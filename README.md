@@ -1,8 +1,4 @@
-## More information
-
-### Development
-
-## React/React Router/Webpack/Babel/Antd
+### Technology Stack
 
 - React: [React](https://reactjs.org/)
 - React Router: [React Router](https://reactrouter.com/)
@@ -25,7 +21,7 @@
 
     Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
 
-4. Commit Lint: [Commit Lint ](https://commitlint.js.org) TODO
+4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
 
     CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
 
