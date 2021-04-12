@@ -4,12 +4,12 @@ import { ConfigProvider } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN'
 // import enUS from 'antd/lib/locale/en_US'
 
-import Home from './pages/home/index'
+import ProLayout from './pages/layout/index'
 
 function App() {
   return (
     <ConfigProvider locale={zhCN}>
-      <Home />
+      <ProLayout />
     </ConfigProvider>
   )
 }

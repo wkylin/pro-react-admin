@@ -1,5 +1,10 @@
 {
   "jumpToAliasFile.alias": {
     "@": "d:\\workspace\\promotion-manage-web\\src"
-  }
+  },
+  "cSpell.ignoreWords": [
+    "entrypoint",
+    "multiline",
+    "precommit"
+  ]
 }

@@ -1,4 +1,9 @@
 {
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "env": {
     "browser": true,
     "es2021": true
@@ -17,6 +22,7 @@
     "semi": "off",
     "no-use-before-define": "off",
     "comma-dangle": "off",
-    "space-before-function-paren": "off"
+    "space-before-function-paren": "off",
+    "multiline-ternary": "off"
   }
 }

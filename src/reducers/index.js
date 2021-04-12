@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux'
-import counter from './counter'
-const reducers = {
-  counter
+import inReducer from './increment'
+import deReducer from './decrement'
+const rootReducers = {
+  inReducer,
+  deReducer,
 }
 
-const rootReducers = combineReducers(reducers)
+const rootReducer = combineReducers(rootReducers)
 
-export default rootReducers
+export default rootReducer

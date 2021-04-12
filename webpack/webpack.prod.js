@@ -6,6 +6,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
+
 
 const clearPath = path.resolve(__dirname, '../dist')
 
@@ -17,11 +20,25 @@ module.exports = merge(common, {
   mode: 'production',
   devtool: false,
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'styles/[name].[contenthash].css',
-      chunkFilename: '[id].css',
-    }),
     new CleanWebpackPlugin({ dry: false, verbose: true, cleanOnceBeforeBuildPatterns: [clearPath, clearPath] }),
+    new MiniCssExtractPlugin({
+      filename: 'static/css/[name].[contenthash].css',
+      chunkFilename: 'static/css/[name].[contenthash].css',
+    }),
+    // new CopyPlugin({
+    //   patterns: [
+    //     {
+    //       from: `${path.resolve(__dirname, '../public')}/assets`,
+    //       to: `${path.resolve(__dirname, '../dist')}/assets`,
+    //     },
+    //   ],
+    //   options: {
+    //     concurrency: 100,
+    //   },
+    // }),
+    // new Dotenv({
+    //   path: path.resolve(__dirname, '..', '.env.development'),
+    // }),
   ],
   optimization: {
     minimize: true,
@@ -48,7 +65,7 @@ module.exports = merge(common, {
           priority: 10,
           enforce: true,
           chunks: 'all',
-        }
+        },
       },
     },
     runtimeChunk: {

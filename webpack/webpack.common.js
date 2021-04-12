@@ -1,4 +1,5 @@
 const paths = require('./paths')
+const webpack = require('webpack')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -16,11 +17,11 @@ const config = {
   output: {
     path: paths.build,
     publicPath: isDev ? '/' : './',
-    filename: isDev ? 'js/[name].js' : 'js/[name].[contenthash].js',
-    chunkFilename: isDev ? 'js/[name].js' : 'js/[name].[contenthash].js',
+    filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
+    chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
   },
   resolve: {
-    extensions: ['.js'],
+    extensions: ['*', '.js', '.jsx'],
     alias: {
       '@': paths.src,
     },
@@ -29,15 +30,26 @@ const config = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: paths.public + '/index.html',
+      title: isDev ? '促销中心--dev' : '促销中心',
+      template: paths.public + '/index.ejs',
       favicon: paths.public + '/favicon.ico',
       filename: 'index.html',
       inject: 'body',
     }),
-    new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
-      chunkFilename: '[id].[contenthash].css',
+    new webpack.ProgressPlugin({
+      activeModules: false,
+      entries: true,
+      handler(percentage, message, ...args) {
+        console.info(`${parseInt(percentage * 100)}%`, message, ...args)
+      },
+      modules: true,
+      modulesCount: 5000,
+      profile: false,
+      dependencies: true,
+      dependenciesCount: 10000,
+      percentBy: null,
     }),
+
   ],
   module: {
     rules: [
@@ -66,8 +78,9 @@ const config = {
         use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
+        // use: ['babel-loader', 'eslint-loader'],
         use: ['babel-loader'],
       },
     ],

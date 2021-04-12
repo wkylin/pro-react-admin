@@ -5,13 +5,15 @@
 - Webpack: [Webpack](https://webpack.js.org/)
 - Babel: [Babel](https://babeljs.io/)
 - Antd: [Ant Design](https://ant.design/index-cn)
-- Redux: [Redux Hooks](https://react-redux.js.org/)
+- Redux Hooks: [Redux Hooks](https://react-redux.js.org/api/hooks)
 
 ### ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
    ESLint is a linter for the JavaScript language, written in Node.js. That helps you find and fix problems in your JavaScript code.
+
+   [https://json.schemastore.org/eslintrc](https://json.schemastore.org/eslintrc)
 
 2. Prettier: [Prettier](https://github.com/prettier/prettier)
 
