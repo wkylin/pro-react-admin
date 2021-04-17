@@ -6,9 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const CopyPlugin = require('copy-webpack-plugin')
+// const CopyPlugin = require('copy-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
-
 
 const clearPath = path.resolve(__dirname, '../dist')
 
@@ -18,7 +17,7 @@ const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-route
 
 module.exports = merge(common, {
   mode: 'production',
-  devtool: false,
+  // devtool: false,
   plugins: [
     new CleanWebpackPlugin({ dry: false, verbose: true, cleanOnceBeforeBuildPatterns: [clearPath, clearPath] }),
     new MiniCssExtractPlugin({
@@ -36,9 +35,9 @@ module.exports = merge(common, {
     //     concurrency: 100,
     //   },
     // }),
-    // new Dotenv({
-    //   path: path.resolve(__dirname, '..', '.env.development'),
-    // }),
+    new Dotenv({
+      path: path.resolve(__dirname, '..', '.env.production')
+    }),
   ],
   optimization: {
     minimize: true,

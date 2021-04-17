@@ -6,6 +6,7 @@
 - Babel: [Babel](https://babeljs.io/)
 - Antd: [Ant Design](https://ant.design/index-cn)
 - Redux Hooks: [Redux Hooks](https://react-redux.js.org/api/hooks)
+- Umi Hox: [Hox](https://github.com/umijs/hox) -- Todo
 
 ### ESLint Prettier Husky EditorConfig
 
@@ -45,6 +46,15 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 ### Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
+
+
+### VSCode Extensions
+1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+
+
+### HTTP
+
+1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
 ### Code Contributors
 

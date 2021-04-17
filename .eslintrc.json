@@ -23,6 +23,11 @@
     "no-use-before-define": "off",
     "comma-dangle": "off",
     "space-before-function-paren": "off",
-    "multiline-ternary": "off"
+    "multiline-ternary": "off",
+    "promise/param-names": "off",
+    "no-debugger": "off",
+    "react/prop-types": "off",
+    "no-extra-parens": "off",
+    "eol-last": "off"
   }
 }

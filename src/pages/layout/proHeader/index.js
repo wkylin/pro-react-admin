@@ -1,27 +1,25 @@
 import React from 'react'
 
 import { Layout, Space, Dropdown, Menu } from 'antd'
-import { UserOutlined, LogoutOutlined, SettingOutlined, MailOutlined, BellOutlined } from '@ant-design/icons'
+import { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from '@ant-design/icons'
+import { useHistory } from 'react-router-dom'
+import PrimaryNav from '../primaryNav'
 
 import styles from './index.module.less'
 
 const ProHeader = () => {
+  const history = useHistory()
+  const redirectTo = (path) => {
+    history.push(path)
+  }
   return (
     <Layout.Header className={styles.header}>
-      <div className={styles.logo}>促销中台</div>
+      <div className={styles.logo} onClick={() => redirectTo('/')}>
+        促销中台
+      </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>
-          <Menu mode="horizontal" defaultSelectedKeys={['mail']}>
-            <Menu.Item key="mail" icon={<MailOutlined />}>
-              Navigation One
-            </Menu.Item>
-            <Menu.SubMenu key="SubMenu" icon={<SettingOutlined />} title="Navigation Three - Submenu">
-              <Menu.ItemGroup title="Item 1">
-                <Menu.Item key="setting:1">Option 1</Menu.Item>
-                <Menu.Item key="setting:2">Option 2</Menu.Item>
-              </Menu.ItemGroup>
-            </Menu.SubMenu>
-          </Menu>
+          <PrimaryNav />
         </div>
         <div className={styles.headerRight}>
           <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
@@ -31,14 +29,14 @@ const ProHeader = () => {
             arrow
             overlay={
               <Menu>
-                <Menu.Item key="1" icon={<UserOutlined />}>
+                <Menu.Item key="1" icon={<UserOutlined />} onClick={() => redirectTo('/profile')}>
                   个人中心
                 </Menu.Item>
-                <Menu.Item key="2" icon={<SettingOutlined />}>
+                <Menu.Item key="2" icon={<SettingOutlined />} onClick={() => redirectTo('/setting')}>
                   个人设置
                 </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key="3" icon={<LogoutOutlined />}>
+                <Menu.Item key="3" icon={<LogoutOutlined />} onClick={() => redirectTo('/signin')}>
                   退出登录
                 </Menu.Item>
               </Menu>

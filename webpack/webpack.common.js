@@ -5,6 +5,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 
 const isDev = !!(process.env.NODE_ENV !== 'production')
 const UNABLE_ANALYZE = 0
@@ -24,6 +25,10 @@ const config = {
     extensions: ['*', '.js', '.jsx'],
     alias: {
       '@': paths.src,
+      stateless: paths.stateless,
+      stateful: paths.stateful,
+      hooks: paths.hooks,
+      container: paths.container,
     },
   },
 
@@ -49,7 +54,7 @@ const config = {
       dependenciesCount: 10000,
       percentBy: null,
     }),
-
+    new AntdDayjsWebpackPlugin(),
   ],
   module: {
     rules: [
@@ -61,8 +66,16 @@ const config = {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              modules: true,
-              importLoaders: 1,
+              // modules: true,
+              modules: {
+                compileType: 'module',
+                mode: 'local',
+                auto: true,
+                exportGlobals: true,
+                localIdentName: '[path][name]__[local]--[hash:base64:5]',
+                localIdentContext: paths.src,
+              },
+              importLoaders: 2,
             },
           },
           {
@@ -82,6 +95,10 @@ const config = {
         exclude: /node_modules/,
         // use: ['babel-loader', 'eslint-loader'],
         use: ['babel-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        type: 'asset',
       },
     ],
   },

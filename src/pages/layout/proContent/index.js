@@ -1,9 +1,13 @@
 import React from 'react'
 import { Layout, Breadcrumb } from 'antd'
+// import { Switch } from 'react-router-dom'
+import CustomSwitch from 'stateless/CustomSwitch'
+import RouteWithSubRoutes from 'stateless/RouteWithSubRoutes'
+
 import styles from './index.module.less'
 
 const { Content, Header } = Layout
-const ProContent = () => {
+const ProContent = ({ routes = [] }) => {
   return (
     <Layout className={styles.layout}>
       <Header className={styles.header}>
@@ -15,8 +19,11 @@ const ProContent = () => {
       </Header>
       <Content className={styles.content}>
         <div className={styles.container}>
-          {/* 此处加载不同的组件 */}
-          加载路由---路由设置
+          <CustomSwitch>
+            {routes.map((route, i) => (
+              <RouteWithSubRoutes key={i} {...route} />
+            ))}
+          </CustomSwitch>
         </div>
         <div className={styles.footer}>Copyright &copy; 2015-{new Date().getFullYear()} 上海永辉云创科技有限公司</div>
       </Content>

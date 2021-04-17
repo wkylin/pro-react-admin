@@ -8,7 +8,7 @@ const Dotenv = require('dotenv-webpack')
 const jsRegex = /\.(js)$/
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'source-map',
+  // devtool: 'source-map',
   devServer: {
     historyApiFallback: true,
     contentBase: path.resolve(__dirname, '../dist'),
@@ -22,6 +22,14 @@ module.exports = merge(common, {
     overlay: {
       warnings: true,
       errors: true,
+    },
+    proxy: {
+      '/app/api': {
+        target: 'http://hc-t1.yonghuivip.com',
+        pathRewrite: { '^/api': '' },
+        secure: false,
+        changeOrigin: true,
+      },
     },
     // useLocalIp: true,
   },
@@ -43,10 +51,14 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
-    // new Dotenv({
-    //   path: path.resolve(__dirname, '..', '.env.development'),
-    // }),
+    new Dotenv({
+      path: path.resolve(__dirname, '..', '.env.development'),
+    }),
     new ReactRefreshWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ].filter(Boolean),
+  optimization: {
+    providedExports: true,
+    usedExports: true,
+  },
 })
