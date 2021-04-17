@@ -8,8 +8,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
-
-const isDev = !!(process.env.NODE_ENV !== 'production')
+const isDev = process.env.NODE_ENV === 'development'
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
