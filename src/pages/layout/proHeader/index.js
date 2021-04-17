@@ -15,7 +15,7 @@ const ProHeader = () => {
   return (
     <Layout.Header className={styles.header}>
       <div className={styles.logo} onClick={() => redirectTo('/')}>
-        促销中台
+        Pro React
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>

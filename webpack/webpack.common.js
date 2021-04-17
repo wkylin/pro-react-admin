@@ -1,15 +1,20 @@
-const paths = require('./paths')
+const path = require('path')
 const webpack = require('webpack')
+const paths = require('./paths')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
+const Dotenv = require('dotenv-webpack')
 
 const isDev = !!(process.env.NODE_ENV !== 'production')
+
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
+
+const dotEnv = process.env.BUILD_GOAL === 'dev' ? '.env.development' : process.env.BUILD_GOAL === 'prod' ? '.env.production' : '.env.test'
 
 const config = {
   entry: {
@@ -34,6 +39,9 @@ const config = {
 
   plugins: [
     new CleanWebpackPlugin(),
+    new Dotenv({
+      path: path.resolve(__dirname, '..', dotEnv),
+    }),
     new HtmlWebpackPlugin({
       title: isDev ? '促销中心--dev' : '促销中心',
       template: paths.public + '/index.ejs',

@@ -1,12 +1,20 @@
 ### Technology Stack
 
-- React: [React](https://reactjs.org/)
-- React Router: [React Router](https://reactrouter.com/)
-- Webpack: [Webpack](https://webpack.js.org/)
-- Babel: [Babel](https://babeljs.io/)
-- Antd: [Ant Design](https://ant.design/index-cn)
-- Redux Hooks: [Redux Hooks](https://react-redux.js.org/api/hooks)
-- Umi Hox: [Hox](https://github.com/umijs/hox) -- Todo
+1. React: [React](https://reactjs.org/)
+2. React Router: [React Router](https://reactrouter.com/)
+3. Webpack: [Webpack](https://webpack.js.org/)
+4. Babel: [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
+5. Antd: [Ant Design](https://ant.design/index-cn)
+6. Redux Hooks: [Redux Hooks](https://react-redux.js.org/api/hooks)
+
+
+### React Code Splitting Library
+
+1. [Loadable Components](https://loadable-components.com/)
+
+### TODO
+1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
+2. Umi Hox: [Hox](https://github.com/umijs/hox)
 
 ### ESLint Prettier Husky EditorConfig
 

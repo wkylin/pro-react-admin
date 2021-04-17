@@ -5,16 +5,18 @@
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
-    "build": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
-    "build:analyze": "cross-env NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js",
+    "start": "cross-env BUILD_GOAL=dev NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
+    "build:prod": "cross-env BUILD_GOAL=prod NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "build:test": "cross-env BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "analyze:build": "cross-env NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:yarn": "yarn upgrade-interactive --latest",
     "stylelint": "stylelint src/**/*.less",
     "stylelint:fix": "stylelint src/**/*.less --fix",
     "eslint": "eslint src/**/*.js --ignore-path .gitignore",
     "eslint:fix": "eslint src/**/*.js --fix",
-    "serve:dist": "yarn run build && serve -s dist -l 5000",
+    "serve:prod": "yarn run build:prod && serve -s dist -l 5000",
+    "serve:test": "yarn run build:test && serve -s dist -l 5100",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
   },
   "pre-commit": [

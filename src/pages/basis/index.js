@@ -1,7 +1,26 @@
 import React from 'react'
+import { Layout } from 'antd'
 
-const PromotionDeduct = () => {
-  return <>促销扣款 demo</>
+import ProHeader from '../layout/proHeader'
+import ProSider from '../layout/proSider'
+import ProContent from '../layout/proContent'
+import ActSecNav from '../layout/actSecNav'
+import styles from './index.module.less'
+
+const BasicComponents = ({ routes = [] }) => {
+  return (
+    <>
+      <Layout className={styles.layout}>
+        <ProHeader />
+        <Layout className={styles.layout}>
+          <ProSider>
+            <ActSecNav />
+          </ProSider>
+          <ProContent routes={routes} />
+        </Layout>
+      </Layout>
+    </>
+  )
 }
 
-export default PromotionDeduct
+export default BasicComponents

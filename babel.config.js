@@ -12,8 +12,8 @@ module.exports = {
             },
           ],
           '@babel/plugin-syntax-dynamic-import',
-          // 'transform-remove-console',
-          // 'transform-remove-debugger',
+          'transform-remove-console',
+          'transform-remove-debugger',
         ]
       : [
           [

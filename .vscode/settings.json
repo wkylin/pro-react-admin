@@ -3,8 +3,25 @@
     "@": "d:\\workspace\\promotion-manage-web\\src"
   },
   "cSpell.ignoreWords": [
+    "basicpage",
+    "binl",
+    "bkey",
+    "camelcase",
     "entrypoint",
+    "md",
     "multiline",
-    "precommit"
-  ]
+    "nodir",
+    "olda",
+    "oldb",
+    "oldc",
+    "oldd",
+    "opad",
+    "parmas",
+    "precommit",
+    "raw",
+    "rstr",
+    "tryer",
+    "urlparams"
+  ],
+  "files.autoSave": "onWindowChange"
 }

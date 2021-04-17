@@ -3,7 +3,6 @@ const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const Dotenv = require('dotenv-webpack')
 
 const jsRegex = /\.(js)$/
 module.exports = merge(common, {
@@ -31,7 +30,6 @@ module.exports = merge(common, {
         changeOrigin: true,
       },
     },
-    // useLocalIp: true,
   },
 
   module: {
@@ -51,9 +49,6 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
-    new Dotenv({
-      path: path.resolve(__dirname, '..', '.env.development'),
-    }),
     new ReactRefreshWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
   ].filter(Boolean),
