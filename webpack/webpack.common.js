@@ -43,7 +43,7 @@ const config = {
       path: path.resolve(__dirname, '..', dotEnv),
     }),
     new HtmlWebpackPlugin({
-      title: isDev ? '促销中心--dev' : '促销中心',
+      title: isDev ? 'Pro React--dev' : 'Pro React --Prod',
       template: paths.public + '/index.ejs',
       favicon: paths.public + '/favicon.ico',
       filename: 'index.html',
