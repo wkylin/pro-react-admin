@@ -2,10 +2,7 @@ import React from 'react'
 import { Menu } from 'antd'
 import { useHistory } from 'react-router-dom'
 import {
-  SettingOutlined,
   HomeOutlined,
-  UnorderedListOutlined,
-  FieldTimeOutlined,
 } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -28,20 +25,6 @@ const ProSecNav = () => {
         <Menu.Item key="3" onClick={() => redirectTo('/layout/coupons/add')}>
           订单立减单
         </Menu.Item>
-      </Menu.SubMenu>
-      <Menu.SubMenu key="sub2" icon={<UnorderedListOutlined />} title="活动列表">
-        <Menu.Item key="5">所有活动</Menu.Item>
-        <Menu.Item key="6">送券活动</Menu.Item>
-        <Menu.Item key="7">商品调价活动</Menu.Item>
-        <Menu.Item key="8">订单立减活动</Menu.Item>
-      </Menu.SubMenu>
-      <Menu.SubMenu key="sub3" icon={<FieldTimeOutlined />} title="促销日历">
-        <Menu.Item key="9">当前生效活动</Menu.Item>
-        <Menu.Item key="10">所有促销活动</Menu.Item>
-      </Menu.SubMenu>
-      <Menu.SubMenu key="sub4" icon={<SettingOutlined />} title="限购管理">
-        <Menu.Item key="11">商品限购管理</Menu.Item>
-        <Menu.Item key="12">活动限购管理</Menu.Item>
       </Menu.SubMenu>
     </Menu>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
-import RouteWithSubRoutes from 'stateless/RouteWithSubRoutes'
+// import RouteWithSubRoutes from 'stateless/RouteWithSubRoutes'
 import { useHistory, useRouteMatch } from 'react-router-dom'
-import CustomSwitch from 'stateless/CustomSwitch'
+// import CustomSwitch from 'stateless/CustomSwitch'
 import { Button } from 'antd'
 
 const Coupons = ({ routes = [] }) => {
@@ -23,11 +23,11 @@ const Coupons = ({ routes = [] }) => {
         Detail Coupons
       </Button>
 
-      <CustomSwitch>
+      {/* <CustomSwitch>
         {routes.map((route, i) => (
           <RouteWithSubRoutes key={i} {...route} />
         ))}
-      </CustomSwitch>
+      </CustomSwitch> */}
     </>
   )
 }
