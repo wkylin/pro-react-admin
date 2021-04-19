@@ -22,12 +22,18 @@ module.exports = merge(common, {
       warnings: true,
       errors: true,
     },
+    // proxy: {
+    //   '/app/api': {
+    //     target: 'http://hc-t1.yonghuivip.com',
+    //     pathRewrite: { '^/api': '' },
+    //     secure: false,
+    //     changeOrigin: true,
+    //   },
+    // },
     proxy: {
-      '/app/api': {
-        target: 'http://hc-t1.yonghuivip.com',
+      '/api': {
+        target: 'https://jsonplaceholder.typicode.com',
         pathRewrite: { '^/api': '' },
-        secure: false,
-        changeOrigin: true,
       },
     },
   },
@@ -48,10 +54,7 @@ module.exports = merge(common, {
       },
     ],
   },
-  plugins: [
-    new ReactRefreshWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-  ].filter(Boolean),
+  plugins: [new ReactRefreshWebpackPlugin(), new webpack.HotModuleReplacementPlugin()].filter(Boolean),
   optimization: {
     providedExports: true,
     usedExports: true,
