@@ -1,11 +1,11 @@
 ### Technology Stack
 
-1. React: [React](https://reactjs.org/)
-2. React Router: [React Router](https://reactrouter.com/)
-3. Webpack: [Webpack](https://webpack.js.org/)
-4. Babel: [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: [Ant Design](https://ant.design/index-cn)
-6. Redux Hooks: [Redux Hooks](https://react-redux.js.org/api/hooks)
+1. React: v17.0.2 [React](https://reactjs.org/)
+2. React Router: v5.2.0 [React Router](https://reactrouter.com/)
+3. Webpack:v5.31.0 [Webpack](https://webpack.js.org/)
+4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
+5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
+6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
 
 ### React Code Splitting Library
