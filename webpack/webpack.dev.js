@@ -22,18 +22,13 @@ module.exports = merge(common, {
       warnings: true,
       errors: true,
     },
-    // proxy: {
-    //   '/app/api': {
-    //     target: 'http://hc-t1.yonghuivip.com',
-    //     pathRewrite: { '^/api': '' },
-    //     secure: false,
-    //     changeOrigin: true,
-    //   },
-    // },
     proxy: {
-      '/api': {
-        target: 'https://jsonplaceholder.typicode.com',
-        pathRewrite: { '^/api': '' },
+      '/': {
+        // target: 'https://jsonplaceholder.typicode.com',
+        target: 'https://my-json-server.typicode.com',
+        pathRewrite: { '^/': '' },
+        secure: false,
+        changeOrigin: true,
       },
     },
   },

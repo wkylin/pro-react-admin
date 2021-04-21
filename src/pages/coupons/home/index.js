@@ -6,11 +6,8 @@ import { httpFetch } from '@/service'
 console.log('httpFetch', httpFetch);
 const HomeCoupons = () => {
   useEffect(() => {
-    // console.log('$fetch', httpFetch('/todos/1'))
-    // httpFetch('api/todos/1')
-    //   .then((res) => console.log('res==>>', res))
-    //   .catch((error) => console.log(error))
-    httpFetch.getFetch('/todos/1')
+    httpFetch
+      .getFetch('/wkylin/angular-json-server/react')
       .then((res) => console.log('res==>>', res))
       .catch((error) => console.log(error))
   }, [])

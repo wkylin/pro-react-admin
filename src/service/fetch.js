@@ -34,14 +34,16 @@ import { message } from 'antd'
 const baseUrl = process.env.APP_BASE_URL
 
 const parseToQuery = (query) => {
-  const queryStr = Object.keys(query)
-    .reduce((ary, key) => {
-      if (query[key]) {
-        ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]))
-      }
-      return ary
-    }, [])
-    .join('&')
+  const queryStr =
+    query &&
+    Object.keys(query)
+      .reduce((ary, key) => {
+        if (query[key]) {
+          ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]))
+        }
+        return ary
+      }, [])
+      .join('&')
   return queryStr
 }
 
@@ -62,7 +64,7 @@ const initOptions = {
 }
 
 const handleFailedResult = (result, isShowError) => {
-  if (result.code !== 0 && isShowError) {
+  if (result.code !== '0' && isShowError) {
     const errMsg = result.message || result.fetchError || '服务器开小差了，稍后再试吧 failed'
     const errStr = `${result.code ? result.code : ''}${errMsg}`
     message.error(errStr, 2)
@@ -72,7 +74,7 @@ const handleFailedResult = (result, isShowError) => {
 }
 
 const handleSuccessResult = (result, isShowError) => {
-  if (result.code !== 0 && isShowError) {
+  if (result.code !== '0' && isShowError) {
     if (result.code === 41002) {
       // Todo clear cookie redirect login
       window.location.href = '#/signin'
@@ -80,7 +82,7 @@ const handleSuccessResult = (result, isShowError) => {
     } else {
       const errMsg = result.message
       const errStr = `${result.code}: ${errMsg}`
-      message.info(errStr, 2)
+      message.error(errStr, 2)
     }
   }
 
@@ -91,7 +93,7 @@ const handleSuccessResponse = (resolve, reject, response, resBody, isShowError) 
   if (response.ok) {
     resolve(handleSuccessResult(resBody, isShowError))
   } else {
-    message.error(response.statusText, 2)
+    // message.error(response.statusText, 2)
     reject(
       handleFailedResult(
         Object.assign({}, resBody, {
@@ -106,6 +108,8 @@ const handleSuccessResponse = (resolve, reject, response, resBody, isShowError) 
 
 const handleErrorResponse = (reject, response, error, isShowError) => {
   let msg = '当前服务繁忙，请稍后再试!'
+
+  debugger;
   // 403 500 401
   if (response.status === 404) {
     msg = '您访问的内容走丢了…'
@@ -180,8 +184,8 @@ const handleFetchData = (url, options) => {
   return fetchPromise
 }
 
-const reqFetch = (url, params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 5000 }) => {
-  const { method = 'GET', payload = null, headers = null, isShowError = true, timeout = 5000 } = params
+const reqFetch = (url, params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000 }) => {
+  const { method = 'GET', payload = null, headers = null, isShowError = true, timeout = 20000 } = params
 
   const defaultOptions = {
     ...initOptions,
@@ -199,15 +203,11 @@ const reqFetch = (url, params = { method: 'GET', payload: null, headers: null, i
   // const isPost = method.toUpperCase() === 'POST'
   const options = isGet ? defaultOptions : { ...defaultOptions, body: JSON.stringify(payload) }
 
-  const suffixPayload = isGet
-    ? {
-        ...payload
-      }
-    : null
+  const suffixPayload = isGet ? payload : null
 
   const queryParams = parseToQuery(suffixPayload)
 
-  const fetchUrl = `${baseUrl}${url}${`?${queryParams}`}`
+  const fetchUrl = `${baseUrl}${url}${queryParams ? `?${queryParams}` : ''}`
 
   return handleFetchData(fetchUrl, options)
 }
