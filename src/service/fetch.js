@@ -1,8 +1,19 @@
-// $fetch(url, params)
-// fetch(url, initParams).then((res) => res.json).then((body) = body).catch((error) => error)
+/**
+ * Fetch Api
+ * 1. reqFetch(url, params)
+ *    params: {
+ *      method: 'GET', // 请求方式
+ *      payload: null, // 入参
+ *      headers: null, // 自定义 Headers
+ *      isShowError: true, // 是否显示total tips
+ *      timeout: 5000 // 超时
+ *    }
+ * 2. postFetch --- method==='POST' 其他入参同 reqFetch
+ * 3. getFetch --- method==='POST'  其他入参同 reqFetch
+ */
 
 import { message } from 'antd'
-
+// fetch(url, initParams).then((res) => res.json).then((body) = body).catch((error) => error)
 // const response = fetch(url, {
 //   method: 'GET',
 //   headers: {
@@ -23,17 +34,14 @@ import { message } from 'antd'
 const baseUrl = process.env.APP_BASE_URL
 
 const parseToQuery = (query) => {
-  const queryStr = query
-    ? Object.keys(query)
-      .reduce((ary, key) => {
-        if (query[key]) {
-          ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]))
-        }
-        return ary
-      }, [])
-      .join('&')
-    : ''
-
+  const queryStr = Object.keys(query)
+    .reduce((ary, key) => {
+      if (query[key]) {
+        ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]))
+      }
+      return ary
+    }, [])
+    .join('&')
   return queryStr
 }
 
@@ -42,7 +50,7 @@ const initOptions = {
   headers: {
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8
   },
-  credentials: 'include',
+  credentials: 'include', // include *same-origin
   // mode: 'cors', // no-cors, cors, *same-origin
   // redirect: 'follow', // manual, *follow, error
   // referrer: 'no-referrer', // no-referrer *client,
@@ -53,39 +61,35 @@ const initOptions = {
   // signal: undefined,
 }
 
-// const sleep = (ms) => {
-//   return new Promise((resolve) => setTimeout(resolve, ms))
-// }
-
-// console.log('sleep', sleep)
-
-const handleFailedResult = (result, cusOptions) => {
-  console.log('failedResult', result)
-
-  if (result.status && cusOptions.isHandleError) {
-    const errMsg = result.msg || result.message || '服务器开小差了，稍后再试吧'
-    const errStr = `${errMsg}（${result.status}）`
-    message.info(errStr, 2)
+const handleFailedResult = (result, isShowError) => {
+  if (result.code !== 0 && isShowError) {
+    const errMsg = result.message || result.fetchError || '服务器开小差了，稍后再试吧 failed'
+    const errStr = `${result.code ? result.code : ''}${errMsg}`
+    message.error(errStr, 2)
   }
-  const errorMsg =
-    'Uncaught PromiseError: ' + (result.netStatus || '') + ' ' + (result.error || result.msg || result.message || '')
+  const errorMsg = 'Uncaught PromiseError: ' + (result.netStatus || '') + ' ' + (result.message || '')
   return errorMsg
 }
 
-const handleSuccessResult = (result, cusOptions) => {
-  console.log('successResult', result)
-  console.log('cusOptions', cusOptions)
-  if (result.status && cusOptions.isHandleError) {
-    const errMsg = result.msg || result.message || '服务器开小差了，稍后再试吧'
-    const errStr = `${errMsg}（${result.status}）`
-    message.info(errStr, 2)
+const handleSuccessResult = (result, isShowError) => {
+  if (result.code !== 0 && isShowError) {
+    if (result.code === 41002) {
+      // Todo clear cookie redirect login
+      window.location.href = '#/signin'
+      return
+    } else {
+      const errMsg = result.message
+      const errStr = `${result.code}: ${errMsg}`
+      message.info(errStr, 2)
+    }
   }
+
   return result
 }
 
-const handleSuccessResponse = (resolve, reject, response, resBody, cusOptions) => {
+const handleSuccessResponse = (resolve, reject, response, resBody, isShowError) => {
   if (response.ok) {
-    resolve(handleSuccessResult(resBody, cusOptions)) // arrayBuffer fix todo
+    resolve(handleSuccessResult(resBody, isShowError))
   } else {
     message.error(response.statusText, 2)
     reject(
@@ -94,111 +98,90 @@ const handleSuccessResponse = (resolve, reject, response, resBody, cusOptions) =
           status: response.status,
           statusText: response.statusText,
         }),
-        cusOptions
+        isShowError
       )
     )
   }
 }
 
-const handleErrorResponse = (reject, response, error, cusOptions) => {
-  console.log('error', error)
-  console.log('fetch error')
-  let msg = '当前服务繁忙，请稍后再试'
+const handleErrorResponse = (reject, response, error, isShowError) => {
+  let msg = '当前服务繁忙，请稍后再试!'
   // 403 500 401
   if (response.status === 404) {
     msg = '您访问的内容走丢了…'
   }
   message.error(msg, 2)
-  reject(handleFailedResult({ fetchStatus: 'error', netStatus: response.status, fetchError: msg }, cusOptions))
+  reject(handleFailedResult({ fetchStatus: 'error', netStatus: response.status, fetchError: msg }, isShowError))
 }
 
-const fetchTimeoutPromise = (cusOptions) => {
-  return new Promise((_, reject) => {
-    setTimeout(() => {
-      if (!cusOptions.isFetched) {
-        cusOptions.isAbort = true
-        message.info('网络开小差了，稍后再试吧', 2)
-        // eslint-disable-next-line prefer-promise-reject-errors
-        reject({ fetchStatus: 'timeout' })
-      }
-    }, cusOptions.timeout)
-  })
-}
-
-const handleFetchData = (url, options, cusOptions) => {
-  // cusOptions.isFetched = false
-  // cusOptions.isAbort = false
-
+const handleFetchData = (url, options) => {
+  const { isShowError, timeout, ...otherOptions } = options
+  if (otherOptions.signal) throw new Error('Signal not supported in timeoutable fetch')
+  const controller = new AbortController()
+  const { signal } = controller
   const fetchPromise = new Promise((resolve, reject) => {
-    fetch(url, options)
+    const timer = setTimeout(() => {
+      reject(new Error('Timeout for Promise'))
+      controller.abort()
+    }, timeout)
+    fetch(url, { signal, ...otherOptions })
+      .finally(() => clearTimeout(timer))
       .then((response) => {
-        if (cusOptions.isAbort) {
-          return
-        }
-        cusOptions.isFetched = true
-
         // response.text() response.json() response.blob() response.formData() response.arrayBuffer()
         // if(response.ok || (response.status >= 200 && response.status < 300)) { 成功 } else { 失败}
         // response.status
         // response.statusText
 
-        console.log('fetch success')
-
-        for (const [key, value] of response.headers.entries()) {
-          console.log(`response ${key} : ${value}`)
-        }
+        // for (const [key, value] of response.headers.entries()) {
+        //   console.log(`response ${key} : ${value}`)
+        // }
 
         const contentType = response.headers.get('Content-Type')
         if (contentType.includes('application/json')) {
-          response.json()
+          response
+            .json()
             .then((resBody) => {
-              handleSuccessResponse(resolve, reject, response, resBody, cusOptions)
+              handleSuccessResponse(resolve, reject, response, resBody, isShowError)
             })
             .catch((error) => {
-              handleErrorResponse(reject, response, error, cusOptions)
+              handleErrorResponse(reject, response, error, isShowError)
             })
-        } else if (contentType.includes('text/html')) {
-          // todo text blob formData arrayBuffer
+        } else if (contentType.includes('application/vnd.ms-excel')) {
+          response
+            .arrayBuffer()
+            .then((resBuffer) => {
+              const blob = new Blob([resBuffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+              })
+              const disposition = response.headers.get('content-disposition')
+              const fileName = decodeURI(disposition.split('=')[1].replace(/'/g, ''))
+              const objectUrl = URL.createObjectURL(blob)
+              const downloadElement = document.createElement('a')
+              document.body.appendChild(downloadElement)
+              downloadElement.style = 'display: none'
+              downloadElement.href = objectUrl
+              downloadElement.download = fileName
+              downloadElement.click()
+              document.body.removeChild(downloadElement)
+            })
+            .catch((error) => {
+              handleErrorResponse(reject, response, error, isShowError)
+            })
+        } else {
+          reject(handleFailedResult({ fetchError: 'No Response Type' }, isShowError))
         }
-
-        // response
-        //   .json()
-        //   .then((res) => {
-        //     resolve(res)
-        //   })
-        //   .catch((err) => {
-        //     reject(err)
-        //   })
       })
       .catch((error) => {
-        // reject(error)
         const errMsg = `${error.name} ${error.message}`
-        if (cusOptions.isAbort) {
-          return
-        }
-        cusOptions.isFetched = true
-        cusOptions.isHandleError && message.error('网络开小差了，稍后再试吧', 2)
-        reject(handleFailedResult({ fetchStatus: 'error', fetchError: errMsg }, cusOptions))
+        reject(handleFailedResult({ fetchStatus: 'error', fetchError: errMsg }, isShowError))
       })
   })
 
-  // const timerPromise = new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     reject(new Error('Request Timeout'))
-  //   }, cusOptions.timeout)
-  // })
-  console.log('fetchPromise', fetchPromise)
-  console.log('promise race', Promise.race([fetchPromise, fetchTimeoutPromise]))
-  return Promise.race([fetchPromise, fetchTimeoutPromise])
-  // return fetchPromise
+  return fetchPromise
 }
 
-const httpFetch = (
-  url,
-  params = { method: 'GET', payload: null, header: null },
-  cusParams = { isHandleError: true, isLoading: true, timeout: 2000 }
-) => {
-  const { method, payload, headers } = params
+const reqFetch = (url, params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 5000 }) => {
+  const { method = 'GET', payload = null, headers = null, isShowError = true, timeout = 5000 } = params
 
   const defaultOptions = {
     ...initOptions,
@@ -207,16 +190,44 @@ const httpFetch = (
       ...initOptions.headers,
       ...headers,
     },
+    isShowError,
+    timeout,
   }
 
   // PUT DELETE
   const isGet = method.toUpperCase() === 'GET'
   // const isPost = method.toUpperCase() === 'POST'
-  const options = isGet ? initOptions : { defaultOptions, body: JSON.stringify(payload) }
-  const fetchUrl = isGet
-    ? `${baseUrl}${url}${parseToQuery(payload) ? `?${parseToQuery(payload)}` : ''}`
-    : `${baseUrl}${url}`
-  return handleFetchData(fetchUrl, options, cusParams)
+  const options = isGet ? defaultOptions : { ...defaultOptions, body: JSON.stringify(payload) }
+
+  const suffixPayload = isGet
+    ? {
+        ...payload
+      }
+    : null
+
+  const queryParams = parseToQuery(suffixPayload)
+
+  const fetchUrl = `${baseUrl}${url}${`?${queryParams}`}`
+
+  return handleFetchData(fetchUrl, options)
 }
 
-export default httpFetch
+const getFetch = (url, params) => {
+  return reqFetch(url, {
+    method: 'GET',
+    ...params,
+  })
+}
+
+const postFetch = (url, params) => {
+  return reqFetch(url, {
+    method: 'POST',
+    ...params,
+  })
+}
+
+export default {
+  reqFetch,
+  postFetch,
+  getFetch,
+}

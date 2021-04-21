@@ -1,23 +1,35 @@
-import { useState, useEffect } from 'react'
+/**
+ * Fetch Hooks
+ * url： api endpoint
+ * opts: 参见 fetch.js
+ */
 
-function useFetch(url, opts) {
+import { useState, useEffect } from 'react'
+import httpFetch from './fetch'
+
+function useReqFetch(url, opts) {
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
   const [hasError, setHasError] = useState(false)
   useEffect(() => {
     setLoading(true)
-    fetch(url, opts)
-      .then((response) => response.json())
+    let canceled = false
+    httpFetch
+      .reqFetch(url, opts)
       .then((res) => {
-        setResponse(res)
-        setLoading(false)
+        if (!canceled) {
+          setResponse(res)
+        }
       })
       .catch(() => {
         setHasError(true)
+      })
+      .finally(() => {
         setLoading(false)
       })
-  }, [url])
+    return () => (canceled = true)
+  }, [url, opts])
   return [response, loading, hasError]
 }
 
-export default useFetch
+export default useReqFetch
