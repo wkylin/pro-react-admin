@@ -41,6 +41,9 @@
 
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
+7. Fix lint now work: npx mrm lint-staged
+    [https://prettier.io/docs/en/precommit.html](https://prettier.io/docs/en/precommit.html)
+
 ### CSS Modules
 
 A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.

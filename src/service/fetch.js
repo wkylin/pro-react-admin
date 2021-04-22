@@ -109,7 +109,6 @@ const handleSuccessResponse = (resolve, reject, response, resBody, isShowError) 
 const handleErrorResponse = (reject, response, error, isShowError) => {
   let msg = '当前服务繁忙，请稍后再试!'
 
-  debugger;
   // 403 500 401
   if (response.status === 404) {
     msg = '您访问的内容走丢了…'

@@ -3,7 +3,6 @@ import { Alert } from 'antd'
 
 import { httpFetch } from '@/service'
 
-console.log('httpFetch', httpFetch);
 const HomeCoupons = () => {
   useEffect(() => {
     httpFetch
