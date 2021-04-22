@@ -21,7 +21,8 @@
     "serve:test": "yarn run build:test && serve -s dist -l 5100",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "predeploy": "npm run build:prod",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "prepare": "husky install"
   },
   "author": "promotion",
   "license": "ISC",
@@ -103,11 +104,8 @@
     "src/**/*.less": [
       "npm run stylelint",
       "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    ],
+    "*.js": "eslint --cache --fix",
+    "*.css": "stylelint --fix"
   }
 }
