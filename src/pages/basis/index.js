@@ -11,7 +11,6 @@ const BasicComponents = ({ routes = [] }) => {
   return (
     <>
       <Layout className={styles.layout}>
-
         <ProHeader />
         <Layout className={styles.layout}>
           <ProSider>
