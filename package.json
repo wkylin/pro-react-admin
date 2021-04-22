@@ -22,13 +22,6 @@
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d dist"
   },
-  "pre-commit": [
-    "precommit-msg",
-    "eslint",
-    "eslint:fix",
-    "stylelint",
-    "stylelint:fix"
-  ],
   "author": "promotion",
   "license": "ISC",
   "devDependencies": {
@@ -107,11 +100,11 @@
     }
   },
   "lint-staged": {
-    "**/*.js": [
+    "*.js": [
       "npm run eslint",
       "git add"
     ],
-    "**/*.less": [
+    "*.less": [
       "npm run stylelint",
       "git add"
     ]
