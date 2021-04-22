@@ -180,7 +180,6 @@ const handleFetchData = (url, options) => {
         reject(handleFailedResult({ fetchStatus: 'error', fetchError: errMsg }, isShowError))
       })
   })
-
   return fetchPromise
 }
 
