@@ -94,11 +94,6 @@
     "redux": "^4.0.5",
     "sanitize.css": "^12.0.1"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
     "*.js": [
       "npm run eslint",
@@ -108,5 +103,10 @@
       "npm run stylelint",
       "git add"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
