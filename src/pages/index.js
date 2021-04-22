@@ -3,7 +3,7 @@ import React from 'react'
 const Index = () => {
   return (
     <>
-      <div>Index 页面</div>
+      <div>Index页面</div>
     </>
   )
 }
