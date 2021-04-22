@@ -106,6 +106,8 @@
       "npm run stylelint:fix",
       "npm run stylelint",
       "git add"
-    ]
+    ],
+    "*.js": "eslint --cache --fix",
+    "*.css": "stylelint --fix"
   }
 }
