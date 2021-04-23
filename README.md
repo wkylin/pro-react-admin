@@ -32,6 +32,8 @@
 
    Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
 
+   Enable Git hooks: npx husky install
+
 4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
 
    CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
