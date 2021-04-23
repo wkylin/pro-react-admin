@@ -12,6 +12,7 @@
     "analyze:build": "cross-env NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:yarn": "yarn upgrade-interactive --latest",
+    "prettier:write": "prettier --write --ignore-unknown src/**/*.{js,less,css}",
     "prettier:check": "prettier --config .prettierrc --check src/**/*.{js,less,css}",
     "stylelint": "stylelint src/**/*.less",
     "stylelint:fix": "stylelint src/**/*.less --fix",
@@ -19,7 +20,6 @@
     "eslint:fix": "eslint src/**/*.js --fix",
     "serve:prod": "yarn run build:prod && serve -s dist -l 5000",
     "serve:test": "yarn run build:test && serve -s dist -l 5100",
-    "precommit-msg": "echo 'Pre-commit checks...' && exit 0",
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d dist",
     "prepare": "husky install"
@@ -97,6 +97,10 @@
     "sanitize.css": "^12.0.1"
   },
   "lint-staged": {
+    "**/*": [
+      "prettier --write --ignore-unknown",
+      "npm run prettier:check"
+    ],
     "src/**/*.js": [
       "npm run eslint:fix",
       "npm run eslint",
@@ -106,8 +110,6 @@
       "npm run stylelint:fix",
       "npm run stylelint",
       "git add"
-    ],
-    "*.js": "eslint --cache --fix",
-    "*.css": "stylelint --fix"
+    ]
   }
 }

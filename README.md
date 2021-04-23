@@ -7,12 +7,12 @@
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
-
 ### React Code Splitting Library
 
 1. [Loadable Components](https://loadable-components.com/)
 
 ### TODO
+
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
 
@@ -26,23 +26,25 @@
 
 2. Prettier: [Prettier](https://github.com/prettier/prettier)
 
-    Prettier is an opinionated code formatter that formats the code with the help of rules we set.
+   Prettier is an opinionated code formatter that formats the code with the help of rules we set.
 
 3. Husky: [Husky](https://github.com/typicode/husky)
 
-    Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
+   Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
 
 4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
 
-    CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
+   CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
 
 5. Editor Config: [EditorConfig](https://EditorConfig.org)
-    EditorConfig helps maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs.
+   EditorConfig helps maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs.
 
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
 7. Fix lint now work: npx mrm lint-staged
-    [https://prettier.io/docs/en/precommit.html](https://prettier.io/docs/en/precommit.html)
+   [https://prettier.io/docs/en/precommit.html](https://prettier.io/docs/en/precommit.html)
+8. Prettierrc
+   [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
 
 ### CSS Modules
 
@@ -53,15 +55,13 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 2. StyleLint: [StyleLint](https://stylelint.io/)
    npx stylelint --help
 
-
 ### Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 
-
 ### VSCode Extensions
-1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 
+1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 
 ### HTTP
 

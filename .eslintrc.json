@@ -19,6 +19,7 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
+    "prettier/prettier": "off",
     "semi": "off",
     "no-use-before-define": "off",
     "comma-dangle": "off",
