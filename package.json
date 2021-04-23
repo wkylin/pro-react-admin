@@ -12,12 +12,12 @@
     "analyze:build": "cross-env NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:yarn": "yarn upgrade-interactive --latest",
-    "prettier:write": "prettier --write --ignore-unknown src/**/*.{js,less,css}",
-    "prettier:check": "prettier --config .prettierrc --check src/**/*.{js,less,css}",
-    "stylelint": "stylelint src/**/*.less",
-    "stylelint:fix": "stylelint src/**/*.less --fix",
-    "eslint": "eslint src/**/*.js",
-    "eslint:fix": "eslint src/**/*.js --fix",
+    "prettier:write": "prettier --write",
+    "prettier:check": "prettier",
+    "stylelint": "stylelint",
+    "stylelint:fix": "stylelint --fix",
+    "eslint": "eslint",
+    "eslint:fix": "eslint --fix",
     "serve:prod": "yarn run build:prod && serve -s dist -l 5000",
     "serve:test": "yarn run build:test && serve -s dist -l 5100",
     "predeploy": "npm run build:prod",
@@ -103,13 +103,11 @@
     ],
     "src/**/*.js": [
       "npm run eslint:fix",
-      "npm run eslint",
-      "git add"
+      "npm run eslint"
     ],
     "src/**/*.less": [
       "npm run stylelint:fix",
-      "npm run stylelint",
-      "git add"
+      "npm run stylelint"
     ]
   }
 }
