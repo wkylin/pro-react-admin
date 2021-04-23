@@ -7,6 +7,7 @@
     "binl",
     "bkey",
     "camelcase",
+    "commitlint",
     "entrypoint",
     "md",
     "multiline",
