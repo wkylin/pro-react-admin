@@ -1,9 +1,7 @@
 import React from 'react'
 import { Menu } from 'antd'
 import { useHistory } from 'react-router-dom'
-import {
-  HomeOutlined,
-} from '@ant-design/icons'
+import { HomeOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
 

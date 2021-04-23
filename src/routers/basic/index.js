@@ -9,8 +9,8 @@ const basicRouter = [
     isAuthenticated: true,
     redirect: '/layout',
     component: loadable(() => import('../../pages'), {
-      fallback: <Loading/>
-    })
+      fallback: <Loading />,
+    }),
   },
   {
     path: '/signup',
@@ -36,6 +36,6 @@ const basicRouter = [
       fallback: <Loading />,
     }),
   },
-];
+]
 
 export default basicRouter

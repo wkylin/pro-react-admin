@@ -1,4 +1,3 @@
-
 import rootAction from '@/actions'
 
 const initialState = {

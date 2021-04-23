@@ -20,7 +20,6 @@ const Home = () => {
       <div>useFetch: {loading ? 'Loading...' : JSON.stringify(response, null, 2)}</div>
       <button onClick={() => dispatch(rootAction.inAction.increment(1))}>Increment</button> -- {inReducer.inNumber}
       <button onClick={() => dispatch(rootAction.deAction.decrement(2))}>Decrement</button> -- {deReducer.deNumber}
-
     </>
   )
 }

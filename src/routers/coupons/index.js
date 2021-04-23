@@ -15,7 +15,7 @@ const couponsRouter = [
         path: '/layout/coupons',
         isAuthenticated: true,
         exact: true,
-        redirect: '/layout/coupons/home'
+        redirect: '/layout/coupons/home',
       },
       {
         path: '/layout/coupons/home',
