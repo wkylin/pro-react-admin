@@ -21,9 +21,7 @@ const ProSider = (props) => {
       trigger={null}
       className={styles.sider}
     >
-      {
-        props.children
-      }
+      {props.children}
       <div className={styles.proLink} onClick={onCollapse}>
         {collapsed ? (
           <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
