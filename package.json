@@ -13,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:yarn": "yarn upgrade-interactive --latest",
     "prettier:write": "prettier --write",
-    "prettier:check": "prettier",
+    "prettier:check": "prettier --check",
     "stylelint": "stylelint",
     "stylelint:fix": "stylelint --fix",
     "eslint": "eslint",
