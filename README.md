@@ -7,6 +7,17 @@
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
+### Development
+
+1. git clone https://github.com/wkylin/promotion-web.git
+2. cd promotion-manage-web
+3. npm start
+
+### Commit message
+
+1. <type>(<scope>): <subject>
+2. "type-enum": ["build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test"],
+
 ### React Code Splitting Library
 
 1. [Loadable Components](https://loadable-components.com/)
