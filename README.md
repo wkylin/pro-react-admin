@@ -43,7 +43,7 @@
 
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
-7. Fix lint now work: npx mrm lint-staged
+7. Active hooks: npx husky install
    [https://prettier.io/docs/en/precommit.html](https://prettier.io/docs/en/precommit.html)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)

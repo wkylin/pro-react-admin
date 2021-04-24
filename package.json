@@ -12,8 +12,12 @@
     "analyze:build": "cross-env NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "update:yarn": "yarn upgrade-interactive --latest",
-    "prettier:write": "prettier --write",
-    "prettier:check": "prettier --check",
+    "lint:fix": "eslint --fix --cache --ext .js,jsx --format=pretty ./src && npm run lint:style",
+    "lint": "npm run lint:js && npm run lint:style && npm run lint:prettier",
+    "lint:js": "eslint --cache --ext .js,jsx --format=pretty ./src",
+    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
+    "lint:prettier": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "prettier:write": "prettier --write \"src/**/*\" --ignore-unknown",
     "stylelint": "stylelint",
     "stylelint:fix": "stylelint --fix",
     "eslint": "eslint",
@@ -52,6 +56,8 @@
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-standard": "^16.0.2",
+    "eslint-formatter-pretty": "^4.0.0",
+    "eslint-loader": "^4.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
@@ -100,8 +106,7 @@
   },
   "lint-staged": {
     "**/*": [
-      "npm run prettier:write",
-      "npm run prettier:check"
+      "npm run prettier:write"
     ],
     "src/**/*.js": [
       "npm run eslint:fix",
