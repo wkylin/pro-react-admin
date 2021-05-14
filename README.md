@@ -47,7 +47,18 @@
 
 4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
 
+   [What is commitlint](https://github.com/conventional-changelog/commitlint/#what-is-commitlint)
    CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
+
+   Setting:
+
+   #### Install commitlint cli and conventional config
+
+   npm install --save-dev @commitlint/{config-conventional,cli}
+
+   #### For Windows:
+
+   npm install --save-dev @commitlint/config-conventional @commitlint/cli
 
 5. Editor Config: [EditorConfig](https://EditorConfig.org)
    EditorConfig helps maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs.
