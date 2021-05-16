@@ -4,6 +4,7 @@ const paths = require('./paths')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ESLintPlugin = require('eslint-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
@@ -13,7 +14,12 @@ const isDev = process.env.NODE_ENV === 'development'
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
 
-const dotEnv = process.env.BUILD_GOAL === 'dev' ? '.env.development' : process.env.BUILD_GOAL === 'prod' ? '.env.production' : '.env.test'
+const dotEnv =
+  process.env.BUILD_GOAL === 'dev'
+    ? '.env.development'
+    : process.env.BUILD_GOAL === 'prod'
+    ? '.env.production'
+    : '.env.test'
 
 const config = {
   entry: {
@@ -61,6 +67,7 @@ const config = {
       dependenciesCount: 10000,
       percentBy: null,
     }),
+    new ESLintPlugin(),
     new AntdDayjsWebpackPlugin(),
   ],
   module: {
@@ -100,7 +107,6 @@ const config = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        // use: ['babel-loader', 'eslint-loader'],
         use: ['babel-loader'],
       },
       {
