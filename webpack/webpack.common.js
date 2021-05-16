@@ -13,7 +13,6 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
-
 const dotEnv =
   process.env.BUILD_GOAL === 'dev'
     ? '.env.development'
