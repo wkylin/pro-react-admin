@@ -55,12 +55,10 @@
     "es6-promise": "^4.2.8",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
-    "eslint-config-standard": "^16.0.2",
     "eslint-formatter-pretty": "^4.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-webpack-plugin": "^2.5.4",
@@ -93,7 +91,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
-    "@loadable/component": "^5.14.1",
+    "@loadable/component": "^5.15.0",
     "antd": "^4.15.0",
     "cookies-js": "^1.2.3",
     "dayjs": "^1.10.4",
