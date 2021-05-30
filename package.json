@@ -93,6 +93,8 @@
   },
   "dependencies": {
     "@loadable/component": "^5.15.0",
+    "@sentry/react": "^6.4.1",
+    "@sentry/tracing": "^6.4.1",
     "antd": "^4.15.0",
     "cookies-js": "^1.2.3",
     "dayjs": "^1.10.4",

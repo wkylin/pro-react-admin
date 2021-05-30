@@ -1250,6 +1250,81 @@
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.9.2.tgz"
   "version" "2.9.2"
 
+"@sentry/browser@6.4.1":
+  "integrity" "sha512-3cDud6GWutnJqcnheIq0lPNTsUJbrRLevQ+g1YfawVXFUxfmmY2bOsGd/Mxq17LxYeBHgKTitXv3DU1bsQ+WBQ=="
+  "resolved" "https://registry.npmjs.org/@sentry/browser/-/browser-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/core" "6.4.1"
+    "@sentry/types" "6.4.1"
+    "@sentry/utils" "6.4.1"
+    "tslib" "^1.9.3"
+
+"@sentry/core@6.4.1":
+  "integrity" "sha512-Lx13oTiP+Tjvm5VxulcCszNVd2S1wY4viSnr+ygq62ySVERR+t7uOZDSARZ0rZ259GwW6nkbMh9dDmD0d6VCGQ=="
+  "resolved" "https://registry.npmjs.org/@sentry/core/-/core-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/hub" "6.4.1"
+    "@sentry/minimal" "6.4.1"
+    "@sentry/types" "6.4.1"
+    "@sentry/utils" "6.4.1"
+    "tslib" "^1.9.3"
+
+"@sentry/hub@6.4.1":
+  "integrity" "sha512-7IZRP5buDE6s/c3vWzzPR/ySE+8GUuHPgTEPiDCPOCWwUN11zXDafJDKkJqY3muJfebUKmC/JG67RyBx+XlnlQ=="
+  "resolved" "https://registry.npmjs.org/@sentry/hub/-/hub-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/types" "6.4.1"
+    "@sentry/utils" "6.4.1"
+    "tslib" "^1.9.3"
+
+"@sentry/minimal@6.4.1":
+  "integrity" "sha512-4x/PRbDZACCKJqjta9EkhiIMyGMf7VgBX13EEWEDVWLP7ymFukBuTr4ap/Tz9429kB/yXZuDGGMIZp/G618H3g=="
+  "resolved" "https://registry.npmjs.org/@sentry/minimal/-/minimal-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/hub" "6.4.1"
+    "@sentry/types" "6.4.1"
+    "tslib" "^1.9.3"
+
+"@sentry/react@^6.4.1":
+  "integrity" "sha512-/rbp9jFgFc+m3DWhI58uKSLQxXtIW5bKqu5eVO/9jedhLzGRGBp0eOlJ5qtZ3KtYKSyPbA4uEBY5qI0rGwipeA=="
+  "resolved" "https://registry.npmjs.org/@sentry/react/-/react-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/browser" "6.4.1"
+    "@sentry/minimal" "6.4.1"
+    "@sentry/types" "6.4.1"
+    "@sentry/utils" "6.4.1"
+    "hoist-non-react-statics" "^3.3.2"
+    "tslib" "^1.9.3"
+
+"@sentry/tracing@^6.4.1":
+  "integrity" "sha512-EPRadE9n/wpUjx4jqP/8vXdOAZBk7vjlzRKniJgKgQUO3v03i0ui6xydaal2mvhplIyOCI2muXdGhjUO7ga4uw=="
+  "resolved" "https://registry.npmjs.org/@sentry/tracing/-/tracing-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/hub" "6.4.1"
+    "@sentry/minimal" "6.4.1"
+    "@sentry/types" "6.4.1"
+    "@sentry/utils" "6.4.1"
+    "tslib" "^1.9.3"
+
+"@sentry/types@6.4.1":
+  "integrity" "sha512-sTu/GaLsLYk1AkAqpkMT4+4q665LtZjhV0hkgiTD4N3zPl5uSf1pCIzxPRYjOpe7NEANmWv8U4PaGKGtc2eMfA=="
+  "resolved" "https://registry.npmjs.org/@sentry/types/-/types-6.4.1.tgz"
+  "version" "6.4.1"
+
+"@sentry/utils@6.4.1":
+  "integrity" "sha512-xJ1uVa5fvg23pXQfulvCIBb9pQ3p1awyd1PapK2AYi+wKjTuYl4B9edmhjRREEQEExznl/d2OVm78fRXLq7M9Q=="
+  "resolved" "https://registry.npmjs.org/@sentry/utils/-/utils-6.4.1.tgz"
+  "version" "6.4.1"
+  dependencies:
+    "@sentry/types" "6.4.1"
+    "tslib" "^1.9.3"
+
 "@tippyjs/react@4.1.0":
   "integrity" "sha512-g6Dpm46edr9T9z+BYxd/eJZa6QMFc4T4z5xrztxVlkti7AhNYf7OaE6b3Nh+boUZZ9wn8xkNq9VrQM5K4huwnQ=="
   "resolved" "https://registry.npmjs.org/@tippyjs/react/-/react-4.1.0.tgz"
@@ -9161,7 +9236,7 @@
     "webpack-dev-server" "^3.11.0"
     "webpack-merge" "^4.2.2"
 
-"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^16.0.0", "react@^16.8.3 || ^17", "react@^17.0.2", "react@>= 0.14.0", "react@>= 16.9.0", "react@>=15", "react@>=16.0.0", "react@>=16.3.0", "react@>=16.8", "react@>=16.9.0", "react@17.0.2":
+"react@*", "react@^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0", "react@^16.0.0", "react@^16.8.3 || ^17", "react@^17.0.2", "react@>= 0.14.0", "react@>= 16.9.0", "react@>=15", "react@>=16.0.0", "react@>=16.3.0", "react@>=16.8", "react@>=16.9.0", "react@15.x || 16.x || 17.x", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
@@ -10950,6 +11025,11 @@
   "version" "1.14.1"
 
 "tslib@^1.9.0":
+  "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
+  "version" "1.14.1"
+
+"tslib@^1.9.3":
   "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"
