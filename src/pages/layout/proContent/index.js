@@ -1,9 +1,9 @@
 import React from 'react'
-import { Layout, Breadcrumb } from 'antd'
+import { Layout } from 'antd'
 // import { Switch } from 'react-router-dom'
 import CustomSwitch from '@stateless/CustomSwitch'
 import RouteWithSubRoutes from '@stateless/RouteWithSubRoutes'
-
+import ProBreadcrumb from './breadcrumb'
 import styles from './index.module.less'
 
 const { Content, Header } = Layout
@@ -11,11 +11,7 @@ const ProContent = ({ routes = [] }) => {
   return (
     <Layout className={styles.layout}>
       <Header className={styles.header}>
-        <Breadcrumb>
-          <Breadcrumb.Item>Home</Breadcrumb.Item>
-          <Breadcrumb.Item>List</Breadcrumb.Item>
-          <Breadcrumb.Item>App</Breadcrumb.Item>
-        </Breadcrumb>
+        <ProBreadcrumb />
       </Header>
       <Content className={styles.content}>
         <div className={styles.container}>

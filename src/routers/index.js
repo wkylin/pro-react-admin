@@ -14,6 +14,7 @@ const rootRouter = [
     path: '/layout',
     isAuthenticated: true,
     exact: false,
+    name: '首页',
     component: loadable(() => import('../pages/layout'), {
       fallback: <Loading />,
     }),
@@ -22,12 +23,14 @@ const rootRouter = [
         path: '/layout',
         isAuthenticated: true,
         exact: true,
+        name: '首页',
         redirect: '/layout/coupons', // 默认跳转到此路由 可调整...
         // redirect: '/basis/info', // 默认跳转到此路由 可调整...
       },
       {
         path: '/layout/401',
         isAuthenticated: true,
+        name: '401',
         exact: false,
         component: loadable(() => import('../components/stateless/Exception/exception401'), {
           fallback: <Loading />,
@@ -36,6 +39,7 @@ const rootRouter = [
       {
         path: '/layout/403',
         isAuthenticated: true,
+        name: '403',
         exact: false,
         component: loadable(() => import('../components/stateless/Exception/exception403'), {
           fallback: <Loading />,
@@ -44,6 +48,7 @@ const rootRouter = [
       {
         path: '/layout/404',
         isAuthenticated: true,
+        name: '404',
         exact: false,
         component: loadable(() => import('../components/stateless/Exception/exception404'), {
           fallback: <Loading />,
@@ -52,6 +57,7 @@ const rootRouter = [
       {
         path: '/layout/500',
         isAuthenticated: true,
+        name: '500',
         exact: false,
         component: loadable(() => import('../components/stateless/Exception/exception500'), {
           fallback: <Loading />,
