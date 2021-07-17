@@ -1,4 +1,4 @@
-import { INCREMENT } from '@/actions/constant/counter'
+import { INCREMENT } from '@src/actions/constant/counter'
 
 const initialState = {
   number: 0,

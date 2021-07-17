@@ -15,4 +15,5 @@ module.exports = {
   stateful: resolve(__dirname, '../src/components/stateful'),
   hooks: resolve(__dirname, '../src/components/hooks'),
   container: resolve(__dirname, '../src/components/container'),
+  assets: resolve(__dirname, '../src/assets'),
 }

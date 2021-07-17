@@ -1,6 +1,6 @@
 import React from 'react'
 import loadable from '@loadable/component'
-import Loading from 'stateless/Loading'
+import Loading from '@stateless/Loading'
 
 import basicRouter from './basic'
 import couponsRouter from './coupons'

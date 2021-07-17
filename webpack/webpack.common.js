@@ -33,11 +33,12 @@ const config = {
   resolve: {
     extensions: ['*', '.js', '.jsx'],
     alias: {
-      '@': paths.src,
-      stateless: paths.stateless,
-      stateful: paths.stateful,
-      hooks: paths.hooks,
-      container: paths.container,
+      '@src': paths.src,
+      '@stateless': paths.stateless,
+      '@stateful': paths.stateful,
+      '@hooks': paths.hooks,
+      '@container': paths.container,
+      '@assets': paths.assets,
     },
   },
 

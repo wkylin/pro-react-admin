@@ -1,5 +1,5 @@
 import React from 'react'
-import BasicInfo from 'container/basicInfo'
+import BasicInfo from '@container/basicInfo'
 
 const Basic = () => {
   return (

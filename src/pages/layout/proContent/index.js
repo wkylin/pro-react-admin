@@ -1,8 +1,8 @@
 import React from 'react'
 import { Layout, Breadcrumb } from 'antd'
 // import { Switch } from 'react-router-dom'
-import CustomSwitch from 'stateless/CustomSwitch'
-import RouteWithSubRoutes from 'stateless/RouteWithSubRoutes'
+import CustomSwitch from '@stateless/CustomSwitch'
+import RouteWithSubRoutes from '@stateless/RouteWithSubRoutes'
 
 import styles from './index.module.less'
 

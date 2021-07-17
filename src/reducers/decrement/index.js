@@ -1,4 +1,4 @@
-import rootAction from '@/actions'
+import rootAction from '@src/actions'
 
 const initialState = {
   deNumber: 0,

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import PromotionDeduct from 'container/promoDeduct'
+import PromotionDeduct from '@container/promoDeduct'
 
 const PromDeduct = () => {
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Alert } from 'antd'
 
-import { httpFetch } from '@/service'
+import { httpFetch } from '@src/service'
 
 const HomeCoupons = () => {
   useEffect(() => {

@@ -1,9 +1,9 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import rootAction from '@/actions'
+import rootAction from '@src/actions'
 
-import { baseUrl, useFetch } from '@/service'
+import { baseUrl, useFetch } from '@src/service'
 
 const Home = () => {
   const inReducer = useSelector((state) => state.inReducer)
