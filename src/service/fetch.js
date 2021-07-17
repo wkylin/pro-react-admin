@@ -129,7 +129,6 @@ const handleSuccessResult = (result, isShowError) => {
 }
 
 const handleErrorResponse = (reject, response, error, isShowError) => {
-  debugger
   let msg = ''
   switch (response.status) {
     case 401:
@@ -197,8 +196,6 @@ const handleFetchData = (url, options) => {
         // for (const [key, value] of response.headers.entries()) {
         //   console.log(`response ${key} : ${value}`)
         // }
-
-        debugger
 
         const contentType = response.headers.get('Content-Type')
         if (!contentType) {
