@@ -15,7 +15,10 @@ const basicActRouter = [
         path: '/basis',
         isAuthenticated: true,
         exact: true,
-        redirect: '/basis/info',
+        // redirect: '/basis/info', // 默认跳转路由
+        component: loadable(() => import('../../pages/demo'), {
+          fallback: <Loading />,
+        }),
       },
       {
         path: '/basis/404',

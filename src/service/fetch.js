@@ -129,6 +129,7 @@ const handleSuccessResult = (result, isShowError) => {
 }
 
 const handleErrorResponse = (reject, response, error, isShowError) => {
+  debugger
   let msg = ''
   switch (response.status) {
     case 401:
@@ -197,6 +198,8 @@ const handleFetchData = (url, options) => {
         //   console.log(`response ${key} : ${value}`)
         // }
 
+        debugger
+
         const contentType = response.headers.get('Content-Type')
         if (!contentType) {
           handleErrorResponse(reject, response, null, isShowError)
@@ -236,6 +239,15 @@ const handleFetchData = (url, options) => {
         } else if (contentType.includes('text/html') || contentType.includes('text/plain')) {
           const resType = response.text()
           resType
+            .then((resBody) => {
+              handleSuccessResponse(resolve, reject, response, resBody, isShowError)
+            })
+            .catch((error) => {
+              handleErrorResponse(reject, response, error, isShowError)
+            })
+        } else {
+          response
+            .text()
             .then((resBody) => {
               handleSuccessResponse(resolve, reject, response, resBody, isShowError)
             })
