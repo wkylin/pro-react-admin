@@ -6,7 +6,6 @@
 4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
-7. YH Design [YHDesign](<[scripts](http://hlwyfb-dev.yh-design-doc.devgw.yonghui.cn/)>)
 
 ### 2. 开发环境
 
@@ -19,8 +18,6 @@ win: nvm-windows nodist nvs
 nvm install 14.16.1
 nvm use 14.16.1
 
-nrm add yonghui http://npm.yonghui.cn/repository/npm-group/
-nrm use yonghui
 ```
 
 2. VSCode extension: 别名路径跳转
@@ -88,8 +85,8 @@ nrm use yonghui
 
 ### 3. Development
 
-1. git clone http://gitlab.yonghui.cn/operation-cp-hccx/promotion-manage-web.git
-2. cd promotion-manage-web
+1. git clone https://github.com/wkylin/promotion-web.git
+2. cd promotion-web
 3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
    - npm start
    - npm run dev:faker 与后端接口约定后，在没有提供接口时前端可以来模拟后端返回数据
