@@ -1,33 +1,153 @@
-### Technology Stack
+### 1. Technology Stack
 
 1. React: v17.0.2 [React](https://reactjs.org/)
 2. React Router: v5.2.0 [React Router](https://reactrouter.com/)
-3. Webpack:v5.31.0 [Webpack](https://webpack.js.org/)
+3. Webpack:v5.40.0 [Webpack](https://webpack.js.org/)
 4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
+7. YH Design [YHDesign](<[scripts](http://hlwyfb-dev.yh-design-doc.devgw.yonghui.cn/)>)
 
-### Development
+### 2. 开发环境
 
-1. git clone https://github.com/wkylin/promotion-web.git
+1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
+
+```bash
+mac: npm install -g nvm nrm
+win: nvm-windows nodist nvs
+
+nvm install 14.16.1
+nvm use 14.16.1
+
+nrm add yonghui http://npm.yonghui.cn/repository/npm-group/
+nrm use yonghui
+```
+
+2. VSCode extension: 别名路径跳转
+
+```
+    "alias-skip.mappings": {
+        "@src": "/src",
+        "@stateless": "/src/components/stateless",
+        "@stateful": "/src/components/stateful",
+        "@hooks": "/src/components/hooks",
+        "@container": "/src/components/container",
+        "@assets": "/src/components/assets",
+    }
+```
+
+3. WebStorm 别名跳转设置： Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
+
+4. 使用标准 commit 生成 changelog 标准化
+   - [conventional-changelog](https://github.com/conventional-changelog)
+   - [standard-version](https://github.com/conventional-changelog/standard-version)
+   - npm install
+   - package.json
+   - git commit
+   - conventional-changelog-cli
+   - standard-version
+     - changes
+     - git add . / git cz
+     - npm run release
+     ```
+     npm install --save-dev commitizen
+     npm install --save-dev cz-conventional-changelog
+     ```
+     ```
+     "config": {
+       "commitizen": {
+         "path": "cz-conventional-changelog"
+       }
+     }
+     ```
+     ```
+     git add .
+     git cz or cz
+     ```
+     ```
+     npm install -g conventional-changelog-cli
+     conventional-changelog -p angular -i CHANGELOG.md -s
+     ```
+     ```
+     npm install -g standard-version
+     "release": "standard-version --tag-prefix \"publish/\""
+     ```
+5. 一次 changelog 的过程如下：
+
+   - 修改代码
+   - git add . / git cz
+   - 修改 package.json 中的 version
+   - 运行生成 changelog 命令，最好将命令集成到 package.json 的 scripts 中
+   - 手动 Tag， Push 等
+
+6. Mock Server:
+   ```
+   // mock index.js
+   npm run dev:faker
+   ```
+
+### 3. Development
+
+1. git clone http://gitlab.yonghui.cn/operation-cp-hccx/promotion-manage-web.git
 2. cd promotion-manage-web
-3. npm start
+3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
+   - npm start
+   - npm run dev:faker 与后端接口约定后，在没有提供接口时前端可以来模拟后端返回数据
 
-### Commit message
+### 4. Commit message
 
-1. <type>(<scope>): <subject>
-2. "type-enum": ["build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test"],
+1. The commit message should be structured as follows:
+   ```
+     <type>[optional scope]: <description>
+     <BLANK LINE>
+     [optional body]
+     <BLANK LINE>
+     [optional footer(s)]
+   ```
+2. "type-enum": ["build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test"]
+3. type-enum 说明文档：
 
-### React Code Splitting Library
+   - build: 依赖调整
+     影响构建系统或外部依赖的更改 (示例作用域：gulp, broccoli, npm）
+   - chore: 杂务处理
+     其他不会修改源文件或者测试文件的更改
+   - ci: 脚本变更
+     对 CI 配置文件和脚本的更改（示例作用域： Travis, Circle, BrowserStack, SauceLabs)
+   - docs: 文档变更
+     添加或者更新文档
+   - feat: 添加功能
+     引入新的特性
+   - fix 错误修复
+     修复 bug
+   - perf: 性能优化
+     更改代码以提高性能
+   - refactor: 代码重构
+     即不是修复 Bug，也不是添加特性的代码更改
+   - revert: 恢复版本
+     恢复到上一个版本
+   - style: 格式调整
+     不会影响代码含义的更改（空格，格式缺少分号等）
+   - test: 更新测试
+     添加或者更新测试
+
+4. [https://www.npmjs.com/package/devmoji](https://www.npmjs.com/package/devmoji)
+5. [https://gitmoji.dev/](https://gitmoji.dev/)
+
+### 5. React Code Splitting Library
 
 1. [Loadable Components](https://loadable-components.com/)
 
-### TODO
+### 6. Deployment
+
+1. Deployment: [Deployment] (https://create-react-app.dev/docs/deployment)
+
+### 7. TODO
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
+3. Mock Server (OK)
 
-### ESLint Prettier Husky EditorConfig
+### 8. ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -43,22 +163,9 @@
 
    Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
 
-   Enable Git hooks: npx husky install [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
-
 4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
 
-   [What is commitlint](https://github.com/conventional-changelog/commitlint/#what-is-commitlint)
    CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
-
-   Setting:
-
-   #### Install commitlint cli and conventional config
-
-   npm install --save-dev @commitlint/{config-conventional,cli}
-
-   #### For Windows:
-
-   npm install --save-dev @commitlint/config-conventional @commitlint/cli
 
 5. Editor Config: [EditorConfig](https://EditorConfig.org)
    EditorConfig helps maintain consistent coding styles for multiple developers working on the same project across various editors and IDEs.
@@ -66,11 +173,11 @@
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
 7. Active hooks: npx husky install
-   [https://prettier.io/docs/en/precommit.html](https://prettier.io/docs/en/precommit.html)
+   [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
 
-### CSS Modules
+### 9. CSS Modules
 
 A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
 
@@ -79,21 +186,32 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 2. StyleLint: [StyleLint](https://stylelint.io/)
    npx stylelint --help
 
-### Plugins
+### 10. CI/CD 自动化构建
+
+### 11. 自动化测试
+
+### 12. Sentry 接入
+
+### 13. Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 
-### VSCode Extensions
+### 14. VSCode Extensions
 
 1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
-### HTTP
+### 15. HTTP
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
-### Code Contributors
+### 16. Code Contributors
 
-### [License](LICENSE)
+### 17. [License](LICENSE)
 
 Copyright (c) 2021 Promotion Web
 Licensed under the [Apache License](LICENSE).
+
+### NPM
+
+npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]

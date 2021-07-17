@@ -13,7 +13,12 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
-const dotEnv = process.env.BUILD_GOAL === 'dev' ? '.env.development' : process.env.BUILD_GOAL === 'prod' ? '.env.production' : '.env.test'
+const dotEnv =
+  process.env.BUILD_GOAL === 'dev'
+    ? '.env.development'
+    : process.env.BUILD_GOAL === 'prod'
+    ? '.env.production'
+    : '.env.test'
 
 const config = {
   entry: {
@@ -91,6 +96,14 @@ const config = {
           },
           {
             loader: 'less-loader',
+            options: {
+              lessOptions: {
+                modifyVars: {
+                  'primary-color': '#1DA57A', // #1DA57A 1890FF
+                },
+                javascriptEnabled: true,
+              },
+            },
           },
         ],
       },
