@@ -14,7 +14,7 @@ module.exports = merge(common, {
     compress: false,
     inline: true,
     hot: true,
-    port: 8090,
+    port: 8080,
     open: true,
     clientLogLevel: 'silent',
     disableHostCheck: true,

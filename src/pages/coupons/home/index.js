@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import { Alert } from 'antd'
 
-import { httpFetch } from '@src/service'
+import { getFetch } from '@src/service'
 
 const HomeCoupons = () => {
   useEffect(() => {
-    httpFetch
-      .getFetch('/wkylin/angular-json-server/react')
+    getFetch('/wkylin/angular-json-server/react')
       .then((res) => console.log('res==>>', res))
       .catch((error) => console.log(error))
   }, [])

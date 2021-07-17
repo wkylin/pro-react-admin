@@ -3,33 +3,55 @@
  * url： api endpoint
  * opts: 参见 fetch.js
  */
+import { useEffect, useState } from 'react'
+import { reqFetch } from './fetch'
 
-import { useState, useEffect } from 'react'
-import httpFetch from './fetch'
-
-function useReqFetch(url, opts) {
-  const [response, setResponse] = useState(null)
+export const useReqFetch = (url, opts) => {
+  const [res, setRes] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const [error, setError] = useState(false)
+
+  const useAsyncFetch = async (canceled, controller) => {
+    try {
+      if (loading) return
+      setLoading(true)
+      const resData = await reqFetch(url, {
+        ...opts,
+        controller,
+      })
+      if (!canceled) {
+        setRes(resData)
+      }
+    } catch (err) {
+      setError(true)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   useEffect(() => {
-    setLoading(true)
     let canceled = false
-    httpFetch
-      .reqFetch(url, opts)
-      .then((res) => {
-        if (!canceled) {
-          setResponse(res)
-        }
-      })
-      .catch(() => {
-        setHasError(true)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-    return () => (canceled = true)
-  }, [url, opts])
-  return [response, loading, hasError]
+    const controller = new AbortController()
+    useAsyncFetch(canceled, controller)
+    return () => {
+      setRes(() => {}) // return undefined
+      canceled = true
+      controller.abort()
+    }
+  }, [])
+  return [res, loading, error]
 }
 
-export default useReqFetch
+export const usePostFetch = (url, opts) => {
+  return useReqFetch(url, {
+    ...opts,
+    method: 'POST',
+  })
+}
+
+export const useGetFetch = (url, opts) => {
+  return useReqFetch(url, {
+    ...opts,
+    method: 'GET',
+  })
+}
