@@ -204,10 +204,12 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 ### 16. Code Contributors
 
-### 17. [License](LICENSE)
+### 17. [Choose A License](https://choosealicense.com/)
+
+1. [MIT](https://choosealicense.com/licenses/mit/)
 
 Copyright (c) 2021 Promotion Web
-Licensed under the [Apache License](LICENSE).
+Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
 ### NPM
 

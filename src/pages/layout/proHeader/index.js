@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Layout, Space, Dropdown, Menu } from 'antd'
+import { Layout, Space, Dropdown, Menu, Tag } from 'antd'
 import { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from '@ant-design/icons'
 import { useHistory } from 'react-router-dom'
 import PrimaryNav from '../primaryNav'
@@ -15,7 +15,7 @@ const ProHeader = () => {
   return (
     <Layout.Header className={styles.header}>
       <div className={styles.logo} onClick={() => redirectTo('/')}>
-        Pro React
+        Pro React <Tag color="cyan">{process.env.DEPLOYED_ENV}</Tag>
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>

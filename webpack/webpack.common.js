@@ -1,5 +1,5 @@
 const path = require('path')
-const webpack = require('webpack')
+// const webpack = require('webpack')
 const paths = require('./paths')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -9,6 +9,11 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+const WebpackBar = require('webpackbar')
+
 const isDev = process.env.NODE_ENV === 'development'
 
 const UNABLE_ANALYZE = 0
@@ -54,21 +59,31 @@ const config = {
       filename: 'index.html',
       inject: 'body',
     }),
-    new webpack.ProgressPlugin({
-      activeModules: false,
-      entries: true,
-      handler(percentage, message, ...args) {
-        console.info(`${parseInt(percentage * 100)}%`, message, ...args)
-      },
-      modules: true,
-      modulesCount: 5000,
-      profile: false,
-      dependencies: true,
-      dependenciesCount: 10000,
-      percentBy: null,
-    }),
+    // new webpack.ProgressPlugin({
+    //   activeModules: false,
+    //   entries: true,
+    //   handler(percentage, message, ...args) {
+    //     console.info(`${parseInt(percentage * 100)}%`, message, ...args)
+    //   },
+    //   modules: true,
+    //   modulesCount: 5000,
+    //   profile: false,
+    //   dependencies: true,
+    //   dependenciesCount: 10000,
+    //   percentBy: null,
+    // }),
     new ESLintPlugin(),
     new AntdDayjsWebpackPlugin(),
+    new CaseSensitivePathsPlugin(),
+    new CircularDependencyPlugin({
+      exclude: /node_modules/,
+      include: /src/,
+      failOnError: true,
+      allowAsyncCycles: false,
+      cwd: process.cwd(),
+    }),
+    new NodePolyfillPlugin(),
+    new WebpackBar(),
   ],
   module: {
     rules: [

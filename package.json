@@ -14,7 +14,7 @@
   "sideEffects": true,
   "scripts": {
     "start": "cross-env BUILD_GOAL=dev NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
-    "dev:faker": "concurrently \"npm run start\" \"npm run faker\"",
+    "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
     "build:prod": "cross-env BUILD_GOAL=prod NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:test": "cross-env BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "analyze:build": "cross-env NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js",
@@ -39,7 +39,7 @@
     "prepare": "husky install"
   },
   "author": "promotion",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.14.3",
     "@babel/core": "^7.14.3",
@@ -58,6 +58,8 @@
     "babel-plugin-import": "^1.13.3",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-plugin-transform-remove-debugger": "^6.9.4",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
+    "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "concurrently": "^6.2.0",
     "copy-webpack-plugin": "^8.1.1",
@@ -87,6 +89,7 @@
     "lint-staged": "^11.0.0",
     "meow": "^8.1.2",
     "mini-css-extract-plugin": "^1.4.1",
+    "node-polyfill-webpack-plugin": "^1.1.4",
     "nodemon": "^2.0.12",
     "postcss": "^8.2.15",
     "postcss-loader": "^5.2.0",
@@ -105,7 +108,8 @@
     "webpack-bundle-analyzer": "^4.4.0",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2",
-    "webpack-merge": "^5.7.3"
+    "webpack-merge": "^5.7.3",
+    "webpackbar": "^5.0.0-3"
   },
   "dependencies": {
     "@loadable/component": "^5.15.0",
