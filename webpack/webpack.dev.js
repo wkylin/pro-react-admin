@@ -3,11 +3,16 @@ const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+const portfinder = require('portfinder')
+
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+// const smp = new SpeedMeasurePlugin()
 
 const jsRegex = /\.(js)$/
-module.exports = merge(common, {
+
+const devWebpackConfig = merge(common, {
   mode: 'development',
-  // devtool: 'source-map',
+  devtool: 'source-map',
   devServer: {
     historyApiFallback: true,
     contentBase: path.resolve(__dirname, '../dist'),
@@ -62,4 +67,19 @@ module.exports = merge(common, {
     providedExports: true,
     usedExports: true,
   },
+})
+
+// module.exports = smp.wrap(devWebpackConfig)
+// module.exports = devWebpackConfig
+
+module.exports = new Promise((resolve, reject) => {
+  // @funboxteam/free-port-finder
+  portfinder.getPort((err, port) => {
+    if (err) {
+      reject(err)
+      return
+    }
+    devWebpackConfig.devServer.port = port
+    resolve(devWebpackConfig)
+  })
 })
