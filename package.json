@@ -36,7 +36,9 @@
     "serve:test": "yarn run build:test && serve -s dist -l 5100",
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d dist",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "process": "node webpack/process",
+    "dev:start": "node webpack/server --stats-children --stats-error-details"
   },
   "author": "promotion",
   "license": "MIT",

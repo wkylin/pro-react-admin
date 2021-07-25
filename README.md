@@ -208,6 +208,10 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 1. [MIT](https://choosealicense.com/licenses/mit/)
 
+### 18. Server: Dev, Test, UAT(Live), Staging, Demo, Production
+
+1. [Server Info](https://www.gratasoftware.com/what-is-each-server-for-development-test-uat-or-staging-demo-and-production/)
+
 Copyright (c) 2021 Promotion Web
 Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
