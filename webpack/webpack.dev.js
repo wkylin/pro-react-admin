@@ -12,7 +12,8 @@ const jsRegex = /\.(js)$/
 
 const devWebpackConfig = merge(common, {
   mode: 'development',
-  devtool: 'source-map',
+  // devtool: 'source-map',
+  devtool: 'eval-cheap-module-source-map',
   devServer: {
     historyApiFallback: true,
     contentBase: path.resolve(__dirname, '../dist'),
@@ -74,12 +75,18 @@ const devWebpackConfig = merge(common, {
 
 module.exports = new Promise((resolve, reject) => {
   // @funboxteam/free-port-finder
-  portfinder.getPort((err, port) => {
-    if (err) {
-      reject(err)
-      return
+  portfinder.getPort(
+    {
+      port: 8080, // 默认8080端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
+      stopPort: 65535, // maximum port
+    },
+    (err, port) => {
+      if (err) {
+        reject(err)
+        return
+      }
+      devWebpackConfig.devServer.port = port
+      resolve(devWebpackConfig)
     }
-    devWebpackConfig.devServer.port = port
-    resolve(devWebpackConfig)
-  })
+  )
 })
