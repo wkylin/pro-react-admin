@@ -15,7 +15,8 @@ const regReact =
 
 module.exports = merge(common, {
   mode: 'production',
-  devtool: false,
+  // devtool: false,
+  devtool: 'cheap-module-source-map',
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',

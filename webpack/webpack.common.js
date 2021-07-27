@@ -1,6 +1,7 @@
 const path = require('path')
 // const webpack = require('webpack')
 const paths = require('./paths')
+const chalk = require('chalk')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -24,6 +25,9 @@ const dotEnv =
     : process.env.BUILD_GOAL === 'prod'
     ? '.env.production'
     : '.env.test'
+
+const root = process.cwd()
+console.log(chalk.blue(`root: ${root}`))
 
 const config = {
   entry: {
