@@ -38,7 +38,8 @@
     "deploy": "gh-pages -d dist",
     "prepare": "husky install",
     "process": "node webpack/process",
-    "dev:start": "node webpack/server --stats-children --stats-error-details"
+    "dev:server": "node webpack/server --stats-children",
+    "pm2:server": "pm2 start webpack/server.js"
   },
   "author": "promotion",
   "license": "MIT",
