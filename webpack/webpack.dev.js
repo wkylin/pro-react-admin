@@ -5,6 +5,8 @@ const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const portfinder = require('portfinder')
 
+// const DashboardPlugin = require('webpack-dashboard/plugin')
+
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
 
@@ -62,7 +64,11 @@ const devWebpackConfig = merge(common, {
       },
     ],
   },
-  plugins: [new ReactRefreshWebpackPlugin(), new webpack.HotModuleReplacementPlugin()].filter(Boolean),
+  plugins: [
+    new ReactRefreshWebpackPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    // new DashboardPlugin()
+  ].filter(Boolean),
   optimization: {
     providedExports: true,
     usedExports: true,
