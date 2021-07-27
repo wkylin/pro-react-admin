@@ -143,6 +143,7 @@ nvm use 14.16.1
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
 3. Mock Server (OK)
+   - [msw](https://github.com/mswjs/msw)
 
 ### 8. ESLint Prettier Husky EditorConfig
 
@@ -185,7 +186,12 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 ### 10. CI/CD 自动化构建
 
-### 11. 自动化测试
+### 11. Test
+
+1. [Jest](https://jestjs.io/)
+2. [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
+3. [React Hooks Testing Library](https://github.com/testing-library/react-hooks-testing-library)
+4. [Cypress](https://www.cypress.io/)
 
 ### 12. Sentry 接入
 

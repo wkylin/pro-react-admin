@@ -29,7 +29,7 @@ export const useReqFetch = (url, opts) => {
     }
   }
 
-  useEffect(() => {
+  const reFetch = useCallback(() => {
     let canceled = false
     const controller = new AbortController()
     useAsyncFetch(canceled, controller)
@@ -38,7 +38,10 @@ export const useReqFetch = (url, opts) => {
       canceled = true
       controller.abort()
     }
-  }, [])
+  }, [url, opts])
+
+  useEffect(reFetch, [])
+
   return [res, loading, error]
 }
 
