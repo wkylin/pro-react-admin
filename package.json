@@ -38,8 +38,8 @@
     "deploy": "gh-pages -d dist",
     "prepare": "husky install",
     "process": "node webpack/process",
-    "dev:server": "node webpack/server --stats-children",
-    "pm2:server": "pm2 start webpack/server.js"
+    "dev:server": "node webpack/dev.server --stats-children",
+    "pm2:server": "concurrently -r \"pm2 flush\" \"pm2 start webpack/dev.server.js --name=promotion\" \"pm2 logs --raw promotion --lines 200\""
   },
   "author": "promotion",
   "license": "MIT",
