@@ -14,6 +14,14 @@
 
 import { message } from 'antd'
 import { suffix } from './suffix'
+import fetch from 'cross-fetch'
+// require('isomorphic-fetch')
+
+// fetch polyfill
+// https://github.com/node-fetch/node-fetch
+// https://github.com/matthew-andrews/isomorphic-fetch
+// https://github.com/lquixada/cross-fetch
+// https://github.com/github/fetch
 
 // fetch(url, initParams).then((res) => res.json).then((body) = body).catch((error) => error)
 // const response = fetch(url, {
