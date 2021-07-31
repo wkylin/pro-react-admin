@@ -37,6 +37,7 @@
     "predeploy": "npm run build:prod",
     "deploy": "gh-pages -d dist",
     "prepare": "husky install",
+    "release": "standard-version --tag-prefix \"publish/\"",
     "process": "node webpack/process",
     "dev:server": "node webpack/dev.server --stats-children",
     "pm2:server": "concurrently -r \"pm2 flush\" \"pm2 start webpack/dev.server.js --name=promotion\" \"pm2 logs --raw promotion --lines 200\""
@@ -67,11 +68,13 @@
     "chalk": "^2.4.2",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "commitizen": "^4.2.4",
     "concurrently": "^6.2.0",
     "copy-webpack-plugin": "^8.1.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.2.0",
     "css-minimizer-webpack-plugin": "^3.0.0",
+    "cz-conventional-changelog": "^3.2.0",
     "dotenv-webpack": "^7.0.2",
     "es6-promise": "^4.2.8",
     "eslint": "^7.23.0",
@@ -110,6 +113,7 @@
     "react-test-renderer": "^17.0.2",
     "serve": "^11.3.2",
     "speed-measure-webpack-plugin": "^1.5.0",
+    "standard-version": "^9.3.1",
     "style-loader": "^2.0.0",
     "stylelint": "^9.3.0",
     "stylelint-config-standard": "^18.3.0",
@@ -156,5 +160,10 @@
       "npm run stylelint:fix",
       "npm run stylelint"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
