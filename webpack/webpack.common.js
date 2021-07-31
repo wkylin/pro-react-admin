@@ -48,6 +48,7 @@ const config = {
       '@hooks': paths.hooks,
       '@container': paths.container,
       '@assets': paths.assets,
+      '@utils': paths.utils,
     },
   },
 

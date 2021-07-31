@@ -3,7 +3,7 @@
  * url： api endpoint
  * opts: 参见 fetch.js
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { reqFetch } from './fetch'
 
 export const useReqFetch = (url, opts) => {
