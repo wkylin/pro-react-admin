@@ -273,13 +273,19 @@ const handleFetchData = (url, options) => {
 fetchIntercept.register({
   request: function (url, config) {
     // Modify the url or config here
-    // console.log('url', url)
-    return [url, config]
+    const cusConfig = {
+      ...config,
+      headers: {
+        ...config.headers,
+        'permissions-policy': 'interest-cohort=()',
+      },
+    }
+    return [url, cusConfig]
   },
 
   requestError: function (error) {
     // Called when an error occured during another 'request' interceptor call
-    console.log('req error', error)
+    // console.log('req error', error)
     return Promise.reject(error)
   },
 
