@@ -12,6 +12,7 @@ const app = new Koa()
 const router = new Router()
 app.use(bodyParser())
 app.use(cors())
+const portfinder = require('portfinder')
 
 const shops = require('./shops')
 const user = require('./app')
@@ -21,6 +22,20 @@ router.use('/app', user.routes())
 
 app.use(router.routes()).use(router.allowedMethods())
 
-app.listen(4000, () => {
-  console.log('koa server is listening to port 4000.')
-})
+portfinder.getPort(
+  {
+    port: 4000,
+    stopPort: 65535,
+  },
+  (err, port) => {
+    if (err) {
+      return
+    }
+    app.listen(port, 'localhost', (error, result) => {
+      if (error) {
+        console.log(error)
+      }
+      console.log(`Listening at localhost:${port}`)
+    })
+  }
+)
