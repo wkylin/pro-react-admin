@@ -4,7 +4,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [1.1.0](https://github.com/wkylin/promotion-web/compare/v1.0.0...v1.1.0) (2021-07-31)
 
-
 ### Features
 
 * aid fn ([42aea19](https://github.com/wkylin/promotion-web/commit/42aea19b51562afa68298107549fa6d8443d9b06))
@@ -33,7 +32,6 @@ All notable changes to this project will be documented in this file. See [standa
 * webpack ([55ee638](https://github.com/wkylin/promotion-web/commit/55ee638011830e63c3658c7d0a56e34febd10233))
 * webpack alias ([f29bcda](https://github.com/wkylin/promotion-web/commit/f29bcda113b041deaef7389536b55c138a52f1d8))
 * webpack package version ([6d96b00](https://github.com/wkylin/promotion-web/commit/6d96b005c17dabf20bffe370431b685127d1d81a))
-
 
 ### Bug Fixes
 
