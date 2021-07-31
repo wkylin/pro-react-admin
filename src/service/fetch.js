@@ -15,8 +15,9 @@
 import { message } from 'antd'
 import { suffix } from '@utils/suffix'
 import { getToken } from '@utils/token'
-import fetch from 'cross-fetch'
-// require('isomorphic-fetch')
+import fetchIntercept from 'fetch-intercept'
+// import fetch from 'cross-fetch'
+require('isomorphic-fetch')
 
 // fetch polyfill
 // https://github.com/node-fetch/node-fetch
@@ -95,7 +96,6 @@ const parseToQuery = (query) => {
 const initOptions = {
   method: 'GET', // POST, *GET,  PUT, DELETE
   headers: {
-    // Accept: 'application/json',
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8 application/x-www-form-urlencoded
     Authorization: getToken() ? `Bearer ${getToken()}` : null, // 携带token
   },
@@ -270,6 +270,32 @@ const handleFetchData = (url, options) => {
   })
 }
 
+fetchIntercept.register({
+  request: function (url, config) {
+    // Modify the url or config here
+    // console.log('url', url)
+    return [url, config]
+  },
+
+  requestError: function (error) {
+    // Called when an error occured during another 'request' interceptor call
+    console.log('req error', error)
+    return Promise.reject(error)
+  },
+
+  response: function (response) {
+    // Modify the reponse object
+    // console.log('response', response)
+    return response
+  },
+
+  responseError: function (error) {
+    // Handle an fetch error
+    // console.log('res error', error)
+    return Promise.reject(error)
+  },
+})
+
 export const reqFetch = (
   url,
   params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: undefined }
@@ -295,7 +321,7 @@ export const reqFetch = (
     timeout,
   }
 
-  // PUT DELETE
+  // GET POST PUT DELETE OPTION
   const isGet = method.toUpperCase() === 'GET'
   // const isPost = method.toUpperCase() === 'POST'
   const options = isGet ? defaultOptions : { ...defaultOptions, body: JSON.stringify(payload) }
