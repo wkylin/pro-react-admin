@@ -128,6 +128,7 @@
     "@sentry/react": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
     "antd": "^4.15.0",
+    "constate": "^3.3.0",
     "cookies-js": "^1.2.3",
     "cross-fetch": "^3.1.4",
     "dayjs": "^1.10.4",
