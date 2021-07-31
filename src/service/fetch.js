@@ -277,7 +277,7 @@ fetchIntercept.register({
       ...config,
       headers: {
         ...config.headers,
-        'permissions-policy': 'interest-cohort=()',
+        'Permissions-Policy': 'interest-cohort=()',
       },
     }
     return [url, cusConfig]
