@@ -6,6 +6,7 @@
 4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
+7. Fetch Api
 
 ### 2. 开发环境
 
@@ -30,6 +31,7 @@ nvm use 14.16.1
         "@hooks": "/src/components/hooks",
         "@container": "/src/components/container",
         "@assets": "/src/components/assets",
+        "@utils":"/src/utils"
     }
 ```
 
@@ -194,6 +196,8 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 4. [Cypress](https://www.cypress.io/)
 
 ### 12. Sentry 接入
+
+1. [Sentry](https://sentry.io/)
 
 ### 13. Plugins
 
