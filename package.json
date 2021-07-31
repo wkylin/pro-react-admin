@@ -131,7 +131,7 @@
     "@loadable/component": "^5.15.0",
     "@sentry/react": "^6.4.1",
     "@sentry/tracing": "^6.4.1",
-    "antd": "^4.15.0",
+    "antd": "^4.16.9",
     "constate": "^3.3.0",
     "cookies-js": "^1.2.3",
     "cross-fetch": "^3.1.4",
@@ -145,8 +145,7 @@
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
-    "sanitize.css": "^12.0.1",
-    "trim": "^1.0.1"
+    "sanitize.css": "^12.0.1"
   },
   "lint-staged": {
     "**/*": [
