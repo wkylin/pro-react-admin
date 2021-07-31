@@ -32,6 +32,8 @@
     "stylelint:fix": "stylelint --fix",
     "eslint": "eslint",
     "eslint:fix": "eslint --fix",
+    "standard": "standard src/**/*",
+    "standard:fix": "standard --fix src/**/*",
     "serve:prod": "yarn run build:prod && serve -s dist -l 5000",
     "serve:test": "yarn run build:test && serve -s dist -l 5100",
     "predeploy": "npm run build:prod",
@@ -42,8 +44,6 @@
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
-    "standard": "standard src/**/*",
-    "standard:fix": "standard --fix src/**/*",
     "process": "node webpack/process",
     "dev:server": "node webpack/dev.server --stats-children",
     "pm2:server": "concurrently -r \"pm2 flush\" \"pm2 start webpack/dev.server.js --name=promotion\" \"pm2 logs --raw promotion --lines 200\""
