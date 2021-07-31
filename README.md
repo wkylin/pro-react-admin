@@ -1,16 +1,17 @@
-### 1. Technology Stack
+# 1. Technology Stack
 
 1. React: v17.0.2 [React](https://reactjs.org/)
 2. React Router: v5.2.0 [React Router](https://reactrouter.com/)
 3. Webpack:v5.40.0 [Webpack](https://webpack.js.org/)
 4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
+5. Antd: v4.16.9 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
-7. Fetch Api
+7. Fetch Api [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+8. Koa Faker [Koa](https://koajs.com/)
 
-### 2. 开发环境
+## 2. 开发环境
 
-1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
+### 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
 
 ```bash
 mac: npm install -g nvm nrm
@@ -18,12 +19,11 @@ win: nvm-windows nodist nvs
 
 nvm install 14.16.1
 nvm use 14.16.1
-
 ```
 
-2. VSCode extension: 别名路径跳转
+### VSCode extension: 别名路径跳转
 
-```
+```bash
     "alias-skip.mappings": {
         "@src": "/src",
         "@stateless": "/src/components/stateless",
@@ -35,43 +35,42 @@ nvm use 14.16.1
     }
 ```
 
-3. WebStorm 别名跳转设置： Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
+### WebStorm 别名跳转设置
 
-4. 使用标准 commit 生成 changelog 标准化
-   - [conventional-changelog](https://github.com/conventional-changelog)
-   - [standard-version](https://github.com/conventional-changelog/standard-version)
-   - npm install
-   - package.json
-   - git commit
-   - conventional-changelog-cli
-   - standard-version
-     - changes
-     - git add . / git cz
-     - npm run release
-     ```
-     npm install --save-dev commitizen
-     npm install --save-dev cz-conventional-changelog
-     ```
-     ```
-     "config": {
-       "commitizen": {
-         "path": "cz-conventional-changelog"
-       }
-     }
-     ```
-     ```
-     git add .
-     git cz or cz
-     ```
-     ```
-     npm install -g conventional-changelog-cli
-     conventional-changelog -p angular -i CHANGELOG.md -s
-     ```
-     ```
-     npm install -g standard-version
-     "release": "standard-version --tag-prefix \"publish/\""
-     ```
-5. 一次 changelog 的过程如下：
+1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
+
+### 使用标准 commit 生成 changelog 标准化
+
+- [conventional-changelog](https://github.com/conventional-changelog)
+- [standard-version](https://github.com/conventional-changelog/standard-version)
+- npm install
+- package.json
+- git commit
+- conventional-changelog-cli
+- standard-version
+
+  - changes
+  - git add . / git cz
+  - npm run release
+
+  ```bash
+
+  npm install --save-dev commitizen
+  npm install --save-dev cz-conventional-changelog
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+  git add .
+  git cz or cz
+  npm install -g conventional-changelog-cli
+  conventional-changelog -p angular -i CHANGELOG.md -s
+  npm install -g standard-version
+  release: standard-version --tag-prefix publish
+  ```
+
+1. 一次 changelog 的过程如下：
 
    - 修改代码
    - git add . / git cz
@@ -79,30 +78,37 @@ nvm use 14.16.1
    - 运行生成 changelog 命令，最好将命令集成到 package.json 的 scripts 中
    - 手动 Tag， Push 等
 
-6. Mock Server:
-   ```
+2. Mock Server:
+
+   ```bash
    // mock index.js
    npm run dev:faker
    ```
 
 ### 3. Development
 
-1. git clone https://github.com/wkylin/promotion-web.git
-2. cd promotion-web
-3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
-   - npm start
-   - npm run dev:faker 与后端接口约定后，在没有提供接口时前端可以来模拟后端返回数据
+```bash
+  1. git clone https://github.com/wkylin/promotion-web.git
+  2. cd promotion-web
+  3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
+    - npm start
+    - npm run dev:faker 与后端接口约定后，在没有提供接口时前端可以来模拟后端返回数据
+    - npm run pm2:server
+    - npm run dev:server
+```
 
 ### 4. Commit message
 
 1. The commit message should be structured as follows:
-   ```
+
+   ```bash
      <type>[optional scope]: <description>
      <BLANK LINE>
      [optional body]
      <BLANK LINE>
      [optional footer(s)]
    ```
+
 2. "type-enum": ["build", "chore", "ci", "docs", "feat", "fix", "perf", "refactor", "revert", "style", "test"]
 3. type-enum 说明文档：
 
@@ -138,7 +144,7 @@ nvm use 14.16.1
 
 ### 6. Deployment
 
-1. Deployment: [Deployment] (https://create-react-app.dev/docs/deployment)
+1. Deployment: [Deployment](https://create-react-app.dev/docs/deployment)
 
 ### 7. TODO
 
@@ -163,7 +169,7 @@ nvm use 14.16.1
 
    Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
 
-4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
+4. Commit Lint: [Commit Lint](https://commitlint.js.org)
 
    CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
 
@@ -187,6 +193,12 @@ A CSS Module is a CSS file in which all class names and animation names are scop
    npx stylelint --help
 
 ### 10. CI/CD 自动化构建
+
+1. Github Pages
+
+```bash
+    npm run deploy
+```
 
 ### 11. Test
 
