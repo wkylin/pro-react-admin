@@ -182,6 +182,17 @@ nvm use 14.16.1
    [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
+9. Conflict eslint prettie Conditional (ternary) operator
+   ```bash
+   // lint-staged
+   "**/*": [
+     "npm run prettier:write"
+   ],
+   // .eslintrc.json
+   "extends": ["plugin:react/recommended", "standard", "prettier"],
+   // package.json
+   "prettier:write": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
+   ```
 
 ### 9. CSS Modules
 

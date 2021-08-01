@@ -48,7 +48,7 @@ const config = {
       '@hooks': paths.hooks,
       '@container': paths.container,
       '@assets': paths.assets,
-      '@utils': paths.utils,
+      // '@utils': paths.utils,
     },
   },
 
@@ -135,7 +135,7 @@ const config = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ['babel-loader'],
+        use: ['thread-loader', 'babel-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,

@@ -16,5 +16,5 @@ module.exports = {
   hooks: resolve(__dirname, '../src/components/hooks'),
   container: resolve(__dirname, '../src/components/container'),
   assets: resolve(__dirname, '../src/assets'),
-  utils: resolve(__dirname, '../src/utils'),
+  // utils: resolve(__dirname, '../src/utils'),
 }

@@ -13,8 +13,8 @@
  */
 
 import { message } from 'antd'
-import { suffix } from '@utils/suffix'
-import { getToken } from '@utils/token'
+import { suffix } from '../utils/suffix'
+import { getToken } from '../utils/token'
 import fetchIntercept from 'fetch-intercept'
 // import fetch from 'cross-fetch'
 require('isomorphic-fetch')
