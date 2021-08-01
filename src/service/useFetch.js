@@ -58,3 +58,24 @@ export const useGetFetch = (url, opts) => {
     method: 'GET',
   })
 }
+
+export const usePutFetch = (url, opts) => {
+  return useReqFetch(url, {
+    ...opts,
+    method: 'PUT',
+  })
+}
+
+export const useDeleteFetch = (url, opts) => {
+  return useReqFetch(url, {
+    ...opts,
+    method: 'DELETE',
+  })
+}
+
+export const usePatchFetch = (url, opts) => {
+  return useReqFetch(url, {
+    ...opts,
+    method: 'PATCH',
+  })
+}

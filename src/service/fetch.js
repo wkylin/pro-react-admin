@@ -94,7 +94,7 @@ const parseToQuery = (query) => {
 }
 
 const initOptions = {
-  method: 'GET', // POST, *GET,  PUT, DELETE
+  method: 'GET', // POST, *GET,  PUT, DELETE, PATCH, [HEAD, CONNECT, OPTIONS, TRACE]
   headers: {
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8 application/x-www-form-urlencoded
     Authorization: getToken() ? `Bearer ${getToken()}` : null, // 携带token
@@ -327,12 +327,14 @@ export const reqFetch = (
     timeout,
   }
 
-  // GET POST PUT DELETE OPTION
-  const isGet = method.toUpperCase() === 'GET'
-  // const isPost = method.toUpperCase() === 'POST'
-  const options = isGet ? defaultOptions : { ...defaultOptions, body: JSON.stringify(payload) }
+  // POST, *GET,  PUT, DELETE, PATCH, [HEAD, CONNECT, OPTIONS, TRACE]
+  const noReqBody = ['GET', 'CONNECT', 'HEAD', 'OPTIONS', 'TRACE']
 
-  const suffixPayload = isGet ? { ...payload } : {}
+  const isNoReqBody = noReqBody.includes(method.toUpperCase())
+
+  const options = isNoReqBody ? defaultOptions : { ...defaultOptions, body: JSON.stringify(payload) }
+
+  const suffixPayload = isNoReqBody ? { ...payload } : {}
 
   const signedPayload = suffix(suffixPayload)
 
@@ -353,6 +355,27 @@ export const getFetch = (url, params) => {
 export const postFetch = (url, params) => {
   return reqFetch(url, {
     method: 'POST',
+    ...params,
+  })
+}
+
+export const putFetch = (url, params) => {
+  return reqFetch(url, {
+    method: 'PUT',
+    ...params,
+  })
+}
+
+export const deleteFetch = (url, params) => {
+  return reqFetch(url, {
+    method: 'DELETE',
+    ...params,
+  })
+}
+
+export const patchFetch = (url, params) => {
+  return reqFetch(url, {
+    method: 'PATCH',
     ...params,
   })
 }
