@@ -1,12 +1,10 @@
 import { parse, stringify } from 'qs'
 
-const toString = Object.prototype.toString
-
 // Check env is browser or node
-export function getEnv() {
+export const getEnv = () => {
   let env
   // Only Node.JS has a process variable that is of [[Class]] process
-  if (typeof process !== 'undefined' && toString.call(process) === '[object process]') {
+  if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
     // For node use HTTP adapter
     env = 'NODE'
   }
@@ -16,23 +14,23 @@ export function getEnv() {
   return env
 }
 
-export function isArray(val) {
+export const isArray = (val) => {
   return typeof val === 'object' && Object.prototype.toString.call(val) === '[object Array]'
 }
 
-export function isURLSearchParams(val) {
+export const isURLSearchParams = (val) => {
   return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams
 }
 
-export function isDate(val) {
+export const isDate = (val) => {
   return typeof val === 'object' && Object.prototype.toString.call(val) === '[object Date]'
 }
 
-export function isObject(val) {
+export const isObject = (val) => {
   return val !== null && typeof val === 'object'
 }
 
-export function forEach2ObjArr(target, callback) {
+export const forEach2ObjArr = (target, callback) => {
   if (!target) return
 
   if (typeof target !== 'object') {
@@ -52,7 +50,7 @@ export function forEach2ObjArr(target, callback) {
   }
 }
 
-export function getParamObject(val) {
+export const getParamObject = (val) => {
   if (isURLSearchParams(val)) {
     return parse(val.toString(), { strictNullHandling: true })
   }
@@ -62,6 +60,14 @@ export function getParamObject(val) {
   return val
 }
 
-export function reqStringify(val) {
+export const reqStringify = (val) => {
   return stringify(val, { arrayFormat: 'repeat', strictNullHandling: true })
+}
+
+export const getType = (obj) => {
+  let type = typeof obj
+  if (type !== 'object') {
+    return type
+  }
+  return Object.prototype.toString.call(obj).replace(/^$/, '$1')
 }
