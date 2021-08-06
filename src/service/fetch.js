@@ -112,10 +112,10 @@ const initOptions = {
 
 const handleFailedResult = (result, error, isShowError) => {
   if (result.code !== 0 && isShowError) {
-    const errMsg = result.message || result.error || error.message
-    const errStatus = result.status ? result.status : error.name
+    const errMsg = result.message || result.error || (error && error.message)
+    const errStatus = result.status ? result.status : error && error.name
     const errStr = `${result.code ? result.code : errStatus}: ${errMsg}`
-    if (error.name !== 'AbortError') {
+    if (!error || (error && error.name !== 'AbortError')) {
       message.error(errStr, 2)
     }
   }
@@ -208,8 +208,9 @@ const handleFetchData = (url, options) => {
         // }
 
         const contentType = response.headers.get('Content-Type')
-        if (!contentType) {
+        if (!response.ok && !contentType) {
           handleErrorResponse(reject, response, null, isShowError)
+          return
         }
 
         if (contentType.includes('application/json')) {

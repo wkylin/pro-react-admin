@@ -113,9 +113,6 @@ const config = {
             },
           },
           {
-            loader: 'postcss-loader',
-          },
-          {
             loader: 'less-loader',
             options: {
               lessOptions: {
@@ -126,6 +123,14 @@ const config = {
               },
             },
           },
+          // {
+          //   loader: 'postcss-loader',
+          //   options: {
+          //     postcssOptions: {
+          //       plugins: [['postcss-preset-env']],
+          //     },
+          //   },
+          // },
         ],
       },
       {

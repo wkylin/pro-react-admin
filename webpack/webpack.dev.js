@@ -6,7 +6,6 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const portfinder = require('portfinder')
 
 // const DashboardPlugin = require('webpack-dashboard/plugin')
-
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
 
