@@ -142,6 +142,7 @@
     "stylelint-config-standard": "^22.0.0",
     "terser-webpack-plugin": "^5.1.2",
     "thread-loader": "^3.0.4",
+    "tree-node-cli": "^1.4.0",
     "typescript": "^4.2.4",
     "webpack": "^5.45.1",
     "webpack-bundle-analyzer": "^4.4.1",

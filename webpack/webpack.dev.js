@@ -82,7 +82,7 @@ module.exports = new Promise((resolve, reject) => {
   // @funboxteam/free-port-finder
   portfinder.getPort(
     {
-      port: 8080, // 默认8080端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
+      port: 9000, // 默认9000端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
       stopPort: 65535, // maximum port
     },
     (err, port) => {

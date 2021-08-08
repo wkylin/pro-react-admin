@@ -251,3 +251,107 @@ Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2
 ### NPM
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
+
+### Nginx
+
+1. Nginx install
+
+   ```bash
+    brew install nginx
+    brew reinstall nginx
+
+    /usr/local/var/www
+    /usr/local/etc/nginx/nginx.conf
+    /usr/local/etc/nginx/servers/
+
+    brew services list
+    brew services start nginx
+    brew services stop nginx
+    brew services restart nginx
+   ```
+
+2. Nginx.conf
+
+   ```bash
+   server {
+    listen       8081;
+    #server_name  localhost;
+    server_name  www.promotion-web.com;
+
+    location / {
+        root   /usr/local/var/www/promotion-web;
+        index  index.html index.htm;
+        try_files  $uri $uri/ /index.html @rewrites;
+        expires -1;
+        add_header Cache-Control no-cache;
+        # proxy_pass http://localhost:3000;
+    }
+    # 接口转发，如果需要的话
+    #location ~ ^/api {
+    #  proxy_pass http://www.wklin.com;
+    #}
+    location @rewrites {
+      rewrite ^(.+)$ /index.html break;
+    }
+    # 或者全部重定向
+    # return 301 https://$server_name$request_uri;
+   }
+
+    # SwitchHosts!
+    192.168.1.101 www.promotion-web.com
+   ```
+
+3. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
+
+#### Tree Node Cli
+
+1. npm install -g tree-node-cli
+2. tree -L 2 -I "node_modules" -r -F
+3. tree node
+
+   ```bash
+    .
+    ├── webpack/
+    │   ├── webpack.prod.js
+    │   ├── webpack.dev.server.js
+    │   ├── webpack.dev.js
+    │   ├── webpack.common.js
+    │   ├── process.js
+    │   ├── paths.js
+    │   └── dev.server.js
+    ├── src/
+    │   ├── utils/
+    │   ├── styles/
+    │   ├── store/
+    │   ├── service/
+    │   ├── routers/
+    │   ├── reducers/
+    │   ├── pages/
+    │   ├── index.js
+    │   ├── components/
+    │   ├── assets/
+    │   ├── actions/
+    │   └── App.js
+    ├── public/
+    │   ├── robots.txt
+    │   ├── manifest.json
+    │   ├── index.ejs
+    │   └── favicon.ico
+    ├── postcss.config.js
+    ├── package.json
+    ├── package-lock.json
+    ├── faker/
+    │   ├── utils/
+    │   ├── shops/
+    │   ├── index.js
+    │   └── app/
+    ├── docker-compose.yml
+    ├── dist/
+    │   ├── static/
+    │   ├── index.html
+    │   └── favicon.ico
+    ├── babel.config.js
+    ├── README.md
+    ├── Dockerfile
+    └── CHANGELOG.md
+   ```
