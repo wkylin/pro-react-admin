@@ -7,7 +7,7 @@ function NoFundPage() {
   console.log('useMatch', JSON.stringify(useRouteMatch(), null, 2))
   useEffect(() => {
     history.push(`${url}/404`)
-  }, [path])
+  }, [path, url, history])
   return null
 }
 const CustomSwitch = (props) => {

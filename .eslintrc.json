@@ -17,7 +17,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint", "react-hooks"],
   "rules": {
     "prettier/prettier": "off",
     "semi": "off",
@@ -29,6 +29,8 @@
     "no-debugger": "off",
     "react/prop-types": "off",
     "no-extra-parens": "off",
-    "eol-last": "off"
+    "eol-last": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }
