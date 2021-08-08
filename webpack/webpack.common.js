@@ -90,6 +90,7 @@ const config = {
     new NodePolyfillPlugin(),
     new WebpackBar(),
   ],
+  // target: 'web',
   module: {
     rules: [
       {

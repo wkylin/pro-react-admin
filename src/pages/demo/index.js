@@ -1,5 +1,5 @@
 import React from 'react'
-import ErrorBoundary from '@stateful/errorBoundary'
+import ErrorBoundary from '@stateful/ErrorBoundary'
 // import React, { useState, useEffect } from 'react'
 // import { reqFetch } from '@src/service'
 import { useReqFetch, useGetFetch } from '@src/service'
@@ -78,7 +78,7 @@ const ProDemo = () => {
       </Space>
 
       <h4>ErrorBoundary</h4>
-      <ErrorBoundary fallback={<h1>Oops!!! Something went wrong</h1>}>
+      <ErrorBoundary>
         <ShopsList />
       </ErrorBoundary>
     </>

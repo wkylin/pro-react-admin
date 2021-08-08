@@ -1,32 +1,33 @@
 import React from 'react'
 
+import { Button, Space } from 'antd'
 class ErrorBoundary extends React.Component {
-  state = { error: null }
-
+  state = { hasError: false }
   static getDerivedStateFromError(error) {
-    return { error }
+    return { hasError: true }
   }
-
   componentDidCatch(error, errorInfo) {
-    console.log(error, errorInfo)
+    // errorService.log({ error, errorInfo })
   }
 
-  retry = () => {
-    this.setState({ error: null })
+  triggerError = ({ error, errorInfo }) => {
+    // errorService.log({ error, errorInfo })
+    this.setState({ hasError: true })
   }
-
+  resetError = () => this.setState({ hasError: false })
   render() {
-    const { error } = this.state
-    const { children, fallback } = this.props
-
-    if (error) {
-      if (typeof fallback === 'function') {
-        return fallback(error, this.retry)
-      }
-
-      return fallback
+    if (this.state.hasError) {
+      return (
+        <div>
+          {/* <h1>Oops, we done goofed up</h1> */}
+          <Space>
+            <span>哎呀，我们搞砸了!!!</span>
+            <Button onClick={this.resetError}>Try again?</Button>
+          </Space>
+        </div>
+      )
     }
-    return children
+    return this.props.children
   }
 }
 
