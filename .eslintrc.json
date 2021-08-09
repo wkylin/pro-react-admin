@@ -17,9 +17,16 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks"],
+  "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
   "rules": {
-    "prettier/prettier": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "semi": "off",
     "no-use-before-define": "off",
     "comma-dangle": "off",
@@ -29,8 +36,6 @@
     "no-debugger": "off",
     "react/prop-types": "off",
     "no-extra-parens": "off",
-    "eol-last": "off",
-    "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "eol-last": "off"
   }
 }
