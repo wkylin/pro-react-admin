@@ -51,18 +51,42 @@ const config = {
       // '@utils': paths.utils,
     },
   },
-
+  target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      root: __dirname,
+      verbose: true,
+      dry: false,
+      exclude: [],
+      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../dist')],
+    }),
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),
     }),
     new HtmlWebpackPlugin({
-      title: isDev ? 'Pro React--dev' : 'Pro React --Prod',
+      title: isDev ? '促销中心--dev' : '促销中心',
       template: paths.public + '/index.ejs',
       favicon: paths.public + '/favicon.ico',
       filename: 'index.html',
       inject: 'body',
+      hash: true,
+      cache: false,
+      minify: isDev
+        ? false
+        : {
+            removeAttributeQuotes: true,
+            collapseWhitespace: true,
+            removeComments: true,
+            collapseBooleanAttributes: true,
+            collapseInlineTagWhitespace: true,
+            removeRedundantAttributes: true,
+            removeScriptTypeAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            minifyCSS: true,
+            minifyJS: true,
+            minifyURLs: true,
+            useShortDoctype: true,
+          },
     }),
     // new webpack.ProgressPlugin({
     //   activeModules: false,
@@ -77,7 +101,7 @@ const config = {
     //   dependenciesCount: 10000,
     //   percentBy: null,
     // }),
-    new ESLintPlugin(),
+    // new ESLintPlugin(),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     new CircularDependencyPlugin({
@@ -90,9 +114,12 @@ const config = {
     new NodePolyfillPlugin(),
     new WebpackBar(),
   ],
-  // target: 'web',
   module: {
     rules: [
+      {
+        test: /\.css$/,
+        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+      },
       {
         test: /\.less$/i,
         use: [
@@ -133,10 +160,6 @@ const config = {
           //   },
           // },
         ],
-      },
-      {
-        test: /\.css$/,
-        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.(js|jsx)$/,

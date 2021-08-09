@@ -21,7 +21,7 @@ const devWebpackConfig = merge(common, {
     compress: true,
     inline: true,
     hot: true,
-    port: 8080,
+    // port: 8080,
     open: true,
     clientLogLevel: 'silent',
     disableHostCheck: true,

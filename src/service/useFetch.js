@@ -6,36 +6,20 @@
 import { useEffect, useState, useCallback } from 'react'
 import { reqFetch } from './fetch'
 
-function useEventCallback(fn, dependencies) {
-  const ref = useRef(() => {
-    throw new Error('Cannot call an event handler while rendering.')
-  })
-
-  useEffect(() => {
-    ref.current = fn
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fn, ...dependencies])
-
-  return useCallback(() => {
-    const fun = ref.current
-    return fun()
-  }, [ref])
-}
-
 export const useReqFetch = (url, opts) => {
   const [res, setRes] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  const asyncFetch = useCallback(async (paramCanceled, paramController) => {
+  const asyncFetch = async (canceled, controller) => {
     try {
       if (loading) return
       setLoading(true)
       const resData = await reqFetch(url, {
         ...opts,
-        paramController,
+        controller,
       })
-      if (!paramCanceled) {
+      if (!canceled) {
         setRes(resData)
       }
     } catch (err) {
@@ -43,11 +27,9 @@ export const useReqFetch = (url, opts) => {
     } finally {
       setLoading(false)
     }
+  }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
+  const reFetch = useCallback(() => {
     let canceled = false
     const controller = new AbortController()
     asyncFetch(canceled, controller)
@@ -56,7 +38,11 @@ export const useReqFetch = (url, opts) => {
       canceled = true
       controller.abort()
     }
-  }, [asyncFetch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url, opts])
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(reFetch, [])
 
   return [res, loading, error]
 }
