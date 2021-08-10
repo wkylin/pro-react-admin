@@ -306,8 +306,9 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 #### Tree Node Cli
 
 1. npm install -g tree-node-cli
-2. tree -L 2 -I "node_modules" -r -F
-3. tree node
+2. Mac: tree -L 2 -I "node_modules" -r -F
+3. Win: treee -L 2 -I "node_modules" -r -F
+4. tree node
 
    ```bash
     .
