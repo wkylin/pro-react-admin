@@ -356,3 +356,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     ├── Dockerfile
     └── CHANGELOG.md
    ```
+
+### CRACO:Create React App Configuration Override
+
+1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
