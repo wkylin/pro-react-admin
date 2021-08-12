@@ -357,6 +357,13 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     └── CHANGELOG.md
    ```
 
+#### Webpack Analyse
+
+1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
+   ```bash
+      npm run analyze:build
+   ```
+
 ### CRACO:Create React App Configuration Override
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
