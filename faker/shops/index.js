@@ -1,14 +1,22 @@
 const Router = require('koa-router')
+const { Mock, Random } = require('../utils/index')
 
 const shops = new Router()
 
 const handler = (ctx) => {
-  ctx.body = [
-    {
-      shopId: 1,
-      shopName: '屏西店',
-    },
-  ]
+  const mockData = Mock.mock({
+    'shopList|1-4': [
+      {
+        'shopId|+1': 1,
+        shopImage: Random.image('200x100', '#894FC4', '#FFF', 'png', '!'),
+        shopMobile: '@mobile',
+        shopName: '@shops',
+      },
+    ],
+  })
+
+  ctx.body = mockData.shopList
+
   // ctx.body = {
   //   code: 41002,
   //   data: null,

@@ -1,4 +1,5 @@
 node_modules/**
 CHANGELOG.md
+package-lock.json
 build/**
-/src/assets/**
+dist/**

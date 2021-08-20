@@ -67,6 +67,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.14.2",
+    "@babel/plugin-proposal-decorators": "^7.14.5",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
@@ -89,6 +90,7 @@
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "commitizen": "^4.2.4",
+    "compression-webpack-plugin": "^8.0.1",
     "concurrently": "^6.2.0",
     "conventional-changelog-cli": "^2.1.1",
     "copy-webpack-plugin": "^8.1.1",
@@ -124,6 +126,7 @@
     "lint-staged": "^11.0.0",
     "markdownlint-cli": "^0.28.1",
     "mini-css-extract-plugin": "^1.6.0",
+    "mockjs": "^1.1.0",
     "nodemon": "^2.0.7",
     "npm-check-updates": "^11.5.11",
     "portfinder": "^1.0.28",
@@ -194,6 +197,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
     "src/**/*.js": [

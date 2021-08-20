@@ -1,2 +1,7 @@
 const delay = require('./delay')
-module.exports = delay
+const { Mock, Random } = require('./mock')
+module.exports = {
+  Mock,
+  Random,
+  delay,
+}

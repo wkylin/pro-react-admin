@@ -4,8 +4,8 @@ const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const portfinder = require('portfinder')
-
 // const DashboardPlugin = require('webpack-dashboard/plugin')
+
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
 
@@ -21,7 +21,8 @@ const devWebpackConfig = merge(common, {
     compress: true,
     inline: true,
     hot: true,
-    // port: 8080,
+    watchContentBase: true,
+    // port: 8080, // *8080 portfinder *8000
     open: true,
     clientLogLevel: 'silent',
     disableHostCheck: true,
@@ -80,9 +81,10 @@ const devWebpackConfig = merge(common, {
 
 module.exports = new Promise((resolve, reject) => {
   // @funboxteam/free-port-finder
+  // detect-port
   portfinder.getPort(
     {
-      port: 9000, // 默认9000端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
+      port: 8080, // 默认8080端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
       stopPort: 65535, // maximum port
     },
     (err, port) => {

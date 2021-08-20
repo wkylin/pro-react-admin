@@ -1,6 +1,7 @@
-const delay = async (time) => {
-  return new Promise(function (resolve, reject) {
-    setTimeout(() => resolve(), time)
-  })
+const delay = require('./delay')
+const { Mock, Random } = require('./mock')
+module.exports = {
+  Mock,
+  Random,
+  delay,
 }
-module.exports = delay

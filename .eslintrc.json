@@ -8,7 +8,7 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended"],
+  "extends": ["plugin:react/recommended", "standard", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -36,6 +36,8 @@
     "no-debugger": "off",
     "react/prop-types": "off",
     "no-extra-parens": "off",
-    "eol-last": "off"
+    "eol-last": "off",
+    "jsx-quotes": "off",
+    "space-before-blocks": "off"
   }
 }

@@ -2,6 +2,8 @@
   "extends": "stylelint-config-standard",
   "rules": {
     "string-quotes": "single",
+    "value-keyword-case": null,
+    "declaration-block-trailing-semicolon": "always",
     "property-no-unknown": [
       true,
       {
