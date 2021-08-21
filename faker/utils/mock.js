@@ -1,3 +1,7 @@
+// https://fakercloud.com/
+// https://www.npmjs.com/package/faker
+// https://www.npmjs.com/package/mockjs
+
 const Mock = require('mockjs')
 const Random = Mock.Random
 Random.extend({
