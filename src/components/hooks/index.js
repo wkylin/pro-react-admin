@@ -1,3 +1,3 @@
-import { ErrorBoundaryContext, useErrorHandling } from './useErrorBoundary'
+import { useLocalStorage } from './useLocalStorage'
 
-export { ErrorBoundaryContext, useErrorHandling }
+export { useLocalStorage }

@@ -13,7 +13,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
-const jsRegex = /\.(js)$/
+const jsRegex = /\.(js|ts)$/
 
 const devWebpackConfig = {
   entry: {
@@ -26,7 +26,7 @@ const devWebpackConfig = {
     chunkFilename: 'static/js/[name].js',
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '@src': paths.src,
       '@stateless': paths.stateless,
@@ -36,18 +36,23 @@ const devWebpackConfig = {
       '@assets': paths.assets,
     },
   },
-
+  mode: 'development',
+  devtool: 'eval-cheap-module-source-map',
+  target: 'web',
   plugins: [
     new CleanWebpackPlugin(),
     new Dotenv({
       path: path.resolve(__dirname, '..', '.env.development'),
     }),
     new HtmlWebpackPlugin({
-      title: 'Pro React--dev',
+      title: 'PRO REACT-DEV',
       template: paths.public + '/index.ejs',
       favicon: paths.public + '/favicon.ico',
       filename: 'index.html',
       inject: 'body',
+      hash: true,
+      cache: false,
+      minify: false,
     }),
     new ESLintPlugin(),
     new AntdDayjsWebpackPlugin(),
@@ -94,7 +99,7 @@ const devWebpackConfig = {
             options: {
               lessOptions: {
                 modifyVars: {
-                  'primary-color': '#1DA57A', // #1DA57A 1890FF
+                  'primary-color': '#1890FF', // #1DA57A 1890FF
                 },
                 javascriptEnabled: true,
               },
@@ -110,6 +115,11 @@ const devWebpackConfig = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: ['babel-loader'],
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: ['ts-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
@@ -129,8 +139,6 @@ const devWebpackConfig = {
       },
     ],
   },
-  mode: 'development',
-  devtool: 'eval-cheap-module-source-map',
   optimization: {
     providedExports: true,
     usedExports: true,

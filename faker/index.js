@@ -7,12 +7,12 @@ const Koa = require('koa')
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 const cors = require('@koa/cors')
+const portfinder = require('portfinder')
 
 const app = new Koa()
 const router = new Router()
 app.use(bodyParser())
 app.use(cors())
-const portfinder = require('portfinder')
 
 const shops = require('./shops')
 const user = require('./app')

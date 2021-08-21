@@ -4,9 +4,10 @@ const initialState = {
   deNumber: 0,
 }
 
-const deReducer = (state = initialState, action) => {
-  const { payload } = action
-  switch (action.type) {
+const deReducer = (state = initialState, { type, payload } = {}) => {
+  switch (type) {
+    case rootAction.inAction.actionType.INCREMENT:
+      return { ...state, inNumber: state.inNumber + payload }
     case rootAction.deAction.actionType.DECREMENT:
       return { ...state, deNumber: state.deNumber - payload }
     default:

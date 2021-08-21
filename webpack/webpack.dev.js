@@ -9,7 +9,7 @@ const portfinder = require('portfinder')
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
 
-const jsRegex = /\.(js)$/
+const jsRegex = /\.(js|ts)$/
 
 const devWebpackConfig = merge(common, {
   mode: 'development',
@@ -21,7 +21,6 @@ const devWebpackConfig = merge(common, {
     compress: true,
     inline: true,
     hot: true,
-    watchContentBase: true,
     // port: 8080, // *8080 portfinder *8000
     open: true,
     clientLogLevel: 'silent',
@@ -32,10 +31,10 @@ const devWebpackConfig = merge(common, {
       errors: true,
     },
     proxy: {
-      '/': {
+      '/wkylin': {
         // target: 'https://jsonplaceholder.typicode.com',
         target: 'https://my-json-server.typicode.com',
-        pathRewrite: { '^/': '' },
+        // pathRewrite: { '^/wkylin': '/wkylin' },
         secure: false,
         changeOrigin: true,
       },

@@ -9,6 +9,6 @@
     { "type": "perf", "hidden": true },
     { "type": "test", "hidden": true }
   ],
-  "commitUrlFormat": "http://gitlab.yonghui.cn/operation-cp-hccx/promotion-manage-web/commits/{{hash}}",
-  "compareUrlFormat": "http://gitlab.yonghui.cn/operation-cp-hccx/promotion-manage-web/compare/{{previousTag}}...{{currentTag}}"
+  "commitUrlFormat": "https://github.com/wkylin/promotion-web/commits/{{hash}}",
+  "compareUrlFormat": "https://github.com/wkylin/promotion-web/compare/{{previousTag}}...{{currentTag}}"
 }

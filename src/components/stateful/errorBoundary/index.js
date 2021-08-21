@@ -1,19 +1,22 @@
 import React from 'react'
 
 import { Button, Space } from 'antd'
+
 class ErrorBoundary extends React.Component {
   state = { hasError: false }
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true }
   }
+
   componentDidCatch(error, errorInfo) {
-    // errorService.log({ error, errorInfo })
+    console.log({ error, errorInfo })
   }
 
   triggerError = ({ error, errorInfo }) => {
-    // errorService.log({ error, errorInfo })
+    console.log({ error, errorInfo })
     this.setState({ hasError: true })
   }
+
   resetError = () => this.setState({ hasError: false })
   render() {
     if (this.state.hasError) {

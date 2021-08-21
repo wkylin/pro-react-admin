@@ -2,16 +2,14 @@
 
 1. React: v17.0.2 [React](https://reactjs.org/)
 2. React Router: v5.2.0 [React Router](https://reactrouter.com/)
-3. Webpack:v5.40.0 [Webpack](https://webpack.js.org/)
+3. Webpack:v5.50.0 [Webpack](https://webpack.js.org/)
 4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: v4.16.9 [Ant Design](https://ant.design/index-cn)
+5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
-7. Fetch Api [Using Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
-8. Koa Faker [Koa](https://koajs.com/)
 
 ## 2. 开发环境
 
-### 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
+1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
 
 ```bash
 mac: npm install -g nvm nrm
@@ -19,9 +17,10 @@ win: nvm-windows nodist nvs
 
 nvm install 14.16.1
 nvm use 14.16.1
+
 ```
 
-### VSCode extension: 别名路径跳转
+## VSCode extension: 别名路径跳转
 
 ```bash
     "alias-skip.mappings": {
@@ -31,15 +30,14 @@ nvm use 14.16.1
         "@hooks": "/src/components/hooks",
         "@container": "/src/components/container",
         "@assets": "/src/components/assets",
-        "@utils":"/src/utils"
     }
 ```
 
-### WebStorm 别名跳转设置
+## WebStorm 别名跳转设置
 
 1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
 
-### 使用标准 commit 生成 changelog 标准化
+## 使用标准 commit 生成 changelog 标准化
 
 - [conventional-changelog](https://github.com/conventional-changelog)
 - [standard-version](https://github.com/conventional-changelog/standard-version)
@@ -54,7 +52,6 @@ nvm use 14.16.1
   - npm run release
 
   ```bash
-
   npm install --save-dev commitizen
   npm install --save-dev cz-conventional-changelog
   "config": {
@@ -67,23 +64,23 @@ nvm use 14.16.1
   npm install -g conventional-changelog-cli
   conventional-changelog -p angular -i CHANGELOG.md -s
   npm install -g standard-version
-  release: standard-version --tag-prefix publish
+  "release": "standard-version --tag-prefix \"publish/\""
   ```
 
-1. 一次 changelog 的过程如下：
+## 一次 changelog 的过程如下
 
-   - 修改代码
-   - git add . / git cz
-   - 修改 package.json 中的 version
-   - 运行生成 changelog 命令，最好将命令集成到 package.json 的 scripts 中
-   - 手动 Tag， Push 等
+- 修改代码
+- git add . / git cz
+- 修改 package.json 中的 version
+- 运行生成 changelog 命令，最好将命令集成到 package.json 的 scripts 中
+- 手动 Tag， Push 等
 
-2. Mock Server:
+## Mock Server
 
-   ```bash
-   // mock index.js
-   npm run dev:faker
-   ```
+```bash
+// mock index.js
+npm run dev:faker
+```
 
 ### 3. Development
 
@@ -144,7 +141,7 @@ nvm use 14.16.1
 
 ### 6. Deployment
 
-1. Deployment: [Deployment](https://create-react-app.dev/docs/deployment)
+1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
 
 ### 7. TODO
 
@@ -169,7 +166,7 @@ nvm use 14.16.1
 
    Husky is an NPM package that lets you run a set of commands or script before any git action. For eg pre-push, pre-commit, pre-rebase.
 
-4. Commit Lint: [Commit Lint](https://commitlint.js.org)
+4. Commit Lint: [Commit Lint ](https://commitlint.js.org)
 
    CommitLint helps your team adhering to a commit convention. By supporting npm-installed configurations it makes sharing of commit conventions easy.
 
@@ -182,16 +179,17 @@ nvm use 14.16.1
    [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
-9. Conflict eslint prettie Conditional (ternary) operator
+9. Conflict eslint prettier Conditional (ternary) operator
+
    ```bash
-   // lint-staged
-   "**/*": [
-     "npm run prettier:write"
-   ],
-   // .eslintrc.json
-   "extends": ["plugin:react/recommended", "standard", "prettier"],
-   // package.json
-   "prettier:write": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
+    // lint-staged
+    "**/*": [
+      "npm run prettier:write"
+    ],
+    // .eslintrc.json
+    "extends": ["plugin:react/recommended", "standard", "prettier"],
+    // package.json
+    "prettier:write": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
    ```
 
 ### 9. CSS Modules
@@ -205,12 +203,6 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 ### 10. CI/CD 自动化构建
 
-1. Github Pages
-
-```bash
-    npm run deploy
-```
-
 ### 11. Test
 
 1. [Jest](https://jestjs.io/)
@@ -219,8 +211,11 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 4. [Cypress](https://www.cypress.io/)
 
 ### 12. Sentry 接入
-
 1. [Sentry](https://sentry.io/)
+2. 遇到的问题：
+   - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
+   - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
+   - "sentry:check": "node check-sentry.js"
 
 ### 13. Plugins
 
@@ -254,7 +249,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
 ### Nginx
 
-1. Nginx install
+1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
    ```bash
     brew install nginx
@@ -301,7 +296,15 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     192.168.1.101 www.promotion-web.com
    ```
 
-3. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
+3. Nginx for Windows
+
+   ```bash
+      1. start nginx
+      2. nginx -s stop
+      3. nginx -s quit
+      4. nginx -s reload
+      5. nginx -s reopen
+   ```
 
 #### Tree Node Cli
 
@@ -367,3 +370,9 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 ### CRACO:Create React App Configuration Override
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
+
+### 与ESLint 风格不一致
+
+1. "lint:json": "jsonlint --quiet src/**/*.json",
+2. "standard": "standard src/**/*",
+3. "standard:fix": "standard --fix src/**/*",

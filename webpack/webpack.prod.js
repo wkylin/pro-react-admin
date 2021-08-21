@@ -1,4 +1,4 @@
-// const path = require('path')
+const path = require('path')
 // const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
@@ -11,12 +11,17 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
+const packageJson = require('../package.json')
+const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
 const regReact =
   /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-config|react-router-dom|react-router-redux|redux)[\\/]/
 
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
+
+const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
 const prodWebpackConfig = merge(common, {
   mode: 'production',
@@ -37,7 +42,7 @@ const prodWebpackConfig = merge(common, {
     // new webpack.BannerPlugin({
     //   raw: true,
     //   banner:
-    //     '/** @preserve Powered by promotion-manage-web (http://gitlab.yonghui.cn/operation-cp-hccx/promotion-manage-web/) */',
+    //     '/** @preserve Powered by promotion-web (https://github.com/wkylin/promotion-web/) */',
     // }),
     new CompressionWebpackPlugin({
       filename: '[path][base].gz',
@@ -89,6 +94,16 @@ const prodWebpackConfig = merge(common, {
     maxAssetSize: 512000,
   },
 })
+
+useSentryMap &&
+  prodWebpackConfig.plugins.push(
+    new SentryWebpackPlugin({
+      release: packageJson.version,
+      include: path.join(__dirname, '../dist/static/js'),
+      configFile: '../.sentryclirc',
+      urlPrefix: '~/static/js',
+    })
+  )
 
 // module.exports = smp.wrap(prodWebpackConfig)
 module.exports = prodWebpackConfig

@@ -38,6 +38,8 @@
     "no-extra-parens": "off",
     "eol-last": "off",
     "jsx-quotes": "off",
-    "space-before-blocks": "off"
+    "space-before-blocks": "off",
+    "max-len": "off",
+    "strict": "off"
   }
 }

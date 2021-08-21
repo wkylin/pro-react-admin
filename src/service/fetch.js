@@ -11,7 +11,6 @@
  * 2. postFetch --- method==='POST' 其他入参同 reqFetch
  * 3. getFetch --- method==='POST'  其他入参同 reqFetch
  */
-
 import { message } from 'antd'
 import { suffix } from '../utils/suffix'
 import { getToken } from '../utils/token'
@@ -96,8 +95,9 @@ const parseToQuery = (query) => {
 const initOptions = {
   method: 'GET', // POST, *GET,  PUT, DELETE, PATCH, [HEAD, CONNECT, OPTIONS, TRACE]
   headers: {
+    // Accept: 'application/json',
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8 application/x-www-form-urlencoded
-    Authorization: getToken() ? `Bearer ${getToken()}` : null, // 携带token
+    Authorization: getToken() ? `Bearer ${getToken()}` : null,
   },
   signal: undefined,
   credentials: 'include', // include *same-origin
@@ -254,6 +254,7 @@ const handleFetchData = (url, options) => {
               handleErrorResponse(reject, response, error, isShowError)
             })
         } else {
+          // context-type */*
           response
             .text()
             .then((resBody) => {
@@ -274,19 +275,13 @@ const handleFetchData = (url, options) => {
 fetchIntercept.register({
   request: function (url, config) {
     // Modify the url or config here
-    const cusConfig = {
-      ...config,
-      headers: {
-        ...config.headers,
-        'Permissions-Policy': 'interest-cohort=()',
-      },
-    }
-    return [url, cusConfig]
+    // console.log('url', url)
+    return [url, config]
   },
 
   requestError: function (error) {
     // Called when an error occured during another 'request' interceptor call
-    // console.log('req error', error)
+    console.log('req error', error)
     return Promise.reject(error)
   },
 

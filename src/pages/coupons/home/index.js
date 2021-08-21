@@ -22,7 +22,7 @@ const HomeCoupons = () => {
       />
 
       <h5 style={{ margin: '30px 0 5px 0' }}>技术栈：</h5>
-      {stackList.map((item, index) => (
+      {stackList?.map((item, index) => (
         <Tag key={index} color="success">
           React: v17.0.2
         </Tag>

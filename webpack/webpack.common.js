@@ -5,7 +5,6 @@ const chalk = require('chalk')
 
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const ESLintPlugin = require('eslint-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
@@ -19,12 +18,24 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
-const dotEnv =
-  process.env.BUILD_GOAL === 'dev'
-    ? '.env.development'
-    : process.env.BUILD_GOAL === 'prod'
-    ? '.env.production'
-    : '.env.test'
+
+let dotEnv = ''
+switch (process.env.BUILD_GOAL) {
+  case 'development':
+    dotEnv = '.env.development'
+    break
+  case 'production':
+    dotEnv = '.env.production'
+    break
+  case 'dev':
+    dotEnv = '.env.dev'
+    break
+  case 'test':
+    dotEnv = '.env.test'
+    break
+  default:
+    dotEnv = '.env.development'
+}
 
 const root = process.cwd()
 console.log(chalk.blue(`root: ${root}`))
@@ -35,12 +46,15 @@ const config = {
   },
   output: {
     path: paths.build,
-    publicPath: isDev ? '/' : './',
+    publicPath: '/',
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
+    // library: '',
+    // libraryTarget: 'umd',
+    // chunkLoadingGlobal: '',
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx'],
+    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '@src': paths.src,
       '@stateless': paths.stateless,
@@ -64,7 +78,7 @@ const config = {
       path: path.resolve(__dirname, '..', dotEnv),
     }),
     new HtmlWebpackPlugin({
-      title: isDev ? '促销中心--dev' : '促销中心',
+      title: isDev ? 'PRO REACT-DEV' : 'PRO REACT',
       template: paths.public + '/index.ejs',
       favicon: paths.public + '/favicon.ico',
       filename: 'index.html',
@@ -101,7 +115,6 @@ const config = {
     //   dependenciesCount: 10000,
     //   percentBy: null,
     // }),
-    // new ESLintPlugin(),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     new CircularDependencyPlugin({
@@ -128,7 +141,6 @@ const config = {
             loader: 'css-loader',
             options: {
               sourceMap: true,
-              // modules: true,
               modules: {
                 compileType: 'module',
                 mode: 'local',
@@ -145,7 +157,7 @@ const config = {
             options: {
               lessOptions: {
                 modifyVars: {
-                  'primary-color': '#1DA57A', // #1DA57A 1890FF
+                  'primary-color': '#1890FF', // #1DA57A
                 },
                 javascriptEnabled: true,
               },
@@ -165,6 +177,11 @@ const config = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: ['thread-loader', 'babel-loader'],
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: ['ts-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,

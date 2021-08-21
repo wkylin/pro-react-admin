@@ -1,0 +1,7 @@
+[auth]
+token=73acdaa05e174744804f105c6e3365533e42da87ada6496bbc42d5a208f23a31
+
+[defaults]
+url=https://sentry.io/
+project=promotion-web
+org=wkylin
