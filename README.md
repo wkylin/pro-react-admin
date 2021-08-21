@@ -7,7 +7,7 @@
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
-## 2. 开发环境
+### 2. 开发环境
 
 1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
 
@@ -20,7 +20,7 @@ nvm use 14.16.1
 
 ```
 
-## VSCode extension: 别名路径跳转
+### 3. VSCode extension: 别名路径跳转
 
 ```bash
     "alias-skip.mappings": {
@@ -33,7 +33,7 @@ nvm use 14.16.1
     }
 ```
 
-## WebStorm 别名跳转设置
+### 4. WebStorm 别名跳转设置
 
 1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
 
@@ -67,7 +67,7 @@ nvm use 14.16.1
   "release": "standard-version --tag-prefix \"publish/\""
   ```
 
-## 一次 changelog 的过程如下
+### 5. 一次 changelog 的过程如下
 
 - 修改代码
 - git add . / git cz
@@ -75,14 +75,14 @@ nvm use 14.16.1
 - 运行生成 changelog 命令，最好将命令集成到 package.json 的 scripts 中
 - 手动 Tag， Push 等
 
-## Mock Server
+### 6. Mock Server
 
 ```bash
 // mock index.js
 npm run dev:faker
 ```
 
-### 3. Development
+### 7. Development
 
 ```bash
   1. git clone https://github.com/wkylin/promotion-web.git
@@ -94,7 +94,7 @@ npm run dev:faker
     - npm run dev:server
 ```
 
-### 4. Commit message
+### 8. Commit message
 
 1. The commit message should be structured as follows:
 
@@ -135,7 +135,7 @@ npm run dev:faker
 4. [https://www.npmjs.com/package/devmoji](https://www.npmjs.com/package/devmoji)
 5. [https://gitmoji.dev/](https://gitmoji.dev/)
 
-### 5. React Code Splitting Library
+### 9. React Code Splitting Library
 
 1. [Loadable Components](https://loadable-components.com/)
 
@@ -143,14 +143,14 @@ npm run dev:faker
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
 
-### 7. TODO
+### 10. TODO
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
 3. Mock Server (OK)
    - [msw](https://github.com/mswjs/msw)
 
-### 8. ESLint Prettier Husky EditorConfig
+### 11. ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -192,7 +192,7 @@ npm run dev:faker
     "prettier:write": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
    ```
 
-### 9. CSS Modules
+### 12. CSS Modules
 
 A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
 
@@ -201,53 +201,53 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 2. StyleLint: [StyleLint](https://stylelint.io/)
    npx stylelint --help
 
-### 10. CI/CD 自动化构建
+### 13. CI/CD 自动化构建
 
-### 11. Test
+### 14. Test
 
 1. [Jest](https://jestjs.io/)
 2. [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
 3. [React Hooks Testing Library](https://github.com/testing-library/react-hooks-testing-library)
 4. [Cypress](https://www.cypress.io/)
 
-### 12. Sentry 接入
+### 15. Sentry 接入
 1. [Sentry](https://sentry.io/)
 2. 遇到的问题：
    - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
    - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
    - "sentry:check": "node check-sentry.js"
 
-### 13. Plugins
+### 16. Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 
-### 14. VSCode Extensions
+### 17. VSCode Extensions
 
 1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
-### 15. HTTP
+### 18. HTTP
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
-### 16. Code Contributors
+### 19. Code Contributors
 
-### 17. [Choose A License](https://choosealicense.com/)
+### 20. [Choose A License](https://choosealicense.com/)
 
 1. [MIT](https://choosealicense.com/licenses/mit/)
 
-### 18. Server: Dev, Test, UAT(Live), Staging, Demo, Production
+### 21. Server: Dev, Test, UAT(Live), Staging, Demo, Production
 
 1. [Server Info](https://www.gratasoftware.com/what-is-each-server-for-development-test-uat-or-staging-demo-and-production/)
 
 Copyright (c) 2021 Promotion Web
 Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
-### NPM
+### 22. NPM
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
 
-### Nginx
+### 23. Nginx
 
 1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
@@ -306,7 +306,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       5. nginx -s reopen
    ```
 
-#### Tree Node Cli
+### 24. Tree Node Cli
 
 1. npm install -g tree-node-cli
 2. Mac: tree -L 2 -I "node_modules" -r -F
@@ -360,18 +360,18 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     └── CHANGELOG.md
    ```
 
-#### Webpack Analyse
+### 25. Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
    ```bash
       npm run analyze:build
    ```
 
-### CRACO:Create React App Configuration Override
+### 26. CRACO:Create React App Configuration Override
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
-### 与ESLint 风格不一致
+### 27. 与ESLint 风格不一致
 
 1. "lint:json": "jsonlint --quiet src/**/*.json",
 2. "standard": "standard src/**/*",
