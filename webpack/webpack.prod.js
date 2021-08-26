@@ -27,9 +27,6 @@ const prodWebpackConfig = merge(common, {
   mode: 'production',
   // devtool: false,
   devtool: 'source-map',
-  output: {
-    publicPath: '/',
-  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',

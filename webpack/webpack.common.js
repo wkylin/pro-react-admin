@@ -46,7 +46,7 @@ const config = {
   },
   output: {
     path: paths.build,
-    publicPath: '/',
+    publicPath: isDev ? '/' : './',
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     // library: '',
