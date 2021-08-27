@@ -7,7 +7,7 @@
 5. Antd: v4.15.0 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
-### 2. 开发环境
+## 2. 开发环境
 
 1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
 
@@ -211,6 +211,7 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 4. [Cypress](https://www.cypress.io/)
 
 ### 15. Sentry 接入
+
 1. [Sentry](https://sentry.io/)
 2. 遇到的问题：
    - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
@@ -363,6 +364,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 ### 25. Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
+   
    ```bash
       npm run analyze:build
    ```
@@ -376,3 +378,4 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 1. "lint:json": "jsonlint --quiet src/**/*.json",
 2. "standard": "standard src/**/*",
 3. "standard:fix": "standard --fix src/**/*",
+4. rm -rf package-lock.json
