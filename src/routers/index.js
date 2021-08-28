@@ -4,6 +4,7 @@ import Loading from '@stateless/Loading'
 
 import basicRouter from './basic'
 import couponsRouter from './coupons'
+import productRouter from './product'
 
 import basicActRouter from './basicAct'
 
@@ -67,6 +68,7 @@ const rootRouter = [
         }),
       },
       ...couponsRouter,
+      ...productRouter,
     ],
   },
   {

@@ -1,18 +1,33 @@
 import React from 'react'
 import { Menu } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import { HomeOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
+const selectedPath = {
+  '/basis/deduct': '21',
+  '/basis/info': '31',
+  '/basis/commodity': '41',
+}
 
 const ActSecNav = () => {
   const history = useHistory()
+  const { pathname } = useLocation()
   const redirectTo = (path) => {
     history.push(path)
   }
+
+  const selectedPathKey = selectedPath[Object.keys(selectedPath).find((item) => pathname.indexOf(item) > -1)]
+
   return (
-    <Menu mode="inline" defaultSelectedKeys={['11']} defaultOpenKeys={['sub1']} theme="dark" className={styles.menu}>
-      <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="活动基础组件库">
+    <Menu
+      mode="inline"
+      defaultSelectedKeys={[selectedPathKey]}
+      defaultOpenKeys={['sub1']}
+      theme="dark"
+      className={styles.menu}
+    >
+      <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="基础组件库">
         <Menu.Item key="21" onClick={() => redirectTo('/basis/deduct')}>
           促销扣款
         </Menu.Item>

@@ -10,7 +10,7 @@ Random.extend({
     return this.pick(phonePrefixs) + Mock.mock(/\d{8}/)
   },
   shops: function () {
-    const shops = ['Mini小店', '屏西店', '双子店']
+    const shops = ['Mini小店', '麒麟店', '双子店']
     return this.pick(shops)
   },
 })

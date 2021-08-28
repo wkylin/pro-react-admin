@@ -1,7 +1,11 @@
 import React from 'react'
-
+import { Result } from 'antd'
 const Exception500 = () => {
-  return <div>500 Internal Server Error</div>
+  return (
+    <>
+      <Result status="500" title="500" subTitle="Sorry, something went wrong." />
+    </>
+  )
 }
 
 export default Exception500

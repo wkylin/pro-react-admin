@@ -27,7 +27,7 @@ const ProContent = ({ routes = [] }) => {
             <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
           </div>
         </BackTop>
-        <div className={styles.footer}>Copyright &copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
+        <div className={styles.footer}>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
       </Content>
     </Layout>
   )

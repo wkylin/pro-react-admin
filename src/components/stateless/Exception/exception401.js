@@ -1,7 +1,13 @@
 import React from 'react'
 
-const Exception403 = () => {
-  return <div>401 Unauthorized</div>
+import { Result } from 'antd'
+
+const Exception401 = () => {
+  return (
+    <>
+      <Result status="401" title="401" subTitle="Sorry, you are not authorized to access this page." />,
+    </>
+  )
 }
 
-export default Exception403
+export default Exception401

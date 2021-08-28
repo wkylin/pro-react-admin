@@ -6,6 +6,7 @@ const couponsRouter = [
   {
     path: '/layout/coupons',
     isAuthenticated: true,
+    name: '送券活动单',
     exact: false,
     component: loadable(() => import('../../pages/coupons'), {
       fallback: <Loading />,
@@ -14,16 +15,28 @@ const couponsRouter = [
       {
         path: '/layout/coupons',
         isAuthenticated: true,
-        name: '新建活动单',
+        name: '送券活动单',
         exact: true,
-        redirect: '/layout/coupons/home',
+        // redirect: '/layout/coupons/home', // 与component home 是有区别的
+        component: loadable(() => import('../../pages/coupons/home'), {
+          fallback: <Loading />,
+        }),
       },
       {
         path: '/layout/coupons/home',
-        name: '新建活动单-首页',
         isAuthenticated: true,
+        name: '新建活动单-首页',
         exact: true,
         component: loadable(() => import('../../pages/coupons/home'), {
+          fallback: <Loading />,
+        }),
+      },
+      {
+        path: '/layout/coupons/edit',
+        isAuthenticated: true,
+        name: '新建活动单-编辑',
+        exact: true,
+        component: loadable(() => import('../../pages/coupons/edit'), {
           fallback: <Loading />,
         }),
       },
