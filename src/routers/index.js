@@ -14,7 +14,7 @@ const rootRouter = [
     path: '/layout',
     isAuthenticated: true,
     exact: false,
-    name: '首页',
+    name: 'Layout首页',
     component: loadable(() => import('../pages/layout'), {
       fallback: <Loading />,
     }),
@@ -23,9 +23,12 @@ const rootRouter = [
         path: '/layout',
         isAuthenticated: true,
         exact: true,
-        name: '首页',
-        redirect: '/layout/coupons', // 默认跳转到此路由 可调整...
-        // redirect: '/basis/info', // 默认跳转到此路由 可调整...
+        name: 'Layout首页',
+        // redirect: '/layout/coupons', // 默认跳转到此路由 可调整...
+        // redirect: '/basis', // 默认跳转到此路由 可调整...
+        component: loadable(() => import('../pages/home'), {
+          fallback: <Loading />,
+        }),
       },
       {
         path: '/layout/401',

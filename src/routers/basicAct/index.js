@@ -6,7 +6,7 @@ const basicActRouter = [
   {
     path: '/basis',
     isAuthenticated: true,
-    name: '首页',
+    name: 'Basis首页',
     exact: false,
     component: loadable(() => import('../../pages/basis'), {
       fallback: <Loading />,
@@ -15,19 +15,10 @@ const basicActRouter = [
       {
         path: '/basis',
         isAuthenticated: true,
-        name: '首页',
+        name: 'Basis首页',
         exact: true,
         // redirect: '/basis/info', // 默认跳转路由
         component: loadable(() => import('../../pages/demo'), {
-          fallback: <Loading />,
-        }),
-      },
-      {
-        path: '/basis/404',
-        isAuthenticated: true,
-        name: '404',
-        exact: false,
-        component: loadable(() => import('../../components/stateless/Exception/exception404'), {
           fallback: <Loading />,
         }),
       },
@@ -46,6 +37,15 @@ const basicActRouter = [
         name: '基本信息',
         exact: true,
         component: loadable(() => import('../../pages/basis/basicInfo'), {
+          fallback: <Loading />,
+        }),
+      },
+      {
+        path: '/basis/404',
+        isAuthenticated: true,
+        name: '404',
+        exact: false,
+        component: loadable(() => import('../../components/stateless/Exception/exception404'), {
           fallback: <Loading />,
         }),
       },

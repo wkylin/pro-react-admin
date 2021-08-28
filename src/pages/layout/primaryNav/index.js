@@ -1,28 +1,26 @@
 import React from 'react'
 import { Menu } from 'antd'
-import { CodeOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
+import { CodeOutlined, SettingOutlined } from '@ant-design/icons'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 
 const PrimaryNav = () => {
   const history = useHistory()
+  const { url } = useRouteMatch()
   const redirectTo = (path) => {
     history.push(path)
   }
   return (
-    <Menu mode="horizontal" defaultSelectedKeys={['mail']}>
+    <Menu mode="horizontal" defaultSelectedKeys={url === '/basis' ? ['mail'] : ['SubMenu']}>
       <Menu.Item key="mail" icon={<CodeOutlined />} onClick={() => redirectTo('/basis')}>
-        活动组件库
+        基础组件库
       </Menu.Item>
-      {/* <Menu.SubMenu key="SubMenu" icon={<SettingOutlined />} title="Navigation Three - Sub Menu">
-        <Menu.ItemGroup title="Item 1">
-          <Menu.Item key="setting:1" onClick={() => redirectTo('/signin')}>
-            Option 1
-          </Menu.Item>
-          <Menu.Item key="setting:2" onClick={() => redirectTo('/signup')}>
-            Option 2
+      <Menu.SubMenu key="SubMenu" icon={<SettingOutlined />} title="Layout组件库">
+        <Menu.ItemGroup title="Layout Component">
+          <Menu.Item key="setting:1" onClick={() => redirectTo('/layout')}>
+            Layout首页
           </Menu.Item>
         </Menu.ItemGroup>
-      </Menu.SubMenu> */}
+      </Menu.SubMenu>
     </Menu>
   )
 }

@@ -7,7 +7,7 @@ const basicRouter = [
     path: '/',
     exact: true,
     isAuthenticated: true,
-    redirect: '/layout',
+    // redirect: '/layout',
     component: loadable(() => import('../../pages'), {
       fallback: <Loading />,
     }),

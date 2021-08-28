@@ -210,6 +210,12 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 3. [React Hooks Testing Library](https://github.com/testing-library/react-hooks-testing-library)
 4. [Cypress](https://www.cypress.io/)
 
+```bash
+    1. npm install jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer --save-dev
+    2. npm install  --save-dev @testing-library/react  
+```
+
+
 ### 15. Sentry 接入
 
 1. [Sentry](https://sentry.io/)
