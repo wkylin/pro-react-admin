@@ -7,10 +7,11 @@ const basicRouter = [
     path: '/',
     exact: true,
     isAuthenticated: true,
+    redirect: '/basis',
     // redirect: '/layout',
-    component: loadable(() => import('../../pages'), {
-      fallback: <Loading />,
-    }),
+    // component: loadable(() => import('../../pages'), {
+    //   fallback: <Loading />,
+    // }),
   },
   {
     path: '/signup',
