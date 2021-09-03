@@ -149,6 +149,8 @@ npm run dev:faker
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
 3. Mock Server (OK)
    - [msw](https://github.com/mswjs/msw)
+4. 单页面多页签
+   - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
 
 ### 11. ESLint Prettier Husky EditorConfig
 
