@@ -7,15 +7,6 @@ const reducers = {
   deReducer,
 }
 
-const baseReducers = combineReducers(reducers)
-
-const rootReducer = window.__POWERED_BY_QIANKUN__
-  ? (state, action) => {
-      if (action.type === 'RESET_DATA') {
-        state = undefined
-      }
-      return baseReducers(state, action)
-    }
-  : baseReducers
+const rootReducer = combineReducers(reducers)
 
 export default rootReducer

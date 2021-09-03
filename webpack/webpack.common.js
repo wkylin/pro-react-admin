@@ -78,7 +78,7 @@ const config = {
       path: path.resolve(__dirname, '..', dotEnv),
     }),
     new HtmlWebpackPlugin({
-      title: isDev ? 'PRO REACT-DEV' : 'PRO REACT',
+      title: isDev ? 'Pro React Dev' : 'Pro React',
       template: paths.public + '/index.ejs',
       favicon: paths.public + '/favicon.ico',
       filename: 'index.html',

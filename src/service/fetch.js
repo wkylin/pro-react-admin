@@ -11,6 +11,7 @@
  * 2. postFetch --- method==='POST' 其他入参同 reqFetch
  * 3. getFetch --- method==='POST'  其他入参同 reqFetch
  */
+import { HashRouter } from 'react-router-dom'
 import { message } from 'antd'
 import { suffix } from '../utils/suffix'
 import { getToken } from '../utils/token'
@@ -79,6 +80,7 @@ require('isomorphic-fetch')
 // }
 
 const baseUrl = process.env.APP_BASE_URL
+const hashRouter = new HashRouter()
 
 const parseToQuery = (query) => {
   return Object.keys(query)
@@ -126,7 +128,8 @@ const handleSuccessResult = (result, isShowError) => {
   // response.ok text/html text/plain result may be string
   if (result.code !== 0) {
     if (result.code === 41002) {
-      window.location.href = '#/signin'
+      // window.location.href = '#/signin'
+      hashRouter.history.push('/signin')
       return
     }
 
