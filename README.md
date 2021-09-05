@@ -151,7 +151,9 @@ npm run dev:faker
    - [msw](https://github.com/mswjs/msw)
 4. 单页面多页签
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-
+5. TS参考
+   - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
+  
 ### 11. ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
