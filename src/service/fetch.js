@@ -10,6 +10,9 @@
  *    }
  * 2. postFetch --- method==='POST' 其他入参同 reqFetch
  * 3. getFetch --- method==='POST'  其他入参同 reqFetch
+ * 4. putFethch
+ * 5. deleteFetch
+ * 6. patchFetch
  */
 import { HashRouter } from 'react-router-dom'
 import { message } from 'antd'

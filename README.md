@@ -153,6 +153,8 @@ npm run dev:faker
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
 5. TS参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
+6. Axios 
+   - [axios拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
   
 ### 11. ESLint Prettier Husky EditorConfig
 
