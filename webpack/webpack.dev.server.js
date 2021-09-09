@@ -2,7 +2,7 @@
 
 const path = require('path')
 const paths = require('./paths')
-const webpack = require('webpack')
+// const webpack = require('webpack')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -66,8 +66,10 @@ const devWebpackConfig = {
     }),
     new NodePolyfillPlugin(),
     new WebpackBar(),
-    new ReactRefreshWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshWebpackPlugin({
+      overlay: false,
+    }),
+    // new webpack.HotModuleReplacementPlugin(),
   ],
   module: {
     rules: [

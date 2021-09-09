@@ -391,3 +391,11 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 2. "standard": "standard src/**/*",
 3. "standard:fix": "standard --fix src/**/*",
 4. rm -rf package-lock.json
+
+### Update npm
+
+```bash
+  npm install css-loader@5.2.7 --save-dev
+  "webpack-dev-server": "^4.1.1",
+  Uncaught TypeError: SocketClient is not a constructor
+```

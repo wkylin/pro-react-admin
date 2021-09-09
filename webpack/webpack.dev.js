@@ -1,5 +1,4 @@
-const path = require('path')
-const webpack = require('webpack')
+// const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -17,19 +16,14 @@ const devWebpackConfig = merge(common, {
   devtool: 'eval-cheap-module-source-map',
   devServer: {
     historyApiFallback: true,
-    contentBase: path.resolve(__dirname, '../dist'),
-    compress: true,
-    inline: true,
-    hot: true,
-    // port: 8080, // *8080 portfinder *8000
-    open: true,
-    clientLogLevel: 'silent',
-    disableHostCheck: true,
-    useLocalIp: false,
-    overlay: {
-      warnings: true,
-      errors: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
     },
+    compress: true,
+    open: true,
     proxy: {
       '/wkylin': {
         // target: 'https://jsonplaceholder.typicode.com',
@@ -65,8 +59,10 @@ const devWebpackConfig = merge(common, {
     ],
   },
   plugins: [
-    new ReactRefreshWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshWebpackPlugin({
+      overlay: false,
+    }),
+    // new webpack.HotModuleReplacementPlugin(),
     // new DashboardPlugin()
   ].filter(Boolean),
   optimization: {

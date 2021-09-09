@@ -1,4 +1,3 @@
-const path = require('path')
 const webpack = require('webpack')
 const WebpackDevServer = require('webpack-dev-server')
 const portfinder = require('portfinder')
@@ -6,18 +5,8 @@ const config = require('./webpack.dev.server')
 
 const devServerConfig = new WebpackDevServer(webpack(config), {
   historyApiFallback: true,
-  contentBase: path.resolve(__dirname, '../dist'),
   compress: true,
-  inline: true,
-  hot: true,
   open: true,
-  clientLogLevel: 'silent',
-  disableHostCheck: true,
-  useLocalIp: false,
-  overlay: {
-    warnings: true,
-    errors: true,
-  },
   proxy: {
     '/': {
       target: 'https://my-json-server.typicode.com',
@@ -44,7 +33,7 @@ portfinder.getPort(
     if (err) {
       return
     }
-    devServerConfig.listen(port, 'localhost', (error, result) => {
+    devServerConfig.start(port, 'localhost', (error, result) => {
       if (error) {
         console.log(error)
       }
