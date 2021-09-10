@@ -1,6 +1,7 @@
 import React from 'react'
-
 import { Button, Space } from 'antd'
+
+// https://github.com/bvaughn/react-error-boundary
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false }
