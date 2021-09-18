@@ -3,6 +3,7 @@ const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const portfinder = require('portfinder')
+const devProxy = require('./dev.proxy')
 // const DashboardPlugin = require('webpack-dashboard/plugin')
 
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
@@ -24,22 +25,7 @@ const devWebpackConfig = merge(common, {
     },
     compress: true,
     open: true,
-    proxy: {
-      '/wkylin': {
-        // target: 'https://jsonplaceholder.typicode.com',
-        target: 'https://my-json-server.typicode.com',
-        // pathRewrite: { '^/wkylin': '/wkylin' },
-        secure: false,
-        changeOrigin: true,
-      },
-      '/faker': {
-        target: 'http://localhost:4000',
-        pathRewrite: { '^/faker': '' },
-        secure: false,
-        changeOrigin: true,
-        cookieDomainRewrite: 'localhost',
-      },
-    },
+    proxy: devProxy,
   },
 
   module: {
