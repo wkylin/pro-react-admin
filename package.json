@@ -174,6 +174,7 @@
     "@sentry/react": "^6.12.0",
     "@sentry/tracing": "^6.12.0",
     "antd": "^4.16.13",
+    "axios": "^0.24.0",
     "constate": "^3.3.0",
     "cookies-js": "^1.2.3",
     "cross-fetch": "^3.1.4",

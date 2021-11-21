@@ -8,6 +8,7 @@ import { Button, Space } from 'antd'
 import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
+import FileUpload from './fileUpload'
 
 const ProDemo = () => {
   const inReducer = useSelector((state) => state.inReducer)
@@ -81,6 +82,9 @@ const ProDemo = () => {
       <ErrorBoundary>
         <ShopsList />
       </ErrorBoundary>
+
+      <h4>File Upload</h4>
+      <FileUpload />
     </>
   )
 }

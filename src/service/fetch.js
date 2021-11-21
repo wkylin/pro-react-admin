@@ -60,6 +60,12 @@ require('isomorphic-fetch')
 //   });
 // }
 
+// https://github.com/Bigerfe/fe-learn-code/
+// https://cloud.tencent.com/developer/article/1532107
+// https://towardsdev.com/what-is-better-for-http-requests-fetch-or-axios-comparison-920ceffc5161
+// https://javascript.info/fetch-progress
+// https://github.com/AnthumChris/fetch-progress-indicators
+// allowHTTP1ForStreamingUpload
 // fetch(url).then(res => consume(res.body.getReader()))
 // const consume = (reader) => {
 //   let total = 0
