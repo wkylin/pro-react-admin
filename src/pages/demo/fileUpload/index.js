@@ -17,6 +17,8 @@ const FileUpload = () => {
 
     setUploading(true)
 
+    console.log('formData', formData)
+
     axios({
       url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       method: 'post',
@@ -68,11 +70,12 @@ const FileUpload = () => {
       setFileList(newFileList)
     },
     beforeUpload: (file) => {
-      setFileList([...fileList, file])
+      debugger
+      setFileList((preFileList) => [...preFileList, file])
       return false
     },
     fileList,
-    // multiple: true,
+    multiple: true,
   }
 
   return (
@@ -89,6 +92,7 @@ const FileUpload = () => {
       >
         {uploading ? 'Uploading' : 'Start Upload'}
       </Button>
+      {`FileList: ${JSON.stringify(fileList, 0, null)}`}
       {`percent: ${percent}`}
       <Progress percent={percent} />
     </>
