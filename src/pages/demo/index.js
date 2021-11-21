@@ -85,6 +85,8 @@ const ProDemo = () => {
 
       <h4>File Upload</h4>
       <FileUpload />
+
+      <div style={{ height: 1000 }}>Height</div>
     </>
   )
 }
