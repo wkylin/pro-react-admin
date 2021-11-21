@@ -6,6 +6,13 @@ module.exports = {
     secure: false,
     changeOrigin: true,
   },
+  '/v2': {
+    // target: 'https://jsonplaceholder.typicode.com',
+    target: 'https://www.mocky.io',
+    // pathRewrite: { '^/wkylin': '/wkylin' },
+    secure: false,
+    changeOrigin: true,
+  },
   '/faker': {
     target: 'http://localhost:4000',
     pathRewrite: { '^/faker': '' },

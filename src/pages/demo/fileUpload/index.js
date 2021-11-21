@@ -1,32 +1,78 @@
-import React from 'react'
-import { Upload, Button, message } from 'antd'
+import React, { useState } from 'react'
+import { Upload, Button, Progress, message } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 
+import axios from 'axios'
+
 const FileUpload = () => {
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`)
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`)
-      }
-    },
-    progress: {
-      strokeColor: {
-        '0%': '#108ee9',
-        '100%': '#87d068',
+  const [fileList, setFileList] = useState([])
+  const [uploading, setUploading] = useState(false)
+  const [percent, setPercent] = useState(0)
+
+  const handleUpload = () => {
+    const formData = new FormData()
+    fileList.forEach((file) => {
+      formData.append('files[]', file)
+    })
+
+    setUploading(true)
+
+    axios({
+      url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+      method: 'post',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+      onUploadProgress: (progressEvent) => {
+        // Do whatever you want with the native progress event
+        console.log('progressEvent', progressEvent)
+        const completedPercent = ((progressEvent.loaded / progressEvent.total) * 100).toFixed(2)
+
+        setPercent(completedPercent)
       },
-      strokeWidth: 3,
-      format: (percent) => `${parseFloat(percent.toFixed(2))}%`,
+    })
+      .then((response) => {
+        console.log(response.data)
+        console.log(response.status)
+        console.log(response.statusText)
+        console.log(response.headers)
+        console.log(response.config)
+      })
+      .catch((error) => {
+        setUploading(false)
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data)
+          console.log(error.response.status)
+          console.log(error.response.headers)
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js
+          console.log(error.request)
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message)
+        }
+        setPercent(0)
+        message.error(error.message)
+        // console.log(error.config)
+      })
+  }
+
+  const props = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file)
+      const newFileList = fileList.slice()
+      newFileList.splice(index, 1)
+      setFileList(newFileList)
     },
+    beforeUpload: (file) => {
+      setFileList([...fileList, file])
+      return false
+    },
+    fileList,
+    // multiple: true,
   }
 
   return (
@@ -34,6 +80,17 @@ const FileUpload = () => {
       <Upload {...props}>
         <Button icon={<UploadOutlined />}>Click to Upload</Button>
       </Upload>
+      <Button
+        type="primary"
+        onClick={handleUpload}
+        disabled={fileList.length === 0}
+        loading={uploading}
+        style={{ marginTop: 16 }}
+      >
+        {uploading ? 'Uploading' : 'Start Upload'}
+      </Button>
+      {`percent: ${percent}`}
+      <Progress percent={percent} />
     </>
   )
 }

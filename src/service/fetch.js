@@ -65,6 +65,7 @@ require('isomorphic-fetch')
 // https://towardsdev.com/what-is-better-for-http-requests-fetch-or-axios-comparison-920ceffc5161
 // https://javascript.info/fetch-progress
 // https://github.com/AnthumChris/fetch-progress-indicators
+// https://github.com/jserz/request-extensions
 // allowHTTP1ForStreamingUpload
 // fetch(url).then(res => consume(res.body.getReader()))
 // const consume = (reader) => {
