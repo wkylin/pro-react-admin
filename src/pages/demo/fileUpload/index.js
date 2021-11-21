@@ -27,7 +27,7 @@ const FileUpload = () => {
       onUploadProgress: (progressEvent) => {
         // Do whatever you want with the native progress event
         console.log('progressEvent', progressEvent)
-        const completedPercent = ((progressEvent.loaded / progressEvent.total) * 100).toFixed(2)
+        const completedPercent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
 
         setPercent(completedPercent)
       },
@@ -70,7 +70,6 @@ const FileUpload = () => {
       setFileList(newFileList)
     },
     beforeUpload: (file) => {
-      debugger
       setFileList((preFileList) => [...preFileList, file])
       return false
     },
