@@ -110,10 +110,10 @@ const initOptions = {
   headers: {
     // Accept: 'application/json',
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8 application/x-www-form-urlencoded
-    Authorization: getToken() ? `Bearer ${getToken()}` : null
+    Authorization: getToken() ? `Bearer ${getToken()}` : null,
   },
   signal: undefined,
-  credentials: 'include' // include *same-origin
+  credentials: 'include', // include *same-origin
   // mode: 'cors', // no-cors, cors, *same-origin
   // redirect: 'follow', // manual, *follow, error
   // referrer: 'no-referrer', // no-referrer *client,
@@ -242,7 +242,7 @@ const handleFetchData = (url, options) => {
             .arrayBuffer()
             .then((resBuffer) => {
               const blob = new Blob([resBuffer], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
               })
               const disposition = response.headers.get('content-disposition')
               const fileName = decodeURI(disposition.split('=')[1].replace(/'/g, ''))
@@ -309,7 +309,7 @@ fetchIntercept.register({
     // Handle an fetch error
     // console.log('res error', error)
     return Promise.reject(error)
-  }
+  },
 })
 
 export const reqFetch = (
@@ -322,7 +322,7 @@ export const reqFetch = (
     headers = null,
     isShowError = true,
     timeout = 20000,
-    controller = undefined
+    controller = undefined,
   } = params
 
   const defaultOptions = {
@@ -330,11 +330,11 @@ export const reqFetch = (
     method,
     headers: {
       ...initOptions.headers,
-      ...headers
+      ...headers,
     },
     controller,
     isShowError,
-    timeout
+    timeout,
   }
 
   // POST, *GET,  PUT, DELETE, PATCH, [HEAD, CONNECT, OPTIONS, TRACE]
@@ -358,34 +358,34 @@ export const reqFetch = (
 export const getFetch = (url, params) => {
   return reqFetch(url, {
     method: 'GET',
-    ...params
+    ...params,
   })
 }
 
 export const postFetch = (url, params) => {
   return reqFetch(url, {
     method: 'POST',
-    ...params
+    ...params,
   })
 }
 
 export const putFetch = (url, params) => {
   return reqFetch(url, {
     method: 'PUT',
-    ...params
+    ...params,
   })
 }
 
 export const deleteFetch = (url, params) => {
   return reqFetch(url, {
     method: 'DELETE',
-    ...params
+    ...params,
   })
 }
 
 export const patchFetch = (url, params) => {
   return reqFetch(url, {
     method: 'PATCH',
-    ...params
+    ...params,
   })
 }
