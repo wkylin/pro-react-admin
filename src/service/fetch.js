@@ -68,6 +68,7 @@ require('isomorphic-fetch')
 // https://github.com/AnthumChris/fetch-progress-indicators
 // https://github.com/jserz/request-extensions
 // allowHTTP1ForStreamingUpload
+// https://medium.datadriveninvestor.com/aborting-cancelling-requests-with-fetch-or-axios-db2e93825a36
 // fetch(url).then(res => consume(res.body.getReader()))
 // const consume = (reader) => {
 //   let total = 0
