@@ -1,4 +1,5 @@
 // const webpack = require('webpack')
+const path = require('path')
 const { merge } = require('webpack-merge')
 const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
@@ -18,10 +19,14 @@ const devWebpackConfig = merge(common, {
   devServer: {
     historyApiFallback: true,
     client: {
+      progress: true,
       overlay: {
         errors: true,
         warnings: false,
       },
+    },
+    static: {
+      directory: path.join(__dirname, '../public'),
     },
     compress: true,
     open: true,

@@ -1,9 +1,9 @@
 const path = require('path')
 // const webpack = require('webpack')
 const paths = require('./paths')
-const chalk = require('chalk')
+// const chalk = require('chalk')
 
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
@@ -37,8 +37,8 @@ switch (process.env.BUILD_GOAL) {
     dotEnv = '.env.development'
 }
 
-const root = process.cwd()
-console.log(chalk.blue(`root: ${root}`))
+// const root = process.cwd()
+// console.log(chalk.blue(`root: ${root}`))
 
 const config = {
   entry: {
@@ -52,6 +52,7 @@ const config = {
     // library: '',
     // libraryTarget: 'umd',
     // chunkLoadingGlobal: '',
+    clean: true,
   },
   resolve: {
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
@@ -67,13 +68,13 @@ const config = {
   },
   target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
-    new CleanWebpackPlugin({
-      root: __dirname,
-      verbose: true,
-      dry: false,
-      exclude: [],
-      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../dist')],
-    }),
+    // new CleanWebpackPlugin({
+    //   root: __dirname,
+    //   verbose: true,
+    //   dry: false,
+    //   exclude: [],
+    //   cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../dist')],
+    // }),
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),
     }),
@@ -142,7 +143,7 @@ const config = {
             options: {
               sourceMap: true,
               modules: {
-                compileType: 'module',
+                // compileType: 'module',
                 mode: 'local',
                 auto: true,
                 exportGlobals: true,
