@@ -1,29 +1,12 @@
 import React from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 const RouteWithSubRoutes = (route) => {
-  return (
-    <Route
-      path={route.path}
-      exact={route.exact}
-      render={
-        route.isAuthenticated
-          ? route.redirect
-            ? () => <Redirect to={route.redirect} />
-            : (props) => <route.component {...props} routes={route.routes} />
-          : (props) => (
-              <Redirect
-                to={{
-                  pathname: '/layout/403',
-                  state: {
-                    from: props.location,
-                  },
-                }}
-              />
-            )
-      }
-    />
-  )
+  debugger
+  // const routeRef = useRoutes(route)
+
+  // return <Route path={route.path} element={route.component} />
+  return <Route path={'/'} element={<div>中国</div>} />
 }
 
 export default RouteWithSubRoutes

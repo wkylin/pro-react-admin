@@ -1,9 +1,7 @@
 import React from 'react'
 import { Layout, BackTop } from 'antd'
-// import { Switch } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
-import CustomSwitch from '@stateless/CustomSwitch'
-import RouteWithSubRoutes from '@stateless/RouteWithSubRoutes'
 import ProBreadcrumb from './breadcrumb'
 import styles from './index.module.less'
 
@@ -16,11 +14,7 @@ const ProContent = ({ routes = [] }) => {
       </Header>
       <Content className={styles.content} id="content">
         <div className={styles.container}>
-          <CustomSwitch>
-            {routes.map((route, i) => (
-              <RouteWithSubRoutes key={i} {...route} />
-            ))}
-          </CustomSwitch>
+          <Outlet />
         </div>
         <BackTop className={styles.backTop} target={() => document.querySelector('#content')}>
           <div className={styles.backTopIcon}>

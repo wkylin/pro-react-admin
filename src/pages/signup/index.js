@@ -1,6 +1,6 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox } from 'antd'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styles from './index.module.less'
 
 const layout = {
@@ -27,9 +27,9 @@ const SignUp = () => {
     console.log('Failed:', errorInfo)
   }
 
-  const history = useHistory()
+  const navigate = useNavigate()
   const redirectTo = (path) => {
-    history.push(path)
+    navigate(path)
   }
 
   return (

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Menu } from 'antd'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { HomeOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -11,10 +11,10 @@ const selectedPath = {
 }
 
 const ActSecNav = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { pathname } = useLocation()
   const redirectTo = (path) => {
-    history.push(path)
+    navigate(path)
   }
 
   const selectedPathKey = selectedPath[Object.keys(selectedPath).find((item) => pathname.indexOf(item) > -1)]

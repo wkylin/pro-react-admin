@@ -1,14 +1,14 @@
 import React from 'react'
 import RouteWithSubRoutes from '@stateless/RouteWithSubRoutes'
-import { useHistory, useRouteMatch } from 'react-router-dom'
+import { useNavigate, useMatch } from 'react-router-dom'
 import CustomSwitch from '@stateless/CustomSwitch'
 import { Button } from 'antd'
 
 const Coupons = ({ routes = [] }) => {
-  const history = useHistory()
-  const { url } = useRouteMatch()
+  const navigate = useNavigate()
+  const { url } = useMatch()
   const redirectTo = (path) => {
-    history.push(path)
+    navigate(path)
   }
 
   return (
@@ -24,6 +24,7 @@ const Coupons = ({ routes = [] }) => {
       </Button>
 
       <CustomSwitch>
+        {/* <Route path="/" element={<div>Route</div>} /> */}
         {routes.map((route, i) => (
           <RouteWithSubRoutes key={i} {...route} />
         ))}

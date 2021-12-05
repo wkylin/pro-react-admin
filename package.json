@@ -1,6 +1,6 @@
 {
   "name": "promotion-web",
-  "version": "0.1.1",
+  "version": "0.1.0",
   "description": "promotion-web",
   "keywords": [
     "React",
@@ -188,7 +188,7 @@
     "react-onclickoutside": "^6.12.1",
     "react-redux": "^7.2.6",
     "react-router-config": "^5.1.1",
-    "react-router-dom": "^5.0.3",
+    "react-router-dom": "^6.0.2",
     "redux": "^4.1.2",
     "sanitize.css": "^13.0.0",
     "use-http": "^1.0.26",

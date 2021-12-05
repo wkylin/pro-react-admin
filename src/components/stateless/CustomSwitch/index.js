@@ -1,23 +1,23 @@
 import React, { useEffect } from 'react'
-import { Switch, useHistory, useRouteMatch } from 'react-router-dom'
+import { Routes, Route, useNavigate, useMatch } from 'react-router-dom'
 
 function NoFundPage() {
-  const history = useHistory()
-  const { url, path } = useRouteMatch()
-  console.log('useMatch', JSON.stringify(useRouteMatch(), null, 2))
+  const navigate = useNavigate()
+  const { url, path } = useMatch()
+  console.log('useMatch', JSON.stringify(useMatch(), null, 2))
   useEffect(() => {
-    history.push(`${url}/404`)
-  }, [path, url, history])
+    navigate(`${url}/404`)
+  }, [path, url, navigate])
   return null
 }
 const CustomSwitch = (props) => {
   const { children } = props
 
   return (
-    <Switch>
+    <Routes>
       {children}
-      <NoFundPage />
-    </Switch>
+      <Route path="*" element={<NoFundPage />} />
+    </Routes>
   )
 }
 

@@ -2,7 +2,7 @@ export const getRouteItem = (arrList = [], queryItem) => {
   let result
 
   if (Array.isArray(arrList)) {
-    result = arrList.find((item) => item.path === queryItem || getRouteItem(item.routes, queryItem))
+    result = arrList.find((item) => item.path === queryItem || getRouteItem(item.children, queryItem))
   }
   return result
 }
@@ -22,7 +22,7 @@ export const getRouteList = (result, arrList = [], queryItem) => {
         })
         getRouteList(
           result,
-          getRouteItem(item.routes, queryItem) ? [getRouteItem(item.routes, queryItem)] : [],
+          getRouteItem(item.children, queryItem) ? [getRouteItem(item.children, queryItem)] : [],
           queryItem
         )
       }

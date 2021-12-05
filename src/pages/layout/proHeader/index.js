@@ -2,15 +2,15 @@ import React from 'react'
 
 import { Layout, Space, Dropdown, Menu, Tag } from 'antd'
 import { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from '@ant-design/icons'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import PrimaryNav from '../primaryNav'
 
 import styles from './index.module.less'
 
 const ProHeader = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const redirectTo = (path) => {
-    history.push(path)
+    navigate(path)
   }
   return (
     <Layout.Header className={styles.header}>

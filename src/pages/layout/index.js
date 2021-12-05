@@ -7,7 +7,7 @@ import ProSecNav from './proSecNav'
 
 import styles from './index.module.less'
 
-const ProLayout = ({ routes = [] }) => {
+const ProLayout = () => {
   return (
     <Layout className={styles.layout}>
       <ProHeader />
@@ -15,7 +15,7 @@ const ProLayout = ({ routes = [] }) => {
         <ProSider>
           <ProSecNav />
         </ProSider>
-        <ProContent routes={routes} />
+        <ProContent />
       </Layout>
     </Layout>
   )

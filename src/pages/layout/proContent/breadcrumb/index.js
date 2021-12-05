@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getRouteItem, getRouteList } from './util'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Breadcrumb } from 'antd'
 import rootRouter from '@src/routers'
@@ -8,7 +8,7 @@ import styles from './index.module.less'
 
 const ProBreadcrumb = () => {
   const { pathname } = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [breadcrumbList, setBreadcrumbList] = useState([])
   useEffect(() => {
@@ -18,11 +18,13 @@ const ProBreadcrumb = () => {
       pathname
     )
 
+    console.log('routeList', routeList)
+
     setBreadcrumbList([...routeList])
   }, [pathname])
 
   const linkTo = (path) => {
-    history.push(path)
+    navigate(path)
   }
 
   return (

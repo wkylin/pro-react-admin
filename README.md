@@ -1,11 +1,11 @@
 # 1. Technology Stack
 
 1. React: v17.0.2 [React](https://reactjs.org/)
-2. React Router: v5.2.0 [React Router](https://reactrouter.com/)
-3. Webpack:v5.50.0 [Webpack](https://webpack.js.org/)
-4. Babel: v7.13.14 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: v4.16.3 [Ant Design](https://ant.design/index-cn)
-6. Redux Hooks: v4.0.5 [Redux Hooks](https://react-redux.js.org/api/hooks)
+2. React Router: v6.0.2 [React Router](https://reactrouter.com/)
+3. Webpack:v5.64.4 [Webpack](https://webpack.js.org/)
+4. Babel: v7.16.0 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
+5. Antd: v4.17.2 [Ant Design](https://ant.design/index-cn)
+6. Redux Hooks: v7.2.6 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
 ## 2. 开发环境
 

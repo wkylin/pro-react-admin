@@ -1,12 +1,12 @@
 import React from 'react'
 
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { Button } from 'antd'
 
 const NoMatch = () => {
   const location = useLocation()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
     <div style={{ margin: 30, textAlign: 'center' }}>
@@ -14,7 +14,7 @@ const NoMatch = () => {
         No match for <code>{location.pathname}</code>
       </h3>
 
-      <Button size="small" type="primary" ghost onClick={() => history.goBack()}>
+      <Button size="small" type="primary" ghost onClick={() => navigate(-1)}>
         返回
       </Button>
     </div>

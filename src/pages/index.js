@@ -1,11 +1,11 @@
 import React from 'react'
-import { useHistory, useRouteMatch } from 'react-router-dom'
+import { useNavigate, useMatch } from 'react-router-dom'
 import { Button } from 'antd'
 const Index = ({ routes = [] }) => {
-  const history = useHistory()
-  const { url } = useRouteMatch()
+  const navigate = useNavigate()
+  const { url } = useMatch()
   const redirectTo = (path) => {
-    history.push(path)
+    navigate(path)
   }
   return (
     <>

@@ -14,7 +14,7 @@
  * 5. deleteFetch
  * 6. patchFetch
  */
-import { HashRouter } from 'react-router-dom'
+// import { HashRouter } from 'react-router-dom'
 import { message } from 'antd'
 import { suffix } from '../utils/suffix'
 import { getToken } from '../utils/token'
@@ -92,7 +92,7 @@ require('isomorphic-fetch')
 // }
 
 const baseUrl = process.env.APP_BASE_URL
-const hashRouter = new HashRouter()
+// const hashRouter = new HashRouter()
 
 const parseToQuery = (query) => {
   return Object.keys(query)
@@ -141,7 +141,7 @@ const handleSuccessResult = (result, isShowError) => {
   if (result.code !== 0) {
     if (result.code === 41002) {
       // window.location.href = '#/signin'
-      hashRouter.history.push('/signin')
+      // hashRouter.history.push('/signin')
       return
     }
 
