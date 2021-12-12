@@ -4,7 +4,7 @@ import ErrorBoundary from '@stateful/ErrorBoundary'
 // import { reqFetch } from '@src/service'
 import { useReqFetch, useGetFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Space } from 'antd'
+import { Button, Space, Select } from 'antd'
 import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
@@ -85,6 +85,11 @@ const ProDemo = () => {
 
       <h4>File Upload</h4>
       <FileUpload />
+      <Select placeholder="Select a person" optionFilterProp="children">
+        <Select.Option value="jack">Jack</Select.Option>
+        <Select.Option value="lucy">Lucy</Select.Option>
+        <Select.Option value="tom">Tom</Select.Option>
+      </Select>
 
       <div style={{ height: 400 }}>Height For Scroll</div>
     </>

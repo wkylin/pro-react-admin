@@ -174,7 +174,7 @@
     "@sentry/cli": "^1.71.0",
     "@sentry/react": "^6.15.0",
     "@sentry/tracing": "^6.15.0",
-    "antd": "^4.17.2",
+    "antd": "^4.17.3",
     "axios": "^0.24.0",
     "constate": "^3.3.0",
     "cookies-js": "^1.2.3",

@@ -6,8 +6,8 @@ import { useRoutes } from 'react-router-dom'
 // import ScrollToTop from '@stateless/ScrollToTop'
 import rootRouter from '@src/routers'
 import { sentryInit } from '@src/utils'
-import './styles/theme.dark.less'
-import './styles/theme.light.less'
+// import './styles/theme.light.less'
+// import './styles/theme.dark.less'
 
 const App = () => {
   useEffect(() => {
