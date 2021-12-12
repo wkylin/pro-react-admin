@@ -24,7 +24,7 @@ const ProSecNav = () => {
       mode="inline"
       defaultSelectedKeys={[selectedPathKey]}
       defaultOpenKeys={['sub1']}
-      theme="dark"
+      // theme="dark"
       className={styles.menu}
     >
       <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="新建活动单">

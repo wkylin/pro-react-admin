@@ -81,6 +81,7 @@
     "@koa/cors": "^3.1.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@sentry/webpack-plugin": "^1.18.3",
+    "@svgr/webpack": "^6.1.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/react-hooks": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^5.5.0",

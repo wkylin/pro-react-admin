@@ -155,7 +155,9 @@ npm run dev:faker
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 6. Axios 
    - [axios拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
-  
+7. React SVGR
+   - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
+
 ### 11. ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
