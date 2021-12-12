@@ -36,11 +36,10 @@
     "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
     "lint": "npm run lint:js && npm run lint:style && npm run lint:prettier",
     "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
-    "lint:style": "stylelint --fix \"src/**/*.less\" --syntax less",
+    "lint:style": "stylelint --custom-syntax postcss-less",
     "lint:prettier": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
     "prettier:check": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
-    "stylelint": "stylelint ./src",
-    "stylelint:fix": "stylelint ./src --fix",
+    "stylelint:fix": "stylelint --fix --custom-syntax postcss-less",
     "eslint": "eslint",
     "eslint:fix": "eslint --fix",
     "lint:markdown": "markdownlint --fix *.md",
@@ -140,6 +139,7 @@
     "npm-check-updates": "^12.0.2",
     "portfinder": "^1.0.28",
     "postcss": "^8.4.4",
+    "postcss-less": "^5.0.0",
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.0.1",
     "pre-commit": "^1.2.2",
@@ -219,12 +219,10 @@
   },
   "lint-staged": {
     "src/**/*.js": [
-      "npm run eslint:fix",
-      "npm run eslint"
+      "npm run eslint:fix"
     ],
     "src/**/*.less": [
-      "npm run stylelint:fix",
-      "npm run stylelint"
+      "npm run stylelint:fix"
     ]
   },
   "config": {
