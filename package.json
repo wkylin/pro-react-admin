@@ -13,6 +13,8 @@
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
+    "dev": "node ./scripts/color.js",
+    "dev:theme": "npm run dev && npm run dev:faker",
     "start": "cross-env BUILD_GOAL=development NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
     "build:production": "cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/**/*.map",
@@ -86,6 +88,7 @@
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "antd-dayjs-webpack-plugin": "^1.0.6",
+    "antd-theme-generator": "^1.2.10",
     "autoprefixer": "^10.4.0",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",

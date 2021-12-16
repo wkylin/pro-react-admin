@@ -14,7 +14,7 @@ const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
 
-const { getThemeVariables } = require('antd/dist/theme')
+// const { getThemeVariables } = require('antd/dist/theme')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -160,12 +160,13 @@ const config = {
             options: {
               lessOptions: {
                 // modifyVars: {
+                //   'root-entry-name': 'default',
                 //   'primary-color': '#1890FF', // #1DA57A
                 // },
-                modifyVars: getThemeVariables({
-                  dark: true, // Enable dark mode
-                  compact: false, // Enable compact mode
-                }),
+                // modifyVars: getThemeVariables({
+                //   dark: true, // Enable dark mode
+                //   compact: false, // Enable compact mode
+                // }),
                 javascriptEnabled: true,
               },
             },
