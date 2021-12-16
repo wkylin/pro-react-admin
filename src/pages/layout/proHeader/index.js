@@ -27,10 +27,9 @@ const ProHeader = () => {
   // }, [theme])
 
   const changeTheme = (checked) => {
-    debugger
-    // setTheme(theme === 'light' ? 'dark' : 'light')
     less.modifyVars({
-      '@primary-color': checked ? 'red' : 'green',
+      '@primary-color': checked ? '#1890ff' : '#1DA57A',
+      '@theme-color': checked ? '#f1f1f1' : '#141414',
     })
   }
 
