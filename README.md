@@ -9,7 +9,7 @@
 
 ## 2. 开发环境
 
-___
+***
 
 1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
 
@@ -24,7 +24,7 @@ nvm use 14.16.1
 
 ### 3. VSCode extension: 别名路径跳转
 
-___
+***
 
 ```bash
     "alias-skip.mappings": {
@@ -39,13 +39,13 @@ ___
 
 ### 4. WebStorm 别名跳转设置
 
-___
+***
 
 1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
 
 ## 使用标准 commit 生成 changelog 标准化
 
-___
+***
 
 - [conventional-changelog](https://github.com/conventional-changelog)
 - [standard-version](https://github.com/conventional-changelog/standard-version)
@@ -77,7 +77,7 @@ ___
 
 ### 5. 一次 changelog 的过程如下
 
-___
+***
 
 - 修改代码
 - git add . / git cz
@@ -87,7 +87,7 @@ ___
 
 ### 6. Mock Server
 
-___
+***
 
 ```bash
 // mock index.js
@@ -96,7 +96,7 @@ npm run dev:faker
 
 ### 7. Development
 
-___
+***
 
 ```bash
   1. git clone https://github.com/wkylin/promotion-web.git
@@ -110,7 +110,7 @@ ___
 
 ### 8. Commit message
 
-___
+***
 
 1. The commit message should be structured as follows:
 
@@ -153,7 +153,7 @@ ___
 
 ### 9. React Code Splitting Library
 
-___
+***
 
 
 1. [Loadable Components](https://loadable-components.com/)
@@ -164,7 +164,7 @@ ___
 
 ### 10. TODO
 
-___
+***
 
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
@@ -182,7 +182,7 @@ ___
 
 ### 11. ESLint Prettier Husky EditorConfig
 
-___
+***
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -226,7 +226,7 @@ ___
 
 ### 12. CSS Modules
 
-___
+***
 
 A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
 
@@ -237,12 +237,12 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 ### 13. CI/CD 自动化构建
 
-___
+***
 
 
 ### 14. Test
 
-___
+***
 
 
 1. [Jest](https://jestjs.io/)
@@ -258,7 +258,7 @@ ___
 
 ### 15. Sentry 接入
 
-___
+***
 
 
 1. [Sentry](https://sentry.io/)
@@ -269,37 +269,37 @@ ___
 
 ### 16. Plugins
 
-___
+***
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 
 ### 17. VSCode Extensions
 
-___
+***
 
 1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
 ### 18. HTTP
 
-___
+***
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
 ### 19. Code Contributors
 
-___
+***
 
 
 ### 20. [Choose A License](https://choosealicense.com/)
 
-___
+***
 
 1. [MIT](https://choosealicense.com/licenses/mit/)
 
 ### 21. Server: Dev, Test, UAT(Live), Staging, Demo, Production
 
-___
+***
 
 1. [Server Info](https://www.gratasoftware.com/what-is-each-server-for-development-test-uat-or-staging-demo-and-production/)
 
@@ -308,13 +308,13 @@ Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2
 
 ### 22. NPM
 
-___
+***
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
 
 ### 23. Nginx
 
-___
+***
 
 1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
@@ -375,7 +375,7 @@ ___
 
 ### 24. Tree Node Cli
 
-___
+***
 
 1. npm install -g tree-node-cli
 2. Mac: tree -L 2 -I "node_modules" -r -F
@@ -431,7 +431,7 @@ ___
 
 ### 25. Webpack Analyse
 
-___
+***
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
    
@@ -441,13 +441,13 @@ ___
 
 ### 26. CRACO:Create React App Configuration Override
 
-___
+***
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
 ### 27. 与ESLint 风格不一致
 
-___
+***
 
 1. "lint:json": "jsonlint --quiet src/**/*.json",
 2. "standard": "standard src/**/*",
@@ -456,7 +456,7 @@ ___
 
 ### 28. Update npm
 
-___
+***
 
 ```bash
   npm install css-loader@5.2.7 --save-dev
@@ -466,5 +466,5 @@ ___
 
 ### Show your support
 
-___
+***
 Give a ⭐️  if this project helped you!
