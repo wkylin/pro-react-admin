@@ -15,7 +15,12 @@
   <script src='./less.min.js'></script>
   <script>
     // https://less.bootcss.com/usage/#browser-usage-setting-options
-    window.less = { javascriptEnabled: true, logLevel: 3 };
+    window.less = {
+      javascriptEnabled: true,
+      logLevel: 3,
+      async: false,
+      env: 'development'
+    };
   </script>
   <!-- antd theme less end -->
   <noscript>You need to enable JavaScript to run this app.</noscript>

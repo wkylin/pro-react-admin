@@ -1,12 +1,15 @@
-// import React, { useEffect, useState } from 'react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+// import React from 'react'
 import { Layout, Space, Dropdown, Menu, Tag, Switch } from 'antd'
 import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import PrimaryNav from '../primaryNav'
 import LightSvg from '@assets/svg/light.svg'
 import DarkSvg from '@assets/svg/dark.svg'
+import darkVars from '@src/theme/dark.json'
+import lightVars from '@src/theme/light.json'
 import less from 'less'
+
 import styles from './index.module.less'
 
 const ProHeader = () => {
@@ -14,25 +17,35 @@ const ProHeader = () => {
   const redirectTo = (path) => {
     navigate(path)
   }
-  // const [theme, setTheme] = useState('light')
+  const [theme, setTheme] = useState(localStorage.getItem('theme-name') || 'light')
 
-  // useEffect(() => {
-  //   if (theme === 'light') {
-  //     document.body.classList.remove('dark')
-  //     document.body.classList.add('light')
-  //   } else {
-  //     document.body.classList.remove('light')
-  //     document.body.classList.add('dark')
-  //   }
-  // }, [theme])
+  const [themeApplied, setThemeApplied] = useState(false)
+
+  const [vars, setVars] = useState(localStorage.getItem('app-theme') === 'dark' ? darkVars : lightVars)
+
+  useEffect(() => {
+    less
+      .modifyVars(vars)
+      .then(() => {
+        setThemeApplied(true)
+      })
+      .catch((error) => {
+        console.log('error:', error)
+        // message.error(`Failed to update theme`)
+      })
+  }, [theme, vars])
 
   const changeTheme = (checked) => {
-    less.modifyVars({
-      '@primary-color': checked ? '#1890ff' : '#1DA57A',
-      '@theme-color': checked ? '#f1f1f1' : '#141414',
-    })
+    const modifyVars = checked ? lightVars : darkVars
+    localStorage.setItem('theme-name', checked ? 'light' : 'dark')
+
+    setTheme(checked ? 'light' : 'dark')
+    setVars(modifyVars)
   }
 
+  if (!themeApplied) {
+    return <div>Loading...</div>
+  }
   return (
     <Layout.Header className={styles.header}>
       <div className={styles.logo} onClick={() => redirectTo('/')}>

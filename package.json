@@ -13,7 +13,7 @@
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
-    "dev": "node ./scripts/color.js",
+    "dev": "node ./src/theme/color.js",
     "dev:theme": "npm run dev && npm run dev:faker",
     "start": "cross-env BUILD_GOAL=development NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
