@@ -36,8 +36,6 @@ div {
 }
 */
 
-
-
 html,
 body {
   height: 100%;
@@ -65,4 +63,37 @@ body {
 
 #root {
   height: 100%;
+}
+
+/**
+  default antd
+*/
+body[data-theme="dark"] *::-webkit-scrollbar-thumb {
+  background: hsl(0, 0%, 24%);
+}
+
+body[data-theme="dark"] .ant-back-top,
+body[data-theme="light"] .ant-back-top {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  right: 30px;
+  bottom: 5px;
+  border-radius: 100%;
+  background-color: #aaa;
+  text-align:center;
+  margin-top: 2px;
+}
+body[data-theme="dark"] .header,
+body[data-theme="light"] .header {
+  height: 50px;
+  line-height: 50px;
+}
+
+body[data-theme="dark"] .container {
+  background: #141414;
+}
+
+body[data-theme="light"] .container {
+  background: #ffffff;
 }

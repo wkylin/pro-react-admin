@@ -16,10 +16,8 @@ const ProContent = ({ routes = [] }) => {
         <div className={styles.container}>
           <Outlet />
         </div>
-        <BackTop className={styles.backTop} target={() => document.querySelector('#content')}>
-          <div className={styles.backTopIcon}>
-            <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
-          </div>
+        <BackTop target={() => document.querySelector('#content')}>
+          <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </BackTop>
         <div className={styles.footer}>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
       </Content>

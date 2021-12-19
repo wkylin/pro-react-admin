@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
-// import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout, Space, Dropdown, Menu, Tag, Switch } from 'antd'
 import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import { useThemeSwitcher } from 'react-css-theme-switcher'
 import PrimaryNav from '../primaryNav'
 import LightSvg from '@assets/svg/light.svg'
 import DarkSvg from '@assets/svg/dark.svg'
-import darkVars from '@src/theme/dark.json'
-import lightVars from '@src/theme/light.json'
-import less from 'less'
 
 import styles from './index.module.less'
 
@@ -17,34 +14,15 @@ const ProHeader = () => {
   const redirectTo = (path) => {
     navigate(path)
   }
-  const [theme, setTheme] = useState(localStorage.getItem('theme-name') || 'light')
-
-  const [themeApplied, setThemeApplied] = useState(false)
-
-  const [vars, setVars] = useState(localStorage.getItem('app-theme') === 'dark' ? darkVars : lightVars)
+  const { switcher, themes, currentTheme } = useThemeSwitcher()
 
   useEffect(() => {
-    less
-      .modifyVars(vars)
-      .then(() => {
-        setThemeApplied(true)
-      })
-      .catch((error) => {
-        console.log('error:', error)
-        // message.error(`Failed to update theme`)
-      })
-  }, [theme, vars])
+    switcher({ theme: themes[localStorage.getItem('antd-theme') ? localStorage.getItem('theme') : 'light'] })
+  }, [currentTheme, switcher, themes])
 
   const changeTheme = (checked) => {
-    const modifyVars = checked ? lightVars : darkVars
-    localStorage.setItem('theme-name', checked ? 'light' : 'dark')
-
-    setTheme(checked ? 'light' : 'dark')
-    setVars(modifyVars)
-  }
-
-  if (!themeApplied) {
-    return <div>Loading...</div>
+    switcher({ theme: checked ? themes.light : themes.dark })
+    localStorage.setItem('antd-theme', checked ? 'light' : 'dark')
   }
   return (
     <Layout.Header className={styles.header}>
@@ -60,7 +38,7 @@ const ProHeader = () => {
             <Switch
               checkedChildren={<Icon component={LightSvg} />}
               unCheckedChildren={<Icon component={DarkSvg} />}
-              defaultChecked
+              defaultChecked={currentTheme === 'light'}
               onClick={changeTheme}
             />
             <BellOutlined style={{ fontSize: 18 }} />

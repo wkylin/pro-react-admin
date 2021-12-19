@@ -4,11 +4,28 @@ import ErrorBoundary from '@stateful/ErrorBoundary'
 // import { reqFetch } from '@src/service'
 import { useReqFetch, useGetFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Space, Select } from 'antd'
+import { Button, Space, Select, Table } from 'antd'
 import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
 import FileUpload from './fileUpload'
+
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    width: 150,
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    width: 150,
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+  },
+]
 
 const ProDemo = () => {
   const inReducer = useSelector((state) => state.inReducer)
@@ -59,11 +76,9 @@ const ProDemo = () => {
       <h2>
         项目文档<span style={{ fontSize: 12, color: '#999', margin: '0 10px' }}>待完善</span>
       </h2>
-
       <h4>Mock API 示例：</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
       <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4>
-
       <h4>Redux 示例:</h4>
       <Space>
         <Space>
@@ -77,12 +92,10 @@ const ProDemo = () => {
           {deReducer.deNumber}
         </Space>
       </Space>
-
       <h4>ErrorBoundary</h4>
       <ErrorBoundary>
         <ShopsList />
       </ErrorBoundary>
-
       <h4>File Upload</h4>
       <FileUpload />
       <Select placeholder="Select a person" optionFilterProp="children">
@@ -90,7 +103,7 @@ const ProDemo = () => {
         <Select.Option value="lucy">Lucy</Select.Option>
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
-
+      <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
       <div style={{ height: 400 }}>Height For Scroll</div>
     </>
   )
