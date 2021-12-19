@@ -9,8 +9,6 @@
 
 ## 2. 开发环境
 
-***
-
 1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
 
 ```bash
@@ -24,8 +22,6 @@ nvm use 14.16.1
 
 ### 3. VSCode extension: 别名路径跳转
 
-***
-
 ```bash
     "alias-skip.mappings": {
         "@src": "/src",
@@ -38,8 +34,6 @@ nvm use 14.16.1
 ```
 
 ### 4. WebStorm 别名跳转设置
-
-***
 
 1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
 
@@ -77,8 +71,6 @@ nvm use 14.16.1
 
 ### 5. 一次 changelog 的过程如下
 
-***
-
 - 修改代码
 - git add . / git cz
 - 修改 package.json 中的 version
@@ -87,16 +79,12 @@ nvm use 14.16.1
 
 ### 6. Mock Server
 
-***
-
 ```bash
 // mock index.js
 npm run dev:faker
 ```
 
 ### 7. Development
-
-***
 
 ```bash
   1. git clone https://github.com/wkylin/promotion-web.git
@@ -109,8 +97,6 @@ npm run dev:faker
 ```
 
 ### 8. Commit message
-
-***
 
 1. The commit message should be structured as follows:
 
@@ -153,19 +139,13 @@ npm run dev:faker
 
 ### 9. React Code Splitting Library
 
-***
-
-
 1. [Loadable Components](https://loadable-components.com/)
 
-### 6. Deployment
+### 10. Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
 
-### 10. TODO
-
-***
-
+### 11. TODO
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
@@ -180,9 +160,7 @@ npm run dev:faker
 7. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
-### 11. ESLint Prettier Husky EditorConfig
-
-***
+### 12. ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -235,15 +213,9 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 2. StyleLint: [StyleLint](https://stylelint.io/)
    npx stylelint --help
 
-### 13. CI/CD 自动化构建
+### 14. CI/CD 自动化构建
 
-***
-
-
-### 14. Test
-
-***
-
+### 15. Test
 
 1. [Jest](https://jestjs.io/)
 2. [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
@@ -255,11 +227,7 @@ A CSS Module is a CSS file in which all class names and animation names are scop
     2. npm install  --save-dev @testing-library/react  
 ```
 
-
-### 15. Sentry 接入
-
-***
-
+### 16. Sentry 接入
 
 1. [Sentry](https://sentry.io/)
 2. 遇到的问题：
@@ -267,54 +235,37 @@ A CSS Module is a CSS file in which all class names and animation names are scop
    - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
    - "sentry:check": "node check-sentry.js"
 
-### 16. Plugins
-
-***
+### 17. Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 
-### 17. VSCode Extensions
-
-***
+### 18. VSCode Extensions
 
 1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
-### 18. HTTP
-
-***
+### 19. HTTP
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
-### 19. Code Contributors
+### 20. Code Contributors
 
-***
-
-
-### 20. [Choose A License](https://choosealicense.com/)
-
-***
+### 21. [Choose A License](https://choosealicense.com/)
 
 1. [MIT](https://choosealicense.com/licenses/mit/)
 
-### 21. Server: Dev, Test, UAT(Live), Staging, Demo, Production
-
-***
+### 22. Server: Dev, Test, UAT(Live), Staging, Demo, Production
 
 1. [Server Info](https://www.gratasoftware.com/what-is-each-server-for-development-test-uat-or-staging-demo-and-production/)
 
 Copyright (c) 2021 Promotion Web
 Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
-### 22. NPM
-
-***
+### 23. NPM
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
 
-### 23. Nginx
-
-***
+### 24. Nginx
 
 1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
@@ -373,9 +324,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       5. nginx -s reopen
    ```
 
-### 24. Tree Node Cli
-
-***
+### 25. Tree Node Cli
 
 1. npm install -g tree-node-cli
 2. Mac: tree -L 2 -I "node_modules" -r -F
@@ -429,9 +378,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     └── CHANGELOG.md
    ```
 
-### 25. Webpack Analyse
-
-***
+### 26. Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
    
@@ -439,24 +386,18 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       npm run analyze:build
    ```
 
-### 26. CRACO:Create React App Configuration Override
-
-***
+### 27. CRACO:Create React App Configuration Override
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
-### 27. 与ESLint 风格不一致
-
-***
+### 28. 与ESLint 风格不一致
 
 1. "lint:json": "jsonlint --quiet src/**/*.json",
 2. "standard": "standard src/**/*",
 3. "standard:fix": "standard --fix src/**/*",
 4. rm -rf package-lock.json
 
-### 28. Update npm
-
-***
+### 29. Update npm
 
 ```bash
   npm install css-loader@5.2.7 --save-dev
@@ -464,7 +405,8 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
   Uncaught TypeError: SocketClient is not a constructor
 ```
 
-### Show your support
+### 30. Show your support
 
 ***
+
 Give a ⭐️  if this project helped you!
