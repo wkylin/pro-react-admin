@@ -4,7 +4,7 @@ import ErrorBoundary from '@stateful/ErrorBoundary'
 // import { reqFetch } from '@src/service'
 import { useReqFetch, useGetFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Space, Select, Table } from 'antd'
+import { Button, Space, Select, Table, Cascader } from 'antd'
 import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
@@ -24,6 +24,41 @@ const columns = [
   {
     title: 'Address',
     dataIndex: 'address',
+  },
+]
+
+const options = [
+  {
+    value: 'zhejiang',
+    label: 'Zhejiang',
+    children: [
+      {
+        value: 'hangzhou',
+        label: 'Hangzhou',
+        children: [
+          {
+            value: 'xihu',
+            label: 'West Lake',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    value: 'jiangsu',
+    label: 'Jiangsu',
+    children: [
+      {
+        value: 'nanjing',
+        label: 'Nanjing',
+        children: [
+          {
+            value: 'zhonghuamen',
+            label: 'Zhong Hua Men',
+          },
+        ],
+      },
+    ],
   },
 ]
 
@@ -104,6 +139,9 @@ const ProDemo = () => {
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
+
+      <Cascader options={options} expandTrigger="hover" />
+
       <div style={{ height: 400 }}>Height For Scroll</div>
     </>
   )
