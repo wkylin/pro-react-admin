@@ -140,7 +140,7 @@ const ProDemo = () => {
       </Select>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <Cascader options={options} expandTrigger="hover" />
+      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
 
       <div style={{ height: 400 }}>Height For Scroll</div>
     </>
