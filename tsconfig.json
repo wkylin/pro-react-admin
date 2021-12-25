@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["dom", "dom.iterable", "es6"],
+    "allowJs": true,
+    "jsx": "react",
+    "sourceMap": true,
+    "outDir": "./dist/",
+    "rootDir": ".",
+    "removeComments": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "types": ["node"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src": ["../src"],
+      "@stateless": ["../src/components/stateless"],
+      "@stateful": ["../src/components/stateful"],
+      "@hooks": ["../src/components/hooks"],
+      "@container": ["../src/components/container"],
+      "@assets": ["../src/assets"]
+    }
+  }
+}

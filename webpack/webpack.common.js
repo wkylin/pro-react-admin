@@ -12,6 +12,7 @@ const Dotenv = require('dotenv-webpack')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+// const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const WebpackBar = require('webpackbar')
 
 // const { getThemeVariables } = require('antd/dist/theme')
@@ -44,7 +45,7 @@ switch (process.env.BUILD_GOAL) {
 
 const config = {
   entry: {
-    app: paths.src + '/index.js',
+    app: paths.src + '/index.tsx',
   },
   output: {
     path: paths.build,
@@ -57,6 +58,7 @@ const config = {
     clean: true,
   },
   resolve: {
+    // plugins: [new TsconfigPathsPlugin()],
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '@src': paths.src,
@@ -68,7 +70,7 @@ const config = {
       // '@utils': paths.utils,
     },
   },
-  target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
+  // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
     // new CleanWebpackPlugin({
     //   root: __dirname,

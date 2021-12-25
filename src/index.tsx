@@ -18,7 +18,7 @@ const themes = {
   dark: `./dark-theme.css`,
   light: `./light-theme.css`,
 }
-
+// const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
 ReactDOM.render(
   <ReduxProvider store={store}>
     <ConfigProvider locale={zhCN} componentSize="middle">
@@ -26,7 +26,7 @@ ReactDOM.render(
         <ThemeSwitcherProvider
           insertionPoint={document.getElementById('inject-styles-here')}
           themeMap={themes}
-          defaultTheme={localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'}
+          defaultTheme="light"
         >
           <App />
         </ThemeSwitcherProvider>
