@@ -10,8 +10,6 @@ const devProxy = require('./dev.proxy')
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
 
-const jsRegex = /\.(js|ts)$/
-
 const devWebpackConfig = merge(common, {
   mode: 'development',
   // devtool: 'source-map',
@@ -36,7 +34,7 @@ const devWebpackConfig = merge(common, {
   module: {
     rules: [
       {
-        test: jsRegex,
+        test: /\.(js|ts)$/,
         exclude: /node_modules/,
         use: [
           {

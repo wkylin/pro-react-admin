@@ -9,6 +9,7 @@ import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
 import FileUpload from './fileUpload'
+import TsDemo from './tsDemo'
 
 const columns = [
   {
@@ -140,7 +141,9 @@ const ProDemo = () => {
       </Select>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <Cascader options={options} expandTrigger="hover" />
+      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
+
+      <TsDemo />
 
       <div style={{ height: 400 }}>Height For Scroll</div>
     </>

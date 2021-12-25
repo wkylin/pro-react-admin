@@ -14,6 +14,8 @@ const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 // const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const WebpackBar = require('webpackbar')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+// const ESLintPlugin = require('eslint-webpack-plugin')
 
 // const { getThemeVariables } = require('antd/dist/theme')
 
@@ -61,13 +63,12 @@ const config = {
     // plugins: [new TsconfigPathsPlugin()],
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@src': paths.src,
-      '@stateless': paths.stateless,
-      '@stateful': paths.stateful,
-      '@hooks': paths.hooks,
-      '@container': paths.container,
-      '@assets': paths.assets,
-      // '@utils': paths.utils,
+      '@src': path.resolve('./src'),
+      '@stateless': path.resolve('./src/components/stateless'),
+      '@stateful': path.resolve('./src/components/stateful'),
+      '@hooks': path.resolve('./src/components/hooks'),
+      '@container': path.resolve('./src/components/container'),
+      '@assets': path.resolve('./src/assets'),
     },
   },
   // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
@@ -131,6 +132,12 @@ const config = {
     }),
     new NodePolyfillPlugin(),
     new WebpackBar(),
+    new ForkTsCheckerWebpackPlugin({
+      async: false,
+    }),
+    // new ESLintPlugin({
+    //   extensions: ['js', 'jsx', 'ts', 'tsx'],
+    // }),
   ],
   module: {
     rules: [
@@ -184,14 +191,9 @@ const config = {
         ],
       },
       {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: ['thread-loader', 'babel-loader'],
-      },
-      {
-        test: /\.(ts|tsx)$/,
-        exclude: /node_modules/,
-        use: ['ts-loader'],
       },
       {
         test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2)$/i,
