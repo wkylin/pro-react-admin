@@ -3,6 +3,7 @@ import { Layout, BackTop } from 'antd'
 import { Outlet } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import ProBreadcrumb from './breadcrumb'
+import ProTabs from '../proTabs'
 import styles from './index.module.less'
 
 const { Content, Header } = Layout
@@ -14,6 +15,7 @@ const ProContent = ({ routes = [] }) => {
       </Header>
       <Content className={styles.content} id="content">
         <div className={styles.container}>
+          <ProTabs />
           <Outlet />
         </div>
         <BackTop target={() => document.querySelector('#content')}>
