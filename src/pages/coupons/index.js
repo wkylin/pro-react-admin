@@ -1,34 +1,28 @@
 import React from 'react'
-import RouteWithSubRoutes from '@stateless/RouteWithSubRoutes'
-import { useNavigate, useMatch } from 'react-router-dom'
-import CustomSwitch from '@stateless/CustomSwitch'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { Button } from 'antd'
 
 const Coupons = ({ routes = [] }) => {
   const navigate = useNavigate()
-  const { url } = useMatch()
   const redirectTo = (path) => {
     navigate(path)
   }
 
   return (
     <>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo(`${url}/add`)}>
+      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('')}>
+        Home Coupons
+      </Button>
+      <Button type="text" style={{ margin: 10 }} onClick={() => redirectTo('add')}>
         Add Coupons
       </Button>
-      <Button style={{ margin: 10 }} onClick={() => redirectTo(`${url}/edit`)}>
+      <Button style={{ margin: 10 }} onClick={() => redirectTo('edit/1')}>
         Edit Coupons
       </Button>
-      <Button type="dashed" style={{ margin: 10 }} onClick={() => redirectTo(`${url}/detail`)}>
+      <Button type="dashed" style={{ margin: 10 }} onClick={() => redirectTo('detail/2')}>
         Detail Coupons
       </Button>
-
-      <CustomSwitch>
-        {/* <Route path="/" element={<div>Route</div>} /> */}
-        {routes.map((route, i) => (
-          <RouteWithSubRoutes key={i} {...route} />
-        ))}
-      </CustomSwitch>
+      <Outlet />
     </>
   )
 }

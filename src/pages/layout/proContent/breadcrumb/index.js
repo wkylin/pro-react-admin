@@ -11,6 +11,9 @@ const ProBreadcrumb = () => {
   const navigate = useNavigate()
 
   const [breadcrumbList, setBreadcrumbList] = useState([])
+
+  console.log('pathname', pathname)
+
   useEffect(() => {
     const routeList = getRouteList(
       [],

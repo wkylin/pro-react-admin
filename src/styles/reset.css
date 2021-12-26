@@ -88,6 +88,7 @@ body[data-theme="dark"] .header,
 body[data-theme="light"] .header {
   height: 50px;
   line-height: 50px;
+  padding-left: 20px;
 }
 
 body[data-theme="dark"] .container {

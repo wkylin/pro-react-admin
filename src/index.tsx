@@ -14,11 +14,14 @@ import zhCN from 'antd/lib/locale/zh_CN'
 // import enUS from 'antd/lib/locale/en_US'
 // import { BrowserRouter as Router } from 'react-router-dom'
 dayjs.locale('zh-cn')
+
 const themes = {
   dark: `./dark-theme.css`,
   light: `./light-theme.css`,
 }
-// const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
+
+const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
+
 ReactDOM.render(
   <ReduxProvider store={store}>
     <ConfigProvider locale={zhCN} componentSize="middle">
@@ -26,7 +29,7 @@ ReactDOM.render(
         <ThemeSwitcherProvider
           insertionPoint={document.getElementById('inject-styles-here')}
           themeMap={themes}
-          defaultTheme="light"
+          defaultTheme={defaultTheme || 'light'}
         >
           <App />
         </ThemeSwitcherProvider>

@@ -4,10 +4,10 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { HomeOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
+
 const selectedPath = {
   '/layout/coupons': '21',
   '/layout/product': '31',
-  '/layout/order': '41',
 }
 
 const ProSecNav = () => {
@@ -28,14 +28,11 @@ const ProSecNav = () => {
       className={styles.menu}
     >
       <Menu.SubMenu key="sub1" icon={<HomeOutlined />} title="新建活动单">
-        <Menu.Item key="21" onClick={() => redirectTo('layout/coupons')}>
+        <Menu.Item key="21" onClick={() => redirectTo('/coupons')}>
           送券活动单
         </Menu.Item>
-        <Menu.Item key="31" onClick={() => redirectTo('layout/product')}>
+        <Menu.Item key="31" onClick={() => redirectTo('/product')}>
           商品调价单
-        </Menu.Item>
-        <Menu.Item key="41" onClick={() => redirectTo('layout/order')}>
-          订单立减单
         </Menu.Item>
       </Menu.SubMenu>
     </Menu>

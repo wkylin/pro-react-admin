@@ -112,7 +112,7 @@ const ProDemo = () => {
       <h2>
         项目文档<span style={{ fontSize: 12, color: '#999', margin: '0 10px' }}>待完善</span>
       </h2>
-      <h4>Mock API 示例：</h4>
+      <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
       <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4>
       <h4>Redux 示例:</h4>

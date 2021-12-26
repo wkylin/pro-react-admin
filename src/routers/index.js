@@ -4,6 +4,14 @@ import Loading from '@stateless/Loading'
 const Layout = React.lazy(() => import('../pages/layout'))
 // const Home = React.lazy(() => import('../pages/home'))
 const Demo = React.lazy(() => import('../pages/demo'))
+const SignIn = React.lazy(() => import('../pages/signin'))
+const SignUp = React.lazy(() => import('../pages/signup'))
+const Coupons = React.lazy(() => import('../pages/coupons'))
+const CouponsHome = React.lazy(() => import('../pages/coupons/home'))
+const CouponsAdd = React.lazy(() => import('../pages/coupons/add'))
+const CouponsEdit = React.lazy(() => import('../pages/coupons/edit'))
+const CouponsDetail = React.lazy(() => import('../pages/coupons/detail'))
+const Product = React.lazy(() => import('../pages/product'))
 const NoMatch = React.lazy(() => import('../components/stateless/NoMatch'))
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
@@ -23,10 +31,68 @@ const rootRouter = [
     children: [
       {
         index: true,
-        name: 'Demo',
         element: (
           <React.Suspense fallback={<Loading />}>
             <Demo />
+          </React.Suspense>
+        ),
+      },
+      {
+        name: '送券活动单',
+        path: '/coupons',
+        element: (
+          <React.Suspense fallback={<Loading />}>
+            <Coupons />
+          </React.Suspense>
+        ),
+        children: [
+          {
+            index: true,
+            name: '送券单首页',
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <CouponsHome />
+              </React.Suspense>
+            ),
+          },
+          {
+            index: false,
+            name: '创建送券单',
+            path: 'add',
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <CouponsAdd />
+              </React.Suspense>
+            ),
+          },
+          {
+            index: false,
+            name: '编辑送券单',
+            path: 'edit/:id',
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <CouponsEdit />
+              </React.Suspense>
+            ),
+          },
+          {
+            index: false,
+            name: '送券单详情',
+            path: 'detail/:id',
+            element: (
+              <React.Suspense fallback={<Loading />}>
+                <CouponsDetail />
+              </React.Suspense>
+            ),
+          },
+        ],
+      },
+      {
+        name: '商品调价单',
+        path: '/product',
+        element: (
+          <React.Suspense fallback={<Loading />}>
+            <Product />
           </React.Suspense>
         ),
       },
@@ -40,6 +106,33 @@ const rootRouter = [
         ),
       },
     ],
+  },
+  {
+    name: '登录',
+    path: '/signin',
+    element: (
+      <React.Suspense fallback={<Loading />}>
+        <SignIn />
+      </React.Suspense>
+    ),
+  },
+  {
+    name: '注册',
+    path: '/signup',
+    element: (
+      <React.Suspense fallback={<Loading />}>
+        <SignUp />
+      </React.Suspense>
+    ),
+  },
+  {
+    path: '*',
+    name: 'No Match',
+    element: (
+      <React.Suspense fallback={<Loading />}>
+        <NoMatch />
+      </React.Suspense>
+    ),
   },
 ]
 
