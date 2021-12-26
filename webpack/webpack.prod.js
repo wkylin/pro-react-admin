@@ -92,5 +92,16 @@ const prodWebpackConfig = merge(common, {
   },
 })
 
+if (useSentryMap) {
+  prodWebpackConfig.plugins.push(
+    new SentryWebpackPlugin({
+      release: packageJson.version,
+      include: path.join(__dirname, '../dist/static/js'),
+      configFile: '../.sentryclirc',
+      urlPrefix: '~/static/js',
+    })
+  )
+}
+
 // module.exports = smp.wrap(prodWebpackConfig)
 module.exports = prodWebpackConfig

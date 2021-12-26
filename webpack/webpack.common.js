@@ -218,4 +218,8 @@ const config = {
   },
 }
 
+if (USE_ANALYZE) {
+  config.plugins.push(new BundleAnalyzerPlugin())
+}
+
 module.exports = config
