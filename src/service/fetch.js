@@ -17,7 +17,7 @@
 // import { HashRouter } from 'react-router-dom'
 import { message } from 'antd'
 import { suffix } from '../utils/suffix'
-import { getToken } from '../utils/token'
+// import { getToken } from '../utils/token'
 import fetchIntercept from 'fetch-intercept'
 // import fetch from 'cross-fetch'
 require('isomorphic-fetch')
@@ -111,7 +111,7 @@ const initOptions = {
   headers: {
     // Accept: 'application/json',
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8 application/x-www-form-urlencoded
-    Authorization: getToken() ? `Bearer ${getToken()}` : null,
+    // Authorization: getToken() ? `Bearer ${getToken()}` : null,
   },
   signal: undefined,
   credentials: 'include', // include *same-origin

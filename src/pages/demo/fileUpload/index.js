@@ -91,7 +91,7 @@ const FileUpload = () => {
       >
         {uploading ? 'Uploading' : 'Start Upload'}
       </Button>
-      {`FileList: ${JSON.stringify(fileList, 0, null)}`}
+      {`FileList: ${JSON.stringify(fileList, null, 2)}`}
       {`percent: ${percent}`}
       <Progress percent={percent} />
     </>
