@@ -68,12 +68,12 @@ body {
 /**
   default antd
 */
-body[data-theme="dark"] *::-webkit-scrollbar-thumb {
+body[data-theme='dark'] *::-webkit-scrollbar-thumb {
   background: hsl(0, 0%, 24%);
 }
 
-body[data-theme="dark"] .ant-back-top,
-body[data-theme="light"] .ant-back-top {
+body[data-theme='dark'] .ant-back-top,
+body[data-theme='light'] .ant-back-top {
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -81,20 +81,20 @@ body[data-theme="light"] .ant-back-top {
   bottom: 5px;
   border-radius: 100%;
   background-color: #aaa;
-  text-align:center;
+  text-align: center;
   margin-top: 2px;
 }
-body[data-theme="dark"] .header,
-body[data-theme="light"] .header {
+body[data-theme='dark'] .header,
+body[data-theme='light'] .header {
   height: 50px;
   line-height: 50px;
   padding-left: 20px;
 }
 
-body[data-theme="dark"] .container {
+body[data-theme='dark'] .container {
   background: #141414;
 }
 
-body[data-theme="light"] .container {
+body[data-theme='light'] .container {
   background: #ffffff;
 }
