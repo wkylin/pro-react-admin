@@ -1,28 +1,73 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Layout, BackTop } from 'antd'
-import { Outlet } from 'react-router-dom'
+// import { Outlet } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
+import { getKeyName } from '@utils/publicFn'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
 
-const { Content, Header } = Layout
+const { Content, Header, Footer } = Layout
+
+const noNewTab = ['/signin'] // 不需要新建 tab的页面
+// const noCheckAuth = ['/', '/403'] // 不需要检查权限的页面
+
 const ProContent = ({ routes = [] }) => {
+  const [tabActiveKey, setTabActiveKey] = useState('home')
+  const [panesItem, setPanesItem] = useState({
+    title: '',
+    content: null,
+    key: '',
+    closable: false,
+    path: '',
+  })
+
+  const pathRef = useRef('')
+  const navigate = useNavigate()
+  const { pathname, search } = useLocation()
+
+  useEffect(() => {
+    // 未登录
+    // if (!token && pathname !== '/signin') {
+    //   history.replace({ pathname: '/signin' })
+    //   return
+    // }
+
+    const { tabKey, title, component: Content } = getKeyName(pathname)
+    // 新tab已存在或不需要新建tab，return
+    if (pathname === pathRef.current || noNewTab.includes(pathname)) {
+      setTabActiveKey(tabKey)
+    }
+
+    // 记录新的路径，用于下次更新比较
+    const newPath = search ? pathname + search : pathname
+    pathRef.current = newPath
+    setPanesItem({
+      title,
+      content: Content,
+      key: tabKey,
+      closable: tabKey !== 'home',
+      path: newPath,
+    })
+    setTabActiveKey(tabKey)
+  }, [pathname, navigate, search])
+
   return (
     <Layout className={styles.layout}>
       <Header className={styles.header}>
         <ProBreadcrumb />
       </Header>
       <Content className={styles.content} id="content">
-        <div className={styles.container}>
-          <ProTabs />
-          <Outlet />
-        </div>
+        <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
+        {/* <Outlet /> */}
+      </Content>
+      <Footer className={styles.footer}>
         <BackTop target={() => document.querySelector('#content')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </BackTop>
-        <div className={styles.footer}>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
-      </Content>
+        <div>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
+      </Footer>
     </Layout>
   )
 }

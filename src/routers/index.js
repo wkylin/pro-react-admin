@@ -2,7 +2,7 @@ import React from 'react'
 // import loadable from '@loadable/component'
 import Loading from '@stateless/Loading'
 const Layout = React.lazy(() => import('../pages/layout'))
-// const Home = React.lazy(() => import('../pages/home'))
+const Home = React.lazy(() => import('../pages/home'))
 const Demo = React.lazy(() => import('../pages/demo'))
 const SignIn = React.lazy(() => import('../pages/signin'))
 const SignUp = React.lazy(() => import('../pages/signup'))
@@ -38,8 +38,17 @@ const rootRouter = [
         ),
       },
       {
+        index: false,
+        path: 'home',
+        element: (
+          <React.Suspense fallback={<Loading />}>
+            <Home />
+          </React.Suspense>
+        ),
+      },
+      {
         name: '送券活动单',
-        path: '/coupons',
+        path: 'coupons',
         element: (
           <React.Suspense fallback={<Loading />}>
             <Coupons />
@@ -89,7 +98,7 @@ const rootRouter = [
       },
       {
         name: '商品调价单',
-        path: '/product',
+        path: 'product',
         element: (
           <React.Suspense fallback={<Loading />}>
             <Product />

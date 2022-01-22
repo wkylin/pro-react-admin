@@ -6,6 +6,7 @@ const Home = () => {
     <>
       <h3>Home!</h3>
       <Empty />
+      <div style={{ height: 1000 }}>Height</div>
     </>
   )
 }
