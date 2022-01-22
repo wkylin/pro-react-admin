@@ -4,7 +4,7 @@ import ErrorBoundary from '@stateful/ErrorBoundary'
 // import { reqFetch } from '@src/service'
 import { useReqFetch, useGetFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Space, Select, Table, Cascader } from 'antd'
+import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
 import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
@@ -144,7 +144,17 @@ const ProDemo = () => {
       <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
 
       <TsDemo />
-
+      <Tabs defaultActiveKey="1">
+        <Tabs.TabPane tab="Tab 1" key="1">
+          Content of Tab Pane 1
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Tab 2" key="2">
+          Content of Tab Pane 2
+        </Tabs.TabPane>
+        <Tabs.TabPane tab="Tab 3" key="3">
+          Content of Tab Pane 3
+        </Tabs.TabPane>
+      </Tabs>
       <div style={{ height: 400 }}>Height For Scroll</div>
     </>
   )

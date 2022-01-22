@@ -1,9 +1,4 @@
 :global {
-  .container {
-    // min-height: calc(100% - 40px);
-    // padding: 10px 20px;
-  }
-
   .header {
     height: 50px;
     line-height: 50px;
@@ -16,15 +11,28 @@
     line-height: 40px;
     padding: 0 !important;
   }
+
+  .content {
+    height: 100%;
+    overflow: auto;
+    padding: 0 10px;
+
+    .ant-tabs-card .ant-tabs-content {
+      height: 100%;
+      margin-top: -16px;
+    }
+    .ant-tabs-card .ant-tabs-content > .ant-tabs-tabpane {
+      padding: 16px;
+      background: #fff;
+    }
+    .ant-tabs-card .ant-tabs-tab {
+      background: transparent;
+      border-color: transparent !important;
+    }
+  }
 }
 
 .layout {
   height: 100%;
   overflow: hidden;
-}
-
-.content {
-  height: 100%;
-  overflow: hidden;
-  padding: 0 20px;
 }

@@ -3,9 +3,12 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { StickyContainer, Sticky } from 'react-sticky'
 
 import Home from '@pages/home'
+import Demo from '@pages/demo'
 import { getKeyName } from '@utils/publicFn'
 // import { Tabs, Button } from 'antd'
 import { Tabs } from 'antd'
+
+// import styles from './index.module.less'
 
 const initialPanes = [
   {
@@ -13,7 +16,14 @@ const initialPanes = [
     key: 'home',
     content: Home,
     closable: false,
-    path: '/',
+    path: '/home',
+  },
+  {
+    title: 'Demo',
+    key: 'demo',
+    content: Demo,
+    closable: true,
+    path: '/demo',
   },
 ]
 
@@ -75,34 +85,33 @@ const ProTabs = (props) => {
   //   setPanes(filterPanes)
   // }
 
-  const renderTabBar = (props, DefaultTabBar) => (
-    <Sticky topOffset={40} relative>
-      {({ style, isSticky, wasSticky, distanceFromTop, distanceFromBottom, calculatedHeight }) => (
-        <DefaultTabBar {...props} className="site-custom-tab-bar" style={{ ...style }} />
-      )}
-    </Sticky>
-  )
+  // const renderTabBar = (props, DefaultTabBar) => (
+  //   <Sticky topOffset={400} relative>
+  //     {({ style, isSticky, wasSticky, distanceFromTop, distanceFromBottom, calculatedHeight }) => (
+  //       <DefaultTabBar {...props} className="site-custom-tab-bar" style={{ ...style }} />
+  //     )}
+  //   </Sticky>
+  // )
   return (
     <>
       {/* <Button onClick={add}>ADD</Button> */}
       {/* <Tabs hideAdd type="editable-card" activeKey={activeKey} onChange={onChange} onEdit={onEdit}> */}
-      <StickyContainer>
-        <Tabs
-          hideAdd
-          // type="editable-card"
-          type="card"
-          activeKey={activeKey}
-          defaultActiveKey={defaultActiveKey}
-          renderTabBar={renderTabBar}
-          onChange={onChange}
-        >
-          {panes.map((pane) => (
-            <Tabs.TabPane forceRender tab={pane.title} key={pane.key} closable={pane.closable}>
-              <pane.content path={pane.path} />
-            </Tabs.TabPane>
-          ))}
-        </Tabs>
-      </StickyContainer>
+      {/* <StickyContainer> */}
+      <Tabs
+        hideAdd
+        type="editable-card"
+        activeKey={activeKey}
+        defaultActiveKey={defaultActiveKey}
+        // renderTabBar={renderTabBar}
+        onChange={onChange}
+      >
+        {panes.map((pane) => (
+          <Tabs.TabPane forceRender tab={pane.title} key={pane.key} closable={pane.closable}>
+            <pane.content path={pane.path} />
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
+      {/* </StickyContainer> */}
     </>
   )
 }
