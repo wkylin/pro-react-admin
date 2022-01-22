@@ -21,10 +21,19 @@ const themes = {
 }
 
 const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
-
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ConfigProvider locale={zhCN} componentSize="middle">
+    <ConfigProvider
+      // getPopupContainer={(node) => {
+      //   if (node) {
+      //     return node.parentNode
+      //   }
+      //   return document.body
+      // }}
+      locale={zhCN}
+      componentSize="middle"
+      input={{ autoComplete: 'off' }}
+    >
       <ThemeSwitcherProvider
         insertionPoint={document.getElementById('inject-styles-here')}
         themeMap={themes}
