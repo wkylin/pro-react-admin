@@ -21,7 +21,6 @@ const themes = {
 }
 
 const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
-
 ReactDOM.render(
   <ReduxProvider store={store}>
     <ConfigProvider locale={zhCN} componentSize="middle">
