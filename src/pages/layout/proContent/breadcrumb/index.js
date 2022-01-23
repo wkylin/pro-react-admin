@@ -28,17 +28,19 @@ const ProBreadcrumb = () => {
 
   return (
     <>
-      <Breadcrumb separator="/">
+      <Breadcrumb separator='/'>
         {breadcrumbList.map((item, index) => {
-          return index !== breadcrumbList.length ? (
-            <Breadcrumb.Item className={styles.breadcrumb} key={item.path} onClick={() => linkTo(item.path)}>
-              {item.name}
-            </Breadcrumb.Item>
-          ) : (
-            <Breadcrumb.Item className={styles.lastBreadcrumb} key={item.path}>
-              {item.name}
-            </Breadcrumb.Item>
-          )
+          return index !== breadcrumbList.length
+            ? (
+              <Breadcrumb.Item className={styles.breadcrumb} key={item.path} onClick={() => linkTo(item.path)}>
+                {item.name}
+              </Breadcrumb.Item>
+              )
+            : (
+              <Breadcrumb.Item className={styles.lastBreadcrumb} key={item.path}>
+                {item.name}
+              </Breadcrumb.Item>
+              )
         })}
       </Breadcrumb>
     </>

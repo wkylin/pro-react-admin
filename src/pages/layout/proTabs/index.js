@@ -20,43 +20,43 @@ const initialPanes = [
     key: '/',
     content: Home,
     closable: false,
-    path: '/',
+    path: '/'
   },
   {
     title: 'Demo',
     key: '/demo',
     content: Demo,
     closable: true,
-    path: 'demo',
+    path: 'demo'
   },
   {
     title: '新建',
     key: '/coupons/add',
     content: CouponsAdd,
     closable: true,
-    path: 'add',
+    path: 'add'
   },
   {
     title: '编辑',
     key: '/coupons/edit',
     content: CouponsEdit,
     closable: true,
-    path: 'edit',
+    path: 'edit'
   },
   {
     title: '商品调价单',
     key: '/product',
     content: Product,
     closable: true,
-    path: 'product',
+    path: 'product'
   },
   {
     title: 'No Match',
     key: '/403',
     content: Exception403,
     closable: true,
-    path: '403',
-  },
+    path: '403'
+  }
 ]
 
 const ProTabs = (props) => {
@@ -119,7 +119,7 @@ const ProTabs = (props) => {
     <>
       <Tabs
         hideAdd
-        type="editable-card"
+        type='editable-card'
         activeKey={activeKey}
         defaultActiveKey={defaultActiveKey}
         onChange={onChange}

@@ -10,7 +10,7 @@ const pathSubmenu = {
   '/home': ['home'],
   '/coupons/add': ['/sub-act', '/sub-coupons'],
   '/coupons/edit': ['/sub-act', '/sub-coupons'],
-  '/product': ['/sub-act', '/sub-coupons'],
+  '/product': ['/sub-act', '/sub-coupons']
 }
 
 const ProSecNav = () => {
@@ -60,7 +60,7 @@ const ProSecNav = () => {
   return (
     <>
       <Menu
-        mode="inline"
+        mode='inline'
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}
@@ -70,24 +70,24 @@ const ProSecNav = () => {
         onOpenChange={onOpenChange}
         onClick={onItemClick}
       >
-        <Menu.Item key="/" icon={<HomeOutlined />}>
+        <Menu.Item key='/' icon={<HomeOutlined />}>
           Home
         </Menu.Item>
-        <Menu.Item key="/demo" icon={<DeploymentUnitOutlined />}>
+        <Menu.Item key='/demo' icon={<DeploymentUnitOutlined />}>
           Demo
         </Menu.Item>
-        <Menu.SubMenu key="/sub-act" icon={<HeatMapOutlined />} title="活动单">
-          <Menu.SubMenu key="/sub-coupons" icon={<DeploymentUnitOutlined />} title="送券活动单">
-            <Menu.Item key="/coupons/add">新建</Menu.Item>
-            <Menu.Item key="/coupons/edit">编辑</Menu.Item>
+        <Menu.SubMenu key='/sub-act' icon={<HeatMapOutlined />} title='活动单'>
+          <Menu.SubMenu key='/sub-coupons' icon={<DeploymentUnitOutlined />} title='送券活动单'>
+            <Menu.Item key='/coupons/add'>新建</Menu.Item>
+            <Menu.Item key='/coupons/edit'>编辑</Menu.Item>
           </Menu.SubMenu>
-          <Menu.Item key="/product" icon={<DeploymentUnitOutlined />}>
+          <Menu.Item key='/product' icon={<DeploymentUnitOutlined />}>
             商品调价单
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.SubMenu key="/sub-list" icon={<OrderedListOutlined />} title="促销列表">
-          <Menu.Item key="/coupons/list">券列表</Menu.Item>
-          <Menu.Item key="/order/list">订单列表</Menu.Item>
+        <Menu.SubMenu key='/sub-list' icon={<OrderedListOutlined />} title='促销列表'>
+          <Menu.Item key='/coupons/list'>券列表</Menu.Item>
+          <Menu.Item key='/order/list'>订单列表</Menu.Item>
         </Menu.SubMenu>
       </Menu>
     </>

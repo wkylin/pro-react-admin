@@ -20,7 +20,7 @@ const ProContent = () => {
     content: null,
     key: '',
     closable: false,
-    path: '',
+    path: ''
   })
 
   const pathRef = useRef('')
@@ -48,7 +48,7 @@ const ProContent = () => {
       content: Content,
       key: tabKey,
       closable: tabKey !== '/',
-      path: newPath,
+      path: newPath
     })
     setTabActiveKey(tabKey)
   }, [pathname, navigate, search])
@@ -58,11 +58,11 @@ const ProContent = () => {
       <Header className={styles.header}>
         <ProBreadcrumb />
       </Header>
-      <Content className={styles.content} id="content">
+      <Content className={styles.content} id='content'>
         {`tabActiveKey: ${tabActiveKey}`}
         <br />
         {`panesItem: ${JSON.stringify(panesItem, null, 2)}`}
-        <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
+        <ProTabs defaultActiveKey='home' panesItem={panesItem} tabActiveKey={tabActiveKey} />
         {/* <Outlet /> */}
       </Content>
       <Footer className={styles.footer}>

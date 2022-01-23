@@ -39,7 +39,7 @@ const rootRouter = [
           <React.Suspense fallback={<Loading />}>
             <Home />
           </React.Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -49,7 +49,7 @@ const rootRouter = [
           <React.Suspense fallback={<Loading />}>
             <Demo />
           </React.Suspense>
-        ),
+        )
       },
       {
         name: '送券活动单',
@@ -70,7 +70,7 @@ const rootRouter = [
               <React.Suspense fallback={<Loading />}>
                 <CouponsHome />
               </React.Suspense>
-            ),
+            )
           },
           {
             index: false,
@@ -81,7 +81,7 @@ const rootRouter = [
               <React.Suspense fallback={<Loading />}>
                 <CouponsAdd />
               </React.Suspense>
-            ),
+            )
           },
           {
             index: false,
@@ -92,7 +92,7 @@ const rootRouter = [
               <React.Suspense fallback={<Loading />}>
                 <CouponsEdit />
               </React.Suspense>
-            ),
+            )
           },
           {
             index: false,
@@ -103,9 +103,9 @@ const rootRouter = [
               <React.Suspense fallback={<Loading />}>
                 <CouponsDetail />
               </React.Suspense>
-            ),
-          },
-        ],
+            )
+          }
+        ]
       },
       {
         name: '商品调价单',
@@ -116,7 +116,7 @@ const rootRouter = [
           <React.Suspense fallback={<Loading />}>
             <Product />
           </React.Suspense>
-        ),
+        )
       },
       {
         path: '*',
@@ -126,9 +126,9 @@ const rootRouter = [
           <React.Suspense fallback={<Loading />}>
             <NoMatch />
           </React.Suspense>
-        ),
-      },
-    ],
+        )
+      }
+    ]
   },
   {
     name: '登录',
@@ -138,7 +138,7 @@ const rootRouter = [
       <React.Suspense fallback={<Loading />}>
         <SignIn />
       </React.Suspense>
-    ),
+    )
   },
   {
     name: '注册',
@@ -148,8 +148,8 @@ const rootRouter = [
       <React.Suspense fallback={<Loading />}>
         <SignUp />
       </React.Suspense>
-    ),
-  },
+    )
+  }
   // {
   //   path: '*',
   //   name: 'No Match',
