@@ -24,7 +24,7 @@ const ProSecNav = () => {
       <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
         Home
       </Menu.Item>
-      <Menu.SubMenu key="demo" icon={<HeatMapOutlined />} title="Deom">
+      <Menu.SubMenu key="demo" icon={<HeatMapOutlined />} title="Demo">
         <Menu.Item key="sub-demo" icon={<DeploymentUnitOutlined />} onClick={() => redirectTo('demo')}>
           Demo
         </Menu.Item>
