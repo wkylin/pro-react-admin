@@ -86,7 +86,7 @@ const rootRouter = [
           {
             index: false,
             name: '编辑送券单',
-            path: 'edit/:id',
+            path: 'edit',
             key: '/coupons/edit',
             element: (
               <React.Suspense fallback={<Loading />}>
@@ -97,7 +97,7 @@ const rootRouter = [
           {
             index: false,
             name: '送券单详情',
-            path: 'detail/:id',
+            path: 'detail',
             key: '/coupons/detail',
             element: (
               <React.Suspense fallback={<Loading />}>
@@ -121,6 +121,7 @@ const rootRouter = [
       {
         path: '*',
         name: 'No Match',
+        key: '*',
         element: (
           <React.Suspense fallback={<Loading />}>
             <NoMatch />
@@ -141,8 +142,8 @@ const rootRouter = [
   },
   {
     name: '注册',
-    key: 'signup',
-    path: '/signup',
+    key: '/signup',
+    path: 'signup',
     element: (
       <React.Suspense fallback={<Loading />}>
         <SignUp />

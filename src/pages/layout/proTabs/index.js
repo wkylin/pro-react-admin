@@ -3,6 +3,11 @@ import { useNavigate, useLocation } from 'react-router-dom'
 
 import Home from '@pages/home'
 import Demo from '@pages/demo'
+import CouponsAdd from '@pages/coupons/add'
+import CouponsEdit from '@pages/coupons/edit'
+import Product from '@pages/product'
+import NoMatch from '@stateless/NoMatch'
+
 import { getKeyName } from '@utils/publicFn'
 // import { Tabs, Button } from 'antd'
 import { Tabs } from 'antd'
@@ -16,6 +21,41 @@ const initialPanes = [
     content: Home,
     closable: false,
     path: '/',
+  },
+  {
+    title: 'Demo',
+    key: '/demo',
+    content: Demo,
+    closable: true,
+    path: 'demo',
+  },
+  {
+    title: '新建',
+    key: '/coupons/add',
+    content: CouponsAdd,
+    closable: true,
+    path: 'add',
+  },
+  {
+    title: '编辑',
+    key: '/coupons/edit',
+    content: CouponsEdit,
+    closable: true,
+    path: 'edit',
+  },
+  {
+    title: '商品调价单',
+    key: '/product',
+    content: Product,
+    closable: true,
+    path: 'product',
+  },
+  {
+    title: 'No Match',
+    key: '403',
+    content: NoMatch,
+    closable: true,
+    path: '403',
   },
 ]
 

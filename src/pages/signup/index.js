@@ -75,7 +75,7 @@ const SignUp = () => {
 
         <Form.Item {...tailLayout}>
           {/* <Button type="primary" htmlType="submit"> */}
-          <Button type="primary" onClick={() => redirectTo('/layout')}>
+          <Button type="primary" onClick={() => redirectTo('/')}>
             Sign up
           </Button>
         </Form.Item>

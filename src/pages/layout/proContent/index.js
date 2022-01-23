@@ -13,7 +13,7 @@ const { Content, Header, Footer } = Layout
 const noNewTab = ['/signin'] // 不需要新建 tab的页面
 // const noCheckAuth = ['/', '/403'] // 不需要检查权限的页面
 
-const ProContent = ({ routes = [] }) => {
+const ProContent = () => {
   const [tabActiveKey, setTabActiveKey] = useState('home')
   const [panesItem, setPanesItem] = useState({
     title: '',

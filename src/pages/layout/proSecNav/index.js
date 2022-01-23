@@ -24,12 +24,17 @@ const ProSecNav = () => {
       <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
         Home
       </Menu.Item>
+      <Menu.SubMenu key="demo" icon={<HeatMapOutlined />} title="Deom">
+        <Menu.Item key="sub-demo" icon={<DeploymentUnitOutlined />} onClick={() => redirectTo('demo')}>
+          Demo
+        </Menu.Item>
+      </Menu.SubMenu>
       <Menu.SubMenu key="act" icon={<HeatMapOutlined />} title="活动单">
         <Menu.SubMenu key="act-coupons" icon={<DeploymentUnitOutlined />} title="送券活动单">
           <Menu.Item key="coupons-new" onClick={() => redirectTo('coupons/add')}>
             新建
           </Menu.Item>
-          <Menu.Item key="coupons-edit" onClick={() => redirectTo('coupons/edit/1')}>
+          <Menu.Item key="coupons-edit" onClick={() => redirectTo('coupons/edit?id=1')}>
             编辑
           </Menu.Item>
         </Menu.SubMenu>
