@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import Home from '@pages/home'
@@ -68,9 +68,8 @@ const ProTabs = (props) => {
 
   const navigate = useNavigate()
 
-  const { defaultActiveKey, panesItem, tabActiveKey } = props
-  const { pathname, search } = useLocation()
-  // const fullPath = pathname + search
+  const { defaultActiveKey } = props
+  const { pathname } = useLocation()
 
   // 从本地存储中恢复已打开的tab列表
   const resetTabs = useCallback(() => {
@@ -97,42 +96,27 @@ const ProTabs = (props) => {
     console.log('direction', direction)
   }
 
-  // const onEdit = (targetKey, action) => {
-  //   action === 'remove' && remove(targetKey)
-  // }
+  const onEdit = (targetKey, action) => {
+    action === 'remove' && remove(targetKey)
+  }
 
-  // const add = () => {
-  //   newTabIndex.current++
-  //   const activeKey = `${newTabIndex.current++}`
-  //   panes.push({ title: 'New Tab', content: 'New Tab Pane', key: activeKey })
-  //   setPanes(panes)
-  //   setActiveKey(activeKey)
-  // }
-
-  // const remove = (targetKey) => {
-  //   let lastIndex
-  //   panes.forEach((pane, i) => {
-  //     if (pane.key === targetKey) {
-  //       lastIndex = i - 1
-  //     }
-  //   })
-  //   const filterPanes = panes.filter((pane) => pane.key !== targetKey)
-  //   if (filterPanes.length && activeKey === targetKey) {
-  //     if (lastIndex >= 0) {
-  //       activeKey = filterPanes[lastIndex].key
-  //     } else {
-  //       activeKey = filterPanes[0].key
-  //     }
-  //   }
-  //   setActiveKey(activeKey)
-  //   setPanes(filterPanes)
-  // }
+  const remove = (targetKey) => {
+    const delIndex = panes.findIndex((item) => item.key === targetKey)
+    const filterPanes = panes.filter((pane) => pane.key !== targetKey)
+    // 删除非当前/当前tab
+    if (targetKey !== activeKey) {
+      setPanes(filterPanes)
+      // storeTabs(panes) // 改变redux中数据
+    } else {
+      const nextPath = filterPanes[delIndex - 1].key
+      navigate(nextPath)
+      setActiveKey(nextPath)
+      setPanes(filterPanes)
+    }
+  }
 
   return (
     <>
-      {/* <Button onClick={add}>ADD</Button> */}
-      {`activeKey: ${activeKey}`}
-      <br />
       <Tabs
         hideAdd
         type="editable-card"
@@ -141,6 +125,7 @@ const ProTabs = (props) => {
         onChange={onChange}
         onTabClick={onTabClick}
         onTabScroll={onTabScroll}
+        onEdit={onEdit}
       >
         {panes.map((pane) => (
           <Tabs.TabPane forceRender tab={pane.title} key={pane.key} closable={pane.closable}>
