@@ -12,16 +12,12 @@ const ProBreadcrumb = () => {
 
   const [breadcrumbList, setBreadcrumbList] = useState([])
 
-  console.log('pathname', pathname)
-
   useEffect(() => {
     const routeList = getRouteList(
       [],
       getRouteItem(rootRouter, pathname) ? [getRouteItem(rootRouter, pathname)] : [],
       pathname
     )
-
-    console.log('routeList', routeList)
 
     setBreadcrumbList([...routeList])
   }, [pathname])

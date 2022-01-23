@@ -6,7 +6,7 @@ import Demo from '@pages/demo'
 import CouponsAdd from '@pages/coupons/add'
 import CouponsEdit from '@pages/coupons/edit'
 import Product from '@pages/product'
-import NoMatch from '@stateless/NoMatch'
+import Exception403 from '@stateless/Exception/exception403'
 
 import { getKeyName } from '@utils/publicFn'
 // import { Tabs, Button } from 'antd'
@@ -52,8 +52,8 @@ const initialPanes = [
   },
   {
     title: 'No Match',
-    key: '403',
-    content: NoMatch,
+    key: '/403',
+    content: Exception403,
     closable: true,
     path: '403',
   },
@@ -65,6 +65,8 @@ const ProTabs = (props) => {
   // const [isReload, setIsReload] = useState(false)
   // const [selectedPanel, setSelectedPanel] = useState({})
   // const pathRef = useRef('')
+
+  const navigate = useNavigate()
 
   const { defaultActiveKey, panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
@@ -84,6 +86,15 @@ const ProTabs = (props) => {
 
   const onChange = (activeKey) => {
     setActiveKey(activeKey)
+    navigate(activeKey)
+  }
+
+  const onTabClick = (key) => {
+    console.log('key', key)
+  }
+
+  const onTabScroll = ({ direction }) => {
+    console.log('direction', direction)
   }
 
   // const onEdit = (targetKey, action) => {
@@ -122,7 +133,15 @@ const ProTabs = (props) => {
       {/* <Button onClick={add}>ADD</Button> */}
       {`activeKey: ${activeKey}`}
       <br />
-      <Tabs hideAdd type="editable-card" activeKey={activeKey} defaultActiveKey={defaultActiveKey} onChange={onChange}>
+      <Tabs
+        hideAdd
+        type="editable-card"
+        activeKey={activeKey}
+        defaultActiveKey={defaultActiveKey}
+        onChange={onChange}
+        onTabClick={onTabClick}
+        onTabScroll={onTabScroll}
+      >
         {panes.map((pane) => (
           <Tabs.TabPane forceRender tab={pane.title} key={pane.key} closable={pane.closable}>
             <pane.content path={pane.path} />
