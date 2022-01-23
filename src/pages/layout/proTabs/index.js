@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-
+import { Tabs, Menu, Dropdown, Alert } from 'antd'
+import { SyncOutlined } from '@ant-design/icons'
 import Home from '@pages/home'
 import Demo from '@pages/demo'
 import CouponsAdd from '@pages/coupons/add'
@@ -9,8 +10,6 @@ import Product from '@pages/product'
 import Exception403 from '@stateless/Exception/exception403'
 
 import { getKeyName } from '@utils/publicFn'
-// import { Tabs, Button } from 'antd'
-import { Tabs } from 'antd'
 
 // import styles from './index.module.less'
 
@@ -62,14 +61,15 @@ const initialPanes = [
 const ProTabs = (props) => {
   const [activeKey, setActiveKey] = useState('')
   const [panes, setPanes] = useState(initialPanes)
-  // const [isReload, setIsReload] = useState(false)
-  // const [selectedPanel, setSelectedPanel] = useState({})
+  const [isReload, setIsReload] = useState(false)
+  const [selectedPanel, setSelectedPanel] = useState({})
   // const pathRef = useRef('')
 
   const navigate = useNavigate()
 
   const { defaultActiveKey } = props
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
+  const fullPath = pathname + search
 
   // 从本地存储中恢复已打开的tab列表
   const resetTabs = useCallback(() => {
@@ -115,8 +115,91 @@ const ProTabs = (props) => {
     }
   }
 
+  const isDisabled = () => selectedPanel.key === '/'
+  // 阻止右键默认事件
+  const preventDefault = (event, panel) => {
+    event.preventDefault()
+    setSelectedPanel(panel)
+  }
+
+  // 刷新当前 tab
+  const refreshTab = () => {
+    setIsReload(true)
+    setTimeout(() => {
+      setIsReload(false)
+    }, 1000)
+
+    // setStoreData('SET_RELOADPATH', pathname + search)
+    // setTimeout(() => {
+    //   setStoreData('SET_RELOADPATH', 'null')
+    // }, 500)
+  }
+
+  // 关闭其他或关闭所有
+  const removeAll = async (isRemoveAll) => {
+    const { key } = selectedPanel
+    navigate(isRemoveAll ? '/' : key)
+
+    const homePanel = [
+      {
+        title: '首页',
+        key: '/',
+        content: Home,
+        closable: false,
+        path: '/',
+      },
+    ]
+
+    const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
+    console.log('nowPanes', nowPanes)
+    setPanes(nowPanes)
+    navigate(nowPanes[0].key)
+    setActiveKey(isRemoveAll ? '/' : key)
+    // storeTabs(nowPanes)
+  }
+
+  // tab 右键菜单
+  const tabRightMenu = (
+    <Menu>
+      <Menu.Item key="1" onClick={refreshTab} disabled={selectedPanel.key !== fullPath || selectedPanel.key === '/403'}>
+        刷新
+      </Menu.Item>
+      <Menu.Item
+        key="2"
+        onClick={(e) => {
+          e.domEvent.stopPropagation()
+          remove(selectedPanel.key)
+        }}
+        disabled={isDisabled()}
+      >
+        关闭
+      </Menu.Item>
+      <Menu.Item
+        key="3"
+        onClick={(e) => {
+          e.domEvent.stopPropagation()
+          removeAll()
+        }}
+      >
+        关闭其他
+      </Menu.Item>
+      <Menu.Item
+        key="4"
+        onClick={(e) => {
+          e.domEvent.stopPropagation()
+          removeAll(true)
+        }}
+        disabled={isDisabled()}
+      >
+        全部关闭
+      </Menu.Item>
+    </Menu>
+  )
+
   return (
     <>
+      <br />
+      {`selectedPanel: ${JSON.stringify(selectedPanel, null, 2)}`}
       <Tabs
         hideAdd
         type="editable-card"
@@ -128,8 +211,32 @@ const ProTabs = (props) => {
         onEdit={onEdit}
       >
         {panes.map((pane) => (
-          <Tabs.TabPane forceRender tab={pane.title} key={pane.key} closable={pane.closable}>
-            <pane.content path={pane.path} />
+          <Tabs.TabPane
+            forceRender
+            key={pane.key}
+            closable={pane.closable}
+            tab={
+              <Dropdown
+                overlay={tabRightMenu}
+                placement="bottomLeft"
+                trigger={['contextMenu']}
+                getPopupContainer={(node) => node.parentNode}
+              >
+                <span onContextMenu={(e) => preventDefault(e, pane)}>
+                  {isReload && pane.key === fullPath && pane.key !== '/403' && (
+                    <SyncOutlined title="刷新" spin={isReload} />
+                  )}
+                  {pane.title}
+                </span>
+              </Dropdown>
+            }
+          >
+            {/* <pane.content path={pane.path} /> */}
+            {isReload && pane.key === fullPath && pane.key !== '/403' ? (
+              <Alert message="刷新中..." type="info" />
+            ) : (
+              <pane.content path={pane.path} />
+            )}
           </Tabs.TabPane>
         ))}
       </Tabs>

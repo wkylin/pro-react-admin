@@ -24,7 +24,7 @@ const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('
 
 ReactDOM.render(
   <ReduxProvider store={store}>
-    <ConfigProvider locale={zhCN} componentSize="middle">
+    <ConfigProvider locale={zhCN} componentSize="middle" input={{ autoComplete: 'off' }}>
       <ThemeSwitcherProvider
         insertionPoint={document.getElementById('inject-styles-here')}
         themeMap={themes}
