@@ -28,6 +28,13 @@ const ProContent = () => {
   const { pathname, search } = useLocation()
 
   useEffect(() => {
+    // scroll to top
+    document.querySelector('#content').scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
+
     // 未登录
     // if (!token && pathname !== '/signin') {
     //   navigate('signin', { replace: true })

@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher'
 import { ConfigProvider } from 'antd'
+
 // import reportWebVitals from './reportWebVitals'
 import store from './store'
 import './styles/reset.css'
