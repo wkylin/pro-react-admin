@@ -10,7 +10,7 @@ import styles from './index.module.less'
 
 const { Content, Header, Footer } = Layout
 
-const noNewTab = ['/signin'] // 不需要新建 tab的页面
+const noNewTab = ['/signin', '/signup'] // 不需要新建 tab的页面
 // const noCheckAuth = ['/', '/403'] // 不需要检查权限的页面
 
 const ProContent = () => {
@@ -30,7 +30,7 @@ const ProContent = () => {
   useEffect(() => {
     // 未登录
     // if (!token && pathname !== '/signin') {
-    //   history.replace({ pathname: '/signin' })
+    //   navigate('signin', { replace: true })
     //   return
     // }
 
@@ -41,8 +41,6 @@ const ProContent = () => {
 
     const newPath = search ? pathname + search : pathname
     pathRef.current = newPath
-    console.log('tabKey', tabKey)
-    console.log('title', title)
     setPanesItem({
       title,
       content: Content,
