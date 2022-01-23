@@ -21,7 +21,7 @@ const ProSecNav = () => {
       // theme="dark"
       className={styles.menu}
     >
-      <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => redirectTo('home')}>
+      <Menu.Item key="home" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
         Home
       </Menu.Item>
       <Menu.SubMenu key="act" icon={<HeatMapOutlined />} title="活动单">
@@ -33,7 +33,7 @@ const ProSecNav = () => {
             编辑
           </Menu.Item>
         </Menu.SubMenu>
-        <Menu.Item key="act-product" icon={<DeploymentUnitOutlined />} onClick={() => redirectTo('/product')}>
+        <Menu.Item key="act-product" icon={<DeploymentUnitOutlined />} onClick={() => redirectTo('product')}>
           商品调价单
         </Menu.Item>
       </Menu.SubMenu>

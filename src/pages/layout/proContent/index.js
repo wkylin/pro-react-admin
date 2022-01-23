@@ -35,19 +35,19 @@ const ProContent = ({ routes = [] }) => {
     // }
 
     const { tabKey, title, component: Content } = getKeyName(pathname)
-    // 新tab已存在或不需要新建tab，return
     if (pathname === pathRef.current || noNewTab.includes(pathname)) {
       setTabActiveKey(tabKey)
     }
 
-    // 记录新的路径，用于下次更新比较
     const newPath = search ? pathname + search : pathname
     pathRef.current = newPath
+    console.log('tabKey', tabKey)
+    console.log('title', title)
     setPanesItem({
       title,
       content: Content,
       key: tabKey,
-      closable: tabKey !== 'home',
+      closable: tabKey !== '/',
       path: newPath,
     })
     setTabActiveKey(tabKey)
@@ -59,6 +59,9 @@ const ProContent = ({ routes = [] }) => {
         <ProBreadcrumb />
       </Header>
       <Content className={styles.content} id="content">
+        {`tabActiveKey: ${tabActiveKey}`}
+        <br />
+        {`panesItem: ${JSON.stringify(panesItem, null, 2)}`}
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
         {/* <Outlet /> */}
       </Content>

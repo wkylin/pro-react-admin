@@ -21,8 +21,8 @@ const ProHeader = () => {
   }, [currentTheme, switcher, themes])
 
   const changeTheme = (checked) => {
-    switcher({ theme: checked ? themes.light : themes.dark })
-    localStorage.setItem('antd-theme', checked ? 'light' : 'dark')
+    // switcher({ theme: checked ? themes.light : themes.dark })
+    // localStorage.setItem('antd-theme', checked ? 'light' : 'dark')
   }
   return (
     <Layout.Header className={styles.header}>
