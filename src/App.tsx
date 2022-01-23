@@ -1,5 +1,5 @@
-// import React, { useEffect, useRef } from 'react'
 import React, { useEffect, useState } from 'react'
+// import React, { useEffect, useState, useRef } from 'react'
 
 import { useRoutes } from 'react-router-dom'
 import rootRouter from './routers'
@@ -21,11 +21,11 @@ const App = () => {
     //   text: '测试测试',
     // })
 
+    asyncCall().then(() => setLoading(false))
+
     // return () => {
     //   waterMark.current && waterMark.current.destroy()
     // }
-
-    asyncCall().then(() => setLoading(false))
   }, [])
 
   const element = useRoutes(rootRouter)

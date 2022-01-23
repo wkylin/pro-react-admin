@@ -4,14 +4,14 @@ import { Layout, BackTop } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
-import ProBreadcrumb from './breadcrumb'
+// import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
 
-const { Content, Header, Footer } = Layout
+// const { Content, Header, Footer } = Layout
+const { Content, Footer } = Layout
 
-const noNewTab = ['/signin', '/signup'] // 不需要新建 tab的页面
-// const noCheckAuth = ['/', '/403'] // 不需要检查权限的页面
+const noNewTab = ['/signin', '/signup']
 
 const ProContent = () => {
   const [tabActiveKey, setTabActiveKey] = useState('home')
@@ -53,9 +53,9 @@ const ProContent = () => {
 
   return (
     <Layout className={styles.layout}>
-      <Header className={styles.header}>
+      {/* <Header className={styles.header}>
         <ProBreadcrumb />
-      </Header>
+      </Header> */}
       <Content className={styles.content} id="content">
         {`tabActiveKey: ${tabActiveKey}`}
         <br />

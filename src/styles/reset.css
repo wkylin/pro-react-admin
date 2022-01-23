@@ -61,6 +61,21 @@ body {
   border-radius: 4px;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+textarea:-webkit-autofill:active,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+select:-webkit-autofill:active {
+  transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s;
+}
+
 #root {
   width: 100vw;
   height: 100vh;
@@ -116,10 +131,10 @@ body[data-theme='light'] .header {
   padding-left: 20px;
 }
 
-body[data-theme='dark'] .container {
+body[data-theme='dark'] .content {
   background: #141414;
 }
 
-body[data-theme='light'] .container {
+body[data-theme='light'] .content {
   background: #ffffff;
 }
