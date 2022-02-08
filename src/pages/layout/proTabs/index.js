@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Tabs, Menu, Dropdown, Alert } from 'antd'
+import { Tabs, Menu, Dropdown, Alert, Button } from 'antd'
+import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined } from '@ant-design/icons'
 import Home from '@pages/home'
 import Demo from '@pages/demo'
@@ -11,7 +12,7 @@ import Exception403 from '@stateless/Exception/exception403'
 
 import { getKeyName } from '@utils/publicFn'
 
-// import styles from './index.module.less'
+import styles from './index.module.less'
 
 const initialPanes = [
   {
@@ -57,6 +58,12 @@ const initialPanes = [
     path: '403',
   },
 ]
+
+const renderTabBar = (props, DefaultTabBar) => (
+  <Sticky topOffset={40} relative={true}>
+    {({ style }) => <DefaultTabBar {...props} style={{ ...style }} />}
+  </Sticky>
+)
 
 const ProTabs = (props) => {
   const [activeKey, setActiveKey] = useState('')
@@ -197,8 +204,7 @@ const ProTabs = (props) => {
   )
 
   return (
-    <>
-      <br />
+    <StickyContainer className={styles.container} id="container">
       {`selectedPanel: ${JSON.stringify(selectedPanel, null, 2)}`}
       <Tabs
         hideAdd
@@ -209,6 +215,15 @@ const ProTabs = (props) => {
         onTabClick={onTabClick}
         onTabScroll={onTabScroll}
         onEdit={onEdit}
+        renderTabBar={renderTabBar}
+        tabBarGutter={0}
+        tabBarStyle={{
+          zIndex: 2,
+        }}
+        className={styles.proTabs}
+        tabBarExtraContent={{
+          left: <Button type="link">Pro React</Button>,
+        }}
       >
         {panes.map((pane) => (
           <Tabs.TabPane
@@ -231,7 +246,6 @@ const ProTabs = (props) => {
               </Dropdown>
             }
           >
-            {/* <pane.content path={pane.path} /> */}
             {isReload && pane.key === fullPath && pane.key !== '/403' ? (
               <Alert message="刷新中..." type="info" />
             ) : (
@@ -240,7 +254,7 @@ const ProTabs = (props) => {
           </Tabs.TabPane>
         ))}
       </Tabs>
-    </>
+    </StickyContainer>
   )
 }
 

@@ -4,12 +4,12 @@ import { Layout, BackTop } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
-// import ProBreadcrumb from './breadcrumb'
+import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
 
-// const { Content, Header, Footer } = Layout
-const { Content, Footer } = Layout
+const { Content, Header, Footer } = Layout
+// const { Content, Footer } = Layout
 
 const noNewTab = ['/signin', '/signup']
 
@@ -29,7 +29,7 @@ const ProContent = () => {
 
   useEffect(() => {
     // scroll to top
-    document.querySelector('#content').scrollTo({
+    document.querySelector('#container').scrollTo({
       top: 0,
       left: 0,
       behavior: 'smooth',
@@ -60,18 +60,19 @@ const ProContent = () => {
 
   return (
     <Layout className={styles.layout}>
-      {/* <Header className={styles.header}>
+      <Header className={styles.header}>
         <ProBreadcrumb />
-      </Header> */}
-      <Content className={styles.content} id="content">
+      </Header>
+      <Content className={styles.content}>
         {`tabActiveKey: ${tabActiveKey}`}
         <br />
         {`panesItem: ${JSON.stringify(panesItem, null, 2)}`}
+        <br />
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
         {/* <Outlet /> */}
       </Content>
       <Footer className={styles.footer}>
-        <BackTop target={() => document.querySelector('#content')}>
+        <BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </BackTop>
         <div>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
