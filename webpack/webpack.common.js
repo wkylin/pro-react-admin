@@ -17,7 +17,7 @@ const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 // const ESLintPlugin = require('eslint-webpack-plugin')
 
-// const { getThemeVariables } = require('antd/dist/theme')
+const { getThemeVariables } = require('antd/dist/theme')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -175,10 +175,10 @@ const config = {
                 //   'root-entry-name': 'default',
                 //   'primary-color': '#1890FF', // #1DA57A
                 // },
-                // modifyVars: getThemeVariables({
-                //   dark: true, // Enable dark mode
-                //   compact: false, // Enable compact mode
-                // }),
+                modifyVars: getThemeVariables({
+                  dark: true, // Enable dark mode
+                  compact: false, // Enable compact mode
+                }),
                 javascriptEnabled: true,
               },
             },
