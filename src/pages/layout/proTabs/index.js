@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Menu, Dropdown, Alert, Button } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined } from '@ant-design/icons'
 import Home from '@pages/home'
-import Demo from '@pages/demo'
-import CouponsAdd from '@pages/coupons/add'
-import CouponsEdit from '@pages/coupons/edit'
-import Product from '@pages/product'
-import Exception403 from '@stateless/Exception/exception403'
+// import Demo from '@pages/demo'
+// import CouponsAdd from '@pages/coupons/add'
+// import CouponsEdit from '@pages/coupons/edit'
+// import Product from '@pages/product'
+// import Exception403 from '@stateless/Exception/exception403'
 
 import { getKeyName } from '@utils/publicFn'
 
@@ -22,41 +22,41 @@ const initialPanes = [
     closable: false,
     path: '/',
   },
-  {
-    title: 'Demo',
-    key: '/demo',
-    content: Demo,
-    closable: true,
-    path: 'demo',
-  },
-  {
-    title: '新建',
-    key: '/coupons/add',
-    content: CouponsAdd,
-    closable: true,
-    path: 'add',
-  },
-  {
-    title: '编辑',
-    key: '/coupons/edit',
-    content: CouponsEdit,
-    closable: true,
-    path: 'edit',
-  },
-  {
-    title: '商品调价单',
-    key: '/product',
-    content: Product,
-    closable: true,
-    path: 'product',
-  },
-  {
-    title: 'No Match',
-    key: '/403',
-    content: Exception403,
-    closable: true,
-    path: '403',
-  },
+  // {
+  //   title: 'Demo',
+  //   key: '/demo',
+  //   content: Demo,
+  //   closable: true,
+  //   path: 'demo',
+  // },
+  // {
+  //   title: '新建',
+  //   key: '/coupons/add',
+  //   content: CouponsAdd,
+  //   closable: true,
+  //   path: 'add',
+  // },
+  // {
+  //   title: '编辑',
+  //   key: '/coupons/edit',
+  //   content: CouponsEdit,
+  //   closable: true,
+  //   path: 'edit',
+  // },
+  // {
+  //   title: '商品调价单',
+  //   key: '/product',
+  //   content: Product,
+  //   closable: true,
+  //   path: 'product',
+  // },
+  // {
+  //   title: 'No Match',
+  //   key: '/403',
+  //   content: Exception403,
+  //   closable: true,
+  //   path: '403',
+  // },
 ]
 
 const renderTabBar = (props, DefaultTabBar) => (
@@ -70,11 +70,11 @@ const ProTabs = (props) => {
   const [panes, setPanes] = useState(initialPanes)
   const [isReload, setIsReload] = useState(false)
   const [selectedPanel, setSelectedPanel] = useState({})
-  // const pathRef = useRef('')
+  const pathRef = useRef('')
 
   const navigate = useNavigate()
 
-  const { defaultActiveKey } = props
+  const { defaultActiveKey, panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
   const fullPath = pathname + search
 
@@ -89,6 +89,37 @@ const ProTabs = (props) => {
   useEffect(() => {
     resetTabs()
   }, [resetTabs])
+
+  useEffect(() => {
+    const newPath = pathname + search
+
+    // 当前的路由和上一次的一样，return
+    if (!panesItem.path || panesItem.path === pathRef.current) return
+
+    // 保存这次的路由地址
+    pathRef.current = newPath
+
+    const index = panes.findIndex((item) => item.key === panesItem.key)
+    // 无效的新tab，return
+    if (!panesItem.key || (index > -1 && newPath === panes[index].path)) {
+      setActiveKey(tabActiveKey)
+      return
+    }
+
+    // 新tab已存在，重新覆盖掉（解决带参数地址数据错乱问题）
+    if (index > -1) {
+      panes[index].path = newPath
+      setPanes(panes)
+      setActiveKey(tabActiveKey)
+      return
+    }
+    debugger
+    // 添加新tab并保存起来
+    panes.push(panesItem)
+    setPanes(panes)
+    setActiveKey(tabActiveKey)
+    // storeTabs(panes)
+  }, [panes, panesItem, pathname, search, tabActiveKey])
 
   const onChange = (activeKey) => {
     setActiveKey(activeKey)
