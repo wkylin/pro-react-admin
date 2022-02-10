@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+// import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Tabs, Menu, Dropdown, Alert, Button } from 'antd'
+import { Tabs, Menu, Dropdown, Alert, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
-import { SyncOutlined } from '@ant-design/icons'
+import { SyncOutlined, HeartTwoTone } from '@ant-design/icons'
 import Home from '@pages/home'
 // import Demo from '@pages/demo'
 // import CouponsAdd from '@pages/coupons/add'
@@ -10,7 +11,7 @@ import Home from '@pages/home'
 // import Product from '@pages/product'
 // import Exception403 from '@stateless/Exception/exception403'
 
-import { getKeyName } from '@utils/publicFn'
+// import { getKeyName } from '@utils/publicFn'
 
 import styles from './index.module.less'
 
@@ -18,45 +19,10 @@ const initialPanes = [
   {
     title: '首页',
     key: '/',
-    content: Home,
+    content: <Home />,
     closable: false,
     path: '/',
   },
-  // {
-  //   title: 'Demo',
-  //   key: '/demo',
-  //   content: Demo,
-  //   closable: true,
-  //   path: 'demo',
-  // },
-  // {
-  //   title: '新建',
-  //   key: '/coupons/add',
-  //   content: CouponsAdd,
-  //   closable: true,
-  //   path: 'add',
-  // },
-  // {
-  //   title: '编辑',
-  //   key: '/coupons/edit',
-  //   content: CouponsEdit,
-  //   closable: true,
-  //   path: 'edit',
-  // },
-  // {
-  //   title: '商品调价单',
-  //   key: '/product',
-  //   content: Product,
-  //   closable: true,
-  //   path: 'product',
-  // },
-  // {
-  //   title: 'No Match',
-  //   key: '/403',
-  //   content: Exception403,
-  //   closable: true,
-  //   path: '403',
-  // },
 ]
 
 const renderTabBar = (props, DefaultTabBar) => (
@@ -79,16 +45,16 @@ const ProTabs = (props) => {
   const fullPath = pathname + search
 
   // 从本地存储中恢复已打开的tab列表
-  const resetTabs = useCallback(() => {
-    const { tabKey } = getKeyName(pathname)
-    setPanes(initialPanes)
-    setActiveKey(tabKey)
-  }, [pathname])
+  // const resetTabs = useCallback(() => {
+  //   const { tabKey } = getKeyName(pathname)
+  //   setPanes(initialPanes)
+  //   setActiveKey(tabKey)
+  // }, [pathname])
 
   // 初始化页面
-  useEffect(() => {
-    resetTabs()
-  }, [resetTabs])
+  // useEffect(() => {
+  //   resetTabs()
+  // }, [resetTabs])
 
   useEffect(() => {
     const newPath = pathname + search
@@ -100,6 +66,7 @@ const ProTabs = (props) => {
     pathRef.current = newPath
 
     const index = panes.findIndex((item) => item.key === panesItem.key)
+
     // 无效的新tab，return
     if (!panesItem.key || (index > -1 && newPath === panes[index].path)) {
       setActiveKey(tabActiveKey)
@@ -113,10 +80,9 @@ const ProTabs = (props) => {
       setActiveKey(tabActiveKey)
       return
     }
-    debugger
+
     // 添加新tab并保存起来
-    panes.push(panesItem)
-    setPanes(panes)
+    setPanes([...panes, panesItem])
     setActiveKey(tabActiveKey)
     // storeTabs(panes)
   }, [panes, panesItem, pathname, search, tabActiveKey])
@@ -182,7 +148,7 @@ const ProTabs = (props) => {
       {
         title: '首页',
         key: '/',
-        content: Home,
+        content: <Home />,
         closable: false,
         path: '/',
       },
@@ -236,7 +202,6 @@ const ProTabs = (props) => {
 
   return (
     <StickyContainer className={styles.container} id="container">
-      {`selectedPanel: ${JSON.stringify(selectedPanel, null, 2)}`}
       <Tabs
         hideAdd
         type="editable-card"
@@ -253,7 +218,12 @@ const ProTabs = (props) => {
         }}
         className={styles.proTabs}
         tabBarExtraContent={{
-          left: <Button type="link">Pro React</Button>,
+          left: (
+            <Space align="center" size={30} style={{ margin: '0 25px' }}>
+              <HeartTwoTone twoToneColor="#eb2f96" />
+              {/* &nbsp; */}
+            </Space>
+          ),
         }}
       >
         {panes.map((pane) => (
@@ -277,10 +247,11 @@ const ProTabs = (props) => {
               </Dropdown>
             }
           >
+            {/* <pane.content path={pane.path} /> */}
             {isReload && pane.key === fullPath && pane.key !== '/403' ? (
               <Alert message="刷新中..." type="info" />
             ) : (
-              <pane.content path={pane.path} />
+              <>{pane.content}</>
             )}
           </Tabs.TabPane>
         ))}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Layout, BackTop } from 'antd'
-// import { Outlet } from 'react-router-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
@@ -41,16 +40,17 @@ const ProContent = () => {
     //   return
     // }
 
-    const { tabKey, title, component: Content } = getKeyName(pathname)
+    const { tabKey, title, element } = getKeyName(pathname)
     if (pathname === pathRef.current || noNewTab.includes(pathname)) {
       setTabActiveKey(tabKey)
     }
 
     const newPath = search ? pathname + search : pathname
     pathRef.current = newPath
+
     setPanesItem({
       title,
-      content: Content,
+      content: element,
       key: tabKey,
       closable: tabKey !== '/',
       path: newPath,
@@ -64,12 +64,11 @@ const ProContent = () => {
         <ProBreadcrumb />
       </Header>
       <Content className={styles.content}>
-        {`tabActiveKey: ${tabActiveKey}`}
+        {/* {`tabActiveKey: ${tabActiveKey}`}
         <br />
         {`panesItem: ${JSON.stringify(panesItem, null, 2)}`}
-        <br />
+        <br /> */}
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
-        {/* <Outlet /> */}
       </Content>
       <Footer className={styles.footer}>
         <BackTop target={() => document.querySelector('#container')}>
