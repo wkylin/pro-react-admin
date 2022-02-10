@@ -1,3 +1,4 @@
+import React from 'react'
 import routes from '@routers/index'
 import Exception403 from '@stateless/Exception/exception403'
 
@@ -14,7 +15,8 @@ export const getKeyName = (path = '/403') => {
   const curRoute = flattenRoutes(routes)
     .filter((item) => !item.index)
     .filter((item) => item.key?.indexOf(thePath) !== -1)
-  if (!curRoute[0]) return { title: '暂无权限', tabKey: '/403', component: Exception403 }
-  const { name, key, component } = curRoute[0]
-  return { title: name, tabKey: key, component }
+  if (!curRoute[0]) return { title: '暂无权限', tabKey: '/403', element: <Exception403 /> }
+  debugger
+  const { name, key, element } = curRoute[0]
+  return { title: name, tabKey: key, element }
 }
