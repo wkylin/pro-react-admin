@@ -16,7 +16,7 @@ export const getKeyName = (path = '/403') => {
     .filter((item) => !item.index)
     .filter((item) => item.key?.indexOf(thePath) !== -1)
   if (!curRoute[0]) return { title: '暂无权限', tabKey: '/403', element: <Exception403 /> }
-  debugger
+
   const { name, key, element } = curRoute[0]
   return { title: name, tabKey: key, element }
 }
