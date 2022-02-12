@@ -1,8 +1,7 @@
 export const getRouteItem = (arrList = [], queryItem) => {
   let result
-
   if (Array.isArray(arrList)) {
-    result = arrList.find((item) => item.path === queryItem || getRouteItem(item.children, queryItem))
+    result = arrList.find((item) => item.key === queryItem || getRouteItem(item.children, queryItem))
   }
   return result
 }
@@ -10,15 +9,19 @@ export const getRouteItem = (arrList = [], queryItem) => {
 export const getRouteList = (result, arrList = [], queryItem) => {
   if (Array.isArray(arrList)) {
     arrList.forEach((item) => {
-      if (item.path === queryItem) {
+      if (item.key === queryItem) {
         result.push({
           path: item.path,
+          key: item.key,
           name: item.name,
+          isSubMenu: item?.isSubMenu,
         })
       } else {
         result.push({
           path: item.path,
+          key: item.key,
           name: item.name,
+          isSubMenu: item?.isSubMenu,
         })
         getRouteList(
           result,

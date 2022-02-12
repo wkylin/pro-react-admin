@@ -1,17 +1,16 @@
 import React from 'react'
 import { Alert } from 'antd'
+import { useSearchParams } from '@hooks'
 
-const HomeCoupons = () => {
+const EditCoupons = () => {
+  const query = useSearchParams()
+  const term = query.get('id')
   return (
     <>
-      <Alert
-        message="Informational Notes"
-        description="Additional description and information about copywriting."
-        type="info"
-        showIcon
-      />
+      <Alert message="送券活动单" description="--编辑--" type="info" showIcon />
+      <span>Search Id: {term}</span>
     </>
   )
 }
 
-export default HomeCoupons
+export default EditCoupons

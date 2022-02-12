@@ -1,3 +1,3 @@
 import { useLocalStorage } from './useLocalStorage'
-
-export { useLocalStorage }
+import { useSearchParams } from './useSearchParams'
+export { useLocalStorage, useSearchParams }
