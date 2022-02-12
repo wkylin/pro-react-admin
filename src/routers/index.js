@@ -32,7 +32,7 @@ const rootRouter = [
     children: [
       {
         index: true,
-        path: 'home',
+        // path: '/',
         name: '首页',
         key: '/',
         element: (
@@ -43,6 +43,7 @@ const rootRouter = [
       },
       {
         index: false,
+        path: 'demo',
         name: 'Demo',
         key: '/demo',
         element: (
@@ -52,10 +53,11 @@ const rootRouter = [
         ),
       },
       {
-        name: '送券活动单',
-        path: 'coupons',
-        key: '/coupons',
         index: false,
+        path: 'coupons',
+        name: '送券活动单',
+        isSubMenu: true, // 是否是子菜单 proSecNav
+        key: '/coupons',
         element: (
           <React.Suspense fallback={<Loading />}>
             <Coupons />
@@ -63,8 +65,9 @@ const rootRouter = [
         ),
         children: [
           {
-            index: true,
-            name: '送券单首页',
+            index: false,
+            path: 'home',
+            name: '首页',
             key: '/coupons/home',
             element: (
               <React.Suspense fallback={<Loading />}>
@@ -74,7 +77,7 @@ const rootRouter = [
           },
           {
             index: false,
-            name: '创建送券单',
+            name: '新建',
             path: 'add',
             key: '/coupons/add',
             element: (
@@ -85,8 +88,8 @@ const rootRouter = [
           },
           {
             index: false,
-            name: '编辑送券单',
             path: 'edit',
+            name: '编辑',
             key: '/coupons/edit',
             element: (
               <React.Suspense fallback={<Loading />}>
@@ -96,8 +99,8 @@ const rootRouter = [
           },
           {
             index: false,
-            name: '送券单详情',
             path: 'detail',
+            name: '详情',
             key: '/coupons/detail',
             element: (
               <React.Suspense fallback={<Loading />}>
@@ -108,10 +111,10 @@ const rootRouter = [
         ],
       },
       {
-        name: '商品调价单',
-        path: 'product',
-        key: '/product',
         index: false,
+        path: 'product',
+        name: '商品调价单',
+        key: '/product',
         element: (
           <React.Suspense fallback={<Loading />}>
             <Product />
@@ -131,8 +134,9 @@ const rootRouter = [
     ],
   },
   {
-    name: '登录',
+    index: false,
     path: 'signin',
+    name: '登录',
     key: '/signin',
     element: (
       <React.Suspense fallback={<Loading />}>
@@ -141,9 +145,10 @@ const rootRouter = [
     ),
   },
   {
+    index: false,
+    path: 'signup',
     name: '注册',
     key: '/signup',
-    path: 'signup',
     element: (
       <React.Suspense fallback={<Loading />}>
         <SignUp />
