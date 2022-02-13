@@ -17,8 +17,8 @@ import zhCN from 'antd/lib/locale/zh_CN'
 dayjs.locale('zh-cn')
 
 const themes = {
-  dark: `../dark-theme.css`,
-  light: `../light-theme.css`,
+  dark: `./dark-theme.css`,
+  light: `./light-theme.css`,
 }
 
 const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
