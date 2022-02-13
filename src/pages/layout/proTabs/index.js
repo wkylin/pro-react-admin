@@ -19,7 +19,7 @@ const initialPanes = [
 
 const renderTabBar = (props, DefaultTabBar) => (
   <Sticky topOffset={40} relative>
-    {({ style }) => <DefaultTabBar {...props} style={{ ...style }} />}
+    {({ style }) => <DefaultTabBar {...props} className="pro-tabs" style={{ ...style }} />}
   </Sticky>
 )
 
