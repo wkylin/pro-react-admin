@@ -17,7 +17,7 @@ const ProHeader = () => {
   const { switcher, themes, currentTheme } = useThemeSwitcher()
 
   useEffect(() => {
-    switcher({ theme: themes[localStorage.getItem('antd-theme') ? localStorage.getItem('theme') : 'dark'] })
+    switcher({ theme: themes[localStorage.getItem('antd-theme') ? localStorage.getItem('theme') : 'light'] })
   }, [currentTheme, switcher, themes])
 
   const changeTheme = (checked) => {
@@ -38,7 +38,7 @@ const ProHeader = () => {
             <Switch
               checkedChildren={<Icon component={LightSvg} />}
               unCheckedChildren={<Icon component={DarkSvg} />}
-              defaultChecked={currentTheme === 'dark'}
+              defaultChecked={currentTheme === 'light'}
               onClick={changeTheme}
             />
             <BellOutlined style={{ fontSize: 18 }} />
