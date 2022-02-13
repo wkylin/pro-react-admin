@@ -30,14 +30,14 @@ const rootRouter = [
         // path: '/',
         name: '首页',
         key: '/',
-        element: <Home />,
+        element: <Home />
       },
       {
         index: false,
         path: 'demo',
         name: 'Demo',
         key: '/demo',
-        element: <Demo />,
+        element: <Demo />
       },
       {
         index: false,
@@ -52,60 +52,60 @@ const rootRouter = [
             path: 'home',
             name: '首页',
             key: '/coupons/home',
-            element: <CouponsHome />,
+            element: <CouponsHome />
           },
           {
             index: false,
             name: '新建',
             path: 'add',
             key: '/coupons/add',
-            element: <CouponsAdd />,
+            element: <CouponsAdd />
           },
           {
             index: false,
             path: 'edit',
             name: '编辑',
             key: '/coupons/edit',
-            element: <CouponsEdit />,
+            element: <CouponsEdit />
           },
           {
             index: false,
             path: 'detail',
             name: '详情',
             key: '/coupons/detail',
-            element: <CouponsDetail />,
-          },
-        ],
+            element: <CouponsDetail />
+          }
+        ]
       },
       {
         index: false,
         path: 'product',
         name: '商品调价单',
         key: '/product',
-        element: <Product />,
+        element: <Product />
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: <NoMatch />,
-      },
-    ],
+        element: <NoMatch />
+      }
+    ]
   },
   {
     index: false,
     path: 'signin',
     name: '登录',
     key: '/signin',
-    element: <SignIn />,
+    element: <SignIn />
   },
   {
     index: false,
     path: 'signup',
     name: '注册',
     key: '/signup',
-    element: <SignUp />,
-  },
+    element: <SignUp />
+  }
   // {
   //   path: '*',
   //   name: 'No Match',
