@@ -1,22 +1,21 @@
 import React from 'react'
-// import loadable from '@loadable/component'
+import loadable from '@loadable/component'
 import Loading from '@stateless/Loading'
-const Layout = React.lazy(() => import('../pages/layout'))
-const Home = React.lazy(() => import('../pages/home'))
-const Demo = React.lazy(() => import('../pages/demo'))
-const SignIn = React.lazy(() => import('../pages/signin'))
-const SignUp = React.lazy(() => import('../pages/signup'))
-const Coupons = React.lazy(() => import('../pages/coupons'))
-const CouponsHome = React.lazy(() => import('../pages/coupons/home'))
-const CouponsAdd = React.lazy(() => import('../pages/coupons/add'))
-const CouponsEdit = React.lazy(() => import('../pages/coupons/edit'))
-const CouponsDetail = React.lazy(() => import('../pages/coupons/detail'))
-const Product = React.lazy(() => import('../pages/product'))
-const NoMatch = React.lazy(() => import('../components/stateless/NoMatch'))
+const SignIn = loadable(() => import('../pages/signin'), { fallback: <Loading /> })
+const SignUp = loadable(() => import('../pages/signup'), { fallback: <Loading /> })
+const Layout = loadable(() => import('../pages/layout'), { fallback: <Loading /> })
+const Home = loadable(() => import('../pages/home'), { fallback: <Loading /> })
+const Demo = loadable(() => import('../pages/demo'), { fallback: <Loading /> })
+const Coupons = loadable(() => import('../pages/coupons'), { fallback: <Loading /> })
+const CouponsHome = loadable(() => import('../pages/coupons/home'), { fallback: <Loading /> })
+const CouponsAdd = loadable(() => import('../pages//coupons/add'), { fallback: <Loading /> })
+const CouponsEdit = loadable(() => import('../pages/coupons/edit'), { fallback: <Loading /> })
+const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallback: <Loading /> })
+const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
+const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
 // import productRouter from './product'
-
 // import basicActRouter from './basicAct'
 
 const rootRouter = [
@@ -24,33 +23,21 @@ const rootRouter = [
     path: '/',
     name: '首页',
     key: '/',
-    element: (
-      <React.Suspense fallback={<Loading />}>
-        <Layout />
-      </React.Suspense>
-    ),
+    element: <Layout />,
     children: [
       {
         index: true,
         // path: '/',
         name: '首页',
         key: '/',
-        element: (
-          <React.Suspense fallback={<Loading />}>
-            <Home />
-          </React.Suspense>
-        ),
+        element: <Home />,
       },
       {
         index: false,
         path: 'demo',
         name: 'Demo',
         key: '/demo',
-        element: (
-          <React.Suspense fallback={<Loading />}>
-            <Demo />
-          </React.Suspense>
-        ),
+        element: <Demo />,
       },
       {
         index: false,
@@ -58,55 +45,35 @@ const rootRouter = [
         name: '送券活动单',
         isSubMenu: true, // 是否是子菜单 proSecNav
         key: '/coupons',
-        element: (
-          <React.Suspense fallback={<Loading />}>
-            <Coupons />
-          </React.Suspense>
-        ),
+        element: <Coupons />,
         children: [
           {
             index: false,
             path: 'home',
             name: '首页',
             key: '/coupons/home',
-            element: (
-              <React.Suspense fallback={<Loading />}>
-                <CouponsHome />
-              </React.Suspense>
-            ),
+            element: <CouponsHome />,
           },
           {
             index: false,
             name: '新建',
             path: 'add',
             key: '/coupons/add',
-            element: (
-              <React.Suspense fallback={<Loading />}>
-                <CouponsAdd />
-              </React.Suspense>
-            ),
+            element: <CouponsAdd />,
           },
           {
             index: false,
             path: 'edit',
             name: '编辑',
             key: '/coupons/edit',
-            element: (
-              <React.Suspense fallback={<Loading />}>
-                <CouponsEdit />
-              </React.Suspense>
-            ),
+            element: <CouponsEdit />,
           },
           {
             index: false,
             path: 'detail',
             name: '详情',
             key: '/coupons/detail',
-            element: (
-              <React.Suspense fallback={<Loading />}>
-                <CouponsDetail />
-              </React.Suspense>
-            ),
+            element: <CouponsDetail />,
           },
         ],
       },
@@ -115,21 +82,13 @@ const rootRouter = [
         path: 'product',
         name: '商品调价单',
         key: '/product',
-        element: (
-          <React.Suspense fallback={<Loading />}>
-            <Product />
-          </React.Suspense>
-        ),
+        element: <Product />,
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: (
-          <React.Suspense fallback={<Loading />}>
-            <NoMatch />
-          </React.Suspense>
-        ),
+        element: <NoMatch />,
       },
     ],
   },
@@ -138,31 +97,19 @@ const rootRouter = [
     path: 'signin',
     name: '登录',
     key: '/signin',
-    element: (
-      <React.Suspense fallback={<Loading />}>
-        <SignIn />
-      </React.Suspense>
-    ),
+    element: <SignIn />,
   },
   {
     index: false,
     path: 'signup',
     name: '注册',
     key: '/signup',
-    element: (
-      <React.Suspense fallback={<Loading />}>
-        <SignUp />
-      </React.Suspense>
-    ),
+    element: <SignUp />,
   },
   // {
   //   path: '*',
   //   name: 'No Match',
-  //   element: (
-  //     <React.Suspense fallback={<Loading />}>
-  //       <NoMatch />
-  //     </React.Suspense>
-  //   ),
+  //   element: <NoMatch />,
   // },
 ]
 
