@@ -8,7 +8,7 @@ const DetailCoupons = () => {
 
   return (
     <>
-      <Alert message="送券活动单" description="--详情--" type="info" showIcon />
+      <Alert message='送券活动单' description='--详情--' type='info' showIcon />
       <span>Search Id: {id}</span>
     </>
   )
