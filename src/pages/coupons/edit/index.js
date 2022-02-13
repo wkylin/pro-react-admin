@@ -1,9 +1,9 @@
 import React from 'react'
 import { Alert } from 'antd'
-import { useSearchParams } from '@hooks'
+import { useUrlSearchParams } from '@hooks'
 
 const EditCoupons = () => {
-  const query = useSearchParams()
+  const query = useUrlSearchParams()
   const term = query.get('id')
   return (
     <>
