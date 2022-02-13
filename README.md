@@ -30,6 +30,9 @@ nvm use 14.16.1
         "@hooks": "/src/components/hooks",
         "@container": "/src/components/container",
         "@assets": "/src/components/assets",
+        '@pages': path.resolve('./src/pages'),
+        '@routers': path.resolve('./src/routers'),
+        '@utils': path.resolve('./src/utils'),
     }
 ```
 
@@ -145,17 +148,17 @@ npm run dev:faker
 
 ### TODO
 
-1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
+1. TypeScript: [TypeScript](https://www.typescriptlang.org/)(OK)
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
 3. Mock Server (OK)
    - [msw](https://github.com/mswjs/msw)
-4. 单页面多页签
+4. 单页面多页签 (OK)
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
 5. TS参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 6. Axios 
    - [axios拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
-7. React SVGR
+7. React SVGR (OK)
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
 ### ESLint Prettier Husky EditorConfig
@@ -395,11 +398,47 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
 ### Update npm
 
-```bash
-  npm install css-loader@5.2.7 --save-dev
-  "webpack-dev-server": "^4.1.1",
-  Uncaught TypeError: SocketClient is not a constructor
-```
+  ```bash
+    npm install css-loader@5.2.7 --save-dev
+    "webpack-dev-server": "^4.1.1",
+    Uncaught TypeError: SocketClient is not a constructor
+  ```
+
+### GitHub Proxy
+
+1. 首先确认自己git拉取代码的方式
+   
+    ```bash
+      git remote -v
+    ```
+
+2. 设置代理
+
+    ```bash
+      git config --global https.proxy 127.0.0.1:10808
+      git config --global http.proxy 127.0.0.1:10808
+      git config --global http.proxy 'socks5://127.0.0.1:10808'
+      git config --global https.proxy 'socks5://127.0.0.1:10808'
+    ```
+
+3. 查看代理是否成功
+
+    ```bash
+      git config --get --global http.proxy
+    ```
+
+4. 查看git配置
+  
+    ```bash
+      git config --global --list
+    ```
+
+5. 取消代理
+
+    ```bash
+      git config --global --unset http.proxy
+      git config --global --unset https.proxy
+    ```
 
 ### Show your support
 
