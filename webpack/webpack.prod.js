@@ -10,7 +10,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 // const PurgeCSSPlugin = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
-
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const packageJson = require('../package.json')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
@@ -48,6 +48,12 @@ const prodWebpackConfig = merge(common, {
       threshold: 10240, // 只有大小大于该值的资源会被处理
       minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
       // deleteOriginalAssets: true // 删除原文件
+    }),
+    new CopyWebpackPlugin({
+      patterns: [{ from: './public', to: '../dist' }],
+      options: {
+        concurrency: 100,
+      },
     }),
   ],
   optimization: {
