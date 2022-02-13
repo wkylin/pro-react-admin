@@ -154,10 +154,10 @@ npm run dev:faker
    - [msw](https://github.com/mswjs/msw)
 4. 单页面多页签 (OK)
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-5. TS参考
+5. TS 参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
-6. Axios 
-   - [axios拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
+6. Axios
+   - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
 7. React SVGR (OK)
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
@@ -223,7 +223,7 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 ```bash
     1. npm install jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer --save-dev
-    2. npm install  --save-dev @testing-library/react  
+    2. npm install  --save-dev @testing-library/react
 ```
 
 ### Sentry 接入
@@ -380,7 +380,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 ### Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
-   
+
    ```bash
       npm run analyze:build
    ```
@@ -389,57 +389,57 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
-### 与ESLint 风格不一致
+### 与 ESLint 风格不一致
 
-1. "lint:json": "jsonlint --quiet src/**/*.json",
-2. "standard": "standard src/**/*",
-3. "standard:fix": "standard --fix src/**/*",
+1. "lint:json": "jsonlint --quiet src/\*_/_.json",
+2. "standard": "standard src/\*_/_",
+3. "standard:fix": "standard --fix src/\*_/_",
 4. rm -rf package-lock.json
 
 ### Update npm
 
-  ```bash
-    npm install css-loader@5.2.7 --save-dev
-    "webpack-dev-server": "^4.1.1",
-    Uncaught TypeError: SocketClient is not a constructor
-  ```
+```bash
+  npm install css-loader@5.2.7 --save-dev
+  "webpack-dev-server": "^4.1.1",
+  Uncaught TypeError: SocketClient is not a constructor
+```
 
 ### GitHub Proxy
 
-1. 首先确认自己git拉取代码的方式
-   
-    ```bash
-      git remote -v
-    ```
+1. 首先确认自己 git 拉取代码的方式
+
+   ```bash
+     git remote -v
+   ```
 
 2. 设置代理
 
-    ```bash
-      git config --global https.proxy 127.0.0.1:10808
-      git config --global http.proxy 127.0.0.1:10808
-      git config --global http.proxy 'socks5://127.0.0.1:10808'
-      git config --global https.proxy 'socks5://127.0.0.1:10808'
-    ```
+   ```bash
+     git config --global https.proxy 127.0.0.1:10808
+     git config --global http.proxy 127.0.0.1:10808
+     git config --global http.proxy 'socks5://127.0.0.1:10808'
+     git config --global https.proxy 'socks5://127.0.0.1:10808'
+   ```
 
 3. 查看代理是否成功
 
-    ```bash
-      git config --get --global http.proxy
-    ```
+   ```bash
+     git config --get --global http.proxy
+   ```
 
-4. 查看git配置
-  
-    ```bash
-      git config --global --list
-    ```
+4. 查看 git 配置
+
+   ```bash
+     git config --global --list
+   ```
 
 5. 取消代理
 
-    ```bash
-      git config --global --unset http.proxy
-      git config --global --unset https.proxy
-    ```
+   ```bash
+     git config --global --unset http.proxy
+     git config --global --unset https.proxy
+   ```
 
 ### Show your support
 
-Give a ⭐️  if this project helped you!
+Give a ⭐️ if this project helped you!
