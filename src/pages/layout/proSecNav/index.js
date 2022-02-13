@@ -28,7 +28,8 @@ const ProSecNav = () => {
   // 提取放在redux中, tab 切换时改成 false
   const [isOpenChange, setIsOpenChange] = useState(false)
 
-  // TODO submenu keys of first level
+  // NOT READY FOR PRIME TIME
+  // submenu keys of first level
   const [rootSubmenuKeys] = useState(['/sub-act', '/sub-list'])
 
   useEffect(() => {

@@ -29,7 +29,10 @@ const App = () => {
     //   text: '测试测试',
     // })
 
-    asyncCall().then(() => setLoading(false))
+    asyncCall().then(
+      () => setLoading(false),
+      () => {}
+    )
 
     // return () => {
     //   waterMark.current && waterMark.current.destroy()
