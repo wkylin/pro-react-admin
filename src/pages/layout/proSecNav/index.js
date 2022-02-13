@@ -28,7 +28,7 @@ const ProSecNav = () => {
   // 提取放在redux中, tab 切换时改成 false
   const [isOpenChange, setIsOpenChange] = useState(false)
 
-  // submenu keys of first level
+  // TODO submenu keys of first level
   const [rootSubmenuKeys] = useState(['/sub-act', '/sub-list'])
 
   useEffect(() => {
@@ -38,23 +38,23 @@ const ProSecNav = () => {
     // setOpenKeys(openKeys)
   }, [pathname, openKeys, isOpenChange])
 
-  const onItemClick = ({ item, key, keyPath }) => {
-    setIsOpenChange(false)
+  // const onItemClick = ({ key }) => {
+  //   redirectTo(key)
+  // }
 
-    redirectTo(key)
-  }
   const onOpenChange = (keys) => {
-    // setOpenKeys(keys)
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)
-    console.log('keys', keys)
-    console.log('latestOpenKey', latestOpenKey)
-
     setIsOpenChange(true)
     if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       setOpenKeys(keys)
     } else {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
     }
+  }
+
+  const onSelect = ({ key }) => {
+    redirectTo(key)
+    setIsOpenChange(false)
   }
 
   return (
@@ -68,7 +68,8 @@ const ProSecNav = () => {
         // theme="dark"
         className={styles.menu}
         onOpenChange={onOpenChange}
-        onClick={onItemClick}
+        // onClick={onItemClick}
+        onSelect={onSelect}
       >
         <Menu.Item key="/" icon={<HomeOutlined />}>
           Home
