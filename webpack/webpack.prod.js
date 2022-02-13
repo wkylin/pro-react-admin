@@ -15,8 +15,7 @@ const packageJson = require('../package.json')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
-const regReact =
-  /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-config|react-router-dom|react-router-redux|redux)[\\/]/
+const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-config|react-router-dom|redux)[\\/]/
 
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
