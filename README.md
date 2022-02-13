@@ -145,6 +145,7 @@ npm run dev:faker
 ### Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
+2. "build:production": "npm run dev:theme && cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/**/*.map",
 
 ### TODO
 
@@ -152,7 +153,7 @@ npm run dev:faker
 2. Umi Hox: [Hox](https://github.com/umijs/hox)
 3. Mock Server (OK)
    - [msw](https://github.com/mswjs/msw)
-4. 单页面多页签 (OK)
+4. 单页面多页签参考 (OK)
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
 5. TS 参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
