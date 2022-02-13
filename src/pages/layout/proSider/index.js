@@ -22,12 +22,14 @@ const ProSider = (props) => {
       className={styles.sider}
     >
       {props.children}
-      <div role="collapsible" className={styles.proLink} onClick={onCollapse}>
-        {collapsed ? (
-          <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
-        ) : (
-          <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
-        )}
+      <div role='collapsible' className={styles.proLink} onClick={onCollapse}>
+        {collapsed
+          ? (
+            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+            )
+          : (
+            <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+            )}
       </div>
     </Layout.Sider>
   )

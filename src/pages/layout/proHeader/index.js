@@ -26,7 +26,7 @@ const ProHeader = () => {
   }
   return (
     <Layout.Header className={styles.header}>
-      <div className={styles.logo} role="logo" onClick={() => redirectTo('/')}>
+      <div className={styles.logo} role='logo' onClick={() => redirectTo('/')}>
         Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag>
       </div>
       <div className={styles.headerMeta}>
@@ -34,7 +34,7 @@ const ProHeader = () => {
           <PrimaryNav />
         </div>
         <div className={styles.headerRight}>
-          <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+          <Space direction='horizontal' style={{ cursor: 'pointer', paddingRight: 8 }}>
             <Switch
               checkedChildren={<Icon component={LightSvg} />}
               unCheckedChildren={<Icon component={DarkSvg} />}
@@ -47,20 +47,20 @@ const ProHeader = () => {
             arrow
             overlay={
               <Menu>
-                <Menu.Item key="1" icon={<UserOutlined />} onClick={() => redirectTo('/profile')}>
+                <Menu.Item key='1' icon={<UserOutlined />} onClick={() => redirectTo('/profile')}>
                   个人中心
                 </Menu.Item>
-                <Menu.Item key="2" icon={<SettingOutlined />} onClick={() => redirectTo('/setting')}>
+                <Menu.Item key='2' icon={<SettingOutlined />} onClick={() => redirectTo('/setting')}>
                   个人设置
                 </Menu.Item>
                 <Menu.Divider />
-                <Menu.Item key="3" icon={<LogoutOutlined />} onClick={() => redirectTo('/signin')}>
+                <Menu.Item key='3' icon={<LogoutOutlined />} onClick={() => redirectTo('/signin')}>
                   退出登录
                 </Menu.Item>
               </Menu>
             }
           >
-            <Space direction="horizontal" style={{ cursor: 'pointer' }}>
+            <Space direction='horizontal' style={{ cursor: 'pointer' }}>
               <UserOutlined style={{ fontSize: 18 }} />
               <span>Admin</span>
             </Space>
