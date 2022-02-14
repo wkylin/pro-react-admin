@@ -7,7 +7,7 @@ const EditCoupons = () => {
   const term = query.get('id')
   return (
     <>
-      <Alert message='送券活动单' description='--编辑--' type='info' showIcon />
+      <Alert message="送券活动单" description="--编辑--" type="info" showIcon />
       <span>Search Id: {term}</span>
     </>
   )
