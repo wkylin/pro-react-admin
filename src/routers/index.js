@@ -16,7 +16,6 @@ const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fall
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
 // import productRouter from './product'
-// import basicActRouter from './basicAct'
 
 const rootRouter = [
   {
@@ -42,7 +41,7 @@ const rootRouter = [
       {
         index: false,
         path: 'coupons',
-        name: '送券活动单',
+        name: '前端技术栈',
         isSubMenu: true, // 是否是子菜单 proSecNav
         key: '/coupons',
         element: <Coupons />,
@@ -50,13 +49,13 @@ const rootRouter = [
           {
             index: false,
             path: 'home',
-            name: '首页',
+            name: 'React',
             key: '/coupons/home',
             element: <CouponsHome />,
           },
           {
             index: false,
-            name: '新建',
+            name: 'Vue',
             path: 'add',
             key: '/coupons/add',
             element: <CouponsAdd />,
@@ -64,14 +63,14 @@ const rootRouter = [
           {
             index: false,
             path: 'edit',
-            name: '编辑',
+            name: 'Angular',
             key: '/coupons/edit',
             element: <CouponsEdit />,
           },
           {
             index: false,
             path: 'detail',
-            name: '详情',
+            name: 'Node',
             key: '/coupons/detail',
             element: <CouponsDetail />,
           },
@@ -80,7 +79,7 @@ const rootRouter = [
       {
         index: false,
         path: 'product',
-        name: '商品调价单',
+        name: '后端技术栈',
         key: '/product',
         element: <Product />,
       },

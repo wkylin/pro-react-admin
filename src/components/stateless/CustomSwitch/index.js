@@ -4,7 +4,6 @@ import { Routes, Route, useNavigate, useMatch } from 'react-router-dom'
 function NoFundPage() {
   const navigate = useNavigate()
   const { url, path } = useMatch()
-  console.log('useMatch', JSON.stringify(useMatch(), null, 2))
   useEffect(() => {
     navigate(`${url}/404`)
   }, [path, url, navigate])

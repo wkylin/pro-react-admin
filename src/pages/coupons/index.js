@@ -10,7 +10,7 @@ const Coupons = () => {
 
   return (
     <>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('')}>
+      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/')}>
         Home Coupons
       </Button>
       <Button type="text" style={{ margin: 10 }} onClick={() => redirectTo('coupons/add')}>

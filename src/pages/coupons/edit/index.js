@@ -7,7 +7,12 @@ const EditCoupons = () => {
   const term = query.get('id')
   return (
     <>
-      <Alert message="送券活动单" description="--编辑--" type="info" showIcon />
+      <Alert
+        message="Success Tips"
+        description="Detailed description and advice about successful copywriting."
+        type="success"
+        showIcon
+      />
       <span>Search Id: {term}</span>
     </>
   )
