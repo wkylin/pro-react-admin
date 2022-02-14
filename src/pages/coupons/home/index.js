@@ -4,7 +4,12 @@ import { Alert } from 'antd'
 const HomeCoupons = () => {
   return (
     <>
-      <Alert message="送券活动单" description="--首页--" type="info" showIcon />
+      <Alert
+        message="Success Tips"
+        description="Detailed description and advice about successful copywriting."
+        type="success"
+        showIcon
+      />
     </>
   )
 }

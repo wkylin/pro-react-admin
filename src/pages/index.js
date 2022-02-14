@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate, useMatch } from 'react-router-dom'
 import { Button } from 'antd'
-const Index = ({ routes = [] }) => {
+const Index = () => {
   const navigate = useNavigate()
   const { url } = useMatch()
   const redirectTo = (path) => {
