@@ -198,8 +198,6 @@ const ProTabs = (props) => {
       <Tabs
         hideAdd
         type="editable-card"
-        activeKey={activeKey}
-        defaultActiveKey={defaultActiveKey}
         onChange={onChange}
         onTabClick={onTabClick}
         onTabScroll={onTabScroll}
@@ -209,6 +207,9 @@ const ProTabs = (props) => {
         tabBarStyle={{
           zIndex: 2,
         }}
+        activeKey={activeKey}
+        defaultActiveKey={defaultActiveKey}
+        destroyInactiveTabPane
         className={styles.proTabs}
         tabBarExtraContent={{
           left: (
@@ -221,7 +222,7 @@ const ProTabs = (props) => {
       >
         {panes.map((pane) => (
           <Tabs.TabPane
-            forceRender
+            forceRender // 被隐藏时是否渲染 DOM 结构
             key={pane.key}
             closable={pane.closable}
             tab={
