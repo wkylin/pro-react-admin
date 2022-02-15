@@ -5,3 +5,4 @@
 /.eslintcache
 /compilation-stats.json
 .yarn/cache
+/packagehash.txt
