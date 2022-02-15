@@ -155,13 +155,17 @@ npm run dev:faker
    - [msw](https://github.com/mswjs/msw)
 4. 单页面多页签参考 (OK)
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-5. TS 参考
+5. TS(OK) 参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 6. Axios
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
 7. React SVGR (OK)
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
-
+8. tab内操作tabs
+   - tab
+9. tab间通信 兄弟 父级context
+   - shared workers
+  
 ### ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)

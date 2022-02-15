@@ -27,6 +27,7 @@ require('isomorphic-fetch')
 // https://github.com/matthew-andrews/isomorphic-fetch
 // https://github.com/lquixada/cross-fetch
 // https://github.com/github/fetch
+// https://juejin.cn/post/7064495856220635150
 
 // fetch(url, initParams).then((res) => res.json).then((body) = body).catch((error) => error)
 // const response = fetch(url, {

@@ -13,6 +13,7 @@
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
+    "pre-run": "install-changed",
     "dev:theme": "npx gulp less",
     "start": "npm run dev:theme && cross-env BUILD_GOAL=development NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
@@ -54,7 +55,8 @@
     "prepare": "husky install && node check-sentry.js",
     "sentry:check": "node check-sentry.js",
     "predeploy": "npm run build:production",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+    "postinstall": "install-changed --hash-only"
   },
   "author": "wkylin",
   "contributors": [
@@ -139,6 +141,7 @@
     "html-webpack-plugin": "^5.5.0",
     "http-server": "^14.1.0",
     "husky": "^7.0.4",
+    "install-pkg-lock": "^1.0.0",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^27.5.1",
     "jsonlint": "^1.6.3",
@@ -237,7 +240,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "post-merge": "install-changed"
     }
   },
   "lint-staged": {
