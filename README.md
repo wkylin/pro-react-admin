@@ -2,9 +2,9 @@
 
 1. React: v17.0.2 [React](https://reactjs.org/)
 2. React Router: v6.2.1 [React Router](https://reactrouter.com/)
-3. Webpack:v5.67.0 [Webpack](https://webpack.js.org/)
+3. Webpack:v5.68.0 [Webpack](https://webpack.js.org/)
 4. Babel: v7.16.7 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: v4.18.4 [Ant Design](https://ant.design/index-cn)
+5. Antd: v4.18.6 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v7.2.6 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
 ## 开发环境
