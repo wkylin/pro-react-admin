@@ -160,11 +160,11 @@ npm run dev:faker
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
 7. React SVGR (OK)
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
-8. tab内操作tabs
+8. tab 内操作 tabs
    - tab
-9. tab间通信 兄弟 父级context
+9. tab 间通信 兄弟 父级 context
    - shared workers
-  
+
 ### ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
