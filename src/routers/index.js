@@ -13,6 +13,7 @@ const CouponsEdit = loadable(() => import('../pages/coupons/edit'), { fallback: 
 const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallback: <Loading /> })
 const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
 const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
+const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
@@ -112,6 +113,13 @@ const rootRouter = [
     name: '注册',
     key: '/signup',
     element: <SignUp />,
+  },
+  {
+    index: false,
+    path: 'dashboard/*',
+    name: 'Dashboard',
+    key: '/dashboard',
+    element: <Dashboard />,
   },
   // {
   //   path: '*',

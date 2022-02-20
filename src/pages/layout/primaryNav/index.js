@@ -10,7 +10,7 @@ const PrimaryNav = () => {
   }
   return (
     <Menu mode="horizontal" width={300}>
-      <Menu.Item key="mail" icon={<CodeOutlined />} onClick={() => redirectTo('basis')}>
+      <Menu.Item key="mail" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
         基础组件库
       </Menu.Item>
     </Menu>
