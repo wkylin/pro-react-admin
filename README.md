@@ -430,6 +430,14 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
      git config --global --unset https.proxy
    ```
 
+### pm-keeper
+
+1. [https://www.npmjs.com/package/pm-keeper](https://www.npmjs.com/package/pm-keeper)
+
+### npm i && npm ci
+
+1. [npm ci vs. npm install](https://betterprogramming.pub/npm-ci-vs-npm-install-which-should-you-use-in-your-node-js-projects-51e07cb71e26)
+
 ### Show your support
 
 Give a ⭐️ if this project helped you!
