@@ -1,14 +1,15 @@
 import React from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useNavigationType } from 'react-router-dom'
 import { Button } from 'antd'
 import styles from './index.module.less'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-
+  const navigateType = useNavigationType()
   return (
     <div className={styles.dashboard}>
       <h3>Look, more routes!</h3>
+      <h4>Navigate type: {navigateType}</h4>
       <Routes>
         <Route
           path="/"
