@@ -1,5 +1,6 @@
 // https://axios-http.com/
 // https://axios-http.com/docs/cancellation
+// https://www.npmjs.com/package/axios-retry
 import axios from 'axios'
 
 axios.get('endpointURL').then((res) => {
@@ -8,13 +9,11 @@ axios.get('endpointURL').then((res) => {
 
 // cancel token
 // useEffect(() => {
-//   const source = axios.CancelToken.source() // <-- 1st step
 //   const controller = new AbortController()
 
 //   const fetchPost = async () => {
 //     try {
 //       const response = await axios.get(`endpointURL`, {
-//         cancelToken: source.token, // <-- 2nd step
 //         signal: controller.signal,
 //       })
 //       console.log(response.data)
@@ -25,10 +24,6 @@ axios.get('endpointURL').then((res) => {
 //   fetchPost()
 
 //   return () => {
-//     // cancel the request (the message parameter is optional)
-//     source.cancel('Operation canceled by the user.') // <-- 3rd step
-
-//     // the message parameter is not supported
 //     controller.abort()
 //   }
 // }, [])
