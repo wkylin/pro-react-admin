@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Menu, Dropdown, Alert, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, HeartTwoTone } from '@ant-design/icons'
+import { MyErrorBoundary } from '@stateful'
 import Home from '@pages/home'
 
 import styles from './index.module.less'
@@ -51,21 +52,17 @@ const ProTabs = (props) => {
   useEffect(() => {
     const newPath = pathname + search
 
-    // 当前的路由和上一次的一样，return
     if (!panesItem.path || panesItem.path === pathRef.current) return
 
-    // 保存这次的路由地址
     pathRef.current = newPath
 
     const index = panes.findIndex((item) => item.key === panesItem.key)
 
-    // 无效的新tab，return
     if (!panesItem.key || (index > -1 && newPath === panes[index].path)) {
       setActiveKey(tabActiveKey)
       return
     }
 
-    // 新tab已存在，重新覆盖掉（解决带参数地址数据错乱问题）
     if (index > -1) {
       panes[index].path = newPath
       setPanes(panes)
@@ -73,7 +70,6 @@ const ProTabs = (props) => {
       return
     }
 
-    // 添加新tab并保存起来
     setPanes([...panes, panesItem])
     setActiveKey(tabActiveKey)
     // storeTabs(panes)
@@ -125,11 +121,6 @@ const ProTabs = (props) => {
     setTimeout(() => {
       setIsReload(false)
     }, 1000)
-
-    // setStoreData('SET_RELOADPATH', pathname + search)
-    // setTimeout(() => {
-    //   setStoreData('SET_RELOADPATH', 'null')
-    // }, 500)
   }
 
   // 关闭其他或关闭所有
@@ -192,6 +183,11 @@ const ProTabs = (props) => {
     </Menu>
   )
 
+  // error boundary
+  const fixError = () => {
+    refreshTab()
+  }
+
   return (
     <StickyContainer className={styles.container} id="container">
       {/* {`panes: ${JSON.stringify(panes, null, 2)}`} */}
@@ -245,7 +241,7 @@ const ProTabs = (props) => {
             {isReload && pane.key === fullPath && pane.key !== '/404' ? (
               <Alert message="刷新中..." type="info" />
             ) : (
-              <>{pane.content}</>
+              <MyErrorBoundary fixError={fixError}>{pane.content}</MyErrorBoundary>
             )}
           </Tabs.TabPane>
         ))}

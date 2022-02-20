@@ -1,38 +1,31 @@
 import React from 'react'
-import { Button, Space } from 'antd'
+import { Button } from 'antd'
+import { ErrorBoundary } from 'react-error-boundary'
+import styles from './index.module.less'
 
-// https://github.com/bvaughn/react-error-boundary
-
-class ErrorBoundary extends React.Component {
-  state = { hasError: false }
-  static getDerivedStateFromError() {
-    return { hasError: true }
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.log({ error, errorInfo })
-  }
-
-  triggerError = ({ error, errorInfo }) => {
-    console.log({ error, errorInfo })
-    this.setState({ hasError: true })
-  }
-
-  resetError = () => this.setState({ hasError: false })
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div>
-          {/* <h1>Oops, we done goofed up</h1> */}
-          <Space>
-            <span>哎呀，我们搞砸了!!!</span>
-            <Button onClick={this.resetError}>Try again?</Button>
-          </Space>
-        </div>
-      )
-    }
-    return this.props.children
-  }
+const ErrorFallback = ({ error, resetErrorBoundary }) => {
+  return (
+    <div role="alert">
+      <h3>Something went wrong:</h3>
+      <pre className={styles.pre}>{error.message}</pre>
+      <Button type="primary" onClick={resetErrorBoundary}>
+        Try again
+      </Button>
+    </div>
+  )
 }
 
-export default ErrorBoundary
+const MyErrorBoundary = (props) => {
+  return (
+    <ErrorBoundary
+      FallbackComponent={ErrorFallback}
+      onReset={() => {
+        props.fixError && props.fixError()
+      }}
+    >
+      {props.children}
+    </ErrorBoundary>
+  )
+}
+
+export default MyErrorBoundary

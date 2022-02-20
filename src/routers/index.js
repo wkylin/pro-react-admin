@@ -12,6 +12,7 @@ const CouponsAdd = loadable(() => import('../pages//coupons/add'), { fallback: <
 const CouponsEdit = loadable(() => import('../pages/coupons/edit'), { fallback: <Loading /> })
 const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallback: <Loading /> })
 const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
+const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
@@ -82,6 +83,13 @@ const rootRouter = [
         name: '后端技术栈',
         key: '/product',
         element: <Product />,
+      },
+      {
+        index: false,
+        path: 'error',
+        name: 'Error',
+        key: '/error',
+        element: <Error />,
       },
       {
         path: '*',
