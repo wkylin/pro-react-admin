@@ -10,7 +10,7 @@ const App = () => {
   // const waterMark = useRef<Watermark>()
   const [loading, setLoading] = useState(true)
   const asyncCall = () => {
-    return new Promise<void>((resolve) => setTimeout(() => resolve(), 1000))
+    return new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
   }
   useEffect(() => {
     // sentry init
