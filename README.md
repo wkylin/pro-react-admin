@@ -433,8 +433,5 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
 ### Show your support
 
-<<<<<<< HEAD
-Give a ⭐️  if this project helped you!
-=======
 Give a ⭐️ if this project helped you!
->>>>>>> main
+
