@@ -7,17 +7,15 @@
 5. Antd: v4.18.6 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v7.2.6 [Redux Hooks](https://react-redux.js.org/api/hooks)
 
-## 开发环境
-
-1. 推荐 nvm 进行本地 node 版本管理，nrm 进行本地 npm registry 管理
+## Development
 
 ```bash
-mac: npm install -g nvm nrm
-win: nvm-windows nodist nvs
-
-nvm install 14.16.1
-nvm use 14.16.1
-
+  1. git clone https://github.com/wkylin/promotion-web.git
+  2. cd promotion-web
+  3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
+    - npm start
+    - npm run dev:faker 与后端接口约定后，在没有提供接口时前端可以来模拟后端返回数据
+    - npm run dev:server
 ```
 
 ### VSCode extension: 别名路径跳转
@@ -83,18 +81,6 @@ nvm use 14.16.1
 ```bash
 // mock index.js
 npm run dev:faker
-```
-
-### Development
-
-```bash
-  1. git clone https://github.com/wkylin/promotion-web.git
-  2. cd promotion-web
-  3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
-    - npm start
-    - npm run dev:faker 与后端接口约定后，在没有提供接口时前端可以来模拟后端返回数据
-    - npm run pm2:server
-    - npm run dev:server
 ```
 
 ### Commit message
