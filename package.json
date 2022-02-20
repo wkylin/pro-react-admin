@@ -56,7 +56,8 @@
     "sentry:check": "node check-sentry.js",
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
-    "postinstall": "install-changed --hash-only"
+    "postinstall": "install-changed --hash-only",
+    "preinstall": "npx pm-keeper npm"
   },
   "author": "wkylin",
   "contributors": [
