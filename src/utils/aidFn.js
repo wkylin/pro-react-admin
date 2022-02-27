@@ -140,3 +140,29 @@ export const isDecimal = (value) => {
 }
 
 export const limitDecimal = (val) => val.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+
+/*
+ ** 判断用户是否离开当前页面
+ */
+export const checkIsLocalPage = () => {
+  document.addEventListener('visibilitychange', function () {
+    // 页面变为不可见时触发
+    if (document.visibilityState === 'hidden') {
+      return false
+    }
+    // 页面变为可见时触发
+    if (document.visibilityState === 'visible') {
+      return true
+    }
+
+    window.addEventListener(
+      'pagehide',
+      (event) => {
+        if (event.persisted) {
+          /* the page isn't being discarded, so it can be reused later */
+        }
+      },
+      false
+    )
+  })
+}

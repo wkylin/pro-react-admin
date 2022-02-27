@@ -247,7 +247,7 @@ const handleFetchData = (url, options) => {
                 type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
               })
               const disposition = response.headers.get('content-disposition')
-              const fileName = decodeURI(disposition.split('=')[1].replace(/'/g, ''))
+              const fileName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(`utf-8''`, '') || ''
               const objectUrl = URL.createObjectURL(blob)
               const downloadElement = document.createElement('a')
               document.body.appendChild(downloadElement)
