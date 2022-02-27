@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from 'antd'
+import FixTabPanel from '@stateless/FixTabPanel'
 
 const Products = () => {
   const navigate = useNavigate()
@@ -9,7 +10,7 @@ const Products = () => {
   }
 
   return (
-    <>
+    <FixTabPanel>
       <Button type="primary" onClick={() => redirectTo('coupons/add')} style={{ margin: 10 }}>
         Add Coupons
       </Button>
@@ -19,7 +20,7 @@ const Products = () => {
       <Button onClick={() => redirectTo('coupons/detail?id=2')} type="dashed" style={{ margin: 10 }}>
         Detail Coupons
       </Button>
-    </>
+    </FixTabPanel>
   )
 }
 
