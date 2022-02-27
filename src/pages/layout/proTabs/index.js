@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Tabs, Menu, Dropdown, Alert, Space } from 'antd'
+import { Tabs, Menu, Dropdown, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, HeartTwoTone } from '@ant-design/icons'
 import { MyErrorBoundary } from '@stateful'
+import Loading from '@stateless/Loading'
 import Home from '@pages/home'
 
 import styles from './index.module.less'
@@ -229,8 +230,8 @@ const ProTabs = (props) => {
                 getPopupContainer={(node) => node.parentNode}
               >
                 <span onContextMenu={(e) => preventDefault(e, pane)}>
-                  {isReload && pane.key === fullPath && pane.key !== '/404' && (
-                    <SyncOutlined title="刷新" spin={isReload} />
+                  {pane.key === fullPath && pane.key !== '/404' && (
+                    <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
                   )}
                   {pane.title}
                 </span>
@@ -238,11 +239,15 @@ const ProTabs = (props) => {
             }
           >
             {/* <pane.content path={pane.path} /> */}
-            {isReload && pane.key === fullPath && pane.key !== '/404' ? (
-              <Alert message="刷新中..." type="info" />
-            ) : (
-              <MyErrorBoundary fixError={fixError}>{pane.content}</MyErrorBoundary>
-            )}
+            <MyErrorBoundary fixError={fixError}>
+              <div className={styles.tabpanel}>
+                {isReload && pane.key === fullPath && pane.key !== '/404' ? (
+                  <Loading tip="刷新中..." />
+                ) : (
+                  <>{pane.content}</>
+                )}
+              </div>
+            </MyErrorBoundary>
           </Tabs.TabPane>
         ))}
       </Tabs>

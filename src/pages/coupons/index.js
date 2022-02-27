@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from 'antd'
+import FixTabPanel from '@stateless/FixTabPanel'
 
 const Coupons = () => {
   const navigate = useNavigate()
@@ -9,7 +10,7 @@ const Coupons = () => {
   }
 
   return (
-    <>
+    <FixTabPanel>
       <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/')}>
         Home Coupons
       </Button>
@@ -22,7 +23,7 @@ const Coupons = () => {
       <Button type="dashed" style={{ margin: 10 }} onClick={() => redirectTo('coupons/detail?id=2')}>
         Detail Coupons
       </Button>
-    </>
+    </FixTabPanel>
   )
 }
 

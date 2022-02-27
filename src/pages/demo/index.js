@@ -5,6 +5,7 @@ import ErrorBoundary from '@stateful/ErrorBoundary'
 import { useReqFetch, useGetFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
+import FixTabPanel from '@stateless/FixTabPanel'
 import rootAction from '@src/actions'
 
 import ShopsList from './shopsList'
@@ -108,7 +109,7 @@ const ProDemo = () => {
   // }, [])
 
   return (
-    <>
+    <FixTabPanel>
       <h2>
         项目文档<span style={{ fontSize: 12, color: '#999', margin: '0 10px' }}>待完善</span>
       </h2>
@@ -156,7 +157,7 @@ const ProDemo = () => {
         </Tabs.TabPane>
       </Tabs>
       <div style={{ height: 400 }}>Height For Scroll</div>
-    </>
+    </FixTabPanel>
   )
 }
 

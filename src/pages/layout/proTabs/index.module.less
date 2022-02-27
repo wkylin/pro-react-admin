@@ -4,13 +4,6 @@
     height: 100%;
     width: 100%;
 
-    .ant-tabs-content {
-      height: 100%;
-      width: 100%;
-      min-height: 120px;
-      margin-top: -16px;
-    }
-
     .ant-tabs-content > .ant-tabs-tabpane {
       padding: 16px;
     }
@@ -21,6 +14,15 @@
       .ant-tabs-nav-wrap {
         overflow: visible !important;
       }
+    }
+
+    .tabpanel {
+      width: 100%;
+      padding: 0 10px 10px;
+      min-height: calc(100vh - 242px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
