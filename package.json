@@ -199,6 +199,7 @@
     "@sentry/cli": "^1.72.2",
     "@sentry/react": "^6.17.7",
     "@sentry/tracing": "^6.17.7",
+    "@welldone-software/why-did-you-render": "^6.2.3",
     "antd": "^4.18.6",
     "axios": "^0.25.0",
     "constate": "^3.3.0",
