@@ -38,6 +38,8 @@ const SignIn = () => {
         name="basic"
         initialValues={{
           remember: true,
+          username: 'wkylin.w',
+          password: 'wkylin.w',
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}

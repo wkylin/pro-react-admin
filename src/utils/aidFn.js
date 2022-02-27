@@ -166,3 +166,29 @@ export const checkIsLocalPage = () => {
     )
   })
 }
+
+// Generate Random Hex
+export const randomHex = () =>
+  `#${Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padEnd(6, '0')}`
+
+// Clear All Cookies
+export const clearCookies = document.cookie
+  .split(';')
+  .forEach(
+    (cookie) =>
+      (document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
+  )
+
+// Find the number of days between two days
+export const dayDif = (date1, date2) => Math.ceil(Math.abs(date1.getTime() - date2.getTime()) / 86400000)
+
+// Capitalize a String
+export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
+
+// Check if the array is empty
+export const isNotEmpty = (arr) => Array.isArray(arr) && arr.length > 0
+
+// Detect Dark Mode
+export const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
