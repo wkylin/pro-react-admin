@@ -123,6 +123,7 @@ npm run dev:faker
 
 4. [https://www.npmjs.com/package/devmoji](https://www.npmjs.com/package/devmoji)
 5. [https://gitmoji.dev/](https://gitmoji.dev/)
+6. [git commit 工具链](https://juejin.cn/post/7067166468797890591)
 
 ### React Code Splitting Library
 
