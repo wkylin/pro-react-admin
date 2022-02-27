@@ -230,7 +230,7 @@ const ProTabs = (props) => {
                 getPopupContainer={(node) => node.parentNode}
               >
                 <span onContextMenu={(e) => preventDefault(e, pane)}>
-                  {pane.key === fullPath && pane.key !== '/404' && (
+                  {pane.key === fullPath && pane.key !== '/404' && pane.key !== '/error' && (
                     <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
                   )}
                   {pane.title}
