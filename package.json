@@ -30,7 +30,7 @@
     "http:dev": "npm run dev:serve && npm run http-server",
     "http:prod": "npm run prod:serve && npm run http-server",
     "http:test": "npm run test:serve && npm run http-server",
-    "http-server": "http-server ./dist -p 9090 --proxy https://my-json-server.typicode.com --gzip",
+    "http-server": "http-server ./dist -p 9090 --proxy https://my-json-server.typicode.com -o --cors --log-ip --gzip",
     "faker": "nodemon faker/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:jest": "jest",
