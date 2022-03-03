@@ -177,7 +177,7 @@ npm run dev:faker
 
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
-7. Active hooks: npx husky install
+7. Active hooks: npx husky install / npx husky-init && npm install / npx husky-init ; npm install
    [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
