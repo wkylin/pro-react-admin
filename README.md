@@ -141,7 +141,6 @@ npm run dev:faker
    - [Bit](https://bit.dev/)
 3. CacheRoute: [react-router-cache-route](https://github.com/CJY0208/react-router-cache-route)
 
-
 ### 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
@@ -149,7 +148,7 @@ npm run dev:faker
    - [msw](https://github.com/mswjs/msw)
 3. 单页面多页签 参考
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-4. TS参考
+4. TS 参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 5. Axios
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
