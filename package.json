@@ -52,7 +52,7 @@
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
     "process": "node webpack/process",
-    "prepare": "husky install && node check-sentry.js",
+    "prepare": "husky install",
     "sentry:check": "node check-sentry.js",
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
