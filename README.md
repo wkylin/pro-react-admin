@@ -188,13 +188,28 @@ npm run dev:faker
 
    ```bash
     // lint-staged
-    "**/*": [
-      "npm run prettier:write"
-    ],
+
+    "lint-staged": {
+      "**/*": [
+        "npm run prettier:write"
+      ],
+      "src/**/*.{js, jsx, ts, tsx}": [
+        "npm run eslint:fix",
+        "npm run prettier:fix"
+      ],
+      "src/**/*.less": [
+        "npm run stylelint:fix",
+        "npm run prettier:fix"
+      ],
+      "*.md": [
+        "npm run markdownlint:fix",
+        "npm run prettier:fix"
+      ]
+    },
     // .eslintrc.json
     "extends": ["plugin:react/recommended", "standard", "prettier"],
     // package.json
-    "prettier:write": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
    ```
 
 ### CSS Modules
@@ -442,6 +457,40 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 ### npm i && npm ci
 
 1. [npm ci vs. npm install](https://betterprogramming.pub/npm-ci-vs-npm-install-which-should-you-use-in-your-node-js-projects-51e07cb71e26)
+
+### Husky 不起作用解决方案
+
+参考官网：[https://typicode.github.io/husky/#/](https://typicode.github.io/husky/#/)
+按以下步骤进行设置：
+
+1. 删除 .git 目录下的 hooks 及 .husky
+2. 查看 git config 配置是否存在 core.hookspath=.husky
+
+   ```base
+     git config --list
+   ```
+
+3. 删除配置及卸载 Huksy:
+
+   ```base
+     npm uninstall husky && git config --unset core.hookspath
+   ```
+
+4. 再次安装 Husky:
+
+   ```base
+     npm install husky --save-dev
+     // npm set-script prepare "husky install"
+     npx husky-init
+   ```
+
+5. 新增 Hooks：
+
+   ```base
+     npx husky add .husky/pre-commit "npx lint-staged"
+     npx husky add .husky/pre-commit "npx pretty-quick --staged"
+     npx husky add .husky/commit-msg 'npx --no-install commitlint --edit'
+   ```
 
 ### Show your support
 

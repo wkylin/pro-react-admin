@@ -36,15 +36,17 @@
     "test:jest": "jest",
     "update:yarn": "yarn upgrade-interactive --latest",
     "update:npm": "ncu -u && npm install",
-    "lint:fix": "npm run eslint:fix && npm run stylelint:fix",
-    "lint": "npm run eslint && npm run lint:style && npm run lint:prettier",
-    "lint:style": "stylelint \"src/**/*.less\" --custom-syntax postcss-less",
-    "lint:prettier": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
-    "prettier:check": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "lint:fix": "npm run eslint:fix && npm run stylelint:fix && npm run prettier:fix",
+    "lint": "npm run eslint && npm run stylelint && npm run prettier:check",
+    "stylelint": "stylelint \"src/**/*.less\" --custom-syntax postcss-less",
     "stylelint:fix": "stylelint \"src/**/*.less\" --fix --custom-syntax postcss-less",
+    "prettier:check": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "prettier:fix:all": "prettier --write . --end-of-line auto --ignore-unknown",
     "eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
     "eslint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
-    "lint:markdown": "markdownlint --fix *.md",
+    "markdownlint": "markdownlint *.md",
+    "markdownlint:fix": "markdownlint --fix *.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
@@ -250,13 +252,16 @@
   },
   "lint-staged": {
     "src/**/*.{js, jsx, ts, tsx}": [
-      "npm run eslint:fix"
+      "npm run eslint:fix",
+      "npm run prettier:fix"
     ],
     "src/**/*.less": [
-      "npm run stylelint:fix"
+      "npm run stylelint:fix",
+      "npm run prettier:fix"
     ],
     "*.md": [
-      "npm run lint:markdown"
+      "npm run markdownlint:fix",
+      "npm run prettier:fix"
     ]
   },
   "config": {

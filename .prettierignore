@@ -1,5 +1,6 @@
 node_modules/**
-CHANGELOG.md
 package-lock.json
 build/**
 dist/**
+.vscode/**
+.yarn/**
