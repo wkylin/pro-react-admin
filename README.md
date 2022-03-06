@@ -132,21 +132,31 @@ npm run dev:faker
 ### Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
-2. "build:production": "npm run dev:theme && cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/**/*.map",
+2. "build:production": "npm run dev:theme && cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/\*_/_.map",
 
 ### TODO
 
-1. TypeScript: [TypeScript](https://www.typescriptlang.org/)(OK)
-2. Umi Hox: [Hox](https://github.com/umijs/hox)
-3. Mock Server (OK)
+1. 配备比较完善的脚手架：
+2. 完善文档：
+   - [https://d.umijs.org/zh-CN](https://d.umijs.org/zh-CN)
+   - [Bit](https://bit.dev/)
+3. CacheRoute: [react-router-cache-route](https://github.com/CJY0208/react-router-cache-route)
+
+### 已支持特性
+
+1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
+2. Mock Server
    - [msw](https://github.com/mswjs/msw)
-4. 单页面多页签参考 (OK)
+     <<<<<<< HEAD
+3. # 单页面多页签参考 (OK)
+4. 单页面多页签 参考
+   > > > > > > > main
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-5. TS(OK) 参考
+5. TS 参考
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 6. Axios
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
-7. React SVGR (OK)
+7. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 8. tab 内操作 tabs
    - tab
@@ -178,7 +188,7 @@ npm run dev:faker
 
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
-7. Active hooks: npx husky install
+7. Active hooks: npx husky install / npx husky-init && npm install / npx husky-init ; npm install
    [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
@@ -229,6 +239,7 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 ### Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
+2. [react-refresh](https://www.npmjs.com/package/react-refresh)
 
 ### VSCode Extensions
 
@@ -443,4 +454,3 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 ### Show your support
 
 Give a ⭐️ if this project helped you!
-

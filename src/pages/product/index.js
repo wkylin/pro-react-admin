@@ -1,13 +1,17 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, matchRoutes } from 'react-router-dom'
 import { Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
-
+import routers from '@routers'
 const Products = () => {
   const navigate = useNavigate()
   const redirectTo = (path) => {
     navigate(path)
   }
+  // 匹配当前层级路由树
+  const mathchs = matchRoutes(routers, location)
+
+  console.log('mathchs', mathchs)
 
   return (
     <FixTabPanel>
