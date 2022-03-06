@@ -1,6 +1,9 @@
 node_modules/**
 package-lock.json
+yarn.lock
 build/**
 dist/**
 .vscode/**
 .yarn/**
+compilation-stats.json
+**/*.css

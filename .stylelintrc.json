@@ -9,17 +9,13 @@
     "property-no-unknown": [
       true,
       {
-        "ignoreProperties": [
-          "composes"
-        ]
+        "ignoreProperties": ["composes"]
       }
     ],
     "selector-pseudo-class-no-unknown": [
       true,
       {
-        "ignorePseudoClasses": [
-          "global"
-        ]
+        "ignorePseudoClasses": ["global"]
       }
     ]
   }
