@@ -132,9 +132,9 @@ npm run dev:faker
 ### Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
-2. "build:production": "npm run dev:theme && cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/\*_/_.map",
+2. "build:production": "npm run dev:theme && cross-env SENTRY*SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/\**/\_.map",
 
-### TODO
+### 待解决
 
 1. 配备比较完善的脚手架：
 2. 完善文档：
@@ -145,23 +145,15 @@ npm run dev:faker
 ### 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
+   - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 2. Mock Server
    - [msw](https://github.com/mswjs/msw)
-     <<<<<<< HEAD
-3. # 单页面多页签参考 (OK)
-4. 单页面多页签 参考
-   > > > > > > > main
+3. 单页面多页签参考
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-5. TS 参考
-   - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
-6. Axios
+4. Axios
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
-7. React SVGR
+5. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
-8. tab 内操作 tabs
-   - tab
-9. tab 间通信 兄弟 父级 context
-   - shared workers
 
 ### ESLint Prettier Husky EditorConfig
 
