@@ -212,6 +212,10 @@ npm run dev:faker
     "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
    ```
 
+### 约定式提交
+
+1. [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+
 ### CSS Modules
 
 A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
@@ -270,9 +274,15 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 Copyright (c) 2021 Promotion Web
 Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
-### NPM
+### NPM version
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
+
+#### Git Tag
+
+1. git tag -a v1.2.0 -m "version: 1.2.0"
+2. git push origin v1.2.0
+3. git push origin --tags
 
 ### Nginx
 
