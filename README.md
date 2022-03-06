@@ -124,6 +124,7 @@ npm run dev:faker
 4. [https://www.npmjs.com/package/devmoji](https://www.npmjs.com/package/devmoji)
 5. [https://gitmoji.dev/](https://gitmoji.dev/)
 6. [git commit 工具链](https://juejin.cn/post/7067166468797890591)
+7. [https://theodorusclarence.com/library/conventional-commit-readme](https://theodorusclarence.com/library/conventional-commit-readme)
 
 ### React Code Splitting Library
 
@@ -179,7 +180,7 @@ npm run dev:faker
 
 6. Semantic Versioning: [Semantic Versioning](https://semver.org/)
 
-7. Active hooks: npx husky install / npx husky-init && npm install / npx husky-init ; npm install
+7. Active hooks:
    [https://typicode.github.io/husky/#/?id=install](https://typicode.github.io/husky/#/?id=install)
 8. Prettierrc
    [http://json.schemastore.org/prettierrc](http://json.schemastore.org/prettierrc)
