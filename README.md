@@ -133,7 +133,7 @@ npm run dev:faker
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
 
-### TODO
+### 待解决
 
 1. 配备比较完善的脚手架：
 2. 完善文档：
@@ -141,24 +141,18 @@ npm run dev:faker
    - [Bit](https://bit.dev/)
 3. CacheRoute: [react-router-cache-route](https://github.com/CJY0208/react-router-cache-route)
 
-
 ### 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
+   - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
 2. Mock Server
    - [msw](https://github.com/mswjs/msw)
-3. 单页面多页签 参考
+3. 单页面多页签参考
    - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
-4. TS参考
-   - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
-5. Axios
+4. Axios
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
-6. React SVGR
+5. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
-7. tab 内操作 tabs
-   - tab
-8. tab 间通信 兄弟 父级 context
-   - shared workers
 
 ### ESLint Prettier Husky EditorConfig
 
