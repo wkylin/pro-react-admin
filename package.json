@@ -251,9 +251,6 @@
     }
   },
   "lint-staged": {
-    "**/*": [
-      "npm run prettier:fix"
-    ],
     "src/**/*.{js, jsx, ts, tsx}": [
       "npm run eslint:fix"
     ],
@@ -262,6 +259,9 @@
     ],
     "*.md": [
       "npm run markdownlint:fix"
+    ],
+    "**/*": [
+      "npm run prettier:fix"
     ]
   },
   "config": {
