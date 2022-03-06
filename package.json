@@ -1,6 +1,6 @@
 {
   "name": "promotion-web",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "promotion-web",
   "keywords": [
     "React",
@@ -36,16 +36,17 @@
     "test:jest": "jest",
     "update:yarn": "yarn upgrade-interactive --latest",
     "update:npm": "ncu -u && npm install",
-    "lint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src && npm run lint:style",
-    "lint": "npm run lint:js && npm run lint:style && npm run lint:prettier",
-    "lint:js": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
-    "lint:style": "stylelint --custom-syntax postcss-less",
-    "lint:prettier": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "lint:fix": "npm run eslint:fix && npm run stylelint:fix && npm run prettier:fix",
+    "lint": "npm run eslint && npm run stylelint && npm run prettier:check",
+    "stylelint": "stylelint \"src/**/*.less\" --custom-syntax postcss-less",
+    "stylelint:fix": "stylelint \"src/**/*.less\" --fix --custom-syntax postcss-less",
     "prettier:check": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
-    "stylelint:fix": "stylelint --fix --custom-syntax postcss-less",
-    "eslint": "eslint",
-    "eslint:fix": "eslint --fix",
-    "lint:markdown": "markdownlint --fix *.md",
+    "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
+    "prettier:fix:all": "prettier --write . --end-of-line auto --ignore-unknown",
+    "eslint": "eslint --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
+    "eslint:fix": "eslint --fix --cache --ext .js,.jsx,.ts,.tsx --format=pretty ./src",
+    "markdownlint": "markdownlint *.md",
+    "markdownlint:fix": "markdownlint --fix *.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor",
@@ -250,11 +251,17 @@
     }
   },
   "lint-staged": {
-    "src/**/*.js": [
+    "src/**/*.{js, jsx, ts, tsx}": [
       "npm run eslint:fix"
     ],
     "src/**/*.less": [
       "npm run stylelint:fix"
+    ],
+    "*.md": [
+      "npm run markdownlint:fix"
+    ],
+    "**/*": [
+      "npm run prettier:fix"
     ]
   },
   "config": {
