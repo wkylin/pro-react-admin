@@ -191,7 +191,7 @@ npm run dev:faker
 
     "lint-staged": {
       "**/*": [
-        "npm run prettier:write"
+        "npm run prettier:fix"
       ],
       "src/**/*.{js, jsx, ts, tsx}": [
         "npm run eslint:fix",

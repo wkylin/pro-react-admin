@@ -251,17 +251,17 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js, jsx, ts, tsx}": [
-      "npm run eslint:fix",
+    "**/*": [
       "npm run prettier:fix"
+    ],
+    "src/**/*.{js, jsx, ts, tsx}": [
+      "npm run eslint:fix"
     ],
     "src/**/*.less": [
-      "npm run stylelint:fix",
-      "npm run prettier:fix"
+      "npm run stylelint:fix"
     ],
     "*.md": [
-      "npm run markdownlint:fix",
-      "npm run prettier:fix"
+      "npm run markdownlint:fix"
     ]
   },
   "config": {
