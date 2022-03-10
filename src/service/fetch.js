@@ -18,7 +18,7 @@
 import { message } from 'antd'
 import { suffix } from '../utils/suffix'
 // import { getToken } from '../utils/token'
-import fetchIntercept from 'fetch-intercept'
+// import fetchIntercept from 'fetch-intercept'
 // import fetch from 'cross-fetch'
 require('isomorphic-fetch')
 
@@ -149,33 +149,6 @@ const handleSuccessResult = (reslove, result, isShowError) => {
   }
   reslove(result)
 }
-
-fetchIntercept.register({
-  request: function (url, config) {
-    // Modify the url or config here
-    console.log('url', url)
-    return [url, config]
-  },
-
-  requestError: function (error) {
-    // Called when an error occured during another 'request' interceptor call
-    console.log('req error', error)
-    return Promise.reject(error)
-  },
-
-  response: function (response) {
-    // Modify the reponse object
-    console.log('response', response)
-    debugger
-    return response
-  },
-
-  responseError: function (error) {
-    // Handle an fetch error
-    console.log('res error', error)
-    return Promise.reject(error)
-  },
-})
 
 const handleFetchData = (url, options) => {
   const { isShowError, timeout, controller, ...otherOptions } = options
