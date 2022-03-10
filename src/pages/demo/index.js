@@ -2,7 +2,7 @@ import React from 'react'
 import ErrorBoundary from '@stateful/ErrorBoundary'
 // import React, { useState, useEffect } from 'react'
 // import { reqFetch } from '@src/service'
-import { useReqFetch, useGetFetch } from '@src/service'
+import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -108,6 +108,15 @@ const ProDemo = () => {
   //   }
   // }, [])
 
+  const onFetch = () => {
+    reqFetch('/faker/shops', { method: 'GET' })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
+  }
   return (
     <FixTabPanel>
       <h2>
@@ -129,7 +138,7 @@ const ProDemo = () => {
           {deReducer.deNumber}
         </Space>
       </Space>
-      <h4>ErrorBoundary</h4>
+      <h4 onClick={onFetch}>ErrorBoundary</h4>
       <ErrorBoundary>
         <ShopsList />
       </ErrorBoundary>

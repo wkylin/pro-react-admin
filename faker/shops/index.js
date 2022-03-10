@@ -14,13 +14,14 @@ const handler = (ctx) => {
       },
     ],
   })
-
+  // ctx.status = 502
   ctx.body = mockData.shopList
 
   // ctx.body = {
   //   code: 41002,
   //   data: null,
   //   message: '',
+  //   now: new Date().getTime(),
   // }
 }
 

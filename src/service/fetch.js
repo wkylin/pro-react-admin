@@ -125,24 +125,20 @@ const initOptions = {
   // keepalive: false,
 }
 
-const handleFailedResult = (result, error, isShowError) => {
-  if (result.code !== 0 && isShowError) {
-    const errMsg = result.message || result.error || (error && error.message)
-    const errStatus = result.status ? result.status : error && error.name
-    const errStr = `${result.code ? result.code : errStatus}: ${errMsg}`
-    if (!error || (error && error.name !== 'AbortError')) {
-      message.error(errStr, 2)
-    }
+const handleFailedResult = (reject, response, error, isShowError) => {
+  const status = response.status
+
+  if (((status && status !== 200) || error) && isShowError) {
+    message.error(`${status ? status + response.statusText : error.message}`, 2)
   }
-  return result
+  reject(response)
 }
 
-const handleSuccessResult = (result, isShowError) => {
+const handleSuccessResult = (reslove, result, isShowError) => {
   // response.ok text/html text/plain result may be string
   if (result.code !== 0) {
     if (result.code === 41002) {
-      // window.location.href = '#/signin'
-      // hashRouter.history.push('/signin')
+      window.location.href = '/signin'
       return
     }
 
@@ -151,46 +147,35 @@ const handleSuccessResult = (result, isShowError) => {
       message.error(errStr, 2)
     }
   }
-  return result
+  reslove(result)
 }
 
-const handleErrorResponse = (reject, response, error, isShowError) => {
-  let msg = ''
-  switch (response.status) {
-    case 401:
-      msg = 'Unauthorized'
-      break
-    case 403:
-      msg = 'Forbidden'
-      break
-    case 404:
-      msg = 'Not Found'
-      break
-    case 405:
-      msg = 'Method Not Allowed'
-      break
-    case 504:
-      msg = 'Gateway Timeout'
-      break
-    default:
-      msg = response.statusText
-  }
+fetchIntercept.register({
+  request: function (url, config) {
+    // Modify the url or config here
+    console.log('url', url)
+    return [url, config]
+  },
 
-  reject(handleFailedResult({ status: response.status, error: msg }, error, isShowError))
-}
+  requestError: function (error) {
+    // Called when an error occured during another 'request' interceptor call
+    console.log('req error', error)
+    return Promise.reject(error)
+  },
 
-const handleSuccessResponse = (resolve, reject, response, resBody, isShowError) => {
-  if (response.ok) {
-    resolve(handleSuccessResult(resBody, isShowError))
-  } else {
-    handleErrorResponse(
-      reject,
-      response,
-      Object.assign({}, resBody, { status: response.status, error: response.statusText }),
-      isShowError
-    )
-  }
-}
+  response: function (response) {
+    // Modify the reponse object
+    console.log('response', response)
+    debugger
+    return response
+  },
+
+  responseError: function (error) {
+    // Handle an fetch error
+    console.log('res error', error)
+    return Promise.reject(error)
+  },
+})
 
 const handleFetchData = (url, options) => {
   const { isShowError, timeout, controller, ...otherOptions } = options
@@ -199,18 +184,16 @@ const handleFetchData = (url, options) => {
   const { signal } = abortController
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
-      reject(
-        handleFailedResult(
-          { error: 'Timeout for Promise' },
-          new Error('TimeoutError: Timeout for Promise'),
-          isShowError
-        )
-      )
+      // handleFailedResult(
+      //   reject,
+      //   { status: 50000, statusText: 'Time out' },
+      //   new Error('TimeoutError: Timeout for Promise'),
+      //   isShowError
+      // )
       abortController.abort()
     }, timeout)
 
     fetch(url, { ...otherOptions, signal })
-      .finally(() => clearTimeout(timer))
       .then((response) => {
         // response.text() response.json() response.blob() response.formData() response.arrayBuffer() response.clone()
         // if(response.ok || (response.status >= 200 && response.status < 300)) { 成功 } else { 失败}
@@ -224,95 +207,58 @@ const handleFetchData = (url, options) => {
         // }
 
         const contentType = response.headers.get('Content-Type')
-        if (!response.ok && !contentType) {
-          handleErrorResponse(reject, response, null, isShowError)
-          return
-        }
-
-        if (contentType.includes('application/json')) {
-          response
-            .json()
-            .then((resBody) => {
-              handleSuccessResponse(resolve, reject, response, resBody, isShowError)
-            })
-            .catch((error) => {
-              handleErrorResponse(reject, response, error, isShowError)
-            })
-        } else if (contentType.includes('application/vnd.ms-excel')) {
-          // application/octet-stream
-          response
-            .arrayBuffer()
-            .then((resBuffer) => {
-              const blob = new Blob([resBuffer], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        if (response.status >= 200 && response.status < 300) {
+          if (contentType.includes('application/json')) {
+            response
+              .json()
+              .then((resBody) => {
+                handleSuccessResult(resolve, resBody, isShowError)
               })
-              const disposition = response.headers.get('content-disposition')
-              const fileName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace("utf-8''", '') || ''
-              const objectUrl = URL.createObjectURL(blob)
-              const downloadElement = document.createElement('a')
-              document.body.appendChild(downloadElement)
-              downloadElement.style = 'display: none'
-              downloadElement.href = objectUrl
-              downloadElement.download = fileName
-              downloadElement.click()
-              document.body.removeChild(downloadElement)
-            })
-            .catch((error) => {
-              handleErrorResponse(reject, response, error, isShowError)
-            })
-        } else if (contentType.includes('text/html') || contentType.includes('text/plain')) {
-          const resType = response.text()
-          resType
-            .then((resBody) => {
-              handleSuccessResponse(resolve, reject, response, resBody, isShowError)
-            })
-            .catch((error) => {
-              handleErrorResponse(reject, response, error, isShowError)
-            })
+              .catch((error) => {
+                handleFailedResult(reject, response, error, isShowError)
+              })
+          } else if (contentType.includes('application/vnd.ms-excel')) {
+            // application/octet-stream
+            response
+              .arrayBuffer()
+              .then((resBuffer) => {
+                const blob = new Blob([resBuffer], {
+                  type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                })
+                const disposition = response.headers.get('content-disposition')
+                const fileName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace("utf-8''", '') || ''
+                const objectUrl = URL.createObjectURL(blob)
+                const downloadElement = document.createElement('a')
+                document.body.appendChild(downloadElement)
+                downloadElement.style = 'display: none'
+                downloadElement.href = objectUrl
+                downloadElement.download = fileName
+                downloadElement.click()
+                document.body.removeChild(downloadElement)
+              })
+              .catch((error) => {
+                handleFailedResult(reject, response, error, isShowError)
+              })
+          } else if (contentType.includes('text/html') || contentType.includes('text/plain')) {
+            response
+              .text()
+              .then((resBody) => {
+                handleSuccessResult(resolve, resBody, isShowError)
+              })
+              .catch((error) => {
+                handleFailedResult(reject, response, error, isShowError)
+              })
+          }
         } else {
-          // context-type */*
-          response
-            .text()
-            .then((resBody) => {
-              handleSuccessResponse(resolve, reject, response, resBody, isShowError)
-            })
-            .catch((error) => {
-              handleErrorResponse(reject, response, error, isShowError)
-            })
+          handleFailedResult(reject, response, response, isShowError)
         }
       })
       .catch((error) => {
-        const errMsg = `${error.name} ${error.message}`
-        reject(handleFailedResult({ error: errMsg }, error, isShowError))
+        handleFailedResult(reject, error, error, isShowError)
       })
+      .finally(() => clearTimeout(timer))
   })
 }
-
-fetchIntercept.register({
-  request: function (url, config) {
-    // Modify the url or config here
-    // console.log('url', url)
-    return [url, config]
-  },
-
-  requestError: function (error) {
-    // Called when an error occured during another 'request' interceptor call
-    console.log('req error', error)
-    return Promise.reject(error)
-  },
-
-  response: function (response) {
-    // Modify the reponse object
-    // console.log('response', response)
-    return response
-  },
-
-  responseError: function (error) {
-    // Handle an fetch error
-    // console.log('res error', error)
-    return Promise.reject(error)
-  },
-})
 
 export const reqFetch = (
   url,
@@ -335,8 +281,8 @@ export const reqFetch = (
       ...headers,
     },
     controller,
-    isShowError,
     timeout,
+    isShowError,
   }
 
   // POST, *GET,  PUT, DELETE, PATCH, [HEAD, CONNECT, OPTIONS, TRACE]

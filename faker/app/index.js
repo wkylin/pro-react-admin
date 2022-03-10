@@ -4,7 +4,7 @@ const Router = require('koa-router')
 const user = new Router()
 
 user.get('/api/user/list', async (ctx) => {
-  // ctx.response.status = 500;
+  // ctx.response.status = 500
   // ctx.type = 'multipart/form-data'
   // ctx.type = 'application/octet-stream'
   // ctx.body = 'Hello, Koa!'

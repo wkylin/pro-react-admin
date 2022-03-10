@@ -138,9 +138,15 @@ npm run dev:faker
 
 1. 配备比较完善的脚手架：
 2. 完善文档：
+   - [https://docusaurus.io/](https://docusaurus.io/)
    - [https://d.umijs.org/zh-CN](https://d.umijs.org/zh-CN)
    - [Bit](https://bit.dev/)
 3. CacheRoute: [react-router-cache-route](https://github.com/CJY0208/react-router-cache-route)
+
+### Docusaurus
+
+1. Github:
+2. Demo:
 
 ### 已支持特性
 
