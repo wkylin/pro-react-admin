@@ -9,7 +9,7 @@ interface UserInterface {
   dob: Date
 }
 
-const UserDemo: React.FC<{ user: UserInterface }> = ({ children, user }) => {
+const UserDemo: React.FC<{ user: UserInterface }> = ({ user }) => {
   return (
     <>
       <div>{user.name}</div>
