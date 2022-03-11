@@ -1,4 +1,4 @@
-import './wdyr' // why-did-you-render
+// import './wdyr' // why-did-you-render
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { HashRouter as Router } from 'react-router-dom'
