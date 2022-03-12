@@ -4,20 +4,11 @@ import { Tabs, Menu, Dropdown, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, HeartTwoTone } from '@ant-design/icons'
 import { MyErrorBoundary } from '@stateful'
+import { useProTabContext } from '@hooks/proTabsContext'
 import Loading from '@stateless/Loading'
 import Home from '@pages/home'
 
 import styles from './index.module.less'
-
-const initialPanes = [
-  {
-    title: '首页',
-    key: '/',
-    content: <Home />,
-    closable: false,
-    path: '/',
-  },
-]
 
 const renderTabBar = (props, DefaultTabBar) => (
   <Sticky topOffset={40} relative>
@@ -26,8 +17,7 @@ const renderTabBar = (props, DefaultTabBar) => (
 )
 
 const ProTabs = (props) => {
-  const [activeKey, setActiveKey] = useState('')
-  const [panes, setPanes] = useState(initialPanes)
+  const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
   const [isReload, setIsReload] = useState(false)
   const [selectedPanel, setSelectedPanel] = useState({})
   const pathRef = useRef('')
@@ -49,6 +39,15 @@ const ProTabs = (props) => {
   // useEffect(() => {
   //   resetTabs()
   // }, [resetTabs])
+
+  useEffect(() => {
+    // scroll to top
+    document.querySelector('#container').scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
+  }, [pathname])
 
   useEffect(() => {
     const newPath = pathname + search
@@ -73,7 +72,7 @@ const ProTabs = (props) => {
 
     setPanes([...panes, panesItem])
     setActiveKey(tabActiveKey)
-    // storeTabs(panes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [panes, panesItem, pathname, search, tabActiveKey])
 
   const onChange = (activeKey) => {
@@ -91,22 +90,7 @@ const ProTabs = (props) => {
   }
 
   const onEdit = (targetKey, action) => {
-    action === 'remove' && remove(targetKey)
-  }
-
-  const remove = (targetKey) => {
-    const delIndex = panes.findIndex((item) => item.key === targetKey)
-    const filterPanes = panes.filter((pane) => pane.key !== targetKey)
-    // 删除非当前/当前tab
-    if (targetKey !== activeKey) {
-      setPanes(filterPanes)
-      // storeTabs(panes) // 改变redux中数据
-    } else {
-      const nextPath = filterPanes[delIndex - 1].key
-      navigate(nextPath)
-      setActiveKey(nextPath)
-      setPanes(filterPanes)
-    }
+    action === 'remove' && removeTab(targetKey)
   }
 
   const isDisabled = () => selectedPanel.key === '/'
@@ -143,7 +127,6 @@ const ProTabs = (props) => {
     setPanes(nowPanes)
     navigate(nowPanes[0].key)
     setActiveKey(isRemoveAll ? '/' : key)
-    // storeTabs(nowPanes)
   }
 
   // tab 右键菜单
@@ -156,7 +139,7 @@ const ProTabs = (props) => {
         key="2"
         onClick={(e) => {
           e.domEvent.stopPropagation()
-          remove(selectedPanel.key)
+          removeTab(selectedPanel.key)
         }}
         disabled={isDisabled()}
       >
@@ -191,7 +174,6 @@ const ProTabs = (props) => {
 
   return (
     <StickyContainer className={styles.container} id="container">
-      {/* {`panes: ${JSON.stringify(panes, null, 2)}`} */}
       <Tabs
         hideAdd
         type="editable-card"

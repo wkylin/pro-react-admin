@@ -3,6 +3,7 @@ import { Layout, BackTop } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
+import { ProTabProvider } from '@hooks/proTabsContext'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
@@ -27,13 +28,6 @@ const ProContent = () => {
   const { pathname, search } = useLocation()
 
   useEffect(() => {
-    // scroll to top
-    document.querySelector('#container').scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    })
-
     // 未登录
     // if (!token && pathname !== '/signin') {
     //   navigate('signin', { replace: true })
@@ -64,11 +58,9 @@ const ProContent = () => {
         <ProBreadcrumb />
       </Header>
       <Content className={styles.content}>
-        {/* {`tabActiveKey: ${tabActiveKey}`}
-        <br />
-        {`panesItem: ${JSON.stringify(panesItem, null, 2)}`}
-        <br /> */}
-        <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
+        <ProTabProvider>
+          <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
+        </ProTabProvider>
       </Content>
       <Footer className={styles.footer}>
         <BackTop target={() => document.querySelector('#container')}>
