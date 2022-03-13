@@ -39,7 +39,7 @@
     - npm run dev:server
 ```
 
-### VSCode extension: 别名路径跳转
+## VSCode extension: 别名路径跳转
 
 ```bash
     "alias-skip.mappings": {
@@ -55,11 +55,11 @@
     }
 ```
 
-### WebStorm 别名跳转设置
+## WebStorm 别名跳转设置
 
 1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
 
-### 使用标准 commit 生成 changelog 标准化
+## 使用标准 commit 生成 changelog 标准化
 
 - [conventional-changelog](https://github.com/conventional-changelog)
 - [standard-version](https://github.com/conventional-changelog/standard-version)
@@ -89,11 +89,11 @@
   "release": "standard-version --tag-prefix \"publish/\""
   ```
 
-### 约定式提交
+## 约定式提交
 
 1. [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
 
-### Commit message
+## Commit message
 
 1. The commit message should be structured as follows:
 
@@ -136,23 +136,23 @@
 6. [git commit 工具链](https://juejin.cn/post/7067166468797890591)
 7. [https://theodorusclarence.com/library/conventional-commit-readme](https://theodorusclarence.com/library/conventional-commit-readme)
 
-### React Code Splitting Library
+## React Code Splitting Library
 
 1. [Loadable Components](https://loadable-components.com/)
 
-### Mock Server
+## Mock Server
 
 ```bash
 // mock index.js
 npm run dev:faker
 ```
 
-### Deployment
+## Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
 2. "build:production": "npm run dev:theme && cross-env SENTRY\*SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/\*\*/\_.map",
 
-### 待解决
+## 待解决
 
 1. 配备比较完善的脚手架：
 2. 完善文档：
@@ -161,12 +161,12 @@ npm run dev:faker
    - [Bit](https://bit.dev/)
 3. CacheRoute: [react-router-cache-route](https://github.com/CJY0208/react-router-cache-route)
 
-### Docusaurus
+## Docusaurus
 
 1. Github:
 2. Demo:
 
-### 已支持特性
+## 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
    - [https://react-typescript-cheatsheet.netlify.app/](https://react-typescript-cheatsheet.netlify.app/)
@@ -184,7 +184,7 @@ npm run dev:faker
 5. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
-### 代码质量控制：ESLint Prettier Husky EditorConfig
+## 代码质量控制：ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -241,12 +241,12 @@ npm run dev:faker
     "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
    ```
 
-### 自动化持续代码审查工具
+## 自动化持续代码审查工具
 
 1. [DeepSource/](https://deepsource.io/)
 2. [DeepScan](https://deepscan.io/)
 
-### Sentry 接入
+## Sentry 接入
 
 1. [Sentry](https://sentry.io/)
 2. 遇到的问题：
@@ -254,12 +254,12 @@ npm run dev:faker
    - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
    - "sentry:check": "node check-sentry.js"
 
-### VSCode Extensions
+## VSCode Extensions
 
 1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
 2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
-### CSS Modules
+## CSS Modules
 
 A CSS Module is a CSS file in which all class names and animation names are scoped locally by default.
 
@@ -268,9 +268,9 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 2. StyleLint: [StyleLint](https://stylelint.io/)
    npx stylelint --help
 
-### CI/CD 自动化构建
+## CI/CD 自动化构建
 
-### Test
+## Test
 
 1. [Jest](https://jestjs.io/)
 2. [React Testing Library](https://testing-library.com/docs/react-testing-library/intro)
@@ -282,39 +282,39 @@ A CSS Module is a CSS file in which all class names and animation names are scop
     2. npm install  --save-dev @testing-library/react
 ```
 
-### Plugins
+## Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 2. [react-refresh](https://www.npmjs.com/package/react-refresh)
 
-### HTTP
+## HTTP
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
 
-### Code Contributors
+## Code Contributors
 
-### [Choose A License](https://choosealicense.com/)
+## [Choose A License](https://choosealicense.com/)
 
 1. [MIT](https://choosealicense.com/licenses/mit/)
 
-### Server: Dev, Test, UAT(Live), Staging, Demo, Production
+## Server: Dev, Test, UAT(Live), Staging, Demo, Production
 
 1. [Server Info](https://www.gratasoftware.com/what-is-each-server-for-development-test-uat-or-staging-demo-and-production/)
 
 Copyright (c) 2021 Promotion Web
 Licensed under the [Apache License](https://choosealicense.com/licenses/apache-2.0/).
 
-### NPM version
+## NPM version
 
 npm version [| major | minor | patch | premajor | preminor | prepatch | prerelease [--preid=[alpha, beta, rc]] | from-git]
 
-#### Git Tag
+## Git Tag
 
 1. git tag -a v1.2.0 -m "version: 1.2.0"
 2. git push origin v1.2.0
 3. git push origin --tags
 
-### Nginx
+## Nginx
 
 1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
@@ -373,7 +373,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       5. nginx -s reopen
    ```
 
-### Tree Node Cli
+## Tree Node Cli
 
 1. npm install -g tree-node-cli
 2. Mac: tree -L 2 -I "node_modules" -r -F
@@ -427,7 +427,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     └── CHANGELOG.md
    ```
 
-### Webpack Analyse
+## Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
 
@@ -435,7 +435,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
       npm run analyze:build
    ```
 
-### CRACO:Create React App Configuration Override
+## CRACO:Create React App Configuration Override
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
@@ -446,7 +446,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 3. "standard:fix": "standard --fix src/\*_/_",
 4. rm -rf package-lock.json
 
-### Update npm
+## Update npm
 
 ```bash
   npm install css-loader@5.2.7 --save-dev
@@ -454,7 +454,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
   Uncaught TypeError: SocketClient is not a constructor
 ```
 
-### GitHub Proxy
+## GitHub Proxy
 
 1. 首先确认自己 git 拉取代码的方式
 
@@ -490,15 +490,15 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
      git config --global --unset https.proxy
    ```
 
-### pm-keeper
+## pm-keeper
 
 1. [https://www.npmjs.com/package/pm-keeper](https://www.npmjs.com/package/pm-keeper)
 
-### npm i && npm ci
+## npm i && npm ci
 
 1. [npm ci vs. npm install](https://betterprogramming.pub/npm-ci-vs-npm-install-which-should-you-use-in-your-node-js-projects-51e07cb71e26)
 
-### Husky 不起作用解决方案
+## Husky 不起作用解决方案
 
 参考官网：[https://typicode.github.io/husky/#/](https://typicode.github.io/husky/#/)
 按以下步骤进行设置：
@@ -532,6 +532,6 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
      npx husky add .husky/commit-msg 'npx --no-install commitlint --edit'
    ```
 
-### Show your support
+## Show your support
 
 Give a ⭐️ if this project helped you!
