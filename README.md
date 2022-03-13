@@ -156,11 +156,16 @@ npm run dev:faker
 ### 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
+   - [https://react-typescript-cheatsheet.netlify.app/](https://react-typescript-cheatsheet.netlify.app/)
+   - [https://usehooks-ts.com/](https://usehooks-ts.com/)
    - [webpack-react-boilerplate](https://github.com/gor918/webpack-react-boilerplate)
+   - [https://usehooks.com/](https://usehooks.com/)
+   - [https://ahooks.js.org/](https://ahooks.js.org/)
 2. Mock Server
+   - [Faker](https://fakerjs.dev/)
    - [msw](https://github.com/mswjs/msw)
 3. 单页面多页签参考
-   - [react-antd-multi-tabs-admin.git](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
+   - [react-antd-multi-tabs-admin](https://github.com/hsl947/react-antd-multi-tabs-admin.git)
 4. Axios
    - [axios 拦截器之重复请求取消](https://juejin.cn/post/7004721390767046686)
 5. React SVGR
