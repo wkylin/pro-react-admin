@@ -83,6 +83,10 @@
 npm run dev:faker
 ```
 
+### 约定式提交
+
+1. [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+
 ### Commit message
 
 1. The commit message should be structured as follows:
@@ -162,7 +166,7 @@ npm run dev:faker
 5. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
-### ESLint Prettier Husky EditorConfig
+### 代码质量控制：ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
@@ -219,9 +223,23 @@ npm run dev:faker
     "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
    ```
 
-### 约定式提交
+### 自动化持续代码审查工具
 
-1. [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+1. [DeepSource/](https://deepsource.io/)
+2. [DeepScan](https://deepscan.io/)
+
+### Sentry 接入
+
+1. [Sentry](https://sentry.io/)
+2. 遇到的问题：
+   - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
+   - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
+   - "sentry:check": "node check-sentry.js"
+
+### VSCode Extensions
+
+1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
+2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
 ### CSS Modules
 
@@ -246,23 +264,10 @@ A CSS Module is a CSS file in which all class names and animation names are scop
     2. npm install  --save-dev @testing-library/react
 ```
 
-### Sentry 接入
-
-1. [Sentry](https://sentry.io/)
-2. 遇到的问题：
-   - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
-   - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
-   - "sentry:check": "node check-sentry.js"
-
 ### Plugins
 
 1. [react-refresh-webpack-plugin](https://github.com/pmmmwh/react-refresh-webpack-plugin)
 2. [react-refresh](https://www.npmjs.com/package/react-refresh)
-
-### VSCode Extensions
-
-1. ErrorLens: [ErrorLens](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens)
-2. SonarLint: [https://www.sonarlint.org/](https://www.sonarlint.org/)
 
 ### HTTP
 
