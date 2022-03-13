@@ -155,6 +155,7 @@ npm run dev:faker
 ## 待解决
 
 1. 配备比较完善的脚手架：
+   - [https://blog.kiradev.co/build-a-cli-using-nodejs](https://blog.kiradev.co/build-a-cli-using-nodejs)
 2. 完善文档：
    - [https://docusaurus.io/](https://docusaurus.io/)
    - [https://d.umijs.org/zh-CN](https://d.umijs.org/zh-CN)
