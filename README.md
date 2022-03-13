@@ -439,7 +439,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
 1. [https://github.com/gsoft-inc/craco](https://github.com/gsoft-inc/craco)
 
-### 与 ESLint 风格不一致
+## 与 ESLint 风格不一致
 
 1. "lint:json": "jsonlint --quiet src/\*_/_.json",
 2. "standard": "standard src/\*_/_",
