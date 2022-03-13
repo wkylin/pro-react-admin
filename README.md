@@ -1,11 +1,32 @@
-# Technology Stack
+# Promotion Web
+
+## 项目特性
+
+1. 基于 Antd 实现亮白及暗黑两套主题
+2. 基于 React 最新版本，拥抱 Hooks
+3. 基于 React Router V6, 实现嵌套路由更方便
+4. 基于 Webpack 最新版本，实现多环境打包部署，代码分割优化，结合官方分析工具，实时优化代码
+5. 基于 Faker 实现 Mock Server,不依赖后端实现模拟数据更加方便
+6. 封装 Fetch, 实现 useFetch, 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
+7. 支持 TypeScript, 一切变得可控，扼杀错误于摇篮之中
+8. 支持多页签，提升效率
+9. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
+10. 配置 Commit message， 使用标准 commit 生成 changelog 标准化
+11. 配置 Sentry，方便日志追踪，及时发现问题
+12. 基于 React Redux Hooks, 状态管理更加方便
+13. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
+14. 代码分割，组件懒加载，Loading 垂直水平居中
+15. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+
+## Technology Stack
 
 1. React: v17.0.2 [React](https://reactjs.org/)
 2. React Router: v6.2.1 [React Router](https://reactrouter.com/)
-3. Webpack:v5.68.0 [Webpack](https://webpack.js.org/)
+3. Webpack:v5.70.0 [Webpack](https://webpack.js.org/)
 4. Babel: v7.16.7 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
 5. Antd: v4.18.6 [Ant Design](https://ant.design/index-cn)
 6. Redux Hooks: v7.2.6 [Redux Hooks](https://react-redux.js.org/api/hooks)
+7. TypeScript: v4.6 [TypeScript](https://www.typescriptlang.org/)
 
 ## Development
 
@@ -38,7 +59,7 @@
 
 1. Settings >> Languages & Frameworks >> Javascript >> Webpack: 指定 Configuration file: webpack\webpack.common.js
 
-## 使用标准 commit 生成 changelog 标准化
+### 使用标准 commit 生成 changelog 标准化
 
 - [conventional-changelog](https://github.com/conventional-changelog)
 - [standard-version](https://github.com/conventional-changelog/standard-version)
@@ -67,21 +88,6 @@
   npm install -g standard-version
   "release": "standard-version --tag-prefix \"publish/\""
   ```
-
-### 一次 changelog 的过程如下
-
-- 修改代码
-- git add . / git cz
-- 修改 package.json 中的 version
-- 运行生成 changelog 命令，最好将命令集成到 package.json 的 scripts 中
-- 手动 Tag， Push 等
-
-### Mock Server
-
-```bash
-// mock index.js
-npm run dev:faker
-```
 
 ### 约定式提交
 
@@ -133,6 +139,13 @@ npm run dev:faker
 ### React Code Splitting Library
 
 1. [Loadable Components](https://loadable-components.com/)
+
+### Mock Server
+
+```bash
+// mock index.js
+npm run dev:faker
+```
 
 ### Deployment
 
