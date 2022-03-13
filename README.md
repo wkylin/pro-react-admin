@@ -184,7 +184,7 @@ npm run dev:faker
 5. React SVGR
    - [https://react-svgr.com/docs/webpack/](https://react-svgr.com/docs/webpack/)
 
-## 代码质量控制：ESLint Prettier Husky EditorConfig
+## 代码规范：ESLint Prettier Husky EditorConfig
 
 1. ESLint: [ESLint](https://eslint.org/)
 
