@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Home from '@pages/home'
 
@@ -21,41 +21,51 @@ const initialPanes = [
 ]
 
 const ProTabContext = createContext(defaultValue)
-const useProTabContext = () => useContext(ProTabContext)
+const useProTabContext = () => {
+  const context = useContext(ProTabContext)
+  if (context === undefined) {
+    throw new Error('useValue must be used within a ValueProvider')
+  }
+  return context
+}
 
 const ProTabProvider = ({ children }) => {
   const [activeKey, setActiveKey] = useState('')
   const [panes, setPanes] = useState(initialPanes)
   const navigate = useNavigate()
 
-  const removeTab = (targetKey, callbackFun = () => {}) => {
-    const delIndex = panes.findIndex((item) => item.key === targetKey)
-    const filterPanes = panes.filter((pane) => pane.key !== targetKey)
-    // 删除非当前/当前tab
-    if (targetKey !== activeKey) {
-      setPanes(filterPanes)
-    } else {
-      const nextPath = filterPanes[delIndex - 1].key
-      navigate(nextPath)
-      setActiveKey(nextPath)
-      setPanes(filterPanes)
-    }
-    callbackFun()
-  }
+  const removeTab = useCallback(
+    (targetKey, callbackFun = () => {}) => {
+      const delIndex = panes.findIndex((item) => item.key === targetKey)
+      const filterPanes = panes.filter((pane) => pane.key !== targetKey)
+      // 删除非当前/当前tab
+      if (targetKey !== activeKey) {
+        setPanes(filterPanes)
+      } else {
+        const nextPath = filterPanes[delIndex - 1].key
+        navigate(nextPath)
+        setActiveKey(nextPath)
+        setPanes(filterPanes)
+      }
+      callbackFun()
+    },
+    [activeKey, panes, navigate]
+  )
+
+  const providerValue = useMemo(
+    () => ({
+      activeKey,
+      setActiveKey,
+      panes,
+      setPanes,
+      removeTab,
+    }),
+    [activeKey, setActiveKey, panes, setPanes, removeTab]
+  )
 
   return (
     <>
-      <ProTabContext.Provider
-        value={{
-          activeKey,
-          setActiveKey,
-          panes,
-          setPanes,
-          removeTab,
-        }}
-      >
-        {children}
-      </ProTabContext.Provider>
+      <ProTabContext.Provider value={providerValue}>{children}</ProTabContext.Provider>
     </>
   )
 }
