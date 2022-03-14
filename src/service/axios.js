@@ -3,27 +3,38 @@
 // https://www.npmjs.com/package/axios-retry
 import axios from 'axios'
 
-axios.get('endpointURL').then((res) => {
-  console.log(res.data)
-})
+import { useEffect, useState } from 'react'
 
-// cancel token
-// useEffect(() => {
-//   const controller = new AbortController()
+// Get 方式
+const useFetcher = ({ url }) => {
+  const [state, setState] = useState({
+    data: null,
+    error: null,
+    status: 'idle',
+  })
 
-//   const fetchPost = async () => {
-//     try {
-//       const response = await axios.get(`endpointURL`, {
-//         signal: controller.signal,
-//       })
-//       console.log(response.data)
-//     } catch (err) {
-//       console.log('There was a problem or request was cancelled.')
-//     }
-//   }
-//   fetchPost()
+  useEffect(() => {
+    const controller = new AbortController()
+    let shouldSetData = true
+    setState({ data: null, error: null, status: 'loading' })
+    ;(async () => {
+      try {
+        const response = await axios.get(url, { signal: controller.signal })
+        if (shouldSetData) {
+          setState({ data: response, error: null, status: 'resolved' })
+        }
+      } catch (error) {
+        if (shouldSetData) {
+          setState({ data: null, error: error, status: 'errored' })
+        }
+      }
+    })()
+    return () => {
+      shouldSetData = false
+      controller.abort()
+    }
+  }, [url])
+  return state
+}
 
-//   return () => {
-//     controller.abort()
-//   }
-// }, [])
+export default useFetcher

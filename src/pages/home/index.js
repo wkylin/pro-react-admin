@@ -1,10 +1,14 @@
 import React, { version } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
+import TypedText from '@stateless/TypedText'
+
 const Home = () => {
   return (
     <FixTabPanel>
-      <h3>Cool! Hi, React && Ant Design</h3>
-      <h4>React version: {version}</h4>
+      <h2>
+        <TypedText>Cool! Hi, React & Ant Design!</TypedText>
+      </h2>
+      <h3>React version: {version}</h3>
     </FixTabPanel>
   )
 }
