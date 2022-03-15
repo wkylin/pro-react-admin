@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
-// import React, { useEffect, useState, useRef } from 'react'
 
 import { useRoutes } from 'react-router-dom'
+import Watermark from '@stateless/Watermark'
 import rootRouter from './routers'
 import { sentryInit } from './utils'
-// import { Watermark } from '@pansy/watermark'
 
 const App = () => {
-  // const waterMark = useRef<Watermark>()
   const [loading, setLoading] = useState(true)
   const asyncCall = () => {
     return new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
@@ -16,19 +14,14 @@ const App = () => {
     // sentry init
     sentryInit()
 
-    // water mark
-    // waterMark.current = new Watermark({
-    //   text: '测试测试',
-    // })
-
     asyncCall().then(
       () => setLoading(false),
       () => {}
     )
-
-    // return () => {
-    //   waterMark.current && waterMark.current.destroy()
-    // }
+    Watermark({
+      content: '上海麒麟有限公司', // 水印文本
+      container: document.getElementById('root'), // 水印容器区域
+    })
   }, [])
 
   const element = useRoutes(rootRouter)
