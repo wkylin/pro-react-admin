@@ -1,8 +1,8 @@
 import React from 'react'
 import ErrorBoundary from '@stateful/ErrorBoundary'
 // import React, { useState, useEffect } from 'react'
-// import { reqFetch } from '@src/service'
-import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
+import { reqFetch, useReqFetch } from '@src/service'
+// import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -70,11 +70,11 @@ const ProDemo = () => {
 
   const dispatch = useDispatch()
 
-  const [res, loading, error] = useReqFetch('/faker/app/api/user/list', {
+  const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
     method: 'GET',
   })
 
-  const [booksRes, booksLoading, booksError] = useGetFetch('/faker/shops')
+  // const [booksRes, booksLoading, booksError] = useGetFetch('/faker/shops')
 
   // const [loading, setLoading] = useState(false)
   // const [error, setError] = useState(false)
@@ -124,7 +124,7 @@ const ProDemo = () => {
       </h2>
       <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
-      <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4>
+      {/* <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4> */}
       <h4>Redux 示例:</h4>
       <Space>
         <Space>
