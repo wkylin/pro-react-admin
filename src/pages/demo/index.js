@@ -1,5 +1,5 @@
 import React from 'react'
-import ErrorBoundary from '@stateful/ErrorBoundary'
+// import ErrorBoundary from '@stateful/ErrorBoundary'
 // import React, { useState, useEffect } from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
 // import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
@@ -8,7 +8,7 @@ import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import rootAction from '@src/actions'
 
-import ShopsList from './shopsList'
+// import ShopsList from './shopsList'
 import FileUpload from './fileUpload'
 import TsDemo from './tsDemo'
 
@@ -139,9 +139,9 @@ const ProDemo = () => {
         </Space>
       </Space>
       <h4 onClick={onFetch}>ErrorBoundary</h4>
-      <ErrorBoundary>
+      {/* <ErrorBoundary>
         <ShopsList />
-      </ErrorBoundary>
+      </ErrorBoundary> */}
       <h4>File Upload</h4>
       <FileUpload />
       <Select placeholder="Select a person" optionFilterProp="children">
