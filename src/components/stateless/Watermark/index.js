@@ -34,6 +34,7 @@ const Watermark = (props) => {
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 99999;
       background: url('${base64Url}');
       pointer-events: none;`
 
