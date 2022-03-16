@@ -7,8 +7,9 @@ const plugins = [
       style: true,
     },
   ],
-  '@babel/plugin-syntax-dynamic-import',
+  ['@babel/plugin-syntax-dynamic-import'],
   ['@babel/plugin-proposal-decorators', { legacy: true }],
+  ['@babel/plugin-transform-runtime'],
 ]
 
 module.exports = {

@@ -28,6 +28,8 @@ const devWebpackConfig = merge(common, {
     },
     compress: true,
     open: true,
+    // hot: true,
+    // liveReload: false,
     proxy: devProxy,
   },
 
