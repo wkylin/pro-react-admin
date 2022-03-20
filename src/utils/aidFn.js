@@ -95,7 +95,7 @@ export const getImgsUrl = (html) => {
 export const customizeTimer = {
   intervalTimer: null,
   timeoutTimer: null,
-  setTimeout(cb, interval) {
+  setTimeout (cb, interval) {
     const { now } = Date
     const stime = now()
     let etime = stime
@@ -110,10 +110,10 @@ export const customizeTimer = {
     this.timeoutTimer = requestAnimationFrame(loop)
     return this.timeoutTimer
   },
-  clearTimeout() {
+  clearTimeout () {
     cancelAnimationFrame(this.timeoutTimer)
   },
-  setInterval(cb, interval) {
+  setInterval (cb, interval) {
     const { now } = Date
     let stime = now()
     let etime = stime
@@ -129,9 +129,9 @@ export const customizeTimer = {
     this.intervalTimer = requestAnimationFrame(loop)
     return this.intervalTimer
   },
-  clearInterval() {
+  clearInterval () {
     cancelAnimationFrame(this.intervalTimer)
-  },
+  }
 }
 
 export const isDecimal = (value) => {
