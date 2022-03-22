@@ -199,3 +199,24 @@ export const fetchSomething = async () =>
       resolve('')
     }, 1000)
   })
+
+export const toFixed = (number, m) => {
+  if (typeof number !== 'number') {
+    throw new Error('number不是数字')
+  }
+  let result = Math.round(Math.pow(10, m) * number) / Math.pow(10, m)
+  result = String(result)
+  if (result.indexOf('.') === -1) {
+    if (m !== 0) {
+      result += '.'
+      result += new Array(m + 1).join('0')
+    }
+  } else {
+    const arr = result.split('.')
+    if (arr[1].length < m) {
+      arr[1] += new Array(m - arr[1].length + 1).join('0')
+    }
+    result = arr.join('.')
+  }
+  return result
+}

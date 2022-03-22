@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import rootAction from '@src/actions'
+import { toFixed } from '@utils/aidFn'
 
 // import ShopsList from './shopsList'
 import FileUpload from './fileUpload'
@@ -165,6 +166,9 @@ const ProDemo = () => {
           Content of Tab Pane 3
         </Tabs.TabPane>
       </Tabs>
+
+      {toFixed(0.75 * 100, 2)}
+
       <div style={{ height: 400 }}>Height For Scroll</div>
     </FixTabPanel>
   )
