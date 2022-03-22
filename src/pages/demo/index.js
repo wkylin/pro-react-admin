@@ -17,17 +17,17 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    width: 150,
+    width: 150
   },
   {
     title: 'Age',
     dataIndex: 'age',
-    width: 150,
+    width: 150
   },
   {
     title: 'Address',
-    dataIndex: 'address',
-  },
+    dataIndex: 'address'
+  }
 ]
 
 const options = [
@@ -41,11 +41,11 @@ const options = [
         children: [
           {
             value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
+            label: 'West Lake'
+          }
+        ]
+      }
+    ]
   },
   {
     value: 'jiangsu',
@@ -57,12 +57,12 @@ const options = [
         children: [
           {
             value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
+            label: 'Zhong Hua Men'
+          }
+        ]
+      }
+    ]
+  }
 ]
 
 const ProDemo = () => {
@@ -72,7 +72,7 @@ const ProDemo = () => {
   const dispatch = useDispatch()
 
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
-    method: 'GET',
+    method: 'GET'
   })
 
   // const [booksRes, booksLoading, booksError] = useGetFetch('/faker/shops')
@@ -129,7 +129,7 @@ const ProDemo = () => {
       <h4>Redux 示例:</h4>
       <Space>
         <Space>
-          <Button type="primary" onClick={() => dispatch(rootAction.inAction.increment(1))}>
+          <Button type='primary' onClick={() => dispatch(rootAction.inAction.increment(1))}>
             Increment
           </Button>
           {inReducer.inNumber}
@@ -145,24 +145,24 @@ const ProDemo = () => {
       </ErrorBoundary> */}
       <h4>File Upload</h4>
       <FileUpload />
-      <Select placeholder="Select a person" optionFilterProp="children">
-        <Select.Option value="jack">Jack</Select.Option>
-        <Select.Option value="lucy">Lucy</Select.Option>
-        <Select.Option value="tom">Tom</Select.Option>
+      <Select placeholder='Select a person' optionFilterProp='children'>
+        <Select.Option value='jack'>Jack</Select.Option>
+        <Select.Option value='lucy'>Lucy</Select.Option>
+        <Select.Option value='tom'>Tom</Select.Option>
       </Select>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
+      <Cascader options={options} expandTrigger='hover' placeholder='Please select' />
 
       <TsDemo />
-      <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Tab 1" key="1">
+      <Tabs defaultActiveKey='1'>
+        <Tabs.TabPane tab='Tab 1' key='1'>
           Content of Tab Pane 1
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Tab 2" key="2">
+        <Tabs.TabPane tab='Tab 2' key='2'>
           Content of Tab Pane 2
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Tab 3" key="3">
+        <Tabs.TabPane tab='Tab 3' key='3'>
           Content of Tab Pane 3
         </Tabs.TabPane>
       </Tabs>
