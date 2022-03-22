@@ -199,3 +199,5 @@ export const fetchSomething = async () =>
       resolve('')
     }, 1000)
   })
+
+export const toFixed = (n, fixed) => ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed)
