@@ -1,6 +1,6 @@
 import React from 'react'
 
-const WithLayout = (Element) => {
+const withLayout = (Element) => {
   const element = (props) => (
     <>
       {/* <Navbar /> */}
@@ -12,7 +12,7 @@ const WithLayout = (Element) => {
   return element
 }
 
-export default WithLayout
+export default withLayout
 
 // const Home = () => {
 //   return (

@@ -220,3 +220,4 @@ export const toFixed = (number, m) => {
   }
   return result
 }
+export const toFixedBug = (n, fixed) => ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed)
