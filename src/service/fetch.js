@@ -157,12 +157,12 @@ const handleFetchData = (url, options) => {
   const { signal } = abortController
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
-      // handleFailedResult(
-      //   reject,
-      //   { status: 50000, statusText: 'Time out' },
-      //   new Error('TimeoutError: Timeout for Promise'),
-      //   isShowError
-      // )
+      handleFailedResult(
+        reject,
+        { status: 50000, statusText: 'Time out' },
+        new Error('TimeoutError: Timeout for Promise'),
+        isShowError
+      )
       abortController.abort()
     }, timeout)
 
