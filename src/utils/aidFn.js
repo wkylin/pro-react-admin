@@ -221,3 +221,12 @@ export const toFixed = (number, m) => {
   return result
 }
 export const toFixedBug = (n, fixed) => ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed)
+
+export const promiseWithTimeout = (promise, timeout) => {
+  const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve('Time Out!'), timeout))
+
+  return Promise.race([timeoutPromise, promise])
+}
+
+export const shuffleArr = (arr) => arr.sort(() => 0.5 - Math.random())
+export const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
