@@ -52,7 +52,7 @@
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
-    "push:tags": "git push --follow-tags origin pre-gh-pages && npm publish",
+    "push:tags": "git push --follow-tags origin pre-gh-pages",
     "process": "node webpack/process",
     "prepare": "husky install",
     "sentry:check": "node check-sentry.js",
