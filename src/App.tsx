@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useRoutes } from 'react-router-dom'
 import Watermark from '@stateless/Watermark'
 import rootRouter from './routers'
-// import { sentryInit } from './utils'
+import { sentryInit } from './utils'
 
 const App = () => {
   const [loading, setLoading] = useState(true)
@@ -12,7 +12,7 @@ const App = () => {
   }
   useEffect(() => {
     // sentry init
-    // sentryInit()
+    sentryInit()
 
     asyncCall().then(
       () => setLoading(false),
