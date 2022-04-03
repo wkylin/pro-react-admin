@@ -1,23 +1,23 @@
-import * as Sentry from '@sentry/react'
-import { Integrations } from '@sentry/tracing'
+// import * as Sentry from '@sentry/react'
+// import { Integrations } from '@sentry/tracing'
 
-import packageJson from '../../../package.json'
+// import packageJson from '../../../package.json'
 
-const sentryInit = () => {
-  const nodeEnv = process.env.NODE_ENV
+// const sentryInit = () => {
+//   const nodeEnv = process.env.NODE_ENV
 
-  if (nodeEnv !== 'production') return
+//   if (nodeEnv !== 'production') return
 
-  Sentry.init({
-    dsn: 'https://39892504629549fa9c0b040d98e87d03@o64827.ingest.sentry.io/5791911',
-    integrations: [new Integrations.BrowserTracing()],
-    tracesSampleRate: 1.0,
-    release: packageJson.version,
-    environment: nodeEnv,
-    autoSessionTracking: nodeEnv === 'production',
-  })
+//   Sentry.init({
+//     dsn: 'https://39892504629549fa9c0b040d98e87d03@o64827.ingest.sentry.io/5791911',
+//     integrations: [new Integrations.BrowserTracing()],
+//     tracesSampleRate: 1.0,
+//     release: packageJson.version,
+//     environment: nodeEnv,
+//     autoSessionTracking: nodeEnv === 'production',
+//   })
 
-  Sentry.setExtra('projectOwner', '15026835870')
-}
+//   Sentry.setExtra('projectOwner', '15026835870')
+// }
 
-export default sentryInit
+// export default sentryInit
