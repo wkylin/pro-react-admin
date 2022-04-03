@@ -20,7 +20,7 @@
 
 ## Technology Stack
 
-1. React: v17.0.2 [React](https://reactjs.org/)
+1. React: v18.0.0 [React](https://reactjs.org/)
 2. React Router: v6.2.1 [React Router](https://reactrouter.com/)
 3. Webpack:v5.70.0 [Webpack](https://webpack.js.org/)
 4. Babel: v7.16.7 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
