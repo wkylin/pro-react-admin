@@ -1,6 +1,7 @@
 // import './wdyr' // why-did-you-render
 import React from 'react'
 import ReactDOM from 'react-dom'
+// import * as ReactDOM from 'react-dom'
 import { HashRouter as Router } from 'react-router-dom'
 // import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -23,6 +24,7 @@ const themes = {
 }
 
 const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
+// const root = ReactDOM.createRoot(document.getElementById('root'))
 
 ReactDOM.render(
   <ReduxProvider store={store}>
