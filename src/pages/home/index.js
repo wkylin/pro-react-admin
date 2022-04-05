@@ -9,7 +9,7 @@ const Home = () => {
       <h2 className={styles.typedText}>
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
       </h2>
-      <h3 className={styles.spotLight} data-spotlight={` React version: ${version}`}>
+      <h3 className={styles.spotLight} data-spotlight={`React version: ${version}`}>
         React version: {version}
       </h3>
     </FixTabPanel>
