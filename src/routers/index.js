@@ -14,6 +14,7 @@ const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallba
 const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
 const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
 const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
+const Landing = loadable(() => import('../pages/landing'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
@@ -120,6 +121,13 @@ const rootRouter = [
     name: 'Dashboard',
     key: '/dashboard',
     element: <Dashboard />,
+  },
+  {
+    index: false,
+    path: 'landing',
+    name: 'Landing Page',
+    key: '/landing',
+    element: <Landing />,
   },
   // {
   //   path: '*',

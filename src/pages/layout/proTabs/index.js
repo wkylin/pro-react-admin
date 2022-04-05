@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Menu, Dropdown, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
-import { SyncOutlined, HeartTwoTone } from '@ant-design/icons'
+import { SyncOutlined, FireOutlined } from '@ant-design/icons'
 import { MyErrorBoundary } from '@stateful'
 import { useProTabContext } from '@hooks/proTabsContext'
 import Loading from '@stateless/Loading'
@@ -193,7 +193,7 @@ const ProTabs = (props) => {
         tabBarExtraContent={{
           left: (
             <Space align="center" size={30} style={{ margin: '0 25px' }}>
-              <HeartTwoTone twoToneColor="#eb2f96" />
+              <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
               {/* &nbsp; */}
             </Space>
           ),

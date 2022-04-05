@@ -1,6 +1,6 @@
 import React from 'react'
-import { Menu } from 'antd'
-import { CodeOutlined } from '@ant-design/icons'
+import { Button, Space } from 'antd'
+import { CodeOutlined, AppstoreOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
 const PrimaryNav = () => {
@@ -9,11 +9,16 @@ const PrimaryNav = () => {
     navigate(path)
   }
   return (
-    <Menu mode="horizontal" width={300}>
-      <Menu.Item key="mail" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
-        基础组件库
-      </Menu.Item>
-    </Menu>
+    <>
+      <Space>
+        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
+          多路由设置
+        </Button>
+        <Button type="link" icon={<AppstoreOutlined />} onClick={() => redirectTo('landing')}>
+          Landing Page For Media
+        </Button>
+      </Space>
+    </>
   )
 }
 

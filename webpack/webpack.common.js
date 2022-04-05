@@ -199,7 +199,7 @@ const config = {
         use: ['thread-loader', 'babel-loader'],
       },
       {
-        test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2)$/i,
+        test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2|mp4)$/i,
         type: 'asset',
       },
       {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Layout, Space, Dropdown, Menu, Tag, Switch } from 'antd'
-import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, BellOutlined } from '@ant-design/icons'
+import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useThemeSwitcher } from 'react-css-theme-switcher'
 import PrimaryNav from '../primaryNav'
@@ -14,6 +14,11 @@ const ProHeader = () => {
   const redirectTo = (path) => {
     navigate(path)
   }
+
+  const redirectGithub = () => {
+    window.open('https://rat.dev/wkylin/promotion-web', '_blank')
+  }
+
   const { switcher, themes, currentTheme } = useThemeSwitcher()
 
   useEffect(() => {
@@ -41,7 +46,7 @@ const ProHeader = () => {
               defaultChecked={currentTheme === 'light'}
               onClick={changeTheme}
             />
-            <BellOutlined style={{ fontSize: 18 }} />
+            <GithubOutlined style={{ fontSize: 18 }} onClick={redirectGithub} />
           </Space>
           <Dropdown
             arrow
@@ -62,7 +67,7 @@ const ProHeader = () => {
           >
             <Space direction="horizontal" style={{ cursor: 'pointer' }}>
               <UserOutlined style={{ fontSize: 18 }} />
-              <span>Admin</span>
+              <span>wkylin.w</span>
             </Space>
           </Dropdown>
         </div>

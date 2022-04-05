@@ -1,7 +1,6 @@
 // import './wdyr' // why-did-you-render
 import React from 'react'
-import ReactDOM from 'react-dom'
-// import * as ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom/client'
 import { HashRouter as Router } from 'react-router-dom'
 // import { BrowserRouter as Router } from 'react-router-dom'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -24,9 +23,9 @@ const themes = {
 }
 
 const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
-// const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement)
 
-ReactDOM.render(
+root.render(
   <ReduxProvider store={store}>
     <ConfigProvider locale={zhCN} componentSize="middle" input={{ autoComplete: 'off' }}>
       <ThemeSwitcherProvider
@@ -35,12 +34,13 @@ ReactDOM.render(
         defaultTheme={defaultTheme || 'light'}
       >
         <Router>
+          {/* <React.StrictMode> */}
           <App />
+          {/* </React.StrictMode> */}
         </Router>
       </ThemeSwitcherProvider>
     </ConfigProvider>
-  </ReduxProvider>,
-  document.getElementById('root')
+  </ReduxProvider>
 )
 
 // web vitals
