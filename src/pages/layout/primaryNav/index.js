@@ -15,7 +15,7 @@ const PrimaryNav = () => {
           多路由设置
         </Button>
         <Button type="link" icon={<AppstoreOutlined />} onClick={() => redirectTo('landing')}>
-          Landing Page For Video
+          Landing Page For Media
         </Button>
       </Space>
     </>
