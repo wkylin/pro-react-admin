@@ -11,12 +11,41 @@ body {
   padding: 5px 10px;
 }
 
-.flex {
-  display: flex;
-  align-items: center;
+.typedText {
+  font-size: 2rem;
+}
 
-  .flexItem {
-    flex: 1;
-    color: #3e6f9e;
+.spotLight {
+  font-size: 2rem;
+  color: #333;
+  letter-spacing: 0.3rem;
+  position: relative;
+}
+
+.spotLight::after {
+  content: attr(data-spotlight);
+  position: absolute;
+  top: 0;
+  left: 0;
+  clip-path: ellipse(200px 200px at 0% 50%);
+  animation: move 5s infinite;
+  color: #1890ff;
+  // color: transparent;
+  // background-image: linear-gradient(to left, #1a2a6c, #b21f1f, #fdbb2d);
+  // -webkit-background-clip: text;
+  // background-clip: text;
+}
+
+@keyframes move {
+  0% {
+    clip-path: ellipse(200px 200px at 0% 50%);
+  }
+
+  50% {
+    clip-path: ellipse(200px 200px at 100% 50%);
+  }
+
+  100% {
+    clip-path: ellipse(200px 200px at 0% 50%);
   }
 }

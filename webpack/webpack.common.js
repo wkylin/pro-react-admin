@@ -187,7 +187,7 @@ const config = {
           //   loader: 'postcss-loader',
           //   options: {
           //     postcssOptions: {
-          //       plugins: [['postcss-preset-env']],
+          //       plugins: [['postcss-preset-env', 'autoprefixer']],
           //     },
           //   },
           // },
