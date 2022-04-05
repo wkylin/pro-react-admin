@@ -183,14 +183,14 @@ const config = {
               },
             },
           },
-          {
-            loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                plugins: [['postcss-preset-env']],
-              },
-            },
-          },
+          // {
+          //   loader: 'postcss-loader',
+          //   options: {
+          //     postcssOptions: {
+          //       plugins: [['postcss-preset-env', 'autoprefixer']],
+          //     },
+          //   },
+          // },
         ],
       },
       {
