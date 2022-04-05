@@ -256,16 +256,20 @@
   },
   "lint-staged": {
     "src/**/*.{js, jsx, ts, tsx}": [
-      "npm run eslint:fix"
+      "npm run eslint:fix",
+      "git add"
     ],
     "src/**/*.less": [
-      "npm run stylelint:fix"
+      "npm run stylelint:fix",
+      "git add"
     ],
     "*.md": [
-      "npm run markdownlint:fix"
+      "npm run markdownlint:fix",
+      "git add"
     ],
     "**/*": [
-      "npm run prettier:fix"
+      "npm run prettier:fix",
+      "git add"
     ]
   },
   "config": {
