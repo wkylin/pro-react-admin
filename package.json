@@ -260,16 +260,13 @@
       "git add"
     ],
     "src/**/*.less": [
-      "npm run stylelint:fix",
-      "git add"
+      "npm run stylelint:fix"
     ],
     "*.md": [
-      "npm run markdownlint:fix",
-      "git add"
+      "npm run markdownlint:fix"
     ],
     "**/*": [
-      "npm run prettier:fix",
-      "git add"
+      "npm run prettier:fix"
     ]
   },
   "config": {
