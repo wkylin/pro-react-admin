@@ -34,7 +34,9 @@ root.render(
         defaultTheme={defaultTheme || 'light'}
       >
         <Router>
+          {/* <React.StrictMode> */}
           <App />
+          {/* </React.StrictMode> */}
         </Router>
       </ThemeSwitcherProvider>
     </ConfigProvider>

@@ -2,7 +2,6 @@ import React from 'react'
 import { Routes, Route, useNavigate, useNavigationType } from 'react-router-dom'
 import { Button } from 'antd'
 import FixLayout from '@stateless/FixLayout'
-
 import styles from './index.module.less'
 
 const Dashboard = () => {

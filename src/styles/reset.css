@@ -53,12 +53,12 @@ body {
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 *::-webkit-scrollbar-thumb {
-  background: hsl(214, 13%, 75%);
-  border-radius: 4px;
+  background: #f0f2f5;
+  border-radius: 3px;
 }
 
 input:-webkit-autofill,
@@ -119,7 +119,7 @@ body[data-theme='dark'] .loader:empty {
 */
 
 body[data-theme='dark'] *::-webkit-scrollbar-thumb {
-  background: hsl(0, 0%, 24%);
+  background: #1f1f1f;
 }
 
 body[data-theme='dark'] .ant-back-top {
@@ -135,6 +135,14 @@ body[data-theme='light'] .header {
   height: 50px;
   line-height: 50px;
   padding-left: 20px;
+}
+
+body[data-theme='dark'] .header{
+  background-color: #191919;
+}
+
+body[data-theme='light'] .header {
+  background-color: #f7f7f7;
 }
 
 body[data-theme='dark'] .content,
