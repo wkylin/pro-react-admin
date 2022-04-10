@@ -111,11 +111,11 @@ const ProDemo = () => {
 
   const onFetch = () => {
     reqFetch('/faker/shops', { method: 'GET' })
-      .then((res) => {
-        console.log(res)
+      .then((response) => {
+        console.log(response)
       })
-      .catch((error) => {
-        console.log('error', error)
+      .catch((errors) => {
+        console.log('error', errors)
       })
   }
   return (

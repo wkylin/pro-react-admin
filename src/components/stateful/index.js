@@ -1,3 +1,3 @@
 import MyErrorBoundary from './ErrorBoundary'
 
-export { MyErrorBoundary }
+export default MyErrorBoundary

@@ -25,8 +25,8 @@ const Watermark = (props) => {
   ctx.fillText(content, parseFloat(width) / 2, parseFloat(height) / 2)
 
   const base64Url = canvas.toDataURL('image/png', 0.92)
-  const _wm = document.querySelector('._wm')
-  const watermarkDiv = _wm || document.createElement('div')
+  const wm = document.querySelector('.wm')
+  const watermarkDiv = wm || document.createElement('div')
 
   const styleStr = `
       width: 100%;
@@ -39,9 +39,9 @@ const Watermark = (props) => {
       pointer-events: none;`
 
   watermarkDiv.setAttribute('style', styleStr)
-  watermarkDiv.classList.add('_wm')
+  watermarkDiv.classList.add('wm')
 
-  if (!_wm) {
+  if (!wm) {
     container.style.position = 'relative'
     container.insertBefore(watermarkDiv, container.firstChild)
   }
@@ -50,8 +50,8 @@ const Watermark = (props) => {
 
   if (MutationObserver) {
     let observer = new MutationObserver(() => {
-      const _wm = document.querySelector('._wm')
-      if ((_wm && _wm.getAttribute('style') !== styleStr) || !_wm) {
+      const wms = document.querySelector('.wm')
+      if ((wms && wms.getAttribute('style') !== styleStr) || !wms) {
         observer.disconnect()
         observer = null
         Watermark(props)

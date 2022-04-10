@@ -1,6 +1,7 @@
 import React from 'react'
 import loadable from '@loadable/component'
 import Loading from '@stateless/Loading'
+
 const SignIn = loadable(() => import('../pages/signin'), { fallback: <Loading /> })
 const SignUp = loadable(() => import('../pages/signup'), { fallback: <Loading /> })
 const Layout = loadable(() => import('../pages/layout'), { fallback: <Loading /> })
@@ -8,7 +9,7 @@ const Home = loadable(() => import('../pages/home'), { fallback: <Loading /> })
 const Demo = loadable(() => import('../pages/demo'), { fallback: <Loading /> })
 const Coupons = loadable(() => import('../pages/coupons'), { fallback: <Loading /> })
 const CouponsHome = loadable(() => import('../pages/coupons/home'), { fallback: <Loading /> })
-const CouponsAdd = loadable(() => import('../pages//coupons/add'), { fallback: <Loading /> })
+const CouponsAdd = loadable(() => import('../pages/coupons/add'), { fallback: <Loading /> })
 const CouponsEdit = loadable(() => import('../pages/coupons/edit'), { fallback: <Loading /> })
 const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallback: <Loading /> })
 const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })

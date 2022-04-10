@@ -25,7 +25,7 @@ const useFetcher = ({ url }) => {
         }
       } catch (error) {
         if (shouldSetData) {
-          setState({ data: null, error: error, status: 'errored' })
+          setState({ data: null, error, status: 'errored' })
         }
       }
     })()

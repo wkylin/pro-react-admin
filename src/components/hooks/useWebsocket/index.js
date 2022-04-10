@@ -20,13 +20,13 @@ const useWebsocket = ({ url, verify }) => {
     try {
       ws.current = new WebSocket(url)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ws.current.onopen = (_e) => setReadyState(stateArr[ws.current?.readyState ?? 0])
+      ws.current.onopen = () => setReadyState(stateArr[ws.current?.readyState ?? 0])
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ws.current.onclose = (e) => {
+      ws.current.onclose = () => {
         setReadyState(stateArr[ws.current?.readyState ?? 0])
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ws.current.onerror = (e) => {
+      ws.current.onerror = () => {
         setReadyState(stateArr[ws.current?.readyState ?? 0])
       }
 
@@ -60,7 +60,7 @@ const useWebsocket = ({ url, verify }) => {
   }
 
   useEffect(() => {
-    verify && webSocketInit()
+    if (verify) webSocketInit()
     return () => {
       ws.current?.close()
     }

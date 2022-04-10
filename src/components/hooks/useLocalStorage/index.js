@@ -7,10 +7,8 @@ function getStorageValue(key, defaultValue) {
   }
 }
 
-export const useLocalStorage = (key, defaultValue) => {
-  const [value, setValue] = useState(() => {
-    return getStorageValue(key, defaultValue)
-  })
+const useLocalStorage = (key, defaultValue) => {
+  const [value, setValue] = useState(() => getStorageValue(key, defaultValue))
 
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value))
@@ -18,3 +16,4 @@ export const useLocalStorage = (key, defaultValue) => {
 
   return [value, setValue]
 }
+export default useLocalStorage

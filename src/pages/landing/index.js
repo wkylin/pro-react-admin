@@ -3,13 +3,11 @@ import React from 'react'
 import FixLayout from '@stateless/FixLayout'
 import LandingPage from '@container/landingPage'
 
-const Landing = () => {
+const Landing = () => (
   // const navigate = useNavigate()
-  return (
-    <FixLayout>
-      <LandingPage />
-    </FixLayout>
-  )
-}
+  <FixLayout>
+    <LandingPage />
+  </FixLayout>
+)
 
 export default Landing

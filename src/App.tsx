@@ -7,9 +7,7 @@ import { sentryInit } from './utils'
 
 const App = () => {
   const [loading, setLoading] = useState(true)
-  const asyncCall = () => {
-    return new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
-  }
+  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
   useEffect(() => {
     // sentry init
     sentryInit()

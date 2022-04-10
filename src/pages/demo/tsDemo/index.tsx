@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useGetFetch } from '@src/service'
 
-import UserDemo from './User'
+import UserDemo from './user'
 
 const TsDemo: React.FC = () => {
   const [booksLoading, booksError] = useGetFetch('/faker/shops')

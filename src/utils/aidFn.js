@@ -12,41 +12,13 @@ export const getEnv = () => {
   return env
 }
 
-export const isArray = (val) => {
-  return typeof val === 'object' && Object.prototype.toString.call(val) === '[object Array]'
-}
+export const isArray = (val) => typeof val === 'object' && Object.prototype.toString.call(val) === '[object Array]'
 
-export const isURLSearchParams = (val) => {
-  return typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams
-}
+export const isURLSearchParams = (val) => typeof URLSearchParams !== 'undefined' && val instanceof URLSearchParams
 
-export const isDate = (val) => {
-  return typeof val === 'object' && Object.prototype.toString.call(val) === '[object Date]'
-}
+export const isDate = (val) => typeof val === 'object' && Object.prototype.toString.call(val) === '[object Date]'
 
-export const isObject = (val) => {
-  return val !== null && typeof val === 'object'
-}
-
-export const forEach2ObjArr = (target, callback) => {
-  if (!target) return
-
-  if (typeof target !== 'object') {
-    target = [target]
-  }
-
-  if (isArray(target)) {
-    for (let i = 0; i < target.length; i++) {
-      callback.call(null, target[i], i, target)
-    }
-  } else {
-    for (const key in target) {
-      if (Object.prototype.hasOwnProperty.call(target, key)) {
-        callback.call(null, target[key], key, target)
-      }
-    }
-  }
-}
+export const isObject = (val) => val !== null && typeof val === 'object'
 
 export const getParamObject = (val) => {
   if (isURLSearchParams(val)) {
@@ -58,9 +30,7 @@ export const getParamObject = (val) => {
   return val
 }
 
-export const reqStringify = (val) => {
-  return stringify(val, { arrayFormat: 'repeat', strictNullHandling: true })
-}
+export const reqStringify = (val) => stringify(val, { arrayFormat: 'repeat', strictNullHandling: true })
 
 export const getType = (obj) => {
   const type = typeof obj
@@ -145,16 +115,13 @@ export const limitDecimal = (val) => val.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.
  ** 判断用户是否离开当前页面
  */
 export const checkIsLocalPage = () => {
-  document.addEventListener('visibilitychange', function () {
-    // 页面变为不可见时触发
+  document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
       return false
     }
-    // 页面变为可见时触发
     if (document.visibilityState === 'visible') {
       return true
     }
-
     window.addEventListener(
       'pagehide',
       (event) => {
@@ -204,7 +171,7 @@ export const toFixed = (number, m) => {
   if (typeof number !== 'number') {
     throw new Error('number不是数字')
   }
-  let result = Math.round(Math.pow(10, m) * number) / Math.pow(10, m)
+  let result = Math.round(10 ** m * number) / 10 ** m
   result = String(result)
   if (result.indexOf('.') === -1) {
     if (m !== 0) {
@@ -220,7 +187,7 @@ export const toFixed = (number, m) => {
   }
   return result
 }
-export const toFixedBug = (n, fixed) => ~~(Math.pow(10, fixed) * n) / Math.pow(10, fixed)
+export const toFixedBug = (n, fixed) => ~~(10 ** fixed * n) / 10 ** fixed
 
 export const promiseWithTimeout = (promise, timeout) => {
   const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve('Time Out!'), timeout))

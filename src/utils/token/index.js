@@ -1,5 +1,3 @@
-const getToken = () => {
-  return 'token'
-}
+const getToken = () => 'token'
 
-export { getToken }
+export default getToken

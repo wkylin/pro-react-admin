@@ -3,9 +3,9 @@ import { Layout, Space, Dropdown, Menu, Tag, Switch } from 'antd'
 import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useThemeSwitcher } from 'react-css-theme-switcher'
-import PrimaryNav from '../primaryNav'
 import LightSvg from '@assets/svg/light.svg'
 import DarkSvg from '@assets/svg/dark.svg'
+import PrimaryNav from '../primaryNav'
 
 import styles from './index.module.less'
 

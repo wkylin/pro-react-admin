@@ -7,7 +7,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["plugin:react/recommended", "standard", "prettier"],
+  "extends": ["plugin:react/recommended", "airbnb-base", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -39,6 +39,16 @@
     "jsx-quotes": "off",
     "space-before-blocks": "off",
     "max-len": "off",
-    "strict": "off"
+    "strict": "off",
+    "no-promise-executor-return": "off",
+    "no-bitwise": "off",
+    "no-return-assign": "off",
+    "consistent-return": "off",
+    "global-require": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/no-unresolved": "off",
+    "no-console": "off",
+    "import/extensions": "off",
+    "no-nested-ternary": "off"
   }
 }
