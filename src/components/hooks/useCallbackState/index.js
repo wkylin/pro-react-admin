@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+
 const useCallbackState = (initialValue) => {
   const [state, _setState] = useState(initialValue)
   const callbackQueue = useRef([])

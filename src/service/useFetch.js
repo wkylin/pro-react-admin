@@ -47,37 +47,32 @@ export const useReqFetch = (url, opts) => {
   return [res, loading, error]
 }
 
-export const usePostFetch = (url, opts) => {
-  return useReqFetch(url, {
+export const usePostFetch = (url, opts) =>
+  useReqFetch(url, {
     ...opts,
     method: 'POST',
   })
-}
 
-export const useGetFetch = (url, opts) => {
-  return useReqFetch(url, {
+export const useGetFetch = (url, opts) =>
+  useReqFetch(url, {
     ...opts,
     method: 'GET',
   })
-}
 
-export const usePutFetch = (url, opts) => {
-  return useReqFetch(url, {
+export const usePutFetch = (url, opts) =>
+  useReqFetch(url, {
     ...opts,
     method: 'PUT',
   })
-}
 
-export const useDeleteFetch = (url, opts) => {
-  return useReqFetch(url, {
+export const useDeleteFetch = (url, opts) =>
+  useReqFetch(url, {
     ...opts,
     method: 'DELETE',
   })
-}
 
-export const usePatchFetch = (url, opts) => {
-  return useReqFetch(url, {
+export const usePatchFetch = (url, opts) =>
+  useReqFetch(url, {
     ...opts,
     method: 'PATCH',
   })
-}

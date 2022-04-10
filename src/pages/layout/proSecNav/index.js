@@ -43,13 +43,8 @@ const ProSecNav = () => {
   useEffect(() => {
     const selectedPathKey = pathname
     setSelectedKeys([selectedPathKey])
-    setOpenKeys(isOpenChange ? openKeys : pathSubmenu[pathname] ? pathSubmenu[pathname] : openKeys)
-    // setOpenKeys(openKeys)
+    setOpenKeys(isOpenChange ? openKeys : pathSubmenu[pathname] ?? openKeys)
   }, [pathname, openKeys, isOpenChange])
-
-  // const onItemClick = ({ key }) => {
-  //   redirectTo(key)
-  // }
 
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)

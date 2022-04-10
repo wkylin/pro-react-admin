@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Menu, Dropdown, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, FireOutlined } from '@ant-design/icons'
-import { MyErrorBoundary } from '@stateful'
+import MyErrorBoundary from '@stateful'
 import { useProTabContext } from '@hooks/proTabsContext'
 import Loading from '@stateless/Loading'
 import Home from '@pages/home'
@@ -75,8 +75,8 @@ const ProTabs = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [panes, panesItem, pathname, search, tabActiveKey])
 
-  const onChange = (activeKey) => {
-    setActiveKey(activeKey)
+  const onChange = (key) => {
+    setActiveKey(key)
   }
 
   // tab点击
@@ -90,7 +90,7 @@ const ProTabs = (props) => {
   }
 
   const onEdit = (targetKey, action) => {
-    action === 'remove' && removeTab(targetKey)
+    if (action === 'remove') removeTab(targetKey)
   }
 
   const isDisabled = () => selectedPanel.key === '/'

@@ -1,4 +1,4 @@
-export const getRouteItem = (arrList = [], queryItem) => {
+export const getRouteItem = (arrList, queryItem) => {
   let result
   if (Array.isArray(arrList)) {
     result = arrList.find((item) => item.key === queryItem || getRouteItem(item.children, queryItem))
@@ -6,7 +6,7 @@ export const getRouteItem = (arrList = [], queryItem) => {
   return result
 }
 
-export const getRouteList = (result, arrList = [], queryItem) => {
+export const getRouteList = (result, arrList, queryItem) => {
   if (Array.isArray(arrList)) {
     arrList.forEach((item) => {
       if (item.key === queryItem) {

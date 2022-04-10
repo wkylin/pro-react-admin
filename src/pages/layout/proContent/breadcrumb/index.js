@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { getRouteItem, getRouteList } from './util'
 // import useBreadcrumbs from 'use-react-router-breadcrumbs'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Breadcrumb, Button } from 'antd'
 import rootRouter from '@src/routers'
+import { getRouteItem, getRouteList } from './util'
 import styles from './index.module.less'
 
 const ProBreadcrumb = () => {
@@ -37,8 +37,8 @@ const ProBreadcrumb = () => {
   return (
     <>
       <Breadcrumb separator=">">
-        {breadcrumbList.map((item, index) => {
-          return index !== breadcrumbList.length - 1 ? (
+        {breadcrumbList.map((item, index) =>
+          index !== breadcrumbList.length - 1 ? (
             <Breadcrumb.Item className={styles.breadcrumb} key={item.key}>
               {item.isSubMenu ? (
                 <Button disabled type="link" style={{ padding: 0 }}>
@@ -55,7 +55,7 @@ const ProBreadcrumb = () => {
               {item.name}
             </Breadcrumb.Item>
           )
-        })}
+        )}
       </Breadcrumb>
     </>
   )

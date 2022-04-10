@@ -8,12 +8,12 @@ import { ThemeSwitcherProvider } from 'react-css-theme-switcher'
 import { ConfigProvider } from 'antd'
 
 // import reportWebVitals from './reportWebVitals'
+import zhCN from 'antd/lib/locale/zh_CN'
+import dayjs from 'dayjs'
 import store from './store'
 import './styles/reset.css'
 import App from './App'
-import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import zhCN from 'antd/lib/locale/zh_CN'
 // import enUS from 'antd/lib/locale/en_US'
 dayjs.locale('zh-cn')
 

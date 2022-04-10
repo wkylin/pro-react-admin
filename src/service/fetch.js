@@ -16,7 +16,7 @@
  */
 // import { HashRouter } from 'react-router-dom'
 import { message } from 'antd'
-import { suffix } from '../utils/suffix'
+import suffix from '../utils/suffix'
 // import { getToken } from '../utils/token'
 // import fetchIntercept from 'fetch-intercept'
 // import fetch from 'cross-fetch'
@@ -95,17 +95,16 @@ require('isomorphic-fetch')
 const baseUrl = process.env.APP_BASE_URL
 // const hashRouter = new HashRouter()
 
-const parseToQuery = (query) => {
-  return Object.keys(query)
+const parseToQuery = (query) =>
+  Object.keys(query)
     .reduce((ary, key) => {
       // if (query[key]) {
       //   ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]))
       // }
-      ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key] === undefined ? '' : query[key]))
+      ary.push(`${encodeURIComponent(key)}=${encodeURIComponent(query[key] === undefined ? '' : query[key])}`)
       return ary
     }, [])
     .join('&')
-}
 
 const initOptions = {
   method: 'GET', // POST, *GET,  PUT, DELETE, PATCH, [HEAD, CONNECT, OPTIONS, TRACE]
@@ -126,7 +125,7 @@ const initOptions = {
 }
 
 const handleFailedResult = (reject, response, error, isShowError) => {
-  const status = response.status
+  const { status } = response
 
   if (((status && status !== 200) || error) && isShowError) {
     message.error(`${status ? status + response.statusText : error.message}`, 2)
@@ -276,37 +275,32 @@ export const reqFetch = (
   return handleFetchData(fetchUrl, options)
 }
 
-export const getFetch = (url, params) => {
-  return reqFetch(url, {
+export const getFetch = (url, params) =>
+  reqFetch(url, {
     method: 'GET',
     ...params,
   })
-}
 
-export const postFetch = (url, params) => {
-  return reqFetch(url, {
+export const postFetch = (url, params) =>
+  reqFetch(url, {
     method: 'POST',
     ...params,
   })
-}
 
-export const putFetch = (url, params) => {
-  return reqFetch(url, {
+export const putFetch = (url, params) =>
+  reqFetch(url, {
     method: 'PUT',
     ...params,
   })
-}
 
-export const deleteFetch = (url, params) => {
-  return reqFetch(url, {
+export const deleteFetch = (url, params) =>
+  reqFetch(url, {
     method: 'DELETE',
     ...params,
   })
-}
 
-export const patchFetch = (url, params) => {
-  return reqFetch(url, {
+export const patchFetch = (url, params) =>
+  reqFetch(url, {
     method: 'PATCH',
     ...params,
   })
-}
