@@ -251,8 +251,7 @@
   },
   "lint-staged": {
     "src/**/*.{js, jsx, ts, tsx}": [
-      "npm run eslint:fix",
-      "git add"
+      "npm run eslint:fix"
     ],
     "src/**/*.less": [
       "npm run stylelint:fix"
