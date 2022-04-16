@@ -197,3 +197,23 @@ export const promiseWithTimeout = (promise, timeout) => {
 
 export const shuffleArr = (arr) => arr.sort(() => 0.5 - Math.random())
 export const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
+
+export const ThousandNum = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+export const RandomId = (len) => Math.random().toString(36).substring(3, len)
+export const RandomColor = () =>
+  `#${Math.floor(Math.random() * 0xffffff)
+    .toString(16)
+    .padEnd(6, '0')}`
+
+export const RoundNum = (num, decimal) => Math.round(num * 10 ** decimal) / 10 ** decimal
+export const RandomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
+export const dataType = (tgt, type) => {
+  const tempType = Object.prototype.toString
+    .call(tgt)
+    .replace(/\[object (\w+)\]/, '$1')
+    .toLowerCase()
+  return type ? tempType === type : tempType
+}
+export const isEmptyArray = (arr) => Array.isArray(arr) && !arr.length
+export const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)]
+export const asyncTo = (promise) => promise.then((data) => [null, data]).catch((err) => [err])
