@@ -1,5 +1,5 @@
-const { delay } = require('../utils/index')
 const Router = require('koa-router')
+const { delay } = require('../utils/index')
 
 const user = new Router()
 

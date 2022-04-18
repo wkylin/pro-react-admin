@@ -1,18 +1,18 @@
 const path = require('path')
 // const webpack = require('webpack')
 const { merge } = require('webpack-merge')
-const common = require('./webpack.common.js')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-// const TerserPlugin = require('terser-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 // const glob = require('glob')
 // const PurgeCSSPlugin = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const packageJson = require('../package.json')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+const packageJson = require('../package.json')
+const common = require('./webpack.common.js')
 
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
 const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-config|react-router-dom|redux)[\\/]/
@@ -57,10 +57,7 @@ const prodWebpackConfig = merge(common, {
   ],
   optimization: {
     minimize: true,
-    minimizer: [
-      new CssMinimizerPlugin(),
-      // new TerserPlugin()
-    ],
+    minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
     splitChunks: {
       chunks: 'all',
       minChunks: 3,
