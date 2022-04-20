@@ -1,9 +1,9 @@
 // const webpack = require('webpack')
 const path = require('path')
 const { merge } = require('webpack-merge')
-const common = require('./webpack.common.js')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const portfinder = require('portfinder')
+const common = require('./webpack.common.js')
 const devProxy = require('./dev.proxy')
 // const DashboardPlugin = require('webpack-dashboard/plugin')
 
@@ -28,6 +28,7 @@ const devWebpackConfig = merge(common, {
     },
     compress: true,
     open: true,
+    // server: 'https',
     // hot: true,
     // liveReload: false,
     proxy: devProxy,
