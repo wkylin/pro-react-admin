@@ -1,6 +1,5 @@
 const path = require('path')
 // const webpack = require('webpack')
-const paths = require('./paths')
 // const chalk = require('chalk')
 
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin')
@@ -15,6 +14,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 // const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const paths = require('./paths')
 // const ESLintPlugin = require('eslint-webpack-plugin')
 
 // const { getThemeVariables } = require('antd/dist/theme')
@@ -47,7 +47,7 @@ switch (process.env.BUILD_GOAL) {
 
 const config = {
   entry: {
-    app: paths.src + '/index.tsx',
+    app: `${paths.src}/index.tsx`,
   },
   output: {
     path: paths.build,
@@ -88,8 +88,8 @@ const config = {
     }),
     new HtmlWebpackPlugin({
       title: isDev ? 'Pro React Dev' : 'Pro React',
-      template: paths.public + '/index.ejs',
-      favicon: paths.public + '/favicon.ico',
+      template: `${paths.public}/index.ejs`,
+      favicon: `${paths.public}/favicon.ico`,
       filename: 'index.html',
       inject: 'body',
       hash: true,
