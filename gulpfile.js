@@ -15,13 +15,13 @@ gulp.task('less', () => {
     .pipe(
       gulpless({
         javascriptEnabled: true,
-        plugins: [new NpmImportPlugin({ prefix: '~' })],
+        plugins: [new NpmImportPlugin({ prefix: '~' })]
       })
     )
     .pipe(postcss(plugins))
     .pipe(
       csso({
-        debug: true,
+        debug: true
       })
     )
     .pipe(gulp.dest('./public'))
