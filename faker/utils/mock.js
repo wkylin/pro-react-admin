@@ -3,13 +3,14 @@
 // https://www.npmjs.com/package/mockjs
 
 const Mock = require('mockjs')
-const Random = Mock.Random
+
+const { Random } = Mock
 Random.extend({
-  mobile: function () {
+  mobile() {
     const phonePrefixs = ['132', '135', '189']
     return this.pick(phonePrefixs) + Mock.mock(/\d{8}/)
   },
-  shops: function () {
+  shops() {
     const shops = ['Mini小店', '麒麟店', '双子店']
     return this.pick(shops)
   },
