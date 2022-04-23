@@ -33,11 +33,11 @@ const prodWebpackConfig = merge(common, {
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
       chunkFilename: 'static/css/[name].[contenthash].css',
-      ignoreOrder: true,
+      ignoreOrder: true
     }),
     new PurgeCSSPlugin({
       paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
-      only: ['bundle', 'vendor'],
+      only: ['bundle', 'vendor']
     }),
     // new webpack.BannerPlugin({
     //   raw: true,
@@ -49,15 +49,15 @@ const prodWebpackConfig = merge(common, {
       algorithm: 'gzip',
       test: /\.js$|\.json$|\.css/,
       threshold: 10240, // 只有大小大于该值的资源会被处理
-      minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
+      minRatio: 0.8 // 只有压缩率小于这个值的资源才会被处理
       // deleteOriginalAssets: true // 删除原文件
     }),
     new CopyWebpackPlugin({
       patterns: [{ from: './public', to: '../dist' }],
       options: {
-        concurrency: 100,
-      },
-    }),
+        concurrency: 100
+      }
+    })
   ],
   optimization: {
     minimize: true,
@@ -77,9 +77,9 @@ const prodWebpackConfig = merge(common, {
           ie8: false,
           keep_classnames: undefined,
           keep_fnames: false,
-          safari10: false,
-        },
-      }),
+          safari10: false
+        }
+      })
     ],
     splitChunks: {
       chunks: 'all',
@@ -94,7 +94,7 @@ const prodWebpackConfig = merge(common, {
           minChunks: 1,
           priority: 10,
           enforce: true,
-          chunks: 'all',
+          chunks: 'all'
         },
         react: {
           test: regReact,
@@ -102,19 +102,19 @@ const prodWebpackConfig = merge(common, {
           minChunks: 1,
           priority: 10,
           enforce: true,
-          chunks: 'all',
-        },
-      },
+          chunks: 'all'
+        }
+      }
     },
     runtimeChunk: {
-      name: 'runtime',
-    },
+      name: 'runtime'
+    }
   },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
+    maxAssetSize: 512000
+  }
 })
 
 if (useSentryMap) {
@@ -123,7 +123,7 @@ if (useSentryMap) {
       release: packageJson.version,
       include: path.join(__dirname, '../dist/static/js'),
       configFile: '../.sentryclirc',
-      urlPrefix: '~/static/js',
+      urlPrefix: '~/static/js'
     })
   )
 }
