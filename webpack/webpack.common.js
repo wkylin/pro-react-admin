@@ -47,7 +47,7 @@ switch (process.env.BUILD_GOAL) {
 
 const config = {
   entry: {
-    app: `${paths.src}/index.tsx`,
+    app: `${paths.src}/index.tsx`
   },
   output: {
     path: paths.build,
@@ -57,7 +57,7 @@ const config = {
     // library: '',
     // libraryTarget: 'umd',
     // chunkLoadingGlobal: '',
-    clean: true,
+    clean: true
   },
   resolve: {
     // plugins: [new TsconfigPathsPlugin()],
@@ -71,11 +71,11 @@ const config = {
       '@assets': path.resolve('./src/assets'),
       '@pages': path.resolve('./src/pages'),
       '@routers': path.resolve('./src/routers'),
-      '@utils': path.resolve('./src/utils'),
-    },
+      '@utils': path.resolve('./src/utils')
+    }
   },
   watchOptions: {
-    ignored: /node_modules/,
+    ignored: /node_modules/
   },
   // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
@@ -87,7 +87,7 @@ const config = {
     //   cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../dist')],
     // }),
     new Dotenv({
-      path: path.resolve(__dirname, '..', dotEnv),
+      path: path.resolve(__dirname, '..', dotEnv)
     }),
     new HtmlWebpackPlugin({
       title: isDev ? 'Pro React Dev' : 'Pro React',
@@ -111,8 +111,8 @@ const config = {
             minifyCSS: true,
             minifyJS: true,
             minifyURLs: true,
-            useShortDoctype: true,
-          },
+            useShortDoctype: true
+          }
     }),
     // new webpack.ProgressPlugin({
     //   activeModules: false,
@@ -134,13 +134,13 @@ const config = {
       include: /src/,
       failOnError: true,
       allowAsyncCycles: false,
-      cwd: process.cwd(),
+      cwd: process.cwd()
     }),
     new NodePolyfillPlugin(),
     new WebpackBar(),
     new ForkTsCheckerWebpackPlugin({
-      async: false,
-    }),
+      async: false
+    })
     // new ESLintPlugin({
     //   extensions: ['js', 'jsx', 'ts', 'tsx'],
     // }),
@@ -149,7 +149,7 @@ const config = {
     rules: [
       {
         test: /\.css$/,
-        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader']
       },
       {
         test: /\.less$/i,
@@ -165,10 +165,10 @@ const config = {
                 auto: true,
                 exportGlobals: true,
                 localIdentName: '[path][name]__[local]--[hash:base64:5]',
-                localIdentContext: paths.src,
+                localIdentContext: paths.src
               },
-              importLoaders: 2,
-            },
+              importLoaders: 2
+            }
           },
           {
             loader: 'less-loader',
@@ -182,10 +182,10 @@ const config = {
                 //   dark: true, // Enable dark mode
                 //   compact: false, // Enable compact mode
                 // }),
-                javascriptEnabled: true,
-              },
-            },
-          },
+                javascriptEnabled: true
+              }
+            }
+          }
           // {
           //   loader: 'postcss-loader',
           //   options: {
@@ -194,7 +194,7 @@ const config = {
           //     },
           //   },
           // },
-        ],
+        ]
       },
       {
         test: /\.(js|jsx|ts|tsx)$/,
@@ -205,32 +205,32 @@ const config = {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env'],
-              plugins: ['@babel/plugin-proposal-object-rest-spread'],
-            },
-          },
-        ],
+              plugins: ['@babel/plugin-proposal-object-rest-spread']
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2|mp4)$/i,
-        type: 'asset',
+        type: 'asset'
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'babel-loader'
           },
           {
             loader: '@svgr/webpack',
             options: {
               babel: false,
-              icon: true,
-            },
-          },
-        ],
-      },
-    ],
-  },
+              icon: true
+            }
+          }
+        ]
+      }
+    ]
+  }
 }
 
 if (USE_ANALYZE) {
