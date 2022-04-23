@@ -5,20 +5,23 @@ const { merge } = require('webpack-merge')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+
 const glob = require('glob')
 const PurgeCSSPlugin = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+
+// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+
+// const smp = new SpeedMeasurePlugin()
+
 const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
 
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
 const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-config|react-router-dom|redux)[\\/]/
-
-// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
-// const smp = new SpeedMeasurePlugin()
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
@@ -58,7 +61,26 @@ const prodWebpackConfig = merge(common, {
   ],
   optimization: {
     minimize: true,
-    minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
+    minimizer: [
+      new CssMinimizerPlugin(),
+      new TerserPlugin({
+        terserOptions: {
+          ecma: undefined,
+          parse: {},
+          compress: {},
+          mangle: true,
+          module: false,
+          output: null,
+          format: null,
+          toplevel: false,
+          nameCache: null,
+          ie8: false,
+          keep_classnames: undefined,
+          keep_fnames: false,
+          safari10: false,
+        },
+      }),
+    ],
     splitChunks: {
       chunks: 'all',
       minChunks: 3,

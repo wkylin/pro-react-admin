@@ -74,6 +74,9 @@ const config = {
       '@utils': path.resolve('./src/utils'),
     },
   },
+  watchOptions: {
+    ignored: /node_modules/,
+  },
   // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
     // new CleanWebpackPlugin({
@@ -196,7 +199,16 @@ const config = {
       {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
-        use: ['thread-loader', 'babel-loader'],
+        use: [
+          'thread-loader',
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread'],
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|eot|ttf|woff|woff2|mp4)$/i,
