@@ -76,6 +76,20 @@ select:-webkit-autofill:active {
   transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s;
 }
 
+.text-nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.text-more-line-nowrap {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+
 #root {
   width: 100vw;
   height: 100vh;
