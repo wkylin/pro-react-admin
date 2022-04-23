@@ -5,8 +5,9 @@ const { merge } = require('webpack-merge')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-// const glob = require('glob')
-// const PurgeCSSPlugin = require('purgecss-webpack-plugin')
+
+const glob = require('glob')
+const PurgeCSSPlugin = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -34,9 +35,10 @@ const prodWebpackConfig = merge(common, {
       chunkFilename: 'static/css/[name].[contenthash].css',
       ignoreOrder: true,
     }),
-    // new PurgeCSSPlugin({
-    //   paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
-    // }),
+    new PurgeCSSPlugin({
+      paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
+      only: ['bundle', 'vendor'],
+    }),
     // new webpack.BannerPlugin({
     //   raw: true,
     //   banner:
