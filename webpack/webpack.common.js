@@ -153,6 +153,7 @@ const config = {
       },
       {
         test: /\.less$/i,
+        // include: [path.resolve(__dirname, 'src/styles')],
         use: [
           isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
           {
@@ -160,12 +161,15 @@ const config = {
             options: {
               sourceMap: true,
               modules: {
-                // compileType: 'module',
                 mode: 'local',
                 auto: true,
                 exportGlobals: true,
                 localIdentName: '[path][name]__[local]--[hash:base64:5]',
+                // localIdentName: '[local]--[hash:base64:5]',
                 localIdentContext: paths.src,
+                namedExport: false,
+                exportLocalsConvention: 'camelCase',
+                // exportOnlyLocals: false,
               },
               importLoaders: 2,
             },
