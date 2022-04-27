@@ -20,13 +20,13 @@
 
 ## Technology Stack
 
-1. React: v18.0.0 [React](https://reactjs.org/)
-2. React Router: v6.2.1 [React Router](https://reactrouter.com/)
-3. Webpack:v5.70.0 [Webpack](https://webpack.js.org/)
-4. Babel: v7.16.7 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: v4.18.6 [Ant Design](https://ant.design/index-cn)
-6. Redux Hooks: v7.2.6 [Redux Hooks](https://react-redux.js.org/api/hooks)
-7. TypeScript: v4.6 [TypeScript](https://www.typescriptlang.org/)
+1. React: v18.1.0 [React](https://reactjs.org/)
+2. React Router: v6.3.0 [React Router](https://reactrouter.com/)
+3. Webpack:v5.72.0 [Webpack](https://webpack.js.org/)
+4. Babel: v7.17.9 [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
+5. Antd: v4.20.1 [Ant Design](https://ant.design/index-cn)
+6. React Redux: v8.0.1 [Redux Hooks](https://react-redux.js.org/api/hooks)
+7. TypeScript: v4.6.3 [TypeScript](https://www.typescriptlang.org/)
 
 ## Development
 
