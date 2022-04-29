@@ -74,8 +74,10 @@ const config = {
       '@utils': path.resolve('./src/utils'),
     },
   },
+  watch: isDev,
   watchOptions: {
     ignored: /node_modules/,
+    aggregateTimeout: 600,
   },
   // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [

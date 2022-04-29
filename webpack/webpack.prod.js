@@ -21,7 +21,7 @@ const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
 
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
-const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-config|react-router-dom|redux)[\\/]/
+// const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-dom|redux)[\\/]/
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
@@ -97,12 +97,15 @@ const prodWebpackConfig = merge(common, {
           chunks: 'all',
         },
         react: {
-          test: regReact,
-          name: 'react',
+          test(module) {
+            // `module.resource` contains the absolute path of the file on disk.
+            return module.resource && module.resource.includes('node_modules/react')
+          },
+          chunks: 'initial',
+          filename: 'react.[contenthash].js',
+          priority: 1,
+          maxInitialRequests: 2,
           minChunks: 1,
-          priority: 10,
-          enforce: true,
-          chunks: 'all',
         },
       },
     },
