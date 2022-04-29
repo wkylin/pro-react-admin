@@ -3,6 +3,6 @@
 /dist
 /node_modules
 /.eslintcache
-/compilation-stats.json
+compilation-stats.json
 .yarn/cache
 /packagehash.txt
