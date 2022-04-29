@@ -74,7 +74,7 @@ const config = {
       '@utils': path.resolve('./src/utils'),
     },
   },
-  watch: isDev,
+  // watch: isDev,
   watchOptions: {
     ignored: /node_modules/,
     aggregateTimeout: 600,
