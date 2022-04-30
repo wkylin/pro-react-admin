@@ -182,7 +182,7 @@ const ProTabs = (props) => {
         onTabScroll={onTabScroll}
         onEdit={onEdit}
         renderTabBar={renderTabBar}
-        tabBarGutter={0}
+        tabBarGutter={-1}
         tabBarStyle={{
           zIndex: 2,
         }}
