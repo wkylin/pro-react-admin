@@ -16,7 +16,7 @@ const ProHeader = () => {
   }
 
   const redirectGithub = () => {
-    window.open('https://rat.dev/wkylin/promotion-web', '_blank')
+    window.open('https://github.com/wkylin/promotion-web', '_blank')
   }
 
   const { switcher, themes, currentTheme } = useThemeSwitcher()
