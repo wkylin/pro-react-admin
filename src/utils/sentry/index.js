@@ -17,7 +17,7 @@ const sentryInit = () => {
     autoSessionTracking: nodeEnv === 'production',
   })
 
-  Sentry.setExtra('projectOwner', '15026835870')
+  Sentry.setExtra('projectOwner', '150****5870')
 }
 
 export default sentryInit
