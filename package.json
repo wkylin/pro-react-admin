@@ -208,6 +208,7 @@
     "dayjs": "^1.11.1",
     "fetch-intercept": "^2.4.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
+    "object-hash": "^3.0.0",
     "qs": "^6.10.3",
     "query-string": "^7.1.1",
     "react": "^18.1.0",
