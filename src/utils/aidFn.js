@@ -217,3 +217,5 @@ export const dataType = (tgt, type) => {
 export const isEmptyArray = (arr) => Array.isArray(arr) && !arr.length
 export const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)]
 export const asyncTo = (promise) => promise.then((data) => [null, data]).catch((err) => [err])
+export const hasFocus = (element) => element === document.activeElement
+export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
