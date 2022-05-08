@@ -148,6 +148,8 @@ const config = {
     // }),
   ],
   module: {
+    // 将缺失的导出提示成错误而不是警告
+    strictExportPresence: true,
     rules: [
       {
         test: /\.css$/,
@@ -166,14 +168,36 @@ const config = {
                 mode: 'local',
                 auto: true,
                 exportGlobals: true,
-                localIdentName: '[path][name]__[local]--[hash:base64:5]',
-                // localIdentName: '[local]--[hash:base64:5]',
+                localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[local]--[hash:base64:5]',
                 localIdentContext: paths.src,
                 namedExport: false,
                 exportLocalsConvention: 'camelCase',
                 // exportOnlyLocals: false,
               },
               importLoaders: 2,
+            },
+          },
+          {
+            loader: require.resolve('postcss-loader'),
+            options: {
+              postcssOptions: {
+                ident: 'postcss',
+                config: false,
+                plugins: [
+                  'postcss-flexbugs-fixes',
+                  [
+                    'postcss-preset-env',
+                    {
+                      autoprefixer: {
+                        flexbox: 'no-2009',
+                      },
+                      stage: 3,
+                    },
+                  ],
+                  'postcss-normalize',
+                ],
+              },
+              sourceMap: true,
             },
           },
           {
@@ -192,14 +216,6 @@ const config = {
               },
             },
           },
-          // {
-          //   loader: 'postcss-loader',
-          //   options: {
-          //     postcssOptions: {
-          //       plugins: [['postcss-preset-env', 'autoprefixer']],
-          //     },
-          //   },
-          // },
         ],
       },
       {
@@ -208,10 +224,10 @@ const config = {
         use: [
           'thread-loader',
           {
-            loader: 'babel-loader',
+            loader: 'babel-loader?cacheDirectory',
             options: {
-              presets: ['@babel/preset-env'],
-              plugins: ['@babel/plugin-proposal-object-rest-spread'],
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/plugin-transform-runtime'],
             },
           },
         ],
