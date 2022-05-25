@@ -61,6 +61,43 @@ const ProSecNav = () => {
     setIsOpenChange(false)
   }
 
+  const menuItems = [
+    { label: 'Home', key: '/', icon: <HomeOutlined /> },
+    { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
+    {
+      label: '技术栈',
+      key: '/sub-act',
+      icon: <HeatMapOutlined />,
+      children: [
+        {
+          label: '前端技术栈',
+          key: '/sub-coupons',
+          icon: <FireOutlined />,
+          children: [
+            { label: 'Vue', key: '/coupons/add' },
+            { label: 'Angular', key: '/coupons/edit' },
+          ],
+        },
+        { label: '后端技术栈', key: '/product', icon: <DeploymentUnitOutlined /> },
+      ],
+    },
+    {
+      label: '构建工具',
+      key: '/sub-list',
+      icon: <ApartmentOutlined />,
+      children: [
+        { label: 'Webpack', key: '/coupons/list' },
+        { label: 'Vite', key: '/order/list' },
+      ],
+    },
+    {
+      label: 'Error',
+      key: '/sub-error',
+      icon: <QuestionCircleOutlined />,
+      children: [{ label: 'ErrorBoundary', key: '/error' }],
+    },
+  ]
+
   return (
     <>
       <Menu
@@ -74,30 +111,8 @@ const ProSecNav = () => {
         onOpenChange={onOpenChange}
         // onClick={onItemClick}
         onSelect={onSelect}
-      >
-        <Menu.Item key="/" icon={<HomeOutlined />}>
-          Home
-        </Menu.Item>
-        <Menu.Item key="/demo" icon={<GlobalOutlined />}>
-          Demo
-        </Menu.Item>
-        <Menu.SubMenu key="/sub-act" icon={<HeatMapOutlined />} title="技术栈">
-          <Menu.SubMenu key="/sub-coupons" icon={<FireOutlined />} title="前端技术栈">
-            <Menu.Item key="/coupons/add">Vue</Menu.Item>
-            <Menu.Item key="/coupons/edit">Angular</Menu.Item>
-          </Menu.SubMenu>
-          <Menu.Item key="/product" icon={<DeploymentUnitOutlined />}>
-            后端技术栈
-          </Menu.Item>
-        </Menu.SubMenu>
-        <Menu.SubMenu key="/sub-list" icon={<ApartmentOutlined />} title="构建工具">
-          <Menu.Item key="/coupons/list">Webpack</Menu.Item>
-          <Menu.Item key="/order/list">Vite</Menu.Item>
-        </Menu.SubMenu>
-        <Menu.SubMenu key="/sub-error" icon={<QuestionCircleOutlined />} title="Error">
-          <Menu.Item key="/error">ErrorBoundary</Menu.Item>
-        </Menu.SubMenu>
-      </Menu>
+        items={menuItems}
+      />
     </>
   )
 }
