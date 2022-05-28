@@ -64,6 +64,7 @@ const ProSecNav = () => {
   const menuItems = [
     { label: 'Home', key: '/', icon: <HomeOutlined /> },
     { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
+    { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',

@@ -15,6 +15,7 @@ const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallba
 const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
 const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
 const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
+const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
 const Landing = loadable(() => import('../pages/landing'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
@@ -30,7 +31,6 @@ const rootRouter = [
     children: [
       {
         index: true,
-        // path: '/',
         name: '首页',
         key: '/',
         element: <Home />,
@@ -41,6 +41,13 @@ const rootRouter = [
         name: 'Demo',
         key: '/demo',
         element: <Demo />,
+      },
+      {
+        index: false,
+        path: 'parallax',
+        name: 'Parallax',
+        key: '/parallax',
+        element: <ParallaxVert />,
       },
       {
         index: false,
