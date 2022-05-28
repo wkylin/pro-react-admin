@@ -9,7 +9,7 @@ import {
   ApartmentOutlined,
   QuestionCircleOutlined,
   FireOutlined,
-  GlobalOutlined,
+  GlobalOutlined
 } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -18,7 +18,7 @@ const pathSubmenu = {
   '/home': ['home'],
   '/coupons/add': ['/sub-act', '/sub-coupons'],
   '/coupons/edit': ['/sub-act', '/sub-coupons'],
-  '/product': ['/sub-act', '/sub-coupons'],
+  '/product': ['/sub-act', '/sub-coupons']
 }
 
 const ProSecNav = () => {
@@ -76,11 +76,11 @@ const ProSecNav = () => {
           icon: <FireOutlined />,
           children: [
             { label: 'Vue', key: '/coupons/add' },
-            { label: 'Angular', key: '/coupons/edit' },
-          ],
+            { label: 'Angular', key: '/coupons/edit' }
+          ]
         },
-        { label: '后端技术栈', key: '/product', icon: <DeploymentUnitOutlined /> },
-      ],
+        { label: '后端技术栈', key: '/product', icon: <DeploymentUnitOutlined /> }
+      ]
     },
     {
       label: '构建工具',
@@ -88,21 +88,21 @@ const ProSecNav = () => {
       icon: <ApartmentOutlined />,
       children: [
         { label: 'Webpack', key: '/coupons/list' },
-        { label: 'Vite', key: '/order/list' },
-      ],
+        { label: 'Vite', key: '/order/list' }
+      ]
     },
     {
       label: 'Error',
       key: '/sub-error',
       icon: <QuestionCircleOutlined />,
-      children: [{ label: 'ErrorBoundary', key: '/error' }],
-    },
+      children: [{ label: 'ErrorBoundary', key: '/error' }]
+    }
   ]
 
   return (
     <>
       <Menu
-        mode="inline"
+        mode='inline'
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}

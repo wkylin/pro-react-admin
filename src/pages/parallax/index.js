@@ -18,7 +18,7 @@ const ParallaxVert = () => {
           factor={3}
           style={{
             backgroundImage: url('stars', true),
-            backgroundSize: 'cover',
+            backgroundSize: 'cover'
           }}
         />
         <ParallaxLayer offset={1.3} speed={-0.3} style={{ pointerEvents: 'none' }}>
@@ -52,7 +52,7 @@ const ParallaxVert = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            pointerEvents: 'none',
+            pointerEvents: 'none'
           }}
         >
           <img src={url('earth')} style={{ width: '60%' }} />
@@ -64,7 +64,7 @@ const ParallaxVert = () => {
           style={{
             backgroundSize: '80%',
             backgroundPosition: 'center',
-            backgroundImage: url('clients', true),
+            backgroundImage: url('clients', true)
           }}
         />
 
@@ -75,7 +75,7 @@ const ParallaxVert = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <img src={url('server')} style={{ width: '20%' }} />
@@ -88,7 +88,7 @@ const ParallaxVert = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <img src={url('bash')} style={{ width: '40%' }} />
@@ -100,7 +100,7 @@ const ParallaxVert = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
           onClick={() => parallaxRef.current.scrollTo(0)}
         >
