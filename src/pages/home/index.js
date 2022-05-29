@@ -16,7 +16,7 @@ const Home = () => {
       <h3 className={styles.spotLight} data-spotlight={`React version: ${version}`}>
         React version: {version}
       </h3>
-      <Button type="primary" onClick={redirectToNgrok}>
+      <Button type='primary' onClick={redirectToNgrok}>
         Hi, Ngrok!
       </Button>
     </FixTabPanel>
