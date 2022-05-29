@@ -15,6 +15,7 @@ const devWebpackConfig = merge(common, {
   // devtool: 'source-map',
   devtool: 'eval-cheap-module-source-map',
   devServer: {
+    allowedHosts: 'all', // disableHostCheck: true,
     historyApiFallback: true,
     client: {
       progress: true,
