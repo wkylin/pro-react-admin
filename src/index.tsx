@@ -6,14 +6,16 @@ import { HashRouter as Router } from 'react-router-dom'
 import { Provider as ReduxProvider } from 'react-redux'
 import { ThemeSwitcherProvider } from 'react-css-theme-switcher'
 import { ConfigProvider } from 'antd'
-
+import 'dayjs/locale/zh-cn'
+import '@ant-design/flowchart/dist/index.css'
 // import reportWebVitals from './reportWebVitals'
 import zhCN from 'antd/lib/locale/zh_CN'
 import dayjs from 'dayjs'
 import store from './store'
+
 import './styles/reset.css'
 import App from './App'
-import 'dayjs/locale/zh-cn'
+
 // import enUS from 'antd/lib/locale/en_US'
 dayjs.locale('zh-cn')
 

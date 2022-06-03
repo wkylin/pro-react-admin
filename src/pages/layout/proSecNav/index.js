@@ -10,6 +10,7 @@ import {
   QuestionCircleOutlined,
   FireOutlined,
   GlobalOutlined,
+  EnvironmentOutlined,
 } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -65,6 +66,7 @@ const ProSecNav = () => {
     { label: 'Home', key: '/', icon: <HomeOutlined /> },
     { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
+    { label: 'AntV', key: '/choropleth', icon: <EnvironmentOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',

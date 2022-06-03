@@ -16,6 +16,7 @@ const Product = loadable(() => import('../pages/product'), { fallback: <Loading 
 const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
 const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
 const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
+const DemoChoroplethMap = loadable(() => import('../pages/chinamap'), { fallback: <Loading /> })
 const Landing = loadable(() => import('../pages/landing'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
@@ -48,6 +49,13 @@ const rootRouter = [
         name: 'Parallax',
         key: '/parallax',
         element: <ParallaxVert />,
+      },
+      {
+        index: false,
+        path: 'choropleth',
+        name: 'AntV',
+        key: '/choropleth',
+        element: <DemoChoroplethMap />,
       },
       {
         index: false,
