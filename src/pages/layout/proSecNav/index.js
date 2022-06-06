@@ -11,6 +11,7 @@ import {
   FireOutlined,
   GlobalOutlined,
   EnvironmentOutlined,
+  QrcodeOutlined,
 } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -66,6 +67,7 @@ const ProSecNav = () => {
     { label: 'Home', key: '/', icon: <HomeOutlined /> },
     { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
+    { label: 'QrGenerate', key: '/qrcode', icon: <QrcodeOutlined /> },
     { label: 'AntV', key: '/choropleth', icon: <EnvironmentOutlined /> },
     {
       label: '技术栈',
