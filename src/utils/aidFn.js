@@ -191,22 +191,15 @@ export const toFixedBug = (n, fixed) => ~~(10 ** fixed * n) / 10 ** fixed
 
 export const promiseWithTimeout = (promise, timeout) => {
   const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve('Time Out!'), timeout))
-
   return Promise.race([timeoutPromise, promise])
 }
 
 export const shuffleArr = (arr) => arr.sort(() => 0.5 - Math.random())
 export const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
-
 export const ThousandNum = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 export const RandomId = (len) => Math.random().toString(36).substring(3, len)
-export const RandomColor = () =>
-  `#${Math.floor(Math.random() * 0xffffff)
-    .toString(16)
-    .padEnd(6, '0')}`
-
 export const RoundNum = (num, decimal) => Math.round(num * 10 ** decimal) / 10 ** decimal
-export const RandomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
+export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
 export const dataType = (tgt, type) => {
   const tempType = Object.prototype.toString
     .call(tgt)
@@ -219,3 +212,16 @@ export const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)]
 export const asyncTo = (promise) => promise.then((data) => [null, data]).catch((err) => [err])
 export const hasFocus = (element) => element === document.activeElement
 export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
+export const randomString = () => Math.random().toString(36).slice(2)
+export const escape = (str) =>
+  str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]))
+export const uppercaseWords = (str) => str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase())
+export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
+export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+export const round = (n, d) => Number(`${Math.round(`${n}e${d}`)}e-${d}`)
+export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
+export const pause = (millis) => new Promise((resolve) => setTimeout(resolve, millis))
+export const camelizeCamelCase = (str) =>
+  str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, (letter, index) => (index === 0 ? letter.toLowerCase() : letter.toUpperCase()))
+    .replace(/\s+/g, '')
