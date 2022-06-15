@@ -18,6 +18,7 @@ const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Load
 const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
 const DemoChoroplethMap = loadable(() => import('../pages/chinamap'), { fallback: <Loading /> })
 const QrCode = loadable(() => import('../pages/qrGenerate'), { fallback: <Loading /> })
+const ReactPlayerDemo = loadable(() => import('../pages/reactPlayer'), { fallback: <Loading /> })
 const Landing = loadable(() => import('../pages/landing'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
@@ -57,6 +58,13 @@ const rootRouter = [
         name: 'QrGenerate',
         key: '/qrcode',
         element: <QrCode />,
+      },
+      {
+        index: false,
+        path: 'player',
+        name: 'React Player',
+        key: '/player',
+        element: <ReactPlayerDemo />,
       },
       {
         index: false,
