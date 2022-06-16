@@ -27,7 +27,7 @@ const useAsyncFetch = (asyncFuntion, args = [], deps = [], immediate = true) => 
     if (immediate || !isFirstUpdate.current) {
       execute()
     }
-  }, [...deps])
+  }, [immediate, execute, ...deps])
   useEffect(() => {
     isFirstUpdate.current = false
   }, [])

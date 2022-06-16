@@ -16,7 +16,7 @@ const useDebounce = (fn, delay) => {
   )
 
   const fnDebounced = useCallback(
-    function (...args) {
+    (...args) => {
       if (timerRef.current) {
         clearTimeout(timerRef.current)
       }

@@ -14,9 +14,11 @@ const devWebpackConfig = merge(common, {
   mode: 'development',
   // devtool: 'source-map',
   devtool: 'eval-cheap-module-source-map',
-  cache: { type: 'memory' }, //开发环境使用内存缓存
+  // 开发环境使用内存缓存
+  cache: { type: 'memory' },
   devServer: {
-    allowedHosts: 'all', // disableHostCheck: true,
+    // disableHostCheck: true,
+    allowedHosts: 'all',
     historyApiFallback: true,
     client: {
       logging: 'error',
