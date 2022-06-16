@@ -14,10 +14,12 @@ const devWebpackConfig = merge(common, {
   mode: 'development',
   // devtool: 'source-map',
   devtool: 'eval-cheap-module-source-map',
+  cache: { type: 'memory' }, //开发环境使用内存缓存
   devServer: {
     allowedHosts: 'all', // disableHostCheck: true,
     historyApiFallback: true,
     client: {
+      logging: 'error',
       progress: true,
       overlay: {
         errors: true,
@@ -28,13 +30,23 @@ const devWebpackConfig = merge(common, {
       directory: path.join(__dirname, '../public'),
     },
     compress: true,
-    open: true,
+    // open: true,
+    open: {
+      target: ['index.html'],
+      app: {
+        name: 'chrome',
+      },
+    },
     // server: 'https',
-    // hot: true,
+    hot: true,
     // liveReload: false,
     proxy: devProxy,
   },
-
+  watchOptions: {
+    aggregateTimeout: 500,
+    poll: 1000,
+    ignored: /node_modules/,
+  },
   module: {
     rules: [
       {

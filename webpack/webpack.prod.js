@@ -27,6 +27,7 @@ const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
 const prodWebpackConfig = merge(common, {
   mode: 'production',
+  cache: { type: 'filesystem', buildDependencies: { config: [__filename] } }, //使用文件缓存
   // devtool: false,
   devtool: 'source-map',
   // devtool: 'nosources-source-map',

@@ -24,6 +24,8 @@ module.exports = {
     '@babel/typescript',
   ],
   // compact: true,
+  // 这个不设置的话，webpack 魔法注释会被删除，魔法注释用于分包
+  comments: true,
   plugins:
     process.env.NODE_ENV === 'production'
       ? [...plugins, 'transform-remove-console', 'transform-remove-debugger']
