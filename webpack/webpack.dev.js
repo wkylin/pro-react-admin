@@ -32,13 +32,7 @@ const devWebpackConfig = merge(common, {
       directory: path.join(__dirname, '../public'),
     },
     compress: true,
-    // open: true,
-    open: {
-      target: ['index.html'],
-      app: {
-        name: 'chrome',
-      },
-    },
+    open: true,
     // server: 'https',
     hot: true,
     // liveReload: false,

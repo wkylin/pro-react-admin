@@ -223,6 +223,7 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-loading-skeleton": "^3.1.0",
+    "react-player": "^2.10.1",
     "react-redux": "^8.0.2",
     "react-router-dom": "^6.3.0",
     "react-sticky": "^6.0.3",
