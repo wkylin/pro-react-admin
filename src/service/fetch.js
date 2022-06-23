@@ -124,13 +124,13 @@ const initOptions = {
   // keepalive: false,
 }
 
-const handleFailedResult = (reject, response, error, isShowError) => {
+const handleFailedResult = (response, error, isShowError, reject) => {
   const { status } = response
 
   if (((status && status !== 200) || error) && isShowError) {
     message.error(`${status ? status + response.statusText : error.message}`, 2)
   }
-  reject(response)
+  if (reject) reject(response)
 }
 
 const handleSuccessResult = (reslove, result, isShowError) => {
@@ -157,7 +157,6 @@ const handleFetchData = (url, options) => {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       handleFailedResult(
-        reject,
         { status: 50000, statusText: 'Time out' },
         new Error('TimeoutError: Timeout for Promise'),
         isShowError
@@ -187,7 +186,7 @@ const handleFetchData = (url, options) => {
                 handleSuccessResult(resolve, resBody, isShowError)
               })
               .catch((error) => {
-                handleFailedResult(reject, response, error, isShowError)
+                handleFailedResult(response, error, isShowError)
               })
           } else if (contentType.includes('application/vnd.ms-excel')) {
             // application/octet-stream
@@ -209,7 +208,7 @@ const handleFetchData = (url, options) => {
                 document.body.removeChild(downloadElement)
               })
               .catch((error) => {
-                handleFailedResult(reject, response, error, isShowError)
+                handleFailedResult(response, error, isShowError)
               })
           } else if (contentType.includes('text/html') || contentType.includes('text/plain')) {
             response
@@ -218,15 +217,15 @@ const handleFetchData = (url, options) => {
                 handleSuccessResult(resolve, resBody, isShowError)
               })
               .catch((error) => {
-                handleFailedResult(reject, response, error, isShowError)
+                handleFailedResult(response, error, isShowError, reject)
               })
           }
         } else {
-          handleFailedResult(reject, response, response, isShowError)
+          handleFailedResult(response, response, isShowError, reject)
         }
       })
       .catch((error) => {
-        handleFailedResult(reject, error, error, isShowError)
+        handleFailedResult(error, error, isShowError)
       })
       .finally(() => clearTimeout(timer))
   })
