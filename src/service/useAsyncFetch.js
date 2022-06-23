@@ -27,6 +27,7 @@ const useAsyncFetch = (asyncFuntion, args = [], deps = [], immediate = true) => 
     if (immediate || !isFirstUpdate.current) {
       execute()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [immediate, execute, ...deps])
   useEffect(() => {
     isFirstUpdate.current = false
