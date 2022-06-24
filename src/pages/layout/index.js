@@ -1,6 +1,7 @@
 import React from 'react'
 // import React, {Profiler} from 'react'
 import { Layout } from 'antd'
+import { ProTabProvider } from '@hooks/proTabsContext'
 import ProHeader from './proHeader'
 import ProSider from './proSider'
 import ProContent from './proContent'
@@ -19,15 +20,17 @@ const ProLayout = () => (
   //   console.log('interactions',interactions)
   // }
   <Layout className={styles.layout}>
-    <ProHeader />
-    <Layout className={styles.layout}>
-      <ProSider>
-        <ProSecNav />
-      </ProSider>
-      {/* <Profiler id="ProContext" onRender={onRenderCallback}> */}
-      <ProContent />
-      {/* </Profiler> */}
-    </Layout>
+    <ProTabProvider>
+      <ProHeader />
+      <Layout className={styles.layout}>
+        <ProSider>
+          <ProSecNav />
+        </ProSider>
+        {/* <Profiler id="ProContext" onRender={onRenderCallback}> */}
+        <ProContent />
+        {/* </Profiler> */}
+      </Layout>
+    </ProTabProvider>
   </Layout>
 )
 

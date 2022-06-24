@@ -3,7 +3,6 @@ import { Layout, BackTop } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
-import { ProTabProvider } from '@hooks/proTabsContext'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
@@ -58,9 +57,7 @@ const ProContent = () => {
         <ProBreadcrumb />
       </Header>
       <Content className={styles.content}>
-        <ProTabProvider>
-          <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
-        </ProTabProvider>
+        <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className={styles.footer}>
         <BackTop target={() => document.querySelector('#container')}>
