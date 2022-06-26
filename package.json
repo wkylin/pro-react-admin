@@ -177,6 +177,7 @@
     "react-test-renderer": "^18.2.0",
     "redux-logger": "^3.0.6",
     "rimraf": "^3.0.2",
+    "scripty": "^2.1.0",
     "serve": "^13.0.2",
     "speed-measure-webpack-plugin": "^1.5.0",
     "standard": "^17.0.0",

@@ -1,6 +1,7 @@
 module.exports = {
   '/wkylin': {
     // target: 'https://jsonplaceholder.typicode.com',
+    // target: service[env.proxy] // --env.proxy=test
     target: 'https://my-json-server.typicode.com',
     // pathRewrite: { '^/wkylin': '/wkylin' },
     secure: false,

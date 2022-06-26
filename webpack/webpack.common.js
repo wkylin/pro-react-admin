@@ -58,6 +58,7 @@ const config = {
     // libraryTarget: 'umd',
     // chunkLoadingGlobal: '',
     clean: true,
+    // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
     // plugins: [new TsconfigPathsPlugin()],
@@ -74,6 +75,7 @@ const config = {
       '@utils': path.resolve('./src/utils'),
     },
     symlinks: false,
+    modules: [path.resolve(__dirname, 'node_modules')],
   },
   // watch: isDev,
   watchOptions: {
