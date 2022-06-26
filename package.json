@@ -162,6 +162,7 @@
     "nodemon": "^2.0.16",
     "npm-check-updates": "^14.0.2",
     "npm-run": "^5.0.1",
+    "onchange": "^7.1.0",
     "portfinder": "^1.0.28",
     "postcss": "^8.4.14",
     "postcss-flexbugs-fixes": "^5.0.2",
