@@ -75,7 +75,7 @@ const config = {
       '@utils': path.resolve('./src/utils'),
     },
     symlinks: false,
-    modules: [path.resolve(__dirname, 'node_modules')],
+    // modules: [path.resolve(__dirname, 'node_modules')],
   },
   // watch: isDev,
   watchOptions: {
