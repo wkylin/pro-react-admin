@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Space } from 'antd'
-import { CodeOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { CodeOutlined, AppstoreOutlined, TeamOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
 const PrimaryNav = () => {
@@ -8,6 +8,10 @@ const PrimaryNav = () => {
   const redirectTo = (path) => {
     navigate(path)
   }
+  const goToSkylin = () => {
+    window.open(`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`, '_blank')
+  }
+
   return (
     <>
       <Space>
@@ -16,6 +20,9 @@ const PrimaryNav = () => {
         </Button>
         <Button type="link" icon={<AppstoreOutlined />} onClick={() => redirectTo('landing')}>
           Landing Page For Media
+        </Button>
+        <Button type="link" icon={<TeamOutlined />} onClick={goToSkylin}>
+          Skyline for wkylin.w
         </Button>
       </Space>
     </>
