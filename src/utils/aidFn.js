@@ -160,7 +160,7 @@ export const isNotEmpty = (arr) => Array.isArray(arr) && arr.length > 0
 // Detect Dark Mode
 export const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 
-export const fetchSomething = async () =>
+export const fetchSomething = () =>
   new Promise((resolve) => {
     setTimeout(() => {
       resolve('')

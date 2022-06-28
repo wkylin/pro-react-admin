@@ -18,7 +18,9 @@ const App = () => {
     // tracker from openreplay.com
     // tracker.start()
 
-    asyncCall().then(() => setLoading(false))
+    asyncCall()
+      .then(() => setLoading(false))
+      .catch(() => {})
     Watermark({
       content: '上海麒麟科技有限公司', // 水印文本
       container: document.getElementById('root'), // 水印容器区域

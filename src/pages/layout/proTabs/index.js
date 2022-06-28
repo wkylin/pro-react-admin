@@ -109,7 +109,7 @@ const ProTabs = (props) => {
   }
 
   // 关闭其他或关闭所有
-  const removeAll = async (isRemoveAll) => {
+  const removeAll = (isRemoveAll) => {
     const { key } = selectedPanel
     navigate(isRemoveAll ? '/' : key)
 

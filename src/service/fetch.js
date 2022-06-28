@@ -35,7 +35,7 @@ require('isomorphic-fetch')
 //   headers: {
 //     'Content-Type': 'text/plain;charset=UTF-8', //application/json;charset=utf-8
 //   },
-//   body: undefined,
+//   body: null,
 //   referrer: 'about:client',
 //   referrerPolicy: 'no-referrer-when-downgrade',
 //   mode: 'cors',
@@ -44,7 +44,7 @@ require('isomorphic-fetch')
 //   redirect: 'follow',
 //   integrity: '',
 //   keepalive: false,
-//   signal: undefined,
+//   signal: null,
 // })
 
 /**
@@ -113,7 +113,7 @@ const initOptions = {
     'Content-Type': 'application/json;charset=utf-8', // text/plain;charset=UTF-8 *application/json;charset=utf-8 application/x-www-form-urlencoded
     // Authorization: getToken() ? `Bearer ${getToken()}` : null,
   },
-  signal: undefined,
+  signal: null,
   credentials: 'include', // include *same-origin
   // mode: 'cors', // no-cors, cors, *same-origin
   // redirect: 'follow', // manual, *follow, error
@@ -233,7 +233,7 @@ const handleFetchData = (url, options) => {
 
 export const reqFetch = (
   url,
-  params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: undefined }
+  params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: null }
 ) => {
   const {
     method = 'GET',
@@ -241,7 +241,7 @@ export const reqFetch = (
     headers = null,
     isShowError = true,
     timeout = 20000,
-    controller = undefined,
+    controller = null,
   } = params
 
   const defaultOptions = {

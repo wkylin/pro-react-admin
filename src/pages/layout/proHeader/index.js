@@ -31,7 +31,7 @@ const ProHeader = () => {
   }
   return (
     <Layout.Header className={styles.header}>
-      <div className={styles.logo} role="logo" onClick={() => redirectTo('/')}>
+      <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
         Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag>
       </div>
       <div className={styles.headerMeta}>

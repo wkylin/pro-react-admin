@@ -21,7 +21,8 @@ const useDebounce = (fn, delay) => {
         clearTimeout(timerRef.current)
       }
       timerRef.current = setTimeout(() => {
-        fnRef.current.apply(this, args)
+        const that = this
+        fnRef.current.apply(that, args)
       }, delay)
     },
     [delay]

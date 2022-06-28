@@ -1,4 +1,4 @@
-const delay = async (time) =>
+const delay = (time) =>
   new Promise((resolve) => {
     setTimeout(() => resolve(), time)
   })
