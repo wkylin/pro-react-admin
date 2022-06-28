@@ -23,7 +23,7 @@ module.exports = {
     ],
     '@babel/typescript',
   ],
-  // compact: true,
+  compact: true,
   // 这个不设置的话，webpack 魔法注释会被删除，魔法注释用于分包
   comments: true,
   plugins:

@@ -4,7 +4,7 @@ const path = require('path')
 
 // const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
@@ -58,6 +58,7 @@ const config = {
     // libraryTarget: 'umd',
     // chunkLoadingGlobal: '',
     clean: true,
+    // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
     // plugins: [new TsconfigPathsPlugin()],
@@ -73,6 +74,8 @@ const config = {
       '@routers': path.resolve('./src/routers'),
       '@utils': path.resolve('./src/utils'),
     },
+    symlinks: false,
+    // modules: [path.resolve(__dirname, 'node_modules')],
   },
   // watch: isDev,
   watchOptions: {
@@ -153,13 +156,13 @@ const config = {
     rules: [
       {
         test: /\.css$/,
-        use: [isDev ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.less$/i,
         // include: [path.resolve(__dirname, 'src/styles')],
         use: [
-          isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+          'style-loader',
           {
             loader: 'css-loader',
             options: {
@@ -222,6 +225,13 @@ const config = {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: [
+          {
+            loader: 'esbuild-loader',
+            options: {
+              // loader: 'tsx',
+              target: 'es2015',
+            },
+          },
           'thread-loader',
           {
             loader: 'babel-loader?cacheDirectory',
