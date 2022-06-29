@@ -288,6 +288,8 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 ```bash
     1. npm install jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer --save-dev
     2. npm install  --save-dev @testing-library/react
+    3. npm install cypress --save-dev
+    4. npm install --save-dev @testing-library/react-hook
 ```
 
 ## Plugins
