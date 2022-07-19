@@ -279,6 +279,9 @@
       "npm run prettier:fix"
     ]
   },
+  "jest": {
+    "collectCoverage": true
+  },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"

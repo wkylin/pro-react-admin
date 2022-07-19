@@ -33,6 +33,7 @@ const devWebpackConfig = merge(common, {
     },
     compress: true,
     open: true,
+    // server: 'spdy',
     // server: 'https',
     hot: true,
     // liveReload: false,
