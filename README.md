@@ -1,4 +1,4 @@
-# Promotion Web
+# Pro React Admin
 
 ## 项目特性
 
