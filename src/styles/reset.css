@@ -46,8 +46,8 @@ body {
 }
 
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   box-sizing: inherit;
   scrollbar-width: inherit;
 }
@@ -56,6 +56,7 @@ body {
   width: 6px;
   height: 6px;
 }
+
 *::-webkit-scrollbar-thumb {
   background: #f0f2f5;
   border-radius: 3px;
@@ -83,11 +84,12 @@ select:-webkit-autofill:active {
 }
 
 .text-more-line-nowrap {
-  overflow:hidden;
-  text-overflow:ellipsis;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* display: -webkit-box; */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 #root {
@@ -110,12 +112,12 @@ select:-webkit-autofill:active {
 }
 
 body[data-theme='light'] .loader:empty {
-  border: 2px solid rgba(0, 0, 0, 0.2);
+  border: 2px solid #0003;
   border-left: 2px solid #1890ff;
 }
 
 body[data-theme='dark'] .loader:empty {
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid #fff3;
   border-left: 2px solid #1890ff;
 }
 
@@ -123,6 +125,7 @@ body[data-theme='dark'] .loader:empty {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -151,7 +154,7 @@ body[data-theme='light'] .header {
   padding-left: 20px;
 }
 
-body[data-theme='dark'] .header{
+body[data-theme='dark'] .header {
   background-color: #191919;
 }
 
@@ -166,5 +169,59 @@ body[data-theme='dark'] .content .ant-tabs-card .ant-tabs-nav {
 
 body[data-theme='light'] .content,
 body[data-theme='light'] .content .ant-tabs-card .ant-tabs-nav {
-  background: #ffffff;
+  background: #fff;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 56px;
+  width: 56px;
+  box-sizing: border-box;
+  background: conic-gradient(from 90deg at 50% 50%, #27ae6000 0deg, #1f90ff00 0.04deg, #1f90ff 360deg);
+  border-radius: 56px;
+  animation: 1s rotate infinite linear;
+}
+
+.spinner::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 40px;
+  width: 40px;
+  border-radius: 48px;
+}
+
+.spinner::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 8px;
+  width: 8px;
+  background: #1f90ff;
+  border-radius: 8px;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+body[data-theme='light'] .spinner::before {
+  background: #fff;
+}
+
+body[data-theme='dark'] .spinner::before {
+  background: #141414;
 }
