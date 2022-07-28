@@ -15,7 +15,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const paths = require('./paths')
-// const ESLintPlugin = require('eslint-webpack-plugin')
+const ESLintWebpackPlugin = require('eslint-webpack-plugin')
 
 // const { getThemeVariables } = require('antd/dist/theme')
 
@@ -146,9 +146,14 @@ const config = {
     new ForkTsCheckerWebpackPlugin({
       async: false,
     }),
-    // new ESLintPlugin({
-    //   extensions: ['js', 'jsx', 'ts', 'tsx'],
-    // }),
+    new ESLintWebpackPlugin({
+      // 指定检查文件的根目录
+      context: path.resolve(__dirname, '../src'),
+      exclude: 'node_modules', // 默认值
+      cache: true, // 开启缓存
+      // 缓存目录
+      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'),
+    }),
   ],
   module: {
     // 将缺失的导出提示成错误而不是警告
