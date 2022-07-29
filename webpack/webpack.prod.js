@@ -67,8 +67,7 @@ const prodWebpackConfig = merge(common, {
     minimizer: [
       new CssMinimizerPlugin(),
       new TerserPlugin({
-        // parallel: true,
-        parallel: threads,
+        parallel: true,
         terserOptions: {
           ecma: 6,
           parse: {},
