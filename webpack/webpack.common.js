@@ -77,11 +77,6 @@ const config = {
     symlinks: false,
     // modules: [path.resolve(__dirname, 'node_modules')],
   },
-  // watch: isDev,
-  watchOptions: {
-    ignored: /node_modules/,
-    aggregateTimeout: 600,
-  },
   // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
     // new CleanWebpackPlugin({

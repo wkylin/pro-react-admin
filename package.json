@@ -144,6 +144,7 @@
     "gulp-less": "^5.0.0",
     "gulp-postcss": "^9.0.1",
     "hashmark": "^5.0.0",
+    "html-minimizer-webpack-plugin": "^4.0.0",
     "html-webpack-plugin": "^5.5.0",
     "http-server": "^14.1.1",
     "husky": "^8.0.1",

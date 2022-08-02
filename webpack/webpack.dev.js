@@ -14,15 +14,15 @@ const devWebpackConfig = merge(common, {
   mode: 'development',
   // devtool: 'source-map',
   devtool: 'eval-cheap-module-source-map',
-  experiments: {
-    asyncWebAssembly: true,
-    buildHttp: true,
-    layers: true,
-    lazyCompilation: true,
-    outputModule: true,
-    syncWebAssembly: true,
-    topLevelAwait: true,
-  },
+  // experiments: {
+  //   asyncWebAssembly: true,
+  //   buildHttp: true,
+  //   layers: true,
+  //   lazyCompilation: true,
+  //   outputModule: true,
+  //   syncWebAssembly: true,
+  //   topLevelAwait: true,
+  // },
   // 开发环境使用内存缓存
   cache: { type: 'memory' },
   devServer: {
@@ -48,6 +48,7 @@ const devWebpackConfig = merge(common, {
     // liveReload: false,
     proxy: devProxy,
   },
+  watch: true,
   watchOptions: {
     aggregateTimeout: 500,
     poll: 1000,
