@@ -14,6 +14,15 @@ const devWebpackConfig = merge(common, {
   mode: 'development',
   // devtool: 'source-map',
   devtool: 'eval-cheap-module-source-map',
+  experiments: {
+    asyncWebAssembly: true,
+    buildHttp: true,
+    layers: true,
+    lazyCompilation: true,
+    outputModule: true,
+    syncWebAssembly: true,
+    topLevelAwait: true,
+  },
   // 开发环境使用内存缓存
   cache: { type: 'memory' },
   devServer: {
@@ -69,8 +78,12 @@ const devWebpackConfig = merge(common, {
     // new DashboardPlugin()
   ].filter(Boolean),
   optimization: {
-    providedExports: true,
-    usedExports: true,
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+    minimize: false,
+    concatenateModules: false,
+    usedExports: false,
   },
 })
 
