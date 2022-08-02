@@ -13,7 +13,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
-const HtmlMinimizerPlugin = require("html-minimizer-webpack-plugin")
+const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 
 // const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 // const smp = new SpeedMeasurePlugin()
