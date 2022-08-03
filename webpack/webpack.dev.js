@@ -48,7 +48,7 @@ const devWebpackConfig = merge(common, {
     // liveReload: false,
     proxy: devProxy,
   },
-  watch: true,
+  // watch: true,
   watchOptions: {
     aggregateTimeout: 500,
     poll: 1000,
