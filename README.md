@@ -149,7 +149,12 @@ npm run dev:faker
 ## Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)
-2. "build:production": "npm run dev:theme && cross-env SENTRY\*SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details && rimraf dist/\*\*/\_.map",
+2. Deploy gh-pages:
+
+   ```bash
+   "predeploy": "npm run build:production",
+    "deploy": "gh-pages -d dist",
+   ```
 
 ## 待解决
 
