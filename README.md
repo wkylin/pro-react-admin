@@ -38,6 +38,15 @@
     - npm run dev:faker
 ```
 
+## 脚手架--白泽 baize
+
+- 可以使用为此项目准备的脚手架开发--白泽 baize
+
+  ```bash
+     > npm install baize --location=global
+     > baize
+  ```
+
 ## VSCode extension: 别名路径跳转
 
 ```bash
