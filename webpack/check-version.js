@@ -19,15 +19,15 @@ inquirer
       name: 'version',
       message: `请确认 ${projectName}/package.json/version 版本号（当前：${versionCurrent}）：\n`,
       default: versionCurrent,
-      validate(version) {
+      validate (version) {
         // 校验版本号的格式
         if (!regVersion.test(version)) {
           console.log(chalk.yellow('输入的版本号无效，请检查格式（示例：1.0.0、2.3.2）'))
           return false
         }
         return true
-      },
-    },
+      }
+    }
   ])
   .then(({ version: versionNew }) => {
     if (versionNew !== versionCurrent) {
@@ -40,7 +40,7 @@ inquirer
             )
           )
           command(`git add package.json && git commit -m 'ci(package.json): 更新项目版本号为：${versionNew}'`)
-          console.log(`\n`)
+          console.log('\n')
           process.exit(0)
         } else {
           console.log(chalk.yellow(`\n更新版本号（${versionNew}）失败了~\n`))
@@ -52,7 +52,7 @@ inquirer
     }
   })
 
-function command(cmd, options, callback) {
+function command (cmd, options, callback) {
   console.log('\n')
   console.log(chalk.cyan(cmd.toString()))
   return exec(cmd, { ...options }, callback)
