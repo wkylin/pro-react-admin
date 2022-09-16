@@ -19,7 +19,6 @@ const Home = () => {
       <Button type="primary" onClick={redirectToNgrok}>
         Hi, Ngrok!
       </Button>
-      <h4>Husky check version</h4>
     </FixTabPanel>
   )
 }
