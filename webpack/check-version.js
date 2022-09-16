@@ -8,7 +8,7 @@ const regVersion = /^[1-9]{1}\d*\.\d+\.\d+$/ // 示例: 1.0.0
 // const regVersion = /^\d+\.\d+\.\d+$/ // 示例: 0.0.1 / 1.0.1
 // const regVersion = /^\d+\.\d+\.\d+(-beta.?\d*)?$/ // 示例: 1.0.3 / 0.0.1-beta / 1.0.0-beta.3
 
-console.log('\n')
+// console.log('\n')
 
 // 确认 package.json 版本号
 inquirer
@@ -50,7 +50,7 @@ inquirer
   })
 
 function command(cmd, options, callback) {
-  console.log('\n')
+  // console.log('\n')
   console.log(chalk.cyan(cmd.toString()))
   return exec(cmd, { ...options }, callback)
 }
