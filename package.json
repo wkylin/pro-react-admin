@@ -59,7 +59,8 @@
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
     "postinstall": "install-changed --hash-only",
-    "preinstall": "npx pm-keeper npm"
+    "preinstall": "npx pm-keeper npm",
+    "check:version": "node webpack/check-version.js"
   },
   "author": "wkylin",
   "contributors": [
