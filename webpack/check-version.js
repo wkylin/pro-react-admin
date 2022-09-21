@@ -25,8 +25,8 @@ inquirer
           return false
         }
         return true
-      }
-    }
+      },
+    },
   ])
   .then(({ version: versionNew }) => {
     if (versionNew !== version) {
@@ -49,7 +49,7 @@ inquirer
     }
   })
 
-function command (cmd, options, callback) {
+function command(cmd, options, callback) {
   console.log('\n')
   console.log(chalk.cyan(cmd.toString()))
   return exec(cmd, { ...options }, callback)
