@@ -61,7 +61,7 @@
     "postinstall": "install-changed --hash-only",
     "preinstall": "npx pm-keeper npm",
     "vite:dev": "vite",
-    "vite:build": "tsc --noEmit && vite build",
+    "vite:build": "vite build",
     "vite:preview": "vite preview"
   },
   "author": "wkylin",
