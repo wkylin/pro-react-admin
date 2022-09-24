@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@src/components/stateless/FixTabPanel'
 // Render a YouTube video player
 const ReactPlayerDemo = () => (
   <FixTabPanel>

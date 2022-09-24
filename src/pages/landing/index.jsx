@@ -1,7 +1,7 @@
 import React from 'react'
 // import { useNavigate } from 'react-router-dom'
-import FixLayout from '@stateless/FixLayout'
-import LandingPage from '@container/landingPage'
+import FixLayout from '@src/components/stateless/FixLayout'
+import LandingPage from '@src/components/container/landingPage'
 
 const Landing = () => (
   // const navigate = useNavigate()

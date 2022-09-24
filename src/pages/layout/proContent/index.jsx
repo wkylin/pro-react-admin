@@ -2,10 +2,9 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Layout, BackTop } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
-import { getKeyName } from '@utils/publicFn'
+import { getKeyName } from '@src/utils/publicFn'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
-import styles from './index.module.less'
 
 const { Content, Header, Footer } = Layout
 // const { Content, Footer } = Layout
@@ -52,14 +51,14 @@ const ProContent = () => {
   }, [pathname, navigate, search])
 
   return (
-    <Layout className={styles.layout}>
-      <Header className={styles.header}>
+    <Layout className="layout">
+      <Header className="header">
         <ProBreadcrumb />
       </Header>
-      <Content className={styles.content}>
+      <Content className="content">
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className={styles.footer}>
+      <Footer className="footer">
         <BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </BackTop>

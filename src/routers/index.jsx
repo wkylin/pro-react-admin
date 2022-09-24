@@ -1,6 +1,6 @@
 import React from 'react'
 import loadable from '@loadable/component'
-import Loading from '@stateless/Loading'
+import Loading from '@src/components/stateless/Loading'
 
 const SignIn = loadable(() => import('../pages/signin'), { fallback: <Loading /> })
 const SignUp = loadable(() => import('../pages/signup'), { fallback: <Loading /> })

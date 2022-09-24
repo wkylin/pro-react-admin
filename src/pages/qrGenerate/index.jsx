@@ -1,7 +1,7 @@
 import QRCode from 'qrcode'
 import React, { useState } from 'react'
 import { Button, Input, Space } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@src/components/stateless/FixTabPanel'
 
 const QrCode = () => {
   const [url, setUrl] = useState('')

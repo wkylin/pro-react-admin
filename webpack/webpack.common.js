@@ -14,8 +14,8 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 // const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const paths = require('./paths')
 const ESLintWebpackPlugin = require('eslint-webpack-plugin')
+const paths = require('./paths')
 
 // const { getThemeVariables } = require('antd/dist/theme')
 
@@ -91,7 +91,7 @@ const config = {
     }),
     new HtmlWebpackPlugin({
       title: isDev ? 'Pro React Dev' : 'Pro React',
-      template: `${paths.public}/index.ejs`,
+      template: `${paths.public}/index.html`,
       favicon: `${paths.public}/favicon.ico`,
       filename: 'index.html',
       inject: 'body',

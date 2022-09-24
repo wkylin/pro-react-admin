@@ -20,7 +20,7 @@ import suffix from '../utils/suffix'
 // import { getToken } from '../utils/token'
 // import fetchIntercept from 'fetch-intercept'
 // import fetch from 'cross-fetch'
-require('isomorphic-fetch')
+// require('isomorphic-fetch')
 
 // fetch polyfill
 // https://github.com/node-fetch/node-fetch
@@ -92,7 +92,8 @@ require('isomorphic-fetch')
 //   })
 // }
 
-const baseUrl = process.env.APP_BASE_URL
+// const baseUrl = process.env.APP_BASE_URL
+const baseUrl = process ? process.env.APP_BASE_URL : import.meta.env.APP_BASE_URL
 // const hashRouter = new HashRouter()
 
 const parseToQuery = (query) =>

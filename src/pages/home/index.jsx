@@ -1,8 +1,7 @@
 import React, { version } from 'react'
 import { Button } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
-import TypedText from '@stateless/TypedText'
-import styles from './index.module.less'
+import FixTabPanel from '@src/components/stateless/FixTabPanel'
+import TypedText from '@src/components/stateless/TypedText'
 
 const Home = () => {
   const redirectToNgrok = () => {
@@ -10,12 +9,10 @@ const Home = () => {
   }
   return (
     <FixTabPanel>
-      <h2 className={styles.typedText}>
+      <h2>
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
       </h2>
-      <h3 className={styles.spotLight} data-spotlight={`React version: ${version}`}>
-        React version: {version}
-      </h3>
+      <h2>React version: {version}</h2>
       <Button type="primary" onClick={redirectToNgrok}>
         Hi, Ngrok!
       </Button>

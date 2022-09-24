@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react'
-import { Layout, Space, Dropdown, Menu, Tag, Switch } from 'antd'
-import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
+import React from 'react'
+// import React, { useEffect, useState } from 'react'
+import { Layout, Space, Dropdown, Menu, Switch } from 'antd'
+import { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
+// import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useThemeSwitcher } from 'react-css-theme-switcher'
-import LightSvg from '@assets/svg/light.svg'
-import DarkSvg from '@assets/svg/dark.svg'
+// import { ReactComponent as LightSvg } from '@assets/svg/light.svg'
+// import { ReactComponent as DarkSvg } from '@assets/svg/dark.svg'
+// import LightSvg from '@assets/svg/light.svg'
+// import DarkSvg from '@assets/svg/dark.svg'
+
 import PrimaryNav from '../primaryNav'
 
 import styles from './index.module.less'
@@ -21,18 +26,14 @@ const ProHeader = () => {
 
   const { switcher, themes, currentTheme } = useThemeSwitcher()
 
-  useEffect(() => {
-    switcher({ theme: themes[localStorage.getItem('antd-theme') ? localStorage.getItem('theme') : 'light'] })
-  }, [currentTheme, switcher, themes])
-
   const changeTheme = (checked) => {
     switcher({ theme: checked ? themes.light : themes.dark })
-    localStorage.setItem('antd-theme', checked ? 'light' : 'dark')
   }
   return (
     <Layout.Header className={styles.header}>
       <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
-        Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag>
+        {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
+        Pro React
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>
@@ -41,8 +42,8 @@ const ProHeader = () => {
         <div className={styles.headerRight}>
           <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
             <Switch
-              checkedChildren={<Icon component={LightSvg} />}
-              unCheckedChildren={<Icon component={DarkSvg} />}
+              // checkedChildren={<Icon component={LightSvg} />}
+              // unCheckedChildren={<Icon component={DarkSvg} />}
               defaultChecked={currentTheme === 'light'}
               onClick={changeTheme}
             />
