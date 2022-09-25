@@ -53,13 +53,13 @@ const ProContent = () => {
 
   return (
     <Layout className={styles.layout}>
-      <Header className={styles.header}>
+      <Header className="layout-header">
         <ProBreadcrumb />
       </Header>
-      <Content className={styles.content}>
+      <Content className="layout-content">
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className={styles.footer}>
+      <Footer className="layout-footer">
         <BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </BackTop>

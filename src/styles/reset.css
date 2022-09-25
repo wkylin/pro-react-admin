@@ -139,6 +139,17 @@ body[data-theme='dark'] *::-webkit-scrollbar-thumb {
   background: #1f1f1f;
 }
 
+.ant-back-top {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  right: 30px;
+  bottom: 5px;
+  border-radius: 100%;
+  text-align: center;
+  margin-top: 2px;
+}
+
 body[data-theme='dark'] .ant-back-top {
   background-color: #999;
 }
@@ -147,29 +158,76 @@ body[data-theme='light'] .ant-back-top {
   background-color: #aaa;
 }
 
-body[data-theme='dark'] .header,
-body[data-theme='light'] .header {
+.layout-header {
+  height: 50px;
+  line-height: 50px;
+}
+
+.layout-footer {
+  text-align: center;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 !important;
+}
+
+body[data-theme='dark'] .layout-header,
+body[data-theme='light'] .layout-header {
   height: 50px;
   line-height: 50px;
   padding-left: 20px;
 }
 
-body[data-theme='dark'] .header {
+body[data-theme='dark'] .layout-header {
   background-color: #191919;
 }
 
-body[data-theme='light'] .header {
+body[data-theme='light'] .layout-header {
   background-color: #f7f7f7;
 }
 
-body[data-theme='dark'] .content,
-body[data-theme='dark'] .content .ant-tabs-card .ant-tabs-nav {
+.layout-content {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+
+body[data-theme='dark'] .layout-content,
+body[data-theme='dark'] .layout-content .ant-tabs-card .ant-tabs-nav {
   background: #141414;
 }
 
-body[data-theme='light'] .content,
-body[data-theme='light'] .content .ant-tabs-card .ant-tabs-nav {
+body[data-theme='light'] .layout-content,
+body[data-theme='light'] .layout-content .ant-tabs-card .ant-tabs-nav {
   background: #fff;
+}
+
+.layout-container {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
+}
+
+.layout-container .ant-tabs-content > .ant-tabs-tabpane {
+  padding: 16px;
+}
+
+.layout-container .pro-tabs {
+  z-index: 10;
+}
+
+.layout-container .pro-tabs .ant-tabs-nav-wrap {
+  overflow: visible !important;
+}
+
+.layout-container .layout-tabpanel {
+  width: 100%;
+  padding: 0 10px 10px;
+  min-height: calc(100vh - 242px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .spinner {

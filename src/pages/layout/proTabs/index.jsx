@@ -8,8 +8,6 @@ import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
 import Home from '@src/pages/home'
 
-import styles from './index.module.less'
-
 const renderTabBar = (props, DefaultTabBar) => (
   <Sticky topOffset={40} relative>
     {({ style }) => <DefaultTabBar {...props} className="pro-tabs" style={{ ...style }} />}
@@ -173,7 +171,7 @@ const ProTabs = (props) => {
   }
 
   return (
-    <StickyContainer className="container" id="container">
+    <StickyContainer className="layout-container" id="container">
       <Tabs
         hideAdd
         type="editable-card"
@@ -189,7 +187,6 @@ const ProTabs = (props) => {
         activeKey={activeKey}
         defaultActiveKey={defaultActiveKey}
         destroyInactiveTabPane
-        className={styles.proTabs}
         tabBarExtraContent={{
           left: (
             <Space align="center" size={30} style={{ margin: '0 25px' }}>
@@ -219,7 +216,7 @@ const ProTabs = (props) => {
           forceRender: true,
           children: (
             <MyErrorBoundary fixError={fixError}>
-              <div className={styles.tabpanel}>
+              <div className="layout-tabpanel">
                 {isReload && pane.key === fullPath && pane.key !== '/404' ? (
                   <Loading tip="刷新中..." />
                 ) : (
