@@ -15,12 +15,13 @@ export const getKeyName = (path = '/404') => {
   const curRoute = flattenRoutes(routes)
     .filter((item) => !item.index)
     .filter((item) => item.key?.indexOf(thePath) !== -1)
-  if (!curRoute[0])
+  if (!curRoute[0]) {
     return {
       title: 'Not Found',
       tabKey: '/404',
       element: <Exception404 />,
     }
+  }
 
   const { name, key, element } = curRoute[0]
   return { title: name, tabKey: key, element }
