@@ -139,25 +139,6 @@ body[data-theme='dark'] *::-webkit-scrollbar-thumb {
   background: #1f1f1f;
 }
 
-.ant-back-top {
-  width: 30px;
-  height: 30px;
-  line-height: 30px;
-  right: 30px;
-  bottom: 5px;
-  border-radius: 100%;
-  text-align: center;
-  margin-top: 2px;
-}
-
-body[data-theme='dark'] .ant-back-top {
-  background-color: #999;
-}
-
-body[data-theme='light'] .ant-back-top {
-  background-color: #aaa;
-}
-
 .layout-header {
   height: 50px;
   line-height: 50px;
@@ -184,6 +165,25 @@ body[data-theme='dark'] .layout-header {
 
 body[data-theme='light'] .layout-header {
   background-color: #f7f7f7;
+}
+
+.layout-footer .ant-back-top {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  right: 30px;
+  bottom: 5px;
+  border-radius: 100%;
+  text-align: center;
+  margin-top: 2px;
+}
+
+body[data-theme='dark'] .ant-back-top {
+  background-color: #999;
+}
+
+body[data-theme='light'] .ant-back-top {
+  background-color: #aaa;
 }
 
 .layout-content {
