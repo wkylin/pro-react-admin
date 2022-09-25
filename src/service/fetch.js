@@ -93,7 +93,7 @@ import suffix from '../utils/suffix'
 // }
 
 // const baseUrl = process.env.APP_BASE_URL
-const baseUrl = process.env.APP_BASE_URL ? process.env.APP_BASE_URL : import.meta.env.APP_BASE_URL ?? ''
+const baseUrl = process?.env?.APP_BASE_URL ? process.env.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
 // const hashRouter = new HashRouter()
 const parseToQuery = (query) =>
   Object.keys(query)
