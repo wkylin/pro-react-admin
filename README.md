@@ -6,17 +6,18 @@
 2. 基于 React 最新版本，拥抱 Hooks
 3. 基于 React Router V6, 实现嵌套路由更方便
 4. 基于 Webpack 最新版本，实现多环境打包部署，代码分割优化，结合官方分析工具，实时优化代码
-5. 基于 Faker 实现 Mock Server,不依赖后端实现模拟数据更加方便
-6. 封装 Fetch, 实现 useFetch, 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
-7. 支持 TypeScript, 一切变得可控，扼杀错误于摇篮之中
-8. 支持多页签，提升效率
-9. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
-10. 配置 Commit message， 使用标准 commit 生成 changelog 标准化
-11. 配置 Sentry，方便日志追踪，及时发现问题
-12. 基于 React Redux Hooks, 状态管理更加方便
-13. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
-14. 代码分割，组件懒加载，Loading 垂直水平居中
-15. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+5. 同时 支持 vite, 极速构建
+6. 基于 Faker 实现 Mock Server,不依赖后端实现模拟数据更加方便
+7. 封装 Fetch, 实现 useFetch, 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
+8. 支持 TypeScript, 一切变得可控，扼杀错误于摇篮之中
+9. 支持多页签，提升效率
+10. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
+11. 配置 Commit message， 使用标准 commit 生成 changelog 标准化
+12. 配置 Sentry，方便日志追踪，及时发现问题
+13. 基于 React Redux Hooks, 状态管理更加方便
+14. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
+15. 代码分割，组件懒加载，Loading 垂直水平居中
+16. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
 ## Technology Stack
 
@@ -36,6 +37,7 @@
   3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
     - npm start
     - npm run dev:faker
+    - npm run vite:dev
 ```
 
 ## 脚手架--白泽 baize
