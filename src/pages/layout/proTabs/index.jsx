@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Menu, Dropdown, Space } from 'antd'
-import { StickyContainer, Sticky } from 'react-sticky'
+import { StickyContainer, Sticky } from 'react-sticky-ts'
 import { SyncOutlined, FireOutlined } from '@ant-design/icons'
 import MyErrorBoundary from '@stateful'
+import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
 import Home from '@src/pages/home'
 
 const renderTabBar = (props, DefaultTabBar) => (
   <Sticky topOffset={40} relative>
-    {({ style }) => <DefaultTabBar {...props} className="pro-tabs" style={{ ...style }} />}
+    {({ style }) => <DefaultTabBar key={nanoid()} {...props} className="pro-tabs" style={{ ...style }} />}
   </Sticky>
 )
 
