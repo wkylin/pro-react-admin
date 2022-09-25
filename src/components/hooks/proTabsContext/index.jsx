@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Home from '@pages/home'
+import Home from '@src/pages/home'
 
 const defaultValue = {
   activeKey: '',

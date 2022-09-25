@@ -1,5 +1,5 @@
 import React from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@src/components/stateless/FixTabPanel'
 
 const Error = () => {
   const error = { error: 'error' }

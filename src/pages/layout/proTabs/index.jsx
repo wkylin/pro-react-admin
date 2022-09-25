@@ -4,9 +4,9 @@ import { Tabs, Menu, Dropdown, Space } from 'antd'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, FireOutlined } from '@ant-design/icons'
 import MyErrorBoundary from '@stateful'
-import { useProTabContext } from '@hooks/proTabsContext'
-import Loading from '@stateless/Loading'
-import Home from '@pages/home'
+import { useProTabContext } from '@src/components/hooks/proTabsContext'
+import Loading from '@src/components/stateless/Loading'
+import Home from '@src/pages/home'
 
 import styles from './index.module.less'
 
@@ -173,7 +173,7 @@ const ProTabs = (props) => {
   }
 
   return (
-    <StickyContainer className={styles.container} id="container">
+    <StickyContainer className="container" id="container">
       <Tabs
         hideAdd
         type="editable-card"
@@ -198,29 +198,26 @@ const ProTabs = (props) => {
             </Space>
           ),
         }}
-      >
-        {panes.map((pane) => (
-          <Tabs.TabPane
-            forceRender // 被隐藏时是否渲染 DOM 结构
-            key={pane.key}
-            closable={pane.closable}
-            tab={
-              <Dropdown
-                overlay={tabRightMenu}
-                placement="bottomLeft"
-                trigger={['contextMenu']}
-                getPopupContainer={(node) => node.parentNode}
-              >
-                <span onContextMenu={(e) => preventDefault(e, pane)}>
-                  {pane.key === fullPath && pane.key !== '/404' && (
-                    <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
-                  )}
-                  {pane.title}
-                </span>
-              </Dropdown>
-            }
-          >
-            {/* <pane.content path={pane.path} /> */}
+        items={panes.map((pane) => ({
+          label: (
+            <Dropdown
+              overlay={tabRightMenu}
+              placement="bottomLeft"
+              trigger={['contextMenu']}
+              getPopupContainer={(node) => node.parentNode}
+            >
+              <span onContextMenu={(e) => preventDefault(e, pane)}>
+                {pane.key === fullPath && pane.key !== '/404' && (
+                  <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+                )}
+                {pane.title}
+              </span>
+            </Dropdown>
+          ),
+          key: pane.key,
+          closable: pane.closable,
+          forceRender: true,
+          children: (
             <MyErrorBoundary fixError={fixError}>
               <div className={styles.tabpanel}>
                 {isReload && pane.key === fullPath && pane.key !== '/404' ? (
@@ -230,9 +227,9 @@ const ProTabs = (props) => {
                 )}
               </div>
             </MyErrorBoundary>
-          </Tabs.TabPane>
-        ))}
-      </Tabs>
+          ),
+        }))}
+      />
     </StickyContainer>
   )
 }

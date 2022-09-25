@@ -24,7 +24,6 @@ const themes = {
   light: `./light-theme.css`,
 }
 
-const defaultTheme = localStorage.getItem('antd-theme') ? localStorage.getItem('antd-theme') : 'light'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement)
 
 root.render(
@@ -33,7 +32,7 @@ root.render(
       <ThemeSwitcherProvider
         insertionPoint={document.getElementById('inject-styles-here')}
         themeMap={themes}
-        defaultTheme={defaultTheme || 'light'}
+        defaultTheme="light"
       >
         <Router>
           {/* <React.StrictMode> */}

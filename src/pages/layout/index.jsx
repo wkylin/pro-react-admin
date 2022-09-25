@@ -1,7 +1,7 @@
 import React from 'react'
 // import React, {Profiler} from 'react'
 import { Layout } from 'antd'
-import { ProTabProvider } from '@hooks/proTabsContext'
+import { ProTabProvider } from '@src/components/hooks/proTabsContext'
 import ProHeader from './proHeader'
 import ProSider from './proSider'
 import ProContent from './proContent'

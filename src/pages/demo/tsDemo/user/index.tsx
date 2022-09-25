@@ -1,6 +1,6 @@
 import React from 'react'
-import Icon from '@ant-design/icons'
-import LightSvg from '@assets/svg/light.svg'
+// import Icon from '@ant-design/icons'
+// import LightSvg from '@assets/svg/light.svg'
 
 interface UserInterface {
   name: string
@@ -15,7 +15,7 @@ const UserDemo: React.FC<{ user: UserInterface }> = ({ user }) => (
     <div>{user.age}</div>
     <div>{user.address}</div>
     <div>{user.dob.toDateString()}</div>
-    <Icon component={LightSvg} />
+    {/* <Icon component={LightSvg} /> */}
   </>
 )
 

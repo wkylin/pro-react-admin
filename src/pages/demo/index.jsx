@@ -4,8 +4,8 @@ import React from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
 // import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Space, Select, Table, Cascader, Tabs } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import { Button, Space, Select, Table, Cascader } from 'antd'
+import FixTabPanel from '@src/components/stateless/FixTabPanel'
 import rootAction from '@src/actions'
 import { toFixed } from '@utils/aidFn'
 
@@ -145,28 +145,19 @@ const ProDemo = () => {
       </ErrorBoundary> */}
       <h4>File Upload</h4>
       <FileUpload />
+
+      <h4>TS 支持</h4>
+      <TsDemo />
+
+      <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
+
+      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
+
       <Select placeholder="Select a person" optionFilterProp="children">
         <Select.Option value="jack">Jack</Select.Option>
         <Select.Option value="lucy">Lucy</Select.Option>
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
-      <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
-
-      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
-
-      <TsDemo />
-      <Tabs defaultActiveKey="1">
-        <Tabs.TabPane tab="Tab 1" key="1">
-          Content of Tab Pane 1
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Tab 2" key="2">
-          Content of Tab Pane 2
-        </Tabs.TabPane>
-        <Tabs.TabPane tab="Tab 3" key="3">
-          Content of Tab Pane 3
-        </Tabs.TabPane>
-      </Tabs>
-
       {toFixed(0.75 * 100, 2)}
 
       <div style={{ height: 400 }}>Height For Scroll</div>
