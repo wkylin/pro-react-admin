@@ -62,6 +62,7 @@
     "preinstall": "npx pm-keeper npm",
     "check:version": "node webpack/check-version.js",
     "vite:dev": "vite",
+    "vite:dev:faker": "concurrently -r \"npm run vite:dev\" \"npm run faker\"",
     "vite:build": "vite build",
     "vite:preview": "vite preview"
   },

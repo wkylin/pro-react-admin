@@ -61,7 +61,7 @@ export default defineConfig({
   },
   server: {
     open: true,
-    host: 'localhost',
+    // host: 'localhost',
     proxy: {
       '/faker': {
         target: 'http://localhost:4000',
@@ -69,6 +69,19 @@ export default defineConfig({
         secure: false,
         changeOrigin: true,
         cookieDomainRewrite: 'localhost',
+      },
+      '/wkylin': {
+        // target: 'https://jsonplaceholder.typicode.com',
+        // target: service[env.proxy] // --env.proxy=test
+        target: 'https://my-json-server.typicode.com',
+        // pathRewrite: { '^/wkylin': '/wkylin' },
+        secure: false,
+        changeOrigin: true,
+      },
+      '/v2': {
+        target: 'https://www.mocky.io',
+        secure: false,
+        changeOrigin: true,
       },
     },
   },
