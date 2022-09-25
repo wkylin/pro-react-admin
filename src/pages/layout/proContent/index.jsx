@@ -5,6 +5,7 @@ import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@src/utils/publicFn'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
+import styles from './index.module.less'
 
 const { Content, Header, Footer } = Layout
 // const { Content, Footer } = Layout
@@ -51,14 +52,14 @@ const ProContent = () => {
   }, [pathname, navigate, search])
 
   return (
-    <Layout className="layout">
-      <Header className="header">
+    <Layout className={styles.layout}>
+      <Header className={styles.header}>
         <ProBreadcrumb />
       </Header>
-      <Content className="content">
+      <Content className={styles.content}>
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className="footer">
+      <Footer className={styles.footer}>
         <BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </BackTop>
