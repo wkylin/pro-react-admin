@@ -1,10 +1,10 @@
 # Pro React Admin
 
-![check-status](https://img.shields.io/github/checks-status/wkylin/pro-react-admin/main "check-status")
-![build status](https://img.shields.io/github/workflow/status/wkylin/pro-react-admin/CodeQL "build status")
-![version-status](https://img.shields.io/github/package-json/v/wkylin/pro-react-admin "version-status")
-![license](https://img.shields.io/github/license/wkylin/pro-react-admin "license")
-![contributors](https://img.shields.io/github/contributors/wkylin/pro-react-admin "contributors")
+![check-status](https://img.shields.io/github/checks-status/wkylin/pro-react-admin/main 'check-status')
+![build status](https://img.shields.io/github/workflow/status/wkylin/pro-react-admin/CodeQL 'build status')
+![version-status](https://img.shields.io/github/package-json/v/wkylin/pro-react-admin 'version-status')
+![license](https://img.shields.io/github/license/wkylin/pro-react-admin 'license')
+![contributors](https://img.shields.io/github/contributors/wkylin/pro-react-admin 'contributors')
 
 ## 项目特性
 
