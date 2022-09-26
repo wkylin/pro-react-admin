@@ -1,5 +1,11 @@
 # Pro React Admin
 
+![check-status](https://img.shields.io/github/checks-status/wkylin/pro-react-admin/main "check-status")
+![build status](https://img.shields.io/github/workflow/status/wkylin/pro-react-admin/CodeQL "build status")
+![version-status](https://img.shields.io/github/package-json/v/wkylin/pro-react-admin "version-status")
+![license](https://img.shields.io/github/license/wkylin/pro-react-admin "license")
+![contributors](https://img.shields.io/github/contributors/wkylin/pro-react-admin "contributors")
+
 ## 项目特性
 
 1. 基于 Antd 实现亮白及暗黑两套主题
@@ -32,8 +38,8 @@
 ## Development
 
 ```bash
-  1. git clone https://github.com/wkylin/promotion-web.git
-  2. cd promotion-web
+  1. git clone https://github.com/wkylin/pro-react-admin.git
+  2. cd pro-react-admin
   3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
     - npm start
     - npm run dev:faker
