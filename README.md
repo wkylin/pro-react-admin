@@ -23,7 +23,8 @@
 13. 基于 React Redux Hooks, 状态管理更加方便
 14. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
 15. 代码分割，组件懒加载，Loading 垂直水平居中
-16. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+16. 集成 Bit，跨项目复用组件，支持在多个仓库间隔离和复用代码，简化协作过程，可以共享、维护和同步来自不同项目的隔离组件
+17. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
 ## Technology Stack
 
@@ -41,9 +42,14 @@
   1. git clone https://github.com/wkylin/pro-react-admin.git
   2. cd pro-react-admin
   3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
-    - npm start
-    - npm run dev:faker
-    - npm run vite:dev
+    - $ npm start
+    - $ npm run dev:faker
+    - $ npm run vite:dev
+  4. Bit - Build composable software
+    - $ npm i -g @teambit/bvm
+    - $ bvm install
+    - $ bvm upgrade
+    - $ bit start
 ```
 
 ## 脚手架--白泽 baize
