@@ -7,7 +7,13 @@
     "JSX",
     "Webpack",
     "React Router",
-    "ESLint"
+    "ESLint",
+    "TSX",
+    "Vite",
+    "Storybook",
+    "Bit",
+    "Bit.dev",
+    "Bit.cloud"
   ],
   "homepage": "https://wkylin.github.io/promotion-web",
   "main": "index.js",
@@ -64,7 +70,9 @@
     "vite:dev": "vite",
     "vite:dev:faker": "concurrently -r \"npm run vite:dev\" \"npm run faker\"",
     "vite:build": "vite build",
-    "vite:preview": "vite preview"
+    "vite:preview": "vite preview",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "author": "wkylin",
   "contributors": [
@@ -93,6 +101,13 @@
     "@koa/cors": "^3.4.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@sentry/webpack-plugin": "^1.19.0",
+    "@storybook/addon-actions": "^6.5.12",
+    "@storybook/addon-essentials": "^6.5.12",
+    "@storybook/addon-interactions": "^6.5.12",
+    "@storybook/addon-links": "^6.5.12",
+    "@storybook/builder-vite": "^0.2.4",
+    "@storybook/react": "^6.5.12",
+    "@storybook/testing-library": "^0.0.13",
     "@svgr/webpack": "^6.3.1",
     "@testing-library/react": "^13.4.0",
     "@testing-library/react-hooks": "^7.0.2",
@@ -141,6 +156,7 @@
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-react": "^7.31.8",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.6",
     "eslint-plugin-unicorn": "^43.0.2",
     "eslint-webpack-plugin": "^3.2.0",
     "fork-ts-checker-webpack-plugin": "^7.2.13",

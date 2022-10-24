@@ -24,7 +24,8 @@
 14. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
 15. 代码分割，组件懒加载，Loading 垂直水平居中
 16. 集成 Bit，跨项目复用组件，支持在多个仓库间隔离和复用代码，简化协作过程，可以共享、维护和同步来自不同项目的隔离组件
-17. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+17. 集成 Bookstory, 方便生成组件文档
+18. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
 ## Technology Stack
 
@@ -50,6 +51,9 @@
     - $ bvm install
     - $ bvm upgrade
     - $ bit start
+  5. Storybook -- A tool for UI development
+    - npx storybook init
+    - npm run storybook
 ```
 
 ## 脚手架--白泽 baize
