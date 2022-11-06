@@ -27,7 +27,7 @@ const App = () => {
     })
   }, [])
 
-  const element = useRoutes(rootRouter)
+  const element = useRoutes(rootRouter as any)
 
   if (loading) return null
   return <>{element}</>
