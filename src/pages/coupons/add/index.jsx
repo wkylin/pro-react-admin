@@ -23,7 +23,6 @@ const AddCoupons = () => {
         type="success"
         showIcon
       />
-      <section className="spinner" />
     </FixTabPanel>
   )
 }

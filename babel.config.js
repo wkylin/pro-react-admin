@@ -1,12 +1,4 @@
 const plugins = [
-  [
-    'import',
-    {
-      libraryName: 'antd',
-      libraryDirectory: 'es',
-      style: true,
-    },
-  ],
   ['@babel/plugin-syntax-dynamic-import'],
   ['@babel/plugin-proposal-decorators', { legacy: true }],
   ['@babel/plugin-transform-runtime'],

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Layout, BackTop } from 'antd'
+import { Layout, FloatButton } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@src/utils/publicFn'
@@ -60,9 +60,9 @@ const ProContent = () => {
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">
-        <BackTop target={() => document.querySelector('#container')}>
+        <FloatButton.BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
-        </BackTop>
+        </FloatButton.BackTop>
         <div>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
       </Footer>
     </Layout>

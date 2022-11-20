@@ -203,22 +203,6 @@ const config = {
               sourceMap: true,
             },
           },
-          {
-            loader: 'less-loader',
-            options: {
-              lessOptions: {
-                // modifyVars: {
-                //   'root-entry-name': 'default',
-                //   'primary-color': '#1890FF', // #1DA57A
-                // },
-                // modifyVars: getThemeVariables({
-                //   dark: true, // Enable dark mode
-                //   compact: false, // Enable compact mode
-                // }),
-                javascriptEnabled: true,
-              },
-            },
-          },
         ],
       },
       {
@@ -232,7 +216,6 @@ const config = {
               target: 'es2015',
             },
           },
-          'thread-loader',
           {
             loader: 'babel-loader?cacheDirectory',
             options: {

@@ -3,10 +3,8 @@ import React from 'react'
 // import React, { useState, useEffect } from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
 // import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
-import { useDispatch, useSelector } from 'react-redux'
-import { Button, Space, Select, Table, Cascader } from 'antd'
+import { Select, Table, Cascader } from 'antd'
 import FixTabPanel from '@src/components/stateless/FixTabPanel'
-import rootAction from '@src/actions'
 import { toFixed } from '@utils/aidFn'
 
 // import ShopsList from './shopsList'
@@ -66,11 +64,6 @@ const options = [
 ]
 
 const ProDemo = () => {
-  const inReducer = useSelector((state) => state.inReducer)
-  const deReducer = useSelector((state) => state.deReducer)
-
-  const dispatch = useDispatch()
-
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
     method: 'GET',
   })
@@ -126,19 +119,6 @@ const ProDemo = () => {
       <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
       {/* <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4> */}
-      <h4>Redux 示例:</h4>
-      <Space>
-        <Space>
-          <Button type="primary" onClick={() => dispatch(rootAction.inAction.increment(1))}>
-            Increment
-          </Button>
-          {inReducer.inNumber}
-        </Space>
-        <Space>
-          <Button onClick={() => dispatch(rootAction.deAction.decrement(2))}>Decrement</Button>
-          {deReducer.deNumber}
-        </Space>
-      </Space>
       <h4 onClick={onFetch}>ErrorBoundary</h4>
       {/* <ErrorBoundary>
         <ShopsList />

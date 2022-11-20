@@ -16,10 +16,7 @@ const Product = loadable(() => import('../pages/product'), { fallback: <Loading 
 const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
 const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
 const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
-const DemoChoroplethMap = loadable(() => import('../pages/chinamap'), { fallback: <Loading /> })
 const QrCode = loadable(() => import('../pages/qrGenerate'), { fallback: <Loading /> })
-const ReactPlayerDemo = loadable(() => import('../pages/reactPlayer'), { fallback: <Loading /> })
-const Landing = loadable(() => import('../pages/landing'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 // import basicRouter from './basic'
 // import couponsRouter from './coupons'
@@ -58,20 +55,6 @@ const rootRouter = [
         name: 'QrGenerate',
         key: '/qrcode',
         element: <QrCode />,
-      },
-      {
-        index: false,
-        path: 'player',
-        name: 'React Player',
-        key: '/player',
-        element: <ReactPlayerDemo />,
-      },
-      {
-        index: false,
-        path: 'choropleth',
-        name: 'AntV',
-        key: '/choropleth',
-        element: <DemoChoroplethMap />,
       },
       {
         index: false,
@@ -154,18 +137,6 @@ const rootRouter = [
     key: '/dashboard',
     element: <Dashboard />,
   },
-  {
-    index: false,
-    path: 'landing',
-    name: 'Landing Page',
-    key: '/landing',
-    element: <Landing />,
-  },
-  // {
-  //   path: '*',
-  //   name: 'No Match',
-  //   element: <NoMatch />,
-  // },
 ]
 
 export default rootRouter

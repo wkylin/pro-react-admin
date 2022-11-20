@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
-// import { useNavigate } from 'react-router-dom'
 import {
   HomeOutlined,
   DeploymentUnitOutlined,
@@ -10,9 +9,7 @@ import {
   QuestionCircleOutlined,
   FireOutlined,
   GlobalOutlined,
-  EnvironmentOutlined,
   QrcodeOutlined,
-  PlayCircleOutlined,
 } from '@ant-design/icons'
 
 import styles from './index.module.less'
@@ -69,8 +66,6 @@ const ProSecNav = () => {
     { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     { label: 'QrGenerate', key: '/qrcode', icon: <QrcodeOutlined /> },
-    { label: 'ReactPlayer', key: '/player', icon: <PlayCircleOutlined /> },
-    { label: 'AntV', key: '/choropleth', icon: <EnvironmentOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',

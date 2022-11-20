@@ -182,7 +182,6 @@ const ProTabs = (props) => {
         onTabScroll={onTabScroll}
         onEdit={onEdit}
         renderTabBar={renderTabBar}
-        tabBarGutter={-1}
         tabBarStyle={{
           zIndex: 2,
         }}
@@ -200,7 +199,7 @@ const ProTabs = (props) => {
         items={panes.map((pane) => ({
           label: (
             <Dropdown
-              overlay={tabRightMenu}
+              menu={tabRightMenu}
               placement="bottomLeft"
               trigger={['contextMenu']}
               getPopupContainer={(node) => node.parentNode}
