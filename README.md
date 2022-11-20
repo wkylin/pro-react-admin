@@ -8,7 +8,7 @@
 
 ## 项目特性
 
-1. 基于 Antd 实现亮白及暗黑两套主题
+1. 升级 Antd 5.0
 2. 基于 React 最新版本，拥抱 Hooks
 3. 基于 React Router V6, 实现嵌套路由更方便
 4. 基于 Webpack 最新版本，实现多环境打包部署，代码分割优化，结合官方分析工具，实时优化代码
@@ -20,12 +20,15 @@
 10. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
 11. 配置 Commit message， 使用标准 commit 生成 changelog 标准化
 12. 配置 Sentry，方便日志追踪，及时发现问题
-13. 基于 React Redux Hooks, 状态管理更加方便
-14. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
-15. 代码分割，组件懒加载，Loading 垂直水平居中
-16. 集成 Bit，跨项目复用组件，支持在多个仓库间隔离和复用代码，简化协作过程，可以共享、维护和同步来自不同项目的隔离组件
-17. 集成 Bookstory, 方便生成组件文档
-18. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+13. 实现 ErrorBoundary,方便定位问题，避免不可预知的问题导致系统崩溃
+14. 代码分割，组件懒加载，Loading 垂直水平居中
+15. 集成 Bit，跨项目复用组件，支持在多个仓库间隔离和复用代码，简化协作过程，可以共享、维护和同步来自不同项目的隔离组件
+16. 集成 Bookstory, 方便生成组件文档
+17. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+
+## Antd 4.x.x 版本
+
+1. 基于 Antd 实现亮白及暗黑两套主题， 请参见 feature-antd4 分支
 
 ## Technology Stack
 
@@ -33,9 +36,8 @@
 2. React Router: v6.x.x [React Router](https://reactrouter.com/)
 3. Webpack:v5.x.x [Webpack](https://webpack.js.org/)
 4. Babel: v7.x.x [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
-5. Antd: v4.x.x [Ant Design](https://ant.design/index-cn)
-6. React Redux: v8.x.x [Redux Hooks](https://react-redux.js.org/api/hooks)
-7. TypeScript: v4.x.x[TypeScript](https://www.typescriptlang.org/)
+5. Antd: v5.x.x [Ant Design](https://ant.design/index-cn)
+6. TypeScript: v4.x.x[TypeScript](https://www.typescriptlang.org/)
 
 ## Development
 
@@ -45,7 +47,7 @@
   3. 可以选择以下两种方式的任一方式启动项目, 其他 cli 参考 package.json 中的 scripts
     - $ npm start
     - $ npm run dev:faker
-    - $ npm run vite:dev
+    - $ npm run vite:dev:faker
   4. Bit - Build composable software
     - $ npm i -g @teambit/bvm
     - $ bvm install
