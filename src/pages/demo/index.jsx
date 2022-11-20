@@ -15,17 +15,17 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    width: 150,
+    width: 150
   },
   {
     title: 'Age',
     dataIndex: 'age',
-    width: 150,
+    width: 150
   },
   {
     title: 'Address',
-    dataIndex: 'address',
-  },
+    dataIndex: 'address'
+  }
 ]
 
 const options = [
@@ -39,11 +39,11 @@ const options = [
         children: [
           {
             value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
+            label: 'West Lake'
+          }
+        ]
+      }
+    ]
   },
   {
     value: 'jiangsu',
@@ -55,17 +55,17 @@ const options = [
         children: [
           {
             value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
+            label: 'Zhong Hua Men'
+          }
+        ]
+      }
+    ]
+  }
 ]
 
 const ProDemo = () => {
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
-    method: 'GET',
+    method: 'GET'
   })
 
   // const [booksRes, booksLoading, booksError] = useGetFetch('/faker/shops')
@@ -131,12 +131,12 @@ const ProDemo = () => {
 
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
+      <Cascader options={options} expandTrigger='hover' placeholder='Please select' />
 
-      <Select placeholder="Select a person" optionFilterProp="children">
-        <Select.Option value="jack">Jack</Select.Option>
-        <Select.Option value="lucy">Lucy</Select.Option>
-        <Select.Option value="tom">Tom</Select.Option>
+      <Select placeholder='Select a person' optionFilterProp='children'>
+        <Select.Option value='jack'>Jack</Select.Option>
+        <Select.Option value='lucy'>Lucy</Select.Option>
+        <Select.Option value='tom'>Tom</Select.Option>
       </Select>
       {toFixed(0.75 * 100, 2)}
 

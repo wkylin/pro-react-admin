@@ -29,7 +29,7 @@ const ProHeader = () => {
       icon: <UserOutlined />,
       onClick: () => {
         redirectTo('/profile')
-      },
+      }
     },
     {
       key: '2',
@@ -37,7 +37,7 @@ const ProHeader = () => {
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/setting')
-      },
+      }
     },
     {
       key: '3',
@@ -45,13 +45,13 @@ const ProHeader = () => {
       icon: <LogoutOutlined />,
       onClick: () => {
         redirectTo('/signin')
-      },
-    },
+      }
+    }
   ]
 
   return (
     <Layout.Header className={styles.header}>
-      <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
+      <div className={styles.logo} role='button' onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         Pro React
       </div>
@@ -60,17 +60,14 @@ const ProHeader = () => {
           <PrimaryNav />
         </div>
         <div className={styles.headerRight}>
-          <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
-            <Switch
-            // checkedChildren={<Icon component={LightSvg} />}
-            // unCheckedChildren={<Icon component={DarkSvg} />}
-            />
+          <Space direction='horizontal' style={{ cursor: 'pointer', paddingRight: 8 }}>
+            <Switch />
             <GithubOutlined style={{ fontSize: 18 }} onClick={redirectGithub} />
           </Space>
           <Dropdown
             arrow
             menu={{
-              items,
+              items
             }}
           >
             <Space>

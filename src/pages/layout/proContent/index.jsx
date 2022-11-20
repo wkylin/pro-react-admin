@@ -19,7 +19,7 @@ const ProContent = () => {
     content: null,
     key: '',
     closable: false,
-    path: '',
+    path: ''
   })
 
   const pathRef = useRef('')
@@ -46,20 +46,20 @@ const ProContent = () => {
       content: element,
       key: tabKey,
       closable: tabKey !== '/',
-      path: newPath,
+      path: newPath
     })
     setTabActiveKey(tabKey)
   }, [pathname, navigate, search])
 
   return (
     <Layout className={styles.layout}>
-      <Header className="layout-header">
+      <Header className='layout-header'>
         <ProBreadcrumb />
       </Header>
-      <Content className="layout-content">
-        <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
+      <Content className='layout-content'>
+        <ProTabs defaultActiveKey='home' panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className="layout-footer">
+      <Footer className='layout-footer'>
         <FloatButton.BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>

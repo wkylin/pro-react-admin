@@ -12,7 +12,7 @@ import Home from '@src/pages/home'
 
 const renderTabBar = (props, DefaultTabBar) => (
   <Sticky topOffset={40} relative>
-    {({ style }) => <DefaultTabBar key={nanoid()} {...props} className="pro-tabs" style={{ ...style }} />}
+    {({ style }) => <DefaultTabBar key={nanoid()} {...props} className='pro-tabs' style={{ ...style }} />}
   </Sticky>
 )
 
@@ -45,7 +45,7 @@ const ProTabs = (props) => {
     document.querySelector('#container').scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth',
+      behavior: 'smooth'
     })
   }, [pathname])
 
@@ -119,8 +119,8 @@ const ProTabs = (props) => {
         key: '/',
         content: <Home />,
         closable: false,
-        path: '/',
-      },
+        path: '/'
+      }
     ]
 
     const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
@@ -132,11 +132,11 @@ const ProTabs = (props) => {
   // tab 右键菜单
   const tabRightMenu = (
     <Menu>
-      <Menu.Item key="1" onClick={refreshTab} disabled={selectedPanel.key !== fullPath || selectedPanel.key === '/404'}>
+      <Menu.Item key='1' onClick={refreshTab} disabled={selectedPanel.key !== fullPath || selectedPanel.key === '/404'}>
         刷新
       </Menu.Item>
       <Menu.Item
-        key="2"
+        key='2'
         onClick={(e) => {
           e.domEvent.stopPropagation()
           removeTab(selectedPanel.key)
@@ -146,7 +146,7 @@ const ProTabs = (props) => {
         关闭
       </Menu.Item>
       <Menu.Item
-        key="3"
+        key='3'
         onClick={(e) => {
           e.domEvent.stopPropagation()
           removeAll()
@@ -155,7 +155,7 @@ const ProTabs = (props) => {
         关闭其他
       </Menu.Item>
       <Menu.Item
-        key="4"
+        key='4'
         onClick={(e) => {
           e.domEvent.stopPropagation()
           removeAll(true)
@@ -173,40 +173,40 @@ const ProTabs = (props) => {
   }
 
   return (
-    <StickyContainer className="layout-container" id="container">
+    <StickyContainer className='layout-container' id='container'>
       <Tabs
         hideAdd
-        type="editable-card"
+        type='editable-card'
         onChange={onChange}
         onTabClick={onTabClick}
         onTabScroll={onTabScroll}
         onEdit={onEdit}
         renderTabBar={renderTabBar}
         tabBarStyle={{
-          zIndex: 2,
+          zIndex: 2
         }}
         activeKey={activeKey}
         defaultActiveKey={defaultActiveKey}
         destroyInactiveTabPane
         tabBarExtraContent={{
           left: (
-            <Space align="center" size={30} style={{ margin: '0 25px' }}>
+            <Space align='center' size={30} style={{ margin: '0 25px' }}>
               <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
               {/* &nbsp; */}
             </Space>
-          ),
+          )
         }}
         items={panes.map((pane) => ({
           label: (
             <Dropdown
               menu={tabRightMenu}
-              placement="bottomLeft"
+              placement='bottomLeft'
               trigger={['contextMenu']}
               getPopupContainer={(node) => node.parentNode}
             >
               <span onContextMenu={(e) => preventDefault(e, pane)}>
                 {pane.key === fullPath && pane.key !== '/404' && (
-                  <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+                  <SyncOutlined onClick={refreshTab} title='刷新' spin={isReload} />
                 )}
                 {pane.title}
               </span>
@@ -217,15 +217,17 @@ const ProTabs = (props) => {
           forceRender: true,
           children: (
             <MyErrorBoundary fixError={fixError}>
-              <div className="layout-tabpanel">
-                {isReload && pane.key === fullPath && pane.key !== '/404' ? (
-                  <Loading tip="刷新中..." />
-                ) : (
-                  <>{pane.content}</>
-                )}
+              <div className='layout-tabpanel'>
+                {isReload && pane.key === fullPath && pane.key !== '/404'
+                  ? (
+                    <Loading tip='刷新中...' />
+                    )
+                  : (
+                    <>{pane.content}</>
+                    )}
               </div>
             </MyErrorBoundary>
-          ),
+          )
         }))}
       />
     </StickyContainer>
