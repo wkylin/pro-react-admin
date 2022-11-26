@@ -71,7 +71,8 @@
     "vite:build": "vite build",
     "vite:preview": "vite preview",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "clean-lockfiles": "rm -rf package-lock.json yarn.lock"
   },
   "author": "wkylin",
   "contributors": [
