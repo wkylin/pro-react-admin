@@ -19,6 +19,6 @@ const ProtectedRoute = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn])
 
-  return <React.Fragment>{isLoggedIn ? props.children : <SignIn />}</React.Fragment>
+  return <>{isLoggedIn ? props.children : <SignIn />}</>
 }
 export default ProtectedRoute
