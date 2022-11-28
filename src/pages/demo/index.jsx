@@ -63,8 +63,8 @@ const options = [
   },
 ]
 
-const viteEnvMode = import.meta.env.MODE
-const viteEnvVariableValue = import.meta.env.VITE_GREETINGS
+const viteEnvMode = import.meta?.env?.MODE ?? 'webapck env'
+const viteEnvVariableValue = import.meta?.env?.VITE_GREETINGS ?? 'webapck env'
 
 const ProDemo = () => {
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
