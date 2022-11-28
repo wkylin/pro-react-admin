@@ -70,6 +70,8 @@
     "vite:dev:faker": "concurrently -r \"npm run vite:dev\" \"npm run faker\"",
     "vite:build": "vite build",
     "vite:preview": "vite preview",
+    "vite:start:dev": "vite --mode dev",
+    "vite:build:production": "vite build --mode production",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "clean-lockfiles": "rm -rf package-lock.json yarn.lock"

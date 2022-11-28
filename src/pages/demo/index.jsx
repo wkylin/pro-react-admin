@@ -3,7 +3,7 @@ import React from 'react'
 // import React, { useState, useEffect } from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
 // import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
-import { Select, Table, Cascader } from 'antd'
+import { Select, Table, Cascader, Space } from 'antd'
 import FixTabPanel from '@src/components/stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
@@ -62,6 +62,9 @@ const options = [
     ],
   },
 ]
+
+const viteEnvMode = import.meta.env.MODE
+const viteEnvVariableValue = import.meta.env.VITE_GREETINGS
 
 const ProDemo = () => {
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
@@ -139,6 +142,11 @@ const ProDemo = () => {
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
       {toFixed(0.75 * 100, 2)}
+
+      <h3>Vite Env</h3>
+      <Space>Mode: {viteEnvMode}</Space>
+      <br />
+      <Space>Variable value: {viteEnvVariableValue}</Space>
 
       <div style={{ height: 400 }}>Height For Scroll</div>
     </FixTabPanel>
