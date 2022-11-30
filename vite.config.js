@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 // import { createHtmlPlugin } from 'vite-plugin-html'
-// import reactRefresh from '@vitejs/plugin-react-refresh'
 import react from '@vitejs/plugin-react'
 import vitePluginImp from 'vite-plugin-imp'
 import svgr from 'vite-plugin-svgr'
@@ -35,7 +34,6 @@ export default defineConfig({
         },
       ],
     }),
-    // reactRefresh(),
     // createHtmlPlugin({
     //   inject: {
     //     data: {
