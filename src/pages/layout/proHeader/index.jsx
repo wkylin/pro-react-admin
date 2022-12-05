@@ -9,6 +9,8 @@ import { useNavigate } from 'react-router-dom'
 // import LightSvg from '@assets/svg/light.svg'
 // import DarkSvg from '@assets/svg/dark.svg'
 
+import { useProThemeContext } from '@theme/hooks'
+
 import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
 
@@ -49,6 +51,12 @@ const ProHeader = () => {
     },
   ]
 
+  const { theme, setTheme } = useProThemeContext()
+
+  const setAntdTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+  }
+
   return (
     <Layout.Header className={styles.header}>
       <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
@@ -62,8 +70,9 @@ const ProHeader = () => {
         <div className={styles.headerRight}>
           <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
             <Switch
-            // checkedChildren={<Icon component={LightSvg} />}
-            // unCheckedChildren={<Icon component={DarkSvg} />}
+              // checkedChildren={<Icon component={LightSvg} />}
+              // unCheckedChildren={<Icon component={DarkSvg} />}
+              onClick={setAntdTheme}
             />
             <GithubOutlined style={{ fontSize: 18 }} onClick={redirectGithub} />
           </Space>

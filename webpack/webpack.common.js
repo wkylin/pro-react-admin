@@ -73,6 +73,7 @@ const config = {
       '@pages': path.resolve('./src/pages'),
       '@routers': path.resolve('./src/routers'),
       '@utils': path.resolve('./src/utils'),
+      '@theme': path.resolve('./src/theme'),
     },
     symlinks: false,
     // modules: [path.resolve(__dirname, 'node_modules')],
