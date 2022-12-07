@@ -22,7 +22,7 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #f0f2f5;
+  background: #7e7e7e;
   border-radius: 3px;
 }
 
@@ -87,9 +87,9 @@ select:-webkit-autofill:active {
   }
 }
 
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: #aaa;
-}
+} */
 
 .layout-footer {
   text-align: center;
@@ -100,32 +100,18 @@ select:-webkit-autofill:active {
 }
 
 .ant-layout-header {
-  background: #f1f1f1 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
 
-.ant-layout-sider {
-  background: #f1f1f1 !important;
-}
-
 .layout-header {
-  height: 50px !important;
-  line-height: 50px;
   padding-left: 20px !important;
-  background-color: #f7f7f7 !important;
 }
 
 .layout-content {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  padding: 0;
-}
-
-.layout-content,
-.layout-content .ant-tabs-card .ant-tabs-nav {
-  background: #fff;
 }
 
 .layout-container {

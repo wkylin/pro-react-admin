@@ -15,7 +15,7 @@ const ProSider = (props) => {
     <Layout.Sider
       width={208}
       collapsedWidth={80}
-      // theme="dark"
+      theme="light"
       collapsible
       collapsed={collapsed}
       trigger={null}

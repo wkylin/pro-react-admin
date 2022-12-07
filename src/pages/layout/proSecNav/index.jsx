@@ -108,7 +108,7 @@ const ProSecNav = () => {
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}
         openKeys={openKeys}
-        // theme="dark"
+        theme="light"
         className={styles.menu}
         onOpenChange={onOpenChange}
         // onClick={onItemClick}

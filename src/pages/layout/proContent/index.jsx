@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Layout, FloatButton } from 'antd'
+import { Layout, FloatButton, theme } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@src/utils/publicFn'
@@ -25,7 +25,9 @@ const ProContent = () => {
   const pathRef = useRef('')
   const navigate = useNavigate()
   const { pathname, search } = useLocation()
-
+  const {
+    token: { colorBgContainer, colorBgLayout },
+  } = theme.useToken()
   useEffect(() => {
     // 未登录
     // if (!token && pathname !== '/signin') {
@@ -53,10 +55,10 @@ const ProContent = () => {
 
   return (
     <Layout className={styles.layout}>
-      <Header className="layout-header">
+      <Header className="layout-header" style={{ background: colorBgLayout }}>
         <ProBreadcrumb />
       </Header>
-      <Content className="layout-content">
+      <Content className="layout-content" style={{ background: colorBgContainer }}>
         <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">

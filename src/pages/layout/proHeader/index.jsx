@@ -1,6 +1,6 @@
 import React from 'react'
 // import React, { useEffect, useState } from 'react'
-import { Layout, Space, Dropdown, Switch } from 'antd'
+import { Layout, Space, Dropdown, Switch, theme } from 'antd'
 import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -51,14 +51,21 @@ const ProHeader = () => {
     },
   ]
 
-  const { theme, setTheme } = useProThemeContext()
+  const { myTheme, setMyTheme } = useProThemeContext()
 
   const setAntdTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light')
+    setMyTheme(myTheme === 'light' ? 'dark' : 'light')
   }
 
+  const {
+    token: { colorBgContainer, colorBorder },
+  } = theme.useToken()
+
   return (
-    <Layout.Header className={styles.header}>
+    <Layout.Header
+      className={styles.header}
+      style={{ background: colorBgContainer, borderBottom: `1px solid ${colorBorder}` }}
+    >
       <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         Pro React

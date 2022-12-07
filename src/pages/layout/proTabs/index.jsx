@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Tabs, Menu, Dropdown, Space } from 'antd'
+import { Tabs, Menu, Dropdown, Space, theme } from 'antd'
 // import { StickyContainer, Sticky } from 'react-sticky-ts'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, FireOutlined } from '@ant-design/icons'
@@ -9,12 +9,6 @@ import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
 import Home from '@src/pages/home'
-
-const renderTabBar = (props, DefaultTabBar) => (
-  <Sticky topOffset={40} relative>
-    {({ style }) => <DefaultTabBar key={nanoid()} {...props} className="pro-tabs" style={{ ...style }} />}
-  </Sticky>
-)
 
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
@@ -27,6 +21,23 @@ const ProTabs = (props) => {
   const { defaultActiveKey, panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
   const fullPath = pathname + search
+
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken()
+
+  const renderTabBar = (_props, DefaultTabBar) => (
+    <Sticky topOffset={40} relative>
+      {({ style }) => (
+        <DefaultTabBar
+          key={nanoid()}
+          {..._props}
+          className="pro-tabs"
+          style={{ ...style, background: colorBgContainer }}
+        />
+      )}
+    </Sticky>
+  )
 
   // 从本地存储中恢复已打开的tab列表
   // const resetTabs = useCallback(() => {
