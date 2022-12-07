@@ -1,7 +1,7 @@
 {
-  "name": "promotion-web",
+  "name": "pro-react-admin",
   "version": "3.0.0",
-  "description": "promotion-web",
+  "description": "pro-react-admin",
   "keywords": [
     "React",
     "JSX",
@@ -15,7 +15,7 @@
     "Bit.dev",
     "Bit.cloud"
   ],
-  "homepage": "https://wkylin.github.io/promotion-web",
+  "homepage": "https://wkylin.github.io/pro-react-admin",
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
@@ -85,7 +85,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/wkylin/promotion-web/issues",
+    "url": "https://github.com/wkylin/pro-react-admin/issues",
     "email": "wkylin.w@gmail.com"
   },
   "license": "MIT",
