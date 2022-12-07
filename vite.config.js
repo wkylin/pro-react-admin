@@ -31,7 +31,7 @@ export default defineConfig({
       libList: [
         {
           libName: 'antd',
-          style: (name) => `antd/es/${name}/style`,
+          style: (name) => name !== 'theme' && `antd/es/${name}/style`,
         },
       ],
     }),
