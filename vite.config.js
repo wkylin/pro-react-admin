@@ -88,6 +88,9 @@ export default defineConfig({
   },
   build: {
     write: true,
+    rollupOptions: {
+      // external: [],
+    },
   },
   preview: {
     port: 4173,
