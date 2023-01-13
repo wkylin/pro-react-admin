@@ -65,7 +65,7 @@ const ProContent = () => {
         <FloatButton.BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>
-        <div>&copy; 2020-{new Date().getFullYear()} 上海麒麟科技有限公司</div>
+        <div>&copy; {new Date().getFullYear()} Pro React Admin</div>
       </Footer>
     </Layout>
   )

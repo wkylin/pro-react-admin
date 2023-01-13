@@ -68,7 +68,7 @@ const ProHeader = () => {
     >
       <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
-        Pro React
+        Pro React Admin
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>
