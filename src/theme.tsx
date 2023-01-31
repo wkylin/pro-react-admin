@@ -15,6 +15,10 @@ dayjs.locale('zh-cn')
 
 const ThemeIndex = () => {
   const { myTheme } = useProThemeContext() as any
+  ConfigProvider.config({
+    prefixCls: 'wui-ant',
+    iconPrefixCls: 'wui-anticon',
+  })
   return (
     <StyleProvider hashPriority="high">
       <ConfigProvider
@@ -27,6 +31,8 @@ const ThemeIndex = () => {
         }}
         componentSize="middle"
         input={{ autoComplete: 'off' }}
+        prefixCls="wui-ant"
+        iconPrefixCls="wui-anticon"
       >
         <Router>
           <App />

@@ -99,7 +99,7 @@ select:-webkit-autofill:active {
   padding: 0 !important;
 }
 
-.ant-layout-header {
+.wui-ant-layout-header {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -120,7 +120,7 @@ select:-webkit-autofill:active {
   width: 100%;
 }
 
-.layout-container .ant-tabs-content > .ant-tabs-tabpane {
+.layout-container .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
   padding: 16px;
 }
 
@@ -128,7 +128,7 @@ select:-webkit-autofill:active {
   z-index: 10;
 }
 
-.layout-container .pro-tabs .ant-tabs-nav-wrap {
+.layout-container .pro-tabs .wui-ant-tabs-nav-wrap {
   overflow: visible !important;
 }
 
