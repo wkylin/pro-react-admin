@@ -198,7 +198,7 @@ const ProTabs = (props) => {
         }}
         activeKey={activeKey}
         defaultActiveKey={defaultActiveKey}
-        destroyInactiveTabPane
+        destroyInactiveTabPane={false}
         tabBarExtraContent={{
           left: (
             <Space align="center" size={30} style={{ margin: '0 25px' }}>

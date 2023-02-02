@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useMemo } from 'react'
 
 const defaultTheme: string = 'light'
 type ThemeContextType = {
@@ -12,16 +12,14 @@ const useProThemeContext = () => useContext(ProThemeContext)
 const ProThemeProvider = ({ children }: any) => {
   const [myTheme, setMyTheme] = useState(defaultTheme)
 
-  return (
-    <ProThemeContext.Provider
-      value={{
-        myTheme,
-        setMyTheme,
-      }}
-    >
-      {children}
-    </ProThemeContext.Provider>
+  const themeProvider = useMemo(
+    () => ({
+      myTheme,
+      setMyTheme,
+    }),
+    [myTheme, setMyTheme]
   )
+  return <ProThemeContext.Provider value={themeProvider}>{children}</ProThemeContext.Provider>
 }
 
 export { ProThemeProvider, useProThemeContext }

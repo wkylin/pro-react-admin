@@ -3,7 +3,7 @@ import React from 'react'
 // import React, { useState, useEffect } from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
 // import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
-import { Select, Table, Cascader, Space } from 'antd'
+import { Select, Table, Cascader, Space, message } from 'antd'
 import FixTabPanel from '@src/components/stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
@@ -142,7 +142,7 @@ const ProDemo = () => {
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
       {toFixed(0.75 * 100, 2)}
-
+      {message.info('message')}
       <h3>Vite Env</h3>
       <Space>Mode: {viteEnvMode}</Space>
       <br />
