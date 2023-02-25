@@ -5,8 +5,23 @@ import Loading from '@src/components/stateless/Loading'
 const SignIn = loadable(() => import('../pages/signin'), { fallback: <Loading /> })
 const SignUp = loadable(() => import('../pages/signup'), { fallback: <Loading /> })
 const Layout = loadable(() => import('../pages/layout'), { fallback: <Loading /> })
-const Home = loadable(() => import('../pages/home'), { fallback: <Loading /> })
-const Demo = loadable(() => import('../pages/demo'), { fallback: <Loading /> })
+
+// prefetch
+const Home = loadable(
+  () =>
+    /* webpackChunkName: "PreHome" */
+    /* webpackPrefetch: true */
+    import('../pages/home'),
+  { fallback: <Loading /> }
+)
+// preload
+const Demo = loadable(
+  () =>
+    /* webpackChunkName: "PreloadDemo" */
+    /* webpackPreload: true */
+    import('../pages/demo'),
+  { fallback: <Loading /> }
+)
 const Coupons = loadable(() => import('../pages/coupons'), { fallback: <Loading /> })
 const CouponsHome = loadable(() => import('../pages/coupons/home'), { fallback: <Loading /> })
 const CouponsAdd = loadable(() => import('../pages/coupons/add'), { fallback: <Loading /> })

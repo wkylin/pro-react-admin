@@ -254,6 +254,14 @@ const config = {
           },
         ],
       },
+      {
+        test: /\.json$/,
+        type: 'asset/resource', // 将json文件视为文件类型
+        generator: {
+          // 这里专门针对json文件的处理
+          filename: 'static/json/[name].[hash][ext][query]',
+        },
+      },
     ],
   },
 }

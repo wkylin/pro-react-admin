@@ -41,7 +41,10 @@ const prodWebpackConfig = merge(common, {
     }),
     new PurgeCSSPlugin({
       paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
-      only: ['bundle', 'vendor'],
+      only: ['bundle', 'vendor', 'dist'],
+      safelist: {
+        standard: [/^ant-/],
+      },
     }),
     // new webpack.BannerPlugin({
     //   raw: true,
