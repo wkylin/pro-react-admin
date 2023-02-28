@@ -215,7 +215,6 @@ export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 export const randomString = () => Math.random().toString(36).slice(2)
 export const escape = (str) =>
   str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]))
-export const uppercaseWords = (str) => str.replace(/^(.)|\s+(.)/g, (c) => c.toUpperCase())
 export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 export const round = (n, d) => Number(`${Math.round(`${n}e${d}`)}e-${d}`)
