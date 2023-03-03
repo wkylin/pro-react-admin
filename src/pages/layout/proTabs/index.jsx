@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Tabs, Menu, Dropdown, Space, theme } from 'antd'
+// import { Tabs, Dropdown, Space, theme } from 'antd'
+import { Tabs, Space, theme } from 'antd'
 // import { StickyContainer, Sticky } from 'react-sticky-ts'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, FireOutlined } from '@ant-design/icons'
@@ -8,12 +9,12 @@ import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
-import Home from '@src/pages/home'
+// import Home from '@src/pages/home'
 
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
   const [isReload, setIsReload] = useState(false)
-  const [selectedPanel, setSelectedPanel] = useState({})
+  // const [selectedPanel, setSelectedPanel] = useState({})
   const pathRef = useRef('')
 
   const navigate = useNavigate()
@@ -104,12 +105,12 @@ const ProTabs = (props) => {
     if (action === 'remove') removeTab(targetKey)
   }
 
-  const isDisabled = () => selectedPanel.key === '/'
+  // const isDisabled = () => selectedPanel.key === '/'
   // 阻止右键默认事件
-  const preventDefault = (event, panel) => {
-    event.preventDefault()
-    setSelectedPanel(panel)
-  }
+  // const preventDefault = (event, panel) => {
+  //   event.preventDefault()
+  //   setSelectedPanel(panel)
+  // }
 
   // 刷新当前 tab
   const refreshTab = () => {
@@ -120,63 +121,76 @@ const ProTabs = (props) => {
   }
 
   // 关闭其他或关闭所有
-  const removeAll = (isRemoveAll) => {
-    const { key } = selectedPanel
-    navigate(isRemoveAll ? '/' : key)
+  // const removeAll = (isRemoveAll) => {
+  //   const { key } = selectedPanel
+  //   navigate(isRemoveAll ? '/' : key)
 
-    const homePanel = [
-      {
-        title: '首页',
-        key: '/',
-        content: <Home />,
-        closable: false,
-        path: '/',
-      },
-    ]
+  //   const homePanel = [
+  //     {
+  //       title: '首页',
+  //       key: '/',
+  //       content: <Home />,
+  //       closable: false,
+  //       path: '/',
+  //     },
+  //   ]
 
-    const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
-    setPanes(nowPanes)
-    navigate(nowPanes[0].key)
-    setActiveKey(isRemoveAll ? '/' : key)
-  }
+  //   const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
+  //   setPanes(nowPanes)
+  //   navigate(nowPanes[0].key)
+  //   setActiveKey(isRemoveAll ? '/' : key)
+  // }
 
   // tab 右键菜单
-  const tabRightMenu = (
-    <Menu>
-      <Menu.Item key="1" onClick={refreshTab} disabled={selectedPanel.key !== fullPath || selectedPanel.key === '/404'}>
-        刷新
-      </Menu.Item>
-      <Menu.Item
-        key="2"
-        onClick={(e) => {
-          e.domEvent.stopPropagation()
-          removeTab(selectedPanel.key)
-        }}
-        disabled={isDisabled()}
-      >
-        关闭
-      </Menu.Item>
-      <Menu.Item
-        key="3"
-        onClick={(e) => {
-          e.domEvent.stopPropagation()
-          removeAll()
-        }}
-      >
-        关闭其他
-      </Menu.Item>
-      <Menu.Item
-        key="4"
-        onClick={(e) => {
-          e.domEvent.stopPropagation()
-          removeAll(true)
-        }}
-        disabled={isDisabled()}
-      >
-        全部关闭
-      </Menu.Item>
-    </Menu>
-  )
+  // const tabRightMenu = [
+  //   {
+  //     label: <span onClick={refreshTab}>刷新</span>,
+  //     key: '1',
+  //     disabled: selectedPanel.key !== fullPath || selectedPanel.key === '/404',
+  //   },
+  //   {
+  //     label: (
+  //       <span
+  //         onClick={(e) => {
+  //           e.domEvent.stopPropagation()
+  //           removeTab(selectedPanel.key)
+  //         }}
+  //       >
+  //         关闭
+  //       </span>
+  //     ),
+  //     key: '2',
+  //     disabled: isDisabled(),
+  //   },
+  //   {
+  //     label: (
+  //       <span
+  //         onClick={(e) => {
+  //           e.domEvent.stopPropagation()
+  //           removeAll()
+  //         }}
+  //       >
+  //         关闭其他
+  //       </span>
+  //     ),
+  //     key: '3',
+  //     disabled: isDisabled(),
+  //   },
+  //   {
+  //     label: (
+  //       <span
+  //         onClick={(e) => {
+  //           e.domEvent.stopPropagation()
+  //           removeAll(true)
+  //         }}
+  //       >
+  //         全部关闭
+  //       </span>
+  //     ),
+  //     key: '4',
+  //     disabled: isDisabled(),
+  //   },
+  // ]
 
   // error boundary
   const fixError = () => {
@@ -209,19 +223,20 @@ const ProTabs = (props) => {
         }}
         items={panes.map((pane) => ({
           label: (
-            <Dropdown
-              menu={tabRightMenu}
-              placement="bottomLeft"
-              trigger={['contextMenu']}
-              getPopupContainer={(node) => node.parentNode}
-            >
-              <span onContextMenu={(e) => preventDefault(e, pane)}>
-                {pane.key === fullPath && pane.key !== '/404' && (
-                  <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
-                )}
-                {pane.title}
-              </span>
-            </Dropdown>
+            // <Dropdown
+            //   menu={tabRightMenu}
+            //   placement="bottomLeft"
+            //   trigger={['contextMenu']}
+            //   getPopupContainer={(node) => node.parentNode}
+            // >
+            // <span onContextMenu={(e) => preventDefault(e, pane)}>
+            <span>
+              {pane.key === fullPath && pane.key !== '/404' && (
+                <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+              )}
+              {pane.title}
+            </span>
+            // </Dropdown>
           ),
           key: pane.key,
           closable: pane.closable,
