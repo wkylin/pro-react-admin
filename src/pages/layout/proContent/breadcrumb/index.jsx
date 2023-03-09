@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-// import useBreadcrumbs from 'use-react-router-breadcrumbs'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 import { Breadcrumb, Button } from 'antd'
@@ -10,7 +9,6 @@ import styles from './index.module.less'
 const ProBreadcrumb = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  // const breadcrumbs = useBreadcrumbs()
   const [breadcrumbList, setBreadcrumbList] = useState([])
 
   useEffect(() => {
@@ -34,31 +32,30 @@ const ProBreadcrumb = () => {
     navigate(path)
   }
 
-  return (
-    <>
-      <Breadcrumb separator=">">
-        {breadcrumbList.map((item, index) =>
-          index !== breadcrumbList.length - 1 ? (
-            <Breadcrumb.Item className={styles.breadcrumb} key={item.key}>
-              {item.isSubMenu ? (
-                <Button disabled type="link" style={{ padding: 0 }}>
-                  {item.name}
-                </Button>
-              ) : (
-                <Button type="link" style={{ padding: 0 }} onClick={() => linkTo(item.key)}>
-                  {item.name}
-                </Button>
-              )}
-            </Breadcrumb.Item>
-          ) : (
-            <Breadcrumb.Item className={styles.breadcrumb} key={item.key}>
-              {item.name}
-            </Breadcrumb.Item>
-          )
-        )}
-      </Breadcrumb>
-    </>
-  )
+  const breadcrumbItem = () =>
+    breadcrumbList.map((item, index) => ({
+      title:
+        index !== breadcrumbList.length - 1 ? (
+          <span className={styles.breadcrumb} key={item.key}>
+            {item.isSubMenu ? (
+              <Button disabled type="link" style={{ padding: 0 }}>
+                {item.name}
+              </Button>
+            ) : (
+              <Button type="link" style={{ padding: 0 }} onClick={() => linkTo(item.key)}>
+                {item.name}
+              </Button>
+            )}
+          </span>
+        ) : (
+          <span className={styles.breadcrumb} key={item.key}>
+            {item.name}
+          </span>
+        ),
+      key: item.key,
+    }))
+
+  return <Breadcrumb separator=">" items={breadcrumbItem()} />
 }
 
 export default ProBreadcrumb
