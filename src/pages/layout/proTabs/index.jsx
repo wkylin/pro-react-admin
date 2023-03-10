@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-// import { Tabs, Dropdown, Space, theme } from 'antd'
-import { Tabs, Space, theme } from 'antd'
+import { Tabs, Dropdown, Space, theme } from 'antd'
 // import { StickyContainer, Sticky } from 'react-sticky-ts'
 import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, FireOutlined } from '@ant-design/icons'
@@ -9,12 +8,12 @@ import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
-// import Home from '@src/pages/home'
+import Home from '@src/pages/home'
 
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
   const [isReload, setIsReload] = useState(false)
-  // const [selectedPanel, setSelectedPanel] = useState({})
+  const [selectedPanel, setSelectedPanel] = useState({})
   const pathRef = useRef('')
 
   const navigate = useNavigate()
@@ -84,6 +83,7 @@ const ProTabs = (props) => {
 
     setPanes([...panes, panesItem])
     setActiveKey(tabActiveKey)
+    setSelectedPanel(panesItem)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [panes, panesItem, pathname, search, tabActiveKey])
 
@@ -105,12 +105,7 @@ const ProTabs = (props) => {
     if (action === 'remove') removeTab(targetKey)
   }
 
-  // const isDisabled = () => selectedPanel.key === '/'
-  // 阻止右键默认事件
-  // const preventDefault = (event, panel) => {
-  //   event.preventDefault()
-  //   setSelectedPanel(panel)
-  // }
+  const isDisabled = () => selectedPanel.key === '/' || panes.length === 1
 
   // 刷新当前 tab
   const refreshTab = () => {
@@ -121,82 +116,66 @@ const ProTabs = (props) => {
   }
 
   // 关闭其他或关闭所有
-  // const removeAll = (isRemoveAll) => {
-  //   const { key } = selectedPanel
-  //   navigate(isRemoveAll ? '/' : key)
-
-  //   const homePanel = [
-  //     {
-  //       title: '首页',
-  //       key: '/',
-  //       content: <Home />,
-  //       closable: false,
-  //       path: '/',
-  //     },
-  //   ]
-
-  //   const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
-  //   setPanes(nowPanes)
-  //   navigate(nowPanes[0].key)
-  //   setActiveKey(isRemoveAll ? '/' : key)
-  // }
+  const removeAll = (isRemoveAll) => {
+    const { key } = selectedPanel
+    const homePanel = [
+      {
+        title: '首页',
+        key: '/',
+        content: <Home />,
+        closable: false,
+        path: '/',
+      },
+    ]
+    const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
+    setPanes(nowPanes)
+    const { path } = nowPanes.filter((item) => item.key === (isRemoveAll ? '/' : key))[0]
+    navigate(path)
+    setActiveKey(isRemoveAll ? '/' : key)
+  }
 
   // tab 右键菜单
-  // const tabRightMenu = [
-  //   {
-  //     label: <span onClick={refreshTab}>刷新</span>,
-  //     key: '1',
-  //     disabled: selectedPanel.key !== fullPath || selectedPanel.key === '/404',
-  //   },
-  //   {
-  //     label: (
-  //       <span
-  //         onClick={(e) => {
-  //           e.domEvent.stopPropagation()
-  //           removeTab(selectedPanel.key)
-  //         }}
-  //       >
-  //         关闭
-  //       </span>
-  //     ),
-  //     key: '2',
-  //     disabled: isDisabled(),
-  //   },
-  //   {
-  //     label: (
-  //       <span
-  //         onClick={(e) => {
-  //           e.domEvent.stopPropagation()
-  //           removeAll()
-  //         }}
-  //       >
-  //         关闭其他
-  //       </span>
-  //     ),
-  //     key: '3',
-  //     disabled: isDisabled(),
-  //   },
-  //   {
-  //     label: (
-  //       <span
-  //         onClick={(e) => {
-  //           e.domEvent.stopPropagation()
-  //           removeAll(true)
-  //         }}
-  //       >
-  //         全部关闭
-  //       </span>
-  //     ),
-  //     key: '4',
-  //     disabled: isDisabled(),
-  //   },
-  // ]
+  const tabRightMenu = [
+    {
+      label: '刷新',
+      key: '1',
+      disabled: selectedPanel.key !== fullPath || selectedPanel.key === '/404',
+    },
+    {
+      label: '关闭',
+      key: '2',
+      disabled: isDisabled(),
+    },
+    {
+      label: '关闭其他',
+      key: '3',
+      disabled: isDisabled(),
+    },
+    {
+      label: '全部关闭',
+      key: '4',
+      disabled: isDisabled(),
+    },
+  ]
 
   // error boundary
   const fixError = () => {
     refreshTab()
   }
-
+  const onClick = ({ key }) => {
+    if (key === '1') {
+      refreshTab()
+    }
+    if (key === '2') {
+      removeTab(selectedPanel.key)
+    }
+    if (key === '3') {
+      removeAll()
+    }
+    if (key === '4') {
+      removeAll(true)
+    }
+  }
   return (
     <StickyContainer className="layout-container" id="container">
       <Tabs
@@ -223,20 +202,26 @@ const ProTabs = (props) => {
         }}
         items={panes.map((pane) => ({
           label: (
-            // <Dropdown
-            //   menu={tabRightMenu}
-            //   placement="bottomLeft"
-            //   trigger={['contextMenu']}
-            //   getPopupContainer={(node) => node.parentNode}
-            // >
-            // <span onContextMenu={(e) => preventDefault(e, pane)}>
-            <span>
+            <>
               {pane.key === fullPath && pane.key !== '/404' && (
                 <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
               )}
-              {pane.title}
-            </span>
-            // </Dropdown>
+              <Dropdown
+                menu={{
+                  items: tabRightMenu,
+                  onClick,
+                }}
+                trigger={['contextMenu']}
+              >
+                <span
+                  onClick={(e) => {
+                    e.preventDefault()
+                  }}
+                >
+                  {pane.title}
+                </span>
+              </Dropdown>
+            </>
           ),
           key: pane.key,
           closable: pane.closable,
