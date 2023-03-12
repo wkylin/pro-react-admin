@@ -18,13 +18,13 @@ const ProContent = () => {
     content: null,
     key: '',
     closable: false,
-    path: '',
+    path: ''
   })
 
   const pathRef = useRef('')
   const { pathname, search } = useLocation()
   const {
-    token: { colorBgContainer, colorBgLayout },
+    token: { colorBgContainer, colorBgLayout }
   } = theme.useToken()
   useEffect(() => {
     const { tabKey, title, element } = getKeyName(pathname)
@@ -36,7 +36,7 @@ const ProContent = () => {
       content: element,
       key: tabKey,
       closable: tabKey !== '/',
-      path: newPath,
+      path: newPath
     })
     setTabActiveKey(tabKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -44,13 +44,13 @@ const ProContent = () => {
 
   return (
     <Layout className={styles.layout}>
-      <Header className="layout-header" style={{ background: colorBgLayout }}>
+      <Header className='layout-header' style={{ background: colorBgLayout }}>
         <ProBreadcrumb />
       </Header>
-      <Content className="layout-content" style={{ background: colorBgContainer }}>
+      <Content className='layout-content' style={{ background: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className="layout-footer">
+      <Footer className='layout-footer'>
         <FloatButton.BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>
