@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Layout, FloatButton, theme } from 'antd'
+import { Layout, FloatButton, theme, Space } from 'antd'
 import { useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@src/utils/publicFn'
@@ -54,7 +54,7 @@ const ProContent = () => {
         <FloatButton.BackTop target={() => document.querySelector('#container')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>
-        <div>&copy; {new Date().getFullYear()} Pro React Admin</div>
+        <Space>&copy; {new Date().getFullYear()} Pro React Admin</Space>
       </Footer>
     </Layout>
   )

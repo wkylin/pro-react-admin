@@ -13,6 +13,7 @@ import { useProThemeContext } from '@theme/hooks'
 
 import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
+import Fullscreen from '../fullscreen'
 
 const ProHeader = () => {
   const navigate = useNavigate()
@@ -81,8 +82,10 @@ const ProHeader = () => {
               // unCheckedChildren={<Icon component={DarkSvg} />}
               onClick={setAntdTheme}
             />
-            <GithubOutlined style={{ fontSize: 18 }} onClick={redirectGithub} />
+            <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
+            <Fullscreen />
           </Space>
+
           <Dropdown
             arrow
             menu={{
@@ -90,7 +93,7 @@ const ProHeader = () => {
             }}
           >
             <Space>
-              wkylin.w
+              <span style={{ fontSize: 18 }}>wkylin.w</span>
               <DownOutlined />
             </Space>
           </Dropdown>
