@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Tabs, Dropdown, Space, theme } from 'antd'
+import { Tabs, Dropdown, Space, theme, Button } from 'antd'
 // import { StickyContainer, Sticky } from 'react-sticky-ts'
 import { StickyContainer, Sticky } from 'react-sticky'
-import { SyncOutlined, FireOutlined } from '@ant-design/icons'
+import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
 import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
@@ -12,7 +12,6 @@ import Loading from '@src/components/stateless/Loading'
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
   const [isReload, setIsReload] = useState(false)
-  const [selectedPanel, setSelectedPanel] = useState({})
   const pathRef = useRef('')
 
   const navigate = useNavigate()
@@ -54,7 +53,6 @@ const ProTabs = (props) => {
     pathRef.current = newPath
 
     const index = panes.findIndex((item) => item.key === panesItem.key)
-    setSelectedPanel(panesItem)
     setActiveKey(tabActiveKey)
 
     if (!panesItem.key || (index > -1 && newPath === panes[index].path)) {
@@ -97,29 +95,17 @@ const ProTabs = (props) => {
     }, 1000)
   }
 
-  const onTabContextMenu = (rightMenuKey, rightMenuTab) => {
+  const onTabContextMenu = (rightMenuKey) => {
     if (rightMenuKey === 'all') {
-      removeAll()
+      const filterPanes = panes.filter((pane) => pane.key === '/')
+      setPanes(filterPanes)
+      navigate('/')
+      setActiveKey('/')
     }
     if (rightMenuKey === 'other') {
-      removeOther(rightMenuTab)
+      const filterPanes = panes.filter((pane) => pane.key === '/' || pane.key === activeKey)
+      setPanes(filterPanes)
     }
-  }
-
-  // 关闭所有
-  const removeAll = () => {
-    // key === rightMenuTab 在当前tab上右键
-    const filterPanes = panes.filter((pane) => pane.key === '/')
-    setPanes(filterPanes)
-    navigate('/')
-    setActiveKey('/')
-  }
-
-  // 关闭其他或
-  const removeOther = (rightMenuTab) => {
-    const { key } = selectedPanel
-    console.log('rightMenuTab', rightMenuTab)
-    console.log('key', key)
   }
 
   // tab 右键菜单
@@ -138,7 +124,6 @@ const ProTabs = (props) => {
     refreshTab()
   }
 
-  console.log('panes', panes)
   return (
     <StickyContainer className="layout-container" id="container">
       <Tabs
@@ -158,8 +143,26 @@ const ProTabs = (props) => {
           left: (
             <Space align="center" size={30} style={{ margin: '0 25px' }}>
               <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
-              {/* &nbsp; */}
             </Space>
+          ),
+          right: (
+            <>
+              {panes.length > 2 ? (
+                <Dropdown
+                  menu={{
+                    items: tabRightMenu,
+                    onClick: ({ key }) => {
+                      onTabContextMenu(key)
+                    },
+                  }}
+                  trigger={['hover']}
+                >
+                  <Button type="link">
+                    More <DownOutlined />
+                  </Button>
+                </Dropdown>
+              ) : null}
+            </>
           ),
         }}
         items={panes.map((pane) => ({
@@ -168,27 +171,7 @@ const ProTabs = (props) => {
               {pane.key === fullPath && pane.key !== '/404' && (
                 <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
               )}
-              {panes.length > 2 ? (
-                <Dropdown
-                  menu={{
-                    items: tabRightMenu,
-                    onClick: ({ key }) => {
-                      onTabContextMenu(key, pane.key)
-                    },
-                  }}
-                  trigger={['contextMenu']}
-                >
-                  <span
-                    onClick={(e) => {
-                      e.preventDefault()
-                    }}
-                  >
-                    {pane.title}
-                  </span>
-                </Dropdown>
-              ) : (
-                <>{pane.title}</>
-              )}
+              {pane.title}
             </>
           ),
           key: pane.key,
