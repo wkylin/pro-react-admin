@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Layout, FloatButton, theme } from 'antd'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@src/utils/publicFn'
+import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
 
 const { Content, Header, Footer } = Layout
-// const { Content, Footer } = Layout
-
-const noNewTab = ['/signin', '/signup']
 
 const ProContent = () => {
   const [tabActiveKey, setTabActiveKey] = useState('home')
+  const { activeKey, panes } = useProTabContext()
   const [panesItem, setPanesItem] = useState({
     title: '',
     content: null,
@@ -23,23 +22,12 @@ const ProContent = () => {
   })
 
   const pathRef = useRef('')
-  const navigate = useNavigate()
   const { pathname, search } = useLocation()
   const {
     token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
   useEffect(() => {
-    // 未登录
-    // if (!token && pathname !== '/signin') {
-    //   navigate('signin', { replace: true })
-    //   return
-    // }
-
     const { tabKey, title, element } = getKeyName(pathname)
-    if (pathname === pathRef.current || noNewTab.includes(pathname)) {
-      setTabActiveKey(tabKey)
-    }
-
     const newPath = search ? pathname + search : pathname
     pathRef.current = newPath
 
@@ -51,7 +39,8 @@ const ProContent = () => {
       path: newPath,
     })
     setTabActiveKey(tabKey)
-  }, [pathname, navigate, search])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, search, panes, activeKey])
 
   return (
     <Layout className={styles.layout}>
@@ -59,7 +48,7 @@ const ProContent = () => {
         <ProBreadcrumb />
       </Header>
       <Content className="layout-content" style={{ background: colorBgContainer }}>
-        <ProTabs defaultActiveKey="home" panesItem={panesItem} tabActiveKey={tabActiveKey} />
+        <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">
         <FloatButton.BackTop target={() => document.querySelector('#container')}>

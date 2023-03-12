@@ -49,7 +49,8 @@ const ProTabProvider = ({ children }) => {
       }
       callbackFun()
     },
-    [activeKey, panes, navigate]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activeKey, panes]
   )
 
   const providerValue = useMemo(

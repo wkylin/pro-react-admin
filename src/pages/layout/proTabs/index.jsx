@@ -8,7 +8,6 @@ import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
-import Home from '@src/pages/home'
 
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
@@ -18,7 +17,7 @@ const ProTabs = (props) => {
 
   const navigate = useNavigate()
 
-  const { defaultActiveKey, panesItem, tabActiveKey } = props
+  const { panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
   const fullPath = pathname + search
 
@@ -39,20 +38,7 @@ const ProTabs = (props) => {
     </Sticky>
   )
 
-  // 从本地存储中恢复已打开的tab列表
-  // const resetTabs = useCallback(() => {
-  //   const { tabKey } = getKeyName(pathname)
-  //   setPanes(initialPanes)
-  //   setActiveKey(tabKey)
-  // }, [pathname])
-
-  // 初始化页面
-  // useEffect(() => {
-  //   resetTabs()
-  // }, [resetTabs])
-
   useEffect(() => {
-    // scroll to top
     document.querySelector('#container').scrollTo({
       top: 0,
       left: 0,
@@ -68,24 +54,22 @@ const ProTabs = (props) => {
     pathRef.current = newPath
 
     const index = panes.findIndex((item) => item.key === panesItem.key)
+    setSelectedPanel(panesItem)
+    setActiveKey(tabActiveKey)
 
     if (!panesItem.key || (index > -1 && newPath === panes[index].path)) {
-      setActiveKey(tabActiveKey)
       return
     }
 
     if (index > -1) {
       panes[index].path = newPath
       setPanes(panes)
-      setActiveKey(tabActiveKey)
       return
     }
-
     setPanes([...panes, panesItem])
-    setActiveKey(tabActiveKey)
-    setSelectedPanel(panesItem)
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [panes, panesItem, pathname, search, tabActiveKey])
+  }, [pathname, tabActiveKey])
 
   const onChange = (key) => {
     setActiveKey(key)
@@ -105,8 +89,6 @@ const ProTabs = (props) => {
     if (action === 'remove') removeTab(targetKey)
   }
 
-  const isDisabled = () => selectedPanel.key === '/' || panes.length === 1
-
   // 刷新当前 tab
   const refreshTab = () => {
     setIsReload(true)
@@ -115,67 +97,48 @@ const ProTabs = (props) => {
     }, 1000)
   }
 
-  // 关闭其他或关闭所有
-  const removeAll = (isRemoveAll) => {
+  const onTabContextMenu = (rightMenuKey, rightMenuTab) => {
+    if (rightMenuKey === 'all') {
+      removeAll()
+    }
+    if (rightMenuKey === 'other') {
+      removeOther(rightMenuTab)
+    }
+  }
+
+  // 关闭所有
+  const removeAll = () => {
+    // key === rightMenuTab 在当前tab上右键
+    const filterPanes = panes.filter((pane) => pane.key === '/')
+    setPanes(filterPanes)
+    navigate('/')
+    setActiveKey('/')
+  }
+
+  // 关闭其他或
+  const removeOther = (rightMenuTab) => {
     const { key } = selectedPanel
-    const homePanel = [
-      {
-        title: '首页',
-        key: '/',
-        content: <Home />,
-        closable: false,
-        path: '/',
-      },
-    ]
-    const nowPanes = key !== '/' && !isRemoveAll ? [...homePanel, selectedPanel] : homePanel
-    setPanes(nowPanes)
-    const { path } = nowPanes.filter((item) => item.key === (isRemoveAll ? '/' : key))[0]
-    navigate(path)
-    setActiveKey(isRemoveAll ? '/' : key)
+    console.log('rightMenuTab', rightMenuTab)
+    console.log('key', key)
   }
 
   // tab 右键菜单
   const tabRightMenu = [
     {
-      label: '刷新',
-      key: '1',
-      disabled: selectedPanel.key !== fullPath || selectedPanel.key === '/404',
-    },
-    {
-      label: '关闭',
-      key: '2',
-      disabled: isDisabled(),
-    },
-    {
       label: '关闭其他',
-      key: '3',
-      disabled: isDisabled(),
+      key: 'other',
     },
     {
       label: '全部关闭',
-      key: '4',
-      disabled: isDisabled(),
+      key: 'all',
     },
   ]
 
-  // error boundary
   const fixError = () => {
     refreshTab()
   }
-  const onClick = ({ key }) => {
-    if (key === '1') {
-      refreshTab()
-    }
-    if (key === '2') {
-      removeTab(selectedPanel.key)
-    }
-    if (key === '3') {
-      removeAll()
-    }
-    if (key === '4') {
-      removeAll(true)
-    }
-  }
+
+  console.log('panes', panes)
   return (
     <StickyContainer className="layout-container" id="container">
       <Tabs
@@ -190,7 +153,6 @@ const ProTabs = (props) => {
           zIndex: 2,
         }}
         activeKey={activeKey}
-        defaultActiveKey={defaultActiveKey}
         destroyInactiveTabPane={false}
         tabBarExtraContent={{
           left: (
@@ -206,21 +168,27 @@ const ProTabs = (props) => {
               {pane.key === fullPath && pane.key !== '/404' && (
                 <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
               )}
-              <Dropdown
-                menu={{
-                  items: tabRightMenu,
-                  onClick,
-                }}
-                trigger={['contextMenu']}
-              >
-                <span
-                  onClick={(e) => {
-                    e.preventDefault()
+              {panes.length > 2 ? (
+                <Dropdown
+                  menu={{
+                    items: tabRightMenu,
+                    onClick: ({ key }) => {
+                      onTabContextMenu(key, pane.key)
+                    },
                   }}
+                  trigger={['contextMenu']}
                 >
-                  {pane.title}
-                </span>
-              </Dropdown>
+                  <span
+                    onClick={(e) => {
+                      e.preventDefault()
+                    }}
+                  >
+                    {pane.title}
+                  </span>
+                </Dropdown>
+              ) : (
+                <>{pane.title}</>
+              )}
             </>
           ),
           key: pane.key,
