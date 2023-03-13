@@ -5,6 +5,7 @@
 ![version-status](https://img.shields.io/github/package-json/v/wkylin/pro-react-admin 'version-status')
 ![license](https://img.shields.io/github/license/wkylin/pro-react-admin 'license')
 ![contributors](https://img.shields.io/github/contributors/wkylin/pro-react-admin 'contributors')
+[![DeepScan grade](https://deepscan.io/api/teams/16370/projects/24083/branches/739580/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=16370&pid=24083&bid=739580)
 
 ## 项目特性
 
