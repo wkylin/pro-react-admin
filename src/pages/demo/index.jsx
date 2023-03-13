@@ -122,7 +122,9 @@ const ProDemo = () => {
       <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
       {/* <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4> */}
-      <h4 onClick={onFetch}>ErrorBoundary</h4>
+      <div onClick={onFetch} aria-hidden="true">
+        ErrorBoundary
+      </div>
       {/* <ErrorBoundary>
         <ShopsList />
       </ErrorBoundary> */}

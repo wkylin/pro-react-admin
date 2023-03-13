@@ -40,7 +40,7 @@ const QrCode = () => {
       <section style={{ margin: 20 }}>
         {qr && (
           <Space>
-            <img src={qr} width="300" />
+            <img src={qr} width="300" alt="QRcode" />
             <Button type="link" href={qr} download="qrcode.png">
               Download
             </Button>

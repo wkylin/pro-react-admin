@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useMemo } from 'react'
 
-const defaultTheme: string = 'light'
+const defaultTheme = 'light'
 type ThemeContextType = {
   myTheme: string
   setMyTheme: Function

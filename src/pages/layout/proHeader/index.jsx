@@ -67,7 +67,7 @@ const ProHeader = () => {
       className={styles.header}
       style={{ background: colorBgContainer, borderBottom: `1px solid ${colorBorder}` }}
     >
-      <div className={styles.logo} role="button" onClick={() => redirectTo('/')}>
+      <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         Pro React Admin
       </div>
