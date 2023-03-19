@@ -9,14 +9,14 @@
 
 ## 项目特性
 
-1. 升级 Antd 5.0， 实现亮白与暗黑主题切换，并自定义组件主题，且组合紧凑算法实现相关主题
+1. 升级 Ant 5.x.x， 实现亮白与暗黑主题切换，并自定义组件主题，且组合紧凑算法实现相关主题
 2. 基于 React 最新版本，拥抱 Hooks
 3. 基于 React Router V6, 实现嵌套路由更方便
 4. 基于 Webpack 最新版本，实现多环境打包部署，代码分割优化，结合官方分析工具，实时优化代码
-5. 同时 支持 vite, 极速构建
+5. 同时 支持 vite 4.x.x, 极速构建
 6. 基于 Faker 实现 Mock Server,不依赖后端实现模拟数据更加方便
 7. 封装 Fetch, 实现 useFetch, 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
-8. 支持 TypeScript, 一切变得可控，扼杀错误于摇篮之中
+8. 支持 TypeScript 5.x.x, 一切变得可控，扼杀错误于摇篮之中
 9. 支持多页签，提升效率
 10. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
 11. 配置 Commit message， 使用标准 commit 生成 changelog 标准化
@@ -38,7 +38,7 @@
 3. Webpack:v5.x.x [Webpack](https://webpack.js.org/)
 4. Babel: v7.x.x [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
 5. Antd: v5.x.x [Ant Design](https://ant.design/index-cn)
-6. TypeScript: v4.x.x[TypeScript](https://www.typescriptlang.org/)
+6. TypeScript: v5.x.x[TypeScript](https://www.typescriptlang.org/)
 
 ## Development
 
