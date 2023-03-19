@@ -287,7 +287,8 @@ npm run dev:faker
 2. 遇到的问题：
    - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
    - 解决方案参考：[https://juejin.cn/post/6961012856636571655](https://juejin.cn/post/6961012856636571655)
-   - "sentry:check": "node check-sentry.js"
+   - "sentry:check": "node check-sentry.js
+3. Self-Hosted Sentry nightly -[https://github.com/getsentry/self-hosted](https://github.com/getsentry/self-hosted)
 
 ## VSCode Extensions
 
