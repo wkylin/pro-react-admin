@@ -163,7 +163,7 @@ const handleFetchData = (url, options) => {
       )
       abortController.abort()
     }, timeout)
-
+    const fetchStartTime = +new Date()
     fetch(url, { ...otherOptions, signal })
       .then((response) => {
         // response.text() response.json() response.blob() response.formData() response.arrayBuffer() response.clone()
@@ -176,9 +176,11 @@ const handleFetchData = (url, options) => {
         // for (const [key, value] of response.headers.entries()) {
         //   console.log(`response ${key} : ${value}`)
         // }
-
+        const fetchEndTime = +new Date()
         const contentType = response.headers.get('Content-Type')
         if (response.status >= 200 && response.status < 300) {
+          const delayTime = fetchEndTime - fetchStartTime
+          console.log('response delay:', delayTime)
           if (contentType.includes('application/json')) {
             response
               .json()
