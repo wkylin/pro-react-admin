@@ -177,10 +177,10 @@ const handleFetchData = (url, options) => {
         //   console.log(`response ${key} : ${value}`)
         // }
         const fetchEndTime = +new Date()
+        const delayTime = fetchEndTime - fetchStartTime
+        console.log('response delay:', delayTime)
         const contentType = response.headers.get('Content-Type')
         if (response.status >= 200 && response.status < 300) {
-          const delayTime = fetchEndTime - fetchStartTime
-          console.log('response delay:', delayTime)
           if (contentType.includes('application/json')) {
             response
               .json()
