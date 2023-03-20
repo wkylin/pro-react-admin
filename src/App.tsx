@@ -2,22 +2,14 @@ import React, { useEffect, useState } from 'react'
 
 import { useRoutes } from 'react-router-dom'
 import Watermark from '@stateless/Watermark'
-// import Tracker from '@openreplay/tracker'
 import rootRouter from './routers'
 import { sentryInit } from './utils'
 
 const App = () => {
   const [loading, setLoading] = useState(true)
   const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
-  // const tracker = new Tracker({
-  //   projectKey: 'HYHVjM3lbPjVFcPxsfh8',
-  // })
   useEffect(() => {
-    // sentry init
     sentryInit()
-    // tracker from openreplay.com
-    // tracker.start()
-
     asyncCall()
       .then(() => setLoading(false))
       .catch(() => setLoading(false))

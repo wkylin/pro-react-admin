@@ -1,23 +1,15 @@
 const path = require('path')
-// const webpack = require('webpack')
-// const chalk = require('chalk')
-
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-// const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const ESLintWebpackPlugin = require('eslint-webpack-plugin')
 const paths = require('./paths')
-
-// const { getThemeVariables } = require('antd/dist/theme')
 
 const isDev = process.env.NODE_ENV === 'development'
 
@@ -42,9 +34,6 @@ switch (process.env.BUILD_GOAL) {
     dotEnv = '.env.development'
 }
 
-// const root = process.cwd()
-// console.log(chalk.blue(`root: ${root}`))
-
 const config = {
   entry: {
     app: `${paths.src}/index.tsx`,
@@ -61,7 +50,6 @@ const config = {
     // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
-    // plugins: [new TsconfigPathsPlugin()],
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
       '@src': path.resolve('./src'),
@@ -76,17 +64,8 @@ const config = {
       '@theme': path.resolve('./src/theme'),
     },
     symlinks: false,
-    // modules: [path.resolve(__dirname, 'node_modules')],
   },
-  // target: process.env.NODE_ENV === 'development' ? 'web' : 'browserslist',
   plugins: [
-    // new CleanWebpackPlugin({
-    //   root: __dirname,
-    //   verbose: true,
-    //   dry: false,
-    //   exclude: [],
-    //   cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, '../dist')],
-    // }),
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),
     }),
@@ -115,19 +94,6 @@ const config = {
             useShortDoctype: true,
           },
     }),
-    // new webpack.ProgressPlugin({
-    //   activeModules: false,
-    //   entries: true,
-    //   handler(percentage, message, ...args) {
-    //     console.info(`${parseInt(percentage * 100)}%`, message, ...args)
-    //   },
-    //   modules: true,
-    //   modulesCount: 5000,
-    //   profile: false,
-    //   dependencies: true,
-    //   dependenciesCount: 10000,
-    //   percentBy: null,
-    // }),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     new CircularDependencyPlugin({
@@ -161,7 +127,6 @@ const config = {
       },
       {
         test: /\.less$/i,
-        // include: [path.resolve(__dirname, 'src/styles')],
         use: [
           'style-loader',
           {
@@ -176,7 +141,6 @@ const config = {
                 localIdentContext: paths.src,
                 namedExport: false,
                 exportLocalsConvention: 'camelCase',
-                // exportOnlyLocals: false,
               },
               importLoaders: 2,
             },

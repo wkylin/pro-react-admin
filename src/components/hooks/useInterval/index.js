@@ -21,16 +21,3 @@ const useInterval = (callback, delay) => {
 }
 
 export default useInterval
-
-// const [isRunning, setIsRunning] = useState(true)
-
-// useInterval(
-//   () => {
-//     // Your custom logic here
-//   },
-//   isRunning ? delay : null
-// )
-
-// function handleIsRunningChange(e) {
-//   setIsRunning(true)
-// }

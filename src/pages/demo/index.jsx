@@ -1,13 +1,9 @@
 import React from 'react'
-// import ErrorBoundary from '@stateful/ErrorBoundary'
-// import React, { useState, useEffect } from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
-// import { useReqFetch, useGetFetch, reqFetch } from '@src/service'
 import { Select, Table, Cascader, Space } from 'antd'
 import FixTabPanel from '@src/components/stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
-// import ShopsList from './shopsList'
 import FileUpload from './fileUpload'
 import TsDemo from './tsDemo'
 
@@ -71,40 +67,6 @@ const ProDemo = () => {
     method: 'GET',
   })
 
-  // const [booksRes, booksLoading, booksError] = useGetFetch('/faker/shops')
-
-  // const [loading, setLoading] = useState(false)
-  // const [error, setError] = useState(false)
-  // const [res, setRes] = useState([])
-
-  // const useAsyncFetch = async (canceled, controller) => {
-  //   try {
-  //     if (loading) return
-  //     setLoading(true)
-  //     const res = await reqFetch('/mocker/app/api/user/list', {
-  //       method: 'GET',
-  //       controller,
-  //     })
-  //     if (!canceled) {
-  //       setRes(res)
-  //     }
-  //   } catch (error) {
-  //     setError(true)
-  //   } finally {
-  //     setLoading(false)
-  //   }
-  // }
-  // useEffect(() => {
-  //   const controller = new AbortController()
-  //   let canceled = false
-  //   useAsyncFetch(canceled, controller)
-  //   return () => {
-  //     setRes(() => {})
-  //     canceled = true
-  //     controller.abort()
-  //   }
-  // }, [])
-
   const onFetch = () => {
     reqFetch('/faker/shops', { method: 'GET' })
       .then((response) => {
@@ -121,13 +83,9 @@ const ProDemo = () => {
       </h2>
       <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
-      {/* <h4>useFetch: {booksLoading ? 'Books Loading...' : booksError ? 'error' : JSON.stringify(booksRes, null, 2)}</h4> */}
       <div onClick={onFetch} aria-hidden="true">
         ErrorBoundary
       </div>
-      {/* <ErrorBoundary>
-        <ShopsList />
-      </ErrorBoundary> */}
       <h4>File Upload</h4>
       <FileUpload />
 

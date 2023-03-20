@@ -10,10 +10,3 @@ const useInitialRender = () => {
 }
 
 export default useInitialRender
-
-// const isInitialRender = useInitialRender()
-// useEffect(() => {
-//   if (!isInitialRender) {
-//     console.log('render')
-//   }
-// }, [count])

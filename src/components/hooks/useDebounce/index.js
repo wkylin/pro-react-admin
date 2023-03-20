@@ -32,24 +32,3 @@ const useDebounce = (fn, delay) => {
 }
 
 export default useDebounce
-
-// const getRes = useCallback(
-//   (v) => {
-//     fakeFetch({
-//       value: v,
-//       duration,
-//     }).then((res) => {
-//       setRes(res);
-//     });
-//   },
-//   [duration]
-// );
-
-// const getResDebounced = useDebounceFn(getRes, 500);
-
-// const onChange = useCallback(
-//   (e) => {
-//     getResDebounced(e.target.value);
-//   },
-//   [getResDebounced]
-// );

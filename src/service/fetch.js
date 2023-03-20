@@ -14,93 +14,13 @@
  * 5. deleteFetch
  * 6. patchFetch
  */
-// import { HashRouter } from 'react-router-dom'
 import { message } from 'antd'
 import suffix from '../utils/suffix'
-// import { getToken } from '../utils/token'
-// import fetchIntercept from 'fetch-intercept'
-// import fetch from 'cross-fetch'
-// require('isomorphic-fetch')
 
-// fetch polyfill
-// https://github.com/node-fetch/node-fetch
-// https://github.com/matthew-andrews/isomorphic-fetch
-// https://github.com/lquixada/cross-fetch
-// https://github.com/github/fetch
-// https://juejin.cn/post/7064495856220635150
-
-// fetch(url, initParams).then((res) => res.json).then((body) = body).catch((error) => error)
-// const response = fetch(url, {
-//   method: 'GET',
-//   headers: {
-//     'Content-Type': 'text/plain;charset=UTF-8', //application/json;charset=utf-8
-//   },
-//   body: null,
-//   referrer: 'about:client',
-//   referrerPolicy: 'no-referrer-when-downgrade',
-//   mode: 'cors',
-//   credentials: 'same-origin',
-//   cache: 'default',
-//   redirect: 'follow',
-//   integrity: '',
-//   keepalive: false,
-//   signal: null,
-// })
-
-/**
- * Timeout function
- * @param {Integer} time (miliseconds)
- * @param {Promise} promise
- */
-// const timeout = (time, promise) => {
-//   return new Promise(function(resolve, reject) {
-//     setTimeout(() => {
-//       reject(new Error('Request timed out.'))
-//     }, time);
-//     promise.then(resolve, reject);
-//   });
-// }
-
-// https://use-http.com/#/
-// https://github.com/Bigerfe/fe-learn-code/
-// https://cloud.tencent.com/developer/article/1532107
-// https://towardsdev.com/what-is-better-for-http-requests-fetch-or-axios-comparison-920ceffc5161
-// https://javascript.info/fetch-progress
-// https://github.com/AnthumChris/fetch-progress-indicators
-// https://github.com/jserz/request-extensions
-// allowHTTP1ForStreamingUpload
-// https://medium.datadriveninvestor.com/aborting-cancelling-requests-with-fetch-or-axios-db2e93825a36
-// fetch(url).then(res => consume(res.body.getReader()))
-// const consume = (reader) => {
-//   let total = 0
-//   return new Promise((resolve, reject) => {
-//     function pump() {
-//       reader
-//         .read()
-//         .then(({ done, value }) => {
-//           if (done) {
-//             resolve()
-//             return
-//           }
-//           total += value.byteLength
-//           console.log(`received ${value.byteLength} bytes (${total} bytes in total)`)
-//           pump()
-//         })
-//         .catch(reject)
-//     }
-//     pump()
-//   })
-// }
-
-// const baseUrl = process.env.APP_BASE_URL
 const baseUrl = process?.env?.APP_BASE_URL ? process.env.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
-// const hashRouter = new HashRouter()
 const parseToQuery = (query) =>
   Object.keys(query)
     .reduce((ary, key) => {
-      // if (query[key]) {
-      //   ary.push(encodeURIComponent(key) + '=' + encodeURIComponent(query[key]))
-      // }
       ary.push(`${encodeURIComponent(key)}=${encodeURIComponent(query[key] === undefined ? '' : query[key])}`)
       return ary
     }, [])
@@ -166,16 +86,6 @@ const handleFetchData = (url, options) => {
     const fetchStartTime = +new Date()
     fetch(url, { ...otherOptions, signal })
       .then((response) => {
-        // response.text() response.json() response.blob() response.formData() response.arrayBuffer() response.clone()
-        // if(response.ok || (response.status >= 200 && response.status < 300)) { 成功 } else { 失败}
-        // response.status
-        // response.statusText
-        // response.type >> *basic cors opaque error opaqueredirect(manual)
-        // cors >> Cache-Control, Content-Language, Content-Type, Expores, Last-Modified, Progma
-        // res.body.getReader()
-        // for (const [key, value] of response.headers.entries()) {
-        //   console.log(`response ${key} : ${value}`)
-        // }
         const fetchEndTime = +new Date()
         const delayTime = fetchEndTime - fetchStartTime
         console.log('response delay:', delayTime)
@@ -191,7 +101,6 @@ const handleFetchData = (url, options) => {
                 handleFailedResult(response, error, isShowError)
               })
           } else if (contentType.includes('application/vnd.ms-excel')) {
-            // application/octet-stream
             response
               .arrayBuffer()
               .then((resBuffer) => {

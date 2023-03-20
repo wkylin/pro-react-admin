@@ -1,5 +1,4 @@
 const path = require('path')
-// const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -10,19 +9,14 @@ const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
-// const CopyWebpackPlugin = require('copy-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
-
-// const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
-// const smp = new SpeedMeasurePlugin()
 
 const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
 
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
-// const regReact = /[\\/]node_modules[\\/](react|react-dom|react-redux|react-router-dom|redux)[\\/]/
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
@@ -30,9 +24,7 @@ const prodWebpackConfig = merge(common, {
   mode: 'production',
   // 使用文件缓存
   cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
-  // devtool: false,
   devtool: 'source-map',
-  // devtool: 'nosources-source-map',
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
@@ -46,11 +38,6 @@ const prodWebpackConfig = merge(common, {
         standard: [/^ant-/],
       },
     }),
-    // new webpack.BannerPlugin({
-    //   raw: true,
-    //   banner:
-    //     '/** @preserve Powered by promotion-web (https://github.com/wkylin/promotion-web/) */',
-    // }),
     new CompressionWebpackPlugin({
       filename: '[path][base].gz',
       algorithm: 'gzip',
@@ -59,12 +46,6 @@ const prodWebpackConfig = merge(common, {
       minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
       // deleteOriginalAssets: true // 删除原文件
     }),
-    // new CopyWebpackPlugin({
-    //   patterns: [{ from: './public', to: '../dist' }],
-    //   options: {
-    //     concurrency: 100,
-    //   },
-    // }),
   ],
   optimization: {
     minimize: true,
@@ -140,5 +121,4 @@ if (useSentryMap) {
   )
 }
 
-// module.exports = smp.wrap(prodWebpackConfig)
 module.exports = prodWebpackConfig
