@@ -87,8 +87,15 @@ const handleFetchData = (url, options) => {
     fetch(url, { ...otherOptions, signal })
       .then((response) => {
         const fetchEndTime = +new Date()
-        const delayTime = fetchEndTime - fetchStartTime
-        console.log('response delay:', delayTime)
+        const delay = fetchEndTime - fetchStartTime
+        fetch('http://localhost:5200/apis', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url.split('?')[0], delay }),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log(data))
+          .catch((err) => console.error(err))
         const contentType = response.headers.get('Content-Type')
         if (response.status >= 200 && response.status < 300) {
           if (contentType.includes('application/json')) {

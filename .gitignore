@@ -7,3 +7,4 @@ compilation-stats.json
 .yarn/cache
 /packagehash.txt
 public/bit
+api/node_modules
