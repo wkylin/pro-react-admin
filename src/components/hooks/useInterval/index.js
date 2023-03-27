@@ -10,7 +10,7 @@ const useInterval = (callback, delay) => {
 
   // Set up the interval.
   useEffect(() => {
-    function tick() {
+    function tick () {
       savedCallback.current()
     }
     if (delay !== null) {

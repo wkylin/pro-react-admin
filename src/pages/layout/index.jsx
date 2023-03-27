@@ -26,7 +26,7 @@ const ProLayout = () => {
           <ProSider>
             <ProSecNav />
           </ProSider>
-          <Profiler id="ProContext" onRender={onRenderCallback}>
+          <Profiler id='ProContext' onRender={onRenderCallback}>
             <ProContent />
           </Profiler>
         </Layout>
