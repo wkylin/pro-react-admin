@@ -280,6 +280,13 @@ npm run dev:faker
 
 1. [DeepSource/](https://deepsource.io/)
 2. [DeepScan](https://deepscan.io/)
+3. [SonarQube](https://www.sonarsource.com/)
+
+## Mac 本地部署 SonarQube
+
+1. [SonarQube for Mac](https://juejin.cn/post/7210005376652886077)
+2. [Gitlab for Mac](https://juejin.cn/post/7210746685802397755)
+3. [Gitlab CI/CD for Mac](https://juejin.cn/post/7214686619097874491)
 
 ## Sentry 接入
 
@@ -427,50 +434,73 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 4. tree node
 
    ```bash
-    .
-    ├── webpack/
-    │   ├── webpack.prod.js
-    │   ├── webpack.dev.server.js
-    │   ├── webpack.dev.js
-    │   ├── webpack.common.js
-    │   ├── process.js
-    │   ├── paths.js
-    │   └── dev.server.js
-    ├── src/
-    │   ├── utils/
-    │   ├── styles/
-    │   ├── store/
-    │   ├── service/
-    │   ├── routers/
-    │   ├── reducers/
-    │   ├── pages/
-    │   ├── index.js
-    │   ├── components/
-    │   ├── assets/
-    │   ├── actions/
-    │   └── App.js
-    ├── public/
-    │   ├── robots.txt
-    │   ├── manifest.json
-    │   ├── index.ejs
-    │   └── favicon.ico
-    ├── postcss.config.js
-    ├── package.json
-    ├── package-lock.json
-    ├── faker/
-    │   ├── utils/
-    │   ├── shops/
-    │   ├── index.js
-    │   └── app/
-    ├── docker-compose.yml
-    ├── dist/
-    │   ├── static/
-    │   ├── index.html
-    │   └── favicon.ico
-    ├── babel.config.js
-    ├── README.md
-    ├── Dockerfile
-    └── CHANGELOG.md
+    pro-react-admin/
+   ├── workspace.jsonc
+   ├── webpack/
+   │   ├── webpack.prod.js
+   │   ├── webpack.dev.js
+   │   ├── webpack.common.js
+   │   ├── process.js
+   │   ├── paths.js
+   │   └── dev.proxy.js
+   ├── vite.config.js
+   ├── typings/
+   │   ├── style.d.ts
+   │   ├── declaration.d.ts
+   │   └── asset.d.ts
+   ├── tsconfig.json
+   ├── src/
+   │   ├── utils/
+   │   ├── theme.tsx
+   │   ├── theme/
+   │   ├── styles/
+   │   ├── store/
+   │   ├── service/
+   │   ├── routers/
+   │   ├── reducers/
+   │   ├── pages/
+   │   ├── index.tsx
+   │   ├── components/
+   │   ├── assets/
+   │   ├── actions/
+   │   └── App.tsx
+   ├── public/
+   │   ├── robots.txt
+   │   ├── manifest.json
+   │   ├── loading.svg
+   │   ├── index.html
+   │   └── favicon.ico
+   ├── packagehash.txt
+   ├── package.json
+   ├── package-lock.json
+   ├── index.html
+   ├── faker/
+   │   ├── utils/
+   │   ├── shops/
+   │   ├── index.js
+   │   └── app/
+   ├── docker-compose.yml
+   ├── dist/
+   │   ├── static/
+   │   ├── react.bb194261542b956cd3ea.js.map
+   │   ├── react.bb194261542b956cd3ea.js.gz
+   │   ├── react.bb194261542b956cd3ea.js.LICENSE.txt
+   │   ├── react.bb194261542b956cd3ea.js
+   │   ├── index.html
+   │   └── favicon.ico
+   ├── compilation-stats.json
+   ├── check-sentry.js
+   ├── babel.config.js
+   ├── api/
+   │   ├── server.js
+   │   ├── package.json
+   │   ├── package-lock.json
+   ├── SECURITY.md
+   ├── README.md
+   ├── LICENSE
+   ├── Dockerfile
+   ├── CODE_OF_CONDUCT.md
+   └── CHANGELOG.md
    ```
 
 ## Webpack Analyse
