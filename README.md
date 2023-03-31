@@ -201,6 +201,11 @@ npm run dev:faker
 1. Github:
 2. Demo:
 
+## Bit
+
+1. [Bit.dev](https://bit.dev/)
+2. [Bit 实践](https://juejin.cn/post/7157576390177456159)
+
 ## 已支持特性
 
 1. TypeScript: [TypeScript](https://www.typescriptlang.org/)
