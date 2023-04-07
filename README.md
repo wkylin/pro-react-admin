@@ -201,6 +201,14 @@ npm run dev:faker
 1. Github:
 2. Demo:
 
+## Snyk
+
+```js
+  - npm install -g snyk
+  - snyk auth
+  - snyk monitor
+```
+
 ## Bit
 
 1. [Bit.dev](https://bit.dev/)

@@ -38,8 +38,8 @@ const SignIn = () => {
         name="basic"
         initialValues={{
           remember: true,
-          username: 'wkylin.w',
-          password: 'wkylin.w',
+          username: process.env.AUTH_USER,
+          password: process.env.AUTH_PASSWORD,
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
