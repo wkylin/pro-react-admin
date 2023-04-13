@@ -1,4 +1,6 @@
 const path = require('path')
+
+const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const portfinder = require('portfinder')
@@ -53,6 +55,9 @@ const devWebpackConfig = merge(common, {
   plugins: [
     new ReactRefreshWebpackPlugin({
       overlay: false,
+    }),
+    new webpack.debug.ProfilingPlugin({
+      outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
     }),
   ].filter(Boolean),
   optimization: {

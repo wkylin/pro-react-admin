@@ -45,10 +45,10 @@ const initOptions = {
 }
 
 const handleFailedResult = (response, error, isShowError, reject) => {
-  const { status } = response
+  const { status, statusText } = response
 
   if (((status && status !== 200) || error) && isShowError) {
-    message.error(`${status ? status + response.statusText : error.message}`, 2)
+    message.error(`${status ? `${status}: ${statusText}` : error?.message}`, 2)
   }
   if (reject) reject(response)
 }
@@ -95,7 +95,10 @@ const handleFetchData = (url, options) => {
         })
           .then((res) => res.json())
           .then((data) => console.log(data))
-          .catch((err) => console.error(err))
+          .catch((err) => {
+            console.error('err.name', err.name)
+            console.error('err.message', err.message)
+          })
         const contentType = response.headers.get('Content-Type')
         if (response.status >= 200 && response.status < 300) {
           if (contentType.includes('application/json')) {

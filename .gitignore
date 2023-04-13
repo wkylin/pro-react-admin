@@ -8,3 +8,4 @@ compilation-stats.json
 /packagehash.txt
 public/bit
 api/node_modules
+webpack/profiling
