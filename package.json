@@ -211,7 +211,7 @@
     "webpackbar": "^5.0.2"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.6.1",
+    "@ant-design/cssinjs": "^1.6.2",
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.1",
     "@sentry/cli": "^2.15.2",
