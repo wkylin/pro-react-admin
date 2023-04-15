@@ -45,28 +45,28 @@ const rootRouter = [
         index: true,
         name: '首页',
         key: '/',
-        element: <Home />,
+        element: <Home />
       },
       {
         index: false,
         path: 'demo',
         name: 'Demo',
         key: '/demo',
-        element: <Demo />,
+        element: <Demo />
       },
       {
         index: false,
         path: 'parallax',
         name: 'Parallax',
         key: '/parallax',
-        element: <ParallaxVert />,
+        element: <ParallaxVert />
       },
       {
         index: false,
         path: 'qrcode',
         name: 'QrGenerate',
         key: '/qrcode',
-        element: <QrCode />,
+        element: <QrCode />
       },
       {
         index: false,
@@ -81,80 +81,80 @@ const rootRouter = [
             path: 'home',
             name: 'React',
             key: '/coupons/home',
-            element: <CouponsHome />,
+            element: <CouponsHome />
           },
           {
             index: false,
             name: 'Vue',
             path: 'add',
             key: '/coupons/add',
-            element: <CouponsAdd />,
+            element: <CouponsAdd />
           },
           {
             index: false,
             path: 'edit',
             name: 'Angular',
             key: '/coupons/edit',
-            element: <CouponsEdit />,
+            element: <CouponsEdit />
           },
           {
             index: false,
             path: 'detail',
             name: 'Node',
             key: '/coupons/detail',
-            element: <CouponsDetail />,
-          },
-        ],
+            element: <CouponsDetail />
+          }
+        ]
       },
       {
         index: false,
         path: 'product',
         name: '后端技术栈',
         key: '/product',
-        element: <Product />,
+        element: <Product />
       },
       {
         index: false,
         path: 'error',
         name: 'Error',
         key: '/error',
-        element: <Error />,
+        element: <Error />
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: <NoMatch />,
-      },
-    ],
+        element: <NoMatch />
+      }
+    ]
   },
   {
     index: false,
     path: 'signin',
     name: '登录',
     key: '/signin',
-    element: <SignIn />,
+    element: <SignIn />
   },
   {
     index: false,
     path: 'signup',
     name: '注册',
     key: '/signup',
-    element: <SignUp />,
+    element: <SignUp />
   },
   {
     index: false,
     path: 'dashboard/*',
     name: 'Dashboard',
     key: '/dashboard',
-    element: <Dashboard />,
+    element: <Dashboard />
   },
   {
     path: '*',
     name: 'No Match',
     key: '*',
-    element: <NoMatch />,
-  },
+    element: <NoMatch />
+  }
 ]
 
 export default rootRouter

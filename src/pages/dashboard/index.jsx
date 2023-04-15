@@ -10,7 +10,7 @@ const Dashboard = () => {
   const navigate = useNavigate()
   // const navigateType = useNavigationType()
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
 
   return (
@@ -19,16 +19,16 @@ const Dashboard = () => {
         <Content style={{ height: '100%', background: colorBgContainer }}>
           <Routes>
             <Route
-              path="/"
+              path='/'
               element={
                 <>
                   {/* <h2>Look, more routes!</h2> */}
                   {/* <h2>Navigate type: {navigateType}</h2> */}
                   <Space>
-                    <Button type="primary" onClick={() => navigate('/')}>
+                    <Button type='primary' onClick={() => navigate('/')}>
                       Navigate /
                     </Button>
-                    <Button type="primary" onClick={() => navigate('invoices')}>
+                    <Button type='primary' onClick={() => navigate('invoices')}>
                       navigate to invoices
                     </Button>
                   </Space>
@@ -36,10 +36,10 @@ const Dashboard = () => {
               }
             />
             <Route
-              path="invoices"
+              path='invoices'
               element={
                 <>
-                  <Button type="primary" onClick={() => navigate(-1)}>
+                  <Button type='primary' onClick={() => navigate(-1)}>
                     navigate to dashborad
                   </Button>
                 </>
