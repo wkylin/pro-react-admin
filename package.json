@@ -214,7 +214,7 @@
     "@ant-design/cssinjs": "^1.6.1",
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.1",
-    "@sentry/cli": "^2.15.2",
+    "@sentry/cli": "^2.16.0",
     "@sentry/react": "^7.44.0",
     "@sentry/tracing": "^7.45.0",
     "@welldone-software/why-did-you-render": "^7.0.1",
