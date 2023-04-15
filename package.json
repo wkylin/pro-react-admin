@@ -215,7 +215,7 @@
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.1",
     "@sentry/cli": "^2.15.2",
-    "@sentry/react": "^7.44.0",
+    "@sentry/react": "^7.45.0",
     "@sentry/tracing": "^7.43.0",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "antd": "^5.3.2",
