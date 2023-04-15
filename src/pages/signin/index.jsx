@@ -1,7 +1,9 @@
 import React from 'react'
-import { Form, Input, Button, Checkbox } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import styles from './index.module.less'
+import { Form, Input, Button, Checkbox, Layout, theme } from 'antd'
+import AlignCenter from '@stateless/AlignCenter'
+
+const { Content } = Layout
 
 const layout = {
   labelCol: {
@@ -19,6 +21,14 @@ const tailLayout = {
 }
 
 const SignIn = () => {
+  const navigate = useNavigate()
+  const redirectTo = (path) => {
+    navigate(path)
+  }
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken()
+
   const onFinish = (values) => {
     console.log('Success:', values)
   }
@@ -26,62 +36,62 @@ const SignIn = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo)
   }
-  const navigate = useNavigate()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
 
   return (
-    <div className={styles.container}>
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-          username: process.env.AUTH_USER,
-          password: process.env.AUTH_PASSWORD,
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      >
-        <Form.Item
-          label="Username"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your username!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+    <Layout style={{ height: '100%' }}>
+      <Content style={{ height: '100%', background: colorBgContainer }}>
+        <AlignCenter>
+          <Form
+            {...layout}
+            name="basic"
+            initialValues={{
+              remember: true,
+              username: process.env.AUTH_USER,
+              password: process.env.AUTH_PASSWORD,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <Form.Item
+              label="Username"
+              name="username"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your username!',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
 
-        <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
+            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
 
-        <Form.Item {...tailLayout}>
-          {/* <Button type="primary" htmlType="submit"> */}
-          <Button type="primary" onClick={() => redirectTo('/')}>
-            Sign in
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+            <Form.Item {...tailLayout}>
+              {/* <Button type="primary" htmlType="submit"> */}
+              <Button type="primary" onClick={() => redirectTo('/')}>
+                Sign in
+              </Button>
+            </Form.Item>
+          </Form>
+        </AlignCenter>
+      </Content>
+    </Layout>
   )
 }
 

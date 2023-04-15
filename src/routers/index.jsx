@@ -33,9 +33,6 @@ const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Load
 const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
 const QrCode = loadable(() => import('../pages/qrGenerate'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
-// import basicRouter from './basic'
-// import couponsRouter from './coupons'
-// import productRouter from './product'
 
 const rootRouter = [
   {
@@ -151,6 +148,12 @@ const rootRouter = [
     name: 'Dashboard',
     key: '/dashboard',
     element: <Dashboard />,
+  },
+  {
+    path: '*',
+    name: 'No Match',
+    key: '*',
+    element: <NoMatch />,
   },
 ]
 
