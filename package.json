@@ -73,7 +73,8 @@
     "vite:start:dev": "vite --mode dev",
     "vite:build:production": "vite build --mode production",
     "clean:lock": "rm -rf package-lock.json yarn.lock",
-    "clean:dist": "rm -rf ./dist"
+    "clean:dist": "rm -rf ./dist",
+    "clean:modules": "rm -rf node_modules"
   },
   "author": "wkylin",
   "contributors": [
@@ -193,9 +194,9 @@
     "standard": "^17.0.0",
     "standard-version": "^9.5.0",
     "style-loader": "^3.3.2",
-    "stylelint": "^15.4.0",
+    "stylelint": "^14.16.1",
     "stylelint-config-prettier": "^9.0.4",
-    "stylelint-config-standard": "^32.0.0",
+    "stylelint-config-standard": "^29.0.0",
     "terser-webpack-plugin": "^5.3.7",
     "thread-loader": "^3.0.4",
     "tree-node-cli": "^1.6.0",
