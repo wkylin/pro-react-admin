@@ -29,5 +29,7 @@
     "urlparams"
   ],
   "files.autoSave": "onWindowChange",
-  "npm-scripts.showStartNotification": false
+  "npm-scripts.showStartNotification": false,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "aiXcoder.showTrayIcon": true
 }
