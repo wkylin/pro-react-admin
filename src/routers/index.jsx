@@ -28,10 +28,11 @@ const CouponsAdd = loadable(() => import('../pages/coupons/add'), { fallback: <L
 const CouponsEdit = loadable(() => import('../pages/coupons/edit'), { fallback: <Loading /> })
 const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallback: <Loading /> })
 const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
-const Error = loadable(() => import('../pages/error'), { fallback: <Loading /> })
+const ErrorPage = loadable(() => import('../pages/error'), { fallback: <Loading /> })
 const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
 const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
 const QrCode = loadable(() => import('../pages/qrGenerate'), { fallback: <Loading /> })
+const PrismRender = loadable(() => import('../pages/prism'), { fallback: <Loading /> })
 const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
 
 const rootRouter = [
@@ -67,6 +68,13 @@ const rootRouter = [
         name: 'QrGenerate',
         key: '/qrcode',
         element: <QrCode />,
+      },
+      {
+        index: false,
+        path: 'prism',
+        name: 'PrismRender',
+        key: '/prism',
+        element: <PrismRender />,
       },
       {
         index: false,
@@ -118,7 +126,7 @@ const rootRouter = [
         path: 'error',
         name: 'Error',
         key: '/error',
-        element: <Error />,
+        element: <ErrorPage />,
       },
       {
         path: '*',
