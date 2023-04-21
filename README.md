@@ -39,6 +39,7 @@
 4. Babel: v7.x.x [Babel](https://babeljs.io/), [Versions](https://babel.docschina.org/versions/)
 5. Antd: v5.x.x [Ant Design](https://ant.design/index-cn)
 6. TypeScript: v5.x.x[TypeScript](https://www.typescriptlang.org/)
+7. Vite: v4.x.x [Vite](https://vitejs.dev/)
 
 ## Development
 
