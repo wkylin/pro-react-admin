@@ -1,11 +1,10 @@
 import React from 'react'
 
-import Highlight, { defaultProps } from 'prism-react-renderer'
+import { Highlight, themes } from 'prism-react-renderer'
 
-import theme from 'prism-react-renderer/themes/okaidia'
 import FixTabPanel from '@src/components/stateless/FixTabPanel'
 
-import { Pre, Line, LineNo, LineContent } from './styles'
+import styles from './index.module.less'
 
 const exampleCode = `
 const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
@@ -22,20 +21,18 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
 const PrismRender = () => (
   <FixTabPanel>
     <h3>Welcome to prism-react-renderer!</h3>
-    <Highlight {...defaultProps} theme={theme} code={exampleCode} language="jsx">
-      {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <Pre className={className} style={style}>
+    <Highlight theme={themes.dracula} className={styles.wrapper} code={exampleCode} language="jsx">
+      {({ style, tokens, getLineProps, getTokenProps }) => (
+        <pre className={styles.pre} style={style}>
           {tokens.map((line, i) => (
-            <Line key={i} {...getLineProps({ line, key: i })}>
-              <LineNo>{i + 1}</LineNo>
-              <LineContent>
-                {line.map((token, key) => (
-                  <span key={key} {...getTokenProps({ token, key })} />
-                ))}
-              </LineContent>
-            </Line>
+            <div className={styles.line} key={i} {...getLineProps({ line })}>
+              <span className={styles['line-no']}>{i + 1}</span>
+              {line.map((token, key) => (
+                <span key={key} {...getTokenProps({ token })} />
+              ))}
+            </div>
           ))}
-        </Pre>
+        </pre>
       )}
     </Highlight>
   </FixTabPanel>

@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
-// import { createHtmlPlugin } from 'vite-plugin-html'
+import path from 'path'
 import react from '@vitejs/plugin-react'
 import vitePluginImp from 'vite-plugin-imp'
 import svgr from 'vite-plugin-svgr'
-import path from 'path'
-// const { env } = import.meta
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 export default defineConfig({
   resolve: {
@@ -43,6 +42,14 @@ export default defineConfig({
     //     },
     //   },
     // }),
+    sentryVitePlugin({
+      org: 'wkylin',
+      project: 'promotion-web',
+      authToken: '73acdaa05e174744804f105c6e3365533e42da87ada6496bbc42d5a208f23a31',
+      sourcemaps: {
+        assets: './dist/**',
+      },
+    }),
   ],
   define: {
     process, // 解决未定义问题，推荐 import.meta.env
@@ -87,6 +94,7 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: true,
     write: true,
     rollupOptions: {
       // external: [],

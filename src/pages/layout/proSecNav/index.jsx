@@ -112,7 +112,6 @@ const ProSecNav = () => {
         theme="light"
         className={styles.menu}
         onOpenChange={onOpenChange}
-        // onClick={onItemClick}
         onSelect={onSelect}
         items={menuItems}
       />
