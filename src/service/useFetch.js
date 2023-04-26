@@ -17,7 +17,7 @@ export const useReqFetch = (url, opts) => {
       setLoading(true)
       const resData = await reqFetch(url, {
         ...opts,
-        controller,
+        controller
       })
       if (!canceled) {
         setRes(resData)
@@ -50,29 +50,29 @@ export const useReqFetch = (url, opts) => {
 export const usePostFetch = (url, opts) =>
   useReqFetch(url, {
     ...opts,
-    method: 'POST',
+    method: 'POST'
   })
 
 export const useGetFetch = (url, opts) =>
   useReqFetch(url, {
     ...opts,
-    method: 'GET',
+    method: 'GET'
   })
 
 export const usePutFetch = (url, opts) =>
   useReqFetch(url, {
     ...opts,
-    method: 'PUT',
+    method: 'PUT'
   })
 
 export const useDeleteFetch = (url, opts) =>
   useReqFetch(url, {
     ...opts,
-    method: 'DELETE',
+    method: 'DELETE'
   })
 
 export const usePatchFetch = (url, opts) =>
   useReqFetch(url, {
     ...opts,
-    method: 'PATCH',
+    method: 'PATCH'
   })

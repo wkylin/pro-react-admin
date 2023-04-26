@@ -4,7 +4,7 @@ import deReducer from './decrement'
 
 const reducers = {
   inReducer,
-  deReducer,
+  deReducer
 }
 
 const rootReducer = combineReducers(reducers)

@@ -4,7 +4,7 @@ import rootReducer from '@src/reducers'
 
 const store = configureStore({
   reducer: rootReducer,
-  middleware: process.env.NODE_ENV !== 'production' ? [logger] : [],
+  middleware: process.env.NODE_ENV !== 'production' ? [logger] : []
 })
 
 export default store

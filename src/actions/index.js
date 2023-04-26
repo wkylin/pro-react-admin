@@ -3,7 +3,7 @@ import * as deAction from './decrement'
 
 const rootAction = {
   inAction,
-  deAction,
+  deAction
 }
 
 export default rootAction

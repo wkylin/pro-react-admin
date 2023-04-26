@@ -7,7 +7,7 @@ const useFetchReducer = (initialData = null) => {
   const initialState = {
     status: 'idle',
     data: initialData,
-    error: null,
+    error: null
   }
 
   const fetchReducer = (currentState, action) => {
@@ -15,19 +15,19 @@ const useFetchReducer = (initialData = null) => {
       case 'FETCH':
         return {
           ...currentState,
-          status: 'loading',
+          status: 'loading'
         }
       case 'RESOLVE':
         return {
           status: 'success',
           data: action.data,
-          error: null,
+          error: null
         }
       case 'REJECT':
         return {
           data: null,
           status: 'failure',
-          error: action.error,
+          error: action.error
         }
       default:
         return currentState

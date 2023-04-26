@@ -15,7 +15,7 @@ const QrCode = () => {
         color: {
           // dark: '#335383FF',
           // light: '#EEEEEEFF'
-        },
+        }
       },
       (err, urls) => {
         if (err) return console.error(err)
@@ -29,19 +29,19 @@ const QrCode = () => {
       <Space>
         <Input
           style={{ width: 400 }}
-          placeholder="e.g. https://google.com"
+          placeholder='e.g. https://google.com'
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         />
-        <Button type="primary" onClick={GenerateQRCode}>
+        <Button type='primary' onClick={GenerateQRCode}>
           Generate
         </Button>
       </Space>
       <section style={{ margin: 20 }}>
         {qr && (
           <Space>
-            <img src={qr} width="300" alt="QRcode" />
-            <Button type="link" href={qr} download="qrcode.png">
+            <img src={qr} width='300' alt='QRcode' />
+            <Button type='link' href={qr} download='qrcode.png'>
               Download
             </Button>
           </Space>

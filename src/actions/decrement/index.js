@@ -1,8 +1,8 @@
 export const actionType = {
-  DECREMENT: 'DECREMENT',
+  DECREMENT: 'DECREMENT'
 }
 
 export const decrement = (payload) => ({
   type: actionType.DECREMENT,
-  payload,
+  payload
 })

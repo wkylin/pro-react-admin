@@ -1,7 +1,7 @@
 import rootAction from '@src/actions'
 
 const initialState = {
-  inNumber: 0,
+  inNumber: 0
 }
 
 const inReducer = (state = initialState, { type, payload } = {}) => {

@@ -4,10 +4,10 @@ import { ErrorBoundary } from 'react-error-boundary'
 import styles from './index.module.less'
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => (
-  <div role="alert">
+  <div role='alert'>
     <h3>Something went wrong:</h3>
     <pre className={styles.pre}>{error.message}</pre>
-    <Button type="primary" onClick={resetErrorBoundary}>
+    <Button type='primary' onClick={resetErrorBoundary}>
       Try again
     </Button>
   </div>

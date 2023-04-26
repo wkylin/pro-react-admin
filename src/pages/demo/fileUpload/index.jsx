@@ -30,7 +30,7 @@ const FileUpload = () => {
         const completedPercent = Math.round((progressEvent.loaded * 100) / progressEvent.total)
 
         setPercent(completedPercent)
-      },
+      }
     })
       .then((response) => {
         console.log(response.data)
@@ -74,7 +74,7 @@ const FileUpload = () => {
       return false
     },
     fileList,
-    multiple: true,
+    multiple: true
   }
 
   return (
@@ -83,7 +83,7 @@ const FileUpload = () => {
         <Button icon={<UploadOutlined />}>Click to Upload</Button>
       </Upload>
       <Button
-        type="primary"
+        type='primary'
         onClick={handleUpload}
         disabled={fileList.length === 0}
         loading={uploading}

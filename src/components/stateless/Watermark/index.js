@@ -8,7 +8,7 @@ const Watermark = (props) => {
     font = '18px Microsoft Yahei',
     fillStyle = 'rgba(100, 100, 100, 0.2)',
     content = 'water mark',
-    rotate = -20,
+    rotate = -20
   } = props
 
   const canvas = document.createElement('canvas')
@@ -61,7 +61,7 @@ const Watermark = (props) => {
       attributes: true,
       childList: true,
       characterData: true,
-      subtree: true,
+      subtree: true
     })
   }
 }

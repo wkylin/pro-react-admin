@@ -14,7 +14,7 @@ const sentryInit = () => {
     tracesSampleRate: 1.0,
     release: packageJson.version,
     environment: nodeEnv,
-    autoSessionTracking: nodeEnv === 'production',
+    autoSessionTracking: nodeEnv === 'production'
   })
 
   Sentry.setExtra('projectOwner', '150****5870')

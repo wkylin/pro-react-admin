@@ -25,7 +25,7 @@ app.use(router.routes()).use(router.allowedMethods())
 portfinder.getPort(
   {
     port: 4000,
-    stopPort: 65535,
+    stopPort: 65535
   },
   (err, port) => {
     if (err) {

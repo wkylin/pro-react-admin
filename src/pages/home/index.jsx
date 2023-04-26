@@ -13,7 +13,7 @@ const Home = () => {
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
       </h2>
       <h2>React version: {version}</h2>
-      <Button type="primary" onClick={redirectToNgrok}>
+      <Button type='primary' onClick={redirectToNgrok}>
         Hi, Ngrok!
       </Button>
     </FixTabPanel>

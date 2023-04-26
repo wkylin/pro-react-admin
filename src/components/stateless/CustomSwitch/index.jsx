@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Routes, Route, useNavigate, useMatch } from 'react-router-dom'
 
-function NoFundPage() {
+function NoFundPage () {
   const navigate = useNavigate()
   const { url, path } = useMatch()
   useEffect(() => {
@@ -15,7 +15,7 @@ const CustomSwitch = (props) => {
   return (
     <Routes>
       {children}
-      <Route path="*" element={<NoFundPage />} />
+      <Route path='*' element={<NoFundPage />} />
     </Routes>
   )
 }
