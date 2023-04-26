@@ -8,7 +8,7 @@ const sentryInit = () => {
     dsn: 'https://39892504629549fa9c0b040d98e87d03@o64827.ingest.sentry.io/5791911',
     integrations: [new Sentry.BrowserTracing()],
     tracesSampleRate: 1.0,
-    release: packageJson.version,
+    release: packageJson.version
     // environment: nodeEnv,
     // autoSessionTracking: nodeEnv === 'production',
   })

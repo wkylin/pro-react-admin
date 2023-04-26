@@ -21,7 +21,7 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
 const PrismRender = () => (
   <FixTabPanel>
     <h3>Welcome to prism-react-renderer!</h3>
-    <Highlight theme={themes.dracula} className={styles.wrapper} code={exampleCode} language="jsx">
+    <Highlight theme={themes.dracula} className={styles.wrapper} code={exampleCode} language='jsx'>
       {({ style, tokens, getLineProps, getTokenProps }) => (
         <pre className={styles.pre} style={style}>
           {tokens.map((line, i) => (
