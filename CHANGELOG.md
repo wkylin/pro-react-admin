@@ -99,5 +99,3 @@ All notable changes to this project will be documented in this file. See [standa
 - upgrade @sentry/react from 7.43.0 to 7.44.0 ([8724926](https://github.com/wkylin/promotion-web/commits/8724926291f1a81ddfecacf0707ddc674809b0fc))
 - upgrade @sentry/tracing from 7.43.0 to 7.45.0 ([1bbdbf2](https://github.com/wkylin/promotion-web/commits/1bbdbf26565df1ac23eb281952b88c441c7872a3))
 - upgrade antd from 5.3.1 to 5.3.2 ([0a48e2a](https://github.com/wkylin/promotion-web/commits/0a48e2ac325ea4d50fe776f0fc492769deecde04))
-
-### [1.0.1](https://github.com/wkylin/promotion-web/compare/v2.2.0...v1.0.1) (2023-04-27)
