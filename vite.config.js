@@ -92,6 +92,10 @@ export default defineConfig({
       },
     },
   },
+  // 去除console和debugger
+  esbuild: {
+    pure: ['console.log', 'debugger'],
+  },
   build: {
     sourcemap: true,
     write: true,
