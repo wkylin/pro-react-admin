@@ -1,6 +1,6 @@
 {
   "name": "pro-react-admin",
-  "version": "3.0.0",
+  "version": "1.0.0",
   "description": "pro-react-admin",
   "keywords": [
     "React",
@@ -64,9 +64,9 @@
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
     "postinstall": "install-changed --hash-only",
-    "preinstall": "npx pm-keeper npm",
+    "preinstall": "npx pm-keeper pnpm",
     "check:version": "node webpack/check-version.js",
-    "vite:dev": "concurrently -r \"vite\" \"npm run faker\"",
+    "vite:dev": "concurrently -r \"vite -- --host\" \"npm run faker\"",
     "vite:dev:faker": "concurrently -r \"npm run vite:dev\" \"npm run faker\"",
     "vite:build": "vite build",
     "vite:preview": "vite preview",
@@ -175,6 +175,7 @@
     "npm-check-updates": "^16.10.9",
     "npm-run": "^5.0.1",
     "onchange": "^7.1.0",
+    "pnpm": "^8.3.1",
     "portfinder": "^1.0.32",
     "postcss": "^8.4.23",
     "postcss-flexbugs-fixes": "^5.0.2",

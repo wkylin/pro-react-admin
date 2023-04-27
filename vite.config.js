@@ -69,7 +69,6 @@ export default defineConfig({
   },
   server: {
     open: true,
-    // host: 'localhost',
     proxy: {
       '/faker': {
         target: 'http://localhost:4000',
