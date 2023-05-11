@@ -20,7 +20,7 @@ const { Schema } = mongoose
 const ApiSchema = new Schema({
   url: { type: String },
   delay: { type: Number },
-  date: { type: Date, default: Date.now },
+  date: { type: Date, default: Date.now }
 })
 
 const ApiModel = mongoose.model('apis', ApiSchema)
