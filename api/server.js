@@ -1,5 +1,4 @@
 import helmet from 'helmet'
-import csurf from 'csurf'
 
 const MONGODB = 'mongodb://127.0.0.1:27017/promotion?retryWrites=true'
 
@@ -7,7 +6,6 @@ const express = require('express')
 
 const app = express()
 app.use(helmet())
-app.use(csurf())
 
 const bodyParser = require('body-parser')
 const cors = require('cors')

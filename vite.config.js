@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import vitePluginImp from 'vite-plugin-imp'
 import svgr from 'vite-plugin-svgr'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import visualizer from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   resolve: {
@@ -26,6 +27,7 @@ export default defineConfig({
       include: '**/*.{jsx,tsx}',
     }),
     svgr(),
+    visualizer(),
     vitePluginImp({
       libList: [
         {
