@@ -40,7 +40,7 @@ export const getType = (obj) => {
   return Object.prototype.toString.call(obj).replace(/^$/, '$1')
 }
 
-export const hidePhone = (phone) => phone && phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+export const hidePhone = (phone) => phone?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
 
 // asyncAction(action)(callback)
 export const asyncAction = (action) => {
@@ -158,7 +158,7 @@ export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 export const isNotEmpty = (arr) => Array.isArray(arr) && arr.length > 0
 
 // Detect Dark Mode
-export const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+export const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const fetchSomething = () =>
   new Promise((resolve) => {

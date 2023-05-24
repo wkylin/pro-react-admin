@@ -48,7 +48,8 @@ const handleFailedResult = (response, error, isShowError, reject) => {
   const { status, statusText } = response
 
   if (((status && status !== 200) || error) && isShowError) {
-    message.error(`${status ? `${status}: ${statusText}` : error?.message}`, 2)
+    const statusTips = `${status}: ${statusText}`
+    message.error(`${status ? statusTips : error?.message}`, 2)
   }
   if (reject) reject(response)
 }

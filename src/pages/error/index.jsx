@@ -1,7 +1,7 @@
 import React from 'react'
 import FixTabPanel from '@src/components/stateless/FixTabPanel'
 
-const Error = () => {
+const MyError = () => {
   const error = { error: 'error' }
   return (
     <FixTabPanel>
@@ -13,4 +13,4 @@ const Error = () => {
   )
 }
 
-export default Error
+export default MyError
