@@ -2,7 +2,6 @@ const path = require('path')
 const { merge } = require('webpack-merge')
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 const glob = require('glob')
@@ -12,6 +11,7 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
+const { EsbuildPlugin } = require('esbuild-loader')
 
 const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
@@ -51,23 +51,8 @@ const prodWebpackConfig = merge(common, {
     minimize: true,
     minimizer: [
       new CssMinimizerPlugin(),
-      new TerserPlugin({
-        parallel: true,
-        terserOptions: {
-          ecma: 6,
-          parse: {},
-          compress: {},
-          mangle: true,
-          module: false,
-          output: null,
-          format: null,
-          toplevel: false,
-          nameCache: null,
-          ie8: false,
-          keep_classnames: undefined,
-          keep_fnames: false,
-          safari10: false,
-        },
+      new EsbuildPlugin({
+        target: 'es2015',
       }),
       new HtmlMinimizerPlugin(),
     ],
