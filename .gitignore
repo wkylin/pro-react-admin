@@ -9,3 +9,4 @@ compilation-stats.json
 public/bit
 api/node_modules
 webpack/profiling
+stats.html

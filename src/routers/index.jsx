@@ -1,80 +1,88 @@
-import React from 'react'
-import loadable from '@loadable/component'
+import React, { Suspense, lazy } from 'react'
 import Loading from '@src/components/stateless/Loading'
 
-const SignIn = loadable(() => import('../pages/signin'), { fallback: <Loading /> })
-const SignUp = loadable(() => import('../pages/signup'), { fallback: <Loading /> })
-const Layout = loadable(() => import('../pages/layout'), { fallback: <Loading /> })
-
-// prefetch
-const Home = loadable(
-  () =>
-    /* webpackChunkName: "PreHome" */
-    /* webpackPrefetch: true */
-    import('../pages/home'),
-  { fallback: <Loading /> }
-)
-// preload
-const Demo = loadable(
-  () =>
-    /* webpackChunkName: "PreloadDemo" */
-    /* webpackPreload: true */
-    import('../pages/demo'),
-  { fallback: <Loading /> }
-)
-const Coupons = loadable(() => import('../pages/coupons'), { fallback: <Loading /> })
-const CouponsHome = loadable(() => import('../pages/coupons/home'), { fallback: <Loading /> })
-const CouponsAdd = loadable(() => import('../pages/coupons/add'), { fallback: <Loading /> })
-const CouponsEdit = loadable(() => import('../pages/coupons/edit'), { fallback: <Loading /> })
-const CouponsDetail = loadable(() => import('../pages/coupons/detail'), { fallback: <Loading /> })
-const Product = loadable(() => import('../pages/product'), { fallback: <Loading /> })
-const ErrorPage = loadable(() => import('../pages/error'), { fallback: <Loading /> })
-const Dashboard = loadable(() => import('../pages/dashboard'), { fallback: <Loading /> })
-const ParallaxVert = loadable(() => import('../pages/parallax'), { fallback: <Loading /> })
-const QrCode = loadable(() => import('../pages/qrGenerate'), { fallback: <Loading /> })
-const PrismRender = loadable(() => import('../pages/prism'), { fallback: <Loading /> })
-const NoMatch = loadable(() => import('../components/stateless/NoMatch'), { fallback: <Loading /> })
+const SignIn = lazy(() => import('../pages/signin'))
+const SignUp = lazy(() => import('../pages/signup'))
+const Layout = lazy(() => import('../pages/layout'))
+const Home = lazy(() => import('../pages/home'))
+const Demo = lazy(() => import('../pages/demo'))
+const Coupons = lazy(() => import('../pages/coupons'))
+const CouponsHome = lazy(() => import('../pages/coupons/home'))
+const CouponsAdd = lazy(() => import('../pages/coupons/add'))
+const CouponsEdit = lazy(() => import('../pages/coupons/edit'))
+const CouponsDetail = lazy(() => import('../pages/coupons/detail'))
+const Product = lazy(() => import('../pages/product'))
+const ErrorPage = lazy(() => import('../pages/error'))
+const Dashboard = lazy(() => import('../pages/dashboard'))
+const ParallaxVert = lazy(() => import('../pages/parallax'))
+const QrCode = lazy(() => import('../pages/qrGenerate'))
+const PrismRender = lazy(() => import('../pages/prism'))
+const NoMatch = lazy(() => import('../components/stateless/NoMatch'))
 
 const rootRouter = [
   {
     path: '/',
     name: '首页',
     key: '/',
-    element: <Layout />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Layout />
+      </Suspense>
+    ),
     children: [
       {
         index: true,
         name: '首页',
         key: '/',
-        element: <Home />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Home />
+          </Suspense>
+        ),
       },
       {
         index: false,
         path: 'demo',
         name: 'Demo',
         key: '/demo',
-        element: <Demo />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Demo />
+          </Suspense>
+        ),
       },
       {
         index: false,
         path: 'parallax',
         name: 'Parallax',
         key: '/parallax',
-        element: <ParallaxVert />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ParallaxVert />
+          </Suspense>
+        ),
       },
       {
         index: false,
         path: 'qrcode',
         name: 'QrGenerate',
         key: '/qrcode',
-        element: <QrCode />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <QrCode />
+          </Suspense>
+        ),
       },
       {
         index: false,
         path: 'prism',
         name: 'PrismRender',
         key: '/prism',
-        element: <PrismRender />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <PrismRender />
+          </Suspense>
+        ),
       },
       {
         index: false,
@@ -82,35 +90,55 @@ const rootRouter = [
         name: '前端技术栈',
         isSubMenu: true, // 是否是子菜单 proSecNav
         key: '/coupons',
-        element: <Coupons />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Coupons />
+          </Suspense>
+        ),
         children: [
           {
             index: false,
             path: 'home',
             name: 'React',
             key: '/coupons/home',
-            element: <CouponsHome />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <CouponsHome />
+              </Suspense>
+            ),
           },
           {
             index: false,
             name: 'Vue',
             path: 'add',
             key: '/coupons/add',
-            element: <CouponsAdd />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <CouponsAdd />
+              </Suspense>
+            ),
           },
           {
             index: false,
             path: 'edit',
             name: 'Angular',
             key: '/coupons/edit',
-            element: <CouponsEdit />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <CouponsEdit />
+              </Suspense>
+            ),
           },
           {
             index: false,
             path: 'detail',
             name: 'Node',
             key: '/coupons/detail',
-            element: <CouponsDetail />,
+            element: (
+              <Suspense fallback={<Loading />}>
+                <CouponsDetail />
+              </Suspense>
+            ),
           },
         ],
       },
@@ -119,20 +147,32 @@ const rootRouter = [
         path: 'product',
         name: '后端技术栈',
         key: '/product',
-        element: <Product />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Product />
+          </Suspense>
+        ),
       },
       {
         index: false,
         path: 'error',
         name: 'Error',
         key: '/error',
-        element: <ErrorPage />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <ErrorPage />
+          </Suspense>
+        ),
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: <NoMatch />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <NoMatch />
+          </Suspense>
+        ),
       },
     ],
   },
@@ -141,27 +181,43 @@ const rootRouter = [
     path: 'signin',
     name: '登录',
     key: '/signin',
-    element: <SignIn />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <SignIn />
+      </Suspense>
+    ),
   },
   {
     index: false,
     path: 'signup',
     name: '注册',
     key: '/signup',
-    element: <SignUp />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <SignUp />
+      </Suspense>
+    ),
   },
   {
     index: false,
     path: 'dashboard/*',
     name: 'Dashboard',
     key: '/dashboard',
-    element: <Dashboard />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Dashboard />
+      </Suspense>
+    ),
   },
   {
     path: '*',
     name: 'No Match',
     key: '*',
-    element: <NoMatch />,
+    element: (
+      <Suspense fallback={<Loading />}>
+        <NoMatch />
+      </Suspense>
+    ),
   },
 ]
 
