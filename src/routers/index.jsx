@@ -38,7 +38,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <Home />
           </Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -49,7 +49,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <Demo />
           </Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -60,7 +60,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <ParallaxVert />
           </Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -71,7 +71,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <QrCode />
           </Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -82,7 +82,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <PrismRender />
           </Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -105,7 +105,7 @@ const rootRouter = [
               <Suspense fallback={<Loading />}>
                 <CouponsHome />
               </Suspense>
-            ),
+            )
           },
           {
             index: false,
@@ -116,7 +116,7 @@ const rootRouter = [
               <Suspense fallback={<Loading />}>
                 <CouponsAdd />
               </Suspense>
-            ),
+            )
           },
           {
             index: false,
@@ -127,7 +127,7 @@ const rootRouter = [
               <Suspense fallback={<Loading />}>
                 <CouponsEdit />
               </Suspense>
-            ),
+            )
           },
           {
             index: false,
@@ -138,9 +138,9 @@ const rootRouter = [
               <Suspense fallback={<Loading />}>
                 <CouponsDetail />
               </Suspense>
-            ),
-          },
-        ],
+            )
+          }
+        ]
       },
       {
         index: false,
@@ -151,7 +151,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <Product />
           </Suspense>
-        ),
+        )
       },
       {
         index: false,
@@ -162,7 +162,7 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <ErrorPage />
           </Suspense>
-        ),
+        )
       },
       {
         path: '*',
@@ -172,9 +172,9 @@ const rootRouter = [
           <Suspense fallback={<Loading />}>
             <NoMatch />
           </Suspense>
-        ),
-      },
-    ],
+        )
+      }
+    ]
   },
   {
     index: false,
@@ -185,7 +185,7 @@ const rootRouter = [
       <Suspense fallback={<Loading />}>
         <SignIn />
       </Suspense>
-    ),
+    )
   },
   {
     index: false,
@@ -196,7 +196,7 @@ const rootRouter = [
       <Suspense fallback={<Loading />}>
         <SignUp />
       </Suspense>
-    ),
+    )
   },
   {
     index: false,
@@ -207,7 +207,7 @@ const rootRouter = [
       <Suspense fallback={<Loading />}>
         <Dashboard />
       </Suspense>
-    ),
+    )
   },
   {
     path: '*',
@@ -217,8 +217,8 @@ const rootRouter = [
       <Suspense fallback={<Loading />}>
         <NoMatch />
       </Suspense>
-    ),
-  },
+    )
+  }
 ]
 
 export default rootRouter
