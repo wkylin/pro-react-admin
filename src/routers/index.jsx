@@ -36,35 +36,35 @@ const rootRouter = [
         index: true,
         name: '首页',
         key: '/',
-        element: lazyLoad(Home),
+        element: lazyLoad(Home)
       },
       {
         index: false,
         path: 'demo',
         name: 'Demo',
         key: '/demo',
-        element: lazyLoad(Demo),
+        element: lazyLoad(Demo)
       },
       {
         index: false,
         path: 'parallax',
         name: 'Parallax',
         key: '/parallax',
-        element: lazyLoad(ParallaxVert),
+        element: lazyLoad(ParallaxVert)
       },
       {
         index: false,
         path: 'qrcode',
         name: 'QrGenerate',
         key: '/qrcode',
-        element: lazyLoad(QrCode),
+        element: lazyLoad(QrCode)
       },
       {
         index: false,
         path: 'prism',
         name: 'PrismRender',
         key: '/prism',
-        element: lazyLoad(PrismRender),
+        element: lazyLoad(PrismRender)
       },
       {
         index: false,
@@ -79,80 +79,80 @@ const rootRouter = [
             path: 'home',
             name: 'React',
             key: '/coupons/home',
-            element: lazyLoad(CouponsHome),
+            element: lazyLoad(CouponsHome)
           },
           {
             index: false,
             name: 'Vue',
             path: 'add',
             key: '/coupons/add',
-            element: lazyLoad(CouponsAdd),
+            element: lazyLoad(CouponsAdd)
           },
           {
             index: false,
             path: 'edit',
             name: 'Angular',
             key: '/coupons/edit',
-            element: lazyLoad(CouponsEdit),
+            element: lazyLoad(CouponsEdit)
           },
           {
             index: false,
             path: 'detail',
             name: 'Node',
             key: '/coupons/detail',
-            element: lazyLoad(CouponsDetail),
-          },
-        ],
+            element: lazyLoad(CouponsDetail)
+          }
+        ]
       },
       {
         index: false,
         path: 'product',
         name: '后端技术栈',
         key: '/product',
-        element: lazyLoad(Product),
+        element: lazyLoad(Product)
       },
       {
         index: false,
         path: 'error',
         name: 'Error',
         key: '/error',
-        element: lazyLoad(ErrorPage),
+        element: lazyLoad(ErrorPage)
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: lazyLoad(NoMatch),
-      },
-    ],
+        element: lazyLoad(NoMatch)
+      }
+    ]
   },
   {
     index: false,
     path: 'signin',
     name: '登录',
     key: '/signin',
-    element: lazyLoad(SignIn),
+    element: lazyLoad(SignIn)
   },
   {
     index: false,
     path: 'signup',
     name: '注册',
     key: '/signup',
-    element: lazyLoad(SignUp),
+    element: lazyLoad(SignUp)
   },
   {
     index: false,
     path: 'dashboard/*',
     name: 'Dashboard',
     key: '/dashboard',
-    element: lazyLoad(Dashboard),
+    element: lazyLoad(Dashboard)
   },
   {
     path: '*',
     name: 'No Match',
     key: '*',
-    element: lazyLoad(NoMatch),
-  },
+    element: lazyLoad(NoMatch)
+  }
 ]
 
 export default rootRouter
