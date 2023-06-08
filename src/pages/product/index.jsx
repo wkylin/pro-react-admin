@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from 'antd'
-import FixTabPanel from '@src/components/stateless/FixTabPanel'
+import FixTabPanel from '@stateless/FixTabPanel'
 
 const Products = () => {
   const navigate = useNavigate()

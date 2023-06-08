@@ -20,25 +20,25 @@ const ThemeIndex = () => {
     iconPrefixCls: 'wui-anticon',
   })
   return (
-    <StyleProvider hashPriority="high">
-      <ConfigProvider
-        theme={{
-          algorithm:
-            myTheme === 'light'
-              ? [theme.defaultAlgorithm, theme.compactAlgorithm]
-              : [theme.darkAlgorithm, theme.compactAlgorithm],
-          token: myTheme === 'light' ? myThems.lightTheme : myThems.darkTheme,
-        }}
-        componentSize="middle"
-        input={{ autoComplete: 'off' }}
-        prefixCls="wui-ant"
-        iconPrefixCls="wui-anticon"
-      >
-        <Router>
+    <Router>
+      <StyleProvider hashPriority="high">
+        <ConfigProvider
+          theme={{
+            algorithm:
+              myTheme === 'light'
+                ? [theme.defaultAlgorithm, theme.compactAlgorithm]
+                : [theme.darkAlgorithm, theme.compactAlgorithm],
+            token: myTheme === 'light' ? myThems.lightTheme : myThems.darkTheme,
+          }}
+          componentSize="middle"
+          input={{ autoComplete: 'off' }}
+          prefixCls="wui-ant"
+          iconPrefixCls="wui-anticon"
+        >
           <App />
-        </Router>
-      </ConfigProvider>
-    </StyleProvider>
+        </ConfigProvider>
+      </StyleProvider>
+    </Router>
   )
 }
 

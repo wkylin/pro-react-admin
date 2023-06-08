@@ -4,6 +4,7 @@ import { Layout, Space, Dropdown, Switch, theme } from 'antd'
 import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import { removeLocalStorage } from '@utils/publicFn'
 // import { ReactComponent as LightSvg } from '@assets/svg/light.svg'
 // import { ReactComponent as DarkSvg } from '@assets/svg/dark.svg'
 // import LightSvg from '@assets/svg/light.svg'
@@ -47,6 +48,7 @@ const ProHeader = () => {
       label: <Space>退出登录</Space>,
       icon: <LogoutOutlined />,
       onClick: () => {
+        removeLocalStorage('token')
         redirectTo('/signin')
       },
     },

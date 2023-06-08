@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useRoutes } from 'react-router-dom'
 import Watermark from '@stateless/Watermark'
 import rootRouter from './routers'
-
+import AuthRouter from './routers/authRouter'
 import { sentryInit } from './utils'
 
 const App = () => {
@@ -23,7 +23,11 @@ const App = () => {
   const element = useRoutes(rootRouter as any)
 
   if (loading) return null
-  return <>{element}</>
+  return (
+    <>
+      <AuthRouter>{element}</AuthRouter>
+    </>
+  )
 }
 
 export default App

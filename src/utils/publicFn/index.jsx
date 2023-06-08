@@ -10,8 +10,8 @@ export const flattenRoutes = (arr) =>
     return prev.concat(Array.isArray(item.children) ? flattenRoutes(item.children) : item)
   }, [])
 
-export const getKeyName = (path = '/404') => {
-  const thePath = path.split('?')[0]
+export const getKeyName = (pathName = '/404') => {
+  const thePath = pathName.split('?')[0]
   const curRoute = flattenRoutes(routes)
     .filter((item) => !item.index)
     .filter((item) => item.key?.indexOf(thePath) !== -1)
@@ -23,6 +23,27 @@ export const getKeyName = (path = '/404') => {
     }
   }
 
-  const { name, key, element } = curRoute[0]
-  return { title: name, tabKey: key, element }
+  const { name, key, element, index, path, auth } = curRoute[0]
+  return { index: index ?? false, path, auth, title: name, tabKey: key, element }
+}
+
+export const getLocalStorage = (key) => {
+  const value = window.localStorage.getItem(key)
+  try {
+    return JSON.parse(value)
+  } catch (error) {
+    return value
+  }
+}
+
+export const setLocalStorage = (key, value) => {
+  window.localStorage.setItem(key, JSON.stringify(value))
+}
+
+export const removeLocalStorage = (key) => {
+  window.localStorage.removeItem(key)
+}
+
+export const clearLocalStorage = () => {
+  window.localStorage.clear()
 }

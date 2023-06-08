@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Alert } from 'antd'
-import FixTabPanel from '@src/components/stateless/FixTabPanel'
+import FixTabPanel from '@stateless/FixTabPanel'
 
 const EditCoupons = () => {
   const [searchParams] = useSearchParams()

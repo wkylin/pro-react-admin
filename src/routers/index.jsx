@@ -23,6 +23,7 @@ const Dashboard = lazy(() => import('@pages/dashboard'))
 const ParallaxVert = lazy(() => import('@pages/parallax'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
+const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 
 const rootRouter = [
@@ -30,12 +31,14 @@ const rootRouter = [
     path: '/',
     name: '首页',
     key: '/',
+    auth: true,
     element: lazyLoad(Layout),
     children: [
       {
         index: true,
         name: '首页',
         key: '/',
+        auth: true,
         element: lazyLoad(Home),
       },
       {
@@ -43,6 +46,7 @@ const rootRouter = [
         path: 'demo',
         name: 'Demo',
         key: '/demo',
+        auth: true,
         element: lazyLoad(Demo),
       },
       {
@@ -50,6 +54,7 @@ const rootRouter = [
         path: 'parallax',
         name: 'Parallax',
         key: '/parallax',
+        auth: true,
         element: lazyLoad(ParallaxVert),
       },
       {
@@ -57,6 +62,7 @@ const rootRouter = [
         path: 'qrcode',
         name: 'QrGenerate',
         key: '/qrcode',
+        auth: true,
         element: lazyLoad(QrCode),
       },
       {
@@ -64,6 +70,7 @@ const rootRouter = [
         path: 'prism',
         name: 'PrismRender',
         key: '/prism',
+        auth: true,
         element: lazyLoad(PrismRender),
       },
       {
@@ -79,6 +86,7 @@ const rootRouter = [
             path: 'home',
             name: 'React',
             key: '/coupons/home',
+            auth: false,
             element: lazyLoad(CouponsHome),
           },
           {
@@ -86,6 +94,7 @@ const rootRouter = [
             name: 'Vue',
             path: 'add',
             key: '/coupons/add',
+            auth: false,
             element: lazyLoad(CouponsAdd),
           },
           {
@@ -93,6 +102,7 @@ const rootRouter = [
             path: 'edit',
             name: 'Angular',
             key: '/coupons/edit',
+            auth: false,
             element: lazyLoad(CouponsEdit),
           },
           {
@@ -100,6 +110,7 @@ const rootRouter = [
             path: 'detail',
             name: 'Node',
             key: '/coupons/detail',
+            auth: false,
             element: lazyLoad(CouponsDetail),
           },
         ],
@@ -109,6 +120,7 @@ const rootRouter = [
         path: 'product',
         name: '后端技术栈',
         key: '/product',
+        auth: false,
         element: lazyLoad(Product),
       },
       {
@@ -116,6 +128,7 @@ const rootRouter = [
         path: 'error',
         name: 'Error',
         key: '/error',
+        auth: false,
         element: lazyLoad(ErrorPage),
       },
       {
@@ -131,6 +144,7 @@ const rootRouter = [
     path: 'signin',
     name: '登录',
     key: '/signin',
+    auth: false,
     element: lazyLoad(SignIn),
   },
   {
@@ -138,6 +152,7 @@ const rootRouter = [
     path: 'signup',
     name: '注册',
     key: '/signup',
+    auth: false,
     element: lazyLoad(SignUp),
   },
   {
@@ -145,7 +160,16 @@ const rootRouter = [
     path: 'dashboard/*',
     name: 'Dashboard',
     key: '/dashboard',
+    auth: true,
     element: lazyLoad(Dashboard),
+  },
+  {
+    index: false,
+    path: '/403',
+    name: '403',
+    key: '/403',
+    auth: false,
+    element: lazyLoad(Exception403),
   },
   {
     path: '*',

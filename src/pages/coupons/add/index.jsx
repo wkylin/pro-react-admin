@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Alert, Button } from 'antd'
-import FixTabPanel from '@src/components/stateless/FixTabPanel'
+import FixTabPanel from '@stateless/FixTabPanel'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 
 const AddCoupons = () => {

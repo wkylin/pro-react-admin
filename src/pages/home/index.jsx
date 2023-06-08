@@ -1,6 +1,6 @@
 import React, { version } from 'react'
 import { Button } from 'antd'
-import FixTabPanel from '@src/components/stateless/FixTabPanel'
+import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@src/components/stateless/TypedText'
 
 const Home = () => {

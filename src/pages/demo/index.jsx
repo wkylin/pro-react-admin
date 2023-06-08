@@ -1,7 +1,7 @@
 import React from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
 import { Select, Table, Cascader, Space } from 'antd'
-import FixTabPanel from '@src/components/stateless/FixTabPanel'
+import FixTabPanel from '@stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
 import FileUpload from './fileUpload'
