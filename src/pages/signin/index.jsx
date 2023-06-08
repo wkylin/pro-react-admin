@@ -2,7 +2,6 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Form, Input, Button, Checkbox, Layout, theme } from 'antd'
 import AlignCenter from '@stateless/AlignCenter'
-import md5 from 'js-md5'
 import { setLocalStorage } from '@utils/publicFn'
 
 const { Content } = Layout
@@ -33,9 +32,7 @@ const SignIn = () => {
 
   const onFinish = (values) => {
     // 模拟后端登录
-    const pswd = md5(values.password)
     const { username } = values
-    console.log('pswd', pswd)
     setLocalStorage('token', { token: username })
     redirectTo('/')
   }
