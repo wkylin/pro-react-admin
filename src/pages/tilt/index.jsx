@@ -12,7 +12,7 @@ const defaultOptions = {
   transition: true, // Set a transition on enter/exit.
   axis: null, // What axis should be disabled. Can be X or Y.
   reset: true, // If the tilt effect has to be reset on exit.
-  easing: 'cubic-bezier(.03,.98,.52,.99)', // Easing on enter/exit.
+  easing: 'cubic-bezier(.03,.98,.52,.99)' // Easing on enter/exit.
 }
 
 const ReactTilt = () => (
@@ -20,11 +20,11 @@ const ReactTilt = () => (
     <h3>Welcome to react tilt!</h3>
     <Tilt
       options={defaultOptions}
-      className="bg-[#55467c] p-2 rounded-2xl w-full flex items-center justify-center"
+      className='bg-[#55467c] p-2 rounded-2xl w-full flex items-center justify-center'
       style={{ height: 248, width: 248 }}
     >
-      <div className="text-white">
-        <img src={wkylinPng} alt="wkylin.w" />
+      <div className='text-white'>
+        <img src={wkylinPng} alt='wkylin.w' />
         <h2>wkylin.w</h2>
       </div>
     </Tilt>
