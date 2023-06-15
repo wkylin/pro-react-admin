@@ -7,6 +7,9 @@ const lazyLoad = (Component) => (
   </Suspense>
 )
 
+// 以下路由可根据需求另分成不同的文件维护
+// 结合 proSecNav组件中的menuItems
+
 const SignIn = lazy(() => import('@pages/signin'))
 const SignUp = lazy(() => import('@pages/signup'))
 const Layout = lazy(() => import('@pages/layout'))
@@ -21,6 +24,7 @@ const Product = lazy(() => import('@pages/product'))
 const ErrorPage = lazy(() => import('@pages/error'))
 const Dashboard = lazy(() => import('@pages/dashboard'))
 const ParallaxVert = lazy(() => import('@pages/parallax'))
+const ReactTilt = lazy(() => import('@pages/tilt'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
@@ -64,6 +68,14 @@ const rootRouter = [
         key: '/qrcode',
         auth: true,
         element: lazyLoad(QrCode),
+      },
+      {
+        index: false,
+        path: 'tilt',
+        name: 'React Tilt',
+        key: '/tilt',
+        auth: true,
+        element: lazyLoad(ReactTilt),
       },
       {
         index: false,

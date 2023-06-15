@@ -1,4 +1,10 @@
+/* stylelint-disable at-rule-no-unknown */
+
 /* @import '~sanitize.css'; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body {
