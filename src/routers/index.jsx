@@ -25,6 +25,7 @@ const ErrorPage = lazy(() => import('@pages/error'))
 const Dashboard = lazy(() => import('@pages/dashboard'))
 const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
+const ReactMusic = lazy(() => import('@pages/music'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
@@ -76,6 +77,14 @@ const rootRouter = [
         key: '/tilt',
         auth: true,
         element: lazyLoad(ReactTilt),
+      },
+      {
+        index: false,
+        path: 'music',
+        name: 'React Music',
+        key: '/music',
+        auth: false,
+        element: lazyLoad(ReactMusic),
       },
       {
         index: false,

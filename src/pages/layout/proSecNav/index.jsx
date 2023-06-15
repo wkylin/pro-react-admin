@@ -66,8 +66,9 @@ const ProSecNav = () => {
     { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     { label: 'QrGenerate', key: '/qrcode', icon: <QrcodeOutlined /> },
-    { label: 'PrismRender', key: '/prism', icon: <QrcodeOutlined /> },
-    { label: 'ReactTilt', key: '/tilt', icon: <FireOutlined /> },
+    { label: 'PrismRender', key: '/prism', icon: <FireOutlined /> },
+    { label: 'ReactTilt', key: '/tilt', icon: <QrcodeOutlined /> },
+    { label: 'Music', key: '/music', icon: <FireOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',
