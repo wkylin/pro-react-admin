@@ -26,6 +26,7 @@ const Dashboard = lazy(() => import('@pages/dashboard'))
 const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
+const ReactThree = lazy(() => import('@pages/three'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
@@ -93,6 +94,14 @@ const rootRouter = [
         key: '/prism',
         auth: true,
         element: lazyLoad(PrismRender),
+      },
+      {
+        index: false,
+        path: 'three',
+        name: 'ReactThree',
+        key: '/three',
+        auth: true,
+        element: lazyLoad(ReactThree),
       },
       {
         index: false,

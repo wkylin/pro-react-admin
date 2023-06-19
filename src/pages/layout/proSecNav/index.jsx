@@ -69,6 +69,7 @@ const ProSecNav = () => {
     { label: 'PrismRender', key: '/prism', icon: <FireOutlined /> },
     { label: 'ReactTilt', key: '/tilt', icon: <QrcodeOutlined /> },
     { label: 'Music', key: '/music', icon: <FireOutlined /> },
+    { label: 'Three', key: '/three', icon: <QrcodeOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',

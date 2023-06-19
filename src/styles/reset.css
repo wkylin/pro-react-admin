@@ -144,8 +144,7 @@ select:-webkit-autofill:active {
 
 .layout-container .layout-tabpanel {
   width: 100%;
-  padding: 0 10px 10px;
-  min-height: calc(100vh - 242px);
+  min-height: calc(100vh - 232px);
   display: flex;
   justify-content: center;
   align-items: center;
