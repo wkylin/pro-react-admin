@@ -70,6 +70,7 @@ const ProSecNav = () => {
     { label: 'ReactTilt', key: '/tilt', icon: <QrcodeOutlined /> },
     { label: 'Music', key: '/music', icon: <FireOutlined /> },
     { label: 'Three', key: '/three', icon: <QrcodeOutlined /> },
+    { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',
