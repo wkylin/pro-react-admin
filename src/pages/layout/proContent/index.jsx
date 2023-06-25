@@ -47,7 +47,7 @@ const ProContent = () => {
       <Header className="layout-header" style={{ background: colorBgLayout }}>
         <ProBreadcrumb />
       </Header>
-      <Content className="layout-content" style={{ background: colorBgContainer }}>
+      <Content className="layout-content" id="fullScreen" style={{ background: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">

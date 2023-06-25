@@ -8,6 +8,7 @@ import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
+import Fullscreen from '../fullscreen'
 
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
@@ -147,6 +148,7 @@ const ProTabs = (props) => {
           ),
           right: (
             <>
+              <Fullscreen ele="#fullScreen" placement="left" tips="主内容全屏" />
               {panes.length > 2 ? (
                 <Dropdown
                   menu={{
