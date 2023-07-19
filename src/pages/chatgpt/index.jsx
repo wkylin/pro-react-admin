@@ -49,18 +49,18 @@ const ChatGpt = () => {
             items: [
               {
                 key: '1',
-                label: '导出png格式',
+                label: '导出png格式'
               },
               {
                 key: '2',
-                label: '导出svg格式',
-              },
-            ],
+                label: '导出svg格式'
+              }
+            ]
           }}
-          placement="bottom"
+          placement='bottom'
           arrow
         >
-          <Button type="primary">
+          <Button type='primary'>
             <DownloadOutlined />
             导出
           </Button>

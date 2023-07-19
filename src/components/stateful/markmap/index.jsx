@@ -44,9 +44,9 @@ const MarkmapHooks = ({ markmap }) => {
   }, [])
 
   return (
-    <React.Fragment>
+    <>
       <svg style={{ width: '100%', minHeight: 400 }} ref={refSvg} />
-    </React.Fragment>
+    </>
   )
 }
 
