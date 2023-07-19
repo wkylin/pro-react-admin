@@ -5,14 +5,14 @@ mermaid.initialize({
   startOnLoad: true,
   theme: 'dark',
   securityLevel: 'loose',
-  fontFamily: 'monospace',
+  fontFamily: 'monospace'
 })
 
 const MermaidHooks = ({ chart }) => {
   useEffect(() => {
     mermaid.contentLoaded()
   }, [])
-  return <div className="mermaid">{chart}</div>
+  return <div className='mermaid'>{chart}</div>
 }
 
 export default MermaidHooks
