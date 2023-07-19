@@ -31,6 +31,7 @@ const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
+const Mermaid = lazy(() => import('@pages/mermaid'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 
@@ -96,6 +97,14 @@ const rootRouter = [
         key: '/markmap',
         auth: false,
         element: lazyLoad(ChatGpt),
+      },
+      {
+        index: false,
+        path: 'mermaid',
+        name: 'ChatGPT Mermaid',
+        key: '/mermaid',
+        auth: false,
+        element: lazyLoad(Mermaid),
       },
       {
         index: false,

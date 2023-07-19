@@ -72,6 +72,7 @@ const ProSecNav = () => {
     { label: 'Three', key: '/three', icon: <QrcodeOutlined /> },
     { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
     { label: 'ChatGPT', key: '/markmap', icon: <QrcodeOutlined /> },
+    { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',
