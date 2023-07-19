@@ -27,6 +27,7 @@ const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
 const ReactThree = lazy(() => import('@pages/three'))
+const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
@@ -87,6 +88,14 @@ const rootRouter = [
         key: '/music',
         auth: false,
         element: lazyLoad(ReactMusic),
+      },
+      {
+        index: false,
+        path: 'markmap',
+        name: 'ChatGPT Markmap',
+        key: '/markmap',
+        auth: false,
+        element: lazyLoad(ChatGpt),
       },
       {
         index: false,
