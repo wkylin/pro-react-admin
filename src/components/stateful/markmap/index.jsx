@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { Transformer } from 'markmap-lib'
 import { Markmap } from 'markmap-view'
-// import 'markmap-toolbar/dist/style.css'
 
 const transformer = new Transformer()
 const initValue = `# 登录注册模块功能页面结构图
@@ -34,19 +33,29 @@ const initValue = `# 登录注册模块功能页面结构图
 `
 const MarkmapHooks = ({ markmap }) => {
   const refSvg = useRef()
+  const refMm = useRef()
 
   useEffect(() => {
     const mm = Markmap.create(refSvg.current)
-    const { root } = transformer.transform(initValue)
-    // const { root } = transformer.transform(markmap)
-    mm.setData(root)
-    mm.fit()
+    refMm.current = mm
+    return () => {
+      mm.destroy()
+    }
   }, [])
 
+  useEffect(() => {
+    const mm = refMm.current
+    // if (!mm) return
+    // const { root } = transformer.transform(markmap)
+    const { root } = transformer.transform(initValue)
+    mm.setData(root)
+    mm.fit()
+  }, [refMm.current, markmap])
+
   return (
-    <React.Fragment>
+    <>
       <svg style={{ width: '100%', minHeight: 400 }} ref={refSvg} />
-    </React.Fragment>
+    </>
   )
 }
 
