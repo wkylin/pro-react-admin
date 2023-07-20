@@ -113,6 +113,7 @@
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "@types/react-test-renderer": "^18.0.0",
+    "@types/user-agents": "^1.0.2",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "@vitejs/plugin-react": "^4.0.1",
@@ -275,6 +276,7 @@
     "typescript": "^5.1.6",
     "use-deep-compare-effect": "^1.8.1",
     "use-react-router-breadcrumbs": "^4.0.1",
+    "user-agents": "^1.0.1444",
     "vite-plugin-imp": "^2.4.0",
     "vite-plugin-svgr": "^3.2.0"
   },
