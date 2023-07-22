@@ -44,7 +44,7 @@ const MarkmapHooks = ({ markmap }) => {
   }, [])
 
   useEffect(() => {
-    const mm = refMm.current
+    const mm = refMm.currentdsds
     // if (!mm) return
     // const { root } = transformer.transform(markmap)
     const { root } = transformer.transform(initValue)

@@ -13,10 +13,10 @@ const UserIP = () => {
       .then((response) => response.json())
       .then((data) => {
         const ipAddress = data.ip
-        setUserIp(ipAddress)
+        setUserIp(ipAddress ?? '0.0.0.0')
       })
-      .catch((error) => {
-        console.error('Error:', error)
+      .catch(() => {
+        setUserIp('0.0.0.0')
       })
   }
 
