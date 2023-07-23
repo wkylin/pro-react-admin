@@ -5,7 +5,7 @@ import * as random from 'maath/random/dist/maath-random.esm'
 
 import styles from './index.module.less'
 
-export default function ReactThree() {
+export default function ReactThree () {
   return (
     <div style={{ width: '100%', height: 'calc(100vh - 232px)', background: '#12071f' }}>
       <h2 className={styles.liner}>React Three Fiber</h2>
@@ -16,7 +16,7 @@ export default function ReactThree() {
   )
 }
 
-function Stars(props) {
+function Stars (props) {
   const ref = useRef()
   const [sphere] = useState(() => random.inSphere(new Float32Array(5000), { radius: 1.5 }))
   useFrame((state, delta) => {
@@ -26,7 +26,7 @@ function Stars(props) {
   return (
     <group>
       <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
-        <PointMaterial transparent color="#ffa0e0" size={0.005} sizeAttenuation={true} depthWrite={false} />
+        <PointMaterial transparent color='#ffa0e0' size={0.005} sizeAttenuation depthWrite={false} />
       </Points>
     </group>
   )
