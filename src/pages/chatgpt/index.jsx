@@ -12,22 +12,37 @@ import initSSE from './sse'
 const ChatGpt = () => {
   const markmapRef = useRef(null)
   const [form] = Form.useForm()
+
+  // 生成概述
   const apiResultRef = useRef('')
   const [apiResult, setApiResult] = useState('')
   const [readyState, setReadyState] = useState(-1)
   const [apiKey, setApiKey] = useState('')
 
+  const bottomRef = useRef(null)
+
+  // 生成页面结构
+  const [structureResult, setStructureResult] = useState('')
+  const [structureReadyState, setStructureReadyState] = useState(-1)
+  const structureResultRef = useRef()
+  useEffect(() => {
+    structureResultRef.current = structureResult
+  }, [structureResult])
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [apiResult, structureResult])
+
   const onChange = (event) => {
     setApiKey(event.target.value)
   }
   const onFinish = (values) => {
-    const { apiText, text } = values
-    setApiKey(apiText)
+    const { text } = values
     setApiResult('')
     apiResultRef.current = ''
     setStructureResult('')
     structureResultRef.current = ''
-    const source = initSSE(apiText, text)
+    const source = initSSE(apiKey, text)
     source.addEventListener('message', (e) => {
       if (e.data !== '[DONE]') {
         const payload = JSON.parse(e.data)
@@ -52,13 +67,6 @@ const ChatGpt = () => {
     source.stream()
   }
 
-  // 生成页面结构
-  const [structureResult, setStructureResult] = useState('')
-  const [structureReadyState, setStructureReadyState] = useState(-1)
-  const structureResultRef = useRef()
-  useEffect(() => {
-    structureResultRef.current = structureResult
-  }, [structureResult])
   const onButtonClick = useCallback(
     (key) => {
       if (markmapRef.current === null) {
@@ -249,6 +257,8 @@ const ChatGpt = () => {
             <MarkmapHooks markmap={structureResult} />
           </section>
         )}
+
+        <div ref={bottomRef} style={{ height: 20, marginBottom: 20 }} />
       </FixTabPanel>
     </>
   )
