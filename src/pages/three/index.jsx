@@ -24,7 +24,7 @@ function Stars(props) {
     ref.current.rotation.y -= delta / 15
   })
   return (
-    <group rotation={[0, 0, Math.PI / 4]}>
+    <group>
       <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
         <PointMaterial transparent color="#ffa0e0" size={0.005} sizeAttenuation={true} depthWrite={false} />
       </Points>
