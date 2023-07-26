@@ -200,13 +200,7 @@ export const ThousandNum = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))
 export const RandomId = (len) => Math.random().toString(36).substring(3, len)
 export const RoundNum = (num, decimal) => Math.round(num * 10 ** decimal) / 10 ** decimal
 export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
-export const dataType = (tgt, type) => {
-  const tempType = Object.prototype.toString
-    .call(tgt)
-    .replace(/\[object (\w+)\]/, '$1')
-    .toLowerCase()
-  return type ? tempType === type : tempType
-}
+
 export const isEmptyArray = (arr) => Array.isArray(arr) && !arr.length
 export const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)]
 export const asyncTo = (promise) => promise.then((data) => [null, data]).catch((err) => [err])
@@ -217,10 +211,35 @@ export const escape = (str) =>
   str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]))
 export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-export const round = (n, d) => Number(`${Math.round(`${n}e${d}`)}e-${d}`)
 export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
 export const pause = (millis) => new Promise((resolve) => setTimeout(resolve, millis))
 export const camelizeCamelCase = (str) =>
   str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, (letter, index) => (index === 0 ? letter.toLowerCase() : letter.toUpperCase()))
     .replace(/\s+/g, '')
+
+export const copyTextToClipboard = async (textToCopy) => {
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(textToCopy)
+      console.log('已成功复制到剪贴板')
+    }
+  } catch (err) {
+    console.error(`复制到剪贴板失败:${err.message}`)
+  }
+}
+
+export const copyImgToClipboard = async (imgUrl) => {
+  try {
+    const data = await fetch(imgUrl)
+    const blob = await data.blob()
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        [blob.type]: blob,
+      }),
+    ])
+    console.log('Image copied.')
+  } catch (err) {
+    console.error(err.name, err.message)
+  }
+}

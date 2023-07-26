@@ -2,11 +2,11 @@ import React, { useRef, useCallback, useState, useEffect } from 'react'
 import MarkmapHooks from '@stateful/markmap'
 import FixTabPanel from '@stateless/FixTabPanel'
 import ReactMarkdown from 'react-markdown'
-import copy from 'copy-to-clipboard'
 import remarkGfm from 'remark-gfm'
 import { toPng, toSvg } from 'html-to-image'
 import { Button, Dropdown, Form, Input, Space, message } from 'antd'
 import { DownloadOutlined, CopyOutlined } from '@ant-design/icons'
+import { copyTextToClipboard } from '@utils/aidFn'
 import initSSE from './sse'
 
 const ChatGpt = () => {
@@ -99,8 +99,14 @@ const ChatGpt = () => {
     [markmapRef]
   )
 
-  const copyToClipboard = () => {
-    copy(apiResult)
+  const removeMd = require('remove-markdown')
+
+  const copyToClipboard = (key) => {
+    if (key === '1') {
+      copyTextToClipboard(removeMd(apiResult))
+    } else {
+      copyTextToClipboard(apiResult)
+    }
     message.success('复制成功！')
   }
 
@@ -190,6 +196,10 @@ const ChatGpt = () => {
                 items: [
                   {
                     key: '1',
+                    label: '复制文本',
+                  },
+                  {
+                    key: '2',
                     label: '复制Markdown',
                   },
                 ],

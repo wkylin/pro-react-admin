@@ -273,6 +273,7 @@
     "react-sticky-ts": "^1.0.7",
     "react-tilt": "^1.0.2",
     "remark-gfm": "^3.0.1",
+    "remove-markdown": "^0.5.0",
     "sanitize.css": "^13.0.0",
     "screenfull": "^6.0.2",
     "sse": "github:mpetazzoni/sse.js",
