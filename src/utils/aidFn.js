@@ -65,7 +65,7 @@ export const getImgsUrl = (html) => {
 export const customizeTimer = {
   intervalTimer: null,
   timeoutTimer: null,
-  setTimeout(cb, interval) {
+  setTimeout (cb, interval) {
     const { now } = Date
     const stime = now()
     let etime = stime
@@ -80,10 +80,10 @@ export const customizeTimer = {
     this.timeoutTimer = requestAnimationFrame(loop)
     return this.timeoutTimer
   },
-  clearTimeout() {
+  clearTimeout () {
     cancelAnimationFrame(this.timeoutTimer)
   },
-  setInterval(cb, interval) {
+  setInterval (cb, interval) {
     const { now } = Date
     let stime = now()
     let etime = stime
@@ -99,9 +99,9 @@ export const customizeTimer = {
     this.intervalTimer = requestAnimationFrame(loop)
     return this.intervalTimer
   },
-  clearInterval() {
+  clearInterval () {
     cancelAnimationFrame(this.intervalTimer)
-  },
+  }
 }
 
 export const isDecimal = (value) => {
@@ -208,7 +208,7 @@ export const hasFocus = (element) => element === document.activeElement
 export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 export const randomString = () => Math.random().toString(36).slice(2)
 export const escape = (str) =>
-  str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]))
+  str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m])
 export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
@@ -235,8 +235,8 @@ export const copyImgToClipboard = async (imgUrl) => {
     const blob = await data.blob()
     await navigator.clipboard.write([
       new ClipboardItem({
-        [blob.type]: blob,
-      }),
+        [blob.type]: blob
+      })
     ])
     console.log('Image copied.')
   } catch (err) {
