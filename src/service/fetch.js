@@ -54,7 +54,7 @@ const handleFailedResult = (response, error, isShowError, reject) => {
   if (reject) reject(response)
 }
 
-const handleSuccessResult = (reslove, result, isShowError) => {
+const handleSuccessResult = (resolve, result, isShowError) => {
   // response.ok text/html text/plain result may be string
   if (result.code !== 0) {
     if (result.code === 41002) {
@@ -67,7 +67,7 @@ const handleSuccessResult = (reslove, result, isShowError) => {
       message.error(errStr, 2)
     }
   }
-  reslove(result)
+  resolve(result)
 }
 
 const handleFetchData = (url, options) => {

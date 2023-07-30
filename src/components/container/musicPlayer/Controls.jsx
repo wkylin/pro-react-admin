@@ -20,7 +20,7 @@ const Controls = ({
       onClick={() => setRepeat((prev) => !prev)}
       className="hidden sm:block cursor-pointer"
     />
-    {currentSongs?.length && (
+    {currentSongs?.length > 0 && (
       <MdSkipPrevious size={30} color="#FFF" className="cursor-pointer" onClick={handlePrevSong} />
     )}
     {isPlaying ? (
@@ -28,7 +28,9 @@ const Controls = ({
     ) : (
       <BsFillPlayFill size={45} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
     )}
-    {currentSongs?.length && <MdSkipNext size={30} color="#FFF" className="cursor-pointer" onClick={handleNextSong} />}
+    {currentSongs?.length > 0 && (
+      <MdSkipNext size={30} color="#FFF" className="cursor-pointer" onClick={handleNextSong} />
+    )}
     <BsShuffle
       size={20}
       color={shuffle ? 'red' : 'white'}

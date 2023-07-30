@@ -212,7 +212,7 @@ export const escape = (str) =>
 export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
-export const pause = (millis) => new Promise((resolve) => setTimeout(resolve, millis))
+export const pause = (millions) => new Promise((resolve) => setTimeout(resolve, millions))
 export const camelizeCamelCase = (str) =>
   str
     .replace(/(?:^\w|[A-Z]|\b\w)/g, (letter, index) => (index === 0 ? letter.toLowerCase() : letter.toUpperCase()))
@@ -226,20 +226,5 @@ export const copyTextToClipboard = async (textToCopy) => {
     }
   } catch (err) {
     console.error(`复制到剪贴板失败:${err.message}`)
-  }
-}
-
-export const copyImgToClipboard = async (imgUrl) => {
-  try {
-    const data = await fetch(imgUrl)
-    const blob = await data.blob()
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        [blob.type]: blob,
-      }),
-    ])
-    console.log('Image copied.')
-  } catch (err) {
-    console.error(err.name, err.message)
   }
 }
