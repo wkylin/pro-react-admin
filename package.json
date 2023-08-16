@@ -247,7 +247,7 @@
     "markmap-common": "^0.15.0",
     "markmap-lib": "^0.15.2",
     "markmap-view": "^0.15.0",
-    "mermaid": "^10.2.4",
+    "mermaid": "^10.3.0",
     "nanoid": "^4.0.2",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "object-hash": "^3.0.0",
