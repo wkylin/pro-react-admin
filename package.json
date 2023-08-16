@@ -216,7 +216,7 @@
     "webpackbar": "^5.0.2"
   },
   "dependencies": {
-    "@ant-design/cssinjs": "^1.11.1",
+    "@ant-design/cssinjs": "^1.14.0",
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.3",
     "@react-three/drei": "^9.78.1",
