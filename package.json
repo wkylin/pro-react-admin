@@ -245,7 +245,7 @@
     "lodash": "^4.17.21",
     "maath": "^0.7.0",
     "markmap-common": "^0.15.3",
-    "markmap-lib": "^0.15.2",
+    "markmap-lib": "^0.15.4",
     "markmap-view": "^0.15.0",
     "mermaid": "^10.3.0",
     "nanoid": "^4.0.2",
