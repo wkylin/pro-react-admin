@@ -220,7 +220,7 @@
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.3",
     "@react-three/drei": "^9.79.4",
-    "@react-three/fiber": "^8.13.4",
+    "@react-three/fiber": "^8.13.6",
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/cli": "^2.20.0",
     "@sentry/react": "^7.57.0",
