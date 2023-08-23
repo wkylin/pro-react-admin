@@ -222,7 +222,7 @@
     "@react-three/drei": "^9.79.4",
     "@react-three/fiber": "^8.13.6",
     "@reduxjs/toolkit": "^1.9.5",
-    "@sentry/cli": "^2.20.1",
+    "@sentry/cli": "^2.20.3",
     "@sentry/react": "^7.57.0",
     "@sentry/tracing": "^7.57.0",
     "@types/three": "^0.154.0",
