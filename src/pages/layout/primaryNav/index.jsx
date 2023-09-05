@@ -8,7 +8,7 @@ const PrimaryNav = () => {
   const redirectTo = (path) => {
     navigate(path)
   }
-  const goToSkylin = () => {
+  const goToWkylin = () => {
     window.open(`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`, '_blank')
   }
 
@@ -18,7 +18,7 @@ const PrimaryNav = () => {
         <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
-        <Button type="link" icon={<TeamOutlined />} onClick={goToSkylin}>
+        <Button type="link" icon={<TeamOutlined />} onClick={goToWkylin}>
           Skyline for wkylin.w
         </Button>
       </Space>

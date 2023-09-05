@@ -49,6 +49,8 @@
     "Meraid",
     "mockjs",
     "mpetazzoni",
+    "noopener",
+    "noreferrer",
     "portfinder",
     "preinstall",
     "purgecss",
@@ -68,5 +70,18 @@
     "xihu",
     "Zhong",
     "zhonghuamen"
-  ]
+  ],
+  "eslint.codeActionsOnSave.rules": null,
+  "eslint.run": "onType",
+  "eslint.options": {
+    "extensions": [
+      ".js",
+      ".vue",
+      ".jsx",
+      ".tsx"
+    ]
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
