@@ -278,7 +278,7 @@
     "screenfull": "^6.0.2",
     "sse": "github:mpetazzoni/sse.js",
     "styled-components": "^6.0.7",
-    "three": "^0.154.0",
+    "three": "^0.155.0",
     "typescript": "^5.1.6",
     "use-deep-compare-effect": "^1.8.1",
     "use-react-router-breadcrumbs": "^4.0.1",
