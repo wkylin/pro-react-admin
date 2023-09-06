@@ -1,0 +1,36 @@
+.multiWrapper {
+  border-radius: 3px;
+  box-sizing: border-box;
+  display: block;
+  overflow: hidden;
+  padding: 2px;
+  position: relative;
+}
+
+.multiWrapper::before {
+  background: linear-gradient(115deg, #4fcf70, #fad648, #a767e5, #12bcfe, #44ce7b);
+  background-size: 50% 100%;
+  content: '';
+  height: 100%;
+  width: 200%;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.multiWrapper:hover::before {
+  animation: wrapper-animation 0.75s linear infinite;
+}
+
+.multiWrapper .multiContent {
+  background: #000;
+  position: relative;
+  border-radius: 3px;
+  color: #fff;
+}
+
+@keyframes wrapper-animation {
+  to {
+    transform: translateX(-50%);
+  }
+}
