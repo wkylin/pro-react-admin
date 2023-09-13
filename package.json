@@ -219,7 +219,7 @@
     "@ant-design/cssinjs": "^1.16.2",
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.3",
-    "@react-three/drei": "^9.80.3",
+    "@react-three/drei": "^9.80.5",
     "@react-three/fiber": "^8.13.6",
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/cli": "^2.20.5",
