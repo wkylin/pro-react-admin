@@ -225,7 +225,7 @@
     "@sentry/cli": "^2.20.5",
     "@sentry/react": "^7.57.0",
     "@sentry/tracing": "^7.64.0",
-    "@types/three": "^0.155.0",
+    "@types/three": "^0.155.1",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "antd": "^5.8.4",
     "axios": "^1.4.0",
