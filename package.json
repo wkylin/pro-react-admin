@@ -228,7 +228,7 @@
     "@types/three": "^0.155.1",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "antd": "^5.8.4",
-    "axios": "^1.4.0",
+    "axios": "^1.5.0",
     "blueimp-md5": "^2.19.0",
     "cookies-js": "^1.2.3",
     "copy-to-clipboard": "^3.3.3",
