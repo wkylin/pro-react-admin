@@ -12,7 +12,11 @@ const MermaidHooks = ({ chart }) => {
   useEffect(() => {
     mermaid.contentLoaded()
   }, [])
-  return <div className="mermaid">{chart}</div>
+  return (
+    <div className="mermaid" style={{ minHeight: 0, background: '#fff' }}>
+      {chart}
+    </div>
+  )
 }
 
 export default MermaidHooks
