@@ -12,7 +12,7 @@ const Home = () => (
     <h2>React version: {version}</h2>
     <UserIP />
     <section style={{ width: 200, height: 60 }}>
-      <MultiColorBorder text="多色彩边框文案" />
+      <MultiColorBorder text='多色彩边框文案' />
     </section>
   </FixTabPanel>
 )

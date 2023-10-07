@@ -7,7 +7,7 @@ const MultiColorBorder = ({ text, wrapperStyles = { color: '#fff' }, contentStyl
     <section
       className={styles.multiWrapper}
       style={{
-        ...wrapperStyles,
+        ...wrapperStyles
       }}
     >
       <section className={styles.multiContent} style={{ ...contentStyles }}>
