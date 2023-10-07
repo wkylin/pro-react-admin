@@ -179,7 +179,7 @@
     "onchange": "^7.1.0",
     "pnpm": "^8.6.6",
     "portfinder": "^1.0.32",
-    "postcss": "^8.4.24",
+    "postcss": "^8.4.31",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^7.3.3",
     "postcss-normalize": "^10.0.1",
