@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import React, { useRef, useCallback, useState, useEffect } from 'react'
 import MarkmapHooks from '@stateful/markmap'
 import FixTabPanel from '@stateless/FixTabPanel'
