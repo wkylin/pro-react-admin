@@ -233,7 +233,7 @@
     "cookies-js": "^1.2.3",
     "copy-to-clipboard": "^3.3.3",
     "cross-fetch": "^4.0.0",
-    "dayjs": "^1.11.9",
+    "dayjs": "^1.11.10",
     "echarts": "^5.4.2",
     "echarts-for-react": "^3.0.2",
     "fetch-intercept": "^2.4.0",
