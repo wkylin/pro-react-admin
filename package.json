@@ -243,7 +243,7 @@
     "lamina": "^1.1.23",
     "less": "^4.2.0",
     "lodash": "^4.17.21",
-    "maath": "^0.8.1",
+    "maath": "^0.9.0",
     "markmap-common": "^0.15.3",
     "markmap-lib": "^0.15.2",
     "markmap-view": "^0.15.4",
