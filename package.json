@@ -278,7 +278,7 @@
     "sanitize.css": "^13.0.0",
     "screenfull": "^6.0.2",
     "sse": "github:mpetazzoni/sse.js",
-    "styled-components": "^6.0.7",
+    "styled-components": "^6.0.8",
     "three": "^0.156.1",
     "typescript": "^5.2.0",
     "use-deep-compare-effect": "^1.8.1",
