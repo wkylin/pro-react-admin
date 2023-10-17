@@ -224,7 +224,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/cli": "^2.20.7",
     "@sentry/react": "^7.69.0",
-    "@sentry/tracing": "^7.68.0",
+    "@sentry/tracing": "^7.72.0",
     "@types/three": "^0.156.0",
     "@welldone-software/why-did-you-render": "^7.0.1",
     "antd": "^5.9.1",
