@@ -175,6 +175,7 @@ const ChatGpt = () => {
                 maxLength={1000}
                 style={{ resize: 'none', padding: 2 }}
                 placeholder=""
+                onPressEnter={onFinish}
               />
             </Form.Item>
 
