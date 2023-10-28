@@ -221,7 +221,7 @@
     "@react-spring/web": "^9.7.3",
     "@react-three/drei": "^9.85.0",
     "@react-three/fiber": "^8.14.4",
-    "@reduxjs/toolkit": "^1.9.6",
+    "@reduxjs/toolkit": "^1.9.7",
     "@sentry/cli": "^2.21.1",
     "@sentry/react": "^7.73.0",
     "@sentry/tracing": "^7.72.0",
