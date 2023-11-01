@@ -26,6 +26,7 @@ const Dashboard = lazy(() => import('@pages/dashboard'))
 const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
+const MyVideo = lazy(() => import('@pages/video'))
 const ReactThree = lazy(() => import('@pages/three'))
 const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
@@ -89,6 +90,14 @@ const rootRouter = [
         key: '/music',
         auth: false,
         element: lazyLoad(ReactMusic),
+      },
+      {
+        index: false,
+        path: 'video',
+        name: 'React Video',
+        key: '/video',
+        auth: false,
+        element: lazyLoad(MyVideo),
       },
       {
         index: false,

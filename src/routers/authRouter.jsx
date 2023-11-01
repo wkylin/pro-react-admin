@@ -12,7 +12,18 @@ const AuthRouter = (props) => {
   if (!token) return <Navigate to="/signin" replace />
 
   // * 后端返回有权限路由列表 暂时硬编码 需要结合 proSecNav组件中的menuItems
-  const routerList = ['/', '/home', '/demo', '/parallax', '/dashboard', '/tilt', '/prism', '/three', '/echarts']
+  const routerList = [
+    '/',
+    '/home',
+    '/demo',
+    '/parallax',
+    '/dashboard',
+    '/tilt',
+    '/prism',
+    '/three',
+    '/echarts',
+    '/video',
+  ]
   if (routerList.indexOf(pathname) === -1) return <Navigate to="/403" replace />
 
   return props.children

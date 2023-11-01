@@ -205,6 +205,7 @@
     "thread-loader": "^4.0.2",
     "tree-node-cli": "^1.6.0",
     "typescript": "^5.2.2",
+    "video.js": "^8.6.1",
     "vite": "^4.4.0",
     "vite-plugin-html": "^3.2.0",
     "webpack": "^5.88.1",
