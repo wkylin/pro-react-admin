@@ -27,6 +27,7 @@ const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
 const MyVideo = lazy(() => import('@pages/video'))
+const MyCrypto = lazy(() => import('@pages/crypto'))
 const ReactThree = lazy(() => import('@pages/three'))
 const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
@@ -98,6 +99,14 @@ const rootRouter = [
         key: '/video',
         auth: false,
         element: lazyLoad(MyVideo),
+      },
+      {
+        index: false,
+        path: 'crypto',
+        name: 'React Crypto',
+        key: '/crypto',
+        auth: false,
+        element: lazyLoad(MyCrypto),
       },
       {
         index: false,
