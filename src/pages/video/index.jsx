@@ -14,9 +14,9 @@ const MyVideo = () => {
     sources: [
       {
         src: 'https://placehold.co/1920x1080.mp4',
-        type: 'video/mp4'
-      }
-    ]
+        type: 'video/mp4',
+      },
+    ],
   }
 
   const handlePlayerReady = (player) => {
