@@ -275,7 +275,7 @@
     "react-scroll-to-bottom": "^4.2.0",
     "react-sticky": "^6.0.3",
     "react-sticky-ts": "^1.0.7",
-    "react-zoom-pan-pinch": "^3.1.0",
+    "react-zoom-pan-pinch": "^3.2.0",
     "remark-gfm": "^3.0.1",
     "remove-markdown": "^0.5.0",
     "sanitize.css": "^13.0.0",
