@@ -271,7 +271,7 @@
     "react-qr-code": "^2.0.12",
     "react-redux": "^8.1.3",
     "react-ripples": "^2.2.1",
-    "react-router-dom": "^6.16.0",
+    "react-router-dom": "^6.17.0",
     "react-scroll-to-bottom": "^4.2.0",
     "react-sticky": "^6.0.3",
     "react-sticky-ts": "^1.0.7",
