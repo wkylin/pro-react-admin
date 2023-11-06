@@ -228,7 +228,7 @@
     "@sentry/tracing": "^7.74.0",
     "@types/three": "^0.157.0",
     "@welldone-software/why-did-you-render": "^7.0.1",
-    "antd": "^5.9.4",
+    "antd": "^5.10.1",
     "axios": "^1.6.0",
     "blueimp-md5": "^2.19.0",
     "cookies-js": "^1.2.3",
