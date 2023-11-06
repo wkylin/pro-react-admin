@@ -69,7 +69,8 @@ v4U73TKOI+a1xxr6ZMQ4vzwt
       encrypt.setPublicKey(publicKey)
 
       // const reaParameter = CryptoJS.lib.WordArray.random(80 / 4).toString()
-      const reaParameter = `基于转换器的大型神经网络可以有数十亿个参数。模型的大小通常由模型大小、参数数量和训练数据规模之间的经验关系决定。`
+      const reaParameter =
+        '基于转换器的大型神经网络可以有数十亿个参数。模型的大小通常由模型大小、参数数量和训练数据规模之间的经验关系决定。'
 
       const reaEncrypt = encrypt.encrypt(reaParameter)
       setReaData(reaParameter)
