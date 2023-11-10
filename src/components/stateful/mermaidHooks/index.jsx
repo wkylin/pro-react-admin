@@ -5,7 +5,7 @@ mermaid.initialize({
   startOnLoad: true,
   theme: 'dark',
   securityLevel: 'loose',
-  fontFamily: 'monospace',
+  fontFamily: 'monospace'
 })
 
 const MermaidHooks = ({ chart }) => {
@@ -13,7 +13,7 @@ const MermaidHooks = ({ chart }) => {
     mermaid.contentLoaded()
   }, [])
   return (
-    <div className="mermaid" style={{ minHeight: 0, background: '#fff' }}>
+    <div className='mermaid' style={{ minHeight: 0, background: '#fff' }}>
       {chart}
     </div>
   )

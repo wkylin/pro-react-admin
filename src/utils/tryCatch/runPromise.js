@@ -17,7 +17,7 @@ const promise = () =>
     }, 3000)
   })
 
-async function test() {
+async function test () {
   const [res] = await runPromise(promise)
   console.log('23', res)
 }
@@ -32,7 +32,7 @@ const fetchDataFromServer = (params) => () =>
     }, 3000)
   })
 
-async function main() {
+async function main () {
   const [res1, error1] = await runPromise(fetchDataFromServer('123'))
   const [res2, error2] = await runPromise(fetchDataFromServer())
   console.log('res1', res1)

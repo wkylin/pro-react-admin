@@ -14,13 +14,13 @@ const AddCoupons = () => {
   }
   return (
     <FixTabPanel>
-      <Button type="link" onClick={closeActiveOpenAngular}>
+      <Button type='link' onClick={closeActiveOpenAngular}>
         关闭当前标签 并打开 Angular标签
       </Button>
       <Alert
-        message="Success Tips"
-        description="Detailed description and advice about successful copywriting."
-        type="success"
+        message='Success Tips'
+        description='Detailed description and advice about successful copywriting.'
+        type='success'
         showIcon
       />
     </FixTabPanel>

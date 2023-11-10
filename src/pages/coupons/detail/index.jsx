@@ -13,9 +13,9 @@ const DetailCoupons = () => {
   return (
     <FixTabPanel>
       <Alert
-        message="Success Tips"
-        description="Detailed description and advice about successful copywriting."
-        type="success"
+        message='Success Tips'
+        description='Detailed description and advice about successful copywriting.'
+        type='success'
         showIcon
       />
       <div>useParams: {JSON.stringify(params, null, 2)}</div>

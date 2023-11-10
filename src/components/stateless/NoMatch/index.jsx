@@ -14,7 +14,7 @@ const NoMatch = () => {
         No match for <code>{location.pathname}</code>
       </h3>
 
-      <Button size="small" type="primary" ghost onClick={() => navigate(-1)}>
+      <Button size='small' type='primary' ghost onClick={() => navigate(-1)}>
         返回
       </Button>
     </div>

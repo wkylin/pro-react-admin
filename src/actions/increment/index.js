@@ -1,8 +1,8 @@
 export const actionType = {
-  INCREMENT: 'INCREMENT',
+  INCREMENT: 'INCREMENT'
 }
 
 export const increment = (payload) => ({
   type: actionType.INCREMENT,
-  payload,
+  payload
 })

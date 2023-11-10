@@ -8,5 +8,5 @@ module.exports = {
   build: resolve(__dirname, '../dist'),
 
   // Static files that get copied to build folder
-  public: resolve(__dirname, '../public'),
+  public: resolve(__dirname, '../public')
 }

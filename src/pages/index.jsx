@@ -10,7 +10,7 @@ const Index = () => {
   }
   return (
     <>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo(`${url}layout`)}>
+      <Button type='primary' style={{ margin: 10 }} onClick={() => redirectTo(`${url}layout`)}>
         Layout Home
       </Button>
       <Button style={{ margin: 10 }} onClick={() => redirectTo(`${url}basis`)}>

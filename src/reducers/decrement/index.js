@@ -1,7 +1,7 @@
 import rootAction from '@src/actions'
 
 const initialState = {
-  deNumber: 0,
+  deNumber: 0
 }
 
 const deReducer = (state = initialState, { type, payload } = {}) => {

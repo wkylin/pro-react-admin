@@ -54,7 +54,7 @@ const Mermaid = () => (
 
       <TransformWrapper centerOnInit centerZoomedOut>
         {({ zoomIn, zoomOut, resetTransform }) => (
-          <React.Fragment>
+          <>
             <Space>
               <Button onClick={() => zoomIn()}>放大</Button>
               <Button onClick={() => zoomOut()}>缩小</Button>
@@ -63,7 +63,7 @@ const Mermaid = () => (
             <TransformComponent>
               <MermaidHooks chart={gitChart} />
             </TransformComponent>
-          </React.Fragment>
+          </>
         )}
       </TransformWrapper>
       <h3> 演示2: Markmap</h3>

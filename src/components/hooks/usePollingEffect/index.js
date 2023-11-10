@@ -4,7 +4,7 @@ const usePollingEffect = (asyncCallback, dependencies = [], options = { interval
   const timeoutIdRef = useRef(null)
   useEffect(() => {
     // Side note: preceding semicolon needed for IIFEs.
-    ;(async function pollingCallback() {
+    ;(async function pollingCallback () {
       try {
         await asyncCallback()
       } finally {

@@ -8,17 +8,17 @@ const { Content } = Layout
 
 const layout = {
   labelCol: {
-    span: 8,
+    span: 8
   },
   wrapperCol: {
-    span: 16,
-  },
+    span: 16
+  }
 }
 const tailLayout = {
   wrapperCol: {
     offset: 8,
-    span: 16,
-  },
+    span: 16
+  }
 }
 
 const SignIn = () => {
@@ -27,7 +27,7 @@ const SignIn = () => {
     navigate(path)
   }
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
 
   const onFinish = (values) => {
@@ -47,47 +47,47 @@ const SignIn = () => {
         <AlignCenter>
           <Form
             {...layout}
-            name="basic"
+            name='basic'
             initialValues={{
               remember: true,
               username: process.env.AUTH_USER,
-              password: process.env.AUTH_PASSWORD,
+              password: process.env.AUTH_PASSWORD
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
           >
             <Form.Item
-              label="Username"
-              name="username"
+              label='Username'
+              name='username'
               rules={[
                 {
                   required: true,
-                  message: 'Please input your username!',
-                },
+                  message: 'Please input your username!'
+                }
               ]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item
-              label="Password"
-              name="password"
+              label='Password'
+              name='password'
               rules={[
                 {
                   required: true,
-                  message: 'Please input your password!',
-                },
+                  message: 'Please input your password!'
+                }
               ]}
             >
               <Input.Password />
             </Form.Item>
 
-            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+            <Form.Item {...tailLayout} name='remember' valuePropName='checked'>
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
 
             <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
+              <Button type='primary' htmlType='submit'>
                 {' '}
                 Sign in
               </Button>

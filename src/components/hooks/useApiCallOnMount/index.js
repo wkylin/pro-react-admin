@@ -3,10 +3,10 @@ import { useReducer, useEffect } from 'react'
 const initialState = {
   loading: false,
   data: null,
-  error: null,
+  error: null
 }
 
-function reducer(state, action) {
+function reducer (state, action) {
   switch (action.type) {
     case 'loading':
       return { ...initialState, loading: true }

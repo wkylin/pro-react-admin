@@ -14,14 +14,14 @@ export const getRouteList = (result, arrList, queryItem) => {
           path: item.path,
           key: item.key,
           name: item.name,
-          isSubMenu: item.isSubMenu,
+          isSubMenu: item.isSubMenu
         })
       } else {
         result.push({
           path: item.path,
           key: item.key,
           name: item.name,
-          isSubMenu: item.isSubMenu,
+          isSubMenu: item.isSubMenu
         })
         getRouteList(
           result,
