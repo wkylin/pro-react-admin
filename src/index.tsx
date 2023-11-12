@@ -1,8 +1,37 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { ProThemeProvider } from './theme/hooks'
+import i18n from 'i18next'
+import Backend from 'i18next-http-backend'
+import { initReactI18next } from 'react-i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
 import ThemeIndex from './theme'
+import { ProThemeProvider } from './theme/hooks'
+import translationEN from './locales/en/translation.json'
+import translationZH from './locales/zh/translation.json'
 
+i18n
+  .use(Backend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources: {
+      en: {
+        translation: translationEN,
+      },
+      zh: {
+        translation: translationZH,
+      },
+    },
+    lng: 'zh',
+    fallbackLng: 'en', // 默认语言
+    debug: true, // 开启调试模式
+    interpolation: {
+      escapeValue: false, // 不转义特殊字符
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+    },
+  })
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement)
 
 root.render(

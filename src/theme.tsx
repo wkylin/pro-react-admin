@@ -7,8 +7,9 @@ import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
 import 'antd/dist/reset.css'
 import './styles/reset.css'
+
 import App from './App'
-import myThems from './theme/index'
+import myThemes from './theme/index'
 import { useProThemeContext } from './theme/hooks'
 
 dayjs.locale('zh-cn')
@@ -17,7 +18,7 @@ const ThemeIndex = () => {
   const { myTheme } = useProThemeContext() as any
   ConfigProvider.config({
     prefixCls: 'wui-ant',
-    iconPrefixCls: 'wui-anticon',
+    iconPrefixCls: 'wui-icon',
   })
   return (
     <Router>
@@ -28,12 +29,12 @@ const ThemeIndex = () => {
               myTheme === 'light'
                 ? [theme.defaultAlgorithm, theme.compactAlgorithm]
                 : [theme.darkAlgorithm, theme.compactAlgorithm],
-            token: myTheme === 'light' ? myThems.lightTheme : myThems.darkTheme,
+            token: myTheme === 'light' ? myThemes.lightTheme : myThemes.darkTheme,
           }}
           componentSize="middle"
           input={{ autoComplete: 'off' }}
           prefixCls="wui-ant"
-          iconPrefixCls="wui-anticon"
+          iconPrefixCls="wui-icon"
         >
           <App />
         </ConfigProvider>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Menu } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
   HomeOutlined,
   DeploymentUnitOutlined,
@@ -28,6 +29,7 @@ const ProSecNav = () => {
     navigate(path)
   }
 
+  const { t } = useTranslation()
   const [selectedKeys, setSelectedKeys] = useState(['home'])
 
   // 当前路由对应的 sub menu key
@@ -62,8 +64,8 @@ const ProSecNav = () => {
   }
 
   const menuItems = [
-    { label: 'Home', key: '/', icon: <HomeOutlined /> },
-    { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
+    { label: t('home'), key: '/', icon: <HomeOutlined /> },
+    { label: t('lang'), key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     { label: 'QrGenerate', key: '/qrcode', icon: <QrcodeOutlined /> },
     { label: 'PrismRender', key: '/prism', icon: <FireOutlined /> },

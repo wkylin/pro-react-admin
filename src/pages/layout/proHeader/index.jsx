@@ -5,6 +5,7 @@ import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlin
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage } from '@utils/publicFn'
+import LanguageSwitcher from '@stateless/LanguageSwitcher'
 // import { ReactComponent as LightSvg } from '@assets/svg/light.svg'
 // import { ReactComponent as DarkSvg } from '@assets/svg/dark.svg'
 // import LightSvg from '@assets/svg/light.svg'
@@ -86,6 +87,7 @@ const ProHeader = () => {
             />
             <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
             <Fullscreen />
+            <LanguageSwitcher />
           </Space>
 
           <Dropdown
