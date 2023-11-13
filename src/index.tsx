@@ -6,25 +6,18 @@ import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
-import translationEN from './locales/en/translation.json'
-import translationZH from './locales/zh/translation.json'
 
 i18n
   .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    resources: {
-      en: {
-        translation: translationEN,
-      },
-      zh: {
-        translation: translationZH,
-      },
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
-    lng: 'zh',
-    fallbackLng: 'en', // 默认语言
-    debug: true, // 开启调试模式
+    // lng: 'zh',
+    fallbackLng: 'zh', // 默认语言
+    debug: process.env.NODE_ENV === 'production', // 开启调试模式
     interpolation: {
       escapeValue: false, // 不转义特殊字符
     },

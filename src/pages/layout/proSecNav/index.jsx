@@ -65,7 +65,7 @@ const ProSecNav = () => {
 
   const menuItems = [
     { label: t('home'), key: '/', icon: <HomeOutlined /> },
-    { label: t('lang'), key: '/demo', icon: <GlobalOutlined /> },
+    { label: t('demo'), key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     { label: 'QrGenerate', key: '/qrcode', icon: <QrcodeOutlined /> },
     { label: 'PrismRender', key: '/prism', icon: <FireOutlined /> },

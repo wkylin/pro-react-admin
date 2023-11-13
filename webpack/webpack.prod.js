@@ -1,6 +1,7 @@
 const path = require('path')
 const { merge } = require('webpack-merge')
 
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
@@ -45,6 +46,17 @@ const prodWebpackConfig = merge(common, {
       threshold: 10240, // 只有大小大于该值的资源会被处理
       minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
       // deleteOriginalAssets: true // 删除原文件
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../public'),
+          to: path.resolve(__dirname, '../dist'),
+          globOptions: {
+            ignore: ['**/index.html'],
+          },
+        },
+      ],
     }),
   ],
   optimization: {

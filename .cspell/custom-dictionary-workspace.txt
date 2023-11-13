@@ -1,0 +1,4 @@
+# Custom Dictionary Words
+codepaths
+singleline
+tsbuildinfo
