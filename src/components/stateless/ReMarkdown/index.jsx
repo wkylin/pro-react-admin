@@ -66,19 +66,19 @@ const ReMarkdown = ({ markdownText = '' }) => (
           RehypeHighlight,
           {
             detect: false,
-            ignoreMissing: true,
-          },
-        ],
+            ignoreMissing: true
+          }
+        ]
       ]}
       components={{
         pre: PreCode,
-        p: (pProps) => <p {...pProps} dir="auto" />,
+        p: (pProps) => <p {...pProps} dir='auto' />,
         a: (aProps) => {
           const href = aProps.href || ''
           const isInternal = /^\/#/i.test(href)
           const target = isInternal ? '_self' : aProps.target ?? '_blank'
           return <a {...aProps} target={target} />
-        },
+        }
       }}
     >
       {markdownText}
