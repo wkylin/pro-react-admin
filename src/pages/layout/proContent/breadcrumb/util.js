@@ -15,6 +15,7 @@ export const getRouteList = (result, arrList, queryItem) => {
           key: item.key,
           name: item.name,
           isSubMenu: item.isSubMenu,
+          i18nKey: item.i18nKey,
         })
       } else {
         result.push({
@@ -22,6 +23,7 @@ export const getRouteList = (result, arrList, queryItem) => {
           key: item.key,
           name: item.name,
           isSubMenu: item.isSubMenu,
+          i18nKey: item.i18nKey,
         })
         getRouteList(
           result,

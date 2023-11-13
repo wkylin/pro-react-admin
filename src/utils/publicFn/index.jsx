@@ -20,11 +20,12 @@ export const getKeyName = (pathName = '/404') => {
       title: 'Not Found',
       tabKey: '/404',
       element: <Exception404 />,
+      i18nKey: 'notFound',
     }
   }
 
-  const { name, key, element, index, path, auth } = curRoute[0]
-  return { index: index ?? false, path, auth, title: name, tabKey: key, element }
+  const { name, key, element, index, path, auth, i18nKey } = curRoute[0]
+  return { index: index ?? false, path, auth, title: name, tabKey: key, element, i18nKey }
 }
 
 export const getLocalStorage = (key) => {

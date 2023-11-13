@@ -13,6 +13,7 @@ const defaultValue = {
 const initialPanes = [
   {
     title: '首页',
+    i18nKey: 'home',
     key: '/',
     content: <Home />,
     closable: false,
@@ -64,11 +65,7 @@ const ProTabProvider = ({ children }) => {
     [activeKey, setActiveKey, panes, setPanes, removeTab]
   )
 
-  return (
-    <>
-      <ProTabContext.Provider value={providerValue}>{children}</ProTabContext.Provider>
-    </>
-  )
+  return <ProTabContext.Provider value={providerValue}>{children}</ProTabContext.Provider>
 }
 
 export { ProTabProvider, useProTabContext }

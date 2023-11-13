@@ -17,7 +17,7 @@
 6. 基于 Faker 实现 Mock Server,不依赖后端实现模拟数据更加方便
 7. 封装 Fetch, 实现 useFetch, 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
 8. 支持 TypeScript 5.x.x, 一切变得可控，扼杀错误于摇篮之中
-9. 支持多页签，提升效率
+9. 支持多页签，提升效率，支持国际化
 10. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
 11. 配置 Commit message， 使用标准 commit 生成 changelog 标准化
 12. 配置 Sentry，方便日志追踪，及时发现问题

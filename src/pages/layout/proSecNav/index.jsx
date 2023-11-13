@@ -112,20 +112,18 @@ const ProSecNav = () => {
   ]
 
   return (
-    <>
-      <Menu
-        mode="inline"
-        defaultSelectedKeys={selectedKeys}
-        defaultOpenKeys={openKeys}
-        selectedKeys={selectedKeys}
-        openKeys={openKeys}
-        theme="light"
-        className={styles.menu}
-        onOpenChange={onOpenChange}
-        onSelect={onSelect}
-        items={menuItems}
-      />
-    </>
+    <Menu
+      mode="inline"
+      defaultSelectedKeys={selectedKeys}
+      defaultOpenKeys={openKeys}
+      selectedKeys={selectedKeys}
+      openKeys={openKeys}
+      theme="light"
+      className={styles.menu}
+      onOpenChange={onOpenChange}
+      onSelect={onSelect}
+      items={menuItems}
+    />
   )
 }
 

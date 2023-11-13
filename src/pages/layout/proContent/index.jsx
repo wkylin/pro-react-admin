@@ -19,6 +19,7 @@ const ProContent = () => {
     key: '',
     closable: false,
     path: '',
+    i18nKey: '',
   })
 
   const pathRef = useRef('')
@@ -27,7 +28,7 @@ const ProContent = () => {
     token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
   useEffect(() => {
-    const { tabKey, title, element } = getKeyName(pathname)
+    const { tabKey, title, element, i18nKey } = getKeyName(pathname)
     const newPath = search ? pathname + search : pathname
     pathRef.current = newPath
 
@@ -37,6 +38,7 @@ const ProContent = () => {
       key: tabKey,
       closable: tabKey !== '/',
       path: newPath,
+      i18nKey,
     })
     setTabActiveKey(tabKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps

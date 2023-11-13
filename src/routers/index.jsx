@@ -41,6 +41,7 @@ const rootRouter = [
   {
     path: '/',
     name: '首页',
+    i18nKey: 'home',
     key: '/',
     auth: true,
     element: lazyLoad(Layout),
@@ -49,6 +50,7 @@ const rootRouter = [
         index: true,
         name: '首页',
         key: '/',
+        i18nKey: 'home',
         auth: true,
         element: lazyLoad(Home),
       },
@@ -56,6 +58,7 @@ const rootRouter = [
         index: false,
         path: 'demo',
         name: 'Demo',
+        i18nKey: 'demo',
         key: '/demo',
         auth: true,
         element: lazyLoad(Demo),

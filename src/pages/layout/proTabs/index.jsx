@@ -6,6 +6,7 @@ import { StickyContainer, Sticky } from 'react-sticky'
 import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
 import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
+import { useTranslation } from 'react-i18next'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
 import Fullscreen from '../fullscreen'
@@ -16,7 +17,7 @@ const ProTabs = (props) => {
   const pathRef = useRef('')
 
   const navigate = useNavigate()
-
+  const { t } = useTranslation()
   const { panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
   const fullPath = pathname + search
@@ -173,7 +174,7 @@ const ProTabs = (props) => {
               {pane.key === fullPath && pane.key !== '/404' && (
                 <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
               )}
-              {pane.title}
+              {pane.i18nKey ? t(pane.i18nKey) : pane.title}
             </>
           ),
           key: pane.key,
