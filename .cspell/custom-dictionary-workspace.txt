@@ -1,4 +1,22 @@
 # Custom Dictionary Words
+ACSS
+Analyse
+Bookstory
 codepaths
+CRACO
+ENOENT
+hookspath
+Huksy
+packagehash
+preid
+premajor
+preminor
+prepatch
+Qube
 singleline
+snyk
+Snyk
+teambit
+treee
 tsbuildinfo
+Windi
