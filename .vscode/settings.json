@@ -97,5 +97,8 @@
       "addWords": true,
       "scope": "workspace"
     }
-  }
+  },
+  "i18n-ally.localesPaths": [
+    "public/locales"
+  ]
 }

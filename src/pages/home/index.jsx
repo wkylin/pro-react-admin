@@ -10,6 +10,7 @@ import { oneApiChat } from '@utils/aidFn'
 const Home = () => {
   const [aiText, setAiText] = useState('')
   const aiTextRef = useRef(null)
+  const [loading, setLoading] = useState(false)
 
   const [apiKey, setApiKey] = useState(() => '')
   const [chatText, setChatText] = useState('')
@@ -30,6 +31,7 @@ const Home = () => {
     aiTextRef.current = null
     setAiText(aiTextRef)
     const { signal } = controller
+    setLoading(true)
     oneApiChat(
       [
         {
@@ -41,7 +43,12 @@ const Home = () => {
       signal
     )
       .then((response) => {
+        setLoading(false)
+        console.log('response status', response.status)
+        console.log('response status text', response.statusText)
         const reader = response?.body?.getReader()
+        const delimiter = '\n\n'
+        let buffer = ''
         let lastText = ''
         const readStream = () => {
           reader
@@ -51,11 +58,11 @@ const Home = () => {
               if (done) {
                 return
               }
-              const data = new TextDecoder().decode(value)
-              console.log('data', data)
+              buffer += new TextDecoder().decode(value)
+              console.log('buffer', buffer)
 
               if (!(response.status >= 200 && response.status < 300)) {
-                const resData = JSON.parse(data, null, 2)
+                const resData = JSON.parse(buffer, null, 2)
                 const dataKeys = Object.keys(resData)
 
                 console.log('resData', resData)
@@ -68,28 +75,35 @@ const Home = () => {
                 return false
               }
 
-              const dataList = data.split('data: ')
-              console.log('data list', dataList)
+              while (buffer.includes(delimiter)) {
+                const ind = buffer.indexOf(delimiter)
+                const message = buffer.slice(0, ind)
 
-              // eslint-disable-next-line no-restricted-syntax
-              for (const index in dataList) {
-                if (dataList[index] !== '') {
-                  try {
-                    const jsonRegex =
-                      /"id":"(.*?)","object":"chat\.completion\.chunk","created":\d+,"model":"[^"]+","choices":\[\{"index":\d+,"delta":\{"content":"(.*?)"\},"finish_reason":null}]/
-                    const match = jsonRegex.exec(dataList[index])
-                    if (match) {
-                      const content = match[2]
-                      lastText += content.replace(/\\n/g, '\n').replace('\\"', '"')
-                      aiTextRef.current = lastText
-                      setAiText(aiTextRef.current)
+                const dataList = message.split('data: ')
+                console.log('data list', dataList)
+
+                // eslint-disable-next-line no-restricted-syntax
+                for (const index in dataList) {
+                  if (dataList[index] !== '') {
+                    try {
+                      const jsonRegex =
+                        /"id":"(.*?)","object":"chat\.completion\.chunk","created":\d+,"model":"[^"]+","choices":\[\{"index":\d+,"delta":\{"content":"(.*?)"\},"finish_reason":null}]/
+                      const match = jsonRegex.exec(dataList[index])
+                      if (match) {
+                        const content = match[2]
+                        lastText += content.replace(/\\n/g, '\n').replace('\\"', '"')
+                        aiTextRef.current = lastText
+                        setAiText(aiTextRef.current)
+                      }
+                    } catch (error) {
+                      console.log(error)
                     }
-                  } catch (error) {
-                    console.log(error)
+                  } else {
+                    console.log('data list 为空')
                   }
-                } else {
-                  console.log('data list 为空')
                 }
+                // 从缓冲区中移除已处理的消息和分隔符
+                buffer = buffer.slice(ind + delimiter.length)
               }
 
               readStream()
@@ -102,7 +116,8 @@ const Home = () => {
         readStream()
       })
       .catch((error) => {
-        console.log('catch error:', error)
+        setLoading(false)
+        setAiText(error.message)
       })
   }
 
@@ -123,7 +138,7 @@ const Home = () => {
           onPressEnter={onEnter}
         />
       </section>
-      {!!aiText && <ReMarkdown markdownText={aiText} />}
+      {loading ? 'AI思考中...' : aiText ? <ReMarkdown markdownText={aiText} /> : ''}
     </FixTabPanel>
   )
 }

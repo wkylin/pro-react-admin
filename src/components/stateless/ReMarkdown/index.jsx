@@ -55,7 +55,7 @@ const PreCode = (props) => {
   )
 }
 
-const ReMarkdown = ({ markdownText }) => (
+const ReMarkdown = ({ markdownText = '' }) => (
   <section className={styles.markdownBody}>
     <ReactMarkdown
       remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
