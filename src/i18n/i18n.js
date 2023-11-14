@@ -2,6 +2,10 @@ import i18n from 'i18next'
 // import Backend from 'i18next-http-backend'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
+import translationInZh from '../locales/zh/translation.json'
+import translationInEn from '../locales/en/translation.json'
+// import translationInZh from '../locales/zh/translation'
+// import translationInEn from '../locales/en/translation'
 
 i18n
   // .use(Backend)
@@ -13,18 +17,10 @@ i18n
     // },
     resources: {
       en: {
-        translation: {
-          demo: 'Demo',
-          lang: 'En',
-          home: 'Home',
-        },
+        translation: translationInEn,
       },
       zh: {
-        translation: {
-          demo: '演示',
-          lang: 'ZH',
-          home: '首页',
-        },
+        translation: translationInZh,
       },
     },
     lng: 'zh',
