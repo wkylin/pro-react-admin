@@ -16,26 +16,26 @@ i18n
         translation: {
           demo: 'Demo',
           lang: 'En',
-          home: 'Home',
-        },
+          home: 'Home'
+        }
       },
       zh: {
         translation: {
           demo: '演示',
           lang: 'ZH',
-          home: '首页',
-        },
-      },
+          home: '首页'
+        }
+      }
     },
     lng: 'zh',
     fallbackLng: 'en', // 默认语言
     debug: process.env.NODE_ENV !== 'production', // 开启调试模式
     interpolation: {
-      escapeValue: false, // 不转义特殊字符
+      escapeValue: false // 不转义特殊字符
     },
     detection: {
-      order: ['localStorage', 'navigator'],
-    },
+      order: ['localStorage', 'navigator']
+    }
   })
 
 export default i18n
