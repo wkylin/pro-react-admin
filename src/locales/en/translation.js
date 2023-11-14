@@ -1,7 +1,7 @@
 const en = {
   demo: 'Demo',
   lang: 'En',
-  home: 'Home',
+  home: 'Home'
 }
 
 export default en
