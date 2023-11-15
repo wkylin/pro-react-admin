@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-call */
 import { parse, stringify } from 'qs'
+import html2canvas from 'html2canvas'
 
 export const getEnv = () => {
   let env
@@ -253,3 +254,48 @@ export const oneApiChat = (chatList, token, signal) =>
       stream: true,
     }),
   })
+
+export const getCurrentDate = () => {
+  const date = new Date()
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  return `${year}-${month}-${day}`
+}
+
+export const exportJsonData = (data) => {
+  const date = getCurrentDate()
+  const jsonString = JSON.stringify(JSON.parse(data), null, 2)
+  const blob = new Blob([jsonString], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `chat-store_${date}.json`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
+  try {
+    const ele = eleHtml ?? document.getElementById('image-wrapper')
+    const canvas = await html2canvas(ele, {
+      useCORS: true,
+    })
+    const imgUrl = canvas.toDataURL('image/png')
+    const tempLink = document.createElement('a')
+    tempLink.style.display = 'none'
+    tempLink.href = imgUrl
+    tempLink.setAttribute('download', 'chat-shot.png')
+    if (typeof tempLink.download === 'undefined') tempLink.setAttribute('target', '_blank')
+
+    document.body.appendChild(tempLink)
+    tempLink.click()
+    document.body.removeChild(tempLink)
+    window.URL.revokeObjectURL(imgUrl)
+    if (successFun) successFun()
+    Promise.resolve()
+  } catch (error) {
+    if (errorFun) errorFun(error.message)
+  }
+}
