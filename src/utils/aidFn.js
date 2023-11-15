@@ -240,6 +240,9 @@ export const getRandomId = () => {
   return text
 }
 
+// https://github.com/Azure/fetch-event-source
+// https://github.com/mpetazzoni/sse.js
+// https://nodejs.org/api/http.html#httprequesturl-options-callback
 export const oneApiChat = (chatList, token, signal) =>
   fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -299,3 +302,27 @@ export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
     if (errorFun) errorFun(error.message)
   }
 }
+
+export const trimTopic = (topic) => topic.replace(/[，。！？”“"、,.!?]*$/, '')
+
+// onClick={() => importFromFile()}
+// readFromFile().then((content) => { JSON.parse(content)})
+
+export const readFromFile = () =>
+  new Promise((res, rej) => {
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.accept = 'application/json'
+
+    fileInput.onchange = (event) => {
+      const file = event.target.files[0]
+      const fileReader = new FileReader()
+      fileReader.onload = (e) => {
+        res(e.target.result)
+      }
+      fileReader.onerror = (e) => rej(e)
+      fileReader.readAsText(file)
+    }
+
+    fileInput.click()
+  })
