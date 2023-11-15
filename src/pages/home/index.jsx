@@ -36,8 +36,8 @@ const Home = () => {
       [
         {
           content: text,
-          role: 'user',
-        },
+          role: 'user'
+        }
       ],
       key,
       signal
@@ -121,11 +121,11 @@ const Home = () => {
       <h2>React version: {version}</h2>
 
       <section style={{ width: 400, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Input defaultValue={apiKey} placeholder='api key' onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Input
           addonAfter={<SendOutlined />}
           defaultValue={chatText}
-          placeholder="来，说点什么呗...Enter发送"
+          placeholder='来，说点什么呗...Enter发送'
           onChange={changeChatText}
           onPressEnter={onEnter}
         />
