@@ -66,7 +66,7 @@ export const getImgsUrl = (html) => {
 export const customizeTimer = {
   intervalTimer: null,
   timeoutTimer: null,
-  setTimeout(cb, interval) {
+  setTimeout (cb, interval) {
     const { now } = Date
     const stime = now()
     let etime = stime
@@ -81,10 +81,10 @@ export const customizeTimer = {
     this.timeoutTimer = requestAnimationFrame(loop)
     return this.timeoutTimer
   },
-  clearTimeout() {
+  clearTimeout () {
     cancelAnimationFrame(this.timeoutTimer)
   },
-  setInterval(cb, interval) {
+  setInterval (cb, interval) {
     const { now } = Date
     let stime = now()
     let etime = stime
@@ -100,9 +100,9 @@ export const customizeTimer = {
     this.intervalTimer = requestAnimationFrame(loop)
     return this.intervalTimer
   },
-  clearInterval() {
+  clearInterval () {
     cancelAnimationFrame(this.intervalTimer)
-  },
+  }
 }
 
 export const isDecimal = (value) => {
@@ -209,7 +209,7 @@ export const hasFocus = (element) => element === document.activeElement
 export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 export const randomString = () => Math.random().toString(36).slice(2)
 export const escape = (str) =>
-  str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]))
+  str.replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m])
 export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
@@ -246,13 +246,13 @@ export const oneApiChat = (chatList, token, signal) =>
     signal,
     headers: {
       Authorization: token,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
       messages: chatList,
-      stream: true,
-    }),
+      stream: true
+    })
   })
 
 export const getCurrentDate = () => {
@@ -280,7 +280,7 @@ export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
   try {
     const ele = eleHtml ?? document.getElementById('image-wrapper')
     const canvas = await html2canvas(ele, {
-      useCORS: true,
+      useCORS: true
     })
     const imgUrl = canvas.toDataURL('image/png')
     const tempLink = document.createElement('a')
