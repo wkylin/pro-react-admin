@@ -44,76 +44,68 @@ const Home = () => {
     )
       .then((response) => {
         setLoading(false)
-        console.log('response status', response.status)
-        console.log('response status text', response.statusText)
-        const reader = response?.body?.getReader()
-        const delimiter = '\n\n'
-        let buffer = ''
-        let lastText = ''
-        const readStream = () => {
-          reader
-            .read()
-            .then(({ done, value }) => {
-              console.log('done', done)
-              if (done) {
-                return
-              }
-              buffer += new TextDecoder().decode(value)
-              console.log('buffer', buffer)
+        const contentType = response.headers.get('content-type')
 
-              if (!(response.status >= 200 && response.status < 300)) {
-                const resData = JSON.parse(buffer, null, 2)
-                const dataKeys = Object.keys(resData)
+        if (!response.ok || !contentType?.startsWith('text/event-stream') || response.status !== 200) {
+          if (contentType?.startsWith('text/plain')) {
+            setAiText(response.clone().text())
+          }
+          try {
+            const resJson = response.clone().json()
+            setAiText(JSON.stringify(resJson, null, 2))
+          } catch (error) {
+            console.log('error', error)
+          }
 
-                console.log('resData', resData)
-                if (dataKeys.includes('error')) {
-                  aiTextRef.current = resData.error?.message
-                  setAiText(aiTextRef.current)
-                  controller.abort()
+          if (response.status === 401) {
+            console.log(response.statusText)
+          }
+        } else {
+          const reader = response?.body?.getReader()
+          const delimiter = '\n\n'
+          let buffer = ''
+          let lastText = ''
+          const readStream = () => {
+            reader
+              .read()
+              .then(({ done, value }) => {
+                console.log('done', done)
+                if (done) {
+                  return
                 }
+                buffer += new TextDecoder().decode(value)
+                console.log('buffer', buffer)
+                while (buffer.includes(delimiter)) {
+                  const ind = buffer.indexOf(delimiter)
+                  const message = buffer.slice(0, ind)
 
-                return false
-              }
+                  const dataList = message.split('data: ')
 
-              while (buffer.includes(delimiter)) {
-                const ind = buffer.indexOf(delimiter)
-                const message = buffer.slice(0, ind)
-
-                const dataList = message.split('data: ')
-                console.log('data list', dataList)
-
-                // eslint-disable-next-line no-restricted-syntax
-                for (const index in dataList) {
-                  if (dataList[index] !== '') {
-                    try {
-                      const jsonRegex =
-                        /"id":"(.*?)","object":"chat\.completion\.chunk","created":\d+,"model":"[^"]+","choices":\[\{"index":\d+,"delta":\{"content":"(.*?)"\},"finish_reason":null}]/
-                      const match = jsonRegex.exec(dataList[index])
-                      if (match) {
-                        const content = match[2]
-                        lastText += content.replace(/\\n/g, '\n').replace('\\"', '"')
+                  // eslint-disable-next-line no-restricted-syntax
+                  for (const index in dataList) {
+                    if (dataList[index] !== '' && dataList[index] !== '[DONE]') {
+                      try {
+                        const json = JSON.parse(dataList[index])
+                        const delta = json.choices[0]?.delta?.content ?? ''
+                        lastText += delta
                         aiTextRef.current = lastText
                         setAiText(aiTextRef.current)
+                      } catch (error) {
+                        console.log(error)
                       }
-                    } catch (error) {
-                      console.log(error)
                     }
-                  } else {
-                    console.log('data list 为空')
                   }
+                  // 从缓冲区中移除已处理的消息和分隔符
+                  buffer = buffer.slice(ind + delimiter.length)
                 }
-                // 从缓冲区中移除已处理的消息和分隔符
-                buffer = buffer.slice(ind + delimiter.length)
-              }
-
-              readStream()
-            })
-            .catch((error) => {
-              console.log('read stream error', error)
-            })
+                readStream()
+              })
+              .catch((error) => {
+                console.log('read stream error', error)
+              })
+          }
+          readStream()
         }
-
-        readStream()
       })
       .catch((error) => {
         setLoading(false)
