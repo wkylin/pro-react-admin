@@ -19,6 +19,7 @@
   "sideEffects": true,
   "scripts": {
     "pre:run": "install-changed",
+    "dev": "npm run start",
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
     "build:production": "npm run && cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
