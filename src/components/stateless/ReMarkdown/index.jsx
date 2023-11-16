@@ -14,8 +14,10 @@ import 'highlight.js/styles/github.css'
 import styles from './index.module.less'
 
 const PreCode = (props) => {
+  console.log('props.children', props.children)
   const ref = useRef(null)
   const refText = ref.current?.innerText
+  console.log('refText', refText)
   const [mermaidCode, setMermaidCode] = useState('')
 
   const renderMermaid = useDebouncedCallback(() => {

@@ -59,16 +59,21 @@ const Home = () => {
         const contentType = response.headers.get('content-type')
 
         if (!response.ok || !contentType?.startsWith('text/event-stream') || response.status !== 200) {
-          if (contentType?.startsWith('text/plain')) {
-            setAiText(response.clone().text())
-          }
-          try {
+          if (contentType?.startsWith('text/html')) {
+            const textPlain = response.clone().text()
+            textPlain.then((plainText) => {
+              setAiText(plainText.toString())
+            })
+          } else if (contentType?.startsWith('text/plain')) {
+            const textPlain = response.clone().text()
+            textPlain.then((plainText) => {
+              setAiText(plainText.toString())
+            })
+          } else if (contentType?.startsWith('application/json')) {
             const resJson = response.clone().json()
             resJson.then((res) => {
-              setAiText(res.error.message)
+              setAiText(`${JSON.stringify(res)}`)
             })
-          } catch (error) {
-            setAiText(error.message)
           }
         } else {
           const reader = response?.body?.getReader()
@@ -99,7 +104,7 @@ const Home = () => {
                         const delta = json.choices[0]?.delta?.content ?? ''
                         lastText += delta
                         aiTextRef.current = lastText
-                        setAiText(aiTextRef.current)
+                        setAiText(aiTextRef.current.toString())
                       } catch (error) {
                         console.log(error)
                       }
@@ -147,7 +152,7 @@ const Home = () => {
         </Flex>
       </section>
       {aiText ? (
-        <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 10 }}>
+        <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 5 }}>
           {loading ? 'AI思考中...' : <ReMarkdown markdownText={aiText} />}
         </section>
       ) : null}
