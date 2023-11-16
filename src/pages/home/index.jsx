@@ -48,8 +48,8 @@ const Home = () => {
       [
         {
           content: text,
-          role: 'user',
-        },
+          role: 'user'
+        }
       ],
       key,
       signal
@@ -131,26 +131,28 @@ const Home = () => {
       <h2>React version: {version}</h2>
 
       <section style={{ width: 400, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
+        <Input defaultValue={apiKey} placeholder='api key' onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Flex align='center'>
           <Input.TextArea
             ref={textareaRef}
             defaultValue={chatText}
-            placeholder="来，说点什么呗...Meta + Enter发送"
+            placeholder='来，说点什么呗...Meta + Enter发送'
             onChange={changeChatText}
             onKeyDown={onInputKeyDown}
             autoSize
           />
-          <Button icon={<SendOutlined rotate={-60} />} type="link" onClick={onSubmit}>
+          <Button icon={<SendOutlined rotate={-60} />} type='link' onClick={onSubmit}>
             发送
           </Button>
         </Flex>
       </section>
-      {aiText ? (
-        <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 10 }}>
-          {loading ? 'AI思考中...' : <ReMarkdown markdownText={aiText} />}
-        </section>
-      ) : null}
+      {aiText
+        ? (
+          <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 10 }}>
+            {loading ? 'AI思考中...' : <ReMarkdown markdownText={aiText} />}
+          </section>
+          )
+        : null}
     </FixTabPanel>
   )
 }
