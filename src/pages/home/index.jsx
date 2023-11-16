@@ -2,7 +2,7 @@ import React, { version, useState, useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
-import { Input } from 'antd'
+import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 
 import { oneApiChat } from '@utils/aidFn'
@@ -14,6 +14,8 @@ const Home = () => {
 
   const [apiKey, setApiKey] = useState(() => '')
   const [chatText, setChatText] = useState('')
+  const textareaRef = useRef(null)
+
   const changeApiKey = (event) => {
     setApiKey(event.target.value)
   }
@@ -22,7 +24,17 @@ const Home = () => {
     setChatText(event.target.value)
   }
 
-  const onEnter = () => {
+  const onInputKeyDown = (event) => {
+    if (event.metaKey && event.key === 'Enter') {
+      onSubmit()
+      event.preventDefault()
+    }
+  }
+
+  const onSubmit = () => {
+    if (chatText.trim() === '') {
+      return
+    }
     const controller = new AbortController()
     fetchAi(chatText, apiKey, controller)
   }
@@ -52,13 +64,11 @@ const Home = () => {
           }
           try {
             const resJson = response.clone().json()
-            setAiText(JSON.stringify(resJson, null, 2))
+            resJson.then((res) => {
+              setAiText(res.error.message)
+            })
           } catch (error) {
-            console.log('error', error)
-          }
-
-          if (response.status === 401) {
-            console.log(response.statusText)
+            setAiText(error.message)
           }
         } else {
           const reader = response?.body?.getReader()
@@ -122,15 +132,23 @@ const Home = () => {
 
       <section style={{ width: 400, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Input
-          addonAfter={<SendOutlined />}
-          defaultValue={chatText}
-          placeholder="来，说点什么呗...Enter发送"
-          onChange={changeChatText}
-          onPressEnter={onEnter}
-        />
+        <Flex align="center">
+          <Input.TextArea
+            ref={textareaRef}
+            defaultValue={chatText}
+            placeholder="来，说点什么呗...Meta + Enter发送"
+            onChange={changeChatText}
+            onKeyDown={onInputKeyDown}
+            autoSize
+          />
+          <Button icon={<SendOutlined rotate={-60} />} type="link" onClick={onSubmit}>
+            发送
+          </Button>
+        </Flex>
       </section>
-      {loading ? 'AI思考中...' : aiText ? <ReMarkdown markdownText={aiText} /> : ''}
+      <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 10 }}>
+        {loading ? 'AI思考中...' : aiText ? <ReMarkdown markdownText={aiText} /> : ''}
+      </section>
     </FixTabPanel>
   )
 }
