@@ -146,9 +146,11 @@ const Home = () => {
           </Button>
         </Flex>
       </section>
-      <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 10 }}>
-        {loading ? 'AI思考中...' : aiText ? <ReMarkdown markdownText={aiText} /> : ''}
-      </section>
+      {aiText ? (
+        <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 10 }}>
+          {loading ? 'AI思考中...' : <ReMarkdown markdownText={aiText} />}
+        </section>
+      ) : null}
     </FixTabPanel>
   )
 }
