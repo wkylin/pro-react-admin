@@ -5,14 +5,17 @@ import ReMarkdown from '@stateless/ReMarkdown'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 
-import { oneApiChat } from '@utils/aidFn'
+import { oneApiChat, prettyObject } from '@utils/aidFn'
 
 const Home = () => {
   const [aiText, setAiText] = useState('')
   const aiTextRef = useRef(null)
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
+  const [isStream, setIsStream] = useState(false)
+  const curController = useRef(null)
 
-  const [apiKey, setApiKey] = useState(() => '')
+  // const [apiKey, setApiKey] = useState(() => '')
+  const [apiKey, setApiKey] = useState(() => 'sk-J2fzXIbVRoaD6lXH1260143cBaD54e2b917dC093519cC9Cf')
   const [chatText, setChatText] = useState('')
   const textareaRef = useRef(null)
 
@@ -36,14 +39,22 @@ const Home = () => {
       return
     }
     const controller = new AbortController()
+    curController.current = controller
     fetchAi(chatText, apiKey, controller)
   }
 
+  const onStop = () => {
+    curController.current.abort()
+    // setLoading(false)
+    setIsStream(false)
+  }
+
   const fetchAi = (text, key, controller) => {
-    aiTextRef.current = null
-    setAiText(aiTextRef)
+    aiTextRef.current = ''
+    setAiText(aiTextRef.current)
     const { signal } = controller
-    setLoading(true)
+    // setLoading(true)
+    setIsStream(true)
     oneApiChat(
       [
         {
@@ -55,26 +66,27 @@ const Home = () => {
       signal
     )
       .then((response) => {
-        setLoading(false)
         const contentType = response.headers.get('content-type')
-
+        // setLoading(false)
         if (!response.ok || !contentType?.startsWith('text/event-stream') || response.status !== 200) {
           if (contentType?.startsWith('text/html')) {
             const textPlain = response.clone().text()
             textPlain.then((plainText) => {
-              setAiText(plainText.toString())
+              setAiText(plainText)
             })
           } else if (contentType?.startsWith('text/plain')) {
             const textPlain = response.clone().text()
             textPlain.then((plainText) => {
-              setAiText(plainText.toString())
+              setAiText(plainText)
             })
           } else if (contentType?.startsWith('application/json')) {
             const resJson = response.clone().json()
             resJson.then((res) => {
-              setAiText(`${JSON.stringify(res)}`)
+              setAiText(prettyObject(res))
             })
           }
+          // setLoading(false)
+          setIsStream(false)
         } else {
           const reader = response?.body?.getReader()
           const delimiter = '\n\n'
@@ -86,6 +98,7 @@ const Home = () => {
               .then(({ done, value }) => {
                 console.log('done', done)
                 if (done) {
+                  setIsStream(false)
                   return
                 }
                 buffer += new TextDecoder().decode(value)
@@ -104,7 +117,7 @@ const Home = () => {
                         const delta = json.choices[0]?.delta?.content ?? ''
                         lastText += delta
                         aiTextRef.current = lastText
-                        setAiText(aiTextRef.current.toString())
+                        setAiText(aiTextRef.current)
                       } catch (error) {
                         console.log(error)
                       }
@@ -123,7 +136,7 @@ const Home = () => {
         }
       })
       .catch((error) => {
-        setLoading(false)
+        // setLoading(false)
         setAiText(error.message)
       })
   }
@@ -135,7 +148,7 @@ const Home = () => {
       </h2>
       <h2>React version: {version}</h2>
 
-      <section style={{ width: 400, margin: '30px 0' }}>
+      <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
           <Input.TextArea
@@ -146,16 +159,24 @@ const Home = () => {
             onKeyDown={onInputKeyDown}
             autoSize
           />
-          <Button icon={<SendOutlined rotate={-60} />} type="link" onClick={onSubmit}>
+          <Button
+            style={{ margin: '0 10px' }}
+            icon={<SendOutlined rotate={-60} />}
+            type="primary"
+            disabled={isStream}
+            onClick={onSubmit}
+          >
             发送
+          </Button>
+          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+            停止
           </Button>
         </Flex>
       </section>
-      {aiText ? (
-        <section style={{ background: '#282c34', color: '#fff', borderRadius: 4, padding: 5 }}>
-          {loading ? 'AI思考中...' : <ReMarkdown markdownText={aiText} />}
-        </section>
-      ) : null}
+      <section>
+        {isStream && <div>正在输入...</div>}
+        {aiText && <ReMarkdown markdownText={aiText} />}
+      </section>
     </FixTabPanel>
   )
 }

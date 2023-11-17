@@ -13,11 +13,31 @@ import 'highlight.js/styles/github.css'
 
 import styles from './index.module.less'
 
+const copyTextToClipboard = async (copyText) => {
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(copyText)
+      message.success('已成功复制到剪贴板')
+    }
+  } catch (err) {
+    const textArea = document.createElement('textarea')
+    textArea.value = copyText
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+    try {
+      document.execCommand('copy')
+      message.success('已成功复制到剪贴板')
+    } catch (error) {
+      message.success('复制到剪贴板失败')
+    }
+    document.body.removeChild(textArea)
+  }
+}
+
 const PreCode = (props) => {
-  console.log('props.children', props.children)
   const ref = useRef(null)
   const refText = ref.current?.innerText
-  console.log('refText', refText)
   const [mermaidCode, setMermaidCode] = useState('')
 
   const renderMermaid = useDebouncedCallback(() => {
@@ -33,23 +53,22 @@ const PreCode = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refText])
 
-  const copyTextToClipboard = async (copyText) => {
-    try {
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(copyText)
-        message.success('已成功复制到剪贴板')
-      }
-    } catch (err) {
-      message.error(`复制到剪贴板失败:${err.message}`)
-    }
-  }
-
   return (
     <section>
       {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
-      <div className={styles.copyBtn} onClick={() => copyTextToClipboard(refText)}>
-        复制代码
-      </div>
+      <section className={styles.copySection}>
+        <span
+          className={styles.copySpan}
+          onClick={() => {
+            if (ref.current) {
+              const code = ref.current.innerText
+              copyTextToClipboard(code)
+            }
+          }}
+        >
+          复制代码
+        </span>
+      </section>
       <pre className={styles.preCode} ref={ref}>
         {props.children}
       </pre>
