@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { message } from 'antd'
-import Mermaid from 'mermaid'
+import Icon from '@ant-design/icons'
 import ReactMarkdown from 'react-markdown'
 import RemarkMath from 'remark-math'
 import RemarkBreaks from 'remark-breaks'
@@ -9,6 +9,7 @@ import RemarkGfm from 'remark-gfm'
 import RehypeHighlight from 'rehype-highlight'
 import RehypeRaw from 'rehype-raw'
 import { useDebouncedCallback } from 'use-debounce'
+import LoadingIcon from '@assets/svg/three-dots.svg'
 import 'highlight.js/styles/github.css'
 
 import styles from './index.module.less'
@@ -38,15 +39,16 @@ const copyTextToClipboard = async (copyText) => {
 const PreCode = (props) => {
   const ref = useRef(null)
   const refText = ref.current?.innerText
-  const [mermaidCode, setMermaidCode] = useState('')
-
+  const langRef = useRef('')
   const renderMermaid = useDebouncedCallback(() => {
     if (!ref.current) return
-    const mermaidDom = ref.current.querySelector('code.language-mermaid')
-    if (mermaidDom) {
-      setMermaidCode(mermaidDom.innerText)
+    const { className } = ref.current.querySelector('code')
+    const match = /language-(\w+)/.exec(className || '')
+    if (match) {
+      const [, lang] = match
+      langRef.current = lang
     }
-  }, 600)
+  }, 800)
 
   useEffect(() => {
     setTimeout(renderMermaid, 1)
@@ -55,8 +57,8 @@ const PreCode = (props) => {
 
   return (
     <section>
-      {mermaidCode.length > 0 && <Mermaid code={mermaidCode} key={mermaidCode} />}
       <section className={styles.copySection}>
+        <span className={styles.lang}>{langRef.current}</span>
         <span
           className={styles.copySpan}
           onClick={() => {
@@ -76,34 +78,39 @@ const PreCode = (props) => {
   )
 }
 
-const ReMarkdown = ({ markdownText = '' }) => (
+const ReMarkdown = ({ markdownText = '', isLoading = false }) => (
   <section className={styles.markdownBody}>
-    <ReactMarkdown
-      remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
-      rehypePlugins={[
-        RehypeKatex,
-        RehypeRaw,
-        [
-          RehypeHighlight,
-          {
-            detect: false,
-            ignoreMissing: true,
+    {isLoading && !markdownText && (
+      <Icon component={LoadingIcon} style={{ color: '#fff' }} className={styles.loadingIcon} />
+    )}
+    {markdownText && (
+      <ReactMarkdown
+        remarkPlugins={[RemarkMath, RemarkGfm, RemarkBreaks]}
+        rehypePlugins={[
+          RehypeKatex,
+          RehypeRaw,
+          [
+            RehypeHighlight,
+            {
+              detect: false,
+              ignoreMissing: true,
+            },
+          ],
+        ]}
+        components={{
+          pre: PreCode,
+          p: (pProps) => <p {...pProps} dir="auto" />,
+          a: (aProps) => {
+            const href = aProps.href || ''
+            const isInternal = /^\/#/i.test(href)
+            const target = isInternal ? '_self' : aProps.target ?? '_blank'
+            return <a {...aProps} target={target} />
           },
-        ],
-      ]}
-      components={{
-        pre: PreCode,
-        p: (pProps) => <p {...pProps} dir="auto" />,
-        a: (aProps) => {
-          const href = aProps.href || ''
-          const isInternal = /^\/#/i.test(href)
-          const target = isInternal ? '_self' : aProps.target ?? '_blank'
-          return <a {...aProps} target={target} />
-        },
-      }}
-    >
-      {markdownText}
-    </ReactMarkdown>
+        }}
+      >
+        {markdownText}
+      </ReactMarkdown>
+    )}
   </section>
 )
 

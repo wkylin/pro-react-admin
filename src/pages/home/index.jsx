@@ -12,10 +12,10 @@ const Home = () => {
   const aiTextRef = useRef(null)
   // const [loading, setLoading] = useState(false)
   const [isStream, setIsStream] = useState(false)
+  const [dateTime, setDateTime] = useState('')
   const curController = useRef(null)
 
-  // const [apiKey, setApiKey] = useState(() => '')
-  const [apiKey, setApiKey] = useState(() => 'sk-J2fzXIbVRoaD6lXH1260143cBaD54e2b917dC093519cC9Cf')
+  const [apiKey, setApiKey] = useState(() => '')
   const [chatText, setChatText] = useState('')
   const textareaRef = useRef(null)
 
@@ -116,6 +116,7 @@ const Home = () => {
                         const json = JSON.parse(dataList[index])
                         const delta = json.choices[0]?.delta?.content ?? ''
                         lastText += delta
+                        setDateTime(new Date().toLocaleString())
                         aiTextRef.current = lastText
                         setAiText(aiTextRef.current)
                       } catch (error) {
@@ -175,7 +176,8 @@ const Home = () => {
       </section>
       <section>
         {isStream && <div>正在输入...</div>}
-        {aiText && <ReMarkdown markdownText={aiText} />}
+        <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
+        <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
     </FixTabPanel>
   )

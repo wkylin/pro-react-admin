@@ -244,8 +244,7 @@ export const getRandomId = () => {
 // https://github.com/mpetazzoni/sse.js
 // https://nodejs.org/api/http.html#httprequesturl-options-callback
 export const oneApiChat = (chatList, token, signal) =>
-  // fetch('https://api.openai.com/v1/chat/completions', {
-  fetch('http://60.204.142.133:2000/v1/chat/completions', {
+  fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     signal,
     headers: {
