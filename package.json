@@ -294,7 +294,7 @@
     "sanitize.css": "^13.0.0",
     "screenfull": "^6.0.2",
     "sse": "github:mpetazzoni/sse.js",
-    "styled-components": "^6.0.8",
+    "styled-components": "^6.1.0",
     "three": "^0.156.1",
     "typescript": "^5.2.0",
     "use-debounce": "^10.0.0",
