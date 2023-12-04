@@ -1,0 +1,17 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[1909],{58714:function(a,s,e){"use strict";var _=e(87537),l=e.n(_),t=e(23645),o=e.n(t),n=o()(l());n.push([a.id,`.alignCenter--aqiSR {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+`,"",{version:3,sources:["webpack://./src/components/stateless/AlignCenter/index.module.less"],names:[],mappings:"AAAA;EACE,WAAW;EACX,iBAAiB;EACjB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB",sourcesContent:[`.alignCenter {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+`],sourceRoot:""}]),n.locals={alignCenter:"alignCenter--aqiSR"},s.Z=n},28334:function(a,s,e){"use strict";var _=e(64836);Object.defineProperty(s,"__esModule",{value:!0}),s.default=void 0;var l=_(e(67294)),t=_(e(11188)),o=function(d){var u=d.children;return l.default.createElement("div",{className:t.default.alignCenter},u)},n=s.default=o},61909:function(a,s,e){"use strict";var _=e(64836);Object.defineProperty(s,"__esModule",{value:!0}),s.default=void 0;var l=_(e(10434)),t=_(e(67294)),o=e(36634),n=e(70152),m=_(e(28334)),d=e(76685),u=n.Layout.Content,c={labelCol:{span:8},wrapperCol:{span:16}},E={wrapperCol:{offset:8,span:16}},v=function(){var r=(0,o.useNavigate)(),y=function(f){r(f)},C=n.theme.useToken(),O=C.token.colorBgContainer,M=function(f){var g=f.username;(0,d.setLocalStorage)("token",{token:g}),y("/")},D=function(f){};return t.default.createElement(n.Layout,{style:{height:"100%"}},t.default.createElement(u,{style:{height:"100%",background:O}},t.default.createElement(m.default,null,t.default.createElement(n.Form,(0,l.default)({},c,{name:"basic",initialValues:{remember:!0,username:"wkylin.w",password:"wkylin.w"},onFinish:M,onFinishFailed:D}),t.default.createElement(n.Form.Item,{label:"Username",name:"username",rules:[{required:!0,message:"Please input your username!"}]},t.default.createElement(n.Input,null)),t.default.createElement(n.Form.Item,{label:"Password",name:"password",rules:[{required:!0,message:"Please input your password!"}]},t.default.createElement(n.Input.Password,null)),t.default.createElement(n.Form.Item,(0,l.default)({},E,{name:"remember",valuePropName:"checked"}),t.default.createElement(n.Checkbox,null,"Remember me")),t.default.createElement(n.Form.Item,E,t.default.createElement(n.Button,{type:"primary",htmlType:"submit"}," ","Sign in"))))))},A=s.default=v},11188:function(a,s,e){"use strict";e.r(s);var _=e(93379),l=e.n(_),t=e(7795),o=e.n(t),n=e(90569),m=e.n(n),d=e(3565),u=e.n(d),c=e(19216),E=e.n(c),v=e(44589),A=e.n(v),i=e(58714),r={};r.styleTagTransform=A(),r.setAttributes=u(),r.insert=m().bind(null,"head"),r.domAPI=o(),r.insertStyleElement=E();var y=l()(i.Z,r);s.default=i.Z&&i.Z.locals?i.Z.locals:void 0},10434:function(a){function s(){return a.exports=s=Object.assign?Object.assign.bind():function(e){for(var _=1;_<arguments.length;_++){var l=arguments[_];for(var t in l)Object.prototype.hasOwnProperty.call(l,t)&&(e[t]=l[t])}return e},a.exports.__esModule=!0,a.exports.default=a.exports,s.apply(this,arguments)}a.exports=s,a.exports.__esModule=!0,a.exports.default=a.exports}}]);
+
+//# sourceMappingURL=1909.7af34de0c16dce110572.js.map
