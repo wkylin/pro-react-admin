@@ -53,7 +53,6 @@ const Home = () => {
     aiTextRef.current = ''
     setAiText(aiTextRef.current)
     const { signal } = controller
-    // setLoading(true)
     setIsStream(true)
     oneApiChat(
       [
@@ -67,7 +66,6 @@ const Home = () => {
     )
       .then((response) => {
         const contentType = response.headers.get('content-type')
-        // setLoading(false)
         if (!response.ok || !contentType?.startsWith('text/event-stream') || response.status !== 200) {
           if (contentType?.startsWith('text/html')) {
             const textPlain = response.clone().text()
@@ -84,8 +82,9 @@ const Home = () => {
             resJson.then((res) => {
               setAiText(prettyObject(res))
             })
+          } else {
+            setAiText(response.statusText)
           }
-          // setLoading(false)
           setIsStream(false)
         } else {
           const reader = response?.body?.getReader()
@@ -137,7 +136,7 @@ const Home = () => {
         }
       })
       .catch((error) => {
-        // setLoading(false)
+        setIsStream(false)
         setAiText(error.message)
       })
   }
