@@ -102,7 +102,7 @@
     "@babel/runtime": "^7.23.5",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
-    "@koa/cors": "^4.0.0",
+    "@koa/cors": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@sentry/vite-plugin": "^2.10.2",
     "@sentry/webpack-plugin": "^2.10.2",
