@@ -220,6 +220,7 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.3",
     "@react-three/drei": "^9.89.3",
