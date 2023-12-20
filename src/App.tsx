@@ -8,7 +8,7 @@ import { sentryInit } from './utils'
 const App = () => {
   // const { i18n } = useTranslation()
   const [loading, setLoading] = useState(true)
-  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
+  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1500))
   useEffect(() => {
     sentryInit()
     asyncCall()
@@ -42,7 +42,10 @@ const App = () => {
 
   const element = useRoutes(rootRouter as any)
 
-  if (loading) return null
+  if (loading) {
+    return <>Loading...</>
+  }
+
   return (
     <>
       <AuthRouter>{element}</AuthRouter>
