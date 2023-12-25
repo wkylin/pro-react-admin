@@ -223,7 +223,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@loadable/component": "^5.15.3",
     "@react-spring/web": "^9.7.3",
-    "@react-three/drei": "^9.89.3",
+    "@react-three/drei": "^9.90.0",
     "@react-three/fiber": "^8.15.12",
     "@reduxjs/toolkit": "^1.9.7",
     "@sentry/cli": "^2.22.3",
