@@ -227,7 +227,7 @@
     "@react-three/fiber": "^8.15.12",
     "@reduxjs/toolkit": "^1.9.7",
     "@sentry/cli": "^2.22.3",
-    "@sentry/react": "^7.84.0",
+    "@sentry/react": "^7.85.0",
     "@sentry/tracing": "^7.84.0",
     "@types/three": "^0.159.0",
     "@welldone-software/why-did-you-render": "^7.0.1",
