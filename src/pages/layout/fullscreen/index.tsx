@@ -4,7 +4,7 @@ import { message, Space, Tooltip } from 'antd'
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 
 const FullScreen = ({ ele, tips = '全屏', placement = 'bottom' }: any) => {
-  const [fullScreen, setFullScreen] = useState<boolean>(screenfull.isFullscreen)
+  const [fullScreen, setFullScreen] = useState<boolean>(false)
 
   useEffect(() => {
     screenfull.on('change', () => {
@@ -23,9 +23,9 @@ const FullScreen = ({ ele, tips = '全屏', placement = 'bottom' }: any) => {
     <Tooltip placement={placement} title={tips}>
       <Space style={{ cursor: 'pointer' }} onClick={handleFullScreen}>
         {fullScreen ? (
-          <FullscreenExitOutlined style={{ fontSize: 16 }} />
+          <FullscreenExitOutlined onPointerEnterCapture onPointerLeaveCapture style={{ fontSize: 16 }} />
         ) : (
-          <FullscreenOutlined style={{ fontSize: 16 }} />
+          <FullscreenOutlined onPointerEnterCapture onPointerLeaveCapture style={{ fontSize: 16 }} />
         )}
       </Space>
     </Tooltip>

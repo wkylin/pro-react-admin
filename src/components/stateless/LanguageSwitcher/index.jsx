@@ -7,7 +7,7 @@ const LanguageSwitcher = () => {
 
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language)
-    window.location.reload()
+    // window.location.reload()
   }
 
   return (
