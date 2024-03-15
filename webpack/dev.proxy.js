@@ -4,14 +4,14 @@ module.exports = [
     target: 'https://my-json-server.typicode.com',
     // pathRewrite: { '^/wkylin': '/wkylin' },
     secure: false,
-    changeOrigin: true,
+    changeOrigin: true
   },
   {
     context: ['/v2'],
     target: 'https://www.mocky.io',
     // pathRewrite: { '^/wkylin': '/wkylin' },
     secure: false,
-    changeOrigin: true,
+    changeOrigin: true
   },
   {
     context: ['/faker'],
@@ -19,8 +19,8 @@ module.exports = [
     pathRewrite: { '^/faker': '' },
     secure: false,
     changeOrigin: true,
-    cookieDomainRewrite: 'localhost',
-  },
+    cookieDomainRewrite: 'localhost'
+  }
 ]
 
 // module.exports = {
