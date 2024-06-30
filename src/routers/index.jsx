@@ -34,7 +34,7 @@ const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
 const Mermaid = lazy(() => import('@pages/mermaid'))
-const DynamicModal = lazy(() => import('@pages/dynamicModal'))
+// const DynamicModal = lazy(() => import('@pages/dynamicModal'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 
@@ -152,14 +152,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(Echarts),
       },
-      {
-        index: false,
-        path: 'dynamic',
-        name: 'DynamicModal',
-        key: '/dynamic',
-        auth: true,
-        element: lazyLoad(DynamicModal),
-      },
+      // {
+      //   index: false,
+      //   path: 'dynamic',
+      //   name: 'DynamicModal',
+      //   key: '/dynamic',
+      //   auth: true,
+      //   element: lazyLoad(DynamicModal),
+      // },
       {
         index: false,
         path: 'coupons',
