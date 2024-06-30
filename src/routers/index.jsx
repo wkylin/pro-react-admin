@@ -29,7 +29,7 @@ const ReactMusic = lazy(() => import('@pages/music'))
 const MyVideo = lazy(() => import('@pages/video'))
 const MyCrypto = lazy(() => import('@pages/crypto'))
 const ReactThree = lazy(() => import('@pages/three'))
-// const ChatGpt = lazy(() => import('@pages/chatgpt'))
+const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
@@ -112,14 +112,14 @@ const rootRouter = [
         auth: false,
         element: lazyLoad(MyCrypto),
       },
-      // {
-      //   index: false,
-      //   path: 'markmap',
-      //   name: 'ChatGPT Markmap',
-      //   key: '/markmap',
-      //   auth: false,
-      //   element: lazyLoad(ChatGpt),
-      // },
+      {
+        index: false,
+        path: 'markmap',
+        name: 'ChatGPT Markmap',
+        key: '/markmap',
+        auth: false,
+        element: lazyLoad(ChatGpt),
+      },
       // {
       //   index: false,
       //   path: 'mermaid',
