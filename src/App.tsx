@@ -3,14 +3,14 @@ import { useRoutes } from 'react-router-dom'
 import Watermark from '@stateless/Watermark'
 import rootRouter from './routers'
 import AuthRouter from './routers/authRouter'
-import { sentryInit } from './utils'
+// import { sentryInit } from './utils'
 
 const App = () => {
   // const { i18n } = useTranslation()
   const [loading, setLoading] = useState(true)
   const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1500))
   useEffect(() => {
-    sentryInit()
+    // sentryInit()
     asyncCall()
       .then(() => setLoading(false))
       .catch(() => setLoading(false))

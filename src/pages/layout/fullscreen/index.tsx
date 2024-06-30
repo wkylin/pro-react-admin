@@ -23,9 +23,9 @@ const FullScreen = ({ ele, tips = '全屏', placement = 'bottom' }: any) => {
     <Tooltip placement={placement} title={tips}>
       <Space style={{ cursor: 'pointer' }} onClick={handleFullScreen}>
         {fullScreen ? (
-          <FullscreenExitOutlined onPointerEnterCapture onPointerLeaveCapture style={{ fontSize: 16 }} />
+          <FullscreenExitOutlined style={{ fontSize: 16 }} />
         ) : (
-          <FullscreenOutlined onPointerEnterCapture onPointerLeaveCapture style={{ fontSize: 16 }} />
+          <FullscreenOutlined style={{ fontSize: 16 }} />
         )}
       </Space>
     </Tooltip>

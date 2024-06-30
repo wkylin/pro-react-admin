@@ -10,14 +10,15 @@
  *    }
  * 2. postFetch --- method==='POST' 其他入参同 reqFetch
  * 3. getFetch --- method==='POST'  其他入参同 reqFetch
- * 4. putFethch
+ * 4. putFetch
  * 5. deleteFetch
  * 6. patchFetch
  */
 import { message } from 'antd'
 import suffix from '../utils/suffix'
 
-const baseUrl = process?.env?.APP_BASE_URL ? process.env.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
+// const baseUrl = process?.env?.APP_BASE_URL ? process?.env?.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
+const baseUrl = ''
 const parseToQuery = (query) =>
   Object.keys(query)
     .reduce((ary, key) => {

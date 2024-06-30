@@ -24,6 +24,7 @@ const AuthRouter = (props) => {
     '/echarts',
     '/video',
     '/crypto',
+    '/dynamic',
   ]
   if (routerList.indexOf(pathname) === -1) return <Navigate to="/403" replace />
 
