@@ -3,6 +3,7 @@ import React from 'react'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import { Button, Layout, theme, Space } from 'antd'
 import FixLayout from '@src/components/stateless/FixLayout'
+// import BigScreen from '@pages/bigScreen'
 
 const { Content } = Layout
 
@@ -32,6 +33,7 @@ const Dashboard = () => {
                       navigate to invoices
                     </Button>
                   </Space>
+                  {/* <BigScreen /> */}
                 </>
               }
             />

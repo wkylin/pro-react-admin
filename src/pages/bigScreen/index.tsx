@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-// import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@stateless/FixTabPanel'
 import { previewFitScale } from '@utils/previewScale'
 import EChartsCommon from '@stateless/EChartsCommon'
 import { mapOptions } from './options'
@@ -93,7 +93,7 @@ const BigScreen = () => {
   })
 
   useEffect(() => {
-    const { calcRate, windowResize, unWindowResize } = previewFitScale(1200, 580, scaleDom.current)
+    const { calcRate, windowResize, unWindowResize } = previewFitScale(1440, 900, scaleDom.current)
     calcRate()
     windowResize()
     return () => {
@@ -101,18 +101,18 @@ const BigScreen = () => {
     }
   }, [])
   return (
-    // <FixTabPanel>
-    <section ref={scaleDom} className={styles.bigScreen}>
-      <div
-        style={{
-          width: '760px',
-          height: '400px',
-        }}
-      >
-        <EChartsCommon option={mapOptions(mapData)} />
-      </div>
-    </section>
-    // </FixTabPanel>
+    <FixTabPanel style={{ background: '#04060D' }}>
+      <section ref={scaleDom} className={styles.bigScreen} style={{ background: '#04060D' }}>
+        <div
+          style={{
+            width: '760px',
+            height: '400px',
+          }}
+        >
+          <EChartsCommon option={mapOptions(mapData)} />
+        </div>
+      </section>
+    </FixTabPanel>
   )
 }
 
