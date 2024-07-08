@@ -1623,10 +1623,10 @@ const mapData = {
         },
       },
     },
-  ]
-};
+  ],
+}
 
-export const mapOptions = (params:any) => ({
+export const mapOptions = (params: any) => ({
   title: {
     show: false,
     text: '全国物流输送图',
@@ -1732,4 +1732,4 @@ export const mapOptions = (params:any) => ({
       data: params.moveLines,
     },
   ],
-});
+})

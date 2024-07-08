@@ -20,7 +20,7 @@ export const getKeyName = (pathName = '/404') => {
       title: 'Not Found',
       tabKey: '/404',
       element: <Exception404 />,
-      i18nKey: 'notFound',
+      i18nKey: 'notFound'
     }
   }
 
@@ -67,19 +67,11 @@ export const formatTime = (time, fmt) => {
     S: date.getMilliseconds()
   }
   if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(
-      RegExp.$1,
-      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
-    )
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
   }
   for (const k in o) {
     if (new RegExp('(' + k + ')').test(fmt)) {
-      fmt = fmt.replace(
-        RegExp.$1,
-        RegExp.$1.length === 1
-          ? o[k].toString()
-          : ('00' + o[k]).substr(('' + o[k]).length)
-      )
+      fmt = fmt.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k].toString() : ('00' + o[k]).substr(('' + o[k]).length))
     }
   }
   return fmt
