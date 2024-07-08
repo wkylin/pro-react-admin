@@ -111,6 +111,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.12",
+    "@types/lodash": "^4.17.6",
     "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -221,6 +222,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.21.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@jiaminghi/data-view-react": "^1.2.5",
     "@loadable/component": "^5.16.4",
     "@react-spring/web": "^9.7.3",
     "@react-three/drei": "^9.107.3",

@@ -35,6 +35,7 @@ const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
 // const Mermaid = lazy(() => import('@pages/mermaid'))
 // const DynamicModal = lazy(() => import('@pages/dynamicModal'))
+const BigScreen = lazy(() => import('@pages/bigScreen'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 
@@ -160,6 +161,14 @@ const rootRouter = [
       //   auth: true,
       //   element: lazyLoad(DynamicModal),
       // },
+      {
+        index: false,
+        path: 'big-screen',
+        name: 'BigScreen',
+        key: '/big-screen',
+        auth: false,
+        element: lazyLoad(BigScreen),
+      },
       {
         index: false,
         path: 'coupons',
