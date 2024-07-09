@@ -91,7 +91,7 @@ const ChinaMap = () => {
   return (
     <div
       style={{
-        width: '760px',
+        width: '600px',
         height: '400px',
       }}
     >
