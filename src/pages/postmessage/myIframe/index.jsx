@@ -6,6 +6,8 @@ const MyIFrame = () => {
 
   const onReceivedMessage = (event) => {
     // check the message source origin as a security measure
+    console.log('event.origin', event.origin)
+    console.log('parentOrigin', parentOrigin)
     if (event.origin !== parentOrigin) {
       return
     }
