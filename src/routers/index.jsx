@@ -37,6 +37,8 @@ const PrismRender = lazy(() => import('@pages/prism'))
 // const DynamicModal = lazy(() => import('@pages/dynamicModal'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
 const ReactAmap = lazy(() => import('@pages/reactAmap'))
+const PostMessage = lazy(() => import('@pages/postmessage'))
+const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 
@@ -177,6 +179,22 @@ const rootRouter = [
         key: '/react-amap',
         auth: false,
         element: lazyLoad(ReactAmap),
+      },
+      {
+        index: false,
+        path: 'postmessage',
+        name: 'postmessage',
+        key: '/postmessage',
+        auth: false,
+        element: lazyLoad(PostMessage),
+      },
+      {
+        index: false,
+        path: 'my-iframe',
+        name: 'my-iframe',
+        key: '/my-iframe',
+        auth: false,
+        element: lazyLoad(MyIframe),
       },
       {
         index: false,

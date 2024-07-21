@@ -1626,7 +1626,7 @@ const mapData = {
   ],
 }
 
-export const mapOptions = (params: any) => ({
+const mapOptions = (params: any) => ({
   title: {
     show: false,
     text: '全国物流输送图',
@@ -1651,9 +1651,9 @@ export const mapOptions = (params: any) => ({
     zoom: 1.2,
     itemStyle: {
       normal: {
-        borderColor: 'rgba(255,209,163, .5)', //区域边框颜色
-        areaColor: 'rgba(73,86,166,.1)', //区域颜色
-        borderWidth: 0.5, //区域边框宽度
+        borderColor: 'rgba(255,209,163, .5)', // 区域边框颜色
+        areaColor: 'rgba(73,86,166,.1)', // 区域颜色
+        borderWidth: 0.5, // 区域边框宽度
         shadowBlur: 5,
         shadowColor: 'rgba(107,91,237,.7)',
       },
@@ -1733,3 +1733,5 @@ export const mapOptions = (params: any) => ({
     },
   ],
 })
+
+export default mapOptions

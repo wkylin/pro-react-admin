@@ -80,6 +80,7 @@ const ProSecNav = () => {
     { label: 'Dynamic', key: '/dynamic', icon: <QrcodeOutlined /> },
     { label: 'BigScreen', key: '/big-screen', icon: <FireOutlined /> },
     { label: 'ReactAmap', key: '/react-amap', icon: <QrcodeOutlined /> },
+    { label: 'PostMessage', key: '/postmessage', icon: <FireOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',
