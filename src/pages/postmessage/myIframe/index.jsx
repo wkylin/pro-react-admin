@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 const MyIFrame = () => {
-  const parentOrigin = 'http://localhost:8080'
+  const parentOrigin = process.env.IFRAME_ORIGIN
   const [message, setMessage] = useState() // string | undefined
 
   const onReceivedMessage = (event) => {
