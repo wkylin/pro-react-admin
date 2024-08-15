@@ -304,7 +304,7 @@
     "use-debounce": "^10.0.1",
     "use-deep-compare-effect": "^1.8.1",
     "use-react-router-breadcrumbs": "^4.0.1",
-    "user-agents": "^1.1.259",
+    "user-agents": "^1.1.276",
     "vite-plugin-imp": "^2.4.0",
     "vite-plugin-svgr": "^4.2.0"
   },
