@@ -111,6 +111,11 @@ export const isDecimal = (value) => {
 
 export const limitDecimal = (val) => val.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
 
+export const passwordStrength = (pass) => {
+  const reg = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/
+  return reg.test(pass)
+}
+
 /*
  ** 判断用户是否离开当前页面
  */
@@ -336,4 +341,25 @@ export const prettyObject = (msg) => {
     return obj
   }
   return ['```json', obj, '```'].join('\n')
+}
+
+// 导出
+export const exportExcel = (res, fileName) => {
+  const blob = new Blob([res.data], {
+    type: 'application/vnd.ms-excel; charset=UTF-8',
+  });
+  const disposition = res.headers &&  res.headers['content-disposition'] || `attachment;filename=${fileName}.xlsx`;
+  const disName =
+    decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(
+      "utf-8''",
+      '',
+    ) || '';
+  const objectUrl = URL.createObjectURL(blob);
+  const downloadElement = document.createElement('a');
+  document.body.appendChild(downloadElement);
+  downloadElement.style = 'display: none';
+  downloadElement.href = objectUrl;
+  downloadElement.download = disName;
+  downloadElement.click();
+  document.body.removeChild(downloadElement);
 }
