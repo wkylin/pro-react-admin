@@ -65,7 +65,7 @@ export const getImgsUrl = (html) => {
 export const customizeTimer = {
   intervalTimer: null,
   timeoutTimer: null,
-  setTimeout(cb, interval) {
+  setTimeout (cb, interval) {
     const { now } = Date
     const stime = now()
     let etime = stime
@@ -80,10 +80,10 @@ export const customizeTimer = {
     this.timeoutTimer = requestAnimationFrame(loop)
     return this.timeoutTimer
   },
-  clearTimeout() {
+  clearTimeout () {
     cancelAnimationFrame(this.timeoutTimer)
   },
-  setInterval(cb, interval) {
+  setInterval (cb, interval) {
     const { now } = Date
     let stime = now()
     let etime = stime
@@ -99,9 +99,9 @@ export const customizeTimer = {
     this.intervalTimer = requestAnimationFrame(loop)
     return this.intervalTimer
   },
-  clearInterval() {
+  clearInterval () {
     cancelAnimationFrame(this.intervalTimer)
-  },
+  }
 }
 
 export const isDecimal = (value) => {
@@ -251,13 +251,13 @@ export const oneApiChat = (chatList, token, signal) =>
     signal,
     headers: {
       Authorization: token,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
       messages: chatList,
-      stream: true,
-    }),
+      stream: true
+    })
   })
 
 export const getCurrentDate = () => {
@@ -285,7 +285,7 @@ export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
   try {
     const ele = eleHtml ?? document.getElementById('image-wrapper')
     const canvas = await html2canvas(ele, {
-      useCORS: true,
+      useCORS: true
     })
     const imgUrl = canvas.toDataURL('image/png')
     const tempLink = document.createElement('a')
@@ -346,20 +346,16 @@ export const prettyObject = (msg) => {
 // 导出
 export const exportExcel = (res, fileName) => {
   const blob = new Blob([res.data], {
-    type: 'application/vnd.ms-excel; charset=UTF-8',
-  });
-  const disposition = res.headers &&  res.headers['content-disposition'] || `attachment;filename=${fileName}.xlsx`;
-  const disName =
-    decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(
-      "utf-8''",
-      '',
-    ) || '';
-  const objectUrl = URL.createObjectURL(blob);
-  const downloadElement = document.createElement('a');
-  document.body.appendChild(downloadElement);
-  downloadElement.style = 'display: none';
-  downloadElement.href = objectUrl;
-  downloadElement.download = disName;
-  downloadElement.click();
-  document.body.removeChild(downloadElement);
+    type: 'application/vnd.ms-excel; charset=UTF-8'
+  })
+  const disposition = (res.headers && res.headers['content-disposition']) || `attachment;filename=${fileName}.xlsx`
+  const disName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace("utf-8''", '') || ''
+  const objectUrl = URL.createObjectURL(blob)
+  const downloadElement = document.createElement('a')
+  document.body.appendChild(downloadElement)
+  downloadElement.style = 'display: none'
+  downloadElement.href = objectUrl
+  downloadElement.download = disName
+  downloadElement.click()
+  document.body.removeChild(downloadElement)
 }
