@@ -81,6 +81,7 @@ const ProSecNav = () => {
     { label: 'BigScreen', key: '/big-screen', icon: <FireOutlined /> },
     { label: 'ReactAmap', key: '/react-amap', icon: <QrcodeOutlined /> },
     { label: 'PostMessage', key: '/postmessage', icon: <FireOutlined /> },
+    { label: 'GeoChart', key: '/geo', icon: <QrcodeOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',

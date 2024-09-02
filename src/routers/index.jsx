@@ -38,6 +38,7 @@ const PrismRender = lazy(() => import('@pages/prism'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
 const ReactAmap = lazy(() => import('@pages/reactAmap'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
+const GeoChart = lazy(() => import('@pages/geoChart'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
@@ -147,6 +148,14 @@ const rootRouter = [
         key: '/three',
         auth: true,
         element: lazyLoad(ReactThree),
+      },
+      {
+        index: false,
+        path: 'geo',
+        name: 'geo',
+        key: '/geo',
+        auth: false,
+        element: lazyLoad(GeoChart),
       },
       {
         index: false,
