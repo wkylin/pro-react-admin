@@ -347,19 +347,15 @@ export const prettyObject = (msg) => {
 export const exportExcel = (res, fileName) => {
   const blob = new Blob([res.data], {
     type: 'application/vnd.ms-excel; charset=UTF-8',
-  });
-  const disposition = res.headers &&  res.headers['content-disposition'] || `attachment;filename=${fileName}.xlsx`;
-  const disName =
-    decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(
-      "utf-8''",
-      '',
-    ) || '';
-  const objectUrl = URL.createObjectURL(blob);
-  const downloadElement = document.createElement('a');
-  document.body.appendChild(downloadElement);
-  downloadElement.style = 'display: none';
-  downloadElement.href = objectUrl;
-  downloadElement.download = disName;
-  downloadElement.click();
-  document.body.removeChild(downloadElement);
+  })
+  const disposition = (res.headers && res.headers['content-disposition']) || `attachment;filename=${fileName}.xlsx`
+  const disName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace("utf-8''", '') || ''
+  const objectUrl = URL.createObjectURL(blob)
+  const downloadElement = document.createElement('a')
+  document.body.appendChild(downloadElement)
+  downloadElement.style = 'display: none'
+  downloadElement.href = objectUrl
+  downloadElement.download = disName
+  downloadElement.click()
+  document.body.removeChild(downloadElement)
 }

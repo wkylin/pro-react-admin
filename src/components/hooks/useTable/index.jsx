@@ -1,128 +1,116 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 
 const useTable = (props) => {
-  const {
-    dataInterface,
-    implemented = true,
-    isPagination = true,
-    paths = ['data'],
-    payload = {},
-  } = props;
-  const [rawData, setRawData] = useState({});
-  const [dataSource, setDataSource] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(payload.pageNum || 1);
-  const [pageSize, setPageSize] = useState(10);
-  const [cachePayload, setCachePayload] = useState({ ...payload });
-  const [loading, setLoading] = useState(dataInterface ? false : true);
+  const { dataInterface, implemented = true, isPagination = true, paths = ['data'], payload = {} } = props
+  const [rawData, setRawData] = useState({})
+  const [dataSource, setDataSource] = useState([])
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(payload.pageNum || 1)
+  const [pageSize, setPageSize] = useState(10)
+  const [cachePayload, setCachePayload] = useState({ ...payload })
+  const [loading, setLoading] = useState(dataInterface ? false : true)
 
   const onChange = (page, pageSize) => {
-    setPage(page);
-    setPageSize(pageSize);
+    setPage(page)
+    setPageSize(pageSize)
     if (isPagination) {
-      getTableList(dataInterface, { page, pageSize, ...payload });
+      getTableList(dataInterface, { page, pageSize, ...payload })
     }
-  };
+  }
 
-  const getTableList = (
-    dataInterface,
-    { page = 1, pageSize = 10, ...other },
-  ) => {
-    setLoading(true);
+  const getTableList = (dataInterface, { page = 1, pageSize = 10, ...other }) => {
+    setLoading(true)
     if (!dataInterface || typeof dataInterface !== 'function') {
-      setLoading(false);
-      return;
+      setLoading(false)
+      return
     }
     dataInterface({
       ...(isPagination ? { pageNum: page, pageSize } : {}),
       ...other,
     }).then((resp) => {
       if (resp && resp.status === 1) {
-        setPage(page);
-        setPageSize(pageSize);
+        setPage(page)
+        setPageSize(pageSize)
         try {
-          let data = JSON.parse(JSON.stringify(resp));
-          let _path = [...paths];
+          let data = JSON.parse(JSON.stringify(resp))
+          let _path = [...paths]
           while (_path.length) {
-            data = data[_path[0]];
-            _path = _path.slice(1);
+            data = data[_path[0]]
+            _path = _path.slice(1)
           }
 
           if (Array.isArray(data)) {
-            setTotal(data.length);
-            setDataSource(data);
+            setTotal(data.length)
+            setDataSource(data)
           } else {
-            setTotal(data.total || 0);
-            setDataSource(data.list || []);
+            setTotal(data.total || 0)
+            setDataSource(data.list || [])
           }
         } catch {
-          setTotal(0);
-          setDataSource([]);
+          setTotal(0)
+          setDataSource([])
         }
-        setRawData(resp.data);
+        setRawData(resp.data)
       }
-      setLoading(false);
-    });
-  };
+      setLoading(false)
+    })
+  }
 
   const resetTable = () => {
-    setTotal(0);
-    setPage(1);
-    setPageSize(10);
-    setDataSource([]);
-  };
+    setTotal(0)
+    setPage(1)
+    setPageSize(10)
+    setDataSource([])
+  }
 
   const updateTable = (params) => {
-    const { dataInterface, payload = {} } = params || {};
+    const { dataInterface, payload = {} } = params || {}
 
-    setPage(payload.page || 1);
-    setPageSize(payload.pageSize || 10);
-    setCachePayload({ ...payload });
+    setPage(payload.page || 1)
+    setPageSize(payload.pageSize || 10)
+    setCachePayload({ ...payload })
     getTableList(dataInterface || props.dataInterface, {
       ...cachePayload,
       ...payload,
-    });
-  };
+    })
+  }
 
   useEffect(() => {
     if (!!implemented) {
-      resetTable();
-      setCachePayload({ ...payload });
-      getTableList(dataInterface, { ...payload });
+      resetTable()
+      setCachePayload({ ...payload })
+      getTableList(dataInterface, { ...payload })
     }
-  }, [JSON.stringify(payload), dataInterface, implemented]);
+  }, [JSON.stringify(payload), dataInterface, implemented])
 
   return {
     tableConfig: {
       loading: loading,
       dataSource: [...dataSource],
-      pagination:
-        isPagination
-          ? {
-              total: total,
-              size: 'default',
-              current: page,
-              pageSize: pageSize,
-              onChange: onChange,
-              onShowSizeChange: onChange,
-              showQuickJumper: true,
-              showSizeChanger: true,
-              hideOnSinglePage: false,
-              showTotal: (total) => (
-                <span>{`共计 ${total} 条记录 第${page}/${Math.ceil(total / pageSize,)}页`}</span>
-              ),
-            }
-          : false,
-      scroll: dataSource.length ? { scrollToFirstRowOnChange: true, x: 'max-content',} : false,
+      pagination: isPagination
+        ? {
+            total: total,
+            size: 'default',
+            current: page,
+            pageSize: pageSize,
+            onChange: onChange,
+            onShowSizeChange: onChange,
+            showQuickJumper: true,
+            showSizeChanger: true,
+            hideOnSinglePage: false,
+            showTotal: (total) => <span>{`共计 ${total} 条记录 第${page}/${Math.ceil(total / pageSize)}页`}</span>,
+          }
+        : false,
+      scroll: dataSource.length ? { scrollToFirstRowOnChange: true, x: 'max-content' } : false,
     },
     page,
     pageSize,
     rawData,
     updateTable,
     resetTable,
-  };
-};
-export default useTable;
+  }
+}
+export default useTable
 
 /**
  *

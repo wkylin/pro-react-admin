@@ -1,23 +1,19 @@
-import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
-import {
-  Form,
-  Input,
-  Select,
-  Checkbox,
-  Space,
-  Button,
-} from 'antd';
-import moment from 'moment';
-import './index.less';
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable react/display-name */
+import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react'
+import { Form, Input, Select, Checkbox, Space, Button, DatePicker } from 'antd'
+import moment from 'moment'
+import './index.less'
 
-const datesOption = ['date'];
-const checkBoxesOption = ['checkbox'];
-const { Option } = Select;
+const datesOption = ['date']
+const checkBoxesOption = ['checkbox']
+const { Option } = Select
+
 const SearchForm = forwardRef((props, ref) => {
   const {
     onFinish,
     dataSource,
-    btnText='搜索',
+    btnText = '搜索',
     exportText = '导出',
     resetText = '重置',
     isReset,
@@ -29,32 +25,29 @@ const SearchForm = forwardRef((props, ref) => {
     exportLoading,
     resetExternal = () => {},
     ...otherProp
-  } = props;
+  } = props
 
-  const [dates, setDates] = useState(
-    () => dataSource.filter((item) => datesOption.includes(item.type)) || [],
-  );
+  const [dates, setDates] = useState(() => dataSource.filter((item) => datesOption.includes(item.type)) || [])
   const [checkboxes, setCheckboxes] = useState(
-    () =>
-      dataSource.filter((item) => checkBoxesOption.includes(item.type)) || [],
-  );
+    () => dataSource.filter((item) => checkBoxesOption.includes(item.type)) || []
+  )
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
-        const values = form.getFieldsValue();
-        _onFinish(values);
+        const values = form.getFieldsValue()
+        onFinishInner(values)
       }
-    };
+    }
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown)
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onFinishInner, form])
 
   const getFormItemHtml = (data, last) => {
     const {
@@ -68,29 +61,18 @@ const SearchForm = forwardRef((props, ref) => {
       element,
       selectMode = undefined,
       ...other
-    } = data;
+    } = data
 
-    const formItemHtml = (type) => {
-      switch (type) {
+    const formItemHtml = (typeOption) => {
+      switch (typeOption) {
         case 'select':
           return (
             <Select
               style={{ width }}
               allowClear
               mode={selectMode}
-              placeholder={
-                placeholder
-                  ? placeholder
-                  : label
-                  ? `请选择${label}`
-                  : '请选择...'
-              }
-              onChange={
-                data.eventListener
-                  ? (value) => data.eventListener({ libraryId: value })
-                  : null
-              }
-              dropdownMatchSelectWidth={false}
+              placeholder={placeholder || (label ? `请选择${label}` : '请选择...')}
+              onChange={data.eventListener ? (value) => data.eventListener({ libraryId: value }) : null}
               {...other}
             >
               {options.map((child) => (
@@ -99,7 +81,7 @@ const SearchForm = forwardRef((props, ref) => {
                 </Option>
               ))}
             </Select>
-          );
+          )
 
         case 'date':
           return (
@@ -107,35 +89,23 @@ const SearchForm = forwardRef((props, ref) => {
               style={{ width, borderRadius: 5 }}
               allowClear
               {...other}
-              placeholder={
-                placeholder
-                  ? placeholder
-                  : label
-                  ? `请选择${label}`
-                  : '请选择时间...'
-              }
+              placeholder={placeholder || (label ? `请选择${label}` : '请选择时间...')}
             />
-          );
+          )
 
         case 'checkbox':
-          return <Checkbox>{text}</Checkbox>;
+          return <Checkbox>{text}</Checkbox>
         default:
           return (
             <Input
               allowClear
               {...other}
               style={{ width, borderRadius: 5 }}
-              placeholder={
-                placeholder
-                  ? placeholder
-                  : label
-                  ? `请输入${label}`
-                  : '请输入...'
-              }
+              placeholder={placeholder || (label ? `请输入${label}` : '请输入...')}
             />
-          );
+          )
       }
-    };
+    }
 
     return (
       <Form.Item
@@ -150,43 +120,48 @@ const SearchForm = forwardRef((props, ref) => {
       >
         {element ?? formItemHtml(type)}
       </Form.Item>
-    );
-  };
+    )
+  }
 
-  const _onFinish = (values) => {
-    let newValues = {};
-    for (let key in values) {
-      newValues[key] = window.isEmpty(values[key]) ? undefined : values[key];
-    }
-    if (dates.length > 0) {
-      dates.forEach((item) => {
-        newValues = {
-          ...newValues,
-          [item.name]: newValues[item.name]
-            ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
-            : undefined,
-        };
-      });
-    }
+  const onFinishInner = useCallback(
+    (values) => {
+      let newValues = {}
+      // eslint-disable-next-line guard-for-in
+      for (const key in values) {
+        newValues[key] = window.isEmpty(values[key]) ? undefined : values[key]
+      }
+      if (dates.length > 0) {
+        dates.forEach((item) => {
+          newValues = {
+            ...newValues,
+            [item.name]: newValues[item.name]
+              ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
+              : undefined,
+          }
+        })
+      }
 
-    if (checkboxes.length > 0) {
-      checkboxes.forEach((item) => {
-        newValues = {
-          ...newValues,
-          [item.name]: Number(newValues[item.name]) || undefined,
-        };
-      });
-    }
+      if (checkboxes.length > 0) {
+        checkboxes.forEach((item) => {
+          newValues = {
+            ...newValues,
+            [item.name]: Number(newValues[item.name]) || undefined,
+          }
+        })
+      }
 
-    onFinish(newValues);
-  };
+      onFinish(newValues)
+    },
+    [checkboxes, dates, onFinish]
+  )
 
   // 导出
-  const _exportResult = () => {
-    const values = form.getFieldsValue();
-    let newValues = {};
-    for (let key in values) {
-      newValues[key] = window.isEmpty(values[key]) ? undefined : values[key];
+  const exportResultInner = () => {
+    const values = form.getFieldsValue()
+    let newValues = {}
+    // eslint-disable-next-line guard-for-in
+    for (const key in values) {
+      newValues[key] = window.isEmpty(values[key]) ? undefined : values[key]
     }
     if (dates.length > 0) {
       dates.forEach((item) => {
@@ -195,8 +170,8 @@ const SearchForm = forwardRef((props, ref) => {
           [item.name]: newValues[item.name]
             ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
             : undefined,
-        };
-      });
+        }
+      })
     }
 
     if (checkboxes.length > 0) {
@@ -204,36 +179,31 @@ const SearchForm = forwardRef((props, ref) => {
         newValues = {
           ...newValues,
           [item.name]: Number(newValues[item.name]) || undefined,
-        };
-      });
+        }
+      })
     }
 
-    exportResult(newValues);
-  };
+    exportResult(newValues)
+  }
 
   const reset = () => {
     setTimeout(() => {
-      form.resetFields();
-    }, 0);
-    resetExternal();
-    _onFinish({});
-  };
+      form.resetFields()
+    }, 0)
+    resetExternal()
+    onFinishInner({})
+  }
   const onFieldsChange = () => {
-    if (!automatic) return;
-    const values = form.getFieldsValue();
-    _onFinish(values);
-  };
+    if (!automatic) return
+    const values = form.getFieldsValue()
+    onFinishInner(values)
+  }
   useEffect(() => {
-    setDates(
-      dataSource.filter((item) => datesOption.includes(item.type)) || [],
-    );
-    setCheckboxes(
-      () =>
-        dataSource.filter((item) => checkBoxesOption.includes(item.type)) || [],
-    );
-  }, [dataSource]);
+    setDates(dataSource.filter((item) => datesOption.includes(item.type)) || [])
+    setCheckboxes(() => dataSource.filter((item) => checkBoxesOption.includes(item.type)) || [])
+  }, [dataSource])
 
-  useImperativeHandle(ref, () => ({ ...form }));
+  useImperativeHandle(ref, () => ({ ...form }))
 
   return (
     <div className={'searchForm'}>
@@ -241,22 +211,16 @@ const SearchForm = forwardRef((props, ref) => {
         form={form}
         name="search"
         layout="inline"
-        onFinish={_onFinish}
+        onFinish={onFinishInner}
         onFieldsChange={onFieldsChange}
         initialValues={initialValues}
         {...otherProp}
       >
-        {dataSource.map((item, idx, self) =>
-          getFormItemHtml(item, self[self.length - 1]),
-        )}
+        {dataSource.map((item, idx, self) => getFormItemHtml(item, self[self.length - 1]))}
         <Form.Item style={{ marginRight: 0, marginLeft: 10 }}>
           <Space>
             {!automatic ? (
-              <Button
-                type={loading ? 'default' : 'primary'}
-                htmlType="submit"
-                disabled={loading}
-              >
+              <Button type={loading ? 'default' : 'primary'} htmlType="submit" disabled={loading}>
                 {btnText}
               </Button>
             ) : null}
@@ -269,7 +233,7 @@ const SearchForm = forwardRef((props, ref) => {
               <Button
                 type={exportLoading ? 'default' : 'primary'}
                 disabled={exportLoading}
-                onClick={() => _exportResult()}
+                onClick={() => exportResultInner()}
               >
                 {exportText}
               </Button>
@@ -278,14 +242,24 @@ const SearchForm = forwardRef((props, ref) => {
         </Form.Item>
       </Form>
     </div>
-  );
-});
-export default SearchForm;
+  )
+})
 
+export default SearchForm
 
 // 用法
 
 /**
+ *  const searchFormRef = useRef();
+    useEffect(() => {
+      searchFormRef.current.setFieldsValue({
+        dateRange:
+          param?.startTime && param?.endTime
+            ? [moment(param?.startTime), moment(param?.endTime)]
+            : undefined,
+        timeType: param?.timeType ?? undefined,
+      });
+    }, [param?.startTime, param?.endTime, param?.timeType]);
  * const [searchValues, setSearchValues] = useState({
     startTime: (startTime && startTime) || undefined,
     endTime: (endTime && endTime) || undefined,
@@ -315,7 +289,8 @@ export default SearchForm;
       options: prjStatus,
     },
 */
-{/* <SearchForm
+// {
+/* <SearchForm
   dataSource={conf}
   initialValues={searchValues}
   automatic={false}
@@ -342,4 +317,22 @@ export default SearchForm;
   loading={tableConfig.loading}
   exportLoading={exportLoading}
   exportResult={(values) => exportData(values, '项目列表数据')}
-/> */}
+/> */
+// }
+
+/**
+ * const uid = nanoid();
+    sessionStorage.setItem(
+      uid,
+      JSON.stringify({
+        prjStage,
+        startTime,
+        endTime,
+        timeType: '02',
+      }),
+    );
+ * const [param] = useState(() => {
+    const _param = JSON.parse(sessionStorage.getItem(params.uid)) || {};
+    return _param;
+  });
+ */

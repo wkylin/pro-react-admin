@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { InputNumber, Row, Col } from 'antd';
+import React, { useState } from 'react'
+import { InputNumber, Row, Col } from 'antd'
 
 const IntervalInput = ({ value = {}, onChange }) => {
-  const [minValue, setMinValue] = useState(null);
-  const [maxValue, setMaxValue] = useState(null);
+  const [minValue, setMinValue] = useState(null)
+  const [maxValue, setMaxValue] = useState(null)
 
   const triggerChange = (changedValue) => {
     onChange?.({
@@ -11,22 +11,22 @@ const IntervalInput = ({ value = {}, onChange }) => {
       maxValue,
       ...value,
       ...changedValue,
-    });
-  };
+    })
+  }
 
-  const handleMinChange = (value) => {
-    setMinValue(value);
+  const handleMinChange = (valueOps) => {
+    setMinValue(valueOps)
     triggerChange({
-      minValue: value,
-    });
-  };
+      minValue: valueOps,
+    })
+  }
 
-  const handleMaxChange = (value) => {
-    setMaxValue(value);
+  const handleMaxChange = (valueOts) => {
+    setMaxValue(valueOts)
     triggerChange({
-      maxValue: value,
-    });
-  };
+      maxValue: valueOts,
+    })
+  }
 
   return (
     <Row gutter={16}>
@@ -41,10 +41,7 @@ const IntervalInput = ({ value = {}, onChange }) => {
           placeholder=""
         />
       </Col>
-      <Col
-        span={2}
-        style={{ textAlign: 'center', lineHeight: '32px', color: '#fff' }}
-      >
+      <Col span={2} style={{ textAlign: 'center', lineHeight: '32px', color: '#fff' }}>
         -
       </Col>
       <Col span={11}>
@@ -59,7 +56,7 @@ const IntervalInput = ({ value = {}, onChange }) => {
         />
       </Col>
     </Row>
-  );
-};
+  )
+}
 
-export default IntervalInput;
+export default IntervalInput
