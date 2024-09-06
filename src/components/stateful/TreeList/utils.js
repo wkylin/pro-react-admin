@@ -2,10 +2,10 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
 
-export function getDefaultKey(treeData) {
+export function getDefaultKey (treeData) {
   let selected = []
   let expanded = []
-  function forFn(data, parentKey) {
+  function forFn (data, parentKey) {
     return data.some((item) => {
       if (item.children && item.children.length) {
         return forFn(item.children, item.key)
@@ -19,14 +19,14 @@ export function getDefaultKey(treeData) {
 
   return { selected, expanded }
 }
-export function processTreeData(list, pid) {
+export function processTreeData (list, pid) {
   return list
     .filter((item) => item.pid === pid)
     .map((item) => ({
       pid,
       key: item.id,
       title: item.name,
-      children: processTreeData(list, item.id),
+      children: processTreeData(list, item.id)
     }))
 }
 
@@ -38,16 +38,16 @@ export const loopTreeData = (data) =>
         title,
         key: item.key,
         pid: item.pid,
-        children: loopTreeData(item.children),
+        children: loopTreeData(item.children)
       }
     }
     return {
       title,
       key: item.key,
-      pid: item.pid,
+      pid: item.pid
     }
   })
-export function expandTree(a, b, setExpandedKeys) {
+export function expandTree (a, b, setExpandedKeys) {
   if (b.expanded) {
     if (a.length > 0) {
       a.splice(0, a.length - 1)
@@ -77,27 +77,29 @@ export const loopTreeDataWithSearch = (data, searchValue) =>
     const beforeStr = item.title.substr(0, index)
     const afterStr = item.title.substr(index + searchValue.length)
     const title =
-      index > -1 ? (
-        <span>
-          {beforeStr} <span style={{ color: '#D12604' }}>{searchValue}</span> {afterStr}
-        </span>
-      ) : (
-        <span>{item.title}</span>
-      )
+      index > -1
+        ? (
+          <span>
+            {beforeStr} <span style={{ color: '#D12604' }}>{searchValue}</span> {afterStr}
+          </span>
+          )
+        : (
+          <span>{item.title}</span>
+          )
     if (item.children) {
       return {
         title,
         key: item.key,
         pid: item.pid,
         // selectable: item.flag,
-        children: loopTreeDataWithSearch(item.children, searchValue),
+        children: loopTreeDataWithSearch(item.children, searchValue)
       }
     }
     return {
       title,
       // selectable: item.flag,
       key: item.key,
-      pid: item.pid,
+      pid: item.pid
     }
   })
 export const getParentKey = (key, tree) => {

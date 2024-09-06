@@ -27,7 +27,7 @@ const CheckableTags = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     setSelectedTags,
-    handleChange,
+    handleChange
   }))
   return (
     <div className={styles.checkableTags}>

@@ -13,7 +13,7 @@ const Index = forwardRef((props, ref) => {
     selectedKeys, // 选中的节点
     setSelectedKeys, // 选中外传函数
     selectable = false, // 父级节点是否可以选中
-    params = {}, // 额外的参数
+    params = {} // 额外的参数
   } = props
   const [treeList, setTreeList] = useState([]) // 全量数据源列表
   const [treeData, setTreeData] = useState([])
@@ -87,7 +87,7 @@ const Index = forwardRef((props, ref) => {
             return {
               ...item,
               key: itemPath,
-              ...(item.children?.length ? { children: setPath(item.children, itemPath) } : {}),
+              ...(item.children?.length ? { children: setPath(item.children, itemPath) } : {})
             }
           })
         treeData = setPath(treeData)
@@ -123,7 +123,7 @@ const Index = forwardRef((props, ref) => {
               const defaultKey = selectable
                 ? {
                     selected: [treeData[0].key],
-                    expanded: [treeData[0].key],
+                    expanded: [treeData[0].key]
                   }
                 : getDefaultKey(treeData)
               selected = defaultKey.selected
@@ -133,7 +133,7 @@ const Index = forwardRef((props, ref) => {
             const defaultKey = selectable
               ? {
                   selected: [treeData[0].key],
-                  expanded: [treeData[0].key],
+                  expanded: [treeData[0].key]
                 }
               : getDefaultKey(treeData)
             selected = defaultKey.selected
@@ -159,7 +159,7 @@ const Index = forwardRef((props, ref) => {
         })
         selected = selectedKeys
 
-        function loop(params) {
+        function loop (params) {
           return params.some((item) => {
             if (item.realId === selectedKeys[0]) {
               expanded = [item.key]
@@ -176,7 +176,7 @@ const Index = forwardRef((props, ref) => {
         const defaultKey = selectable
           ? {
               selected: [treeData[0].key],
-              expanded: [treeData[0].key],
+              expanded: [treeData[0].key]
             }
           : getDefaultKey(treeData)
         selected = defaultKey.selected
@@ -214,14 +214,14 @@ const Index = forwardRef((props, ref) => {
     expandedKeys,
     setExpandedKeys,
     setSelectedKeys: _setSelectedKeys,
-    treeData,
+    treeData
   }))
 
   return (
     <div className={`${styles.treeList} treeList`}>
       <div>
         {search && (
-          <Search placeholder="搜索" onSearch={onSearch} style={{ marginBottom: 10, width: '100%' }} allowClear />
+          <Search placeholder='搜索' onSearch={onSearch} style={{ marginBottom: 10, width: '100%' }} allowClear />
         )}
         <Tree
           selectedKeys={!isEmpty(selectedKeys) ? selectedKeys : _selectedKeys}
