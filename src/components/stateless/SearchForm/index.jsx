@@ -111,7 +111,7 @@ const SearchForm = forwardRef((props, ref) => {
       <Form.Item
         style={{
           marginRight: name === last?.name ? 0 : '10px',
-          marginBottom: 10,
+          marginBottom: 10
         }}
         key={name}
         name={name}
@@ -136,7 +136,7 @@ const SearchForm = forwardRef((props, ref) => {
             ...newValues,
             [item.name]: newValues[item.name]
               ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
-              : undefined,
+              : undefined
           }
         })
       }
@@ -145,7 +145,7 @@ const SearchForm = forwardRef((props, ref) => {
         checkboxes.forEach((item) => {
           newValues = {
             ...newValues,
-            [item.name]: Number(newValues[item.name]) || undefined,
+            [item.name]: Number(newValues[item.name]) || undefined
           }
         })
       }
@@ -169,7 +169,7 @@ const SearchForm = forwardRef((props, ref) => {
           ...newValues,
           [item.name]: newValues[item.name]
             ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
-            : undefined,
+            : undefined
         }
       })
     }
@@ -178,7 +178,7 @@ const SearchForm = forwardRef((props, ref) => {
       checkboxes.forEach((item) => {
         newValues = {
           ...newValues,
-          [item.name]: Number(newValues[item.name]) || undefined,
+          [item.name]: Number(newValues[item.name]) || undefined
         }
       })
     }
@@ -206,11 +206,11 @@ const SearchForm = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({ ...form }))
 
   return (
-    <div className={'searchForm'}>
+    <div className='searchForm'>
       <Form
         form={form}
-        name="search"
-        layout="inline"
+        name='search'
+        layout='inline'
         onFinish={onFinishInner}
         onFieldsChange={onFieldsChange}
         initialValues={initialValues}
@@ -219,25 +219,31 @@ const SearchForm = forwardRef((props, ref) => {
         {dataSource.map((item, idx, self) => getFormItemHtml(item, self[self.length - 1]))}
         <Form.Item style={{ marginRight: 0, marginLeft: 10 }}>
           <Space>
-            {!automatic ? (
-              <Button type={loading ? 'default' : 'primary'} htmlType="submit" disabled={loading}>
-                {btnText}
-              </Button>
-            ) : null}
-            {isReset ? (
-              <Button type="primary" onClick={() => reset()}>
-                {resetText}
-              </Button>
-            ) : null}
-            {isExport ? (
-              <Button
-                type={exportLoading ? 'default' : 'primary'}
-                disabled={exportLoading}
-                onClick={() => exportResultInner()}
-              >
-                {exportText}
-              </Button>
-            ) : null}
+            {!automatic
+              ? (
+                <Button type={loading ? 'default' : 'primary'} htmlType='submit' disabled={loading}>
+                  {btnText}
+                </Button>
+                )
+              : null}
+            {isReset
+              ? (
+                <Button type='primary' onClick={() => reset()}>
+                  {resetText}
+                </Button>
+                )
+              : null}
+            {isExport
+              ? (
+                <Button
+                  type={exportLoading ? 'default' : 'primary'}
+                  disabled={exportLoading}
+                  onClick={() => exportResultInner()}
+                >
+                  {exportText}
+                </Button>
+                )
+              : null}
           </Space>
         </Form.Item>
       </Form>

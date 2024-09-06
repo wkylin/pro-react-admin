@@ -8,7 +8,7 @@ const useTable = (props) => {
   const [page, setPage] = useState(payload.pageNum || 1)
   const [pageSize, setPageSize] = useState(10)
   const [cachePayload, setCachePayload] = useState({ ...payload })
-  const [loading, setLoading] = useState(dataInterface ? false : true)
+  const [loading, setLoading] = useState(!dataInterface)
 
   const onChange = (page, pageSize) => {
     setPage(page)
@@ -26,7 +26,7 @@ const useTable = (props) => {
     }
     dataInterface({
       ...(isPagination ? { pageNum: page, pageSize } : {}),
-      ...other,
+      ...other
     }).then((resp) => {
       if (resp && resp.status === 1) {
         setPage(page)
@@ -71,12 +71,12 @@ const useTable = (props) => {
     setCachePayload({ ...payload })
     getTableList(dataInterface || props.dataInterface, {
       ...cachePayload,
-      ...payload,
+      ...payload
     })
   }
 
   useEffect(() => {
-    if (!!implemented) {
+    if (implemented) {
       resetTable()
       setCachePayload({ ...payload })
       getTableList(dataInterface, { ...payload })
@@ -85,29 +85,29 @@ const useTable = (props) => {
 
   return {
     tableConfig: {
-      loading: loading,
+      loading,
       dataSource: [...dataSource],
       pagination: isPagination
         ? {
-            total: total,
+            total,
             size: 'default',
             current: page,
-            pageSize: pageSize,
-            onChange: onChange,
+            pageSize,
+            onChange,
             onShowSizeChange: onChange,
             showQuickJumper: true,
             showSizeChanger: true,
             hideOnSinglePage: false,
-            showTotal: (total) => <span>{`共计 ${total} 条记录 第${page}/${Math.ceil(total / pageSize)}页`}</span>,
+            showTotal: (total) => <span>{`共计 ${total} 条记录 第${page}/${Math.ceil(total / pageSize)}页`}</span>
           }
         : false,
-      scroll: dataSource.length ? { scrollToFirstRowOnChange: true, x: 'max-content' } : false,
+      scroll: dataSource.length ? { scrollToFirstRowOnChange: true, x: 'max-content' } : false
     },
     page,
     pageSize,
     rawData,
     updateTable,
-    resetTable,
+    resetTable
   }
 }
 export default useTable

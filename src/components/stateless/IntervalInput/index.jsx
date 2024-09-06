@@ -10,21 +10,21 @@ const IntervalInput = ({ value = {}, onChange }) => {
       minValue,
       maxValue,
       ...value,
-      ...changedValue,
+      ...changedValue
     })
   }
 
   const handleMinChange = (valueOps) => {
     setMinValue(valueOps)
     triggerChange({
-      minValue: valueOps,
+      minValue: valueOps
     })
   }
 
   const handleMaxChange = (valueOts) => {
     setMaxValue(valueOts)
     triggerChange({
-      maxValue: valueOts,
+      maxValue: valueOts
     })
   }
 
@@ -38,7 +38,7 @@ const IntervalInput = ({ value = {}, onChange }) => {
           status={minValue > maxValue ? 'error' : ''}
           onChange={handleMinChange}
           style={{ width: '100%' }}
-          placeholder=""
+          placeholder=''
         />
       </Col>
       <Col span={2} style={{ textAlign: 'center', lineHeight: '32px', color: '#fff' }}>
@@ -52,7 +52,7 @@ const IntervalInput = ({ value = {}, onChange }) => {
           status={minValue > maxValue ? 'error' : ''}
           onChange={handleMaxChange}
           style={{ width: '100%' }}
-          placeholder=""
+          placeholder=''
         />
       </Col>
     </Row>
