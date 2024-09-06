@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+/* eslint-disable no-shadow */
+import React, { useState, useEffect } from 'react'
 
 const useTable = (props) => {
   const { dataInterface, implemented = true, isPagination = true, paths = ['data'], payload = {} } = props
@@ -8,7 +9,7 @@ const useTable = (props) => {
   const [page, setPage] = useState(payload.pageNum || 1)
   const [pageSize, setPageSize] = useState(10)
   const [cachePayload, setCachePayload] = useState({ ...payload })
-  const [loading, setLoading] = useState(dataInterface ? false : true)
+  const [loading, setLoading] = useState(!dataInterface)
 
   const onChange = (page, pageSize) => {
     setPage(page)
@@ -33,6 +34,7 @@ const useTable = (props) => {
         setPageSize(pageSize)
         try {
           let data = JSON.parse(JSON.stringify(resp))
+          // eslint-disable-next-line no-underscore-dangle
           let _path = [...paths]
           while (_path.length) {
             data = data[_path[0]]
@@ -76,24 +78,25 @@ const useTable = (props) => {
   }
 
   useEffect(() => {
-    if (!!implemented) {
+    if (implemented) {
       resetTable()
       setCachePayload({ ...payload })
       getTableList(dataInterface, { ...payload })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(payload), dataInterface, implemented])
 
   return {
     tableConfig: {
-      loading: loading,
+      loading,
       dataSource: [...dataSource],
       pagination: isPagination
         ? {
-            total: total,
+            total,
             size: 'default',
             current: page,
-            pageSize: pageSize,
-            onChange: onChange,
+            pageSize,
+            onChange,
             onShowSizeChange: onChange,
             showQuickJumper: true,
             showSizeChanger: true,

@@ -19,7 +19,8 @@
   "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
+    "react/display-name":"off",
+    "react-hooks/exhaustive-deps":"off",
     "prettier/prettier": [
       "error",
       {
@@ -49,6 +50,9 @@
     "import/no-unresolved": "off",
     "no-console": "off",
     "import/extensions": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "array-callback-return":"off",
+    "no-shadow":"off",
+    "no-inner-declarations":"off"
   }
 }
