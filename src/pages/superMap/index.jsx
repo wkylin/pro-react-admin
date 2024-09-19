@@ -17,20 +17,20 @@ const SuperMap = () => {
   const iconList = [
     {
       locationX: 121.44,
-      locationY: 31.25,
+      locationY: 31.25
     },
     {
       locationX: 121.54,
-      locationY: 31.14,
+      locationY: 31.14
     },
     {
       locationX: 121.473919,
-      locationY: 30.955082,
+      locationY: 30.955082
     },
     {
       locationX: 121.447153,
-      locationY: 30.800443,
-    },
+      locationY: 30.800443
+    }
   ]
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const SuperMap = () => {
       minZoom: 3,
       zoom: 3,
       attributionControl: false,
-      zoomControl: true,
+      zoomControl: true
     })
     const layer = new TiledMapLayer(url)
     layer.addTo(map)
@@ -71,7 +71,7 @@ const SuperMap = () => {
     const markerCluster = L.markerClusterGroup({
       spiderfyOnMaxZoom: true,
       showCoverageOnHover: false,
-      zoomToBoundsOnClick: true,
+      zoomToBoundsOnClick: true
     })
 
     markerClusterRef.current = markerCluster
@@ -84,11 +84,11 @@ const SuperMap = () => {
 
       const myIcon = L.icon({
         iconUrl,
-        iconSize: [20, 24],
+        iconSize: [20, 24]
       })
 
       const marker = L.marker([lat, lon], {
-        icon: myIcon,
+        icon: myIcon
       })
 
       markerCluster.addLayer(marker)
@@ -99,7 +99,7 @@ const SuperMap = () => {
 
   return (
     <section className={styles.homeBox}>
-      <div id="superMap" className={styles.superMap} ref={superMapRef}></div>
+      <div id='superMap' className={styles.superMap} ref={superMapRef} />
     </section>
   )
 }

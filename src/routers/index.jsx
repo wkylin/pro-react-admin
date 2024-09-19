@@ -59,7 +59,7 @@ const rootRouter = [
         key: '/',
         i18nKey: 'home',
         auth: true,
-        element: lazyLoad(Home),
+        element: lazyLoad(Home)
       },
       {
         index: false,
@@ -68,7 +68,7 @@ const rootRouter = [
         i18nKey: 'demo',
         key: '/demo',
         auth: true,
-        element: lazyLoad(Demo),
+        element: lazyLoad(Demo)
       },
       {
         index: false,
@@ -76,7 +76,7 @@ const rootRouter = [
         name: 'Parallax',
         key: '/parallax',
         auth: true,
-        element: lazyLoad(ParallaxVert),
+        element: lazyLoad(ParallaxVert)
       },
       {
         index: false,
@@ -84,7 +84,7 @@ const rootRouter = [
         name: 'QrGenerate',
         key: '/qrcode',
         auth: true,
-        element: lazyLoad(QrCode),
+        element: lazyLoad(QrCode)
       },
       {
         index: false,
@@ -92,7 +92,7 @@ const rootRouter = [
         name: 'React Tilt',
         key: '/tilt',
         auth: true,
-        element: lazyLoad(ReactTilt),
+        element: lazyLoad(ReactTilt)
       },
       {
         index: false,
@@ -100,7 +100,7 @@ const rootRouter = [
         name: 'React Music',
         key: '/music',
         auth: false,
-        element: lazyLoad(ReactMusic),
+        element: lazyLoad(ReactMusic)
       },
       {
         index: false,
@@ -108,7 +108,7 @@ const rootRouter = [
         name: 'React Video',
         key: '/video',
         auth: false,
-        element: lazyLoad(MyVideo),
+        element: lazyLoad(MyVideo)
       },
       {
         index: false,
@@ -116,7 +116,7 @@ const rootRouter = [
         name: 'React Crypto',
         key: '/crypto',
         auth: false,
-        element: lazyLoad(MyCrypto),
+        element: lazyLoad(MyCrypto)
       },
       {
         index: false,
@@ -124,7 +124,7 @@ const rootRouter = [
         name: 'ChatGPT Markmap',
         key: '/markmap',
         auth: false,
-        element: lazyLoad(ChatGpt),
+        element: lazyLoad(ChatGpt)
       },
       // {
       //   index: false,
@@ -140,7 +140,7 @@ const rootRouter = [
         name: 'PrismRender',
         key: '/prism',
         auth: true,
-        element: lazyLoad(PrismRender),
+        element: lazyLoad(PrismRender)
       },
       {
         index: false,
@@ -148,7 +148,7 @@ const rootRouter = [
         name: 'ReactThree',
         key: '/three',
         auth: true,
-        element: lazyLoad(ReactThree),
+        element: lazyLoad(ReactThree)
       },
       {
         index: false,
@@ -156,7 +156,7 @@ const rootRouter = [
         name: 'geo',
         key: '/geo',
         auth: false,
-        element: lazyLoad(GeoChart),
+        element: lazyLoad(GeoChart)
       },
       {
         index: false,
@@ -164,7 +164,7 @@ const rootRouter = [
         name: 'ReactEcharts',
         key: '/echarts',
         auth: true,
-        element: lazyLoad(Echarts),
+        element: lazyLoad(Echarts)
       },
       // {
       //   index: false,
@@ -180,7 +180,7 @@ const rootRouter = [
         name: 'BigScreen',
         key: '/big-screen',
         auth: false,
-        element: lazyLoad(BigScreen),
+        element: lazyLoad(BigScreen)
       },
       {
         index: false,
@@ -188,7 +188,7 @@ const rootRouter = [
         name: 'react-amap',
         key: '/react-amap',
         auth: false,
-        element: lazyLoad(ReactAmap),
+        element: lazyLoad(ReactAmap)
       },
       {
         index: false,
@@ -196,7 +196,7 @@ const rootRouter = [
         name: 'postmessage',
         key: '/postmessage',
         auth: false,
-        element: lazyLoad(PostMessage),
+        element: lazyLoad(PostMessage)
       },
       {
         index: false,
@@ -204,7 +204,7 @@ const rootRouter = [
         name: 'my-iframe',
         key: '/my-iframe',
         auth: false,
-        element: lazyLoad(MyIframe),
+        element: lazyLoad(MyIframe)
       },
       {
         index: false,
@@ -212,7 +212,7 @@ const rootRouter = [
         name: 'super-map',
         key: '/super-map',
         auth: false,
-        element: lazyLoad(SuperMap),
+        element: lazyLoad(SuperMap)
       },
       {
         index: false,
@@ -228,7 +228,7 @@ const rootRouter = [
             name: 'React',
             key: '/coupons/home',
             auth: false,
-            element: lazyLoad(CouponsHome),
+            element: lazyLoad(CouponsHome)
           },
           {
             index: false,
@@ -236,7 +236,7 @@ const rootRouter = [
             path: 'add',
             key: '/coupons/add',
             auth: false,
-            element: lazyLoad(CouponsAdd),
+            element: lazyLoad(CouponsAdd)
           },
           {
             index: false,
@@ -244,7 +244,7 @@ const rootRouter = [
             name: 'Angular',
             key: '/coupons/edit',
             auth: false,
-            element: lazyLoad(CouponsEdit),
+            element: lazyLoad(CouponsEdit)
           },
           {
             index: false,
@@ -252,9 +252,9 @@ const rootRouter = [
             name: 'Node',
             key: '/coupons/detail',
             auth: false,
-            element: lazyLoad(CouponsDetail),
-          },
-        ],
+            element: lazyLoad(CouponsDetail)
+          }
+        ]
       },
       {
         index: false,
@@ -262,7 +262,7 @@ const rootRouter = [
         name: '后端技术栈',
         key: '/product',
         auth: false,
-        element: lazyLoad(Product),
+        element: lazyLoad(Product)
       },
       {
         index: false,
@@ -270,15 +270,15 @@ const rootRouter = [
         name: 'Error',
         key: '/error',
         auth: false,
-        element: lazyLoad(ErrorPage),
+        element: lazyLoad(ErrorPage)
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: lazyLoad(NoMatch),
-      },
-    ],
+        element: lazyLoad(NoMatch)
+      }
+    ]
   },
   {
     index: false,
@@ -286,7 +286,7 @@ const rootRouter = [
     name: '登录',
     key: '/signin',
     auth: false,
-    element: lazyLoad(SignIn),
+    element: lazyLoad(SignIn)
   },
   {
     index: false,
@@ -294,7 +294,7 @@ const rootRouter = [
     name: '注册',
     key: '/signup',
     auth: false,
-    element: lazyLoad(SignUp),
+    element: lazyLoad(SignUp)
   },
   {
     index: false,
@@ -302,7 +302,7 @@ const rootRouter = [
     name: 'Dashboard',
     key: '/dashboard',
     auth: true,
-    element: lazyLoad(Dashboard),
+    element: lazyLoad(Dashboard)
   },
   {
     index: false,
@@ -310,14 +310,14 @@ const rootRouter = [
     name: '403',
     key: '/403',
     auth: false,
-    element: lazyLoad(Exception403),
+    element: lazyLoad(Exception403)
   },
   {
     path: '*',
     name: 'No Match',
     key: '*',
-    element: lazyLoad(NoMatch),
-  },
+    element: lazyLoad(NoMatch)
+  }
 ]
 
 export default rootRouter
