@@ -5,10 +5,13 @@ Bookstory
 codepaths
 CRACO
 ENOENT
+EPSG
 fengian
 fengxian
 hookspath
 Huksy
+iclient
+markercluster
 packagehash
 preid
 premajor
@@ -18,6 +21,8 @@ Qube
 singleline
 snyk
 Snyk
+spiderfy
+supermapgis
 teambit
 treee
 tsbuildinfo
