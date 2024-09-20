@@ -22,7 +22,6 @@ const EChartsCommon = (props: {
   notMerge?: boolean
   lazyUpdate?: boolean
   option: OptionType
-  // eslint-disable-next-line no-unused-vars
   instanceHandle?: (instance: EChartsType) => void
 }) => {
   const drawDomRef = useRef<HTMLDivElement>(null)
@@ -37,7 +36,6 @@ const EChartsCommon = (props: {
   }
 
   const resize = debounce(() => {
-    // eslint-disable-next-line no-unused-expressions
     chartRef.current && chartRef.current.resize()
   }, 100)
 
