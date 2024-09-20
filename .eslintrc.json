@@ -53,6 +53,7 @@
     "no-nested-ternary": "off",
     "array-callback-return":"off",
     "no-shadow":"off",
-    "no-inner-declarations":"off"
+    "no-inner-declarations":"off",
+    "no-unused-expressions":"off"
   }
 }
