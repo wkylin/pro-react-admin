@@ -409,10 +409,10 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
    server {
     listen       8081;
     #server_name  localhost;
-    server_name  www.promotion-web.com;
+    server_name  www.pro.react.admin.com;
 
     location / {
-        root   /usr/local/var/www/promotion-web;
+        root   /usr/local/var/www/pro-react-admin;
         index  index.html index.htm;
         try_files  $uri $uri/ /index.html @rewrites;
         expires -1;
@@ -421,7 +421,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     }
     # 接口转发，如果需要的话
     #location ~ ^/api {
-    #  proxy_pass http://www.wklin.com;
+    #  proxy_pass http://www.wkylin.com;
     #}
     location @rewrites {
       rewrite ^(.+)$ /index.html break;
@@ -431,7 +431,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
    }
 
     # SwitchHosts!
-    192.168.1.101 www.promotion-web.com
+    192.168.1.101 www.pro.react.admin.com
    ```
 
 3. Nginx for Windows
