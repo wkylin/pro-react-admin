@@ -14,7 +14,7 @@ const EChart = (props, ref) => {
   const resize = () => {
     cInstance.current &&
       cInstance.current.resize({
-        animation: { duration: 300 },
+        animation: { duration: 300 }
       })
   }
 
@@ -27,7 +27,7 @@ const EChart = (props, ref) => {
       cInstance.current = echarts.getInstanceByDom(cDom.current)
       if (!cInstance.current) {
         cInstance.current = echarts.init(cDom.current, null, {
-          renderer: 'svg',
+          renderer: 'svg'
         })
       } else {
         cInstance.current.clear()
@@ -69,7 +69,7 @@ const EChart = (props, ref) => {
   // 对父组件暴露获取ECharts实例的方法，可直接通过实例调用原生函数
   useImperativeHandle(ref, () => ({ getInstance }))
 
-  return <div id="myEChart" ref={cDom} style={{ width: '100%', height: '100%', ...style }} />
+  return <div id='myEChart' ref={cDom} style={{ width: '100%', height: '100%', ...style }} />
 }
 
 export default React.memo(React.forwardRef(EChart))
