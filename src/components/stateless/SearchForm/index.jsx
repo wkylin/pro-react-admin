@@ -34,6 +34,38 @@ const SearchForm = forwardRef((props, ref) => {
 
   const [form] = Form.useForm()
 
+  const onFinishInner = useCallback(
+    (values) => {
+      let newValues = {}
+      // eslint-disable-next-line guard-for-in
+      for (const key in values) {
+        newValues[key] = window.isEmpty(values[key]) ? undefined : values[key]
+      }
+      if (dates.length > 0) {
+        dates.forEach((item) => {
+          newValues = {
+            ...newValues,
+            [item.name]: newValues[item.name]
+              ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
+              : undefined,
+          }
+        })
+      }
+
+      if (checkboxes.length > 0) {
+        checkboxes.forEach((item) => {
+          newValues = {
+            ...newValues,
+            [item.name]: Number(newValues[item.name]) || undefined,
+          }
+        })
+      }
+
+      onFinish(newValues)
+    },
+    [checkboxes, dates, onFinish]
+  )
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
@@ -122,38 +154,6 @@ const SearchForm = forwardRef((props, ref) => {
       </Form.Item>
     )
   }
-
-  const onFinishInner = useCallback(
-    (values) => {
-      let newValues = {}
-      // eslint-disable-next-line guard-for-in
-      for (const key in values) {
-        newValues[key] = window.isEmpty(values[key]) ? undefined : values[key]
-      }
-      if (dates.length > 0) {
-        dates.forEach((item) => {
-          newValues = {
-            ...newValues,
-            [item.name]: newValues[item.name]
-              ? moment(newValues[item.name]).format(item.format || 'YYYY-MM-DD')
-              : undefined,
-          }
-        })
-      }
-
-      if (checkboxes.length > 0) {
-        checkboxes.forEach((item) => {
-          newValues = {
-            ...newValues,
-            [item.name]: Number(newValues[item.name]) || undefined,
-          }
-        })
-      }
-
-      onFinish(newValues)
-    },
-    [checkboxes, dates, onFinish]
-  )
 
   // 导出
   const exportResultInner = () => {

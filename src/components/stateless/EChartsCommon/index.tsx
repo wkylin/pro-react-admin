@@ -96,7 +96,7 @@ const EChartsCommon = (props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.option])
 
-  return <div className="default-chart" ref={drawDomRef} style={{ width: state.width, height: state.height }}></div>
+  return <div className="default-chart" ref={drawDomRef} style={{ width: state.width, height: state.height }} />
 }
 
 export default EChartsCommon

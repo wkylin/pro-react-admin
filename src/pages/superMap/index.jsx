@@ -99,7 +99,7 @@ const SuperMap = () => {
 
   return (
     <section className={styles.homeBox}>
-      <div id="superMap" className={styles.superMap} ref={superMapRef}></div>
+      <div id="superMap" className={styles.superMap} ref={superMapRef} />
     </section>
   )
 }
