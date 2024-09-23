@@ -343,13 +343,65 @@ export const prettyObject = (msg) => {
   return ['```json', obj, '```'].join('\n')
 }
 
+export const getFileType = (data, fileName) => {
+  // 根据文件扩展名判断类型
+  const extension = fileName.split('.').pop().toLowerCase()
+  switch (extension) {
+    case 'txt':
+      return 'text/plain'
+    case 'json':
+      return 'application/json'
+    case 'doc':
+      return 'application/msword'
+    case 'docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    case 'xls':
+      return 'application/vnd.ms-excel'
+    case 'xlsx':
+      return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    case 'ppt':
+      return 'application/vnd.ms-powerpoint'
+    case 'pptx':
+      return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    case 'pdf':
+      return 'application/pdf'
+    case 'jpg':
+    case 'jpeg':
+      return 'image/jpeg'
+    case 'png':
+      return 'image/png'
+    case 'gif':
+      return 'image/gif'
+    case 'zip':
+      return 'application/zip'
+    case 'rar':
+      return 'application/x-rar-compressed'
+    // 可以继续添加其他类型...
+    default:
+      // 如果无法根据扩展名判断，则尝试根据数据内容判断或返回默认类型
+      if (typeof data === 'string') {
+        try {
+          JSON.parse(data)
+          return 'application/json'
+        } catch (e) {
+          return 'text/plain'
+        }
+      } else if (data instanceof Uint8Array || data instanceof ArrayBuffer) {
+        return 'application/octet-stream' // 默认二进制流
+      } else {
+        return 'application/octet-stream' // 默认类型，无法确定时使用
+      }
+  }
+}
 // 导出
 export const exportExcel = (res, fileName) => {
-  const blob = new Blob([res.data], {
-    type: 'application/vnd.ms-excel; charset=UTF-8',
-  })
-  const disposition = (res.headers && res.headers['content-disposition']) || `attachment;filename=${fileName}.xlsx`
-  const disName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace("utf-8''", '') || ''
+  const disposition =
+    (res.headers && res.headers['content-disposition']) || `attachment;filename=${fileName || 'file'}.xlsx`
+  const disName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(/"/g, '').replace("utf-8''", '') || ''
+
+  const fileType = getFileType(res.data, fileName || disName)
+  const blob = new Blob([res.data], { type: fileType })
+
   const objectUrl = URL.createObjectURL(blob)
   const downloadElement = document.createElement('a')
   document.body.appendChild(downloadElement)
