@@ -42,7 +42,7 @@ const PostMessage = () => {
         ref={ref}
         width="800px"
         height="600px"
-        sandbox="allow-all"
+        // sandbox=""
       />
     </>
   )
