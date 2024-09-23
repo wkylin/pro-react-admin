@@ -209,7 +209,7 @@
     "tree-node-cli": "^1.6.0",
     "typescript": "^5.5.4",
     "video.js": "^8.12.0",
-    "vite": "^5.3.2",
+    "vite": "^5.4.7",
     "vite-plugin-html": "^3.2.2",
     "webpack": "^5.92.1",
     "webpack-bundle-analyzer": "^4.10.2",
