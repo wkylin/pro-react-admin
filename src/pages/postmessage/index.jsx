@@ -36,13 +36,13 @@ const PostMessage = () => {
         style={{
           display: 'block',
           border: 'none',
-          width: '100%',
+          width: '100%'
         }}
         src={childOrigin}
         ref={ref}
-        width="800px"
-        height="600px"
-        sandbox="allow-all"
+        width='800px'
+        height='600px'
+        sandbox='allow-all'
       />
     </>
   )
