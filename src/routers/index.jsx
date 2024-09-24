@@ -38,6 +38,7 @@ const PrismRender = lazy(() => import('@pages/prism'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
 const ReactAmap = lazy(() => import('@pages/reactAmap'))
 const SuperMap = lazy(() => import('@pages/superMap'))
+const D3Chart = lazy(() => import('@pages/d3Chart'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
@@ -213,6 +214,14 @@ const rootRouter = [
         key: '/super-map',
         auth: false,
         element: lazyLoad(SuperMap),
+      },
+      {
+        index: false,
+        path: 'd3-chart',
+        name: 'd3-chart',
+        key: '/d3-chart',
+        auth: false,
+        element: lazyLoad(D3Chart),
       },
       {
         index: false,
