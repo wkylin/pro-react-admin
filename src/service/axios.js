@@ -40,6 +40,9 @@ const useFetcher = ({ url }) => {
 export default useFetcher
 
 // 下载需要指定 responseType: 'blob'
+// 后端设置：
+// response.setHeader("Access-Control-Expose-Headers", "Content-Disposition")
+// response.setHeader("Content-Disposition", "attchment; filename*=UTF8''真实文件名.pdf")
 // 另参见 aidFn.js中 getFileType 及 exportFile
 // .then(async (response) => {
 //   const contentType = response.headers['content-type'];

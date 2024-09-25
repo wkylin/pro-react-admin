@@ -361,6 +361,7 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 ## HTTP
 
 1. HTTP: [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)
+2. HTTP.DEV [HTTP.DEV](https://http.dev/)
 
 ## Code Contributors
 
