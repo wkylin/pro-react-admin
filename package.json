@@ -226,7 +226,7 @@
     "@loadable/component": "^5.16.4",
     "@pansy/react-amap": "^2.21.0",
     "@react-spring/web": "^9.7.4",
-    "@react-three/drei": "^9.111.5",
+    "@react-three/drei": "^9.112.0",
     "@react-three/fiber": "^8.17.6",
     "@reduxjs/toolkit": "^2.2.7",
     "@sentry/cli": "^2.34.1",
