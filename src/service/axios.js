@@ -38,3 +38,34 @@ const useFetcher = ({ url }) => {
 }
 
 export default useFetcher
+
+// 下载需要指定 responseType: 'blob'
+// 另参见 aidFn.js中 getFileType 及 exportFile
+// .then(async (response) => {
+//   const contentType = response.headers['content-type'];
+//   const responseType = response.config.responseType;
+//   const fileReader = new FileReader();
+//   let resData = null;
+//   let isBlob = ['arraybuffer', 'blob'].includes(responseType);
+//   if (!isBlob) {
+//     resData = response.data;
+//     if (resData.status === -1) {
+//       message.error(resData.message);
+//     }
+//     return resData;
+//   } else {
+//     if (contentType.indexOf('application/json') > -1) {
+//       fileReader.onloadend = () => {
+//         let jsonData = JSON.parse(fileReader.result as string);
+//         if (jsonData.status === -1) {
+//           message.error(jsonData.message);
+//         }
+//         return jsonData;
+//       };
+//       fileReader.readAsText(response.data);
+//     } else {
+//       resData = response;
+//     }
+//   }
+//   return resData;
+// })

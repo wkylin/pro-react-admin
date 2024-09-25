@@ -1,6 +1,6 @@
 import React from 'react'
 import { reqFetch, useReqFetch } from '@src/service'
-import { Select, Table, Cascader, Space } from 'antd'
+import { Select, Table, Cascader, Space, Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
@@ -70,7 +70,7 @@ const ProDemo = () => {
   const onFetch = () => {
     reqFetch('/faker/shops', { method: 'GET' })
       .then((response) => {
-        console.log(response)
+        console.log('response==>>', response)
       })
       .catch((errors) => {
         console.log('error', errors)
@@ -83,9 +83,9 @@ const ProDemo = () => {
       </h2>
       <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
-      <div onClick={onFetch} aria-hidden="true">
+      <Button type="primary" onClick={onFetch} aria-hidden="true">
         ErrorBoundary
-      </div>
+      </Button>
       <h4>File Upload</h4>
       <FileUpload />
 

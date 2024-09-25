@@ -394,7 +394,10 @@ export const getFileType = (data, fileName) => {
   }
 }
 // 导出
-export const exportExcel = (res, fileName) => {
+export const exportFile = (res, fileName) => {
+  if (res?.headers['content-type']?.indexOf('application/json') !== -1) {
+    return
+  }
   const disposition =
     (res.headers && res.headers['content-disposition']) || `attachment;filename=${fileName || 'file'}.xlsx`
   const disName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(/"/g, '').replace("utf-8''", '') || ''

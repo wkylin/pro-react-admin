@@ -36,7 +36,7 @@ const initOptions = {
   },
   signal: null,
   credentials: 'include', // include *same-origin
-  // mode: 'cors', // no-cors, cors, *same-origin
+  mode: 'cors', // no-cors, cors, *same-origin
   // redirect: 'follow', // manual, *follow, error
   // referrer: 'no-referrer', // no-referrer *client,
   // referrerPolicy: 'no-referrer-when-downgrade',
@@ -88,20 +88,21 @@ const handleFetchData = (url, options) => {
     const fetchStartTime = +new Date()
     fetch(url, { ...otherOptions, signal })
       .then((response) => {
-        const fetchEndTime = +new Date()
-        const delay = fetchEndTime - fetchStartTime
-        fetch('http://localhost:5200/apis', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: url.split('?')[0], delay }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data))
-          .catch((err) => {
-            console.error('err.name', err.name)
-            console.error('err.message', err.message)
-          })
+        // const fetchEndTime = +new Date()
+        // const delay = fetchEndTime - fetchStartTime
+        // fetch('http://localhost:5200/apis', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ url: url.split('?')[0], delay }),
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => console.log(data))
+        //   .catch((err) => {
+        //     console.error('err.name', err.name)
+        //     console.error('err.message', err.message)
+        //   })
         const contentType = response.headers.get('Content-Type')
+        console.log('response', response)
         if (response.status >= 200 && response.status < 300) {
           if (contentType.includes('application/json')) {
             response
