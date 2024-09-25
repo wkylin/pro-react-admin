@@ -10,7 +10,7 @@ const useFetcher = ({ url }) => {
   const [state, setState] = useState({
     data: null,
     error: null,
-    status: 'idle',
+    status: 'idle'
   })
 
   useEffect(() => {
