@@ -235,7 +235,7 @@
     "@supermapgis/iclient-leaflet": "^11.2.0",
     "@types/three": "^0.168.0",
     "@welldone-software/why-did-you-render": "^8.0.3",
-    "antd": "^5.20.3",
+    "antd": "^5.20.5",
     "axios": "^1.7.7",
     "blueimp-md5": "^2.19.0",
     "cookies-js": "^1.2.3",
