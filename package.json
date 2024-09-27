@@ -229,7 +229,7 @@
     "@react-three/drei": "^9.111.5",
     "@react-three/fiber": "^8.17.6",
     "@reduxjs/toolkit": "^2.2.7",
-    "@sentry/cli": "^2.34.1",
+    "@sentry/cli": "^2.35.0",
     "@sentry/react": "^8.27.0",
     "@sentry/tracing": "^7.119.0",
     "@supermapgis/iclient-leaflet": "^11.2.0",
