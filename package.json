@@ -227,7 +227,7 @@
     "@pansy/react-amap": "^2.21.0",
     "@react-spring/web": "^9.7.4",
     "@react-three/drei": "^9.111.5",
-    "@react-three/fiber": "^8.17.6",
+    "@react-three/fiber": "^8.17.7",
     "@reduxjs/toolkit": "^2.2.7",
     "@sentry/cli": "^2.34.1",
     "@sentry/react": "^8.27.0",
