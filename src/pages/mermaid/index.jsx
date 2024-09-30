@@ -1,9 +1,9 @@
 import React from 'react'
-import { Space, Button } from 'antd'
-import MermaidHooks from '@stateful/mermaidHooks'
+// import { Space, Button } from 'antd'
+// import MermaidHooks from '@stateful/mermaidHooks'
 import FixTabPanel from '@stateless/FixTabPanel'
 import MarkmapHooks from '@stateful/markmap'
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+// import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 
 const gitChart = `gitGraph
   commit
