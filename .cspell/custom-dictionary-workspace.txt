@@ -1,4 +1,7 @@
 # Custom Dictionary Words
+1
+2
+6
 ACSS
 amap
 Amap
@@ -13,6 +16,10 @@ fengxian
 hookspath
 Huksy
 iclient
+jsencrypt
+kend
+lamina
+languagedetector
 markercluster
 packagehash
 preid

@@ -4,7 +4,7 @@ import { Select, Table, Cascader, Space, Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
-import FileUpload from './fileUpload'
+// import FileUpload from './fileUpload'
 import TsDemo from './tsDemo'
 
 const columns = [
@@ -86,8 +86,8 @@ const ProDemo = () => {
       <Button type="primary" onClick={onFetch} aria-hidden="true">
         ErrorBoundary
       </Button>
-      <h4>File Upload</h4>
-      <FileUpload />
+      {/* <h4>File Upload</h4>
+      <FileUpload /> */}
 
       <h4>TS 支持</h4>
       <TsDemo />
