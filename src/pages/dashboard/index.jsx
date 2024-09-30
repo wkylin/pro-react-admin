@@ -40,11 +40,9 @@ const Dashboard = () => {
             <Route
               path="invoices"
               element={
-                <>
-                  <Button type="primary" onClick={() => navigate(-1)}>
-                    navigate to dashborad
-                  </Button>
-                </>
+                <Button type="primary" onClick={() => navigate(-1)}>
+                  navigate to dashboard
+                </Button>
               }
             />
           </Routes>

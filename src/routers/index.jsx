@@ -33,12 +33,14 @@ const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
-// const Mermaid = lazy(() => import('@pages/mermaid'))
-// const DynamicModal = lazy(() => import('@pages/dynamicModal'))
+const Mermaid = lazy(() => import('@pages/mermaid'))
+const DynamicModal = lazy(() => import('@pages/dynamicModal'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
 const ReactAmap = lazy(() => import('@pages/reactAmap'))
 const SuperMap = lazy(() => import('@pages/superMap'))
 const D3Chart = lazy(() => import('@pages/d3Chart'))
+const Barcode = lazy(() => import('@pages/barcode'))
+const Print = lazy(() => import('@pages/print'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
@@ -127,14 +129,14 @@ const rootRouter = [
         auth: false,
         element: lazyLoad(ChatGpt),
       },
-      // {
-      //   index: false,
-      //   path: 'mermaid',
-      //   name: 'ChatGPT Mermaid',
-      //   key: '/mermaid',
-      //   auth: false,
-      //   element: lazyLoad(Mermaid),
-      // },
+      {
+        index: false,
+        path: 'mermaid',
+        name: 'ChatGPT Mermaid',
+        key: '/mermaid',
+        auth: false,
+        element: lazyLoad(Mermaid),
+      },
       {
         index: false,
         path: 'prism',
@@ -154,7 +156,7 @@ const rootRouter = [
       {
         index: false,
         path: 'geo',
-        name: 'geo',
+        name: 'Geo',
         key: '/geo',
         auth: false,
         element: lazyLoad(GeoChart),
@@ -167,14 +169,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(Echarts),
       },
-      // {
-      //   index: false,
-      //   path: 'dynamic',
-      //   name: 'DynamicModal',
-      //   key: '/dynamic',
-      //   auth: true,
-      //   element: lazyLoad(DynamicModal),
-      // },
+      {
+        index: false,
+        path: 'dynamic',
+        name: 'DynamicModal',
+        key: '/dynamic',
+        auth: false,
+        element: lazyLoad(DynamicModal),
+      },
       {
         index: false,
         path: 'big-screen',
@@ -186,7 +188,7 @@ const rootRouter = [
       {
         index: false,
         path: 'react-amap',
-        name: 'react-amap',
+        name: 'reactAmap',
         key: '/react-amap',
         auth: false,
         element: lazyLoad(ReactAmap),
@@ -194,7 +196,7 @@ const rootRouter = [
       {
         index: false,
         path: 'postmessage',
-        name: 'postmessage',
+        name: 'PostMessage',
         key: '/postmessage',
         auth: false,
         element: lazyLoad(PostMessage),
@@ -202,7 +204,7 @@ const rootRouter = [
       {
         index: false,
         path: 'my-iframe',
-        name: 'my-iframe',
+        name: 'myIframe',
         key: '/my-iframe',
         auth: false,
         element: lazyLoad(MyIframe),
@@ -210,7 +212,7 @@ const rootRouter = [
       {
         index: false,
         path: 'super-map',
-        name: 'super-map',
+        name: 'SuperMap',
         key: '/super-map',
         auth: false,
         element: lazyLoad(SuperMap),
@@ -218,10 +220,26 @@ const rootRouter = [
       {
         index: false,
         path: 'd3-chart',
-        name: 'd3-chart',
+        name: 'D3Chart',
         key: '/d3-chart',
         auth: false,
         element: lazyLoad(D3Chart),
+      },
+      {
+        index: false,
+        path: 'barcode',
+        name: 'Barcode',
+        key: '/barcode',
+        auth: false,
+        element: lazyLoad(Barcode),
+      },
+      {
+        index: false,
+        path: 'print',
+        name: 'Print',
+        key: '/print',
+        auth: false,
+        element: lazyLoad(Print),
       },
       {
         index: false,

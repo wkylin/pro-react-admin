@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import EChartsCommon from '@stateless/EChartsCommon'
-import { previewFitScale } from '@utils/previewScale'
+import previewFitScale from '@utils/previewScale'
 import BigHeader from './bigHeader'
 
 import styles from './index.module.less'
@@ -20,7 +20,7 @@ const BigScreen = () => {
     barData: [32.2, 60.0, 32.6, 36.4, 53.3, 35.0],
   })
   useEffect(() => {
-    const { calcRate, windowResize, unWindowResize } = previewFitScale(1440, 900, scaleDom.current)
+    const { calcRate, windowResize, unWindowResize } = previewFitScale(1200, 800, scaleDom.current)
     calcRate()
     windowResize()
     return () => {

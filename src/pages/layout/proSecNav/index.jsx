@@ -84,6 +84,8 @@ const ProSecNav = () => {
     { label: 'GeoChart', key: '/geo', icon: <QrcodeOutlined /> },
     { label: 'SuperMap', key: '/super-map', icon: <FireOutlined /> },
     { label: 'D3Chart', key: '/d3-chart', icon: <QrcodeOutlined /> },
+    { label: 'Barcode', key: '/barcode', icon: <FireOutlined /> },
+    // { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',

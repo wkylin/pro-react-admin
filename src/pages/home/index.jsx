@@ -95,13 +95,11 @@ const Home = () => {
             reader
               .read()
               .then(({ done, value }) => {
-                console.log('done', done)
                 if (done) {
                   setIsStream(false)
                   return
                 }
                 buffer += new TextDecoder().decode(value)
-                console.log('buffer', buffer)
                 while (buffer.includes(delimiter)) {
                   const ind = buffer.indexOf(delimiter)
                   const message = buffer.slice(0, ind)

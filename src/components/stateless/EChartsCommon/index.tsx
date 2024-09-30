@@ -36,7 +36,7 @@ const EChartsCommon = (props: {
   }
 
   const resize = debounce(() => {
-    chartRef.current && chartRef.current.resize()
+    chartRef?.current?.resize()
   }, 100)
 
   const setOption = useCallback(

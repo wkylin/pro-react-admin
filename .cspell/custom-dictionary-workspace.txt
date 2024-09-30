@@ -1,5 +1,7 @@
 # Custom Dictionary Words
 ACSS
+amap
+Amap
 Analyse
 Bookstory
 codepaths
