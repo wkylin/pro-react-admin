@@ -46,32 +46,30 @@ const initMarkup = `# 登录注册模块功能页面结构图
 `
 
 const Mermaid = () => (
-  <>
-    <FixTabPanel>
-      <h2>Meraid: http://https://mermaid.js.org/</h2>
+  <FixTabPanel>
+    <h2>Meraid: http://https://mermaid.js.org/</h2>
 
-      <h3 style={{ marginBottom: 30 }}>演示1:Git Diagram </h3>
+    {/* <h3 style={{ marginBottom: 30 }}>演示1:Git Diagram </h3> */}
 
-      <TransformWrapper centerOnInit centerZoomedOut>
-        {({ zoomIn, zoomOut, resetTransform }) => (
-          <React.Fragment>
-            <Space>
-              <Button onClick={() => zoomIn()}>放大</Button>
-              <Button onClick={() => zoomOut()}>缩小</Button>
-              <Button onClick={() => resetTransform()}>还原</Button>
-            </Space>
-            <TransformComponent>
-              <MermaidHooks chart={gitChart} />
-            </TransformComponent>
-          </React.Fragment>
-        )}
-      </TransformWrapper>
-      <h3> 演示2: Markmap</h3>
-      <section>
-        <MarkmapHooks markmap={initMarkup} />
-      </section>
-    </FixTabPanel>
-  </>
+    {/* <TransformWrapper centerOnInit centerZoomedOut>
+      {({ zoomIn, zoomOut, resetTransform }) => (
+        <React.Fragment>
+          <Space>
+            <Button onClick={() => zoomIn()}>放大</Button>
+            <Button onClick={() => zoomOut()}>缩小</Button>
+            <Button onClick={() => resetTransform()}>还原</Button>
+          </Space>
+          <TransformComponent>
+            <MermaidHooks chart={gitChart} />
+          </TransformComponent>
+        </React.Fragment>
+      )}
+    </TransformWrapper> */}
+    <h3> 演示2: Markmap</h3>
+    <section>
+      <MarkmapHooks markmap={initMarkup} />
+    </section>
+  </FixTabPanel>
 )
 
 export default Mermaid

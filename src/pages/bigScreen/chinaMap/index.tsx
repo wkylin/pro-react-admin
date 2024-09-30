@@ -88,16 +88,7 @@ const ChinaMap = () => {
     ],
   })
 
-  return (
-    <div
-      style={{
-        width: '600px',
-        height: '400px',
-      }}
-    >
-      <EChartsCommon option={mapOptions(mapData)} />
-    </div>
-  )
+  return <EChartsCommon option={mapOptions(mapData)} />
 }
 
 export default ChinaMap
