@@ -19,8 +19,8 @@
   "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
-    "react/display-name":"off",
-    "react-hooks/exhaustive-deps":"off",
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps": "off",
     "prettier/prettier": [
       "error",
       {
@@ -51,10 +51,11 @@
     "no-console": "off",
     "import/extensions": "off",
     "no-nested-ternary": "off",
-    "array-callback-return":"off",
-    "no-shadow":"off",
-    "no-inner-declarations":"off",
-    "no-unused-expressions":"off",
-    "no-unused-vars":"off"
+    "array-callback-return": "off",
+    "no-shadow": "off",
+    "no-inner-declarations": "off",
+    "no-unused-expressions": "off",
+    "no-unused-vars": "off",
+    "no-plusplus": "off"
   }
 }

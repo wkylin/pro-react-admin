@@ -1,9 +1,7 @@
 {
   "extends": "stylelint-config-standard",
   "rules": {
-    "string-quotes": "single",
     "value-keyword-case": null,
-    "declaration-block-trailing-semicolon": "always",
     "no-invalid-position-at-import-rule": null,
     "selector-class-pattern": "^(?:(?:o|c|u|t|s|is|has|_|js|qa)-)?[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*(?:__[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*)?(?:--[a-zA-Z0-9]+(?:-[a-zA-Z0-9]+)*)?(?:\\[.+\\])?$",
     "property-no-unknown": [
