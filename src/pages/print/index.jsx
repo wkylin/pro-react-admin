@@ -6,7 +6,7 @@ import { useReactToPrint } from 'react-to-print'
 const MyPrint = () => {
   const componentRef = useRef()
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
+    content: () => componentRef.current
   })
   return (
     <FixTabPanel>

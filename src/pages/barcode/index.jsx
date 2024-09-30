@@ -4,7 +4,7 @@ import Barcode from 'react-barcode'
 
 const MyBarcode = () => (
   <FixTabPanel>
-    <Barcode value="https://github.com/wkylin/pro-react-admin" />
+    <Barcode value='https://github.com/wkylin/pro-react-admin' />
   </FixTabPanel>
 )
 
