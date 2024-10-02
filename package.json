@@ -283,7 +283,7 @@
     "react-qr-code": "^2.0.15",
     "react-redux": "^9.1.2",
     "react-ripples": "^2.2.1",
-    "react-router-dom": "^6.26.1",
+    "react-router-dom": "^6.26.2",
     "react-scroll-to-bottom": "^4.2.0",
     "react-sticky": "^6.0.3",
     "react-sticky-ts": "^1.0.7",
