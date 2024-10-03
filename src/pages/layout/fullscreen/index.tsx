@@ -8,18 +8,19 @@ const FullScreen = ({ ele, tips = '全屏', placement = 'bottom' }: any) => {
 
   useEffect(() => {
     screenfull.on('change', () => {
-      if (screenfull.isFullscreen) setFullScreen(true)
-      else setFullScreen(false)
+      if (screenfull.isFullscreen) {
+        setFullScreen(true)
+      } else {
+        setFullScreen(false)
+      }
     })
   }, [])
 
   const handleFullScreen = () => {
     if (!screenfull.isEnabled) message.warning('当前您的浏览器不支持全屏')
     const dom = document.querySelector(ele) || undefined
-    console.log('dom', dom)
     screenfull.toggle(dom)
   }
-  console.log('fullScreen', fullScreen)
   return (
     <Tooltip placement={placement} title={tips}>
       <Space style={{ cursor: 'pointer' }} onClick={handleFullScreen}>
