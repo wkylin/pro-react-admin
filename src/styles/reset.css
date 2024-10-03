@@ -1,7 +1,4 @@
 /* stylelint-disable at-rule-no-unknown */
-
-/* @import '~sanitize.css'; */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -56,8 +53,6 @@ select:-webkit-autofill:active {
 .text-more-line-nowrap {
   overflow: hidden;
   text-overflow: ellipsis;
-
-  /* display: -webkit-box; */
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
@@ -92,10 +87,6 @@ select:-webkit-autofill:active {
     transform: rotate(360deg);
   }
 }
-
-/* ::-webkit-scrollbar-thumb {
-  background: #aaa;
-} */
 
 .layout-footer {
   text-align: center;
@@ -136,10 +127,6 @@ select:-webkit-autofill:active {
 
 .layout-container .pro-tabs {
   z-index: 10;
-}
-
-.layout-container .pro-tabs .wui-ant-tabs-nav-wrap {
-  overflow: visible !important;
 }
 
 .layout-container .layout-tabpanel {

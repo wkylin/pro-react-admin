@@ -149,7 +149,9 @@ const ProTabs = (props) => {
           ),
           right: (
             <>
-              <Fullscreen ele="#fullScreen" placement="left" tips="主内容全屏" />
+              <Space style={{ padding: '0 5px' }}>
+                <Fullscreen ele="#fullScreenContent" placement="left" tips="主内容全屏" />
+              </Space>
               {panes.length > 2 ? (
                 <Dropdown
                   menu={{
@@ -172,7 +174,7 @@ const ProTabs = (props) => {
           label: (
             <>
               {pane.key === fullPath && pane.key !== '/404' && (
-                <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+                <SyncOutlined style={{ padding: '0 5px' }} onClick={refreshTab} title="刷新" spin={isReload} />
               )}
               {pane.i18nKey ? t(pane.i18nKey) : pane.title}
             </>

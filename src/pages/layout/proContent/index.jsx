@@ -45,11 +45,11 @@ const ProContent = () => {
   }, [pathname, search, panes, activeKey])
 
   return (
-    <Layout className={styles.layout}>
+    <Layout className={styles.layout} id="fullScreen">
       <Header className="layout-header" style={{ background: colorBgLayout }}>
         <ProBreadcrumb />
       </Header>
-      <Content className="layout-content" id="fullScreen" style={{ background: colorBgContainer }}>
+      <Content className="layout-content" id="fullScreenContent" style={{ background: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">
