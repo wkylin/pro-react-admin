@@ -45,7 +45,7 @@ const ProSecNav = () => {
   useEffect(() => {
     const selectedPathKey = pathname
     setSelectedKeys([selectedPathKey])
-    setOpenKeys(isOpenChange ? openKeys : pathSubmenu[pathname] ?? openKeys)
+    setOpenKeys(isOpenChange ? openKeys : (pathSubmenu[pathname] ?? openKeys))
   }, [pathname, openKeys, isOpenChange])
 
   const onOpenChange = (keys) => {
@@ -85,6 +85,7 @@ const ProSecNav = () => {
     { label: 'SuperMap', key: '/super-map', icon: <FireOutlined /> },
     { label: 'D3Chart', key: '/d3-chart', icon: <QrcodeOutlined /> },
     { label: 'Barcode', key: '/barcode', icon: <FireOutlined /> },
+    { label: 'PdfView', key: '/pdf-view', icon: <QrcodeOutlined /> },
     // { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
     {
       label: '技术栈',

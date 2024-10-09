@@ -43,6 +43,7 @@ const Barcode = lazy(() => import('@pages/barcode'))
 const Print = lazy(() => import('@pages/print'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
+const ReactPdf = lazy(() => import('@pages/reactPdf'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
@@ -232,6 +233,14 @@ const rootRouter = [
         key: '/barcode',
         auth: false,
         element: lazyLoad(Barcode),
+      },
+      {
+        index: false,
+        path: 'pdf-view',
+        name: 'PdfView',
+        key: '/pdf-view',
+        auth: false,
+        element: lazyLoad(ReactPdf),
       },
       {
         index: false,
