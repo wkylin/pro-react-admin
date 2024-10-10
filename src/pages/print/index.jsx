@@ -3,15 +3,32 @@ import { Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { useReactToPrint } from 'react-to-print'
 
+import ComponentToPrint from './test/toPrint'
+
 const MyPrint = () => {
-  const componentRef = useRef()
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
+  const componentRef = React.useRef(null)
+
+  const handleAfterPrint = React.useCallback(() => {
+    console.log('`onAfterPrint` called')
+  }, [])
+
+  const handleBeforePrint = React.useCallback(() => {
+    console.log('`onBeforePrint` called')
+    return Promise.resolve()
+  }, [])
+
+  const printFn = useReactToPrint({
+    contentRef: componentRef,
+    documentTitle: 'AwesomeFileName',
+    onAfterPrint: handleAfterPrint,
+    onBeforePrint: handleBeforePrint,
   })
   return (
     <FixTabPanel>
-      <div ref={componentRef}>This contains all the files you intend to export[download]</div>
-      <Button onClick={handlePrint}>Print</Button>
+      <ComponentToPrint ref={componentRef} />
+      <Button type="primary" onClick={printFn}>
+        Print
+      </Button>
     </FixTabPanel>
   )
 }

@@ -86,7 +86,7 @@ const ProSecNav = () => {
     { label: 'D3Chart', key: '/d3-chart', icon: <QrcodeOutlined /> },
     { label: 'Barcode', key: '/barcode', icon: <FireOutlined /> },
     { label: 'PdfView', key: '/pdf-view', icon: <QrcodeOutlined /> },
-    // { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
+    { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
     {
       label: '技术栈',
       key: '/sub-act',
