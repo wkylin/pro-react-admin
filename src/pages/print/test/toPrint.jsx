@@ -31,25 +31,25 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
   }, [])
 
   return (
-    <div className="relativeCSS" ref={ref}>
+    <div className='relativeCSS' ref={ref}>
       <link
         // This tests that we properly ignore disabled nodes
         // Learn more: https://github.com/MatthewHerbst/react-to-print/pull/537
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         disabled
-        rel="stylesheet"
-        href="./disabled.css"
+        rel='stylesheet'
+        href='./disabled.css'
       />
-      <style type="text/css" media="print">
+      <style type='text/css' media='print'>
         {'@page { size: landscape; }'}
       </style>
-      <link href="./as-style.css" rel="stylesheet" />
-      <div className="flash" />
-      <table className="testClass">
+      <link href='./as-style.css' rel='stylesheet' />
+      <div className='flash' />
+      <table className='testClass'>
         <thead>
           <tr>
-            <th className="column1">Test Name</th>
+            <th className='column1'>Test Name</th>
             <th>Test</th>
           </tr>
         </thead>
@@ -57,19 +57,19 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
           <tr>
             <td>Test loading {'<link>'}s with multi-value `rel`</td>
             <td>
-              <div className="multi-rel">Purple Background</div>
+              <div className='multi-rel'>Purple Background</div>
             </td>
           </tr>
           <tr>
             <td>Test loading {'<link>'}s with `as=&ldquo;style&quot;`</td>
             <td>
-              <div className="as-style">Blue Background</div>
+              <div className='as-style'>Blue Background</div>
             </td>
           </tr>
           <tr>
             <td>Canvass</td>
             <td>
-              <canvas height="100" ref={canvasEl} width="200">
+              <canvas height='100' ref={canvasEl} width='200'>
                 Your browser does not support the HTML5 canvas tag.
               </canvas>
             </td>
@@ -81,24 +81,24 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
           <tr>
             <td>Fonts</td>
             <td>
-              <div className="externalCustomFont">Some Cool Font Text</div>
-              <div className="internalCustomFontInterThin">123456789</div>
-              <div className="internalCustomFrontInterBlackItalic">Some Cool Font Text</div>
+              <div className='externalCustomFont'>Some Cool Font Text</div>
+              <div className='internalCustomFontInterThin'>123456789</div>
+              <div className='internalCustomFrontInterBlackItalic'>Some Cool Font Text</div>
             </td>
           </tr>
           <tr>
             <td>Image: Local Import</td>
             <td>
-              <img alt="A test image" src={image} width="200" />
+              <img alt='A test image' src={image} width='200' />
             </td>
           </tr>
           <tr>
             <td>Image: URL</td>
             <td>
               <img
-                alt="Google logo"
-                src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png"
-                width="200"
+                alt='Google logo'
+                src='https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
+                width='200'
               />
             </td>
           </tr>
@@ -111,30 +111,30 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
           <tr>
             <td>Input: Checkbox</td>
             <td>
-              <input type="checkbox" />
+              <input type='checkbox' />
             </td>
           </tr>
           <tr>
             <td>Input: Date</td>
             <td>
-              <input type="date" />
+              <input type='date' />
             </td>
           </tr>
           <tr>
             <td>Input: Radio</td>
             <td>
-              Blue <input type="radio" id="blue" name="color" value="blue" />
-              Red <input type="radio" id="red" name="color" value="red" />
+              Blue <input type='radio' id='blue' name='color' value='blue' />
+              Red <input type='radio' id='red' name='color' value='red' />
             </td>
           </tr>
           <tr>
             <td>Select</td>
             <td>
-              <select name="cars" id="cars">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="mercedes">Mercedes</option>
-                <option value="audi">Audi</option>
+              <select name='cars' id='cars'>
+                <option value='volvo'>Volvo</option>
+                <option value='saab'>Saab</option>
+                <option value='mercedes'>Mercedes</option>
+                <option value='audi'>Audi</option>
               </select>
             </td>
           </tr>
@@ -147,24 +147,24 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
           <tr>
             <td>SVG</td>
             <td>
-              <svg height="100" width="100">
-                <circle cx="50" cy="50" fill="yellow" r="40" stroke="green" strokeWidth="4" />
+              <svg height='100' width='100'>
+                <circle cx='50' cy='50' fill='yellow' r='40' stroke='green' strokeWidth='4' />
               </svg>
             </td>
           </tr>
           <tr>
             <td>Video</td>
             <td>
-              <video src="https://www.w3schools.com/html/mov_bbb.mp4" width="200" />
+              <video src='https://www.w3schools.com/html/mov_bbb.mp4' width='200' />
             </td>
           </tr>
           <tr>
             <td>Video: With Poster</td>
             <td>
               <video
-                poster="https://images.freeimages.com/images/large-previews/9a9/tuscany-landscape-4-1500765.jpg"
-                src="https://www.w3schools.com/html/mov_bbb.mp4"
-                width="200"
+                poster='https://images.freeimages.com/images/large-previews/9a9/tuscany-landscape-4-1500765.jpg'
+                src='https://www.w3schools.com/html/mov_bbb.mp4'
+                width='200'
               />
             </td>
           </tr>
