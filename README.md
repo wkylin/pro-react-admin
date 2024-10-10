@@ -625,6 +625,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
      npx husky add .husky/pre-commit "npx lint-staged"
      npx husky add .husky/pre-commit "npx pretty-quick --staged"
      npx husky add .husky/commit-msg 'npx --no-install commitlint --edit'
+     npx husky add .husky/prepare-commit-msg 'exec < /dev/tty && npx cz --hook || true'
    ```
 
 ## Show your support
