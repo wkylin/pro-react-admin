@@ -15,9 +15,9 @@ const MyVideo = () => {
     sources: [
       {
         src: 'https://placehold.co/1920x1080.mp4',
-        type: 'video/mp4',
-      },
-    ],
+        type: 'video/mp4'
+      }
+    ]
   }
 
   const handlePlayerReady = (player) => {
@@ -31,9 +31,9 @@ const MyVideo = () => {
 
   return (
     <FixTabPanel>
-      <video ref={videoRef} controls muted controlsList="nodownload" style={{ width: 900 }}>
-        <track kind="captions" />
-        <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4" />
+      <video ref={videoRef} controls muted controlsList='nodownload' style={{ width: 900 }}>
+        <track kind='captions' />
+        <source src='https://media.w3.org/2010/05/sintel/trailer.mp4' type='video/mp4' />
       </video>
       <div style={{ width: 900 }}>
         <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
