@@ -46,9 +46,7 @@ const App = () => {
     return <>Pro React Admin. Loading...</>
   }
 
-  return (
-    <AuthRouter>{element}</AuthRouter>
-  )
+  return <AuthRouter>{element}</AuthRouter>
 }
 
 export default App
