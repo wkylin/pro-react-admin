@@ -43,13 +43,11 @@ const App = () => {
   const element = useRoutes(rootRouter as any)
 
   if (loading) {
-    return <>Loading...</>
+    return <>Pro React Admin. Loading...</>
   }
 
   return (
-    <>
-      <AuthRouter>{element}</AuthRouter>
-    </>
+    <AuthRouter>{element}</AuthRouter>
   )
 }
 

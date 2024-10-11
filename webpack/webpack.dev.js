@@ -26,7 +26,7 @@ const devWebpackConfig = merge(common, {
       directory: path.join(__dirname, '../public'),
     },
     compress: true,
-    open: true,
+    // open: true,
     hot: true,
     proxy: devProxy,
   },
