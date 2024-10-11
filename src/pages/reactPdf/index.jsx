@@ -24,6 +24,7 @@ function ReactPdf() {
     setScale((prevScale) => Math.min(Math.max(prevScale + delta, 0.5), 2.0))
   }
 
+  const httpsUrl = 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf'
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-blue-600 text-white p-4">
@@ -31,11 +32,7 @@ function ReactPdf() {
       </header>
       <main className="flex-grow container mx-auto p-4 flex flex-col items-center">
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 w-full max-w-3xl">
-          <Document
-            file="https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf"
-            onLoadSuccess={onDocumentLoadSuccess}
-            className="flex justify-center"
-          >
+          <Document file={httpsUrl} onLoadSuccess={onDocumentLoadSuccess} className="flex justify-center">
             <Page pageNumber={pageNumber} scale={scale} />
           </Document>
         </div>
@@ -65,6 +62,7 @@ function ReactPdf() {
           </button>
         </div>
       </main>
+      {/* <embed type="application/pdf" src={`${httpsUrl}`} key={`${httpsUrl}`} width="100%" height="600px" />; */}
     </div>
   )
 }
