@@ -59,8 +59,8 @@ const Home = () => {
       [
         {
           content: text,
-          role: 'user',
-        },
+          role: 'user'
+        }
       ],
       key,
       signal
@@ -148,29 +148,29 @@ const Home = () => {
       <h2>React version: {version}</h2>
 
       <section style={{ width: 600, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
+        <Input defaultValue={apiKey} placeholder='api key' onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Flex align='center'>
           <LinearWrap>
             <Input.TextArea
               ref={textareaRef}
               defaultValue={chatText}
-              placeholder="来，说点什么呗...Meta + Enter发送"
+              placeholder='来，说点什么呗...Meta + Enter发送'
               onChange={changeChatText}
               onKeyDown={onInputKeyDown}
               autoSize
-              style={{width: 300,height: 30}}
+              style={{ width: 300, height: 30 }}
             />
           </LinearWrap>
           <Button
             style={{ margin: '0 10px' }}
             icon={<SendOutlined rotate={-60} />}
-            type="primary"
+            type='primary'
             disabled={isStream}
             onClick={onSubmit}
           >
             发送
           </Button>
-          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+          <Button icon={<SendOutlined rotate={-60} />} type='primary' disabled={!isStream} onClick={onStop}>
             停止
           </Button>
         </Flex>
@@ -181,7 +181,6 @@ const Home = () => {
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
-
     </FixTabPanel>
   )
 }
