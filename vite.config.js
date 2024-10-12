@@ -18,13 +18,13 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, './src/pages'),
       '@routers': path.resolve(__dirname, './src/routers'),
       '@utils': path.resolve(__dirname, './src/utils'),
-      '@theme': path.resolve(__dirname, './src/theme'),
-    },
+      '@theme': path.resolve(__dirname, './src/theme')
+    }
   },
   plugins: [
     react({
       // Use React plugin in all *.jsx and *.tsx files
-      include: '**/*.{jsx,tsx}',
+      include: '**/*.{jsx,tsx}'
     }),
     svgr(),
     visualizer(),
@@ -32,10 +32,10 @@ export default defineConfig({
       libList: [
         {
           libName: 'antd',
-          style: (name) => name !== 'theme' && `antd/es/${name}/style`,
-        },
-      ],
-    }),
+          style: (name) => name !== 'theme' && `antd/es/${name}/style`
+        }
+      ]
+    })
     // createHtmlPlugin({
     //   inject: {
     //     data: {
@@ -54,20 +54,20 @@ export default defineConfig({
     // }),
   ],
   define: {
-    process, // 解决未定义问题，推荐 import.meta.env
+    process // 解决未定义问题，推荐 import.meta.env
   },
   css: {
     modules: {
-      scopeBehaviour: 'local',
+      scopeBehaviour: 'local'
     },
     preprocessorOptions: {
       less: {
         javascriptEnabled: true,
         modifyVars: {
-          '@primary-color': '#4377FE', // 设置antd主题色
-        },
-      },
-    },
+          '@primary-color': '#4377FE' // 设置antd主题色
+        }
+      }
+    }
   },
   server: {
     open: true,
@@ -77,7 +77,7 @@ export default defineConfig({
         pathRewrite: { '^/faker': '' },
         secure: false,
         changeOrigin: true,
-        cookieDomainRewrite: 'localhost',
+        cookieDomainRewrite: 'localhost'
       },
       '/wkylin': {
         // target: 'https://jsonplaceholder.typicode.com',
@@ -85,18 +85,18 @@ export default defineConfig({
         target: 'https://my-json-server.typicode.com',
         // pathRewrite: { '^/wkylin': '/wkylin' },
         secure: false,
-        changeOrigin: true,
+        changeOrigin: true
       },
       '/v2': {
         target: 'https://www.mocky.io',
         secure: false,
-        changeOrigin: true,
-      },
-    },
+        changeOrigin: true
+      }
+    }
   },
   // 去除console和debugger
   esbuild: {
-    pure: ['console.log', 'debugger'],
+    pure: ['console.log', 'debugger']
   },
   build: {
     sourcemap: true,
@@ -104,20 +104,20 @@ export default defineConfig({
     rollupOptions: {
       // external: [],
       output: {
-        manualChunks(id) {
+        manualChunks (id) {
           if (id.includes('node_modules')) {
             return id.toString().split('node_modules/')[1].split('/')[0].toString()
           }
-        },
+        }
         // chunkFileNames: (chunkInfo) => {
         //   const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/') : []
         //   const fileName = facadeModuleId[facadeModuleId.length - 2] || '[name]'
         //   return `js/${fileName}/[name].[hash].js`
         // },
-      },
-    },
+      }
+    }
   },
   preview: {
-    port: 4173,
-  },
+    port: 4173
+  }
 })
