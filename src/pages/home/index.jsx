@@ -158,7 +158,7 @@ const Home = () => {
               onChange={changeChatText}
               onKeyDown={onInputKeyDown}
               autoSize
-              style={{width: 300,height: 30}}
+              style={{ width: 300, height: 30 }}
             />
           </LinearWrap>
           <Button
@@ -181,7 +181,6 @@ const Home = () => {
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
-
     </FixTabPanel>
   )
 }
