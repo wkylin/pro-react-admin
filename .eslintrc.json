@@ -16,7 +16,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier", "react-hooks/recommended"],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react/display-name": "off",

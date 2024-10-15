@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import path from 'path'
 import react from '@vitejs/plugin-react'
-import vitePluginImp from 'vite-plugin-imp'
+// import vitePluginImp from 'vite-plugin-imp'
 import svgr from 'vite-plugin-svgr'
 // import { sentryVitePlugin } from '@sentry/vite-plugin'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   resolve: {
@@ -27,15 +27,15 @@ export default defineConfig({
       include: '**/*.{jsx,tsx}',
     }),
     svgr(),
-    visualizer(),
-    vitePluginImp({
-      libList: [
-        {
-          libName: 'antd',
-          style: (name) => name !== 'theme' && `antd/es/${name}/style`,
-        },
-      ],
-    }),
+    // visualizer(),
+    // vitePluginImp({
+    //   libList: [
+    //     {
+    //       libName: 'antd',
+    //       style: (name) => name !== 'theme' && `antd/es/${name}/style`,
+    //     },
+    //   ],
+    // }),
     // createHtmlPlugin({
     //   inject: {
     //     data: {
@@ -56,19 +56,19 @@ export default defineConfig({
   define: {
     process, // 解决未定义问题，推荐 import.meta.env
   },
-  css: {
-    modules: {
-      scopeBehaviour: 'local',
-    },
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-        modifyVars: {
-          '@primary-color': '#4377FE', // 设置antd主题色
-        },
-      },
-    },
-  },
+  // css: {
+  //   modules: {
+  //     scopeBehaviour: 'local',
+  //   },
+  //   preprocessorOptions: {
+  //     less: {
+  //       javascriptEnabled: true,
+  //       modifyVars: {
+  //         '@primary-color': '#4377FE', // 设置antd主题色
+  //       },
+  //     },
+  //   },
+  // },
   server: {
     open: true,
     proxy: {
@@ -95,28 +95,28 @@ export default defineConfig({
     },
   },
   // 去除console和debugger
-  esbuild: {
-    pure: ['console.log', 'debugger'],
-  },
-  build: {
-    sourcemap: true,
-    write: true,
-    rollupOptions: {
-      // external: [],
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString()
-          }
-        },
-        // chunkFileNames: (chunkInfo) => {
-        //   const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/') : []
-        //   const fileName = facadeModuleId[facadeModuleId.length - 2] || '[name]'
-        //   return `js/${fileName}/[name].[hash].js`
-        // },
-      },
-    },
-  },
+  // esbuild: {
+  //   pure: ['console.log', 'debugger'],
+  // },
+  // build: {
+  // sourcemap: true,
+  // write: true,
+  // rollupOptions: {
+  //   // external: [],
+  //   output: {
+  //     manualChunks(id) {
+  //       if (id.includes('node_modules')) {
+  //         return id.toString().split('node_modules/')[1].split('/')[0].toString()
+  //       }
+  //     },
+  //     // chunkFileNames: (chunkInfo) => {
+  //     //   const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/') : []
+  //     //   const fileName = facadeModuleId[facadeModuleId.length - 2] || '[name]'
+  //     //   return `js/${fileName}/[name].[hash].js`
+  //     // },
+  //   },
+  // },
+  // },
   preview: {
     port: 4173,
   },
