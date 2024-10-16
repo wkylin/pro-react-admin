@@ -67,12 +67,6 @@
     "postinstall": "install-changed --hash-only",
     "preinstall": "npx pm-keeper npm",
     "check:version": "node webpack/check-version.js",
-    "vite:dev": "concurrently -r \"vite -- --host\" \"npm run faker\"",
-    "vite:dev:faker": "concurrently -r \"npm run vite:dev\" \"npm run faker\"",
-    "vite:build": "vite build",
-    "vite:preview": "vite preview",
-    "vite:start:dev": "vite --mode dev",
-    "vite:build:production": "vite build --mode production",
     "clean:lock": "rm -rf package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:dist": "rm -rf ./dist",
     "clean:modules": "rm -rf node_modules"
@@ -104,7 +98,6 @@
     "@commitlint/config-conventional": "^19.5.0",
     "@koa/cors": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
-    "@sentry/vite-plugin": "^2.22.5",
     "@sentry/webpack-plugin": "^2.22.5",
     "@svgr/webpack": "^8.1.0",
     "@testing-library/react": "^16.0.1",
@@ -120,7 +113,6 @@
     "@types/user-agents": "^1.0.4",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",
-    "@vitejs/plugin-react": "^4.3.2",
     "antd-dayjs-webpack-plugin": "^1.0.6",
     "autoprefixer": "^10.4.20",
     "babel-jest": "^29.7.0",
@@ -208,8 +200,6 @@
     "tree-node-cli": "^1.6.0",
     "typescript": "^5.6.3",
     "video.js": "^8.18.1",
-    "vite": "^5.4.8",
-    "vite-plugin-html": "^3.2.2",
     "webpack": "^5.95.0",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
@@ -308,9 +298,7 @@
     "use-debounce": "^10.0.3",
     "use-deep-compare-effect": "^1.8.1",
     "use-react-router-breadcrumbs": "^4.0.1",
-    "user-agents": "^1.1.325",
-    "vite-plugin-imp": "^2.4.0",
-    "vite-plugin-svgr": "^4.2.0"
+    "user-agents": "^1.1.325"
   },
   "engines": {
     "node": ">= 14.17.1",

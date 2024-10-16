@@ -4,7 +4,6 @@ import { Select, Table, Cascader, Space, Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { toFixed } from '@utils/aidFn'
 
-// import FileUpload from './fileUpload'
 import TsDemo from './tsDemo'
 
 const columns = [
@@ -59,9 +58,6 @@ const options = [
   },
 ]
 
-const viteEnvMode = import.meta?.env?.MODE ?? 'webapck env'
-const viteEnvVariableValue = import.meta?.env?.VITE_GREETINGS ?? 'webapck env'
-
 const ProDemo = () => {
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
     method: 'GET',
@@ -86,9 +82,6 @@ const ProDemo = () => {
       <Button type="primary" onClick={onFetch} aria-hidden="true">
         ErrorBoundary
       </Button>
-      {/* <h4>File Upload</h4>
-      <FileUpload /> */}
-
       <h4>TS 支持</h4>
       <TsDemo />
 
@@ -102,11 +95,6 @@ const ProDemo = () => {
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
       {toFixed(0.75 * 100, 2)}
-      <h3>Vite Env</h3>
-      <Space>Mode: {viteEnvMode}</Space>
-      <br />
-      <Space>Variable value: {viteEnvVariableValue}</Space>
-
       <div style={{ height: 400 }}>Height For Scroll</div>
     </FixTabPanel>
   )
