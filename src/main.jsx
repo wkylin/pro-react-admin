@@ -5,7 +5,7 @@ import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
 import i18n from './i18n/i18n'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement)
+const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
   <I18nextProvider i18n={i18n}>

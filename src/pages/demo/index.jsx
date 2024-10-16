@@ -1,10 +1,7 @@
 import React from 'react'
-import { reqFetch, useReqFetch } from '@src/service'
-import { Select, Table, Cascader, Space, Button } from 'antd'
+import { useReqFetch } from '@src/service'
+import { Select, Table, Cascader, Space } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { toFixed } from '@utils/aidFn'
-
-// import FileUpload from './fileUpload'
 import TsDemo from './tsDemo'
 
 const columns = [
@@ -59,23 +56,14 @@ const options = [
   },
 ]
 
-const viteEnvMode = import.meta?.env?.MODE ?? 'webapck env'
-const viteEnvVariableValue = import.meta?.env?.VITE_GREETINGS ?? 'webapck env'
+const viteEnvMode = import.meta.env.MODE ?? 'webapck env'
+const viteEnvVariableValue = import.meta.env.VITE_GREETINGS ?? 'webapck env'
 
 const ProDemo = () => {
   const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
     method: 'GET',
   })
 
-  const onFetch = () => {
-    reqFetch('/faker/shops', { method: 'GET' })
-      .then((response) => {
-        console.log('response==>>', response)
-      })
-      .catch((errors) => {
-        console.log('error', errors)
-      })
-  }
   return (
     <FixTabPanel>
       <h2>
@@ -83,11 +71,6 @@ const ProDemo = () => {
       </h2>
       <h4>Mock API 示例</h4>
       <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
-      <Button type="primary" onClick={onFetch} aria-hidden="true">
-        ErrorBoundary
-      </Button>
-      {/* <h4>File Upload</h4>
-      <FileUpload /> */}
 
       <h4>TS 支持</h4>
       <TsDemo />
@@ -101,8 +84,8 @@ const ProDemo = () => {
         <Select.Option value="lucy">Lucy</Select.Option>
         <Select.Option value="tom">Tom</Select.Option>
       </Select>
-      {toFixed(0.75 * 100, 2)}
       <h3>Vite Env</h3>
+      <Space> import.meta.env：{JSON.stringify(import.meta.env, null, 2)}</Space>
       <Space>Mode: {viteEnvMode}</Space>
       <br />
       <Space>Variable value: {viteEnvVariableValue}</Space>

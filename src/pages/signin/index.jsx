@@ -50,8 +50,8 @@ const SignIn = () => {
             name="basic"
             initialValues={{
               remember: true,
-              username: process.env.AUTH_USER,
-              password: process.env.AUTH_PASSWORD,
+              username: import.meta.env.VITE_AUTH_USER,
+              password: import.meta.env.VITE_AUTH_PASSWORD,
             }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}

@@ -10,7 +10,7 @@ import RehypeHighlight from 'rehype-highlight'
 import RehypeRaw from 'rehype-raw'
 import { useDebouncedCallback } from 'use-debounce'
 import LoadingIcon from '@assets/svg/three-dots.svg'
-import 'highlight.js/styles/github.css'
+// import 'highlight.js/styles/github.css'
 
 import styles from './index.module.less'
 

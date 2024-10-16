@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react'
 
 const PostMessage = () => {
-  const origin = process.env.IFRAME_ORIGIN
-  const childOrigin = `${process.env.IFRAME_ORIGIN}/pro-react-admin/#/my-iframe`
+  const origin = import.meta?.env?.VITE_IFRAME_ORIGIN
+  const childOrigin = `${import.meta?.env?.VITE_IFRAME_ORIGIN}/pro-react-admin/#/my-iframe`
   const ref = useRef()
 
   const onReceivedMessage = (event) => {
@@ -40,6 +40,7 @@ const PostMessage = () => {
         }}
         src={childOrigin}
         ref={ref}
+        title="iframe"
         width="800px"
         height="600px"
         // sandbox=""
