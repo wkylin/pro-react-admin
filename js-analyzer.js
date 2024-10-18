@@ -10,12 +10,12 @@ module.exports = {
     '@@/': '/',
     '~~/': '/',
     '@/': '/src/',
-    '~/': '/src/',
+    '~/': '/src/'
   },
   // Server and port related information
   server: {
     port: 8088,
     host: 'localhost',
-    openBrowser: true, // Automatically open in browser after startup
-  },
+    openBrowser: true // Automatically open in browser after startup
+  }
 }
