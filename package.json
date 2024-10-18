@@ -69,7 +69,8 @@
     "check:version": "node webpack/check-version.js",
     "clean:lock": "rm -rf package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:dist": "rm -rf ./dist",
-    "clean:modules": "rm -rf node_modules"
+    "clean:modules": "rm -rf node_modules",
+    "js-analyzer": "js-analyzer --root ./"
   },
   "author": "wkylin",
   "contributors": [
@@ -96,6 +97,7 @@
     "@babel/runtime": "^7.25.7",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
+    "@js-analyzer/server": "^2.5.0",
     "@koa/cors": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@sentry/webpack-plugin": "^2.22.5",
@@ -145,7 +147,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-promise": "^7.1.0",
     "eslint-plugin-react": "^7.37.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-unicorn": "^56.0.0",
     "eslint-webpack-plugin": "^4.2.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
@@ -209,8 +211,10 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.21.1",
+    "@ant-design/icons": "^5.5.1",
     "@loadable/component": "^5.16.4",
     "@pansy/react-amap": "^2.21.0",
+    "@react-spring/core": "^9.7.5",
     "@react-spring/web": "^9.7.5",
     "@react-three/drei": "^9.114.3",
     "@react-three/fiber": "^8.17.10",
@@ -260,6 +264,7 @@
     "query-string": "^9.1.1",
     "react": "^18.3.1",
     "react-barcode": "^1.5.3",
+    "react-canvas-confetti": "^2.0.7",
     "react-css-theme-switcher": "^0.3.0",
     "react-dom": "^18.3.1",
     "react-error-boundary": "^4.0.13",
