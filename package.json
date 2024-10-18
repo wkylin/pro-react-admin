@@ -70,7 +70,7 @@
     "clean:lock": "rm -rf package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:dist": "rm -rf ./dist",
     "clean:modules": "rm -rf node_modules",
-    "js-analyzer": "js-analyzer --root ./"
+    "js-analyzer": "js-analyzer --config ./js-analyzer.js"
   },
   "author": "wkylin",
   "contributors": [
