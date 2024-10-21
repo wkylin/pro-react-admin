@@ -21,7 +21,7 @@ const AlternatingText = ({ alternateText = [] }) => {
   }, [])
 
   return (
-    <span className={styles.alternating} id="alternating-text">
+    <span className={styles.alternating} id='alternating-text'>
       {alternateText[0] || 'Text goes here'}
     </span>
   )
