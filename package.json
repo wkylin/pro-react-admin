@@ -69,8 +69,7 @@
     "check:version": "node webpack/check-version.js",
     "clean:lock": "rm -rf package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:dist": "rm -rf ./dist",
-    "clean:modules": "rm -rf node_modules",
-    "js-analyzer": "js-analyzer --config ./js-analyzer.js"
+    "clean:modules": "rm -rf node_modules"
   },
   "author": "wkylin",
   "contributors": [
@@ -97,7 +96,6 @@
     "@babel/runtime": "^7.25.7",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
-    "@js-analyzer/server": "^2.5.0",
     "@koa/cors": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@sentry/webpack-plugin": "^2.22.5",

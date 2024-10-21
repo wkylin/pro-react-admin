@@ -3,6 +3,7 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
 import LinearWrap from '@stateless/LinearWrap'
+import AlternatingText from '@stateless/AlternatingText'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 
@@ -147,6 +148,9 @@ const Home = () => {
       </h2>
       <h2>React version: {version}</h2>
 
+      <section>
+        I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
