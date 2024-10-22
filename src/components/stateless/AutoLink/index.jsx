@@ -10,7 +10,7 @@ const AutoLink = ({ text }) => {
         if (match) {
           const url = match[0]
           return (
-            <a target="_blank" href={url.startsWith('http') ? url : `http://${url}`}>
+            <a target='_blank' href={url.startsWith('http') ? url : `http://${url}`} rel='noreferrer'>
               {url}
             </a>
           )

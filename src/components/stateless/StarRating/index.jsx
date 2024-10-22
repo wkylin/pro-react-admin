@@ -3,7 +3,7 @@ import styles from './index.module.less'
 
 const Star = ({ marked, starId }) => {
   return (
-    <span data-star-id={starId} className={styles.star} role="button">
+    <span data-star-id={starId} className={styles.star} role='button'>
       {marked ? '\u2605' : '\u2606'}
     </span>
   )
@@ -15,8 +15,9 @@ const StarRating = ({ value }) => {
 
   const hoverOver = (event) => {
     let val = 0
-    if (event && event.target && event.target.getAttribute('data-star-id'))
+    if (event && event.target && event.target.getAttribute('data-star-id')) {
       val = event.target.getAttribute('data-star-id')
+    }
     setSelection(val)
   }
   return (
