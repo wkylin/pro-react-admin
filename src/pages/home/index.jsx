@@ -12,8 +12,12 @@ import StarRating from '@stateless/StarRating'
 import IsometricCard from '@stateless/IsometricCard'
 import AvatarCard from '@stateless/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
+import GradientTracking from '@stateless/GradientTracking'
+import ShiftingCard from '@stateless/ShiftingCard'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
+
+import styles from './index.module.less'
 
 const Home = () => {
   const [aiText, setAiText] = useState('')
@@ -149,10 +153,11 @@ const Home = () => {
 
   return (
     <FixTabPanel>
-      <h2>
+      <h2 style={{ marginBottom: 15 }}>
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
       </h2>
-      <h2>React version: {version}</h2>
+
+      <h2 className={styles.avatar}>React version: {version}</h2>
 
       <section>
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
@@ -171,6 +176,14 @@ const Home = () => {
       </section>
       <StarRating value={2} />
       <LineBordered text="A line bordered text." />
+
+      <section>
+        <GradientTracking />
+      </section>
+
+      <section>
+        <ShiftingCard />
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

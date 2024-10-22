@@ -1,0 +1,31 @@
+/* Perspective card */
+.perspective-card {
+  transform: perspective(1500px) rotateY(15deg);
+  transition: transform 1s ease 0s;
+}
+
+.perspective-card:hover {
+  transform: perspective(3000px) rotateY(5deg);
+}
+
+/* Base card styles */
+.shiftingCard {
+  position: relative;
+  display: inline-block;
+  box-sizing: border-box;
+  height: 360px;
+  width: 240px;
+  padding: 8px;
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+  background-size: cover;
+  transform: rotateX(calc(10deg * var(--dx, 0))) rotateY(calc(10deg * var(--dy, 0)));
+  transition: transform 0.2s ease-out;
+  background-image: url('https://picsum.photos/id/1018/480/720');
+}
+
+.shiftingCard h3 {
+  width: 100%;
+  text-align: center;
+  margin-top: 30%;
+}

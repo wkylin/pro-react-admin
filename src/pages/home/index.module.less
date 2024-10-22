@@ -1,0 +1,25 @@
+.avatar {
+  animation: levitate 10s ease 1s infinite reverse;
+}
+
+@keyframes levitate {
+  0% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-10px);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+
+  70% {
+    transform: translateY(-15px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
