@@ -177,13 +177,13 @@ const Home = () => {
       <StarRating value={2} />
       <LineBordered text="A line bordered text." />
 
-      {/* <section>
-        <GradientTracking />
-      </section> */}
-
       <section>
-        <ShiftingCard />
+        <GradientTracking />
       </section>
+
+      {/* <section>
+        <ShiftingCard />
+      </section> */}
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
