@@ -4,7 +4,7 @@ const ShiftingCard = () => {
   const ref = useRef(null)
   useLayoutEffect(() => {
     const card = ref.current
-    const { x, y, width, height } = card.getBoundingClientRect()
+    const { x, y, width, height } = card && card.getBoundingClientRect()
     const cx = x + width / 2
     const cy = y + height / 2
     const handleMove = (e) => {

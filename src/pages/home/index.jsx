@@ -13,7 +13,7 @@ import IsometricCard from '@stateless/IsometricCard'
 import AvatarCard from '@stateless/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
-import ShiftingCard from '@stateless/ShiftingCard'
+// import ShiftingCard from '@stateless/ShiftingCard'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -177,9 +177,9 @@ const Home = () => {
       <StarRating value={2} />
       <LineBordered text="A line bordered text." />
 
-      <section>
+      {/* <section>
         <GradientTracking />
-      </section>
+      </section> */}
 
       <section>
         <ShiftingCard />
