@@ -1,4 +1,6 @@
 import React, { version, useState, useRef } from 'react'
+import { Input, Flex, Button } from 'antd'
+import { SendOutlined } from '@ant-design/icons'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -7,8 +9,9 @@ import AlternatingText from '@stateless/AlternatingText'
 import AutoLink from '@stateless/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
 import StarRating from '@stateless/StarRating'
-import { Input, Flex, Button } from 'antd'
-import { SendOutlined } from '@ant-design/icons'
+import IsometricCard from '@stateless/IsometricCard'
+import AvatarCard from '@stateless/AvatarCard'
+import LineBordered from '@stateless/LineBordered'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -160,7 +163,14 @@ const Home = () => {
       <section>
         <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
       </section>
+      <section>
+        <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+      </section>
+      <section>
+        <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
+      </section>
       <StarRating value={2} />
+      <LineBordered text="A line bordered text." />
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

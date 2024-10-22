@@ -39,6 +39,18 @@
   box-sizing: border-box;
   max-width: 100%;
 }
+
+.hoverRotate img::before {
+  content: 'Sorry, this image is unavailable.';
+  display: block;
+  margin-bottom: 8px;
+}
+
+.hoverRotate img::after {
+  content: '(url: ' attr(src) ')';
+  display: block;
+  font-size: 12px;
+}
 .hoverRotate:hover img {
   transform: scale(1.3) rotate(5deg);
 }

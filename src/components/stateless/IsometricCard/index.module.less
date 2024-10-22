@@ -1,0 +1,38 @@
+.isometricCard {
+  margin: 0 100px;
+  transform: rotateX(51deg) rotateZ(43deg);
+  transform-style: preserve-3d;
+  will-change: transform;
+  width: 240px;
+  height: 320px;
+  background: #070221;
+  border-radius: 2rem;
+  box-shadow:
+    1px 1px 0 1px #f9f9fb,
+    -1px 0 28px 0 rgba(34, 33, 81, 0.01),
+    28px 28px 28px 0 rgba(34, 33, 81, 0.25);
+  transition:
+    0.4s ease-in-out transform,
+    0.3s ease-in-out box-shadow;
+  color: #fff;
+}
+
+.isometricCard:hover {
+  transform: translate3d(0px, -16px, 0px) rotateX(51deg) rotateZ(43deg);
+  box-shadow:
+    1px 1px 0 1px #f9f9fb,
+    -1px 0 28px 0 rgba(34, 33, 81, 0.01),
+    54px 54px 28px -10px rgba(34, 33, 81, 0.15);
+}
+
+.isometricCard {
+  display: flex;
+  align-items: center;
+}
+
+.isometricCard p {
+  margin: 0 36px;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.4;
+}
