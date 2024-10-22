@@ -70,8 +70,8 @@ const Home = () => {
       [
         {
           content: text,
-          role: 'user',
-        },
+          role: 'user'
+        }
       ],
       key,
       signal
@@ -163,19 +163,19 @@ const Home = () => {
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
       </section>
       <section>
-        <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
+        <AutoLink text='foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin' />
       </section>
       <section>
-        <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
+        <LazyLoadImage src='https://picsum.photos/seed/picsum/300/160' alt='Strawberries' />
       </section>
       <section>
-        <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+        <AvatarCard avatar='https://picsum.photos/seed/picsum/300/160' text="Hi, I'm a developer." />
       </section>
       <section>
-        <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
+        <IsometricCard text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?' />
       </section>
       <StarRating value={2} />
-      <LineBordered text="A line bordered text." />
+      <LineBordered text='A line bordered text.' />
 
       <section>
         <GradientTracking />
@@ -185,13 +185,13 @@ const Home = () => {
         <ShiftingCard />
       </section> */}
       <section style={{ width: 600, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
+        <Input defaultValue={apiKey} placeholder='api key' onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Flex align='center'>
           <LinearWrap>
             <Input.TextArea
               ref={textareaRef}
               defaultValue={chatText}
-              placeholder="来，说点什么呗...Meta + Enter发送"
+              placeholder='来，说点什么呗...Meta + Enter发送'
               onChange={changeChatText}
               onKeyDown={onInputKeyDown}
               autoSize
@@ -201,13 +201,13 @@ const Home = () => {
           <Button
             style={{ margin: '0 10px' }}
             icon={<SendOutlined rotate={-60} />}
-            type="primary"
+            type='primary'
             disabled={isStream}
             onClick={onSubmit}
           >
             发送
           </Button>
-          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+          <Button icon={<SendOutlined rotate={-60} />} type='primary' disabled={!isStream} onClick={onStop}>
             停止
           </Button>
         </Flex>
