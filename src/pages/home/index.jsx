@@ -4,6 +4,9 @@ import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
 import LinearWrap from '@stateless/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
+import AutoLink from '@stateless/AutoLink'
+import LazyLoadImage from '@stateless/LazyLoadImage'
+import StarRating from '@stateless/StarRating'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 
@@ -151,6 +154,13 @@ const Home = () => {
       <section>
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
       </section>
+      <section>
+        <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
+      </section>
+      <section>
+        <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
+      </section>
+      <StarRating value={2} />
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
