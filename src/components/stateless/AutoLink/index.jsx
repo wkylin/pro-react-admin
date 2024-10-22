@@ -15,8 +15,9 @@ const AutoLink = ({ text }) => {
             <a
               key={index}
               className={styles.squiggle}
-              target="_blank"
+              target='_blank'
               href={url.startsWith('http') ? url : `http://${url}`}
+              rel='noreferrer'
             >
               {url}
             </a>
