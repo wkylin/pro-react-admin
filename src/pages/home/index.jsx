@@ -13,7 +13,7 @@ import IsometricCard from '@stateless/IsometricCard'
 import AvatarCard from '@stateless/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
-// import ShiftingCard from '@stateless/ShiftingCard'
+import ShiftingCard from '@stateless/ShiftingCard'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -181,9 +181,9 @@ const Home = () => {
         <GradientTracking />
       </section>
 
-      {/* <section>
+      <section>
         <ShiftingCard />
-      </section> */}
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
