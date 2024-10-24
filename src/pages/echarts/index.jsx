@@ -3,7 +3,7 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import ReactEcharts from 'echarts-for-react'
 
 const Echarts = () => {
-  option = {
+  const option = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
