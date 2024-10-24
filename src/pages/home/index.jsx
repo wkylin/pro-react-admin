@@ -1,4 +1,4 @@
-import React, { version, useState, useRef } from 'react'
+﻿import React, { version, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -79,12 +79,7 @@ const Home = () => {
       .then((response) => {
         const contentType = response.headers.get('content-type')
         if (!response.ok || !contentType?.startsWith('text/event-stream') || response.status !== 200) {
-          if (contentType?.startsWith('text/html')) {
-            const textPlain = response.clone().text()
-            textPlain.then((plainText) => {
-              setAiText(plainText)
-            })
-          } else if (contentType?.startsWith('text/plain')) {
+          if (contentType?.startsWith('text/html') || contentType?.startsWith('text/plain')) {
             const textPlain = response.clone().text()
             textPlain.then((plainText) => {
               setAiText(plainText)

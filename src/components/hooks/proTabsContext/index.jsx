@@ -24,7 +24,7 @@ const initialPanes = [
 const ProTabContext = createContext(defaultValue)
 const useProTabContext = () => {
   const context = useContext(ProTabContext)
-  if (context === undefined) {
+  if (context == undefined) {
     throw new Error('useValue must be used within a ValueProvider')
   }
   return context
