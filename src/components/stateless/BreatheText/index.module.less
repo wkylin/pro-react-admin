@@ -84,7 +84,7 @@
 
 @keyframes trans {
   0% {
-    transform: rotate(1turn);
+    transform: rotate(0deg);
   }
 
   50% {
@@ -93,5 +93,43 @@
 
   to {
     transform: rotate(0deg);
+  }
+}
+
+.play-button {
+  z-index: 1;
+  width: 100px;
+  height: 100px;
+  background-color: #2761ff;
+  border-radius: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  box-shadow:
+    1px 1px 94px #000,
+    1px 1px 164px rgba(39, 97, 255, 0.9);
+  animation: zoom-in-zoom-out 2s ease infinite;
+}
+
+.div-block {
+  width: 86px;
+  height: 86px;
+  background-color: rgba(39, 97, 255, 0.1);
+  border-radius: 100%;
+  position: absolute;
+}
+
+@keyframes zoom-in-zoom-out {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  to {
+    transform: scale(1);
   }
 }
