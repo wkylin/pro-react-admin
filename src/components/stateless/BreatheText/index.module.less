@@ -4,6 +4,7 @@
   background-color: #27c2a3;
   border-radius: 50%;
   text-align: center;
+  margin-bottom: 80px;
 }
 
 .breatheItem::before {
@@ -32,5 +33,65 @@
   78%,
   to {
     opacity: 0;
+  }
+}
+
+.loopRotate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  .outside {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 120px;
+    border: 1px dashed #44ec79;
+    border-radius: 50%;
+    position: relative;
+    .inner {
+      width: 100px;
+      height: 100px;
+      border: 3px dashed #44ec79;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 100px;
+      animation: loop 10s linear infinite;
+    }
+    .text {
+      position: absolute;
+      padding: 0;
+      color: #44ec79;
+      font-size: 20px;
+      font-weight: bolder;
+    }
+  }
+}
+
+@keyframes loop {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes trans {
+  0% {
+    transform: rotate(1turn);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  to {
+    transform: rotate(0deg);
   }
 }

@@ -1,6 +1,7 @@
 import React, { version, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
+import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -172,7 +173,9 @@ const Home = () => {
       </section>
       <StarRating value={2} />
       <LineBordered text="A line bordered text." />
-
+      <section style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+        <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
+      </section>
       <section>
         <GradientTracking />
       </section>
