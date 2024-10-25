@@ -100,5 +100,9 @@
   },
   "i18n-ally.localesPaths": [
     "public/locales"
-  ]
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "pro-react-admin"
+  }
 }

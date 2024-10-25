@@ -1,4 +1,4 @@
-﻿import React, { version, useState, useRef } from 'react'
+import React, { version, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -14,6 +14,7 @@ import AvatarCard from '@stateless/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
 import ShiftingCard from '@stateless/ShiftingCard'
+import BreatheText from '@stateless/BreatheText'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -176,9 +177,13 @@ const Home = () => {
         <GradientTracking />
       </section>
 
+      <section style={{ margin: 40 }}>
+        <BreatheText />
+      </section>
       <section>
         <ShiftingCard />
       </section>
+
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
