@@ -2,6 +2,7 @@ import React, { version, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
+import { PinInput } from 'react-input-pin-code'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -47,6 +48,8 @@ const Home = () => {
       event.preventDefault()
     }
   }
+
+  const [pinValues, setPinValues] = useState(['', '', '', '', '', '', ''])
 
   const onSubmit = () => {
     if (chatText.trim() === '') {
@@ -183,10 +186,12 @@ const Home = () => {
       <section style={{ margin: 40 }}>
         <BreatheText />
       </section>
-      <section>
+      <section style={{ marginBottom: 40 }}>
         <ShiftingCard />
       </section>
-
+      <section>
+        <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

@@ -103,3 +103,14 @@ export const toThousands = (num) => {
   }
   return result
 }
+
+// 获取表格序号
+export const getTableNumber = (page, pageSize, index) => {
+  if (pageSize === undefined && index === undefined) {
+    return Number(page) + 1
+  }
+  if (index !== undefined) {
+    return (Number(page) - 1) * Number(pageSize) + index + 1
+  }
+  return 0
+}
