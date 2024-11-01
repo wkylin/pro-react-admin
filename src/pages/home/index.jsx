@@ -17,6 +17,8 @@ import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
 import ShiftingCard from '@stateless/ShiftingCard'
 import BreatheText from '@stateless/BreatheText'
+import ScrollAnimation from '@stateless/ScrollAnimation'
+import AnimateOnScreen from '@stateless/AnimateOnScreen'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -162,11 +164,8 @@ const Home = () => {
       <section>
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
       </section>
-      <section>
+      <section style={{ marginBottom: 40 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
-      </section>
-      <section>
-        <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
       </section>
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
@@ -176,8 +175,13 @@ const Home = () => {
       </section>
       <StarRating value={2} />
       <LineBordered text="A line bordered text." />
-      <section style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
+      <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
+      </section>
+      <section style={{ marginBottom: 40 }}>
+        <ScrollAnimation>
+          <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
+        </ScrollAnimation>
       </section>
       <section>
         <GradientTracking />
@@ -186,12 +190,29 @@ const Home = () => {
       <section style={{ margin: 40 }}>
         <BreatheText />
       </section>
+
       <section style={{ marginBottom: 40 }}>
         <ShiftingCard />
       </section>
-      <section>
+      <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
       </section>
+      <section style={{ marginBottom: 40 }}>
+        <AnimateOnScreen.FadeIn>
+          <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+        </AnimateOnScreen.FadeIn>
+      </section>
+      <section style={{ marginBottom: 40 }}>
+        <AnimateOnScreen.FadeUp>
+          <img src="https://picsum.photos/360/200.jpg" alt="" />
+        </AnimateOnScreen.FadeUp>
+      </section>
+      <section style={{ marginBottom: 40, width: 360, height: 200 }}>
+        <AnimateOnScreen.ScaleIn>
+          <img src="https://picsum.photos/360/200/?blur=2" alt="" />
+        </AnimateOnScreen.ScaleIn>
+      </section>
+
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

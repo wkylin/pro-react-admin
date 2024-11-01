@@ -161,7 +161,7 @@ export const groupBy = (arr, groupFn) =>
 export const areEqual = (arr1, arr2) => JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
 export const areEqual2 = (arr1, arr2) => arr1.sort().join(',') === arr2.sort().join(',')
 
-export const jsonToMap = (json = new Map(Object.entries(JSON.parse(json))))
+export const jsonToMap = (json) => new Map(Object.entries(JSON.parse(json)))
 
 // 蛇形转换为驼峰
 export const snakeToCamelCase = (snake) => snake.toLowerCase().replace(/(_\w)/g, (word) => word.toUpperCase().substr(1))
