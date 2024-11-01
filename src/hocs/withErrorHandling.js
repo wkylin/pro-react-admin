@@ -13,3 +13,11 @@ export default withErrorHandling
 
 // const ListWithLoading = withLoading(List);
 // const ListWithErrorHandling = withErrorHandling(ListWithLoading);
+// function withLogging(WrappedComponent) {
+//   return function Wrapped(props) {
+//     console.log('Component Rendered');
+//     return <WrappedComponent {...props} />;
+//   };
+// }
+
+// const MyComponentWithLogging = withLogging(MyComponent);

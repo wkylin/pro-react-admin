@@ -114,3 +114,56 @@ export const getTableNumber = (page, pageSize, index) => {
   }
   return 0
 }
+
+// 随机排列数组
+export const shuffleArray = (arr) =>
+  [...Array(arr.length)]
+    .map((_, i) => Math.floor(Math.random() * (i + 1)))
+    .reduce((shuffled, r, i) => shuffled.map((num, j) => (j === i ? shuffled[r] : j === r ? shuffled[i] : num)), arr)
+
+// 根据特定对象属性对数组进行分组
+export const groupBy = (arr, groupFn) =>
+  arr.reduce(
+    (grouped, obj) => ({
+      ...grouped,
+      [groupFn(obj)]: [...(grouped[groupFn(obj)] || []), obj],
+    }),
+    {}
+  )
+
+// const fruits = [
+//   {
+//     name: 'apple', color: 'yellow'
+//   },
+//   {
+//     name: 'banana', color: 'red'
+//   },
+//   {
+//     name: 'pine', color: 'yellow'
+//   },
+//   {
+//     name: 'berry', color: 'red'
+//   },
+// ]
+
+// const groupedByName = groupBy(fruits, (fruit) => fruit.color)
+
+// const people = [
+//   { name: 'Alice', role: 'admin' },
+//   { name: 'Bob', role: 'user' },
+//   { name: 'Charlie', role: 'admin' },
+// ];
+// const grouped = people.reduce((acc, person) => {
+//   (acc[person.role] = acc[person.role] || []).push(person);
+//   return acc;
+// }, {});
+
+export const areEqual = (arr1, arr2) => JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
+export const areEqual2 = (arr1, arr2) => arr1.sort().join(',') === arr2.sort().join(',')
+
+export const jsonToMap = (json = new Map(Object.entries(JSON.parse(json))))
+
+// 蛇形转换为驼峰
+export const snakeToCamelCase = (snake) => snake.toLowerCase().replace(/(_\w)/g, (word) => word.toUpperCase().substr(1))
+
+export const mathRound = (num) => Math.round(num * 100) / 100
