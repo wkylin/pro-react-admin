@@ -26,15 +26,16 @@ const devWebpackConfig = merge(common, {
       directory: path.join(__dirname, '../public'),
     },
     compress: true,
-    // open: true,
+    open: true,
     hot: true,
     proxy: devProxy,
   },
-  watchOptions: {
-    aggregateTimeout: 500,
-    poll: 1000,
-    ignored: /node_modules/,
-  },
+  // watch: true,
+  // watchOptions: {
+  //   aggregateTimeout: 500,
+  //   poll: 1000,
+  //   ignored: /node_modules/,
+  // },
   module: {
     rules: [
       {

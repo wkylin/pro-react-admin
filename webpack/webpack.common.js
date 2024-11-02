@@ -70,7 +70,7 @@ const config = {
       path: path.resolve(__dirname, '..', dotEnv),
     }),
     new HtmlWebpackPlugin({
-      title: isDev ? 'Pro React Dev' : 'Pro React',
+      title: isDev ? 'Pro React Dev' : 'Pro React Admin',
       template: `${paths.public}/index.html`,
       favicon: `${paths.public}/favicon.ico`,
       filename: 'index.html',
