@@ -23,3 +23,45 @@
     transform: translateY(0);
   }
 }
+
+.maskBox {
+  width: 100px;
+  height: 40px;
+  background: darkcyan;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-size: 18px;
+  position: relative;
+  mask: radial-gradient(8px at 10px 10px, transparent 98%, black) -10px -10px;
+}
+.watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.blend-me {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  mix-blend-mode: overlay;
+  transition: 0.3s cubic-bezier(0.25, 0.25, 0.33, 1.33);
+  animation: moveMe 8s ease-out infinite alternate;
+}
+
+@keyframes moveMe {
+  to {
+    transform: translateY(50px);
+  }
+}

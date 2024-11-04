@@ -211,11 +211,18 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
         <AnimateOnScreen.ScaleIn>
-          <img src="https://picsum.photos/360/200/?blur=2" alt="" />
+          <>
+            <img src="https://picsum.photos/360/200/?blur=2" alt="" />
+            <section className={styles['blend-me']}>Mix Blend Mode</section>
+          </>
         </AnimateOnScreen.ScaleIn>
       </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateRipple>Click Me</AnimateRipple>
+      </section>
+      <section style={{ marginBottom: 40 }} className={styles.maskBox}>
+        <section className={styles.watermark}>water mark</section>
+        mask
       </section>
 
       <section style={{ width: 600, margin: '30px 0' }}>
