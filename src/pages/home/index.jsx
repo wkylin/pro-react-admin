@@ -20,6 +20,7 @@ import BreatheText from '@stateless/BreatheText'
 import ScrollAnimation from '@stateless/ScrollAnimation'
 import AnimateOnScreen from '@stateless/AnimateOnScreen'
 import AnimateRipple from '@stateless/AnimateRipple'
+import AnimateWave from '@stateless/AnimateWave'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -250,6 +251,12 @@ const Home = () => {
         {isStream && <div>正在输入...</div>}
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
+      </section>
+
+      <section style={{ position: 'relative', height: 300 }}>
+        <AnimateWave>
+          <p> wave </p>
+        </AnimateWave>
       </section>
     </FixTabPanel>
   )
