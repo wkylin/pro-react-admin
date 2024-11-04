@@ -19,6 +19,7 @@ import ShiftingCard from '@stateless/ShiftingCard'
 import BreatheText from '@stateless/BreatheText'
 import ScrollAnimation from '@stateless/ScrollAnimation'
 import AnimateOnScreen from '@stateless/AnimateOnScreen'
+import AnimateRipple from '@stateless/AnimateRipple'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -211,6 +212,9 @@ const Home = () => {
         <AnimateOnScreen.ScaleIn>
           <img src="https://picsum.photos/360/200/?blur=2" alt="" />
         </AnimateOnScreen.ScaleIn>
+      </section>
+      <section style={{ marginBottom: 40 }}>
+        <AnimateRipple>Click Me</AnimateRipple>
       </section>
 
       <section style={{ width: 600, margin: '30px 0' }}>
