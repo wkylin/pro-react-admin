@@ -234,6 +234,13 @@ const Home = () => {
         </button>
       </section>
 
+      <section style={{ position: 'relative', margin: '80px 0 160px 50px' }}>
+        <div className={styles['circle-1']}></div>
+        <div className={styles['circle-2']}></div>
+        <div className={styles['circle-3']}></div>
+        <div className={styles['circle-4']}></div>
+      </section>
+
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

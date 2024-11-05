@@ -85,3 +85,84 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
 }
+
+.circle-1 {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  top: calc(-10px);
+  left: calc(-10px);
+  animation-play-state: running;
+  animation-delay: 1s;
+  border: 1.5px solid rgba(121, 40, 202, 0.4);
+  background: linear-gradient(-180deg, rgba(121, 40, 202, 0.4) 40%, #000000 100%);
+  animation: expand 6s ease-out infinite both;
+}
+
+.circle-2 {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  top: calc(-20px);
+  left: calc(-20px);
+  animation-play-state: running;
+  animation-delay: 0.5s;
+  border: 1px solid rgba(121, 40, 202, 0.4);
+  background: linear-gradient(-180deg, rgba(121, 40, 202, 0.30000000000000004) 20%, #000000 100%);
+  animation: expand-opacity 6s linear infinite both;
+}
+.circle-3 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  top: calc(-30px);
+  left: calc(-30px);
+  animation-play-state: running;
+  animation-delay: 1s;
+  border: 1px solid rgba(121, 40, 202, 0.3);
+  background: linear-gradient(-180deg, rgba(121, 40, 202, 0.2) 20%, #000000 100%);
+  animation: expand-opacity 6s linear infinite both;
+}
+.circle-4 {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  top: calc(-40px);
+  left: calc(-40px);
+  animation-play-state: running;
+  animation-delay: 1.5s;
+  border: 1px solid rgba(121, 40, 202, 0.2);
+  background: linear-gradient(-180deg, rgba(121, 40, 202, 0.09999999999999998) 20%, #000000 100%);
+  animation: expand-opacity 6s linear infinite both;
+}
+
+@keyframes expand {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes expand-opacity {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.295);
+  }
+}
