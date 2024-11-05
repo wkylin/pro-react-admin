@@ -21,6 +21,7 @@ import ScrollAnimation from '@stateless/ScrollAnimation'
 import AnimateOnScreen from '@stateless/AnimateOnScreen'
 import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
+import MeshGradientBackground from '@stateless/MeshGradientBackground'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -217,12 +218,20 @@ const Home = () => {
           </>
         </AnimateOnScreen.ScaleIn>
       </section>
+      <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
+        <MeshGradientBackground />
+      </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateRipple>Click Me</AnimateRipple>
       </section>
       <section style={{ marginBottom: 40 }} className={styles.maskBox}>
         <section className={styles.watermark}>water mark</section>
         mask
+      </section>
+      <section style={{ marginBottom: 40 }}>
+        <button className={styles['button']}>
+          <span className={styles['button-label']}>Click Me</span>
+        </button>
       </section>
 
       <section style={{ width: 600, margin: '30px 0' }}>
@@ -236,7 +245,7 @@ const Home = () => {
               onChange={changeChatText}
               onKeyDown={onInputKeyDown}
               autoSize
-              style={{ width: 300, height: 30 }}
+              style={{ width: 300, height: 30, caretColor: '#ff0000' }}
             />
           </LinearWrap>
           <Button
