@@ -8,8 +8,8 @@
   font-weight: medium;
   color: #fff;
   box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.1),
-    0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    0 1px 3px 0 rgb(0 0 0 / 10%),
+    0 1px 2px 0 rgb(0 0 0 / 6%);
   overflow: hidden;
   position: relative;
   padding: 4px 16px;
@@ -34,7 +34,7 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   animation: ripple 0.4s ease-in;
 }
 
@@ -52,9 +52,11 @@
   0% {
     opacity: 0;
   }
+
   25% {
     opacity: 1;
   }
+
   100% {
     width: 200%;
     padding-bottom: 200%;

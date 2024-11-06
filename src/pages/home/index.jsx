@@ -6,7 +6,7 @@ import { PinInput } from 'react-input-pin-code'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
-import LinearWrap from '@stateless/LinearWrap'
+// import LinearWrap from '@stateless/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
 import AutoLink from '@stateless/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
@@ -244,17 +244,17 @@ const Home = () => {
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
-          <LinearWrap>
-            <Input.TextArea
-              ref={textareaRef}
-              defaultValue={chatText}
-              placeholder="来，说点什么呗...Meta + Enter发送"
-              onChange={changeChatText}
-              onKeyDown={onInputKeyDown}
-              autoSize
-              style={{ width: 300, height: 30, caretColor: '#ff0000' }}
-            />
-          </LinearWrap>
+          {/* <LinearWrap> */}
+          <Input.TextArea
+            ref={textareaRef}
+            defaultValue={chatText}
+            placeholder="来，说点什么呗...Meta + Enter发送"
+            onChange={changeChatText}
+            onKeyDown={onInputKeyDown}
+            autoSize
+            style={{ width: 300, height: 30, caretColor: '#ff0000' }}
+          />
+          {/* </LinearWrap> */}
           <Button
             style={{ margin: '0 10px' }}
             icon={<SendOutlined rotate={-60} />}

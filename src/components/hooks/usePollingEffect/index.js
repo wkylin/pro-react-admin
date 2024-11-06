@@ -13,7 +13,6 @@ const usePollingEffect = (asyncCallback, dependencies = [], options = { interval
       }
     })()
     return () => clearTimeout(timeoutIdRef.current)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...dependencies, asyncCallback, options.interval])
 }
 

@@ -116,7 +116,7 @@ p:first-child::first-letter {
 
 .container {
   position: relative;
-  background: #ffffff;
+  background: #fff;
   padding: 15px;
   border: 1px solid #ccc;
   margin-top: 20px;
@@ -144,7 +144,7 @@ p:first-child::first-letter {
 
 .container.top::after {
   left: 20px;
-  border-bottom-color: #ffffff;
+  border-bottom-color: #fff;
 }
 
 .container.bottom::before,
@@ -156,7 +156,7 @@ p:first-child::first-letter {
 
 .container.bottom::after {
   right: 20px;
-  border-top-color: #ffffff;
+  border-top-color: #fff;
 }
 
 .no-scrollbars {
@@ -169,17 +169,17 @@ p:first-child::first-letter {
 }
 
 .engraved-text {
-  background-color: #666666;
-  -webkit-background-clip: text;
+  background-color: #666;
+  background-clip: text;
   color: transparent;
-  text-shadow: 3px 5px 1px rgba(245, 245, 245, 0.5);
+  text-shadow: 3px 5px 1px rgb(245 245 245 / 50%);
 }
 
 .embossed-text {
   color: #f0f0f0;
-  background-color: #666666;
+  background-color: #666;
   text-shadow: 1px 4px 4px #555;
-  -webkit-background-clip: text;
+  background-clip: text;
 }
 
 :root {

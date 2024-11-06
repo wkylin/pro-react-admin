@@ -2,15 +2,17 @@
   font-style: normal;
   font-weight: bold;
   font-size: 60px;
-  margin: 0px;
+  margin: 0;
   color: white;
-  background: linear-gradient(rgb(115, 0, 64) 0%, rgb(48, 28, 190) 100%) text;
+  background: linear-gradient(rgb(115 0 64) 0%, rgb(48 28 190) 100%) text;
   -webkit-text-fill-color: transparent;
 }
+
 .hIBkFg span {
-  background: linear-gradient(rgb(255, 215, 255) 0%, rgb(255, 182, 255) 100%) text;
+  background: linear-gradient(rgb(255 215 255) 0%, rgb(255 182 255) 100%) text;
   -webkit-text-fill-color: transparent;
 }
+
 .kqOLaE {
   display: inline-flex;
   flex-direction: row;
@@ -19,7 +21,7 @@
 }
 
 .kqOLaE span {
-  animation-name: bzAnHH;
+  animation-name: bz-an;
   animation-duration: 6s;
   animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
   animation-fill-mode: forwards;
@@ -29,12 +31,15 @@
 .kqOLaE span:nth-child(1) {
   animation-delay: 0.1s;
 }
+
 .kqOLaE span:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .kqOLaE span:nth-child(3) {
   animation-delay: 0.3s;
 }
+
 .kqOLaE span:nth-child(4) {
   animation-delay: 0.4s;
 }
@@ -43,11 +48,11 @@
   animation-delay: 0.5s;
 }
 
-@keyframes bzAnHH {
+@keyframes bz-an {
   50% {
     opacity: 1;
-    transform: scale(1) translateY(0px) skewX(0deg) skewY(0deg) rotateZ(0deg);
-    filter: blur(0px);
+    transform: scale(1) translateY(0) skewX(0deg) skewY(0deg) rotateZ(0deg);
+    filter: blur(0);
   }
 
   60% {
@@ -55,14 +60,16 @@
     transform: scale(2) translateX(100px) skewX(10deg) skewY(10deg) rotateZ(30deg);
     filter: blur(10px);
   }
+
   70% {
     opacity: 0;
     transform: scale(2) translateY(-100px) skewX(10deg) skewY(10deg) rotateZ(30deg);
     filter: blur(10px);
   }
+
   80% {
     opacity: 1;
-    transform: scale(1) translateY(0px) skewX(0deg) skewY(0deg) rotateZ(0deg);
-    filter: blur(0px);
+    transform: scale(1) translateY(0) skewX(0deg) skewY(0deg) rotateZ(0deg);
+    filter: blur(0);
   }
 }

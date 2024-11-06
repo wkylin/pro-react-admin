@@ -27,7 +27,7 @@
     /**
      * default scope for all components in workspace.
      **/
-    "defaultScope": "wbit.wui"
+    "defaultScope": "wbit.wui",
   },
   /**
    * main configuration for component dependency resolution.
@@ -39,8 +39,8 @@
     "packageManager": "teambit.dependencies/pnpm",
     "policy": {
       "dependencies": {},
-      "peerDependencies": {}
-    }
+      "peerDependencies": {},
+    },
   },
   /**
    * workspace variants allow to set different subsets of configuration for components in your
@@ -58,6 +58,6 @@
        * uncomment to apply the chosen environment on all components.
        **/
       // "teambit.react/react": { }
-    }
-  }
+    },
+  },
 }

@@ -13,7 +13,6 @@ const usePersistedState = (defaultValue, localStorageKey) => {
 
   useEffect(() => {
     localStorage.setItem(localStorageKey, JSON.stringify(value))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
   // Expose the value and the updater function.

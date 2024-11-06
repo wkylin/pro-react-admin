@@ -3,9 +3,11 @@
   overflow: hidden;
   padding: 3px;
 }
+
 .line {
   position: absolute;
 }
+
 .line:nth-child(1) {
   top: 0;
   left: 0;
@@ -14,15 +16,18 @@
   background: linear-gradient(90deg, transparent, orange);
   animation: animate1 8s linear infinite;
 }
+
 @keyframes animate1 {
   0% {
     left: -100%;
   }
+
   50%,
   100% {
     left: 100%;
   }
 }
+
 .line:nth-child(2) {
   top: -100%;
   right: 0;
@@ -32,15 +37,18 @@
   animation: animate2 8s linear infinite;
   animation-delay: 2s;
 }
+
 @keyframes animate2 {
   0% {
     top: -100%;
   }
+
   50%,
   100% {
     top: 100%;
   }
 }
+
 .line:nth-child(3) {
   bottom: 0;
   right: 0;
@@ -49,17 +57,20 @@
   animation: animate3 8s linear infinite;
   animation-delay: 4s;
 }
+
 @keyframes animate3 {
   0% {
     right: -100%;
     height: 2px;
   }
+
   50%,
   100% {
     height: 2px;
     right: 100%;
   }
 }
+
 .line:nth-child(4) {
   bottom: -100%;
   left: 0;
@@ -69,10 +80,12 @@
   animation: animate4 8s linear infinite;
   animation-delay: 6s;
 }
+
 @keyframes animate4 {
   0% {
     bottom: -100%;
   }
+
   50%,
   100% {
     bottom: 100%;

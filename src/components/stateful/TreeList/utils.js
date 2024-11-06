@@ -1,5 +1,3 @@
-/* eslint-disable no-plusplus */
-/* eslint-disable no-underscore-dangle */
 import React from 'react'
 
 export function getDefaultKey(treeData) {
