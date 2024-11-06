@@ -33,11 +33,9 @@ export const getParamObject = (val) => {
 export const reqStringify = (val) => stringify(val, { arrayFormat: 'repeat', strictNullHandling: true })
 
 export const getType = (obj) => {
-  const type = typeof obj
-  if (type !== 'object') {
-    return type
-  }
-  return Object.prototype.toString.call(obj).replace(/^$/, '$1')
+  const typeString = Object.prototype.toString.call(obj)
+  const match = /\[object (.*?)\]/.exec(typeString)
+  return match ? match[1] : null
 }
 
 export const hidePhone = (phone) => phone?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
@@ -112,7 +110,7 @@ export const isDecimal = (value) => {
 export const limitDecimal = (val) => val.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
 
 export const passwordStrength = (pass) => {
-  const reg = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/
+  const reg = /^(?=.*[A-Z])(?=.*[\d])(?=.*[a-z]).{8,}$/
   return reg.test(pass)
 }
 
@@ -322,7 +320,7 @@ export const readFromFile = () =>
       fileReader.onload = (e) => {
         res(e.target.result)
       }
-      fileReader.onerror = (e) => rej(e)
+      fileReader.onerror = (e) => rej(new Error(e))
       fileReader.readAsText(file)
     }
 

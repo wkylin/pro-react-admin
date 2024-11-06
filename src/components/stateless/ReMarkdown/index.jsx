@@ -61,6 +61,7 @@ const PreCode = (props) => {
         <span className={styles.lang}>{langRef.current}</span>
         <span
           className={styles.copySpan}
+          role="button"
           onClick={() => {
             if (ref.current) {
               const code = ref.current.innerText

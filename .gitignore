@@ -10,3 +10,4 @@ public/bit
 api/node_modules
 webpack/profiling
 stats.html
+/.scannerwork

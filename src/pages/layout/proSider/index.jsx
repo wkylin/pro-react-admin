@@ -4,7 +4,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
 
-const ProSider = (props) => {
+const ProSider = ({ children }) => {
   const [collapsed, setCollapsed] = useState(false)
 
   const onCollapse = () => {
@@ -21,8 +21,8 @@ const ProSider = (props) => {
       trigger={null}
       className={styles.sider}
     >
-      {props.children}
-      <div className={styles.proLink} onClick={onCollapse}>
+      {children}
+      <div className={styles.proLink} onClick={onCollapse} role="button">
         {collapsed ? (
           <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
         ) : (

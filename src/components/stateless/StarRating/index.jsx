@@ -24,6 +24,7 @@ const StarRating = ({ value }) => {
       onMouseOut={() => hoverOver(null)}
       onClick={(e) => setRating(e.target.getAttribute('data-star-id') || rating)}
       onMouseOver={hoverOver}
+      role="button"
     >
       {Array.from({ length: 5 }, (v, i) => (
         <Star starId={i + 1} key={`star_${i + 1}`} marked={selection ? selection >= i + 1 : rating >= i + 1} />
