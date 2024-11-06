@@ -15,19 +15,21 @@ const ProSider = ({ children }) => {
     <Layout.Sider
       width={208}
       collapsedWidth={80}
-      theme="light"
+      theme='light'
       collapsible
       collapsed={collapsed}
       trigger={null}
       className={styles.sider}
     >
       {children}
-      <div className={styles.proLink} onClick={onCollapse} role="button">
-        {collapsed ? (
-          <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
-        ) : (
-          <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
-        )}
+      <div className={styles.proLink} onClick={onCollapse} role='button'>
+        {collapsed
+          ? (
+            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+            )
+          : (
+            <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+            )}
       </div>
     </Layout.Sider>
   )

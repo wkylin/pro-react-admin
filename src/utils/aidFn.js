@@ -63,7 +63,7 @@ export const getImgsUrl = (html) => {
 export const customizeTimer = {
   intervalTimer: null,
   timeoutTimer: null,
-  setTimeout(cb, interval) {
+  setTimeout (cb, interval) {
     const { now } = Date
     const stime = now()
     let etime = stime
@@ -78,10 +78,10 @@ export const customizeTimer = {
     this.timeoutTimer = requestAnimationFrame(loop)
     return this.timeoutTimer
   },
-  clearTimeout() {
+  clearTimeout () {
     cancelAnimationFrame(this.timeoutTimer)
   },
-  setInterval(cb, interval) {
+  setInterval (cb, interval) {
     const { now } = Date
     let stime = now()
     let etime = stime
@@ -97,9 +97,9 @@ export const customizeTimer = {
     this.intervalTimer = requestAnimationFrame(loop)
     return this.intervalTimer
   },
-  clearInterval() {
+  clearInterval () {
     cancelAnimationFrame(this.intervalTimer)
-  },
+  }
 }
 
 export const isDecimal = (value) => {
@@ -249,13 +249,13 @@ export const oneApiChat = (chatList, token, signal) =>
     signal,
     headers: {
       Authorization: token,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
       messages: chatList,
-      stream: true,
-    }),
+      stream: true
+    })
   })
 
 export const getCurrentDate = () => {
@@ -283,7 +283,7 @@ export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
   try {
     const ele = eleHtml ?? document.getElementById('image-wrapper')
     const canvas = await html2canvas(ele, {
-      useCORS: true,
+      useCORS: true
     })
     const imgUrl = canvas.toDataURL('image/png')
     const tempLink = document.createElement('a')
