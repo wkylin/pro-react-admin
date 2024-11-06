@@ -8,7 +8,7 @@ const previewFitScale = (width, height, scaleDom, callback) => {
   // * 默认缩放值
   const scale = {
     width: 1,
-    height: 1,
+    height: 1
   }
 
   // * 需保持的比例
@@ -51,7 +51,7 @@ const previewFitScale = (width, height, scaleDom, callback) => {
   return {
     calcRate,
     windowResize,
-    unWindowResize,
+    unWindowResize
   }
 }
 
