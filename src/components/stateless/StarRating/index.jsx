@@ -3,7 +3,7 @@ import styles from './index.module.less'
 
 const Star = ({ marked, starId }) => {
   return (
-    <span data-star-id={starId} className={styles.star} role="button">
+    <span data-star-id={starId} className={styles.star} role='button'>
       {marked ? '\u2605' : '\u2606'}
     </span>
   )
@@ -23,8 +23,8 @@ const StarRating = ({ value }) => {
       onMouseOut={() => hoverOver(null)}
       onClick={(e) => setRating(e.target.getAttribute('data-star-id') || rating)}
       onMouseOver={hoverOver}
-      role="button"
-      tabIndex="0"
+      role='button'
+      tabIndex='0'
     >
       {Array.from({ length: 5 }, (v, i) => (
         <Star starId={i + 1} key={`star_${i + 1}`} marked={selection ? selection >= i + 1 : rating >= i + 1} />
