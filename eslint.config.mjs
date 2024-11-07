@@ -17,7 +17,7 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
   allConfig: js.configs.all,
 })
-
+// npx @eslint/migrate-config .eslintrc.json
 export default [
   {
     ignores: ['node_modules/**/*', '**/CHANGELOG.md', '**/package-lock.json', 'dist/**/*', 'build/**/*', '**/coverage'],
@@ -57,14 +57,13 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react/display-name': 'off',
       'react-hooks/exhaustive-deps': 'off',
-
+      'react/prop-types': 'off',
       'prettier/prettier': [
         'error',
         {
           endOfLine: 'auto',
         },
       ],
-
       semi: 'off',
       'no-use-before-define': 'off',
       'comma-dangle': 'off',
@@ -72,7 +71,6 @@ export default [
       'multiline-ternary': 'off',
       'promise/param-names': 'off',
       'no-debugger': 'off',
-      'react/prop-types': 'off',
       'no-extra-parens': 'off',
       'eol-last': 'off',
       'jsx-quotes': 'off',
