@@ -158,11 +158,11 @@ const Home = () => {
 
   return (
     <FixTabPanel>
-      <h2 style={{ marginBottom: 15 }}>
+      <section style={{ marginBottom: 15 }}>
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
-      </h2>
+      </section>
 
-      <h2 className={styles.avatar}>React version: {version}</h2>
+      <section className={styles.avatar}>React version: {version}</section>
 
       <section>
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.

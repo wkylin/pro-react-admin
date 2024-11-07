@@ -15,22 +15,22 @@ const StarRating = ({ value }) => {
 
   const hoverOver = (event) => {
     let val = 0
-    if (event && event.target && event.target.getAttribute('data-star-id'))
-      val = event.target.getAttribute('data-star-id')
+    if (event?.target?.getAttribute('data-star-id')) val = event.target.getAttribute('data-star-id')
     setSelection(val)
   }
   return (
-    <div
+    <span
       onMouseOut={() => hoverOver(null)}
       onClick={(e) => setRating(e.target.getAttribute('data-star-id') || rating)}
       onMouseOver={hoverOver}
       role="button"
+      tabIndex="0"
     >
       {Array.from({ length: 5 }, (v, i) => (
         <Star starId={i + 1} key={`star_${i + 1}`} marked={selection ? selection >= i + 1 : rating >= i + 1} />
       ))}
       <span>{rating}</span>
-    </div>
+    </span>
   )
 }
 

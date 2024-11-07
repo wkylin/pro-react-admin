@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import image from './px4T-test_image.png'
+import imagePng from './px4T-test_image.png'
 
 const ComponentToPrint = React.forwardRef((props, ref) => {
   const { text } = props
@@ -89,7 +89,7 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
           <tr>
             <td>Image: Local Import</td>
             <td>
-              <img alt="A test image" src={image} width="200" />
+              <img alt="A test" src={imagePng} width="200" />
             </td>
           </tr>
           <tr>
@@ -123,8 +123,10 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
           <tr>
             <td>Input: Radio</td>
             <td>
-              Blue <input type="radio" id="blue" name="color" value="blue" />
-              Red <input type="radio" id="red" name="color" value="red" />
+              <span>Blue</span>
+              <input type="radio" id="blue" name="color" value="blue" />
+              <span>Red</span>
+              <input type="radio" id="red" name="color" value="red" />
             </td>
           </tr>
           <tr>

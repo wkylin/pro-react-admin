@@ -26,7 +26,9 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       onEnded={onEnded}
       onTimeUpdate={onTimeUpdate}
       onLoadedData={onLoadedData}
-    />
+    >
+      <track src="aaaa" kind="subtitles" srcLang="en" label="English" />
+    </audio>
   )
 }
 
