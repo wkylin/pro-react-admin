@@ -170,6 +170,7 @@ const Home = () => {
       <section style={{ marginBottom: 40 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
       </section>
+      <section className={styles.line}></section>
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
       </section>
@@ -241,6 +242,9 @@ const Home = () => {
         <div className={styles['circle-4']}></div>
       </section>
 
+      <section style={{ marginBottom: 40 }} className={styles.eHElAY}>
+        Hi, React!
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

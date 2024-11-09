@@ -18,7 +18,7 @@ i18n
     },
     lng: 'zh',
     fallbackLng: 'en', // 默认语言
-    debug: process.env.NODE_ENV !== 'production', // 开启调试模式
+    // debug: process.env.NODE_ENV !== 'production', // 开启调试模式
     interpolation: {
       escapeValue: false, // 不转义特殊字符
     },
