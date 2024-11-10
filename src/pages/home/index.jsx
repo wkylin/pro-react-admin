@@ -195,6 +195,12 @@ const Home = () => {
         <BreatheText />
       </section>
 
+      <section style={{ margin: '60px 0 40px 40px' }}>
+        <div className={styles['video-box']}>
+          <div className={styles['video-btn']}>b</div>
+        </div>
+      </section>
+
       <section style={{ marginBottom: 40 }}>
         <ShiftingCard />
       </section>
@@ -245,6 +251,17 @@ const Home = () => {
       <section style={{ marginBottom: 40 }} className={styles.eHElAY}>
         Hi, React!
       </section>
+
+      <section>
+        <div className={styles.stages}>
+          <div className={styles.cubeSpinner}>
+            <span className={styles.face1}>Web Services</span>
+            <span className={styles.face2}>Blockchain</span>
+            <span className={styles.face3}>Mobile Apps</span>
+          </div>
+        </div>
+      </section>
+
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
