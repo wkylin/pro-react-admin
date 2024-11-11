@@ -255,7 +255,7 @@
     "leaflet.markercluster": "^1.5.3",
     "less": "^4.2.0",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.451.0",
+    "lucide-react": "^0.453.0",
     "maath": "^0.10.8",
     "markmap-common": "^0.17.1",
     "markmap-lib": "^0.17.2",
