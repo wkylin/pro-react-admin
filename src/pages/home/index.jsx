@@ -231,6 +231,9 @@ const Home = () => {
       <section style={{ marginBottom: 40 }}>
         <AnimateRipple>Click Me</AnimateRipple>
       </section>
+      <section style={{ marginBottom: 40 }}>
+        <section className={styles.effect}> Hello CSS</section>
+      </section>
       <section style={{ marginBottom: 40 }} className={styles.maskBox}>
         <section className={styles.watermark}>water mark</section>
         mask
