@@ -307,7 +307,7 @@
     "screenfull": "^6.0.2",
     "sse": "github:mpetazzoni/sse.js",
     "styled-components": "^6.1.13",
-    "three": "^0.169.0",
+    "three": "^0.170.0",
     "typescript": "^5.5.4",
     "use-debounce": "^10.0.3",
     "use-deep-compare-effect": "^1.8.1",
