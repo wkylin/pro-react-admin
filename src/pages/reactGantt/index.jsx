@@ -11,7 +11,7 @@ const ReactGantt = () => {
       duration: 1,
       progress: 2,
       type: 'task',
-      lazy: false,
+      lazy: false
     },
     {
       id: 47,
@@ -21,7 +21,7 @@ const ReactGantt = () => {
       duration: 8,
       progress: 0,
       parent: 0,
-      type: 'summary',
+      type: 'summary'
     },
     {
       id: 22,
@@ -31,7 +31,7 @@ const ReactGantt = () => {
       duration: 8,
       progress: 0,
       parent: 47,
-      type: 'task',
+      type: 'task'
     },
     {
       id: 21,
@@ -41,15 +41,15 @@ const ReactGantt = () => {
       duration: 3,
       progress: 0,
       type: 'task',
-      lazy: false,
-    },
+      lazy: false
+    }
   ]
 
   const links = [{ id: 1, source: 20, target: 21, type: 'e2e' }]
 
   const scales = [
     { unit: 'month', step: 1, format: 'MMMM yyy' },
-    { unit: 'day', step: 1, format: 'd' },
+    { unit: 'day', step: 1, format: 'd' }
   ]
 
   return (
