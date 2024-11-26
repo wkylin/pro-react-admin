@@ -230,7 +230,7 @@
     "@sentry/tracing": "^7.119.0",
     "@supermapgis/iclient-leaflet": "^11.2.1",
     "antd": "^5.21.3",
-    "axios": "^1.7.7",
+    "axios": "^1.7.8",
     "blueimp-md5": "^2.19.0",
     "cookies-js": "^1.2.3",
     "copy-to-clipboard": "^3.3.3",
