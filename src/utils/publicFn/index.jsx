@@ -167,3 +167,9 @@ export const jsonToMap = (json) => new Map(Object.entries(JSON.parse(json)))
 export const snakeToCamelCase = (snake) => snake.toLowerCase().replace(/(_\w)/g, (word) => word.toUpperCase().substr(1))
 
 export const mathRound = (num) => Math.round(num * 100) / 100
+
+export const openInNewTab = (url) => {
+  const win = window.open(url, '_blank')
+  win.focus()
+  return win
+}

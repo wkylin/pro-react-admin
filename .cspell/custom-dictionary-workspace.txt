@@ -20,6 +20,8 @@ ENOENT
 EPSG
 fengian
 fengxian
+gantt
+Gantt
 hookspath
 Huksy
 iclient

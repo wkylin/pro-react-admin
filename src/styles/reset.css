@@ -135,6 +135,7 @@ select:-webkit-autofill:active {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 }
 
 @keyframes rotate {

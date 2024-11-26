@@ -47,6 +47,7 @@ const ReactPdf = lazy(() => import('@pages/reactPdf'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
+const ReactGantt = lazy(() => import('@pages/reactGantt'))
 
 const rootRouter = [
   {
@@ -81,6 +82,14 @@ const rootRouter = [
         key: '/parallax',
         auth: true,
         element: lazyLoad(ParallaxVert),
+      },
+      {
+        index: false,
+        path: 'gantt',
+        name: 'gantt',
+        key: '/gantt',
+        auth: false,
+        element: lazyLoad(ReactGantt),
       },
       {
         index: false,
