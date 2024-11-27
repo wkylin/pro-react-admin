@@ -34,7 +34,7 @@ const ProHeader = () => {
       icon: <UserOutlined />,
       onClick: () => {
         redirectTo('/profile')
-      },
+      }
     },
     {
       key: '2',
@@ -42,7 +42,7 @@ const ProHeader = () => {
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/setting')
-      },
+      }
     },
     {
       key: '3',
@@ -51,8 +51,8 @@ const ProHeader = () => {
       onClick: () => {
         removeLocalStorage('token')
         redirectTo('/signin')
-      },
-    },
+      }
+    }
   ]
 
   const { myTheme, setMyTheme } = useProThemeContext()
@@ -62,7 +62,7 @@ const ProHeader = () => {
   }
 
   const {
-    token: { colorBgContainer, colorBorder },
+    token: { colorBgContainer, colorBorder }
   } = theme.useToken()
 
   return (
@@ -70,7 +70,7 @@ const ProHeader = () => {
       className={styles.header}
       style={{ background: colorBgContainer, borderBottom: `1px solid ${colorBorder}` }}
     >
-      <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
+      <div aria-hidden='true' className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         Pro React Admin
       </div>
@@ -79,7 +79,7 @@ const ProHeader = () => {
           <PrimaryNav />
         </div>
         <div className={styles.headerRight}>
-          <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+          <Space direction='horizontal' style={{ cursor: 'pointer', paddingRight: 8 }}>
             <Switch
               // checkedChildren={<Icon component={LightSvg} />}
               // unCheckedChildren={<Icon component={DarkSvg} />}
@@ -93,7 +93,7 @@ const ProHeader = () => {
           <Dropdown
             arrow
             menu={{
-              items,
+              items
             }}
           >
             <Space>
