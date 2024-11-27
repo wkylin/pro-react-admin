@@ -8,5 +8,5 @@ services:
     ports:
       - '8090:8090'
     volumes:
-      - '/promotion-web/node_modules'
-      - './:/promotion-web'
+      - '/pro-react-admin/node_modules'
+      - './:/pro-react-admin'

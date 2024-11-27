@@ -1,6 +1,6 @@
 FROM node:21.7.3-alpine3.18
-WORKDIR /promotion-web
-COPY package.json /promotion-web
+WORKDIR /pro-react-admin
+COPY package.json /pro-react-admin
 RUN npm install
-COPY . /promotion-web
+COPY . /pro-react-admin
 CMD ["npm", "run", "start"]
