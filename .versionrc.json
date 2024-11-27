@@ -9,6 +9,6 @@
     { "type": "perf", "hidden": true },
     { "type": "test", "hidden": true }
   ],
-  "commitUrlFormat": "https://github.com/wkylin/promotion-web/commits/{{hash}}",
-  "compareUrlFormat": "https://github.com/wkylin/promotion-web/compare/{{previousTag}}...{{currentTag}}"
+  "commitUrlFormat": "https://github.com/wkylin/pro-react-admin/commits/{{hash}}",
+  "compareUrlFormat": "https://github.com/wkylin/pro-react-admin/compare/{{previousTag}}...{{currentTag}}"
 }

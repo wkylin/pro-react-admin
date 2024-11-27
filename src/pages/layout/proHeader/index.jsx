@@ -24,7 +24,7 @@ const ProHeader = () => {
   }
 
   const redirectGithub = () => {
-    window.open('https://github.com/wkylin/promotion-web', '_blank')
+    window.open('https://github.com/wkylin/pro-react-admin', '_blank')
   }
 
   const items = [
