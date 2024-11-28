@@ -6,4 +6,4 @@ dist/**
 .vscode/**
 .yarn/**
 compilation-stats.json
-**/*.css
+**/*.css/.npmrc
