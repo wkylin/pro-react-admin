@@ -60,7 +60,7 @@
     "release:major": "standard-version --release-as major",
     "push:tags": "git push --follow-tags origin pre-gh-pages",
     "process": "node webpack/process",
-    "prepare": "husky && husky install",
+    "prepare": "husky",
     "sentry:check": "node check-sentry.js",
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
