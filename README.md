@@ -535,8 +535,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
  ```bash
     npm run js-analyzer
 ````
-![image](https://github.com/user-attachments/assets/11761ace-e6db-4b0f-bf1e-475abe5743c2)
-
+![image](https://github.com/user-attachments/assets/4a76e27f-47d3-4230-8587-73c3f0d8e5a0)
 
 ## CRACO:Create React App Configuration Override
 
