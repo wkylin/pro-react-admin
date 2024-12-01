@@ -251,7 +251,7 @@ const Home = () => {
         <div className={styles['circle-4']}></div>
       </section>
 
-      <section style={{ marginBottom: 40 }} className={styles.eHElAY}>
+      <section style={{ margin: 20 }} className={styles.eHElAY}>
         Hi, React!
       </section>
 
