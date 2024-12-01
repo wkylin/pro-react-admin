@@ -339,7 +339,6 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 1. GitHub Actions
 
-
 ## Test
 
 1. [Jest](https://jestjs.io/)
@@ -530,11 +529,13 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
    ```bash
       npm run analyze:build
    ```
+
 2. 依赖分析
 
- ```bash
-    npm run js-analyzer
-````
+```bash
+   npm run js-analyzer
+```
+
 ![image](https://github.com/user-attachments/assets/4a76e27f-47d3-4230-8587-73c3f0d8e5a0)
 
 ## CRACO:Create React App Configuration Override
