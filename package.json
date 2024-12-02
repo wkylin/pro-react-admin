@@ -102,7 +102,6 @@
     "@js-analyzer/server": "^2.6.2",
     "@koa/cors": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
-    "@sentry/cli-darwin": "^2.39.1",
     "@sentry/webpack-plugin": "^2.22.6",
     "@svgr/webpack": "^8.1.0",
     "@types/crypto-js": "^4.2.2",
