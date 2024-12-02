@@ -1,0 +1,17 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[9885],{69480:function(r,s,e){"use strict";var _=e(71354),a=e.n(_),t=e(76314),o=e.n(t),n=o()(a());n.push([r.id,`.alignCenter--aqiSR {\r
+  width: 100%;\r
+  min-height: 100vh;\r
+  display: flex;\r
+  align-items: center;\r
+  justify-content: center;\r
+}\r
+`,"",{version:3,sources:["webpack://./src/components/stateless/AlignCenter/index.module.less"],names:[],mappings:"AAAA;EACE,WAAW;EACX,iBAAiB;EACjB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB",sourcesContent:[`.alignCenter {\r
+  width: 100%;\r
+  min-height: 100vh;\r
+  display: flex;\r
+  align-items: center;\r
+  justify-content: center;\r
+}\r
+`],sourceRoot:""}]),n.locals={alignCenter:"alignCenter--aqiSR"},s.A=n},20304:function(r,s,e){"use strict";var _=e(24994);Object.defineProperty(s,"__esModule",{value:!0}),s.default=void 0;var a=_(e(96540)),t=_(e(61793)),o=function(d){var u=d.children;return a.default.createElement("div",{className:t.default.alignCenter},u)},n=s.default=o},79885:function(r,s,e){"use strict";var _=e(24994);Object.defineProperty(s,"__esModule",{value:!0}),s.default=void 0;var a=_(e(94634)),t=_(e(96540)),o=e(84976),n=e(55290),m=_(e(20304)),d=e(11265),u=n.Layout.Content,c={labelCol:{span:8},wrapperCol:{span:16}},E={wrapperCol:{offset:8,span:16}},v=function(){var l=(0,o.useNavigate)(),y=function(f){l(f)},C=n.theme.useToken(),M=C.token.colorBgContainer,O=function(f){var g=f.username;(0,d.setLocalStorage)("token",{token:g}),y("/")},D=function(f){};return t.default.createElement(n.Layout,{style:{height:"100%"}},t.default.createElement(u,{style:{height:"100%",background:M}},t.default.createElement(m.default,null,t.default.createElement(n.Form,(0,a.default)({},c,{name:"basic",initialValues:{remember:!0,username:"wkylin.w",password:"wkylin.w"},onFinish:O,onFinishFailed:D}),t.default.createElement(n.Form.Item,{label:"Username",name:"username",rules:[{required:!0,message:"Please input your username!"}]},t.default.createElement(n.Input,null)),t.default.createElement(n.Form.Item,{label:"Password",name:"password",rules:[{required:!0,message:"Please input your password!"}]},t.default.createElement(n.Input.Password,null)),t.default.createElement(n.Form.Item,(0,a.default)({},E,{name:"remember",valuePropName:"checked"}),t.default.createElement(n.Checkbox,null,"Remember me")),t.default.createElement(n.Form.Item,E,t.default.createElement(n.Button,{type:"primary",htmlType:"submit"}," ","Sign in"))))))},A=s.default=v},61793:function(r,s,e){"use strict";e.r(s);var _=e(85072),a=e.n(_),t=e(97825),o=e.n(t),n=e(77659),m=e.n(n),d=e(55056),u=e.n(d),c=e(10540),E=e.n(c),v=e(41113),A=e.n(v),i=e(69480),l={};l.styleTagTransform=A(),l.setAttributes=u(),l.insert=m().bind(null,"head"),l.domAPI=o(),l.insertStyleElement=E();var y=a()(i.A,l);s.default=i.A&&i.A.locals?i.A.locals:void 0},94634:function(r){function s(){return r.exports=s=Object.assign?Object.assign.bind():function(e){for(var _=1;_<arguments.length;_++){var a=arguments[_];for(var t in a)({}).hasOwnProperty.call(a,t)&&(e[t]=a[t])}return e},r.exports.__esModule=!0,r.exports.default=r.exports,s.apply(null,arguments)}r.exports=s,r.exports.__esModule=!0,r.exports.default=r.exports}}]);
+
+//# sourceMappingURL=9885.466e5a3299e1bbc50dbe.js.map
