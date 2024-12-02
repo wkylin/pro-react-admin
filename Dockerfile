@@ -1,6 +1,6 @@
 FROM node:22.11.0
 WORKDIR /pro-react-admin
 COPY package.json /pro-react-admin
-RUN yarn install
+RUN npm install
 COPY . /pro-react-admin
-CMD ["yarn", "run", "build:production"]
+CMD ["npm", "run", "build:production"]
