@@ -25,6 +25,7 @@ import AnimateOnScreen from '@stateless/AnimateOnScreen'
 import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
+import TagCloud from '@stateless/TagCloud'
 import Masonry from '@container/masonryContainer'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
@@ -268,7 +269,7 @@ const Home = () => {
         </button>
       </section>
 
-      <section style={{ position: 'relative', margin: '80px 0 160px 50px' }}>
+      <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
         <div className={styles['circle-1']}></div>
         <div className={styles['circle-2']}></div>
         <div className={styles['circle-3']}></div>
@@ -299,6 +300,9 @@ const Home = () => {
       </section>
       <section style={{ margin: 20 }}>
         <Masonry />
+      </section>
+      <section style={{ margin: 20 }}>
+        <TagCloud />
       </section>
 
       <section style={{ width: 600, margin: '30px 0' }}>
