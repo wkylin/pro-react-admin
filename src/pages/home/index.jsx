@@ -26,6 +26,7 @@ import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import TagCloud from '@stateless/TagCloud'
+import SlideLinear from '@stateless/SlideLinear'
 import Masonry from '@container/masonryContainer'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
@@ -304,6 +305,18 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <TagCloud />
       </section>
+      <section style={{ margin: 20 }}>
+        <SlideLinear >
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+        </SlideLinear>
+      </section>
 
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
@@ -339,6 +352,7 @@ const Home = () => {
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
+
 
       <section style={{ position: 'relative', height: 300 }}>
         <AnimateWave>
