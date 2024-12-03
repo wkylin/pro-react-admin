@@ -25,6 +25,7 @@ import AnimateOnScreen from '@stateless/AnimateOnScreen'
 import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
+import Masonry from '@container/masonryContainer'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 
@@ -296,6 +297,10 @@ const Home = () => {
           scrollSpyDelay={1000}
         />
       </section>
+      <section style={{ margin: 20 }}>
+        <Masonry />
+      </section>
+
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
