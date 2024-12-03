@@ -1,35 +1,35 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react'
 
 const useInViewport = () => {
-    const inViewRef = useRef(null);
-    const [inViewport, setInViewport] = useState(false);
+  const inViewRef = useRef(null)
+  const [inViewport, setInViewport] = useState(false)
 
-    useEffect(() => {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setInViewport(true);
-                } else {
-                    setInViewport(false);
-                }
-            });
-        });
-
-        if (inViewRef.current) {
-            observer.observe(inViewRef.current);
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setInViewport(true)
+        } else {
+          setInViewport(false)
         }
+      })
+    })
 
-        return () => {
-            if (inViewRef.current) {
-                observer.unobserve(inViewRef.current);
-            }
-        };
-    }, []);
+    if (inViewRef.current) {
+      observer.observe(inViewRef.current)
+    }
 
-    return {
-        inViewRef,
-        inViewport
-    };
-};
+    return () => {
+      if (inViewRef.current) {
+        observer.unobserve(inViewRef.current)
+      }
+    }
+  }, [])
 
-export default useInViewport;
+  return {
+    inViewRef,
+    inViewport
+  }
+}
+
+export default useInViewport
