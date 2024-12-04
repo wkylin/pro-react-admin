@@ -228,6 +228,7 @@
     "antd": "^5.22.2",
     "axios": "^1.7.8",
     "blueimp-md5": "^2.19.0",
+    "clsx": "^2.1.1",
     "cookies-js": "^1.2.3",
     "copy-to-clipboard": "^3.3.3",
     "cross-fetch": "^4.0.0",
