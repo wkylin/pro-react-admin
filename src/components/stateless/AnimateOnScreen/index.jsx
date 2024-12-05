@@ -1,29 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-const useElementOnScreen = (ref, rootMargin = '0px') => {
+const useElementOnScreen = (ref,  rootMargin = '0px', threshold = 0, triggerOnce=false) => {
   const [isIntersecting, setIsIntersecting] = useState(true)
+  const observer = useRef(null)
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    observer.current = new IntersectionObserver(
       ([entry]) => {
-        setIsIntersecting(entry.isIntersecting)
+        if (entry.isIntersecting && entry.intersectionRatio >= threshold) {
+          setIsIntersecting(true)
+          if (triggerOnce) {
+            observer.current.disconnect()
+          }
+        } else {
+          setIsIntersecting(false)
+        }
       },
-      { rootMargin }
+      { rootMargin, threshold }
     )
     if (ref.current) {
-      observer.observe(ref.current)
+      observer.current.observe(ref.current)
     }
     return () => {
       if (ref.current) {
-        observer.unobserve(ref.current)
+        observer.current.unobserve(ref.current)
       }
     }
-  }, [])
+  }, [ref, rootMargin, threshold, triggerOnce])
   return isIntersecting
 }
 
-const AnimateIn = ({ from, to, children }) => {
+const AnimateIn = ({ from, to, rootMargin, threshold, triggerOnce, children }) => {
   const ref = useRef(null)
-  const onScreen = useElementOnScreen(ref)
+  const onScreen = useElementOnScreen(ref, rootMargin, threshold, triggerOnce)
   const defaultStyles = {
     transition: '1000ms ease-in-out',
   }
@@ -47,28 +55,36 @@ const AnimateIn = ({ from, to, children }) => {
   )
 }
 
-const FadeIn = ({ children }) => (
-  <AnimateIn from={{ opacity: 0 }} to={{ opacity: 1 }}>
+const FadeIn = ({rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
+  <AnimateIn from={{ opacity: 0 }} to={{ opacity: 1 }} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
     {children}
   </AnimateIn>
 )
 
-const FadeUp = ({ children }) => (
-  <AnimateIn from={{ opacity: 0, translate: '0 2rem' }} to={{ opacity: 1, translate: 'none' }}>
+const FadeUp = ({rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
+  <AnimateIn from={{ opacity: 0, translate: '0 2rem' }} to={{ opacity: 1, translate: 'none' }} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
     {children}
   </AnimateIn>
 )
 
-const ScaleIn = ({ children }) => (
-  <AnimateIn from={{ scale: '0' }} to={{ scale: '1' }}>
+const ScaleIn = ({rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
+  <AnimateIn from={{ scale: '0' }} to={{ scale: '1' }} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
     {children}
   </AnimateIn>
 )
+
+const DiyAnimation = ({from, to, rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
+  <AnimateIn from={from } to={to} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
+    {children}
+  </AnimateIn>
+)
+
 
 const AnimateOnScreen = {
   FadeIn,
   FadeUp,
   ScaleIn,
+  DiyAnimation,
 }
 
 export default AnimateOnScreen

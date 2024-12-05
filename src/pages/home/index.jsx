@@ -238,12 +238,21 @@ const Home = () => {
         </AnimateOnScreen.FadeUp>
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
-        <AnimateOnScreen.ScaleIn>
+        <AnimateOnScreen.ScaleIn triggerOnce={false}>
           <>
             <img src="https://picsum.photos/360/200/?blur=2" alt="" />
             <section className={styles['blend-me']}>Mix Blend Mode</section>
           </>
         </AnimateOnScreen.ScaleIn>
+      </section>
+      <section style={{ marginBottom: 40, width: 360, height: 200 }}>
+        <AnimateOnScreen.DiyAnimation
+          from={{ opacity: 0, transform: "translate(-100%, 0)" }}
+          to={{ opacity: 1, transform: "translate(0, 0)" }}
+          triggerOnce={true}
+        >
+          <img src="https://picsum.photos/360/200.jpg" alt="" />
+        </AnimateOnScreen.DiyAnimation>
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
         <Spotlight className="w-full h-full group mx-auto grid max-w-sm items-start gap-6">
@@ -299,9 +308,9 @@ const Home = () => {
           scrollSpyDelay={1000}
         />
       </section>
-      <section style={{ margin: 20 }}>
+      {/* <section style={{ margin: 20 }}>
         <Masonry />
-      </section>
+      </section> */}
       <section style={{ margin: 20 }}>
         <TagCloud />
       </section>
