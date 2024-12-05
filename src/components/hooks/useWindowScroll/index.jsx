@@ -4,14 +4,14 @@ const useWindowScroll = () => {
   // 用于存储窗口滚动位置的状态
   const [scroll, setScroll] = useState({
     x: window.pageXOffset,
-    y: window.pageYOffset,
+    y: window.pageYOffset
   })
 
   // 用于更新滚动位置状态的函数
   const handleScroll = () => {
     setScroll({
       x: window.pageXOffset,
-      y: window.pageYOffset,
+      y: window.pageYOffset
     })
   }
 
@@ -30,7 +30,7 @@ const useWindowScroll = () => {
     setScroll: (newScroll) => {
       window.scrollTo(newScroll.x, newScroll.y)
       setScroll(newScroll)
-    },
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import useMousePosition from '@hooks/useMousePosition'
 
-export default function Spotlight({ children, className = '' }) {
+export default function Spotlight ({ children, className = '' }) {
   const containerRef = useRef(null)
   const mousePosition = useMousePosition()
   const mouse = useRef({ x: 0, y: 0 })

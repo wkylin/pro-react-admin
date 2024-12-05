@@ -87,8 +87,8 @@ const Home = () => {
       [
         {
           content: text,
-          role: 'user',
-        },
+          role: 'user'
+        }
       ],
       key,
       signal
@@ -175,32 +175,30 @@ const Home = () => {
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
       </section>
       <section style={{ marginBottom: 40 }}>
-        <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
+        <AutoLink text='foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin' />
       </section>
-      <section className={styles.line}></section>
+      <section className={styles.line} />
       <section>
-        <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+        <AvatarCard avatar='https://picsum.photos/seed/picsum/300/160' text="Hi, I'm a developer." />
       </section>
       <section>
-        <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
+        <IsometricCard text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?' />
       </section>
       <StarRating value={2} />
-      <LineBordered text="A line bordered text." />
+      <LineBordered text='A line bordered text.' />
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
       </section>
       <section style={{ marginBottom: 40, fontSize: 16 }}>
+        <h3>React Animate On Scroll.</h3>
         <h3>
-          React Animate On Scroll.
+          <AutoLink text='https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/' />
         </h3>
-        <h3>
-          <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
-        </h3>
-        <h3 style={{marginBottom: 40}}>
-          <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
+        <h3 style={{ marginBottom: 40 }}>
+          <AutoLink text='https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview' />
         </h3>
         <ScrollAnimation>
-          <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
+          <LazyLoadImage src='https://picsum.photos/seed/picsum/300/160' alt='Strawberries' />
         </ScrollAnimation>
       </section>
       <section style={{ marginBottom: 40, fontSize: 36 }}>
@@ -209,7 +207,7 @@ const Home = () => {
             strings: ['Software Developer.', 'Full Stack Developer.', 'Open Source Contributor.'],
             autoStart: true,
             loop: true,
-            deleteSpeed: 50,
+            deleteSpeed: 50
           }}
         />
       </section>
@@ -235,18 +233,18 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateOnScreen.FadeIn>
-          <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+          <AvatarCard avatar='https://picsum.photos/seed/picsum/300/160' text="Hi, I'm a developer." />
         </AnimateOnScreen.FadeIn>
       </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateOnScreen.FadeUp>
-          <img src="https://picsum.photos/360/200.jpg" alt="" />
+          <img src='https://picsum.photos/360/200.jpg' alt='' />
         </AnimateOnScreen.FadeUp>
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
         <AnimateOnScreen.ScaleIn triggerOnce={false}>
           <>
-            <img src="https://picsum.photos/360/200/?blur=2" alt="" />
+            <img src='https://picsum.photos/360/200/?blur=2' alt='' />
             <section className={styles['blend-me']}>Mix Blend Mode</section>
           </>
         </AnimateOnScreen.ScaleIn>
@@ -255,14 +253,14 @@ const Home = () => {
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+          triggerOnce
         >
-          <img src="https://picsum.photos/360/200.jpg" alt="" />
+          <img src='https://picsum.photos/360/200.jpg' alt='' />
         </AnimateOnScreen.DiyAnimation>
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
-        <Spotlight className="w-full h-full group mx-auto grid max-w-sm items-start gap-6">
-          <div className="relative w-full h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-900/90 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 after:hover:opacity-20 before:group-hover:opacity-100"></div>
+        <Spotlight className='w-full h-full group mx-auto grid max-w-sm items-start gap-6'>
+          <div className='relative w-full h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-900/90 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 after:hover:opacity-20 before:group-hover:opacity-100' />
         </Spotlight>
       </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
@@ -278,17 +276,17 @@ const Home = () => {
         <section className={styles.watermark}>water mark</section>
         mask
       </section>
-      <section style={{ marginBottom: 40 }} >
-        <button className={styles['button']} onClick={fireConfetti}>
+      <section style={{ marginBottom: 40 }}>
+        <button className={styles.button} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
 
       <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
-        <div className={styles['circle-1']}></div>
-        <div className={styles['circle-2']}></div>
-        <div className={styles['circle-3']}></div>
-        <div className={styles['circle-4']}></div>
+        <div className={styles['circle-1']} />
+        <div className={styles['circle-2']} />
+        <div className={styles['circle-3']} />
+        <div className={styles['circle-4']} />
       </section>
 
       <section style={{ margin: 20 }} className={styles.eHElAY}>
@@ -315,25 +313,25 @@ const Home = () => {
       </section>
       <section style={{ margin: 20 }}>
         <SlideLinear>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }} />
         </SlideLinear>
       </section>
 
       <section style={{ width: 600, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
+        <Input defaultValue={apiKey} placeholder='api key' onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Flex align='center'>
           {/* <LinearWrap> */}
           <Input.TextArea
             ref={textareaRef}
             defaultValue={chatText}
-            placeholder="来，说点什么呗...Meta + Enter发送"
+            placeholder='来，说点什么呗...Meta + Enter发送'
             onChange={changeChatText}
             onKeyDown={onInputKeyDown}
             autoSize
@@ -343,13 +341,13 @@ const Home = () => {
           <Button
             style={{ margin: '0 10px' }}
             icon={<SendOutlined rotate={-60} />}
-            type="primary"
+            type='primary'
             disabled={isStream}
             onClick={onSubmit}
           >
             发送
           </Button>
-          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+          <Button icon={<SendOutlined rotate={-60} />} type='primary' disabled={!isStream} onClick={onStop}>
             停止
           </Button>
         </Flex>

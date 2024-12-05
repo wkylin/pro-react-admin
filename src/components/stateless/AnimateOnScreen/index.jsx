@@ -38,7 +38,7 @@ const AnimateIn = ({ from, to, rootMargin, threshold, triggerOnce, children }) =
   const ref = useRef(null)
   const onScreen = useElementOnScreen(ref, rootMargin, threshold, triggerOnce)
   const defaultStyles = {
-    transition: '1000ms ease-in-out',
+    transition: '1000ms ease-in-out'
   }
   return (
     <div
@@ -47,11 +47,11 @@ const AnimateIn = ({ from, to, rootMargin, threshold, triggerOnce, children }) =
         onScreen
           ? {
               ...defaultStyles,
-              ...to,
+              ...to
             }
           : {
               ...defaultStyles,
-              ...from,
+              ...from
             }
       }
     >
@@ -106,7 +106,7 @@ const AnimateOnScreen = {
   FadeIn,
   FadeUp,
   ScaleIn,
-  DiyAnimation,
+  DiyAnimation
 }
 
 export default AnimateOnScreen
