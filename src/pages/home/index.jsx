@@ -30,6 +30,7 @@ import SlideLinear from '@stateless/SlideLinear'
 import Masonry from '@container/masonryContainer'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
+import { fireConfetti } from '@utils/confetti'
 
 import styles from './index.module.less'
 
@@ -188,7 +189,16 @@ const Home = () => {
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
       </section>
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ marginBottom: 40, fontSize: 16 }}>
+        <h3>
+          React Animate On Scroll.
+        </h3>
+        <h3>
+          <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
+        </h3>
+        <h3 style={{marginBottom: 40}}>
+          <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
+        </h3>
         <ScrollAnimation>
           <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
         </ScrollAnimation>
@@ -196,11 +206,7 @@ const Home = () => {
       <section style={{ marginBottom: 40, fontSize: 36 }}>
         <Typewriter
           options={{
-            strings: [
-              "Software Developer.",
-              "Full Stack Developer.",
-              "Open Source Contributor.",
-            ],
+            strings: ['Software Developer.', 'Full Stack Developer.', 'Open Source Contributor.'],
             autoStart: true,
             loop: true,
             deleteSpeed: 50,
@@ -247,8 +253,8 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
         <AnimateOnScreen.DiyAnimation
-          from={{ opacity: 0, transform: "translate(-100%, 0)" }}
-          to={{ opacity: 1, transform: "translate(0, 0)" }}
+          from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
+          to={{ opacity: 1, transform: 'translate(0, 0)' }}
           triggerOnce={true}
         >
           <img src="https://picsum.photos/360/200.jpg" alt="" />
@@ -256,8 +262,7 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
         <Spotlight className="w-full h-full group mx-auto grid max-w-sm items-start gap-6">
-          <div className="relative w-full h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-900/90 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 after:hover:opacity-20 before:group-hover:opacity-100">
-          </div>
+          <div className="relative w-full h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-900/90 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 after:hover:opacity-20 before:group-hover:opacity-100"></div>
         </Spotlight>
       </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
@@ -273,8 +278,8 @@ const Home = () => {
         <section className={styles.watermark}>water mark</section>
         mask
       </section>
-      <section style={{ marginBottom: 40 }}>
-        <button className={styles['button']}>
+      <section style={{ marginBottom: 40 }} >
+        <button className={styles['button']} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
@@ -300,13 +305,7 @@ const Home = () => {
         </div>
       </section>
       <section style={{ margin: 20, fontSize: 40 }}>
-        <CountUp
-          start={20}
-          end={10000}
-          duration={10}
-          enableScrollSpy
-          scrollSpyDelay={1000}
-        />
+        <CountUp start={20} end={10000} duration={10} enableScrollSpy scrollSpyDelay={1000} />
       </section>
       {/* <section style={{ margin: 20 }}>
         <Masonry />
@@ -315,15 +314,15 @@ const Home = () => {
         <TagCloud />
       </section>
       <section style={{ margin: 20 }}>
-        <SlideLinear >
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4}}></div>
+        <SlideLinear>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
+          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
         </SlideLinear>
       </section>
 
@@ -361,7 +360,6 @@ const Home = () => {
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
-
 
       <section style={{ position: 'relative', height: 300 }}>
         <AnimateWave>

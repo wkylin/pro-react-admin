@@ -10,6 +10,7 @@ body {
   text-size-adjust: 100%;
   box-sizing: border-box;
   scrollbar-width: thin;
+  scroll-behavior: smooth;
 }
 
 *,
@@ -41,7 +42,9 @@ select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus,
 select:-webkit-autofill:active {
-  transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s;
+  transition:
+    background-color 600000s ease-in-out 0s,
+    color 600000s ease-in-out 0s;
 }
 
 .text-nowrap {

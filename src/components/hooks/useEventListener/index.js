@@ -1,20 +1,19 @@
-
 const useEventListener = (type, handler, el = window) => {
-  const savedHandler = React.useRef();
+  const savedHandler = React.useRef()
 
   React.useEffect(() => {
-    savedHandler.current = handler;
-  }, [handler]);
+    savedHandler.current = handler
+  }, [handler])
 
   React.useEffect(() => {
-    const listener = e => savedHandler.current(e);
+    const listener = (e) => savedHandler.current(e)
 
-    el.addEventListener(type, listener);
+    el.addEventListener(type, listener)
 
     return () => {
-      el.removeEventListener(type, listener);
-    };
-  }, [type, el]);
+      el.removeEventListener(type, listener)
+    }
+  }, [type, el])
 }
 
 export default useEventListener

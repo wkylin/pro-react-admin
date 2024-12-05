@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react'
 
-const useElementOnScreen = (ref,  rootMargin = '0px', threshold = 0, triggerOnce=false) => {
+// import useElementViewportPosition from '@hooks/useElementViewportPosition'
+
+const useElementOnScreen = (ref, rootMargin = '0px', threshold = 0, triggerOnce = false) => {
   const [isIntersecting, setIsIntersecting] = useState(true)
   const observer = useRef(null)
+
+  // const { position } = useElementViewportPosition(ref)
+
   useEffect(() => {
     observer.current = new IntersectionObserver(
       ([entry]) => {
@@ -55,30 +60,47 @@ const AnimateIn = ({ from, to, rootMargin, threshold, triggerOnce, children }) =
   )
 }
 
-const FadeIn = ({rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
-  <AnimateIn from={{ opacity: 0 }} to={{ opacity: 1 }} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
+const FadeIn = ({ rootMargin = '0px', threshold = 0, triggerOnce = false, children }) => (
+  <AnimateIn
+    from={{ opacity: 0 }}
+    to={{ opacity: 1 }}
+    rootMargin={rootMargin}
+    threshold={threshold}
+    triggerOnce={triggerOnce}
+  >
     {children}
   </AnimateIn>
 )
 
-const FadeUp = ({rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
-  <AnimateIn from={{ opacity: 0, translate: '0 2rem' }} to={{ opacity: 1, translate: 'none' }} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
+const FadeUp = ({ rootMargin = '0px', threshold = 0, triggerOnce = false, children }) => (
+  <AnimateIn
+    from={{ opacity: 0, translate: '0 2rem' }}
+    to={{ opacity: 1, translate: 'none' }}
+    rootMargin={rootMargin}
+    threshold={threshold}
+    triggerOnce={triggerOnce}
+  >
     {children}
   </AnimateIn>
 )
 
-const ScaleIn = ({rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
-  <AnimateIn from={{ scale: '0' }} to={{ scale: '1' }} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
+const ScaleIn = ({ rootMargin = '0px', threshold = 0, triggerOnce = false, children }) => (
+  <AnimateIn
+    from={{ scale: '0' }}
+    to={{ scale: '1' }}
+    rootMargin={rootMargin}
+    threshold={threshold}
+    triggerOnce={triggerOnce}
+  >
     {children}
   </AnimateIn>
 )
 
-const DiyAnimation = ({from, to, rootMargin="0px", threshold=0, triggerOnce=false, children }) => (
-  <AnimateIn from={from } to={to} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
+const DiyAnimation = ({ from, to, rootMargin = '0px', threshold = 0, triggerOnce = false, children }) => (
+  <AnimateIn from={from} to={to} rootMargin={rootMargin} threshold={threshold} triggerOnce={triggerOnce}>
     {children}
   </AnimateIn>
 )
-
 
 const AnimateOnScreen = {
   FadeIn,
