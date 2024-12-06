@@ -2,9 +2,9 @@ import React, { version, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
-import CountUp from 'react-countup'
-import { PinInput } from 'react-input-pin-code'
-import Spotlight from '@stateless/Spotlight'
+// import CountUp from 'react-countup'
+// import { PinInput } from 'react-input-pin-code'
+import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
@@ -230,9 +230,9 @@ const Home = () => {
       <section style={{ marginBottom: 40 }}>
         <ShiftingCard />
       </section>
-      <section style={{ marginBottom: 40 }}>
+      {/* <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
-      </section>
+      </section> */}
       <section style={{ marginBottom: 40 }}>
         <AnimateOnScreen.FadeIn>
           <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
@@ -260,10 +260,10 @@ const Home = () => {
           <img src="https://picsum.photos/360/200.jpg" alt="" />
         </AnimateOnScreen.DiyAnimation>
       </section>
-      <section style={{ marginBottom: 40, width: 360, height: 200 }}>
-        <Spotlight className="w-full h-full group mx-auto grid max-w-sm items-start gap-6">
-          <div className="relative w-full h-full overflow-hidden rounded-2xl bg-gray-800 p-px before:pointer-events-none before:absolute before:-left-40 before:-top-40 before:z-10 before:h-80 before:w-80 before:translate-x-[var(--mouse-x)] before:translate-y-[var(--mouse-y)] before:rounded-full before:bg-indigo-900/90 before:opacity-0 before:blur-3xl before:transition-opacity before:duration-500 after:pointer-events-none after:absolute after:-left-48 after:-top-48 after:z-30 after:h-64 after:w-64 after:translate-x-[var(--mouse-x)] after:translate-y-[var(--mouse-y)] after:rounded-full after:bg-indigo-500 after:opacity-0 after:blur-3xl after:transition-opacity after:duration-500 after:hover:opacity-20 before:group-hover:opacity-100"></div>
-        </Spotlight>
+      <section style={{ marginBottom: 40, display: 'flex' }}>
+        <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff'}}>
+          <section></section>
+        </SpotlightCard>
       </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
         <MeshGradientBackground />
@@ -304,9 +304,9 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section style={{ margin: 20, fontSize: 40 }}>
+      {/* <section style={{ margin: 20, fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy scrollSpyDelay={1000} />
-      </section>
+      </section> */}
       {/* <section style={{ margin: 20 }}>
         <Masonry />
       </section> */}

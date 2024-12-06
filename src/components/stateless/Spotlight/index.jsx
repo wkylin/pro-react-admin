@@ -1,60 +1,60 @@
 import React, { useRef, useState, useEffect } from 'react'
-import useMousePosition from '@hooks/useMousePosition'
+import styles from './index.module.less'
 
-export default function Spotlight({ children, className = '' }) {
-  const containerRef = useRef(null)
-  const mousePosition = useMousePosition()
-  const mouse = useRef({ x: 0, y: 0 })
-  const containerSize = useRef({ w: 0, h: 0 })
-  const [boxes, setBoxes] = useState([])
+const SpotlightCard = ({className, style,children}) => {
+  const divRef = useRef(null)
+  const [isFocused, setIsFocused] = useState(false)
+  const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [opacity, setOpacity] = useState(0)
 
-  useEffect(() => {
-    containerRef.current && setBoxes(Array.from(containerRef.current.children).map((el) => el))
-  }, [])
+  const handleMouseMove = (e) => {
+    if (!divRef.current || isFocused) return
 
-  useEffect(() => {
-    initContainer()
-    window.addEventListener('resize', initContainer)
+    const div = divRef.current
+    const rect = div.getBoundingClientRect()
 
-    return () => {
-      window.removeEventListener('resize', initContainer)
-    }
-  }, [boxes])
-
-  useEffect(() => {
-    onMouseMove()
-  }, [mousePosition])
-
-  const initContainer = () => {
-    if (containerRef.current) {
-      containerSize.current.w = containerRef.current.offsetWidth
-      containerSize.current.h = containerRef.current.offsetHeight
-    }
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top })
   }
 
-  const onMouseMove = () => {
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect()
-      const { w, h } = containerSize.current
-      const x = mousePosition.x - rect.left
-      const y = mousePosition.y - rect.top
-      const inside = x < w && x > 0 && y < h && y > 0
-      if (inside) {
-        mouse.current.x = x
-        mouse.current.y = y
-        boxes.forEach((box) => {
-          const boxX = -(box.getBoundingClientRect().left - rect.left) + mouse.current.x
-          const boxY = -(box.getBoundingClientRect().top - rect.top) + mouse.current.y
-          box.style.setProperty('--mouse-x', `${boxX}px`)
-          box.style.setProperty('--mouse-y', `${boxY}px`)
-        })
-      }
-    }
+  const handleFocus = () => {
+    setIsFocused(true)
+    setOpacity(1)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+    setOpacity(0)
+  }
+
+  const handleMouseEnter = () => {
+    setOpacity(1)
+  }
+
+  const handleMouseLeave = () => {
+    setOpacity(0)
   }
 
   return (
-    <div className={className} ref={containerRef}>
+    <section
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`${styles.cardEffect} ${className}`}
+      style={{...style}}
+    >
+      <section
+        className={styles.spotlight}
+        style={{
+          opacity,
+          background: `radial-gradient(1000px circle at ${position.x}px ${position.y}px, rgba(190,255,255,.2), transparent 40%)`,
+        }}
+      />
       {children}
-    </div>
+    </section>
   )
 }
+
+export default SpotlightCard

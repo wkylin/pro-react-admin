@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
-// import { StickyContainer, Sticky } from 'react-sticky-ts'
-import { StickyContainer, Sticky } from 'react-sticky'
+import StickyBox from 'react-sticky-box'
 import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
 import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
@@ -26,17 +25,15 @@ const ProTabs = (props) => {
     token: { colorBgContainer },
   } = theme.useToken()
 
-  const renderTabBar = (_props, DefaultTabBar) => (
-    <Sticky topOffset={40} relative>
-      {({ style }) => (
-        <DefaultTabBar
-          key={nanoid()}
-          {..._props}
-          className="pro-tabs"
-          style={{ ...style, background: colorBgContainer }}
-        />
-      )}
-    </Sticky>
+  const renderTabBar = (props, DefaultTabBar) => (
+    <StickyBox offsetTop={0} style={{ zIndex: 9999}}>
+      <DefaultTabBar
+        key={nanoid()}
+        {...props}
+        className="pro-tabs"
+        style={{ background: colorBgContainer }}
+      />
+    </StickyBox>
   )
 
   useEffect(() => {
@@ -127,75 +124,74 @@ const ProTabs = (props) => {
   }
 
   return (
-    <StickyContainer className="layout-container" id="container">
-      <Tabs
-        hideAdd
-        type="editable-card"
-        onChange={onChange}
-        onTabClick={onTabClick}
-        onTabScroll={onTabScroll}
-        onEdit={onEdit}
-        renderTabBar={renderTabBar}
-        tabBarStyle={{
-          zIndex: 2,
-        }}
-        activeKey={activeKey}
-        destroyInactiveTabPane={false}
-        tabBarExtraContent={{
-          left: (
-            <Space align="center" size={30} style={{ margin: '0 25px' }}>
-              <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
+    <Tabs
+      hideAdd
+      type="editable-card"
+      onChange={onChange}
+      onTabClick={onTabClick}
+      onTabScroll={onTabScroll}
+      onEdit={onEdit}
+      renderTabBar={renderTabBar}
+      className="layout-container" id="container"
+      tabBarStyle={{
+        zIndex: 2,
+      }}
+      activeKey={activeKey}
+      destroyInactiveTabPane={false}
+      tabBarExtraContent={{
+        left: (
+          <Space align="center" size={30} style={{ margin: '0 25px' }}>
+            <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
+          </Space>
+        ),
+        right: (
+          <>
+            <Space style={{ padding: '0 5px' }}>
+              <Fullscreen ele="#fullScreenContent" placement="left" tips="主内容全屏" />
             </Space>
-          ),
-          right: (
-            <>
-              <Space style={{ padding: '0 5px' }}>
-                <Fullscreen ele="#fullScreenContent" placement="left" tips="主内容全屏" />
-              </Space>
-              {panes.length > 2 ? (
-                <Dropdown
-                  menu={{
-                    items: tabRightMenu,
-                    onClick: ({ key }) => {
-                      onTabContextMenu(key)
-                    },
-                  }}
-                  trigger={['hover']}
-                >
-                  <Button type="link">
-                    More <DownOutlined />
-                  </Button>
-                </Dropdown>
-              ) : null}
-            </>
-          ),
-        }}
-        items={panes.map((pane) => ({
-          label: (
-            <>
-              {pane.key === fullPath && pane.key !== '/404' && (
-                <SyncOutlined style={{ padding: '0 5px' }} onClick={refreshTab} title="刷新" spin={isReload} />
+            {panes.length > 2 ? (
+              <Dropdown
+                menu={{
+                  items: tabRightMenu,
+                  onClick: ({ key }) => {
+                    onTabContextMenu(key)
+                  },
+                }}
+                trigger={['hover']}
+              >
+                <Button type="link">
+                  More <DownOutlined />
+                </Button>
+              </Dropdown>
+            ) : null}
+          </>
+        ),
+      }}
+      items={panes.map((pane) => ({
+        label: (
+          <>
+            {pane.key === fullPath && pane.key !== '/404' && (
+              <SyncOutlined style={{ padding: '0 5px' }} onClick={refreshTab} title="刷新" spin={isReload} />
+            )}
+            {pane.i18nKey ? t(pane.i18nKey) : pane.title}
+          </>
+        ),
+        key: pane.key,
+        closable: pane.closable,
+        forceRender: true,
+        children: (
+          <MyErrorBoundary fixError={fixError}>
+            <div className="layout-tabpanel">
+              {isReload && pane.key === fullPath && pane.key !== '/404' ? (
+                <Loading tip="刷新中..." />
+              ) : (
+                <>{pane.content}</>
               )}
-              {pane.i18nKey ? t(pane.i18nKey) : pane.title}
-            </>
-          ),
-          key: pane.key,
-          closable: pane.closable,
-          forceRender: true,
-          children: (
-            <MyErrorBoundary fixError={fixError}>
-              <div className="layout-tabpanel">
-                {isReload && pane.key === fullPath && pane.key !== '/404' ? (
-                  <Loading tip="刷新中..." />
-                ) : (
-                  <>{pane.content}</>
-                )}
-              </div>
-            </MyErrorBoundary>
-          ),
-        }))}
-      />
-    </StickyContainer>
+            </div>
+          </MyErrorBoundary>
+        ),
+      }))}
+    />
   )
 }
 
