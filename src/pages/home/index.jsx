@@ -265,6 +265,11 @@ const Home = () => {
           <section></section>
         </SpotlightCard>
       </section>
+      <section className={styles.box} style={{ marginBottom: 40, width: 360, height: 200, position: 'relative', backgroundColor: 'rgba(0, 0,0, 0.9)', borderRadius:8 }}>
+        <section className={styles.dotMask}>
+          我的中国心
+          </section>
+      </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
         <MeshGradientBackground />
       </section>
