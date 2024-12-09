@@ -26,13 +26,8 @@ const ProTabs = (props) => {
   } = theme.useToken()
 
   const renderTabBar = (props, DefaultTabBar) => (
-    <StickyBox offsetTop={0} style={{ zIndex: 9999}}>
-      <DefaultTabBar
-        key={nanoid()}
-        {...props}
-        className="pro-tabs"
-        style={{ background: colorBgContainer }}
-      />
+    <StickyBox offsetTop={0} style={{ zIndex: 9999 }}>
+      <DefaultTabBar key={nanoid()} {...props} className="pro-tabs" style={{ background: colorBgContainer }} />
     </StickyBox>
   )
 
@@ -132,7 +127,8 @@ const ProTabs = (props) => {
       onTabScroll={onTabScroll}
       onEdit={onEdit}
       renderTabBar={renderTabBar}
-      className="layout-container" id="container"
+      className="layout-container"
+      id="container"
       tabBarStyle={{
         zIndex: 2,
       }}
