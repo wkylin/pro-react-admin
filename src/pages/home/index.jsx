@@ -6,6 +6,7 @@ import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
 // import { PinInput } from 'react-input-pin-code'
 import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
+import Marquee from "react-fast-marquee"
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -319,7 +320,7 @@ const Home = () => {
         <TagCloud />
       </section>
       <section style={{ margin: 20 }}>
-        <SlideLinear>
+        {/* <SlideLinear>
           <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
           <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
           <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
@@ -328,9 +329,16 @@ const Home = () => {
           <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
           <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
           <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-        </SlideLinear>
+        </SlideLinear> */}
+        <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>React</div>
+        </Marquee>
       </section>
-
+      <section style={{ margin: 20 }}>
+        <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>Vue</div>
+        </Marquee>
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
