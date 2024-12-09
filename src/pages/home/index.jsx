@@ -7,6 +7,7 @@ import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
 import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
 import Marquee from "react-fast-marquee"
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -27,8 +28,8 @@ import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import TagCloud from '@stateless/TagCloud'
-import SlideLinear from '@stateless/SlideLinear'
-import Masonry from '@container/masonryContainer'
+// import SlideLinear from '@stateless/SlideLinear'
+// import Masonry from '@container/masonryContainer'
 
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
@@ -316,29 +317,7 @@ const Home = () => {
       {/* <section style={{ margin: 20 }}>
         <Masonry />
       </section> */}
-      <section style={{ margin: 20 }}>
-        <TagCloud />
-      </section>
-      <section style={{ margin: 20 }}>
-        {/* <SlideLinear>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-          <div style={{ width: 200, height: 40, background: '#aaa', margin: '0 10px', borderRadius: 4 }}></div>
-        </SlideLinear> */}
-        <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>React</div>
-        </Marquee>
-      </section>
-      <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>Vue</div>
-        </Marquee>
-      </section>
+
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
@@ -367,18 +346,44 @@ const Home = () => {
           </Button>
         </Flex>
       </section>
-
       <section>
         {isStream && <div>正在输入...</div>}
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
-
-      <section style={{ position: 'relative', height: 300 }}>
-        <AnimateWave>
-          <p> wave </p>
-        </AnimateWave>
+      <section style={{ position: 'relative' }}>
+        <AnimateWave />
       </section>
+      <section style={{ margin: 20 }}>
+        <ResponsiveMasonry
+          columnsCountBreakPoints={{350: 1, 750: 2, 900: 6}}
+        >
+          <Masonry gutter="10px">
+            <LazyLoadImage src="https://picsum.photos/id/1/300/100" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/2/300/200" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/3/300/150" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/4/300/150" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/5/300/200" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/6/300/100" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/7/300/150" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/8/300/200" alt="Strawberries" />
+          </Masonry>
+        </ResponsiveMasonry>
+      </section>
+      <section style={{ margin: 20 }}>
+        <TagCloud />
+      </section>
+      <section style={{ margin: 20 }}>
+        <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>React</div>
+        </Marquee>
+      </section>
+      <section style={{ margin: 20 }}>
+        <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>Vue</div>
+        </Marquee>
+      </section>
+
     </FixTabPanel>
   )
 }

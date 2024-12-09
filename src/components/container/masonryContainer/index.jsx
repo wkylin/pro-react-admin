@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import useMasonry from '@hooks/useMasonry'
 
 const Masonry = () => {
