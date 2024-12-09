@@ -7,7 +7,8 @@ import CountUp from 'react-countup'
 import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
 import Marquee from "react-fast-marquee"
-import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
+import useDetectScroll, { Direction } from "@smakss/react-scroll-direction"
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -164,6 +165,8 @@ const Home = () => {
       })
   }
 
+  const { scrollDir, scrollPosition } = useDetectScroll({target: document.getElementById('container')})
+
   return (
     <FixTabPanel>
       <section style={{ marginBottom: 15 }}>
@@ -188,6 +191,12 @@ const Home = () => {
       <LineBordered text="A line bordered text." />
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
+      </section>
+      <section style={{ marginBottom: 40, fontSize: 16 }}>
+        <h2>Scroll direction: {`${scrollDir}`}</h2>
+        <p>
+          Scroll position - Top: {scrollPosition.top}, Bottom: {scrollPosition.bottom}
+        </p>
       </section>
       <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h3>
@@ -268,7 +277,7 @@ const Home = () => {
       <section className={styles.box} style={{ marginBottom: 40, width: 360, height: 200, position: 'relative', backgroundColor: 'rgba(0, 0,0, 0.9)', borderRadius:8 }}>
         <section className={styles.dotMask}>
           我的中国心
-          </section>
+        </section>
       </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
         <MeshGradientBackground />
@@ -276,6 +285,7 @@ const Home = () => {
       <section style={{ marginBottom: 40 }}>
         <AnimateRipple>Click Me</AnimateRipple>
       </section>
+
       <section style={{ marginBottom: 40 }}>
         <section className={styles.effect}> Hello CSS</section>
       </section>
@@ -346,6 +356,7 @@ const Home = () => {
         <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
+
       <section style={{ position: 'relative' }}>
         <AnimateWave />
       </section>

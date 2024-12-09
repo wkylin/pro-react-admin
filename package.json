@@ -224,6 +224,7 @@
     "@sentry/cli": "^2.39.1",
     "@sentry/react": "^8.41.0",
     "@sentry/tracing": "^7.119.0",
+    "@smakss/react-scroll-direction": "^4.2.0",
     "@supermapgis/iclient-leaflet": "^11.2.1",
     "@use-gesture/react": "^10.3.1",
     "animate.css": "^4.1.1",
