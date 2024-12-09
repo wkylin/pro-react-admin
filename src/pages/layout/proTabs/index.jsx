@@ -26,7 +26,7 @@ const ProTabs = (props) => {
   } = theme.useToken()
 
   const renderTabBar = (props, DefaultTabBar) => (
-    <StickyBox offsetTop={0} style={{ zIndex: 9999}}>
+    <StickyBox offsetTop={0} style={{ zIndex: 10}}>
       <DefaultTabBar
         key={nanoid()}
         {...props}
