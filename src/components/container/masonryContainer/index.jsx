@@ -1,6 +1,6 @@
 import useMasonry from '@hooks/useMasonry'
 
-const Masonry = () => {
+const MyMasonry = () => {
   const masonryContainer = useMasonry()
   return (
     <div
@@ -29,4 +29,4 @@ const Masonry = () => {
   )
 }
 
-export default Masonry
+export default MyMasonry

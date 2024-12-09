@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useLayoutEffect, useState, useRef } from 'react'
 
 const useMasonry = () => {
   const masonryContainer = useRef<HTMLDivElement | null>(null)
   const [items, setItems] = useState<ChildNode[]>([])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (masonryContainer.current) {
       const masonryItem = Array.from(masonryContainer.current.children)
       setItems(masonryItem)

@@ -27,6 +27,7 @@ import AnimateOnScreen from '@stateless/AnimateOnScreen'
 import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
+import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
@@ -165,7 +166,9 @@ const Home = () => {
       })
   }
 
-  const { scrollDir, scrollPosition } = useDetectScroll({target: document.getElementById('container')})
+  // const { scrollDir, scrollPosition } = useDetectScroll({target: document.getElementById('container')})
+
+  const [barRect, barRef] = useRect()
 
   return (
     <FixTabPanel>
@@ -192,12 +195,12 @@ const Home = () => {
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
       </section>
-      <section style={{ marginBottom: 40, fontSize: 16 }}>
+      {/* <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h2>Scroll direction: {`${scrollDir}`}</h2>
         <p>
           Scroll position - Top: {scrollPosition.top}, Bottom: {scrollPosition.bottom}
         </p>
-      </section>
+      </section> */}
       <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h3>
           React Animate On Scroll.
@@ -274,11 +277,14 @@ const Home = () => {
           <section></section>
         </SpotlightCard>
       </section>
-      <section className={styles.box} style={{ marginBottom: 40, width: 360, height: 200, position: 'relative', backgroundColor: 'rgba(0, 0,0, 0.9)', borderRadius:8 }}>
-        <section className={styles.dotMask}>
-          我的中国心
+      <section className={styles.box} style={{ marginBottom: 10, width: 360, height: 200, position: 'relative', backgroundColor: 'rgba(0, 0,0, 0.9)', borderRadius:8 }}>
+        <section className={styles.dotMask} ref={barRef}>
+          dot mask
         </section>
       </section>
+      <section style={{ marginBottom: 40, fontSize: 18 }}>
+        <section>RectResult.</section>
+        width: {parseInt(barRect?.width)} height: {parseInt(barRect?.height)} top: {parseInt(barRect?.top)} bottom: {parseInt(barRect?.bottom)} right: {parseInt(barRect?.right)} left: {parseInt(barRect?.left)}</section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
         <MeshGradientBackground />
       </section>
@@ -373,6 +379,10 @@ const Home = () => {
             <LazyLoadImage src="https://picsum.photos/id/6/300/100" alt="Strawberries" />
             <LazyLoadImage src="https://picsum.photos/id/7/300/150" alt="Strawberries" />
             <LazyLoadImage src="https://picsum.photos/id/8/300/200" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/1/300/100" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/2/300/200" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/3/300/150" alt="Strawberries" />
+            <LazyLoadImage src="https://picsum.photos/id/4/300/150" alt="Strawberries" />
           </Masonry>
         </ResponsiveMasonry>
       </section>
@@ -389,7 +399,6 @@ const Home = () => {
           <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>Vue</div>
         </Marquee>
       </section>
-
     </FixTabPanel>
   )
 }
