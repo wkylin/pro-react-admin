@@ -6,9 +6,9 @@ import CountUp from 'react-countup'
 // import { PinInput } from 'react-input-pin-code'
 import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
-import Marquee from "react-fast-marquee"
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
-import useDetectScroll, { Direction } from "@smakss/react-scroll-direction"
+import Marquee from 'react-fast-marquee'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import useDetectScroll, { Direction } from '@smakss/react-scroll-direction'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -184,7 +184,7 @@ const Home = () => {
       <section style={{ marginBottom: 40 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
       </section>
-      <section className={styles.line}></section>
+      <section className={styles.line} />
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
       </section>
@@ -202,13 +202,11 @@ const Home = () => {
         </p>
       </section> */}
       <section style={{ marginBottom: 40, fontSize: 16 }}>
-        <h3>
-          React Animate On Scroll.
-        </h3>
+        <h3>React Animate On Scroll.</h3>
         <h3>
           <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
         </h3>
-        <h3 style={{marginBottom: 40}}>
+        <h3 style={{ marginBottom: 40 }}>
           <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
         </h3>
         <ScrollAnimation>
@@ -267,24 +265,36 @@ const Home = () => {
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+          triggerOnce
         >
           <img src="https://picsum.photos/360/200.jpg" alt="" />
         </AnimateOnScreen.DiyAnimation>
       </section>
       <section style={{ marginBottom: 40, display: 'flex' }}>
-        <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff'}}>
-          <section></section>
+        <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
+          <section />
         </SpotlightCard>
       </section>
-      <section className={styles.box} style={{ marginBottom: 10, width: 360, height: 200, position: 'relative', backgroundColor: 'rgba(0, 0,0, 0.9)', borderRadius:8 }}>
+      <section
+        className={styles.box}
+        style={{
+          marginBottom: 10,
+          width: 360,
+          height: 200,
+          position: 'relative',
+          backgroundColor: 'rgba(0, 0,0, 0.9)',
+          borderRadius: 8,
+        }}
+      >
         <section className={styles.dotMask} ref={barRef}>
           dot mask
         </section>
       </section>
       <section style={{ marginBottom: 40, fontSize: 18 }}>
         <section>RectResult.</section>
-        width: {parseInt(barRect?.width)} height: {parseInt(barRect?.height)} top: {parseInt(barRect?.top)} bottom: {parseInt(barRect?.bottom)} right: {parseInt(barRect?.right)} left: {parseInt(barRect?.left)}</section>
+        width: {parseInt(barRect?.width)} height: {parseInt(barRect?.height)} top: {parseInt(barRect?.top)} bottom:{' '}
+        {parseInt(barRect?.bottom)} right: {parseInt(barRect?.right)} left: {parseInt(barRect?.left)}
+      </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
         <MeshGradientBackground />
       </section>
@@ -299,17 +309,17 @@ const Home = () => {
         <section className={styles.watermark}>water mark</section>
         mask
       </section>
-      <section style={{ marginBottom: 40 }} >
-        <button className={styles['button']} onClick={fireConfetti}>
+      <section style={{ marginBottom: 40 }}>
+        <button className={styles.button} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
 
       <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
-        <div className={styles['circle-1']}></div>
-        <div className={styles['circle-2']}></div>
-        <div className={styles['circle-3']}></div>
-        <div className={styles['circle-4']}></div>
+        <div className={styles['circle-1']} />
+        <div className={styles['circle-2']} />
+        <div className={styles['circle-3']} />
+        <div className={styles['circle-4']} />
       </section>
 
       <section style={{ margin: 20 }} className={styles.eHElAY}>
@@ -367,9 +377,7 @@ const Home = () => {
         <AnimateWave />
       </section>
       <section style={{ margin: 20 }}>
-        <ResponsiveMasonry
-          columnsCountBreakPoints={{350: 1, 750: 2, 900: 6}}
-        >
+        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
           <Masonry gutter="10px">
             <LazyLoadImage src="https://picsum.photos/id/1/300/100" alt="Strawberries" />
             <LazyLoadImage src="https://picsum.photos/id/2/300/200" alt="Strawberries" />
@@ -391,12 +399,36 @@ const Home = () => {
       </section>
       <section style={{ margin: 20 }}>
         <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>React</div>
+          <div
+            style={{
+              width: 200,
+              height: 40,
+              lineHeight: '40px',
+              textAlign: 'center',
+              background: '#aaa',
+              margin: '0 10px',
+              borderRadius: 4,
+            }}
+          >
+            React
+          </div>
         </Marquee>
       </section>
       <section style={{ margin: 20 }}>
         <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>Vue</div>
+          <div
+            style={{
+              width: 200,
+              height: 40,
+              lineHeight: '40px',
+              textAlign: 'center',
+              background: '#aaa',
+              margin: '0 10px',
+              borderRadius: 4,
+            }}
+          >
+            Vue
+          </div>
         </Marquee>
       </section>
     </FixTabPanel>
