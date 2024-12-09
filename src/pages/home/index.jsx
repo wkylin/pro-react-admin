@@ -15,7 +15,6 @@ import ReMarkdown from '@stateless/ReMarkdown'
 import AlternatingText from '@stateless/AlternatingText'
 import AutoLink from '@stateless/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
-import StarRating from '@stateless/StarRating'
 import IsometricCard from '@stateless/IsometricCard'
 import AvatarCard from '@stateless/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
@@ -186,7 +185,6 @@ const Home = () => {
       <section>
         <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
       </section>
-      <StarRating value={2} />
       <LineBordered text="A line bordered text." />
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
