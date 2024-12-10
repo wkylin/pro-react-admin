@@ -29,6 +29,7 @@ import AnimateWave from '@stateless/AnimateWave'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
+import ShiCode from '@stateless/ShiCode'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
 
@@ -328,7 +329,6 @@ const Home = () => {
       <section style={{ margin: '20px 0', fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy />
       </section>
-
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
@@ -398,6 +398,21 @@ const Home = () => {
         <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
           <div style={{ width: 200, height: 40, lineHeight: '40px', textAlign: 'center', background: '#aaa', margin: '0 10px', borderRadius: 4 }}>Vue</div>
         </Marquee>
+      </section>
+      <section style={{ margin: '20px 0' }}>
+        <ShiCode
+          preCode={`
+const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
+  return (
+    <div>
+      <h2>{item.name}</h2>
+      <p>Price: {item.price}</p>
+      <p>Quantity: {item.quantity}</p>
+    </div>
+  );
+}
+          `}
+        />
       </section>
     </FixTabPanel>
   )
