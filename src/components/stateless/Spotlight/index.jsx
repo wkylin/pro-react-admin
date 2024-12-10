@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import styles from './index.module.less'
 
-const SpotlightCard = ({className, style, children}) => {
+const SpotlightCard = ({ className, style, children }) => {
   const divRef = useRef(null)
   const [isFocused, setIsFocused] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -58,9 +58,9 @@ const SpotlightCard = ({className, style, children}) => {
         className={styles.spotlight}
         style={{
           opacity,
-          border: "2px solid rgb(255, 255, 255)",
+          border: '2px solid rgb(255, 255, 255)',
           borderRadius: '8px',
-          WebkitMaskImage: `radial-gradient(40% 40% at ${position.x}px ${position.y}px, black 45%, transparent)`
+          WebkitMaskImage: `radial-gradient(40% 40% at ${position.x}px ${position.y}px, black 45%, transparent)`,
         }}
       />
       {children}
