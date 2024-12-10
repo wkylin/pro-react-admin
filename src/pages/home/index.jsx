@@ -8,7 +8,7 @@ import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
 import Marquee from 'react-fast-marquee'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
-import useDetectScroll, { Direction } from '@smakss/react-scroll-direction'
+// import useDetectScroll, { Direction } from '@smakss/react-scroll-direction'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -26,6 +26,7 @@ import ScrollAnimation from '@stateless/ScrollAnimation'
 import AnimateOnScreen from '@stateless/AnimateOnScreen'
 import AnimateRipple from '@stateless/AnimateRipple'
 import AnimateWave from '@stateless/AnimateWave'
+import NumberFlowFix from '@stateless/NumberFlowFix'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
@@ -65,7 +66,7 @@ const Home = () => {
     }
   }
 
-  const [pinValues, setPinValues] = useState(['', '', '', '', '', '', ''])
+  // const [pinValues, setPinValues] = useState(['', '', '', '', '', '', ''])
 
   const onSubmit = () => {
     if (chatText.trim() === '') {
@@ -339,10 +340,12 @@ const Home = () => {
       <section style={{ margin: '20px 0', fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy />
       </section>
+      <section style={{ margin: '20px 0', fontSize: 40 }}>
+        <NumberFlowFix />
+      </section>
       <section style={{ width: 600, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
-          {/* <LinearWrap> */}
           <Input.TextArea
             ref={textareaRef}
             defaultValue={chatText}
@@ -352,7 +355,6 @@ const Home = () => {
             autoSize
             style={{ width: 300, height: 30, caretColor: '#ff0000' }}
           />
-          {/* </LinearWrap> */}
           <Button
             style={{ margin: '0 10px' }}
             icon={<SendOutlined rotate={-60} />}

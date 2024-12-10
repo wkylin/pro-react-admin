@@ -217,6 +217,7 @@
     "@ant-design/cssinjs": "^1.22.0",
     "@ant-design/icons": "^5.5.1",
     "@loadable/component": "^5.16.4",
+    "@number-flow/react": "^0.4.2",
     "@pansy/react-amap": "^2.21.0",
     "@react-spring/core": "^9.7.5",
     "@react-spring/web": "^9.7.5",
