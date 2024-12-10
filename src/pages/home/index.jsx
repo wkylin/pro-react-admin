@@ -186,7 +186,7 @@ const Home = () => {
       <section style={{ marginBottom: 40 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
       </section>
-      <section className={styles.line}></section>
+      <section className={styles.line} />
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
       </section>
@@ -267,14 +267,14 @@ const Home = () => {
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+          triggerOnce
         >
           <img src="https://picsum.photos/360/200.jpg" alt="" />
         </AnimateOnScreen.DiyAnimation>
       </section>
       <section style={{ marginBottom: 40, display: 'flex' }}>
         <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
-          <section></section>
+          <section />
         </SpotlightCard>
       </section>
       <section
@@ -312,16 +312,16 @@ const Home = () => {
         mask
       </section>
       <section style={{ marginBottom: 40 }}>
-        <button className={styles['button']} onClick={fireConfetti}>
+        <button className={styles.button} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
 
       <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
-        <div className={styles['circle-1']}></div>
-        <div className={styles['circle-2']}></div>
-        <div className={styles['circle-3']}></div>
-        <div className={styles['circle-4']}></div>
+        <div className={styles['circle-1']} />
+        <div className={styles['circle-2']} />
+        <div className={styles['circle-3']} />
+        <div className={styles['circle-4']} />
       </section>
 
       <section style={{ margin: 20 }} className={styles.eHElAY}>
