@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const useCycle = (options = [], defaultValue = '') => {
-  const [index, setIndex] = React.useState(defaultValue ? undefined : 0)
+  const [index, setIndex] = useState(defaultValue ? undefined : 0)
   const next = () => setIndex((i) => ((i ?? -1) + 1) % options.length)
 
   return [index == null && defaultValue ? defaultValue : options[index ?? 0], next]

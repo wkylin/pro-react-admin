@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const useRootClick = (cb = () => {}) => {
-  React.useEffect(() => {
+  useEffect(() => {
     const controller = new AbortController()
     document.documentElement.addEventListener(
       'click',
