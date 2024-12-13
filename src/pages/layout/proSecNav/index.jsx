@@ -45,7 +45,7 @@ const ProSecNav = () => {
   useEffect(() => {
     const selectedPathKey = pathname
     setSelectedKeys([selectedPathKey])
-    setOpenKeys(isOpenChange ? openKeys : (pathSubmenu[pathname] ?? openKeys))
+    setOpenKeys(isOpenChange ? openKeys : pathSubmenu[pathname] ?? openKeys)
   }, [pathname, openKeys, isOpenChange])
 
   const onOpenChange = (keys) => {
