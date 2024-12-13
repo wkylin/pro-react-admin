@@ -20,7 +20,7 @@ export const getKeyName = (pathName = '/404') => {
       title: 'Not Found',
       tabKey: '/404',
       element: <Exception404 />,
-      i18nKey: 'notFound',
+      i18nKey: 'Not Found',
     }
   }
 

@@ -9,7 +9,7 @@ const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
-const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+// const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const { EsbuildPlugin } = require('esbuild-loader')
@@ -107,15 +107,15 @@ const prodWebpackConfig = merge(common, {
   },
 })
 
-if (useSentryMap) {
-  prodWebpackConfig.plugins.push(
-    new SentryWebpackPlugin({
-      release: packageJson.version,
-      include: path.join(__dirname, '../dist/static/js'),
-      configFile: '../.sentryclirc',
-      urlPrefix: '~/static/js',
-    })
-  )
-}
+// if (useSentryMap) {
+//   prodWebpackConfig.plugins.push(
+//     new SentryWebpackPlugin({
+//       release: packageJson.version,
+//       include: path.join(__dirname, '../dist/static/js'),
+//       configFile: '../.sentryclirc',
+//       urlPrefix: '~/static/js',
+//     })
+//   )
+// }
 
 module.exports = prodWebpackConfig

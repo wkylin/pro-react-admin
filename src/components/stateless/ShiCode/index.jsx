@@ -1,5 +1,4 @@
 import React from 'react'
-import { codeToHtml } from 'shiki'
 import { Highlight, themes } from 'prism-react-renderer'
 import useCopyToClipboard from '@hooks/useCopyToClipboard'
 import { CopyOutlined, CheckCircleTwoTone } from '@ant-design/icons'

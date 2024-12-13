@@ -23,7 +23,7 @@ const ProBreadcrumb = () => {
     if (routeList.length === 0) {
       setBreadcrumbList([
         { path: '/', name: '首页', key: '/', i18nKey: 'home', isSubMenu: false },
-        { path: '404', name: 'Not Found', key: '/404', i18nKey: 'notFound', isSubMenu: false },
+        { path: '404', name: 'Not Found', key: '/404', i18nKey: 'Not Found', isSubMenu: false },
       ])
     } else {
       setBreadcrumbList([...routeList])

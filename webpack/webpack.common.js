@@ -50,7 +50,7 @@ const config = {
     // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
-    extensions: ['.*', '.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '...'],
     alias: {
       '@src': path.resolve('./src'),
       '@stateless': path.resolve('./src/components/stateless'),
