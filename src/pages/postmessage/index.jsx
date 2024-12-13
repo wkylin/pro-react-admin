@@ -49,6 +49,20 @@ const PostMessage = () => {
         referrerPolicy="no-referrer-when-downgrade"
         sandbox="allow-scripts allow-same-origin"
       />
+
+      {/* <iframe
+        id="result"
+        name="CodePen"
+        title="CodePen Preview"
+        src="https://codepen.io/oscar-jite/fullpage/RwzOrjv?anon=true&amp;view="
+        sandbox="allow-downloads allow-forms allow-modals allow-pointer-lock allow-popups-to-escape-sandbox allow-popups allow-presentation allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
+        allow="accelerometer *; bluetooth *; camera *; encrypted-media *; display-capture *; geolocation *; gyroscope *; microphone *; midi *; clipboard-read *; clipboard-write *; web-share *; serial *; xr-spatial-tracking *"
+        allowtransparency="true"
+        allowPaymentRequest="true"
+        allowfullscreen="true"
+        class="result-iframe"
+        loading="lazy"
+      /> */}
     </>
   )
 }
