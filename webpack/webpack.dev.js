@@ -57,9 +57,9 @@ const devWebpackConfig = merge(common, {
     new ReactRefreshWebpackPlugin({
       overlay: false,
     }),
-    new webpack.debug.ProfilingPlugin({
-      outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
-    }),
+    // new webpack.debug.ProfilingPlugin({
+    //   outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
+    // }),
   ].filter(Boolean),
   optimization: {
     removeAvailableModules: false,

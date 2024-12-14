@@ -4,7 +4,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const CircularDependencyPlugin = require('circular-dependency-plugin')
+// const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
@@ -96,13 +96,13 @@ const config = {
     }),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
-    new CircularDependencyPlugin({
-      exclude: /node_modules/,
-      include: /src/,
-      failOnError: true,
-      allowAsyncCycles: false,
-      cwd: process.cwd(),
-    }),
+    // new CircularDependencyPlugin({
+    //   exclude: /node_modules/,
+    //   include: /src/,
+    //   failOnError: true,
+    //   allowAsyncCycles: false,
+    //   cwd: process.cwd(),
+    // }),
     new NodePolyfillPlugin(),
     new WebpackBar(),
     new ForkTsCheckerWebpackPlugin({
@@ -220,6 +220,14 @@ const config = {
       },
     ],
   },
+  stats: {
+    all: false,
+    errors: true,
+    warnings: true,
+    errorDetails: true,
+    moduleTrace: true,  // 打印模块追踪信息，与--trace - warnings类似
+    excludeAssets: /node_modules/
+  }
 }
 
 if (USE_ANALYZE) {
