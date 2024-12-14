@@ -1,3 +1,4 @@
+import React from 'react'
 import NumberFlow from '@number-flow/react'
 import useCycle from '@hooks/useCycle'
 import useRootClick from '@hooks/useRootClick'
