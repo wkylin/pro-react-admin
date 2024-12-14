@@ -22,7 +22,7 @@
     "dev": "npm run start",
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development NODE_OPTIONS=--trace-deprecation webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
-    "build:production": "npm run && cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "build:production": "npm run && cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--max_old_space_size=8192 NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:test": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:dev": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=dev NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "prod:serve": "cross-env SENTRY_SOURCE_MAP=no BUILD_SERVE=prod BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
