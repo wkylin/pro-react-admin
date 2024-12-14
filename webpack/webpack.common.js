@@ -7,7 +7,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 // const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const ESLintWebpackPlugin = require('eslint-webpack-plugin')
 const paths = require('./paths')
 
@@ -105,9 +105,10 @@ const config = {
     // }),
     new NodePolyfillPlugin(),
     new WebpackBar(),
-    new ForkTsCheckerWebpackPlugin({
-      async: false,
-    }),
+    // new ForkTsCheckerWebpackPlugin({
+    //   async: false,
+    //   memoryLimit: 4096
+    // }),
     new ESLintWebpackPlugin({
       // 指定检查文件的根目录
       context: path.resolve(__dirname, '../src'),
