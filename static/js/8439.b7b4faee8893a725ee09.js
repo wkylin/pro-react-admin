@@ -1,3 +1,0 @@
-"use strict";(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[8439],{98439:function(o,e,n){n.r(e);const t=Object.freeze(JSON.parse('{"displayName":"CODEOWNERS","name":"codeowners","patterns":[{"include":"#comment"},{"include":"#pattern"},{"include":"#owner"}],"repository":{"comment":{"patterns":[{"begin":"^\\\\s*#","captures":{"0":{"name":"punctuation.definition.comment.codeowners"}},"end":"$","name":"comment.line.codeowners"}]},"owner":{"match":"\\\\S*@\\\\S+","name":"storage.type.function.codeowners"},"pattern":{"match":"^\\\\s*(\\\\S+)","name":"variable.other.codeowners"}},"scopeName":"text.codeowners"}'));e.default=[t]}}]);
-
-//# sourceMappingURL=8439.b7b4faee8893a725ee09.js.map
