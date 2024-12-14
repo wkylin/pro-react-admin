@@ -225,9 +225,9 @@ const config = {
     errors: true,
     warnings: true,
     errorDetails: true,
-    moduleTrace: true,  // 打印模块追踪信息，与--trace - warnings类似
-    excludeAssets: /node_modules/
-  }
+    moduleTrace: true, // 打印模块追踪信息，与--trace - warnings类似
+    excludeAssets: /node_modules/,
+  },
 }
 
 if (USE_ANALYZE) {
