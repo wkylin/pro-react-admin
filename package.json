@@ -223,7 +223,6 @@
     "@react-three/fiber": "^8.17.8",
     "@reduxjs/toolkit": "^2.5.0",
     "@smakss/react-scroll-direction": "^4.2.0",
-    "@supermapgis/iclient-leaflet": "^11.3.0",
     "@use-gesture/react": "^10.3.1",
     "animate.css": "^4.1.1",
     "antd": "^5.22.4",
