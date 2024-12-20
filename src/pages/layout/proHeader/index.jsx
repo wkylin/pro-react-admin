@@ -27,6 +27,10 @@ const ProHeader = () => {
     window.open('https://github.com/wkylin/pro-react-admin', '_blank')
   }
 
+  const redirectWrapped = () => {
+    window.open('https://www.githubwrapped.io/wkylin', '_blank')
+  }
+
   const items = [
     {
       key: '1',
@@ -87,6 +91,7 @@ const ProHeader = () => {
             />
             <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
             <Fullscreen />
+            <GithubOutlined style={{ fontSize: 16 }} onClick={redirectWrapped} />
             <LanguageSwitcher />
           </Space>
 
