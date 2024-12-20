@@ -641,3 +641,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 <!-- Give a ⭐️ if this project helped you! -->
 
 If you like the project, give it a star ⭐️, it will be a great encouragement to me.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=wkylin/pro-react-admin&type=Date)](https://star-history.com/#wkylin/pro-react-admin&Date)
