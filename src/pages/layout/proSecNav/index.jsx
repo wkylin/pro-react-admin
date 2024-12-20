@@ -67,6 +67,7 @@ const ProSecNav = () => {
     { label: t('home'), key: '/', icon: <HomeOutlined /> },
     { label: t('demo'), key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
+    { label: 'Motion', key: '/motion', icon: <QrcodeOutlined /> },
     { label: 'Qr Generate', key: '/qrcode', icon: <QrcodeOutlined /> },
     { label: 'Prism Render', key: '/prism', icon: <FireOutlined /> },
     { label: 'React Tilt', key: '/tilt', icon: <QrcodeOutlined /> },

@@ -43,6 +43,7 @@ const Barcode = lazy(() => import('@pages/barcode'))
 const Print = lazy(() => import('@pages/print'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
+const Motion = lazy(() => import('@pages/motion'))
 // const ReactPdf = lazy(() => import('@pages/reactPdf'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
@@ -82,6 +83,14 @@ const rootRouter = [
         key: '/parallax',
         auth: true,
         element: lazyLoad(ParallaxVert),
+      },
+      {
+        index: false,
+        path: 'motion',
+        name: 'Motion',
+        key: '/motion',
+        auth: false,
+        element: lazyLoad(Motion),
       },
       {
         index: false,
