@@ -18,6 +18,15 @@ const AnimateWave = ({ children }) => {
           apps
         </h2>
       </section>
+      <section style={{ fontSize: 30, position: 'relative' }}>
+        Dropping Texts:
+        <div className={styles.droppingTexts}>
+          <div>React</div>
+          <div>Vue</div>
+          <div>Angular</div>
+          <div>Remix!</div>
+        </div>
+      </section>
       {/* <Wave className="wave" fill='#8a2be2'
         paused={false}
         options={{
