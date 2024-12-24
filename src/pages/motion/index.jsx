@@ -1,7 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { motion, useAnimationControls, LayoutGroup, useScroll } from 'motion/react'
+import {
+  motion,
+  useAnimationControls,
+  LayoutGroup,
+  useScroll,
+  useMotionValueEvent,
+  useSpring,
+  useTransform,
+} from 'motion/react'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { is } from '@react-spring/shared'
+
+import './index.css'
 
 const animations = {
   show: {
@@ -90,11 +99,38 @@ const ParallaxVert = () => {
   const [listLabel, setListLabel] = useState(['JavaScript', 'html', 'css', 'webAssembly'])
   const [isBig, setBigState] = useState(false)
   const [leftState, setLeftState] = useState(false)
+
   const scrollRef = useRef(null)
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress, scrollY } = useScroll({
     container: scrollRef,
   })
+
+  const x = useTransform(scrollY, (value) => {
+    return (value * 1) / 5
+  })
+
+  const ref = useRef(null)
+  const { scrollYProgress: scrollAa } = useScroll({
+    container: scrollRef,
+    target: ref,
+    offset: ['end end', 'start start'],
+  })
+
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  })
+
+  const [scrollDirection, setScrollDirection] = useState('down')
+
+  useMotionValueEvent(scrollY, 'change', (current) => {
+    const diff = current - scrollY.getPrevious()
+    setScrollDirection(diff > 0 ? 'down' : 'up')
+  })
+
+  const rotate = useTransform(scrollY, [0, 100], [0, 360], { clamp: false })
 
   return (
     <FixTabPanel ref={scrollRef}>
@@ -108,7 +144,8 @@ const ParallaxVert = () => {
           height: 3,
           backgroundColor: '#aaa',
           borderRadius: '3px',
-          scaleX: scrollYProgress,
+          // scaleX: scrollYProgress,
+          scaleX: scaleX,
         }}
       ></motion.div>
       <motion.div
@@ -492,7 +529,7 @@ const ParallaxVert = () => {
           borderRadius: '60px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: buttonRight ? 'flex-end' : 'flex-start', // 这里改变 <-
+          justifyContent: buttonRight ? 'flex-end' : 'flex-start',
           padding: 10,
         }}
         onTap={() => {
@@ -509,6 +546,28 @@ const ParallaxVert = () => {
           }}
         ></motion.div>
       </motion.div>
+
+      <section style={{ fontSize: 30 }}>scrollDirection: {scrollDirection}</section>
+      <motion.div
+        style={{
+          width: 200,
+          height: 100,
+          backgroundColor: '#aaa',
+          borderRadius: '20px',
+          // scaleX: scrollYProgress,
+          x,
+          rotate,
+        }}
+      ></motion.div>
+      <motion.div
+        style={{
+          width: 200,
+          height: 100,
+          backgroundColor: '#aaa',
+          borderRadius: '20px',
+          scaleX,
+        }}
+      ></motion.div>
 
       <div
         style={{
@@ -777,8 +836,124 @@ const ParallaxVert = () => {
           <motion.span>黑点和文字都未设置layout</motion.span>
         </div>
       </div>
+      <section>
+        <section>
+          <div ref={ref} className="item">
+            <figure className="progress">
+              <svg id="progress" width="75" height="75" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="30"
+                  pathLength="1"
+                  className="indicator"
+                  style={{ pathLength: scrollAa }}
+                />
+              </svg>
+            </figure>
+          </div>
+        </section>
+        <section>
+          <div ref={ref} className="item">
+            <figure className="progress">
+              <svg id="progress" width="75" height="75" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="30"
+                  pathLength="1"
+                  className="indicator"
+                  style={{ pathLength: scrollAa }}
+                />
+              </svg>
+            </figure>
+          </div>
+        </section>
+        <section>
+          <div ref={ref} className="item">
+            <figure className="progress">
+              <svg id="progress" width="75" height="75" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="30"
+                  pathLength="1"
+                  className="indicator"
+                  style={{ pathLength: scrollAa }}
+                />
+              </svg>
+            </figure>
+          </div>
+        </section>
+        <section>
+          <div ref={ref} className="item">
+            <figure className="progress">
+              <svg id="progress" width="75" height="75" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="30"
+                  pathLength="1"
+                  className="indicator"
+                  style={{ pathLength: scrollAa }}
+                />
+              </svg>
+            </figure>
+          </div>
+        </section>
+        <section>
+          <div ref={ref} className="item">
+            <figure className="progress">
+              <svg id="progress" width="75" height="75" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r="30"
+                  pathLength="1"
+                  className="indicator"
+                  style={{ pathLength: scrollAa }}
+                />
+              </svg>
+            </figure>
+          </div>
+        </section>
+      </section>
     </FixTabPanel>
   )
 }
 
 export default ParallaxVert
+
+function Item({ scrollRef }) {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['end end', 'start start'],
+    container: scrollRef,
+  })
+
+  return (
+    <section>
+      <div ref={ref} className="item">
+        <figure className="progress">
+          <svg id="progress" width="75" height="75" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="30" pathLength="1" className="bg" />
+            <motion.circle
+              cx="50"
+              cy="50"
+              r="30"
+              pathLength="1"
+              className="indicator"
+              style={{ pathLength: scrollYProgress }}
+            />
+          </svg>
+        </figure>
+      </div>
+    </section>
+  )
+}
