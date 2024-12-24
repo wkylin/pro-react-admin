@@ -118,26 +118,27 @@ select:-webkit-autofill:active {
 }
 
 .layout-container {
-  overflow: auto;
+  overflow: hidden;
   height: 100%;
   width: 100%;
 }
 
 .layout-container .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
-  padding: 16px;
+  padding: 0 4px 8px 8px;
 }
 
 .layout-container .pro-tabs {
   z-index: 10;
+  margin-bottom: 0;
 }
 
 .layout-container .layout-tabpanel {
   width: 100%;
-  min-height: calc(100vh - 232px);
+  min-height: calc(100vh - 204px);
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: auto;
+  overflow: hidden;
 }
 
 @keyframes rotate {

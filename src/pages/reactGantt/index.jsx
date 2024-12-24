@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 import { Gantt, Willow } from 'wx-react-gantt'
+import FixTabPanel from '@stateless/FixTabPanel'
 import 'wx-react-gantt/dist/gantt.css'
 const ReactGantt = () => {
   const tasks = [
@@ -53,9 +54,11 @@ const ReactGantt = () => {
   ]
 
   return (
-    <Willow>
-      <Gantt tasks={tasks} links={links} scales={scales} />
-    </Willow>
+    <FixTabPanel>
+      <Willow>
+        <Gantt tasks={tasks} links={links} scales={scales} />
+      </Willow>
+    </FixTabPanel>
   )
 }
 

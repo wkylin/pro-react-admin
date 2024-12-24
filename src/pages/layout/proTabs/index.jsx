@@ -131,6 +131,7 @@ const ProTabs = (props) => {
       id="container"
       tabBarStyle={{
         zIndex: 2,
+        marginBottom: 0,
       }}
       activeKey={activeKey}
       destroyInactiveTabPane={false}

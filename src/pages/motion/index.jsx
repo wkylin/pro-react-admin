@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react'
-import { motion, useAnimationControls, LayoutGroup } from 'motion/react'
+import React, { useEffect, useState, useRef } from 'react'
+import { motion, useAnimationControls, LayoutGroup, useScroll } from 'motion/react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { is } from '@react-spring/shared'
 
@@ -90,11 +90,27 @@ const ParallaxVert = () => {
   const [listLabel, setListLabel] = useState(['JavaScript', 'html', 'css', 'webAssembly'])
   const [isBig, setBigState] = useState(false)
   const [leftState, setLeftState] = useState(false)
+  const scrollRef = useRef(null)
+
+  const { scrollYProgress } = useScroll({
+    container: scrollRef,
+  })
 
   return (
-    <FixTabPanel>
+    <FixTabPanel ref={scrollRef}>
       <h2>Hi, Motion</h2>
-
+      <motion.div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: 3,
+          backgroundColor: '#aaa',
+          borderRadius: '3px',
+          scaleX: scrollYProgress,
+        }}
+      ></motion.div>
       <motion.div
         style={{
           width: 100,
