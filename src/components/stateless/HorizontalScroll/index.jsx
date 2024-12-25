@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 import { motion, useTransform, useScroll } from 'motion/react'
 
 const cards = [
