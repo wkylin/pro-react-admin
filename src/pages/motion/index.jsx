@@ -68,7 +68,7 @@ const easeNames = [
 ]
 
 const randomSort = (arr) => {
-  let newArr = []
+  const newArr = []
   const len = arr.length
   for (let i = 0; i < len; i++) {
     const random = Math.floor(Math.random() * arr.length)
@@ -138,9 +138,9 @@ const ParallaxVert = () => {
           backgroundColor: '#aaa',
           borderRadius: '3px',
           // scaleX: scrollYProgress,
-          scaleX: scaleX,
+          scaleX,
         }}
-      ></motion.div>
+      />
       <motion.div
         style={{
           width: 100,
@@ -164,7 +164,7 @@ const ParallaxVert = () => {
           rotate: 45, // 旋转45度
           opacity: 0.5, // 不透明度设置为0.5
         }}
-      ></motion.div>
+      />
       <motion.div
         transformTemplate={template}
         animate={{ rotate: 360 }}
@@ -176,7 +176,7 @@ const ParallaxVert = () => {
           rotate: 0,
           x: '200px',
         }}
-      ></motion.div>
+      />
 
       <motion.div
         style={{
@@ -189,9 +189,9 @@ const ParallaxVert = () => {
           duration: 2,
         }}
         variants={animations}
-        initial={'hidden'}
-        animate={'show'}
-      ></motion.div>
+        initial="hidden"
+        animate="show"
+      />
       <motion.ul
         initial="hidden"
         animate="visible"
@@ -242,7 +242,7 @@ const ParallaxVert = () => {
           onClick={() => {
             setRotate(!isRotated)
           }}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
@@ -296,13 +296,10 @@ const ParallaxVert = () => {
           onDragStart={(event, info) => console.log(info.point.x, info.point.y)}
           onDragEnd={(event, info) => console.log(info.point.x, info.point.y)}
           onDirectionLock={(axis) => console.log('axis', axis)}
-          dragSnapToOrigin={true}
+          dragSnapToOrigin
           // dragConstraints={{ left: 0, right: 300 }}
           dragConstraints={constraintsRef}
-          // dragElastic={false}
-          // dragElastic={0.8}
-          // dragPropagation={false}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
@@ -379,7 +376,7 @@ const ParallaxVert = () => {
             setIsAnimation(false)
             console.log('Completed animating', definition)
           }}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
@@ -512,7 +509,7 @@ const ParallaxVert = () => {
             duration: 1,
             repeat: Infinity,
           }}
-        ></motion.div>
+        />
       </div>
 
       <motion.div
@@ -537,7 +534,7 @@ const ParallaxVert = () => {
             backgroundColor: 'white',
             borderRadius: 60,
           }}
-        ></motion.div>
+        />
       </motion.div>
 
       <section style={{ fontSize: 30 }}>scrollDirection: {scrollDirection}</section>
@@ -551,7 +548,7 @@ const ParallaxVert = () => {
           x,
           rotate,
         }}
-      ></motion.div>
+      />
       <motion.div
         style={{
           width: 200,
@@ -560,7 +557,7 @@ const ParallaxVert = () => {
           borderRadius: '20px',
           scaleX,
         }}
-      ></motion.div>
+      />
 
       <div
         style={{
@@ -650,7 +647,7 @@ const ParallaxVert = () => {
           onTap={() => {
             setButtonState(!buttonRight)
           }}
-        ></motion.div>
+        />
 
         <motion.div
           style={{
@@ -670,7 +667,7 @@ const ParallaxVert = () => {
           onTap={() => {
             setButtonState(!buttonRight)
           }}
-        ></motion.div>
+        />
         <span
           style={{
             color: '#aaa',
@@ -729,7 +726,7 @@ const ParallaxVert = () => {
                 backgroundColor: '#fff',
                 borderRadius: 10,
               }}
-            ></motion.div>
+            />
             <motion.div
               layout
               style={{
@@ -738,7 +735,7 @@ const ParallaxVert = () => {
                 backgroundColor: '#fff',
                 borderRadius: 10,
               }}
-            ></motion.div>
+            />
           </LayoutGroup>
         </motion.div>
       </div>
