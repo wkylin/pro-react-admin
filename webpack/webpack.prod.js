@@ -8,7 +8,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
@@ -25,7 +25,8 @@ const prodWebpackConfig = merge(common, {
   mode: 'production',
   // 使用文件缓存
   cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
-  devtool: 'source-map',
+  // devtool: 'source-map',
+  devtool: false,
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
@@ -39,14 +40,14 @@ const prodWebpackConfig = merge(common, {
         standard: [/^ant-/],
       },
     }),
-    new CompressionWebpackPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.js$|\.json$|\.css/,
-      threshold: 10240, // 只有大小大于该值的资源会被处理
-      minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-      // deleteOriginalAssets: true // 删除原文件
-    }),
+    // new CompressionWebpackPlugin({
+    //   filename: '[path][base].gz',
+    //   algorithm: 'gzip',
+    //   test: /\.js$|\.json$|\.css/,
+    //   threshold: 10240, // 只有大小大于该值的资源会被处理
+    //   minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
+    //   // deleteOriginalAssets: true // 删除原文件
+    // }),
     new CopyWebpackPlugin({
       patterns: [
         {
