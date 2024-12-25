@@ -8,7 +8,7 @@ import SpotlightCard from '@stateless/Spotlight'
 import Typewriter from 'typewriter-effect'
 import Marquee from 'react-fast-marquee'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
-// import useDetectScroll, { Direction } from '@smakss/react-scroll-direction'
+import useDetectScroll, { Direction } from '@smakss/react-scroll-direction'
 import FixTabPanel from '@stateless/FixTabPanel'
 import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -168,12 +168,13 @@ const Home = () => {
       })
   }
 
-  // const { scrollDir, scrollPosition } = useDetectScroll({target: document.getElementById('container')})
+  const scrollRef = useRef(null)
+  const { scrollDir, scrollPosition } = useDetectScroll({ target: scrollRef.current })
 
   const [barRect, barRef] = useRect()
 
   return (
-    <FixTabPanel>
+    <FixTabPanel ref={scrollRef}>
       <section style={{ marginBottom: 15 }}>
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
       </section>
@@ -197,12 +198,12 @@ const Home = () => {
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
       </section>
-      {/* <section style={{ marginBottom: 40, fontSize: 16 }}>
+      <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h2>Scroll direction: {`${scrollDir}`}</h2>
         <p>
           Scroll position - Top: {scrollPosition.top}, Bottom: {scrollPosition.bottom}
         </p>
-      </section> */}
+      </section>
       <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h3>React Animate On Scroll.</h3>
         <h3>
