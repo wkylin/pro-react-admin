@@ -448,7 +448,7 @@ const ParallaxVert = () => {
           </motion.div>
         </div>
       </div>
-      <section ref={targetRef} className="relative h-[300vh] bg-neutral-300">
+      <section ref={targetRef} className="relative h-[300vh] pt-4 bg-neutral-300">
         <div className="sticky top-0 flex items-center overflow-hidden">
           <motion.div style={{ x: scrYProCardX }} className="flex gap-4">
             <HorizontalScrollParallax />

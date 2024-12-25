@@ -40,7 +40,7 @@ const HorizontalScrollParallax = () => {
 
 const Card = ({ card }) => {
   return (
-    <div key={card.id} className="group relative h-[267px] w-[400px] overflow-hidden ">
+    <div key={card.id} className="group relative h-[267px] w-[400px] overflow-hidden">
       <div
         style={{
           backgroundImage: `url(${card.url})`,
