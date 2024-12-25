@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   motion,
   useAnimationControls,
@@ -9,15 +9,16 @@ import {
   useTransform,
 } from 'motion/react'
 import FixTabPanel from '@stateless/FixTabPanel'
-
-import './index.css'
+import HorizontalScrollParallax from '@stateless/HorizontalScroll'
 
 const animations = {
   show: {
     opacity: 1,
+    filter: 'blur(0)',
   },
   hidden: {
     opacity: 0,
+    filter: 'blur(10px)',
   },
 }
 
@@ -105,6 +106,24 @@ const ParallaxVert = () => {
   const { scrollYProgress, scrollY } = useScroll({
     container: scrollRef,
   })
+  const { scrollYProgress: scrYPro, scrollY: scrY } = useScroll({
+    target: constraintsRef,
+    container: scrollRef,
+    offset: ['start end', 'end start'],
+  })
+
+  const targetRef = useRef(null)
+  const { scrollYProgress: scrYProCard } = useScroll({
+    target: targetRef,
+    container: scrollRef,
+    // offset: ['start end', 'end start']
+  })
+  const scrYProCardX = useTransform(scrYProCard, [0, 1], ['1%', '-50%'])
+
+  const scaleSec = useTransform(scrYPro, (value) => value * 3)
+  useMotionValueEvent(scrYPro, 'change', (current) => {
+    console.log('scrYPro', current)
+  })
 
   const x = useTransform(scrollY, (value) => {
     return (value * 1) / 5
@@ -128,6 +147,7 @@ const ParallaxVert = () => {
   return (
     <FixTabPanel ref={scrollRef}>
       <h2>Hi, Motion</h2>
+
       <motion.div
         style={{
           position: 'fixed',
@@ -243,26 +263,34 @@ const ParallaxVert = () => {
             setRotate(!isRotated)
           }}
         ></motion.div>
-        <div
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: 52,
+          marginBottom: 120,
+          marginTop: 30,
+        }}
+      >
+        <motion.div
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            padding: 6,
-            fontFamily: 'system-ui',
-            color: 'white',
-            backgroundColor: 'black',
             width: 100,
-            borderRadius: 20,
-            fontSize: 14,
-            letterSpacing: 2,
-            cursor: 'pointer',
+            height: 100,
+            backgroundColor: '#333',
+            borderRadius: '20px',
           }}
-          onClick={() => {
-            setRotate(!isRotated)
+          animate={{
+            rotate: [0, 180, 0],
           }}
-        >
-          点击切换
-        </div>
+          transition={{
+            duration: 1,
+            repeat: Infinity,
+          }}
+        ></motion.div>
       </div>
 
       <motion.div
@@ -279,6 +307,24 @@ const ParallaxVert = () => {
         }}
         ref={constraintsRef}
       >
+        <motion.section
+          style={{
+            width: 100,
+            height: 50,
+            backgroundColor: '#aaa',
+            borderRadius: '10px',
+            color: 'white',
+            textAlign: 'center',
+            lineHeight: '50px',
+            scale: scaleSec,
+            position: 'sticky',
+            top: '40px',
+            left: 0,
+            zIndex: 10,
+          }}
+        >
+          拖动元素
+        </motion.section>
         <motion.div
           style={{
             width: 100,
@@ -343,7 +389,6 @@ const ParallaxVert = () => {
           </motion.div>
         </div>
       </motion.div>
-
       <div
         style={{
           display: 'flex',
@@ -351,6 +396,7 @@ const ParallaxVert = () => {
           justifyContent: 'center',
           alignItems: 'center',
           gap: 52,
+          marginTop: 100,
         }}
       >
         <motion.div
@@ -402,7 +448,13 @@ const ParallaxVert = () => {
           </motion.div>
         </div>
       </div>
-
+      <section ref={targetRef} className="relative h-[300vh] bg-neutral-300">
+        <div className="sticky top-0 flex items-center overflow-hidden">
+          <motion.div style={{ x: scrYProCardX }} className="flex gap-4">
+            <HorizontalScrollParallax />
+          </motion.div>
+        </div>
+      </section>
       <div
         style={{
           display: 'flex',
@@ -487,34 +539,6 @@ const ParallaxVert = () => {
         </div>
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 52,
-          marginBottom: 120,
-          marginTop: 30,
-        }}
-      >
-        <motion.div
-          style={{
-            width: 100,
-            height: 100,
-            backgroundColor: '#333',
-            borderRadius: '20px',
-          }}
-          animate={{
-            rotate: [0, 180, 0],
-          }}
-          transition={{
-            duration: 1,
-            repeat: Infinity,
-          }}
-        ></motion.div>
-      </div>
-
       <motion.div
         style={{
           width: 180,
@@ -569,8 +593,9 @@ const ParallaxVert = () => {
           justifyContent: 'center',
           alignItems: 'center',
           fontFamily: 'system-ui',
-          fontSize: '1.5rem',
+          fontSize: '2rem',
           fontWeight: 'bold',
+          marginBottom: 20,
         }}
       >
         <motion.div
@@ -578,7 +603,7 @@ const ParallaxVert = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 20,
+            gap: 10,
           }}
         >
           {listLabel.map((item) => {
@@ -587,7 +612,7 @@ const ParallaxVert = () => {
                 layout
                 style={{
                   width: 200,
-                  height: 60,
+                  height: 30,
                   background: 'white',
                   display: 'flex',
                   justifyContent: 'center',
@@ -603,14 +628,13 @@ const ParallaxVert = () => {
           <motion.div
             style={{
               width: 160,
-              height: 50,
+              height: 30,
               background: 'white',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: 8,
-              fontSize: 20,
-              fontWeight: 100,
+              fontSize: 14,
               backgroundColor: 'black',
               color: 'white',
               letterSpacing: 2,
@@ -623,62 +647,6 @@ const ParallaxVert = () => {
             点击改变顺序
           </motion.div>
         </motion.div>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 30,
-          fontFamily: 'system-ui',
-          fontSize: 16,
-        }}
-      >
-        <motion.div
-          style={{
-            width: buttonRight ? 160 : 200,
-            height: 40,
-            backgroundColor: '#FFFFFF',
-            borderRadius: '60px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 10,
-          }}
-          layout
-          onTap={() => {
-            setButtonState(!buttonRight)
-          }}
-        ></motion.div>
-
-        <motion.div
-          style={{
-            width: 120,
-            height: 40,
-            backgroundColor: '#333',
-            borderRadius: '60px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 10,
-            // 跟位置相关的参数，而不是x 即transform相关的参数
-            left: buttonRight ? 100 : 0,
-            position: 'relative',
-          }}
-          layout
-          onTap={() => {
-            setButtonState(!buttonRight)
-          }}
-        ></motion.div>
-        <span
-          style={{
-            color: '#aaa',
-            opacity: 0.6,
-          }}
-        >
-          点击任意一个
-        </span>
       </div>
       <div
         style={{
