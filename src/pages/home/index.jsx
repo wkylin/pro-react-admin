@@ -34,6 +34,7 @@ import ShiCode from '@stateless/ShiCode'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
 import DynamicBackground from '@stateless/DynamicBackground'
+import ContentPlaceholder from '@stateless/ContentPlaceholder'
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
@@ -278,6 +279,9 @@ const Home = () => {
           <section></section>
         </SpotlightCard>
       </section>
+      <section style={{ margin: '20px 0' }}>
+        <ContentPlaceholder />
+      </section>
       <section
         className={styles.box}
         style={{
@@ -382,20 +386,20 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
           <Masonry gutter="10px">
-            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, border: '1px solid #ccc', background: '#aaa' }}></section>
           </Masonry>
         </ResponsiveMasonry>
       </section>
