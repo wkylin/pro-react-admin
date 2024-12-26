@@ -35,10 +35,12 @@ import ShiCode from '@stateless/ShiCode'
 // import Masonry from '@container/masonryContainer'
 import DynamicBackground from '@stateless/DynamicBackground'
 import ContentPlaceholder from '@stateless/ContentPlaceholder'
-import { oneApiChat, prettyObject } from '@utils/aidFn'
+import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
 import styles from './index.module.less'
+
+const boxCount = Array.apply(null, Array(10))
 
 const Home = () => {
   const [aiText, setAiText] = useState('')

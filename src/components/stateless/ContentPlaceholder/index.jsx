@@ -30,6 +30,11 @@ const ContentPlaceholder = () => (
     transition={{ duration: 0.8 }}
     className={styles.contentPlaceholder}
   >
+    <section>
+      <Word width={75} />
+      <Word width={245} />
+      <Word width={120} />
+    </section>
     {paragraphs.map((words) => (
       <Paragraph words={words} />
     ))}

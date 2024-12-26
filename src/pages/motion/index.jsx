@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   motion,
   useAnimationControls,
@@ -7,6 +7,8 @@ import {
   useMotionValueEvent,
   useSpring,
   useTransform,
+  useMotionValue,
+  animate,
 } from 'motion/react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import HorizontalScrollParallax from '@stateless/HorizontalScroll'
@@ -144,10 +146,18 @@ const ParallaxVert = () => {
 
   const rotate = useTransform(scrollY, [0, 100], [0, 360], { clamp: false })
 
+  const count = useMotionValue(10)
+  const rounded = useTransform(count, (value) => Math.round(value))
+
+  useEffect(() => {
+    const animation = animate(count, 1000, { duration: 10 })
+    return animation.stop
+  }, [])
+
   return (
     <FixTabPanel ref={scrollRef}>
       <h2>Hi, Motion</h2>
-
+      <motion.h2>{rounded}</motion.h2>
       <motion.div
         style={{
           position: 'fixed',
