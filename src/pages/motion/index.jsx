@@ -265,15 +265,9 @@ const ParallaxVert = () => {
         ></motion.div>
       </div>
 
-      <div
+      {/* <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 52,
-          marginBottom: 120,
-          marginTop: 30,
+          margin: 20
         }}
       >
         <motion.div
@@ -291,8 +285,62 @@ const ParallaxVert = () => {
             repeat: Infinity,
           }}
         ></motion.div>
-      </div>
+      </div> */}
 
+      <div
+        style={{
+          margin: '200px 0 0 150px',
+        }}
+      >
+        <motion.div
+          style={{
+            width: 100,
+            height: 100,
+            backgroundColor: '#aaa',
+            borderRadius: '20px',
+          }}
+          transition={{
+            duration: 2,
+            ease: 'linear',
+          }}
+          initial={{
+            x: -100,
+          }}
+          animate={controller2}
+          onUpdate={(latest) => {
+            console.log(latest.x, latest.y)
+          }}
+          onAnimationStart={() => {
+            console.log('Animation started')
+            setIsAnimation(true)
+          }}
+          onAnimationComplete={(definition) => {
+            setIsAnimation(false)
+            console.log('Completed animating', definition)
+          }}
+        ></motion.div>
+        <div
+          style={{
+            display: 'flex',
+            gap: 20,
+          }}
+        >
+          <motion.div
+            style={{
+              ...btnStyle,
+              pointerEvents: isAnimation ? 'none' : 'auto',
+            }}
+            onTap={async () => {
+              await controller2.start({ x: 100 })
+              await controller2.start({ y: -200 })
+              await controller2.start({ x: -100 })
+              controller2.start({ y: 0 })
+            }}
+          >
+            开始
+          </motion.div>
+        </div>
+      </div>
       <motion.div
         style={{
           display: 'flex',
@@ -303,7 +351,7 @@ const ParallaxVert = () => {
           width: 800,
           height: 400,
           border: '1px solid #aaa',
-          margin: '0 auto',
+          margin: '20px auto',
         }}
         ref={constraintsRef}
       >
@@ -320,7 +368,7 @@ const ParallaxVert = () => {
             position: 'sticky',
             top: '40px',
             left: 0,
-            zIndex: 10,
+            zIndex: 3,
           }}
         >
           拖动元素
@@ -389,65 +437,7 @@ const ParallaxVert = () => {
           </motion.div>
         </div>
       </motion.div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          gap: 52,
-          marginTop: 100,
-        }}
-      >
-        <motion.div
-          style={{
-            width: 100,
-            height: 100,
-            backgroundColor: '#aaa',
-            borderRadius: '20px',
-          }}
-          transition={{
-            duration: 2,
-            ease: 'linear',
-          }}
-          initial={{
-            x: -100,
-          }}
-          animate={controller2}
-          onUpdate={(latest) => {
-            console.log(latest.x, latest.y)
-          }}
-          onAnimationStart={() => {
-            console.log('Animation started')
-            setIsAnimation(true)
-          }}
-          onAnimationComplete={(definition) => {
-            setIsAnimation(false)
-            console.log('Completed animating', definition)
-          }}
-        ></motion.div>
-        <div
-          style={{
-            display: 'flex',
-            gap: 20,
-          }}
-        >
-          <motion.div
-            style={{
-              ...btnStyle,
-              pointerEvents: isAnimation ? 'none' : 'auto',
-            }}
-            onTap={async () => {
-              await controller2.start({ x: 100 })
-              await controller2.start({ y: -200 })
-              await controller2.start({ x: -100 })
-              controller2.start({ y: 0 })
-            }}
-          >
-            开始
-          </motion.div>
-        </div>
-      </div>
+
       <section ref={targetRef} className="relative h-[300vh] pt-4 bg-neutral-300">
         <div className="sticky top-0 flex items-center overflow-hidden">
           <motion.div style={{ x: scrYProCardX }} className="flex gap-4">

@@ -33,7 +33,7 @@ import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
-
+import DynamicBackground from '@stateless/DynamicBackground'
 import { oneApiChat, prettyObject } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
@@ -382,18 +382,20 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
           <Masonry gutter="10px">
-            <LazyLoadImage src="https://picsum.photos/id/1/300/100" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/2/300/200" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/3/300/150" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/4/300/150" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/5/300/200" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/6/300/100" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/7/300/150" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/8/300/200" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/1/300/100" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/2/300/200" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/3/300/150" alt="Strawberries" />
-            <LazyLoadImage src="https://picsum.photos/id/4/300/150" alt="Strawberries" />
+            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 100, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 200, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section style={{ height: 150, width: 300, border: '1px solid #ccc', background: '#aaa' }}></section>
           </Masonry>
         </ResponsiveMasonry>
       </section>
@@ -434,7 +436,7 @@ const Home = () => {
           </div>
         </Marquee>
       </section>
-      <section style={{ margin: '20px 0' }}>
+      <section style={{ margin: 20 }}>
         <ShiCode
           preCode={`
 const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
@@ -448,6 +450,9 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
 }
           `}
         />
+      </section>
+      <section style={{ margin: 20 }}>
+        <DynamicBackground />
       </section>
     </FixTabPanel>
   )

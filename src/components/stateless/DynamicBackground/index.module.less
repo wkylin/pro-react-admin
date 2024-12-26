@@ -1,0 +1,108 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 50px 0;
+  position: relative;
+  height: 600px;
+  overflow: hidden;
+  background: radial-gradient(circle, hsl(30deg 100% 8% / 100%) 0%, rgb(0 0 0) 100%);
+}
+
+.heroText {
+  text-align: center;
+  color: #fff;
+  max-width: 750px;
+  z-index: 10;
+
+  h1 {
+    font-size: 76px;
+    margin: 0 0 30px;
+    font-weight: 300;
+
+    span {
+      background: linear-gradient(30deg, #ff8000 40%, #ad1d1d 70%);
+      background-clip: text;
+      color: transparent;
+    }
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  a {
+    margin-top: 20px;
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+    border-radius: 8px;
+    background: #ad1d1d;
+    padding: 20px 30px;
+  }
+}
+
+.iconLayer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.icon {
+  position: absolute;
+  border-radius: 12px;
+  transition: transform 1s ease-out;
+  animation: icon-fade-in 7s ease forwards;
+  padding: 10px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  path {
+    color: #fff;
+  }
+
+  &.outline {
+    border: 1px solid #414141;
+  }
+
+  &.fill {
+    background: #414141;
+  }
+
+  &.sm {
+    height: 40px;
+    width: 40px;
+    z-index: 1;
+  }
+
+  &.md {
+    height: 60px;
+    width: 60px;
+    z-index: 3;
+  }
+
+  &.lg {
+    height: 80px;
+    width: 80px;
+    z-index: 5;
+  }
+}
+
+@keyframes icon-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.6;
+  }
+}
