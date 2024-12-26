@@ -26,7 +26,7 @@ const ContentPlaceholder = () => (
     variants={{ collapsed: { scale: 0.8 }, open: { scale: 1 } }}
     initial="collapsed"
     animate="open"
-    whileInView={true}
+    whileInView
     transition={{ duration: 0.8 }}
     className={styles.contentPlaceholder}
   >
