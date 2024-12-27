@@ -29,7 +29,7 @@
     "tryer",
     "urlparams"
   ],
-  "files.autoSave": "onWindowChange",
+  "files.autoSave": "off",
   "npm-scripts.showStartNotification": false,
   "editor.suggest.snippetsPreventQuickSuggestions": false,
   "aiXcoder.showTrayIcon": true,
