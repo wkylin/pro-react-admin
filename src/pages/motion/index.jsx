@@ -123,9 +123,7 @@ const ParallaxVert = () => {
   const scrYProCardX = useTransform(scrYProCard, [0, 1], ['1%', '-50%'])
 
   const scaleSec = useTransform(scrYPro, (value) => value * 3)
-  useMotionValueEvent(scrYPro, 'change', (current) => {
-    console.log('scrYPro', current)
-  })
+  useMotionValueEvent(scrYPro, 'change', (current) => {})
 
   const x = useTransform(scrollY, (value) => {
     return (value * 1) / 5

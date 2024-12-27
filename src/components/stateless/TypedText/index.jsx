@@ -6,9 +6,8 @@ const TypedText = ({ children, delay = 110 }) => {
 
   useEffect(() => {
     if (revealedLetters === children.length) clearInterval(interval)
+    return () => clearInterval(interval)
   }, [children, interval, revealedLetters])
-
-  useEffect(() => () => clearInterval(interval), [interval])
 
   return (
     <>

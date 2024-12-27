@@ -15,8 +15,8 @@ export const Word = ({ width }) => <div className={styles.word} style={{ width }
 
 const Paragraph = ({ words }) => (
   <div className={styles.paragraph}>
-    {words.map((width) => (
-      <Word width={width} />
+    {words.map((width, index) => (
+      <Word key={index} width={width} />
     ))}
   </div>
 )
@@ -35,8 +35,8 @@ const ContentPlaceholder = () => (
       <Word width={245} />
       <Word width={120} />
     </section>
-    {paragraphs.map((words) => (
-      <Paragraph words={words} />
+    {paragraphs.map((words, index) => (
+      <Paragraph key={index} words={words} />
     ))}
   </motion.div>
 )
