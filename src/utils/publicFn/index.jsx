@@ -175,7 +175,7 @@ export const openInNewTab = (url) => {
 }
 
 export const range = (start, end, step = 1) => {
-  let output = []
+  const output = []
   if (typeof end === 'undefined') {
     end = start
     start = 0
