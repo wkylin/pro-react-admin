@@ -102,7 +102,6 @@ const handleFetchData = (url, options) => {
         //     console.error('err.message', err.message)
         //   })
         const contentType = response.headers.get('Content-Type')
-        console.log('response', response)
         if (response.status >= 200 && response.status < 300) {
           if (contentType.includes('application/json')) {
             response
@@ -150,6 +149,8 @@ const handleFetchData = (url, options) => {
       })
       .catch((error) => {
         handleFailedResult(error, error, isShowError)
+        // return error  会正常处理
+        // return Promise.reject(error.response); 会进入catch
       })
       .finally(() => clearTimeout(timer))
   })
