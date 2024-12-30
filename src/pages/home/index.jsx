@@ -36,6 +36,7 @@ import ShiCode from '@stateless/ShiCode'
 import DynamicBackground from '@stateless/DynamicBackground'
 import ContentPlaceholder from '@stateless/ContentPlaceholder'
 import SkeletonFix from '@stateless/SkeletonFix'
+import { ReactSignature } from '@stateless/ReactSignature'
 import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
@@ -397,6 +398,9 @@ const Home = () => {
 
       <section style={{ position: 'relative' }}>
         <AnimateWave />
+      </section>
+      <section style={{ position: 'relative' }}>
+        <ReactSignature />
       </section>
       <section style={{ margin: 20 }}>
         <SkeletonFix />
