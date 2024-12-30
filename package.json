@@ -310,6 +310,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "sanitize.css": "^13.0.0",
     "screenfull": "^6.0.2",
+    "shiki": "^1.24.4",
     "sse.js": "^2.5.0",
     "styled-components": "^6.1.13",
     "three": "^0.171.0",

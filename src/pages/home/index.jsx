@@ -37,12 +37,22 @@ import DynamicBackground from '@stateless/DynamicBackground'
 import ContentPlaceholder from '@stateless/ContentPlaceholder'
 import SkeletonFix from '@stateless/SkeletonFix'
 import { ReactSignature } from '@stateless/ReactSignature'
+// import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
 import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
 import styles from './index.module.less'
 
 const boxCount = Array.apply(null, Array(10))
+
+const code = {
+  fileName: './explanations.ts',
+  code: `export const = explanations = {
+main : "This component needs more than the default code block to be displayed"
+detailed : "For now, if you want the exact same behaviour, please check the github"
+}`,
+  lang: 'typescript',
+}
 
 const preCode = `
   const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
@@ -399,7 +409,10 @@ const Home = () => {
       <section style={{ position: 'relative' }}>
         <AnimateWave />
       </section>
-      <section style={{ position: 'relative' }}>
+      {/* <section style={{ margin: 20 }}>
+        <AdvancedCodeBlock code={code.code} fileName={code.fileName} lang={code.lang} />
+      </section> */}
+      <section style={{ margin: 20 }}>
         <ReactSignature />
       </section>
       <section style={{ margin: 20 }}>
