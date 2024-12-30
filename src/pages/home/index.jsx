@@ -43,6 +43,18 @@ import styles from './index.module.less'
 
 const boxCount = Array.apply(null, Array(10))
 
+const preCode = `
+  const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
+    return (
+      <div>
+        <h2>{item.name}</h2>
+        <p>Price: {item.price}</p>
+        <p>Quantity: {item.quantity}</p>
+      </div>
+    );
+  };
+`.trim()
+
 const Home = () => {
   const [aiText, setAiText] = useState('')
   const aiTextRef = useRef(null)
@@ -447,19 +459,7 @@ const Home = () => {
         </Marquee>
       </section>
       <section style={{ margin: 20 }}>
-        <ShiCode
-          preCode={`
-const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
-  return (
-    <div>
-      <h2>{item.name}</h2>
-      <p>Price: {item.price}</p>
-      <p>Quantity: {item.quantity}</p>
-    </div>
-  );
-}
-          `}
-        />
+        <ShiCode preCode={preCode} />
       </section>
       <section style={{ margin: 20 }}>
         <DynamicBackground />
