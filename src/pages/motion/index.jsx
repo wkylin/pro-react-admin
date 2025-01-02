@@ -12,6 +12,7 @@ import {
 } from 'motion/react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import HorizontalScrollParallax from '@stateless/HorizontalScroll'
+import styles from './index.module.less'
 
 const animations = {
   show: {
@@ -152,6 +153,65 @@ const ParallaxVert = () => {
     return animation.stop
   }, [])
 
+  const navItemsRef = useRef([])
+  const sectionRefs = useRef({})
+  const followScrollRef = useRef({})
+
+  const navItems = ['Home', 'About', 'Contact']
+  const [activeNavItemIndex, setActiveNavItemIndex] = useState(0)
+  const [activeScrollY, setActiveScrollY] = useState(0)
+
+  const { scrollY: followScrollY } = useScroll({
+    container: scrollRef,
+    target: followScrollRef,
+    offset: ['start end', 'end start'],
+  })
+  const findIndex = (arr, x) => {
+    if (x <= arr[0]) {
+      return 0
+    }
+    for (let index = 0; index < arr.length - 1; index++) {
+      if (x > arr[index] && x <= arr[index + 1]) {
+        return index + 1
+      }
+    }
+    return arr.length
+  }
+  useMotionValueEvent(followScrollY, 'change', (current) => {
+    const index = findIndex(sectionPositions, current)
+    setActiveNavItemIndex(index === -1 ? 0 : index)
+    setActiveScrollY(current)
+  })
+
+  // 获取 navItem 和 section 的 DOM 元素引用并存储
+  useEffect(() => {
+    navItemsRef.current = Array.from(document.querySelectorAll(styles.navItem))
+    navItems.forEach((item) => {
+      const sectionId = `${item.toLowerCase()}-section`
+      sectionRefs.current[sectionId] = document.getElementById(sectionId)
+    })
+  }, [])
+
+  // 动态计算各 section 的位置信息
+  const sectionPositions = React.useMemo(() => {
+    return Object.values(sectionRefs.current).map((section) => {
+      if (section) {
+        const rect = section.getBoundingClientRect()
+        return rect.top + activeScrollY
+      }
+      return 0
+    })
+  }, [activeScrollY])
+
+  // 处理点击 navitem 滚动到对应 section 的逻辑
+  const handleNavItemClick = (index) => {
+    const sectionId = `${navItems[index].toLowerCase()}-section`
+    const section = sectionRefs.current[sectionId]
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
   return (
     <FixTabPanel ref={scrollRef}>
       <h2>Hi, Motion</h2>
@@ -193,6 +253,42 @@ const ParallaxVert = () => {
           opacity: 0.5, // 不透明度设置为0.5
         }}
       ></motion.div>
+      <motion.nav
+        layout
+        className={styles.nav}
+        style={{ position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky' }}
+        initial={{ opacity: 1 }}
+        animate={{
+          opacity: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1,
+        }}
+        exit={{ opacity: 0 }}
+      >
+        <ul>
+          {navItems.map((item, index) => (
+            <li
+              key={index}
+              className={`${styles.navItem} ${index === activeNavItemIndex ? `${styles.navItemActive}` : ''}`}
+              ref={(el) => (navItemsRef.current[index] = el)}
+              onClick={() => handleNavItemClick(index)}
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      </motion.nav>
+      <div className="content" ref={followScrollRef}>
+        {navItems.map((item) => (
+          <div
+            key={item}
+            id={`${item.toLowerCase()}-section`}
+            className={styles.section}
+            ref={(el) => (sectionRefs.current[`${item.toLowerCase()}-section`] = el)}
+          >
+            <h2>{item} Section</h2>
+            <p>这里是 {item} 部分的详细内容......</p>
+          </div>
+        ))}
+      </div>
       <motion.div
         transformTemplate={template}
         animate={{ rotate: 360 }}

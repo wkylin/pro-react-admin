@@ -1,0 +1,29 @@
+.nav {
+  position: sticky;
+  top: 0;
+  right: 0;
+  background-color: #aaa;
+  z-index: 10;
+
+  ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .navItem {
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+    color: #fff;
+  }
+
+  .navItemActive {
+    color: #fff;
+    background-color: #333;
+  }
+}
+
+.section {
+  height: 100vh;
+}
