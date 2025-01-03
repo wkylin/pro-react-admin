@@ -38,6 +38,8 @@ import ContentPlaceholder from '@stateless/ContentPlaceholder'
 import SkeletonFix from '@stateless/SkeletonFix'
 import { ReactSignature } from '@stateless/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
+import ShinyText from '@stateless/ShinyText'
+import BlurText from '@stateless/BlurText'
 import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
@@ -202,18 +204,27 @@ const Home = () => {
 
   return (
     <FixTabPanel ref={scrollRef}>
-      <section style={{ marginBottom: 15 }}>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
         <TypedText>Cool! Hi, React & Ant Design!</TypedText>
       </section>
 
-      <section className={styles.avatar}>React version: {version}</section>
+      <section className={styles.avatar} style={{ marginBottom: 15, fontSize: 24 }}>
+        React version: {version}
+      </section>
 
-      <section>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
       </section>
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
       </section>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
+        <ShinyText text="Just some shiny text!" disabled={false} speed={3} />
+      </section>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
+        <BlurText text="Isn't this so cool?!" delay={50} />
+      </section>
+
       <section className={styles.line}></section>
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
