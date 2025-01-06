@@ -40,11 +40,14 @@ import { ReactSignature } from '@stateless/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
 import ShinyText from '@stateless/ShinyText'
 import BlurText from '@stateless/BlurText'
-
 import Meteors from '@stateless/Meteors'
+import CompareAll from '@stateless/CompareAll'
+
+import firstImage from '@assets/images/88-300x160.jpg'
+import secondImage from '@assets/images/2-300x160.jpg'
+
 import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
-
 import styles from './index.module.less'
 
 const boxCount = Array.apply(null, Array(10))
@@ -238,6 +241,16 @@ const Home = () => {
         }}
       >
         <Meteors number={40} />
+      </section>
+      <section style={{ margin: '20px 0' }}>
+        <CompareAll
+          firstImage={firstImage}
+          secondImage={secondImage}
+          firstImageClassName="object-cover object-left-top"
+          secondImageClassName="object-cover object-left-top"
+          className="h-[160px]"
+          slideMode="drag"
+        />
       </section>
       <section className={styles.line}></section>
       <section>
