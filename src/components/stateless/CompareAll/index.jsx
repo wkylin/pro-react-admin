@@ -130,7 +130,7 @@ const Compare = ({
   return (
     <div
       ref={sliderRef}
-      className={clsx('w-[300px] h-[160px] overflow-hidden', className)}
+      className={clsx('w-[360px] h-[160px] overflow-hidden', className)}
       style={{
         position: 'relative',
         cursor: slideMode === 'drag' ? 'grab' : 'col-resize',
