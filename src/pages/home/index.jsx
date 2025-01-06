@@ -40,6 +40,8 @@ import { ReactSignature } from '@stateless/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
 import ShinyText from '@stateless/ShinyText'
 import BlurText from '@stateless/BlurText'
+
+import Meteors from '@stateless/Meteors'
 import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 
@@ -224,7 +226,19 @@ const Home = () => {
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
       </section>
-
+      <section
+        style={{
+          marginBottom: 15,
+          fontSize: 20,
+          height: 200,
+          width: 360,
+          background: '#111827',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <Meteors number={40} />
+      </section>
       <section className={styles.line}></section>
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
