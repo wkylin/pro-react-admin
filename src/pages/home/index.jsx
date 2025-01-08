@@ -483,12 +483,13 @@ const Home = () => {
           <div
             style={{
               width: 200,
-              height: 40,
-              lineHeight: '40px',
+              height: 100,
+              lineHeight: '100px',
               textAlign: 'center',
               background: '#aaa',
               margin: '0 10px',
-              borderRadius: 4,
+              borderRadius: 8,
+              // transform: 'rotateX(60deg) rotateY(0deg) rotateZ(45deg)'
             }}
           >
             React
@@ -500,12 +501,12 @@ const Home = () => {
           <div
             style={{
               width: 200,
-              height: 40,
-              lineHeight: '40px',
+              height: 100,
+              lineHeight: '100px',
               textAlign: 'center',
               background: '#aaa',
               margin: '0 10px',
-              borderRadius: 4,
+              borderRadius: 8,
             }}
           >
             Vue
