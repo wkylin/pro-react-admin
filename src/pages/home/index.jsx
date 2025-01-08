@@ -42,7 +42,6 @@ import ShinyText from '@stateless/ShinyText'
 import BlurText from '@stateless/BlurText'
 import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
-
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
