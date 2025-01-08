@@ -2,9 +2,9 @@ import { useRef, useState, useEffect } from 'react'
 import { motion } from 'motion/react'
 import styles from './index.module.less'
 
-const PointMove = () => {
+const PointerMove = () => {
   const ref = useRef(null)
-  const [coordinates, setCoordinates] = useState({ x: 0, y: 0 })
+  const [coordinates, setCoordinates] = useState({ x: 158, y: 18 })
 
   useEffect(() => {
     //  check if DOM element referenced by ref has been mounted
@@ -27,7 +27,7 @@ const PointMove = () => {
     <motion.div
       ref={ref}
       className={styles.star}
-      animate={{ x: coordinates.x, y: coordinates.y }}
+      animate={{ x: coordinates.x, y: coordinates.y, opacity: 1 }}
       transition={{
         type: 'spring',
       }}
@@ -35,4 +35,4 @@ const PointMove = () => {
   )
 }
 
-export default PointMove
+export default PointerMove

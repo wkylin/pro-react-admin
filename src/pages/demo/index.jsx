@@ -1,101 +1,29 @@
 import React from 'react'
-import { reqFetch, useReqFetch } from '@src/service'
-import { Select, Table, Cascader, Space, Button } from 'antd'
+import { Table } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { toFixed } from '@utils/aidFn'
-
-import TsDemo from './tsDemo'
-
 const columns = [
   {
     title: 'Name',
+    align: 'center',
     dataIndex: 'name',
     width: 150,
   },
   {
     title: 'Age',
+    align: 'center',
     dataIndex: 'age',
     width: 150,
   },
   {
     title: 'Address',
+    align: 'center',
     dataIndex: 'address',
   },
 ]
-
-const options = [
-  {
-    value: 'zhejiang',
-    label: 'Zhejiang',
-    children: [
-      {
-        value: 'hangzhou',
-        label: 'Hangzhou',
-        children: [
-          {
-            value: 'xihu',
-            label: 'West Lake',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    value: 'jiangsu',
-    label: 'Jiangsu',
-    children: [
-      {
-        value: 'nanjing',
-        label: 'Nanjing',
-        children: [
-          {
-            value: 'zhonghuamen',
-            label: 'Zhong Hua Men',
-          },
-        ],
-      },
-    ],
-  },
-]
-
 const ProDemo = () => {
-  const [res, loading, error] = useReqFetch('https://my-json-server.typicode.com/wkylin/angular-json-server/react', {
-    method: 'GET',
-  })
-
-  const onFetch = () => {
-    reqFetch('/faker/shops', { method: 'GET' })
-      .then((response) => {
-        console.log('response==>>', response)
-      })
-      .catch((errors) => {
-        console.log('error', errors)
-      })
-  }
   return (
     <FixTabPanel>
-      <h2>
-        项目文档<span style={{ fontSize: 12, color: '#999', margin: '0 10px' }}>待完善</span>
-      </h2>
-      <h4>Mock API 示例</h4>
-      <h4>useFetch: {loading ? 'Loading...' : error ? 'error' : JSON.stringify(res, null, 2)}</h4>
-      <Button type="primary" onClick={onFetch} aria-hidden="true">
-        ErrorBoundary
-      </Button>
-      <h4>TS 支持</h4>
-      <TsDemo />
-
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
-
-      <Cascader options={options} expandTrigger="hover" placeholder="Please select" />
-
-      <Select placeholder="Select a person" optionFilterProp="children">
-        <Select.Option value="jack">Jack</Select.Option>
-        <Select.Option value="lucy">Lucy</Select.Option>
-        <Select.Option value="tom">Tom</Select.Option>
-      </Select>
-      {toFixed(0.75 * 100, 2)}
-      <div style={{ height: 400 }}>Height For Scroll</div>
     </FixTabPanel>
   )
 }
