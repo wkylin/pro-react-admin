@@ -12,7 +12,7 @@ const data = [
     srcImage: SpringPng,
   },
   {
-    title: '小池》—— 杨万里',
+    title: '《小池》—— 杨万里',
     content: '泉眼无声惜细流，树阴照水爱晴柔。小荷才露尖尖角，早有蜻蜓立上头。',
     srcImage: HePng,
   },
