@@ -203,7 +203,7 @@ const ParallaxVert = () => {
     })
   }, [activeScrollY])
 
-  // 处理点击 navitem 滚动到对应 section 的逻辑
+  // 处理点击 navItem 滚动到对应 section 的逻辑
   const handleNavItemClick = (index) => {
     const sectionId = `${navItems[index].toLowerCase()}-section`
     const section = sectionRefs.current[sectionId]
