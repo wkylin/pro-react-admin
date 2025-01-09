@@ -33,6 +33,7 @@ import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
 import StaticStepper from '@stateless/StaticStepper'
 import FeatureFourImages from '@stateless/FeatureAny'
+import ScratchToReveal from '@stateless/ScratchToReveal'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
 import DynamicBackground from '@stateless/DynamicBackground'
@@ -250,6 +251,7 @@ const Home = () => {
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
       </section>
+
       <section
         style={{
           marginBottom: 15,
@@ -269,11 +271,11 @@ const Home = () => {
           secondImage={secondImage}
           firstImageClassName="object-cover object-left-top"
           secondImageClassName="object-cover object-left-top"
-          className="h-[160px]"
+          className="h-[200px]"
           slideMode="drag"
         />
       </section>
-      <section style={{ margin: '20px 0', width: 360, height: 160, background: '#000' }}>
+      <section style={{ margin: '20px 0', width: 360, height: 200, background: '#000' }}>
         <SquaresGrid
           speed={0.5}
           squareSize={20}
@@ -398,6 +400,20 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
         <MeshGradientBackground />
+      </section>
+      <section
+        style={{
+          marginBottom: 20,
+        }}
+      >
+        <ScratchToReveal
+          width={360}
+          height={200}
+          minScratchPercentage={70}
+          className="flex items-center justify-center overflow-hidden bg-gray-100 border-2 rounded-2xl"
+        >
+          <p className="text-9xl">✨</p>
+        </ScratchToReveal>
       </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateRipple>Click Me</AnimateRipple>

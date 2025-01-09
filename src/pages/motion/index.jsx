@@ -223,9 +223,9 @@ const ParallaxVert = () => {
           left: 0,
           width: '100%',
           height: 3,
-          backgroundColor: '#aaa',
+          backgroundImage: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
           borderRadius: '3px',
-          // scaleX: scrollYProgress,
+          transformOrigin: 'left',
           scaleX: scaleX,
         }}
       ></motion.div>
