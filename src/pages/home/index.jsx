@@ -32,6 +32,7 @@ import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
 import StaticStepper from '@stateless/StaticStepper'
+import FeatureFourImages from '@stateless/FeatureAny'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
 import DynamicBackground from '@stateless/DynamicBackground'
@@ -489,6 +490,9 @@ const Home = () => {
             <StaticStepper.CodeContainer>{step.code}</StaticStepper.CodeContainer>
           </StaticStepper.StaticStep>
         ))}
+      </section>
+      <section style={{ margin: 20 }}>
+        <FeatureFourImages />
       </section>
       <section style={{ margin: 20 }}>
         <SkeletonFix />
