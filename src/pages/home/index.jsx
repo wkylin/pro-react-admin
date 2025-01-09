@@ -31,6 +31,7 @@ import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
+import StaticStepper from '@stateless/StaticStepper'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
 import DynamicBackground from '@stateless/DynamicBackground'
@@ -72,6 +73,25 @@ const preCode = `
     );
   };
 `.trim()
+
+const dataSteps = [
+  {
+    title: 'Step 1',
+    code: 'npx create-react-app my-app',
+  },
+  {
+    title: 'Step 2',
+    code: 'cd my-app',
+  },
+  {
+    title: 'Step 3',
+    code: 'npm start',
+  },
+  {
+    title: 'Step 4',
+    code: 'npm run build',
+  },
+]
 
 const Home = () => {
   const [aiText, setAiText] = useState('')
@@ -461,6 +481,14 @@ const Home = () => {
       </section> */}
       <section style={{ margin: 20 }}>
         <ReactSignature />
+      </section>
+
+      <section style={{ margin: 20 }}>
+        {dataSteps.map((step, index) => (
+          <StaticStepper.StaticStep key={step.title} step={index + 1} title={step.title}>
+            <StaticStepper.CodeContainer>{step.code}</StaticStepper.CodeContainer>
+          </StaticStepper.StaticStep>
+        ))}
       </section>
       <section style={{ margin: 20 }}>
         <SkeletonFix />
