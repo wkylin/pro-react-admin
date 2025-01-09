@@ -135,7 +135,7 @@ const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete,
         className="absolute top-0 left-0"
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-      ></canvas>
+      />
       {children}
     </motion.div>
   )
