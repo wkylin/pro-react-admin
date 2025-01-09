@@ -38,6 +38,7 @@ import ContentPlaceholder from '@stateless/ContentPlaceholder'
 import SkeletonFix from '@stateless/SkeletonFix'
 import { ReactSignature } from '@stateless/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
+import SquaresGrid from '@stateless/SquaresGrid'
 import ShinyText from '@stateless/ShinyText'
 import BlurText from '@stateless/BlurText'
 import Meteors from '@stateless/Meteors'
@@ -249,6 +250,15 @@ const Home = () => {
           secondImageClassName="object-cover object-left-top"
           className="h-[160px]"
           slideMode="drag"
+        />
+      </section>
+      <section style={{ margin: '20px 0', width: 360, height: 160, background: '#000' }}>
+        <SquaresGrid
+          speed={0.5}
+          squareSize={20}
+          direction="diagonal" // up, down, left, right, diagonal
+          borderColor="#222"
+          hoverFillColor="#222"
         />
       </section>
       <section className={styles.line}></section>
