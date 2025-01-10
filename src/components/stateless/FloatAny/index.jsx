@@ -8,7 +8,7 @@ const FloatAny = ({
   amplitude = [10, 30, 30],
   rotationRange = [15, 15, 7.5],
   timeOffset = 0,
-  className,
+  className
 }) => {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -50,7 +50,7 @@ const FloatAny = ({
         rotateX,
         rotateY,
         rotateZ,
-        transformStyle: 'preserve-3d',
+        transformStyle: 'preserve-3d'
       }}
       className={clsx('will-change-transform', className)}
     >
