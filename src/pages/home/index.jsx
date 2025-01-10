@@ -46,6 +46,9 @@ import ShinyText from '@stateless/ShinyText'
 import BlurText from '@stateless/BlurText'
 import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
+import TextLoader from '@stateless/TextLoader'
+import FloatAny from '@stateless/FloatAny'
+
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -53,7 +56,7 @@ import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 import styles from './index.module.less'
 
-const boxCount = Array.apply(null, Array(10))
+const boxList = Array.apply(null, Array(20))
 
 const code = {
   fileName: './explanations.ts',
@@ -250,6 +253,39 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
+      </section>
+      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
+        <TextLoader
+          messages={[
+            'Preparing your experience',
+            'Loading awesome content',
+            'Almost there',
+            'Just a moment',
+            'Getting things ready',
+          ]}
+        />
+      </section>
+      <section
+        style={{
+          marginBottom: 15,
+          position: 'relative',
+          width: 360,
+          height: 160,
+          overflow: 'hidden',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        {boxList.map((box, i) => (
+          <FloatAny
+            key={i}
+            timeOffset={i * 0.8}
+            amplitude={[15 + Math.random() * 20, 25 + Math.random() * 30, 20 + Math.random() * 25]}
+            rotationRange={[10 + Math.random() * 10, 10 + Math.random() * 10, 5 + Math.random() * 5]}
+            speed={0.3 + Math.random() * 0.4}
+          >
+            <section style={{ width: 20, height: 20, borderRadius: 20, background: '#aaa' }} />
+          </FloatAny>
+        ))}
       </section>
 
       <section

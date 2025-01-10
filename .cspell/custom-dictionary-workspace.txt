@@ -28,6 +28,7 @@ CWGNC
 depcheck
 devchat
 doloribus
+elementor
 elit
 ENOENT
 EPSG
@@ -47,6 +48,7 @@ jsencrypt
 kend
 lamina
 languagedetector
+Laravel
 markercluster
 Menlo
 mfsu
