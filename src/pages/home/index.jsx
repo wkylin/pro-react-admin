@@ -5,12 +5,11 @@ import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
 import CountUp from 'react-countup'
 // import { PinInput } from 'react-input-pin-code'
 import SpotlightCard from '@stateless/Spotlight'
-import Typewriter from 'typewriter-effect'
+// import Typewriter from 'typewriter-effect'
 import Marquee from 'react-fast-marquee'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import useDetectScroll, { Direction } from '@smakss/react-scroll-direction'
 import FixTabPanel from '@stateless/FixTabPanel'
-import TypedText from '@stateless/TypedText'
 import ReMarkdown from '@stateless/ReMarkdown'
 // import LinearWrap from '@stateless/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
@@ -48,6 +47,9 @@ import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
 import FloatAny from '@stateless/FloatAny'
+import BackgroundBoxes from '@stateless/BackgroundBoxes'
+import TypeWriter from '@stateless/TypeWriter'
+import SlideText from '@stateless/SlideText'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -260,16 +262,27 @@ const Home = () => {
 
   return (
     <FixTabPanel ref={scrollRef}>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <TypedText>Cool! Hi, React & Ant Design!</TypedText>
-      </section>
-
       <section className={styles.avatar} style={{ marginBottom: 15, fontSize: 24 }}>
         React version: {version}
       </section>
 
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
+      </section>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
+        X 岁的你，正处在一个特殊的位置：
+        <TypeWriter
+          text={['年轻到足以创新, 成熟到懂得坚持', '你既有冒险的勇气, 又有控制风险的智慧', '人生不设限，梦想不过期! ']}
+          speed={70}
+          className="text-gray-500"
+          waitTime={1500}
+          deleteSpeed={40}
+          cursorChar={'_'}
+        />
+      </section>
+      <section style={{ marginBottom: 15, fontSize: 20, overflow: 'hidden' }}>
+        This is something
+        <SlideText text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
@@ -325,6 +338,20 @@ const Home = () => {
         }}
       >
         <Meteors number={40} />
+      </section>
+
+      <section
+        style={{
+          marginBottom: 15,
+          fontSize: 20,
+          height: 200,
+          width: 360,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+        className="bg-slate-900"
+      >
+        <BackgroundBoxes />
       </section>
       <section
         onMouseEnter={handleMouseEnter}
@@ -390,7 +417,7 @@ const Home = () => {
           <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
         </ScrollAnimation>
       </section>
-      <section style={{ marginBottom: 40, fontSize: 36 }}>
+      {/* <section style={{ marginBottom: 40, fontSize: 36 }}>
         <Typewriter
           options={{
             strings: ['Software Developer.', 'Full Stack Developer.', 'Open Source Contributor.'],
@@ -399,7 +426,7 @@ const Home = () => {
             deleteSpeed: 50,
           }}
         />
-      </section>
+      </section> */}
       <section>
         <GradientTracking />
       </section>
