@@ -417,3 +417,11 @@ export const exportFile = (res, fileName) => {
   downloadElement.click()
   document.body.removeChild(downloadElement)
 }
+
+export const getDirection = (ev, obj) => {
+  const { width: w, height: h, left, top } = obj.getBoundingClientRect()
+  const x = ev.clientX - left - (w / 2) * (w > h ? h / w : 1)
+  const y = ev.clientY - top - (h / 2) * (h > w ? w / h : 1)
+  const d = Math.round(Math.atan2(y, x) / 1.57079633 + 5) % 4
+  return d
+}

@@ -52,7 +52,7 @@ import FloatAny from '@stateless/FloatAny'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
-import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
+import { oneApiChat, prettyObject, randomNum, getDirection } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 import styles from './index.module.less'
 
@@ -105,6 +105,32 @@ const Home = () => {
   const [isStream, setIsStream] = useState(false)
   const [dateTime, setDateTime] = useState('')
   const curController = useRef(null)
+
+  const mouseEnterRef = useRef(null)
+  const [enterDirection, setEnterDirection] = useState('left')
+  const handleMouseEnter = (event) => {
+    if (!mouseEnterRef.current) return
+
+    const direction = getDirection(event, mouseEnterRef.current)
+    console.log('direction', direction)
+    switch (direction) {
+      case 0:
+        setEnterDirection('top')
+        break
+      case 1:
+        setEnterDirection('right')
+        break
+      case 2:
+        setEnterDirection('bottom')
+        break
+      case 3:
+        setEnterDirection('left')
+        break
+      default:
+        setEnterDirection('left')
+        break
+    }
+  }
 
   const [apiKey, setApiKey] = useState(() => '')
   const [chatText, setChatText] = useState('')
@@ -299,6 +325,22 @@ const Home = () => {
         }}
       >
         <Meteors number={40} />
+      </section>
+      <section
+        onMouseEnter={handleMouseEnter}
+        ref={mouseEnterRef}
+        style={{
+          marginBottom: 15,
+          height: 200,
+          width: 360,
+          background: '#111827',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: '#fff',
+        }}
+      >
+        Direction: {enterDirection}
       </section>
       <section style={{ margin: '20px 0' }}>
         <CompareAll
