@@ -17,28 +17,25 @@ const FloatAny = ({
   const rotateY = useMotionValue(0)
   const rotateZ = useMotionValue(0)
 
-  // Use refs for animation values to avoid recreating the animation frame callback
   const time = useRef(0)
 
   useAnimationFrame(() => {
     time.current += speed * 0.02
 
-    // Smooth floating motion on all axes
     const newX = Math.sin(time.current * 0.7 + timeOffset) * amplitude[0]
     const newY = Math.sin(time.current * 0.6 + timeOffset) * amplitude[1]
     const newZ = Math.sin(time.current * 0.5 + timeOffset) * amplitude[2]
 
-    // 3D rotations with different frequencies for more organic movement
     const newRotateX = Math.sin(time.current * 0.5 + timeOffset) * rotationRange[0]
     const newRotateY = Math.sin(time.current * 0.4 + timeOffset) * rotationRange[1]
     const newRotateZ = Math.sin(time.current * 0.3 + timeOffset) * rotationRange[2]
 
-    x.set(newX)
-    y.set(newY)
-    z.set(newZ)
-    rotateX.set(newRotateX)
-    rotateY.set(newRotateY)
-    rotateZ.set(newRotateZ)
+    x.set(newX > 0 ? newX : 0)
+    y.set(newY > 0 ? newY : 0)
+    z.set(newZ > 0 ? newZ : 0)
+    rotateX.set(newRotateX > 0 ? newRotateX : 0)
+    rotateY.set(newRotateY > 0 ? newRotateY : 0)
+    rotateZ.set(newRotateZ > 0 ? newRotateZ : 0)
   })
 
   return (

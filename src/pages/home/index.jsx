@@ -43,7 +43,7 @@ import { ReactSignature } from '@stateless/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
 import SquaresGrid from '@stateless/SquaresGrid'
 import ShinyText from '@stateless/ShinyText'
-import BlurText from '@stateless/BlurText'
+// import BlurText from '@stateless/BlurText'
 import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
@@ -56,7 +56,7 @@ import { oneApiChat, prettyObject, randomNum } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 import styles from './index.module.less'
 
-const boxList = Array.apply(null, Array(20))
+// const boxList = Array.apply(null, Array(10))
 
 const code = {
   fileName: './explanations.ts',
@@ -251,9 +251,9 @@ const Home = () => {
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <ShinyText text="Just some shiny text!" disabled={false} speed={3} />
       </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
+      {/* <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
-      </section>
+      </section> */}
       <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
         <TextLoader
           messages={[
@@ -265,7 +265,7 @@ const Home = () => {
           ]}
         />
       </section>
-      <section
+      {/* <section
         style={{
           marginBottom: 15,
           position: 'relative',
@@ -283,11 +283,10 @@ const Home = () => {
             rotationRange={[10 + Math.random() * 10, 10 + Math.random() * 10, 5 + Math.random() * 5]}
             speed={0.3 + Math.random() * 0.4}
           >
-            <section style={{ width: 20, height: 20, borderRadius: 20, background: '#aaa' }} />
+            <section style={{ width: 20, height: 20, background: '#aaa' }} />
           </FloatAny>
         ))}
-      </section>
-
+      </section> */}
       <section
         style={{
           marginBottom: 15,
