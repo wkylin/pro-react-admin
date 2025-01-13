@@ -20,7 +20,7 @@ import IsometricCard from '@stateless/IsometricCard'
 import AvatarCard from '@stateless/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
-import ShiftingCard from '@stateless/ShiftingCard'
+// import ShiftingCard from '@stateless/ShiftingCard'
 import BreatheText from '@stateless/BreatheText'
 import ScrollAnimation from '@stateless/ScrollAnimation'
 import AnimateOnScreen from '@stateless/AnimateOnScreen'
@@ -372,9 +372,9 @@ const Home = () => {
         </div>
       </section>
 
-      <section style={{ marginBottom: 40 }}>
+      {/* <section style={{ marginBottom: 40 }}>
         <ShiftingCard />
-      </section>
+      </section> */}
       {/* <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
       </section> */}
