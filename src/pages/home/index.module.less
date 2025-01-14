@@ -473,3 +473,33 @@
   initial-value: 0deg;
   inherits: false;
 }
+
+.circledHighlight {
+  position: relative;
+  z-index: 1;
+  padding: 5px;
+  margin: 0 15px;
+}
+
+.circledHighlight:before,
+.circledHighlight:after {
+  content: '';
+  width: 120%;
+  height: 100%;
+  position: absolute;
+  top: 5%;
+  left: -10%;
+  z-index: -1;
+  border-radius: 80%;
+  box-sizing: border-box;
+}
+
+.circledHighlight:before {
+  border: 2px solid #06251b;
+  transform: rotate(-4deg);
+}
+
+.circledHighlight:after {
+  border: 1px solid #63d9b3;
+  transform: rotate(6deg);
+}

@@ -268,10 +268,11 @@ const Home = () => {
       </section>
 
       <section style={{ marginBottom: 15, fontSize: 20 }}>
-        I love coding in <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
+        I love <span className={styles.circledHighlight}>coding</span> in{' '}
+        <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
-        X 岁的你，正处在一个特殊的位置：
+        X岁的你，正处在一个特殊的位置：
         <TypeWriter
           text={['年轻到足以创新, 成熟到懂得坚持', '你既有冒险的勇气, 又有控制风险的智慧', '人生不设限，梦想不过期! ']}
           speed={70}
