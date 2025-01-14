@@ -1,5 +1,4 @@
-import React, { useId, useMemo } from 'react'
-import { useEffect, useState } from 'react'
+import React, { useId, useMemo, useEffect, useState } from 'react'
 import Particles, { initParticlesEngine } from '@tsparticles/react'
 import { loadSlim } from '@tsparticles/slim'
 import clsx from 'clsx'
