@@ -47,7 +47,7 @@ import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
 import FloatAny from '@stateless/FloatAny'
-import BackgroundBoxes from '@stateless/BackgroundBoxes'
+// import BackgroundBoxes from '@stateless/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
 import SparklesCore from '@stateless/Sparkles'
@@ -359,7 +359,7 @@ const Home = () => {
           particleColor="#FFFFFF"
         />
       </section>
-      <section
+      {/* <section
         style={{
           marginBottom: 15,
           fontSize: 20,
@@ -371,7 +371,7 @@ const Home = () => {
         className="bg-slate-900"
       >
         <BackgroundBoxes />
-      </section>
+      </section> */}
       <section
         onMouseEnter={handleMouseEnter}
         ref={mouseEnterRef}
