@@ -40,16 +40,16 @@ import ContentPlaceholder from '@stateless/ContentPlaceholder'
 import SkeletonFix from '@stateless/SkeletonFix'
 import { ReactSignature } from '@stateless/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
-// import SquaresGrid from '@stateless/SquaresGrid'
+import SquaresGrid from '@stateless/SquaresGrid'
 import ShinyText from '@stateless/ShinyText'
 // import BlurText from '@stateless/BlurText'
-// import Meteors from '@stateless/Meteors'
-// import CompareAll from '@stateless/CompareAll'
-// import TextLoader from '@stateless/TextLoader'
-// import BackgroundBoxes from '@stateless/BackgroundBoxes'
+import Meteors from '@stateless/Meteors'
+import CompareAll from '@stateless/CompareAll'
+import TextLoader from '@stateless/TextLoader'
+import BackgroundBoxes from '@stateless/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
-// import SparklesCore from '@stateless/Sparkles'
+import SparklesCore from '@stateless/Sparkles'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -298,7 +298,7 @@ const Home = () => {
       {/* <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
       </section> */}
-      {/* <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
+      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
         <TextLoader
           messages={[
             'Preparing your experience',
@@ -368,8 +368,8 @@ const Home = () => {
         }}
       >
         Direction: {enterDirection}
-      </section> */}
-      {/* <section style={{ margin: '20px 0' }}>
+      </section>
+      <section style={{ margin: '20px 0' }}>
         <CompareAll
           firstImage={firstImage}
           secondImage={secondImage}
@@ -387,7 +387,7 @@ const Home = () => {
           borderColor="#222"
           hoverFillColor="#222"
         />
-      </section> */}
+      </section>
       <section className={styles.line}></section>
       <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
