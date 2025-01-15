@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 const useScrollIntoView = ({ offset = 0 }) => {
-  const targetRef = useRef < T > null
+  const targetRef = useRef(null)
   const [isScrolled, setIsScrolled] = useState(false)
 
   const scrollIntoView = () => {

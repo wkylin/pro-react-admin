@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef } from 'react'
 import { Gantt, Willow } from 'wx-react-gantt'
 import FixTabPanel from '@stateless/FixTabPanel'
 import 'wx-react-gantt/dist/gantt.css'

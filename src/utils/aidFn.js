@@ -386,7 +386,8 @@ export const getFileType = (data, fileName) => {
         try {
           JSON.parse(data)
           return 'application/json'
-        } catch (e) {
+        } catch (event) {
+          console.log('event', event)
           return 'text/plain'
         }
       } else if (data instanceof Uint8Array || data instanceof ArrayBuffer) {

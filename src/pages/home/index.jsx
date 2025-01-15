@@ -54,7 +54,12 @@ import SparklesCore from '@stateless/Sparkles'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
-import { oneApiChat, prettyObject, randomNum, getDirection } from '@utils/aidFn'
+import {
+  oneApiChat,
+  prettyObject,
+  // randomNum,
+  getDirection,
+} from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 import styles from './index.module.less'
 

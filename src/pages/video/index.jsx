@@ -41,11 +41,11 @@ const MyVideo = () => {
     togglePause,
     increaseVolume,
     decreaseVolume,
-    mute,
+    // mute,
     unmute,
     toggleMute,
     forward,
-    back,
+    // back,
     toggleFullscreen,
   } = useVideo(videoRef)
 

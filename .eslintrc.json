@@ -28,7 +28,7 @@
       }
     ],
     "semi": "off",
-    "no-use-before-define": "off",
+    "no-use-before-define": "warn",
     "comma-dangle": "off",
     "space-before-function-paren": "off",
     "multiline-ternary": "off",
@@ -54,8 +54,8 @@
     "array-callback-return": "off",
     "no-shadow": "off",
     "no-inner-declarations": "off",
-    "no-unused-expressions": "off",
-    "no-unused-vars": "off",
+    "no-unused-expressions": "warn",
+    "no-unused-vars": "warn",
     "no-plusplus": "off"
   }
 }

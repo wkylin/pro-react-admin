@@ -7,7 +7,7 @@ const TextClips = () => {
         <span className="elementor-headline-plain-text elementor-headline-text-wrapper">Trending</span>
         <span
           className="elementor-headline-dynamic-wrapper elementor-headline-text-wrapper"
-          style="width: 20.9824px; overflow: hidden;"
+          style={{ width: '20.9824px', overflow: 'hidden' }}
         >
           <span className="elementor-headline-dynamic-text elementor-headline-text-inactive">Bootstrap</span>
           <span className="elementor-headline-dynamic-text elementor-headline-text-active">React</span>

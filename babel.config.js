@@ -3,7 +3,6 @@ const plugins = [
   ['@babel/plugin-proposal-decorators', { legacy: true }],
   ['@babel/plugin-transform-runtime'],
   ['@babel/plugin-transform-modules-commonjs'],
-  [require('babel-plugin-await-add-trycatch')],
 ]
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
     [
       '@babel/preset-react',
       {
-        runtime: 'automatic',
+        runtime: 'automatic', // classic
       },
     ],
     '@babel/typescript',

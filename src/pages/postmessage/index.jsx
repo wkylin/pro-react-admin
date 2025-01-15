@@ -44,7 +44,7 @@ const PostMessage = () => {
         height="600px"
         title="my-iframe"
         loading="lazy"
-        allowfullscreen
+        allowFullScreen
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="no-referrer-when-downgrade"
         sandbox="allow-scripts allow-same-origin"
@@ -59,7 +59,7 @@ const PostMessage = () => {
         allow="accelerometer *; bluetooth *; camera *; encrypted-media *; display-capture *; geolocation *; gyroscope *; microphone *; midi *; clipboard-read *; clipboard-write *; web-share *; serial *; xr-spatial-tracking *"
         allowtransparency="true"
         allowPaymentRequest="true"
-        allowfullscreen="true"
+        allowFullScreen
         class="result-iframe"
         loading="lazy"
       /> */}
