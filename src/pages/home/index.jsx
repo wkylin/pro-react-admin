@@ -46,7 +46,6 @@ import ShinyText from '@stateless/ShinyText'
 import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
-import FloatAny from '@stateless/FloatAny'
 import BackgroundBoxes from '@stateless/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
@@ -305,59 +304,6 @@ const Home = () => {
           ]}
         />
       </section>
-      {/* <section
-        style={{
-          marginBottom: 15,
-          position: 'relative',
-          width: 360,
-          height: 160,
-          overflow: 'hidden',
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        }}
-      >
-        {boxList.map((box, i) => (
-          <FloatAny
-            key={i}
-            timeOffset={i * 0.8}
-            amplitude={[15 + Math.random() * 20, 25 + Math.random() * 30, 20 + Math.random() * 25]}
-            rotationRange={[10 + Math.random() * 10, 10 + Math.random() * 10, 5 + Math.random() * 5]}
-            speed={0.3 + Math.random() * 0.4}
-          >
-            <section style={{ width: 20, height: 20, background: '#aaa' }} />
-          </FloatAny>
-        ))}
-      </section> */}
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          background: '#111827',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <Meteors number={40} />
-      </section>
-      {/* <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          background: '#111827',
-        }}
-      >
-        <SparklesCore
-          background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={1200}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
-        />
-      </section> */}
       <section
         style={{
           marginBottom: 15,
