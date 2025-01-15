@@ -47,10 +47,10 @@ import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
 import FloatAny from '@stateless/FloatAny'
-// import BackgroundBoxes from '@stateless/BackgroundBoxes'
+import BackgroundBoxes from '@stateless/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
-import SparklesCore from '@stateless/Sparkles'
+// import SparklesCore from '@stateless/Sparkles'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -115,7 +115,6 @@ const Home = () => {
     if (!mouseEnterRef.current) return
 
     const direction = getDirection(event, mouseEnterRef.current)
-    console.log('direction', direction)
     switch (direction) {
       case 0:
         setEnterDirection('top')
@@ -341,7 +340,7 @@ const Home = () => {
       >
         <Meteors number={40} />
       </section>
-      <section
+      {/* <section
         style={{
           marginBottom: 15,
           fontSize: 20,
@@ -358,8 +357,8 @@ const Home = () => {
           className="w-full h-full"
           particleColor="#FFFFFF"
         />
-      </section>
-      {/* <section
+      </section> */}
+      <section
         style={{
           marginBottom: 15,
           fontSize: 20,
@@ -371,7 +370,7 @@ const Home = () => {
         className="bg-slate-900"
       >
         <BackgroundBoxes />
-      </section> */}
+      </section>
       <section
         onMouseEnter={handleMouseEnter}
         ref={mouseEnterRef}
