@@ -481,8 +481,8 @@
   margin: 0 15px;
 }
 
-.circledHighlight:before,
-.circledHighlight:after {
+.circledHighlight::before,
+.circledHighlight::after {
   content: '';
   width: 120%;
   height: 100%;
@@ -494,12 +494,18 @@
   box-sizing: border-box;
 }
 
-.circledHighlight:before {
+.circledHighlight::before {
   border: 2px solid #06251b;
   transform: rotate(-4deg);
 }
 
-.circledHighlight:after {
+.circledHighlight::after {
   border: 1px solid #63d9b3;
   transform: rotate(6deg);
 }
+
+// backdrop-filter
+// object-fit: cover;
+// object-position: 0 0;
+// isolation: isolate;
+// z-index: 1;
