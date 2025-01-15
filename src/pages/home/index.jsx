@@ -49,7 +49,7 @@ import TextLoader from '@stateless/TextLoader'
 import BackgroundBoxes from '@stateless/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
-// import SparklesCore from '@stateless/Sparkles'
+import SparklesCore from '@stateless/Sparkles'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -302,6 +302,37 @@ const Home = () => {
             'Just a moment',
             'Getting things ready',
           ]}
+        />
+      </section>
+      <section
+        style={{
+          marginBottom: 15,
+          fontSize: 20,
+          height: 200,
+          width: 360,
+          background: '#111827',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <Meteors number={40} />
+      </section>
+      <section
+        style={{
+          marginBottom: 15,
+          fontSize: 20,
+          height: 200,
+          width: 360,
+          background: '#111827',
+        }}
+      >
+        <SparklesCore
+          background="transparent"
+          minSize={0.4}
+          maxSize={1}
+          particleDensity={1200}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
         />
       </section>
       <section
