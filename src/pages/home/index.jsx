@@ -50,6 +50,7 @@ import BackgroundBoxes from '@stateless/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
 import SparklesCore from '@stateless/Sparkles'
+import SparklesText from '@stateless/SparklesText'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -289,6 +290,10 @@ const Home = () => {
         This is something
         <SlideText text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
       </section>
+      <section style={{ marginBottom: 15, fontSize: 20 }}>
+        <SparklesText text="Magic UI" sparklesCount={5} />
+      </section>
+
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
       </section>

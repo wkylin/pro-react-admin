@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { motion } from 'motion/react'
-import { MoveRight, PhoneCall } from 'lucide-react'
 
 const SlideText = ({ text = [] }) => {
   const [titleNumber, setTitleNumber] = useState(0)
