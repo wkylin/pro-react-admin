@@ -6,7 +6,7 @@ const Stars = () => {
   const randomOpacity = () => Math.random()
   const random = () => Math.random()
   return (
-    <div className="absolute inset-0">
+    <div className='absolute inset-0'>
       {[...Array(80)].map((_, i) => (
         <motion.span
           key={`star-${i}`}
@@ -14,25 +14,25 @@ const Stars = () => {
             top: `calc(${random() * 100}% + ${randomMove()}px)`,
             left: `calc(${random() * 100}% + ${randomMove()}px)`,
             opacity: randomOpacity(),
-            scale: [1, 1.2, 0],
+            scale: [1, 1.2, 0]
           }}
           transition={{
             duration: random() * 10 + 20,
             repeat: Infinity,
-            ease: 'linear',
+            ease: 'linear'
           }}
           style={{
             position: 'absolute',
             top: `${random() * 100}%`,
             left: `${random() * 100}%`,
-            width: `2px`,
-            height: `2px`,
+            width: '2px',
+            height: '2px',
             backgroundColor: 'white',
             borderRadius: '50%',
-            zIndex: 1,
+            zIndex: 1
           }}
-          className="inline-block"
-        ></motion.span>
+          className='inline-block'
+        />
       ))}
     </div>
   )
