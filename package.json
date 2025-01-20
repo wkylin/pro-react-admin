@@ -287,6 +287,7 @@
     "react-lazy-load-image-component": "^1.6.3",
     "react-loading-skeleton": "^3.5.0",
     "react-markdown": "^9.0.3",
+    "react-medium-image-zoom": "^5.2.13",
     "react-parallax-tilt": "^1.7.272",
     "react-pdf": "^9.2.1",
     "react-player": "^2.16.0",

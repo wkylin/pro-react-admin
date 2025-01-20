@@ -62,6 +62,8 @@ import {
   getDirection,
 } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
+import Zoom from 'react-medium-image-zoom'
+import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
 
 // const boxList = Array.apply(null, Array(10))
@@ -476,7 +478,9 @@ const Home = () => {
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
           triggerOnce={true}
         >
-          <img src="https://picsum.photos/360/200.jpg" alt="" />
+          <Zoom>
+            <img src="https://picsum.photos/360/200.jpg" alt="" />
+          </Zoom>
         </AnimateOnScreen.DiyAnimation>
       </section>
       <section style={{ marginBottom: 40, display: 'flex' }}>
