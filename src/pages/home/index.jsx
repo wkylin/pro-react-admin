@@ -51,6 +51,8 @@ import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
 import SparklesCore from '@stateless/Sparkles'
 import SparklesText from '@stateless/SparklesText'
+import ColorfulText from '@stateless/ColorfulText'
+import MemoizedStars from '@stateless/MemoizedStars'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -270,7 +272,7 @@ const Home = () => {
   return (
     <FixTabPanel ref={scrollRef}>
       <section className={styles.avatar} style={{ marginBottom: 15, fontSize: 24 }}>
-        React version: {version}
+        <ColorfulText text={`React version: ${version}`} />
       </section>
 
       <section style={{ marginBottom: 15, fontSize: 20 }}>
@@ -359,6 +361,19 @@ const Home = () => {
         className="bg-slate-900"
       >
         <BackgroundBoxes />
+      </section>
+      <section
+        style={{
+          marginBottom: 15,
+          fontSize: 20,
+          height: 200,
+          width: 360,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
+        className="bg-slate-900"
+      >
+        <MemoizedStars />
       </section>
       <section
         onMouseEnter={handleMouseEnter}
