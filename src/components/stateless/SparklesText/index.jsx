@@ -1,4 +1,4 @@
-import { CSSProperties, ReactElement, useEffect, useState } from 'react'
+import React, { CSSProperties, ReactElement, useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import clsx from 'clsx'
 
