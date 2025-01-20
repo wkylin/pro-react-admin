@@ -10,6 +10,7 @@ import {
   useMotionValue,
   animate,
 } from 'motion/react'
+import clsx from 'clsx'
 import FixTabPanel from '@stateless/FixTabPanel'
 import HorizontalScrollParallax from '@stateless/HorizontalScroll'
 import styles from './index.module.less'
@@ -267,11 +268,22 @@ const ParallaxVert = () => {
           {navItems.map((item, index) => (
             <li
               key={index}
-              className={`${styles.navItem} ${index === activeNavItemIndex ? `${styles.navItemActive}` : ''}`}
+              className={styles.navItem}
               ref={(el) => (navItemsRef.current[index] = el)}
               onClick={() => handleNavItemClick(index)}
+              style={{
+                transformStyle: 'preserve-3d',
+              }}
             >
               {item}
+              {index === activeNavItemIndex && (
+                <motion.div
+                  layoutId="clickedButton"
+                  transition={{ type: 'spring', bounce: 0.3, duration: 0.6 }}
+                  className={clsx('absolute inset-0 bg-gray-200 dark:bg-zinc-800 rounded-full')}
+                  style={{ zIndex: -1 }}
+                />
+              )}
             </li>
           ))}
         </ul>
