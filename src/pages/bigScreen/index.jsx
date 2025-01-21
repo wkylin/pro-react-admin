@@ -17,7 +17,7 @@ const BigScreen = () => {
     data3: [110, 132, 201, 154, 150, 80],
     data4: [90, 142, 161, 114, 190, 170],
     xData: ['9:00', '12:00', '15:00', '18:00', '21:00', '00:00'],
-    barData: [32.2, 60.0, 32.6, 36.4, 53.3, 35.0],
+    barData: [32.2, 60.0, 32.6, 36.4, 53.3, 35.0]
   })
   useEffect(() => {
     const { calcRate, windowResize, unWindowResize } = previewFitScale(1200, 800, scaleDom.current)
@@ -35,477 +35,477 @@ const BigScreen = () => {
         bidderName: '平山县万达公路工程有限公司',
         bizDate: '2019-01',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2019-03',
         bidCount: '2',
-        winRate: 50,
+        winRate: 50
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2019-03',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130108673216180T',
         bidderName: '河北盛创公路工程有限公司',
         bizDate: '2019-04',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2019-07',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2019-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2019-09',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2019-10',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2020-03',
         bidCount: '5',
-        winRate: 60,
+        winRate: 60
       },
       {
         bidderCode: '91130108673216180T',
         bidderName: '河北盛创公路工程有限公司',
         bizDate: '2020-03',
         bidCount: '7',
-        winRate: 28.57,
+        winRate: 28.57
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2020-04',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2020-05',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2020-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2020-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2020-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2020-12',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2021-03',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2021-04',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2021-05',
         bidCount: '2',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2021-05',
         bidCount: '2',
-        winRate: 50,
+        winRate: 50
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2021-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2021-12',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2022-04',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2022-06',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2022-07',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2022-08',
         bidCount: '2',
-        winRate: 50,
+        winRate: 50
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2022-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130131694657380A',
         bidderName: '平山县万达公路工程有限公司',
         bizDate: '2022-08',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2022-10',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2022-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2022-11',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2023-02',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2023-02',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130131694657380A',
         bidderName: '平山县万达公路工程有限公司',
         bizDate: '2023-02',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2023-04',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2023-05',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2023-05',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2023-05',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '9113018579415799XW',
         bidderName: '河北昕辰路桥工程有限公司',
         bizDate: '2023-05',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2023-05',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2023-06',
         bidCount: '3',
-        winRate: 66.67,
+        winRate: 66.67
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2023-06',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91510129MA6CWGNC1F',
         bidderName: '四川联天望海建筑工程有限公司',
         bizDate: '2023-06',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2023-07',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2023-08',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91510129MA6CWGNC1F',
         bidderName: '四川联天望海建筑工程有限公司',
         bizDate: '2023-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130131694657380A',
         bidderName: '平山县万达公路工程有限公司',
         bizDate: '2023-08',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2023-09',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2023-10',
         bidCount: '2',
-        winRate: 50,
+        winRate: 50
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2023-10',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2023-10',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91510129MA6CWGNC1F',
         bidderName: '四川联天望海建筑工程有限公司',
         bizDate: '2023-10',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2023-11',
         bidCount: '3',
-        winRate: 33.33,
+        winRate: 33.33
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2023-11',
         bidCount: '4',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2023-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '9113018579415799XW',
         bidderName: '河北昕辰路桥工程有限公司',
         bizDate: '2023-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130104681399108D',
         bidderName: '河北君邦公路工程有限公司',
         bizDate: '2023-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91510129MA6CWGNC1F',
         bidderName: '四川联天望海建筑工程有限公司',
         bizDate: '2023-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130131694657380A',
         bidderName: '平山县万达公路工程有限公司',
         bizDate: '2023-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130108673216180T',
         bidderName: '河北盛创公路工程有限公司',
         bizDate: '2023-11',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130927319947095N',
         bidderName: '河北广润建筑工程有限公司',
         bizDate: '2023-12',
         bidCount: '3',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '9113018579415799XW',
         bidderName: '河北昕辰路桥工程有限公司',
         bizDate: '2023-12',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91510129MA6CWGNC1F',
         bidderName: '四川联天望海建筑工程有限公司',
         bizDate: '2023-12',
         bidCount: '2',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2024-01',
         bidCount: '4',
-        winRate: 75,
+        winRate: 75
       },
       {
         bidderCode: '91130121096822075A',
         bidderName: '井陉县兴通公路养护工程有限公司',
         bizDate: '2024-01',
         bidCount: '2',
-        winRate: 50,
+        winRate: 50
       },
       {
         bidderCode: '9113018579415799XW',
         bidderName: '河北昕辰路桥工程有限公司',
         bizDate: '2024-01',
         bidCount: '1',
-        winRate: 100,
+        winRate: 100
       },
       {
         bidderCode: '91130183784094817J',
         bidderName: '石家庄通畅公路工程有限公司',
         bizDate: '2024-02',
         bidCount: '1',
-        winRate: 0,
+        winRate: 0
       },
       {
         bidderCode: '91510129MA6CWGNC1F',
         bidderName: '四川联天望海建筑工程有限公司',
         bizDate: '2024-02',
         bidCount: '1',
-        winRate: 100,
-      },
+        winRate: 100
+      }
     ],
     chartDate: [
       '2019-01',
@@ -542,7 +542,7 @@ const BigScreen = () => {
       '2023-11',
       '2023-12',
       '2024-01',
-      '2024-02',
+      '2024-02'
     ],
     chartLegend: [
       '井陉县兴通公路养护工程有限公司',
@@ -552,7 +552,7 @@ const BigScreen = () => {
       '河北广润建筑工程有限公司',
       '河北君邦公路工程有限公司',
       '河北昕辰路桥工程有限公司',
-      '四川联天望海建筑工程有限公司',
+      '四川联天望海建筑工程有限公司'
     ],
     seriesData: [
       {
@@ -594,8 +594,8 @@ const BigScreen = () => {
           '1',
           0,
           0,
-          0,
-        ],
+          0
+        ]
       },
       {
         name: '石家庄通畅公路工程有限公司',
@@ -635,8 +635,8 @@ const BigScreen = () => {
           '3',
           0,
           '4',
-          '1',
-        ],
+          '1'
+        ]
       },
       {
         name: '河北君邦公路工程有限公司',
@@ -677,8 +677,8 @@ const BigScreen = () => {
           '1',
           0,
           0,
-          0,
-        ],
+          0
+        ]
       },
       {
         name: '河北盛创公路工程有限公司',
@@ -718,8 +718,8 @@ const BigScreen = () => {
           '1',
           0,
           0,
-          0,
-        ],
+          0
+        ]
       },
       {
         name: '河北广润建筑工程有限公司',
@@ -760,8 +760,8 @@ const BigScreen = () => {
           '1',
           '3',
           0,
-          0,
-        ],
+          0
+        ]
       },
       {
         name: '井陉县兴通公路养护工程有限公司',
@@ -801,8 +801,8 @@ const BigScreen = () => {
           '4',
           0,
           '2',
-          0,
-        ],
+          0
+        ]
       },
       {
         name: '河北昕辰路桥工程有限公司',
@@ -843,8 +843,8 @@ const BigScreen = () => {
           '1',
           '1',
           '1',
-          0,
-        ],
+          0
+        ]
       },
       {
         name: '四川联天望海建筑工程有限公司',
@@ -885,10 +885,10 @@ const BigScreen = () => {
           '1',
           '2',
           0,
-          '1',
-        ],
-      },
-    ],
+          '1'
+        ]
+      }
+    ]
   }
   const options = {
     enlarge: false,
@@ -908,29 +908,29 @@ const BigScreen = () => {
           return index === 0 ? `${param.name}<br/>${temp}` : temp
         })
         return formatterText.join('')
-      },
+      }
     },
     options: {
       legend: {
         show: true,
         type: 'scroll',
         icon: 'circle',
-        data: chartData?.chartLegend ?? [],
-      },
+        data: chartData?.chartLegend ?? []
+      }
     },
     grid: {
       top: 40,
       right: 30,
       bottom: 30,
       left: 40,
-      containLabel: true,
+      containLabel: true
     },
     xAxis: {
       axisLabel: {
         rotate: 45,
-        margin: 20,
+        margin: 20
       },
-      data: chartData?.chartDate ?? [],
+      data: chartData?.chartDate ?? []
     },
     yAxis: [
       {
@@ -938,21 +938,21 @@ const BigScreen = () => {
         nameGap: 5,
         nameTextStyle: {
           padding: [0, 0, 10, 0],
-          verticalAlign: 'bottom',
-        },
-      },
+          verticalAlign: 'bottom'
+        }
+      }
     ],
-    series: chartData?.seriesData ?? [],
+    series: chartData?.seriesData ?? []
   }
   return (
     <FixTabPanel style={{ background: '#04060D' }}>
       <section ref={scaleDom} className={styles.bigScreen} style={{ background: '#04060D' }}>
         <BigHeader />
-        <section className="flex justify-between text-white">
+        <section className='flex justify-between text-white'>
           <div
             style={{
               width: '30%',
-              height: '30vh',
+              height: '30vh'
             }}
           >
             <EChartsCommon option={OfflinePortalOptions(feedbackData)} />
@@ -960,7 +960,7 @@ const BigScreen = () => {
           <div
             style={{
               width: '40%',
-              height: '30vh',
+              height: '30vh'
             }}
           >
             <ChinaMap />
@@ -968,7 +968,7 @@ const BigScreen = () => {
           <div
             style={{
               width: '30%',
-              height: '30vh',
+              height: '30vh'
             }}
           >
             <EChartsCommon option={OfflinePortalOptions(feedbackData)} />
