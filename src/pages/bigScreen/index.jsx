@@ -9,7 +9,7 @@ import ChinaMap from './chinaMap'
 import { OfflinePortalOptions } from './offlinePortalOptions'
 
 const BigScreen = () => {
-  const scaleDom = useRef<HTMLDivElement>(null)
+  const scaleDom = useRef(null)
 
   const [feedbackData] = useState({
     data1: [80, 152, 101, 134, 90, 130],
@@ -28,7 +28,7 @@ const BigScreen = () => {
     }
   }, [])
 
-  const chartData: any = {
+  const chartData = {
     chartAllData: [
       {
         bidderCode: '91130131694657380A',
@@ -894,10 +894,10 @@ const BigScreen = () => {
     enlarge: false,
     tooltip: {
       trigger: 'axis',
-      formatter: (params: any) => {
-        const formatterText = params.map((param: any, index: number) => {
+      formatter: (params) => {
+        const formatterText = params.map((param, index) => {
           const bizData = chartData?.chartAllData?.find(
-            (item: any) => item.bizDate === param.name && item.bidderName === param.seriesName
+            (item) => item.bizDate === param.name && item.bidderName === param.seriesName
           )
           const winRate = bizData?.winRate ?? 0
           const bidCount = bizData?.bidCount ?? 0
@@ -919,7 +919,7 @@ const BigScreen = () => {
       },
     },
     grid: {
-      top: 100,
+      top: 40,
       right: 30,
       bottom: 30,
       left: 40,
@@ -936,6 +936,10 @@ const BigScreen = () => {
       {
         name: '投标（次）',
         nameGap: 5,
+        nameTextStyle: {
+          padding: [0, 0, 10, 0],
+          verticalAlign: 'bottom',
+        },
       },
     ],
     series: chartData?.seriesData ?? [],
@@ -947,30 +951,31 @@ const BigScreen = () => {
         <section className="flex justify-between text-white">
           <div
             style={{
-              width: '460px',
-              height: '280px',
+              width: '30%',
+              height: '30vh',
             }}
           >
             <EChartsCommon option={OfflinePortalOptions(feedbackData)} />
           </div>
           <div
             style={{
-              width: '600px',
-              height: '280px',
+              width: '40%',
+              height: '30vh',
             }}
           >
             <ChinaMap />
           </div>
           <div
             style={{
-              width: '460px',
-              height: '280px',
+              width: '30%',
+              height: '30vh',
             }}
           >
             <EChartsCommon option={OfflinePortalOptions(feedbackData)} />
           </div>
         </section>
-        <section style={{ height: 400, marginTop: 20 }}>
+        <section style={{ marginTop: 20, color: '#fff' }}>某市项目投标数据统计</section>
+        <section style={{ height: '40vh' }}>
           <EChartsCommon option={options} />
         </section>
       </section>

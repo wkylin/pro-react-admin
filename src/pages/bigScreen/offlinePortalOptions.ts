@@ -1,5 +1,3 @@
-import { graphic } from 'echarts/core'
-
 // 关联数据类别
 export const BrowseCategoriesOptions = (params: any) => ({
   radar: {
@@ -103,22 +101,6 @@ export const FeedbackOptions = (params: any) => ({
         {
           value: params.number,
           name: params.title,
-          itemStyle: {
-            normal: {
-              color: new graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: '#5a8bfa',
-                },
-                {
-                  offset: 1,
-                  color: '#831bdb',
-                },
-              ]),
-              shadowColor: 'rgba(175,143,230,.5)',
-              shadowBlur: 10,
-            },
-          },
           label: {
             show: false,
           },
@@ -292,25 +274,6 @@ export const OfflinePortalOptions = (params: any) => ({
       name: '额度',
       type: 'bar',
       data: params.barData,
-      itemStyle: {
-        normal: {
-          color: new graphic.LinearGradient(0, 0, 0, 1, [
-            {
-              offset: 0,
-              color: 'rgba(34,224,214,.8)',
-            },
-            {
-              offset: 0.5,
-              color: 'rgba(5,137,186,1)',
-            },
-            {
-              offset: 1,
-              color: 'rgba(11,12,31,1)',
-            },
-          ]),
-          barBorderRadius: 7.5,
-        },
-      },
       barMaxWidth: 15,
     },
   ],

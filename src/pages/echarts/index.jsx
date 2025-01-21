@@ -1,6 +1,6 @@
 import React from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
-import ReactEcharts from 'echarts-for-react'
+import EChartsCommon from '@stateless/EChartsCommon'
 
 const Echarts = () => {
   const option = {
@@ -122,7 +122,7 @@ const Echarts = () => {
   return (
     <FixTabPanel>
       <h3>Welcome to echarts!</h3>
-      <ReactEcharts option={option} notMerge={true} lazyUpdate={true} style={{ height: 680 }} />
+      <EChartsCommon option={option} style={{ height: 680 }} />
     </FixTabPanel>
   )
 }

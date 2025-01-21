@@ -14,7 +14,7 @@ const BigHeader = () => {
   const setTimingFn = () => {
     timing.current = setInterval(() => {
       const dateYear = formatTime(new Date(), 'yyyy-MM-dd')
-      const dateDay = formatTime(new Date(), 'HH: mm: ss')
+      const dateDay = formatTime(new Date(), 'HH : mm : ss')
       const dateWeek = stateInfo.weekday[new Date().getDay()]
       setTimeStr(`${dateYear} | ${dateDay} ${dateWeek}`)
     }, 1000) as any
@@ -29,7 +29,7 @@ const BigHeader = () => {
   }, [])
 
   return (
-    <section style={{ color: '#fff' }} className="flex justify-between mb-5">
+    <section style={{ color: '#fff', fontSize: 18 }} className="flex justify-between mb-5">
       <span>{stateInfo.title}</span>
       <span>{timeStr}</span>
     </section>

@@ -1,5 +1,3 @@
-import { graphic } from 'echarts/core'
-
 //  地图数据
 const mapData = {
   citys: [
@@ -1707,23 +1705,6 @@ const mapOptions = (params: any) => ({
       },
       lineStyle: {
         normal: {
-          color: new graphic.LinearGradient(
-            0,
-            0,
-            0,
-            1,
-            [
-              {
-                offset: 0,
-                color: '#58B3CC',
-              },
-              {
-                offset: 1,
-                color: '#F58158',
-              },
-            ],
-            false
-          ),
           width: 1,
           opacity: 0.2,
           curveness: 0.1,

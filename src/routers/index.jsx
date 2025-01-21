@@ -30,12 +30,12 @@ const MyVideo = lazy(() => import('@pages/video'))
 const MyCrypto = lazy(() => import('@pages/crypto'))
 // const ReactThree = lazy(() => import('@pages/three'))
 // const ChatGpt = lazy(() => import('@pages/chatgpt'))
-// const Echarts = lazy(() => import('@pages/echarts'))
+const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
 // const Mermaid = lazy(() => import('@pages/mermaid'))
 // const DynamicModal = lazy(() => import('@pages/dynamicModal'))
-// const BigScreen = lazy(() => import('@pages/bigScreen'))
+const BigScreen = lazy(() => import('@pages/bigScreen'))
 const ReactAmap = lazy(() => import('@pages/reactAmap'))
 // const SuperMap = lazy(() => import('@pages/superMap'))
 const D3Chart = lazy(() => import('@pages/d3Chart'))
@@ -180,14 +180,14 @@ const rootRouter = [
         auth: false,
         element: lazyLoad(GeoChart),
       },
-      // {
-      //   index: false,
-      //   path: 'echarts',
-      //   name: 'React Echarts',
-      //   key: '/echarts',
-      //   auth: true,
-      //   element: lazyLoad(Echarts),
-      // },
+      {
+        index: false,
+        path: 'echarts',
+        name: 'React Echarts',
+        key: '/echarts',
+        auth: true,
+        element: lazyLoad(Echarts),
+      },
       // {
       //   index: false,
       //   path: 'dynamic',
@@ -196,14 +196,14 @@ const rootRouter = [
       //   auth: false,
       //   element: lazyLoad(DynamicModal),
       // },
-      // {
-      //   index: false,
-      //   path: 'big-screen',
-      //   name: 'Big Screen',
-      //   key: '/big-screen',
-      //   auth: false,
-      //   element: lazyLoad(BigScreen),
-      // },
+      {
+        index: false,
+        path: 'big-screen',
+        name: 'Big Screen',
+        key: '/big-screen',
+        auth: false,
+        element: lazyLoad(BigScreen),
+      },
       {
         index: false,
         path: 'react-amap',
