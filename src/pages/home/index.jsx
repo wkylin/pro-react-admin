@@ -53,6 +53,8 @@ import SparklesCore from '@stateless/Sparkles'
 import SparklesText from '@stateless/SparklesText'
 import ColorfulText from '@stateless/ColorfulText'
 import MemoizedStars from '@stateless/MemoizedStars'
+import WordRotate from '@stateless/WordRotate'
+import BorderBeam from '@stateless/BorderBeam'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -274,10 +276,9 @@ const Home = () => {
       <section className={styles.avatar} style={{ marginBottom: 15, fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
-
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
-        <AlternatingText alternateText={['javascript', 'typescript', 'rect', 'vue']} />.
+        <AlternatingText alternateText={['Js', 'Ts', 'Rect', 'Vue']} />.
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         X岁的你，正处在一个特殊的位置：
@@ -506,6 +507,14 @@ const Home = () => {
       <section style={{ margin: '20px 0' }}>
         <ContentPlaceholder />
       </section>
+      <section style={{ margin: '20px 0' }}>
+        <div className="relative flex h-[200px] w-[360px] flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
+          <span className="text-3xl font-semibold leading-none text-center text-transparent whitespace-pre-wrap pointer-events-none bg-gradient-to-b from-black to-gray-300/80 bg-clip-text">
+            Border Beam
+          </span>
+          <BorderBeam size={250} duration={12} delay={9} />
+        </div>
+      </section>
       <section
         className={styles.box}
         style={{
@@ -513,7 +522,7 @@ const Home = () => {
           width: 360,
           height: 200,
           position: 'relative',
-          backgroundColor: 'rgba(0, 0,0, 0.9)',
+          backgroundColor: 'rgba(0, 0,0, 0.2)',
           borderRadius: 8,
         }}
       >
