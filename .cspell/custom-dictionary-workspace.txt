@@ -52,6 +52,7 @@ Laravel
 markercluster
 Menlo
 mfsu
+nowrap
 packagehash
 preid
 premajor
@@ -61,8 +62,10 @@ Qube
 rapidapi
 repellat
 rvest
+Seekbar
 sentrycli
 singleline
+slideup
 smakss
 snyk
 Snyk
@@ -73,6 +76,7 @@ spiderfy
 stepsize
 supermapgis
 tabnine
+tabpane
 tada
 Tahoma
 teambit

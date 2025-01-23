@@ -19,7 +19,7 @@ const ShiCode = ({ preCode }) => {
           <div className="rounded-full h-3 w-3 bg-green-500"></div>
         </div>
         <div className="col-span-4 flex justify-center">
-          <div className="bg-transparent text-center text-gray-400 text-sm font-medium focus:outline-none">
+          <div className="bg-transparent text-center text-gray-400 text-sm font-medium focus:outline-hidden">
             Untitled
           </div>
         </div>

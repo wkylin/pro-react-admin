@@ -46,7 +46,7 @@ const FeatureFourImages = () => {
   }, [timer])
 
   return (
-    <div className="grid grid-cols-1 gap-4 p-4 border rounded md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 p-4 border rounded-sm md:grid-cols-2">
       <div className="space-y-6 ">
         {data.map((item, index) => (
           <button

@@ -27,7 +27,7 @@ const tabs = [
     title: 'Product',
     value: 'product',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-gradient-to-br from-purple-700 to-violet-900">
+      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
         <p>Product Tab</p>
       </div>
     ),
@@ -36,7 +36,7 @@ const tabs = [
     title: 'Services',
     value: 'services',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-gradient-to-br from-purple-700 to-violet-900">
+      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
         <p>Services tab</p>
       </div>
     ),
@@ -45,7 +45,7 @@ const tabs = [
     title: 'Playground',
     value: 'playground',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-gradient-to-br from-purple-700 to-violet-900">
+      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
         <p>Playground tab</p>
       </div>
     ),
@@ -54,7 +54,7 @@ const tabs = [
     title: 'Content',
     value: 'content',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-gradient-to-br from-purple-700 to-violet-900">
+      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
         <p>Content tab</p>
       </div>
     ),
@@ -63,7 +63,7 @@ const tabs = [
     title: 'Random',
     value: 'random',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-gradient-to-br from-purple-700 to-violet-900">
+      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
         <p>Random tab</p>
       </div>
     ),

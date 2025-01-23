@@ -30,7 +30,7 @@ function ReactPdf() {
       <header className="bg-blue-600 text-white p-4">
         <h1 className="text-2xl font-bold">React PDF Viewer</h1>
       </header>
-      <main className="flex-grow container mx-auto p-4 flex flex-col items-center">
+      <main className="grow container mx-auto p-4 flex flex-col items-center">
         <div className="bg-white rounded-lg shadow-md p-4 mb-4 w-full max-w-3xl">
           <Document file={httpsUrl} onLoadSuccess={onDocumentLoadSuccess} className="flex justify-center">
             <Page pageNumber={pageNumber} scale={scale} />

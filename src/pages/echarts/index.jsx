@@ -7,7 +7,7 @@ const Echarts = () => {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
-        type: 'shadow',
+        type: 'shadow-sm',
       },
     },
     legend: {

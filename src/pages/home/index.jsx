@@ -54,7 +54,6 @@ import SparklesText from '@stateless/SparklesText'
 import ColorfulText from '@stateless/ColorfulText'
 import MemoizedStars from '@stateless/MemoizedStars'
 import WordRotate from '@stateless/WordRotate'
-import BorderBeam from '@stateless/BorderBeam'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -506,14 +505,6 @@ const Home = () => {
       </section>
       <section style={{ margin: '20px 0' }}>
         <ContentPlaceholder />
-      </section>
-      <section style={{ margin: '20px 0' }}>
-        <div className="relative flex h-[200px] w-[360px] flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
-          <span className="text-3xl font-semibold leading-none text-center text-transparent whitespace-pre-wrap pointer-events-none bg-gradient-to-b from-black to-gray-300/80 bg-clip-text">
-            Border Beam
-          </span>
-          <BorderBeam size={250} duration={12} delay={9} />
-        </div>
       </section>
       <section
         className={styles.box}

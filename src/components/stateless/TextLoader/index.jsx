@@ -43,7 +43,7 @@ const TextLoader = ({ messages, interval = 2000, dotCount = 3, direction = 'vert
 
   if (direction === 'horizontal') {
     return (
-      <div className="flex items-center justify-start w-full gap-3 px-3 py-2 border rounded-sm">
+      <div className="flex items-center justify-start w-full gap-3 px-3 py-2 border rounded-xs">
         <motion.div
           className="size-5 md:size-6 border-[3px] text-primary-foreground border-t-transparent rounded-full"
           animate={{ rotate: 360 }}
