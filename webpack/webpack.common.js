@@ -179,11 +179,11 @@ const config = {
             loader: 'esbuild-loader',
             options: {
               // loader: 'tsx',
-              target: 'es2015',
+              target: 'es2020',
             },
           },
           {
-            loader: 'babel-loader?cacheDirectory',
+            loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env', '@babel/preset-react'],
               plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime'],
