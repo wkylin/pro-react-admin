@@ -11,7 +11,7 @@ const TextComponent = ({ number, title, content, isOpen, loadingWidthPercent }) 
           : 'scale-90 border-transparent opacity-50 saturate-0'
       )}
     >
-      <div className="flex items-center w-full gap-4 p-4">
+      <div className='flex items-center w-full gap-4 p-4'>
         <p
           className={clsx(
             'inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-neutral-500/20 text-neutral-600'
@@ -27,9 +27,9 @@ const TextComponent = ({ number, title, content, isOpen, loadingWidthPercent }) 
           isOpen ? ' max-h-64' : 'max-h-0'
         )}
       >
-        <p className="p-4 text-lg">{content}</p>
-        <div className="w-full px-4 pb-4">
-          <div className="relative w-full h-1 overflow-hidden rounded-full">
+        <p className='p-4 text-lg'>{content}</p>
+        <div className='w-full px-4 pb-4'>
+          <div className='relative w-full h-1 overflow-hidden rounded-full'>
             <div
               className={clsx('absolute left-0 top-0 h-1 bg-neutral-500')}
               style={{ width: `${loadingWidthPercent}%` }}

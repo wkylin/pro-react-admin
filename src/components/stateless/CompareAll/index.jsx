@@ -14,7 +14,7 @@ const Compare = ({
   slideMode = 'hover',
   showHandlebar = true,
   autoplay = false,
-  autoplayDuration = 5000,
+  autoplayDuration = 5000
 }) => {
   const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage)
   const [isDragging, setIsDragging] = useState(false)
@@ -53,12 +53,12 @@ const Compare = ({
     return () => stopAutoplay()
   }, [startAutoplay, stopAutoplay])
 
-  function mouseEnterHandler() {
+  function mouseEnterHandler () {
     setIsMouseOver(true)
     stopAutoplay()
   }
 
-  function mouseLeaveHandler() {
+  function mouseLeaveHandler () {
     setIsMouseOver(false)
     if (slideMode === 'hover') {
       setSliderXPercent(initialSliderPercentage)
@@ -133,7 +133,7 @@ const Compare = ({
       className={clsx('w-[360px] h-[160px] overflow-hidden', className)}
       style={{
         position: 'relative',
-        cursor: slideMode === 'drag' ? 'grab' : 'col-resize',
+        cursor: slideMode === 'drag' ? 'grab' : 'col-resize'
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={mouseLeaveHandler}
@@ -146,57 +146,61 @@ const Compare = ({
     >
       <AnimatePresence initial={false}>
         <motion.div
-          className="h-full w-px absolute top-0 m-auto z-30 bg-linear-to-b from-transparent from-5% to-95% via-indigo-500 to-transparent"
+          className='h-full w-px absolute top-0 m-auto z-30 bg-linear-to-b from-transparent from-5% to-95% via-indigo-500 to-transparent'
           style={{
             left: `${sliderXPercent}%`,
             top: '0',
-            zIndex: 40,
+            zIndex: 40
           }}
           transition={{ duration: 0 }}
         >
-          <div className="w-36 h-full [mask-image:radial-gradient(100px_at_left,white,transparent)] absolute top-1/2 -translate-y-1/2 left-0 bg-linear-to-r from-indigo-400 via-transparent to-transparent z-20 opacity-50" />
-          <div className="w-10 h-1/2 [mask-image:radial-gradient(50px_at_left,white,transparent)] absolute top-1/2 -translate-y-1/2 left-0 bg-linear-to-r from-cyan-400 via-transparent to-transparent z-10 opacity-100" />
-          <div className="w-10 h-3/4 top-1/2 -translate-y-1/2 absolute -right-10 [mask-image:radial-gradient(100px_at_left,white,transparent)]"></div>
+          <div className='w-36 h-full [mask-image:radial-gradient(100px_at_left,white,transparent)] absolute top-1/2 -translate-y-1/2 left-0 bg-linear-to-r from-indigo-400 via-transparent to-transparent z-20 opacity-50' />
+          <div className='w-10 h-1/2 [mask-image:radial-gradient(50px_at_left,white,transparent)] absolute top-1/2 -translate-y-1/2 left-0 bg-linear-to-r from-cyan-400 via-transparent to-transparent z-10 opacity-100' />
+          <div className='w-10 h-3/4 top-1/2 -translate-y-1/2 absolute -right-10 [mask-image:radial-gradient(100px_at_left,white,transparent)]' />
           {showHandlebar && (
-            <div className="h-5 w-5 rounded-md top-1/2 -translate-y-1/2 bg-white z-30 -right-2.5 absolute   flex items-center justify-center shadow-[0px_-1px_0px_0px_#FFFFFF40]">
-              <GitMerge className="w-4 h-4 text-black" />
+            <div className='h-5 w-5 rounded-md top-1/2 -translate-y-1/2 bg-white z-30 -right-2.5 absolute   flex items-center justify-center shadow-[0px_-1px_0px_0px_#FFFFFF40]'>
+              <GitMerge className='w-4 h-4 text-black' />
             </div>
           )}
         </motion.div>
       </AnimatePresence>
-      <div className="relative z-20 w-full h-full overflow-hidden pointer-events-none">
+      <div className='relative z-20 w-full h-full overflow-hidden pointer-events-none'>
         <AnimatePresence initial={false}>
-          {firstImage ? (
-            <motion.div
-              className={clsx(
-                'absolute inset-0 z-20  shrink-0 w-full h-full select-none overflow-hidden',
-                firstImageClassName
-              )}
-              style={{
-                clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
-              }}
-              transition={{ duration: 0 }}
-            >
-              <img
-                alt="first image"
-                src={firstImage}
-                className={clsx('absolute inset-0  z-20  shrink-0 w-full h-full select-none', firstImageClassName)}
-                draggable={false}
-              />
-            </motion.div>
-          ) : null}
+          {firstImage
+            ? (
+              <motion.div
+                className={clsx(
+                  'absolute inset-0 z-20  shrink-0 w-full h-full select-none overflow-hidden',
+                  firstImageClassName
+                )}
+                style={{
+                  clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`
+                }}
+                transition={{ duration: 0 }}
+              >
+                <img
+                  alt='first image'
+                  src={firstImage}
+                  className={clsx('absolute inset-0  z-20  shrink-0 w-full h-full select-none', firstImageClassName)}
+                  draggable={false}
+                />
+              </motion.div>
+              )
+            : null}
         </AnimatePresence>
       </div>
 
       <AnimatePresence initial={false}>
-        {secondImage ? (
-          <motion.img
-            className={clsx('absolute top-0 left-0 z-19   w-full h-full select-none', secondImageClassname)}
-            alt="second image"
-            src={secondImage}
-            draggable={false}
-          />
-        ) : null}
+        {secondImage
+          ? (
+            <motion.img
+              className={clsx('absolute top-0 left-0 z-19   w-full h-full select-none', secondImageClassname)}
+              alt='second image'
+              src={secondImage}
+              draggable={false}
+            />
+            )
+          : null}
       </AnimatePresence>
     </div>
   )
