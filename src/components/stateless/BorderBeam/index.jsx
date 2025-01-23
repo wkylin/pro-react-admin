@@ -21,7 +21,7 @@ const BorderBeam = ({
         '--border-width': borderWidth,
         '--color-from': colorFrom,
         '--color-to': colorTo,
-        '--delay': `-${delay}s`,
+        '--delay': `-${delay}s`
       }}
       className={clsx(
         'pointer-events-none absolute inset-0 rounded-[inherit] [border:calc(var(--border-width)*1px)_solid_transparent]',

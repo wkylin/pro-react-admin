@@ -10,9 +10,9 @@ const WordRotate = ({
     initial: { opacity: 0, y: -50 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: 50 },
-    transition: { duration: 0.25, ease: 'easeOut' },
+    transition: { duration: 0.25, ease: 'easeOut' }
   },
-  className,
+  className
 }) => {
   const [index, setIndex] = useState(0)
 
@@ -25,8 +25,8 @@ const WordRotate = ({
   }, [words, duration])
 
   return (
-    <div className="py-2 overflow-hidden">
-      <AnimatePresence mode="wait">
+    <div className='py-2 overflow-hidden'>
+      <AnimatePresence mode='wait'>
         <motion.span key={words[index]} className={clsx(className)} {...motionProps}>
           {words[index]}
         </motion.span>
