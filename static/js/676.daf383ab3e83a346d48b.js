@@ -710,6 +710,7 @@ body.vjs-pip-window .video-js {
   text-decoration: none;
   transition: none;
   -webkit-appearance: none;
+  -moz-appearance: none;
        appearance: none;
 }
 
@@ -1169,8 +1170,8 @@ body.vjs-pip-window .video-js {
   /* Safari, and Chrome 53 */
   -webkit-user-select: none;
   /* Non-prefixed version, currently supported by Chrome and Opera */
-       -ms-user-select: none;
-      user-select: none;
+  -moz-user-select: none;
+       user-select: none;
   background-color: #73859f;
   background-color: rgba(115, 133, 159, 0.5);
 }

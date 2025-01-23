@@ -133,13 +133,13 @@ code.hljs {
   touch-action: manipulation;
   width: 40px;
   -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
 }
 [data-rmiz-btn-zoom]:not(:focus):not(:active) {
   position: absolute;
   clip: rect(0 0 0 0);
-  -webkit-clip-path: inset(50%);
-          clip-path: inset(50%);
+  clip-path: inset(50%);
   height: 1px;
   overflow: hidden;
   pointer-events: none;
@@ -162,9 +162,6 @@ code.hljs {
 [data-rmiz-content="found"] [role="img"],
 [data-rmiz-content="found"] [data-zoom] {
   cursor: zoom-in;
-}
-[data-rmiz-modal]::-ms-backdrop {
-  display: none;
 }
 [data-rmiz-modal]::backdrop {
   display: none;
