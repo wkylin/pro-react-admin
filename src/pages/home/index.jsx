@@ -54,6 +54,7 @@ import SparklesText from '@stateless/SparklesText'
 import ColorfulText from '@stateless/ColorfulText'
 import MemoizedStars from '@stateless/MemoizedStars'
 import WordRotate from '@stateless/WordRotate'
+import TestimonialCarousel from '@stateless/TestimonialCarousel'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -317,6 +318,9 @@ const Home = () => {
             'Getting things ready',
           ]}
         />
+      </section>
+      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
+        <TestimonialCarousel />
       </section>
       <section
         style={{
