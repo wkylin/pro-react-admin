@@ -57,6 +57,7 @@ import WordRotate from '@stateless/WordRotate'
 import TestimonialCarousel from '@stateless/TestimonialCarousel'
 import InteractiveGrid from '@stateless/InteractiveGrid'
 import BlurFade from '@stateless/BlurFade'
+import IconCloud from '@stateless/IconCloud'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -94,6 +95,19 @@ const preCode = `
     );
   };
 `.trim()
+const slugs = [
+  'typescript',
+  'javascript',
+  'react',
+  'html5',
+  'css3',
+  'prisma',
+  'nginx',
+  'vercel',
+  'docker',
+  'git',
+  'sonarqube',
+]
 
 const dataSteps = [
   {
@@ -273,6 +287,8 @@ const Home = () => {
 
   const [barRect, barRef] = useRect()
 
+  const images = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`)
+
   return (
     <FixTabPanel ref={scrollRef}>
       <section className={styles.avatar} style={{ marginBottom: 15, fontSize: 24 }}>
@@ -342,6 +358,15 @@ const Home = () => {
       }}>
         <InteractiveGrid width={12} height={12} squares={[50, 50]} />
       </section> */}
+      <section
+        style={{
+          marginBottom: 15,
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <IconCloud images={images} />
+      </section>
       <section
         style={{
           marginBottom: 15,
