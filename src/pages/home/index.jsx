@@ -55,6 +55,8 @@ import ColorfulText from '@stateless/ColorfulText'
 import MemoizedStars from '@stateless/MemoizedStars'
 import WordRotate from '@stateless/WordRotate'
 import TestimonialCarousel from '@stateless/TestimonialCarousel'
+import InteractiveGrid from '@stateless/InteractiveGrid'
+import BlurFade from '@stateless/BlurFade'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -322,6 +324,24 @@ const Home = () => {
       <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
         <TestimonialCarousel />
       </section>
+      {/* <section style={{
+        marginBottom: 15,
+        width: 360,
+        height: 200,
+        overflow: 'hidden',
+        position: 'relative',
+        background: '#111827',
+        // transform: 'skew(15deg, 15deg)'
+        // maskComposite: 'intersect',
+        // maskImage: `
+        //   linear-gradient(to right,  transparent, black 5%),
+        //   linear-gradient(to left,   transparent, black 5%),
+        //   linear-gradient(to bottom, transparent, black 5%),
+        //   linear-gradient(to top,    transparent, black 5%)
+        // `,
+      }}>
+        <InteractiveGrid width={12} height={12} squares={[50, 50]} />
+      </section> */}
       <section
         style={{
           marginBottom: 15,
@@ -512,6 +532,11 @@ const Home = () => {
         <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
           <section></section>
         </SpotlightCard>
+      </section>
+      <section style={{ margin: '20px 0', fontSize: 24 }}>
+        <BlurFade delay={0.25} inView>
+          这一年，以笔为剑，以梦为马，在生活的画布上，绘就属于自己的壮丽史诗。
+        </BlurFade>
       </section>
       <section style={{ margin: '20px 0' }}>
         <ContentPlaceholder />
