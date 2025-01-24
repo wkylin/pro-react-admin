@@ -476,7 +476,13 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateOnScreen.FadeUp>
-          <img src="https://picsum.photos/360/200.jpg" alt="" />
+          <img
+            src="https://picsum.photos/360/200.jpg"
+            alt=""
+            style={{
+              maskImage: `linear-gradient(to top, transparent, black 20%, black 80%, transparent)`,
+            }}
+          />
         </AnimateOnScreen.FadeUp>
       </section>
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
