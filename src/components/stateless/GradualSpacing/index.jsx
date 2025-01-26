@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useInView } from 'motion/react'
 const GradualSpacing = ({ text = '', className = '' }) => {
   const gradual = {
     hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 },
+    visible: { opacity: 1, x: 0 }
   }
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
@@ -15,9 +15,9 @@ const GradualSpacing = ({ text = '', className = '' }) => {
         {text.split('').map((char, i) => (
           <motion.span
             key={i}
-            initial="hidden"
+            initial='hidden'
             animate={isInView ? 'visible' : 'hidden'}
-            exit="hidden"
+            exit='hidden'
             variants={gradual}
             transition={{ duration: 0.5, delay: i * 0.1 }}
           >
