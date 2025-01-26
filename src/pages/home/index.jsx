@@ -58,6 +58,7 @@ import TestimonialCarousel from '@stateless/TestimonialCarousel'
 import InteractiveGrid from '@stateless/InteractiveGrid'
 import BlurFade from '@stateless/BlurFade'
 import IconCloud from '@stateless/IconCloud'
+import GradualSpacing from '@stateless/GradualSpacing'
 
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -562,6 +563,9 @@ const Home = () => {
         <BlurFade delay={0.25} inView>
           这一年，以笔为剑，以梦为马，在生活的画布上，绘就属于自己的壮丽史诗。
         </BlurFade>
+      </section>
+      <section style={{ margin: '20px 0', fontSize: 24 }}>
+        <GradualSpacing text="2025 年，是充满希望的一年。让我们放下过去的包袱，轻装上阵。用积极的心态去面对生活，用坚定的信念去追逐梦想。相信自己，只要我们努力奋斗，就一定能创造出属于自己的精彩人生。让我们一起逐光前行，奔赴新程，书写属于我们的辉煌篇章！" />
       </section>
       <section style={{ margin: '20px 0' }}>
         <ContentPlaceholder />
