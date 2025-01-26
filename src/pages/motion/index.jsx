@@ -13,6 +13,7 @@ import {
 import clsx from 'clsx'
 import FixTabPanel from '@stateless/FixTabPanel'
 import HorizontalScrollParallax from '@stateless/HorizontalScroll'
+import ScrollVelocity from '@stateless/ScrollVelocity'
 import styles from './index.module.less'
 
 const animations = {
@@ -110,6 +111,7 @@ const ParallaxVert = () => {
   const { scrollYProgress, scrollY } = useScroll({
     container: scrollRef,
   })
+
   const { scrollYProgress: scrYPro, scrollY: scrY } = useScroll({
     target: constraintsRef,
     container: scrollRef,
@@ -671,6 +673,9 @@ const ParallaxVert = () => {
       </motion.div>
 
       <section style={{ fontSize: 30 }}>scrollDirection: {scrollDirection}</section>
+      <section style={{ margin: 20 }}>
+        <ScrollVelocity text="Pro React Admin" ref={scrollRef} className="text-4xl" />
+      </section>
       <motion.div
         style={{
           width: 200,
