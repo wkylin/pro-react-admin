@@ -28,12 +28,12 @@ const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
 const MyVideo = lazy(() => import('@pages/video'))
 const MyCrypto = lazy(() => import('@pages/crypto'))
-// const ReactThree = lazy(() => import('@pages/three'))
+const ReactThree = lazy(() => import('@pages/three'))
 // const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
-// const Mermaid = lazy(() => import('@pages/mermaid'))
+const Mermaid = lazy(() => import('@pages/mermaid'))
 // const DynamicModal = lazy(() => import('@pages/dynamicModal'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
 const ReactAmap = lazy(() => import('@pages/reactAmap'))
@@ -44,7 +44,7 @@ const Print = lazy(() => import('@pages/print'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
 const Motion = lazy(() => import('@pages/motion'))
-// const ReactPdf = lazy(() => import('@pages/reactPdf'))
+const ReactPdf = lazy(() => import('@pages/reactPdf'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
@@ -148,14 +148,14 @@ const rootRouter = [
       //   auth: false,
       //   element: lazyLoad(ChatGpt),
       // },
-      // {
-      //   index: false,
-      //   path: 'mermaid',
-      //   name: 'ChatGPT Mermaid',
-      //   key: '/mermaid',
-      //   auth: false,
-      //   element: lazyLoad(Mermaid),
-      // },
+      {
+        index: false,
+        path: 'mermaid',
+        name: 'ChatGPT Mermaid',
+        key: '/mermaid',
+        auth: false,
+        element: lazyLoad(Mermaid),
+      },
       {
         index: false,
         path: 'prism',
@@ -164,14 +164,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(PrismRender),
       },
-      // {
-      //   index: false,
-      //   path: 'three',
-      //   name: 'ReactThree',
-      //   key: '/three',
-      //   auth: true,
-      //   element: lazyLoad(ReactThree),
-      // },
+      {
+        index: false,
+        path: 'three',
+        name: 'ReactThree',
+        key: '/three',
+        auth: true,
+        element: lazyLoad(ReactThree),
+      },
       {
         index: false,
         path: 'geo',
@@ -252,14 +252,14 @@ const rootRouter = [
         auth: false,
         element: lazyLoad(Barcode),
       },
-      // {
-      //   index: false,
-      //   path: 'pdf-view',
-      //   name: 'PdfView',
-      //   key: '/pdf-view',
-      //   auth: false,
-      //   element: lazyLoad(ReactPdf),
-      // },
+      {
+        index: false,
+        path: 'pdf-view',
+        name: 'PdfView',
+        key: '/pdf-view',
+        auth: false,
+        element: lazyLoad(ReactPdf),
+      },
       {
         index: false,
         path: 'print',

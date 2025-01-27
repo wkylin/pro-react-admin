@@ -1,23 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { type BundledLanguage, type BundledTheme, codeToHtml } from 'shiki'
+import { codeToHtml } from 'shiki'
 import clsx from 'clsx'
-import type { HTMLAttributes } from 'react'
 
-type ShikiProps = {
-  code: string
-  lang: BundledLanguage
-  theme: BundledTheme
-  className?: string
-}
-
-export default function ShikiCode({
-  code,
-  lang,
-  theme,
-  className,
-  ...props
-}: Readonly<ShikiProps> & HTMLAttributes<HTMLDivElement>) {
-  const [html, setHtml] = useState<string>('')
+const ShikiCode = ({ code, lang, theme, className, ...props }) => {
+  const [html, setHtml] = useState('')
 
   useEffect(() => {
     const loadHtml = async () => {
@@ -36,3 +22,5 @@ export default function ShikiCode({
     />
   )
 }
+
+export default ShikiCode
