@@ -36,7 +36,7 @@ switch (process.env.BUILD_GOAL) {
 
 const config = {
   entry: {
-    app: `${paths.src}/index.tsx`,
+    app: `${paths.src}/index.tsx`
   },
   output: {
     path: paths.build,
@@ -46,7 +46,7 @@ const config = {
     // library: '',
     // libraryTarget: 'umd',
     // chunkLoadingGlobal: '',
-    clean: true,
+    clean: true
     // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
@@ -61,13 +61,13 @@ const config = {
       '@pages': path.resolve('./src/pages'),
       '@routers': path.resolve('./src/routers'),
       '@utils': path.resolve('./src/utils'),
-      '@theme': path.resolve('./src/theme'),
+      '@theme': path.resolve('./src/theme')
     },
-    symlinks: false,
+    symlinks: false
   },
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, '..', dotEnv),
+      path: path.resolve(__dirname, '..', dotEnv)
     }),
     new HtmlWebpackPlugin({
       title: isDev ? 'Pro React Dev' : 'Pro React Admin',
@@ -91,8 +91,8 @@ const config = {
             minifyCSS: true,
             minifyJS: true,
             minifyURLs: true,
-            useShortDoctype: true,
-          },
+            useShortDoctype: true
+          }
     }),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
@@ -115,8 +115,8 @@ const config = {
       exclude: 'node_modules', // 默认值
       cache: true, // 开启缓存
       // 缓存目录
-      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'),
-    }),
+      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache')
+    })
   ],
   module: {
     // 将缺失的导出提示成错误而不是警告
@@ -125,12 +125,12 @@ const config = {
       {
         test: /\.m?js$/,
         resolve: {
-          fullySpecified: false,
-        },
+          fullySpecified: false
+        }
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader']
       },
       {
         test: /\.less$/i,
@@ -147,10 +147,10 @@ const config = {
                 localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[local]--[hash:base64:5]',
                 localIdentContext: paths.src,
                 namedExport: false,
-                exportLocalsConvention: 'camelCase',
+                exportLocalsConvention: 'camelCase'
               },
-              importLoaders: 2,
-            },
+              importLoaders: 2
+            }
           },
           {
             loader: require.resolve('postcss-loader'),
@@ -164,18 +164,18 @@ const config = {
                     'postcss-preset-env',
                     {
                       autoprefixer: {
-                        flexbox: 'no-2009',
+                        flexbox: 'no-2009'
                       },
-                      stage: 3,
-                    },
+                      stage: 3
+                    }
                   ],
-                  'postcss-normalize',
-                ],
+                  'postcss-normalize'
+                ]
               },
-              sourceMap: true,
-            },
-          },
-        ],
+              sourceMap: true
+            }
+          }
+        ]
       },
       {
         test: /\.(js|jsx|ts|tsx)$/,
@@ -185,17 +185,17 @@ const config = {
             loader: 'esbuild-loader',
             options: {
               // loader: 'tsx',
-              target: 'es2020',
-            },
+              target: 'es2020'
+            }
           },
           {
             loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env', '@babel/preset-react'],
-              plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime'],
-            },
-          },
-        ],
+              plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime']
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|webp|eot|ttf|woff|woff2|mp4|pdf)$/i,
@@ -203,29 +203,29 @@ const config = {
         parser: {
           // Conditions for converting to base64
           dataUrlCondition: {
-            maxSize: 25 * 1024, // 25kb
-          },
+            maxSize: 25 * 1024 // 25kb
+          }
         },
         generator: {
-          filename: 'images/[contenthash][ext][query]',
-        },
+          filename: 'images/[contenthash][ext][query]'
+        }
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'babel-loader'
           },
           {
             loader: '@svgr/webpack',
             options: {
               babel: false,
-              icon: true,
-            },
-          },
-        ],
-      },
-    ],
+              icon: true
+            }
+          }
+        ]
+      }
+    ]
   },
   stats: {
     all: false,
@@ -233,8 +233,8 @@ const config = {
     warnings: true,
     errorDetails: true,
     moduleTrace: true, // 打印模块追踪信息，与--trace - warnings类似
-    excludeAssets: /node_modules/,
-  },
+    excludeAssets: /node_modules/
+  }
 }
 
 if (USE_ANALYZE) {
