@@ -130,7 +130,7 @@ const ParallaxVert = () => {
   useMotionValueEvent(scrYPro, 'change', (current) => {})
 
   const x = useTransform(scrollY, (value) => {
-    return (value * 1) / 5
+    return (value * 1) / 10
   })
 
   const scaleX = useSpring(scrollYProgress, {
@@ -681,21 +681,29 @@ const ParallaxVert = () => {
           width: 200,
           height: 100,
           backgroundColor: '#aaa',
+          textAlign: 'center',
+          lineHeight: '100px',
           borderRadius: '20px',
           // scaleX: scrollYProgress,
           x,
           rotate,
         }}
-      ></motion.div>
+      >
+        Rotate
+      </motion.div>
       <motion.div
         style={{
           width: 200,
           height: 100,
           backgroundColor: '#aaa',
           borderRadius: '20px',
+          textAlign: 'center',
+          lineHeight: '100px',
           scaleX,
         }}
-      ></motion.div>
+      >
+        scaleX
+      </motion.div>
 
       <div
         style={{
