@@ -466,9 +466,14 @@ const Home = () => {
         />
       </section>
       <section className={styles.line}></section>
-      <section>
+      <section className={styles.violetGradient}></section>
+      {/* <section className={styles.linearGradient}></section>
+      <section className={styles.linearGra}></section>
+      <section className={styles.violet}></section> */}
+
+      {/* <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
-      </section>
+      </section> */}
       <section>
         <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
       </section>
