@@ -466,7 +466,7 @@ const Home = () => {
         />
       </section>
       <section className={styles.line}></section>
-      <section className={styles.violetGradient}></section>
+      {/* <section className={styles.violetGradient}></section> */}
       {/* <section className={styles.linearGradient}></section>
       <section className={styles.linearGra}></section>
       <section className={styles.violet}></section> */}
