@@ -56,8 +56,6 @@ const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className }, ref)
     const directionFactor = useRef(1)
     useAnimationFrame((t, delta) => {
       let moveBy = directionFactor.current * baseVelocity * (delta / 1000)
-
-      console.log('velocityFactor.get()', velocityFactor.get())
       if (velocityFactor.get() < 0) {
         directionFactor.current = -1
       } else if (velocityFactor.get() > 0) {

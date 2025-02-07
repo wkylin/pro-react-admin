@@ -2,7 +2,7 @@ import React, { version, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
-import CountUp from 'react-countup'
+// import CountUp from 'react-countup'
 // import { PinInput } from 'react-input-pin-code'
 import SpotlightCard from '@stateless/Spotlight'
 // import Typewriter from 'typewriter-effect'
@@ -655,9 +655,9 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section style={{ margin: '20px 0', fontSize: 40 }}>
+      {/* <section style={{ margin: '20px 0', fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy />
-      </section>
+      </section> */}
       <section style={{ margin: '20px 0', fontSize: 40 }}>
         <NumberFlowFix />
       </section>
