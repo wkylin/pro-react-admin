@@ -6,7 +6,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
-  useVelocity,
+  useVelocity
 } from 'motion/react'
 import clsx from 'clsx'
 
@@ -23,16 +23,16 @@ const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className }, ref)
     const baseX = useMotionValue(0)
     const { scrollY } = useScroll({
       container: ref,
-      target: textRef,
+      target: textRef
     })
     const scrollVelocity = useVelocity(scrollY)
     const smoothVelocity = useSpring(scrollVelocity, {
       damping: 50,
-      stiffness: 400,
+      stiffness: 400
     })
 
     const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
-      clamp: false,
+      clamp: false
     })
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className }, ref)
     })
 
     return (
-      <div className="w-full overflow-hidden whitespace-nowrap" ref={targetRef}>
+      <div className='w-full overflow-hidden whitespace-nowrap' ref={targetRef}>
         <motion.div className={clsx('inline-block', className)} style={{ x }}>
           {Array.from({ length: repetitions }).map((_, i) => (
             <span key={i} ref={i === 0 ? textRef : null}>
@@ -81,7 +81,7 @@ const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className }, ref)
   }
 
   return (
-    <section className="relative w-full">
+    <section className='relative w-full'>
       <ParallaxSection baseVelocity={velocity} className={className}>
         {text}
       </ParallaxSection>
