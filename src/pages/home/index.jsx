@@ -60,8 +60,8 @@ import BlurFade from '@stateless/BlurFade'
 import IconCloud from '@stateless/IconCloud'
 import GradualSpacing from '@stateless/GradualSpacing'
 import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
+import InViewBasicMultiple from '@container/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
-
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -735,6 +735,9 @@ const Home = () => {
             <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
           </Masonry>
         </ResponsiveMasonry>
+      </section>
+      <section style={{ margin: 20 }}>
+        <InViewBasicMultiple />
       </section>
       <section style={{ margin: 20 }}>
         <TagCloud />
