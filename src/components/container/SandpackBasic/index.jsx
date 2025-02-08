@@ -4,10 +4,10 @@ import { Sandpack } from '@codesandbox/sandpack-react'
 const SandpackBasic = () => {
   return (
     <Sandpack
-      template="react"
+      template='react'
       options={{
         // layout: "preview",
-        showNavigator: true,
+        showNavigator: true
       }}
       files={{
         '/App.js': `export default function App() {
@@ -19,8 +19,8 @@ const SandpackBasic = () => {
 };`,
           readOnly: true,
           active: true,
-          hidden: false,
-        },
+          hidden: false
+        }
       }}
     />
   )
