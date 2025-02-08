@@ -215,6 +215,7 @@
   "dependencies": {
     "@ant-design/cssinjs": "^1.23.0",
     "@ant-design/icons": "^5.6.0",
+    "@codesandbox/sandpack-react": "^2.19.11",
     "@loadable/component": "^5.16.4",
     "@number-flow/react": "^0.5.5",
     "@pansy/react-amap": "^2.21.0",

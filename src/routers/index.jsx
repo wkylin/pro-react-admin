@@ -49,6 +49,7 @@ const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 const ReactGantt = lazy(() => import('@pages/reactGantt'))
+const SandBox = lazy(() => import('@pages/sandBox'))
 
 const rootRouter = [
   {
@@ -75,6 +76,14 @@ const rootRouter = [
         key: '/demo',
         auth: true,
         element: lazyLoad(Demo),
+      },
+      {
+        index: false,
+        path: 'sandbox',
+        name: 'Sand Box',
+        key: '/sandbox',
+        auth: false,
+        element: lazyLoad(SandBox),
       },
       {
         index: false,

@@ -66,8 +66,8 @@ const ProSecNav = () => {
   const menuItems = [
     { label: t('home'), key: '/', icon: <HomeOutlined /> },
     { label: t('demo'), key: '/demo', icon: <GlobalOutlined /> },
-    { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     { label: 'Motion', key: '/motion', icon: <QrcodeOutlined /> },
+    { label: 'Sand Box', key: '/sandbox', icon: <GlobalOutlined /> },
     { label: 'Qr Generate', key: '/qrcode', icon: <QrcodeOutlined /> },
     { label: 'Prism Render', key: '/prism', icon: <FireOutlined /> },
     { label: 'React Tilt', key: '/tilt', icon: <QrcodeOutlined /> },
@@ -78,6 +78,7 @@ const ProSecNav = () => {
     { label: 'Three', key: '/three', icon: <QrcodeOutlined /> },
     { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
     // { label: 'ChatGPT', key: '/markmap', icon: <QrcodeOutlined /> },
+    { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
     { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
     // { label: 'Dynamic', key: '/dynamic', icon: <QrcodeOutlined /> },
     { label: 'Big Screen', key: '/big-screen', icon: <FireOutlined /> },
