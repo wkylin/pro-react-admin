@@ -2,6 +2,7 @@ import React from 'react'
 import { Button, Space } from 'antd'
 import { CodeOutlined, TeamOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import FlipLink from '@stateless/FlipLink'
 
 const PrimaryNav = () => {
   const navigate = useNavigate()
@@ -18,9 +19,7 @@ const PrimaryNav = () => {
         <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
-        <Button type="link" icon={<TeamOutlined />} onClick={goToWkylin}>
-          Skyline for wkylin.w
-        </Button>
+        <FlipLink href={`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`}>SkyLine</FlipLink>
       </Space>
     </>
   )

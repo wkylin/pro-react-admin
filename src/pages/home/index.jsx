@@ -62,6 +62,7 @@ import GradualSpacing from '@stateless/GradualSpacing'
 import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
 import InViewBasicMultiple from '@container/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
+import FlipWords from '@stateless/FlipWords'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -693,8 +694,11 @@ const Home = () => {
         <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
 
-      <section style={{ position: 'relative' }}>
-        <AnimateWave />
+      <section style={{ position: 'relative', fontSize: 36 }}>
+        I build
+        <FlipWords className="mx-1 px-4 py-2" words={['creative', 'interactive', 'beautiful', 'modern']} />
+        <span className="block sm:inline text-black">websites and apps.</span>
+        {/* <AnimateWave /> */}
       </section>
       {/* <section style={{ margin: 20 }}>
         <AdvancedCodeBlock code={code.code} fileName={code.fileName} lang={code.lang} />
