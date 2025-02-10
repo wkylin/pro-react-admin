@@ -250,6 +250,7 @@
     "lamina": "^1.1.23",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
+    "lenis": "^1.1.20",
     "less": "^4.2.2",
     "lodash": "^4.17.21",
     "lucide-react": "^0.475.0",

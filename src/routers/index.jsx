@@ -50,6 +50,7 @@ const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 // const ReactGantt = lazy(() => import('@pages/reactGantt'))
 const SandBox = lazy(() => import('@pages/sandBox'))
+const Profile = lazy(() => import('@pages/profile'))
 
 const rootRouter = [
   {
@@ -276,6 +277,14 @@ const rootRouter = [
         key: '/print',
         auth: false,
         element: lazyLoad(Print),
+      },
+      {
+        index: false,
+        path: 'profile',
+        name: 'Profile',
+        key: '/profile',
+        auth: false,
+        element: lazyLoad(Profile),
       },
       {
         index: false,
