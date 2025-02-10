@@ -16,7 +16,7 @@ const PrimaryNav = () => {
   return (
     <>
       <Space>
-        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
+        <Button type='link' icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
         <FlipLink href={`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`}>SkyLine</FlipLink>
