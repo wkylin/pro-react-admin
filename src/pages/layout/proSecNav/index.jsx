@@ -82,7 +82,7 @@ const ProSecNav = () => {
     { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
     // { label: 'Dynamic', key: '/dynamic', icon: <QrcodeOutlined /> },
     { label: 'Big Screen', key: '/big-screen', icon: <FireOutlined /> },
-    { label: 'React Amap', key: '/react-amap', icon: <QrcodeOutlined /> },
+    // { label: 'React Amap', key: '/react-amap', icon: <QrcodeOutlined /> },
     { label: 'Post Message', key: '/postmessage', icon: <FireOutlined /> },
     { label: 'Geo Chart', key: '/geo', icon: <QrcodeOutlined /> },
     // { label: 'SuperMap', key: '/super-map', icon: <FireOutlined /> },

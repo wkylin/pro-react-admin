@@ -23,12 +23,12 @@ const CouponsDetail = lazy(() => import('@pages/coupons/detail'))
 const Product = lazy(() => import('@pages/product'))
 const ErrorPage = lazy(() => import('@pages/error'))
 const Dashboard = lazy(() => import('@pages/dashboard'))
-const ParallaxVert = lazy(() => import('@pages/parallax'))
+// const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
 const MyVideo = lazy(() => import('@pages/video'))
 const MyCrypto = lazy(() => import('@pages/crypto'))
-const ReactThree = lazy(() => import('@pages/three'))
+// const ReactThree = lazy(() => import('@pages/three'))
 // const ChatGpt = lazy(() => import('@pages/chatgpt'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
@@ -36,10 +36,10 @@ const PrismRender = lazy(() => import('@pages/prism'))
 const Mermaid = lazy(() => import('@pages/mermaid'))
 // const DynamicModal = lazy(() => import('@pages/dynamicModal'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
-const ReactAmap = lazy(() => import('@pages/reactAmap'))
+// const ReactAmap = lazy(() => import('@pages/reactAmap'))
 // const SuperMap = lazy(() => import('@pages/superMap'))
 const D3Chart = lazy(() => import('@pages/d3Chart'))
-const Barcode = lazy(() => import('@pages/barcode'))
+// const Barcode = lazy(() => import('@pages/barcode'))
 const Print = lazy(() => import('@pages/print'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
@@ -48,7 +48,7 @@ const ReactPdf = lazy(() => import('@pages/reactPdf'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
-const ReactGantt = lazy(() => import('@pages/reactGantt'))
+// const ReactGantt = lazy(() => import('@pages/reactGantt'))
 const SandBox = lazy(() => import('@pages/sandBox'))
 
 const rootRouter = [
@@ -85,14 +85,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(SandBox),
       },
-      {
-        index: false,
-        path: 'parallax',
-        name: 'Parallax',
-        key: '/parallax',
-        auth: true,
-        element: lazyLoad(ParallaxVert),
-      },
+      // {
+      //   index: false,
+      //   path: 'parallax',
+      //   name: 'Parallax',
+      //   key: '/parallax',
+      //   auth: true,
+      //   element: lazyLoad(ParallaxVert),
+      // },
       {
         index: false,
         path: 'motion',
@@ -101,14 +101,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(Motion),
       },
-      {
-        index: false,
-        path: 'gantt',
-        name: 'Gantt',
-        key: '/gantt',
-        auth: false,
-        element: lazyLoad(ReactGantt),
-      },
+      // {
+      //   index: false,
+      //   path: 'gantt',
+      //   name: 'Gantt',
+      //   key: '/gantt',
+      //   auth: false,
+      //   element: lazyLoad(ReactGantt),
+      // },
       {
         index: false,
         path: 'qrcode',
@@ -173,14 +173,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(PrismRender),
       },
-      {
-        index: false,
-        path: 'three',
-        name: 'ReactThree',
-        key: '/three',
-        auth: true,
-        element: lazyLoad(ReactThree),
-      },
+      // {
+      //   index: false,
+      //   path: 'three',
+      //   name: 'ReactThree',
+      //   key: '/three',
+      //   auth: true,
+      //   element: lazyLoad(ReactThree),
+      // },
       {
         index: false,
         path: 'geo',
@@ -213,14 +213,14 @@ const rootRouter = [
         auth: false,
         element: lazyLoad(BigScreen),
       },
-      {
-        index: false,
-        path: 'react-amap',
-        name: 'React Amap',
-        key: '/react-amap',
-        auth: false,
-        element: lazyLoad(ReactAmap),
-      },
+      // {
+      //   index: false,
+      //   path: 'react-amap',
+      //   name: 'React Amap',
+      //   key: '/react-amap',
+      //   auth: false,
+      //   element: lazyLoad(ReactAmap),
+      // },
       {
         index: false,
         path: 'postmessage',
@@ -253,14 +253,14 @@ const rootRouter = [
         auth: false,
         element: lazyLoad(D3Chart),
       },
-      {
-        index: false,
-        path: 'barcode',
-        name: 'Barcode',
-        key: '/barcode',
-        auth: false,
-        element: lazyLoad(Barcode),
-      },
+      // {
+      //   index: false,
+      //   path: 'barcode',
+      //   name: 'Barcode',
+      //   key: '/barcode',
+      //   auth: false,
+      //   element: lazyLoad(Barcode),
+      // },
       {
         index: false,
         path: 'pdf-view',
