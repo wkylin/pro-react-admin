@@ -82,7 +82,7 @@ const rootRouter = [
         path: 'sandbox',
         name: 'Sand Box',
         key: '/sandbox',
-        auth: false,
+        auth: true,
         element: lazyLoad(SandBox),
       },
       {
@@ -98,7 +98,7 @@ const rootRouter = [
         path: 'motion',
         name: 'Motion',
         key: '/motion',
-        auth: false,
+        auth: true,
         element: lazyLoad(Motion),
       },
       {
