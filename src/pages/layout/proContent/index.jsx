@@ -19,13 +19,13 @@ const ProContent = () => {
     key: '',
     closable: false,
     path: '',
-    i18nKey: '',
+    i18nKey: ''
   })
 
   const pathRef = useRef('')
   const { pathname, search } = useLocation()
   const {
-    token: { colorBgContainer, colorBgLayout },
+    token: { colorBgContainer, colorBgLayout }
   } = theme.useToken()
   useEffect(() => {
     const { tabKey, title, element, i18nKey } = getKeyName(pathname)
@@ -38,21 +38,21 @@ const ProContent = () => {
       key: tabKey,
       closable: tabKey !== '/',
       path: newPath,
-      i18nKey,
+      i18nKey
     })
     setTabActiveKey(tabKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, search, panes, activeKey])
 
   return (
-    <Layout className={styles.layout} id="fullScreen">
-      <Header className="layout-header" style={{ background: colorBgLayout }}>
+    <Layout className={styles.layout} id='fullScreen'>
+      <Header className='layout-header' style={{ background: colorBgLayout }}>
         <ProBreadcrumb />
       </Header>
-      <Content className="layout-content" id="fullScreenContent" style={{ background: colorBgContainer }}>
+      <Content className='layout-content' id='fullScreenContent' style={{ background: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className="layout-footer">
+      <Footer className='layout-footer'>
         <FloatButton.BackTop target={() => document.querySelector('#scrollContainer')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>

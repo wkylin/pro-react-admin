@@ -8,7 +8,7 @@ import {
   useSpring,
   useTransform,
   useMotionValue,
-  animate,
+  animate
 } from 'motion/react'
 import clsx from 'clsx'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -20,32 +20,32 @@ import styles from './index.module.less'
 const animations = {
   show: {
     opacity: 1,
-    filter: 'blur(0)',
+    filter: 'blur(0)'
   },
   hidden: {
     opacity: 0,
-    filter: 'blur(10px)',
-  },
+    filter: 'blur(10px)'
+  }
 }
 
 const list = {
   visible: { opacity: 1 },
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0 }
 }
 
 const item = {
   visible: { opacity: 1, x: 0 },
-  hidden: { opacity: 0, x: -100 },
+  hidden: { opacity: 0, x: -100 }
 }
 
 const variantsText = {
   visible: (i) => ({
     opacity: i * 0.3,
     transition: {
-      delay: i * 0.3,
-    },
+      delay: i * 0.3
+    }
   }),
-  hidden: { opacity: 0 },
+  hidden: { opacity: 0 }
 }
 
 const btnStyle = {
@@ -58,7 +58,7 @@ const btnStyle = {
   letterSpacing: 1,
   borderRadius: 20,
   cursor: 'pointer',
-  whiteSpace: 'nowrap',
+  whiteSpace: 'nowrap'
 }
 const easeNames = [
   'linear',
@@ -71,11 +71,11 @@ const easeNames = [
   'backIn',
   'backOut',
   'backInOut',
-  'anticipate',
+  'anticipate'
 ]
 
 const randomSort = (arr) => {
-  let newArr = []
+  const newArr = []
   const len = arr.length
   for (let i = 0; i < len; i++) {
     const random = Math.floor(Math.random() * arr.length)
@@ -110,19 +110,19 @@ const ParallaxVert = ({ props }) => {
   const scrollRef = useRef(null)
 
   const { scrollYProgress, scrollY } = useScroll({
-    container: scrollRef,
+    container: scrollRef
   })
 
   const { scrollYProgress: scrYPro, scrollY: scrY } = useScroll({
     target: constraintsRef,
     container: scrollRef,
-    offset: ['start end', 'end start'],
+    offset: ['start end', 'end start']
   })
 
   const targetRef = useRef(null)
   const { scrollYProgress: scrYProCard } = useScroll({
     target: targetRef,
-    container: scrollRef,
+    container: scrollRef
     // offset: ['start end', 'end start']
   })
   const scrYProCardX = useTransform(scrYProCard, [0, 1], ['1%', '-50%'])
@@ -137,7 +137,7 @@ const ParallaxVert = ({ props }) => {
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001,
+    restDelta: 0.001
   })
 
   const [scrollDirection, setScrollDirection] = useState('down')
@@ -168,7 +168,7 @@ const ParallaxVert = ({ props }) => {
   const { scrollY: followScrollY } = useScroll({
     container: scrollRef,
     target: followScrollRef,
-    offset: ['start end', 'end start'],
+    offset: ['start end', 'end start']
   })
   const findIndex = (arr, x) => {
     if (x <= arr[0]) {
@@ -223,7 +223,7 @@ const ParallaxVert = ({ props }) => {
     )
   const { scrollYProgress: wordScrYPro } = useScroll({
     target: wordTargetRef,
-    container: scrollRef,
+    container: scrollRef
   })
 
   return (
@@ -240,15 +240,15 @@ const ParallaxVert = ({ props }) => {
           backgroundImage: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
           borderRadius: '3px',
           transformOrigin: 'left',
-          scaleX: scaleX,
+          scaleX
         }}
-      ></motion.div>
+      />
       <motion.div
         style={{
           width: 100,
           height: 100,
           backgroundColor: '#aaa',
-          borderRadius: '20px',
+          borderRadius: '20px'
         }}
         // initial={{
         //   width:100,
@@ -264,16 +264,16 @@ const ParallaxVert = ({ props }) => {
           y: 20, // 向下移动20px
           scale: 0.5, // 缩放至0.5倍
           rotate: 45, // 旋转45度
-          opacity: 0.5, // 不透明度设置为0.5
+          opacity: 0.5 // 不透明度设置为0.5
         }}
-      ></motion.div>
+      />
       <motion.nav
         layout
         className={styles.nav}
         style={{ position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky' }}
         initial={{ opacity: 1 }}
         animate={{
-          opacity: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1,
+          opacity: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1
         }}
         exit={{ opacity: 0 }}
       >
@@ -285,13 +285,13 @@ const ParallaxVert = ({ props }) => {
               ref={(el) => (navItemsRef.current[index] = el)}
               onClick={() => handleNavItemClick(index)}
               style={{
-                transformStyle: 'preserve-3d',
+                transformStyle: 'preserve-3d'
               }}
             >
               {item}
               {index === activeNavItemIndex && (
                 <motion.div
-                  layoutId="clickedButton"
+                  layoutId='clickedButton'
                   transition={{ type: 'spring', bounce: 0.3, duration: 0.6 }}
                   className={clsx('absolute inset-0 bg-gray-200 dark:bg-zinc-800 rounded-full')}
                   style={{ zIndex: -1 }}
@@ -301,7 +301,7 @@ const ParallaxVert = ({ props }) => {
           ))}
         </ul>
       </motion.nav>
-      <div className="content" ref={followScrollRef}>
+      <div className='content' ref={followScrollRef}>
         {navItems.map((item) => (
           <div
             key={item}
@@ -323,31 +323,31 @@ const ParallaxVert = ({ props }) => {
           backgroundColor: '#aaa',
           borderRadius: '10px',
           rotate: 0,
-          x: '200px',
+          x: '200px'
         }}
-      ></motion.div>
+      />
       <motion.div
         style={{
           width: 100,
           height: 100,
           backgroundColor: '#aaa',
-          borderRadius: '20px',
+          borderRadius: '20px'
         }}
         transition={{
-          duration: 2,
+          duration: 2
         }}
         variants={animations}
-        initial={'hidden'}
-        animate={'show'}
-      ></motion.div>
+        initial='hidden'
+        animate='show'
+      />
       <motion.ul
-        initial="hidden"
-        animate="visible"
+        initial='hidden'
+        animate='visible'
         variants={list}
         transition={{
           duration: 2,
           staggerChildren: 0.5,
-          delayChildren: 0.5,
+          delayChildren: 0.5
         }}
         style={{ fontSize: 20 }}
       >
@@ -356,7 +356,7 @@ const ParallaxVert = ({ props }) => {
         <motion.li variants={item}>item3</motion.li>
       </motion.ul>
       {['vue', 'react', 'angular'].map((item, i) => (
-        <motion.p style={{ fontSize: 20 }} key={i} custom={i + 0.3} animate="visible" variants={variantsText}>
+        <motion.p style={{ fontSize: 20 }} key={i} custom={i + 0.3} animate='visible' variants={variantsText}>
           {item}
         </motion.p>
       ))}
@@ -365,7 +365,7 @@ const ParallaxVert = ({ props }) => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: 30,
+          gap: 30
         }}
       >
         <motion.div
@@ -373,24 +373,24 @@ const ParallaxVert = ({ props }) => {
             width: 100,
             height: 100,
             backgroundColor: '#aaa',
-            borderRadius: '20px',
+            borderRadius: '20px'
           }}
           animate={{
-            rotate: isRotated ? 45 : 0,
+            rotate: isRotated ? 45 : 0
           }}
           // 实现鼠标悬浮的效果
           whileHover={{
-            rotate: 45,
+            rotate: 45
           }}
           // 实现按住的效果
           whileTap={{
             backgroundColor: '#000',
-            scale: 1.2,
+            scale: 1.2
           }}
           onClick={() => {
             setRotate(!isRotated)
           }}
-        ></motion.div>
+        />
       </div>
 
       {/* <div
@@ -417,7 +417,7 @@ const ParallaxVert = ({ props }) => {
 
       <div
         style={{
-          margin: '200px 0 0 150px',
+          margin: '200px 0 0 150px'
         }}
       >
         <motion.div
@@ -425,14 +425,14 @@ const ParallaxVert = ({ props }) => {
             width: 100,
             height: 100,
             backgroundColor: '#aaa',
-            borderRadius: '20px',
+            borderRadius: '20px'
           }}
           transition={{
             duration: 2,
-            ease: 'linear',
+            ease: 'linear'
           }}
           initial={{
-            x: -100,
+            x: -100
           }}
           animate={controller2}
           onUpdate={(latest) => {
@@ -446,17 +446,17 @@ const ParallaxVert = ({ props }) => {
             setIsAnimation(false)
             console.log('Completed animating', definition)
           }}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
-            gap: 20,
+            gap: 20
           }}
         >
           <motion.div
             style={{
               ...btnStyle,
-              pointerEvents: isAnimation ? 'none' : 'auto',
+              pointerEvents: isAnimation ? 'none' : 'auto'
             }}
             onTap={async () => {
               await controller2.start({ x: 100 })
@@ -479,7 +479,7 @@ const ParallaxVert = ({ props }) => {
           width: 800,
           height: 400,
           border: '1px solid #aaa',
-          margin: '20px auto',
+          margin: '20px auto'
         }}
         ref={constraintsRef}
       >
@@ -496,7 +496,7 @@ const ParallaxVert = ({ props }) => {
             position: 'sticky',
             top: '40px',
             left: 0,
-            zIndex: 3,
+            zIndex: 3
           }}
         >
           拖动元素
@@ -506,29 +506,26 @@ const ParallaxVert = ({ props }) => {
             width: 100,
             height: 100,
             backgroundColor: '#333',
-            borderRadius: '20px',
+            borderRadius: '20px'
           }}
           animate={controller}
           whileDrag={{
             backgroundColor: '#aaa',
-            scale: 1.2,
+            scale: 1.2
           }}
           // drag="x"
           drag
           onDragStart={(event, info) => console.log(info.point.x, info.point.y)}
           onDragEnd={(event, info) => console.log(info.point.x, info.point.y)}
           onDirectionLock={(axis) => console.log('axis', axis)}
-          dragSnapToOrigin={true}
+          dragSnapToOrigin
           // dragConstraints={{ left: 0, right: 300 }}
           dragConstraints={constraintsRef}
-          // dragElastic={false}
-          // dragElastic={0.8}
-          // dragPropagation={false}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
-            gap: 20,
+            gap: 20
           }}
         >
           <motion.div
@@ -566,9 +563,9 @@ const ParallaxVert = ({ props }) => {
         </div>
       </motion.div>
 
-      <section ref={targetRef} className="relative h-[300vh] pt-4 bg-neutral-300">
-        <div className="sticky top-0 flex items-center overflow-hidden">
-          <motion.div style={{ x: scrYProCardX }} className="flex gap-4">
+      <section ref={targetRef} className='relative h-[300vh] pt-4 bg-neutral-300'>
+        <div className='sticky top-0 flex items-center overflow-hidden'>
+          <motion.div style={{ x: scrYProCardX }} className='flex gap-4'>
             <HorizontalScrollParallax />
           </motion.div>
         </div>
@@ -580,7 +577,7 @@ const ParallaxVert = ({ props }) => {
           justifyContent: 'center',
           flexWrap: 'wrap',
           alignItems: 'center',
-          gap: 52,
+          gap: 52
         }}
       >
         <div
@@ -591,7 +588,7 @@ const ParallaxVert = ({ props }) => {
             flexWrap: 'wrap',
             alignItems: 'center',
             gap: 32,
-            marginTop: 230,
+            marginTop: 230
           }}
         >
           {easeNames.map((item, i) => {
@@ -604,7 +601,7 @@ const ParallaxVert = ({ props }) => {
                   alignItems: 'center',
                   fontFamily: 'system-ui',
                   gap: 12,
-                  color: 'white',
+                  color: 'white'
                 }}
                 key={i}
               >
@@ -615,11 +612,11 @@ const ParallaxVert = ({ props }) => {
                     backgroundColor: '#333',
                     borderRadius: '20px',
                     textAlign: 'center',
-                    lineHeight: '100px',
+                    lineHeight: '100px'
                   }}
                   transition={{
                     duration: 2,
-                    ease: item,
+                    ease: item
                   }}
                   animate={controls}
                 >
@@ -633,7 +630,7 @@ const ParallaxVert = ({ props }) => {
         <div
           style={{
             display: 'flex',
-            gap: 100,
+            gap: 100
           }}
         >
           <div
@@ -665,7 +662,7 @@ const ParallaxVert = ({ props }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: buttonRight ? 'flex-end' : 'flex-start',
-          padding: 10,
+          padding: 10
         }}
         onTap={() => {
           setButtonState(!buttonRight)
@@ -677,22 +674,18 @@ const ParallaxVert = ({ props }) => {
             width: 60,
             height: 60,
             backgroundColor: 'white',
-            borderRadius: 60,
+            borderRadius: 60
           }}
-        ></motion.div>
+        />
       </motion.div>
 
       <section style={{ fontSize: 30 }}>scrollDirection: {scrollDirection}</section>
       <section style={{ margin: 20 }}>
-        <ScrollVelocity {...props} text="Pro React Admin" ref={scrollRef} className="text-4xl" />
+        <ScrollVelocity {...props} text='Pro React Admin' ref={scrollRef} className='text-4xl' />
       </section>
       <div ref={wordTargetRef} className={clsx('relative z-0 h-[200vh]')}>
-        <div className={'sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'}>
-          <p
-            className={
-              'flex flex-wrap p-5 text-2xl font-bold text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl'
-            }
-          >
+        <div className='sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'>
+          <p className='flex flex-wrap p-5 text-2xl font-bold text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl'>
             {words.map((word, i) => {
               const start = i / words.length
               const end = start + 1 / words.length
@@ -715,7 +708,7 @@ const ParallaxVert = ({ props }) => {
           borderRadius: '20px',
           // scaleX: scrollYProgress,
           x,
-          rotate,
+          rotate
         }}
       >
         Rotate
@@ -728,7 +721,7 @@ const ParallaxVert = ({ props }) => {
           borderRadius: '20px',
           textAlign: 'center',
           lineHeight: '100px',
-          scaleX,
+          scaleX
         }}
       >
         scaleX
@@ -743,7 +736,7 @@ const ParallaxVert = ({ props }) => {
           fontFamily: 'system-ui',
           fontSize: '2rem',
           fontWeight: 'bold',
-          marginBottom: 20,
+          marginBottom: 20
         }}
       >
         <motion.div
@@ -751,7 +744,7 @@ const ParallaxVert = ({ props }) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: 10,
+            gap: 10
           }}
         >
           {listLabel.map((item) => {
@@ -765,7 +758,7 @@ const ParallaxVert = ({ props }) => {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderRadius: 12,
+                  borderRadius: 12
                 }}
                 key={item}
               >
@@ -786,7 +779,7 @@ const ParallaxVert = ({ props }) => {
               backgroundColor: 'black',
               color: 'white',
               letterSpacing: 2,
-              cursor: 'pointer',
+              cursor: 'pointer'
             }}
             onTap={() => {
               setListLabel(randomSort(listLabel))
@@ -801,7 +794,7 @@ const ParallaxVert = ({ props }) => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'center'
         }}
       >
         <motion.div
@@ -812,7 +805,7 @@ const ParallaxVert = ({ props }) => {
             alignItems: 'center',
             justifyContent: 'center',
             padding: 10,
-            gap: 10,
+            gap: 10
           }}
           layout
         >
@@ -829,7 +822,7 @@ const ParallaxVert = ({ props }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 fontFamily: 'system-ui',
-                color: '#000',
+                color: '#000'
               }}
               onTap={() => {
                 setBigState(!isBig)
@@ -843,18 +836,18 @@ const ParallaxVert = ({ props }) => {
                 width: 60,
                 height: 60,
                 backgroundColor: '#fff',
-                borderRadius: 10,
+                borderRadius: 10
               }}
-            ></motion.div>
+            />
             <motion.div
               layout
               style={{
                 width: 60,
                 height: 60,
                 backgroundColor: '#fff',
-                borderRadius: 10,
+                borderRadius: 10
               }}
-            ></motion.div>
+            />
           </LayoutGroup>
         </motion.div>
       </div>
@@ -865,9 +858,9 @@ const ParallaxVert = ({ props }) => {
 const Word = ({ children, progress, range }) => {
   const opacity = useTransform(progress, range, [0, 1])
   return (
-    <span className="xl:lg-3 relative mx-1 lg:mx-2.5">
-      <span className="absolute opacity-30">{children}</span>
-      <motion.span style={{ opacity: opacity }} className={'text-black dark:text-white'}>
+    <span className='xl:lg-3 relative mx-1 lg:mx-2.5'>
+      <span className='absolute opacity-30'>{children}</span>
+      <motion.span style={{ opacity }} className='text-black dark:text-white'>
         {children}
       </motion.span>
     </span>
