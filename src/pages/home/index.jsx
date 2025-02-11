@@ -63,6 +63,7 @@ import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
 import InViewBasicMultiple from '@container/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
 import FlipWords from '@stateless/FlipWords'
+import BorderBeam from '@stateless/BorderBeam'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -321,7 +322,7 @@ const Home = () => {
         <SlideText text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <SparklesText text="Magic UI" sparklesCount={5} />
+        <SparklesText text="千山过尽，万里星辰!" sparklesCount={5} />
       </section>
 
       <section style={{ marginBottom: 15, fontSize: 20 }}>
@@ -583,19 +584,20 @@ const Home = () => {
         <ContentPlaceholder />
       </section>
       <section
-        className={styles.box}
+        // className={styles.box}
         style={{
           marginBottom: 10,
           width: 360,
           height: 200,
           position: 'relative',
-          backgroundColor: 'rgba(0, 0,0, 0.2)',
+          backgroundColor: 'rgba(0, 0,0, 0.8)',
           borderRadius: 8,
         }}
       >
         <section className={styles.dotMask} ref={barRef}>
           dot mask
         </section>
+        <BorderBeam size={100} />
       </section>
       <section style={{ marginBottom: 40, fontSize: 18 }}>
         <section>RectResult.</section>
