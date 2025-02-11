@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
-import styles from './index.module.less'
 
 const Profile = () => {
   const scrollRef = useRef(null)

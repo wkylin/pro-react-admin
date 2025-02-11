@@ -14,6 +14,7 @@ import clsx from 'clsx'
 import FixTabPanel from '@stateless/FixTabPanel'
 import HorizontalScrollParallax from '@stateless/HorizontalScroll'
 import ScrollVelocity from '@stateless/ScrollVelocity'
+import TextReveal from '@stateless/TextReveal'
 import styles from './index.module.less'
 
 const animations = {
@@ -215,6 +216,16 @@ const ParallaxVert = () => {
     }
   }
 
+  const wordTargetRef = useRef(null)
+  const words =
+    '新的一年，愿你的生活充满阳光，每一天都被幸福环绕。工作上顺顺利利，所有的努力都能得到丰厚的回报，每一个目标都能成功实现。'.split(
+      ''
+    )
+  const { scrollYProgress: wordScrYPro } = useScroll({
+    target: wordTargetRef,
+    container: scrollRef,
+  })
+
   return (
     <FixTabPanel ref={scrollRef}>
       <h2>Hi, Motion</h2>
@@ -315,7 +326,6 @@ const ParallaxVert = () => {
           x: '200px',
         }}
       ></motion.div>
-
       <motion.div
         style={{
           width: 100,
@@ -676,6 +686,25 @@ const ParallaxVert = () => {
       <section style={{ margin: 20 }}>
         <ScrollVelocity text="Pro React Admin" ref={scrollRef} className="text-4xl" />
       </section>
+      <div ref={wordTargetRef} className={clsx('relative z-0 h-[200vh]')}>
+        <div className={'sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'}>
+          <p
+            className={
+              'flex flex-wrap p-5 text-2xl font-bold text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl'
+            }
+          >
+            {words.map((word, i) => {
+              const start = i / words.length
+              const end = start + 1 / words.length
+              return (
+                <Word key={i} progress={wordScrYPro} range={[start, end]}>
+                  {word}
+                </Word>
+              )
+            })}
+          </p>
+        </div>
+      </div>
       <motion.div
         style={{
           width: 200,
@@ -830,6 +859,18 @@ const ParallaxVert = () => {
         </motion.div>
       </div>
     </FixTabPanel>
+  )
+}
+
+const Word = ({ children, progress, range }) => {
+  const opacity = useTransform(progress, range, [0, 1])
+  return (
+    <span className="xl:lg-3 relative mx-1 lg:mx-2.5">
+      <span className="absolute opacity-30">{children}</span>
+      <motion.span style={{ opacity: opacity }} className={'text-black dark:text-white'}>
+        {children}
+      </motion.span>
+    </span>
   )
 }
 
