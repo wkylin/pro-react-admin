@@ -15,7 +15,7 @@ export const wrap = (min, max, v) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min
 }
 
-const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className }, ref) => {
+const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className, ...restProps }, ref) => {
   const ParallaxSection = ({ children, baseVelocity = 100, className }) => {
     const [repetitions, setRepetitions] = useState(1)
     const targetRef = useRef(null)
@@ -68,7 +68,7 @@ const ScrollVelocity = React.forwardRef(({ text, velocity = 3, className }, ref)
     })
 
     return (
-      <div className="w-full overflow-hidden whitespace-nowrap" ref={targetRef}>
+      <div className="w-full overflow-hidden whitespace-nowrap" {...restProps} ref={targetRef}>
         <motion.div className={clsx('inline-block', className)} style={{ x }}>
           {Array.from({ length: repetitions }).map((_, i) => (
             <span key={i} ref={i === 0 ? textRef : null}>

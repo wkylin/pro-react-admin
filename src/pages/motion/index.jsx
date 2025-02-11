@@ -85,7 +85,7 @@ const randomSort = (arr) => {
   return newArr
 }
 
-const ParallaxVert = () => {
+const ParallaxVert = ({ props }) => {
   const controller = useAnimationControls()
   const controller2 = useAnimationControls()
 
@@ -684,7 +684,7 @@ const ParallaxVert = () => {
 
       <section style={{ fontSize: 30 }}>scrollDirection: {scrollDirection}</section>
       <section style={{ margin: 20 }}>
-        <ScrollVelocity text="Pro React Admin" ref={scrollRef} className="text-4xl" />
+        <ScrollVelocity {...props} text="Pro React Admin" ref={scrollRef} className="text-4xl" />
       </section>
       <div ref={wordTargetRef} className={clsx('relative z-0 h-[200vh]')}>
         <div className={'sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'}>

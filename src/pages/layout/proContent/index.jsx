@@ -53,7 +53,7 @@ const ProContent = () => {
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">
-        <FloatButton.BackTop target={() => document.querySelector('#container')}>
+        <FloatButton.BackTop target={() => document.querySelector('#scrollContainer')}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>
         <Space>&copy; {new Date().getFullYear()} Pro React Admin</Space>

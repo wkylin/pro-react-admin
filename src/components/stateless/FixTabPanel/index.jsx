@@ -1,8 +1,10 @@
 import React from 'react'
 
-const FixTabPanel = React.forwardRef(({ style, children }, ref) => (
+const FixTabPanel = React.forwardRef(({ style, children, ...rest }, ref) => (
   <div
     ref={ref}
+    {...rest}
+    id="scrollContainer"
     style={{
       width: '100%',
       height: 'calc(100vh - 204px)',

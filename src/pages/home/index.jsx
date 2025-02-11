@@ -295,7 +295,7 @@ const Home = () => {
 
   return (
     <FixTabPanel ref={scrollRef}>
-      <section className={styles.avatar} style={{ marginBottom: 15, fontSize: 24 }}>
+      <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
