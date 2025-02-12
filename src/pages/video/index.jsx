@@ -4,6 +4,8 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import VideoJS from '@stateless/Video'
 import useVideo from '@hooks/useVideo'
 
+import videoSource from '@assets/video/trailer.mp4'
+
 const MyVideo = () => {
   const playerRef = useRef(null)
   const videoRef = useRef(null)
@@ -15,7 +17,7 @@ const MyVideo = () => {
     fluid: true,
     sources: [
       {
-        src: 'https://placehold.co/1920x1080.mp4',
+        src: videoSource,
         type: 'video/mp4',
       },
     ],
@@ -41,19 +43,19 @@ const MyVideo = () => {
     togglePause,
     increaseVolume,
     decreaseVolume,
-    // mute,
+    mute,
     unmute,
     toggleMute,
     forward,
-    // back,
+    back,
     toggleFullscreen,
-  } = useVideo(videoRef)
+  } = useVideo(useVideoRef)
 
   return (
     <FixTabPanel>
       <video ref={videoRef} controls muted controlsList="nodownload" style={{ width: 900 }}>
         <track kind="captions" />
-        <source src="https://media.w3.org/2010/05/sintel/trailer.mp4" type="video/mp4" />
+        <source src={videoSource} type="video/mp4" />
       </video>
       <div style={{ marginTop: 30, width: 900 }}>
         <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
@@ -61,12 +63,12 @@ const MyVideo = () => {
 
       {/* <section style={{marginTop: 30}}>
         <div>
-          <video ref={useVideoRef} className="w-full mb-4 h-72">
-            <source src="https://cuicui.day/video/google-deepmind-demo-video.mp4" type="video/mp4" />
+          <video ref={useVideoRef} className="w-[900px]">
+            <source src={videoSource} controls muted controlsList="nodownload" type="video/mp4" />
             <track
               kind="captions"
               srcLang="en"
-              src="/video/google-deepmind-demo-video.vtt"
+              src={videoSource.replace(/\.mp4$/, ".vtt")}
             />
             Your browser does not support the
           </video>
@@ -97,14 +99,15 @@ const MyVideo = () => {
                 Decrease Volume
               </button>
             </div>
+            currentTime：{currentTime}
             <input
               type="range"
               min={0}
-              max={videoRef.current?.duration ?? 0}
+              max={useVideoRef.current?.duration ?? 0}
               value={currentTime}
               onChange={(e) => {
-                if (videoRef.current) {
-                  videoRef.current.currentTime = Number(e.target.value);
+                if (useVideoRef.current) {
+                  useVideoRef.current.currentTime = Number(e.target.value);
                 }
               }}
             />
