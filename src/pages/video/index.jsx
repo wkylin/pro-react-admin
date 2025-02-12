@@ -18,9 +18,9 @@ const MyVideo = () => {
     sources: [
       {
         src: videoSource,
-        type: 'video/mp4',
-      },
-    ],
+        type: 'video/mp4'
+      }
+    ]
   }
 
   const handlePlayerReady = (player) => {
@@ -48,14 +48,14 @@ const MyVideo = () => {
     toggleMute,
     forward,
     back,
-    toggleFullscreen,
+    toggleFullscreen
   } = useVideo(useVideoRef)
 
   return (
     <FixTabPanel>
-      <video ref={videoRef} controls muted controlsList="nodownload" style={{ width: 900 }}>
-        <track kind="captions" />
-        <source src={videoSource} type="video/mp4" />
+      <video ref={videoRef} controls muted controlsList='nodownload' style={{ width: 900 }}>
+        <track kind='captions' />
+        <source src={videoSource} type='video/mp4' />
       </video>
       <div style={{ marginTop: 30, width: 900 }}>
         <VideoJS options={videoJsOptions} onReady={handlePlayerReady} />
