@@ -1,6 +1,5 @@
 import React from 'react'
-import { MdSkipNext, MdSkipPrevious } from 'react-icons/md'
-import { BsArrowRepeat, BsFillPauseFill, BsFillPlayFill, BsShuffle } from 'react-icons/bs'
+import { Pause, CirclePlay, SkipBack, SkipForward, Shuffle, RefreshCw } from 'lucide-react'
 
 const Controls = ({
   isPlaying,
@@ -14,24 +13,24 @@ const Controls = ({
   handleNextSong,
 }) => (
   <div className="flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
-    <BsArrowRepeat
+    <RefreshCw
       size={20}
       color={repeat ? 'red' : 'white'}
       onClick={() => setRepeat((prev) => !prev)}
       className="hidden sm:block cursor-pointer"
     />
     {currentSongs?.length > 0 && (
-      <MdSkipPrevious size={30} color="#FFF" className="cursor-pointer" onClick={handlePrevSong} />
+      <SkipBack size={20} color="#FFF" className="cursor-pointer" onClick={handlePrevSong} />
     )}
     {isPlaying ? (
-      <BsFillPauseFill size={45} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
+      <Pause size={20} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
     ) : (
-      <BsFillPlayFill size={45} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
+      <CirclePlay size={20} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
     )}
     {currentSongs?.length > 0 && (
-      <MdSkipNext size={30} color="#FFF" className="cursor-pointer" onClick={handleNextSong} />
+      <SkipForward size={20} color="#FFF" className="cursor-pointer" onClick={handleNextSong} />
     )}
-    <BsShuffle
+    <Shuffle
       size={20}
       color={shuffle ? 'red' : 'white'}
       onClick={() => setShuffle((prev) => !prev)}
