@@ -64,6 +64,7 @@ import InViewBasicMultiple from '@container/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
 import FlipWords from '@stateless/FlipWords'
 import BorderBeam from '@stateless/BorderBeam'
+import AutoSlider from '@stateless/AutoSlider'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -791,6 +792,9 @@ const Home = () => {
       </section>
       <section style={{ margin: 20 }}>
         <DynamicBackground />
+      </section>
+      <section style={{ margin: 20 }}>
+        <AutoSlider />
       </section>
     </FixTabPanel>
   )
