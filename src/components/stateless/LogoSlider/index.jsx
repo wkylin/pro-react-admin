@@ -68,7 +68,7 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
   return (
     <div>
       <div className="mx-auto w-full text-center">
-        <div className="relative h-[200px] overflow-hidden">
+        <div className="relative h-[260px] overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative min-w-[500px] min-h-[500px]">
               <AnimatePresence initial={false}>
@@ -80,7 +80,7 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3 ml-[-50px]"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/3"
                   >
                     <img
                       src={logo}

@@ -230,6 +230,23 @@ const ParallaxVert = ({ props }) => {
     <FixTabPanel ref={scrollRef}>
       <h2>Hi, Motion</h2>
       <motion.h2>{rounded}</motion.h2>
+      <div className="flex space-x-4 pl-2">
+        <motion.div
+          className="w-2 h-2 bg-blue-500 rounded-full"
+          animate={{ scale: [1, 1.5, 1] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+        />
+        <motion.div
+          className="w-2 h-2 bg-purple-500 rounded-full"
+          animate={{ scale: [1, 1.5, 1] }}
+          transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
+        />
+        <motion.div
+          className="w-2 h-2 bg-pink-500 rounded-full"
+          animate={{ scale: [1, 1.5, 1] }}
+          transition={{ repeat: Infinity, duration: 2, delay: 1 }}
+        />
+      </div>
       <motion.div
         style={{
           position: 'fixed',
