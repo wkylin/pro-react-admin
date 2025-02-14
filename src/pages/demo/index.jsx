@@ -4,7 +4,7 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
 import LogoSlider from '@stateless/LogoSlider'
 import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
-
+import Footer from '@stateless/Footer'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
@@ -127,6 +127,7 @@ const ProDemo = () => {
         <AnimationTabs tabs={tabs} />
       </div>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
+      <Footer />
     </FixTabPanel>
   )
 }
