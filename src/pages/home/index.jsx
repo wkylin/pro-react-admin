@@ -289,7 +289,9 @@ const Home = () => {
   }
 
   const scrollRef = useRef(null)
-  const { scrollDir, scrollPosition } = useDetectScroll({ target: scrollRef.current })
+  const { scrollDir, scrollPosition } = useDetectScroll({ target: scrollRef.current || window })
+
+  const [isVisible, setIsVisible] = useState(false)
 
   const [barRect, barRef] = useRect()
 

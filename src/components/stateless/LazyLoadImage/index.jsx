@@ -42,7 +42,7 @@ const LazyLoadImage = ({
     <figure className={styles.hoverRotate}>
       <img
         alt={alt}
-        src={isLoaded ? src : ''}
+        src={isLoaded ? src : null}
         ref={imgRef}
         className={className}
         loading={loadInitially ? undefined : 'lazy'}
