@@ -2,6 +2,12 @@ import React from 'react'
 import { Table } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
+import LogoSlider from '@stateless/LogoSlider'
+import SpringPng from '@assets/images/spring.png'
+import HePng from '@assets/images/he.png'
+import SongPng from '@assets/images/song.png'
+import XuePng from '@assets/images/xue.png'
+const companies = [SpringPng, HePng, SongPng, XuePng]
 const columns = [
   {
     title: 'Name',
@@ -72,6 +78,7 @@ const tabs = [
 const ProDemo = () => {
   return (
     <FixTabPanel>
+      <LogoSlider companies={companies} />
       <div className="h-[20rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start">
         <AnimationTabs tabs={tabs} />
       </div>
