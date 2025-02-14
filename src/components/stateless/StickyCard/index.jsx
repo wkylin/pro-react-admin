@@ -12,7 +12,7 @@ const StickyCard = ({ cards, children }) => {
               z-0 after:z-10 after:content-[''] after:absolute after:inset-0 after:outline after:-outline-offset-2
               after:rounded-3xl after:outline-white/20 px-8 pt-4 after:pointer-events-none sticky m-auto"
           >
-            <div className="sticky top-9 h-[40vh]"></div>
+            <div className="sticky top-9 h-[40vh]" />
           </div>
         ))}
       </section>
