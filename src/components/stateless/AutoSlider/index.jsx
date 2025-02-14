@@ -13,29 +13,29 @@ const data = [
     name: '《咏柳》',
     title: '贺知章',
     quote: '碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。',
-    image: SpringPng,
+    image: SpringPng
   },
   {
     id: 2,
     name: '《小池》',
     title: '杨万里',
     quote: '泉眼无声惜细流，树阴照水爱晴柔。小荷才露尖尖角，早有蜻蜓立上头。',
-    image: HePng,
+    image: HePng
   },
   {
     id: 3,
     name: '《山居秋暝》',
     title: '王维',
     quote: '空山新雨后，天气晚来秋。明月松间照，清泉石上流。',
-    image: SongPng,
+    image: SongPng
   },
   {
     id: 4,
     name: '《逢雪宿芙蓉山主人》',
     title: '刘长卿',
     quote: '日暮苍山远，天寒白屋贫。柴门闻犬吠，风雪夜归人。',
-    image: XuePng,
-  },
+    image: XuePng
+  }
 ]
 
 const AutoSlider = () => {
@@ -71,33 +71,33 @@ const AutoSlider = () => {
   }
 
   return (
-    <section className={styles['section']}>
+    <section className={styles.section}>
       <div className={styles['section-center']}>
         {people.map((person, personIndex) => {
           const { id, image, name, title, quote } = person
 
-          let position = styles['nextSlide']
+          let position = styles.nextSlide
           if (personIndex === index) {
-            position = styles['activeSlide']
+            position = styles.activeSlide
           }
           if (personIndex === index - 1 || (index === 0 && personIndex === people.length - 1)) {
-            position = styles['lastSlide']
+            position = styles.lastSlide
           }
 
           return (
             <article className={position} key={id}>
               <img src={image} alt={name} className={styles['person-img']} />
               <h4>{name}</h4>
-              <p className={styles['title']}>{title}</p>
-              <p className={styles['text']}>{quote}</p>
-              <Quote className={styles['icon']} />
+              <p className={styles.title}>{title}</p>
+              <p className={styles.text}>{quote}</p>
+              <Quote className={styles.icon} />
             </article>
           )
         })}
-        <button className={styles['prev']} onClick={() => handleIndexChange(index - 1)}>
+        <button className={styles.prev} onClick={() => handleIndexChange(index - 1)}>
           <ArrowLeft />
         </button>
-        <button className={styles['next']} onClick={() => handleIndexChange(index + 1)}>
+        <button className={styles.next} onClick={() => handleIndexChange(index + 1)}>
           <ArrowRight />
         </button>
       </div>
