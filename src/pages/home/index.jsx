@@ -72,7 +72,7 @@ import {
   oneApiChat,
   prettyObject,
   // randomNum,
-  getDirection,
+  getDirection
 } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 import Zoom from 'react-medium-image-zoom'
@@ -87,7 +87,7 @@ const code = {
 main : "This component needs more than the default code block to be displayed"
 detailed : "For now, if you want the exact same behaviour, please check the github"
 }`,
-  lang: 'typescript',
+  lang: 'typescript'
 }
 
 const preCode = `
@@ -112,26 +112,26 @@ const slugs = [
   'vercel',
   'docker',
   'git',
-  'sonarqube',
+  'sonarqube'
 ]
 
 const dataSteps = [
   {
     title: 'Step 1',
-    code: 'npx create-react-app my-app',
+    code: 'npx create-react-app my-app'
   },
   {
     title: 'Step 2',
-    code: 'cd my-app',
+    code: 'cd my-app'
   },
   {
     title: 'Step 3',
-    code: 'npm start',
+    code: 'npm start'
   },
   {
     title: 'Step 4',
-    code: 'npm run build',
-  },
+    code: 'npm run build'
+  }
 ]
 
 const Home = () => {
@@ -212,8 +212,8 @@ const Home = () => {
       [
         {
           content: text,
-          role: 'user',
-        },
+          role: 'user'
+        }
       ],
       key,
       signal
@@ -311,28 +311,28 @@ const Home = () => {
         <TypeWriter
           text={['年轻到足以创新, 成熟到懂得坚持', '你既有冒险的勇气, 又有控制风险的智慧', '人生不设限，梦想不过期! ']}
           speed={70}
-          className="text-gray-500"
+          className='text-gray-500'
           waitTime={1500}
           deleteSpeed={40}
-          cursorChar={'_'}
+          cursorChar='_'
         />
       </section>
       <section style={{ margin: '20px 0', fontSize: 20 }}>
-        <MultiDirectionSlide textLeft="逐光前行，奔赴新程；" textRight="千山过尽，万里星辰！" />
+        <MultiDirectionSlide textLeft='逐光前行，奔赴新程；' textRight='千山过尽，万里星辰！' />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20, overflow: 'hidden' }}>
         This is something
         <SlideText text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <SparklesText text="千山过尽，万里星辰!" sparklesCount={5} />
+        <SparklesText text='千山过尽，万里星辰!' sparklesCount={5} />
       </section>
 
       <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
+        <AutoLink text='foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin' />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <ShinyText text="Just some shiny text!" disabled={false} speed={3} />
+        <ShinyText text='Just some shiny text!' disabled={false} speed={3} />
       </section>
       {/* <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
@@ -344,7 +344,7 @@ const Home = () => {
             'Loading awesome content',
             'Almost there',
             'Just a moment',
-            'Getting things ready',
+            'Getting things ready'
           ]}
         />
       </section>
@@ -373,7 +373,7 @@ const Home = () => {
         style={{
           marginBottom: 15,
           position: 'relative',
-          overflow: 'hidden',
+          overflow: 'hidden'
         }}
       >
         <IconCloud images={images} />
@@ -386,7 +386,7 @@ const Home = () => {
           width: 360,
           background: '#111827',
           position: 'relative',
-          overflow: 'hidden',
+          overflow: 'hidden'
         }}
       >
         <Meteors number={40} />
@@ -397,16 +397,16 @@ const Home = () => {
           fontSize: 20,
           height: 200,
           width: 360,
-          background: '#111827',
+          background: '#111827'
         }}
       >
         <SparklesCore
-          background="transparent"
+          background='transparent'
           minSize={0.4}
           maxSize={1}
           particleDensity={1200}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
+          className='w-full h-full'
+          particleColor='#FFFFFF'
         />
       </section>
       <section
@@ -416,9 +416,9 @@ const Home = () => {
           height: 200,
           width: 360,
           overflow: 'hidden',
-          position: 'relative',
+          position: 'relative'
         }}
-        className="bg-slate-900"
+        className='bg-slate-900'
       >
         <BackgroundBoxes />
       </section>
@@ -429,9 +429,9 @@ const Home = () => {
           height: 200,
           width: 360,
           overflow: 'hidden',
-          position: 'relative',
+          position: 'relative'
         }}
-        className="bg-slate-900"
+        className='bg-slate-900'
       >
         <MemoizedStars />
       </section>
@@ -446,7 +446,7 @@ const Home = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#fff',
+          color: '#fff'
         }}
       >
         Direction: {enterDirection}
@@ -455,22 +455,22 @@ const Home = () => {
         <CompareAll
           firstImage={firstImage}
           secondImage={secondImage}
-          firstImageClassName="object-cover object-left-top"
-          secondImageClassName="object-cover object-left-top"
-          className="h-[200px]"
-          slideMode="drag"
+          firstImageClassName='object-cover object-left-top'
+          secondImageClassName='object-cover object-left-top'
+          className='h-[200px]'
+          slideMode='drag'
         />
       </section>
       <section style={{ margin: '20px 0', width: 360, height: 200, background: '#000' }}>
         <SquaresGrid
           speed={0.5}
           squareSize={20}
-          direction="diagonal" // up, down, left, right, diagonal
-          borderColor="#222"
-          hoverFillColor="#222"
+          direction='diagonal' // up, down, left, right, diagonal
+          borderColor='#222'
+          hoverFillColor='#222'
         />
       </section>
-      <section className={styles.line}></section>
+      <section className={styles.line} />
       {/* <section className={styles.violetGradient}></section> */}
       {/* <section className={styles.linearGradient}></section>
       <section className={styles.linearGra}></section>
@@ -480,9 +480,9 @@ const Home = () => {
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
       </section> */}
       <section>
-        <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
+        <IsometricCard text='Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?' />
       </section>
-      <LineBordered text="A line bordered text." />
+      <LineBordered text='A line bordered text.' />
       <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
       </section>
@@ -495,13 +495,13 @@ const Home = () => {
       <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h3>React Animate On Scroll.</h3>
         <h3>
-          <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
+          <AutoLink text='https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/' />
         </h3>
         <h3 style={{ marginBottom: 40 }}>
-          <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
+          <AutoLink text='https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview' />
         </h3>
         <ScrollAnimation>
-          <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
+          <LazyLoadImage src='https://picsum.photos/seed/picsum/300/160' alt='Strawberries' />
         </ScrollAnimation>
       </section>
       {/* <section style={{ marginBottom: 40, fontSize: 36 }}>
@@ -536,16 +536,16 @@ const Home = () => {
       </section> */}
       <section style={{ marginBottom: 40 }}>
         <AnimateOnScreen.FadeIn>
-          <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+          <AvatarCard avatar='https://picsum.photos/seed/picsum/300/160' text="Hi, I'm a developer." />
         </AnimateOnScreen.FadeIn>
       </section>
       <section style={{ marginBottom: 40 }}>
         <AnimateOnScreen.FadeUp>
           <img
-            src="https://picsum.photos/360/200.jpg"
-            alt=""
+            src='https://picsum.photos/360/200.jpg'
+            alt=''
             style={{
-              maskImage: `linear-gradient(to top, transparent, black 20%, black 80%, transparent)`,
+              maskImage: 'linear-gradient(to top, transparent, black 20%, black 80%, transparent)'
             }}
           />
         </AnimateOnScreen.FadeUp>
@@ -553,7 +553,7 @@ const Home = () => {
       <section style={{ marginBottom: 40, width: 360, height: 200 }}>
         <AnimateOnScreen.ScaleIn triggerOnce={false}>
           <>
-            <img src="https://picsum.photos/360/200/?blur=2" alt="" />
+            <img src='https://picsum.photos/360/200/?blur=2' alt='' />
             <section className={styles['blend-me']}>Mix Blend Mode</section>
           </>
         </AnimateOnScreen.ScaleIn>
@@ -562,16 +562,16 @@ const Home = () => {
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+          triggerOnce
         >
           <Zoom>
-            <img src="https://picsum.photos/360/200.jpg" alt="" />
+            <img src='https://picsum.photos/360/200.jpg' alt='' />
           </Zoom>
         </AnimateOnScreen.DiyAnimation>
       </section>
       <section style={{ marginBottom: 40, display: 'flex' }}>
-        <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
-          <section></section>
+        <SpotlightCard className='my-spot' style={{ width: 360, height: 200, color: '#fff' }}>
+          <section />
         </SpotlightCard>
       </section>
       <section style={{ margin: '20px 0', fontSize: 24 }}>
@@ -580,7 +580,7 @@ const Home = () => {
         </BlurFade>
       </section>
       <section style={{ margin: '20px 0', fontSize: 24 }}>
-        <GradualSpacing text="2025 年，是充满希望的一年。让我们放下过去的包袱，轻装上阵。用积极的心态去面对生活，用坚定的信念去追逐梦想。相信自己，只要我们努力奋斗，就一定能创造出属于自己的精彩人生。让我们一起逐光前行，奔赴新程，书写属于我们的辉煌篇章！" />
+        <GradualSpacing text='2025 年，是充满希望的一年。让我们放下过去的包袱，轻装上阵。用积极的心态去面对生活，用坚定的信念去追逐梦想。相信自己，只要我们努力奋斗，就一定能创造出属于自己的精彩人生。让我们一起逐光前行，奔赴新程，书写属于我们的辉煌篇章！' />
       </section>
 
       <section style={{ margin: '20px 0' }}>
@@ -594,7 +594,7 @@ const Home = () => {
           height: 200,
           position: 'relative',
           backgroundColor: 'rgba(0, 0,0, 0.8)',
-          borderRadius: 8,
+          borderRadius: 8
         }}
       >
         <section className={styles.dotMask} ref={barRef}>
@@ -612,16 +612,16 @@ const Home = () => {
       </section>
       <section
         style={{
-          marginBottom: 20,
+          marginBottom: 20
         }}
       >
         <ScratchToReveal
           width={360}
           height={200}
           minScratchPercentage={70}
-          className="flex items-center justify-center overflow-hidden bg-gray-100 border-2 rounded-2xl"
+          className='flex items-center justify-center overflow-hidden bg-gray-100 border-2 rounded-2xl'
         >
-          <p className="text-9xl">✨</p>
+          <p className='text-9xl'>✨</p>
         </ScratchToReveal>
       </section>
       <section style={{ marginBottom: 40 }}>
@@ -636,16 +636,16 @@ const Home = () => {
         mask
       </section>
       <section style={{ marginBottom: 40 }}>
-        <button className={styles['button']} onClick={fireConfetti}>
+        <button className={styles.button} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
 
       <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
-        <div className={styles['circle-1']}></div>
-        <div className={styles['circle-2']}></div>
-        <div className={styles['circle-3']}></div>
-        <div className={styles['circle-4']}></div>
+        <div className={styles['circle-1']} />
+        <div className={styles['circle-2']} />
+        <div className={styles['circle-3']} />
+        <div className={styles['circle-4']} />
       </section>
 
       <section style={{ margin: 20 }} className={styles.eHElAY}>
@@ -668,12 +668,12 @@ const Home = () => {
         <NumberFlowFix />
       </section>
       <section style={{ width: 600, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
+        <Input defaultValue={apiKey} placeholder='api key' onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Flex align='center'>
           <Input.TextArea
             ref={textareaRef}
             defaultValue={chatText}
-            placeholder="来，说点什么呗...Meta + Enter发送"
+            placeholder='来，说点什么呗...Meta + Enter发送'
             onChange={changeChatText}
             onKeyDown={onInputKeyDown}
             autoSize
@@ -682,13 +682,13 @@ const Home = () => {
           <Button
             style={{ margin: '0 10px' }}
             icon={<SendOutlined rotate={-60} />}
-            type="primary"
+            type='primary'
             disabled={isStream}
             onClick={onSubmit}
           >
             发送
           </Button>
-          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+          <Button icon={<SendOutlined rotate={-60} />} type='primary' disabled={!isStream} onClick={onStop}>
             停止
           </Button>
         </Flex>
@@ -701,8 +701,8 @@ const Home = () => {
 
       <section style={{ position: 'relative', fontSize: 36 }}>
         I build
-        <FlipWords className="mx-1 px-4 py-2" words={['creative', 'interactive', 'beautiful', 'modern']} />
-        <span className="block sm:inline text-black">websites and apps.</span>
+        <FlipWords className='mx-1 px-4 py-2' words={['creative', 'interactive', 'beautiful', 'modern']} />
+        <span className='block sm:inline text-black'>websites and apps.</span>
         {/* <AnimateWave /> */}
       </section>
       {/* <section style={{ margin: 20 }}>
@@ -727,21 +727,21 @@ const Home = () => {
       </section>
       <section style={{ margin: 20 }}>
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
-          <Masonry gutter="10px">
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
+          <Masonry gutter='10px'>
+            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
+            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }} />
           </Masonry>
         </ResponsiveMasonry>
       </section>
@@ -752,7 +752,7 @@ const Home = () => {
         <TagCloud />
       </section>
       <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+        <Marquee autoFill direction='left' gradient gradientColor='rgba(255, 255, 255, 0.8)'>
           <div
             style={{
               width: 200,
@@ -761,7 +761,7 @@ const Home = () => {
               textAlign: 'center',
               background: '#aaa',
               margin: '0 10px',
-              borderRadius: 8,
+              borderRadius: 8
               // transform: 'rotateX(60deg) rotateY(0deg) rotateZ(45deg)'
             }}
           >
@@ -770,7 +770,7 @@ const Home = () => {
         </Marquee>
       </section>
       <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+        <Marquee autoFill direction='right' gradient gradientColor='rgba(255, 255, 255, 0.8)'>
           <div
             style={{
               width: 200,
@@ -779,7 +779,7 @@ const Home = () => {
               textAlign: 'center',
               background: '#aaa',
               margin: '0 10px',
-              borderRadius: 8,
+              borderRadius: 8
             }}
           >
             Vue
