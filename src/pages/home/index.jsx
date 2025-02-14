@@ -1,4 +1,4 @@
-import React, { version, useState, useRef } from 'react'
+import React, { version, useEffect, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
 import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
@@ -289,7 +289,14 @@ const Home = () => {
   }
 
   const scrollRef = useRef(null)
-  const { scrollDir, scrollPosition } = useDetectScroll({ target: scrollRef.current || window })
+  const [customElement, setCustomElement] = useState()
+  const { scrollDir, scrollPosition } = useDetectScroll({ target: customElement })
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      setCustomElement(scrollRef.current)
+    }
+  }, [scrollRef])
 
   const [isVisible, setIsVisible] = useState(false)
 
