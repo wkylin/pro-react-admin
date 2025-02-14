@@ -143,6 +143,89 @@ export const randomHex = () =>
     .toString(16)
     .padEnd(6, '0')}`
 
+export const rgbToHex = (r, g, b) => `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`
+
+export const fibonacci = (n) => {
+  const seq = [0, 1]
+
+  for (let i = 2; i < n; i++) {
+    seq.push(seq[i - 1] + seq[i - 2])
+  }
+
+  return seq.slice(0, n)
+}
+
+export const lerp = (a, b, t) => a + (b - a) * t
+
+export const formatFileSize = (bytes, decimals = 2) => {
+  if (bytes === 0) return '0 Bytes'
+
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return `${(bytes / Math.pow(k, i)).toFixed(decimalPlaces)} ${sizes[i]}`
+}
+
+export const formatOrdinal = (num) => {
+  const suffixes = ['th', 'st', 'nd', 'rd']
+  const v = num % 100
+  return `${num}${suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]}`
+}
+
+export const formatPercentage = (num, decimals = 2) => `${(num * 100).toFixed(decimals)}%`
+
+export const formatRomanNumeral = (num) => {
+  const romanMap = [
+    { value: 1000, numeral: 'M' },
+    { value: 900, numeral: 'CM' },
+    { value: 500, numeral: 'D' },
+    { value: 400, numeral: 'CD' },
+    { value: 100, numeral: 'C' },
+    { value: 90, numeral: 'XC' },
+    { value: 50, numeral: 'L' },
+    { value: 40, numeral: 'XL' },
+    { value: 10, numeral: 'X' },
+    { value: 9, numeral: 'IX' },
+    { value: 5, numeral: 'V' },
+    { value: 4, numeral: 'IV' },
+    { value: 1, numeral: 'I' },
+  ]
+  let result = ''
+  for (const { value, numeral } of romanMap) {
+    while (num >= value) {
+      result += numeral
+      num -= value
+    }
+  }
+
+  return result
+}
+
+export const formatScientific = (num, decimalPlaces = 2) => toExponential(decimalPlaces)
+
+export const capitalizeWords = (str) => str.replace(/\b\w/g, (match) => match.toUpperCase())
+
+export const isPalindrome = (str) => {
+  const normalized = str.toLowerCase().replace(/[^a-z0-9]/g, '')
+  return normalized === normalized.split('').reverse().join('')
+}
+
+export const toCamelCase = (str) => str.replace(/\W+(.)/g, (match, chr) => chr.toUpperCase())
+
+export const toKebabCase = (str) => {
+  return str
+    .replace(/^[^A-Za-z0-9]*|[^A-Za-z0-9]*$/g, '')
+    .replace(/([a-z])([A-Z])/g, (m, a, b) => `${a}_${b.toLowerCase()}`)
+    .replace(/[^A-Za-z0-9]+|_+/g, '-')
+    .toLowerCase()
+}
+
+export const truncate = (str, num) => (str.length > num ? str.slice(0, num) + '...' : str)
+
+export const delay = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 // Clear All Cookies
 export const clearCookies = document.cookie
   .split(';')
@@ -215,7 +298,6 @@ export const asyncTo = (promise) => promise.then((data) => [null, data]).catch((
 export const hasFocus = (element) => element === document.activeElement
 export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
 export const randomString = () => Math.random().toString(36).slice(2)
-export const toCamelCase = (str) => str.trim().replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ''))
 export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
 export const pause = (millions) => new Promise((resolve) => setTimeout(resolve, millions))

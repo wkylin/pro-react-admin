@@ -185,3 +185,31 @@ export const range = (start, end, step = 1) => {
   }
   return output
 }
+
+export const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
+
+export const chunkArray = (arr, size) => {
+  return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size))
+}
+
+export const partitionArray = (arr, fn) => {
+  return arr.reduce(
+    ([pass, fail], elem) => {
+      if (callback(elem)) {
+        pass.push(elem)
+      } else {
+        fail.push(elem)
+      }
+      return [pass, fail]
+    },
+    [[], []]
+  )
+}
+
+export const shuffleArr = (arr) => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
