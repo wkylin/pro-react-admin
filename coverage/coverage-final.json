@@ -1,0 +1,30 @@
+{
+  "C:\\wui\\pro-react\\pro-react-admin\\src\\components\\stateless\\StickyCard\\index.jsx": {
+    "path": "C:\\wui\\pro-react\\pro-react-admin\\src\\components\\stateless\\StickyCard\\index.jsx",
+    "statementMap": {
+      "0": { "start": { "line": 3, "column": 19 }, "end": { "line": 21, "column": 1 } },
+      "1": { "start": { "line": 4, "column": 2 }, "end": { "line": 20, "column": 3 } },
+      "2": { "start": { "line": 8, "column": 10 }, "end": { "line": 16, "column": 16 } }
+    },
+    "fnMap": {
+      "0": {
+        "name": "(anonymous_0)",
+        "decl": { "start": { "line": 3, "column": 19 }, "end": { "line": 3, "column": 20 } },
+        "loc": { "start": { "line": 3, "column": 44 }, "end": { "line": 21, "column": 1 } },
+        "line": 3
+      },
+      "1": {
+        "name": "(anonymous_1)",
+        "decl": { "start": { "line": 7, "column": 19 }, "end": { "line": 7, "column": 20 } },
+        "loc": { "start": { "line": 8, "column": 10 }, "end": { "line": 16, "column": 16 } },
+        "line": 8
+      }
+    },
+    "branchMap": {},
+    "s": { "0": 1, "1": 2, "2": 6 },
+    "f": { "0": 2, "1": 6 },
+    "b": {},
+    "_coverageSchema": "1a1c01bbd47fc00a2c39e90264f33305004495a9",
+    "hash": "4673c2147bc3403b7cb026cf1f477d1e0d4c02ed"
+  }
+}

@@ -38,14 +38,14 @@
     "http:test": "npm run clean:dist && npm run test:serve && npm run http-server",
     "http-server": "http-server ./dist -p 9090 --proxy https://my-json-server.typicode.com -o --cors --log-ip --gzip",
     "faker": "nodemon faker/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run test:jest && npm run test:coverage",
     "test:jest": "jest",
     "update:yarn": "yarn upgrade-interactive --latest",
     "update:npm": "ncu -u && npm install",
     "lint:fix": "npm run eslint:fix && npm run stylelint:fix && npm run prettier:fix",
     "lint": "npm run eslint && npm run stylelint && npm run prettier:check",
-    "stylelint": "stylelint \"src/**/*.less\" --custom-syntax postcss-less",
-    "stylelint:fix": "stylelint \"src/**/*.less\" --fix --custom-syntax postcss-less",
+    "stylelint": "stylelint \"src/**/*.(less|css|scss)\" --custom-syntax postcss-less",
+    "stylelint:fix": "stylelint \"src/**/*.(less|css|scss)\" --fix --custom-syntax postcss-less",
     "prettier:check": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
     "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
     "prettier:fix:all": "prettier --write . --end-of-line auto --ignore-unknown",
@@ -103,12 +103,15 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.5",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.15",
     "@types/node": "^22.13.1",
-    "@types/react": "^19.0.8",
-    "@types/react-dom": "^19.0.3",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
     "@types/react-test-renderer": "^19.0.0",
     "@types/resize-observer-browser": "^0.1.11",
     "@types/three": "^0.173.0",
@@ -163,6 +166,7 @@
     "install-pkg-lock": "^1.0.2",
     "isomorphic-fetch": "^3.0.0",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jsonlint": "^1.6.3",
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
@@ -346,7 +350,7 @@
     "src/**/*.{js, jsx, ts, tsx}": [
       "npm run eslint:fix"
     ],
-    "src/**/*.less": [
+    "src/**/*.{less, css, scss}": [
       "npm run stylelint:fix"
     ],
     "*.md": [
@@ -357,7 +361,8 @@
     ]
   },
   "jest": {
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testEnvironment": "jsdom"
   },
   "config": {
     "commitizen": {
