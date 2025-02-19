@@ -21,7 +21,7 @@ describe('StickyCard Component', () => {
 
     // 验证动态计算的 top 值
     expect(firstCard).toHaveStyle({
-      top: 'calc(50px + 30px)',
+      top: 'calc(50px + 30px)'
     })
   })
 })
