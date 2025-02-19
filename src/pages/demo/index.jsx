@@ -130,7 +130,7 @@ const ProDemo = () => {
       </div>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <StickyCard cards={[...Array(4)]} />
+      <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <Footer />
     </FixTabPanel>
   )

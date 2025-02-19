@@ -3,11 +3,16 @@
 @import 'tailwindcss';
 
 @theme {
-  --animate-border-beam: border-beam calc(var(--duration) * 1s) infinite linear;
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
 
-  @keyframes border-beam {
+  @keyframes wiggle {
+    0%,
     100% {
-      offset-distance: 100%;
+      transform: rotate(-3deg);
+    }
+
+    50% {
+      transform: rotate(3deg);
     }
   }
 }
@@ -33,6 +38,8 @@
 :root {
   --background: #fff;
   --foreground: #171717;
+  --duration: 0.5;
+  --color-gray-200: #e5e7eb;
 }
 
 @media (prefers-color-scheme: dark) {
