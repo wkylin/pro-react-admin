@@ -85,6 +85,7 @@ const tabs = [
 const ProDemo = () => {
   return (
     <FixTabPanel>
+      <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <div className="relative w-full bg-[#0a192f] overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full">
           <div
@@ -125,12 +126,11 @@ const ProDemo = () => {
       </div>
 
       <LogoSlider companies={companies} />
-      <div className="h-[20rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full  items-start justify-start">
+      <div className="h-[20rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full items-start justify-start">
         <AnimationTabs tabs={tabs} />
       </div>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <Footer />
     </FixTabPanel>
   )
