@@ -14,8 +14,8 @@
 3. 基于 React Router V7, 实现嵌套路由更方便
 4. 基于 Webpack 最新版本，实现多环境打包部署，代码分割优化，结合官方分析工具，实时优化代码
 5. 同时 支持 vite 6.x.x, 极速构建
-6. 基于 Faker 实现 Mock Server,不依赖后端实现模拟数据更加方便
-7. 封装 Fetch, 实现 useFetch, 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
+6. 基于 Faker 实现 Mock Server，不依赖后端实现模拟数据更加方便
+7. 封装 Fetch, 实现 useFetch， 请求更加方便，取消请求，实现请求及响应拦截，方便数据处理及统一报错提示
 8. 支持 TypeScript 5.x.x, 一切变得可控，扼杀错误于摇篮之中
 9. 支持多页签，提升效率，支持国际化
 10. 代码风格统一，项目统一配置 ESLint/Prettier/Husky/EditorConfig
@@ -192,7 +192,12 @@ npm run dev:faker
    "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
    ```
-
+3. Vercel
+   提交后自动部署，预览地址：
+   ```
+   [https://pro-react-admin.vercel.app/](https://pro-react-admin.vercel.app/)
+   ```
+   
 ## 架构
 
 ![whiteboard_exported_image](https://github.com/wkylin/pro-react-admin/assets/1208330/c28852c2-7efe-407f-80f8-41d741ef3108)
