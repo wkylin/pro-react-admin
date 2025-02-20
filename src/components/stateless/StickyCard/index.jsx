@@ -4,7 +4,7 @@ import clsx from 'clsx'
 const StickyCard = ({ cards, children }) => {
   return (
     <>
-      <section className="flex flex-col gap-4 pt-30 pb-20">
+      <section className='flex flex-col gap-4 pt-30 pb-20'>
         {cards.map((card, index) => {
           const animateSlide = index % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right'
           return (
@@ -16,8 +16,8 @@ const StickyCard = ({ cards, children }) => {
                 animateSlide
               )}
             >
-              <div className="animate-wiggle sticky top-9 h-[30vh]">
-                <p className="animate-hue-rotate hue-clip text-gradient text-2xl">Card Item</p>
+              <div className='animate-wiggle sticky top-9 h-[30vh]'>
+                <p className='animate-hue-rotate hue-clip text-gradient text-2xl'>Card Item</p>
               </div>
             </div>
           )

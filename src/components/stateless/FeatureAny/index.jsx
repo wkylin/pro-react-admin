@@ -9,23 +9,23 @@ const data = [
   {
     title: '《咏柳》—— 贺知章',
     content: '碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。',
-    srcImage: SpringPng,
+    srcImage: SpringPng
   },
   {
     title: '《小池》—— 杨万里',
     content: '泉眼无声惜细流，树阴照水爱晴柔。小荷才露尖尖角，早有蜻蜓立上头。',
-    srcImage: HePng,
+    srcImage: HePng
   },
   {
     title: '《山居秋暝》—— 王维',
     content: '空山新雨后，天气晚来秋。明月松间照，清泉石上流。',
-    srcImage: SongPng,
+    srcImage: SongPng
   },
   {
     title: '《逢雪宿芙蓉山主人》—— 刘长卿',
     content: '日暮苍山远，天寒白屋贫。柴门闻犬吠，风雪夜归人。',
-    srcImage: XuePng,
-  },
+    srcImage: XuePng
+  }
 ]
 
 const FeatureFourImages = () => {
@@ -46,17 +46,17 @@ const FeatureFourImages = () => {
   }, [timer])
 
   return (
-    <div className="grid grid-cols-1 gap-4 rounded-sm border p-4 md:grid-cols-2">
-      <div className="space-y-6">
+    <div className='grid grid-cols-1 gap-4 rounded-sm border p-4 md:grid-cols-2'>
+      <div className='space-y-6'>
         {data.map((item, index) => (
           <button
-            className="w-full"
+            className='w-full'
             key={item.title}
             onClick={() => {
               setFeatureOpen(index)
               setTimer(0)
             }}
-            type="button"
+            type='button'
           >
             <TextComponent
               content={item.content}
@@ -68,7 +68,7 @@ const FeatureFourImages = () => {
           </button>
         ))}
       </div>
-      <div className="h-full">
+      <div className='h-full'>
         <div className={clsx('relative h-96 w-full overflow-hidden rounded-lg md:h-[500px]')}>
           {data.map((item, index) => (
             <img

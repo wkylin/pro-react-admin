@@ -22,10 +22,10 @@ const TypeWriter = ({
         duration: 0.01,
         repeat: Infinity,
         repeatDelay: 0.4,
-        repeatType: 'reverse',
-      },
-    },
-  },
+        repeatType: 'reverse'
+      }
+    }
+  }
 }) => {
   const [displayText, setDisplayText] = useState('')
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -87,8 +87,8 @@ const TypeWriter = ({
             cursorClassName,
             hideCursorOnType && (currentIndex < texts[currentTextIndex].length || isDeleting) ? 'hidden' : ''
           )}
-          initial="initial"
-          animate="animate"
+          initial='initial'
+          animate='animate'
         >
           {cursorChar}
         </motion.span>

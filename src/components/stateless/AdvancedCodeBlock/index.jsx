@@ -12,13 +12,13 @@ const AdvancedCodeBlock = ({ code, fileName, lang = 'typescript', theme = 'githu
       )}
       {...props}
     >
-      <div className="flex items-center justify-between px-5 py-3">
-        <figcaption className="mr-[-48px] max-w-full text-xs font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-200">
+      <div className='flex items-center justify-between px-5 py-3'>
+        <figcaption className='mr-[-48px] max-w-full text-xs font-medium whitespace-nowrap text-neutral-600 dark:text-neutral-200'>
           <span>{fileName ?? <br />}</span>
         </figcaption>
         <CopyToClipboard code={code} />
       </div>
-      <div className="w-full px-1 pb-1">
+      <div className='w-full px-1 pb-1'>
         <ShikiCode code={code} lang={lang} theme={theme} />
       </div>
     </figure>
