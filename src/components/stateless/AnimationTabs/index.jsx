@@ -35,18 +35,18 @@ const AnimationTabs = ({ tabs: propTabs, containerClassName, activeTabClassName,
             onMouseLeave={() => setHovering(false)}
             className={clsx('relative rounded-full px-4 py-2', tabClassName)}
             style={{
-              transformStyle: 'preserve-3d',
+              transformStyle: 'preserve-3d'
             }}
           >
             {active.value === tab.value && (
               <motion.div
-                layoutId="clickedButton"
+                layoutId='clickedButton'
                 transition={{ type: 'spring', bounce: 0.3, duration: 0.6 }}
                 className={clsx('absolute inset-0 rounded-full bg-gray-200 dark:bg-zinc-800', activeTabClassName)}
               />
             )}
 
-            <span className="relative block text-black dark:text-white">{tab.title}</span>
+            <span className='relative block text-black dark:text-white'>{tab.title}</span>
           </button>
         ))}
       </div>
@@ -66,7 +66,7 @@ export const FadeInDiv = ({ className, tabs, hovering }) => {
     return tab.value === tabs[0].value
   }
   return (
-    <div className="relative h-full w-full">
+    <div className='relative h-full w-full'>
       {tabs.map((tab, idx) => (
         <motion.div
           key={tab.value}
@@ -75,10 +75,10 @@ export const FadeInDiv = ({ className, tabs, hovering }) => {
             scale: 1 - idx * 0.1,
             top: hovering ? idx * -50 : 0,
             zIndex: -idx,
-            opacity: idx < 3 ? 1 - idx * 0.1 : 0,
+            opacity: idx < 3 ? 1 - idx * 0.1 : 0
           }}
           animate={{
-            y: isActive(tab) ? [0, 40, 0] : 0,
+            y: isActive(tab) ? [0, 40, 0] : 0
           }}
           className={clsx('absolute top-0 left-0 h-full w-full', className)}
         >

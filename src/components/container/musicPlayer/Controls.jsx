@@ -10,31 +10,33 @@ const Controls = ({
   currentSongs,
   handlePlayPause,
   handlePrevSong,
-  handleNextSong,
+  handleNextSong
 }) => (
-  <div className="flex items-center justify-around md:w-36 lg:w-52 2xl:w-80">
+  <div className='flex items-center justify-around md:w-36 lg:w-52 2xl:w-80'>
     <RefreshCw
       size={20}
       color={repeat ? 'red' : 'white'}
       onClick={() => setRepeat((prev) => !prev)}
-      className="hidden cursor-pointer sm:block"
+      className='hidden cursor-pointer sm:block'
     />
     {currentSongs?.length > 0 && (
-      <SkipBack size={20} color="#FFF" className="cursor-pointer" onClick={handlePrevSong} />
+      <SkipBack size={20} color='#FFF' className='cursor-pointer' onClick={handlePrevSong} />
     )}
-    {isPlaying ? (
-      <Pause size={20} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
-    ) : (
-      <CirclePlay size={20} color="#FFF" onClick={handlePlayPause} className="cursor-pointer" />
-    )}
+    {isPlaying
+      ? (
+        <Pause size={20} color='#FFF' onClick={handlePlayPause} className='cursor-pointer' />
+        )
+      : (
+        <CirclePlay size={20} color='#FFF' onClick={handlePlayPause} className='cursor-pointer' />
+        )}
     {currentSongs?.length > 0 && (
-      <SkipForward size={20} color="#FFF" className="cursor-pointer" onClick={handleNextSong} />
+      <SkipForward size={20} color='#FFF' className='cursor-pointer' onClick={handleNextSong} />
     )}
     <Shuffle
       size={20}
       color={shuffle ? 'red' : 'white'}
       onClick={() => setShuffle((prev) => !prev)}
-      className="hidden cursor-pointer sm:block"
+      className='hidden cursor-pointer sm:block'
     />
   </div>
 )
