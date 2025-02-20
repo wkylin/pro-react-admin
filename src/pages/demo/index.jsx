@@ -40,7 +40,7 @@ const tabs = [
     title: 'Product',
     value: 'product',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
         <p>Product Tab</p>
       </div>
     ),
@@ -49,7 +49,7 @@ const tabs = [
     title: 'Services',
     value: 'services',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
         <p>Services tab</p>
       </div>
     ),
@@ -58,7 +58,7 @@ const tabs = [
     title: 'Playground',
     value: 'playground',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
         <p>Playground tab</p>
       </div>
     ),
@@ -67,7 +67,7 @@ const tabs = [
     title: 'Content',
     value: 'content',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
         <p>Content tab</p>
       </div>
     ),
@@ -76,7 +76,7 @@ const tabs = [
     title: 'Random',
     value: 'random',
     content: (
-      <div className="relative w-full h-full p-10 overflow-hidden text-xl font-bold text-white rounded-2xl md:text-4xl bg-linear-to-br from-purple-700 to-violet-900">
+      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
         <p>Random tab</p>
       </div>
     ),
@@ -86,8 +86,8 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
-      <div className="relative w-full bg-[#0a192f] overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full">
+      <div className="relative w-full overflow-hidden bg-[#0a192f]">
+        <div className="absolute top-0 right-0 h-full w-1/2">
           <div
             className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20"
             style={{
@@ -95,21 +95,21 @@ const ProDemo = () => {
             }}
           />
         </div>
-        <div className="absolute top-0 left-0 w-64 h-64 border-8 border-white/20 rounded-full -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-64 h-64 border-8 border-white/20 rounded-full translate-x-1/2 translate-y-1/2" />
+        <div className="absolute top-0 left-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border-8 border-white/20" />
+        <div className="absolute right-0 bottom-0 h-64 w-64 translate-x-1/2 translate-y-1/2 rounded-full border-8 border-white/20" />
 
-        <div className="relative max-w-7xl mx-auto px-4 py-16">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        <div className="relative mx-auto max-w-7xl px-4 py-16">
+          <div className="mb-16 text-center">
+            <h1 className="mb-6 text-4xl font-bold text-white md:text-5xl">
               Influencer And Affiliate Marketing Plans and Pricing
             </h1>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-lg text-gray-300">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, in? Nemo, quas esse a id at quae sunt!
               Temporibus, consectetur optio. Beatae, culpa nam quas eaque ipsa blanditiis adipisci rem.
             </p>
           </div>
         </div>
-        <div className="flex justify-center gap-8 mt-8 relative h-16">
+        <div className="relative mt-8 flex h-16 justify-center gap-8">
           <FloatingIcon initialX={-150}>
             <SocialIcon icon={Command} color="bg-blue-500" />
           </FloatingIcon>
@@ -126,7 +126,7 @@ const ProDemo = () => {
       </div>
 
       <LogoSlider companies={companies} />
-      <div className="h-[20rem] [perspective:1000px] relative b flex flex-col max-w-5xl mx-auto w-full items-start justify-start">
+      <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
         <AnimationTabs tabs={tabs} />
       </div>
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />

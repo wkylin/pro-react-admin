@@ -43,9 +43,9 @@ const TextLoader = ({ messages, interval = 2000, dotCount = 3, direction = 'vert
 
   if (direction === 'horizontal') {
     return (
-      <div className="flex items-center justify-start w-full gap-3 px-3 py-2 border rounded-xs">
+      <div className="flex w-full items-center justify-start gap-3 rounded-xs border px-3 py-2">
         <motion.div
-          className="size-5 md:size-6 border-[3px] text-primary-foreground border-t-transparent rounded-full"
+          className="text-primary-foreground size-5 rounded-full border-[3px] border-t-transparent md:size-6"
           animate={{ rotate: 360 }}
           transition={{
             duration: 1,
@@ -61,7 +61,7 @@ const TextLoader = ({ messages, interval = 2000, dotCount = 3, direction = 'vert
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-1">
       <motion.div
-        className="size-10 md:size-12 border-[3px] text-primary-foreground border-t-transparent rounded-full"
+        className="text-primary-foreground size-10 rounded-full border-[3px] border-t-transparent md:size-12"
         animate={{ rotate: 360 }}
         transition={{
           duration: 1,

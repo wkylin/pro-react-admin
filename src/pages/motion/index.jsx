@@ -232,17 +232,17 @@ const ParallaxVert = ({ props }) => {
       <motion.h2>{rounded}</motion.h2>
       <div className="flex space-x-4 pl-2">
         <motion.div
-          className="w-2 h-2 bg-blue-500 rounded-full"
+          className="h-2 w-2 rounded-full bg-blue-500"
           animate={{ scale: [1, 1.5, 1] }}
           transition={{ repeat: Infinity, duration: 2 }}
         />
         <motion.div
-          className="w-2 h-2 bg-purple-500 rounded-full"
+          className="h-2 w-2 rounded-full bg-purple-500"
           animate={{ scale: [1, 1.5, 1] }}
           transition={{ repeat: Infinity, duration: 2, delay: 0.5 }}
         />
         <motion.div
-          className="w-2 h-2 bg-pink-500 rounded-full"
+          className="h-2 w-2 rounded-full bg-pink-500"
           animate={{ scale: [1, 1.5, 1] }}
           transition={{ repeat: Infinity, duration: 2, delay: 1 }}
         />
@@ -310,7 +310,7 @@ const ParallaxVert = ({ props }) => {
                 <motion.div
                   layoutId="clickedButton"
                   transition={{ type: 'spring', bounce: 0.3, duration: 0.6 }}
-                  className={clsx('absolute inset-0 bg-gray-200 dark:bg-zinc-800 rounded-full')}
+                  className={clsx('absolute inset-0 rounded-full bg-gray-200 dark:bg-zinc-800')}
                   style={{ zIndex: -1 }}
                 />
               )}
@@ -583,7 +583,7 @@ const ParallaxVert = ({ props }) => {
         </div>
       </motion.div>
 
-      <section ref={targetRef} className="relative h-[300vh] pt-4 bg-neutral-300">
+      <section ref={targetRef} className="relative h-[300vh] bg-neutral-300 pt-4">
         <div className="sticky top-0 flex items-center overflow-hidden">
           <motion.div style={{ x: scrYProCardX }} className="flex gap-4">
             <HorizontalScrollParallax />
@@ -707,7 +707,7 @@ const ParallaxVert = ({ props }) => {
         <div className={'sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'}>
           <p
             className={
-              'flex flex-wrap p-5 text-2xl font-bold text-black/20 dark:text-white/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl'
+              'flex flex-wrap p-5 text-2xl font-bold text-black/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl dark:text-white/20'
             }
           >
             {words.map((word, i) => {

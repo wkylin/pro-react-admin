@@ -58,12 +58,12 @@ const BackgroundBeams = React.memo(({ className }) => {
   return (
     <div
       className={clsx(
-        'absolute  h-full w-full inset-0  [mask-size:40px] [mask-repeat:no-repeat] flex items-center justify-center',
+        'absolute inset-0 flex h-full w-full items-center justify-center [mask-repeat:no-repeat] [mask-size:40px]',
         className
       )}
     >
       <svg
-        className="absolute z-0 w-full h-full pointer-events-none "
+        className="pointer-events-none absolute z-0 h-full w-full"
         width="100%"
         height="100%"
         viewBox="0 0 696 316"

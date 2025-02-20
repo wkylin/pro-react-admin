@@ -12,14 +12,14 @@ const ShiCode = ({ preCode }) => {
 
   return (
     <div className="rounded-md bg-cyan-800 text-zinc-50">
-      <header className="grid grid-cols-6 gap-3 items-center px-4 py-3">
+      <header className="grid grid-cols-6 items-center gap-3 px-4 py-3">
         <div className="flex gap-1.5">
-          <div className="rounded-full h-3 w-3 bg-red-500"></div>
-          <div className="rounded-full h-3 w-3 bg-yellow-500"></div>
-          <div className="rounded-full h-3 w-3 bg-green-500"></div>
+          <div className="h-3 w-3 rounded-full bg-red-500"></div>
+          <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+          <div className="h-3 w-3 rounded-full bg-green-500"></div>
         </div>
         <div className="col-span-4 flex justify-center">
-          <div className="bg-transparent text-center text-gray-400 text-sm font-medium focus:outline-hidden">
+          <div className="bg-transparent text-center text-sm font-medium text-gray-400 focus:outline-hidden">
             Untitled
           </div>
         </div>

@@ -47,7 +47,7 @@ const FlipWords = ({ words, duration = 3000, className }) => {
           scale: 2,
           position: 'absolute',
         }}
-        className={clsx('z-10 inline-block relative text-left text-neutral-900 dark:text-neutral-100 px-2', className)}
+        className={clsx('relative z-10 inline-block px-2 text-left text-neutral-900 dark:text-neutral-100', className)}
         key={currentWord}
       >
         {currentWord.split(' ').map((word, wordIndex) => (

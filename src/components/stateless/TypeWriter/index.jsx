@@ -78,7 +78,7 @@ const TypeWriter = ({
   }, [currentIndex, displayText, isDeleting, speed, deleteSpeed, waitTime, texts, currentTextIndex, loop])
 
   return (
-    <div className={`inline whitespace-pre-wrap tracking-tight ${className}`}>
+    <div className={`inline tracking-tight whitespace-pre-wrap ${className}`}>
       <span>{displayText}</span>
       {showCursor && (
         <motion.span

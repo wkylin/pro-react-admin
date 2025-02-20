@@ -56,7 +56,7 @@ const ImageMouseTrail = ({
       onTouchMove={(e) => handleOnMove(e.touches[0])}
       ref={containerRef}
       className={clsx(
-        'grid place-content-center h-screen w-full bg-white relative overflow-hidden text-slate-900',
+        'relative grid h-screen w-full place-content-center overflow-hidden bg-white text-slate-900',
         className
       )}
     >
@@ -65,7 +65,7 @@ const ImageMouseTrail = ({
           <img
             key={index}
             className={clsx(
-              "object-cover  scale-0 opacity:0 data-[status='active']:scale-100  data-[status='active']:opacity-100 transition-transform data-[status='active']:duration-500 duration-300 data-[status='active']:ease-out-expo  absolute   -translate-y-[50%] -translate-x-[50%] ",
+              "opacity:0 data-[status='active']:ease-out-expo absolute -translate-x-[50%] -translate-y-[50%] scale-0 object-cover transition-transform duration-300 data-[status='active']:scale-100 data-[status='active']:opacity-100 data-[status='active']:duration-500",
               imgClass
             )}
             data-index={index}

@@ -72,7 +72,7 @@ function ValidateButton({
 }>) {
   return (
     <button
-      className="inline-grid border rounded-md size-8 place-content-center border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
+      className="inline-grid size-8 place-content-center rounded-md border border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
       onClick={onClick}
       type="button"
     >
@@ -121,7 +121,7 @@ function DownloadButton({
 
   return (
     <button
-      className="inline-grid border rounded-md size-8 place-content-center border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
+      className="inline-grid size-8 place-content-center rounded-md border border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
       onClick={handleDownloadImage}
       type="button"
     >
@@ -149,7 +149,7 @@ function CopySvgButton({
 
   return (
     <button
-      className="inline-flex items-center gap-1 px-1 text-sm tracking-tight border rounded-md border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
+      className="inline-flex items-center gap-1 rounded-md border border-neutral-500/10 bg-neutral-500/10 px-1 text-sm tracking-tight hover:bg-neutral-500/20"
       onClick={handleCopySvg}
       type="button"
     >
@@ -171,7 +171,7 @@ function CopySvgButton({
 function ClearButton({ onClick }: Readonly<{ onClick: () => void }>) {
   return (
     <button
-      className="inline-grid border rounded-md size-8 place-content-center border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
+      className="inline-grid size-8 place-content-center rounded-md border border-neutral-500/10 bg-neutral-500/10 hover:bg-neutral-500/20"
       onClick={onClick}
       type="button"
     >

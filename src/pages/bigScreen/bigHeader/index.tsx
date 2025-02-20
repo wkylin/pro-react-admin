@@ -29,7 +29,7 @@ const BigHeader = () => {
   }, [])
 
   return (
-    <section style={{ color: '#fff', fontSize: 18 }} className="flex justify-between mb-5">
+    <section style={{ color: '#fff', fontSize: 18 }} className="mb-5 flex justify-between">
       <span>{stateInfo.title}</span>
       <span>{timeStr}</span>
     </section>

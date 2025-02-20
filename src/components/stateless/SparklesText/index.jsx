@@ -69,7 +69,7 @@ const Sparkle = ({ id, x, y, color, delay, scale }) => {
   return (
     <motion.svg
       key={id}
-      className="absolute z-20 pointer-events-none"
+      className="pointer-events-none absolute z-20"
       initial={{ opacity: 0, left: x, top: y }}
       animate={{
         opacity: [0, 1, 0],

@@ -412,7 +412,7 @@ const Home = () => {
           minSize={0.4}
           maxSize={1}
           particleDensity={1200}
-          className="w-full h-full"
+          className="h-full w-full"
           particleColor="#FFFFFF"
         />
       </section>
@@ -626,7 +626,7 @@ const Home = () => {
           width={360}
           height={200}
           minScratchPercentage={70}
-          className="flex items-center justify-center overflow-hidden bg-gray-100 border-2 rounded-2xl"
+          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 bg-gray-100"
         >
           <p className="text-9xl">✨</p>
         </ScratchToReveal>
@@ -709,7 +709,7 @@ const Home = () => {
       <section style={{ position: 'relative', fontSize: 36 }}>
         I build
         <FlipWords className="mx-1 px-4 py-2" words={['creative', 'interactive', 'beautiful', 'modern']} />
-        <span className="block sm:inline text-black">websites and apps.</span>
+        <span className="block text-black sm:inline">websites and apps.</span>
         {/* <AnimateWave /> */}
       </section>
       {/* <section style={{ margin: 20 }}>

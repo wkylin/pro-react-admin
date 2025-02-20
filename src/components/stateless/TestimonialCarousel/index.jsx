@@ -55,7 +55,7 @@ const TestimonialCarousel = () => {
             animate="animate"
             exit="exit"
             variants={variants}
-            className="flex flex-col items-center justify-center w-full"
+            className="flex w-full flex-col items-center justify-center"
             transition={{
               type: 'spring',
               stiffness: 200,
@@ -63,18 +63,18 @@ const TestimonialCarousel = () => {
               duration: 0.5,
             }}
           >
-            <p className="m-0 font-medium tracking-tight text-center text">&quot;{text}&quot;</p>
+            <p className="text m-0 text-center font-medium tracking-tight">&quot;{text}&quot;</p>
             <div className="mx-auto mt-5">
               <div className="flex flex-col items-center justify-center space-x-3">
-                <div className="text-sm font-regular text-gray-900/80">{author}</div>
+                <div className="font-regular text-sm text-gray-900/80">{author}</div>
               </div>
             </div>
           </motion.div>
-          <div className="flex justify-center mt-8">
+          <div className="mt-8 flex justify-center">
             {testimonials.map((_, index) => (
               <motion.div
                 key={index}
-                className="w-1 h-1 mx-1 rounded-full cursor-pointer"
+                className="mx-1 h-1 w-1 cursor-pointer rounded-full"
                 variants={dotVariants}
                 animate={index === currentTestimonial ? 'active' : 'inactive'}
                 onClick={() => setCurrentTestimonial(index)}

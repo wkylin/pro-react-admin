@@ -51,8 +51,8 @@ const FloatingIcon = ({ children, initialX }) => {
 }
 
 export const SocialIcon = ({ icon: Icon, color, ...props }) => (
-  <div className={`p-3 rounded-full ${color} shadow-lg hover:shadow-xl transition-shadow`}>
-    <Icon className="w-6 h-6 text-white" />
+  <div className={`rounded-full p-3 ${color} shadow-lg transition-shadow hover:shadow-xl`}>
+    <Icon className="h-6 w-6 text-white" />
   </div>
 )
 

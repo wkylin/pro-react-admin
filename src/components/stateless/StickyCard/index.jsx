@@ -12,11 +12,11 @@ const StickyCard = ({ cards, children }) => {
               key={card?.id}
               style={{ top: `calc(50px + ${(index + 1) * 30}px)` }}
               className={clsx(
-                'bg-[#0a192f] w-[50vw] flex justify-center rounded-2xl overflow-hidden z-0 after:z-10 after:absolute after:inset-0 after:outline after:-outline-offset-2 after:rounded-2xl after:outline-white/20 px-8 pt-4 after:pointer-events-none sticky m-auto',
+                'sticky z-0 m-auto flex w-[50vw] justify-center overflow-hidden rounded-2xl bg-[#0a192f] px-8 pt-4 after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-2xl after:outline after:-outline-offset-2 after:outline-white/20',
                 animateSlide
               )}
             >
-              <div className="sticky top-9 h-[30vh] animate-wiggle">
+              <div className="animate-wiggle sticky top-9 h-[30vh]">
                 <p className="animate-hue-rotate hue-clip text-gradient text-2xl">Card Item</p>
               </div>
             </div>

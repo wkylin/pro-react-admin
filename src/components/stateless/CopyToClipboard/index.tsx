@@ -19,14 +19,14 @@ const CopyToClipboard = ({ code }: Readonly<{ code: string }>) => {
   return (
     <>
       <button
-        className="relative flex text-base font-normal leading-6 transition-colors duration-150 ease-in-out bg-transparent cursor-pointer size-4 text-zinc-500 dark:text-zinc-400"
+        className="relative flex size-4 cursor-pointer bg-transparent text-base leading-6 font-normal text-zinc-500 transition-colors duration-150 ease-in-out dark:text-zinc-400"
         onClick={copyToClipboard}
         type="button"
       >
         {isCopied ? (
-          <CheckIcon className="block align-middle size-4" />
+          <CheckIcon className="block size-4 align-middle" />
         ) : (
-          <CopyIcon className="block align-middle size-4" />
+          <CopyIcon className="block size-4 align-middle" />
         )}
       </button>
     </>

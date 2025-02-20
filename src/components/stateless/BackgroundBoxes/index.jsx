@@ -28,13 +28,13 @@ export const BoxesCore = ({ className, ...rest }) => {
         transform: `translate(-40%,-60%) skewX(-48deg) skewY(14deg) scale(0.675) rotate(0deg) translateZ(0)`,
       }}
       className={clsx(
-        'absolute left-1/4 p-4 -top-1/4 flex -translate-x-1/2 -translate-y-1/2 w-full h-full z-0',
+        'absolute -top-1/4 left-1/4 z-0 flex h-full w-full -translate-x-1/2 -translate-y-1/2 p-4',
         className
       )}
       {...rest}
     >
       {rows.map((_, i) => (
-        <motion.div key={`row` + i} className="relative w-16 h-8 border-l border-slate-700">
+        <motion.div key={`row` + i} className="relative h-8 w-16 border-l border-slate-700">
           {cols.map((_, j) => (
             <motion.div
               whileHover={{
@@ -45,7 +45,7 @@ export const BoxesCore = ({ className, ...rest }) => {
                 transition: { duration: 1 },
               }}
               key={`col` + j}
-              className="relative w-16 h-8 border-t border-r border-slate-700"
+              className="relative h-8 w-16 border-t border-r border-slate-700"
             >
               {j % 2 === 0 && i % 2 === 0 ? (
                 <svg
@@ -54,7 +54,7 @@ export const BoxesCore = ({ className, ...rest }) => {
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="absolute h-6 w-10 -top-[14px] -left-[22px] text-slate-700 stroke-[1px] pointer-events-none"
+                  className="pointer-events-none absolute -top-[14px] -left-[22px] h-6 w-10 stroke-[1px] text-slate-700"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m6-6H6" />
                 </svg>

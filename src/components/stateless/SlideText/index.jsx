@@ -17,7 +17,7 @@ const SlideText = ({ text = [] }) => {
   }, [titleNumber, titles])
 
   return (
-    <span className="relative pl-4 overflow-hidden text-center">
+    <span className="relative overflow-hidden pl-4 text-center">
       {titles.map((title, index) => (
         <motion.span
           key={index}

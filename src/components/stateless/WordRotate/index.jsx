@@ -25,7 +25,7 @@ const WordRotate = ({
   }, [words, duration])
 
   return (
-    <div className="py-2 overflow-hidden">
+    <div className="overflow-hidden py-2">
       <AnimatePresence mode="wait">
         <motion.span key={words[index]} className={clsx(className)} {...motionProps}>
           {words[index]}

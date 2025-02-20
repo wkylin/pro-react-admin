@@ -70,7 +70,7 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
       <div className="mx-auto w-full text-center">
         <div className="relative h-[260px] overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative min-w-[500px] min-h-[500px]">
+            <div className="relative min-h-[500px] min-w-[500px]">
               <AnimatePresence initial={false}>
                 {visibleLogos.map(({ offset, logo, index }) => (
                   <motion.div
@@ -87,7 +87,7 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
                       width={80}
                       height={80}
                       alt={`Company logo ${index + 1}`}
-                      className=" dark:brightness-200"
+                      className="dark:brightness-200"
                     />
                   </motion.div>
                 ))}
