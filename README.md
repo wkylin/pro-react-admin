@@ -23,10 +23,12 @@
 12. 配置 Sentry，方便日志追踪，及时发现问题
 13. 实现 ErrorBoundary，方便定位问题，避免不可预知的问题导致系统崩溃
 14. 代码分割，组件懒加载，Loading 垂直水平居中
-15. 集成Tailwindcss V4，高度可定制主题，响应式设计友好，灵活布局，提高开发效率
-16. 集成 Bit，跨项目复用组件，支持在多个仓库间隔离和复用代码，简化协作过程，可以共享、维护和同步来自不同项目的隔离组件
-17. 集成 Bookstory, 方便生成组件文档
-18. 更多特性请 fork 项目，相信我，你会有意想不到的收获
+15. 集成单元测试，通过编写全面的测试用例，可以发现代码中的潜在问题和漏洞，确保代码的质量和稳定性
+16. 集成Tailwindcss V4，高度可定制主题，响应式设计友好，灵活布局，提高开发效率
+17. 集成Moton，提供了简洁直观的Api，用于创建流畅、高性能动画，让动画更自自然流畅，方便实现复杂的交互动画
+18. 集成 Bit，跨项目复用组件，支持在多个仓库间隔离和复用代码，简化协作过程，可以共享、维护和同步来自不同项目的隔离组件
+19. 集成 Bookstory, 方便生成组件文档
+20. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
 ## Antd 4.x.x 版本
 
@@ -41,6 +43,9 @@
 5. Antd: v5.x.x [Ant Design](https://ant.design/index-cn)
 6. TypeScript: v5.x.x[TypeScript](https://www.typescriptlang.org/)
 7. Vite: v6.x.x [Vite](https://vite.dev/)
+8. Tailwindcss: v4.x.x[Tailwindcss](https://tailwindcss.com/)
+9. Motion.dev: v12.x.x[Motion.dev](https://motion.dev/)
+10. Testing: v16.x.x[Testing Library React](https://testing-library.com/)
 
 ## Development
 
@@ -204,8 +209,8 @@ npm run dev:faker
 
 ## Docusaurus
 
-1. Github:
-2. Demo:
+1. Github: https://github.com/wkylin/pro-react-admin
+2. Demo: https://pro-react-admin.vercel.app/
 
 ## Snyk
 
@@ -334,7 +339,7 @@ A CSS Module is a CSS file in which all class names and animation names are scop
 
 1. Windi CSS: [Windi CSS](https://windicss.org/)
 
-2. TailWind CSS: [TailWind CSS](https://tailwindcss.com/)
+2. Tailwind CSS: [TailWind CSS](https://tailwindcss.com/)
 
 ## CI/CD 自动化构建
 
