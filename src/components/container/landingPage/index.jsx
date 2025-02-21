@@ -14,8 +14,8 @@ const LandingPage = () => {
       <Button
         className={styles.rollback}
         icon={<ArrowLeftOutlined style={{ fontSize: 18 }} />}
-        type="text"
-        size="large"
+        type='text'
+        size='large'
         onClick={() => navigate('/')}
       >
         Roll Back

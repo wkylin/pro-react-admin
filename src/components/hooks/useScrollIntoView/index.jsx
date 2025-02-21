@@ -26,14 +26,14 @@ const useScrollIntoView = ({ offset = 0 }) => {
       if (shouldScrollY) {
         window.scrollTo({
           top: shouldScrollY ? adjustedTop : scrollTop,
-          behavior: 'smooth',
+          behavior: 'smooth'
         })
       }
 
       if (shouldScrollX) {
         window.scrollTo({
           left: shouldScrollX ? adjustedLeft : scrollLeft,
-          behavior: 'smooth',
+          behavior: 'smooth'
         })
       }
 
@@ -49,7 +49,7 @@ const useScrollIntoView = ({ offset = 0 }) => {
 
   return {
     scrollIntoView,
-    targetRef,
+    targetRef
   }
 }
 
