@@ -15,7 +15,7 @@ const useWebsocket = ({ url, verify }) => {
       { key: 0, value: '正在链接中' },
       { key: 1, value: '已经链接并且可以通讯' },
       { key: 2, value: '连接正在关闭' },
-      { key: 3, value: '连接已关闭或者没有链接成功' },
+      { key: 3, value: '连接已关闭或者没有链接成功' }
     ]
     try {
       ws.current = new WebSocket(url)
@@ -70,7 +70,7 @@ const useWebsocket = ({ url, verify }) => {
     wsData,
     readyState,
     closeWebSocket,
-    reconnect,
+    reconnect
   }
 }
 export default useWebsocket

@@ -10,7 +10,7 @@ const useRippling = () => {
     const { left, top } = e.currentTarget.getBoundingClientRect()
     setCoordinates({
       x: e.clientX - left,
-      y: e.clientY - top,
+      y: e.clientY - top
     })
 
     setTimeout(() => {
@@ -22,7 +22,7 @@ const useRippling = () => {
     x,
     y,
     handleRippleOnClick,
-    isRippling,
+    isRippling
   }
 }
 
@@ -35,7 +35,7 @@ const AnimateRipple = ({ children, onClick, ...rest }) => {
   }
 
   return (
-    <button type="button" onClick={handleClick} className={styles.btn} {...rest}>
+    <button type='button' onClick={handleClick} className={styles.btn} {...rest}>
       <span className={styles.content}>{children}</span>
       {isRippling && (
         <div className={styles['btn-ripple-container']}>
@@ -43,7 +43,7 @@ const AnimateRipple = ({ children, onClick, ...rest }) => {
             className={styles['btn-ripple']}
             style={{
               left: x,
-              top: y,
+              top: y
             }}
           />
         </div>

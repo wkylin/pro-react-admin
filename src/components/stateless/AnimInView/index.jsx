@@ -3,7 +3,7 @@ import { motion, useInView } from 'motion/react'
 
 const defaultVariants = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1 },
+  visible: { opacity: 1 }
 }
 
 const AnimationInView = ({ children, variants = defaultVariants, transition, viewOptions, as = 'div' }) => {
@@ -15,7 +15,7 @@ const AnimationInView = ({ children, variants = defaultVariants, transition, vie
   return (
     <MotionComponent
       ref={ref}
-      initial="hidden"
+      initial='hidden'
       animate={isInView ? 'visible' : 'hidden'}
       variants={variants}
       transition={transition}
