@@ -1,11 +1,11 @@
-import { useState, useEffect, RefObject } from 'react'
+import { useState, useEffect } from 'react'
 
 const useElementViewportPosition = (ref = null, offset = 0) => {
   const [position, setPosition] = useState([0, 0])
 
   useEffect(() => {
     const update = () => {
-      if (!ref || !ref.current) return
+      if (!ref?.current) return
       const pageHeight = document.body.scrollHeight
       const start = ref.current.offsetTop
       const end = start + ref.current.offsetHeight

@@ -20,7 +20,7 @@ const Index = forwardRef((props, ref) => {
   const [searchValue, setSearchValue] = useState('')
   const [loading, setLoading] = useState(false)
   const [expandedKeys, setExpandedKeys] = useState([])
-  const [_selectedKeys, _setSelectedKeys] = useState(selectedKeys || [])
+  const [fixSelectedKeys, setFixSelectedKeys] = useState(selectedKeys || [])
 
   // 展开树
   const handleExpand = (a, b) => {
@@ -59,15 +59,15 @@ const Index = forwardRef((props, ref) => {
     if (!selectedKeys.length) return
     if (selectable) {
       setSelectedKeys(selectedKeys, info)
-      return _setSelectedKeys(selectedKeys, info)
+      return setFixSelectedKeys(selectedKeys, info)
     }
     if (!info) {
       setSelectedKeys(selectedKeys, info)
-      return _setSelectedKeys(selectedKeys, info)
+      return setFixSelectedKeys(selectedKeys, info)
     }
-    if (!info.node.children || !info.node.children.length) {
+    if (!info?.node?.children?.length) {
       setSelectedKeys(selectedKeys, info)
-      return _setSelectedKeys(selectedKeys, info)
+      return setFixSelectedKeys(selectedKeys, info)
     }
     handleExpand(selectedKeys, info)
   }
@@ -166,7 +166,7 @@ const Index = forwardRef((props, ref) => {
               selected = [item.key]
               return true
             }
-            if (item.children && item.children.length) {
+            if (item?.children?.length) {
               return loop(item.children)
             }
           })
@@ -200,7 +200,7 @@ const Index = forwardRef((props, ref) => {
       setTreeList([])
       setTreeData([])
       setSearchValue('')
-      _setSelectedKeys([])
+      setFixSelectedKeys([])
       setExpandedKeys([])
     }
   }, [])
@@ -213,7 +213,7 @@ const Index = forwardRef((props, ref) => {
     getTreeListData,
     expandedKeys,
     setExpandedKeys,
-    setSelectedKeys: _setSelectedKeys,
+    setSelectedKeys: setFixSelectedKeys,
     treeData,
   }))
 
@@ -224,7 +224,7 @@ const Index = forwardRef((props, ref) => {
           <Search placeholder="搜索" onSearch={onSearch} style={{ marginBottom: 10, width: '100%' }} allowClear />
         )}
         <Tree
-          selectedKeys={!isEmpty(selectedKeys) ? selectedKeys : _selectedKeys}
+          selectedKeys={!isEmpty(selectedKeys) ? selectedKeys : fixSelectedKeys}
           expandedKeys={expandedKeys}
           autoExpandParent
           onExpand={handleExpand}

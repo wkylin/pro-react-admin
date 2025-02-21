@@ -7,7 +7,7 @@ import { useState, useRef, useEffect } from 'react'
 
 const useWebsocket = ({ url, verify }) => {
   const ws = useRef(null)
-  const [wsData, setMessage] = useState('')
+  const [wsData, setWsData] = useState('')
   const [readyState, setReadyState] = useState({ key: 0, value: '正在链接中' })
 
   const creatWebSocket = () => {
@@ -31,7 +31,7 @@ const useWebsocket = ({ url, verify }) => {
       }
 
       ws.current.onmessage = (e) => {
-        setMessage(e.data)
+        setWsData(e.data)
       }
     } catch (error) {
       console.log(error)

@@ -7,8 +7,8 @@ const useScrollIntoView = ({ offset = 0 }) => {
   const scrollIntoView = () => {
     if (targetRef.current) {
       const rect = targetRef.current.getBoundingClientRect()
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft
+      const scrollTop = window.scrollX || document.documentElement.scrollTop
+      const scrollLeft = window.scrollY || document.documentElement.scrollLeft
       const elementTop = rect.top + scrollTop
       const elementLeft = rect.left + scrollLeft
 

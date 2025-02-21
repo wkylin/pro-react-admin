@@ -1,5 +1,5 @@
-import React, { ReactNode, useRef } from 'react'
-import { motion, useInView, Variant, Transition, UseInViewOptions } from 'motion/react'
+import React, { useRef } from 'react'
+import { motion, useInView } from 'motion/react'
 
 const defaultVariants = {
   hidden: { opacity: 0 },

@@ -2,7 +2,12 @@ import React from 'react'
 import { FastForward, Rewind } from 'lucide-react'
 const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime }) => {
   // converts the time to format 0:00
-  const getTime = (time) => `${Math.floor(time / 60)}:${`0${Math.floor(time % 60)}`.slice(-2)}`
+  const getTime = (time) => {
+    const minutes = Math.floor(time / 60)
+    const rawSeconds = Math.floor(time % 60)
+    const formattedSeconds = `0${rawSeconds}`.slice(-2)
+    return `${minutes}:${formattedSeconds}`
+  }
 
   return (
     <div className="hidden flex-row items-center sm:flex">

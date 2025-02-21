@@ -65,7 +65,7 @@ function getCookie(name: string): string | null {
   const cookies = document.cookie ? document.cookie.split(';') : []
   for (let c of cookies) {
     c = c.trim()
-    if (c.indexOf(nameEq) === 0) {
+    if (c.startsWith(nameEq)) {
       return decodeURIComponent(c.substring(nameEq.length))
     }
   }

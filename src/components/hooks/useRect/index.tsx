@@ -16,7 +16,7 @@ const getRect = (element: HTMLElement | null): RectResult | null => {
   return element.getBoundingClientRect()
 }
 
-const useRect = (): [RectResult, React.MutableRefObject<HTMLDivElement | null>] => {
+const useRect = (): [RectResult, React.RefObject<HTMLDivElement | null>] => {
   const ref = useRef<HTMLDivElement | null>(null)
   const current = ref.current || null
   const [rect, setRect] = useState(getRect(current))

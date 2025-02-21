@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react'
 const useWindowScroll = () => {
   // 用于存储窗口滚动位置的状态
   const [scroll, setScroll] = useState({
-    x: window.pageXOffset,
-    y: window.pageYOffset,
+    x: window.scrollX,
+    y: window.scrollY,
   })
 
   // 用于更新滚动位置状态的函数
   const handleScroll = () => {
     setScroll({
-      x: window.pageXOffset,
-      y: window.pageYOffset,
+      x: window.scrollX,
+      y: window.scrollY,
     })
   }
 
