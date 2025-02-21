@@ -25,7 +25,7 @@ const SoundBar = () => {
         ))}
       </span>
       <audio src={music} ref={audioRef} loop>
-        <track kind="captions" default />
+        <track kind='captions' default />
       </audio>
     </>
   )

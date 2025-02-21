@@ -8,7 +8,7 @@ const Toggle = ({ children }) => {
   const getChildProps = () => {
     return {
       on,
-      toggle,
+      toggle
     }
   }
   return <>{React.Children.map(children, (child) => React.cloneElement(child, getChildProps()))}</>
