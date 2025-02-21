@@ -11,6 +11,8 @@ import LanguageSwitcher from '@stateless/LanguageSwitcher'
 // import LightSvg from '@assets/svg/light.svg'
 // import DarkSvg from '@assets/svg/dark.svg'
 
+import SoundBar from '@stateless/SoundBar'
+
 import { useProThemeContext } from '@theme/hooks'
 
 import PrimaryNav from '../primaryNav'
@@ -84,6 +86,7 @@ const ProHeader = () => {
         </div>
         <div className={styles.headerRight}>
           <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+            <SoundBar />
             <Switch
               // checkedChildren={<Icon component={LightSvg} />}
               // unCheckedChildren={<Icon component={DarkSvg} />}
