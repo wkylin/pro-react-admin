@@ -5,6 +5,7 @@ import AnimationTabs from '@stateless/AnimationTabs'
 import LogoSlider from '@stateless/LogoSlider'
 import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
 import Footer from '@stateless/Footer'
+import StarBack from '@stateless/StarBackground'
 
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
@@ -85,6 +86,7 @@ const tabs = [
 const ProDemo = () => {
   return (
     <FixTabPanel>
+      <StarBack />
       <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <div className="relative w-full overflow-hidden bg-[#0a192f]">
         <div className="absolute top-0 right-0 h-full w-1/2">

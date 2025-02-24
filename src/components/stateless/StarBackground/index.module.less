@@ -1,0 +1,75 @@
+.stars {
+  --box-shadow: 0 0 10px 1px rgb(255 255 255 / 50%);
+
+  width: 1px;
+  height: 1px;
+  border-radius: 100%;
+  background: transparent;
+  box-shadow: var(--box-shadow);
+  animation: anim-star 50s linear infinite;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    border-radius: 100%;
+    box-shadow: var(--box-shadow);
+    background: transparent;
+  }
+}
+
+.medium {
+  --box-shadow: 0 0 10px 1px rgb(255 255 255 / 50%);
+
+  width: 2px;
+  height: 2px;
+  border-radius: 100%;
+  background: transparent;
+  box-shadow: var(--box-shadow);
+  animation: anim-star 150s linear infinite;
+
+  &::after {
+    content: ' ';
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    border-radius: 100%;
+    box-shadow: var(--box-shadow);
+    background: transparent;
+  }
+}
+
+.big {
+  --box-shadow: 0 0 10px 1px rgb(255 255 255 / 50%);
+
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+  background: transparent;
+  box-shadow: var(--box-shadow);
+  animation: anim-star 30s linear infinite;
+
+  &::after {
+    content: '*';
+    position: absolute;
+    top: 2000px;
+    width: 3px;
+    height: 3px;
+    border-radius: 100%;
+    box-shadow: var(--box-shadow);
+    background: transparent;
+  }
+}
+
+@keyframes anim-star {
+  from {
+    transform: translateY(-2000px);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
