@@ -65,6 +65,7 @@ import DottedStepper from '@stateless/DottedStepper'
 import FlipWords from '@stateless/FlipWords'
 import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
+import AnimText from '@stateless/AnimText'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -326,6 +327,9 @@ const Home = () => {
       </section>
       <section style={{ margin: '20px 0', fontSize: 20 }}>
         <MultiDirectionSlide textLeft="逐光前行，奔赴新程；" textRight="千山过尽，万里星辰！" />
+      </section>
+      <section style={{ margin: '20px 0', fontSize: 20 }}>
+        <AnimText animText="逐光前行，奔赴新程；千山过尽，万里星辰！" />
       </section>
       <section style={{ marginBottom: 15, fontSize: 20, overflow: 'hidden' }}>
         This is something

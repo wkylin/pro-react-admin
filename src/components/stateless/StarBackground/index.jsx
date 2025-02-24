@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styles from './index.module.less'
 // 生成随机阴影值的函数
 const generateBoxShadow = (n) => {
