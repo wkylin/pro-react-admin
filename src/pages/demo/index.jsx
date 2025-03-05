@@ -155,7 +155,7 @@ const ProDemo = () => {
             <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">2000+</span>
           </div>
         </div>
-        <setion></setion>
+        <setion />
       </section>
       <Footer />
     </FixTabPanel>
