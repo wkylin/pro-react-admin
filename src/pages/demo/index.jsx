@@ -131,8 +131,31 @@ const ProDemo = () => {
       <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
         <AnimationTabs tabs={tabs} />
       </div>
+
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
+      <section class="m-10 flex items-center justify-center gap-5">
+        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">200+</span>
+          </div>
+        </div>
+        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">400+</span>
+          </div>
+        </div>
+        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">1200+</span>
+          </div>
+        </div>
+        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">2000+</span>
+          </div>
+        </div>
+      </section>
       <Footer />
     </FixTabPanel>
   )

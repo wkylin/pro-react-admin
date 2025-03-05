@@ -63,7 +63,16 @@ const prodWebpackConfig = merge(common, {
   optimization: {
     minimize: true,
     minimizer: [
-      new CssMinimizerPlugin(),
+      new CssMinimizerPlugin({
+        minimizerOptions: {
+          preset: [
+            'default',
+            {
+              discardComments: { removeAll: true },
+            },
+          ],
+        },
+      }),
       new EsbuildPlugin({
         target: 'es2015',
       }),
