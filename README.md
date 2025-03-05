@@ -30,9 +30,6 @@
 19. 集成 Bookstory, 方便生成组件文档
 20. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
-## Antd 4.x.x 版本
-
-1. 基于 Antd 实现亮白及暗黑两套主题， 请参见 feature-antd4 分支
 
 ## Technology Stack
 
