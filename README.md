@@ -30,7 +30,6 @@
 19. 集成 Bookstory, 方便生成组件文档
 20. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
-
 ## Technology Stack
 
 1. React: v19.x.x [React](https://reactjs.org/)
@@ -189,12 +188,13 @@ npm run dev:faker
    "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
    ```
+
 3. Vercel
    提交后自动部署，预览地址：
    ```
    [https://pro-react-admin.vercel.app/](https://pro-react-admin.vercel.app/)
    ```
-   
+
 ## 架构
 
 ![whiteboard_exported_image](https://github.com/wkylin/pro-react-admin/assets/1208330/c28852c2-7efe-407f-80f8-41d741ef3108)
