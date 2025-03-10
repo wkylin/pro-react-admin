@@ -776,7 +776,7 @@ const Home = () => {
               // transform: 'rotateX(60deg) rotateY(0deg) rotateZ(45deg)'
             }}
           >
-            React
+            React on view
           </div>
         </Marquee>
       </section>
