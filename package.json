@@ -232,7 +232,7 @@
     "@use-gesture/react": "^10.3.1",
     "animate.css": "^4.1.1",
     "antd": "^5.24.2",
-    "axios": "^1.8.1",
+    "axios": "^1.8.2",
     "blueimp-md5": "^2.19.0",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
