@@ -18,6 +18,7 @@
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
+    "prebuild": "rm -rf node_modules && npm install",
     "pre:run": "install-changed",
     "dev": "npm run start",
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development NODE_OPTIONS=--trace-deprecation webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
