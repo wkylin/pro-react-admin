@@ -4,6 +4,7 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
 import LogoSlider from '@stateless/LogoSlider'
 import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
+import GradientTracing from '@stateless/GradientTracing'
 import Footer from '@stateless/Footer'
 import StarBack from '@stateless/StarBackground'
 
@@ -128,34 +129,50 @@ const ProDemo = () => {
       </div>
 
       <LogoSlider companies={companies} />
+
+      <section className="flex flex-row items-center justify-center gap-5">
+        <GradientTracing width={300} height={100} path="M0,50 Q150,0 300,50" />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M100,0 L75,75 L125,75 L50,200 L100,100 L50,100 L100,0"
+          gradientColors={['#F1C40F', '#F1C40F', '#E67E22']}
+        />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M100,100 m0,-75 a75,75 0 1,1 -0.1,0 z"
+          gradientColors={['#7B68EE', '#7B68EE', '#3498DB']}
+        />
+      </section>
+
       <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
         <AnimationTabs tabs={tabs} />
       </div>
 
       <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
 
-      <section class="m-10 flex items-center justify-center gap-5">
-        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">200+</span>
+      <section className="m-10 flex items-center justify-center gap-5">
+        <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">200+</span>
           </div>
         </div>
-        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">400+</span>
+        <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">400+</span>
           </div>
         </div>
-        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">1200+</span>
+        <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">1200+</span>
           </div>
         </div>
-        <div class="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-          <div class="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-            <span class="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">2000+</span>
+        <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
+          <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
+            <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">2000+</span>
           </div>
         </div>
-        <setion></setion>
       </section>
       <Footer />
     </FixTabPanel>
