@@ -156,7 +156,7 @@ const ProDemo = () => {
         <GradientTracing
           width={250}
           height={200}
-          path="M 50,20 L 50,120 L 50,60 L 200,60"
+          path="M 50,20 L 50,60 L 80,80 L 200,60"
           gradientColors={['#FFA07A', '#FFA07A', '#FF6347']}
         />
         <GradientTracing
@@ -170,26 +170,20 @@ const ProDemo = () => {
         <GradientTracing
           width={200}
           height={200}
-          path="M 20,20 L 20,120 L 170,120"
+          path="M 50,20 L 100,20 L 60, 25 L 180, 25"
           gradientColors={['#FF69B4', '#FF69B4', '#8A2BE2']}
         />
         <GradientTracing
           width={200}
           height={200}
-          path="M 150,20 L 150,120 L 20,120"
+          path="M 50,20 L 100,20 L 100,30 L 150, 30"
           gradientColors={['#FF1493', '#FF1493', '#9400D3']}
         />
         <GradientTracing
           width={200}
           height={200}
-          path="M 20,180 L 20,80 L 170,80"
+          path="M 20,30 L 40,30 L 40,10 L 180, 10"
           gradientColors={['#FFA500', '#FFA500', '#FF4500']}
-        />
-        <GradientTracing
-          width={200}
-          height={200}
-          path="M 180,180 L 180,80 L 30,80"
-          gradientColors={['#00BFFF', '#00BFFF', '#1E90FF']}
         />
       </section>
       <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
