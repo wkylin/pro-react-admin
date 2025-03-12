@@ -144,8 +144,54 @@ const ProDemo = () => {
           path="M100,100 m0,-75 a75,75 0 1,1 -0.1,0 z"
           gradientColors={['#7B68EE', '#7B68EE', '#3498DB']}
         />
+        <GradientTracing width={300} height={100} path="M0,50 L75,25 L150,75 L225,25 L300,50" />
       </section>
-
+      <section className="flex flex-row items-center justify-center gap-5">
+        <GradientTracing
+          width={200}
+          height={50}
+          path="M 20,25 L 180,25"
+          gradientColors={['#FF5733', '#FF5733', '#C70039']}
+        />
+        <GradientTracing
+          width={250}
+          height={200}
+          path="M 50,20 L 50,120 L 50,60 L 200,60"
+          gradientColors={['#FFA07A', '#FFA07A', '#FF6347']}
+        />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M 20,20 L 180,180"
+          gradientColors={['#5733FF', '#5733FF', '#C700C7']}
+        />
+      </section>
+      <section className="flex flex-row items-center justify-center gap-5">
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M 20,20 L 20,120 L 170,120"
+          gradientColors={['#FF69B4', '#FF69B4', '#8A2BE2']}
+        />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M 150,20 L 150,120 L 20,120"
+          gradientColors={['#FF1493', '#FF1493', '#9400D3']}
+        />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M 20,180 L 20,80 L 170,80"
+          gradientColors={['#FFA500', '#FFA500', '#FF4500']}
+        />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M 180,180 L 180,80 L 30,80"
+          gradientColors={['#00BFFF', '#00BFFF', '#1E90FF']}
+        />
+      </section>
       <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
         <AnimationTabs tabs={tabs} />
       </div>

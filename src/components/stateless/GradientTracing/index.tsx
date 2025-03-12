@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 
 interface GradientTracingProps {
   width: number
@@ -8,6 +8,7 @@ interface GradientTracingProps {
   gradientColors?: [string, string, string]
   animationDuration?: number
   strokeWidth?: number
+  path: string
 }
 
 const GradientTracing: React.FC<GradientTracingProps> = ({
@@ -17,22 +18,15 @@ const GradientTracing: React.FC<GradientTracingProps> = ({
   gradientColors = ['#2EB9DF', '#2EB9DF', '#9E00FF'],
   animationDuration = 2,
   strokeWidth = 2,
+  path,
 }) => {
   const gradientId = `pulse-${Math.random().toString(36).substring(2, 9)}`
 
   return (
     <div className="relative" style={{ width, height }}>
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} fill="none">
-        <line x1={0} y1={height / 2} x2={width} y2={height / 2} stroke={baseColor} strokeOpacity="0.2" />
-        <line
-          x1={0}
-          y1={height / 2}
-          x2={width}
-          y2={height / 2}
-          stroke={`url(#${gradientId})`}
-          strokeLinecap="round"
-          strokeWidth={strokeWidth}
-        />
+        <path d={path} stroke={baseColor} strokeOpacity="0.2" />
+        <path d={path} stroke={`url(#${gradientId})`} strokeLinecap="round" strokeWidth={strokeWidth} />
         <defs>
           <motion.linearGradient
             animate={{
