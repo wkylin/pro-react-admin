@@ -185,6 +185,12 @@ const ProDemo = () => {
           path="M 20,30 L 40,30 L 40,10 L 180, 10"
           gradientColors={['#FFA500', '#FFA500', '#FF4500']}
         />
+        <GradientTracing
+          width={200}
+          height={200}
+          path="M 10 10 L 90 10 Q 100 50 90 90 C 50 100 10 50 10 10 Z"
+          gradientColors={['#FFA500', '#FFA500', '#FF4500']}
+        />
       </section>
       <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
         <AnimationTabs tabs={tabs} />
