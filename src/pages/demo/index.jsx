@@ -16,6 +16,8 @@ import XuePng from '@assets/images/xue.png'
 
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 
+import styles from './index.module.less'
+
 const companies = [SpringPng, HePng, SongPng, XuePng]
 const columns = [
   {
@@ -219,6 +221,11 @@ const ProDemo = () => {
             <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">2000+</span>
           </div>
         </div>
+      </section>
+      <section className={styles['section-gradient']}>
+        <div className={styles.wave}></div>
+        <div className={styles.wave}></div>
+        <div className={styles.wave}></div>
       </section>
       <Footer />
     </FixTabPanel>
