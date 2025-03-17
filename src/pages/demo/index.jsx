@@ -17,6 +17,7 @@ import XuePng from '@assets/images/xue.png'
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 
 import styles from './index.module.less'
+import ScriptView from '@stateless/ScriptView'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
 const columns = [
@@ -86,9 +87,18 @@ const tabs = [
     ),
   },
 ]
+
+const customCommandMap = {
+  npm: 'npm run shadcn add button',
+  yarn: 'yarn shadcn add button',
+  pnpm: 'pnpm dlx shadcn@latest add button',
+  bun: 'bun x shadcn@latest add button',
+}
+
 const ProDemo = () => {
   return (
     <FixTabPanel>
+      <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
       <StarBack />
       <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <div className="relative w-full overflow-hidden bg-[#0a192f]">
