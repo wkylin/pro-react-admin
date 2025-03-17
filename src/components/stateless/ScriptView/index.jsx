@@ -50,7 +50,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
                   <div key={pm} className="flex items-center">
                     {index > 0 && <div className={`h-4 w-px ${styles['bg-border']}`} aria-hidden="true" />}
                     <span
-                      className={`bg-background hover:bg-background text-primary relative cursor-pointer rounded-none px-2 py-1`}
+                      className="bg-background hover:bg-background text-primary relative cursor-pointer rounded-none px-2 py-1"
                       onClick={() => setPackageManager(pm)}
                     >
                       {pm}

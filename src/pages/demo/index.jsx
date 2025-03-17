@@ -98,7 +98,7 @@ const customCommandMap = {
 const ProDemo = () => {
   return (
     <FixTabPanel>
-      <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
+      <ScriptView showMultiplePackageOptions codeLanguage="shell" commandMap={customCommandMap} />
       <StarBack />
       <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <div className="relative w-full overflow-hidden bg-[#0a192f]">
@@ -233,9 +233,9 @@ const ProDemo = () => {
         </div>
       </section>
       <section className={styles['section-gradient']}>
-        <div className={styles.wave}></div>
-        <div className={styles.wave}></div>
-        <div className={styles.wave}></div>
+        <div className={styles.wave} />
+        <div className={styles.wave} />
+        <div className={styles.wave} />
       </section>
       <Footer />
     </FixTabPanel>
