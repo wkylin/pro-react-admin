@@ -15,9 +15,10 @@ import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
 
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
+import ScriptView from '@stateless/ScriptView'
+import AnimatedList from '@stateless/AnimatedList'
 
 import styles from './index.module.less'
-import ScriptView from '@stateless/ScriptView'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
 const columns = [
@@ -99,6 +100,21 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
+      <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
+        <AnimatedList>
+          {Array.from({ length: 10 }, () => {
+            id: Math.random()
+          })
+            .flat()
+            .map((item, index) => (
+              <div className="flex flex-col items-center justify-center gap-4">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-16 w-100 rounded-full bg-gradient-to-br from-purple-500 to-blue-500" />
+                </div>
+              </div>
+            ))}
+        </AnimatedList>
+      </section>
       <StarBack />
       <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
       <div className="relative w-full overflow-hidden bg-[#0a192f]">
