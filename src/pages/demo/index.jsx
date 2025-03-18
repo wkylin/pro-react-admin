@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Table } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
@@ -17,6 +17,7 @@ import XuePng from '@assets/images/xue.png'
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 import ScriptView from '@stateless/ScriptView'
 import AnimatedList from '@stateless/AnimatedList'
+import { DraggableList, DraggableItem } from '@stateless/DraggableList'
 
 import styles from './index.module.less'
 
@@ -97,6 +98,15 @@ const customCommandMap = {
 }
 
 const ProDemo = () => {
+  const [items, setItems] = useState([
+    { id: '1', content: <DraggableItem>First Item</DraggableItem> },
+    { id: '2', content: <DraggableItem>Second Item</DraggableItem> },
+    { id: '3', content: <DraggableItem>Third Item</DraggableItem> },
+  ])
+  const handleReorder = (newItems) => {
+    setItems(newItems)
+    // Do something with the new order
+  }
   return (
     <FixTabPanel>
       <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
@@ -114,6 +124,9 @@ const ProDemo = () => {
               </div>
             ))}
         </AnimatedList>
+      </section>
+      <section className="flex items-center justify-center gap-5">
+        <DraggableList items={items} onChange={handleReorder} className="w-[600px] max-w-md cursor-move" />
       </section>
       <StarBack />
       <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
