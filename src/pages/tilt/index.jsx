@@ -41,7 +41,7 @@ const ReactTilt = () => (
       <ThreeDCard title="小荷才露尖尖角，早有蜻蜓立上头" backgroundUrl={HePng} imageUrl={MacPng} variant="shine" />
       <ThreeDCard title="不知细叶谁裁出，二月春风似剪刀" backgroundUrl={SpringPng} variant="border" />
       <ThreeDCard title="明月松间照，清泉石上流" backgroundUrl={SongPng} />
-      <ThreeDCard title="柴门闻犬吠，风雪夜归人" backgroundUrl={XuePng} />
+      <ThreeDCard title="柴门闻犬吠，风雪夜归人" backgroundUrl={XuePng} disabled />
     </section>
   </FixTabPanel>
 )

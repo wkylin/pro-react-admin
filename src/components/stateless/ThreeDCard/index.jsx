@@ -108,7 +108,11 @@ const ThreeDCard = ({
     >
       {backgroundUrl && (
         <div
-          className={clsx('absolute inset-0 scale-110 bg-cover bg-center', disabled && 'brightness-75 grayscale')}
+          className={clsx(
+            'absolute inset-0 scale-110 bg-cover bg-center',
+            imageUrl ? 'blur-[1px]' : 'blur-[0]',
+            disabled && 'brightness-75 grayscale-75'
+          )}
           style={{
             backgroundImage: `url(${backgroundUrl})`,
             transform: `
