@@ -77,7 +77,7 @@ const ThreeDCard = ({
     transition: transitionSettings,
     transformOrigin: 'center center',
     filter: disabled ? 'grayscale(1) brightness(0.8)' : 'none',
-    willChange: 'transform',
+    willChange: 'transform'
   }
 
   return (
@@ -89,13 +89,13 @@ const ThreeDCard = ({
         variant === 'border' && [
           'before:absolute before:inset-0 before:z-20 before:rounded-xl before:border-2',
           'before:border-white/20 before:transition-colors before:duration-700',
-          'hover:before:border-white/40',
+          'hover:before:border-white/40'
         ],
         variant === 'shine' && [
           'after:absolute after:inset-0 after:z-20',
           'after:bg-linear-to-br after:from-white/0 after:to-white/20',
           'after:transition-opacity after:duration-700',
-          'hover:after:opacity-100',
+          'hover:after:opacity-100'
         ],
         disabled && 'cursor-not-allowed',
         className
@@ -122,14 +122,14 @@ const ThreeDCard = ({
               scale(${isHovered && !disabled ? 1.15 : 1.1})
             `,
             transition: transitionSettings,
-            willChange: 'transform',
+            willChange: 'transform'
           }}
         />
       )}
 
       {!disabled && (
         <div
-          className="pointer-events-none absolute inset-0 h-full w-full"
+          className='pointer-events-none absolute inset-0 h-full w-full'
           style={{
             background: `linear-gradient(
               ${105 + rotation.x}deg,
@@ -140,13 +140,13 @@ const ThreeDCard = ({
             )`,
             transform: 'translateZ(1px)',
             opacity: isHovered ? 1 : 0,
-            transition: 'opacity 0.5s ease-out',
+            transition: 'opacity 0.5s ease-out'
           }}
         />
       )}
 
       {imageUrl && (
-        <div className="relative h-full w-full">
+        <div className='relative h-full w-full'>
           <img
             src={imageUrl}
             alt={title || 'Card image'}
@@ -163,14 +163,14 @@ const ThreeDCard = ({
                 scale(${isHovered && !disabled ? 1.2 : 1.1})
               `,
               transition: transitionSettings,
-              willChange: 'transform',
+              willChange: 'transform'
             }}
           />
         </div>
       )}
 
       <div
-        className="absolute -bottom-3 z-20 w-full rounded-b-xl bg-linear-to-t from-black/90 via-black/50 to-transparent p-4"
+        className='absolute -bottom-3 z-20 w-full rounded-b-xl bg-linear-to-t from-black/90 via-black/50 to-transparent p-4'
         style={{
           transform: `
             translateZ(50px)
@@ -178,7 +178,7 @@ const ThreeDCard = ({
             translateY(${position.y * -1.5}px)
           `,
           transition: transitionSettings,
-          willChange: 'transform',
+          willChange: 'transform'
         }}
       >
         {title && (
@@ -186,8 +186,8 @@ const ThreeDCard = ({
             className={clsx('text-lg font-bold text-white', disabled && 'text-white/70')}
             style={{
               textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-              transform: `translateZ(25px)`,
-              transition: transitionSettings,
+              transform: 'translateZ(25px)',
+              transition: transitionSettings
             }}
           >
             {title}
@@ -200,7 +200,7 @@ const ThreeDCard = ({
         className={clsx('absolute inset-0 rounded-xl ring-2 ring-white/0', isHovered && !disabled && 'ring-white/20')}
         style={{
           transform: 'translateZ(100px)',
-          transition: 'ring-color 0.5s ease-out',
+          transition: 'ring-color 0.5s ease-out'
         }}
       />
     </div>
