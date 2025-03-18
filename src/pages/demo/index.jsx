@@ -105,19 +105,18 @@ const ProDemo = () => {
   ])
   const handleReorder = (newItems) => {
     setItems(newItems)
-    // Do something with the new order
   }
   return (
     <FixTabPanel>
       <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
       <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
         <AnimatedList>
-          {Array.from({ length: 10 }, () => {
-            id: Math.random()
-          })
+          {Array.from({ length: 10 }, () => ({
+            id: Math.random(),
+          }))
             .flat()
             .map((item, index) => (
-              <div className="flex flex-col items-center justify-center gap-4">
+              <div key={item?.id} className="flex flex-col items-center justify-center gap-4">
                 <div className="flex items-center justify-center gap-4">
                   <div className="h-16 w-100 rounded-full bg-gradient-to-br from-purple-500 to-blue-500" />
                 </div>
