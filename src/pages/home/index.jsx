@@ -69,6 +69,10 @@ import AnimText from '@stateless/AnimText'
 import SlideButton from '@stateless/SlideButton'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
+import SpringPng from '@assets/images/spring.png'
+import HePng from '@assets/images/he.png'
+import SongPng from '@assets/images/song.png'
+import XuePng from '@assets/images/xue.png'
 
 import {
   oneApiChat,
@@ -515,7 +519,8 @@ const Home = () => {
           <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
         </h3>
         <ScrollAnimation>
-          <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" />
+          {/* <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" /> */}
+          <LazyLoadImage src={secondImage} alt="Strawberries" />
         </ScrollAnimation>
       </section>
       {/* <section style={{ marginBottom: 40, fontSize: 36 }}>
@@ -548,15 +553,15 @@ const Home = () => {
       {/* <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
       </section> */}
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
         <AnimateOnScreen.FadeIn>
-          <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
+          <AvatarCard avatar={XuePng} text="Hi, I'm a developer." />
         </AnimateOnScreen.FadeIn>
       </section>
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
         <AnimateOnScreen.FadeUp>
           <img
-            src="https://picsum.photos/360/200.jpg"
+            src={SongPng}
             alt=""
             style={{
               maskImage: `linear-gradient(to top, transparent, black 20%, black 80%, transparent)`,
@@ -564,22 +569,22 @@ const Home = () => {
           />
         </AnimateOnScreen.FadeUp>
       </section>
-      <section style={{ marginBottom: 40, width: 360, height: 200 }}>
+      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
         <AnimateOnScreen.ScaleIn triggerOnce={false}>
           <>
-            <img src="https://picsum.photos/360/200/?blur=2" alt="" />
+            <img src={SpringPng} alt="" />
             <section className={styles['blend-me']}>Mix Blend Mode</section>
           </>
         </AnimateOnScreen.ScaleIn>
       </section>
-      <section style={{ marginBottom: 40, width: 360, height: 200 }}>
+      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
           triggerOnce={true}
         >
           <Zoom>
-            <img src="https://picsum.photos/360/200.jpg" alt="" />
+            <img src={HePng} alt="" />
           </Zoom>
         </AnimateOnScreen.DiyAnimation>
       </section>
@@ -638,29 +643,29 @@ const Home = () => {
           <p className="text-9xl">✨</p>
         </ScratchToReveal>
       </section>
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ margin: 20 }}>
         <AnimateRipple>Click Me</AnimateRipple>
       </section>
 
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ margin: 20 }}>
         <section className={styles.effect}> Hello CSS</section>
       </section>
-      <section style={{ marginBottom: 40 }} className={styles.maskBox}>
+      <section style={{ margin: 20 }} className={styles.maskBox}>
         <section className={styles.watermark}>water mark</section>
         mask
       </section>
-      <section style={{ marginBottom: 40 }}>
+      <section style={{ margin: 20 }}>
         <button className={styles['button']} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
 
-      <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
+      {/* <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
         <div className={styles['circle-1']}></div>
         <div className={styles['circle-2']}></div>
         <div className={styles['circle-3']}></div>
         <div className={styles['circle-4']}></div>
-      </section>
+      </section> */}
 
       <section style={{ margin: 20 }} className={styles.eHElAY}>
         Hi, React!
