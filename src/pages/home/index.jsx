@@ -66,6 +66,7 @@ import FlipWords from '@stateless/FlipWords'
 import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@stateless/AnimText'
+import SlideButton from '@stateless/SlideButton'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 
@@ -663,6 +664,24 @@ const Home = () => {
 
       <section style={{ margin: 20 }} className={styles.eHElAY}>
         Hi, React!
+      </section>
+      <section style={{ margin: 20 }} className="z-30 flex w-full items-center justify-start gap-8">
+        <SlideButton
+          backgroundColor="#0c002b"
+          textColor="#1670f0"
+          borderStartColor="rgba(22, 112, 240, 0.1)"
+          borderEndColor="rgba(22, 112, 240, 0.7)"
+        >
+          Button
+        </SlideButton>
+        <SlideButton
+          backgroundColor="#1a0b2e"
+          textColor="#ff00ff"
+          borderStartColor="rgba(255, 0, 255, 0.1)"
+          borderEndColor="rgba(0, 255, 255, 0.7)"
+        >
+          Button
+        </SlideButton>
       </section>
 
       <section>
