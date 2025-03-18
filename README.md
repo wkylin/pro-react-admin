@@ -30,9 +30,9 @@
 19. 集成 Bookstory, 方便生成组件文档
 20. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
-## Antd 4.x.x 版本
+## Vite构建版本
 
-1. 基于 Antd 实现亮白及暗黑两套主题， 请参见 feature-antd4 分支
+1. 基于Vite 构建， 请参见 feature-vite 分支
 
 ## Technology Stack
 
@@ -192,12 +192,14 @@ npm run dev:faker
    "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
    ```
+
 3. Vercel
    提交后自动部署，预览地址：
+
    ```
    [https://pro-react-admin.vercel.app/](https://pro-react-admin.vercel.app/)
    ```
-   
+
 ## 架构
 
 ![whiteboard_exported_image](https://github.com/wkylin/pro-react-admin/assets/1208330/c28852c2-7efe-407f-80f8-41d741ef3108)
@@ -214,8 +216,9 @@ npm run dev:faker
 
 ## Docusaurus
 
-1. Github: https://github.com/wkylin/pro-react-admin
-2. Demo: https://pro-react-admin.vercel.app/
+1. Github: [https://github.com/wkylin/pro-react-admin](https://github.com/wkylin/pro-react-admin)
+
+2. Demo: [https://pro-react-admin.vercel.app/](https://pro-react-admin.vercel.app/)
 
 ## Snyk
 

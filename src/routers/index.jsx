@@ -33,7 +33,7 @@ const MyCrypto = lazy(() => import('@pages/crypto'))
 const Echarts = lazy(() => import('@pages/echarts'))
 const QrCode = lazy(() => import('@pages/qrGenerate'))
 const PrismRender = lazy(() => import('@pages/prism'))
-const Mermaid = lazy(() => import('@pages/mermaid'))
+// const Mermaid = lazy(() => import('@pages/mermaid'))
 // const DynamicModal = lazy(() => import('@pages/dynamicModal'))
 const BigScreen = lazy(() => import('@pages/bigScreen'))
 // const ReactAmap = lazy(() => import('@pages/reactAmap'))
@@ -158,14 +158,14 @@ const rootRouter = [
       //   auth: false,
       //   element: lazyLoad(ChatGpt),
       // },
-      {
-        index: false,
-        path: 'mermaid',
-        name: 'ChatGPT Mermaid',
-        key: '/mermaid',
-        auth: false,
-        element: lazyLoad(Mermaid),
-      },
+      // {
+      //   index: false,
+      //   path: 'mermaid',
+      //   name: 'ChatGPT Mermaid',
+      //   key: '/mermaid',
+      //   auth: false,
+      //   element: lazyLoad(Mermaid),
+      // },
       {
         index: false,
         path: 'prism',
