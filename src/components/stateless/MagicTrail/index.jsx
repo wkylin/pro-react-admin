@@ -8,7 +8,7 @@ const MagicTrail = ({
   trailLength = 35,
   decay = 0.03,
   smoothing = 0.65,
-  containerRef,
+  containerRef
 }) => {
   const canvasRef = useRef(null)
   const points = useRef([])
@@ -30,7 +30,7 @@ const MagicTrail = ({
       vy: Math.sin(angle) * speed,
       life: 1,
       color,
-      size: Math.random() * 3 + 1,
+      size: Math.random() * 3 + 1
     }
   }
 
@@ -88,7 +88,7 @@ const MagicTrail = ({
           x: mousePos.current.x,
           y: mousePos.current.y,
           age: 0,
-          color: currentColor,
+          color: currentColor
         })
 
         for (let i = 0; i < 3; i++) {
@@ -217,7 +217,7 @@ const MagicTrail = ({
       className={clsx('pointer-events-none absolute inset-0', className)}
       style={{ width: '100%', height: '100%', zIndex: 100 }}
     >
-      <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" />
+      <canvas ref={canvasRef} className='pointer-events-none absolute inset-0 h-full w-full' />
     </div>
   )
 }
