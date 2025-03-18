@@ -109,7 +109,7 @@ const ProDemo = () => {
   }
   return (
     <FixTabPanel>
-      <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
+      <ScriptView showMultiplePackageOptions codeLanguage="shell" commandMap={customCommandMap} />
       <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
         <AnimatedList>
           {Array.from({ length: 10 }, () => {
@@ -262,9 +262,9 @@ const ProDemo = () => {
         </div>
       </section>
       <section className={styles['section-gradient']}>
-        <div className={styles.wave}></div>
-        <div className={styles.wave}></div>
-        <div className={styles.wave}></div>
+        <div className={styles.wave} />
+        <div className={styles.wave} />
+        <div className={styles.wave} />
       </section>
       <Footer />
     </FixTabPanel>
