@@ -400,7 +400,9 @@ const Home = () => {
           overflow: 'hidden',
         }}
       >
-        <Meteors number={40} />
+        <Meteors starCount={30} primaryColor="#6366f1" className="opacity-30" />
+        <Meteors starCount={25} primaryColor="#818cf8" className="opacity-50" />
+        <Meteors starCount={20} primaryColor="#ffffff" className="opacity-70" />
       </section>
       <section
         style={{
