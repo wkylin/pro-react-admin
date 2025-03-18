@@ -16,7 +16,7 @@ const SlideButton = ({
     '--border-end': borderEndColor,
     '--text-color': textColor,
     '--bg-color': backgroundColor,
-    ...style,
+    ...style
   }
 
   return (
@@ -29,10 +29,10 @@ const SlideButton = ({
       style={buttonStyle}
       {...props}
     >
-      <span className="animate-wui-slide-right absolute top-0 left-0 h-[2px] w-full bg-linear-to-r from-[var(--border-start)] to-[var(--border-end)]" />
-      <span className="animate-wui-slide-down absolute top-0 right-0 h-full w-[2px] bg-linear-to-b from-[var(--border-start)] to-[var(--border-end)]" />
-      <span className="animate-wui-slide-left absolute bottom-0 left-0 h-[2px] w-full bg-linear-to-l from-[var(--border-start)] to-[var(--border-end)]" />
-      <span className="animate-wui-slide-up absolute top-0 left-0 h-full w-[2px] bg-linear-to-t from-[var(--border-start)] to-[var(--border-end)]" />
+      <span className='animate-wui-slide-right absolute top-0 left-0 h-[2px] w-full bg-linear-to-r from-[var(--border-start)] to-[var(--border-end)]' />
+      <span className='animate-wui-slide-down absolute top-0 right-0 h-full w-[2px] bg-linear-to-b from-[var(--border-start)] to-[var(--border-end)]' />
+      <span className='animate-wui-slide-left absolute bottom-0 left-0 h-[2px] w-full bg-linear-to-l from-[var(--border-start)] to-[var(--border-end)]' />
+      <span className='animate-wui-slide-up absolute top-0 left-0 h-full w-[2px] bg-linear-to-t from-[var(--border-start)] to-[var(--border-end)]' />
       {children}
     </span>
   )
