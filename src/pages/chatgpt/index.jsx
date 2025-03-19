@@ -217,7 +217,15 @@ const ChatGpt = () => {
         )}
       </h3>
 
-      <section style={{ marginBottom: 15, minHeight: 150, border: '1px solid #eee', borderRadius: 4, padding: 15 }}>
+      <section
+        style={{
+          marginBottom: 15,
+          minHeight: 150,
+          border: '1px solid #eee',
+          borderRadius: 4,
+          padding: 15,
+        }}
+      >
         {/* {readyState === 0 && <h3>Loading...</h3>} */}
         {readyState === 0 && <h3>AI正在理解您的需求...</h3>}
         {/* {apiResult && <section> {apiResult}</section>} */}

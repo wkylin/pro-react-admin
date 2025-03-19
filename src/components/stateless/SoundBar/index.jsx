@@ -19,7 +19,10 @@ const SoundBar = () => {
         {Array.from({ length: 5 }, () => ({ id: Math.random() })).map((item, index) => (
           <span
             key={item.id}
-            style={{ '--i': index, '--state': isPlaying ? 'running' : 'paused' }}
+            style={{
+              '--i': index,
+              '--state': isPlaying ? 'running' : 'paused',
+            }}
             className={styles.line}
           />
         ))}

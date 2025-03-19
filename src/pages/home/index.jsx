@@ -296,7 +296,9 @@ const Home = () => {
 
   const scrollRef = useRef(null)
   const [customElement, setCustomElement] = useState()
-  const { scrollDir, scrollPosition } = useDetectScroll({ target: customElement })
+  const { scrollDir, scrollPosition } = useDetectScroll({
+    target: customElement,
+  })
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -479,7 +481,14 @@ const Home = () => {
           slideMode="drag"
         />
       </section>
-      <section style={{ margin: '20px 0', width: 360, height: 200, background: '#000' }}>
+      <section
+        style={{
+          margin: '20px 0',
+          width: 360,
+          height: 200,
+          background: '#000',
+        }}
+      >
         <SquaresGrid
           speed={0.5}
           squareSize={20}
@@ -488,7 +497,7 @@ const Home = () => {
           hoverFillColor="#222"
         />
       </section>
-      <section className={styles.line}></section>
+      <section className={styles.line} />
       {/* <section className={styles.violetGradient}></section> */}
       {/* <section className={styles.linearGradient}></section>
       <section className={styles.linearGra}></section>
@@ -501,7 +510,14 @@ const Home = () => {
         <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
       </section>
       <LineBordered text="A line bordered text." />
-      <section style={{ display: 'flex', alignItems: 'center', marginTop: 10, marginBottom: 40 }}>
+      <section
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: 10,
+          marginBottom: 40,
+        }}
+      >
         <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
       </section>
       <section style={{ marginBottom: 40, fontSize: 16 }}>
@@ -553,23 +569,44 @@ const Home = () => {
       {/* <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
       </section> */}
-      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
+      <section
+        style={{
+          marginBottom: 40,
+          width: 360,
+          height: 200,
+          overflow: 'hidden',
+        }}
+      >
         <AnimateOnScreen.FadeIn>
           <AvatarCard avatar={XuePng} text="Hi, I'm a developer." />
         </AnimateOnScreen.FadeIn>
       </section>
-      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
+      <section
+        style={{
+          marginBottom: 40,
+          width: 360,
+          height: 200,
+          overflow: 'hidden',
+        }}
+      >
         <AnimateOnScreen.FadeUp>
           <img
             src={SongPng}
             alt=""
             style={{
-              maskImage: `linear-gradient(to top, transparent, black 20%, black 80%, transparent)`,
+              maskImage: 'linear-gradient(to top, transparent, black 20%, black 80%, transparent)',
             }}
           />
         </AnimateOnScreen.FadeUp>
       </section>
-      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
+      <section
+        style={{
+          marginBottom: 40,
+          width: 360,
+          height: 200,
+          overflow: 'hidden',
+        }}
+      >
         <AnimateOnScreen.ScaleIn triggerOnce={false}>
           <>
             <img src={SpringPng} alt="" />
@@ -577,7 +614,14 @@ const Home = () => {
           </>
         </AnimateOnScreen.ScaleIn>
       </section>
-      <section style={{ marginBottom: 40, width: 360, height: 200, overflow: 'hidden' }}>
+      <section
+        style={{
+          marginBottom: 40,
+          width: 360,
+          height: 200,
+          overflow: 'hidden',
+        }}
+      >
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
@@ -590,7 +634,7 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40, display: 'flex' }}>
         <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
-          <section></section>
+          <section />
         </SpotlightCard>
       </section>
       <section style={{ margin: '20px 0', fontSize: 24 }}>
@@ -623,10 +667,18 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 40, fontSize: 18 }}>
         <section>RectResult.</section>
-        width: {parseInt(barRect?.width)} height: {parseInt(barRect?.height)} top: {parseInt(barRect?.top)} bottom:{' '}
-        {parseInt(barRect?.bottom)} right: {parseInt(barRect?.right)} left: {parseInt(barRect?.left)}
+        width: {Number.parseInt(barRect?.width)} height: {Number.parseInt(barRect?.height)} top:{' '}
+        {Number.parseInt(barRect?.top)} bottom: {Number.parseInt(barRect?.bottom)} right:{' '}
+        {Number.parseInt(barRect?.right)} left: {Number.parseInt(barRect?.left)}
       </section>
-      <section style={{ marginBottom: 40, height: 200, width: 360, overflow: 'hidden' }}>
+      <section
+        style={{
+          marginBottom: 40,
+          height: 200,
+          width: 360,
+          overflow: 'hidden',
+        }}
+      >
         <MeshGradientBackground />
       </section>
       <section
@@ -655,7 +707,7 @@ const Home = () => {
         mask
       </section>
       <section style={{ margin: 20 }}>
-        <button className={styles['button']} onClick={fireConfetti}>
+        <button className={styles.button} onClick={fireConfetti}>
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
@@ -765,20 +817,118 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
           <Masonry gutter="10px">
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 100, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 200, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
-            <section style={{ height: 150, width: '100%', border: '1px solid #ccc', background: '#aaa' }}></section>
+            <section
+              style={{
+                height: 100,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 200,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 150,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 150,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 200,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 100,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 200,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 150,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 100,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 150,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 100,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 200,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 150,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
+            <section
+              style={{
+                height: 150,
+                width: '100%',
+                border: '1px solid #ccc',
+                background: '#aaa',
+              }}
+            />
           </Masonry>
         </ResponsiveMasonry>
       </section>

@@ -287,7 +287,9 @@ const ParallaxVert = ({ props }) => {
       <motion.nav
         layout
         className={styles.nav}
-        style={{ position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky' }}
+        style={{
+          position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky',
+        }}
         initial={{ opacity: 1 }}
         animate={{
           opacity: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1,

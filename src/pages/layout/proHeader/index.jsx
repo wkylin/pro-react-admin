@@ -74,7 +74,10 @@ const ProHeader = () => {
   return (
     <Layout.Header
       className={styles.header}
-      style={{ background: colorBgContainer, borderBottom: `1px solid ${colorBorder}` }}
+      style={{
+        background: colorBgContainer,
+        borderBottom: `1px solid ${colorBorder}`,
+      }}
     >
       <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}

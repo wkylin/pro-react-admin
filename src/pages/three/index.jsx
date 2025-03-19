@@ -7,7 +7,13 @@ import styles from './index.module.less'
 
 export default function ReactThree() {
   return (
-    <div style={{ width: '100%', height: 'calc(100vh - 232px)', background: '#12071f' }}>
+    <div
+      style={{
+        width: '100%',
+        height: 'calc(100vh - 232px)',
+        background: '#12071f',
+      }}
+    >
       <h2 className={styles.liner}>React Three Fiber</h2>
       <Canvas camera={{ position: [0, 0, 1] }}>
         <Stars />

@@ -27,12 +27,24 @@ const BlurText = ({ text, delay = 200, className = '' }) => {
   const springs = useSprings(
     words.length,
     words.map((_, i) => ({
-      from: { filter: 'blur(10px)', opacity: 0, transform: 'translate3d(0,-50px,0)' },
+      from: {
+        filter: 'blur(10px)',
+        opacity: 0,
+        transform: 'translate3d(0,-50px,0)',
+      },
       to: inView
         ? async (next) => {
             try {
-              await next({ filter: 'blur(5px)', opacity: 0.5, transform: 'translate3d(0,5px,0)' })
-              await next({ filter: 'blur(0px)', opacity: 1, transform: 'translate3d(0,0,0)' })
+              await next({
+                filter: 'blur(5px)',
+                opacity: 0.5,
+                transform: 'translate3d(0,5px,0)',
+              })
+              await next({
+                filter: 'blur(0px)',
+                opacity: 1,
+                transform: 'translate3d(0,0,0)',
+              })
             } catch (err) {
               console.log('err', err)
             }

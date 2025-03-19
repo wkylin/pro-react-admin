@@ -158,7 +158,14 @@ const handleFetchData = (url, options) => {
 
 export const reqFetch = (
   url,
-  params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: null }
+  params = {
+    method: 'GET',
+    payload: null,
+    headers: null,
+    isShowError: true,
+    timeout: 20000,
+    controller: null,
+  }
 ) => {
   const {
     method = 'GET',

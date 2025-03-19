@@ -104,7 +104,11 @@ const ProSecNav = () => {
             { label: 'Angular', key: '/coupons/edit' },
           ],
         },
-        { label: '后端技术栈', key: '/product', icon: <DeploymentUnitOutlined /> },
+        {
+          label: '后端技术栈',
+          key: '/product',
+          icon: <DeploymentUnitOutlined />,
+        },
       ],
     },
     {
