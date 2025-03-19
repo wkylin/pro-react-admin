@@ -16,7 +16,7 @@ import XuePng from '@assets/images/xue.png'
 
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 import ScriptView from '@stateless/ScriptView'
-import AnimatedList from '@stateless/AnimatedList'
+// import AnimatedList from '@stateless/AnimatedList'
 import { DraggableList, DraggableItem } from '@stateless/DraggableList'
 
 import styles from './index.module.less'
@@ -109,7 +109,7 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
-      <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
+      {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
         <AnimatedList>
           {Array.from({ length: 10 }, () => ({
             id: Math.random(),
@@ -123,7 +123,7 @@ const ProDemo = () => {
               </div>
             ))}
         </AnimatedList>
-      </section>
+      </section> */}
       <section className="flex items-center justify-center gap-5">
         <DraggableList items={items} onChange={handleReorder} className="w-[600px] max-w-md cursor-move" />
       </section>
@@ -261,9 +261,9 @@ const ProDemo = () => {
         </div>
       </section>
       <section className={styles['section-gradient']}>
-        <div className={styles.wave}></div>
-        <div className={styles.wave}></div>
-        <div className={styles.wave}></div>
+        <div className={styles.wave} />
+        <div className={styles.wave} />
+        <div className={styles.wave} />
       </section>
       <Footer />
     </FixTabPanel>
