@@ -317,7 +317,7 @@ const Home = () => {
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
-        <AlternatingText alternateText={['Js', 'Ts', 'Rect', 'Vue']} />.
+        <AlternatingText alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         X岁的你，正处在一个特殊的位置：
