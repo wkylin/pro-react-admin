@@ -6,7 +6,18 @@ import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
 import i18n from './i18n/i18n'
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement)
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement, {
+  onCaughtError: (error) => {
+    console.log('caught error', error)
+  },
+  onUncaughtError: (error) => {
+    console.log('uncaught error', error)
+  },
+  onRecoverableError: (error) => {
+    console.log('recoverable error', error)
+  },
+  identifierPrefix: 'wui',
+})
 
 root.render(
   <I18nextProvider i18n={i18n}>
