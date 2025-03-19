@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[890],{10890:function(e,n,_){_.d(n,{createInfoServices:function(){return c.v}});var c=_(97021),u=_(19369)}}]);

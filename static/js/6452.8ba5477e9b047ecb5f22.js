@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[6452],{6452:function(e,c,_){_.d(c,{createPacketServices:function(){return n.$}});var n=_(71609),a=_(19369)}}]);

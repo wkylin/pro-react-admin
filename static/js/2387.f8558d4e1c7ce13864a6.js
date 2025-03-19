@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[2387],{82387:function(a,n,_){_.d(n,{createGitGraphServices:function(){return c.b}});var c=_(82785),e=_(19369)}}]);

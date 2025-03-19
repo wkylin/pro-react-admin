@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[7723],{57723:function(e,n,_){_.d(n,{createPieServices:function(){return c.f}});var c=_(88685),u=_(19369)}}]);
