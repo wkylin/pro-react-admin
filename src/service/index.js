@@ -21,5 +21,5 @@ export {
   postFetch,
   putFetch,
   deleteFetch,
-  patchFetch,
+  patchFetch
 }

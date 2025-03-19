@@ -21,14 +21,14 @@ const SoundBar = () => {
             key={item.id}
             style={{
               '--i': index,
-              '--state': isPlaying ? 'running' : 'paused',
+              '--state': isPlaying ? 'running' : 'paused'
             }}
             className={styles.line}
           />
         ))}
       </span>
       <audio src={music} ref={audioRef} loop>
-        <track kind="captions" default />
+        <track kind='captions' default />
       </audio>
     </>
   )

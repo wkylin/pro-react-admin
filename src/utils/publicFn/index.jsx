@@ -20,7 +20,7 @@ export const getKeyName = (pathName = '/404') => {
       title: 'Not Found',
       tabKey: '/404',
       element: <Exception404 />,
-      i18nKey: 'Not Found',
+      i18nKey: 'Not Found'
     }
   }
 
@@ -32,7 +32,7 @@ export const getKeyName = (pathName = '/404') => {
     title: name,
     tabKey: key,
     element,
-    i18nKey,
+    i18nKey
   }
 }
 
@@ -75,7 +75,7 @@ export const formatTime = (date, format) => {
     dd: padZero(date.getDate()),
     HH: padZero(date.getHours()),
     mm: padZero(date.getMinutes()),
-    ss: padZero(date.getSeconds()),
+    ss: padZero(date.getSeconds())
   }
 
   return format.replace(/yyyy|MM|dd|HH|mm|ss/g, (match) => map[match])
@@ -134,7 +134,7 @@ export const groupBy = (arr, groupFn) =>
   arr.reduce(
     (grouped, obj) => ({
       ...grouped,
-      [groupFn(obj)]: [...(grouped[groupFn(obj)] || []), obj],
+      [groupFn(obj)]: [...(grouped[groupFn(obj)] || []), obj]
     }),
     {}
   )
@@ -183,7 +183,7 @@ export const openInNewTab = (url) => {
 }
 
 export const range = (start, end, step = 1) => {
-  let output = []
+  const output = []
   if (typeof end === 'undefined') {
     end = start
     start = 0

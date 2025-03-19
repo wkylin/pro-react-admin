@@ -27,15 +27,15 @@ const ProBreadcrumb = () => {
           name: '首页',
           key: '/',
           i18nKey: 'home',
-          isSubMenu: false,
+          isSubMenu: false
         },
         {
           path: '404',
           name: 'Not Found',
           key: '/404',
           i18nKey: 'Not Found',
-          isSubMenu: false,
-        },
+          isSubMenu: false
+        }
       ])
     } else {
       setBreadcrumbList([...routeList])
@@ -49,27 +49,31 @@ const ProBreadcrumb = () => {
   const breadcrumbItem = () =>
     breadcrumbList.map((item, index) => ({
       title:
-        index !== breadcrumbList.length - 1 ? (
-          <span className={styles.breadcrumb} key={item.key}>
-            {item.isSubMenu ? (
-              <Button disabled type="link" style={{ padding: 0 }}>
-                {item.i18nKey ? t(item.i18nKey) : item.name}
-              </Button>
-            ) : (
-              <Button type="link" style={{ padding: 0 }} onClick={() => linkTo(item.key)}>
-                {item.i18nKey ? t(item.i18nKey) : item.name}
-              </Button>
-            )}
-          </span>
-        ) : (
-          <span className={styles.breadcrumb} key={item.key}>
-            {item.i18nKey ? t(item.i18nKey) : item.name}
-          </span>
-        ),
-      key: item.key,
+        index !== breadcrumbList.length - 1
+          ? (
+            <span className={styles.breadcrumb} key={item.key}>
+              {item.isSubMenu
+                ? (
+                  <Button disabled type='link' style={{ padding: 0 }}>
+                    {item.i18nKey ? t(item.i18nKey) : item.name}
+                  </Button>
+                  )
+                : (
+                  <Button type='link' style={{ padding: 0 }} onClick={() => linkTo(item.key)}>
+                    {item.i18nKey ? t(item.i18nKey) : item.name}
+                  </Button>
+                  )}
+            </span>
+            )
+          : (
+            <span className={styles.breadcrumb} key={item.key}>
+              {item.i18nKey ? t(item.i18nKey) : item.name}
+            </span>
+            ),
+      key: item.key
     }))
 
-  return <Breadcrumb separator=">" items={breadcrumbItem()} />
+  return <Breadcrumb separator='>' items={breadcrumbItem()} />
 }
 
 export default ProBreadcrumb
