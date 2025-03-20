@@ -6,6 +6,7 @@ import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlin
 import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage } from '@utils/publicFn'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
+import GradientAnimationText from '@stateless/GradientAnimation'
 // import { ReactComponent as LightSvg } from '@assets/svg/light.svg'
 // import { ReactComponent as DarkSvg } from '@assets/svg/dark.svg'
 // import LightSvg from '@assets/svg/light.svg'
@@ -81,7 +82,7 @@ const ProHeader = () => {
     >
       <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
-        Pro React Admin
+        <GradientAnimationText text="Pro React Admin" />
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>

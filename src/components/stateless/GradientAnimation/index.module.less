@@ -1,0 +1,26 @@
+.package-name {
+  color: transparent;
+  background: linear-gradient(45deg, #ff6347, #ffd700, #32cd32, #1e90ff, #8a2be2);
+  background-size: 400% 400%;
+  background-clip: text;
+  background-clip: text;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.1;
+  animation: gradient-animation 5s ease infinite;
+  filter: drop-shadow(1px 2px 0 #fff);
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 100%;
+  }
+
+  100% {
+    background-position: 0% 0%;
+  }
+}
