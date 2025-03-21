@@ -498,10 +498,7 @@ const Home = () => {
         />
       </section>
       <section className={styles.line} />
-      {/* <section className={styles.violetGradient}></section> */}
-      {/* <section className={styles.linearGradient}></section>
-      <section className={styles.linearGra}></section>
-      <section className={styles.violet}></section> */}
+      <section className={styles.linear} />
 
       {/* <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
