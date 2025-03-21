@@ -53,6 +53,14 @@ const ProHeader = () => {
     },
     {
       key: '3',
+      label: <Space>联 系 我</Space>,
+      icon: <SmileOutlined />,
+      onClick: () => {
+        redirectTo('/contact')
+      },
+    },
+    {
+      key: '4',
       label: <Space>退出登录</Space>,
       icon: <LogoutOutlined />,
       onClick: () => {

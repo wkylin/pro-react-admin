@@ -51,6 +51,7 @@ const NoMatch = lazy(() => import('@stateless/NoMatch'))
 // const ReactGantt = lazy(() => import('@pages/reactGantt'))
 const SandBox = lazy(() => import('@pages/sandBox'))
 const Profile = lazy(() => import('@pages/profile'))
+const Contact = lazy(() => import('@pages/contact'))
 
 const rootRouter = [
   {
@@ -285,6 +286,14 @@ const rootRouter = [
         key: '/profile',
         auth: false,
         element: lazyLoad(Profile),
+      },
+      {
+        index: false,
+        path: 'contact',
+        name: 'Contact',
+        key: '/contact',
+        auth: false,
+        element: lazyLoad(Contact),
       },
       {
         index: false,

@@ -4,13 +4,21 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 const codeString = `const profile = {
-  name: 'wkylin.w',
+  name: 'Wkylin Wang',
   title: 'Full-Stack Developer',
   skills: [
     'React', 'Vue' 'NextJS', 'Redux', 'TypeScript',
     'MySQL', 'MongoDB', 'Docker', 'Express',
     'GraphQL', 'Git',
   ],
+  hobbies: ['Music', 'Travel', 'Film', 'Reading'],
+  languages: ['English', 'Chinese'],
+  vision: {
+    life: 'Colourful',
+    work: 'Successful',
+    love: 'Sweet',
+    family: 'Healthy',
+  },
   hardWorker: true,
   quickLearner: true,
   problemSolver: true,
