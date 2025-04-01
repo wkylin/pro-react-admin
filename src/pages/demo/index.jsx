@@ -119,8 +119,8 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       {/* <OrbitingCirclesDemo /> */}
-      <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
-      <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
+      {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
+      {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
         <AnimatedList>
           {Array.from({ length: 10 }, () => ({
             id: Math.random(),
@@ -134,7 +134,7 @@ const ProDemo = () => {
               </div>
             ))}
         </AnimatedList>
-      </section>
+      </section> */}
       {/* <section className="flex items-center justify-center gap-5">
         <DraggableList items={items} onChange={handleReorder} className="w-[600px] max-w-md cursor-move" />
       </section> */}
