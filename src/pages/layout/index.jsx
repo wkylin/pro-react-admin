@@ -14,7 +14,7 @@ const ProLayout = () => {
   const layoutRef = useRef(null)
   return (
     <Layout className={styles.layout} ref={layoutRef}>
-      {/* <PointerMove /> */}
+      <PointerMove />
       <MagicTrail
         containerRef={layoutRef}
         colors={['#f59e0b', '#ec4899', '#8b5cf6', '#38bdf8', '#4ade80']}
