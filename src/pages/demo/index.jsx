@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Table } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
@@ -7,6 +7,7 @@ import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
 import GradientTracing from '@stateless/GradientTracing'
 import Footer from '@stateless/Footer'
 import StarBack from '@stateless/StarBackground'
+import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
 
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
@@ -97,6 +98,14 @@ const customCommandMap = {
   bun: 'bun x shadcn@latest add button',
 }
 
+const dateDifference = (date1, date2) => {
+  const d1 = new Date(date1)
+  const d2 = new Date(date2)
+  const diffTime = Math.abs(d2 - d1)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays
+}
+
 const ProDemo = () => {
   const [items, setItems] = useState([
     { id: '1', content: <DraggableItem>First Item</DraggableItem> },
@@ -106,8 +115,10 @@ const ProDemo = () => {
   const handleReorder = (newItems) => {
     setItems(newItems)
   }
+
   return (
     <FixTabPanel>
+      <OrbitingCirclesDemo />
       <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
       {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
         <AnimatedList>

@@ -67,6 +67,7 @@ const ProSecNav = () => {
     { label: t('home'), key: '/', icon: <HomeOutlined /> },
     { label: t('demo'), key: '/demo', icon: <GlobalOutlined /> },
     { label: 'Motion', key: '/motion', icon: <QrcodeOutlined /> },
+    { label: 'Business', key: '/business', icon: <FireOutlined /> },
     { label: 'Sand Box', key: '/sandbox', icon: <GlobalOutlined /> },
     { label: 'Big Screen', key: '/big-screen', icon: <FireOutlined /> },
     { label: 'Qr Generate', key: '/qrcode', icon: <QrcodeOutlined /> },
@@ -78,6 +79,7 @@ const ProSecNav = () => {
     { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
     { label: 'Barcode', key: '/barcode', icon: <FireOutlined /> },
     { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
+
     // { label: 'Gantt', key: '/gantt', icon: <QrcodeOutlined /> },
     // { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
     // { label: 'Dynamic', key: '/dynamic', icon: <QrcodeOutlined /> },

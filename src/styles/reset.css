@@ -54,7 +54,6 @@
   --animate-wui-slide-right: wui-slide-right 2s linear infinite;
   --animate-wui-slide-down: wui-slide-down 2s linear infinite;
   --animate-wui-slide-left: wui-slide-left 2s linear infinite;
-  --animate-wui-slide-up: wui-slide-up 2s linear infinite;
 
   @keyframes wui-slide-right {
     0% {
@@ -93,6 +92,20 @@
 
     100% {
       transform: translateY(-100%);
+    }
+  }
+
+  --animate-my-orbit: ui-orbit calc(var(--duration) * 1s) linear infinite;
+
+  @keyframes ui-orbit {
+    0% {
+      transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px))
+        rotate(calc(var(--angle) * -1deg));
+    }
+
+    100% {
+      transform: rotate(calc(var(--angle) * 1deg + 1turn)) translateY(calc(var(--radius) * 1px))
+        rotate(calc(var(--angle) * -1deg - 1turn));
     }
   }
 }

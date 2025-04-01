@@ -538,3 +538,63 @@ object-position: 0 0;
 isolation: isolate;
 z-index: 1;
  */
+
+.itemCircle {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #2d995d;
+}
+
+.itemCircleTail {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #d335be;
+}
+
+.itemCircleTail::before,
+.itemCircle::before {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  opacity: 0.3;
+  border-radius: 50%;
+  background-color: inherit;
+  animation: time-circle-pulse 3s infinite;
+}
+
+@keyframes time-circle-pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+
+  85% {
+    transform: scale(1);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+}

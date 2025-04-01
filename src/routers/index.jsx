@@ -44,6 +44,7 @@ const Print = lazy(() => import('@pages/print'))
 const PostMessage = lazy(() => import('@pages/postmessage'))
 const GeoChart = lazy(() => import('@pages/geoChart'))
 const Motion = lazy(() => import('@pages/motion'))
+const Business = lazy(() => import('@pages/business'))
 const ReactPdf = lazy(() => import('@pages/reactPdf'))
 const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
@@ -102,6 +103,14 @@ const rootRouter = [
         key: '/motion',
         auth: true,
         element: lazyLoad(Motion),
+      },
+      {
+        index: false,
+        path: 'business',
+        name: 'Business',
+        key: '/business',
+        auth: false,
+        element: lazyLoad(Business),
       },
       // {
       //   index: false,

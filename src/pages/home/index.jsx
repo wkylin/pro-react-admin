@@ -497,6 +497,61 @@ const Home = () => {
           hoverFillColor="#222"
         />
       </section>
+      <section
+        style={{
+          margin: '20px 0',
+          width: 360,
+        }}
+      >
+        <section className="relative p-4">
+          <div className={styles.itemCircle} />
+          <svg style={{ height: '10px', width: '100%' }}>
+            <path
+              d="M 0 0 L 5000 0"
+              stroke-miterlimit="10"
+              fill="none"
+              stroke="#595959"
+              stroke-width="5"
+              stroke-dasharray="10"
+              stroke-dashoffset="5000"
+            >
+              <animate
+                attributeName="stroke-dashoffset"
+                values="100;0"
+                dur="3s"
+                calcMode="linear"
+                repeatCount="indefinite"
+              ></animate>
+            </path>
+          </svg>
+          <div className={styles.itemCircleTail} />
+        </section>
+
+        <svg width="100%" height="100%" viewBox="0 0 620 445" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <linearGradient id="paint0_linear" x1="277" y1="0" x2="277" y2="202" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FF7383"></stop>
+            <stop offset="1" stop-color="#2F48EA"></stop>
+          </linearGradient>
+          <rect
+            x="3"
+            y="3"
+            width="610"
+            height="400"
+            stroke="url(#paint0_linear)"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-dasharray="31 31"
+            rx="25"
+          ></rect>
+          <animate
+            attributeName="stroke-dashoffset"
+            values="370;0"
+            dur="3s"
+            calcMode="linear"
+            repeatCount="indefinite"
+          ></animate>
+        </svg>
+      </section>
       <section className={styles.line} />
       <section className={styles.linear} />
 
