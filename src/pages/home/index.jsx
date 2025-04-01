@@ -329,7 +329,7 @@ const Home = () => {
           className="text-gray-500"
           waitTime={1500}
           deleteSpeed={40}
-          cursorChar={'_'}
+          cursorChar="_"
         />
       </section>
       <section style={{ margin: '20px 0', fontSize: 20 }}>
@@ -521,7 +521,7 @@ const Home = () => {
                 dur="3s"
                 calcMode="linear"
                 repeatCount="indefinite"
-              ></animate>
+              />
             </path>
           </svg>
           <div className={styles.itemCircleTail} />
@@ -529,8 +529,8 @@ const Home = () => {
 
         <svg width="100%" height="100%" viewBox="0 0 620 445" fill="none" xmlns="http://www.w3.org/2000/svg">
           <linearGradient id="paint0_linear" x1="277" y1="0" x2="277" y2="202" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FF7383"></stop>
-            <stop offset="1" stop-color="#2F48EA"></stop>
+            <stop stop-color="#FF7383" />
+            <stop offset="1" stop-color="#2F48EA" />
           </linearGradient>
           <rect
             x="3"
@@ -542,14 +542,14 @@ const Home = () => {
             stroke-linecap="round"
             stroke-dasharray="31 31"
             rx="25"
-          ></rect>
+          />
           <animate
             attributeName="stroke-dashoffset"
             values="370;0"
             dur="3s"
             calcMode="linear"
             repeatCount="indefinite"
-          ></animate>
+          />
         </svg>
       </section>
       <section className={styles.line} />
@@ -677,7 +677,7 @@ const Home = () => {
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+          triggerOnce
         >
           <Zoom>
             <img src={HePng} alt="" />
