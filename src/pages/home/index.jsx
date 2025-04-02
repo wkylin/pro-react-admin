@@ -312,8 +312,30 @@ const Home = () => {
 
   const images = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`)
 
+  // 使用 useRef 来引用 SVG 元素
+  const svgRef = useRef(null)
+  const saveSvgAsFile = () => {
+    if (svgRef.current) {
+      // 获取 SVG 元素的 outerHTML
+      const svgContent = svgRef.current.outerHTML
+      // 创建 Blob 对象
+      const blob = new Blob([svgContent], { type: 'image/svg+xml' })
+      // 创建下载链接
+      const url = URL.createObjectURL(blob)
+      // 创建 <a> 元素
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'mySvg.svg'
+      // 模拟点击下载链接
+      a.click()
+      // 释放临时 URL
+      URL.revokeObjectURL(url)
+    }
+  }
+
   return (
     <FixTabPanel ref={scrollRef}>
+      <button onClick={saveSvgAsFile}>保存 SVG</button>
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
@@ -505,7 +527,7 @@ const Home = () => {
       >
         <section className="relative p-4">
           <div className={styles.itemCircle} />
-          <svg style={{ height: '10px', width: '100%' }}>
+          <svg ref={svgRef} style={{ height: '10px', width: '100%' }}>
             <path
               d="M 0 0 L 5000 0"
               stroke-miterlimit="10"
@@ -526,31 +548,6 @@ const Home = () => {
           </svg>
           <div className={styles.itemCircleTail} />
         </section>
-
-        <svg width="100%" height="100%" viewBox="0 0 620 445" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <linearGradient id="paint0_linear" x1="277" y1="0" x2="277" y2="202" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FF7383"></stop>
-            <stop offset="1" stop-color="#2F48EA"></stop>
-          </linearGradient>
-          <rect
-            x="3"
-            y="3"
-            width="610"
-            height="400"
-            stroke="url(#paint0_linear)"
-            stroke-width="5"
-            stroke-linecap="round"
-            stroke-dasharray="31 31"
-            rx="25"
-          ></rect>
-          <animate
-            attributeName="stroke-dashoffset"
-            values="370;0"
-            dur="3s"
-            calcMode="linear"
-            repeatCount="indefinite"
-          ></animate>
-        </svg>
       </section>
       <section className={styles.line} />
       <section className={styles.linear} />

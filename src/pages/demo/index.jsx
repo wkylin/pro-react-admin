@@ -119,7 +119,7 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       {/* <OrbitingCirclesDemo /> */}
-      {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
+      <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
       {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
         <AnimatedList>
           {Array.from({ length: 10 }, () => ({

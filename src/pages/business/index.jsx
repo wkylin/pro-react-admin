@@ -43,63 +43,24 @@ const fixColumns = [
 
 const initialFetchData = [
   {
-    grid: '1634270012',
-    name: '中化学土木工程有限公司',
+    grid: '2316258212',
+    name: '上海徐汇规划建筑设计有限公司',
     list: [],
   },
-  // {
-  //   grid: '304300699',
-  //   name: '上海市建筑装饰工程集团有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '325253024',
-  //   name: '上海市工程建设咨询监理有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '307886242',
-  //   name: '上海市住安建设发展股份有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '828163972',
-  //   name: '中石化上海工程有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '2350706740',
-  //   name: '上海璞奥电子科技有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '804448386',
-  //   name: '上海江崎格力高南奉食品有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '787672126',
-  //   name: '清水建设（中国）有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '137331760',
-  //   name: '信息产业电子第十一设计研究院科技工程股份有限公司',
-  //   list: [],
-  // },
-  // {
-  //   grid: '2416780932',
-  //   name: '上海子绵置业有限公司',
-  //   list: [],
-  // },
+  {
+    grid: '551517222',
+    name: '中交第一公路勘察设计研究院有限公司',
+    list: [],
+  },
 ]
 
 const Business = () => {
   const [fetchData, setFetchData] = useState(initialFetchData)
-
+  const [loading, setLoading] = useState(false)
   useEffect(() => {
     const fetchAllData = async () => {
       const newFetchData = [...fetchData]
+      setLoading(true)
       for (let i = 0; i < newFetchData.length; i++) {
         const item = newFetchData[i]
         try {
@@ -118,11 +79,13 @@ const Business = () => {
               },
             }
           )
+          setLoading(false)
           newFetchData[i] = {
             ...item,
             list: res.data?.list || [],
           }
         } catch (error) {
+          setLoading(false)
           console.error('数据请求失败:', error)
         }
       }
@@ -139,7 +102,7 @@ const Business = () => {
             {index + 1}
             <span>.</span> {item.name} : {item.list.length}
           </section>
-          <Table columns={fixColumns} dataSource={item.list} pagination={false} />
+          <Table loading={loading} columns={fixColumns} dataSource={item.list} pagination={false} />
         </section>
       ))}
     </FixTabPanel>

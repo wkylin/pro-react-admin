@@ -200,7 +200,6 @@ export const reqFetch = (
   const signedPayload = suffix(suffixPayload)
 
   const queryParams = parseToQuery(signedPayload)
-  console.log('queryParams', queryParams)
 
   const fetchUrl = `${baseUrl}${url}?${queryParams}`
 
