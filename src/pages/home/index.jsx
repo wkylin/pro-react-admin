@@ -335,7 +335,7 @@ const Home = () => {
 
   return (
     <FixTabPanel ref={scrollRef}>
-      <button onClick={saveSvgAsFile}>保存 SVG</button>
+      {/* <button onClick={saveSvgAsFile}>保存 SVG</button> */}
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
