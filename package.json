@@ -271,7 +271,7 @@
     "markmap-common": "^0.18.9",
     "markmap-lib": "^0.18.11",
     "markmap-view": "^0.18.10",
-    "mermaid": "^11.4.1",
+    "mermaid": "^11.5.0",
     "motion": "^12.4.7",
     "nanoid": "^5.1.2",
     "node-polyfill-webpack-plugin": "^4.1.0",
