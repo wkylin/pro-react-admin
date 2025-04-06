@@ -255,7 +255,7 @@
     "helmet": "^8.0.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
-    "i18next": "^24.2.2",
+    "i18next": "^24.2.3",
     "i18next-browser-languagedetector": "^8.0.4",
     "i18next-http-backend": "^3.0.2",
     "js-md5": "^0.8.3",
