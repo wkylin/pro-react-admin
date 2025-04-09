@@ -173,7 +173,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jsonlint": "^1.6.3",
-    "koa": "^2.16.0",
+    "koa": "^2.16.1",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^13.0.1",
     "lint-staged": "^15.4.3",
