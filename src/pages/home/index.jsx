@@ -352,7 +352,7 @@ const Home = () => {
           className="text-gray-500"
           waitTime={1500}
           deleteSpeed={40}
-          cursorChar={'_'}
+          cursorChar="_"
         />
       </section>
       <section style={{ margin: '20px 0', fontSize: 20 }}>
@@ -553,7 +553,7 @@ const Home = () => {
                 dur="3s"
                 calcMode="linear"
                 repeatCount="indefinite"
-              ></animate>
+              />
             </path>
           </svg>
           <div className={styles.itemCircleTail} />
@@ -684,7 +684,7 @@ const Home = () => {
         <AnimateOnScreen.DiyAnimation
           from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
           to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+          triggerOnce
         >
           <Zoom>
             <img src={HePng} alt="" />
