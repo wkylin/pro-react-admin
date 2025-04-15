@@ -108,6 +108,35 @@
         rotate(calc(var(--angle) * -1deg - 1turn));
     }
   }
+
+  --animate-move-dot: move-dot 6s linear infinite;
+
+  @keyframes move-dot {
+    0% {
+      top: 10%;
+      right: 10%;
+    }
+
+    25% {
+      top: 10%;
+      right: calc(100% - 40px);
+    }
+
+    50% {
+      top: calc(100% - 23px);
+      right: calc(100% - 45px);
+    }
+
+    75% {
+      top: calc(100% - 23px);
+      right: 10%;
+    }
+
+    100% {
+      top: 10%;
+      right: 10%;
+    }
+  }
 }
 
 .hue-clip {

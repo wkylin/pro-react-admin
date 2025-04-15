@@ -67,6 +67,7 @@ import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@stateless/AnimText'
 import SlideButton from '@stateless/SlideButton'
+import NumberViewCard from '@stateless/NumberViewCard'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 import SpringPng from '@assets/images/spring.png'
@@ -417,6 +418,15 @@ const Home = () => {
         }}
       >
         <IconCloud images={images} />
+      </section>
+      <section
+        style={{
+          marginBottom: 15,
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <NumberViewCard />
       </section>
       <section
         style={{
