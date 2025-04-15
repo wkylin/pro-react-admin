@@ -1,0 +1,1 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[53811],{57084:function(e){function n(u){return{name:"ERB",subLanguage:"xml",contains:[u.COMMENT("<%#","%>"),{begin:"<%[%=-]?",end:"[%-]?%>",subLanguage:"ruby",excludeBegin:!0,excludeEnd:!0}]}}e.exports=n}}]);

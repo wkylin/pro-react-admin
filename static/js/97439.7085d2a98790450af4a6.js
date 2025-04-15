@@ -1,0 +1,17 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[97439],{14974:function(r,n,e){"use strict";var a=e(24994);Object.defineProperty(n,"__esModule",{value:!0}),n.default=void 0;var _=a(e(96540)),t=a(e(52205)),l=function(u){var d=u.children;return _.default.createElement("div",{className:t.default.alignCenter},d)},s=n.default=l},52205:function(r,n,e){"use strict";e.r(n);var a=e(85072),_=e.n(a),t=e(97825),l=e.n(t),s=e(77659),m=e.n(s),u=e(55056),d=e.n(u),f=e(10540),c=e.n(f),v=e(41113),A=e.n(v),i=e(56156),o={};o.styleTagTransform=A(),o.setAttributes=d(),o.insert=m().bind(null,"head"),o.domAPI=l(),o.insertStyleElement=c();var y=_()(i.A,o);n.default=i.A&&i.A.locals?i.A.locals:void 0},56156:function(r,n,e){"use strict";var a=e(71354),_=e.n(a),t=e(76314),l=e.n(t),s=l()(_());s.push([r.id,`.alignCenter--aqiSR {\r
+  width: 100%;\r
+  min-height: 100vh;\r
+  display: flex;\r
+  align-items: center;\r
+  justify-content: center;\r
+}\r
+`,"",{version:3,sources:["webpack://./src/components/stateless/AlignCenter/index.module.less"],names:[],mappings:"AAAA;EACE,WAAW;EACX,iBAAiB;EACjB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB",sourcesContent:[`.alignCenter {\r
+  width: 100%;\r
+  min-height: 100vh;\r
+  display: flex;\r
+  align-items: center;\r
+  justify-content: center;\r
+}\r
+`],sourceRoot:""}]),s.locals={alignCenter:"alignCenter--aqiSR"},n.A=s},71354:function(r){"use strict";r.exports=function(n){var e=n[1],a=n[3];if(!a)return e;if(typeof btoa=="function"){var _=btoa(unescape(encodeURIComponent(JSON.stringify(a)))),t="sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(_),l="/*# ".concat(t," */");return[e].concat([l]).join(`
+`)}return[e].join(`
+`)}},94634:function(r){function n(){return r.exports=n=Object.assign?Object.assign.bind():function(e){for(var a=1;a<arguments.length;a++){var _=arguments[a];for(var t in _)({}).hasOwnProperty.call(_,t)&&(e[t]=_[t])}return e},r.exports.__esModule=!0,r.exports.default=r.exports,n.apply(null,arguments)}r.exports=n,r.exports.__esModule=!0,r.exports.default=r.exports},97439:function(r,n,e){"use strict";var a=e(24994);Object.defineProperty(n,"__esModule",{value:!0}),n.default=void 0;var _=a(e(94634)),t=a(e(96540)),l=e(84976),s=e(33742),m=a(e(14974)),u=e(23311),d=s.Layout.Content,f={labelCol:{span:8},wrapperCol:{span:16}},c={wrapperCol:{offset:8,span:16}},v=function(){var o=(0,l.useNavigate)(),y=function(E){o(E)},C=s.theme.useToken(),M=C.token.colorBgContainer,O=function(E){var D=E.username;(0,u.setLocalStorage)("token",{token:D}),y("/")},g=function(E){};return t.default.createElement(s.Layout,{style:{height:"100%"}},t.default.createElement(d,{style:{height:"100%",background:M}},t.default.createElement(m.default,null,t.default.createElement(s.Form,(0,_.default)({},f,{name:"basic",initialValues:{remember:!0,username:"wkylin.w",password:"wkylin.w"},onFinish:O,onFinishFailed:g}),t.default.createElement(s.Form.Item,{label:"Username",name:"username",rules:[{required:!0,message:"Please input your username!"}]},t.default.createElement(s.Input,null)),t.default.createElement(s.Form.Item,{label:"Password",name:"password",rules:[{required:!0,message:"Please input your password!"}]},t.default.createElement(s.Input.Password,null)),t.default.createElement(s.Form.Item,(0,_.default)({},c,{name:"remember",valuePropName:"checked"}),t.default.createElement(s.Checkbox,null,"Remember me")),t.default.createElement(s.Form.Item,c,t.default.createElement(s.Button,{type:"primary",htmlType:"submit"}," ","Sign in"))))))},A=n.default=v}}]);

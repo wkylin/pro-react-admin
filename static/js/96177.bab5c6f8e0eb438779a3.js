@@ -1,0 +1,17 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[96177],{14974:function(a,n,e){"use strict";var r=e(24994);Object.defineProperty(n,"__esModule",{value:!0}),n.default=void 0;var _=r(e(96540)),t=r(e(52205)),l=function(d){var i=d.children;return _.default.createElement("div",{className:t.default.alignCenter},i)},s=n.default=l},52205:function(a,n,e){"use strict";e.r(n);var r=e(85072),_=e.n(r),t=e(97825),l=e.n(t),s=e(77659),m=e.n(s),d=e(55056),i=e.n(d),c=e(10540),E=e.n(c),A=e(41113),C=e.n(A),u=e(56156),o={};o.styleTagTransform=C(),o.setAttributes=i(),o.insert=m().bind(null,"head"),o.domAPI=l(),o.insertStyleElement=E();var y=_()(u.A,o);n.default=u.A&&u.A.locals?u.A.locals:void 0},56156:function(a,n,e){"use strict";var r=e(71354),_=e.n(r),t=e(76314),l=e.n(t),s=l()(_());s.push([a.id,`.alignCenter--aqiSR {\r
+  width: 100%;\r
+  min-height: 100vh;\r
+  display: flex;\r
+  align-items: center;\r
+  justify-content: center;\r
+}\r
+`,"",{version:3,sources:["webpack://./src/components/stateless/AlignCenter/index.module.less"],names:[],mappings:"AAAA;EACE,WAAW;EACX,iBAAiB;EACjB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB",sourcesContent:[`.alignCenter {\r
+  width: 100%;\r
+  min-height: 100vh;\r
+  display: flex;\r
+  align-items: center;\r
+  justify-content: center;\r
+}\r
+`],sourceRoot:""}]),s.locals={alignCenter:"alignCenter--aqiSR"},n.A=s},71354:function(a){"use strict";a.exports=function(n){var e=n[1],r=n[3];if(!r)return e;if(typeof btoa=="function"){var _=btoa(unescape(encodeURIComponent(JSON.stringify(r)))),t="sourceMappingURL=data:application/json;charset=utf-8;base64,".concat(_),l="/*# ".concat(t," */");return[e].concat([l]).join(`
+`)}return[e].join(`
+`)}},94634:function(a){function n(){return a.exports=n=Object.assign?Object.assign.bind():function(e){for(var r=1;r<arguments.length;r++){var _=arguments[r];for(var t in _)({}).hasOwnProperty.call(_,t)&&(e[t]=_[t])}return e},a.exports.__esModule=!0,a.exports.default=a.exports,n.apply(null,arguments)}a.exports=n,a.exports.__esModule=!0,a.exports.default=a.exports},96177:function(a,n,e){"use strict";var r=e(24994);Object.defineProperty(n,"__esModule",{value:!0}),n.default=void 0;var _=r(e(94634)),t=r(e(96540)),l=e(84976),s=e(33742),m=r(e(14974)),d=s.Layout.Content,i={labelCol:{span:8},wrapperCol:{span:16}},c={wrapperCol:{offset:8,span:16}},E=function(){var u=(0,l.useNavigate)(),o=function(v){u(v)},y=s.theme.useToken(),P=y.token.colorBgContainer,M=function(v){},O=function(v){};return t.default.createElement(s.Layout,{style:{height:"100%"}},t.default.createElement(d,{style:{height:"100%",background:P}},t.default.createElement(m.default,null,t.default.createElement(s.Form,(0,_.default)({},i,{name:"basic",initialValues:{remember:!0},onFinish:M,onFinishFailed:O}),t.default.createElement(s.Form.Item,{label:"Username",name:"username",rules:[{required:!0,message:"Please input your username!"}]},t.default.createElement(s.Input,null)),t.default.createElement(s.Form.Item,{label:"Password",name:"password",rules:[{required:!0,message:"Please input your password!"}]},t.default.createElement(s.Input.Password,null)),t.default.createElement(s.Form.Item,(0,_.default)({},c,{name:"remember",valuePropName:"checked"}),t.default.createElement(s.Checkbox,null,"Remember me")),t.default.createElement(s.Form.Item,c,t.default.createElement(s.Button,{type:"primary",onClick:function(){return o("/")}},"Sign up"))))))},A=n.default=E}}]);

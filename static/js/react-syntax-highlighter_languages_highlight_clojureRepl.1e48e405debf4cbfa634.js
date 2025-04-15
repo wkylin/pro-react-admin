@@ -1,0 +1,1 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[45253],{63929:function(e){function n(a){return{name:"Clojure REPL",contains:[{className:"meta",begin:/^([\w.-]+|\s*#_)?=>/,starts:{end:/$/,subLanguage:"clojure"}}]}}e.exports=n}}]);

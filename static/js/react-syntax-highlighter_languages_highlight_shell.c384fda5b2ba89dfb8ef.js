@@ -1,0 +1,1 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[30464],{32117:function(s){function e(a){return{name:"Shell Session",aliases:["console"],contains:[{className:"meta",begin:/^\s{0,3}[/~\w\d[\]()@-]*[>%$#]/,starts:{end:/[^\\](?=\s*$)/,subLanguage:"bash"}}]}}s.exports=e}}]);
