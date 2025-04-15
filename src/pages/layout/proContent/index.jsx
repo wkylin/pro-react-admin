@@ -3,7 +3,8 @@ import { Layout, FloatButton, theme, Space } from 'antd'
 import { useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
-import { useProTabContext } from '@src/components/hooks/proTabsContext'
+import { useProTabContext } from '@hooks/proTabsContext'
+import ClockFace from '@stateless/ClockFace'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
@@ -47,7 +48,10 @@ const ProContent = () => {
   return (
     <Layout className={styles.layout} id="fullScreen">
       <Header className="layout-header" style={{ background: colorBgLayout }}>
-        <ProBreadcrumb />
+        <section className="flex items-center justify-between">
+          <ProBreadcrumb />
+          <ClockFace />
+        </section>
       </Header>
       <Content className="layout-content" id="fullScreenContent" style={{ background: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
