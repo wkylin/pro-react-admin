@@ -19,7 +19,7 @@ import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 import ScriptView from '@stateless/ScriptView'
 import AnimatedList from '@stateless/AnimatedList'
 import { DraggableList, DraggableItem } from '@stateless/DraggableList'
-
+import FixCarousel from '@stateless/FixCarouse'
 import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
@@ -118,6 +118,7 @@ const ProDemo = () => {
 
   return (
     <FixTabPanel>
+      <FixCarousel />
       {/* <OrbitingCirclesDemo /> */}
       {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
       {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
