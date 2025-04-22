@@ -4,7 +4,7 @@ import { ChevronRight, ChevronLeft } from 'lucide-react'
 
 const mockData = Array.from({ length: 30 }, (_, i) => ({
   name: `Item ${i + 1}`,
-  category: ['A', 'B', 'C'][i % 3],
+  category: ['A', 'B', 'C'][i % 3]
 }))
 
 const FixCarousel = ({ tradeList = [] }) => {
@@ -16,7 +16,7 @@ const FixCarousel = ({ tradeList = [] }) => {
     { label: '全部', value: 'all' },
     { label: '分类 A', value: 'A' },
     { label: '分类 B', value: 'B' },
-    { label: '分类 C', value: 'C' },
+    { label: '分类 C', value: 'C' }
   ]
 
   const filterData = () => {
@@ -53,56 +53,58 @@ const FixCarousel = ({ tradeList = [] }) => {
   }, [selectedFilter, data])
 
   return (
-    <div className="relative mx-auto w-full max-w-6xl">
-      <div className="mb-4 flex justify-end">
+    <div className='relative mx-auto w-full max-w-6xl'>
+      <div className='mb-4 flex justify-end'>
         <Select
           value={selectedFilter}
           onChange={setSelectedFilter}
-          className="w-[240px]"
-          placeholder="请选择分类"
+          className='w-[240px]'
+          placeholder='请选择分类'
           options={filters}
         />
       </div>
-      <div className="relative flex items-center justify-between">
-        <Button className="cursor-pointer rounded-full" onClick={prevPage} disabled={currentPage === 0} shape="circle">
+      <div className='relative flex items-center justify-between'>
+        <Button className='cursor-pointer rounded-full' onClick={prevPage} disabled={currentPage === 0} shape='circle'>
           <ChevronLeft />
         </Button>
-        <div className="relative mx-4 flex-grow overflow-hidden">
+        <div className='relative mx-4 flex-grow overflow-hidden'>
           <div
-            className="flex transition-transform duration-300 ease-in-out"
+            className='flex transition-transform duration-300 ease-in-out'
             style={{ transform: `translateX(-${currentPage * 100}%)` }}
           >
-            {paginatedData.length === 0 ? (
-              <div className="w-full text-center text-gray-500">暂无数据</div>
-            ) : (
-              <>
-                {paginatedData.map((page, pageIndex) => (
-                  <div key={pageIndex} className="flex min-w-full flex-wrap justify-center">
-                    {page.map((item, itemIndex) => (
-                      <div key={itemIndex} className="w-1/3 p-2">
-                        <div className="cus-bg mx-auto rounded-md border border-sky-500 p-4 text-center shadow-md">
-                          <div className="mb-2 text-xl text-sky-500">{item.name}</div>
-                          <div className="text-gray-500">{item.category}</div>
+            {paginatedData.length === 0
+              ? (
+                <div className='w-full text-center text-gray-500'>暂无数据</div>
+                )
+              : (
+                <>
+                  {paginatedData.map((page, pageIndex) => (
+                    <div key={pageIndex} className='flex min-w-full flex-wrap justify-center'>
+                      {page.map((item, itemIndex) => (
+                        <div key={itemIndex} className='w-1/3 p-2'>
+                          <div className='cus-bg mx-auto rounded-md border border-sky-500 p-4 text-center shadow-md'>
+                            <div className='mb-2 text-xl text-sky-500'>{item.name}</div>
+                            <div className='text-gray-500'>{item.category}</div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </>
-            )}
+                      ))}
+                    </div>
+                  ))}
+                </>
+                )}
           </div>
         </div>
         <Button
-          className="cursor-pointer rounded-full"
+          className='cursor-pointer rounded-full'
           onClick={nextPage}
           goToPage
           disabled={currentPage === totalPages - 1 || data.length === 0}
-          shape="circle"
+          shape='circle'
         >
           <ChevronRight />
         </Button>
       </div>
-      <div className="mt-4 flex justify-center gap-4 space-x-4">
+      <div className='mt-4 flex justify-center gap-4 space-x-4'>
         {Array.from({ length: totalPages }).map((_, index) => (
           <button
             key={index}
@@ -110,7 +112,7 @@ const FixCarousel = ({ tradeList = [] }) => {
               currentPage === index ? 'bg-blue-600/80' : 'bg-white'
             }`}
             onClick={() => index}
-          ></button>
+          />
         ))}
       </div>
     </div>
