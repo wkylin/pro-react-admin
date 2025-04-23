@@ -12,6 +12,7 @@ import GradientAnimationText from '@stateless/GradientAnimation'
 // import LightSvg from '@assets/svg/light.svg'
 // import DarkSvg from '@assets/svg/dark.svg'
 
+import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
 
 import { useProThemeContext } from '@theme/hooks'
@@ -90,6 +91,7 @@ const ProHeader = () => {
     >
       <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
+        <img src={Logo} alt="logo" />
         <GradientAnimationText text="Pro React Admin" />
       </div>
       <div className={styles.headerMeta}>
