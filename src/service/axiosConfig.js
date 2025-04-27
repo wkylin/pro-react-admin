@@ -5,8 +5,8 @@ const axiosInstance = axios.create({
   baseURL: process.env.APP_BASE_URL || '', // Default base URL
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 })
 
 // Request interceptor
@@ -72,7 +72,7 @@ export const downloadFile = async (url, data, onDownloadProgress, setProgress, s
       method: 'POST',
       url: process.env.APP_BASE_URL + url,
       responseType: 'blob',
-      data: data,
+      data,
       onDownloadProgress: (progressEvent) => {
         if (progressEvent.lengthComputable) {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -83,7 +83,7 @@ export const downloadFile = async (url, data, onDownloadProgress, setProgress, s
         if (onDownloadProgress) {
           onDownloadProgress(progressEvent)
         }
-      },
+      }
     })
     setProgressStatus('success')
     saveFile(response.data, filename)
