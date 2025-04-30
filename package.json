@@ -18,6 +18,7 @@
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
+    "devtools": "react-devtools",
     "prebuild": "rm -rf node_modules && npm install",
     "pre:run": "install-changed",
     "dev": "npm run start",
