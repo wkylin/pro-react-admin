@@ -284,7 +284,7 @@
     "qrcode": "^1.5.4",
     "qs": "^6.14.0",
     "query-string": "^9.1.1",
-    "react": "^19.0.0",
+    "react": "^19.1.0",
     "react-canvas-confetti": "^2.0.7",
     "react-countup": "^6.5.3",
     "react-css-theme-switcher": "^0.3.0",
