@@ -7,7 +7,8 @@ import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
 import GradientTracing from '@stateless/GradientTracing'
 import Footer from '@stateless/Footer'
 import StarBack from '@stateless/StarBackground'
-import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
+// import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
+import FixTabs from '@stateless/FixTabs'
 
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
@@ -16,9 +17,9 @@ import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
 
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
-import ScriptView from '@stateless/ScriptView'
-import AnimatedList from '@stateless/AnimatedList'
-import { DraggableList, DraggableItem } from '@stateless/DraggableList'
+// import ScriptView from '@stateless/ScriptView'
+// import AnimatedList from '@stateless/AnimatedList'
+// import { DraggableList, DraggableItem } from '@stateless/DraggableList'
 import FixCarousel from '@stateless/FixCarouse'
 import styles from './index.module.less'
 
@@ -107,17 +108,18 @@ const dateDifference = (date1, date2) => {
 }
 
 const ProDemo = () => {
-  const [items, setItems] = useState([
-    { id: '1', content: <DraggableItem>First Item</DraggableItem> },
-    { id: '2', content: <DraggableItem>Second Item</DraggableItem> },
-    { id: '3', content: <DraggableItem>Third Item</DraggableItem> },
-  ])
-  const handleReorder = (newItems) => {
-    setItems(newItems)
-  }
+  // const [items, setItems] = useState([
+  //   { id: '1', content: <DraggableItem>First Item</DraggableItem> },
+  //   { id: '2', content: <DraggableItem>Second Item</DraggableItem> },
+  //   { id: '3', content: <DraggableItem>Third Item</DraggableItem> },
+  // ])
+  // const handleReorder = (newItems) => {
+  //   setItems(newItems)
+  // }
 
   return (
     <FixTabPanel>
+      <FixTabs />
       <FixCarousel />
       {/* <OrbitingCirclesDemo /> */}
       {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
