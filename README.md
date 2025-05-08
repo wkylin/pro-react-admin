@@ -431,7 +431,7 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     listen       8081;
     #server_name  localhost;
     server_name  www.pro.react.admin.com;
-
+    # 静态资源
     location / {
         root   /usr/local/var/www/pro-react-admin;
         index  index.html index.htm;
@@ -440,10 +440,27 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
         add_header Cache-Control no-cache;
         # proxy_pass http://localhost:3000;
     }
-    # 接口转发，如果需要的话
-    #location ~ ^/api {
-    #  proxy_pass http://www.wkylin.com;
-    #}
+    # API代理
+    location /api/ {
+        proxy_pass https://api.example.com/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # 允许跨域配置
+        add_header Access-Control-Allow-Origin $http_origin;
+        add_header Access-Control-Allow-Methods 'GET, POST, PUT, DELETE, OPTIONS';
+        add_header Access-Control-Allow-Headers 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
+        add_header Access-Control-Allow-Credentials 'true';
+        
+        if ($request_method = 'OPTIONS') {
+            add_header Access-Control-Max-Age 86400;
+            add_header Content-Length 0;
+            add_header Content-Type text/plain;
+            return 204;
+        }
+    }
     location @rewrites {
       rewrite ^(.+)$ /index.html break;
     }
