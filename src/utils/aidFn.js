@@ -484,9 +484,9 @@ export const exportFile = (res, fileName) => {
   if (res?.headers['content-type']?.indexOf('application/json') !== -1) {
     return
   }
-  const disposition =
-    (res.headers && res.headers['content-disposition']) || `attachment;filename=${fileName || 'file'}.xlsx`
-  const disName = decodeURI(disposition?.split('=')[1].replace(/'/g, '')).replace(/"/g, '').replace("utf-8''", '') || ''
+  const disposition = res.headers?.['content-disposition'] || `attachment;filename=${fileName || 'file'}.xlsx`
+  const disName =
+    decodeURI(disposition.split('=')[1].replace(/'/g, '').replace(/UTF-8/g, '').replace(/utf-8/g, '')) || ''
 
   const fileType = getFileType(res.data, fileName || disName)
   const blob = new Blob([res.data], { type: fileType })
