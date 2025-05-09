@@ -9,6 +9,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
 // const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const ESLintWebpackPlugin = require('eslint-webpack-plugin')
+const { codeInspectorPlugin } = require('code-inspector-plugin')
 const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -69,6 +70,9 @@ const config = {
   plugins: [
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),
+    }),
+    codeInspectorPlugin({
+      bundler: 'webpack',
     }),
     new HtmlWebpackPlugin({
       title: isDev ? 'Pro React Dev' : 'Pro React Admin',

@@ -133,6 +133,7 @@
     "child_process": "^1.0.2",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
+    "code-inspector-plugin": "^0.20.10",
     "commitizen": "^4.3.1",
     "compression-webpack-plugin": "^11.1.0",
     "concurrently": "^9.1.2",
