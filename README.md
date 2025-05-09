@@ -447,13 +447,11 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
         # 允许跨域配置
         add_header Access-Control-Allow-Origin $http_origin;
         add_header Access-Control-Allow-Methods 'GET, POST, PUT, DELETE, OPTIONS';
         add_header Access-Control-Allow-Headers 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
         add_header Access-Control-Allow-Credentials 'true';
-        
         if ($request_method = 'OPTIONS') {
             add_header Access-Control-Max-Age 86400;
             add_header Content-Length 0;
