@@ -226,7 +226,7 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.23.0",
-    "@ant-design/icons": "^5.6.1",
+    "@ant-design/icons": "^6.0.0",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@number-flow/react": "^0.5.5",
@@ -257,7 +257,7 @@
     "helmet": "^8.0.0",
     "html-to-image": "^1.11.13",
     "html2canvas": "^1.4.1",
-    "i18next": "^24.2.2",
+    "i18next": "^24.2.3",
     "i18next-browser-languagedetector": "^8.0.4",
     "i18next-http-backend": "^3.0.2",
     "js-md5": "^0.8.3",
