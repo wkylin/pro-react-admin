@@ -8,9 +8,6 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
-// const CompressionWebpackPlugin = require('compression-webpack-plugin')
-// const SentryWebpackPlugin = require('@sentry/webpack-plugin')
-
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const { EsbuildPlugin } = require('esbuild-loader')
 
@@ -78,35 +75,23 @@ const prodWebpackConfig = merge(common, {
       maxAsyncRequests: 30,
       maxInitialRequests: 30,
       cacheGroups: {
-        // 框架代码分离
-        react: {
-          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-          name: 'react',
-          chunks: 'all',
-          priority: 20,
-        },
-        // Ant Design分离
-        antd: {
-          test: /[\\/]node_modules[\\/](@ant-design|antd)[\\/]/,
-          name: 'antd',
-          chunks: 'all',
-          priority: 15,
-        },
-        // 其他第三方库
         vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
+          test: regVendor,
+          name: 'vendor',
+          minChunks: 1,
           priority: 10,
-          minChunks: 2,
-        },
-        // 公共代码
-        common: {
-          name: 'common',
-          minChunks: 2,
+          enforce: true,
           chunks: 'all',
-          priority: 5,
-          reuseExistingChunk: true,
+        },
+        react: {
+          test(module) {
+            return module.resource && module.resource.includes('node_modules/react')
+          },
+          chunks: 'initial',
+          filename: 'react.[contenthash].js',
+          priority: 1,
+          maxInitialRequests: 2,
+          minChunks: 1,
         },
       },
     },
@@ -120,16 +105,5 @@ const prodWebpackConfig = merge(common, {
     maxAssetSize: 512000,
   },
 })
-
-// if (useSentryMap) {
-//   prodWebpackConfig.plugins.push(
-//     new SentryWebpackPlugin({
-//       release: packageJson.version,
-//       include: path.join(__dirname, '../dist/static/js'),
-//       configFile: '../.sentryclirc',
-//       urlPrefix: '~/static/js',
-//     })
-//   )
-// }
 
 module.exports = prodWebpackConfig
