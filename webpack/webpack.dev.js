@@ -10,7 +10,7 @@ const devProxy = require('./dev.proxy')
 const devWebpackConfig = merge(common, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
-  cache: { type: 'memory' },
+  cache: { type: 'filesystem' },
   devServer: {
     allowedHosts: 'all',
     historyApiFallback: true,
@@ -36,23 +36,6 @@ const devWebpackConfig = merge(common, {
   //   poll: 1000,
   //   ignored: /node_modules/,
   // },
-  module: {
-    rules: [
-      {
-        test: /\.(js|ts|jsx|tsx)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env'],
-              plugins: [require.resolve('react-refresh/babel')].filter(Boolean),
-            },
-          },
-        ],
-      },
-    ],
-  },
   plugins: [
     new ReactRefreshWebpackPlugin({
       overlay: false,
@@ -62,12 +45,23 @@ const devWebpackConfig = merge(common, {
     // }),
   ].filter(Boolean),
   optimization: {
+    // 适度启用一些优化以改善开发体验
     removeAvailableModules: false,
     removeEmptyChunks: false,
-    splitChunks: false,
+    splitChunks: {
+      chunks: 'async',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+        },
+      },
+    },
     minimize: false,
     concatenateModules: false,
-    usedExports: false,
+    usedExports: true, // 启用tree shaking
   },
 })
 module.exports = new Promise((resolve, reject) => {

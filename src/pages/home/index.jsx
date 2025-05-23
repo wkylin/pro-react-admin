@@ -529,7 +529,7 @@ const Home = () => {
           hoverFillColor="#222"
         />
       </section>
-      <section
+      {/* <section
         style={{
           margin: '20px 0',
           width: 360,
@@ -558,7 +558,7 @@ const Home = () => {
           </svg>
           <div className={styles.itemCircleTail} />
         </section>
-      </section>
+      </section> */}
       <section className={styles.line} />
       <section className={styles.linear} />
 

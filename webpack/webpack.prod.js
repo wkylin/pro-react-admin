@@ -64,46 +64,49 @@ const prodWebpackConfig = merge(common, {
     minimize: true,
     minimizer: [
       new CssMinimizerPlugin(),
-      // new CssMinimizerPlugin({
-      //   minimizerOptions: {
-      //     preset: [
-      //       'default',
-      //       {
-      //         discardComments: { removeAll: true },
-      //       },
-      //     ],
-      //   },
-      // }),
       new EsbuildPlugin({
         target: 'es2015',
+        css: true,
       }),
       new HtmlMinimizerPlugin(),
     ],
     splitChunks: {
       chunks: 'all',
-      minChunks: 3,
-      maxAsyncRequests: 6,
-      maxInitialRequests: 4,
-      automaticNameDelimiter: '~',
+      minSize: 20000,
+      maxSize: 244000,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
       cacheGroups: {
-        vendor: {
-          test: regVendor,
-          name: 'vendor',
-          minChunks: 1,
-          priority: 10,
-          enforce: true,
-          chunks: 'all',
-        },
+        // 框架代码分离
         react: {
-          test(module) {
-            // `module.resource` contains the absolute path of the file on disk.
-            return module.resource && module.resource.includes('node_modules/react')
-          },
-          chunks: 'initial',
-          filename: 'react.[contenthash].js',
-          priority: 1,
-          maxInitialRequests: 2,
-          minChunks: 1,
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+          priority: 20,
+        },
+        // Ant Design分离
+        antd: {
+          test: /[\\/]node_modules[\\/](@ant-design|antd)[\\/]/,
+          name: 'antd',
+          chunks: 'all',
+          priority: 15,
+        },
+        // 其他第三方库
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+          minChunks: 2,
+        },
+        // 公共代码
+        common: {
+          name: 'common',
+          minChunks: 2,
+          chunks: 'all',
+          priority: 5,
+          reuseExistingChunk: true,
         },
       },
     },

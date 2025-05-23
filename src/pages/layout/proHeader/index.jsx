@@ -11,6 +11,8 @@ import GradientAnimationText from '@stateless/GradientAnimation'
 // import { ReactComponent as DarkSvg } from '@assets/svg/dark.svg'
 // import LightSvg from '@assets/svg/light.svg'
 // import DarkSvg from '@assets/svg/dark.svg'
+import WikiSvg from '@assets/svg/wikipedia.svg'
+import RocketSvg from '@assets/svg/rocket.svg'
 
 import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
@@ -33,6 +35,9 @@ const ProHeader = () => {
 
   const redirectWrapped = () => {
     window.open('https://www.githubwrapped.io/wkylin', '_blank')
+  }
+  const redirectWiki = () => {
+    window.open('https://deepwiki.com/wkylin/pro-react-admin', '_blank')
   }
 
   const items = [
@@ -108,7 +113,8 @@ const ProHeader = () => {
             />
             <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
             <Fullscreen />
-            <GithubOutlined style={{ fontSize: 16 }} onClick={redirectWrapped} />
+            <RocketSvg style={{ fontSize: 16 }} onClick={redirectWrapped} />
+            <WikiSvg style={{ fontSize: 16 }} onClick={redirectWiki} />
             <LanguageSwitcher />
           </Space>
 

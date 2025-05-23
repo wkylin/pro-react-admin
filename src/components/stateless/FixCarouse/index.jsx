@@ -95,7 +95,6 @@ const FixCarousel = ({ tradeList = [] }) => {
         <Button
           className="cursor-pointer rounded-full"
           onClick={nextPage}
-          goToPage
           disabled={currentPage === totalPages - 1 || data.length === 0}
           shape="circle"
         >
@@ -109,7 +108,7 @@ const FixCarousel = ({ tradeList = [] }) => {
             className={`h-2 w-2 rounded-full ring ring-blue-600/80 transition-colors duration-300 hover:bg-blue-600/80 ${
               currentPage === index ? 'bg-blue-600/80' : 'bg-white'
             }`}
-            onClick={() => index}
+            onClick={() => goToPage(index)}
           ></button>
         ))}
       </div>
