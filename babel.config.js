@@ -3,7 +3,7 @@ const plugins = [
   ['@babel/plugin-proposal-decorators', { legacy: true }],
   ['@babel/plugin-transform-runtime'],
   ['@babel/plugin-transform-modules-commonjs'],
-  ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }],
+  ['@babel/plugin-proposal-object-rest-spread', { loose: true, useBuiltIns: true }]
 ]
 
 module.exports = {
@@ -12,20 +12,20 @@ module.exports = {
       '@babel/preset-env',
       {
         targets: {
-          browsers: ['> 1%', 'last 2 versions', 'not ie <= 8'],
+          browsers: ['> 1%', 'last 2 versions', 'not ie <= 8']
         },
         modules: false,
         useBuiltIns: 'entry',
-        corejs: 3,
-      },
+        corejs: 3
+      }
     ],
     [
       '@babel/preset-react',
       {
-        runtime: 'automatic',
-      },
+        runtime: 'automatic'
+      }
     ],
-    '@babel/preset-typescript',
+    '@babel/preset-typescript'
   ],
   compact: true,
   comments: true,
@@ -35,7 +35,7 @@ module.exports = {
       : plugins,
   env: {
     development: {
-      plugins: ['react-refresh/babel'],
-    },
-  },
+      plugins: ['react-refresh/babel']
+    }
+  }
 }

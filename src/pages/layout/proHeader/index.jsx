@@ -47,7 +47,7 @@ const ProHeader = () => {
       icon: <UserOutlined />,
       onClick: () => {
         redirectTo('/profile')
-      },
+      }
     },
     {
       key: '2',
@@ -55,7 +55,7 @@ const ProHeader = () => {
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/setting')
-      },
+      }
     },
     {
       key: '3',
@@ -63,7 +63,7 @@ const ProHeader = () => {
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/contact')
-      },
+      }
     },
     {
       key: '4',
@@ -72,8 +72,8 @@ const ProHeader = () => {
       onClick: () => {
         removeLocalStorage('token')
         redirectTo('/signin')
-      },
-    },
+      }
+    }
   ]
 
   const { myTheme, setMyTheme } = useProThemeContext()
@@ -83,7 +83,7 @@ const ProHeader = () => {
   }
 
   const {
-    token: { colorBgContainer, colorBorder },
+    token: { colorBgContainer, colorBorder }
   } = theme.useToken()
 
   return (
@@ -91,20 +91,20 @@ const ProHeader = () => {
       className={styles.header}
       style={{
         background: colorBgContainer,
-        borderBottom: `1px solid ${colorBorder}`,
+        borderBottom: `1px solid ${colorBorder}`
       }}
     >
-      <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
+      <div aria-hidden='true' className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
-        <img src={Logo} alt="logo" />
-        <GradientAnimationText text="Pro React Admin" />
+        <img src={Logo} alt='logo' />
+        <GradientAnimationText text='Pro React Admin' />
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>
           <PrimaryNav />
         </div>
         <div className={styles.headerRight}>
-          <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+          <Space direction='horizontal' style={{ cursor: 'pointer', paddingRight: 8 }}>
             <SoundBar />
             <Switch
               // checkedChildren={<Icon component={LightSvg} />}
@@ -121,7 +121,7 @@ const ProHeader = () => {
           <Dropdown
             arrow
             menu={{
-              items,
+              items
             }}
           >
             <Space>

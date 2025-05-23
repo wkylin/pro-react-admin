@@ -37,7 +37,7 @@ switch (process.env.BUILD_GOAL) {
 
 const config = {
   entry: {
-    app: `${paths.src}/index.tsx`,
+    app: `${paths.src}/index.tsx`
   },
   output: {
     path: paths.build,
@@ -47,7 +47,7 @@ const config = {
     // library: '',
     // libraryTarget: 'umd',
     // chunkLoadingGlobal: '',
-    clean: true,
+    clean: true
     // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
@@ -62,19 +62,19 @@ const config = {
       '@pages': path.resolve('./src/pages'),
       '@routers': path.resolve('./src/routers'),
       '@utils': path.resolve('./src/utils'),
-      '@theme': path.resolve('./src/theme'),
+      '@theme': path.resolve('./src/theme')
     },
     symlinks: false,
     modules: ['node_modules', paths.src],
-    cacheWithContext: false,
+    cacheWithContext: false
   },
   stats: 'verbose', // 输出详细的构建信息
   plugins: [
     new Dotenv({
-      path: path.resolve(__dirname, '..', dotEnv),
+      path: path.resolve(__dirname, '..', dotEnv)
     }),
     codeInspectorPlugin({
-      bundler: 'webpack',
+      bundler: 'webpack'
     }),
     new HtmlWebpackPlugin({
       title: isDev ? 'Pro React Dev' : 'Pro React Admin',
@@ -98,8 +98,8 @@ const config = {
             minifyCSS: true,
             minifyJS: true,
             minifyURLs: true,
-            useShortDoctype: true,
-          },
+            useShortDoctype: true
+          }
     }),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
@@ -113,14 +113,14 @@ const config = {
     new NodePolyfillPlugin(),
     new WebpackBar(),
     new ForkTsCheckerWebpackPlugin({
-      async: true,
+      async: true
     }),
     new ESLintWebpackPlugin({
       context: path.resolve(__dirname, '../src'),
       exclude: 'node_modules',
       cache: true,
-      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'),
-    }),
+      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache')
+    })
   ],
   module: {
     // 将缺失的导出提示成错误而不是警告
@@ -129,8 +129,8 @@ const config = {
       {
         test: /\.m?js$/,
         resolve: {
-          fullySpecified: false,
-        },
+          fullySpecified: false
+        }
       },
       {
         test: /\.css$/,
@@ -140,11 +140,11 @@ const config = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
-              sourceMap: isDev,
-            },
+              sourceMap: isDev
+            }
           },
-          'postcss-loader',
-        ],
+          'postcss-loader'
+        ]
       },
       {
         test: /\.less$/i,
@@ -161,10 +161,10 @@ const config = {
                 localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[hash:base64:8]',
                 localIdentContext: paths.src,
                 namedExport: false,
-                exportLocalsConvention: 'camelCase',
+                exportLocalsConvention: 'camelCase'
               },
-              importLoaders: 2,
-            },
+              importLoaders: 2
+            }
           },
           {
             loader: 'postcss-loader',
@@ -176,25 +176,25 @@ const config = {
                     'postcss-preset-env',
                     {
                       autoprefixer: { flexbox: 'no-2009' },
-                      stage: 3,
-                    },
+                      stage: 3
+                    }
                   ],
-                  'postcss-normalize',
-                ],
+                  'postcss-normalize'
+                ]
               },
-              sourceMap: isDev,
-            },
+              sourceMap: isDev
+            }
           },
           {
             loader: 'less-loader',
             options: {
               sourceMap: isDev,
               lessOptions: {
-                javascriptEnabled: true,
-              },
-            },
-          },
-        ],
+                javascriptEnabled: true
+              }
+            }
+          }
+        ]
       },
       {
         test: /\.(js|jsx|ts|tsx)$/,
@@ -213,17 +213,17 @@ const config = {
           {
             loader: 'esbuild-loader',
             options: {
-              target: 'es2020',
-            },
+              target: 'es2020'
+            }
           },
           {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
-              cacheCompression: false,
-            },
-          },
-        ],
+              cacheCompression: false
+            }
+          }
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|webp|eot|ttf|woff|woff2|mp4|mp3|mkv|pdf)$/i,
@@ -231,29 +231,29 @@ const config = {
         parser: {
           // Conditions for converting to base64
           dataUrlCondition: {
-            maxSize: 25 * 1024, // 25kb
-          },
+            maxSize: 25 * 1024 // 25kb
+          }
         },
         generator: {
-          filename: 'images/[contenthash][ext][query]',
-        },
+          filename: 'images/[contenthash][ext][query]'
+        }
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: [
           {
-            loader: 'babel-loader',
+            loader: 'babel-loader'
           },
           {
             loader: '@svgr/webpack',
             options: {
               babel: false,
-              icon: true,
-            },
-          },
-        ],
-      },
-    ],
+              icon: true
+            }
+          }
+        ]
+      }
+    ]
   },
   stats: {
     all: false,
@@ -261,22 +261,22 @@ const config = {
     warnings: true,
     errorDetails: true,
     moduleTrace: true, // 打印模块追踪信息，与--trace - warnings类似
-    excludeAssets: /node_modules/,
+    excludeAssets: /node_modules/
   },
   // 启用持久化缓存
   cache: {
     type: 'filesystem',
     buildDependencies: {
-      config: [__filename],
+      config: [__filename]
     },
-    cacheDirectory: path.resolve(__dirname, '../node_modules/.cache/webpack'),
+    cacheDirectory: path.resolve(__dirname, '../node_modules/.cache/webpack')
   },
   // 性能提示
   performance: {
     hints: isDev ? false : 'warning',
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
+    maxAssetSize: 512000
+  }
 }
 
 if (USE_ANALYZE) {

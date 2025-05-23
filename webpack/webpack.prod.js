@@ -31,14 +31,14 @@ const prodWebpackConfig = merge(common, {
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
       chunkFilename: 'static/css/[name].[contenthash].css',
-      ignoreOrder: true,
+      ignoreOrder: true
     }),
     new PurgeCSSPlugin({
       paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
       only: ['bundle', 'vendor', 'dist'],
       safelist: {
-        standard: [/^ant-/],
-      },
+        standard: [/^ant-/]
+      }
     }),
     // new CompressionWebpackPlugin({
     //   filename: '[path][base].gz',
@@ -54,11 +54,11 @@ const prodWebpackConfig = merge(common, {
           from: path.resolve(__dirname, '../public'),
           to: path.resolve(__dirname, '../dist'),
           globOptions: {
-            ignore: ['**/index.html'],
-          },
-        },
-      ],
-    }),
+            ignore: ['**/index.html']
+          }
+        }
+      ]
+    })
   ],
   optimization: {
     minimize: true,
@@ -66,9 +66,9 @@ const prodWebpackConfig = merge(common, {
       new CssMinimizerPlugin(),
       new EsbuildPlugin({
         target: 'es2015',
-        css: true,
+        css: true
       }),
-      new HtmlMinimizerPlugin(),
+      new HtmlMinimizerPlugin()
     ],
     splitChunks: {
       chunks: 'all',
@@ -83,14 +83,14 @@ const prodWebpackConfig = merge(common, {
           test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
           name: 'react',
           chunks: 'all',
-          priority: 20,
+          priority: 20
         },
         // Ant Design分离
         antd: {
           test: /[\\/]node_modules[\\/](@ant-design|antd)[\\/]/,
           name: 'antd',
           chunks: 'all',
-          priority: 15,
+          priority: 15
         },
         // 其他第三方库
         vendor: {
@@ -98,7 +98,7 @@ const prodWebpackConfig = merge(common, {
           name: 'vendors',
           chunks: 'all',
           priority: 10,
-          minChunks: 2,
+          minChunks: 2
         },
         // 公共代码
         common: {
@@ -106,19 +106,19 @@ const prodWebpackConfig = merge(common, {
           minChunks: 2,
           chunks: 'all',
           priority: 5,
-          reuseExistingChunk: true,
-        },
-      },
+          reuseExistingChunk: true
+        }
+      }
     },
     runtimeChunk: {
-      name: 'runtime',
-    },
+      name: 'runtime'
+    }
   },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
+    maxAssetSize: 512000
+  }
 })
 
 // if (useSentryMap) {
