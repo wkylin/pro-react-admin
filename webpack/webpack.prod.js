@@ -31,14 +31,14 @@ const prodWebpackConfig = merge(common, {
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
       chunkFilename: 'static/css/[name].[contenthash].css',
-      ignoreOrder: true,
+      ignoreOrder: true
     }),
     new PurgeCSSPlugin({
       paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
       only: ['bundle', 'vendor', 'dist'],
       safelist: {
-        standard: [/^ant-/],
-      },
+        standard: [/^ant-/]
+      }
     }),
     // new CompressionWebpackPlugin({
     //   filename: '[path][base].gz',
@@ -54,11 +54,11 @@ const prodWebpackConfig = merge(common, {
           from: path.resolve(__dirname, '../public'),
           to: path.resolve(__dirname, '../dist'),
           globOptions: {
-            ignore: ['**/index.html'],
-          },
-        },
-      ],
-    }),
+            ignore: ['**/index.html']
+          }
+        }
+      ]
+    })
   ],
   optimization: {
     minimize: true,
@@ -75,9 +75,9 @@ const prodWebpackConfig = merge(common, {
       //   },
       // }),
       new EsbuildPlugin({
-        target: 'es2015',
+        target: 'es2015'
       }),
-      new HtmlMinimizerPlugin(),
+      new HtmlMinimizerPlugin()
     ],
     splitChunks: {
       chunks: 'all',
@@ -92,10 +92,10 @@ const prodWebpackConfig = merge(common, {
           minChunks: 1,
           priority: 10,
           enforce: true,
-          chunks: 'all',
+          chunks: 'all'
         },
         react: {
-          test(module) {
+          test (module) {
             // `module.resource` contains the absolute path of the file on disk.
             return module.resource && module.resource.includes('node_modules/react')
           },
@@ -103,19 +103,19 @@ const prodWebpackConfig = merge(common, {
           filename: 'react.[contenthash].js',
           priority: 1,
           maxInitialRequests: 2,
-          minChunks: 1,
-        },
-      },
+          minChunks: 1
+        }
+      }
     },
     runtimeChunk: {
-      name: 'runtime',
-    },
+      name: 'runtime'
+    }
   },
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
+    maxAssetSize: 512000
+  }
 })
 
 // if (useSentryMap) {
