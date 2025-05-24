@@ -65,8 +65,6 @@ const config = {
       '@theme': path.resolve('./src/theme'),
     },
     symlinks: false,
-    modules: ['node_modules', paths.src],
-    cacheWithContext: false,
   },
   stats: 'verbose', // 输出详细的构建信息
   plugins: [
@@ -116,9 +114,11 @@ const config = {
       async: true,
     }),
     new ESLintWebpackPlugin({
+      // 指定检查文件的根目录
       context: path.resolve(__dirname, '../src'),
-      exclude: 'node_modules',
-      cache: true,
+      exclude: 'node_modules', // 默认值
+      cache: true, // 开启缓存
+      // 缓存目录
       cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'),
     }),
   ],
@@ -134,17 +134,7 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-              sourceMap: isDev,
-            },
-          },
-          'postcss-loader',
-        ],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.less$/i,
@@ -153,12 +143,12 @@ const config = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: isDev,
+              sourceMap: true,
               modules: {
                 mode: 'local',
                 auto: true,
                 exportGlobals: true,
-                localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[hash:base64:8]',
+                localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[local]--[hash:base64:5]',
                 localIdentContext: paths.src,
                 namedExport: false,
                 exportLocalsConvention: 'camelCase',
@@ -167,31 +157,26 @@ const config = {
             },
           },
           {
-            loader: 'postcss-loader',
+            loader: require.resolve('postcss-loader'),
             options: {
               postcssOptions: {
+                ident: 'postcss',
+                config: false,
                 plugins: [
                   'postcss-flexbugs-fixes',
                   [
                     'postcss-preset-env',
                     {
-                      autoprefixer: { flexbox: 'no-2009' },
+                      autoprefixer: {
+                        flexbox: 'no-2009',
+                      },
                       stage: 3,
                     },
                   ],
                   'postcss-normalize',
                 ],
               },
-              sourceMap: isDev,
-            },
-          },
-          {
-            loader: 'less-loader',
-            options: {
-              sourceMap: isDev,
-              lessOptions: {
-                javascriptEnabled: true,
-              },
+              sourceMap: true,
             },
           },
         ],
@@ -200,27 +185,18 @@ const config = {
         test: /\.(js|jsx|ts|tsx)$/,
         exclude: /node_modules/,
         use: [
-          // {
-          //   loader: 'thread-loader',
-          //   options: {
-          //     workers: require('os').cpus().length - 1,
-          //     workerParallelJobs: 50,
-          //     poolTimeout: 2000,
-          //     poolParallelJobs: 50,
-          //     name: 'js-pool'
-          //   }
-          // },
           {
             loader: 'esbuild-loader',
             options: {
+              // loader: 'tsx',
               target: 'es2020',
             },
           },
           {
             loader: 'babel-loader',
             options: {
-              cacheDirectory: true,
-              cacheCompression: false,
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+              plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime'],
             },
           },
         ],
@@ -262,14 +238,6 @@ const config = {
     errorDetails: true,
     moduleTrace: true, // 打印模块追踪信息，与--trace - warnings类似
     excludeAssets: /node_modules/,
-  },
-  // 启用持久化缓存
-  cache: {
-    type: 'filesystem',
-    buildDependencies: {
-      config: [__filename],
-    },
-    cacheDirectory: path.resolve(__dirname, '../node_modules/.cache/webpack'),
   },
   // 性能提示
   performance: {

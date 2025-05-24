@@ -8,6 +8,9 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
+// const CompressionWebpackPlugin = require('compression-webpack-plugin')
+// const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const { EsbuildPlugin } = require('esbuild-loader')
 
@@ -61,19 +64,27 @@ const prodWebpackConfig = merge(common, {
     minimize: true,
     minimizer: [
       new CssMinimizerPlugin(),
+      // new CssMinimizerPlugin({
+      //   minimizerOptions: {
+      //     preset: [
+      //       'default',
+      //       {
+      //         discardComments: { removeAll: true },
+      //       },
+      //     ],
+      //   },
+      // }),
       new EsbuildPlugin({
         target: 'es2015',
-        css: true,
       }),
       new HtmlMinimizerPlugin(),
     ],
     splitChunks: {
       chunks: 'all',
-      minSize: 20000,
-      maxSize: 244000,
-      minChunks: 1,
-      maxAsyncRequests: 30,
-      maxInitialRequests: 30,
+      minChunks: 3,
+      maxAsyncRequests: 6,
+      maxInitialRequests: 4,
+      automaticNameDelimiter: '~',
       cacheGroups: {
         vendor: {
           test: regVendor,
@@ -85,6 +96,7 @@ const prodWebpackConfig = merge(common, {
         },
         react: {
           test(module) {
+            // `module.resource` contains the absolute path of the file on disk.
             return module.resource && module.resource.includes('node_modules/react')
           },
           chunks: 'initial',
@@ -105,5 +117,16 @@ const prodWebpackConfig = merge(common, {
     maxAssetSize: 512000,
   },
 })
+
+// if (useSentryMap) {
+//   prodWebpackConfig.plugins.push(
+//     new SentryWebpackPlugin({
+//       release: packageJson.version,
+//       include: path.join(__dirname, '../dist/static/js'),
+//       configFile: '../.sentryclirc',
+//       urlPrefix: '~/static/js',
+//     })
+//   )
+// }
 
 module.exports = prodWebpackConfig
