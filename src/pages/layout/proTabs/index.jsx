@@ -168,7 +168,12 @@ const ProTabs = (props) => {
         label: (
           <>
             {pane.key === fullPath && pane.key !== '/404' && (
-              <SyncOutlined style={{ padding: '0 5px' }} onClick={refreshTab} title="刷新" spin={isReload} />
+              <SyncOutlined
+                style={{ padding: '0 5px', display: 'line-block' }}
+                onClick={refreshTab}
+                title="刷新"
+                spin={isReload}
+              />
             )}
             {pane.i18nKey ? t(pane.i18nKey) : pane.title}
           </>
