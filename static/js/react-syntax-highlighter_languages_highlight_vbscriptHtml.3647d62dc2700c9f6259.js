@@ -1,0 +1,1 @@
+(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[6152],{25356:function(n){function e(a){return{name:"VBScript in HTML",subLanguage:"xml",contains:[{begin:"<%",end:"%>",subLanguage:"vbscript"}]}}n.exports=e}}]);

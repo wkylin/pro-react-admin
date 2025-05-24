@@ -1,1 +1,0 @@
-(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[88705],{72841:function(a){function e(n){return{name:"Node REPL",contains:[{className:"meta",starts:{end:/ |$/,starts:{end:"$",subLanguage:"javascript"}},variants:[{begin:/^>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}a.exports=e}}]);
