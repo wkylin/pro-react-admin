@@ -345,6 +345,22 @@ export const oneApiChat = (chatList, token, signal) =>
     }),
   })
 
+export const oneApiImage = (chatList, token, signal) =>
+  fetch('https://api.zhizengzeng.com/v1/images/generations', {
+    method: 'POST',
+    signal,
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: 'dall-e-3',
+      prompt: chatList[0].content,
+      n: 1,
+      size: '1792x1024',
+      response_format: 'url',
+    }),
+  })
 export const getCurrentDate = () => {
   const date = new Date()
   const day = date.getDate()

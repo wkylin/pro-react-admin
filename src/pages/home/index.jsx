@@ -80,11 +80,13 @@ import {
   prettyObject,
   // randomNum,
   getDirection,
+  oneApiImage,
 } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
+import { image } from 'd3'
 
 // const boxList = Array.apply(null, Array(10))
 
@@ -149,6 +151,8 @@ const Home = () => {
   const [dateTime, setDateTime] = useState('')
   const curController = useRef(null)
 
+  const [aiImageList, setAiImageList] = useState([])
+
   const mouseEnterRef = useRef(null)
   const [enterDirection, setEnterDirection] = useState('left')
   const handleMouseEnter = (event) => {
@@ -202,6 +206,14 @@ const Home = () => {
     const controller = new AbortController()
     curController.current = controller
     fetchAi(chatText, apiKey, controller)
+  }
+  const onSubmitImage = () => {
+    if (chatText.trim() === '') {
+      return
+    }
+    const controller = new AbortController()
+    curController.current = controller
+    fetchAiImage(chatText, apiKey, controller)
   }
 
   const onStop = () => {
@@ -294,6 +306,60 @@ const Home = () => {
         setAiText(error.message)
       })
   }
+  const fetchAiImage = (text, key, controller) => {
+    aiTextRef.current = ''
+    setAiText(aiTextRef.current)
+    setAiImageList([])
+    const { signal } = controller
+    setIsStream(true)
+    oneApiImage(
+      [
+        {
+          content: text,
+          role: 'user',
+        },
+      ],
+      key,
+      signal
+    )
+      .then((response) => {
+        const contentType = response.headers.get('content-type')
+        if (!response.ok || response.status !== 200) {
+          if (contentType?.startsWith('text/html') || contentType?.startsWith('text/plain')) {
+            const textPlain = response.clone().text()
+            textPlain.then((plainText) => {
+              setAiText(plainText)
+            })
+          } else if (contentType?.startsWith('application/json')) {
+            const resJson = response.clone().json()
+            resJson.then((res) => {
+              setAiText(prettyObject(res))
+            })
+          } else {
+            setAiText(response.statusText)
+          }
+          setIsStream(false)
+        } else {
+          const resJson = response.clone().json()
+          resJson.then((res) => {
+            // setAiText(prettyObject(res))
+            console.log('res', res)
+            if (res.error) return
+            setAiImageList(
+              res.data.map((item) => ({
+                imageUrl: item.url,
+                imagePrompt: item.revised_prompt,
+              }))
+            )
+          })
+          setIsStream(false)
+        }
+      })
+      .catch((error) => {
+        setIsStream(false)
+        setAiText(error.message)
+      })
+  }
 
   const scrollRef = useRef(null)
   const [customElement, setCustomElement] = useState()
@@ -340,10 +406,63 @@ const Home = () => {
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
+      <section style={{ width: 600, margin: '30px 0' }}>
+        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
+        <Flex align="center">
+          <Input.TextArea
+            ref={textareaRef}
+            defaultValue={chatText}
+            placeholder="来，说点什么呗...Meta + Enter发送"
+            onChange={changeChatText}
+            onKeyDown={onInputKeyDown}
+            autoSize
+            style={{ width: 300, height: 30, caretColor: '#ff0000' }}
+          />
+          <Button
+            style={{ margin: '0 10px' }}
+            icon={<SendOutlined rotate={-60} />}
+            type="primary"
+            disabled={isStream}
+            onClick={onSubmit}
+          >
+            发送
+          </Button>
+          <Button
+            style={{ margin: '0 10px' }}
+            icon={<SendOutlined rotate={-60} />}
+            type="primary"
+            disabled={isStream}
+            onClick={onSubmitImage}
+          >
+            生成图片
+          </Button>
+          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+            停止
+          </Button>
+        </Flex>
+      </section>
+      <section className="mb-10">
+        {isStream && <div>正在输入...</div>}
+        <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
+        <ReMarkdown markdownText={aiText} isLoading={isStream} />
+        <section className="aiImage">
+          {aiImageList.length > 0 && (
+            <>
+              {aiImageList.map((item, index) => (
+                <div key={index}>
+                  <div>{item.imagePrompt}</div>
+                  <img src={item.imageUrl} width="100%" alt={item.url} />
+                </div>
+              ))}
+            </>
+          )}
+        </section>
+      </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
         <AlternatingText alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
       </section>
+
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         X岁的你，正处在一个特殊的位置：
         <TypeWriter
@@ -814,37 +933,6 @@ const Home = () => {
       </section> */}
       <section style={{ margin: '20px 0', fontSize: 40 }}>
         <NumberFlowFix />
-      </section>
-      <section style={{ width: 600, margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
-          <Input.TextArea
-            ref={textareaRef}
-            defaultValue={chatText}
-            placeholder="来，说点什么呗...Meta + Enter发送"
-            onChange={changeChatText}
-            onKeyDown={onInputKeyDown}
-            autoSize
-            style={{ width: 300, height: 30, caretColor: '#ff0000' }}
-          />
-          <Button
-            style={{ margin: '0 10px' }}
-            icon={<SendOutlined rotate={-60} />}
-            type="primary"
-            disabled={isStream}
-            onClick={onSubmit}
-          >
-            发送
-          </Button>
-          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
-            停止
-          </Button>
-        </Flex>
-      </section>
-      <section>
-        {isStream && <div>正在输入...</div>}
-        <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
-        <ReMarkdown markdownText={aiText} isLoading={isStream} />
       </section>
 
       <section style={{ position: 'relative', fontSize: 36 }}>
