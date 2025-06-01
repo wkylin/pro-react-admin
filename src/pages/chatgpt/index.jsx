@@ -8,7 +8,7 @@ import { toPng, toSvg } from 'html-to-image'
 import { Button, Dropdown, Form, Input, Space, message } from 'antd'
 import { DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { copyTextToClipboard } from '@utils/aidFn'
-import initSSE from './sse'
+import initSSE from './fixSse'
 
 const ChatGpt = () => {
   const markmapRef = useRef(null)
@@ -45,24 +45,41 @@ const ChatGpt = () => {
     structureResultRef.current = ''
     const source = initSSE(apiKey, text)
     source.addEventListener('message', (e) => {
+      console.log('message', e.data)
       if (e.data !== '[DONE]') {
+        console.log('NOT DONE')
         const payload = JSON.parse(e.data)
         const {
           delta: { content },
-        } = payload.choices[0]
+        } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           apiResultRef.current += content
           setApiResult(apiResultRef.current)
         }
       } else {
+        console.log('DONE')
+        setReadyState(2)
         source.close()
       }
     })
 
     source.addEventListener('readystatechange', (e) => {
       setReadyState(e.readyState)
-      // if (e.readyState === 2) {
-      // }
+      console.log('readyState', e.readyState)
+      if (e.readyState === 2) {
+        console.log('SSE connection closed')
+      }
+    })
+
+    source.addEventListener('error', (e) => {
+      console.error('SSE error:', e)
+      source.close()
+    })
+    source.addEventListener('open', (e) => {
+      console.log('SSE connection opened:', e)
+    })
+    source.addEventListener('abort', (e) => {
+      console.log('SSE connection closed:', e)
     })
 
     source.stream()
@@ -126,12 +143,13 @@ const ChatGpt = () => {
         const payload = JSON.parse(e.data)
         const {
           delta: { content },
-        } = payload.choices[0]
+        } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           structureResultRef.current += content
           setStructureResult(structureResultRef.current)
         }
       } else {
+        setStructureReadyState(2)
         source.close()
       }
     })
@@ -268,7 +286,7 @@ const ChatGpt = () => {
           </Space>
         )}
       </section>
-      {/* {JSON.stringify(structureReadyState, null, 2)} */}
+      {JSON.stringify(structureResult, null, 2)}
       {structureReadyState === 0 && <h3>Ai 正在理解的需求...</h3>}
       {structureReadyState === 1 && <h3>生成中...</h3>}
       {structureResult && (

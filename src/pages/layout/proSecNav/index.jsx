@@ -84,7 +84,7 @@ const ProSecNav = () => {
     // { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
     // { label: 'Dynamic', key: '/dynamic', icon: <QrcodeOutlined /> },
     // { label: 'React Amap', key: '/react-amap', icon: <QrcodeOutlined /> },
-    // { label: 'ChatGPT', key: '/markmap', icon: <QrcodeOutlined /> },
+    { label: 'ChatGPT', key: '/markmap', icon: <QrcodeOutlined /> },
     // { label: 'SuperMap', key: '/super-map', icon: <FireOutlined /> },
     // { label: 'Three', key: '/three', icon: <QrcodeOutlined /> },
     { label: 'Post Message', key: '/postmessage', icon: <FireOutlined /> },
