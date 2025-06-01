@@ -50,7 +50,7 @@ const ChatGpt = () => {
         console.log('NOT DONE')
         const payload = JSON.parse(e.data)
         const {
-          delta: { content },
+          delta: { content }
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           apiResultRef.current += content
@@ -142,7 +142,7 @@ const ChatGpt = () => {
       if (e.data !== '[DONE]') {
         const payload = JSON.parse(e.data)
         const {
-          delta: { content },
+          delta: { content }
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           structureResultRef.current += content
@@ -168,36 +168,36 @@ const ChatGpt = () => {
       <section style={{ width: 600 }}>
         <Form
           form={form}
-          layout="vertical"
+          layout='vertical'
           initialValues={{
             apiKey: '',
-            text: '作为产品经理，帮我生成一份PRD文档，功能是公园入园人数大屏展示功能，采用 markdown 格式区分标题和正文，标题加上序号',
+            text: '作为产品经理，帮我生成一份PRD文档，功能是公园入园人数大屏展示功能，采用 markdown 格式区分标题和正文，标题加上序号'
           }}
           onFinish={onFinish}
           requiredMark={false}
-          autoComplete="off"
+          autoComplete='off'
         >
-          <Form.Item name="apiKey" label="OPEN AI KEY" rules={[{ required: true, message: '请输入open ai key' }]}>
+          <Form.Item name='apiKey' label='OPEN AI KEY' rules={[{ required: true, message: '请输入open ai key' }]}>
             <Input.TextArea
               onChange={onChange}
               rows={1}
               style={{ resize: 'none', padding: 2 }}
-              placeholder="open ai key"
+              placeholder='open ai key'
             />
           </Form.Item>
-          <Form.Item name="text" label="您的输入" rules={[{ required: true, message: '请输您的需求' }]}>
+          <Form.Item name='text' label='您的输入' rules={[{ required: true, message: '请输您的需求' }]}>
             <Input.TextArea
               rows={4}
               showCount
               maxLength={1000}
               style={{ resize: 'none', padding: 2 }}
-              placeholder=""
+              placeholder=''
               onPressEnter={onFinish}
             />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-            <Button block type="primary" htmlType="submit" disabled={[0, 1].includes(readyState)}>
+            <Button block type='primary' htmlType='submit' disabled={[0, 1].includes(readyState)}>
               {apiResult && readyState === 2 ? '再来一次' : 'ChatGPT'}
             </Button>
           </Form.Item>
@@ -215,15 +215,15 @@ const ChatGpt = () => {
               items: [
                 {
                   key: '1',
-                  label: '复制文本',
+                  label: '复制文本'
                 },
                 {
                   key: '2',
-                  label: '复制Markdown',
-                },
-              ],
+                  label: '复制Markdown'
+                }
+              ]
             }}
-            placement="bottom"
+            placement='bottom'
             arrow
           >
             <Button>
@@ -241,7 +241,7 @@ const ChatGpt = () => {
           minHeight: 150,
           border: '1px solid #eee',
           borderRadius: 4,
-          padding: 15,
+          padding: 15
         }}
       >
         {/* {readyState === 0 && <h3>Loading...</h3>} */}
@@ -253,7 +253,7 @@ const ChatGpt = () => {
       <section>
         {apiResult && readyState === 2 && (
           <Space>
-            <Button type="primary" disabled={[0, 1].includes(structureReadyState)} onClick={buildStructure}>
+            <Button type='primary' disabled={[0, 1].includes(structureReadyState)} onClick={buildStructure}>
               {structureResult && structureReadyState === 2 ? '重新生成' : '生成页面结构'}
             </Button>
 
@@ -266,18 +266,18 @@ const ChatGpt = () => {
                   items: [
                     {
                       key: '1',
-                      label: '导出png格式',
+                      label: '导出png格式'
                     },
                     {
                       key: '2',
-                      label: '导出svg格式',
-                    },
-                  ],
+                      label: '导出svg格式'
+                    }
+                  ]
                 }}
-                placement="bottom"
+                placement='bottom'
                 arrow
               >
-                <Button type="primary">
+                <Button type='primary'>
                   <DownloadOutlined />
                   导出
                 </Button>

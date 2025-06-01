@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-function AutoScrollSection({ messages }) {
+function AutoScrollSection ({ messages }) {
   const sectionRef = useRef(null)
 
   useEffect(() => {
@@ -16,7 +16,7 @@ function AutoScrollSection({ messages }) {
         height: 200,
         overflowY: 'auto',
         border: '1px solid #ccc',
-        padding: 8,
+        padding: 8
       }}
     >
       {messages.map((msg, idx) => (
@@ -27,7 +27,7 @@ function AutoScrollSection({ messages }) {
 }
 
 // 使用示例
-export default function Demo() {
+export default function Demo () {
   const [messages, setMessages] = React.useState(['Hello', 'World'])
 
   // 模拟新消息
