@@ -146,7 +146,6 @@ const dataSteps = [
 const Home = () => {
   const [aiText, setAiText] = useState('')
   const aiTextRef = useRef(null)
-  // const [loading, setLoading] = useState(false)
   const [isStream, setIsStream] = useState(false)
   const [dateTime, setDateTime] = useState('')
   const curController = useRef(null)
