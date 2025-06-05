@@ -75,7 +75,7 @@ const easeNames = [
 ]
 
 const randomSort = (arr) => {
-  let newArr = []
+  const newArr = []
   const len = arr.length
   for (let i = 0; i < len; i++) {
     const random = Math.floor(Math.random() * arr.length)
@@ -257,9 +257,9 @@ const ParallaxVert = ({ props }) => {
           backgroundImage: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
           borderRadius: '3px',
           transformOrigin: 'left',
-          scaleX: scaleX,
+          scaleX,
         }}
-      ></motion.div>
+      />
       <motion.div
         style={{
           width: 100,
@@ -283,7 +283,7 @@ const ParallaxVert = ({ props }) => {
           rotate: 45, // 旋转45度
           opacity: 0.5, // 不透明度设置为0.5
         }}
-      ></motion.div>
+      />
       <motion.nav
         layout
         className={styles.nav}
@@ -344,7 +344,7 @@ const ParallaxVert = ({ props }) => {
           rotate: 0,
           x: '200px',
         }}
-      ></motion.div>
+      />
       <motion.div
         style={{
           width: 100,
@@ -356,9 +356,9 @@ const ParallaxVert = ({ props }) => {
           duration: 2,
         }}
         variants={animations}
-        initial={'hidden'}
-        animate={'show'}
-      ></motion.div>
+        initial="hidden"
+        animate="show"
+      />
       <motion.ul
         initial="hidden"
         animate="visible"
@@ -409,7 +409,7 @@ const ParallaxVert = ({ props }) => {
           onClick={() => {
             setRotate(!isRotated)
           }}
-        ></motion.div>
+        />
       </div>
 
       {/* <div
@@ -465,7 +465,7 @@ const ParallaxVert = ({ props }) => {
             setIsAnimation(false)
             console.log('Completed animating', definition)
           }}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
@@ -537,13 +537,10 @@ const ParallaxVert = ({ props }) => {
           onDragStart={(event, info) => console.log(info.point.x, info.point.y)}
           onDragEnd={(event, info) => console.log(info.point.x, info.point.y)}
           onDirectionLock={(axis) => console.log('axis', axis)}
-          dragSnapToOrigin={true}
+          dragSnapToOrigin
           // dragConstraints={{ left: 0, right: 300 }}
           dragConstraints={constraintsRef}
-          // dragElastic={false}
-          // dragElastic={0.8}
-          // dragPropagation={false}
-        ></motion.div>
+        />
         <div
           style={{
             display: 'flex',
@@ -698,7 +695,7 @@ const ParallaxVert = ({ props }) => {
             backgroundColor: 'white',
             borderRadius: 60,
           }}
-        ></motion.div>
+        />
       </motion.div>
 
       <section style={{ fontSize: 30 }}>scrollDirection: {scrollDirection}</section>
@@ -706,12 +703,8 @@ const ParallaxVert = ({ props }) => {
         <ScrollVelocity {...props} text="Pro React Admin" ref={scrollRef} className="text-4xl" />
       </section>
       <div ref={wordTargetRef} className={clsx('relative z-0 h-[200vh]')}>
-        <div className={'sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'}>
-          <p
-            className={
-              'flex flex-wrap p-5 text-2xl font-bold text-black/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl dark:text-white/20'
-            }
-          >
+        <div className="sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]">
+          <p className="flex flex-wrap p-5 text-2xl font-bold text-black/20 md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl dark:text-white/20">
             {words.map((word, i) => {
               const start = i / words.length
               const end = start + 1 / words.length
@@ -864,7 +857,7 @@ const ParallaxVert = ({ props }) => {
                 backgroundColor: '#fff',
                 borderRadius: 10,
               }}
-            ></motion.div>
+            />
             <motion.div
               layout
               style={{
@@ -873,7 +866,7 @@ const ParallaxVert = ({ props }) => {
                 backgroundColor: '#fff',
                 borderRadius: 10,
               }}
-            ></motion.div>
+            />
           </LayoutGroup>
         </motion.div>
       </div>
@@ -886,7 +879,7 @@ const Word = ({ children, progress, range }) => {
   return (
     <span className="xl:lg-3 relative mx-1 lg:mx-2.5">
       <span className="absolute opacity-30">{children}</span>
-      <motion.span style={{ opacity: opacity }} className={'text-black dark:text-white'}>
+      <motion.span style={{ opacity }} className="text-black dark:text-white">
         {children}
       </motion.span>
     </span>
