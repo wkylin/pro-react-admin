@@ -50,7 +50,7 @@ const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
 const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
 const NoMatch = lazy(() => import('@stateless/NoMatch'))
 // const ReactGantt = lazy(() => import('@pages/reactGantt'))
-const SandBox = lazy(() => import('@pages/sandBox'))
+// const SandBox = lazy(() => import('@pages/sandBox'))
 const Profile = lazy(() => import('@pages/profile'))
 const Contact = lazy(() => import('@pages/contact'))
 
@@ -80,14 +80,14 @@ const rootRouter = [
         auth: true,
         element: lazyLoad(Demo),
       },
-      {
-        index: false,
-        path: 'sandbox',
-        name: 'Sand Box',
-        key: '/sandbox',
-        auth: true,
-        element: lazyLoad(SandBox),
-      },
+      // {
+      //   index: false,
+      //   path: 'sandbox',
+      //   name: 'Sand Box',
+      //   key: '/sandbox',
+      //   auth: true,
+      //   element: lazyLoad(SandBox),
+      // },
       // {
       //   index: false,
       //   path: 'parallax',
