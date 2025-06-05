@@ -481,7 +481,7 @@ const ParallaxVert = ({ props }) => {
               await controller2.start({ x: 100 })
               await controller2.start({ y: -200 })
               await controller2.start({ x: -100 })
-              controller2.start({ y: 0 })
+              await controller2.start({ y: 0 })
             }}
           >
             开始

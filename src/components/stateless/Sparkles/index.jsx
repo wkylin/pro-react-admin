@@ -18,7 +18,7 @@ const SparklesCore = (props) => {
 
   const particlesLoaded = async (container) => {
     if (container) {
-      controls.start({
+      await controls.start({
         opacity: 1,
         transition: {
           duration: 1,

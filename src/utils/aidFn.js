@@ -53,11 +53,10 @@ export const getImgsUrl = (html) => {
   const srcReg = /src=['"]?([^'"]*)['"]?/i
   const arr = html.match(imgReg)
   if (!arr) return null
-  const urlArr = arr.reduce((prev, next) => {
+  return arr.reduce((prev, next) => {
     const src = next.match(srcReg)
     return src[1] ? [...prev, src[1]] : prev
   }, [])
-  return urlArr
 }
 
 export const customizeTimer = {

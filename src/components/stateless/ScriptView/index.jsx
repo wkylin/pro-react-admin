@@ -14,7 +14,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
   const [highlightedCode, setHighlightedCode] = useState('')
   const command = commandMap[packageManager]
 
-  useEffect(() => {
+  useEffect(async () => {
     async function loadHighlightedCode() {
       try {
         const { codeToHtml } = await import('shiki')
