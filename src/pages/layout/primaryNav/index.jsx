@@ -19,6 +19,9 @@ const PrimaryNav = () => {
         <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
+        {/* <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
+          My Portfilo
+        </Button> */}
         <FlipLink href={`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`}>SkyLine</FlipLink>
       </Space>
     </>

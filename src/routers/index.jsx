@@ -23,6 +23,7 @@ const CouponsDetail = lazy(() => import('@pages/coupons/detail'))
 const Product = lazy(() => import('@pages/product'))
 const ErrorPage = lazy(() => import('@pages/error'))
 const Dashboard = lazy(() => import('@pages/dashboard'))
+const MyPortfilo = lazy(() => import('@pages/portfilo'))
 // const ParallaxVert = lazy(() => import('@pages/parallax'))
 const ReactTilt = lazy(() => import('@pages/tilt'))
 const ReactMusic = lazy(() => import('@pages/music'))
@@ -393,6 +394,14 @@ const rootRouter = [
     key: '/dashboard',
     auth: true,
     element: lazyLoad(Dashboard),
+  },
+  {
+    index: false,
+    path: 'portfilo/*',
+    name: 'My Portfilo',
+    key: '/portfilo',
+    auth: true,
+    element: lazyLoad(MyPortfilo),
   },
   {
     index: false,

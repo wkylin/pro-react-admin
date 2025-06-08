@@ -18,6 +18,7 @@ const AuthRouter = (props) => {
     '/demo',
     '/parallax',
     '/dashboard',
+    '/portfilo',
     '/tilt',
     '/prism',
     '/three',
