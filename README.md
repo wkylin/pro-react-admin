@@ -462,6 +462,10 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
     location @rewrites {
       rewrite ^(.+)$ /index.html break;
     }
+    # 不缓存
+    location ~ .*(htm|html|json)?$ {
+      expires -1;
+    }
     # 或者全部重定向
     # return 301 https://$server_name$request_uri;
    }
