@@ -472,6 +472,21 @@ npm version [| major | minor | patch | premajor | preminor | prepatch | prerelea
 
     # SwitchHosts!
     192.168.1.101 www.pro.react.admin.com
+
+    # 第一个目录的配置
+    # C:\nginx-1.27.5\html\var\www\html\
+    # location /html/ {
+    #     root   /var/www;
+    #     index  index.html index.htm;
+    # }
+
+    # 第二个目录的配置
+    # C:\nginx-1.27.5\html\var\www\static\
+    # location /static/ {
+    #    root   /var/www;
+    #    index  index.html index.htm;
+    #}
+
    ```
 
 3. Nginx for Windows
