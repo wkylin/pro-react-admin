@@ -328,7 +328,7 @@
     "sse.js": "^2.6.0",
     "styled-components": "^6.1.18",
     "three": "^0.177.0",
-    "use-debounce": "^10.0.4",
+    "use-debounce": "^10.0.5",
     "use-deep-compare-effect": "^1.8.1",
     "use-react-router-breadcrumbs": "^4.0.1",
     "user-agents": "^1.1.558"
