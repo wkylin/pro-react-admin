@@ -41,7 +41,6 @@ const ProContent = () => {
       i18nKey,
     })
     setTabActiveKey(tabKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, search, panes, activeKey])
 
   return (

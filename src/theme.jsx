@@ -1,6 +1,5 @@
 import React from 'react'
 import { HashRouter as Router } from 'react-router-dom'
-// import { BrowserRouter as Router } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd'
 import { StyleProvider } from '@ant-design/cssinjs'
 import 'dayjs/locale/zh-cn'
@@ -15,7 +14,7 @@ import { useProThemeContext } from './theme/hooks'
 dayjs.locale('zh-cn')
 
 const ThemeIndex = () => {
-  const { myTheme } = useProThemeContext() as any
+  const { myTheme } = useProThemeContext()
   ConfigProvider.config({
     prefixCls: 'wui-ant',
     iconPrefixCls: 'wui-icon',

@@ -1,6 +1,3 @@
-import { parse, stringify } from 'qs'
-import html2canvas from 'html2canvas'
-
 export const getEnv = () => {
   let env
   if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
@@ -235,7 +232,7 @@ export const copyTextToClipboard = async (textToCopy) => {
 export const getRandomId = () => {
   let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  // eslint-disable-next-line no-plusplus
+
   for (let i = 0; i < 32; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   }
@@ -279,30 +276,6 @@ export const exportJsonData = (data) => {
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
-}
-
-export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
-  try {
-    const ele = eleHtml ?? document.getElementById('image-wrapper')
-    const canvas = await html2canvas(ele, {
-      useCORS: true,
-    })
-    const imgUrl = canvas.toDataURL('image/png')
-    const tempLink = document.createElement('a')
-    tempLink.style.display = 'none'
-    tempLink.href = imgUrl
-    tempLink.setAttribute('download', 'chat-shot.png')
-    if (typeof tempLink.download === 'undefined') tempLink.setAttribute('target', '_blank')
-
-    document.body.appendChild(tempLink)
-    tempLink.click()
-    document.body.removeChild(tempLink)
-    window.URL.revokeObjectURL(imgUrl)
-    if (successFun) successFun()
-    Promise.resolve()
-  } catch (error) {
-    if (errorFun) errorFun(error.message)
-  }
 }
 
 export const trimTopic = (topic) => topic.replace(/[，。！？”“"、,.!?]*$/, '')

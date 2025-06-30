@@ -1,4 +1,3 @@
-/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react'
 
 const useTable = (props) => {
@@ -34,7 +33,7 @@ const useTable = (props) => {
         setPageSize(pageSize)
         try {
           let data = JSON.parse(JSON.stringify(resp))
-          // eslint-disable-next-line no-underscore-dangle
+
           let _path = [...paths]
           while (_path.length) {
             data = data[_path[0]]

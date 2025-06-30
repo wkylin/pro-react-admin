@@ -1,15 +1,11 @@
 import React, { createContext, useContext, useState, useMemo } from 'react'
 
 const defaultTheme = 'light'
-type ThemeContextType = {
-  myTheme: string
-  setMyTheme: Function
-}
 
-const ProThemeContext = createContext<ThemeContextType | null>(null)
+const ProThemeContext = createContext(null)
 const useProThemeContext = () => useContext(ProThemeContext)
 
-const ProThemeProvider = ({ children }: any) => {
+const ProThemeProvider = ({ children }) => {
   const [myTheme, setMyTheme] = useState(defaultTheme)
 
   const themeProvider = useMemo(

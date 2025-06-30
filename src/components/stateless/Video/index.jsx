@@ -16,10 +16,9 @@ export const VideoJS = (props) => {
       videoElement.classList.add('vjs-big-play-centered')
       videoRef.current.appendChild(videoElement)
 
-      // eslint-disable-next-line no-multi-assign
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log('player is ready')
-        // eslint-disable-next-line no-unused-expressions
+
         onReady && onReady(player)
       }))
 

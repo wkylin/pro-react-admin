@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 /* eslint-disable react/display-name */
 import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { Form, Input, Select, Checkbox, Space, Button, DatePicker } from 'antd'
@@ -37,7 +36,7 @@ const SearchForm = forwardRef((props, ref) => {
   const onFinishInner = useCallback(
     (values) => {
       let newValues = {}
-      // eslint-disable-next-line guard-for-in
+
       for (const key in values) {
         newValues[key] = window.isEmpty(values[key]) ? undefined : values[key]
       }
@@ -159,7 +158,7 @@ const SearchForm = forwardRef((props, ref) => {
   const exportResultInner = () => {
     const values = form.getFieldsValue()
     let newValues = {}
-    // eslint-disable-next-line guard-for-in
+
     for (const key in values) {
       newValues[key] = window.isEmpty(values[key]) ? undefined : values[key]
     }

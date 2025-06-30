@@ -77,10 +77,6 @@ export default defineConfig({
       },
     },
   },
-  // 去除console和debugger
-  esbuild: {
-    pure: ['console.log', 'debugger'],
-  },
   preview: {
     port: 4173,
   },

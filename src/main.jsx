@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import '@ant-design/v5-patch-for-react-19'
 import { I18nextProvider } from 'react-i18next'
 import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'

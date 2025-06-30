@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
-// import { StickyContainer, Sticky } from 'react-sticky-ts'
-import { StickyContainer, Sticky } from 'react-sticky'
+import StickyBox from 'react-sticky-box'
 import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
 import MyErrorBoundary from '@stateful'
 import { nanoid } from 'nanoid'
@@ -27,16 +26,9 @@ const ProTabs = (props) => {
   } = theme.useToken()
 
   const renderTabBar = (_props, DefaultTabBar) => (
-    <Sticky topOffset={40} relative>
-      {({ style }) => (
-        <DefaultTabBar
-          key={nanoid()}
-          {..._props}
-          className="pro-tabs"
-          style={{ ...style, background: colorBgContainer }}
-        />
-      )}
-    </Sticky>
+    <StickyBox topOffset={40} style={{ zIndex: 1 }}>
+      <DefaultTabBar key={nanoid()} {..._props} className="pro-tabs" style={{ background: colorBgContainer }} />
+    </StickyBox>
   )
 
   useEffect(() => {
@@ -127,7 +119,7 @@ const ProTabs = (props) => {
   }
 
   return (
-    <StickyContainer className="layout-container" id="container">
+    <section className="layout-container" id="container">
       <Tabs
         hideAdd
         type="editable-card"
@@ -140,7 +132,7 @@ const ProTabs = (props) => {
           zIndex: 2,
         }}
         activeKey={activeKey}
-        destroyInactiveTabPane={false}
+        destroyOnHidden={false}
         tabBarExtraContent={{
           left: (
             <Space align="center" size={30} style={{ margin: '0 25px' }}>
@@ -195,7 +187,7 @@ const ProTabs = (props) => {
           ),
         }))}
       />
-    </StickyContainer>
+    </section>
   )
 }
 
