@@ -279,7 +279,7 @@
     "motion": "^12.16.0",
     "nanoid": "^5.1.5",
     "node-polyfill-webpack-plugin": "^4.1.0",
-    "number-flow": "^0.5.7",
+    "number-flow": "^0.5.8",
     "object-hash": "^3.0.0",
     "popmotion": "^11.0.5",
     "postcss-less": "^6.0.0",
