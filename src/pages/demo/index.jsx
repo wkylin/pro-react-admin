@@ -9,6 +9,7 @@ import Footer from '@stateless/Footer'
 import StarBack from '@stateless/StarBackground'
 // import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
 import FixTabs from '@stateless/FixTabs'
+import TagCard from '@stateless/TagCard'
 
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
@@ -107,6 +108,128 @@ const dateDifference = (date1, date2) => {
   return diffDays
 }
 
+const tagCardList = [
+  {
+    name: '基础属性标签',
+    tags: [
+      {
+        name: '本地客户',
+      },
+      {
+        name: '建筑行业',
+      },
+      {
+        name: '教育体系客户/医疗体系客户',
+      },
+    ],
+  },
+  {
+    name: '业务属性标签',
+    tags: [
+      {
+        name: '建设工程中重点客户',
+      },
+      {
+        name: '交易频次高',
+      },
+      {
+        name: '业务数量多',
+      },
+      {
+        name: '复合型客户',
+      },
+      {
+        name: '交易频次高',
+      },
+      {
+        name: '业务数量多',
+      },
+      {
+        name: '复合型客户',
+      },
+    ],
+  },
+  {
+    name: '价值评估标签',
+    tags: [
+      {
+        name: '重点客户/一般客户',
+      },
+      {
+        name: '战略合作客户',
+      },
+      {
+        name: '高影响力客户',
+      },
+      {
+        name: '长期委托协议客户',
+      },
+    ],
+  },
+  {
+    name: '风险控制标签',
+    tags: [
+      {
+        name: '信用等级高',
+      },
+      {
+        name: '内控制度完善',
+      },
+      {
+        name: '存在失信记录',
+      },
+      {
+        name: '中风险客户',
+      },
+    ],
+  },
+  {
+    name: '行为特征标签',
+    tags: [
+      {
+        name: '偏好线上客户/电话咨询',
+      },
+      {
+        name: '内控制度完善',
+      },
+      {
+        name: '存在失信记录',
+      },
+      {
+        name: '中风险客户',
+      },
+    ],
+  },
+  {
+    name: '其他标签',
+    tags: [
+      {
+        name: '紧急项目多',
+      },
+      {
+        name: '配合度高',
+      },
+      {
+        name: '推动效率高',
+      },
+      {
+        name: '响应时间长',
+      },
+    ],
+  },
+  {
+    name: '其他标签',
+    tags: [
+      {
+        name: '紧急项目多',
+      },
+      {
+        name: '配合度高',
+      },
+    ],
+  },
+]
+
 const ProDemo = () => {
   // const [items, setItems] = useState([
   //   { id: '1', content: <DraggableItem>First Item</DraggableItem> },
@@ -121,6 +244,7 @@ const ProDemo = () => {
     <FixTabPanel>
       <section style={{ position: 'relative', zIndex: 1, backgroundColor: '#fff', transform: 'translate3d(0, 0, 0)' }}>
         <FixTabs />
+        <TagCard tagCardList={tagCardList} showMax={6} />
         <FixCarousel />
         {/* <OrbitingCirclesDemo /> */}
         {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}

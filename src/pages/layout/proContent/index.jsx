@@ -50,7 +50,7 @@ const ProContent = () => {
       <Header className="layout-header" style={{ background: colorBgLayout }}>
         <section className="flex items-center justify-between">
           <ProBreadcrumb />
-          <ClockFace />
+          {/* <ClockFace /> */}
         </section>
       </Header>
       <Content className="layout-content" id="fullScreenContent" style={{ background: colorBgContainer }}>
