@@ -2,7 +2,7 @@ import React from 'react'
 import { Tooltip } from 'antd'
 import styles from './index.module.less'
 
-import iconQuestion from './icons/icon-question.png'
+import iconQuestion from './icons/question.png'
 import iconBook from './icons/book.png'
 import iconWallet from './icons/wallet.png'
 
