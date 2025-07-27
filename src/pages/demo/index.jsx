@@ -10,6 +10,7 @@ import StarBack from '@stateless/StarBackground'
 // import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
 import FixTabs from '@stateless/FixTabs'
 import TagCard from '@stateless/TagCard'
+import StatisticCard from '@stateless/StatisticCard'
 
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
@@ -244,7 +245,7 @@ const ProDemo = () => {
     <FixTabPanel>
       <section style={{ position: 'relative', zIndex: 1, backgroundColor: '#fff', transform: 'translate3d(0, 0, 0)' }}>
         <FixTabs />
-        <TagCard tagCardList={tagCardList} showMax={6} />
+        <StatisticCard />
         <FixCarousel />
         {/* <OrbitingCirclesDemo /> */}
         {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
@@ -399,6 +400,7 @@ const ProDemo = () => {
             </div>
           </div>
         </section>
+        <TagCard tagCardList={tagCardList} showMax={6} />
         <section className={styles['section-gradient']}>
           <div className={styles.wave} />
           <div className={styles.wave} />
