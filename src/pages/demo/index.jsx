@@ -11,7 +11,7 @@ import StarBack from '@stateless/StarBackground'
 import FixTabs from '@stateless/FixTabs'
 import TagCard from '@stateless/TagCard'
 import StatisticCard from '@stateless/StatisticCard'
-
+import TransferHistory from '@stateless/TransferHistory'
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
@@ -246,6 +246,7 @@ const ProDemo = () => {
       <section style={{ position: 'relative', zIndex: 1, backgroundColor: '#fff', transform: 'translate3d(0, 0, 0)' }}>
         <FixTabs />
         <StatisticCard />
+        <TransferHistory />
         <FixCarousel />
         {/* <OrbitingCirclesDemo /> */}
         {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}

@@ -5,11 +5,13 @@ import styles from './index.module.less'
 import iconQuestion from './icons/question.png'
 import iconBook from './icons/book.png'
 import iconWallet from './icons/wallet.png'
+import iconRate from './icons/rate.png'
 
 const defaultIcons = {
   book: iconBook,
   wallet: iconWallet,
   question: iconQuestion,
+  rate: iconRate,
 }
 
 const StatisticCard = ({
@@ -27,7 +29,7 @@ const StatisticCard = ({
       title: '同比增长',
       value: 20,
       unit: '%',
-      icon: 'wallet',
+      icon: 'rate',
       showTooltip: false,
     },
   ],
