@@ -1,0 +1,46 @@
+.descWrapper {
+  padding: 10px;
+
+  .descBox {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 14px;
+
+    .descLabel {
+      flex: 0 0 160px;
+      color: #666;
+      text-align: right;
+      margin-right: 10px;
+    }
+
+    .descContent {
+      flex: 1;
+      text-align: left;
+      color: #333;
+
+      .descItem {
+        margin-bottom: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        .descItemBox {
+          width: 33.33%;
+        }
+      }
+
+      .descItemNormal {
+        .descItemBox {
+          width: auto;
+          margin-right: 20px;
+        }
+      }
+
+      .descItem.lastItem {
+        margin-bottom: 0;
+      }
+    }
+  }
+}

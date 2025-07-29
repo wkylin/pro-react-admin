@@ -10,6 +10,7 @@ import StarBack from '@stateless/StarBackground'
 // import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
 import FixTabs from '@stateless/FixTabs'
 import TagCard from '@stateless/TagCard'
+import DescBox from '@stateless/DescBox'
 import StatisticCard from '@stateless/StatisticCard'
 import TransferHistory from '@stateless/TransferHistory'
 import StickyCard from '@stateless/StickyCard'
@@ -401,6 +402,7 @@ const ProDemo = () => {
             </div>
           </div>
         </section>
+        <DescBox />
         <TagCard tagCardList={tagCardList} showMax={6} />
         <section className={styles['section-gradient']}>
           <div className={styles.wave} />
