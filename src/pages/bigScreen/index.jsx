@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import EChartsCommon from '@stateless/EChartsCommon'
+import PieNestCharts from '@stateless/PieNestCharts'
+import DonutCharts from '@stateless/DonutCharts'
 import previewFitScale from '@utils/previewScale'
 import BigHeader from './bigHeader'
 
 import styles from './index.module.less'
 import ChinaMap from './chinaMap'
-import { OfflinePortalOptions } from './offlinePortalOptions'
+import { OfflinePortalOptions, pieNestOptions, subordOptions } from './offlinePortalOptions'
 
 const BigScreen = () => {
   const scaleDom = useRef(null)
@@ -955,7 +957,7 @@ const BigScreen = () => {
               height: '30vh',
             }}
           >
-            <EChartsCommon option={OfflinePortalOptions(feedbackData)} />
+            <PieNestCharts eOptions={pieNestOptions} />
           </div>
           <div
             style={{
@@ -975,8 +977,13 @@ const BigScreen = () => {
           </div>
         </section>
         <section style={{ marginTop: 20, color: '#fff' }}>某市项目投标数据统计</section>
-        <section style={{ height: '40vh' }}>
-          <EChartsCommon option={options} />
+        <section className="flex justify-between text-white">
+          <section style={{ height: '40vh', width: '56%' }}>
+            <EChartsCommon option={options} />
+          </section>
+          <section style={{ height: '40vh', width: '40%' }}>
+            <DonutCharts eOptions={subordOptions} />
+          </section>
         </section>
       </section>
     </FixTabPanel>

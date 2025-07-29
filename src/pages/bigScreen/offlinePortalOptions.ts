@@ -278,3 +278,87 @@ export const OfflinePortalOptions = (params: any) => ({
     },
   ],
 })
+
+export const pieNestOptions = {
+  options: {
+    series: [
+      {
+        data: [
+          { value: 700, name: '服务', code: 'service' },
+          { value: 900, name: '工程', code: 'project' },
+          { value: 600, name: '货物', code: 'goods' },
+        ],
+      },
+      {
+        label: {
+          show: true,
+          formatter: '{b|{b}}\n {a|流标宗数: {c}宗}\n {a|宗数占比: {d}%}',
+        },
+        data: [
+          { value: 200, name: '信息服务', category: 'service' },
+          { value: 500, name: '社工', category: 'service' },
+          { value: 400, name: '工程-A', category: 'project' },
+          { value: 300, name: '工程-B', category: 'project' },
+          { value: 200, name: '工程-C', category: 'project' },
+          { value: 400, name: '货物-A', category: 'goods' },
+          { value: 200, name: '货物-B', category: 'goods' },
+        ],
+      },
+    ],
+  },
+}
+
+export const subordOptions = {
+  data: [
+    {
+      value: 40,
+      name: '央企',
+    },
+    {
+      value: 35,
+      name: '省属',
+    },
+    {
+      value: 25,
+      name: '市属',
+    },
+    {
+      value: 40,
+      name: '区属',
+    },
+    {
+      value: 35,
+      name: '其他公有',
+    },
+    {
+      value: 25,
+      name: '行政事业',
+    },
+    {
+      value: 25,
+      name: '民营',
+    },
+  ],
+  options: {
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      show: false,
+    },
+    label: {
+      formatter: '{d|{b}}\n{b|项目数量}{g|{c}}{b|宗}\n{b|当前时段占比}{f|{d}}{b|%}',
+    },
+    labelLine: {
+      // show: false
+    },
+    series: [
+      {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+      },
+    ],
+  },
+}
