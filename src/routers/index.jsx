@@ -1,5 +1,8 @@
 import React, { Suspense, lazy } from 'react'
-import Loading from '@src/components/stateless/Loading'
+import Loading from '@stateless/Loading'
+import SignIn from '@pages/signin'
+import SignUp from '@pages/signup'
+import Layout from '@pages/layout'
 
 const lazyLoad = (Component) => (
   <Suspense fallback={<Loading />}>
@@ -10,9 +13,9 @@ const lazyLoad = (Component) => (
 // 以下路由可根据需求另分成不同的文件维护
 // 结合 proSecNav组件中的menuItems
 
-const SignIn = lazy(() => import('@pages/signin'))
-const SignUp = lazy(() => import('@pages/signup'))
-const Layout = lazy(() => import('@pages/layout'))
+// const SignIn = lazy(() => import('@pages/signin'))
+// const SignUp = lazy(() => import('@pages/signup'))
+// const Layout = lazy(() => import('@pages/layout'))
 const Home = lazy(() => import('@pages/home'))
 const Demo = lazy(() => import('@pages/demo'))
 const Coupons = lazy(() => import('@pages/coupons'))
