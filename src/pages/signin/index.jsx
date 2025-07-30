@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
 import { setLocalStorage } from '@utils/publicFn'
+import { useOAuth } from '@hooks/useOAuth'
 
 const { Content } = Layout
 const { Title, Text, Link } = Typography
@@ -23,6 +24,8 @@ const SignIn = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+
+  const { loginWithGitHub, loginWithGoogle } = useOAuth()
 
   const [form] = Form.useForm()
 
