@@ -24,6 +24,7 @@ import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 // import AnimatedList from '@stateless/AnimatedList'
 // import { DraggableList, DraggableItem } from '@stateless/DraggableList'
 import FixCarousel from '@stateless/FixCarouse'
+import OrgChart from '@stateless/OrgChart'
 import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
@@ -408,6 +409,9 @@ const ProDemo = () => {
           <div className={styles.wave} />
           <div className={styles.wave} />
           <div className={styles.wave} />
+        </section>
+        <section style={{height: 420}}>
+          <OrgChart />
         </section>
       </section>
       <Footer />
