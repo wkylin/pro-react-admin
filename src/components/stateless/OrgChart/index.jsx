@@ -55,7 +55,7 @@ const sampleOrgData = {
 const OrgChartDemo = () => {
   return (
     <div className="m-5 flex justify-center bg-white">
-      <OrgChart data={sampleOrgData} isRoot={true} />
+      <OrgChart data={sampleOrgData} isRoot />
     </div>
   )
 }

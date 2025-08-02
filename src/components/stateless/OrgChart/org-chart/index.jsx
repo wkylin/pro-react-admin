@@ -53,7 +53,7 @@ const OrgChart = ({ data, isRoot = false }) => {
         </Card>
 
         {/* 向下的垂直线 */}
-        {hasChildren && <div className={styles.verticalLineDown}></div>}
+        {hasChildren && <div className={styles.verticalLineDown} />}
       </div>
 
       {/* 子节点区域 */}
@@ -67,7 +67,7 @@ const OrgChart = ({ data, isRoot = false }) => {
                 width: `${horizontalLineInfo.width}px`,
                 left: `${horizontalLineInfo.positions[0]}px`,
               }}
-            ></div>
+            />
           )}
 
           {/* 子节点包装器 */}
@@ -88,7 +88,7 @@ const OrgChart = ({ data, isRoot = false }) => {
                   }}
                 >
                   {/* 向上的垂直线连接到水平线 */}
-                  <div className={styles.verticalLineUp}></div>
+                  <div className={styles.verticalLineUp} />
 
                   {/* 递归渲染子节点 */}
                   <OrgChart data={child} />
