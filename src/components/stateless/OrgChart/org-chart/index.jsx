@@ -1,3 +1,4 @@
+import React from 'react'
 import { Card, Typography } from 'antd'
 import styles from './index.module.less'
 
