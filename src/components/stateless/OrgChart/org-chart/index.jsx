@@ -1,8 +1,7 @@
-import { Card, Typography } from "antd"
-import styles from "./index.module.less"
+import { Card, Typography } from 'antd'
+import styles from './index.module.less'
 
 const { Text } = Typography
-
 
 const OrgChart = ({ data, isRoot = false }) => {
   const nodeWidth = 140
@@ -83,9 +82,9 @@ const OrgChart = ({ data, isRoot = false }) => {
                   className={styles.childContainer}
                   style={{
                     width: `${childWidth}px`,
-                    position: "absolute",
+                    position: 'absolute',
                     left: `${leftPosition}px`,
-                    top: "0px",
+                    top: '0px',
                   }}
                 >
                   {/* 向上的垂直线连接到水平线 */}
