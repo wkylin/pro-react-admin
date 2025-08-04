@@ -116,7 +116,7 @@ const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete,
     controls.start({
       scale: [1, 1.5, 1],
       rotate: [0, 10, -10, 10, -10, 0],
-      transition: { duration: 0.5 },
+      transition: { duration: 0.5 }
     })
   }
 
@@ -127,7 +127,7 @@ const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete,
         width,
         height,
         cursor:
-          "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNSIgc3R5bGU9ImZpbGw6I2ZmZjtzdHJva2U6IzAwMDtzdHJva2Utd2lkdGg6MXB4OyIgLz4KPC9zdmc+'), auto",
+          "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj4KICA8Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxNSIgc3R5bGU9ImZpbGw6I2ZmZjtzdHJva2U6IzAwMDtzdHJva2Utd2lkdGg6MXB4OyIgLz4KPC9zdmc+'), auto"
       }}
       animate={controls}
     >
@@ -135,10 +135,10 @@ const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete,
         ref={canvasRef}
         width={width}
         height={height}
-        className="absolute top-0 left-0"
+        className='absolute top-0 left-0'
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
-      ></canvas>
+      />
       {children}
     </motion.div>
   )
