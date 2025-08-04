@@ -15,6 +15,7 @@ const state = {
   height: '100%',
 }
 
+// 注册地图数据
 echarts.registerMap('china', china as unknown as GeoJSONCompressed)
 
 const EChartsCommon = (props: {
@@ -26,77 +27,151 @@ const EChartsCommon = (props: {
 }) => {
   const drawDomRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<EChartsType | null>(null)
+  const isInitializedRef = useRef(false)
+  const resizeObserverRef = useRef<ResizeObserver | null>(null)
 
-  const dispose = () => {
-    if (!chartRef.current) {
-      return
+  // 安全地销毁图表实例
+  const dispose = useCallback(() => {
+    if (chartRef.current) {
+      try {
+        chartRef.current.dispose()
+      } catch (error) {
+        console.error('ECharts dispose error:', error)
+      }
+      chartRef.current = null
+      isInitializedRef.current = false
     }
-    chartRef.current.dispose()
-    chartRef.current = null
-  }
+  }, [])
 
-  const resize = debounce(() => {
-    chartRef?.current?.resize()
-  }, 100)
+  // 使用 ResizeObserver 替代 window.resize 事件
+  const setupResizeObserver = useCallback(() => {
+    if (!drawDomRef.current || !chartRef.current) return
 
+    // 清理旧的观察者
+    if (resizeObserverRef.current) {
+      resizeObserverRef.current.disconnect()
+    }
+
+    // 创建新的观察者
+    resizeObserverRef.current = new ResizeObserver(
+      debounce(() => {
+        if (chartRef.current) {
+          try {
+            chartRef.current.resize()
+          } catch (error) {
+            console.error('ECharts resize error:', error)
+          }
+        }
+      }, 100)
+    )
+
+    resizeObserverRef.current.observe(drawDomRef.current)
+  }, [])
+
+  // 安全地设置图表配置
   const setOption = useCallback(
     (option: OptionType) => {
       if (!chartRef.current) {
+        console.warn('ECharts instance is not available')
         return
       }
-      const { notMerge } = props
-      const { lazyUpdate } = props
-      chartRef.current.setOption(option, notMerge, lazyUpdate)
+
+      try {
+        const { notMerge = false, lazyUpdate = false } = props
+        chartRef.current.setOption(option, notMerge, lazyUpdate)
+      } catch (error) {
+        console.error('ECharts setOption error:', error)
+        // 尝试重新初始化图表
+        dispose()
+        initChart(drawDomRef.current)
+      }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [props.notMerge, props.lazyUpdate]
+    [props.notMerge, props.lazyUpdate, dispose]
   )
 
-  // 初始化组件
-  const initChart = (dom: HTMLDivElement | null) => {
-    if (chartRef.current) return
-    if (!dom) return
-    // renderer 用于配置渲染方式 可以是 svg 或者 canvas
-    const renderer = props.renderer || 'canvas'
-    chartRef.current = echarts.init(dom, null, {
-      renderer,
-      width: 'auto',
-      height: 'auto',
-    })
-    // 执行初始化的任务，例如注册地图
-    if (props.instanceHandle) props.instanceHandle(chartRef.current)
-    setOption(props.option)
-    // 监听屏幕缩放，重新绘制 echart 图表
-    window.addEventListener('resize', resize)
-  }
+  // 初始化图表
+  const initChart = useCallback(
+    (dom: HTMLDivElement | null) => {
+      if (!dom || chartRef.current) return
 
-  const initHandle = () => {
-    // 还没实例走初始化
-    if (!chartRef.current) {
+      try {
+        // 确保 DOM 元素有尺寸
+        if (dom.clientWidth === 0 || dom.clientHeight === 0) {
+          console.warn('Chart container has zero size, delaying initialization')
+          return
+        }
+
+        const renderer = props.renderer || 'canvas'
+        chartRef.current = echarts.init(dom, null, {
+          renderer,
+          width: 'auto',
+          height: 'auto',
+        })
+
+        isInitializedRef.current = true
+
+        // 执行初始化回调
+        if (props.instanceHandle) {
+          props.instanceHandle(chartRef.current)
+        }
+
+        // 设置初始配置
+        setOption(props.option)
+
+        // 设置尺寸观察
+        setupResizeObserver()
+      } catch (error) {
+        console.error('ECharts initialization error:', error)
+        chartRef.current = null
+        isInitializedRef.current = false
+      }
+    },
+    [props, setOption, setupResizeObserver]
+  )
+
+  // 处理图表初始化或更新
+  const initHandle = useCallback(() => {
+    if (!chartRef.current || !isInitializedRef.current) {
       initChart(drawDomRef.current)
     } else {
       setOption(props.option)
     }
-  }
+  }, [initChart, setOption, props.option])
 
-  useEffect(
-    () =>
-      // 组件卸载
-      () => {
-        window.removeEventListener('resize', resize)
-        dispose()
-      },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
-
-  // 每次更新组件都重置
+  // 组件挂载和卸载
   useEffect(() => {
     initHandle()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.option])
 
-  return <div className="default-chart" ref={drawDomRef} style={{ width: state.width, height: state.height }} />
+    return () => {
+      // 清理 ResizeObserver
+      if (resizeObserverRef.current) {
+        resizeObserverRef.current.disconnect()
+        resizeObserverRef.current = null
+      }
+
+      // 销毁图表实例
+      dispose()
+    }
+  }, [initHandle, dispose])
+
+  // 当 option 变化时更新图表
+  useEffect(() => {
+    if (isInitializedRef.current) {
+      setOption(props.option)
+    }
+  }, [props.option, setOption])
+
+  return (
+    <div
+      className="default-chart"
+      ref={drawDomRef}
+      style={{
+        width: state.width,
+        height: state.height,
+        minHeight: '200px', // 确保容器有最小高度
+      }}
+    />
+  )
 }
 
 export default EChartsCommon
