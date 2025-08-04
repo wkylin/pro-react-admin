@@ -110,19 +110,7 @@ const preCode = `
     );
   };
 `.trim()
-const slugs = [
-  'typescript',
-  'javascript',
-  'react',
-  'html5',
-  'css3',
-  'prisma',
-  'nginx',
-  'vercel',
-  'docker',
-  'git',
-  'sonarqube',
-]
+const slugs = ['typescript', 'javascript', 'react', 'html5', 'css', 'prisma', 'nginx', 'vercel', 'docker', 'git']
 
 const dataSteps = [
   {

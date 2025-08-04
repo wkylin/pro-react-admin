@@ -5,20 +5,23 @@ import { motion, useAnimation } from 'motion/react'
 const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete, children, className }) => {
   const canvasRef = useRef(null)
   const [isScratching, setIsScratching] = useState(false)
-  const [isComplete, setIsComplete] = useState(false) // New state to track completion
+  const [isComplete, setIsComplete] = useState(false)
 
   const controls = useAnimation()
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const ctx = canvas?.getContext('2d')
-    if (canvas && ctx) {
-      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
-      gradient.addColorStop(0, '#A97CF8')
-      gradient.addColorStop(0.5, '#F38CB8')
-      gradient.addColorStop(1, '#FDCC92')
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+    if (canvas) {
+      // 关键优化：添加willReadFrequently: true
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })
+      if (ctx) {
+        const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+        gradient.addColorStop(0, '#A97CF8')
+        gradient.addColorStop(0.5, '#F38CB8')
+        gradient.addColorStop(1, '#FDCC92')
+        ctx.fillStyle = gradient
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      }
     }
   }, [])
 
