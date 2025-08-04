@@ -77,8 +77,8 @@ const ProSecNav = () => {
     { label: 'Crypto', key: '/crypto', icon: <QrcodeOutlined /> },
     { label: 'Video', key: '/video', icon: <FireOutlined /> },
     { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
-    { label: 'Barcode', key: '/barcode', icon: <FireOutlined /> },
-    { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
+    // { label: 'Barcode', key: '/barcode', icon: <FireOutlined /> },
+    // { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
 
     // { label: 'Gantt', key: '/gantt', icon: <QrcodeOutlined /> },
     // { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
@@ -90,7 +90,7 @@ const ProSecNav = () => {
     { label: 'Post Message', key: '/postmessage', icon: <FireOutlined /> },
     { label: 'Geo Chart', key: '/geo', icon: <QrcodeOutlined /> },
     { label: 'D3 Chart', key: '/d3-chart', icon: <QrcodeOutlined /> },
-    { label: 'PdfView', key: '/pdf-view', icon: <QrcodeOutlined /> },
+    // { label: 'PdfView', key: '/pdf-view', icon: <QrcodeOutlined /> },
     { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
     {
       label: '技术栈',
