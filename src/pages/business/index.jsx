@@ -102,7 +102,13 @@ const Business = () => {
             {index + 1}
             <span>.</span> {item.name} : {item.list.length}
           </section>
-          <Table loading={loading} columns={fixColumns} dataSource={item.list} pagination={false} />
+          <Table
+            loading={loading}
+            columns={fixColumns}
+            dataSource={item.list}
+            rowKey="certificateNo"
+            pagination={false}
+          />
         </section>
       ))}
     </FixTabPanel>
