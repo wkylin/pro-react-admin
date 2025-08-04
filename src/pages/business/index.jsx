@@ -12,46 +12,46 @@ const fixColumns = [
   {
     title: '资质名称',
     dataIndex: 'certificateName',
-    render: (text, _record, index) => text || '-',
+    render: (text, _record, index) => text || '-'
   },
   {
     title: '证书编号',
     dataIndex: 'certificateNo',
-    render: (text, _record, index) => text || '-',
+    render: (text, _record, index) => text || '-'
   },
   {
     title: '发证机构',
     dataIndex: 'certifyOrgName',
-    render: (text, _record, index) => text || '-',
+    render: (text, _record, index) => text || '-'
   },
   {
     title: '发证日期',
     dataIndex: 'issueDate',
-    render: (text, _record, index) => text || '-',
+    render: (text, _record, index) => text || '-'
   },
   {
     title: '有效期至',
     dataIndex: 'endDate',
-    render: (text, _record, index) => text || '-',
+    render: (text, _record, index) => text || '-'
   },
   {
     title: '证书状态',
     dataIndex: 'status',
-    render: (text, _record, index) => text || '-',
-  },
+    render: (text, _record, index) => text || '-'
+  }
 ]
 
 const initialFetchData = [
   {
     grid: '2316258212',
     name: '上海徐汇规划建筑设计有限公司',
-    list: [],
+    list: []
   },
   {
     grid: '551517222',
     name: '中交第一公路勘察设计研究院有限公司',
-    list: [],
-  },
+    list: []
+  }
 ]
 
 const Business = () => {
@@ -75,14 +75,14 @@ const Business = () => {
                 status: '-100',
                 issueYear: '-100',
                 searchKey: '',
-                sortType: '',
-              },
+                sortType: ''
+              }
             }
           )
           setLoading(false)
           newFetchData[i] = {
             ...item,
-            list: res.data?.list || [],
+            list: res.data?.list || []
           }
         } catch (error) {
           setLoading(false)
@@ -97,8 +97,8 @@ const Business = () => {
   return (
     <FixTabPanel>
       {fetchData.map((item, index) => (
-        <section className="my-4" key={item.grid}>
-          <section className="my-4 text-lg">
+        <section className='my-4' key={item.grid}>
+          <section className='my-4 text-lg'>
             {index + 1}
             <span>.</span> {item.name} : {item.list.length}
           </section>
@@ -106,7 +106,7 @@ const Business = () => {
             loading={loading}
             columns={fixColumns}
             dataSource={item.list}
-            rowKey="certificateNo"
+            rowKey='certificateNo'
             pagination={false}
           />
         </section>
