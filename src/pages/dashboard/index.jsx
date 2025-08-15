@@ -1,9 +1,10 @@
 import React from 'react'
 // import { Routes, Route, useNavigate, useNavigationType } from 'react-router-dom'
 import { Routes, Route, useNavigate } from 'react-router-dom'
-import { Button, Layout, theme, Space } from 'antd'
+import { Button, Layout, theme, Space, Skeleton } from 'antd'
+import { ArrowLeftOutlined, ArrowRightOutlined } from '@ant-design/icons'
 import FixLayout from '@src/components/stateless/FixLayout'
-// import BigScreen from '@pages/bigScreen'
+import NavigationTabs from '@stateless/NavigationTabs'
 
 const { Content } = Layout
 
@@ -26,23 +27,28 @@ const Dashboard = () => {
                   {/* <h2>Look, more routes!</h2> */}
                   {/* <h2>Navigate type: {navigateType}</h2> */}
                   <Space>
-                    <Button type="primary" onClick={() => navigate('/')}>
-                      Navigate /
+                    <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate('/')}>
+                      回主站
                     </Button>
-                    <Button type="primary" onClick={() => navigate('invoices')}>
-                      navigate to invoices
+                    <Button type="link" icon={<ArrowRightOutlined />} onClick={() => navigate('invoices')}>
+                      下一站
                     </Button>
                   </Space>
-                  {/* <BigScreen /> */}
+                  <NavigationTabs />
                 </>
               }
             />
             <Route
               path="invoices"
               element={
-                <Button type="primary" onClick={() => navigate(-1)}>
-                  navigate to dashboard
-                </Button>
+                <>
+                  <Space>
+                    <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
+                      上一站
+                    </Button>
+                  </Space>
+                  <Skeleton active />
+                </>
               }
             />
           </Routes>
