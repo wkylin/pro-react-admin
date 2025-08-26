@@ -1,4 +1,4 @@
-import axiosInstance from '@/services/axiosConfig'
+import axiosInstance from '@src/services/axiosConfig'
 const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
 
 const venuesExchange = async (data, customBaseUrl) => {

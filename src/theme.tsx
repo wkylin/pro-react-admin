@@ -1,7 +1,8 @@
-import React from 'react'
-import { HashRouter as Router } from 'react-router-dom'
-// import { BrowserRouter as Router } from 'react-router-dom'
-import { ConfigProvider, theme } from 'antd'
+import React, { useEffect } from 'react'
+// import { HashRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
+import { ConfigProvider, theme, App as AntdApp } from 'antd'
+
 import { StyleProvider } from '@ant-design/cssinjs'
 import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
@@ -11,6 +12,7 @@ import './styles/reset.css'
 import App from './App'
 import myThemes from './theme/index'
 import { useProThemeContext } from './theme/hooks'
+import { setMessageInstance } from '@utils/message'
 
 dayjs.locale('zh-cn')
 
@@ -20,6 +22,13 @@ const ThemeIndex = () => {
     prefixCls: 'wui-ant',
     iconPrefixCls: 'wui-icon',
   })
+  const { message } = AntdApp.useApp()
+
+  // 组件挂载时设置消息实例
+  useEffect(() => {
+    setMessageInstance(message)
+  }, [message])
+
   return (
     <Router>
       <StyleProvider hashPriority="high">

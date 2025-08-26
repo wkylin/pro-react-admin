@@ -1,6 +1,6 @@
 import React from 'react'
 // import React, { useEffect, useState } from 'react'
-import { Layout, Space, Dropdown, Switch, theme } from 'antd'
+import { Layout, Space, Dropdown, Switch, theme, Avatar } from 'antd'
 import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -18,6 +18,9 @@ import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
 
 import { useProThemeContext } from '@theme/hooks'
+
+import { useAuth } from '@src/service/useAuth'
+import { authService } from '@src/service/authService'
 
 import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
@@ -38,6 +41,14 @@ const ProHeader = () => {
   }
   const redirectWiki = () => {
     window.open('https://deepwiki.com/wkylin/pro-react-admin', '_blank')
+  }
+
+  const { isAuthenticated, user, isLoading } = useAuth()
+
+  const handleLogout = () => {
+    authService.logout()
+    removeLocalStorage('token')
+    redirectTo('/signin')
   }
 
   const items = [
@@ -70,8 +81,12 @@ const ProHeader = () => {
       label: <Space>退出登录</Space>,
       icon: <LogoutOutlined />,
       onClick: () => {
-        removeLocalStorage('token')
-        redirectTo('/signin')
+        if (isAuthenticated && user) {
+          authService.logout()
+        } else {
+          removeLocalStorage('token')
+          redirectTo('/signin')
+        }
       },
     },
   ]
@@ -125,7 +140,13 @@ const ProHeader = () => {
             }}
           >
             <Space>
-              <span style={{ fontSize: 18 }}>wkylin.w</span>
+              {isAuthenticated && user ? (
+                <>
+                  <Avatar src={user.avatar_url} /> <span>{user.name || user.login}</span>
+                </>
+              ) : (
+                <span style={{ fontSize: 18 }}>wkylin.w</span>
+              )}
               <DownOutlined />
             </Space>
           </Dropdown>

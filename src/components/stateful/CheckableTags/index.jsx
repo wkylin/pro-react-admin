@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, { useState, forwardRef, useImperativeHandle } from 'react'
 import { Tag } from 'antd'
 import styles from './index.module.less'

@@ -4,6 +4,9 @@ import SignIn from '@pages/signin'
 import SignUp from '@pages/signup'
 import Layout from '@pages/layout'
 
+import { ProtectedRoute } from '@src/components/auth/ProtectedRoute'
+import { AuthCallback } from '@src/components/auth/AuthCallback'
+
 const lazyLoad = (Component) => (
   <Suspense fallback={<Loading />}>
     <Component />
@@ -65,7 +68,11 @@ const rootRouter = [
     i18nKey: 'home',
     key: '/',
     auth: true,
-    element: lazyLoad(Layout),
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -389,6 +396,13 @@ const rootRouter = [
     key: '/signup',
     auth: false,
     element: lazyLoad(SignUp),
+  },
+  {
+    index: false,
+    name: '认证回调',
+    auth: false,
+    path: '/auth/callback',
+    element: lazyLoad(AuthCallback),
   },
   {
     index: false,

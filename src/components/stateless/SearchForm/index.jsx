@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable react/display-name */
 import React, { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { Form, Input, Select, Checkbox, Space, Button, DatePicker } from 'antd'
 import moment from 'moment'

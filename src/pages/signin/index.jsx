@@ -11,7 +11,9 @@ import {
 } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
 import { setLocalStorage } from '@utils/publicFn'
-import { useOAuth } from '@hooks/useOAuth'
+// import { useOAuth } from '@hooks/useOAuth'
+import { useAuth } from '@src/service/useAuth'
+import { authService } from '@src/service/authService'
 
 const { Content } = Layout
 const { Title, Text, Link } = Typography
@@ -25,7 +27,13 @@ const SignIn = () => {
     token: { colorBgContainer },
   } = theme.useToken()
 
-  const { loginWithGitHub, loginWithGoogle } = useOAuth()
+  // const { loginWithGitHub, loginWithGoogle } = useOAuth()
+
+  const { isAuthenticated, user, isLoading } = useAuth()
+
+  const handleLogin = () => {
+    authService.login()
+  }
 
   const [form] = Form.useForm()
 
@@ -75,9 +83,15 @@ const SignIn = () => {
               {/* 社交登录按钮 */}
               <Row gutter={12} style={{ marginBottom: 24 }}>
                 <Col span={12}>
-                  <Button block icon={<GithubOutlined />} style={{ height: 40 }}>
-                    GitHub
-                  </Button>
+                  {isLoading ? (
+                    <Button block icon={<GithubOutlined />} style={{ height: 40 }} loading>
+                      正在登录...
+                    </Button>
+                  ) : (
+                    <Button block icon={<GithubOutlined />} style={{ height: 40 }} onClick={handleLogin}>
+                      GitHub
+                    </Button>
+                  )}
                 </Col>
                 <Col span={12}>
                   <Button block icon={<GoogleOutlined />} style={{ height: 40 }}>
@@ -144,7 +158,9 @@ const SignIn = () => {
                     <Form.Item name="remember" valuePropName="checked" noStyle>
                       <Checkbox>记住我</Checkbox>
                     </Form.Item>
-                    <Link style={{ fontSize: 14 }}>忘记密码？</Link>
+                    <Link href="reset-pwd" style={{ fontSize: 14 }}>
+                      忘记密码？
+                    </Link>
                   </div>
                 </Form.Item>
 
@@ -169,7 +185,7 @@ const SignIn = () => {
                 <div style={{ textAlign: 'center' }}>
                   <Text type="secondary" style={{ fontSize: 14 }}>
                     还没有账户？
-                    <Link href="#/signup" style={{ fontWeight: 500 }}>
+                    <Link href="signup" style={{ fontWeight: 500 }}>
                       立即注册
                     </Link>
                   </Text>

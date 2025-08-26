@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import { App as AntdApp } from 'antd'
 import '@ant-design/v5-patch-for-react-19'
 import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
@@ -22,11 +23,13 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivEleme
 })
 
 root.render(
-  <I18nextProvider i18n={i18n}>
-    <ProThemeProvider>
-      <ThemeIndex />
-      <Analytics />
-      <SpeedInsights />
-    </ProThemeProvider>
-  </I18nextProvider>
+  <AntdApp>
+    <I18nextProvider i18n={i18n}>
+      <ProThemeProvider>
+        <ThemeIndex />
+        <Analytics />
+        <SpeedInsights />
+      </ProThemeProvider>
+    </I18nextProvider>
+  </AntdApp>
 )

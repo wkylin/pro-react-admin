@@ -189,6 +189,13 @@
 npm run dev:faker
 ```
 
+## Github 登录
+
+```
+# Authorization callback URL
+http://localhost:8080/auth/callback
+```
+
 ## Deployment
 
 1. Deployment: [Deployment] (<https://create-react-app.dev/docs/deployment>)

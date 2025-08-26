@@ -53,6 +53,7 @@ const config = {
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '...'],
     alias: {
+      '@': path.resolve('./src'),
       '@src': path.resolve('./src'),
       '@stateless': path.resolve('./src/components/stateless'),
       '@stateful': path.resolve('./src/components/stateful'),

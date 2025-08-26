@@ -5,6 +5,8 @@ import rootRouter from './routers'
 import AuthRouter from './routers/authRouter'
 // import { sentryInit } from './utils'
 
+// import { useAuth } from '@src/service/useAuth'
+
 const App = () => {
   // const { i18n } = useTranslation()
   const [loading, setLoading] = useState(true)
@@ -39,6 +41,8 @@ const App = () => {
     // fetchUserLanguage()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // const { isAuthenticated } = useAuth()
 
   const element = useRoutes(rootRouter as any)
 

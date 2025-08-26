@@ -21,6 +21,51 @@ module.exports = [
     changeOrigin: true,
     cookieDomainRewrite: 'localhost',
   },
+  {
+    context: ['/api/github-token'],
+    target: 'https://github.com',
+    pathRewrite: { '/api/github-token': '/login/oauth/access_token' },
+    secure: false,
+    changeOrigin: true,
+    cookieDomainRewrite: 'localhost',
+    onProxyReq: (proxyReq, req, res) => {
+      proxyReq.setHeader('Accept', 'application/json')
+      proxyReq.setHeader('Content-Type', 'application/json')
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      proxyRes.headers['Access-Control-Allow-Origin'] = '*'
+    },
+  },
+  {
+    context: ['/api/github-user'],
+    target: 'https://api.github.com',
+    pathRewrite: { '/api/github-user': '/user' },
+    secure: false,
+    changeOrigin: true,
+    cookieDomainRewrite: 'localhost',
+    onProxyReq: (proxyReq, req, res) => {
+      proxyReq.setHeader('Accept', 'application/json')
+      proxyReq.setHeader('Content-Type', 'application/json')
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      proxyRes.headers['Access-Control-Allow-Origin'] = '*'
+    },
+  },
+  {
+    context: ['/api/github-email'],
+    target: 'https://api.github.com',
+    pathRewrite: { '/api/github-email': '/user/emails' },
+    secure: false,
+    changeOrigin: true,
+    cookieDomainRewrite: 'localhost',
+    onProxyReq: (proxyReq, req, res) => {
+      proxyReq.setHeader('Accept', 'application/json')
+      proxyReq.setHeader('Content-Type', 'application/json')
+    },
+    onProxyRes: (proxyRes, req, res) => {
+      proxyRes.headers['Access-Control-Allow-Origin'] = '*'
+    },
+  },
 ]
 
 // module.exports = {

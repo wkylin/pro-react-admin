@@ -208,7 +208,7 @@ export default useFetcher
 //         if (status === 401) {
 //           message.info('请重新登录！', () => {
 //             setTimeout(() => {
-//               let url = env.prod.BASE_URL + '/login';
+//               let url = env.prod.BASE_URL + '/signin';
 //               window.open(url, '_self');
 //             }, 0);
 //           });
