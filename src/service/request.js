@@ -26,7 +26,7 @@ service.interceptors.request.use(
         const token = authService.getToken()
         if (token) {
           config.headers = config.headers || {}
-          config.headers['Authorization'] = `Bearer ${token}`
+          config.headers.Authorization = `Bearer ${token}`
           console.log('自动添加 token:', token)
         }
       }
