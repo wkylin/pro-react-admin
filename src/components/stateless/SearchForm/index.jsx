@@ -204,7 +204,7 @@ const SearchForm = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({ ...form }))
 
   return (
-    <div className={'searchForm'}>
+    <div className="searchForm">
       <Form
         form={form}
         name="search"
