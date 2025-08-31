@@ -242,7 +242,7 @@ const SignUp = () => {
                 >
                   <Checkbox>
                     我已阅读并同意
-                    <Link href="terms">用户协议</Link>和<Link href="privacy">隐私政策</Link>
+                    <Link href="#/terms">用户协议</Link>和<Link href="#/privacy">隐私政策</Link>
                   </Checkbox>
                 </Form.Item>
 
@@ -269,7 +269,7 @@ const SignUp = () => {
                 <div style={{ textAlign: 'center' }}>
                   <Text type="secondary" style={{ fontSize: 14 }}>
                     已有账户？
-                    <Link href="signin" style={{ fontWeight: 500 }}>
+                    <Link href="#/signin" style={{ fontWeight: 500 }}>
                       立即登录
                     </Link>
                   </Text>

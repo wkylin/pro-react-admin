@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
-// import { HashRouter as Router } from 'react-router-dom'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
+// import { BrowserRouter as Router } from 'react-router-dom'
 import { ConfigProvider, theme, App as AntdApp } from 'antd'
 
 import { StyleProvider } from '@ant-design/cssinjs'

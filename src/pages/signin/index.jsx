@@ -88,7 +88,7 @@ const SignIn = () => {
                       正在登录...
                     </Button>
                   ) : (
-                    <Button block icon={<GithubOutlined />} style={{ height: 40 }} onClick={handleLogin}>
+                    <Button block icon={<GithubOutlined />} style={{ height: 40 }}>
                       GitHub
                     </Button>
                   )}
@@ -158,7 +158,7 @@ const SignIn = () => {
                     <Form.Item name="remember" valuePropName="checked" noStyle>
                       <Checkbox>记住我</Checkbox>
                     </Form.Item>
-                    <Link href="reset-pwd" style={{ fontSize: 14 }}>
+                    <Link href="#/reset-pwd" style={{ fontSize: 14 }}>
                       忘记密码？
                     </Link>
                   </div>
@@ -185,7 +185,7 @@ const SignIn = () => {
                 <div style={{ textAlign: 'center' }}>
                   <Text type="secondary" style={{ fontSize: 14 }}>
                     还没有账户？
-                    <Link href="signup" style={{ fontWeight: 500 }}>
+                    <Link href="#/signup" style={{ fontWeight: 500 }}>
                       立即注册
                     </Link>
                   </Text>
