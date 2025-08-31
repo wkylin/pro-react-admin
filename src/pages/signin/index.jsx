@@ -7,7 +7,7 @@ import {
   EyeTwoTone,
   GithubOutlined,
   GoogleOutlined,
-  MailOutlined,
+  MailOutlined
 } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
 import { setLocalStorage } from '@utils/publicFn'
@@ -24,7 +24,7 @@ const SignIn = () => {
     navigate(path)
   }
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
 
   // const { loginWithGitHub, loginWithGoogle } = useOAuth()
@@ -60,7 +60,7 @@ const SignIn = () => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: '20px',
-              width: '100%',
+              width: '100%'
             }}
           >
             <Card
@@ -69,7 +69,7 @@ const SignIn = () => {
                 maxWidth: 400,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 borderRadius: '12px',
-                padding: '40px 32px',
+                padding: '40px 32px'
               }}
             >
               {/* 头部标题 */}
@@ -77,21 +77,23 @@ const SignIn = () => {
                 <Title level={2} style={{ marginBottom: 8, color: '#1f2937' }}>
                   欢迎回来
                 </Title>
-                <Text type="secondary">请输入您的账户信息以登录</Text>
+                <Text type='secondary'>请输入您的账户信息以登录</Text>
               </div>
 
               {/* 社交登录按钮 */}
               <Row gutter={12} style={{ marginBottom: 24 }}>
                 <Col span={12}>
-                  {isLoading ? (
-                    <Button block icon={<GithubOutlined />} style={{ height: 40 }} loading>
-                      正在登录...
-                    </Button>
-                  ) : (
-                    <Button block icon={<GithubOutlined />} style={{ height: 40 }}>
-                      GitHub
-                    </Button>
-                  )}
+                  {isLoading
+                    ? (
+                      <Button block icon={<GithubOutlined />} style={{ height: 40 }} loading>
+                        正在登录...
+                      </Button>
+                      )
+                    : (
+                      <Button block icon={<GithubOutlined />} style={{ height: 40 }}>
+                        GitHub
+                      </Button>
+                      )}
                 </Col>
                 <Col span={12}>
                   <Button block icon={<GoogleOutlined />} style={{ height: 40 }}>
@@ -101,7 +103,7 @@ const SignIn = () => {
               </Row>
 
               <Divider>
-                <Text type="secondary" style={{ fontSize: 12 }}>
+                <Text type='secondary' style={{ fontSize: 12 }}>
                   或者使用邮箱登录
                 </Text>
               </Divider>
@@ -109,45 +111,45 @@ const SignIn = () => {
               {/* 登录表单 */}
               <Form
                 form={form}
-                name="login"
+                name='login'
                 initialValues={{
                   remember: true,
                   username: process.env.AUTH_USER,
                   email: process.env.AUTH_EMAIL,
-                  password: process.env.AUTH_PASSWORD,
+                  password: process.env.AUTH_PASSWORD
                 }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                size="large"
-                layout="vertical"
+                autoComplete='off'
+                size='large'
+                layout='vertical'
               >
                 <Form.Item
-                  label="邮箱地址"
-                  name="email"
+                  label='邮箱地址'
+                  name='email'
                   rules={[
                     { required: true, message: '请输入您的邮箱地址!' },
-                    { type: 'email', message: '请输入有效的邮箱地址!' },
+                    { type: 'email', message: '请输入有效的邮箱地址!' }
                   ]}
                 >
                   <Input
                     prefix={<MailOutlined style={{ color: '#bfbfbf' }} />}
-                    placeholder="请输入您的邮箱"
+                    placeholder='请输入您的邮箱'
                     style={{ height: 44 }}
                   />
                 </Form.Item>
 
                 <Form.Item
-                  label="密码"
-                  name="password"
+                  label='密码'
+                  name='password'
                   rules={[
                     { required: true, message: '请输入您的密码!' },
-                    { min: 6, message: '密码至少需要6个字符!' },
+                    { min: 6, message: '密码至少需要6个字符!' }
                   ]}
                 >
                   <Input.Password
                     prefix={<LockOutlined style={{ color: '#bfbfbf' }} />}
-                    placeholder="请输入您的密码"
+                    placeholder='请输入您的密码'
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     style={{ height: 44 }}
                   />
@@ -155,10 +157,10 @@ const SignIn = () => {
 
                 <Form.Item style={{ marginBottom: 16 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
+                    <Form.Item name='remember' valuePropName='checked' noStyle>
                       <Checkbox>记住我</Checkbox>
                     </Form.Item>
-                    <Link href="#/reset-pwd" style={{ fontSize: 14 }}>
+                    <Link href='#/reset-pwd' style={{ fontSize: 14 }}>
                       忘记密码？
                     </Link>
                   </div>
@@ -166,8 +168,8 @@ const SignIn = () => {
 
                 <Form.Item style={{ marginBottom: 16 }}>
                   <Button
-                    type="primary"
-                    htmlType="submit"
+                    type='primary'
+                    htmlType='submit'
                     block
                     style={{
                       height: 44,
@@ -175,7 +177,7 @@ const SignIn = () => {
                       border: 'none',
                       borderRadius: '6px',
                       fontSize: '16px',
-                      fontWeight: 500,
+                      fontWeight: 500
                     }}
                   >
                     登录
@@ -183,9 +185,9 @@ const SignIn = () => {
                 </Form.Item>
 
                 <div style={{ textAlign: 'center' }}>
-                  <Text type="secondary" style={{ fontSize: 14 }}>
+                  <Text type='secondary' style={{ fontSize: 14 }}>
                     还没有账户？
-                    <Link href="#/signup" style={{ fontWeight: 500 }}>
+                    <Link href='#/signup' style={{ fontWeight: 500 }}>
                       立即注册
                     </Link>
                   </Text>
