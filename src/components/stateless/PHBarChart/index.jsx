@@ -48,7 +48,7 @@ const PHBarChart = () => {
           stack: '范围1',
           data: [1, 0, 0],
           itemStyle: {
-            color: getPHColor(ph),
+            color: getPHColor(ph)
           },
           label: {
             show: true,
@@ -56,14 +56,14 @@ const PHBarChart = () => {
             formatter: ph.toString(),
             color: '#fff',
             fontSize: 11,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
         })
 
         // 为pH范围2创建系列
@@ -73,7 +73,7 @@ const PHBarChart = () => {
           stack: '范围2',
           data: [0, 1, 0],
           itemStyle: {
-            color: getPHColor(ph),
+            color: getPHColor(ph)
           },
           label: {
             show: true,
@@ -81,14 +81,14 @@ const PHBarChart = () => {
             formatter: ph.toString(),
             color: '#fff',
             fontSize: 11,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
         })
 
         // 为pH范围3创建系列
@@ -98,7 +98,7 @@ const PHBarChart = () => {
           stack: '范围3',
           data: [0, 0, 1],
           itemStyle: {
-            color: getPHColor(ph),
+            color: getPHColor(ph)
           },
           label: {
             show: true,
@@ -106,14 +106,14 @@ const PHBarChart = () => {
             formatter: ph.toString(),
             color: '#fff',
             fontSize: 11,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
         })
       }
 
@@ -127,23 +127,23 @@ const PHBarChart = () => {
           lineStyle: {
             color: '#ff0000',
             type: 'solid',
-            width: 2,
+            width: 2
           },
           label: {
             position: 'end',
             formatter: '中性点 (pH=7)',
             color: '#ff0000',
             fontSize: 12,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           data: [
             {
               yAxis: 7,
-              name: '中性点',
-            },
-          ],
+              name: '中性点'
+            }
+          ]
         },
-        data: [0, 0, 0],
+        data: [0, 0, 0]
       })
 
       // 弱酸性指示线 (pH=3.5)
@@ -155,23 +155,23 @@ const PHBarChart = () => {
           lineStyle: {
             color: '#ff9900',
             type: 'solid',
-            width: 2,
+            width: 2
           },
           label: {
             position: 'end',
             formatter: '弱酸性 (pH=3.5)',
             color: '#ff9900',
             fontSize: 12,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           data: [
             {
               yAxis: 3.5,
-              name: '弱酸性',
-            },
-          ],
+              name: '弱酸性'
+            }
+          ]
         },
-        data: [0, 0, 0],
+        data: [0, 0, 0]
       })
 
       // 弱碱性指示线 (pH=10.5)
@@ -183,23 +183,23 @@ const PHBarChart = () => {
           lineStyle: {
             color: '#0066ff',
             type: 'solid',
-            width: 2,
+            width: 2
           },
           label: {
             position: 'end',
             formatter: '弱碱性 (pH=10.5)',
             color: '#0066ff',
             fontSize: 12,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           data: [
             {
               yAxis: 10.5,
-              name: '弱碱性',
-            },
-          ],
+              name: '弱碱性'
+            }
+          ]
         },
-        data: [0, 0, 0],
+        data: [0, 0, 0]
       })
 
       // 配置图表选项
@@ -210,8 +210,8 @@ const PHBarChart = () => {
           top: 10,
           textStyle: {
             fontSize: 18,
-            color: '#2c3e50',
-          },
+            color: '#2c3e50'
+          }
         },
         tooltip: {
           trigger: 'item',
@@ -224,37 +224,37 @@ const PHBarChart = () => {
             const ph = params.seriesName.split(' ')[1]
             const range = params.seriesName.split('-')[1]
             return `pH值: ${ph}<br/>范围: ${range}<br/>酸碱性: ${getPHType(ph)}<br/>颜色: ${getPHColor(ph)}`
-          },
+          }
         },
         legend: {
           data: categories,
           top: 40,
           textStyle: {
-            color: '#666',
+            color: '#666'
           },
           itemWidth: 15,
-          itemHeight: 15,
+          itemHeight: 15
         },
         grid: {
           left: '8%',
           right: '5%',
           bottom: '15%',
           top: '15%',
-          containLabel: true,
+          containLabel: true
         },
         xAxis: {
           type: 'category',
           data: categories,
           axisLine: {
             lineStyle: {
-              color: '#ddd',
-            },
+              color: '#ddd'
+            }
           },
           axisLabel: {
             color: '#666',
             fontSize: 14,
-            fontWeight: 'bold',
-          },
+            fontWeight: 'bold'
+          }
         },
         yAxis: {
           type: 'value',
@@ -266,25 +266,25 @@ const PHBarChart = () => {
           nameTextStyle: {
             color: '#666',
             fontSize: 14,
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           axisLine: {
             lineStyle: {
-              color: '#ddd',
-            },
+              color: '#ddd'
+            }
           },
           axisLabel: {
             color: '#666',
-            formatter: '{value}',
+            formatter: '{value}'
           },
           splitLine: {
             lineStyle: {
               type: 'dashed',
-              color: '#eee',
-            },
-          },
+              color: '#eee'
+            }
+          }
         },
-        series: series,
+        series
       }
 
       // 应用配置
@@ -326,7 +326,7 @@ const PHBarChart = () => {
             fontSize: '12px',
             fontWeight: 'bold',
             textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-            height: '30px',
+            height: '30px'
           }}
         >
           {i}
@@ -339,7 +339,7 @@ const PHBarChart = () => {
   return (
     <div style={{ padding: '20px', backgroundColor: '#f5f7fa', minHeight: '100vh' }}>
       <Card
-        title="pH值堆叠柱状图（0-14）"
+        title='pH值堆叠柱状图（0-14）'
         style={{ maxWidth: 1200, margin: '0 auto' }}
         headStyle={{ textAlign: 'center', fontSize: '20px' }}
       >
@@ -349,13 +349,13 @@ const PHBarChart = () => {
           style={{
             width: '100%',
             height: '600px',
-            marginBottom: '20px',
+            marginBottom: '20px'
           }}
         />
 
         {/* pH范围图例 */}
-        <Row justify="center" style={{ marginBottom: '20px' }}>
-          <Space size="large">
+        <Row justify='center' style={{ marginBottom: '20px' }}>
+          <Space size='large'>
             <div
               style={{
                 display: 'flex',
@@ -363,7 +363,7 @@ const PHBarChart = () => {
                 padding: '8px 15px',
                 backgroundColor: '#f8f9fa',
                 borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
               }}
             >
               <div
@@ -372,9 +372,9 @@ const PHBarChart = () => {
                   height: '16px',
                   backgroundColor: '#3498db',
                   marginRight: '8px',
-                  borderRadius: '3px',
+                  borderRadius: '3px'
                 }}
-              ></div>
+              />
               <span>pH范围1</span>
             </div>
             <div
@@ -384,7 +384,7 @@ const PHBarChart = () => {
                 padding: '8px 15px',
                 backgroundColor: '#f8f9fa',
                 borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
               }}
             >
               <div
@@ -393,9 +393,9 @@ const PHBarChart = () => {
                   height: '16px',
                   backgroundColor: '#e74c3c',
                   marginRight: '8px',
-                  borderRadius: '3px',
+                  borderRadius: '3px'
                 }}
-              ></div>
+              />
               <span>pH范围2</span>
             </div>
             <div
@@ -405,7 +405,7 @@ const PHBarChart = () => {
                 padding: '8px 15px',
                 backgroundColor: '#f8f9fa',
                 borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
               }}
             >
               <div
@@ -414,27 +414,27 @@ const PHBarChart = () => {
                   height: '16px',
                   backgroundColor: '#2ecc71',
                   marginRight: '8px',
-                  borderRadius: '3px',
+                  borderRadius: '3px'
                 }}
-              ></div>
+              />
               <span>pH范围3</span>
             </div>
           </Space>
         </Row>
 
         {/* 指示线图例 */}
-        <Row justify="center" style={{ marginBottom: '20px' }}>
-          <Space size="middle">
+        <Row justify='center' style={{ marginBottom: '20px' }}>
+          <Space size='middle'>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: '30px', height: '3px', backgroundColor: '#ff0000', marginRight: '8px' }}></div>
+              <div style={{ width: '30px', height: '3px', backgroundColor: '#ff0000', marginRight: '8px' }} />
               <Text>中性点 (pH=7)</Text>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: '30px', height: '3px', backgroundColor: '#ff9900', marginRight: '8px' }}></div>
+              <div style={{ width: '30px', height: '3px', backgroundColor: '#ff9900', marginRight: '8px' }} />
               <Text>弱酸性 (pH=3.5)</Text>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: '30px', height: '3px', backgroundColor: '#0066ff', marginRight: '8px' }}></div>
+              <div style={{ width: '30px', height: '3px', backgroundColor: '#0066ff', marginRight: '8px' }} />
               <Text>弱碱性 (pH=10.5)</Text>
             </div>
           </Space>
@@ -450,26 +450,26 @@ const PHBarChart = () => {
               borderRadius: '4px',
               overflow: 'hidden',
               margin: '20px 0',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
             }}
           >
             {renderColorScale()}
           </div>
-          <Row justify="space-between" style={{ padding: '0 5px' }}>
+          <Row justify='space-between' style={{ padding: '0 5px' }}>
             <Col style={{ textAlign: 'center', width: '40px' }}>
-              <Text type="secondary">
+              <Text type='secondary'>
                 0<br />
                 强酸
               </Text>
             </Col>
             <Col style={{ textAlign: 'center', width: '40px' }}>
-              <Text type="secondary">
+              <Text type='secondary'>
                 7<br />
                 中性
               </Text>
             </Col>
             <Col style={{ textAlign: 'center', width: '40px' }}>
-              <Text type="secondary">
+              <Text type='secondary'>
                 14
                 <br />
                 强碱
