@@ -60,6 +60,7 @@ const NoMatch = lazy(() => import('@stateless/NoMatch'))
 // const SandBox = lazy(() => import('@pages/sandBox'))
 const Profile = lazy(() => import('@pages/profile'))
 const Contact = lazy(() => import('@pages/contact'))
+const PHBar = lazy(() => import('@pages/phbar'))
 
 const rootRouter = [
   {
@@ -234,6 +235,14 @@ const rootRouter = [
         key: '/big-screen',
         auth: false,
         element: lazyLoad(BigScreen),
+      },
+      {
+        index: false,
+        path: 'ph-bar',
+        name: 'PH Bar',
+        key: '/ph-bar',
+        auth: false,
+        element: lazyLoad(PHBar),
       },
       // {
       //   index: false,

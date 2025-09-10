@@ -25,6 +25,7 @@ import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 // import { DraggableList, DraggableItem } from '@stateless/DraggableList'
 import FixCarousel from '@stateless/FixCarouse'
 import OrgChart from '@stateless/OrgChart'
+import TrapezoidTabs from '@stateless/TrapezoidTabs'
 import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
@@ -250,6 +251,14 @@ const ProDemo = () => {
         <StatisticCard />
         <TransferHistory />
         <FixCarousel />
+        <TrapezoidTabs
+          tabs={[
+            { name: 'tab1', code: 'tab1' },
+            { name: 'tab2', code: 'tab2' },
+            { name: 'tab3', code: 'tab3' },
+          ]}
+          defaultActiveTab="tab1"
+        />
         {/* <OrbitingCirclesDemo /> */}
         {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
         {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>

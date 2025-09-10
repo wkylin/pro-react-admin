@@ -70,6 +70,7 @@ const ProSecNav = () => {
     { label: 'Business', key: '/business', icon: <FireOutlined /> },
     // { label: 'Sand Box', key: '/sandbox', icon: <GlobalOutlined /> },
     { label: 'Big Screen', key: '/big-screen', icon: <FireOutlined /> },
+    { label: 'PH Bar', key: '/ph-bar', icon: <QrcodeOutlined /> },
     { label: 'Qr Generate', key: '/qrcode', icon: <QrcodeOutlined /> },
     { label: 'Prism Render', key: '/prism', icon: <FireOutlined /> },
     { label: 'React Tilt', key: '/tilt', icon: <QrcodeOutlined /> },
