@@ -243,7 +243,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "animate.css": "^4.1.1",
     "antd": "^5.25.4",
-    "axios": "^1.9.0",
+    "axios": "^1.12.0",
     "blueimp-md5": "^2.19.0",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
