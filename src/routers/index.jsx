@@ -1,66 +1,61 @@
-import React, { Suspense, lazy } from 'react'
+import React from 'react'
+import loadable from '@loadable/component'
 import Loading from '@stateless/Loading'
 import SignIn from '@pages/signin'
 import SignUp from '@pages/signup'
 import Layout from '@pages/layout'
-
 import { ProtectedRoute } from '@src/components/auth/ProtectedRoute'
 import { AuthCallback } from '@src/components/auth/AuthCallback'
 
-const lazyLoad = (Component) => (
-  <Suspense fallback={<Loading />}>
-    <Component />
-  </Suspense>
-)
+// 创建统一的 loadable 包装函数，支持额外选项
+const lazyLoad = (importFunc, options = {}) => loadable(importFunc, { fallback: <Loading />, ...options })
+
+// 使用 loadable 替换 lazy
+const Dashboard = lazyLoad(() => import('@/pages/dashboard'), { preload: true })
+const Home = lazyLoad(() => import('@pages/home'), { preload: true })
+const Demo = lazyLoad(() => import('@pages/demo'), { preload: true })
+const Coupons = lazyLoad(() => import('@pages/coupons'), { preload: true })
+const CouponsHome = lazyLoad(() => import('@pages/coupons/home'), { preload: true })
+const CouponsAdd = lazyLoad(() => import('@pages/coupons/add'), { preload: true })
+const CouponsEdit = lazyLoad(() => import('@pages/coupons/edit'), { preload: true })
+const CouponsDetail = lazyLoad(() => import('@pages/coupons/detail'), { preload: true })
+const Product = lazyLoad(() => import('@pages/product'), { preload: true })
+const ErrorPage = lazyLoad(() => import('@pages/error'), { preload: true })
+const MyPortfilo = lazyLoad(() => import('@pages/portfilo'), { preload: true })
+const ReactTilt = lazyLoad(() => import('@pages/tilt'), { preload: true })
+const ReactMusic = lazyLoad(() => import('@pages/music'), { preload: true })
+const MyVideo = lazyLoad(() => import('@pages/video'), { preload: true })
+const MyCrypto = lazyLoad(() => import('@pages/crypto'), { preload: true })
+const ChatGpt = lazyLoad(() => import('@pages/chatgpt'), { preload: true })
+const Echarts = lazyLoad(() => import('@pages/echarts'), { preload: true })
+const QrCode = lazyLoad(() => import('@pages/qrGenerate'), { preload: true })
+const PrismRender = lazyLoad(() => import('@pages/prism'), { preload: true })
+const BigScreen = lazyLoad(() => import('@pages/bigScreen'), { preload: true })
+const D3Chart = lazyLoad(() => import('@pages/d3Chart'), { preload: true })
+const Print = lazyLoad(() => import('@pages/print'), { preload: true })
+const PostMessage = lazyLoad(() => import('@pages/postmessage'), { preload: true })
+const GeoChart = lazyLoad(() => import('@pages/geoChart'), { preload: true })
+const Motion = lazyLoad(() => import('@pages/motion'))
+const Business = lazyLoad(() => import('@pages/business'))
+const MyIframe = lazyLoad(() => import('@pages/postmessage/myIframe'))
+const Exception403 = lazyLoad(() => import('@stateless/Exception/exception403'))
+const NoMatch = lazyLoad(() => import('@stateless/NoMatch'))
+const Profile = lazyLoad(() => import('@pages/profile'))
+const Contact = lazyLoad(() => import('@pages/contact'))
+const PHBar = lazyLoad(() => import('@pages/phbar'))
+// const ParallaxVert = lazyLoad(() => import('@pages/parallax'))
+// const ReactThree = lazyLoad(() => import('@pages/three'))
+// const Mermaid = lazyLoad(() => import('@pages/mermaid'))
+// const DynamicModal = lazyLoad(() => import('@pages/dynamicModal'))
+// const ReactAmap = lazyLoad(() => import('@pages/reactAmap'))
+// const SuperMap = lazyLoad(() => import('@pages/superMap'))
+// const Barcode = lazyLoad(() => import('@pages/barcode'))
+// const ReactPdf = lazyLoad(() => import('@pages/reactPdf'))
+// const ReactGantt = lazyLoad(() => import('@pages/reactGantt'))
+// const SandBox = lazyLoad(() => import('@pages/sandBox'))
 
 // 以下路由可根据需求另分成不同的文件维护
 // 结合 proSecNav组件中的menuItems
-
-// const SignIn = lazy(() => import('@pages/signin'))
-// const SignUp = lazy(() => import('@pages/signup'))
-// const Layout = lazy(() => import('@pages/layout'))
-const Home = lazy(() => import('@pages/home'))
-const Demo = lazy(() => import('@pages/demo'))
-const Coupons = lazy(() => import('@pages/coupons'))
-const CouponsHome = lazy(() => import('@pages/coupons/home'))
-const CouponsAdd = lazy(() => import('@pages/coupons/add'))
-const CouponsEdit = lazy(() => import('@pages/coupons/edit'))
-const CouponsDetail = lazy(() => import('@pages/coupons/detail'))
-const Product = lazy(() => import('@pages/product'))
-const ErrorPage = lazy(() => import('@pages/error'))
-const Dashboard = lazy(() => import('@pages/dashboard'))
-const MyPortfilo = lazy(() => import('@pages/portfilo'))
-// const ParallaxVert = lazy(() => import('@pages/parallax'))
-const ReactTilt = lazy(() => import('@pages/tilt'))
-const ReactMusic = lazy(() => import('@pages/music'))
-const MyVideo = lazy(() => import('@pages/video'))
-const MyCrypto = lazy(() => import('@pages/crypto'))
-// const ReactThree = lazy(() => import('@pages/three'))
-const ChatGpt = lazy(() => import('@pages/chatgpt'))
-const Echarts = lazy(() => import('@pages/echarts'))
-const QrCode = lazy(() => import('@pages/qrGenerate'))
-const PrismRender = lazy(() => import('@pages/prism'))
-// const Mermaid = lazy(() => import('@pages/mermaid'))
-// const DynamicModal = lazy(() => import('@pages/dynamicModal'))
-const BigScreen = lazy(() => import('@pages/bigScreen'))
-// const ReactAmap = lazy(() => import('@pages/reactAmap'))
-// const SuperMap = lazy(() => import('@pages/superMap'))
-const D3Chart = lazy(() => import('@pages/d3Chart'))
-// const Barcode = lazy(() => import('@pages/barcode'))
-const Print = lazy(() => import('@pages/print'))
-const PostMessage = lazy(() => import('@pages/postmessage'))
-const GeoChart = lazy(() => import('@pages/geoChart'))
-const Motion = lazy(() => import('@pages/motion'))
-const Business = lazy(() => import('@pages/business'))
-// const ReactPdf = lazy(() => import('@pages/reactPdf'))
-const MyIframe = lazy(() => import('@pages/postmessage/myIframe'))
-const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
-const NoMatch = lazy(() => import('@stateless/NoMatch'))
-// const ReactGantt = lazy(() => import('@pages/reactGantt'))
-// const SandBox = lazy(() => import('@pages/sandBox'))
-const Profile = lazy(() => import('@pages/profile'))
-const Contact = lazy(() => import('@pages/contact'))
-const PHBar = lazy(() => import('@pages/phbar'))
 
 const rootRouter = [
   {
@@ -81,7 +76,7 @@ const rootRouter = [
         key: '/',
         i18nKey: 'home',
         auth: true,
-        element: lazyLoad(Home),
+        element: <Home />,
       },
       {
         index: false,
@@ -90,31 +85,15 @@ const rootRouter = [
         i18nKey: 'demo',
         key: '/demo',
         auth: true,
-        element: lazyLoad(Demo),
+        element: <Demo />,
       },
-      // {
-      //   index: false,
-      //   path: 'sandbox',
-      //   name: 'Sand Box',
-      //   key: '/sandbox',
-      //   auth: true,
-      //   element: lazyLoad(SandBox),
-      // },
-      // {
-      //   index: false,
-      //   path: 'parallax',
-      //   name: 'Parallax',
-      //   key: '/parallax',
-      //   auth: true,
-      //   element: lazyLoad(ParallaxVert),
-      // },
       {
         index: false,
         path: 'motion',
         name: 'Motion',
         key: '/motion',
         auth: true,
-        element: lazyLoad(Motion),
+        element: <Motion />,
       },
       {
         index: false,
@@ -122,23 +101,15 @@ const rootRouter = [
         name: 'Business',
         key: '/business',
         auth: false,
-        element: lazyLoad(Business),
+        element: <Business />,
       },
-      // {
-      //   index: false,
-      //   path: 'gantt',
-      //   name: 'Gantt',
-      //   key: '/gantt',
-      //   auth: false,
-      //   element: lazyLoad(ReactGantt),
-      // },
       {
         index: false,
         path: 'qrcode',
         name: 'QrGenerate',
         key: '/qrcode',
         auth: false,
-        element: lazyLoad(QrCode),
+        element: <QrCode />,
       },
       {
         index: false,
@@ -146,7 +117,7 @@ const rootRouter = [
         name: 'React Tilt',
         key: '/tilt',
         auth: true,
-        element: lazyLoad(ReactTilt),
+        element: <ReactTilt />,
       },
       {
         index: false,
@@ -154,7 +125,7 @@ const rootRouter = [
         name: 'React Music',
         key: '/music',
         auth: false,
-        element: lazyLoad(ReactMusic),
+        element: <ReactMusic />,
       },
       {
         index: false,
@@ -162,7 +133,7 @@ const rootRouter = [
         name: 'React Video',
         key: '/video',
         auth: false,
-        element: lazyLoad(MyVideo),
+        element: <MyVideo />,
       },
       {
         index: false,
@@ -170,7 +141,7 @@ const rootRouter = [
         name: 'React Crypto',
         key: '/crypto',
         auth: false,
-        element: lazyLoad(MyCrypto),
+        element: <MyCrypto />,
       },
       {
         index: false,
@@ -178,39 +149,23 @@ const rootRouter = [
         name: 'ChatGPT Markmap',
         key: '/markmap',
         auth: false,
-        element: lazyLoad(ChatGpt),
+        element: <ChatGpt />,
       },
-      // {
-      //   index: false,
-      //   path: 'mermaid',
-      //   name: 'ChatGPT Mermaid',
-      //   key: '/mermaid',
-      //   auth: false,
-      //   element: lazyLoad(Mermaid),
-      // },
       {
         index: false,
         path: 'prism',
         name: 'Prism Render',
         key: '/prism',
         auth: true,
-        element: lazyLoad(PrismRender),
+        element: <PrismRender />,
       },
-      // {
-      //   index: false,
-      //   path: 'three',
-      //   name: 'ReactThree',
-      //   key: '/three',
-      //   auth: true,
-      //   element: lazyLoad(ReactThree),
-      // },
       {
         index: false,
         path: 'geo',
         name: 'Geo Chart',
         key: '/geo',
         auth: false,
-        element: lazyLoad(GeoChart),
+        element: <GeoChart />,
       },
       {
         index: false,
@@ -218,23 +173,15 @@ const rootRouter = [
         name: 'React Echarts',
         key: '/echarts',
         auth: true,
-        element: lazyLoad(Echarts),
+        element: <Echarts />,
       },
-      // {
-      //   index: false,
-      //   path: 'dynamic',
-      //   name: 'DynamicModal',
-      //   key: '/dynamic',
-      //   auth: false,
-      //   element: lazyLoad(DynamicModal),
-      // },
       {
         index: false,
         path: 'big-screen',
         name: 'Big Screen',
         key: '/big-screen',
         auth: false,
-        element: lazyLoad(BigScreen),
+        element: <BigScreen />,
       },
       {
         index: false,
@@ -242,23 +189,15 @@ const rootRouter = [
         name: 'PH Bar',
         key: '/ph-bar',
         auth: false,
-        element: lazyLoad(PHBar),
+        element: <PHBar />,
       },
-      // {
-      //   index: false,
-      //   path: 'react-amap',
-      //   name: 'React Amap',
-      //   key: '/react-amap',
-      //   auth: false,
-      //   element: lazyLoad(ReactAmap),
-      // },
       {
         index: false,
         path: 'postmessage',
         name: 'Post Message',
         key: '/postmessage',
         auth: false,
-        element: lazyLoad(PostMessage),
+        element: <PostMessage />,
       },
       {
         index: false,
@@ -266,47 +205,23 @@ const rootRouter = [
         name: 'My Iframe',
         key: '/my-iframe',
         auth: false,
-        element: lazyLoad(MyIframe),
+        element: <MyIframe />,
       },
-      // {
-      //   index: false,
-      //   path: 'super-map',
-      //   name: 'SuperMap',
-      //   key: '/super-map',
-      //   auth: false,
-      //   element: lazyLoad(SuperMap),
-      // },
       {
         index: false,
         path: 'd3-chart',
         name: 'D3 Chart',
         key: '/d3-chart',
         auth: false,
-        element: lazyLoad(D3Chart),
+        element: <D3Chart />,
       },
-      // {
-      //   index: false,
-      //   path: 'barcode',
-      //   name: 'Barcode',
-      //   key: '/barcode',
-      //   auth: false,
-      //   element: lazyLoad(Barcode),
-      // },
-      // {
-      //   index: false,
-      //   path: 'pdf-view',
-      //   name: 'PdfView',
-      //   key: '/pdf-view',
-      //   auth: false,
-      //   element: lazyLoad(ReactPdf),
-      // },
       {
         index: false,
         path: 'print',
         name: 'Print',
         key: '/print',
         auth: false,
-        element: lazyLoad(Print),
+        element: <Print />,
       },
       {
         index: false,
@@ -314,7 +229,7 @@ const rootRouter = [
         name: 'Profile',
         key: '/profile',
         auth: false,
-        element: lazyLoad(Profile),
+        element: <Profile />,
       },
       {
         index: false,
@@ -322,7 +237,7 @@ const rootRouter = [
         name: 'Contact',
         key: '/contact',
         auth: false,
-        element: lazyLoad(Contact),
+        element: <Contact />,
       },
       {
         index: false,
@@ -330,7 +245,7 @@ const rootRouter = [
         name: '前端技术栈',
         isSubMenu: true, // 是否是子菜单 proSecNav
         key: '/coupons',
-        element: lazyLoad(Coupons),
+        element: <Coupons />,
         children: [
           {
             index: false,
@@ -338,7 +253,7 @@ const rootRouter = [
             name: 'React',
             key: '/coupons/home',
             auth: false,
-            element: lazyLoad(CouponsHome),
+            element: <CouponsHome />,
           },
           {
             index: false,
@@ -346,7 +261,7 @@ const rootRouter = [
             path: 'add',
             key: '/coupons/add',
             auth: false,
-            element: lazyLoad(CouponsAdd),
+            element: <CouponsAdd />,
           },
           {
             index: false,
@@ -354,7 +269,7 @@ const rootRouter = [
             name: 'Angular',
             key: '/coupons/edit',
             auth: false,
-            element: lazyLoad(CouponsEdit),
+            element: <CouponsEdit />,
           },
           {
             index: false,
@@ -362,7 +277,7 @@ const rootRouter = [
             name: 'Node',
             key: '/coupons/detail',
             auth: false,
-            element: lazyLoad(CouponsDetail),
+            element: <CouponsDetail />,
           },
         ],
       },
@@ -372,7 +287,7 @@ const rootRouter = [
         name: '后端技术栈',
         key: '/product',
         auth: false,
-        element: lazyLoad(Product),
+        element: <Product />,
       },
       {
         index: false,
@@ -380,13 +295,13 @@ const rootRouter = [
         name: 'Error',
         key: '/error',
         auth: false,
-        element: lazyLoad(ErrorPage),
+        element: <ErrorPage />,
       },
       {
         path: '*',
         name: 'No Match',
         key: '*',
-        element: lazyLoad(NoMatch),
+        element: <NoMatch />,
       },
     ],
   },
@@ -396,7 +311,7 @@ const rootRouter = [
     name: '登录',
     key: '/signin',
     auth: false,
-    element: lazyLoad(SignIn),
+    element: <SignIn />,
   },
   {
     index: false,
@@ -404,14 +319,14 @@ const rootRouter = [
     name: '注册',
     key: '/signup',
     auth: false,
-    element: lazyLoad(SignUp),
+    element: <SignUp />,
   },
   {
     index: false,
     name: '认证回调',
     auth: false,
     path: '/auth/callback',
-    element: lazyLoad(AuthCallback),
+    element: <AuthCallback />,
   },
   {
     index: false,
@@ -419,7 +334,7 @@ const rootRouter = [
     name: 'Dashboard',
     key: '/dashboard',
     auth: true,
-    element: lazyLoad(Dashboard),
+    element: <Dashboard />,
   },
   {
     index: false,
@@ -427,7 +342,7 @@ const rootRouter = [
     name: 'My Portfilo',
     key: '/portfilo',
     auth: true,
-    element: lazyLoad(MyPortfilo),
+    element: <MyPortfilo />,
   },
   {
     index: false,
@@ -435,13 +350,13 @@ const rootRouter = [
     name: '403',
     key: '/403',
     auth: false,
-    element: lazyLoad(Exception403),
+    element: <Exception403 />,
   },
   {
     path: '*',
     name: 'No Match',
     key: '*',
-    element: lazyLoad(NoMatch),
+    element: <NoMatch />,
   },
 ]
 

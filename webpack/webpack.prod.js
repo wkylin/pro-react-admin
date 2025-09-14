@@ -8,7 +8,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
-// const CompressionWebpackPlugin = require('compression-webpack-plugin')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const SentryWebpackPlugin = require('@sentry/webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
@@ -40,14 +40,14 @@ const prodWebpackConfig = merge(common, {
         standard: [/^ant-/],
       },
     }),
-    // new CompressionWebpackPlugin({
-    //   filename: '[path][base].gz',
-    //   algorithm: 'gzip',
-    //   test: /\.js$|\.json$|\.css/,
-    //   threshold: 10240, // 只有大小大于该值的资源会被处理
-    //   minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-    //   // deleteOriginalAssets: true // 删除原文件
-    // }),
+    new CompressionWebpackPlugin({
+      filename: '[path][base].gz',
+      algorithm: 'gzip',
+      test: /\.js$|\.json$|\.css/,
+      threshold: 10240, // 只有大小大于该值的资源会被处理
+      minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
+      // deleteOriginalAssets: true // 删除原文件
+    }),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -105,7 +105,15 @@ const prodWebpackConfig = merge(common, {
           maxInitialRequests: 2,
           minChunks: 1,
         },
+        commons: {
+          name: 'commons',
+          minChunks: 2, // 至少被 2 个路由引用
+          chunks: 'all',
+          priority: 5,
+        },
       },
+      minSize: 20000, // 20KB 以上才拆分
+      maxSize: 244000, // 244KB 强制拆分（避免超大 chunk）
     },
     runtimeChunk: {
       name: 'runtime',

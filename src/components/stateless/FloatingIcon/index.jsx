@@ -1,31 +1,44 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { motion, useAnimation } from 'motion/react'
 
 const FloatingIcon = ({ children, initialX }) => {
   const [isClient, setIsClient] = useState(false)
   const controls = useAnimation()
+  const isMounted = useRef(true) // 添加ref来跟踪组件挂载状态
 
   const startFloating = async () => {
-    if (isClient) {
-      while (true) {
-        await controls.start({
-          x: initialX + Math.random() * 30 - 15,
-          y: Math.random() * 30 - 15,
-          transition: {
-            duration: 3,
-            ease: 'easeInOut',
-          },
-        })
+    if (isClient && isMounted.current) {
+      // 检查组件是否仍挂载
+      await controls.start({
+        x: initialX + Math.random() * 30 - 15,
+        y: Math.random() * 30 - 15,
+        transition: {
+          duration: 3,
+          ease: 'easeInOut',
+        },
+      })
+
+      // 递归调用前再次检查组件是否挂载
+      if (isMounted.current) {
+        startFloating()
       }
     }
   }
 
   useEffect(() => {
     setIsClient(true)
+
+    // 添加清理函数，组件卸载时设置isMounted为false
+    return () => {
+      isMounted.current = false
+      controls.stop() // 停止所有动画
+    }
   }, [])
 
   useEffect(() => {
-    startFloating()
+    if (isClient) {
+      startFloating()
+    }
   }, [isClient])
 
   return (
