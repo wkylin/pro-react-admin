@@ -40,14 +40,7 @@ const prodWebpackConfig = merge(common, {
         standard: [/^ant-/],
       },
     }),
-    new CompressionWebpackPlugin({
-      filename: '[path][base].gz',
-      algorithm: 'gzip',
-      test: /\.js$|\.json$|\.css/,
-      threshold: 10240, // 只有大小大于该值的资源会被处理
-      minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-      // deleteOriginalAssets: true // 删除原文件
-    }),
+    new CompressionWebpackPlugin(),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -64,16 +57,6 @@ const prodWebpackConfig = merge(common, {
     minimize: true,
     minimizer: [
       new CssMinimizerPlugin(),
-      // new CssMinimizerPlugin({
-      //   minimizerOptions: {
-      //     preset: [
-      //       'default',
-      //       {
-      //         discardComments: { removeAll: true },
-      //       },
-      //     ],
-      //   },
-      // }),
       new EsbuildPlugin({
         target: 'es2015',
       }),
@@ -96,7 +79,6 @@ const prodWebpackConfig = merge(common, {
         },
         react: {
           test(module) {
-            // `module.resource` contains the absolute path of the file on disk.
             return module.resource && module.resource.includes('node_modules/react')
           },
           chunks: 'initial',
@@ -105,15 +87,13 @@ const prodWebpackConfig = merge(common, {
           maxInitialRequests: 2,
           minChunks: 1,
         },
-        commons: {
-          name: 'commons',
-          minChunks: 2, // 至少被 2 个路由引用
-          chunks: 'all',
-          priority: 5,
-        },
+        // commons: {
+        //   name: 'commons',
+        //   minChunks: 2,
+        //   chunks: 'all',
+        //   priority: 5,
+        // },
       },
-      minSize: 20000, // 20KB 以上才拆分
-      maxSize: 244000, // 244KB 强制拆分（避免超大 chunk）
     },
     runtimeChunk: {
       name: 'runtime',

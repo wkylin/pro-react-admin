@@ -1,3 +1,4 @@
+import React from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import PHBarChart from '@stateless/PHBarChart'
 
