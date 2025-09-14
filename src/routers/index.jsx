@@ -56,7 +56,6 @@ const PHBar = lazyLoad(() => import('@pages/phbar'))
 
 // 以下路由可根据需求另分成不同的文件维护
 // 结合 proSecNav组件中的menuItems
-
 const rootRouter = [
   {
     path: '/',
@@ -296,12 +295,6 @@ const rootRouter = [
         key: '/error',
         auth: false,
         element: <ErrorPage />,
-      },
-      {
-        path: '*',
-        name: 'No Match',
-        key: '*',
-        element: <NoMatch />,
       },
     ],
   },
