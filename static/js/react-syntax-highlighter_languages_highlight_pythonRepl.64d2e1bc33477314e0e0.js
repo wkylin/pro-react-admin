@@ -1,1 +1,0 @@
-(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[1895],{9507:function(n){function a(e){return{aliases:["pycon"],contains:[{className:"meta",starts:{end:/ |$/,starts:{end:"$",subLanguage:"python"}},variants:[{begin:/^>>>(?=[ ]|$)/},{begin:/^\.\.\.(?=[ ]|$)/}]}]}}n.exports=a}}]);

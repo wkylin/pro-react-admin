@@ -1,1 +1,0 @@
-(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[8216],{12373:function(e){function a(n){return{name:"Backus\u2013Naur Form",contains:[{className:"attribute",begin:/</,end:/>/},{begin:/::=/,end:/$/,contains:[{begin:/</,end:/>/},n.C_LINE_COMMENT_MODE,n.C_BLOCK_COMMENT_MODE,n.APOS_STRING_MODE,n.QUOTE_STRING_MODE]}]}}e.exports=a}}]);

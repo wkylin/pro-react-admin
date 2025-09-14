@@ -1,1 +1,0 @@
-(self.webpackChunkpro_react_admin=self.webpackChunkpro_react_admin||[]).push([[2979],{81832:function(t){function e(a){return{name:"Plain text",aliases:["text","txt"],disableAutodetect:!0}}t.exports=e}}]);
