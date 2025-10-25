@@ -1,0 +1,13 @@
+.DS_Store
+/.idea
+/dist
+/node_modules
+/.eslintcache
+compilation-stats.json
+.yarn/cache
+/packagehash.txt
+public/bit
+api/node_modules
+webpack/profiling
+stats.html
+/.scannerwork

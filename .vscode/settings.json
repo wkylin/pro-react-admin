@@ -1,0 +1,110 @@
+{
+  "jumpToAliasFile.alias": {
+    "@": "d:\\workspace\\promotion-manage-web\\src"
+  },
+  "cSpell.ignoreWords": [
+    "basicpage",
+    "binl",
+    "bkey",
+    "camelcase",
+    "commitlint",
+    "entrypoint",
+    "md",
+    "multiline",
+    "nodir",
+    "olda",
+    "oldb",
+    "oldc",
+    "oldd",
+    "opad",
+    "paren",
+    "parmas",
+    "pmmmwh",
+    "popmotion",
+    "precommit",
+    "predeploy",
+    "raw",
+    "rstr",
+    "styleguidist",
+    "tryer",
+    "urlparams"
+  ],
+  "files.autoSave": "off",
+  "npm-scripts.showStartNotification": false,
+  "editor.suggest.snippetsPreventQuickSuggestions": false,
+  "aiXcoder.showTrayIcon": true,
+  "cSpell.words": [
+    "antd",
+    "blueimp",
+    "bodyparser",
+    "Cascader",
+    "cssinjs",
+    "drei",
+    "echarts",
+    "flexbugs",
+    "hashmark",
+    "jsonlint",
+    "katex",
+    "Katex",
+    "maath",
+    "markmap",
+    "Markmap",
+    "Meraid",
+    "mockjs",
+    "mpetazzoni",
+    "noopener",
+    "noreferrer",
+    "portfinder",
+    "preinstall",
+    "purgecss",
+    "qrcode",
+    "reduxjs",
+    "rehype",
+    "Rehype",
+    "screenfull",
+    "scripty",
+    "stime",
+    "stylelint",
+    "svgr",
+    "tailwindcss",
+    "trycatch",
+    "uncrypted",
+    "videojs",
+    "webapck",
+    "webpackbar",
+    "welldone",
+    "wkylin",
+    "xihu",
+    "Zhong",
+    "zhonghuamen"
+  ],
+  "eslint.codeActionsOnSave.rules": null,
+  "eslint.run": "onType",
+  "eslint.options": {
+    "extensions": [
+      ".js",
+      ".vue",
+      ".jsx",
+      ".tsx"
+    ]
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "cSpell.customDictionaries": {
+    "custom-dictionary-workspace": {
+      "name": "custom-dictionary-workspace",
+      "path": "${workspaceFolder:pro-react-admin}/.cspell/custom-dictionary-workspace.txt",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  },
+  "i18n-ally.localesPaths": [
+    "public/locales"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "pro-react-admin2"
+  },
+  "bitoAI.codeCompletion.enableAutoCompletion": false
+}
