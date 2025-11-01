@@ -24,6 +24,8 @@
     "devtools": "react-devtools",
     "prebuild": "npm run clean:dist",
     "pre:run": "install-changed",
+    "ci:quality": "npm run lint && npm run test",
+    "prepare": "husky install",
     "dev": "npm run start",
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development NODE_OPTIONS=--trace-deprecation webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
@@ -69,7 +71,6 @@
     "release:major": "standard-version --release-as major",
     "push:tags": "git push --follow-tags origin pre-gh-pages",
     "process": "node webpack/process",
-    "prepare": "husky",
     "sentry:check": "node check-sentry.js",
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
@@ -94,7 +95,6 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@babel/plugin-transform-object-rest-spread": "^7.20.7",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-object-rest-spread": "^7.28.4",
     "@babel/plugin-transform-runtime": "^7.28.5",
@@ -361,23 +361,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
+      "pre-commit": "npx lint-staged",
       "post-merge": "install-changed",
       "post-commit": "exec < /dev/tty && node webpack/check-version.js"
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "npm run eslint:fix"
-    ],
-    "src/**/*.{less,css,scss}": [
-      "npm run stylelint:fix"
-    ],
-    "*.md": [
-      "npm run markdownlint:fix"
-    ],
-    "**/*": [
-      "npm run prettier:fix"
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
     ]
   },
   "jest": {

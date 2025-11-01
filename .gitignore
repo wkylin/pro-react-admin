@@ -11,3 +11,10 @@ api/node_modules
 webpack/profiling
 stats.html
 /.scannerwork
+# 忽略测试覆盖率输出
+coverage
+# 忽略本地 env
+.env
+.env.local
+.env.development.local
+.env.production.local
