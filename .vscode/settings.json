@@ -106,5 +106,6 @@
     "connectionId": "http-localhost-9000",
     "projectKey": "pro-react-admin2"
   },
-  "bitoAI.codeCompletion.enableAutoCompletion": false
+  "bitoAI.codeCompletion.enableAutoCompletion": false,
+  "i18n-ally.sourceLanguage": "zh"
 }
