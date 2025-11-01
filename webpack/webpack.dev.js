@@ -60,7 +60,7 @@ const devWebpackConfig = merge(common, {
     // new webpack.debug.ProfilingPlugin({
     //   outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
     // }),
-  ].filter(Boolean),
+  ],
   optimization: {
     removeAvailableModules: false,
     removeEmptyChunks: false,

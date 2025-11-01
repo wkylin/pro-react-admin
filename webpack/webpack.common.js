@@ -67,7 +67,6 @@ const config = {
     },
     symlinks: false,
   },
-  stats: 'verbose', // 输出详细的构建信息
   plugins: [
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),

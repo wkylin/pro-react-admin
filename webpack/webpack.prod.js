@@ -17,7 +17,8 @@ const { EsbuildPlugin } = require('esbuild-loader')
 const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
 
-const regVendor = /[\\/]node_modules[\\/](axios|classnames|)[\\/]/
+// 第三方库正则匹配（用于代码分割）
+const regVendor = /[\\/]node_modules[\\/](axios|classnames|lodash)[\\/]/
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
@@ -40,7 +41,12 @@ const prodWebpackConfig = merge(common, {
         standard: [/^ant-/],
       },
     }),
-    new CompressionWebpackPlugin(),
+    new CompressionWebpackPlugin({
+      algorithm: 'gzip',
+      test: /\.(js|css|html|svg)$/,
+      threshold: 8192,
+      minRatio: 0.8,
+    }),
     new CopyWebpackPlugin({
       patterns: [
         {

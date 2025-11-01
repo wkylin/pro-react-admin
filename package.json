@@ -12,19 +12,22 @@
     "Vite",
     "Bit",
     "Bit.dev",
-    "Bit.cloud"
+    "Bit.cloud",
+    "TypeScript",
+    "Ant Design",
+    "Admin Dashboard"
   ],
   "homepage": "https://wkylin.github.io/pro-react-admin",
   "main": "index.js",
   "sideEffects": true,
   "scripts": {
     "devtools": "react-devtools",
-    "prebuild": "rm -rf node_modules && npm install",
+    "prebuild": "npm run clean:dist",
     "pre:run": "install-changed",
     "dev": "npm run start",
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development NODE_OPTIONS=--trace-deprecation webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
-    "build:production": "npm run && cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "build:production": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:test": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:dev": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=dev NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "prod:serve": "cross-env SENTRY_SOURCE_MAP=no BUILD_SERVE=prod BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
@@ -43,6 +46,8 @@
     "faker": "nodemon faker/index.js",
     "test": "npm run test:jest && npm run test:coverage",
     "test:jest": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
     "update:yarn": "yarn upgrade --latest",
     "update:npm": "ncu -u && npm install",
     "lint:fix": "npm run eslint:fix && npm run stylelint:fix && npm run prettier:fix",
@@ -52,9 +57,9 @@
     "prettier:check": "prettier --check \"src/**/*\" --end-of-line auto --ignore-unknown",
     "prettier:fix": "prettier --write \"src/**/*\" --end-of-line auto --ignore-unknown",
     "prettier:fix:all": "prettier --write . --end-of-line auto --ignore-unknown",
-    "eslint": "eslint --cache",
+    "eslint": "eslint --cache \"src/**/*.{js,jsx,ts,tsx}\"",
     "biome:fix": "npx @biomejs/biome format --write --fix ./src",
-    "eslint:fix": "eslint --fix --cache",
+    "eslint:fix": "eslint --fix --cache \"src/**/*.{js,jsx,ts,tsx}\"",
     "markdownlint": "markdownlint *.md",
     "markdownlint:fix": "markdownlint --fix *.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
@@ -89,7 +94,7 @@
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/plugin-proposal-decorators": "^7.28.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/plugin-transform-object-rest-spread": "^7.20.7",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-object-rest-spread": "^7.28.4",
     "@babel/plugin-transform-runtime": "^7.28.5",
@@ -132,7 +137,6 @@
     "babel-plugin-transform-remove-debugger": "^6.9.4",
     "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "chalk": "^5.6.2",
-    "child_process": "^1.0.2",
     "circular-dependency-plugin": "^5.2.2",
     "clean-webpack-plugin": "^4.0.0",
     "code-inspector-plugin": "^1.2.10",
@@ -363,10 +367,10 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js, jsx, ts, tsx}": [
+    "src/**/*.{js,jsx,ts,tsx}": [
       "npm run eslint:fix"
     ],
-    "src/**/*.{less, css, scss}": [
+    "src/**/*.{less,css,scss}": [
       "npm run stylelint:fix"
     ],
     "*.md": [
