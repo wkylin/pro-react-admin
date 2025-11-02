@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Result, Spin } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { authService } from '@src/service/authService'
+import { permissionService } from '@src/service/permissionService'
 
 export const AuthCallback: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
@@ -26,8 +27,31 @@ export const AuthCallback: React.FC = () => {
         }
 
         await authService.handleCallback(code)
-        debugger
-        navigate('/')
+
+        // 登录成功后立即同步权限
+        try {
+          await permissionService.syncPermissions()
+        } catch (error) {
+          console.error('同步权限失败:', error)
+          // 即使权限同步失败，也允许登录，使用默认权限
+        }
+
+        // 获取用户可访问的第一个路由
+        try {
+          const routes = await permissionService.getAccessibleRoutes(true)
+          if (routes && routes.length > 0) {
+            // 跳转到第一个有权限的路由（优先首页）
+            const targetRoute = routes.includes('/') ? '/' : routes[0]
+            navigate(targetRoute)
+          } else {
+            // 如果没有权限，跳转到403
+            navigate('/403')
+          }
+        } catch (error) {
+          console.error('获取路由失败:', error)
+          // 默认跳转到首页，让路由守卫处理权限
+          navigate('/')
+        }
       } catch (err) {
         console.error('Callback handling error:', err)
         setError(err instanceof Error ? err.message : '登录失败')

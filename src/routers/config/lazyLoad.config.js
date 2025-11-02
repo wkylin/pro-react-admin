@@ -56,6 +56,9 @@ export const lazyComponents = {
   Profile: lazyLoad(() => import('@pages/profile')),
   Contact: lazyLoad(() => import('@pages/contact')),
 
+  // 权限管理示例
+  PermissionDemo: lazyLoad(() => import('@pages/permission'), { preload: true }),
+
   // 优惠券模块（嵌套路由）
   Coupons: lazyLoad(() => import('@pages/coupons'), { preload: true }),
   CouponsHome: lazyLoad(() => import('@pages/coupons/home'), { preload: true }),

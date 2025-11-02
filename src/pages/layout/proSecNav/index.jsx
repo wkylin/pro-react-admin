@@ -16,7 +16,7 @@ import {
 import styles from './index.module.less'
 
 const pathSubmenu = {
-  '/home': ['home'],
+  '/': ['home'],
   '/coupons/add': ['/sub-act', '/sub-coupons'],
   '/coupons/edit': ['/sub-act', '/sub-coupons'],
   '/product': ['/sub-act', '/sub-coupons'],

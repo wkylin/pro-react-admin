@@ -1,5 +1,4 @@
 import React from 'react'
-// import React, { useEffect, useState } from 'react'
 import { Layout, Space, Dropdown, Switch, theme, Avatar } from 'antd'
 import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
@@ -21,7 +20,7 @@ import { useProThemeContext } from '@theme/hooks'
 
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
-
+import { getLocalStorage } from '@utils/publicFn'
 import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
@@ -145,7 +144,7 @@ const ProHeader = () => {
                   <Avatar src={user.avatar_url} /> <span>{user.name || user.login}</span>
                 </>
               ) : (
-                <span style={{ fontSize: 18 }}>wkylin.w</span>
+                <span style={{ fontSize: 18 }}>{getLocalStorage('token')?.token || 'wkylin.w'}</span>
               )}
               <DownOutlined />
             </Space>

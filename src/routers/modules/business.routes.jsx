@@ -35,4 +35,11 @@ export const businessRoutes = [
     auth: false,
     element: <lazyComponents.Product />,
   },
+  {
+    path: 'permission',
+    name: '权限管理示例',
+    key: '/permission',
+    auth: true,
+    element: <lazyComponents.PermissionDemo />,
+  },
 ]

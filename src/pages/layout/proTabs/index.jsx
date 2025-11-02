@@ -166,17 +166,12 @@ const ProTabs = (props) => {
       }}
       items={panes.map((pane) => ({
         label: (
-          <>
+          <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
             {pane.key === fullPath && pane.key !== '/404' && (
-              <SyncOutlined
-                style={{ padding: '0 5px', display: 'line-block' }}
-                onClick={refreshTab}
-                title="刷新"
-                spin={isReload}
-              />
+              <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
             )}
             {pane.i18nKey ? t(pane.i18nKey) : pane.title}
-          </>
+          </span>
         ),
         key: pane.key,
         closable: pane.closable,

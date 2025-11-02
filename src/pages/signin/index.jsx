@@ -14,6 +14,7 @@ import { setLocalStorage } from '@utils/publicFn'
 // import { useOAuth } from '@hooks/useOAuth'
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
+import { permissionService } from '@src/service/permissionService'
 
 const { Content } = Layout
 const { Title, Text, Link } = Typography
@@ -37,11 +38,29 @@ const SignIn = () => {
 
   const [form] = Form.useForm()
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     // 模拟后端登录
     const { email } = values
     setLocalStorage('token', { token: email })
-    redirectTo('/')
+
+    // 登录成功后同步权限
+    try {
+      await permissionService.syncPermissions()
+      // 获取用户可访问的第一个路由
+      const routes = await permissionService.getAccessibleRoutes(true)
+      if (routes && routes.length > 0) {
+        // 跳转到第一个有权限的路由（优先首页）
+        const targetRoute = routes.includes('/') ? '/' : routes[0]
+        redirectTo(targetRoute)
+      } else {
+        // 如果没有权限，跳转到403
+        redirectTo('/403')
+      }
+    } catch (error) {
+      console.error('同步权限失败:', error)
+      // 默认跳转到首页，让路由守卫处理权限
+      redirectTo('/')
+    }
   }
 
   const onFinishFailed = (errorInfo) => {

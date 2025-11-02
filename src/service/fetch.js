@@ -14,7 +14,7 @@
  * 5. deleteFetch
  * 6. patchFetch
  */
-import { message } from 'antd'
+import { showMessage } from '@utils/message'
 import suffix from '../utils/suffix'
 
 // const baseUrl = process?.env?.APP_BASE_URL ? process?.env?.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
@@ -50,7 +50,7 @@ const handleFailedResult = (response, error, isShowError, reject) => {
 
   if (((status && status !== 200) || error) && isShowError) {
     const statusTips = `${status}: ${statusText}`
-    message.error(`${status ? statusTips : error?.message}`, 2)
+    showMessage.error(`${status ? statusTips : error?.message}`)
   }
   if (reject) reject(response)
 }
@@ -65,7 +65,7 @@ const handleSuccessResult = (resolve, result, isShowError) => {
 
     if (isShowError && result.code) {
       const errStr = `${result.code}: ${result.message}`
-      message.error(errStr, 2)
+      showMessage.error(errStr)
     }
   }
   resolve(result)
