@@ -5,11 +5,13 @@
 当前系统支持以下用户类型（通过不同方式登录）：
 
 ### 1. GitHub OAuth 登录用户
+
 - **登录方式**: 通过 GitHub OAuth 授权
 - **用户信息**: 从 GitHub API 获取
 - **用户标识**: GitHub 邮箱地址
 
 ### 2. 表单登录用户
+
 - **登录方式**: 邮箱 + 密码表单登录
 - **用户信息**: 表单输入的邮箱地址
 - **用户标识**: 邮箱地址
@@ -19,6 +21,7 @@
 系统预定义了 4 种角色：
 
 ### 1. 超级管理员 (super_admin)
+
 - **角色代码**: `super_admin`
 - **角色ID**: `1`
 - **权限**: `*:*` (所有权限)
@@ -26,6 +29,7 @@
 - **描述**: 拥有系统所有权限
 
 ### 2. 管理员 (admin)
+
 - **角色代码**: `admin`
 - **角色ID**: `2`
 - **权限列表**:
@@ -48,6 +52,7 @@
 - **描述**: 拥有大部分管理权限
 
 ### 3. 业务员 (business_user)
+
 - **角色代码**: `business_user`
 - **角色ID**: `3`
 - **权限列表**:
@@ -63,6 +68,7 @@
 - **描述**: 拥有业务相关操作权限
 
 ### 4. 普通用户 (user)
+
 - **角色代码**: `user`
 - **角色ID**: `4`
 - **权限列表**:
@@ -79,10 +85,10 @@
 
 系统根据用户邮箱自动分配角色：
 
-| 用户邮箱 | 绑定角色 | 角色代码 |
-|---------|---------|---------|
-| `wkylin.w@gmail.com` | 管理员 | `admin` |
-| 其他邮箱 | 普通用户 | `user` |
+| 用户邮箱             | 绑定角色 | 角色代码 |
+| -------------------- | -------- | -------- |
+| `wkylin.w@gmail.com` | 管理员   | `admin`  |
+| 其他邮箱             | 普通用户 | `user`   |
 
 ### 2. 手动角色切换（开发/测试）
 
@@ -90,10 +96,10 @@
 
 ```javascript
 // 在浏览器控制台执行
-localStorage.setItem('user_role', 'admin')        // 切换为管理员
+localStorage.setItem('user_role', 'admin') // 切换为管理员
 localStorage.setItem('user_role', 'business_user') // 切换为业务员
-localStorage.setItem('user_role', 'super_admin')   // 切换为超级管理员
-localStorage.setItem('user_role', 'user')          // 切换为普通用户
+localStorage.setItem('user_role', 'super_admin') // 切换为超级管理员
+localStorage.setItem('user_role', 'user') // 切换为普通用户
 ```
 
 ### 3. 通过权限示例页面切换
@@ -201,6 +207,7 @@ AuthRouter 路由守卫
 ### 3. 代码实现位置
 
 #### 登录表单 (`src/pages/signin/index.jsx`)
+
 ```javascript
 const onFinish = (values) => {
   // 模拟后端登录
@@ -211,6 +218,7 @@ const onFinish = (values) => {
 ```
 
 #### GitHub 回调处理 (`src/components/auth/AuthCallback.tsx`)
+
 ```typescript
 await authService.handleCallback(code)
 // 登录成功后立即同步权限
@@ -220,11 +228,9 @@ const routes = await permissionService.getAccessibleRoutes(true)
 ```
 
 #### 权限获取逻辑 (`src/mock/permission.ts`)
+
 ```typescript
-export const mockGetUserPermissions = async (
-  userId?: string,
-  roleCode?: string
-): Promise<UserPermission> => {
+export const mockGetUserPermissions = async (userId?: string, roleCode?: string): Promise<UserPermission> => {
   // 1. 检查是否有手动设置的角色
   const storedRoleCode = localStorage.getItem('user_role')
 
@@ -264,20 +270,20 @@ export const mockGetUserPermissions = async (
 
 路由与权限的映射关系 (`src/mock/permission.ts`):
 
-| 路由路径 | 所需权限 | 说明 |
-|---------|---------|------|
-| `/` | `home:read` | 首页 |
-| `/dashboard` | `dashboard:read` | 仪表盘 |
-| `/business` | `business:read` | 业务管理 |
-| `/coupons` | `coupons:read` | 优惠券列表 |
-| `/coupons/add` | `coupons:create` | 创建优惠券 |
-| `/coupons/edit/:id` | `coupons:update` | 编辑优惠券 |
-| `/coupons/detail/:id` | `coupons:read` | 优惠券详情 |
-| `/product` | `product:read` | 产品管理 |
-| `/chart` | `chart:read` | 图表 |
-| `/ui` | `ui:read` | UI组件 |
-| `/demo` | `demo:read` | 演示页面 |
-| `/permission` | `permission:read` | 权限示例 |
+| 路由路径              | 所需权限          | 说明       |
+| --------------------- | ----------------- | ---------- |
+| `/`                   | `home:read`       | 首页       |
+| `/dashboard`          | `dashboard:read`  | 仪表盘     |
+| `/business`           | `business:read`   | 业务管理   |
+| `/coupons`            | `coupons:read`    | 优惠券列表 |
+| `/coupons/add`        | `coupons:create`  | 创建优惠券 |
+| `/coupons/edit/:id`   | `coupons:update`  | 编辑优惠券 |
+| `/coupons/detail/:id` | `coupons:read`    | 优惠券详情 |
+| `/product`            | `product:read`    | 产品管理   |
+| `/chart`              | `chart:read`      | 图表       |
+| `/ui`                 | `ui:read`         | UI组件     |
+| `/demo`               | `demo:read`       | 演示页面   |
+| `/permission`         | `permission:read` | 权限示例   |
 
 ## 八、使用示例
 
@@ -390,4 +396,3 @@ if (user.email === 'newuser@example.com') {
 - **权限**: 资源:操作格式的权限代码
 - **路由**: 根据权限控制访问
 - **绑定**: 基于邮箱自动分配，支持手动切换（测试用）
-

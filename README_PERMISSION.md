@@ -126,15 +126,15 @@ import { usePermission } from '@/hooks/usePermission'
 
 const MyComponent = () => {
   const {
-    permissions,      // 权限列表
-    roles,           // 角色列表
-    routes,          // 可访问路由列表
-    loading,          // 加载状态
-    hasPermission,    // 检查单个权限
+    permissions, // 权限列表
+    roles, // 角色列表
+    routes, // 可访问路由列表
+    loading, // 加载状态
+    hasPermission, // 检查单个权限
     hasAllPermissions, // 检查多个权限（全部需要）
-    hasAnyPermission,  // 检查多个权限（任一即可）
-    hasRole,          // 检查角色
-    canAccessRoute,   // 检查路由权限
+    hasAnyPermission, // 检查多个权限（任一即可）
+    hasRole, // 检查角色
+    canAccessRoute, // 检查路由权限
     refreshPermissions, // 刷新权限
   } = usePermission()
 
@@ -214,6 +214,7 @@ export const routePermissionMap = {
 3. 刷新页面
 
 可用角色：
+
 - `super_admin` - 超级管理员
 - `admin` - 管理员
 - `business_user` - 业务员
@@ -280,4 +281,3 @@ A: 设置 `hideWhenNoPermission={false}`，按钮在无权限时会显示但处�
 3. 使用 `usePermission` Hook 获取权限信息
 
 系统会自动处理权限检查、路由守卫和缓存管理。
-
