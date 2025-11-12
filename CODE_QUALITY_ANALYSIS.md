@@ -7,14 +7,14 @@
 
 ## 📊 总体评分
 
-| 维度 | 评分 | 说明 |
-|------|------|------|
+| 维度     | 评分   | 说明                       |
+| -------- | ------ | -------------------------- |
 | 架构设计 | ⭐⭐⭐ | 模块化较好，但存在职责混乱 |
-| 类型安全 | ⭐⭐ | 大量 `as any`，TS 配置不当 |
-| 代码规范 | ⭐⭐ | ESLint 规则被大量禁用 |
-| 可维护性 | ⭐⭐⭐ | 注释代码过多，依赖冗余 |
-| 性能优化 | ⭐⭐⭐ | 部分组件有内存泄漏风险 |
-| 测试覆盖 | ⭐ | 测试配置不完整 |
+| 类型安全 | ⭐⭐   | 大量 `as any`，TS 配置不当 |
+| 代码规范 | ⭐⭐   | ESLint 规则被大量禁用      |
+| 可维护性 | ⭐⭐⭐ | 注释代码过多，依赖冗余     |
+| 性能优化 | ⭐⭐⭐ | 部分组件有内存泄漏风险     |
+| 测试覆盖 | ⭐     | 测试配置不完整             |
 
 ---
 
@@ -23,6 +23,7 @@
 ### 1. TypeScript 类型安全被严重削弱
 
 **问题文件**:
+
 ```typescript
 // src/App.tsx:47
 const element = useRoutes(rootRouter as any)
@@ -40,6 +41,7 @@ const response = (await request.get('/api/permissions/current')) as any
 **影响**: 失去 TypeScript 类型检查保护，容易在运行时出错
 
 **建议修复**:
+
 ```typescript
 // 正确做法：定义明确的类型
 import { RouteObject } from 'react-router-dom'
@@ -57,15 +59,16 @@ const element = useRoutes(rootRouter)
 
 **高危文件列表**:
 
-| 文件 | 问题 | 影响 |
-|------|------|------|
-| `src/pages/chatgpt/index.jsx` | EventSource 事件监听器未清理（7处） | 可能导致内存泄漏 |
-| `src/components/stateless/IconCloud/index.jsx` | requestAnimationFrame 无清理 | 组件卸载后动画继续运行 |
-| `src/pages/layout/fullscreen/index.tsx` | screenfull.on('change') 无清理 | 全局监听器泄漏 |
-| `src/utils/aidFn.js` | addEventListener 无清理 | 事件监听器累积 |
-| `src/App.tsx:19-22` | Watermark 无清理逻辑 | DOM 操作无撤销 |
+| 文件                                           | 问题                                | 影响                   |
+| ---------------------------------------------- | ----------------------------------- | ---------------------- |
+| `src/pages/chatgpt/index.jsx`                  | EventSource 事件监听器未清理（7处） | 可能导致内存泄漏       |
+| `src/components/stateless/IconCloud/index.jsx` | requestAnimationFrame 无清理        | 组件卸载后动画继续运行 |
+| `src/pages/layout/fullscreen/index.tsx`        | screenfull.on('change') 无清理      | 全局监听器泄漏         |
+| `src/utils/aidFn.js`                           | addEventListener 无清理             | 事件监听器累积         |
+| `src/App.tsx:19-22`                            | Watermark 无清理逻辑                | DOM 操作无撤销         |
 
 **修复示例**:
+
 ```typescript
 // ❌ 错误示例 - src/pages/chatgpt/index.jsx
 useEffect(() => {
@@ -80,7 +83,7 @@ useEffect(() => {
   const eventSource = new EventSource(url)
   eventSource.addEventListener('message', handler)
   eventSource.addEventListener('error', errorHandler)
-  
+
   return () => {
     eventSource.removeEventListener('message', handler)
     eventSource.removeEventListener('error', errorHandler)
@@ -94,6 +97,7 @@ useEffect(() => {
 ### 3. ESLint 规则被系统性禁用
 
 **配置问题** (`eslint.config.mjs`):
+
 ```javascript
 rules: {
   'react-hooks/exhaustive-deps': 'off',  // ⚠️ 关闭依赖检查
@@ -102,12 +106,14 @@ rules: {
 ```
 
 **代码中的滥用**:
+
 ```bash
 $ grep "eslint-disable" src/**/* | wc -l
 20+ 处 eslint-disable 注释
 ```
 
 **关键案例**:
+
 ```javascript
 // src/components/hooks/useTable/index.jsx:1
 /* eslint-disable no-shadow */
@@ -116,7 +122,8 @@ $ grep "eslint-disable" src/**/* | wc -l
 // eslint-disable-next-line react-hooks/exhaustive-deps
 ```
 
-**建议**: 
+**建议**:
+
 - 启用 `react-hooks/exhaustive-deps: 'warn'`
 - 逐个修复依赖问题，而非全局禁用
 - 移除所有注释代码中的禁用规则
@@ -128,6 +135,7 @@ $ grep "eslint-disable" src/**/* | wc -l
 **统计**: 发现 **103+ 处** console.log/error/warn
 
 **高风险文件**:
+
 ```javascript
 // src/service/request.js - 请求拦截器中
 console.log('使用自定义 Authorization:', config.headers.Authorization)
@@ -143,6 +151,7 @@ console.log('23', res)
 ```
 
 **建议**:
+
 ```javascript
 // 使用环境变量控制
 const logger = {
@@ -166,12 +175,13 @@ Sentry.captureException(error)
 ```json
 {
   "compilerOptions": {
-    "jsx": "react",              // ❌ 应为 "react-jsx" (React 17+)
-    "rootDir": "./",             // ❌ 应为 "./src"
-    "allowJs": true,             // ⚠️ 降低类型约束
-    "noImplicitAny": true,       // ✅ 但被 as any 绕过
+    "jsx": "react", // ❌ 应为 "react-jsx" (React 17+)
+    "rootDir": "./", // ❌ 应为 "./src"
+    "allowJs": true, // ⚠️ 降低类型约束
+    "noImplicitAny": true // ✅ 但被 as any 绕过
   },
-  "rules": {                     // ❌ TSLint 已废弃，无效配置
+  "rules": {
+    // ❌ TSLint 已废弃，无效配置
     "indent": [true, "spaces", 2],
     "semicolon": [true, "never"]
   }
@@ -179,12 +189,13 @@ Sentry.captureException(error)
 ```
 
 **修复建议**:
+
 ```json
 {
   "compilerOptions": {
-    "jsx": "react-jsx",          // React 19 推荐
+    "jsx": "react-jsx", // React 19 推荐
     "rootDir": "./src",
-    "allowJs": false,            // 严格 TS only
+    "allowJs": false, // 严格 TS only
     "moduleResolution": "bundler" // 现代解析策略
   }
   // 删除 rules 块
@@ -197,15 +208,16 @@ Sentry.captureException(error)
 
 **重复功能的库**:
 
-| 功能 | 重复库 | 建议 |
-|------|---------|------|
-| MD5 | `blueimp-md5` + `js-md5` | 保留一个 |
-| Query | `qs` + `query-string` | 保留一个 |
-| Confetti | `canvas-confetti` + `react-canvas-confetti` | 保留一个 |
-| Number Flow | `number-flow` + `@number-flow/react` | 确认是否重复 |
-| HTTP | `axios` + `cross-fetch` + `fetch-intercept` | 统一策略 |
+| 功能        | 重复库                                      | 建议         |
+| ----------- | ------------------------------------------- | ------------ |
+| MD5         | `blueimp-md5` + `js-md5`                    | 保留一个     |
+| Query       | `qs` + `query-string`                       | 保留一个     |
+| Confetti    | `canvas-confetti` + `react-canvas-confetti` | 保留一个     |
+| Number Flow | `number-flow` + `@number-flow/react`        | 确认是否重复 |
+| HTTP        | `axios` + `cross-fetch` + `fetch-intercept` | 统一策略     |
 
 **分类错误**:
+
 ```json
 // ❌ 应在 devDependencies
 "dependencies": {
@@ -222,17 +234,20 @@ Sentry.captureException(error)
 ### 7. 样式技术栈过度复杂
 
 **当前并存**:
+
 1. ✅ Ant Design (css-in-js)
 2. ✅ Less
 3. ⚠️ Tailwind CSS 4
 4. ⚠️ Styled Components
 
-**问题**: 
+**问题**:
+
 - 主题变量冲突风险
 - 开发者心智负担
 - 样式优先级问题
 
-**建议**: 
+**建议**:
+
 ```
 方案 A: Ant Design + Less（保持现状，移除 Tailwind & Styled Components）
 方案 B: Ant Design + Tailwind（移除 Less & Styled Components）
@@ -243,6 +258,7 @@ Sentry.captureException(error)
 ### 8. 代码文件格式不统一
 
 **发现问题**:
+
 ```bash
 src/routers/index.jsx         # ❌ 应为 .ts
 src/routers/authRouter.jsx    # ❌ 应为 .tsx
@@ -262,7 +278,7 @@ src/utils/index.js            # ❌ 应为 .ts
 
 ```typescript
 // ❌ App.tsx - 假的 loading 状态
-const asyncCall = () => new Promise<void>((resolve) => 
+const asyncCall = () => new Promise<void>((resolve) =>
   setTimeout(() => resolve(), 1500)
 )
 
@@ -300,6 +316,7 @@ useEffect(() => {
 **统计**: 50+ 行大段注释代码
 
 **典型案例**:
+
 ```typescript
 // src/App.tsx:25-43 (18行注释代码)
 // const fetchUserLanguage = async () => {
@@ -330,11 +347,11 @@ useEffect(() => {
 ```json
 {
   "name": "pro-react-admin",
-  "main": "index.js",              // ❌ SPA 无需此字段
-  "keywords": ["Vite"],            // ❌ 未使用 Vite
-  "sideEffects": true,             // ⚠️ 阻止 tree-shaking
+  "main": "index.js", // ❌ SPA 无需此字段
+  "keywords": ["Vite"], // ❌ 未使用 Vite
+  "sideEffects": true, // ⚠️ 阻止 tree-shaking
   "scripts": {
-    "clean:lock": "rm -rf ..."     // ⚠️ 破坏可重复构建
+    "clean:lock": "rm -rf ..." // ⚠️ 破坏可重复构建
   }
 }
 ```
@@ -344,6 +361,7 @@ useEffect(() => {
 ### 12. 目录结构混乱
 
 **问题**:
+
 ```
 src/
 ├── components/
@@ -355,11 +373,12 @@ src/
 ```
 
 **别名配置不一致**:
+
 ```json
 {
   "@/*": ["./src/*"],
-  "@src/*": ["./src/*"],   // ❌ 与 @/* 重复
-  "@hooks/*": ["./src/components/hooks/*"]  // ❌ 指向错误位置
+  "@src/*": ["./src/*"], // ❌ 与 @/* 重复
+  "@hooks/*": ["./src/components/hooks/*"] // ❌ 指向错误位置
 }
 ```
 
@@ -370,6 +389,7 @@ src/
 **缺失配置**:
 
 1. **入口文件** (`src/index.tsx`):
+
 ```typescript
 // ❌ 缺少
 root.render(
@@ -384,12 +404,13 @@ root.render(
 ```
 
 2. **Webpack 配置**:
+
 ```javascript
 // webpack/webpack.common.js
 // ❌ 未启用循环依赖检测
 // 已安装 circular-dependency-plugin 但未启用
 new CircularDependencyPlugin({
-  failOnError: true  // 建议开启
+  failOnError: true, // 建议开启
 })
 ```
 
@@ -398,6 +419,7 @@ new CircularDependencyPlugin({
 ### 14. 测试配置不完整
 
 **问题**:
+
 ```json
 // package.json
 "jest": {
@@ -409,6 +431,7 @@ new CircularDependencyPlugin({
 ```
 
 **修复**:
+
 ```json
 "jest": {
   "setupFilesAfterEnv": ["<rootDir>/jest.setup.js"],
@@ -426,6 +449,7 @@ new CircularDependencyPlugin({
 **问题清单**:
 
 1. **Analytics 在开发环境运行**:
+
 ```typescript
 // src/index.tsx
 <Analytics />          // ⚠️ 所有环境都发送数据
@@ -436,16 +460,18 @@ new CircularDependencyPlugin({
 ```
 
 2. **i18n 缺少 XSS 防护**:
+
 ```javascript
 // 需确认 i18n 配置
 i18next.init({
   interpolation: {
-    escapeValue: true  // 必须开启
-  }
+    escapeValue: true, // 必须开启
+  },
 })
 ```
 
 3. **HTTP Server CORS 配置**:
+
 ```json
 // package.json
 "http-server": "http-server ./dist --cors"  // ⚠️ 仅限本地
@@ -457,11 +483,11 @@ i18next.init({
 
 ### 🎯 按影响程度
 
-| 优先级 | 问题数 | 关键问题 |
-|--------|--------|---------|
-| 🔴 Critical | 4 | TypeScript any 滥用、内存泄漏、ESLint 禁用、console.log |
-| 🟡 High | 6 | TS 配置、依赖重复、样式栈混乱、文件格式、React 反模式、注释代码 |
-| 🟢 Medium | 5 | package.json、目录结构、保护机制、测试、安全 |
+| 优先级      | 问题数 | 关键问题                                                        |
+| ----------- | ------ | --------------------------------------------------------------- |
+| 🔴 Critical | 4      | TypeScript any 滥用、内存泄漏、ESLint 禁用、console.log         |
+| 🟡 High     | 6      | TS 配置、依赖重复、样式栈混乱、文件格式、React 反模式、注释代码 |
+| 🟢 Medium   | 5      | package.json、目录结构、保护机制、测试、安全                    |
 
 ### 🏗️ 按代码坏味道类型
 
@@ -531,19 +557,20 @@ i18next.init({
 
 ## 📊 预期收益
 
-| 改进项 | 预期收益 |
-|--------|---------|
-| 移除重复依赖 | Bundle 体积减少 **2-5MB** |
-| 修复内存泄漏 | 页面性能提升 **10-20%** |
-| TypeScript 强类型 | 减少运行时错误 **30-50%** |
-| 清理 console.log | 生产环境性能提升 **5-10%** |
-| ESLint 规则启用 | 代码质量提升 **显著** |
+| 改进项            | 预期收益                   |
+| ----------------- | -------------------------- |
+| 移除重复依赖      | Bundle 体积减少 **2-5MB**  |
+| 修复内存泄漏      | 页面性能提升 **10-20%**    |
+| TypeScript 强类型 | 减少运行时错误 **30-50%**  |
+| 清理 console.log  | 生产环境性能提升 **5-10%** |
+| ESLint 规则启用   | 代码质量提升 **显著**      |
 
 ---
 
 ## 🔧 快速开始
 
 ### 创建修复分支
+
 ```bash
 git checkout -b refactor/code-quality-improvements
 ```
@@ -551,6 +578,7 @@ git checkout -b refactor/code-quality-improvements
 ### 第一批改动（最小风险）
 
 1. **修复 tsconfig.json**:
+
 ```json
 {
   "compilerOptions": {
@@ -563,6 +591,7 @@ git checkout -b refactor/code-quality-improvements
 ```
 
 2. **添加错误边界** (`src/index.tsx`):
+
 ```typescript
 import { StrictMode, Suspense } from 'react'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -591,6 +620,7 @@ root.render(
 ```
 
 3. **移除注释代码** (`src/App.tsx`):
+
 ```typescript
 // 删除所有 // 开头的注释代码
 // 删除假的 loading 逻辑
