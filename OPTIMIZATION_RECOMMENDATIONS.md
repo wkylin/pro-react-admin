@@ -11,6 +11,7 @@
 本文档基于已有的 `CODE_QUALITY_ANALYSIS.md` 提供更详细的优化实施方案。项目整体质量良好，但存在以下关键问题需要优先解决：
 
 ### 🔴 高优先级问题
+
 1. **Engine 兼容性问题**: 项目要求 Node >= 20.12.1，但依赖 `react-input-pin-code@2.0.1` 要求 Node >= 22
 2. **TypeScript 配置问题**: 配置过时且不符合 React 19 最佳实践
 3. **296 个 JS/JSX 文件未转换为 TypeScript**: 降低了类型安全性
@@ -25,7 +26,8 @@
 
 #### 1.1 修复 Node Engine 兼容性
 
-**问题**: 
+**问题**:
+
 ```json
 // package.json
 "engines": {
@@ -34,6 +36,7 @@
 ```
 
 **解决方案 A** (推荐): 更新依赖
+
 ```bash
 # 检查是否有兼容 Node 20 的版本
 npm update react-input-pin-code
@@ -43,6 +46,7 @@ npm search pin code input
 ```
 
 **解决方案 B**: 更新 Node 版本要求
+
 ```json
 "engines": {
   "node": ">= 22.0.0",
@@ -58,34 +62,38 @@ npm search pin code input
 #### 1.2 优化 tsconfig.json
 
 **当前问题**:
+
 ```json
 {
   "compilerOptions": {
-    "jsx": "react",              // ❌ React 17 语法
-    "rootDir": "./",             // ❌ 包含了非源码目录
-    "allowJs": true,             // ⚠️ 降低类型检查
+    "jsx": "react", // ❌ React 17 语法
+    "rootDir": "./", // ❌ 包含了非源码目录
+    "allowJs": true // ⚠️ 降低类型检查
   },
-  "rules": {                     // ❌ TSLint 已废弃
+  "rules": {
+    // ❌ TSLint 已废弃
     "indent": [true, "spaces", 2]
   }
 }
 ```
 
 **优化后配置**:
+
 ```json
 {
   "compilerOptions": {
-    "jsx": "react-jsx",          // ✅ React 17+ 新 JSX 转换
-    "rootDir": "./src",          // ✅ 仅包含源码
-    "allowJs": false,            // ✅ 严格 TypeScript
+    "jsx": "react-jsx", // ✅ React 17+ 新 JSX 转换
+    "rootDir": "./src", // ✅ 仅包含源码
+    "allowJs": false, // ✅ 严格 TypeScript
     "moduleResolution": "bundler", // ✅ 现代模块解析
-    "verbatimModuleSyntax": true  // ✅ 更严格的导入/导出检查
+    "verbatimModuleSyntax": true // ✅ 更严格的导入/导出检查
   }
   // 删除 rules 块
 }
 ```
 
 **实施步骤**:
+
 1. 备份当前 `tsconfig.json`
 2. 应用新配置
 3. 修复出现的类型错误
@@ -141,6 +149,7 @@ export const logger = createLogger()
 ```
 
 **批量替换脚本**:
+
 ```bash
 # 使用 sed 批量替换
 find src -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) \
@@ -161,11 +170,13 @@ find src -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.js
 #### 1.4 添加关键保护机制
 
 **当前 index.tsx** 缺少:
+
 - ❌ React.StrictMode
 - ❌ ErrorBoundary
 - ❌ Suspense fallback
 
 **优化后代码**:
+
 ```typescript
 // src/index.tsx
 import { StrictMode, Suspense } from 'react'
@@ -199,6 +210,7 @@ root.render(
 ```
 
 **创建 ErrorBoundary**:
+
 ```typescript
 // src/components/ErrorBoundary/index.tsx
 import React, { Component, ErrorInfo, ReactNode } from 'react'
@@ -266,6 +278,7 @@ export default ErrorBoundary
 **高危文件**: `src/pages/chatgpt/index.jsx`
 
 **问题代码**:
+
 ```javascript
 useEffect(() => {
   const eventSource = new EventSource(url)
@@ -276,21 +289,22 @@ useEffect(() => {
 ```
 
 **修复后**:
+
 ```typescript
 useEffect(() => {
   const eventSource = new EventSource(url)
-  
+
   const messageHandler = (event: MessageEvent) => {
     // 处理消息
   }
-  
+
   const errorHandler = (error: Event) => {
     // 处理错误
   }
-  
+
   eventSource.addEventListener('message', messageHandler)
   eventSource.addEventListener('error', errorHandler)
-  
+
   // ✅ 清理函数
   return () => {
     eventSource.removeEventListener('message', messageHandler)
@@ -301,6 +315,7 @@ useEffect(() => {
 ```
 
 **需要修复的其他文件**:
+
 1. `src/components/stateless/IconCloud/index.jsx` - requestAnimationFrame 清理
 2. `src/pages/layout/fullscreen/index.tsx` - screenfull 事件清理
 3. `src/utils/aidFn.js` - addEventListener 清理
@@ -317,6 +332,7 @@ useEffect(() => {
 **当前状态**: 296 个 JS/JSX 文件
 
 **重点文件** (优先处理):
+
 ```
 src/routers/index.jsx → index.tsx
 src/routers/authRouter.jsx → authRouter.tsx
@@ -326,12 +342,14 @@ src/locales/**/translation.js → translation.ts
 ```
 
 **迁移步骤**:
+
 1. 重命名文件 `.jsx` → `.tsx`, `.js` → `.ts`
 2. 添加类型定义
 3. 修复类型错误
 4. 验证功能
 
 **批量重命名脚本**:
+
 ```bash
 #!/bin/bash
 # rename-to-typescript.sh
@@ -348,6 +366,7 @@ done
 ```
 
 **类型定义示例**:
+
 ```typescript
 // src/routers/index.tsx
 import { RouteObject } from 'react-router-dom'
@@ -375,6 +394,7 @@ export const rootRouter: RouteObject[] = [
 **修复策略**:
 
 **案例 1**: App.tsx
+
 ```typescript
 // ❌ 错误
 const element = useRoutes(rootRouter as any)
@@ -385,6 +405,7 @@ const element = useRoutes(rootRouter) // rootRouter 已有正确类型
 ```
 
 **案例 2**: theme.tsx
+
 ```typescript
 // ❌ 错误
 const { myTheme } = useProThemeContext() as any
@@ -405,9 +426,10 @@ const useProThemeContext = (): ProThemeContextValue => {
 ```
 
 **案例 3**: API 请求
+
 ```typescript
 // ❌ 错误
-const response = await request.get('/api/permissions/current') as any
+const response = (await request.get('/api/permissions/current')) as any
 
 // ✅ 正确
 interface Permission {
@@ -433,37 +455,39 @@ const response = await request.get<PermissionsResponse>('/api/permissions/curren
 
 **发现的重复**:
 
-| 功能 | 当前依赖 | 建议 |
-|------|---------|------|
-| MD5 哈希 | `blueimp-md5` + `js-md5` | 保留 `js-md5` (更新) |
-| Query 解析 | `qs` + `query-string` | 保留 `qs` (更广泛使用) |
+| 功能          | 当前依赖                                    | 建议                         |
+| ------------- | ------------------------------------------- | ---------------------------- |
+| MD5 哈希      | `blueimp-md5` + `js-md5`                    | 保留 `js-md5` (更新)         |
+| Query 解析    | `qs` + `query-string`                       | 保留 `qs` (更广泛使用)       |
 | Confetti 动画 | `canvas-confetti` + `react-canvas-confetti` | 保留 `react-canvas-confetti` |
-| HTTP 客户端 | `axios` + `cross-fetch` + `fetch-intercept` | 统一使用 `axios` |
+| HTTP 客户端   | `axios` + `cross-fetch` + `fetch-intercept` | 统一使用 `axios`             |
 
 **package.json 优化**:
+
 ```json
 {
   "dependencies": {
     // 移除
     // "blueimp-md5": "^2.19.0",
     "js-md5": "^0.8.3",
-    
+
     // 移除
-    // "query-string": "^9.3.1", 
+    // "query-string": "^9.3.1",
     "qs": "^6.14.0",
-    
+
     // 移除
     // "canvas-confetti": "^1.9.3",
     "react-canvas-confetti": "^2.0.7",
-    
+
     // 主 HTTP 客户端
-    "axios": "^1.12.2",
+    "axios": "^1.12.2"
     // 移除 cross-fetch 和 fetch-intercept
   }
 }
 ```
 
 **修正 dependencies 分类**:
+
 ```json
 {
   "dependencies": {
@@ -501,27 +525,35 @@ rules: {
 ```
 
 **优化配置**:
+
 ```javascript
 // eslint.config.mjs
 export default [
   {
     rules: {
       'react-hooks/exhaustive-deps': 'warn', // ✅
-      'no-debugger': 'error',                 // ✅
-      'no-console': ['warn', { 
-        allow: ['error', 'warn'] 
-      }],
+      'no-debugger': 'error', // ✅
+      'no-console': [
+        'warn',
+        {
+          allow: ['error', 'warn'],
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unused-vars': ['error', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_'
-      }]
-    }
-  }
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+    },
+  },
 ]
 ```
 
 **修复步骤**:
+
 1. 启用规则
 2. 运行 `npm run eslint` 查看所有问题
 3. 分批修复
@@ -535,6 +567,7 @@ export default [
 #### 2.5 优化目录结构
 
 **当前问题**:
+
 ```
 src/
 ├── components/
@@ -546,6 +579,7 @@ src/
 ```
 
 **优化后结构**:
+
 ```
 src/
 ├── components/
@@ -562,6 +596,7 @@ src/
 ```
 
 **别名配置统一**:
+
 ```json
 // tsconfig.json
 {
@@ -578,6 +613,7 @@ src/
 ```
 
 **迁移脚本**:
+
 ```bash
 # 移动 components/hooks 到根 hooks
 mv src/components/hooks/* src/hooks/
@@ -597,12 +633,14 @@ find src -type f \( -name "*.ts" -o -name "*.tsx" \) \
 #### 3.1 样式技术栈收敛
 
 **当前问题**: 4 种样式方案并存
+
 1. Ant Design (CSS-in-JS)
 2. Less
 3. Tailwind CSS 4
 4. Styled Components
 
 **建议方案 A** (保守): Ant Design + Less
+
 ```json
 // package.json - 移除
 {
@@ -615,6 +653,7 @@ find src -type f \( -name "*.ts" -o -name "*.tsx" \) \
 ```
 
 **建议方案 B** (现代): Ant Design + Tailwind CSS
+
 ```json
 // package.json - 移除
 {
@@ -627,6 +666,7 @@ find src -type f \( -name "*.ts" -o -name "*.tsx" \) \
 ```
 
 **实施步骤**:
+
 1. 审计现有样式使用情况
 2. 选择一个主要方案
 3. 迁移少量样式代码
@@ -640,6 +680,7 @@ find src -type f \( -name "*.ts" -o -name "*.tsx" \) \
 #### 3.2 完善测试配置
 
 **当前配置** (不完整):
+
 ```json
 "jest": {
   "collectCoverage": true,
@@ -648,6 +689,7 @@ find src -type f \( -name "*.ts" -o -name "*.tsx" \) \
 ```
 
 **优化配置**:
+
 ```json
 // jest.config.js
 export default {
@@ -682,6 +724,7 @@ export default {
 ```
 
 **创建测试设置文件**:
+
 ```typescript
 // jest.setup.ts
 import '@testing-library/jest-dom'
@@ -689,7 +732,7 @@ import '@testing-library/jest-dom'
 // 模拟 window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -710,6 +753,7 @@ Object.defineProperty(window, 'matchMedia', {
 #### 3.3 Webpack 性能优化
 
 **启用循环依赖检测**:
+
 ```javascript
 // webpack/webpack.common.js
 const CircularDependencyPlugin = require('circular-dependency-plugin')
@@ -720,13 +764,14 @@ module.exports = {
       exclude: /node_modules/,
       failOnError: true,
       allowAsyncCycles: false,
-      cwd: process.cwd()
-    })
-  ]
+      cwd: process.cwd(),
+    }),
+  ],
 }
 ```
 
 **优化 Webpack 配置**:
+
 ```javascript
 // webpack/webpack.prod.js
 module.exports = {
@@ -739,21 +784,21 @@ module.exports = {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          priority: 10
+          priority: 10,
         },
         antd: {
           test: /[\\/]node_modules[\\/]antd[\\/]/,
           name: 'antd',
-          priority: 20
+          priority: 20,
         },
         react: {
           test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
           name: 'react',
-          priority: 20
-        }
-      }
-    }
-  }
+          priority: 20,
+        },
+      },
+    },
+  },
 }
 ```
 
@@ -765,27 +810,27 @@ module.exports = {
 #### 3.4 Bundle 分析和优化
 
 **分析当前 Bundle**:
+
 ```bash
 npm run analyze:build
 ```
 
 **优化策略**:
+
 1. 使用 dynamic import 懒加载
 2. 移除未使用的依赖
 3. 启用 tree-shaking
 
 **修复 package.json**:
+
 ```json
 {
-  "sideEffects": [
-    "*.css",
-    "*.less",
-    "*.scss"
-  ]  // 从 true 改为具体文件
+  "sideEffects": ["*.css", "*.less", "*.scss"] // 从 true 改为具体文件
 }
 ```
 
 **优化懒加载**:
+
 ```typescript
 // src/routers/index.tsx
 import { lazy } from 'react'
@@ -801,33 +846,36 @@ const Settings = lazy(() => import('@pages/settings'))
 
 ## 📊 预期收益总结
 
-| 优化项 | 预期收益 | 优先级 |
-|--------|---------|--------|
-| 修复 Engine 兼容性 | 解决安装问题 | P0 |
-| TypeScript 配置优化 | 提升类型安全 30% | P0 |
-| 移除 console 语句 | 性能提升 5-10% | P0 |
-| 修复内存泄漏 | 性能提升 10-20% | P0 |
-| JS → TS 迁移 | 减少运行时错误 50% | P1 |
-| 清理重复依赖 | Bundle 减少 2-5MB | P1 |
-| ESLint 规则启用 | 代码质量提升显著 | P1 |
-| 样式技术栈收敛 | 开发效率提升 20% | P2 |
-| 测试配置完善 | 测试覆盖率 0→50% | P2 |
-| Webpack 优化 | 构建速度提升 30% | P2 |
+| 优化项              | 预期收益           | 优先级 |
+| ------------------- | ------------------ | ------ |
+| 修复 Engine 兼容性  | 解决安装问题       | P0     |
+| TypeScript 配置优化 | 提升类型安全 30%   | P0     |
+| 移除 console 语句   | 性能提升 5-10%     | P0     |
+| 修复内存泄漏        | 性能提升 10-20%    | P0     |
+| JS → TS 迁移        | 减少运行时错误 50% | P1     |
+| 清理重复依赖        | Bundle 减少 2-5MB  | P1     |
+| ESLint 规则启用     | 代码质量提升显著   | P1     |
+| 样式技术栈收敛      | 开发效率提升 20%   | P2     |
+| 测试配置完善        | 测试覆盖率 0→50%   | P2     |
+| Webpack 优化        | 构建速度提升 30%   | P2     |
 
 ---
 
 ## 🗓️ 实施时间表
 
 ### 第 1 周: Phase 1 紧急修复
+
 - Day 1-2: Engine 兼容性 + TypeScript 配置
 - Day 3: Console 语句 + 保护机制
 - Day 4-5: 内存泄漏修复
 
 ### 第 2-3 周: Phase 2 代码质量
+
 - Week 2: JS → TS 迁移 + 消除 any
 - Week 3: 依赖清理 + ESLint 规则 + 目录优化
 
 ### 第 4-6 周: Phase 3 架构优化
+
 - Week 4: 样式技术栈收敛
 - Week 5: 测试配置 + Webpack 优化
 - Week 6: Bundle 分析 + 性能调优
@@ -837,6 +885,7 @@ const Settings = lazy(() => import('@pages/settings'))
 ## 🔍 额外建议
 
 ### 1. 引入代码审查流程
+
 ```yaml
 # .github/workflows/code-review.yml
 name: Code Review
@@ -855,6 +904,7 @@ jobs:
 ```
 
 ### 2. 引入性能监控
+
 ```typescript
 // src/utils/performance.ts
 export const reportWebVitals = (metric: any) => {
@@ -866,11 +916,13 @@ export const reportWebVitals = (metric: any) => {
 ```
 
 ### 3. 文档改进
+
 - 添加架构决策记录 (ADR)
 - 完善组件文档
 - 添加贡献指南
 
 ### 4. 安全加固
+
 ```bash
 # 定期运行安全审计
 npm audit
@@ -895,6 +947,7 @@ snyk test
 ## 🤝 需要帮助？
 
 如果在实施过程中遇到问题，请：
+
 1. 查看 `CODE_QUALITY_ANALYSIS.md` 获取详细分析
 2. 创建 GitHub Issue
 3. 联系团队技术负责人

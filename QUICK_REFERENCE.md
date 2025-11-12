@@ -7,11 +7,13 @@
 ## 🚨 紧急问题速查
 
 ### 1. 无法安装依赖？
+
 **错误**: `npm error engine Unsupported engine`
 
 **原因**: `react-input-pin-code@2.0.1` 要求 Node >= 22，但项目配置 >= 20.12.1
 
 **快速解决**:
+
 ```bash
 # 方案 1: 升级 Node 版本
 nvm install 22
@@ -25,16 +27,18 @@ npm install react-pin-input  # 或其他替代方案
 ---
 
 ### 2. TypeScript 类型错误太多？
+
 **原因**: tsconfig.json 配置过时
 
 **快速修复**:
+
 ```json
 // tsconfig.json - 最小改动
 {
   "compilerOptions": {
-    "jsx": "react-jsx",    // 改这个
-    "rootDir": "./src",    // 改这个
-    "allowJs": false       // 改这个
+    "jsx": "react-jsx", // 改这个
+    "rootDir": "./src", // 改这个
+    "allowJs": false // 改这个
   }
   // 删除 rules 块 (115-124 行)
 }
@@ -43,7 +47,9 @@ npm install react-pin-input  # 或其他替代方案
 ---
 
 ### 3. 内存泄漏在哪？
+
 **高危文件列表**:
+
 ```
 src/pages/chatgpt/index.jsx           - EventSource 未清理
 src/components/stateless/IconCloud/   - requestAnimationFrame 未清理
@@ -52,14 +58,15 @@ src/utils/aidFn.js                    - addEventListener 未清理
 ```
 
 **修复模板**:
+
 ```typescript
 useEffect(() => {
   const source = new EventSource(url)
-  
+
   // 你的逻辑...
-  
+
   return () => {
-    source.close()  // 关键！
+    source.close() // 关键！
   }
 }, [url])
 ```
@@ -71,12 +78,14 @@ useEffect(() => {
 ### TypeScript 类型定义
 
 ❌ **错误示例**:
+
 ```typescript
-const response = await api.get('/users') as any
+const response = (await api.get('/users')) as any
 const user = JSON.parse(userData as any)
 ```
 
 ✅ **正确示例**:
+
 ```typescript
 interface User {
   id: string
@@ -99,17 +108,19 @@ const user: User = JSON.parse(userData)
 ### 日志记录
 
 ❌ **错误示例**:
+
 ```typescript
-console.log('用户数据:', user)  // 生产环境也会输出
+console.log('用户数据:', user) // 生产环境也会输出
 console.log('API 响应:', response)
 ```
 
 ✅ **正确示例**:
+
 ```typescript
 import { logger } from '@utils/logger'
 
-logger.log('用户数据:', user)  // 开发环境输出，生产环境静默
-logger.error('API 错误:', error)  // 所有环境输出
+logger.log('用户数据:', user) // 开发环境输出，生产环境静默
+logger.error('API 错误:', error) // 所有环境输出
 ```
 
 ---
@@ -117,17 +128,19 @@ logger.error('API 错误:', error)  // 所有环境输出
 ### React Hooks 依赖
 
 ❌ **错误示例**:
+
 ```typescript
 useEffect(() => {
   fetchData(userId)
-}, [])  // ⚠️ 缺少 userId 依赖
+}, []) // ⚠️ 缺少 userId 依赖
 ```
 
 ✅ **正确示例**:
+
 ```typescript
 useEffect(() => {
   fetchData(userId)
-}, [userId])  // ✅ 包含所有依赖
+}, [userId]) // ✅ 包含所有依赖
 
 // 或者使用 useCallback
 const fetchData = useCallback(async () => {
@@ -144,31 +157,33 @@ useEffect(() => {
 ### 错误处理
 
 ❌ **错误示例**:
+
 ```typescript
 try {
   const data = await fetchData()
 } catch (error) {
-  console.log(error)  // 仅记录，不处理
+  console.log(error) // 仅记录，不处理
 }
 ```
 
 ✅ **正确示例**:
+
 ```typescript
 try {
   const data = await fetchData()
   return data
 } catch (error) {
   logger.error('获取数据失败:', error)
-  
+
   // 用户友好的错误提示
   message.error('加载失败，请稍后重试')
-  
+
   // 可选：上报到 Sentry
   if (process.env.NODE_ENV === 'production') {
     Sentry.captureException(error)
   }
-  
-  throw error  // 或返回默认值
+
+  throw error // 或返回默认值
 }
 ```
 
@@ -178,12 +193,12 @@ try {
 
 ### 重复依赖清理对照表
 
-| 保留 | 移除 | 原因 |
-|------|------|------|
-| `js-md5` | `blueimp-md5` | 更新，更轻量 |
-| `qs` | `query-string` | 更广泛使用 |
-| `react-canvas-confetti` | `canvas-confetti` | React 封装版 |
-| `axios` | `cross-fetch`, `fetch-intercept` | 统一 HTTP 客户端 |
+| 保留                    | 移除                             | 原因             |
+| ----------------------- | -------------------------------- | ---------------- |
+| `js-md5`                | `blueimp-md5`                    | 更新，更轻量     |
+| `qs`                    | `query-string`                   | 更广泛使用       |
+| `react-canvas-confetti` | `canvas-confetti`                | React 封装版     |
+| `axios`                 | `cross-fetch`, `fetch-intercept` | 统一 HTTP 客户端 |
 
 ### 依赖分类检查
 
@@ -197,8 +212,8 @@ try {
   "devDependencies": {
     // ✅ 仅构建时需要
     "webpack": "^5.102.1",
-    "typescript": "^5.9.3",
-    
+    "typescript": "^5.9.3"
+
     // ⚠️ 这些应该在 devDependencies
     // "esbuild": "^0.25.11",
     // "helmet": "^8.1.0",
@@ -241,6 +256,7 @@ src/
 ## 🎨 样式方案选择
 
 ### 当前问题: 4 种样式方案并存
+
 1. Ant Design (CSS-in-JS)
 2. Less
 3. Tailwind CSS
@@ -249,6 +265,7 @@ src/
 ### 推荐方案
 
 **方案 A - 保守稳健** (推荐):
+
 ```
 保留: Ant Design + Less
 移除: Tailwind CSS + Styled Components
@@ -262,6 +279,7 @@ src/
 ```
 
 **方案 B - 现代高效**:
+
 ```
 保留: Ant Design + Tailwind CSS 4
 移除: Less + Styled Components
@@ -333,11 +351,7 @@ const Settings = lazy(() => import('@pages/settings'))
 ```json
 // package.json
 {
-  "sideEffects": [
-    "*.css",
-    "*.less",
-    "*.scss"
-  ]  // 从 true 改为数组
+  "sideEffects": ["*.css", "*.less", "*.scss"] // 从 true 改为数组
 }
 ```
 
@@ -356,11 +370,11 @@ export default {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '\\.(css|less)$': 'identity-obj-proxy',
-    '\\.(jpg|png|svg)$': '<rootDir>/__mocks__/fileMock.js'
+    '\\.(jpg|png|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
   transform: {
-    '^.+\\.(ts|tsx)$': 'babel-jest'
-  }
+    '^.+\\.(ts|tsx)$': 'babel-jest',
+  },
 }
 ```
 
@@ -369,6 +383,7 @@ export default {
 ## 🔍 常用命令
 
 ### 代码质量检查
+
 ```bash
 # ESLint 检查
 npm run eslint
@@ -384,6 +399,7 @@ npm run test:coverage
 ```
 
 ### 构建分析
+
 ```bash
 # 分析 bundle
 npm run analyze:build
@@ -396,6 +412,7 @@ npm run build:production
 ```
 
 ### 依赖管理
+
 ```bash
 # 检查过期依赖
 npm outdated
@@ -413,18 +430,21 @@ npm audit fix
 ## 📊 优化目标 KPI
 
 ### Phase 1 完成标准
+
 - ✅ 项目可正常安装 (`npm install` 成功)
 - ✅ TypeScript 严格模式无错误
 - ✅ 生产环境无 console 输出
 - ✅ 无内存泄漏警告
 
 ### Phase 2 完成标准
+
 - ✅ JS/JSX 文件少于 50 个
 - ✅ 'as any' 使用少于 3 处
 - ✅ ESLint 无错误和警告
 - ✅ 重复依赖已清理
 
 ### Phase 3 完成标准
+
 - ✅ 仅使用 2 种样式方案
 - ✅ 测试覆盖率 > 50%
 - ✅ Bundle 大小减少 > 10%
@@ -456,7 +476,8 @@ A: 运行 `npm run analyze:build` 比较 bundle 大小，使用 Lighthouse 测�
 
 ---
 
-**快速开始**: 
+**快速开始**:
+
 1. 阅读 `IMPLEMENTATION_CHECKLIST.md`
 2. 从 Phase 1 第一项开始
 3. 每完成一项就提交代码

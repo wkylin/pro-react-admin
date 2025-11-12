@@ -47,6 +47,7 @@
 4. **[快速参考指南](./QUICK_REFERENCE.md)** - 开发者速查手册，常见问题和最佳实践
 
 **快速开始优化**：
+
 ```bash
 # 1. 查看优化清单
 cat IMPLEMENTATION_CHECKLIST.md

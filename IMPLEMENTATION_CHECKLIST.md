@@ -8,6 +8,7 @@
 ## 🔴 Phase 1: 紧急修复 (2-3 天)
 
 ### 1.1 修复 Node Engine 兼容性 ⚡
+
 - [ ] 检查 `react-input-pin-code` 是否有兼容 Node 20 的版本
 - [ ] 如无，寻找替代包或更新 Node 版本要求
 - [ ] 更新 `package.json` 的 engines 字段
@@ -15,6 +16,7 @@
 - [ ] 提交: `chore: fix node engine compatibility`
 
 ### 1.2 优化 tsconfig.json 📝
+
 - [ ] 备份当前配置: `cp tsconfig.json tsconfig.json.backup`
 - [ ] 修改 `jsx` 从 `"react"` 到 `"react-jsx"`
 - [ ] 修改 `rootDir` 从 `"./"` 到 `"./src"`
@@ -27,6 +29,7 @@
 - [ ] 提交: `chore: optimize tsconfig for React 19 and strict TypeScript`
 
 ### 1.3 创建环境感知日志工具 📊
+
 - [ ] 创建 `src/utils/logger.ts` 文件
 - [ ] 实现 logger 工具 (参考 OPTIMIZATION_RECOMMENDATIONS.md)
 - [ ] 批量替换 `console.log` 为 `logger.log`
@@ -42,6 +45,7 @@
 - [ ] 提交: `feat: add environment-aware logger utility`
 
 ### 1.4 添加关键保护机制 🛡️
+
 - [ ] 创建 `src/components/ErrorBoundary/index.tsx`
 - [ ] 实现 ErrorBoundary 组件
 - [ ] 修改 `src/index.tsx` 添加 `<StrictMode>`
@@ -54,6 +58,7 @@
 ### 1.5 修复内存泄漏 🔧
 
 #### ChatGPT 页面 EventSource 清理
+
 - [ ] 打开 `src/pages/chatgpt/index.jsx`
 - [ ] 找到所有 EventSource 相关的 useEffect
 - [ ] 为每个 useEffect 添加清理函数
@@ -61,18 +66,21 @@
 - [ ] 测试 ChatGPT 功能正常
 
 #### IconCloud 组件 requestAnimationFrame 清理
+
 - [ ] 打开 `src/components/stateless/IconCloud/index.jsx`
 - [ ] 找到 requestAnimationFrame 调用
 - [ ] 添加清理逻辑: `cancelAnimationFrame()`
 - [ ] 测试组件动画正常
 
 #### Fullscreen screenfull 事件清理
+
 - [ ] 打开 `src/pages/layout/fullscreen/index.tsx`
 - [ ] 找到 `screenfull.on('change')` 调用
 - [ ] 添加清理: `screenfull.off('change', handler)`
 - [ ] 测试全屏功能
 
 #### Utils addEventListener 清理
+
 - [ ] 打开 `src/utils/aidFn.js`
 - [ ] 找到所有 addEventListener
 - [ ] 添加对应的 removeEventListener
@@ -87,6 +95,7 @@
 ### 2.1 将关键文件迁移到 TypeScript 📄
 
 #### 路由文件迁移
+
 - [ ] `src/routers/index.jsx` → `index.tsx`
   - [ ] 重命名文件
   - [ ] 添加类型: `RouteObject[]`
@@ -103,6 +112,7 @@
 - [ ] 提交: `refactor: migrate router files to TypeScript`
 
 #### 工具函数迁移
+
 - [ ] `src/utils/suffix/index.js` → `index.ts`
 - [ ] `src/utils/tryCatch/index.js` → `index.ts`
 - [ ] `src/utils/confetti/index.js` → `index.ts`
@@ -114,6 +124,7 @@
 - [ ] 提交: `refactor: migrate utility functions to TypeScript`
 
 #### 国际化文件迁移
+
 - [ ] `src/locales/en/translation.js` → `translation.ts`
 - [ ] `src/locales/zh/translation.js` → `translation.ts`
 - [ ] 定义翻译对象类型
@@ -141,6 +152,7 @@
 ### 2.3 清理重复依赖 🗑️
 
 #### 移除重复的功能包
+
 - [ ] 卸载 `blueimp-md5`: `npm uninstall blueimp-md5`
 - [ ] 全局替换导入: `blueimp-md5` → `js-md5`
 - [ ] 卸载 `query-string`: `npm uninstall query-string`
@@ -151,6 +163,7 @@
 - [ ] 提交: `chore: remove duplicate dependencies`
 
 #### 修正 dependencies 分类
+
 - [ ] 将 `esbuild` 移到 devDependencies
 - [ ] 将 `helmet` 移到 devDependencies
 - [ ] 将 `postcss-less` 移到 devDependencies
@@ -199,9 +212,11 @@
 ### 3.1 样式技术栈收敛 🎨
 
 #### 选择方案 (二选一)
+
 - [ ] 决定: □ 方案A (Ant Design + Less) □ 方案B (Ant Design + Tailwind)
 
 #### 如果选择方案 A (Ant Design + Less):
+
 - [ ] 卸载 Tailwind: `npm uninstall tailwindcss @tailwindcss/postcss prettier-plugin-tailwindcss`
 - [ ] 卸载 Styled Components: `npm uninstall styled-components`
 - [ ] 删除 Tailwind 配置文件
@@ -211,6 +226,7 @@
 - [ ] 提交: `refactor: consolidate to Ant Design + Less`
 
 #### 如果选择方案 B (Ant Design + Tailwind):
+
 - [ ] 卸载 Less: `npm uninstall less less-loader postcss-less`
 - [ ] 卸载 Styled Components: `npm uninstall styled-components`
 - [ ] 将 Less 样式迁移到 Tailwind
@@ -265,6 +281,7 @@
 ## 📊 验证和文档
 
 ### 最终验证清单
+
 - [ ] 运行所有 lint: `npm run lint`
 - [ ] 运行类型检查: `npx tsc --noEmit`
 - [ ] 运行所有测试: `npm test`
@@ -279,12 +296,14 @@
   - [ ] 图表展示
 
 ### 性能指标记录
-- [ ] 记录优化前 bundle 大小: _____ MB
-- [ ] 记录优化后 bundle 大小: _____ MB
-- [ ] 记录构建时间优化: 优化前 _____ 秒, 优化后 _____ 秒
-- [ ] 记录页面加载时间: 优化前 _____ ms, 优化后 _____ ms
+
+- [ ] 记录优化前 bundle 大小: **\_** MB
+- [ ] 记录优化后 bundle 大小: **\_** MB
+- [ ] 记录构建时间优化: 优化前 **\_** 秒, 优化后 **\_** 秒
+- [ ] 记录页面加载时间: 优化前 **\_** ms, 优化后 **\_** ms
 
 ### 文档更新
+
 - [ ] 更新 README.md (如果需要)
 - [ ] 更新贡献指南
 - [ ] 添加架构决策记录 (ADR)
@@ -313,21 +332,24 @@
 ## 📝 进度跟踪
 
 ### 统计
-- Phase 1: __ / 5 任务组完成 (__ %)
-- Phase 2: __ / 5 任务组完成 (__ %)
-- Phase 3: __ / 4 任务组完成 (__ %)
-- 总体进度: __ / 14 任务组完成 (__ %)
+
+- Phase 1: ** / 5 任务组完成 (** %)
+- Phase 2: ** / 5 任务组完成 (** %)
+- Phase 3: ** / 4 任务组完成 (** %)
+- 总体进度: ** / 14 任务组完成 (** %)
 
 ### 时间记录
-- 开始日期: ___________
-- Phase 1 完成: ___________
-- Phase 2 完成: ___________
-- Phase 3 完成: ___________
-- 预计完成日期: ___________
+
+- 开始日期: \***\*\_\_\_\*\***
+- Phase 1 完成: \***\*\_\_\_\*\***
+- Phase 2 完成: \***\*\_\_\_\*\***
+- Phase 3 完成: \***\*\_\_\_\*\***
+- 预计完成日期: \***\*\_\_\_\*\***
 
 ---
 
-**说明**: 
+**说明**:
+
 - ✅ 勾选表示已完成
 - 每完成一个任务组，提交一次代码
 - 使用语义化提交信息 (feat, fix, refactor, chore, test, perf, docs)
