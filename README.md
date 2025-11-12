@@ -37,6 +37,25 @@
 19. 集成 Bookstory, 方便生成组件文档
 20. 更多特性请 fork 项目，相信我，你会有意想不到的收获
 
+## 📊 项目优化文档
+
+为了帮助开发者更好地理解和优化项目，我们提供了以下文档：
+
+1. **[代码质量分析报告](./CODE_QUALITY_ANALYSIS.md)** - 详细的代码质量分析，包含问题和改进建议
+2. **[优化建议方案](./OPTIMIZATION_RECOMMENDATIONS.md)** - 完整的优化实施方案，分 3 个阶段
+3. **[实施清单](./IMPLEMENTATION_CHECKLIST.md)** - 可执行的任务清单，逐项跟踪进度
+4. **[快速参考指南](./QUICK_REFERENCE.md)** - 开发者速查手册，常见问题和最佳实践
+
+**快速开始优化**：
+
+```bash
+# 1. 查看优化清单
+cat IMPLEMENTATION_CHECKLIST.md
+
+# 2. 从 Phase 1 开始实施
+# 详见 OPTIMIZATION_RECOMMENDATIONS.md
+```
+
 ## Vite构建版本
 
 1. 基于Vite 构建， 请参见 feature-vite 分支
