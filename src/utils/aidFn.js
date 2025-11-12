@@ -523,3 +523,19 @@ export const getDirection = (ev, obj) => {
   const d = Math.round(Math.atan2(y, x) / 1.57079633 + 5) % 4
   return d
 }
+
+const generatedSet = new Set()
+
+export const generateUniqueHex32 = () => {
+  let hex
+  do {
+    hex = Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('')
+  } while (generatedSet.has(hex))
+
+  generatedSet.add(hex)
+  return hex
+}
+
+export const clearGeneratedSet = () => {
+  generatedSet.clear()
+}
