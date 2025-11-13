@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import { useRoutes } from 'react-router-dom'
-import Watermark from '@stateless/Watermark'
-import rootRouter from './routers'
+import React, { useEffect } from 'react'
+import { useRoutes, type RouteObject } from 'react-router-dom'
+import rootRouter from '@/routers'
 import AuthRouter from './routers/authRouter'
-// import { sentryInit } from './utils'
 
-// import { useAuth } from '@src/service/useAuth'
+const AppContent: React.FC = () => {
+  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1000))
 
-const App = () => {
-  // const { i18n } = useTranslation()
-  const [loading, setLoading] = useState(true)
-  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1500))
   useEffect(() => {
+    // 可在此处初始化非阻塞逻辑（如 Sentry）
     // sentryInit()
-    asyncCall()
-      .then(() => setLoading(false))
-      .catch(() => setLoading(false))
-    Watermark({
-      content: 'Pro React Admin', // 水印文本
-      container: document.getElementById('root'), // 水印容器区域
-    })
-  }, [])
 
-  useEffect(() => {
+    asyncCall()
+      .then(() => {})
+      .catch(() => {})
+
     // const fetchUserLanguage = async () => {
     //   // 从数据库中获取用户的语言选择
     //   const userLanguage = await fetchUserLanguageFromDatabase()
@@ -39,18 +30,16 @@ const App = () => {
     //   }
     // }
     // fetchUserLanguage()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // const { isAuthenticated } = useAuth()
-
-  const element = useRoutes(rootRouter as any)
-
-  if (loading) {
-    return <>Pro React Admin. Loading...</>
-  }
-
-  return <AuthRouter>{element}</AuthRouter>
+  const element = useRoutes(rootRouter as RouteObject[])
+  return element
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthRouter>
+      <AppContent />
+    </AuthRouter>
+  )
+}

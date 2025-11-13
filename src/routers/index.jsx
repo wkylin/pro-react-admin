@@ -43,4 +43,56 @@ const rootRouter = [
   ...errorRoutes.filter((route) => route.path === '*'),
 ]
 
+// ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
+export function flattenRoutes(routes) {
+  if (!Array.isArray(routes)) {
+    console.error('flattenRoutes: expected array, got:', typeof routes, routes)
+    return []
+  }
+
+  return routes.reduce((acc, route) => {
+    if (!route || typeof route !== 'object') {
+      console.warn('flattenRoutes: invalid route item:', route)
+      return acc
+    }
+
+    acc.push(route)
+
+    if (Array.isArray(route.children) && route.children.length > 0) {
+      const childRoutes = flattenRoutes(route.children)
+      acc.push(...childRoutes)
+    }
+
+    return acc
+  }, [])
+}
+
+// ✅ 新增：根据路径获取路由 key
+export function getKeyName(path = '/') {
+  try {
+    const flatRoutes = flattenRoutes(rootRouter)
+
+    if (!flatRoutes || flatRoutes.length === 0) {
+      console.warn('getKeyName: no routes available')
+      return path
+    }
+
+    const route = flatRoutes.find((r) => r?.path === path)
+
+    if (!route) {
+      console.warn(`getKeyName: route not found for path "${path}"`)
+      return path
+    }
+
+    return route.meta?.key || route.meta?.title || path
+  } catch (error) {
+    console.error('getKeyName error:', error)
+    return path
+  }
+}
+
+// ✅ 命名导出（供其他模块使用）
+export { rootRouter }
+
+// ✅ 默认导出（保持原有导出方式）
 export default rootRouter

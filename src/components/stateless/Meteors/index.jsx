@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 const Meteors = ({ starCount = 50, primaryColor = '#ffffff', className = '' }) => {
   const stars = Array.from({ length: starCount }, (_, i) => {

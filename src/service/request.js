@@ -2,6 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { showMessage } from '@src/utils/message'
 import { authService } from '@src/service/authService'
+import logger from '../utils/logger' // 相对引入更稳妥
 
 // 创建 axios 实例
 const service = axios.create({
@@ -16,7 +17,8 @@ service.interceptors.request.use(
     // 处理 Authorization 优先级：自定义 > token > 无
     if (config.headers?.Authorization) {
       // 如果请求配置中已自定义 Authorization，则使用自定义的
-      console.log('使用自定义 Authorization:', config.headers.Authorization)
+      // console.log('使用自定义 Authorization:', config.headers.Authorization)
+      logger.log('使用自定义 Authorization:', config.headers?.Authorization)
     } else {
       // 检查是否需要添加 token（默认需要）
       const needToken = config.needToken !== false
@@ -27,7 +29,8 @@ service.interceptors.request.use(
         if (token) {
           config.headers = config.headers || {}
           config.headers['Authorization'] = `Bearer ${token}`
-          console.log('自动添加 token:', token)
+          // console.log('自动添加 token:', token)
+          logger.log('自动添加 token:', token)
         }
       }
     }

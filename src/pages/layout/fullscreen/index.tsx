@@ -7,13 +7,19 @@ const FullScreen = ({ ele, tips = '全屏', placement = 'bottom' }: any) => {
   const [fullScreen, setFullScreen] = useState<boolean>(false)
 
   useEffect(() => {
-    screenfull.on('change', () => {
+    if (!screenfull?.isEnabled) return
+
+    const onChange = () => {
       if (screenfull.isFullscreen) {
         setFullScreen(true)
       } else {
         setFullScreen(false)
       }
-    })
+    }
+    screenfull.on('change', onChange)
+    return () => {
+      screenfull.off('change', onChange)
+    }
   }, [])
 
   const handleFullScreen = () => {

@@ -539,3 +539,25 @@ export const generateUniqueHex32 = () => {
 export const clearGeneratedSet = () => {
   generatedSet.clear()
 }
+
+/**
+ * 绑定事件并返回取消函数，避免监听器泄漏
+ * @param {Window|Document|HTMLElement} target
+ * @param {string} type
+ * @param {EventListenerOrEventListenerObject} listener
+ * @param {boolean|AddEventListenerOptions} [options]
+ * @returns {() => void} off
+ */
+export function on(target, type, listener, options) {
+  target.addEventListener(type, listener, options)
+  return () => target.removeEventListener(type, listener, options)
+}
+
+// 可选：批量绑定
+export function onMany(items) {
+  const offs = items.map(({ target, type, listener, options }) => {
+    target.addEventListener(type, listener, options)
+    return () => target.removeEventListener(type, listener, options)
+  })
+  return () => offs.forEach((off) => off())
+}

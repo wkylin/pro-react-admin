@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { HashRouter as Router } from 'react-router-dom'
 // import { BrowserRouter as Router } from 'react-router-dom'
 import { ConfigProvider, theme, App as AntdApp } from 'antd'
-
+import type { AliasToken } from 'antd/es/theme/interface'
 import { StyleProvider } from '@ant-design/cssinjs'
 import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
@@ -16,18 +16,26 @@ import { setMessageInstance } from '@utils/message'
 
 dayjs.locale('zh-cn')
 
-const ThemeIndex = () => {
-  const { myTheme } = useProThemeContext() as any
+const ThemeIndex: React.FC = () => {
+  const { myTheme } = useProThemeContext()
+
+  // 统一自定义前缀
   ConfigProvider.config({
     prefixCls: 'wui-ant',
     iconPrefixCls: 'wui-icon',
   })
+
+  // 拿到 Antd App 实例（message、notification 等）
   const { message } = AntdApp.useApp()
 
-  // 组件挂载时设置消息实例
   useEffect(() => {
     setMessageInstance(message)
   }, [message])
+
+  const themes = myThemes as {
+    lightTheme: Partial<AliasToken>
+    darkTheme: Partial<AliasToken>
+  }
 
   return (
     <Router>
@@ -38,14 +46,16 @@ const ThemeIndex = () => {
               myTheme === 'light'
                 ? [theme.defaultAlgorithm, theme.compactAlgorithm]
                 : [theme.darkAlgorithm, theme.compactAlgorithm],
-            token: myTheme === 'light' ? myThemes.lightTheme : myThemes.darkTheme,
+            token: myTheme === 'light' ? themes.lightTheme : themes.darkTheme,
           }}
           componentSize="middle"
           input={{ autoComplete: 'off' }}
           prefixCls="wui-ant"
           iconPrefixCls="wui-icon"
         >
+          {/* <AntdApp> */}
           <App />
+          {/* </AntdApp> */}
         </ConfigProvider>
       </StyleProvider>
     </Router>

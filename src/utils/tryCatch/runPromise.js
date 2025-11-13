@@ -12,14 +12,12 @@ const runPromise = async (fn) => {
 const promise = () =>
   new Promise((res) => {
     setTimeout(() => {
-      console.log('1')
       res('promise')
     }, 3000)
   })
 
 async function test() {
   const [res] = await runPromise(promise)
-  console.log('23', res)
 }
 
 test()

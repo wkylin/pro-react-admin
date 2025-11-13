@@ -17,6 +17,7 @@ const IconCloud = ({ icons, images }) => {
   const rotationRef = useRef(rotation)
   const iconCanvasesRef = useRef([])
   const imagesLoadedRef = useRef([])
+  const rafIdRef = useRef(0)
 
   useEffect(() => {
     if (!icons && !images) return

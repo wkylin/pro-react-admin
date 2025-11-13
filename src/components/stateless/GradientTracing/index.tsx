@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion, easeInOut } from 'framer-motion'
+import { motion, easeInOut } from 'motion/react'
 
 interface GradientTracingProps {
   width: number

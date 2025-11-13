@@ -6,7 +6,12 @@
 
 import { UserPermission, Role, PermissionCode } from '../../types/permission'
 import { mockGetUserPermissions, mockGetRoles, mockCheckPermission } from '../../mock/permission'
-import request from '../request'
+import request from '@/service/request'
+
+export type Permission = {
+  code: string
+  name?: string
+}
 
 /**
  * 获取当前用户权限信息
@@ -88,4 +93,17 @@ export const checkAnyPermission = async (permissions: PermissionCode[], userId?:
 export const getUserRoutes = async (userId?: string): Promise<string[]> => {
   const userPermissions = await getUserPermissions(userId)
   return userPermissions.routes || []
+}
+
+/**
+ * 获取当前用户权限列表
+ */
+export async function getCurrentPermissions(): Promise<Permission[]> {
+  const response = await request.get('/api/permissions/current')
+  // 兼容不同响应结构
+  const list = (response?.data ?? response) as unknown
+  if (Array.isArray(list)) {
+    return list.filter(Boolean) as Permission[]
+  }
+  return []
 }

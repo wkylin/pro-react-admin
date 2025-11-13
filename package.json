@@ -18,13 +18,16 @@
     "Admin Dashboard"
   ],
   "homepage": "https://wkylin.github.io/pro-react-admin",
-  "main": "index.js",
-  "sideEffects": true,
+  "sideEffects": [
+    "src/styles/**",
+    "**/*.css",
+    "**/*.less"
+  ],
   "scripts": {
     "devtools": "react-devtools",
     "prebuild": "npm run clean:dist",
     "pre:run": "install-changed",
-    "ci:quality": "npm run lint && npm run test",
+    "ci:quality": "npm run lint:fix && npm run test",
     "prepare": "husky install",
     "dev": "npm run start",
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development NODE_OPTIONS=--trace-deprecation webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
@@ -74,9 +77,9 @@
     "sentry:check": "node check-sentry.js",
     "predeploy": "npm run build:production",
     "deploy": "gh-pages -d dist",
-    "clean:lock": "rm -rf package-lock.json yarn.lock pnpm-lock.yaml",
-    "clean:dist": "rm -rf ./dist",
-    "clean:modules": "rm -rf node_modules",
+    "clean:lock": "rimraf  package-lock.json yarn.lock pnpm-lock.yaml",
+    "clean:dist": "rimraf  ./dist",
+    "clean:modules": "rimraf  node_modules",
     "js-analyzer": "js-analyzer --root ./"
   },
   "author": "wkylin",
@@ -342,28 +345,29 @@
     "user-agents": "^1.1.669"
   },
   "engines": {
-    "node": ">= 20.12.1",
-    "npm": ">= 10.5.0",
-    "yarn": ">= 1.22.10"
+    "node": ">=20.12.1",
+    "npm": ">=10.5.0",
+    "yarn": ">=1.22.10"
   },
+  "packageManager": "npm@10.5.0",
   "browserslist": {
     "production": [
       ">0.2%",
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 safari versions"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 2 chrome versions",
+      "last 2 firefox versions",
+      "last 2 safari versions"
     ]
   },
   "husky": {
     "hooks": {
       "pre-commit": "npx lint-staged",
       "post-merge": "install-changed",
-      "post-commit": "exec < /dev/tty && node webpack/check-version.js"
+      "post-commit": "node webpack/check-version.js"
     }
   },
   "lint-staged": {
