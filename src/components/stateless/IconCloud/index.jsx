@@ -148,7 +148,6 @@ const IconCloud = ({ icons, images }) => {
           startTime: performance.now(),
           duration,
         })
-        return
       }
     })
 
