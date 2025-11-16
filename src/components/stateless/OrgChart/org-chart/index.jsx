@@ -1,106 +1,178 @@
-import React from 'react'
-import { Card, Typography } from 'antd'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './index.module.less'
 
-const { Text } = Typography
+// 将树形数据转换为扁平化数据，并建立父子关系
+const flattenTreeData = (node, parentId = null, level = 0) => {
+  const flatNode = {
+    ...node,
+    parentId,
+    level,
+    childrenIds: node.children ? node.children.map((child) => child.id) : [],
+  }
 
-const OrgChart = ({ data, isRoot = false }) => {
-  const nodeWidth = 140
-  const gap = 24
+  let result = [flatNode]
 
-  // 递归计算节点及其整个子树的总宽度
-  const calculateTotalWidth = (node) => {
-    if (!node.children || node.children.length === 0) {
-      return nodeWidth
+  if (node.children) {
+    node.children.forEach((child) => {
+      result = result.concat(flattenTreeData(child, node.id, level + 1))
+    })
+  }
+
+  return result
+}
+
+const OrgChart = ({
+  data,
+  onNodeClick,
+  onNodeExpand,
+  defaultExpanded = true,
+  highlightOnHover = true,
+  nodeClassName,
+  rootNodeClassName,
+  animated = true,
+  expandIcon = '▼',
+  collapseIcon = '▲',
+  showExpandIcon = true,
+  customStyles = {},
+}) => {
+  const [flatData, setFlatData] = useState([])
+  const [hoveredNodeId, setHoveredNodeId] = useState(null)
+  const [expandedNodes, setExpandedNodes] = useState(new Set())
+  const containerRefs = useRef({})
+
+  useEffect(() => {
+    // 将树形数据转换为扁平化数据
+    const flattened = flattenTreeData(data)
+    setFlatData(flattened)
+
+    // 默认展开所有节点
+    if (defaultExpanded) {
+      const allNodeIds = new Set(flattened.map((node) => node.id))
+      setExpandedNodes(allNodeIds)
+    }
+  }, [data, defaultExpanded])
+
+  // 获取节点的所有父节点ID
+  const getParentIds = (nodeId) => {
+    const node = flatData.find((n) => n.id === nodeId)
+    if (!node || !node.parentId) return []
+    return [node.parentId, ...getParentIds(node.parentId)]
+  }
+
+  // 检查节点是否应该高亮
+  const isNodeHighlighted = (nodeId) => {
+    if (!highlightOnHover || !hoveredNodeId) return false
+    const parentIds = getParentIds(hoveredNodeId)
+    return parentIds.includes(nodeId) || nodeId === hoveredNodeId
+  }
+
+  // 切换节点展开/收起状态
+  const toggleNodeExpansion = (nodeId) => {
+    setExpandedNodes((prev) => {
+      const newSet = new Set(prev)
+      if (newSet.has(nodeId)) {
+        newSet.delete(nodeId)
+      } else {
+        newSet.add(nodeId)
+      }
+      return newSet
+    })
+  }
+
+  // 处理节点点击
+  const handleNodeClick = (node, event) => {
+    event.stopPropagation()
+
+    // 如果有子节点，切换展开状态
+    if (node.childrenIds.length > 0) {
+      toggleNodeExpansion(node.id)
+
+      // 调用展开/收起回调
+      if (onNodeExpand) {
+        const isExpanded = expandedNodes.has(node.id)
+        onNodeExpand(node, !isExpanded)
+      }
     }
 
-    const childWidths = node.children.map((child) => calculateTotalWidth(child))
-    const totalChildrenWidth = childWidths.reduce((sum, width) => sum + width, 0)
-    const totalGaps = Math.max(0, (childWidths.length - 1) * gap)
-    const requiredWidth = totalChildrenWidth + totalGaps
-
-    return Math.max(nodeWidth, requiredWidth)
+    // 调用外部点击回调
+    if (onNodeClick) {
+      onNodeClick(node, event)
+    }
   }
 
-  // 计算水平连接线的宽度和位置
-  const calculateHorizontalLine = (children) => {
-    if (children.length <= 1) return { width: 0, positions: [] }
+  // 渲染单个节点及其子树
+  const renderNodeTree = (nodeId) => {
+    const node = flatData.find((n) => n.id === nodeId)
+    if (!node) return null
 
-    const childWidths = children.map((child) => calculateTotalWidth(child))
-    const positions = []
-    let currentPos = 0
+    const isHighlighted = isNodeHighlighted(nodeId)
+    const isHovered = hoveredNodeId === nodeId
+    const isExpanded = expandedNodes.has(nodeId)
+    const hasChildren = node.childrenIds.length > 0
 
-    childWidths.forEach((width, index) => {
-      positions.push(currentPos + width / 2)
-      currentPos += width + gap
-    })
-
-    const lineWidth = positions[positions.length - 1] - positions[0]
-    return { width: lineWidth, positions }
-  }
-
-  const hasChildren = data.children && data.children.length > 0
-  const totalWidth = calculateTotalWidth(data)
-  const horizontalLineInfo = hasChildren ? calculateHorizontalLine(data.children) : { width: 0, positions: [] }
-
-  return (
-    <div className={styles.orgChart} style={{ width: `${totalWidth}px` }}>
-      {/* 当前节点容器 */}
-      <div className={styles.nodeContainer} style={{ width: `${totalWidth}px` }}>
-        <Card className={`${styles.node} ${isRoot ? styles.rootNode : styles.childNode}`} size="small" hoverable>
-          <Text className={styles.nodeTitle} ellipsis={{ tooltip: data.name }}>
-            {data.name}
-          </Text>
-        </Card>
-
-        {/* 向下的垂直线 */}
-        {hasChildren && <div className={styles.verticalLineDown}></div>}
-      </div>
-
-      {/* 子节点区域 */}
-      {hasChildren && (
-        <div className={styles.childrenContainer} style={{ width: `${totalWidth}px` }}>
-          {/* 水平连接线 */}
-          {data?.children?.length > 1 && (
-            <div
-              className={styles.horizontalLine}
-              style={{
-                width: `${horizontalLineInfo.width}px`,
-                left: `${horizontalLineInfo.positions[0]}px`,
-              }}
-            ></div>
-          )}
-
-          {/* 子节点包装器 */}
-          <div className={styles.childrenWrapper}>
-            {data?.children?.map((child, index) => {
-              const childWidth = calculateTotalWidth(child)
-              const leftPosition = horizontalLineInfo.positions[index] - childWidth / 2
-
-              return (
-                <div
-                  key={index}
-                  className={styles.childContainer}
-                  style={{
-                    width: `${childWidth}px`,
-                    position: 'absolute',
-                    left: `${leftPosition}px`,
-                    top: '0px',
-                  }}
-                >
-                  {/* 向上的垂直线连接到水平线 */}
-                  <div className={styles.verticalLineUp}></div>
-
-                  {/* 递归渲染子节点 */}
-                  <OrgChart data={child} />
-                </div>
-              )
-            })}
+    return (
+      <div key={nodeId} className={styles.orgChart}>
+        {/* 当前节点 */}
+        <div className={styles.currentContainer}>
+          <div
+            className={` ${styles.currentBox} ${node.level === 0 ? styles.rootBox : ''} ${isHighlighted ? styles.highlightedParent : ''} ${nodeClassName || ''} ${node.level === 0 ? rootNodeClassName || '' : ''} ${animated ? styles.animated : ''} ${hasChildren ? styles.hasChildren : ''} `}
+            style={customStyles.currentBox}
+            onMouseEnter={() => highlightOnHover && setHoveredNodeId(nodeId)}
+            onMouseLeave={() => highlightOnHover && setHoveredNodeId(null)}
+            onClick={(e) => handleNodeClick(node, e)}
+          >
+            <div className={styles.currentTitle}>
+              {node.name}
+              {showExpandIcon && hasChildren && (
+                <span className={`${styles.expandIcon} ${isExpanded ? styles.expanded : ''}`}>
+                  {isExpanded ? collapseIcon : expandIcon}
+                </span>
+              )}
+            </div>
           </div>
+          {hasChildren && isExpanded && <div className={`${styles.line} ${styles.downWithLine}`}></div>}
         </div>
-      )}
-    </div>
-  )
+
+        {/* 子节点容器 */}
+        {hasChildren && isExpanded && (
+          <div className={styles.childrenContainer}>
+            <div className={styles.childrenScroll}>
+              <div className={styles.childrenWrapper}>
+                {node.childrenIds.map((childId, index) => (
+                  <div key={childId} className={styles.childWrapper}>
+                    <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`}></div>
+                    <div
+                      className={` ${styles.childBox} ${isNodeHighlighted(childId) ? styles.highlightedChild : ''} ${animated ? styles.animated : ''} `}
+                      style={customStyles.childBox}
+                      onMouseEnter={() => highlightOnHover && setHoveredNodeId(childId)}
+                      onMouseLeave={() => highlightOnHover && setHoveredNodeId(null)}
+                      onClick={(e) => {
+                        const childNode = flatData.find((n) => n.id === childId)
+                        if (childNode) handleNodeClick(childNode, e)
+                      }}
+                    >
+                      <div className={styles.childTitle}>{flatData.find((n) => n.id === childId)?.name}</div>
+                    </div>
+                    {/* 递归渲染子节点 */}
+                    {renderNodeTree(childId)}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // 获取根节点ID
+  const rootNodeId = flatData.find((n) => n.level === 0)?.id
+
+  if (!rootNodeId) {
+    return <div className={styles.emptyState}>暂无组织架构数据</div>
+  }
+
+  return <div className={styles.chartContainer}>{renderNodeTree(rootNodeId)}</div>
 }
 
 export default OrgChart

@@ -419,7 +419,7 @@ const ProDemo = () => {
           <div className={styles.wave} />
           <div className={styles.wave} />
         </section>
-        <section style={{ height: 420 }}>
+        <section style={{ marginBottom: '15px' }}>
           <OrgChart />
         </section>
       </section>

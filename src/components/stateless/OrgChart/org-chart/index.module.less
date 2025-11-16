@@ -1,317 +1,318 @@
+.chartContainer {
+  width: 100%;
+  overflow-x: auto;
+  padding: 20px 0;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
 .orgChart {
+  margin: 5px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  margin: 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -20px;
-    background: radial-gradient(ellipse at center, rgb(0 0 255 / 3%) 0%, rgb(0 0 255 / 1%) 50%, transparent 100%);
-    pointer-events: none;
-    z-index: 0;
-    border-radius: 20px;
-  }
+  min-width: max-content;
 }
 
-.nodeContainer {
+.current-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  z-index: 2;
 }
 
-.node {
-  width: 140px;
-  height: 48px;
-  display: flex;
+.current-box,
+.child-box {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  z-index: 2;
-  cursor: pointer;
-
-  :global(.ant-card-body) {
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-  }
-
-  &:hover {
-    transform: translateY(-2px) scale(1.02);
-    box-shadow:
-      0 3px 6px -4px rgb(0 0 0 / 12%),
-      0 6px 16px 0 rgb(0 0 0 / 8%),
-      0 9px 28px 8px rgb(0 0 0 / 5%);
-  }
-}
-
-.nodeTitle {
-  font-size: 12px;
-  line-height: 1.3;
-  text-align: center;
-  width: 100%;
-}
-
-.rootNode {
-  background: linear-gradient(135deg, #00f 0%, #1890ff 100%);
-  border-color: #1890ff;
-
-  .nodeTitle {
-    color: #333;
-    font-weight: 600;
-  }
-
-  &:hover {
-    background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-    box-shadow: 0 8px 25px rgb(0 0 255 / 25%);
-    transform: translateY(-3px) scale(1.03);
-  }
-}
-
-.childNode {
-  background: rgb(0 0 255 / 5%);
-  border-color: rgb(0 0 255 / 30%);
-
-  .nodeTitle {
-    color: rgb(0 0 0 / 85%);
-    font-weight: 500;
-  }
-
-  &:hover {
-    background: rgb(0 0 255 / 10%);
-    border-color: #00f;
-  }
-}
-
-.verticalLineDown,
-.verticalLineUp {
-  width: 3px;
-  height: 30px;
-  background: linear-gradient(to bottom, #00f, #40a9ff);
-  margin: 0;
-  position: relative;
-  z-index: 1;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 12px;
+  background: rgba(40, 120, 255, 0.07);
   border-radius: 2px;
+  border: 1px solid rgba(40, 120, 255, 0.5);
+  text-align: center;
+  box-sizing: border-box;
+  width: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
 }
 
-.verticalLineUp {
-  background: linear-gradient(to top, #00f, #40a9ff);
-  margin: 0 auto;
+.current-box {
+  background: rgba(40, 120, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(40, 120, 255, 0.3);
+}
 
+.rootBox {
+  background: rgba(40, 120, 255, 1);
+  font-weight: bold;
+  height: 32px;
+  line-height: 32px;
+  font-size: 16px;
+}
+
+.hasChildren {
+  &:hover {
+    background: rgba(40, 120, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 120, 255, 0.4);
+  }
+}
+
+.highlightedParent {
+  background: rgba(40, 120, 255, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(40, 120, 255, 0.5) !important;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.highlightedChild {
+  background: rgba(40, 120, 255, 0.15) !important;
+  border-color: rgba(40, 120, 255, 0.8) !important;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.current-title,
+.child-title {
+  font-size: 14px;
+  color: #333333;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.current-title {
+  color: #ffffff;
+}
+
+.expandIcon {
+  font-size: 10px;
+  transition: transform 0.3s ease;
+  opacity: 0.8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}
+
+.arrow {
+  position: relative;
+  height: 30px;
+  margin: 0 0 3px 0;
+}
+
+.arrowChild {
+  height: 14px;
+}
+
+.downArrowWithLine {
   &::before {
     content: '';
     position: absolute;
-    top: -1px;
+    top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 8px;
-    height: 8px;
-    background: #00f;
-    border-radius: 50%;
-    z-index: 2;
-    box-shadow:
-      0 0 0 2px #fff,
-      0 2px 4px rgb(0 0 255 / 30%);
+    height: 100%;
+    width: 1px;
+    background: #2878ff;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #2878ff;
+  }
+}
+
+.line {
+  position: relative;
+  height: 16px;
+  margin: 0;
+}
+
+.downWithLine {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 1px;
+    background: #2878ff;
   }
 }
 
 .childrenContainer {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   position: relative;
-  margin-top: 0;
+  width: 100%;
 }
 
-.horizontalLine {
-  height: 3px;
-  background: linear-gradient(to right, #00f, #00f, #00f);
-  position: absolute;
-  top: 0;
-  z-index: 1;
-  border-radius: 2px;
-  box-shadow: 0 2px 4px rgb(0 0 255 / 20%);
+.childrenScroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding-bottom: 10px;
+  position: relative;
 
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+    margin: 0 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #2878ff 0%, #1a68e6 100%);
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      background: linear-gradient(180deg, #1a68e6 0%, #1558d6 100%);
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+      background: linear-gradient(180deg, #1558d6 0%, #1048c6 100%);
+    }
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #f1f1f1;
+  }
+
+  /* Firefox 滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: #2878ff #f1f1f1;
+}
+
+.childrenWrapper {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  width: max-content;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.childWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 8px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.childWrapper {
   &::before,
   &::after {
     content: '';
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 8px;
-    height: 8px;
-    background: #00f;
-    border-radius: 50%;
-    box-shadow:
-      0 0 0 2px #fff,
-      0 2px 4px rgb(0 0 255 / 30%);
+    top: 0;
+    height: 1px;
+    background-color: #2878ff;
+    width: 50%;
   }
 
   &::before {
-    left: -4px;
+    left: 0;
   }
 
   &::after {
-    right: -4px;
+    right: 0;
+  }
+
+  &:first-child::before {
+    display: none;
+  }
+
+  &:last-child::after {
+    display: none;
   }
 }
 
-.childrenWrapper {
-  position: relative;
-  width: 100%;
-  min-height: 140px;
+.childBox {
+  text-align: center;
 }
 
-.childContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
+.animated {
+  animation: fadeIn 0.5s ease-in-out;
 }
 
-.orgChart .orgChart {
-  .node {
-    border-color: rgb(82 196 26 / 30%);
-    background: rgb(82 196 26 / 5%);
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    &:hover {
-      border-color: #52c41a;
-      background: rgb(82 196 26 / 10%);
-    }
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .current-box,
+  .child-box {
+    padding: 0 8px;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
   }
 
-  .childNode .nodeTitle {
-    color: rgb(0 0 0 / 85%);
+  .rootBox {
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
   }
 
-  .verticalLineDown,
-  .verticalLineUp,
-  .horizontalLine {
-    background: linear-gradient(135deg, #52c41a, #73d13d);
+  .childWrapper {
+    padding: 0 4px;
+    min-width: 80px;
   }
 
-  .horizontalLine::before,
-  .horizontalLine::after,
-  .verticalLineUp::before {
-    background: #52c41a;
-    box-shadow:
-      0 0 0 2px #fff,
-      0 2px 4px rgb(82 196 26 / 30%);
+  .expandIcon {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
   }
 
-  .orgChart {
-    .node {
-      border-color: rgb(250 173 20 / 30%);
-      background: rgb(250 173 20 / 5%);
-
-      &:hover {
-        border-color: #faad14;
-        background: rgb(250 173 20 / 10%);
-      }
-    }
-
-    .verticalLineDown,
-    .verticalLineUp,
-    .horizontalLine {
-      background: linear-gradient(135deg, #faad14, #ffc53d);
-    }
-
-    .horizontalLine::before,
-    .horizontalLine::after,
-    .verticalLineUp::before {
-      background: #faad14;
-      box-shadow:
-        0 0 0 2px #fff,
-        0 2px 4px rgb(250 173 20 / 30%);
-    }
-
-    .orgChart {
-      .node {
-        border-color: rgb(245 34 45 / 30%);
-        background: rgb(245 34 45 / 5%);
-
-        &:hover {
-          border-color: #f5222d;
-          background: rgb(245 34 45 / 10%);
-        }
-      }
-
-      .verticalLineDown,
-      .verticalLineUp,
-      .horizontalLine {
-        background: linear-gradient(135deg, #f5222d, #ff7875);
-      }
-
-      .horizontalLine::before,
-      .horizontalLine::after,
-      .verticalLineUp::before {
-        background: #f5222d;
-        box-shadow:
-          0 0 0 2px #fff,
-          0 2px 4px rgb(245 34 45 / 30%);
-      }
-
-      .orgChart {
-        .node {
-          border-color: rgb(114 46 209 / 30%);
-          background: rgb(114 46 209 / 5%);
-
-          &:hover {
-            border-color: #722ed1;
-            background: rgb(114 46 209 / 10%);
-          }
-        }
-
-        .verticalLineDown,
-        .verticalLineUp,
-        .horizontalLine {
-          background: linear-gradient(135deg, #722ed1, #9254de);
-        }
-
-        .horizontalLine::before,
-        .horizontalLine::after,
-        .verticalLineUp::before {
-          background: #722ed1;
-          box-shadow:
-            0 0 0 2px #fff,
-            0 2px 4px rgb(114 46 209 / 30%);
-        }
-
-        .orgChart {
-          .node {
-            border-color: rgb(235 47 150 / 30%);
-            background: rgb(235 47 150 / 5%);
-
-            &:hover {
-              border-color: #eb2f96;
-              background: rgb(235 47 150 / 10%);
-            }
-          }
-
-          .verticalLineDown,
-          .verticalLineUp,
-          .horizontalLine {
-            background: linear-gradient(135deg, #eb2f96, #f759ab);
-          }
-
-          .horizontalLine::before,
-          .horizontalLine::after,
-          .verticalLineUp::before {
-            background: #eb2f96;
-            box-shadow:
-              0 0 0 2px #fff,
-              0 2px 4px rgb(235 47 150 / 30%);
-          }
-        }
-      }
+  .childrenScroll {
+    &::-webkit-scrollbar {
+      height: 6px;
     }
   }
 }
