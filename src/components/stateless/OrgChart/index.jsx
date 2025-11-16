@@ -81,13 +81,13 @@ function OrgChartDemo() {
       <OrgChart
         data={orgData}
         onNodeClick={handleNodeClick}
-        defaultExpanded={true}
-        highlightOnHover={true}
-        animated={true}
+        defaultExpanded
+        highlightOnHover
+        animated
         rootNodeClassName="custom-root-node"
         expandIcon="▶"
         collapseIcon="▼"
-        showExpandIcon={true}
+        showExpandIcon
         customStyles={customStyles}
       />
     </div>
