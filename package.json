@@ -171,7 +171,7 @@
     "eslint-webpack-plugin": "^5.0.2",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "gh-pages": "^6.3.0",
-    "glob": "^11.0.3",
+    "glob": "^11.1.0",
     "globals": "^16.4.0",
     "hashmark": "^5.0.0",
     "html-minimizer-webpack-plugin": "^5.0.3",
