@@ -186,7 +186,7 @@ const ThreeDCard = ({
             className={clsx('text-lg font-bold text-white', disabled && 'text-white/70')}
             style={{
               textShadow: '2px 2px 4px rgba(0,0,0,0.5)',
-              transform: `translateZ(25px)`,
+              transform: 'translateZ(25px)',
               transition: transitionSettings,
             }}
           >

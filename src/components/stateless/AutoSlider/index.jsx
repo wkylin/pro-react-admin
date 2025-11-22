@@ -71,33 +71,33 @@ const AutoSlider = () => {
   }
 
   return (
-    <section className={styles['section']}>
+    <section className={styles.section}>
       <div className={styles['section-center']}>
         {people.map((person, personIndex) => {
           const { id, image, name, title, quote } = person
 
-          let position = styles['nextSlide']
+          let position = styles.nextSlide
           if (personIndex === index) {
-            position = styles['activeSlide']
+            position = styles.activeSlide
           }
           if (personIndex === index - 1 || (index === 0 && personIndex === people.length - 1)) {
-            position = styles['lastSlide']
+            position = styles.lastSlide
           }
 
           return (
             <article className={position} key={id}>
               <img src={image} alt={name} className={styles['person-img']} />
               <h4>{name}</h4>
-              <p className={styles['title']}>{title}</p>
-              <p className={styles['text']}>{quote}</p>
-              <Quote className={styles['icon']} />
+              <p className={styles.title}>{title}</p>
+              <p className={styles.text}>{quote}</p>
+              <Quote className={styles.icon} />
             </article>
           )
         })}
-        <button className={styles['prev']} onClick={() => handleIndexChange(index - 1)}>
+        <button className={styles.prev} onClick={() => handleIndexChange(index - 1)}>
           <ArrowLeft />
         </button>
-        <button className={styles['next']} onClick={() => handleIndexChange(index + 1)}>
+        <button className={styles.next} onClick={() => handleIndexChange(index + 1)}>
           <ArrowRight />
         </button>
       </div>

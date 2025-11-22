@@ -176,7 +176,7 @@ const MusicPlayer = () => {
         >
           <img src={currentTrack.cover} alt="cover" className="h-full w-full object-cover" />
           {/* 中间的小圆点，模拟黑胶唱片 */}
-          <div className="absolute top-1/2 left-1/2 z-10 h-8 w-8 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-gray-800"></div>
+          <div className="absolute top-1/2 left-1/2 z-10 h-8 w-8 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-gray-800" />
         </div>
 
         {/* 歌曲信息 */}
@@ -259,9 +259,9 @@ const MusicPlayer = () => {
                 <div className="mr-2 flex w-10 items-center justify-center">
                   {isCurrent && isPlaying ? (
                     <div className="flex h-3 items-end gap-1">
-                      <span className="h-full w-0.5 animate-[bounce_1s_infinite] bg-green-500"></span>
-                      <span className="h-2/3 w-0.5 animate-[bounce_1.2s_infinite] bg-green-500"></span>
-                      <span className="h-1/2 w-0.5 animate-[bounce_0.8s_infinite] bg-green-500"></span>
+                      <span className="h-full w-0.5 animate-[bounce_1s_infinite] bg-green-500" />
+                      <span className="h-2/3 w-0.5 animate-[bounce_1.2s_infinite] bg-green-500" />
+                      <span className="h-1/2 w-0.5 animate-[bounce_0.8s_infinite] bg-green-500" />
                     </div>
                   ) : (
                     <span className={`font-mono text-sm ${isCurrent ? 'text-green-500' : 'text-gray-600'}`}>
@@ -291,12 +291,14 @@ const MusicPlayer = () => {
       </div>
 
       {/* 全局样式 (用于滚动条和旋转) */}
-      <style>{`
+      <style>
+        {`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-      `}</style>
+      `}
+      </style>
     </div>
   )
 }

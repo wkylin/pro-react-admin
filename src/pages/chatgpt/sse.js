@@ -24,7 +24,7 @@
  * @param {SSEOptions} options
  * @return {SSE}
  */
-var SSE = function (url, options) {
+const SSE = function (url, options) {
   if (!(this instanceof SSE)) {
     return new SSE(url, options)
   }
@@ -284,7 +284,7 @@ var SSE = function (url, options) {
 
         // consecutive 'data' is concatenated with newlines
         if (field === 'data' && e[field] !== null) {
-          e['data'] += '\n' + value
+          e.data += '\n' + value
         } else {
           e[field] = value
         }
@@ -346,7 +346,7 @@ var SSE = function (url, options) {
     this.xhr.addEventListener('error', this._onStreamFailure.bind(this))
     this.xhr.addEventListener('abort', this._onStreamAbort.bind(this))
     this.xhr.open(this.method, this.url)
-    for (let header in this.headers) {
+    for (const header in this.headers) {
       this.xhr.setRequestHeader(header, this.headers[header])
     }
     if (this.useLastEventId && this.lastEventId.length > 0) {

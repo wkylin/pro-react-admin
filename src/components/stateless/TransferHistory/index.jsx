@@ -148,7 +148,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           <div className={styles.contentWrapper} ref={contentWrapperRef}>
             <div className={styles.leftContent}>
               <div className={styles.levelTwo}>
-                <div className={styles.verticalConnector} style={{ height: leftLineHeight }}></div>
+                <div className={styles.verticalConnector} style={{ height: leftLineHeight }} />
                 <div className={styles.leftLine} ref={leftLineRef}>
                   {item.children && item.children.length > 0 && (
                     <>
@@ -185,14 +185,14 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                         </div>
                                         <div>受让方：{tItem.name}</div>
                                       </div>
-                                      <div className={styles.infoConnector}></div>
+                                      <div className={styles.infoConnector} />
                                       <div
                                         className={
                                           cItem.children.length - 2 === tIndex
                                             ? styles.horizontalConnector
                                             : `${styles.horizontalConnector} ${styles.lastConnector}`
                                         }
-                                      ></div>
+                                      />
                                       <div className={styles.transferYear}>{tItem.value}</div>
                                     </>
                                   )}
@@ -215,7 +215,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                 <div className={styles.expandButtonContainer}>
                   <Button type="link" onClick={toggleExpand} className={styles.expandButton}>
                     {expanded ? '收起部分公司' : '展开全部公司'}
-                    <i className={expanded ? 'anticon anticon-up' : 'anticon anticon-down'}></i>
+                    <i className={expanded ? 'anticon anticon-up' : 'anticon anticon-down'} />
                   </Button>
                 </div>
               )}

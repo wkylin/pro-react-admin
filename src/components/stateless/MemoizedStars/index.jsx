@@ -25,14 +25,14 @@ const Stars = () => {
             position: 'absolute',
             top: `${random() * 100}%`,
             left: `${random() * 100}%`,
-            width: `2px`,
-            height: `2px`,
+            width: '2px',
+            height: '2px',
             backgroundColor: 'white',
             borderRadius: '50%',
             zIndex: 1,
           }}
           className="inline-block"
-        ></motion.span>
+        />
       ))}
     </div>
   )

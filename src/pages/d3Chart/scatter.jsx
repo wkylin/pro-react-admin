@@ -43,7 +43,7 @@ const ScatterPlot = ({ data }) => {
       .attr('fill', 'blue')
   }, [data])
 
-  return <svg ref={svgRef}></svg>
+  return <svg ref={svgRef} />
 }
 
 export default ScatterPlot

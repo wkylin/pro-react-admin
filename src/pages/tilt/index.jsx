@@ -14,22 +14,22 @@ const ReactTilt = () => (
   <FixTabPanel>
     <h3>Welcome to react tilt!</h3>
     <section className="flex flex-wrap items-center justify-start gap-8 p-8">
-      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable={true}>
+      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable>
         <section className="h-[150px] w-[300px] overflow-hidden">
           <img src={SpringPng} alt="wkylin.w" />
         </section>
       </Tilt>
-      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable={true}>
+      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable>
         <section className="h-[150px] w-[300px] overflow-hidden">
           <img src={HePng} alt="wkylin.w" />
         </section>
       </Tilt>
-      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable={true}>
+      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable>
         <section className="h-[150px] w-[300px] overflow-hidden">
           <img src={SongPng} alt="wkylin.w" />
         </section>
       </Tilt>
-      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable={true}>
+      <Tilt tiltMaxAngleX={40} tiltMaxAngleY={40} perspective={1000} scale={1.05} glareEnable>
         <section className="h-[150px] w-[300px] overflow-hidden">
           <img src={XuePng} alt="wkylin.w" />
         </section>

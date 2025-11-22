@@ -38,7 +38,7 @@ const AnimatedList = React.memo(({ children, className, delay = 1000, ...props }
   }, [index, childrenArray])
 
   return (
-    <div className={clsx(`flex flex-col items-center gap-4`, className)} {...props}>
+    <div className={clsx('flex flex-col items-center gap-4', className)} {...props}>
       <AnimatePresence>
         {itemsToShow.map((item) => (
           <AnimatedListItem key={item.key}>{item}</AnimatedListItem>

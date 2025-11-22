@@ -72,7 +72,7 @@ export const downloadFile = async (url, data, onDownloadProgress, setProgress, s
       method: 'POST',
       url: process.env.APP_BASE_URL + url,
       responseType: 'blob',
-      data: data,
+      data,
       onDownloadProgress: (progressEvent) => {
         if (progressEvent.lengthComputable) {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)

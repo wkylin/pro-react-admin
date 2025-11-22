@@ -109,7 +109,7 @@ const FixCarousel = ({ tradeList = [] }) => {
               currentPage === index ? 'bg-blue-600/80' : 'bg-white'
             }`}
             onClick={() => goToPage(index)}
-          ></button>
+          />
         ))}
       </div>
     </div>

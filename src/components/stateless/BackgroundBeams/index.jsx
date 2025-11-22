@@ -75,16 +75,16 @@ const BackgroundBeams = React.memo(({ className }) => {
           stroke="url(#paint0_radial_242_278)"
           strokeOpacity="0.05"
           strokeWidth="0.5"
-        ></path>
+        />
 
         {paths.map((path, index) => (
           <motion.path
-            key={`path-` + index}
+            key={'path-' + index}
             d={path}
             stroke={`url(#linearGradient-${index})`}
             strokeOpacity="0.4"
             strokeWidth="0.6"
-          ></motion.path>
+          />
         ))}
         <defs>
           {paths.map((path, index) => (
@@ -110,10 +110,10 @@ const BackgroundBeams = React.memo(({ className }) => {
                 delay: Math.random() * 10,
               }}
             >
-              <stop stopColor="#18CCFC" stopOpacity="0"></stop>
-              <stop stopColor="#18CCFC"></stop>
-              <stop offset="32.5%" stopColor="#6344F5"></stop>
-              <stop offset="100%" stopColor="#AE48FF" stopOpacity="0"></stop>
+              <stop stopColor="#18CCFC" stopOpacity="0" />
+              <stop stopColor="#18CCFC" />
+              <stop offset="32.5%" stopColor="#6344F5" />
+              <stop offset="100%" stopColor="#AE48FF" stopOpacity="0" />
             </motion.linearGradient>
           ))}
 
@@ -125,9 +125,9 @@ const BackgroundBeams = React.memo(({ className }) => {
             gradientUnits="userSpaceOnUse"
             gradientTransform="translate(352 34) rotate(90) scale(555 1560.62)"
           >
-            <stop offset="0.0666667" stopColor="var(--neutral-300)"></stop>
-            <stop offset="0.243243" stopColor="var(--neutral-300)"></stop>
-            <stop offset="0.43594" stopColor="white" stopOpacity="0"></stop>
+            <stop offset="0.0666667" stopColor="var(--neutral-300)" />
+            <stop offset="0.243243" stopColor="var(--neutral-300)" />
+            <stop offset="0.43594" stopColor="white" stopOpacity="0" />
           </radialGradient>
         </defs>
       </svg>

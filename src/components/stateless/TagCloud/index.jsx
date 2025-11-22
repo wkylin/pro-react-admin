@@ -59,7 +59,7 @@ const TagCloud = () => {
           </li>
         </ul>
       </div>
-      <div className={styles.mask}></div>
+      <div className={styles.mask} />
     </div>
   )
 }

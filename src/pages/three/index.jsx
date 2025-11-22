@@ -32,7 +32,7 @@ function Stars(props) {
   return (
     <group>
       <Points ref={ref} positions={sphere} stride={3} frustumCulled={false} {...props}>
-        <PointMaterial transparent color="#ffa0e0" size={0.005} sizeAttenuation={true} depthWrite={false} />
+        <PointMaterial transparent color="#ffa0e0" size={0.005} sizeAttenuation depthWrite={false} />
       </Points>
     </group>
   )

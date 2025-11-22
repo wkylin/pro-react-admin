@@ -27,7 +27,7 @@ const Meteors = ({ starCount = 50, primaryColor = '#ffffff', className = '' }) =
       {stars.map((star) => (
         <motion.div
           key={star.id}
-          className={`absolute h-[2px] rounded-full bg-gradient-to-r from-current to-transparent drop-shadow-[0_0_6px_currentColor]`}
+          className="absolute h-[2px] rounded-full bg-gradient-to-r from-current to-transparent drop-shadow-[0_0_6px_currentColor]"
           style={{
             top: `${star.topOffset}vh`,
             width: '6em',
@@ -46,19 +46,19 @@ const Meteors = ({ starCount = 50, primaryColor = '#ffffff', className = '' }) =
         >
           <div className="relative h-full w-full">
             <div
-              className={`rounded-inherit animate-blink absolute top-0 left-[calc(-1em)] h-full w-[1em] bg-gradient-to-r from-transparent via-current to-transparent`}
+              className="rounded-inherit animate-blink absolute top-0 left-[calc(-1em)] h-full w-[1em] bg-gradient-to-r from-transparent via-current to-transparent"
               style={{
                 willChange: 'transform, opacity',
               }}
             />
             <div
-              className={`rounded-inherit animate-blink absolute top-0 left-[calc(-1em)] h-full w-[1em] rotate-45 bg-gradient-to-r from-transparent via-current to-transparent`}
+              className="rounded-inherit animate-blink absolute top-0 left-[calc(-1em)] h-full w-[1em] rotate-45 bg-gradient-to-r from-transparent via-current to-transparent"
               style={{
                 willChange: 'transform, opacity',
               }}
             />
             <div
-              className={`rounded-inherit animate-blink absolute top-0 left-[calc(-1em)] h-full w-[1em] -rotate-45 bg-gradient-to-r from-transparent via-current to-transparent`}
+              className="rounded-inherit animate-blink absolute top-0 left-[calc(-1em)] h-full w-[1em] -rotate-45 bg-gradient-to-r from-transparent via-current to-transparent"
               style={{
                 willChange: 'transform, opacity',
               }}

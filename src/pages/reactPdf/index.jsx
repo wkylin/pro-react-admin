@@ -111,8 +111,8 @@ const ReactPdf = () => {
                     scale={scale}
                     onLoadError={onPageLoadError}
                     onLoadSuccess={onPageLoadSuccess}
-                    renderAnnotationLayer={true}
-                    renderTextLayer={true}
+                    renderAnnotationLayer
+                    renderTextLayer
                   />
                 </Document>
               </ErrorBoundary>
@@ -144,7 +144,7 @@ const ReactPdf = () => {
                 <ChevronRight className="h-6 w-6" />
               </button>
 
-              <div className="mx-4 h-6 border-r border-gray-300"></div>
+              <div className="mx-4 h-6 border-r border-gray-300" />
 
               <button
                 onClick={() => changeScale(-0.1)}

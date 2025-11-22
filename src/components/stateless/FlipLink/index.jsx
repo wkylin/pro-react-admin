@@ -5,7 +5,7 @@ export const RevealLinks = () => {
   return (
     <section className="grid place-content-center gap-2">
       <FlipLink href="https://github.com/wkylin/pro-react-admin">Github</FlipLink>
-      <FlipLink href="https://medium.com/@wkylin.w"></FlipLink>
+      <FlipLink href="https://medium.com/@wkylin.w" />
     </section>
   )
 }

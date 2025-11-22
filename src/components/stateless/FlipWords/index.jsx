@@ -13,10 +13,11 @@ const FlipWords = ({ words, duration = 3000, className }) => {
   }, [currentWord, words])
 
   useEffect(() => {
-    if (!isAnimating)
+    if (!isAnimating) {
       setTimeout(() => {
         startAnimation()
       }, duration)
+    }
   }, [isAnimating, duration, startAnimation])
 
   return (
