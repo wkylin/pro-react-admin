@@ -26,6 +26,7 @@ import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 import FixCarousel from '@stateless/FixCarouse'
 import OrgChart from '@stateless/OrgChart'
 import TrapezoidTabs from '@stateless/TrapezoidTabs'
+import MusicPlayer from '@stateless/MusicPlayer'
 import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
@@ -247,6 +248,7 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       <section style={{ position: 'relative', zIndex: 1, backgroundColor: '#fff', transform: 'translate3d(0, 0, 0)' }}>
+        <MusicPlayer />
         <FixTabs />
         <StatisticCard />
         <TransferHistory />
