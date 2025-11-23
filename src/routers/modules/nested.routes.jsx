@@ -18,26 +18,26 @@ export const nestedRoutes = [
         path: 'home',
         name: 'React',
         key: '/coupons/home',
-        element: <lazyComponents.CouponsHome />,
+        element: <lazyComponents.CouponsHome />
       },
       {
         path: 'add',
         name: 'Vue',
         key: '/coupons/add',
-        element: <lazyComponents.CouponsAdd />,
+        element: <lazyComponents.CouponsAdd />
       },
       {
         path: 'edit',
         name: 'Angular',
         key: '/coupons/edit',
-        element: <lazyComponents.CouponsEdit />,
+        element: <lazyComponents.CouponsEdit />
       },
       {
         path: 'detail',
         name: 'Node',
         key: '/coupons/detail',
-        element: <lazyComponents.CouponsDetail />,
-      },
-    ],
-  },
+        element: <lazyComponents.CouponsDetail />
+      }
+    ]
+  }
 ]

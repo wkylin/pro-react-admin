@@ -95,10 +95,11 @@ cat IMPLEMENTATION_CHECKLIST.md
 ## 公共路由与权限菜单
 
 ### 公共路由维护
+
 所有无需登录即可访问的页面集中在 `src/routers/config/publicRoutes.ts`：
 
 ```ts
-export const publicRoutes = ['/signin','/signup','/auth/callback','/404','/403','/500']
+export const publicRoutes = ['/signin', '/signup', '/auth/callback', '/404', '/403', '/500']
 
 // 运行时动态管理（如活动期间临时开放某页）
 addPublicRoute('/landing')
@@ -107,36 +108,44 @@ listPublicRoutes() // 获取当前公开列表
 ```
 
 另外，在任意路由配置对象（如模块路由数组项）上添加 `auth: false` 也会被视为公开，优先级高于数组。适用于：
+
 - 单个页面临时开放
 - 希望和路由结构一起阅读维护
 
 判断逻辑：
+
 1. 若 `auth === false` 立即放行
 2. 否则匹配 `publicRoutes`（支持前缀，如 `/auth/callback` 下子路径）
 
 ### 已登录访问公开页的行为
+
 用户已登录再访问 `/signin` 或其它公开页会被重定向到：
+
 1. 根路径 `/`（若有权限）
 2. 否则其可访问路由列表的第一项
 
 ### 动态权限菜单生成
+
 组件 `src/pages/layout/proSecNav/index.jsx` 在挂载时：
+
 1. 调用 `permissionService.getPermissions()` 取回 `routes` 列表
 2. 用 `generateMenuItems(routes)` 递归过滤所有候选菜单
 3. 支持父路径包含子页面权限：拥有 `/coupons` 自动显示 `/coupons/add`
 4. 子菜单全部被过滤则不展示父菜单
 
 扩展新菜单步骤：
+
 1. 在候选 `allMenuItems` 增加 `{ label:'Xxx', key:'/new-path', icon:<Icon/> }`
 2. 将路径加入对应角色的路由数组（`mock/permission.ts` 内 `managerRoutes` 等）
 3. 可选：添加权限码到 `routePermissionMap`（若做按钮级校验）
 
 ### 登出后权限刷新
+
 `authService.logout()` 会清空 `user_permissions` 缓存并跳转 `/signin`，保证下次登录重新计算菜单。
 
 ### 调试技巧
-在权限获取函数 `mockGetUserPermissions` 已插入日志，可在浏览器 DevTools Console 观察路由与角色匹配过程。
 
+在权限获取函数 `mockGetUserPermissions` 已插入日志，可在浏览器 DevTools Console 观察路由与角色匹配过程。
 
 ## 脚手架--白泽 baize
 

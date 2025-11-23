@@ -14,7 +14,7 @@ export const layoutRoutes = [
     name: 'Dashboard',
     key: '/dashboard',
     auth: true,
-    element: <lazyComponents.Dashboard />,
+    element: <lazyComponents.Dashboard />
   },
   // Portfilo模块（独立布局）
   {
@@ -22,8 +22,8 @@ export const layoutRoutes = [
     name: 'My Portfilo',
     key: '/portfilo',
     auth: true,
-    element: <lazyComponents.MyPortfilo />,
-  },
+    element: <lazyComponents.MyPortfilo />
+  }
 ]
 
 /**
@@ -48,7 +48,7 @@ export const mainLayoutRoute = {
       name: '首页',
       key: '/',
       i18nKey: 'home',
-      element: <lazyComponents.Home />,
-    },
-  ],
+      element: <lazyComponents.Home />
+    }
+  ]
 }

@@ -16,7 +16,7 @@ const SignIn = () => {
   const navigate = useNavigate()
   const { message } = App.useApp()
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm()
@@ -112,7 +112,7 @@ const SignIn = () => {
   const fillAccount = (email) => {
     form.setFieldsValue({
       email,
-      password: testAccounts[email].password,
+      password: testAccounts[email].password
     })
   }
 
@@ -128,7 +128,7 @@ const SignIn = () => {
               alignItems: 'center',
               justifyContent: 'center',
               padding: '20px',
-              width: '100%',
+              width: '100%'
             }}
           >
             <Card
@@ -137,33 +137,33 @@ const SignIn = () => {
                 maxWidth: 450,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 borderRadius: '12px',
-                padding: '20px',
+                padding: '20px'
               }}
             >
               <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                 <Title level={2} style={{ marginBottom: '8px' }}>
                   登录系统
                 </Title>
-                <Text type="secondary">请选择测试账号或输入凭据</Text>
+                <Text type='secondary'>请选择测试账号或输入凭据</Text>
               </div>
 
               {/* 测试账号快捷选择 */}
-              <Card size="small" style={{ marginBottom: '24px', background: '#f5f5f5' }}>
+              <Card size='small' style={{ marginBottom: '24px', background: '#f5f5f5' }}>
                 <Paragraph style={{ margin: 0, marginBottom: '12px' }}>
                   <Text strong>测试账号（点击快速填充）：</Text>
                 </Paragraph>
-                <Space direction="vertical" style={{ width: '100%' }} size="small">
+                <Space direction='vertical' style={{ width: '100%' }} size='small'>
                   {Object.entries(testAccounts).map(([email, account]) => (
                     <Button
                       key={email}
                       block
-                      size="small"
+                      size='small'
                       onClick={() => fillAccount(email)}
                       style={{ textAlign: 'left', height: 'auto', padding: '8px 12px' }}
                     >
                       <Space>
-                        <Tag color="blue">{account.name}</Tag>
-                        <Text type="secondary" style={{ fontSize: '12px' }}>
+                        <Tag color='blue'>{account.name}</Tag>
+                        <Text type='secondary' style={{ fontSize: '12px' }}>
                           {email} / {account.password}
                         </Text>
                       </Space>
@@ -174,39 +174,39 @@ const SignIn = () => {
 
               <Form
                 form={form}
-                name="signin"
+                name='signin'
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                layout="vertical"
-                size="large"
+                autoComplete='off'
+                layout='vertical'
+                size='large'
               >
                 <Form.Item
-                  name="email"
+                  name='email'
                   rules={[
                     { required: true, message: '请输入邮箱!' },
-                    { type: 'email', message: '请输入有效的邮箱格式!' },
+                    { type: 'email', message: '请输入有效的邮箱格式!' }
                   ]}
                 >
-                  <Input prefix={<UserOutlined />} placeholder="邮箱" />
+                  <Input prefix={<UserOutlined />} placeholder='邮箱' />
                 </Form.Item>
 
-                <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
-                  <Input.Password prefix={<LockOutlined />} placeholder="密码" />
+                <Form.Item name='password' rules={[{ required: true, message: '请输入密码!' }]}>
+                  <Input.Password prefix={<LockOutlined />} placeholder='密码' />
                 </Form.Item>
 
                 <Form.Item>
-                  <Button type="primary" htmlType="submit" block>
+                  <Button type='primary' htmlType='submit' block>
                     登录
                   </Button>
                 </Form.Item>
               </Form>
 
               <div style={{ textAlign: 'center', marginTop: '16px' }}>
-                <Text type="secondary">或者</Text>
+                <Text type='secondary'>或者</Text>
               </div>
 
-              <Button icon={<GithubOutlined />} onClick={handleLogin} block size="large" style={{ marginTop: '16px' }}>
+              <Button icon={<GithubOutlined />} onClick={handleLogin} block size='large' style={{ marginTop: '16px' }}>
                 使用 GitHub 登录
               </Button>
             </Card>

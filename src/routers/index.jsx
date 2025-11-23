@@ -11,13 +11,12 @@
  */
 
 import React from 'react'
-import { mainLayoutRoute } from './modules/layout.routes'
+import { mainLayoutRoute, layoutRoutes } from './modules/layout.routes'
 import { authRoutes } from './modules/auth.routes'
 import { businessRoutes } from './modules/business.routes'
 import { uiRoutes } from './modules/ui.routes'
 import { chartRoutes } from './modules/chart.routes'
 import { nestedRoutes } from './modules/nested.routes'
-import { layoutRoutes } from './modules/layout.routes'
 import { errorRoutes } from './modules/error.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
 import { permissionService } from '@src/service/permissionService'
@@ -28,7 +27,7 @@ mainLayoutRoute.children = [
   ...businessRoutes,
   ...uiRoutes,
   ...chartRoutes,
-  ...nestedRoutes,
+  ...nestedRoutes
 ]
 
 // 构建完整路由配置
@@ -42,14 +41,14 @@ const rootRouter = [
   // 错误路由（404 放在最后）
   ...errorRoutes.filter((route) => route.path !== '*'),
   // 全局 404（必须放在最后）
-  ...errorRoutes.filter((route) => route.path === '*'),
+  ...errorRoutes.filter((route) => route.path === '*')
 ]
 
 // ✅ 注入 meta.permission（不改变现有结构，仅增强）
 const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
 
 // ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
-export function flattenRoutes(routes) {
+export function flattenRoutes (routes) {
   if (!Array.isArray(routes)) {
     console.error('flattenRoutes: expected array, got:', typeof routes, routes)
     return []
@@ -73,7 +72,7 @@ export function flattenRoutes(routes) {
 }
 
 // ✅ 新增：根据路径获取路由 key
-export function getKeyName(path = '/') {
+export function getKeyName (path = '/') {
   try {
     const flatRoutes = flattenRoutes(annotatedRootRouter)
 
@@ -101,7 +100,7 @@ export function getKeyName(path = '/') {
  * 仅对主布局的 children 做过滤；其余（auth/error/独立布局）不参与菜单
  * @returns {Promise<Array>} 过滤后的路由配置
  */
-export async function getVisibleMenuRoutes() {
+export async function getVisibleMenuRoutes () {
   try {
     const accessible = await permissionService.getAccessibleRoutes()
     const main = annotatedRootRouter.find((r) => r.key === '/')

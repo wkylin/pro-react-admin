@@ -156,7 +156,7 @@ const AuthRouter = (props) => {
       return (
         <>
           {contextHolder}
-          <Navigate to="/signin" replace />
+          <Navigate to='/signin' replace />
         </>
       )
     }

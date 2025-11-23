@@ -11,30 +11,30 @@ export const businessRoutes = [
     name: 'Demo',
     i18nKey: 'demo',
     key: '/demo',
-    element: <lazyComponents.Demo />,
+    element: <lazyComponents.Demo />
   },
   {
     path: 'motion',
     name: 'Motion',
     key: '/motion',
-    element: <lazyComponents.Motion />,
+    element: <lazyComponents.Motion />
   },
   {
     path: 'business',
     name: 'Business',
     key: '/business',
-    element: <lazyComponents.Business />,
+    element: <lazyComponents.Business />
   },
   {
     path: 'product',
     name: '后端技术栈',
     key: '/product',
-    element: <lazyComponents.Product />,
+    element: <lazyComponents.Product />
   },
   {
     path: 'permission',
     name: '权限管理示例',
     key: '/permission',
-    element: <lazyComponents.PermissionDemo />,
-  },
+    element: <lazyComponents.PermissionDemo />
+  }
 ]
