@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { message } from 'antd'
-import { Menu } from 'antd'
+import { message, Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +11,7 @@ import {
   QuestionCircleOutlined,
   FireOutlined,
   GlobalOutlined,
-  QrcodeOutlined,
+  QrcodeOutlined
 } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
 
@@ -236,22 +235,22 @@ const ProSecNav = () => {
                         icon: <FireOutlined />,
                         children: [
                           { label: 'Vue3 API', key: '/coupons/add/plugins/vue3' },
-                          { label: '性能优化', key: '/coupons/add/plugins/perf' },
-                        ],
-                      },
-                    ],
+                          { label: '性能优化', key: '/coupons/add/plugins/perf' }
+                        ]
+                      }
+                    ]
                   },
-                  { label: 'Angular', key: '/coupons/edit' },
-                ],
-              },
-            ],
+                  { label: 'Angular', key: '/coupons/edit' }
+                ]
+              }
+            ]
           },
           {
             label: '后端技术栈',
             key: '/product',
-            icon: <DeploymentUnitOutlined />,
-          },
-        ],
+            icon: <DeploymentUnitOutlined />
+          }
+        ]
       },
       {
         label: '构建工具',
@@ -259,15 +258,15 @@ const ProSecNav = () => {
         icon: <ApartmentOutlined />,
         children: [
           { label: 'Webpack', key: '/coupons/list' },
-          { label: 'Vite', key: '/order/list' },
-        ],
+          { label: 'Vite', key: '/order/list' }
+        ]
       },
       {
         label: 'Error',
         key: '/sub-error',
         icon: <QuestionCircleOutlined />,
-        children: [{ label: 'ErrorBoundary', key: '/error' }],
-      },
+        children: [{ label: 'ErrorBoundary', key: '/error' }]
+      }
     ]
 
     // 递归过滤菜单：仅保留用户可访问的节点或其子节点
@@ -371,12 +370,12 @@ const ProSecNav = () => {
   return (
     <>
       <Menu
-        mode="inline"
+        mode='inline'
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}
         openKeys={openKeys}
-        theme="light"
+        theme='light'
         className={styles.menu}
         onOpenChange={onOpenChange}
         onSelect={onSelect}

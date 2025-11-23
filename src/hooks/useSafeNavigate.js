@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
 import { permissionService } from '@src/service/permissionService'
 
-export default function useSafeNavigate() {
+export default function useSafeNavigate () {
   const navigate = useNavigate()
   const lastDeniedRef = useRef(null)
 

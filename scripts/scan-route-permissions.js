@@ -3,7 +3,7 @@ const path = require('path')
 
 const root = path.resolve(__dirname, '../src')
 
-function readFile(filepath) {
+function readFile (filepath) {
   try {
     return fs.readFileSync(filepath, 'utf8')
   } catch (e) {
@@ -11,7 +11,7 @@ function readFile(filepath) {
   }
 }
 
-function walk(dir, fileList = []) {
+function walk (dir, fileList = []) {
   const files = fs.readdirSync(dir)
   files.forEach((file) => {
     const full = path.join(dir, file)
@@ -24,7 +24,7 @@ function walk(dir, fileList = []) {
   return fileList
 }
 
-function extractRoutesFromFile(content) {
+function extractRoutesFromFile (content) {
   const routes = new Set()
   // 匹配 key: '/path' 或 key: "/path"
   const keyRegex = /key\s*:\s*['`\"]([^'`\"]+)['`\"]/g
@@ -46,7 +46,7 @@ function extractRoutesFromFile(content) {
 }
 
 // parse routePermissionMap from mock/permission.ts
-function parseRoutePermissionMap(content) {
+function parseRoutePermissionMap (content) {
   const map = {}
   const start = content.indexOf('export const routePermissionMap')
   if (start === -1) return map
@@ -80,7 +80,7 @@ function parseRoutePermissionMap(content) {
   return map
 }
 
-function main() {
+function main () {
   const files = walk(path.join(root, 'routers'))
   const allRoutes = new Set()
   files.forEach((file) => {
@@ -111,10 +111,10 @@ function main() {
     discoveredRoutesCount: allRoutesArr.length,
     discoveredRoutes: allRoutesArr,
     mappedKeysCount: mappedKeys.length,
-    mappedKeys: mappedKeys,
+    mappedKeys,
     unmappedRoutes: unmapped,
     staleMappedKeys: stale,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   }
 
   const outPath = path.join(__dirname, 'route-permission-report.json')

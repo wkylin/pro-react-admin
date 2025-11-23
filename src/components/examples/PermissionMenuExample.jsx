@@ -89,14 +89,14 @@ const MenuItem = ({ route, level = 0 }) => {
           padding: '12px 16px',
           textDecoration: 'none',
           color: isActive ? '#1890ff' : '#333',
-          backgroundColor: isActive ? '#e6f7ff' : 'transparent',
+          backgroundColor: isActive ? '#e6f7ff' : 'transparent'
         }}
       >
         {route.name || route.path}
       </SafeLink>
 
       {hasChildren && (
-        <div className="menu-children">
+        <div className='menu-children'>
           {route.children.map((child) => (
             <MenuItem key={child.key || child.path} route={child} level={level + 1} />
           ))}
@@ -138,7 +138,7 @@ export const PermissionBasedMenu = () => {
   }
 
   return (
-    <nav className="permission-based-menu" style={{ width: '240px', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
+    <nav className='permission-based-menu' style={{ width: '240px', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       {menuRoutes.map((route) => (
         <MenuItem key={route.key || route.path} route={route} />
       ))}
@@ -182,7 +182,7 @@ export const PermissionBasedMenuWithDebug = () => {
               color: currentRole === 'super_admin' ? '#fff' : '#333',
               border: '1px solid #d9d9d9',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: 'pointer'
             }}
           >
             超级管理员
@@ -196,7 +196,7 @@ export const PermissionBasedMenuWithDebug = () => {
               color: currentRole === 'admin' ? '#fff' : '#333',
               border: '1px solid #d9d9d9',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: 'pointer'
             }}
           >
             管理员
@@ -210,7 +210,7 @@ export const PermissionBasedMenuWithDebug = () => {
               color: currentRole === 'business_user' ? '#fff' : '#333',
               border: '1px solid #d9d9d9',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: 'pointer'
             }}
           >
             业务员
@@ -224,7 +224,7 @@ export const PermissionBasedMenuWithDebug = () => {
               color: currentRole === 'user' ? '#fff' : '#333',
               border: '1px solid #d9d9d9',
               borderRadius: '4px',
-              cursor: 'pointer',
+              cursor: 'pointer'
             }}
           >
             普通用户
@@ -234,26 +234,32 @@ export const PermissionBasedMenuWithDebug = () => {
       </div>
 
       {/* 菜单内容 */}
-      {loading ? (
-        <div style={{ padding: '16px', textAlign: 'center' }}>
-          <div>加载菜单中...</div>
-        </div>
-      ) : error ? (
-        <div style={{ padding: '16px', color: 'red' }}>
-          <div>菜单加载失败</div>
-          <small>{error.message}</small>
-        </div>
-      ) : menuRoutes.length === 0 ? (
-        <div style={{ padding: '16px', color: '#999' }}>
-          <div>暂无可访问的菜单</div>
-        </div>
-      ) : (
-        <nav className="permission-based-menu" style={{ backgroundColor: '#f5f5f5' }}>
-          {menuRoutes.map((route) => (
-            <MenuItem key={route.key || route.path} route={route} />
-          ))}
-        </nav>
-      )}
+      {loading
+        ? (
+          <div style={{ padding: '16px', textAlign: 'center' }}>
+            <div>加载菜单中...</div>
+          </div>
+          )
+        : error
+          ? (
+            <div style={{ padding: '16px', color: 'red' }}>
+              <div>菜单加载失败</div>
+              <small>{error.message}</small>
+            </div>
+            )
+          : menuRoutes.length === 0
+            ? (
+              <div style={{ padding: '16px', color: '#999' }}>
+                <div>暂无可访问的菜单</div>
+              </div>
+              )
+            : (
+              <nav className='permission-based-menu' style={{ backgroundColor: '#f5f5f5' }}>
+                {menuRoutes.map((route) => (
+                  <MenuItem key={route.key || route.path} route={route} />
+                ))}
+              </nav>
+              )}
     </div>
   )
 }
@@ -274,7 +280,7 @@ export const useAntdMenuItems = () => {
         const item = {
           key: route.key || fullPath,
           label: route.name || route.path,
-          path: fullPath,
+          path: fullPath
         }
 
         if (hasChildren) {

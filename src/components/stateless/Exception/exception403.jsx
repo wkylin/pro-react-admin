@@ -8,13 +8,13 @@ const Exception403 = () => {
   return (
     <FixTabPanel>
       <Result
-        status="403"
+        status='403'
         title={
-          <Button type="primary" ghost onClick={() => redirectTo('/')}>
+          <Button type='primary' ghost onClick={() => redirectTo('/')}>
             去首页
           </Button>
         }
-        subTitle="Sorry, you are not authorized to access this page."
+        subTitle='Sorry, you are not authorized to access this page.'
       />
     </FixTabPanel>
   )

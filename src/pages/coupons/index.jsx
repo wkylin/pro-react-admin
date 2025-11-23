@@ -8,16 +8,16 @@ const Coupons = () => {
 
   return (
     <FixTabPanel>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/')}>
+      <Button type='primary' style={{ margin: 10 }} onClick={() => redirectTo('/')}>
         Home Coupons
       </Button>
-      <Button type="text" style={{ margin: 10 }} onClick={() => redirectTo('coupons/add')}>
+      <Button type='text' style={{ margin: 10 }} onClick={() => redirectTo('coupons/add')}>
         Add Coupons
       </Button>
       <Button style={{ margin: 10 }} onClick={() => redirectTo('coupons/edit?id=1')}>
         Edit Coupons
       </Button>
-      <Button type="dashed" style={{ margin: 10 }} onClick={() => redirectTo('coupons/detail?id=2')}>
+      <Button type='dashed' style={{ margin: 10 }} onClick={() => redirectTo('coupons/detail?id=2')}>
         Detail Coupons
       </Button>
     </FixTabPanel>

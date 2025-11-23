@@ -23,12 +23,12 @@ const ProTabs = (props) => {
   const fullPath = pathname + search
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
 
   const renderTabBar = (props, DefaultTabBar) => (
     <StickyBox offsetTop={0} style={{ zIndex: 10 }}>
-      <DefaultTabBar key={nanoid()} {...props} className="pro-tabs" style={{ background: colorBgContainer }} />
+      <DefaultTabBar key={nanoid()} {...props} className='pro-tabs' style={{ background: colorBgContainer }} />
     </StickyBox>
   )
 
@@ -36,7 +36,7 @@ const ProTabs = (props) => {
     document.querySelector('#container').scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth',
+      behavior: 'smooth'
     })
   }, [pathname])
 
@@ -107,12 +107,12 @@ const ProTabs = (props) => {
   const tabRightMenu = [
     {
       label: '关闭其他',
-      key: 'other',
+      key: 'other'
     },
     {
       label: '全部关闭',
-      key: 'all',
-    },
+      key: 'all'
+    }
   ]
 
   const fixError = () => {
@@ -122,54 +122,56 @@ const ProTabs = (props) => {
   return (
     <Tabs
       hideAdd
-      type="editable-card"
+      type='editable-card'
       onChange={onChange}
       onTabClick={onTabClick}
       onTabScroll={onTabScroll}
       onEdit={onEdit}
       renderTabBar={renderTabBar}
-      className="layout-container"
-      id="container"
+      className='layout-container'
+      id='container'
       tabBarStyle={{
         zIndex: 2,
-        marginBottom: 0,
+        marginBottom: 0
       }}
       activeKey={activeKey}
       destroyOnHidden={false}
       tabBarExtraContent={{
         left: (
-          <Space align="center" size={30} style={{ margin: '0 25px' }}>
+          <Space align='center' size={30} style={{ margin: '0 25px' }}>
             <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
           </Space>
         ),
         right: (
           <>
             <Space style={{ padding: '0 5px' }}>
-              <Fullscreen ele="#fullScreenContent" placement="left" tips="主内容全屏" />
+              <Fullscreen ele='#fullScreenContent' placement='left' tips='主内容全屏' />
             </Space>
-            {panes.length > 2 ? (
-              <Dropdown
-                menu={{
-                  items: tabRightMenu,
-                  onClick: ({ key }) => {
-                    onTabContextMenu(key)
-                  },
-                }}
-                trigger={['hover']}
-              >
-                <Button type="link">
-                  More <DownOutlined />
-                </Button>
-              </Dropdown>
-            ) : null}
+            {panes.length > 2
+              ? (
+                <Dropdown
+                  menu={{
+                    items: tabRightMenu,
+                    onClick: ({ key }) => {
+                      onTabContextMenu(key)
+                    }
+                  }}
+                  trigger={['hover']}
+                >
+                  <Button type='link'>
+                    More <DownOutlined />
+                  </Button>
+                </Dropdown>
+                )
+              : null}
           </>
-        ),
+        )
       }}
       items={panes.map((pane) => ({
         label: (
           <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
             {pane.key === fullPath && pane.key !== '/404' && (
-              <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+              <SyncOutlined onClick={refreshTab} title='刷新' spin={isReload} />
             )}
             {pane.i18nKey ? t(pane.i18nKey) : pane.title}
           </span>
@@ -179,15 +181,17 @@ const ProTabs = (props) => {
         forceRender: true,
         children: (
           <MyErrorBoundary fixError={fixError}>
-            <div className="layout-tabpanel">
-              {isReload && pane.key === fullPath && pane.key !== '/404' ? (
-                <Loading tip="刷新中..." />
-              ) : (
-                <>{pane.content}</>
-              )}
+            <div className='layout-tabpanel'>
+              {isReload && pane.key === fullPath && pane.key !== '/404'
+                ? (
+                  <Loading tip='刷新中...' />
+                  )
+                : (
+                  <>{pane.content}</>
+                  )}
             </div>
           </MyErrorBoundary>
-        ),
+        )
       }))}
     />
   )

@@ -3,7 +3,7 @@ import { Layout, Space, Dropdown, Switch, theme, Avatar, message } from 'antd'
 import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { removeLocalStorage } from '@utils/publicFn'
+import { removeLocalStorage, getLocalStorage } from '@utils/publicFn'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
 // import { ReactComponent as LightSvg } from '@assets/svg/light.svg'
@@ -21,7 +21,6 @@ import { useProThemeContext } from '@theme/hooks'
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
-import { getLocalStorage } from '@utils/publicFn'
 import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
@@ -96,7 +95,7 @@ const ProHeader = () => {
       icon: <UserOutlined />,
       onClick: () => {
         redirectTo('/profile')
-      },
+      }
     },
     {
       key: '2',
@@ -104,7 +103,7 @@ const ProHeader = () => {
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/setting')
-      },
+      }
     },
     {
       key: '3',
@@ -112,7 +111,7 @@ const ProHeader = () => {
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/contact')
-      },
+      }
     },
     {
       key: '4',
@@ -125,8 +124,8 @@ const ProHeader = () => {
           removeLocalStorage('token')
           redirectTo('/signin')
         }
-      },
-    },
+      }
+    }
   ]
 
   const { myTheme, setMyTheme } = useProThemeContext()
@@ -136,7 +135,7 @@ const ProHeader = () => {
   }
 
   const {
-    token: { colorBgContainer, colorBorder },
+    token: { colorBgContainer, colorBorder }
   } = theme.useToken()
 
   return (
@@ -144,20 +143,20 @@ const ProHeader = () => {
       className={styles.header}
       style={{
         background: colorBgContainer,
-        borderBottom: `1px solid ${colorBorder}`,
+        borderBottom: `1px solid ${colorBorder}`
       }}
     >
-      <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
+      <div aria-hidden='true' className={styles.logo} onClick={() => redirectTo('/')}>
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
-        <img src={Logo} alt="logo" />
-        <GradientAnimationText text="Pro React Admin" />
+        <img src={Logo} alt='logo' />
+        <GradientAnimationText text='Pro React Admin' />
       </div>
       <div className={styles.headerMeta}>
         <div className={styles.headerMenu}>
           <PrimaryNav />
         </div>
         <div className={styles.headerRight}>
-          <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+          <Space direction='horizontal' style={{ cursor: 'pointer', paddingRight: 8 }}>
             <SoundBar />
             <Switch
               // checkedChildren={<Icon component={LightSvg} />}
@@ -174,17 +173,19 @@ const ProHeader = () => {
           <Dropdown
             arrow
             menu={{
-              items,
+              items
             }}
           >
             <Space>
-              {isAuthenticated && user ? (
-                <>
-                  <Avatar src={user.avatar_url} /> <span>{user.name || user.login}</span>
-                </>
-              ) : (
-                <span style={{ fontSize: 18 }}>{getLocalStorage('token')?.token || 'wkylin.w'}</span>
-              )}
+              {isAuthenticated && user
+                ? (
+                  <>
+                    <Avatar src={user.avatar_url} /> <span>{user.name || user.login}</span>
+                  </>
+                  )
+                : (
+                  <span style={{ fontSize: 18 }}>{getLocalStorage('token')?.token || 'wkylin.w'}</span>
+                  )}
               <DownOutlined />
             </Space>
           </Dropdown>

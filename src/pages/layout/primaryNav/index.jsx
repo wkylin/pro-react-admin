@@ -13,7 +13,7 @@ const PrimaryNav = () => {
   return (
     <>
       <Space>
-        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
+        <Button type='link' icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
         {/* <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
