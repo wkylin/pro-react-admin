@@ -19,6 +19,8 @@ import { chartRoutes } from './modules/chart.routes'
 import { nestedRoutes } from './modules/nested.routes'
 import { layoutRoutes } from './modules/layout.routes'
 import { errorRoutes } from './modules/error.routes'
+import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
+import { permissionService } from '@src/service/permissionService'
 
 // 整合主布局的子路由
 mainLayoutRoute.children = [
@@ -42,6 +44,9 @@ const rootRouter = [
   // 全局 404（必须放在最后）
   ...errorRoutes.filter((route) => route.path === '*'),
 ]
+
+// ✅ 注入 meta.permission（不改变现有结构，仅增强）
+const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
 
 // ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
 export function flattenRoutes(routes) {
@@ -70,7 +75,7 @@ export function flattenRoutes(routes) {
 // ✅ 新增：根据路径获取路由 key
 export function getKeyName(path = '/') {
   try {
-    const flatRoutes = flattenRoutes(rootRouter)
+    const flatRoutes = flattenRoutes(annotatedRootRouter)
 
     if (!flatRoutes || flatRoutes.length === 0) {
       console.warn('getKeyName: no routes available')
@@ -91,8 +96,26 @@ export function getKeyName(path = '/') {
   }
 }
 
-// ✅ 命名导出（供其他模块使用）
-export { rootRouter }
+/**
+ * ✅ 新增：菜单/导航可见路由（异步按需获取）
+ * 仅对主布局的 children 做过滤；其余（auth/error/独立布局）不参与菜单
+ * @returns {Promise<Array>} 过滤后的路由配置
+ */
+export async function getVisibleMenuRoutes() {
+  try {
+    const accessible = await permissionService.getAccessibleRoutes()
+    const main = annotatedRootRouter.find((r) => r.key === '/')
+    if (!main) return []
+    const filteredChildren = filterRoutesByAccessiblePaths(main.children || [], accessible)
+    return [{ ...main, children: filteredChildren }]
+  } catch (error) {
+    console.error('getVisibleMenuRoutes error:', error)
+    return []
+  }
+}
 
-// ✅ 默认导出（保持原有导出方式）
-export default rootRouter
+// ✅ 命名导出（供其他模块使用）
+export { rootRouter, annotatedRootRouter }
+
+// ✅ 默认导出注入权限后的路由（保持原有导出方式，增强功能）
+export default annotatedRootRouter

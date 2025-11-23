@@ -1,9 +1,87 @@
 /**
- * 权限系统 Mock 数据
- * 用于模拟后端权限接口返回的数据
+ * 权限系统 Mock 数据（重构版）
+ * 简化权限模型，按角色随机分配路由
  */
 
 import { Role, UserPermission, PermissionCode } from '../types/permission'
+
+/**
+ * 完整路由列表（包含所有实际存在的路由）
+ */
+const allRoutes = [
+  '/',
+  '/demo',
+  '/motion',
+  '/business',
+  '/big-screen',
+  '/ph-bar',
+  '/qrcode',
+  '/prism',
+  '/tilt',
+  '/music',
+  '/crypto',
+  '/video',
+  '/echarts',
+  '/markmap',
+  '/postmessage',
+  '/geo',
+  '/d3-chart',
+  '/print',
+  '/coupons/add',
+  '/coupons/edit',
+  '/product',
+  '/coupons/list',
+  '/order/list',
+  '/error',
+  '/dashboard',
+  '/permission',
+  '/profile',
+  '/contact',
+  '/portfilo',
+]
+
+/**
+ * 固定的角色路由分配（按业务逻辑划分）
+ */
+// 超级管理员：所有路由
+const adminRoutes = [...allRoutes]
+
+// 管理员：核心业务 + 大部分功能（排除高级功能）
+const managerRoutes = [
+  '/',
+  '/demo',
+  '/business',
+  '/echarts',
+  '/d3-chart',
+  '/geo',
+  '/coupons/add',
+  '/coupons/edit',
+  '/coupons/list',
+  '/product',
+  '/dashboard',
+  '/permission',
+  '/profile',
+  '/print',
+  '/markmap',
+  '/postmessage',
+]
+
+// 业务员：业务相关功能
+const businessRoutes = [
+  '/',
+  '/business',
+  '/coupons/add',
+  '/coupons/edit',
+  '/coupons/list',
+  '/product',
+  '/dashboard',
+  '/demo',
+  '/echarts',
+  '/profile',
+]
+
+// 普通用户：基础查看功能
+const userRoutes = ['/', '/demo', '/dashboard', '/profile', '/echarts', '/motion', '/crypto']
 
 /**
  * 预定义角色
@@ -14,28 +92,15 @@ export const mockRoles: Role[] = [
     name: '超级管理员',
     code: 'super_admin',
     description: '拥有所有权限',
-    permissions: ['*:*'], // 所有权限
+    permissions: ['*:*'],
     isDefault: false,
   },
   {
     id: '2',
     name: '管理员',
     code: 'admin',
-    description: '拥有大部分管理权限',
-    permissions: [
-      'user:*',
-      'role:read',
-      'permission:read',
-      'dashboard:*',
-      'system:*',
-      'business:*',
-      'chart:*',
-      'ui:*',
-      'coupons:*',
-      'product:*',
-      'home:*',
-      'demo:*',
-    ],
+    description: '拥有大部分权限',
+    permissions: ['home:read', 'user:read', 'user:create', 'user:update', 'dashboard:read'],
     isDefault: false,
   },
   {
@@ -43,34 +108,49 @@ export const mockRoles: Role[] = [
     name: '业务员',
     code: 'business_user',
     description: '拥有业务相关权限',
-    permissions: [
-      'business:read',
-      'business:create',
-      'business:update',
-      'coupons:read',
-      'coupons:create',
-      'product:read',
-      'dashboard:read',
-      'home:read',
-      'chart:read',
-    ],
+    permissions: ['home:read', 'business:*', 'coupons:read', 'coupons:create'],
     isDefault: true,
   },
   {
     id: '4',
     name: '普通用户',
     code: 'user',
-    description: '仅拥有查看权限',
-    permissions: ['home:read', 'demo:read', 'dashboard:read'],
+    description: '仅拥有基本权限',
+    permissions: ['home:read', 'dashboard:read'],
     isDefault: true,
   },
 ]
 
 /**
- * 路由权限映射
- * 定义路由对应的权限要求
+ * 固定的测试账号（四个角色对应四个账号）
  */
-export const routePermissionMap: Record<string, PermissionCode | PermissionCode[]> = {
+export const testAccounts: Record<string, { password: string; role: string; name: string }> = {
+  'admin@test.com': {
+    password: '123456',
+    role: 'super_admin',
+    name: '超级管理员',
+  },
+  'manager@test.com': {
+    password: '123456',
+    role: 'admin',
+    name: '管理员',
+  },
+  'business@test.com': {
+    password: '123456',
+    role: 'business_user',
+    name: '业务员',
+  },
+  'user@test.com': {
+    password: '123456',
+    role: 'user',
+    name: '普通用户',
+  },
+}
+
+/**
+ * 路由权限映射（简化版）
+ */
+export const routePermissionMap: Record<string, PermissionCode> = {
   '/': 'home:read',
   '/dashboard': 'dashboard:read',
   '/business': 'business:read',
@@ -84,199 +164,143 @@ export const routePermissionMap: Record<string, PermissionCode | PermissionCode[
   '/chart': 'chart:read',
   '/ui': 'ui:read',
   '/demo': 'demo:read',
-  '/user': 'user:read',
-  '/role': 'role:read',
-  '/system': 'system:read',
+  '/echarts': 'chart:read',
 }
 
 /**
- * 用户权限 Mock 数据
+ * 用户权限配置（按账号映射）
  */
 export const mockUserPermissions: Record<string, UserPermission> = {
-  // 超级管理员
   super_admin: {
     userId: '1',
-    username: 'admin',
+    username: '超级管理员',
     roles: [mockRoles[0]],
     permissions: ['*:*'],
-    routes: Object.keys(routePermissionMap),
+    routes: adminRoutes,
   },
-  // 管理员
   admin: {
     userId: '2',
-    username: 'manager',
+    username: '管理员',
     roles: [mockRoles[1]],
     permissions: [
-      'user:*',
-      'role:read',
-      'permission:read',
-      'dashboard:*',
-      'system:*',
-      'business:*',
-      'chart:*',
-      'ui:*',
-      'coupons:*',
-      'product:*',
-      'home:*',
-      'demo:*',
+      'home:read',
+      'user:read',
+      'user:create',
+      'user:update',
+      'dashboard:read',
+      'business:read',
+      'coupons:read',
     ],
-    routes: [
-      '/',
-      '/dashboard',
-      '/business',
-      '/chart',
-      '/ui',
-      '/coupons',
-      '/coupons/home',
-      '/coupons/add',
-      '/coupons/edit/:id',
-      '/coupons/detail/:id',
-      '/product',
-      '/demo',
-      '/permission',
-    ],
+    routes: managerRoutes,
   },
-  // 业务员
   business_user: {
     userId: '3',
-    username: 'business',
+    username: '业务员',
     roles: [mockRoles[2]],
-    permissions: [
-      'business:read',
-      'business:create',
-      'business:update',
-      'coupons:read',
-      'coupons:create',
-      'product:read',
-      'dashboard:read',
-      'home:read',
-      'chart:read',
-    ],
-    routes: ['/', '/dashboard', '/business', '/coupons', '/coupons/home', '/product', '/chart'],
+    permissions: ['home:read', 'business:*', 'coupons:read', 'coupons:create', 'dashboard:read'],
+    routes: businessRoutes,
   },
-  // 普通用户
   user: {
     userId: '4',
-    username: 'normal',
+    username: '普通用户',
     roles: [mockRoles[3]],
-    permissions: ['home:read', 'demo:read', 'dashboard:read'],
-    routes: ['/', '/dashboard', '/demo'],
+    permissions: ['home:read', 'dashboard:read'],
+    routes: userRoutes,
   },
 }
 
 /**
- * 模拟获取用户权限信息
- * @param userId 用户ID（可选，在真实环境中用于查询用户权限）
- * @param roleCode 角色代码（可选，用于测试不同角色）
+ * 获取用户权限（简化逻辑）
  */
-export const mockGetUserPermissions = async (userId?: string, roleCode?: string): Promise<UserPermission> => {
-  // 模拟网络延迟（减少延迟时间，提高响应速度）
+export const mockGetUserPermissions = async (_userId?: string, _roleCode?: string): Promise<UserPermission> => {
   await new Promise((resolve) => setTimeout(resolve, 100))
 
-  // 如果指定了角色代码，使用对应的权限
-  if (roleCode && mockUserPermissions[roleCode]) {
-    return { ...mockUserPermissions[roleCode] }
-  }
+  console.log('🔍 开始获取用户权限...')
 
-  // 根据用户ID判断角色
-  if (userId) {
-    // userId "2" 对应 admin 角色（manager）
-    if (userId === '2') {
-      return { ...mockUserPermissions['admin'] }
-    }
-    // userId "1" 对应 super_admin 角色
-    if (userId === '1') {
-      return { ...mockUserPermissions['super_admin'] }
-    }
-    // userId "3" 对应 business_user 角色
-    if (userId === '3') {
-      return { ...mockUserPermissions['business_user'] }
-    }
-    // 可以根据 userId 映射到对应的角色（这里只是示例）
-    // 实际项目中可以根据 userId 从后端获取权限
-  }
-
-  // 从 localStorage 获取当前用户角色
+  // 1. 优先使用手动设置的角色（用于测试切换）
   const storedRoleCode = localStorage.getItem('user_role')
+  console.log('📝 手动设置的角色:', storedRoleCode)
   if (storedRoleCode && mockUserPermissions[storedRoleCode]) {
+    console.log('✅ 使用手动设置的角色:', storedRoleCode)
     return { ...mockUserPermissions[storedRoleCode] }
   }
 
-  // 检查是否有 token，如果有则根据用户信息设置默认角色
+  // 2. 根据 token 中的邮箱获取角色
   try {
-    // 优先检查 GitHub 用户信息
+    const tokenData = localStorage.getItem('token') || localStorage.getItem('github_token')
+    console.log('🎫 Token 数据:', tokenData)
+
+    if (tokenData) {
+      let email = ''
+      try {
+        const tokenObj = JSON.parse(tokenData)
+        email = tokenObj.token || tokenData
+        console.log('📧 解析出的邮箱:', email)
+      } catch {
+        email = tokenData
+        console.log('📧 直接使用的邮箱:', email)
+      }
+
+      // 根据邮箱匹配账号
+      console.log('🔎 查找账号:', email, '在', Object.keys(testAccounts))
+      if (testAccounts[email]) {
+        const account = testAccounts[email]
+        console.log('✅ 找到账号，角色:', account.role)
+        console.log('📋 返回权限数据:', mockUserPermissions[account.role])
+        return { ...mockUserPermissions[account.role] }
+      } else {
+        console.log('❌ 未找到匹配的测试账号')
+      }
+
+      // GitHub 登录特殊处理
+      if (email === 'wkylin.w@gmail.com') {
+        console.log('✅ GitHub 超级管理员登录')
+        return { ...mockUserPermissions['super_admin'] }
+      }
+    }
+
+    // GitHub 用户信息
     const githubUser = localStorage.getItem('github_user')
     if (githubUser) {
       const user = JSON.parse(githubUser)
-      // 根据邮箱分配角色
       if (user.email === 'wkylin.w@gmail.com') {
-        return { ...mockUserPermissions['admin'] }
-      }
-    }
-
-    // 检查表单登录的 token（token 中存储的是邮箱）
-    const tokenData = localStorage.getItem('token')
-    if (tokenData) {
-      try {
-        const tokenObj = JSON.parse(tokenData)
-        const email = tokenObj.token || tokenData
-        // 根据邮箱分配角色
-        if (email === 'wkylin.w@gmail.com' || email.includes('admin')) {
-          return { ...mockUserPermissions['admin'] }
-        }
-        if (email.includes('business')) {
-          return { ...mockUserPermissions['business_user'] }
-        }
-      } catch (e) {
-        // token 可能是字符串格式
-        const email = tokenData
-        if (email === 'wkylin.w@gmail.com' || email.includes('admin')) {
-          return { ...mockUserPermissions['admin'] }
-        }
+        console.log('✅ GitHub 用户登录')
+        return { ...mockUserPermissions['super_admin'] }
       }
     }
   } catch (error) {
-    console.error('解析用户信息失败:', error)
+    console.error('❌ 解析用户信息失败:', error)
   }
 
-  // 默认返回普通用户权限
+  // 3. 默认返回普通用户权限
+  console.log('⚠️ 使用默认权限（普通用户）')
   return { ...mockUserPermissions['user'] }
 }
 
 /**
- * 模拟获取角色列表
+ * 获取角色列表
  */
 export const mockGetRoles = async (): Promise<Role[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 200))
+  await new Promise((resolve) => setTimeout(resolve, 100))
   return [...mockRoles]
 }
 
 /**
- * 模拟检查权限
- * @param permission 权限代码
- * @param userPermissions 用户权限列表
+ * 检查权限
  */
 export const mockCheckPermission = (permission: PermissionCode, userPermissions: PermissionCode[]): boolean => {
-  // 如果有超级权限，直接返回 true
   if (userPermissions.includes('*:*')) {
     return true
   }
 
-  // 检查精确匹配
   if (userPermissions.includes(permission)) {
     return true
   }
 
-  // 检查通配符匹配（如 user:* 匹配 user:read, user:create 等）
   const [resource, action] = permission.split(':')
-  if (action && userPermissions.includes(`${resource}:*` as PermissionCode)) {
-    return true
-  }
-
-  // 检查资源级权限（如 user 匹配 user:*）
-  if (userPermissions.includes(resource as PermissionCode)) {
-    return true
-  }
-
-  return false
+  return userPermissions.some((p) => {
+    if (p === `${resource}:*`) return true
+    if (p === `*:${action}`) return true
+    return false
+  })
 }

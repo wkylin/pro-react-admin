@@ -269,9 +269,10 @@ class PermissionService {
         return true
       }
 
-      // 检查路由列表
-      if (permissions.routes && Array.isArray(permissions.routes)) {
-        return permissions.routes.some((route) => {
+      // 内部函数：使用给定权限列表检查路由
+      const matchWithRoutes = (routes: string[] | undefined) => {
+        if (!routes || !Array.isArray(routes)) return false
+        return routes.some((route) => {
           // 精确匹配
           if (route === routePath) {
             return true
@@ -284,7 +285,23 @@ class PermissionService {
         })
       }
 
-      // 如果没有路由列表，返回 false
+      // 首次尝试使用当前缓存的 routes
+      if (matchWithRoutes(permissions.routes)) {
+        return true
+      }
+
+      // 如果未匹配且不是强制刷新，尝试强制刷新一次权限并重试（处理缓存旧数据场景）
+      if (!forceRefresh) {
+        try {
+          const refreshed = await this.getPermissions(true)
+          if (refreshed.permissions.includes('*:*')) return true
+          return matchWithRoutes(refreshed.routes)
+        } catch (e) {
+          console.warn('刷新权限以检查路由时失败，继续返回 false', e)
+        }
+      }
+
+      // 如果没有路由列表或未匹配，返回 false
       return false
     } catch (error) {
       console.error('检查路由权限失败:', error)

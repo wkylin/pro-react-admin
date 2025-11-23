@@ -48,7 +48,6 @@ export const mainLayoutRoute = {
       name: '首页',
       key: '/',
       i18nKey: 'home',
-      auth: true,
       element: <lazyComponents.Home />,
     },
   ],

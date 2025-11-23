@@ -1,70 +1,119 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Layout, Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, theme } from 'antd'
-import {
-  LockOutlined,
-  EyeInvisibleOutlined,
-  EyeTwoTone,
-  GithubOutlined,
-  GoogleOutlined,
-  MailOutlined,
-} from '@ant-design/icons'
+import { Form, Input, Button, Typography, Layout, Card, theme, App, Space, Tag } from 'antd'
+import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
 import { setLocalStorage } from '@utils/publicFn'
-// import { useOAuth } from '@hooks/useOAuth'
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
+import { testAccounts } from '@src/mock/permission'
 
+const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
-const { Title, Text, Link } = Typography
 
 const SignIn = () => {
   const navigate = useNavigate()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
+  const { message } = App.useApp()
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+  const { isAuthenticated } = useAuth()
+  const [form] = Form.useForm()
 
-  // const { loginWithGitHub, loginWithGoogle } = useOAuth()
+  useEffect(() => {
+    const redirectIfLoggedIn = async () => {
+      if (!isAuthenticated) return
+      try {
+        // 获取可访问路由列表
+        const routes = await permissionService.getAccessibleRoutes()
+        let target = '/'
+        if (Array.isArray(routes) && routes.length > 0) {
+          // 优先跳转到根路由，其次第一个有权限的路由
+          target = routes.includes('/') ? '/' : routes[0]
+        }
+        navigate(target, { replace: true })
+      } catch (e) {
+        navigate('/', { replace: true })
+      }
+    }
+    redirectIfLoggedIn()
+  }, [isAuthenticated, navigate])
 
-  const { isAuthenticated, user, isLoading } = useAuth()
+  // 挂载时清理可能的无效 token 并重置表单，避免出现 "请输入有效的邮箱格式" 残留提示
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('token')
+      if (raw) {
+        let email = ''
+        try {
+          const obj = JSON.parse(raw)
+          email = obj.token || ''
+        } catch {
+          email = raw
+        }
+        // 如果不是有效邮箱格式，移除 token
+        if (!/^\S+@\S+\.\S+$/.test(email)) {
+          localStorage.removeItem('token')
+        }
+      }
+    } catch (e) {
+      console.warn('清理无效 token 失败:', e)
+    }
+    // 重置表单，确保输入框为空
+    form.resetFields()
+  }, [form])
 
   const handleLogin = () => {
     authService.login()
   }
 
-  const [form] = Form.useForm()
-
   const onFinish = async (values) => {
-    // 模拟后端登录
-    const { email } = values
+    const { email, password } = values
+
+    // 验证账号密码
+    if (!testAccounts[email]) {
+      message.error('账号不存在')
+      return
+    }
+
+    if (testAccounts[email].password !== password) {
+      message.error('密码错误')
+      return
+    }
+
+    // 保存登录信息
     setLocalStorage('token', { token: email })
 
-    // 登录成功后同步权限
+    // 同步权限
     try {
       await permissionService.syncPermissions()
-      // 获取用户可访问的第一个路由
       const routes = await permissionService.getAccessibleRoutes(true)
+
+      message.success(`登录成功！欢迎 ${testAccounts[email].name}`)
+
       if (routes && routes.length > 0) {
-        // 跳转到第一个有权限的路由（优先首页）
         const targetRoute = routes.includes('/') ? '/' : routes[0]
-        redirectTo(targetRoute)
+        navigate(targetRoute)
       } else {
-        // 如果没有权限，跳转到403
-        redirectTo('/403')
+        navigate('/403')
       }
     } catch (error) {
-      console.error('同步权限失败:', error)
-      // 默认跳转到首页，让路由守卫处理权限
-      redirectTo('/')
+      console.error('权限同步失败:', error)
+      navigate('/')
     }
   }
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo)
+    console.log('登录失败:', errorInfo)
+  }
+
+  // 快速填充测试账号
+  const fillAccount = (email) => {
+    form.setFieldsValue({
+      email,
+      password: testAccounts[email].password,
+    })
   }
 
   return (
@@ -85,131 +134,81 @@ const SignIn = () => {
             <Card
               style={{
                 width: '100%',
-                maxWidth: 400,
+                maxWidth: 450,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 borderRadius: '12px',
-                padding: '40px 32px',
+                padding: '20px',
               }}
             >
-              {/* 头部标题 */}
-              <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                <Title level={2} style={{ marginBottom: 8, color: '#1f2937' }}>
-                  欢迎回来
+              <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                <Title level={2} style={{ marginBottom: '8px' }}>
+                  登录系统
                 </Title>
-                <Text type="secondary">请输入您的账户信息以登录</Text>
+                <Text type="secondary">请选择测试账号或输入凭据</Text>
               </div>
 
-              {/* 社交登录按钮 */}
-              <Row gutter={12} style={{ marginBottom: 24 }}>
-                <Col span={12}>
-                  {isLoading ? (
-                    <Button block icon={<GithubOutlined />} style={{ height: 40 }} loading>
-                      正在登录...
+              {/* 测试账号快捷选择 */}
+              <Card size="small" style={{ marginBottom: '24px', background: '#f5f5f5' }}>
+                <Paragraph style={{ margin: 0, marginBottom: '12px' }}>
+                  <Text strong>测试账号（点击快速填充）：</Text>
+                </Paragraph>
+                <Space direction="vertical" style={{ width: '100%' }} size="small">
+                  {Object.entries(testAccounts).map(([email, account]) => (
+                    <Button
+                      key={email}
+                      block
+                      size="small"
+                      onClick={() => fillAccount(email)}
+                      style={{ textAlign: 'left', height: 'auto', padding: '8px 12px' }}
+                    >
+                      <Space>
+                        <Tag color="blue">{account.name}</Tag>
+                        <Text type="secondary" style={{ fontSize: '12px' }}>
+                          {email} / {account.password}
+                        </Text>
+                      </Space>
                     </Button>
-                  ) : (
-                    <Button block icon={<GithubOutlined />} style={{ height: 40 }}>
-                      GitHub
-                    </Button>
-                  )}
-                </Col>
-                <Col span={12}>
-                  <Button block icon={<GoogleOutlined />} style={{ height: 40 }}>
-                    Google
-                  </Button>
-                </Col>
-              </Row>
+                  ))}
+                </Space>
+              </Card>
 
-              <Divider>
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  或者使用邮箱登录
-                </Text>
-              </Divider>
-
-              {/* 登录表单 */}
               <Form
                 form={form}
-                name="login"
-                initialValues={{
-                  remember: true,
-                  username: process.env.AUTH_USER,
-                  email: process.env.AUTH_EMAIL,
-                  password: process.env.AUTH_PASSWORD,
-                }}
+                name="signin"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
-                size="large"
                 layout="vertical"
+                size="large"
               >
                 <Form.Item
-                  label="邮箱地址"
                   name="email"
                   rules={[
-                    { required: true, message: '请输入您的邮箱地址!' },
-                    { type: 'email', message: '请输入有效的邮箱地址!' },
+                    { required: true, message: '请输入邮箱!' },
+                    { type: 'email', message: '请输入有效的邮箱格式!' },
                   ]}
                 >
-                  <Input
-                    prefix={<MailOutlined style={{ color: '#bfbfbf' }} />}
-                    placeholder="请输入您的邮箱"
-                    style={{ height: 44 }}
-                  />
+                  <Input prefix={<UserOutlined />} placeholder="邮箱" />
                 </Form.Item>
 
-                <Form.Item
-                  label="密码"
-                  name="password"
-                  rules={[
-                    { required: true, message: '请输入您的密码!' },
-                    { min: 6, message: '密码至少需要6个字符!' },
-                  ]}
-                >
-                  <Input.Password
-                    prefix={<LockOutlined style={{ color: '#bfbfbf' }} />}
-                    placeholder="请输入您的密码"
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                    style={{ height: 44 }}
-                  />
+                <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
+                  <Input.Password prefix={<LockOutlined />} placeholder="密码" />
                 </Form.Item>
 
-                <Form.Item style={{ marginBottom: 16 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                      <Checkbox>记住我</Checkbox>
-                    </Form.Item>
-                    <Link href="#/reset-pwd" style={{ fontSize: 14 }}>
-                      忘记密码？
-                    </Link>
-                  </div>
-                </Form.Item>
-
-                <Form.Item style={{ marginBottom: 16 }}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    block
-                    style={{
-                      height: 44,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      border: 'none',
-                      borderRadius: '6px',
-                      fontSize: '16px',
-                      fontWeight: 500,
-                    }}
-                  >
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
                     登录
                   </Button>
                 </Form.Item>
-
-                <div style={{ textAlign: 'center' }}>
-                  <Text type="secondary" style={{ fontSize: 14 }}>
-                    还没有账户？
-                    <Link href="#/signup" style={{ fontWeight: 500 }}>
-                      立即注册
-                    </Link>
-                  </Text>
-                </div>
               </Form>
+
+              <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                <Text type="secondary">或者</Text>
+              </div>
+
+              <Button icon={<GithubOutlined />} onClick={handleLogin} block size="large" style={{ marginTop: '16px' }}>
+                使用 GitHub 登录
+              </Button>
             </Card>
           </div>
         </AlignCenter>

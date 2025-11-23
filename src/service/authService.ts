@@ -1,6 +1,7 @@
 import { GITHUB_OAUTH_CONFIG } from '@src/config/auth'
 import request from '@src/service/request'
 import logger from '@/utils/logger'
+import { permissionService } from './permissionService'
 
 export interface GitHubUser {
   id: number
@@ -152,28 +153,36 @@ class AuthService {
     return { ...this.authState }
   }
 
-  setAuthenticated(isAuthenticated: boolean, user?: GitHubUser | null, token?: string | null): Promise<void> {
-    return new Promise((resolve) => {
-      this.authState.isAuthenticated = isAuthenticated
+  async setAuthenticated(isAuthenticated: boolean, user?: GitHubUser | null, token?: string | null): Promise<void> {
+    this.authState.isAuthenticated = isAuthenticated
 
-      if (user !== undefined) {
-        this.authState.user = user
+    if (user !== undefined) {
+      this.authState.user = user
+    }
+
+    if (token !== undefined) {
+      this.authState.token = token
+    }
+
+    if (!isAuthenticated) {
+      this.authState.user = null
+      this.authState.token = null
+    }
+
+    this.saveToStorage()
+    this.notifyListeners()
+
+    // 如果已登录，强制同步权限，保证菜单与路由权限为最新
+    if (isAuthenticated) {
+      try {
+        await permissionService.syncPermissions()
+      } catch (e) {
+        logger.warn('同步权限失败:', e)
       }
+    }
 
-      if (token !== undefined) {
-        this.authState.token = token
-      }
-
-      if (!isAuthenticated) {
-        this.authState.user = null
-        this.authState.token = null
-      }
-
-      this.saveToStorage()
-      this.notifyListeners()
-
-      setTimeout(resolve, 100)
-    })
+    // 保持原有的短延迟行为以兼容订阅者
+    return new Promise((resolve) => setTimeout(resolve, 100))
   }
 
   setLoading(isLoading: boolean): Promise<void> {
@@ -296,8 +305,18 @@ class AuthService {
       isAuthenticated: false,
       isLoading: false,
     }
+    // 清除权限缓存，确保下次登录时重新获取并刷新菜单
+    try {
+      permissionService.clearCache()
+    } catch (e) {
+      logger.warn('清除权限缓存失败:', e)
+    }
     this.saveToStorage()
     this.notifyListeners()
+    // SPA 跳转到登录页
+    if (typeof window !== 'undefined') {
+      window.location.href = '/signin'
+    }
   }
 
   getToken(): string | null {

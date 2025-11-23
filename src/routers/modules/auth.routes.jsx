@@ -13,21 +13,12 @@ export const authRoutes = [
     path: 'signin',
     name: '登录',
     key: '/signin',
-    auth: false,
     element: <SignIn />,
   },
   {
     path: 'signup',
     name: '注册',
     key: '/signup',
-    auth: false,
     element: <SignUp />,
-  },
-  {
-    path: '/auth/callback',
-    name: '认证回调',
-    key: '/auth/callback',
-    auth: false,
-    element: <AuthCallback />,
   },
 ]
