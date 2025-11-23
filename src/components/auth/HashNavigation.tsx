@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { HashRouterUtils } from '@src/utils/hashRouter'
 
 interface HashNavigationProps {
@@ -9,16 +9,16 @@ interface HashNavigationProps {
 }
 
 export const HashNavigation: React.FC<HashNavigationProps> = ({ to, replace = false, children }) => {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   // const location = useLocation();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
 
     if (replace) {
-      navigate(to, { replace: true })
+      redirectTo(to, { replace: true })
     } else {
-      navigate(to)
+      redirectTo(to)
     }
   }
 

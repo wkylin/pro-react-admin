@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Result, Spin } from 'antd'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
 
 export const AuthCallback: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const location = useLocation()
 
   useEffect(() => {
@@ -42,15 +43,15 @@ export const AuthCallback: React.FC = () => {
           if (routes && routes.length > 0) {
             // 跳转到第一个有权限的路由（优先首页）
             const targetRoute = routes.includes('/') ? '/' : routes[0]
-            navigate(targetRoute)
+            redirectTo(targetRoute)
           } else {
             // 如果没有权限，跳转到403
-            navigate('/403')
+            redirectTo('/403')
           }
         } catch (error) {
           console.error('获取路由失败:', error)
           // 默认跳转到首页，让路由守卫处理权限
-          navigate('/')
+          redirectTo('/')
         }
       } catch (err) {
         console.error('Callback handling error:', err)
@@ -59,7 +60,7 @@ export const AuthCallback: React.FC = () => {
     }
 
     handleCallback()
-  }, [location, navigate])
+  }, [location])
 
   if (error) {
     return (
@@ -68,7 +69,7 @@ export const AuthCallback: React.FC = () => {
         title="登录失败"
         subTitle={error}
         extra={[
-          <button key="retry" onClick={() => navigate('/signin')}>
+          <button key="retry" onClick={() => redirectTo('/signin')}>
             重试
           </button>,
         ]}

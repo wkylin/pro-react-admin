@@ -1,14 +1,11 @@
 import React from 'react'
 import { Button, Space } from 'antd'
 import { CodeOutlined, TeamOutlined } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import FlipLink from '@stateless/FlipLink'
 
 const PrimaryNav = () => {
-  const navigate = useNavigate()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
+  const { redirectTo } = useSafeNavigate()
   const goToWkylin = () => {
     window.open(`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`, '_blank')
   }

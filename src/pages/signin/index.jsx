@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Space, Tag } from 'antd'
 import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
@@ -13,7 +13,7 @@ const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
 
 const SignIn = () => {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const {
     token: { colorBgContainer },
@@ -32,13 +32,13 @@ const SignIn = () => {
           // 优先跳转到根路由，其次第一个有权限的路由
           target = routes.includes('/') ? '/' : routes[0]
         }
-        navigate(target, { replace: true })
+        redirectTo(target, { replace: true })
       } catch (e) {
-        navigate('/', { replace: true })
+        redirectTo('/', { replace: true })
       }
     }
     redirectIfLoggedIn()
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated])
 
   // 挂载时清理可能的无效 token 并重置表单，避免出现 "请输入有效的邮箱格式" 残留提示
   useEffect(() => {
@@ -94,13 +94,13 @@ const SignIn = () => {
 
       if (routes && routes.length > 0) {
         const targetRoute = routes.includes('/') ? '/' : routes[0]
-        navigate(targetRoute)
+        redirectTo(targetRoute)
       } else {
-        navigate('/403')
+        redirectTo('/403')
       }
     } catch (error) {
       console.error('权限同步失败:', error)
-      navigate('/')
+      redirectTo('/')
     }
   }
 

@@ -1,13 +1,10 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 
 const Coupons = () => {
-  const navigate = useNavigate()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
+  const { redirectTo } = useSafeNavigate()
 
   return (
     <FixTabPanel>

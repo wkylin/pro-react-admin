@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Breadcrumb, Button } from 'antd'
 import { useTranslation } from 'react-i18next'
 import rootRouter from '@src/routers'
@@ -8,7 +9,7 @@ import styles from './index.module.less'
 
 const ProBreadcrumb = () => {
   const { pathname } = useLocation()
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const [breadcrumbList, setBreadcrumbList] = useState([])
 
   const { t } = useTranslation()
@@ -43,7 +44,7 @@ const ProBreadcrumb = () => {
   }, [pathname])
 
   const linkTo = (path) => {
-    navigate(path)
+    redirectTo(path)
   }
 
   const breadcrumbItem = () =>

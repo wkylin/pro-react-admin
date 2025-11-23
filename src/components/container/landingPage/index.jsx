@@ -1,12 +1,12 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import mediaVideo from '@assets/video/wkylin.skyline.mp4'
 import styles from './index.module.less'
 
 const LandingPage = () => {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   return (
     <section className={styles.landing}>
       <video autoPlay loop muted src={mediaVideo} />
@@ -16,7 +16,7 @@ const LandingPage = () => {
         icon={<ArrowLeftOutlined style={{ fontSize: 18 }} />}
         type="text"
         size="large"
-        onClick={() => navigate('/')}
+        onClick={() => redirectTo('/')}
       >
         Roll Back
       </Button>

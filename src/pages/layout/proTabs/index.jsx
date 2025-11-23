@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
 import StickyBox from 'react-sticky-box'
 import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
@@ -15,7 +16,7 @@ const ProTabs = (props) => {
   const [isReload, setIsReload] = useState(false)
   const pathRef = useRef('')
 
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
   const { panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
@@ -70,7 +71,7 @@ const ProTabs = (props) => {
   // tab点击
   const onTabClick = (targetKey) => {
     const { path } = panes.filter((item) => item.key === targetKey)[0]
-    navigate(path)
+    redirectTo(path)
   }
 
   const onTabScroll = ({ direction }) => {
@@ -93,7 +94,7 @@ const ProTabs = (props) => {
     if (rightMenuKey === 'all') {
       const filterPanes = panes.filter((pane) => pane.key === '/')
       setPanes(filterPanes)
-      navigate('/')
+      redirectTo('/')
       setActiveKey('/')
     }
     if (rightMenuKey === 'other') {

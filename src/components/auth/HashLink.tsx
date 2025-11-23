@@ -1,18 +1,15 @@
 import React, { forwardRef } from 'react'
-import { LinkProps, useNavigate } from 'react-router-dom'
+import { LinkProps } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { HashRouterUtils } from '@src/utils/hashRouter'
 
 export const HashLink = forwardRef<HTMLAnchorElement, LinkProps>(({ to, replace = false, children, ...props }, ref) => {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
-
-    if (replace) {
-      navigate(to, { replace: true })
-    } else {
-      navigate(to)
-    }
+    // delegate to safe navigate
+    redirectTo(to as any)
   }
 
   const href = HashRouterUtils.buildHashUrl(to as any)

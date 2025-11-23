@@ -5,6 +5,7 @@
 
 import { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../types/permission'
 import * as permissionAPI from './api/permission'
+import { routePermissionMap } from '../mock/permission'
 
 class PermissionService {
   private static instance: PermissionService
@@ -267,6 +268,27 @@ class PermissionService {
       // 超级管理员可以访问所有路由
       if (permissions.permissions.includes('*:*')) {
         return true
+      }
+
+      // 优先基于 route -> permission 映射进行检查（permission-code 为主）
+      const findPermissionForRoute = (path: string): PermissionCode | null => {
+        if (!routePermissionMap) return null
+        // 直接精确匹配
+        if (routePermissionMap[path]) return routePermissionMap[path]
+        // 否则尝试使用 pattern 匹配（支持 :param 风格）
+        for (const key of Object.keys(routePermissionMap)) {
+          const pattern = key.replace(/:[^/]+/g, '[^/]+')
+          const regex = new RegExp(`^${pattern}$`)
+          if (regex.test(path)) return routePermissionMap[key]
+        }
+        return null
+      }
+
+      const mappedPerm = findPermissionForRoute(routePath)
+      if (mappedPerm) {
+        // 若存在映射，则以 permission-code 为准（优先）。若 forceRefresh 为 true，传递到 hasPermission
+        const ok = await this.hasPermission(mappedPerm, forceRefresh)
+        return !!ok
       }
 
       // 内部函数：使用给定权限列表检查路由

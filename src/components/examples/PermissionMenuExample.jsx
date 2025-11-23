@@ -15,7 +15,8 @@
  */
 
 import React, { useEffect, useState, useMemo } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import SafeLink from '@stateless/SafeLink'
 import { getVisibleMenuRoutes } from '@src/routers'
 import { permissionService } from '@src/service/permissionService'
 
@@ -79,7 +80,7 @@ const MenuItem = ({ route, level = 0 }) => {
 
   return (
     <div className={`menu-item level-${level}`}>
-      <Link
+      <SafeLink
         to={route.path}
         className={isActive ? 'active' : ''}
         style={{
@@ -92,7 +93,7 @@ const MenuItem = ({ route, level = 0 }) => {
         }}
       >
         {route.name || route.path}
-      </Link>
+      </SafeLink>
 
       {hasChildren && (
         <div className="menu-children">

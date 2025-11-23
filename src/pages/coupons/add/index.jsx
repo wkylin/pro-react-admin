@@ -1,15 +1,15 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Alert, Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 
 const AddCoupons = () => {
   const { activeKey, removeTab } = useProTabContext()
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const closeActiveOpenAngular = () => {
     removeTab(activeKey, () => {
-      navigate('coupons/edit', { replace: true })
+      redirectTo('coupons/edit', { replace: true })
     })
   }
   return (

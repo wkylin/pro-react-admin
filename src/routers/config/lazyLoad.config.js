@@ -69,6 +69,7 @@ export const lazyComponents = {
   // 异常页面
   ErrorPage: lazyLoad(() => import('@pages/error'), { preload: true }),
   Exception403: lazyLoad(() => import('@stateless/Exception/exception403'), { preload: true }),
+  Exception404: lazyLoad(() => import('@stateless/Exception/exception404'), { preload: true }),
   NoMatch: lazyLoad(() => import('@stateless/NoMatch'), { preload: true }),
 }
 

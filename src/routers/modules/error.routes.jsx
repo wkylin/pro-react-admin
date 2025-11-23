@@ -23,7 +23,7 @@ export const errorRoutes = [
     path: '/404',
     name: '404',
     key: '/404',
-    element: <lazyComponents.NoMatch />,
+    element: <lazyComponents.Exception404 />,
   },
   // 全局最终404（放在最后，匹配所有未被上述路由捕获的路径）
   {

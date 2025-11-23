@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Space, Dropdown, Switch, theme, Avatar } from 'antd'
+import { Layout, Space, Dropdown, Switch, theme, Avatar, message } from 'antd'
 import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -20,6 +20,7 @@ import { useProThemeContext } from '@theme/hooks'
 
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
+import { permissionService } from '@src/service/permissionService'
 import { getLocalStorage } from '@utils/publicFn'
 import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
@@ -27,8 +28,46 @@ import Fullscreen from '../fullscreen'
 
 const ProHeader = () => {
   const navigate = useNavigate()
-  const redirectTo = (path) => {
-    navigate(path)
+  const [messageApi, contextHolder] = message.useMessage()
+  const lastDeniedRef = React.useRef(null)
+
+  const redirectTo = async (path) => {
+    // 公共页面直接跳转
+    if (!path || path === '/signin' || path === '/signup' || path === '/') {
+      navigate(path)
+      return
+    }
+
+    try {
+      const ok = await permissionService.canAccessRoute(path, false)
+      if (!ok) {
+        if (lastDeniedRef.current !== path) {
+          lastDeniedRef.current = path
+          try {
+            messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+          } catch (e) {
+            try {
+              message.error('您没有权限访问该页面')
+            } catch (err) {}
+          }
+        }
+        return
+      }
+      navigate(path)
+    } catch (error) {
+      console.error('redirect permission check failed', error)
+      // 出错时保守处理为不跳转并显示提示
+      if (lastDeniedRef.current !== path) {
+        lastDeniedRef.current = path
+        try {
+          messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+        } catch (e) {
+          try {
+            message.error('您没有权限访问该页面')
+          } catch (err) {}
+        }
+      }
+    }
   }
 
   const redirectGithub = () => {
@@ -150,6 +189,7 @@ const ProHeader = () => {
             </Space>
           </Dropdown>
         </div>
+        {contextHolder}
       </div>
     </Layout.Header>
   )

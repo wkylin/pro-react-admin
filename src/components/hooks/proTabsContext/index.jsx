@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import Home from '@src/pages/home'
 
 const defaultValue = {
@@ -34,6 +35,7 @@ const ProTabProvider = ({ children }) => {
   const [activeKey, setActiveKey] = useState('')
   const [panes, setPanes] = useState(initialPanes)
   const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
 
   const removeTab = useCallback(
     (targetKey, callbackFun = () => {}) => {
@@ -44,7 +46,7 @@ const ProTabProvider = ({ children }) => {
         setPanes(filterPanes)
       } else {
         const nextPath = filterPanes[delIndex - 1].key
-        navigate(nextPath)
+        redirectTo(nextPath)
         setActiveKey(nextPath)
         setPanes(filterPanes)
       }

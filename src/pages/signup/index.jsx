@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import AlignCenter from '@stateless/AlignCenter'
 import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme } from 'antd'
 import {
@@ -20,10 +20,7 @@ const { Option } = Select
 const { Content } = Layout
 
 const SignUp = () => {
-  const navigate = useNavigate()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
+  const { redirectTo } = useSafeNavigate()
   const {
     token: { colorBgContainer },
   } = theme.useToken()

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { getLocalStorage } from '@utils/publicFn'
 import { permissionService } from '@src/service/permissionService'
 import { isPublicRoute, isRouteConfigPublic } from './config/publicRoutes'
@@ -13,7 +13,7 @@ const AuthRouter = (props) => {
   const location = useLocation()
   const pathname = location.pathname
   const [canAccess, setCanAccess] = useState(null)
-  const navigate = useNavigate()
+  // navigate 不再直接使用；权限提示通过 message 实现
   const lastDeniedPathRef = useRef(null)
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -121,28 +121,26 @@ const AuthRouter = (props) => {
       // 未登录会在渲染层由 Navigate 处理，这里只处理已登录但无权限的情况
       if (!token) return
 
-      // 防止重复处理同一路径导致循环跳转
+      // 仅在首次遭遇该路径时弹一次提示，且不进行任何导航或刷新
       if (lastDeniedPathRef.current === pathname) return
       lastDeniedPathRef.current = pathname
 
-      // 异步获取可跳转的安全目标，避免 navigate(-1) 导致跳回仍受限的页面
-      ;(async () => {
+      try {
+        messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+      } catch (e) {
+        // fallback
         try {
-          const routes = await permissionService.getAccessibleRoutes().catch(() => ['/'])
-          const target = Array.isArray(routes) && routes.length > 0 ? (routes.includes('/') ? '/' : routes[0]) : '/'
-          messageApi.error('您没有权限访问该页面')
-          navigate(target, { replace: true })
-        } catch (e) {
-          messageApi.error('您没有权限访问该页面')
-          try {
-            navigate('/', { replace: true })
-          } catch (err) {
-            window.location.href = '/'
-          }
+          message.error('您没有权限访问该页面')
+        } catch (err) {
+          // ignore
         }
-      })()
+      }
+      return
     }
-  }, [canAccess, navigate, messageApi, pathname])
+
+    // 权限恢复或路径变化时，清空记录以便未来重试能再次提示
+    lastDeniedPathRef.current = null
+  }, [canAccess, messageApi, pathname])
 
   // 检查中
   if (canAccess === null) {

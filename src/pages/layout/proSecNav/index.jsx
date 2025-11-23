@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { message } from 'antd'
 import { Menu } from 'antd'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
 import {
   HomeOutlined,
@@ -19,13 +21,12 @@ import styles from './index.module.less'
 // 已弃用 pathSubmenu 静态映射，改为自动推导父级链
 
 const ProSecNav = () => {
-  const navigate = useNavigate()
   const { pathname } = useLocation()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
+  const { redirectTo } = useSafeNavigate()
 
   const { t } = useTranslation()
+  const [messageApi, contextHolder] = message.useMessage()
+  const lastDeniedRef = useRef(null)
   const [selectedKeys, setSelectedKeys] = useState(['home'])
   const [menuItems, setMenuItems] = useState([])
   const [accessibleRoutes, setAccessibleRoutes] = useState([])
@@ -130,9 +131,41 @@ const ProSecNav = () => {
     setOpenKeys(filtered)
   }
 
-  const onSelect = ({ key }) => {
-    redirectTo(key)
-    setIsOpenChange(false)
+  const onSelect = async ({ key }) => {
+    try {
+      // 先做权限检查，阻止无权限导航
+      const ok = await permissionService.canAccessRoute(key, false)
+      if (!ok) {
+        // 避免短时间内重复提示同一个 key
+        if (lastDeniedRef.current !== key) {
+          lastDeniedRef.current = key
+          try {
+            messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+          } catch (e) {
+            try {
+              message.error('您没有权限访问该页面')
+            } catch (err) {}
+          }
+        }
+        return
+      }
+      // 有权限再导航
+      redirectTo(key)
+      setIsOpenChange(false)
+    } catch (error) {
+      console.error('菜单权限检查失败:', error)
+      // 失败时保守不导航，并显示提示
+      if (lastDeniedRef.current !== key) {
+        lastDeniedRef.current = key
+        try {
+          messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+        } catch (e) {
+          try {
+            message.error('您没有权限访问该页面')
+          } catch (err) {}
+        }
+      }
+    }
   }
 
   /**
@@ -336,18 +369,21 @@ const ProSecNav = () => {
   }
 
   return (
-    <Menu
-      mode="inline"
-      defaultSelectedKeys={selectedKeys}
-      defaultOpenKeys={openKeys}
-      selectedKeys={selectedKeys}
-      openKeys={openKeys}
-      theme="light"
-      className={styles.menu}
-      onOpenChange={onOpenChange}
-      onSelect={onSelect}
-      items={menuItems}
-    />
+    <>
+      <Menu
+        mode="inline"
+        defaultSelectedKeys={selectedKeys}
+        defaultOpenKeys={openKeys}
+        selectedKeys={selectedKeys}
+        openKeys={openKeys}
+        theme="light"
+        className={styles.menu}
+        onOpenChange={onOpenChange}
+        onSelect={onSelect}
+        items={menuItems}
+      />
+      {contextHolder}
+    </>
   )
 }
 
