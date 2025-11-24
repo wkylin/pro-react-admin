@@ -292,11 +292,14 @@ const ProSecNav = () => {
 
     // 使用配置文件的菜单
     const allMenuItems = mainLayoutMenu.map((item) => {
-      const translateItem = (i) => ({
-        ...i,
-        label: i.i18nKey ? t(i.i18nKey) : i.label,
-        children: i.children ? i.children.map(translateItem) : undefined,
-      })
+      const translateItem = (i) => {
+        const { i18nKey, children, ...rest } = i
+        return {
+          ...rest,
+          label: i18nKey ? t(i18nKey) : i.label,
+          children: children ? children.map(translateItem) : undefined,
+        }
+      }
       return translateItem(item)
     })
 
