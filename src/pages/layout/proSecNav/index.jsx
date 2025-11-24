@@ -18,6 +18,8 @@ import { permissionService } from '@src/service/permissionService'
 
 import styles from './index.module.less'
 
+import { mainLayoutMenu } from '@src/config/menu.config'
+
 // 已弃用 pathSubmenu 静态映射，改为自动推导父级链
 
 const ProSecNav = () => {
@@ -185,90 +187,15 @@ const ProSecNav = () => {
       })
     }
 
-    // 定义所有可能的菜单项
-    const allMenuItems = [
-      { label: t('home'), key: '/', icon: <HomeOutlined /> },
-      { label: t('demo'), key: '/demo', icon: <GlobalOutlined /> },
-      { label: 'Motion', key: '/motion', icon: <QrcodeOutlined /> },
-      { label: 'Business', key: '/business', icon: <FireOutlined /> },
-      { label: 'Big Screen', key: '/big-screen', icon: <FireOutlined /> },
-      { label: 'PH Bar', key: '/ph-bar', icon: <QrcodeOutlined /> },
-      { label: 'Qr Generate', key: '/qrcode', icon: <QrcodeOutlined /> },
-      { label: 'Prism Render', key: '/prism', icon: <FireOutlined /> },
-      { label: 'React Tilt', key: '/tilt', icon: <QrcodeOutlined /> },
-      { label: 'Music', key: '/music', icon: <FireOutlined /> },
-      { label: 'Crypto', key: '/crypto', icon: <QrcodeOutlined /> },
-      { label: 'Video', key: '/video', icon: <FireOutlined /> },
-      { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
-      { label: 'ChatGPT', key: '/markmap', icon: <QrcodeOutlined /> },
-      { label: 'Post Message', key: '/postmessage', icon: <FireOutlined /> },
-      { label: 'Geo Chart', key: '/geo', icon: <QrcodeOutlined /> },
-      { label: 'D3 Chart', key: '/d3-chart', icon: <QrcodeOutlined /> },
-      { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
-      { label: 'Dashboard', key: '/dashboard', icon: <FireOutlined /> },
-      { label: 'Permission', key: '/permission', icon: <QrcodeOutlined /> },
-      { label: 'Profile', key: '/profile', icon: <FireOutlined /> },
-      { label: 'Contact', key: '/contact', icon: <QrcodeOutlined /> },
-      { label: 'Portfilo', key: '/portfilo', icon: <FireOutlined /> },
-      {
-        label: '技术栈',
-        key: '/sub-act',
-        icon: <HeatMapOutlined />,
-        children: [
-          {
-            label: '前端技术栈',
-            key: '/sub-coupons',
-            icon: <FireOutlined />,
-            children: [
-              {
-                label: '框架生态',
-                key: '/sub-fe-framework',
-                icon: <FireOutlined />,
-                children: [
-                  {
-                    label: 'Vue',
-                    key: '/coupons/add',
-                    icon: <FireOutlined />,
-                    children: [
-                      {
-                        label: 'Vue 插件',
-                        key: '/coupons/add/plugins',
-                        icon: <FireOutlined />,
-                        children: [
-                          { label: 'Vue3 API', key: '/coupons/add/plugins/vue3' },
-                          { label: '性能优化', key: '/coupons/add/plugins/perf' },
-                        ],
-                      },
-                    ],
-                  },
-                  { label: 'Angular', key: '/coupons/edit' },
-                ],
-              },
-            ],
-          },
-          {
-            label: '后端技术栈',
-            key: '/product',
-            icon: <DeploymentUnitOutlined />,
-          },
-        ],
-      },
-      {
-        label: '构建工具',
-        key: '/sub-list',
-        icon: <ApartmentOutlined />,
-        children: [
-          { label: 'Webpack', key: '/coupons/list' },
-          { label: 'Vite', key: '/order/list' },
-        ],
-      },
-      {
-        label: 'Error',
-        key: '/sub-error',
-        icon: <QuestionCircleOutlined />,
-        children: [{ label: 'ErrorBoundary', key: '/error' }],
-      },
-    ]
+    // 使用配置文件的菜单，并进行翻译
+    const allMenuItems = mainLayoutMenu.map((item) => {
+      const translateItem = (i) => ({
+        ...i,
+        label: i.i18nKey ? t(i.i18nKey) : i.label,
+        children: i.children ? i.children.map(translateItem) : undefined,
+      })
+      return translateItem(item)
+    })
 
     // 递归过滤菜单：仅保留用户可访问的节点或其子节点
     const filterItems = (items) => {
@@ -350,21 +277,29 @@ const ProSecNav = () => {
               if (ok) return item
               return null
             } catch (e) {
-              console.warn('permission check failed for', item.key, e)
               return null
             }
           }
 
-          // 回退到原来的 path 列表判断
-          return hasAccessFallback(item.key) ? item : null
+          // 降级：使用 routes 列表匹配
+          if (hasAccessFallback(item.key)) return item
+          return null
         })
       )
 
       return results.filter(Boolean)
     }
 
-    // 重新生成所有菜单项（与同步版本保持一致）
-    const allMenuItems = generateMenuItems(routes)
+    // 使用配置文件的菜单
+    const allMenuItems = mainLayoutMenu.map((item) => {
+      const translateItem = (i) => ({
+        ...i,
+        label: i.i18nKey ? t(i.i18nKey) : i.label,
+        children: i.children ? i.children.map(translateItem) : undefined,
+      })
+      return translateItem(item)
+    })
+
     return filterAsync(allMenuItems)
   }
 
@@ -379,11 +314,10 @@ const ProSecNav = () => {
         openKeys={openKeys}
         theme="light"
         className={styles.menu}
+        items={menuItems}
         onOpenChange={onOpenChange}
         onSelect={onSelect}
-        items={menuItems}
       />
-      {contextHolder}
     </>
   )
 }

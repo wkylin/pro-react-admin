@@ -1,5 +1,4 @@
 import React from 'react'
-// import { Routes, Route, useNavigate, useNavigationType } from 'react-router-dom'
 import { Routes, Route, useNavigate } from 'react-router-dom'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Button, Layout, theme, Space, Skeleton } from 'antd'
@@ -12,7 +11,6 @@ const { Content } = Layout
 const Dashboard = () => {
   const navigate = useNavigate()
   const { redirectTo } = useSafeNavigate()
-  // const navigateType = useNavigationType()
   const {
     token: { colorBgContainer },
   } = theme.useToken()
@@ -26,8 +24,6 @@ const Dashboard = () => {
               path="/"
               element={
                 <>
-                  {/* <h2>Look, more routes!</h2> */}
-                  {/* <h2>Navigate type: {navigateType}</h2> */}
                   <Space>
                     <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/')}>
                       回主站

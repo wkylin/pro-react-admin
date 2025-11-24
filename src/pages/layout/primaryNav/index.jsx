@@ -1,27 +1,49 @@
 import React from 'react'
 import { Button, Space } from 'antd'
-import { CodeOutlined, TeamOutlined } from '@ant-design/icons'
+import { CodeOutlined, HomeOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@hooks/useSafeNavigate'
-import FlipLink from '@stateless/FlipLink'
+import { usePermission } from '@src/hooks/usePermission'
 
 const PrimaryNav = () => {
   const { redirectTo } = useSafeNavigate()
-  const goToWkylin = () => {
-    window.open(`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`, '_blank')
+  const { routes } = usePermission()
+
+  // 简单的权限检查辅助函数
+  const hasAccess = (path) => {
+    // 如果 routes 为空（加载中或失败），保守起见不显示
+    if (!routes || routes.length === 0) return false
+    // 根路径总是允许
+    if (path === '/') return true
+
+    return routes.some((route) => {
+      if (route === path) return true
+      if (path.startsWith(route + '/')) return true
+      if (route.includes('*')) {
+        const pattern = route.replace('*', '.*')
+        return new RegExp(`^${pattern}$`).test(path)
+      }
+      return false
+    })
   }
 
   return (
-    <>
-      <Space>
+    <Space>
+      <Button type="link" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
+        首页
+      </Button>
+
+      {hasAccess('/dashboard') && (
         <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
-        {/* <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
+      )}
+
+      {hasAccess('/portfilo') && (
+        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
           My Portfilo
-        </Button> */}
-        <FlipLink href={`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`}>SkyLine</FlipLink>
-      </Space>
-    </>
+        </Button>
+      )}
+    </Space>
   )
 }
 
