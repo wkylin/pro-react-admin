@@ -371,6 +371,7 @@ const ProSecNav = () => {
   return (
     <>
       <Menu
+        inlineIndent={10}
         mode="inline"
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
