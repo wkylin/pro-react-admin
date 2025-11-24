@@ -115,7 +115,7 @@
     "@js-analyzer/core": "^2.6.2",
     "@js-analyzer/server": "^2.8.0",
     "@koa/cors": "^5.0.0",
-    "@playwright/test": "^1.40.0",
+    "@playwright/test": "^1.56.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.1.16",
