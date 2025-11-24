@@ -13,18 +13,18 @@ export const authRoutes = [
     path: 'signin',
     name: '登录',
     key: '/signin',
-    element: <SignIn />,
+    element: <SignIn />
   },
   {
     path: 'signup',
     name: '注册',
     key: '/signup',
-    element: <SignUp />,
+    element: <SignUp />
   },
   {
     path: 'auth/callback',
     name: 'OAuth Callback',
     key: '/auth/callback',
-    element: <AuthCallback />,
-  },
+    element: <AuthCallback />
+  }
 ]
