@@ -6,17 +6,19 @@ const AlternatingText = ({ alternateText = [] }) => {
   useEffect(() => {
     const element = document.getElementById('alternating-text')
 
+    if (!element) return
+
     let i = 0
-    const listener = (e) => {
+    const listener = () => {
       i = i < alternateText.length - 1 ? i + 1 : 0
-      element.innerHTML = alternateText[i]
+      if (element) element.innerHTML = alternateText[i]
     }
 
-    element.innerHTML = alternateText[0]
+    element.innerHTML = alternateText[0] ?? ''
     element.addEventListener('animationiteration', listener, false)
 
     return () => {
-      element.removeEventListener('animationiteration', listener, false)
+      if (element) element.removeEventListener('animationiteration', listener, false)
     }
   }, [])
 

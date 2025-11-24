@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
 import Fullscreen from '../fullscreen'
+import KeepAlive from '@src/components/KeepAlive'
 
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
@@ -118,6 +119,9 @@ const ProTabs = (props) => {
   const fixError = () => {
     refreshTab()
   }
+  // Note: pre-rendering via KeepAlive.preRenderAll was removed when KeepAlive
+  // was simplified to a portal-based implementation. If we reintroduce
+  // background pre-rendering later, re-add appropriate APIs on KeepAlive.
 
   return (
     <Tabs
@@ -180,11 +184,13 @@ const ProTabs = (props) => {
         children: (
           <MyErrorBoundary fixError={fixError}>
             <div className="layout-tabpanel">
-              {isReload && pane.key === fullPath && pane.key !== '/404' ? (
-                <Loading tip="刷新中..." />
-              ) : (
-                <>{pane.content}</>
-              )}
+              <KeepAlive id={pane.key} active={pane.key === fullPath} persistOnUnmount={pane.key === '/'}>
+                {isReload && pane.key === fullPath && pane.key !== '/404' ? (
+                  <Loading tip="刷新中..." />
+                ) : (
+                  <>{pane.content}</>
+                )}
+              </KeepAlive>
             </div>
           </MyErrorBoundary>
         ),
