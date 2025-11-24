@@ -7,7 +7,7 @@ const { Header, Content } = Layout
 
 const FixLayout = ({ children }) => {
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
 
   return (
@@ -22,7 +22,7 @@ const FixLayout = ({ children }) => {
           height: 48,
           lineHeight: '48px',
           borderBottom: '1px solid #f0f0f0',
-          zIndex: 100,
+          zIndex: 100
         }}
       >
         <div style={{ fontWeight: 'bold', fontSize: 16, padding: '0 10px' }}>Pro React Admin</div>

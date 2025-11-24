@@ -12,7 +12,7 @@ const Dashboard = () => {
   const navigate = useNavigate()
   const { redirectTo } = useSafeNavigate()
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer }
   } = theme.useToken()
 
   return (
@@ -21,14 +21,14 @@ const Dashboard = () => {
         <Content style={{ height: '100%', background: colorBgContainer }}>
           <Routes>
             <Route
-              path="/"
+              path='/'
               element={
                 <>
                   <Space>
-                    <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/')}>
+                    <Button type='link' icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/')}>
                       回主站
                     </Button>
-                    <Button type="link" icon={<ArrowRightOutlined />} onClick={() => redirectTo('invoices')}>
+                    <Button type='link' icon={<ArrowRightOutlined />} onClick={() => redirectTo('invoices')}>
                       下一站
                     </Button>
                   </Space>
@@ -37,11 +37,11 @@ const Dashboard = () => {
               }
             />
             <Route
-              path="invoices"
+              path='invoices'
               element={
                 <>
                   <Space>
-                    <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
+                    <Button type='link' icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)}>
                       上一站
                     </Button>
                   </Space>

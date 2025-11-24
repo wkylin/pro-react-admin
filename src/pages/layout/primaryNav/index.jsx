@@ -28,18 +28,18 @@ const PrimaryNav = () => {
 
   return (
     <Space>
-      <Button type="link" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
+      <Button type='link' icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
         首页
       </Button>
 
       {hasAccess('/dashboard') && (
-        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
+        <Button type='link' icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
       )}
 
       {hasAccess('/portfilo') && (
-        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
+        <Button type='link' icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
           My Portfilo
         </Button>
       )}

@@ -7,7 +7,7 @@ import {
   QuestionCircleOutlined,
   FireOutlined,
   GlobalOutlined,
-  QrcodeOutlined,
+  QrcodeOutlined
 } from '@ant-design/icons'
 import { t } from 'i18next' // 注意：这里可能需要处理 i18n
 
@@ -62,22 +62,22 @@ export const mainLayoutMenu = [
                     icon: <FireOutlined />,
                     children: [
                       { label: 'Vue3 API', key: '/coupons/add/plugins/vue3' },
-                      { label: '性能优化', key: '/coupons/add/plugins/perf' },
-                    ],
-                  },
-                ],
+                      { label: '性能优化', key: '/coupons/add/plugins/perf' }
+                    ]
+                  }
+                ]
               },
-              { label: 'Angular', key: '/coupons/edit' },
-            ],
-          },
-        ],
+              { label: 'Angular', key: '/coupons/edit' }
+            ]
+          }
+        ]
       },
       {
         label: '后端技术栈',
         key: '/product',
-        icon: <DeploymentUnitOutlined />,
-      },
-    ],
+        icon: <DeploymentUnitOutlined />
+      }
+    ]
   },
   {
     label: '构建工具',
@@ -85,13 +85,13 @@ export const mainLayoutMenu = [
     icon: <ApartmentOutlined />,
     children: [
       { label: 'Webpack', key: '/coupons/list' },
-      { label: 'Vite', key: '/order/list' },
-    ],
+      { label: 'Vite', key: '/order/list' }
+    ]
   },
   {
     label: 'Error',
     key: '/sub-error',
     icon: <QuestionCircleOutlined />,
-    children: [{ label: 'ErrorBoundary', key: '/error' }],
-  },
+    children: [{ label: 'ErrorBoundary', key: '/error' }]
+  }
 ]
