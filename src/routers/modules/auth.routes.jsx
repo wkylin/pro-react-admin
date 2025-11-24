@@ -21,4 +21,10 @@ export const authRoutes = [
     key: '/signup',
     element: <SignUp />,
   },
+  {
+    path: 'auth/callback',
+    name: 'OAuth Callback',
+    key: '/auth/callback',
+    element: <AuthCallback />,
+  },
 ]
