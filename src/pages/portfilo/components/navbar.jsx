@@ -6,17 +6,14 @@ const Navbar = () => {
 
   useEffect(() => {
     const sections = document.querySelectorAll('section')
-    // 适配 FixLayout，滚动容器可能是 .ant-layout-content
-    const scrollContainer = document.querySelector('.ant-layout-content') || window
+    const scrollContainer =
+      document.getElementById('portfolio-container') || document.querySelector('.ant-layout-content') || window
 
     const handleScroll = () => {
       let current = ''
       const scrollY = scrollContainer === window ? window.scrollY : scrollContainer.scrollTop
 
       sections.forEach((section) => {
-        // 如果是 window，使用 offsetTop；如果是容器，需要计算相对位置
-        // 简单起见，这里假设 section 在容器内，offsetTop 是相对于 offsetParent 的
-        // 如果 offsetParent 是容器，则 offsetTop 就是滚动距离
         const top = section.offsetTop
         const height = section.offsetHeight
         if (scrollY >= top - height / 3) {
@@ -41,7 +38,8 @@ const Navbar = () => {
     e.preventDefault()
     const element = document.getElementById(id)
     const navHeight = document.querySelector('nav').offsetHeight
-    const scrollContainer = document.querySelector('.ant-layout-content') || window
+    const scrollContainer =
+      document.getElementById('portfolio-container') || document.querySelector('.ant-layout-content') || window
 
     if (scrollContainer === window) {
       const elementPosition = element.getBoundingClientRect().top
@@ -51,12 +49,8 @@ const Navbar = () => {
         behavior: 'smooth',
       })
     } else {
-      // 容器内滚动
       const containerRect = scrollContainer.getBoundingClientRect()
       const elementRect = element.getBoundingClientRect()
-      // 目标位置 = 当前滚动位置 + (元素相对视口位置 - 容器相对视口位置) - 导航高度
-      // 或者直接使用 element.offsetTop (如果父级定位正确)
-      // 这里使用相对视口的计算更稳健
       const offsetPosition = scrollContainer.scrollTop + (elementRect.top - containerRect.top) - navHeight
 
       scrollContainer.scrollTo({
@@ -74,7 +68,7 @@ const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, ease: 'easeInOut' }}
         >
-          <a href="#home" onClick={(e) => handleClick(e, 'home')} className={linkClass('about')}>
+          <a href="#home" onClick={(e) => handleClick(e, 'home')} className={linkClass('home')}>
             Home
           </a>
         </motion.li>
@@ -83,7 +77,7 @@ const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
         >
-          <a href="#about" onClick={(e) => handleClick(e, 'about')} className={linkClass('info')}>
+          <a href="#about" onClick={(e) => handleClick(e, 'about')} className={linkClass('about')}>
             About
           </a>
         </motion.li>
@@ -92,12 +86,22 @@ const Navbar = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: 'easeInOut' }}
         >
-          <a href="#stack" onClick={(e) => handleClick(e, 'stack')} className={linkClass('stack')}>
-            Stack
+          <a href="#info" onClick={(e) => handleClick(e, 'info')} className={linkClass('info')}>
+            Info
           </a>
         </motion.li>
         <motion.li
           initial={{ opacity: 0, y: -80 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: 'easeInOut' }}
+        >
+          <a href="#stack" onClick={(e) => handleClick(e, 'stack')} className={linkClass('stack')}>
+            Stack
+          </a>
+        </motion.li>
+
+        <motion.li
+          initial={{ opacity: 0, y: -90 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeInOut' }}
         >
@@ -106,7 +110,7 @@ const Navbar = () => {
           </a>
         </motion.li>
         <motion.li
-          initial={{ opacity: 0, y: -90 }}
+          initial={{ opacity: 0, y: -100 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: 'easeInOut' }}
         >

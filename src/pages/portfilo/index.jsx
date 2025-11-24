@@ -8,7 +8,7 @@ import Contact from './components/contact.jsx'
 
 const MyPortfilo = () => {
   return (
-    <div className="relative w-full scroll-smooth bg-slate-950">
+    <div id="portfolio-container" className="relative h-screen w-full overflow-auto scroll-smooth bg-slate-950">
       <Navbar />
       <main className="relative z-10 text-white">
         <section id="home" className="scroll-mt-20">
