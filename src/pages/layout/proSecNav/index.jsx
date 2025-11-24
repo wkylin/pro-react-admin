@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { message } from 'antd'
-import { Menu } from 'antd'
+import { message, Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +11,7 @@ import {
   QuestionCircleOutlined,
   FireOutlined,
   GlobalOutlined,
-  QrcodeOutlined,
+  QrcodeOutlined
 } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
 
@@ -192,7 +191,7 @@ const ProSecNav = () => {
       const translateItem = (i) => ({
         ...i,
         label: i.i18nKey ? t(i.i18nKey) : i.label,
-        children: i.children ? i.children.map(translateItem) : undefined,
+        children: i.children ? i.children.map(translateItem) : undefined
       })
       return translateItem(item)
     })
@@ -297,7 +296,7 @@ const ProSecNav = () => {
         return {
           ...rest,
           label: i18nKey ? t(i18nKey) : i.label,
-          children: children ? children.map(translateItem) : undefined,
+          children: children ? children.map(translateItem) : undefined
         }
       }
       return translateItem(item)
@@ -310,12 +309,12 @@ const ProSecNav = () => {
     <>
       <Menu
         inlineIndent={10}
-        mode="inline"
+        mode='inline'
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}
         openKeys={openKeys}
-        theme="light"
+        theme='light'
         className={styles.menu}
         items={menuItems}
         onOpenChange={onOpenChange}
