@@ -2,7 +2,7 @@ import React from 'react'
 
 const Project = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center space-y-12 border-b border-gray-800/50 px-4 md:px-8 lg:px-16">
+    <div className="flex h-[calc(100vh-120px)] flex-col items-center justify-center space-y-12 border-b border-gray-800/50 px-4 md:px-8 lg:px-16">
       <h1 className="text-4xl font-bold">My Projects</h1>
       <div className="grid w-full max-w-6xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {[1, 2, 3].map((i) => (
