@@ -33,9 +33,9 @@
   height: 28px;
   line-height: 28px;
   padding: 0 12px;
-  background: rgba(40, 120, 255, 0.07);
+  background: rgb(40 120 255 / 7%);
   border-radius: 2px;
-  border: 1px solid rgba(40, 120, 255, 0.5);
+  border: 1px solid rgb(40 120 255 / 50%);
   text-align: center;
   box-sizing: border-box;
   width: auto;
@@ -45,12 +45,12 @@
 }
 
 .current-box {
-  background: rgba(40, 120, 255, 0.8);
-  box-shadow: 0 2px 8px rgba(40, 120, 255, 0.3);
+  background: rgb(40 120 255 / 80%);
+  box-shadow: 0 2px 8px rgb(40 120 255 / 30%);
 }
 
 .rootBox {
-  background: rgba(40, 120, 255, 1);
+  background: rgb(40 120 255 / 100%);
   font-weight: bold;
   height: 32px;
   line-height: 32px;
@@ -59,22 +59,22 @@
 
 .hasChildren {
   &:hover {
-    background: rgba(40, 120, 255, 0.9);
+    background: rgb(40 120 255 / 90%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(40, 120, 255, 0.4);
+    box-shadow: 0 4px 12px rgb(40 120 255 / 40%);
   }
 }
 
 .highlightedParent {
-  background: rgba(40, 120, 255, 0.95) !important;
-  box-shadow: 0 4px 12px rgba(40, 120, 255, 0.5) !important;
+  background: rgb(40 120 255 / 95%) !important;
+  box-shadow: 0 4px 12px rgb(40 120 255 / 50%) !important;
   transform: scale(1.05);
   z-index: 10;
 }
 
 .highlightedChild {
-  background: rgba(40, 120, 255, 0.15) !important;
-  border-color: rgba(40, 120, 255, 0.8) !important;
+  background: rgb(40 120 255 / 15%) !important;
+  border-color: rgb(40 120 255 / 80%) !important;
   transform: scale(1.05);
   z-index: 10;
 }
@@ -82,7 +82,7 @@
 .current-title,
 .child-title {
   font-size: 14px;
-  color: #333333;
+  color: #333;
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@
 }
 
 .current-title {
-  color: #ffffff;
+  color: #fff;
 }
 
 .expandIcon {
@@ -102,7 +102,7 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   border-radius: 50%;
 
   &.expanded {
@@ -113,7 +113,7 @@
 .arrow {
   position: relative;
   height: 30px;
-  margin: 0 0 3px 0;
+  margin: 0 0 3px;
 }
 
 .arrowChild {
@@ -175,8 +175,7 @@
 
 .childrenScroll {
   width: 100%;
-  overflow-x: auto;
-  overflow-y: visible;
+  overflow: auto visible;
   padding-bottom: 10px;
   position: relative;
 
@@ -196,11 +195,11 @@
     background: linear-gradient(180deg, #2878ff 0%, #1a68e6 100%);
     border-radius: 4px;
     border: 1px solid #e0e0e0;
-    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 10%);
 
     &:hover {
       background: linear-gradient(180deg, #1a68e6 0%, #1558d6 100%);
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+      box-shadow: inset 0 0 8px rgb(0 0 0 / 20%);
     }
 
     &:active {
@@ -277,6 +276,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -284,7 +284,7 @@
 }
 
 /* 响应式调整 */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .current-box,
   .child-box {
     padding: 0 8px;

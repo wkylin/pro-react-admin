@@ -10,7 +10,6 @@ export const nestedRoutes = [
   {
     path: 'coupons',
     name: '前端技术栈',
-    isSubMenu: true, // 是否是子菜单 proSecNav
     key: '/coupons',
     element: <lazyComponents.Coupons />,
     children: [
@@ -37,6 +36,13 @@ export const nestedRoutes = [
         name: 'Node',
         key: '/coupons/detail',
         element: <lazyComponents.CouponsDetail />,
+      },
+      // 补充中间层级路由（用于面包屑显示）
+      {
+        path: 'add/plugins',
+        name: 'Vue 插件',
+        key: '/coupons/add/plugins',
+        element: <lazyComponents.CouponsAddPlugins />,
       },
       {
         path: 'add/plugins/vue3',
