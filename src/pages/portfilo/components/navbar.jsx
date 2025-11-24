@@ -11,7 +11,7 @@ const Navbar = () => {
 
     const handleScroll = () => {
       let current = ''
-      const scrollY = scrollContainer === window ? window.scrollY : scrollContainer.scrollTop
+      const scrollY = scrollContainer instanceof HTMLElement ? scrollContainer.scrollTop : window.scrollY
 
       sections.forEach((section) => {
         const top = section.offsetTop
@@ -51,7 +51,8 @@ const Navbar = () => {
     } else {
       const containerRect = scrollContainer.getBoundingClientRect()
       const elementRect = element.getBoundingClientRect()
-      const offsetPosition = scrollContainer.scrollTop + (elementRect.top - containerRect.top) - navHeight
+      const scrollTop = scrollContainer instanceof HTMLElement ? scrollContainer.scrollTop : 0
+      const offsetPosition = scrollTop + (elementRect.top - containerRect.top) - navHeight
 
       scrollContainer.scrollTo({
         top: offsetPosition,
