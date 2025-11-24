@@ -65,6 +65,10 @@ export const lazyComponents = {
   CouponsAdd: lazyLoad(() => import('@pages/coupons/add'), { preload: true }),
   CouponsEdit: lazyLoad(() => import('@pages/coupons/edit'), { preload: true }),
   CouponsDetail: lazyLoad(() => import('@pages/coupons/detail'), { preload: true }),
+  Vue3Plugin: lazyLoad(() => import('@pages/coupons/add/plugins/vue3'), { preload: true }),
+  VuePerfPlugin: lazyLoad(() => import('@pages/coupons/add/plugins/perf'), { preload: true }),
+  WebpackList: lazyLoad(() => import('@pages/coupons/list'), { preload: true }),
+  ViteList: lazyLoad(() => import('@pages/order/list'), { preload: true }),
 
   // 异常页面
   ErrorPage: lazyLoad(() => import('@pages/error'), { preload: true }),

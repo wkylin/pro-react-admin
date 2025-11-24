@@ -38,6 +38,24 @@ export const nestedRoutes = [
         key: '/coupons/detail',
         element: <lazyComponents.CouponsDetail />,
       },
+      {
+        path: 'add/plugins/vue3',
+        name: 'Vue3 API',
+        key: '/coupons/add/plugins/vue3',
+        element: <lazyComponents.Vue3Plugin />,
+      },
+      {
+        path: 'add/plugins/perf',
+        name: '性能优化',
+        key: '/coupons/add/plugins/perf',
+        element: <lazyComponents.VuePerfPlugin />,
+      },
+      {
+        path: 'list',
+        name: 'Webpack',
+        key: '/coupons/list',
+        element: <lazyComponents.WebpackList />,
+      },
     ],
   },
 ]

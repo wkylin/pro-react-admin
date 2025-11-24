@@ -37,4 +37,10 @@ export const businessRoutes = [
     key: '/permission',
     element: <lazyComponents.PermissionDemo />,
   },
+  {
+    path: 'order/list',
+    name: 'Vite',
+    key: '/order/list',
+    element: <lazyComponents.ViteList />,
+  },
 ]
