@@ -311,6 +311,13 @@ class AuthService {
     } catch (e) {
       logger.warn('清除权限缓存失败:', e)
     }
+    // 保险措施：确保 localStorage 中的权限相关键被移除
+    try {
+      localStorage.removeItem('user_permissions')
+      localStorage.removeItem('permissions_fetch_time')
+    } catch (e) {
+      logger.warn('移除本地权限存储键失败:', e)
+    }
     this.saveToStorage()
     this.notifyListeners()
     // SPA 跳转到登录页

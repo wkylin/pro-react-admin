@@ -216,35 +216,116 @@ export const mockUserPermissions: Record<string, UserPermission> = {
     permissions: ['*:*'],
     routes: adminRoutes,
   },
-  admin: {
-    userId: '2',
-    username: '管理员',
-    roles: [mockRoles[1]],
-    permissions: [
-      'home:read',
-      'user:read',
-      'user:create',
-      'user:update',
-      'dashboard:read',
-      'business:read',
-      'coupons:read',
-    ],
-    routes: managerRoutes,
-  },
-  business_user: {
-    userId: '3',
-    username: '业务员',
-    roles: [mockRoles[2]],
-    permissions: ['home:read', 'business:*', 'coupons:read', 'coupons:create', 'dashboard:read'],
-    routes: businessRoutes,
-  },
-  user: {
-    userId: '4',
-    username: '普通用户',
-    roles: [mockRoles[3]],
-    permissions: ['home:read', 'dashboard:read'],
-    routes: userRoutes,
-  },
+  admin: ((): UserPermission => {
+    // 为管理员根据 routes 自动收集 permissions
+    const base = ['home:read', 'user:read', 'user:create', 'user:update', 'dashboard:read']
+    const perms = new Set<string>(base)
+    const collect = (routes: string[]) => {
+      routes.forEach((r) => {
+        let p = routePermissionMap[r]
+        if (!p) {
+          // 尝试向上匹配父路径或带参数的模式
+          let temp = r
+          while (temp && temp !== '/') {
+            const candidateParam = `${temp}/:id`
+            if (routePermissionMap[candidateParam]) {
+              p = routePermissionMap[candidateParam]
+              break
+            }
+            const idx = temp.lastIndexOf('/')
+            if (idx <= 0) break
+            temp = temp.substring(0, idx)
+            if (routePermissionMap[temp]) {
+              p = routePermissionMap[temp]
+              break
+            }
+          }
+        }
+        if (!p && routePermissionMap['*']) p = routePermissionMap['*']
+        if (p) perms.add(p)
+      })
+    }
+    collect(managerRoutes)
+    return {
+      userId: '2',
+      username: '管理员',
+      roles: [mockRoles[1]],
+      permissions: Array.from(perms) as PermissionCode[],
+      routes: managerRoutes,
+    }
+  })(),
+  business_user: ((): UserPermission => {
+    const base = ['home:read', 'business:*', 'coupons:read', 'coupons:create', 'dashboard:read']
+    const perms = new Set<string>(base)
+    const collect = (routes: string[]) => {
+      routes.forEach((r) => {
+        let p = routePermissionMap[r]
+        if (!p) {
+          let temp = r
+          while (temp && temp !== '/') {
+            const candidateParam = `${temp}/:id`
+            if (routePermissionMap[candidateParam]) {
+              p = routePermissionMap[candidateParam]
+              break
+            }
+            const idx = temp.lastIndexOf('/')
+            if (idx <= 0) break
+            temp = temp.substring(0, idx)
+            if (routePermissionMap[temp]) {
+              p = routePermissionMap[temp]
+              break
+            }
+          }
+        }
+        if (!p && routePermissionMap['*']) p = routePermissionMap['*']
+        if (p) perms.add(p)
+      })
+    }
+    collect(businessRoutes)
+    return {
+      userId: '3',
+      username: '业务员',
+      roles: [mockRoles[2]],
+      permissions: Array.from(perms) as PermissionCode[],
+      routes: businessRoutes,
+    }
+  })(),
+  user: ((): UserPermission => {
+    const base = ['home:read', 'dashboard:read']
+    const perms = new Set<string>(base)
+    const collect = (routes: string[]) => {
+      routes.forEach((r) => {
+        let p = routePermissionMap[r]
+        if (!p) {
+          let temp = r
+          while (temp && temp !== '/') {
+            const candidateParam = `${temp}/:id`
+            if (routePermissionMap[candidateParam]) {
+              p = routePermissionMap[candidateParam]
+              break
+            }
+            const idx = temp.lastIndexOf('/')
+            if (idx <= 0) break
+            temp = temp.substring(0, idx)
+            if (routePermissionMap[temp]) {
+              p = routePermissionMap[temp]
+              break
+            }
+          }
+        }
+        if (!p && routePermissionMap['*']) p = routePermissionMap['*']
+        if (p) perms.add(p)
+      })
+    }
+    collect(userRoutes)
+    return {
+      userId: '4',
+      username: '普通用户',
+      roles: [mockRoles[3]],
+      permissions: Array.from(perms) as PermissionCode[],
+      routes: userRoutes,
+    }
+  })(),
 }
 
 /**

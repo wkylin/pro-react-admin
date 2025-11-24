@@ -399,6 +399,54 @@ http://localhost:8080/auth/callback
 
 ## Sentry 接入
 
+## **更新摘要（近期权限与请求模块改进）**
+
+以下为最近在仓库中完成的主要改动与改进，便于团队成员快速了解变更并在本地验证：
+
+- **权限与导航**
+   - 统一并强化了权限检查逻辑，`permissionService` 提供缓存、过期策略、强制刷新与单例获取，避免重复请求和竞态。
+   - 在侧边栏 `src/pages/layout/proSecNav/index.jsx` 引入了基于权限的菜单过滤，确保首页 `/` 对所有账号可见，并避免在无权限时强制跳转或刷新。
+   - 引入“安全导航”封装（`useSafeNavigate` / `SafeLink` 等），在点击或程序化导航前检查权限，阻止越权访问并提供友好提示。
+
+- **请求层重构**
+   - 全新增强 `src/service/request.js`：基于 `axios`，支持全局配置、可取消请求（AbortController）、上传/下载进度回调、并发/串行执行控制、重试机制以及每次请求可关闭错误弹窗（`config.showError = false`）。
+   - 新的请求模块向后兼容常见用法，同时提供 `request.parallel` / `request.series` / `request.retry` 等工具函数，便于批量请求与限流。
+   - 为请求错误提示增加了统一处理，并与消息中心集成（消息去重，见下）。
+
+- **消息去重**
+   - 修改了 `src/utils/message.ts`：对短时间（2s 窗口）内相同文本的消息进行去重，避免网络抖动或多处错误导致的重复弹窗。
+
+- **文档与示例**
+   - 新增 `docs/REQUESTS.md`，包含对新版 `request` 模块的使用示例：并发、串行、取消、上传/下载进度、重试、关闭错误提示等场景，用法清晰易懂，建议开发者参考并在新代码中使用。
+
+- **自动化测试与迁移提示**
+   - 已配合 Playwright 增加部分 E2E 用例（授权/未授权场景），建议在变更请求或权限逻辑后运行 `npm run test:e2e` 以回归验证。
+
+如何验证本地改动（简要）
+
+- 先安装依赖并构建：
+
+```bash
+npm install
+npm run build:production
+```
+
+- 本地调试：启动 dev 或 mock server：
+
+```bash
+npm start
+# 或使用 faker mock
+npm run dev:faker
+```
+
+- 运行 E2E（如已配置 Playwright）：
+
+```bash
+npm run test:e2e
+```
+
+如需我把项目中仍存在的直接重复请求点（例如多个组件在 mount 时各自向后端请求权限）替换为 `permissionService.getPermissions()` 的单点调用，我可以扫描并提供自动补丁或直接提交变更，请告知偏好工作方式。
+
 1. [Sentry](https://sentry.io/)
 2. 遇到的问题：
    - ERROR in Sentry CLI Plugin: spawn /Users/sheldon/Desktop/promotion-manage-web/node_modules/@sentry/cli/sentry-cli ENOENT
