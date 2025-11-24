@@ -95,10 +95,11 @@ cat IMPLEMENTATION_CHECKLIST.md
 ## 公共路由与权限菜单
 
 ### 公共路由维护
+
 所有无需登录即可访问的页面集中在 `src/routers/config/publicRoutes.ts`：
 
 ```ts
-export const publicRoutes = ['/signin','/signup','/auth/callback','/404','/403','/500']
+export const publicRoutes = ['/signin', '/signup', '/auth/callback', '/404', '/403', '/500']
 
 // 运行时动态管理（如活动期间临时开放某页）
 addPublicRoute('/landing')
@@ -107,36 +108,44 @@ listPublicRoutes() // 获取当前公开列表
 ```
 
 另外，在任意路由配置对象（如模块路由数组项）上添加 `auth: false` 也会被视为公开，优先级高于数组。适用于：
+
 - 单个页面临时开放
 - 希望和路由结构一起阅读维护
 
 判断逻辑：
+
 1. 若 `auth === false` 立即放行
 2. 否则匹配 `publicRoutes`（支持前缀，如 `/auth/callback` 下子路径）
 
 ### 已登录访问公开页的行为
+
 用户已登录再访问 `/signin` 或其它公开页会被重定向到：
+
 1. 根路径 `/`（若有权限）
 2. 否则其可访问路由列表的第一项
 
 ### 动态权限菜单生成
+
 组件 `src/pages/layout/proSecNav/index.jsx` 在挂载时：
+
 1. 调用 `permissionService.getPermissions()` 取回 `routes` 列表
 2. 用 `generateMenuItems(routes)` 递归过滤所有候选菜单
 3. 支持父路径包含子页面权限：拥有 `/coupons` 自动显示 `/coupons/add`
 4. 子菜单全部被过滤则不展示父菜单
 
 扩展新菜单步骤：
+
 1. 在候选 `allMenuItems` 增加 `{ label:'Xxx', key:'/new-path', icon:<Icon/> }`
 2. 将路径加入对应角色的路由数组（`mock/permission.ts` 内 `managerRoutes` 等）
 3. 可选：添加权限码到 `routePermissionMap`（若做按钮级校验）
 
 ### 登出后权限刷新
+
 `authService.logout()` 会清空 `user_permissions` 缓存并跳转 `/signin`，保证下次登录重新计算菜单。
 
 ### 调试技巧
-在权限获取函数 `mockGetUserPermissions` 已插入日志，可在浏览器 DevTools Console 观察路由与角色匹配过程。
 
+在权限获取函数 `mockGetUserPermissions` 已插入日志，可在浏览器 DevTools Console 观察路由与角色匹配过程。
 
 ## 脚手架--白泽 baize
 
@@ -404,23 +413,23 @@ http://localhost:8080/auth/callback
 以下为最近在仓库中完成的主要改动与改进，便于团队成员快速了解变更并在本地验证：
 
 - **权限与导航**
-   - 统一并强化了权限检查逻辑，`permissionService` 提供缓存、过期策略、强制刷新与单例获取，避免重复请求和竞态。
-   - 在侧边栏 `src/pages/layout/proSecNav/index.jsx` 引入了基于权限的菜单过滤，确保首页 `/` 对所有账号可见，并避免在无权限时强制跳转或刷新。
-   - 引入“安全导航”封装（`useSafeNavigate` / `SafeLink` 等），在点击或程序化导航前检查权限，阻止越权访问并提供友好提示。
+  - 统一并强化了权限检查逻辑，`permissionService` 提供缓存、过期策略、强制刷新与单例获取，避免重复请求和竞态。
+  - 在侧边栏 `src/pages/layout/proSecNav/index.jsx` 引入了基于权限的菜单过滤，确保首页 `/` 对所有账号可见，并避免在无权限时强制跳转或刷新。
+  - 引入“安全导航”封装（`useSafeNavigate` / `SafeLink` 等），在点击或程序化导航前检查权限，阻止越权访问并提供友好提示。
 
 - **请求层重构**
-   - 全新增强 `src/service/request.js`：基于 `axios`，支持全局配置、可取消请求（AbortController）、上传/下载进度回调、并发/串行执行控制、重试机制以及每次请求可关闭错误弹窗（`config.showError = false`）。
-   - 新的请求模块向后兼容常见用法，同时提供 `request.parallel` / `request.series` / `request.retry` 等工具函数，便于批量请求与限流。
-   - 为请求错误提示增加了统一处理，并与消息中心集成（消息去重，见下）。
+  - 全新增强 `src/service/request.js`：基于 `axios`，支持全局配置、可取消请求（AbortController）、上传/下载进度回调、并发/串行执行控制、重试机制以及每次请求可关闭错误弹窗（`config.showError = false`）。
+  - 新的请求模块向后兼容常见用法，同时提供 `request.parallel` / `request.series` / `request.retry` 等工具函数，便于批量请求与限流。
+  - 为请求错误提示增加了统一处理，并与消息中心集成（消息去重，见下）。
 
 - **消息去重**
-   - 修改了 `src/utils/message.ts`：对短时间（2s 窗口）内相同文本的消息进行去重，避免网络抖动或多处错误导致的重复弹窗。
+  - 修改了 `src/utils/message.ts`：对短时间（2s 窗口）内相同文本的消息进行去重，避免网络抖动或多处错误导致的重复弹窗。
 
 - **文档与示例**
-   - 新增 `docs/REQUESTS.md`，包含对新版 `request` 模块的使用示例：并发、串行、取消、上传/下载进度、重试、关闭错误提示等场景，用法清晰易懂，建议开发者参考并在新代码中使用。
+  - 新增 `docs/REQUESTS.md`，包含对新版 `request` 模块的使用示例：并发、串行、取消、上传/下载进度、重试、关闭错误提示等场景，用法清晰易懂，建议开发者参考并在新代码中使用。
 
 - **自动化测试与迁移提示**
-   - 已配合 Playwright 增加部分 E2E 用例（授权/未授权场景），建议在变更请求或权限逻辑后运行 `npm run test:e2e` 以回归验证。
+  - 已配合 Playwright 增加部分 E2E 用例（授权/未授权场景），建议在变更请求或权限逻辑后运行 `npm run test:e2e` 以回归验证。
 
 如何验证本地改动（简要）
 

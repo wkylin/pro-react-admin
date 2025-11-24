@@ -10,8 +10,8 @@ const globalConfig = {
   timeout: 60000,
   withCredentials: true,
   defaultHeaders: {
-    'Content-Type': 'application/json;charset=utf-8',
-  },
+    'Content-Type': 'application/json;charset=utf-8'
+  }
 }
 
 // 创建 axios 实例（会在 setBaseUrl 时更新）
@@ -19,25 +19,25 @@ let service = axios.create({
   baseURL: globalConfig.baseURL,
   timeout: globalConfig.timeout,
   withCredentials: globalConfig.withCredentials,
-  headers: { ...globalConfig.defaultHeaders },
+  headers: { ...globalConfig.defaultHeaders }
 })
 
 // allow replacing axios instance (for testing or advanced customization)
-export function setAxiosInstance(instance) {
+export function setAxiosInstance (instance) {
   service = instance
 }
 
-export function setBaseURL(url) {
+export function setBaseURL (url) {
   globalConfig.baseURL = url
   service.defaults.baseURL = url
 }
 
-export function setDefaultHeaders(headers) {
+export function setDefaultHeaders (headers) {
   service.defaults.headers = { ...service.defaults.headers, ...headers }
 }
 
 // 内部：标准化错误显示
-function handleShowError(errorMessage, showError = true) {
+function handleShowError (errorMessage, showError = true) {
   if (!showError) return
   try {
     showMessage.error(errorMessage)
@@ -57,7 +57,7 @@ service.interceptors.request.use(
       if (needToken) {
         const token = authService.getToken()
         if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`
+          config.headers.Authorization = `Bearer ${token}`
           logger.log('自动添加 token:', token)
         }
       }
@@ -87,7 +87,7 @@ service.interceptors.request.use(
 )
 
 // 响应处理 helper（统一处理 status + code）
-function normalizeResponse(response, config = {}) {
+function normalizeResponse (response, config = {}) {
   if (response.config && response.config.responseType === 'blob') {
     return response
   }
@@ -111,7 +111,7 @@ function normalizeResponse(response, config = {}) {
   return Promise.reject(new Error(`HTTP ${response.status}`))
 }
 
-function handleAxiosError(error, config = {}) {
+function handleAxiosError (error, config = {}) {
   let errorMessage = '请求失败'
   if (error.response) {
     switch (error.response.status) {
@@ -153,7 +153,7 @@ function handleAxiosError(error, config = {}) {
 }
 
 // 创建可取消的请求（返回 promise 且附带 cancel 方法）
-function makeCancelableAxios(config) {
+function makeCancelableAxios (config) {
   const controller = new AbortController()
   const merged = { signal: controller.signal, timeout: globalConfig.timeout, ...config }
   const p = service.request(merged).then(
@@ -165,7 +165,7 @@ function makeCancelableAxios(config) {
 }
 
 // 并发控制（简单实现）：限制并发数量
-async function runWithConcurrency(tasks, concurrency = 5) {
+async function runWithConcurrency (tasks, concurrency = 5) {
   const results = []
   const executing = []
   for (const task of tasks) {
@@ -190,42 +190,42 @@ const request = {
   setAxiosInstance,
 
   // 基础方法：返回一个带 cancel 的 promise
-  request(config) {
+  request (config) {
     return makeCancelableAxios(config)
   },
 
-  get(url, params = {}, config = {}) {
+  get (url, params = {}, config = {}) {
     return makeCancelableAxios({ method: 'get', url, params, ...config })
   },
 
-  post(url, data = {}, config = {}) {
+  post (url, data = {}, config = {}) {
     return makeCancelableAxios({ method: 'post', url, data, ...config })
   },
 
-  put(url, data = {}, config = {}) {
+  put (url, data = {}, config = {}) {
     return makeCancelableAxios({ method: 'put', url, data, ...config })
   },
 
-  delete(url, params = {}, config = {}) {
+  delete (url, params = {}, config = {}) {
     return makeCancelableAxios({ method: 'delete', url, params, ...config })
   },
 
-  patch(url, data = {}, config = {}) {
+  patch (url, data = {}, config = {}) {
     return makeCancelableAxios({ method: 'patch', url, data, ...config })
   },
 
-  form(url, data = {}, config = {}) {
+  form (url, data = {}, config = {}) {
     const newConfig = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', ...(config.headers || {}) },
       method: 'post',
       url,
       data,
-      ...config,
+      ...config
     }
     return makeCancelableAxios(newConfig)
   },
 
-  upload(url, formData, config = {}) {
+  upload (url, formData, config = {}) {
     const onUploadProgress = config.onUploadProgress || config.onProgress
     const newConfig = {
       method: 'post',
@@ -235,13 +235,13 @@ const request = {
       onUploadProgress: (progressEvent) => {
         if (onUploadProgress) onUploadProgress(progressEvent)
       },
-      ...config,
+      ...config
     }
     return makeCancelableAxios(newConfig)
   },
 
   // 下载并提供进度回调
-  download(url, params = {}, fileName, config = {}) {
+  download (url, params = {}, fileName, config = {}) {
     const onDownloadProgress = config.onDownloadProgress || config.onProgress
     const newConfig = { method: 'get', url, params, responseType: 'blob', onDownloadProgress, ...config }
 
@@ -261,12 +261,12 @@ const request = {
     return wrapped
   },
 
-  custom(method, url, data = {}, params = {}, config = {}) {
+  custom (method, url, data = {}, params = {}, config = {}) {
     return makeCancelableAxios({ method, url, data, params, ...config })
   },
 
   // 并行，支持并发数限制：accepts array of functions that return promises or array of configs
-  parallel(requests = [], concurrency = 5) {
+  parallel (requests = [], concurrency = 5) {
     const tasks = requests.map((r) => {
       if (typeof r === 'function') return () => r()
       return () => {
@@ -283,7 +283,7 @@ const request = {
   },
 
   // 串行执行
-  series(requests = []) {
+  series (requests = []) {
     const run = async () => {
       const results = []
       for (const r of requests) {
@@ -300,7 +300,7 @@ const request = {
   },
 
   // 简单重试工具：fn 返回 promise
-  retry(fn, attempts = 3, delayMs = 500) {
+  retry (fn, attempts = 3, delayMs = 500) {
     return new Promise((resolve, reject) => {
       let i = 0
       const attempt = () => {
@@ -318,7 +318,7 @@ const request = {
   },
 
   // expose underlying axios instance for advanced use
-  axios: () => service,
+  axios: () => service
 }
 
 export default request
