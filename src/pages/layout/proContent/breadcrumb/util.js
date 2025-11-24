@@ -81,7 +81,7 @@ export const getRouteList = (result, arrList, queryItem) => {
       path: item.path,
       key: item.key,
       name: item.name,
-      i18nKey: item.i18nKey,
+      i18nKey: item.i18nKey
     })
   })
   return result
