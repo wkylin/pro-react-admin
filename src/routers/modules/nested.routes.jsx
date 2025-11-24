@@ -18,44 +18,44 @@ export const nestedRoutes = [
         path: 'home',
         name: 'React',
         key: '/coupons/home',
-        element: <lazyComponents.CouponsHome />,
+        element: <lazyComponents.CouponsHome />
       },
       {
         path: 'add',
         name: 'Vue',
         key: '/coupons/add',
-        element: <lazyComponents.CouponsAdd />,
+        element: <lazyComponents.CouponsAdd />
       },
       {
         path: 'edit',
         name: 'Angular',
         key: '/coupons/edit',
-        element: <lazyComponents.CouponsEdit />,
+        element: <lazyComponents.CouponsEdit />
       },
       {
         path: 'detail',
         name: 'Node',
         key: '/coupons/detail',
-        element: <lazyComponents.CouponsDetail />,
+        element: <lazyComponents.CouponsDetail />
       },
       {
         path: 'add/plugins/vue3',
         name: 'Vue3 API',
         key: '/coupons/add/plugins/vue3',
-        element: <lazyComponents.Vue3Plugin />,
+        element: <lazyComponents.Vue3Plugin />
       },
       {
         path: 'add/plugins/perf',
         name: '性能优化',
         key: '/coupons/add/plugins/perf',
-        element: <lazyComponents.VuePerfPlugin />,
+        element: <lazyComponents.VuePerfPlugin />
       },
       {
         path: 'list',
         name: 'Webpack',
         key: '/coupons/list',
-        element: <lazyComponents.WebpackList />,
-      },
-    ],
-  },
+        element: <lazyComponents.WebpackList />
+      }
+    ]
+  }
 ]
