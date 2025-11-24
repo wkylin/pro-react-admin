@@ -11,7 +11,7 @@ const Loading = ({ style = {} }) => (
       justifyContent: 'center',
       width: '100%',
       height: '100%',
-      ...style,
+      ...style
     }}
   >
     <Spin indicator={antIcon} />

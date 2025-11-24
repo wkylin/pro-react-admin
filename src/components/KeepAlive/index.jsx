@@ -89,7 +89,7 @@ const createKeepAliveManager = () => {
       if (current) {
         current.setShouldRender(true)
       }
-    },
+    }
   }
 }
 
@@ -146,7 +146,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       if (!active) return
       scrollPos.current.set(e.target, {
         left: e.target.scrollLeft,
-        top: e.target.scrollTop,
+        top: e.target.scrollTop
       })
     }
 
