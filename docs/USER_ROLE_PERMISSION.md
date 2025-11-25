@@ -263,16 +263,16 @@ export const mockGetUserPermissions = async (userId?: string, roleCode?: string)
 
 路由与权限的映射关系 (`src/mock/permission.ts`):
 
-| 路由路径              | 所需权限          | 说明       |
-| --------------------- | ----------------- | ---------- |
-| `/`                   | `home:read`       | 首页       |
-| `/dashboard`          | `dashboard:read`  | 仪表盘     |
-| `/business`           | `business:read`   | 业务管理   |
-| `/tech/frontend`      | `tech:read`       | 前端技术栈 |
-| `/tech/backend`       | `tech:read`       | 后端技术栈 |
-| `/chart`              | `chart:read`      | 图表       |
-| `/ui`                 | `ui:read`         | UI组件     |
-| `/demo`               | `demo:read`       | 演示页面   |
+| 路由路径         | 所需权限         | 说明       |
+| ---------------- | ---------------- | ---------- |
+| `/`              | `home:read`      | 首页       |
+| `/dashboard`     | `dashboard:read` | 仪表盘     |
+| `/business`      | `business:read`  | 业务管理   |
+| `/tech/frontend` | `tech:read`      | 前端技术栈 |
+| `/tech/backend`  | `tech:read`      | 后端技术栈 |
+| `/chart`         | `chart:read`     | 图表       |
+| `/ui`            | `ui:read`        | UI组件     |
+| `/demo`          | `demo:read`      | 演示页面   |
 
 ## 八、使用示例
 
