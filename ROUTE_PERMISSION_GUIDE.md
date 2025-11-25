@@ -5,11 +5,13 @@
 ### 1. 权限分配逻辑 (`src/mock/permission.ts`)
 
 #### **之前的问题**
+
 - ❌ 使用随机算法（Fisher-Yates）分配路由
 - ❌ 每次刷新页面，路由分配结果都会改变
 - ❌ 不稳定，测试困难
 
 #### **现在的方案**
+
 - ✅ **固定路由分配**：每个角色有预定义的路由列表
 - ✅ **按业务逻辑划分**：根据角色职责分配合理的路由
 - ✅ **稳定可靠**：每次登录同一账号看到相同的菜单
@@ -22,33 +24,53 @@ const adminRoutes = [所有30个路由]
 
 // 管理员 (60%)：核心业务 + 大部分功能
 const managerRoutes = [
-  '/', '/demo', '/business', '/echarts', '/d3-chart', 
-  '/geo', '/coupons/add', '/coupons/edit', '/build/webpack',
-  '/build/vite', '/backend', '/dashboard', '/permission', '/profile',
-  '/print', '/markmap', '/postmessage'
-]  // 16个路由
+  '/',
+  '/demo',
+  '/business',
+  '/echarts',
+  '/d3-chart',
+  '/geo',
+  '/coupons/add',
+  '/coupons/edit',
+  '/build/webpack',
+  '/build/vite',
+  '/backend',
+  '/dashboard',
+  '/permission',
+  '/profile',
+  '/print',
+  '/markmap',
+  '/postmessage',
+] // 16个路由
 
 // 业务员 (35%)：业务相关功能
 const businessRoutes = [
-  '/', '/business', '/coupons/add', '/coupons/edit',
-  '/build/webpack', '/backend', '/dashboard', '/demo',
-  '/echarts', '/profile'
-]  // 10个路由
+  '/',
+  '/business',
+  '/coupons/add',
+  '/coupons/edit',
+  '/build/webpack',
+  '/backend',
+  '/dashboard',
+  '/demo',
+  '/echarts',
+  '/profile',
+] // 10个路由
 
 // 普通用户 (17%)：基础查看功能
-const userRoutes = [
-  '/', '/demo', '/dashboard', '/profile', '/echarts'
-]  // 5个路由
+const userRoutes = ['/', '/demo', '/dashboard', '/profile', '/echarts'] // 5个路由
 ```
 
 ### 2. 动态菜单生成 (`src/pages/layout/proSecNav/index.jsx`)
 
 #### **之前的问题**
+
 - ❌ 硬编码的静态菜单
 - ❌ 所有用户看到相同的菜单项
 - ❌ 无法根据权限动态调整
 
 #### **现在的方案**
+
 - ✅ **动态获取权限**：组件初始化时从 `permissionService` 获取用户路由权限
 - ✅ **智能过滤**：根据用户可访问路由自动过滤菜单
 - ✅ **递归处理子菜单**：支持多级菜单的权限过滤
@@ -62,7 +84,7 @@ useEffect(() => {
     const userPermissions = await permissionService.getUserPermissions()
     const routes = userPermissions?.routes || ['/']
     setAccessibleRoutes(routes)
-    
+
     // 生成动态菜单
     const dynamicMenus = generateMenuItems(routes)
     setMenuItems(dynamicMenus)
@@ -72,9 +94,9 @@ useEffect(() => {
 
 // 2. 菜单过滤：支持精确匹配和父路径匹配
 const hasAccess = (path) => {
-  return routes.some(route => {
-    if (route === path) return true  // 精确匹配
-    if (path.startsWith(route + '/')) return true  // 父路径匹配
+  return routes.some((route) => {
+    if (route === path) return true // 精确匹配
+    if (path.startsWith(route + '/')) return true // 父路径匹配
     return false
   })
 }
@@ -82,13 +104,13 @@ const hasAccess = (path) => {
 // 3. 递归过滤：处理多级菜单
 const filterMenuItems = (items) => {
   return items
-    .map(item => {
+    .map((item) => {
       if (item.children) {
         const filteredChildren = filterMenuItems(item.children)
         if (filteredChildren.length > 0) {
           return { ...item, children: filteredChildren }
         }
-        return null  // 子菜单全部被过滤则不显示父菜单
+        return null // 子菜单全部被过滤则不显示父菜单
       }
       return hasAccess(item.key) ? item : null
     })
@@ -98,18 +120,19 @@ const filterMenuItems = (items) => {
 
 ## 🔐 测试账号
 
-| 邮箱 | 密码 | 角色 | 可见路由数 | 典型权限 |
-|------|------|------|-----------|---------|
-| admin@test.com | 123456 | super_admin | 30 (100%) | 所有功能 |
-| manager@test.com | 123456 | admin | 16 (60%) | 核心业务+管理 |
-| business@test.com | 123456 | business_user | 10 (35%) | 业务操作 |
-| user@test.com | 123456 | user | 5 (17%) | 基础查看 |
+| 邮箱              | 密码   | 角色          | 可见路由数 | 典型权限      |
+| ----------------- | ------ | ------------- | ---------- | ------------- |
+| admin@test.com    | 123456 | super_admin   | 30 (100%)  | 所有功能      |
+| manager@test.com  | 123456 | admin         | 16 (60%)   | 核心业务+管理 |
+| business@test.com | 123456 | business_user | 10 (35%)   | 业务操作      |
+| user@test.com     | 123456 | user          | 5 (17%)    | 基础查看      |
 
 ## 🎯 验证测试
 
 ### 测试步骤
 
 1. **登录不同账号**
+
    ```bash
    访问: http://localhost:8080/signin
    依次使用上述4个测试账号登录
@@ -136,18 +159,20 @@ const filterMenuItems = (items) => {
 ### 如何添加新路由？
 
 1. **在 `src/mock/permission.ts` 中添加路由**
+
    ```typescript
    const allRoutes = [
      // ... 现有路由
-     '/new-feature',  // 新增路由
+     '/new-feature', // 新增路由
    ]
    ```
 
 2. **分配给角色**
+
    ```typescript
    const managerRoutes = [
      // ... 现有路由
-     '/new-feature',  // 添加到管理员可访问列表
+     '/new-feature', // 添加到管理员可访问列表
    ]
    ```
 
@@ -167,7 +192,7 @@ const filterMenuItems = (items) => {
 // 给业务员增加权限
 const businessRoutes = [
   // ... 现有路由
-  '/new-business-feature',  // 新增
+  '/new-business-feature', // 新增
 ]
 ```
 
@@ -176,7 +201,7 @@ const businessRoutes = [
 ```
 用户登录
   ↓
-permissionService.syncPermissions() 
+permissionService.syncPermissions()
   ↓
 mockGetUserPermissions() 返回角色对应的 routes 数组
   ↓
