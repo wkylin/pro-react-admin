@@ -80,7 +80,7 @@ const ProHeader = ({ layout, onSettingClick, children }) => {
   }
 
   const redirectWrapped = () => {
-    window.open('https://www.githubwrapped.io/wkylin', '_blank')
+    window.open('https://git-wrapped.com/', '_blank')
   }
   const redirectWiki = () => {
     window.open('https://deepwiki.com/wkylin/pro-react-admin', '_blank')
