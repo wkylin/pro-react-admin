@@ -23,7 +23,7 @@ const Toggle = () => {
         }}
       >
         <Alert
-          message="Success Tips"
+          title="Success Tips"
           description="Detailed description and advice about successful copywriting."
           type="success"
           showIcon
@@ -37,7 +37,7 @@ const Toggle = () => {
         }}
       >
         <Alert
-          message="Informational Notes"
+          title="Informational Notes"
           description="Additional description and information about copywriting."
           type="info"
           showIcon

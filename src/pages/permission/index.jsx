@@ -66,7 +66,7 @@ const PermissionDemo = () => {
       <Paragraph>系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。</Paragraph>
 
       <Alert
-        message="权限说明"
+        title="权限说明"
         description={
           <ul style={{ margin: 0, paddingLeft: '20px' }}>
             <li>超级管理员：拥有所有路由访问权限（100%）</li>
@@ -137,9 +137,9 @@ const PermissionDemo = () => {
           <Title level={4}>PermissionGuard 组件</Title>
           <PermissionGuard
             permission="admin:read"
-            fallback={<Alert message="您没有管理员权限" type="warning" showIcon />}
+            fallback={<Alert title="您没有管理员权限" type="warning" showIcon />}
           >
-            <Alert message="✅ 您有管理员权限" type="success" showIcon />
+            <Alert title="✅ 您有管理员权限" type="success" showIcon />
           </PermissionGuard>
 
           <Divider />

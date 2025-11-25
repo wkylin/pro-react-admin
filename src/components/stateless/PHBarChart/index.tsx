@@ -373,7 +373,7 @@ const PHBarChart: React.FC = () => {
     return blocks
   }, [getPHColor])
   return (
-    <div style={{ padding: '20px', backgroundColor: '#f5f7fa', minHeight: '100vh' }}>
+    <>
       <Card title="pH值堆叠柱状图（0-14）">
         {/* 图表容器 */}
         <div
@@ -527,7 +527,7 @@ const PHBarChart: React.FC = () => {
           </Row>
         </div>
         {/* 说明信息 */}
-        <Card style={{ marginTop: '20px', backgroundColor: '#f8f9fa' }}>
+        <Card>
           <Title level={3}>图表说明</Title>
           <p>
             此图表展示了三个独立的pH范围堆叠柱状图，每个柱子都包含pH值0-14的完整渐变效果。从左到右分别是"pH范围1"、"pH范围2"和"pH范围3"。
@@ -546,7 +546,7 @@ const PHBarChart: React.FC = () => {
           </div>
         </Card>
       </Card>
-    </div>
+    </>
   )
 }
 export default PHBarChart

@@ -329,7 +329,8 @@ select:-webkit-autofill:active {
 
 .layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
   height: 100%;
-  padding: 0 4px 8px 8px;
+  padding: 4px 8px;
+  box-sizing: border-box;
 }
 
 .layout-container .pro-tabs {

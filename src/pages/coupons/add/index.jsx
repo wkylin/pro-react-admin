@@ -18,7 +18,7 @@ const AddCoupons = () => {
         关闭当前标签 并打开 Angular标签
       </Button>
       <Alert
-        message="Success Tips"
+        title="Success Tips"
         description="Detailed description and advice about successful copywriting."
         type="success"
         showIcon

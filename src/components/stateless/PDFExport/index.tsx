@@ -177,10 +177,7 @@ const PDFExportDemo: React.FC = () => {
           {isExporting ? '正在导出...' : '导出PDF'}
         </Button>
       </div>
-      <div
-        ref={contentRef}
-        style={{ background: 'white', padding: '32px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
-      >
+      <div ref={contentRef} style={{ padding: '32px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <Title level={2} style={{ marginBottom: '16px' }}>
             数据分析报告
@@ -194,7 +191,7 @@ const PDFExportDemo: React.FC = () => {
                 title="总销售额"
                 value={salesData.reduce((sum, item) => sum + item.value, 0)}
                 precision={0}
-                valueStyle={{ color: '#3f8600' }}
+                styles={{ content: { color: '#3f8600' } }}
                 prefix="¥"
                 suffix="万"
               />
@@ -206,7 +203,7 @@ const PDFExportDemo: React.FC = () => {
                 title="平均月销售"
                 value={salesData.reduce((sum, item) => sum + item.value, 0) / salesData.length}
                 precision={1}
-                valueStyle={{ color: '#1890ff' }}
+                styles={{ content: { color: '#1890ff' } }}
                 prefix="¥"
                 suffix="万"
               />
@@ -218,7 +215,7 @@ const PDFExportDemo: React.FC = () => {
                 title="最高月销售"
                 value={Math.max(...salesData.map((item) => item.value))}
                 precision={0}
-                valueStyle={{ color: '#cf1322' }}
+                styles={{ content: { color: '#cf1322' } }}
                 prefix="¥"
                 suffix="万"
               />
@@ -226,7 +223,12 @@ const PDFExportDemo: React.FC = () => {
           </Col>
           <Col xs={24} sm={12} md={6}>
             <Card>
-              <Statistic title="产品种类" value={pieData.length} valueStyle={{ color: '#722ed1' }} suffix="种" />
+              <Statistic
+                title="产品种类"
+                value={pieData.length}
+                styles={{ content: { color: '#722ed1' } }}
+                suffix="种"
+              />
             </Card>
           </Col>
         </Row>
@@ -254,7 +256,6 @@ const PDFExportDemo: React.FC = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       padding: '8px',
-                      background: '#f5f5f5',
                       borderRadius: '4px',
                       marginBottom: '8px',
                     }}
@@ -275,7 +276,6 @@ const PDFExportDemo: React.FC = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       padding: '8px',
-                      background: '#f5f5f5',
                       borderRadius: '4px',
                       marginBottom: '8px',
                     }}
