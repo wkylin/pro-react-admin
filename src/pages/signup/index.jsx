@@ -73,7 +73,7 @@ const SignUp = () => {
             >
               {/* 头部标题 */}
               <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                <Title level={2} style={{ marginBottom: 8, color: '#1f2937' }}>
+                <Title level={2} style={{ marginBottom: 8 }}>
                   创建账户
                 </Title>
                 <Text type="secondary">填写信息完成注册</Text>

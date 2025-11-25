@@ -197,7 +197,7 @@ export const routePermissionMap = {
   '/home': 'home:read',
   '/dashboard': 'dashboard:read',
   '/business': 'business:read',
-  '/product': 'product:read',
+  '/backend': 'backend:read',
   '/coupons': 'coupons:read',
   '/coupons/add': 'coupons:create',
   '/coupons/edit/:id': 'coupons:update',

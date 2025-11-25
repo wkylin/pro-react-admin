@@ -135,8 +135,8 @@ location.reload()
 | 角色代码        | 角色名称   | 可访问路由示例                                                                |
 | --------------- | ---------- | ----------------------------------------------------------------------------- |
 | `super_admin`   | 超级管理员 | 所有路由                                                                      |
-| `admin`         | 管理员     | /, /dashboard, /business, /chart, /ui, /coupons, /product, /demo, /permission |
-| `business_user` | 业务员     | /, /dashboard, /business, /coupons, /product, /chart                          |
+| `admin`         | 管理员     | /, /dashboard, /business, /chart, /ui, /coupons, /backend, /demo, /permission |
+| `business_user` | 业务员     | /, /dashboard, /business, /coupons, /backend, /chart                          |
 | `user`          | 普通用户   | /, /dashboard, /demo                                                          |
 
 ### 权限代码规则

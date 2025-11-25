@@ -74,7 +74,7 @@ export const mainLayoutMenu = [
       },
       {
         label: '后端技术栈',
-        key: '/product',
+        key: '/backend',
         icon: <DeploymentUnitOutlined />,
       },
     ],
@@ -84,8 +84,8 @@ export const mainLayoutMenu = [
     key: '/sub-list',
     icon: <ApartmentOutlined />,
     children: [
-      { label: 'Webpack', key: '/coupons/list' },
-      { label: 'Vite', key: '/order/list' },
+      { label: 'Webpack', key: '/build/webpack' },
+      { label: 'Vite', key: '/build/vite' },
     ],
   },
   {

@@ -48,7 +48,7 @@
 - **可访问路由**:
   - `/`, `/dashboard`, `/business`, `/chart`, `/ui`
   - `/coupons`, `/coupons/home`, `/coupons/add`, `/coupons/edit/:id`, `/coupons/detail/:id`
-  - `/product`, `/demo`, `/permission`
+  - `/backend`, `/demo`, `/permission`
 - **描述**: 拥有大部分管理权限
 
 ### 3. 业务员 (business_user)
@@ -64,7 +64,7 @@
   - `chart:read` - 图表查看权限
 - **可访问路由**:
   - `/`, `/dashboard`, `/business`
-  - `/coupons`, `/coupons/home`, `/product`, `/chart`
+  - `/coupons`, `/coupons/home`, `/backend`, `/chart`
 - **描述**: 拥有业务相关操作权限
 
 ### 4. 普通用户 (user)
@@ -279,7 +279,7 @@ export const mockGetUserPermissions = async (userId?: string, roleCode?: string)
 | `/coupons/add`        | `coupons:create`  | 创建优惠券 |
 | `/coupons/edit/:id`   | `coupons:update`  | 编辑优惠券 |
 | `/coupons/detail/:id` | `coupons:read`    | 优惠券详情 |
-| `/product`            | `product:read`    | 产品管理   |
+| `/backend`            | `backend:read`    | 产品管理   |
 | `/chart`              | `chart:read`      | 图表       |
 | `/ui`                 | `ui:read`         | UI组件     |
 | `/demo`               | `demo:read`       | 演示页面   |

@@ -56,12 +56,6 @@ export const nestedRoutes = [
         key: '/coupons/add/plugins/perf',
         element: <lazyComponents.VuePerfPlugin />,
       },
-      {
-        path: 'list',
-        name: 'Webpack',
-        key: '/coupons/list',
-        element: <lazyComponents.WebpackList />,
-      },
     ],
   },
 ]

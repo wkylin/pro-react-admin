@@ -23,15 +23,15 @@ const adminRoutes = [所有30个路由]
 // 管理员 (60%)：核心业务 + 大部分功能
 const managerRoutes = [
   '/', '/demo', '/business', '/echarts', '/d3-chart', 
-  '/geo', '/coupons/add', '/coupons/edit', '/coupons/list',
-  '/product', '/dashboard', '/permission', '/profile',
+  '/geo', '/coupons/add', '/coupons/edit', '/build/webpack',
+  '/build/vite', '/backend', '/dashboard', '/permission', '/profile',
   '/print', '/markmap', '/postmessage'
 ]  // 16个路由
 
 // 业务员 (35%)：业务相关功能
 const businessRoutes = [
   '/', '/business', '/coupons/add', '/coupons/edit',
-  '/coupons/list', '/product', '/dashboard', '/demo',
+  '/build/webpack', '/backend', '/dashboard', '/demo',
   '/echarts', '/profile'
 ]  // 10个路由
 
@@ -128,7 +128,7 @@ const filterMenuItems = (items) => {
 4. **检查嵌套菜单**
    - "技术栈" 子菜单：
      - 只有能访问 `/coupons/add` 或 `/coupons/edit` 的用户才能看到 "前端技术栈"
-     - 只有能访问 `/product` 的用户才能看到 "后端技术栈"
+     - 只有能访问 `/backend` 的用户才能看到 "后端技术栈"
    - 如果子菜单全部被过滤，父菜单也会隐藏
 
 ## 📝 扩展指南

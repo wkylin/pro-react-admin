@@ -16,7 +16,7 @@ const SignIn = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm()
@@ -148,7 +148,7 @@ const SignIn = () => {
               </div>
 
               {/* 测试账号快捷选择 */}
-              <Card size="small" style={{ marginBottom: '24px', background: '#f5f5f5' }}>
+              <Card size="small" style={{ marginBottom: '24px', background: colorBgLayout }}>
                 <Paragraph style={{ margin: 0, marginBottom: '12px' }}>
                   <Text strong>测试账号（点击快速填充）：</Text>
                 </Paragraph>
