@@ -20,7 +20,7 @@ export interface ThemeSettings {
 
 export const defaultSettings: ThemeSettings = {
   themeMode: 'light',
-  navTheme: 'dark',
+  navTheme: 'light',
   colorPrimary: '#1677ff',
   layout: 'side',
   contentWidth: 'Fluid',

@@ -247,7 +247,7 @@ const ProDemo = () => {
 
   return (
     <FixTabPanel>
-      <section style={{ position: 'relative', zIndex: 1, backgroundColor: '#fff', transform: 'translate3d(0, 0, 0)' }}>
+      <section style={{ position: 'relative', zIndex: 1, transform: 'translate3d(0, 0, 0)' }}>
         <MusicPlayer />
         <FixTabs />
         <StatisticCard />
