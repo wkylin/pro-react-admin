@@ -308,9 +308,27 @@ select:-webkit-autofill:active {
   overflow: hidden;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.layout-container .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
+.layout-container > .wui-ant-tabs-nav {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+.layout-container > .wui-ant-tabs-content-holder {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content {
+  height: 100%;
+}
+
+.layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
+  height: 100%;
   padding: 0 4px 8px 8px;
 }
 
@@ -321,7 +339,7 @@ select:-webkit-autofill:active {
 
 .layout-container .layout-tabpanel {
   width: 100%;
-  min-height: calc(100vh - 204px);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;

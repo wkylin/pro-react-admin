@@ -21,7 +21,7 @@ const FixTabPanel = React.forwardRef(({ style, children, className, ...rest }, r
       className={`fix-tab-panel-scroll-container ${className || ''}`}
       style={{
         width: '100%',
-        height: 'calc(100vh - 204px)',
+        height: '100%',
         position: 'relative',
         overflowX: 'hidden',
         overflowY: 'auto',

@@ -29,7 +29,12 @@ const ProTabs = (props) => {
 
   const renderTabBar = (props, DefaultTabBar) => (
     <StickyBox offsetTop={0} style={{ zIndex: 10 }}>
-      <DefaultTabBar key={nanoid()} {...props} className="pro-tabs" style={{ background: colorBgContainer }} />
+      <DefaultTabBar
+        key={nanoid()}
+        {...props}
+        className="pro-tabs"
+        style={{ ...props.style, background: colorBgContainer }}
+      />
     </StickyBox>
   )
 
