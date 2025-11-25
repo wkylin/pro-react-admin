@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Space } from 'antd'
-import { CodeOutlined, HomeOutlined } from '@ant-design/icons'
+import { DashboardOutlined, ProjectOutlined, HomeOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { usePermission } from '@src/hooks/usePermission'
 
@@ -33,13 +33,13 @@ const PrimaryNav = () => {
       </Button>
 
       {hasAccess('/dashboard') && (
-        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('dashboard')}>
+        <Button type="link" icon={<DashboardOutlined />} onClick={() => redirectTo('dashboard')}>
           多路由设置
         </Button>
       )}
 
       {hasAccess('/portfilo') && (
-        <Button type="link" icon={<CodeOutlined />} onClick={() => redirectTo('portfilo')}>
+        <Button type="link" icon={<ProjectOutlined />} onClick={() => redirectTo('portfilo')}>
           My Portfilo
         </Button>
       )}
