@@ -35,7 +35,7 @@ const prodWebpackConfig = merge(common, {
       ignoreOrder: true,
     }),
     new PurgeCSSPlugin({
-      paths: glob.sync(`${path.join(__dirname, 'src')}/**/*`, { nodir: true }),
+      paths: glob.sync(`${path.join(__dirname, '../src')}/**/*`, { nodir: true }),
       only: ['bundle', 'vendor', 'dist'],
       safelist: {
         standard: [/^ant-/],

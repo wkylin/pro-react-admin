@@ -32,7 +32,9 @@ root.render(
             <ProThemeProvider>
               <WatermarkProvider content="Pro React Admin">
                 <ThemeIndex />
-                {process.env.NODE_ENV === 'production' && <Analytics />}
+                {process.env.NODE_ENV === 'production' &&
+                  !window.location.hostname.includes('localhost') &&
+                  !window.location.hostname.includes('127.0.0.1') && <Analytics />}
               </WatermarkProvider>
             </ProThemeProvider>
           </Suspense>
