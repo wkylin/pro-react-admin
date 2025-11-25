@@ -61,87 +61,91 @@ const ReactPdf = () => {
 
   return (
     <FixTabPanel>
-      <div className="flex min-h-screen flex-col bg-gray-100">
-        <header className="bg-blue-600 p-4 text-white">
-          <h1 className="text-2xl font-bold">React PDF Viewer</h1>
+      <div className='flex min-h-screen flex-col bg-gray-100'>
+        <header className='bg-blue-600 p-4 text-white'>
+          <h1 className='text-2xl font-bold'>React PDF Viewer</h1>
         </header>
 
-        <main className="container mx-auto flex-grow p-4">
-          <div className="mx-auto mb-4 w-full max-w-3xl rounded-lg bg-white p-4 shadow-md">
-            {isLoading ? (
-              <div className="flex h-96 items-center justify-center">
-                <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
-                <span className="ml-2 text-gray-600">加载PDF文档中...</span>
-              </div>
-            ) : error ? (
-              <div className="flex h-96 items-center justify-center text-red-500">{error}</div>
-            ) : (
-              <ErrorBoundary fallback={<div>PDF渲染失败，请重试。</div>}>
-                <Document
-                  file={pdfUrl}
-                  onLoadSuccess={onDocumentLoadSuccess}
-                  onLoadError={onDocumentLoadError}
-                  className="flex justify-center"
-                >
-                  <Page
-                    key={`page-${pageNumber}-scale-${scale}`}
-                    pageNumber={pageNumber}
-                    scale={scale}
-                    onLoadError={onPageLoadError}
-                    onLoadSuccess={onPageLoadSuccess}
-                    renderAnnotationLayer={true}
-                    renderTextLayer={true}
-                  />
-                </Document>
-              </ErrorBoundary>
-            )}
+        <main className='container mx-auto flex-grow p-4'>
+          <div className='mx-auto mb-4 w-full max-w-3xl rounded-lg bg-white p-4 shadow-md'>
+            {isLoading
+              ? (
+                <div className='flex h-96 items-center justify-center'>
+                  <Loader2 className='h-10 w-10 animate-spin text-blue-500' />
+                  <span className='ml-2 text-gray-600'>加载PDF文档中...</span>
+                </div>
+                )
+              : error
+                ? (
+                  <div className='flex h-96 items-center justify-center text-red-500'>{error}</div>
+                  )
+                : (
+                  <ErrorBoundary fallback={<div>PDF渲染失败，请重试。</div>}>
+                    <Document
+                      file={pdfUrl}
+                      onLoadSuccess={onDocumentLoadSuccess}
+                      onLoadError={onDocumentLoadError}
+                      className='flex justify-center'
+                    >
+                      <Page
+                        key={`page-${pageNumber}-scale-${scale}`}
+                        pageNumber={pageNumber}
+                        scale={scale}
+                        onLoadError={onPageLoadError}
+                        onLoadSuccess={onPageLoadSuccess}
+                        renderAnnotationLayer
+                        renderTextLayer
+                      />
+                    </Document>
+                  </ErrorBoundary>
+                  )}
           </div>
 
           {/* 控制按钮区域 */}
           {numPages && !error && (
-            <div className="mt-4 flex items-center justify-center space-x-4">
+            <div className='mt-4 flex items-center justify-center space-x-4'>
               <button
                 onClick={() => changePage(-1)}
                 disabled={pageNumber <= 1}
-                className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-                aria-label="上一页"
+                className='rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300'
+                aria-label='上一页'
               >
-                <ChevronLeft className="h-6 w-6" />
+                <ChevronLeft className='h-6 w-6' />
               </button>
 
-              <span className="mx-1 text-xl">
+              <span className='mx-1 text-xl'>
                 第 {pageNumber} 页，共 {numPages} 页
               </span>
 
               <button
                 onClick={() => changePage(1)}
                 disabled={pageNumber >= numPages}
-                className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-                aria-label="下一页"
+                className='rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300'
+                aria-label='下一页'
               >
-                <ChevronRight className="h-6 w-6" />
+                <ChevronRight className='h-6 w-6' />
               </button>
 
-              <div className="mx-4 h-6 border-r border-gray-300"></div>
+              <div className='mx-4 h-6 border-r border-gray-300' />
 
               <button
                 onClick={() => changeScale(-0.1)}
                 disabled={scale <= 0.5}
-                className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-                aria-label="缩小"
+                className='rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300'
+                aria-label='缩小'
               >
-                <ZoomOut className="h-6 w-6" />
+                <ZoomOut className='h-6 w-6' />
               </button>
 
-              <span className="text-gray-600">{Math.round(scale * 100)}%</span>
+              <span className='text-gray-600'>{Math.round(scale * 100)}%</span>
 
               <button
                 onClick={() => changeScale(0.1)}
                 disabled={scale >= 2.0}
-                className="rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300"
-                aria-label="放大"
+                className='rounded-full bg-blue-500 p-2 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-gray-300'
+                aria-label='放大'
               >
-                <ZoomIn className="h-6 w-6" />
+                <ZoomIn className='h-6 w-6' />
               </button>
             </div>
           )}
