@@ -152,7 +152,7 @@ const SignIn = () => {
                 <Paragraph style={{ margin: 0, marginBottom: '12px' }}>
                   <Text strong>测试账号（点击快速填充）：</Text>
                 </Paragraph>
-                <Space direction="vertical" style={{ width: '100%' }} size="small">
+                <Space orientation="vertical" style={{ width: '100%' }} size="small">
                   {Object.entries(testAccounts).map(([email, account]) => (
                     <Button
                       key={email}

@@ -1,6 +1,13 @@
 import React from 'react'
-import { Layout, Space, Dropdown, Switch, theme, Avatar, message } from 'antd'
-import { UserOutlined, LogoutOutlined, GithubOutlined, DownOutlined, SmileOutlined } from '@ant-design/icons'
+import { Layout, Space, Dropdown, theme, Avatar, message } from 'antd'
+import {
+  UserOutlined,
+  LogoutOutlined,
+  GithubOutlined,
+  DownOutlined,
+  SmileOutlined,
+  SettingOutlined,
+} from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage } from '@utils/publicFn'
@@ -16,8 +23,6 @@ import RocketSvg from '@assets/svg/rocket.svg'
 import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
 
-import { useProThemeContext } from '@theme/hooks'
-
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
@@ -26,7 +31,7 @@ import PrimaryNav from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
 
-const ProHeader = () => {
+const ProHeader = ({ layout, onSettingClick, children }) => {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
   const lastDeniedRef = React.useRef(null)
@@ -129,12 +134,6 @@ const ProHeader = () => {
     },
   ]
 
-  const { myTheme, setMyTheme } = useProThemeContext()
-
-  const setAntdTheme = () => {
-    setMyTheme(myTheme === 'light' ? 'dark' : 'light')
-  }
-
   const {
     token: { colorBgContainer, colorBorder },
   } = theme.useToken()
@@ -147,25 +146,26 @@ const ProHeader = () => {
         borderBottom: `1px solid ${colorBorder}`,
       }}
     >
-      <div aria-hidden="true" className={styles.logo} onClick={() => redirectTo('/')}>
+      <div
+        aria-hidden="true"
+        className={`${styles.logo} ${layout === 'top' ? styles.topLayoutLogo : ''}`}
+        onClick={() => redirectTo('/')}
+      >
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         <img src={Logo} alt="logo" />
         <GradientAnimationText text="Pro React Admin" />
       </div>
       <div className={styles.headerMeta}>
-        <div className={styles.headerMenu}>
+        <div className={styles.headerMenu} style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center' }}>
           <PrimaryNav />
+          {layout === 'top' && <div style={{ flex: 1, minWidth: 0 }}>{children}</div>}
         </div>
         <div className={styles.headerRight}>
-          <Space direction="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+          <Space orientation="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
             <SoundBar />
-            <Switch
-              // checkedChildren={<Icon component={LightSvg} />}
-              // unCheckedChildren={<Icon component={DarkSvg} />}
-              onClick={setAntdTheme}
-            />
             <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
             <Fullscreen />
+            <SettingOutlined style={{ fontSize: 16 }} onClick={onSettingClick} />
             <RocketSvg style={{ fontSize: 16 }} onClick={redirectWrapped} />
             <WikiSvg style={{ fontSize: 16 }} onClick={redirectWiki} />
             <LanguageSwitcher />

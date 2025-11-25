@@ -4,7 +4,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
 
-const ProSider = ({ children }) => {
+const ProSider = ({ children, theme = 'light' }) => {
   const [collapsed, setCollapsed] = useState(false)
 
   const onCollapse = () => {
@@ -15,7 +15,7 @@ const ProSider = ({ children }) => {
     <Layout.Sider
       width={208}
       collapsedWidth={80}
-      theme="light"
+      theme={theme}
       collapsible
       collapsed={collapsed}
       trigger={null}

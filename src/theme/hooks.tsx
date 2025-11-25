@@ -1,13 +1,41 @@
-import React, { createContext, useContext, useState, useMemo, PropsWithChildren } from 'react'
+import React, { createContext, useContext, useState, useMemo, PropsWithChildren, useEffect } from 'react'
 
 export type ThemeMode = 'light' | 'dark'
+export type NavTheme = 'light' | 'dark'
+export type LayoutMode = 'side' | 'top' | 'mix'
+export type ContentWidth = 'Fluid' | 'Fixed'
 
-export interface ProThemeContextValue {
-  myTheme: ThemeMode
-  setMyTheme: React.Dispatch<React.SetStateAction<ThemeMode>>
+export interface ThemeSettings {
+  themeMode: ThemeMode
+  navTheme: NavTheme
+  colorPrimary: string
+  layout: LayoutMode
+  contentWidth: ContentWidth
+  fixedHeader: boolean
+  fixSiderbar: boolean
+  colorWeak: boolean
+  grayMode: boolean
+  compactAlgorithm: boolean
 }
 
-const defaultTheme: ThemeMode = 'light'
+export const defaultSettings: ThemeSettings = {
+  themeMode: 'light',
+  navTheme: 'dark',
+  colorPrimary: '#1677ff',
+  layout: 'side',
+  contentWidth: 'Fluid',
+  fixedHeader: false,
+  fixSiderbar: true,
+  colorWeak: false,
+  grayMode: false,
+  compactAlgorithm: false,
+}
+
+export interface ProThemeContextValue {
+  themeSettings: ThemeSettings
+  setThemeSettings: React.Dispatch<React.SetStateAction<ThemeSettings>>
+  updateSettings: (settings: Partial<ThemeSettings>) => void
+}
 
 const ProThemeContext = createContext<ProThemeContextValue | null>(null)
 
@@ -21,13 +49,46 @@ const useProThemeContext = (): ProThemeContextValue => {
 }
 
 type ProThemeProviderProps = PropsWithChildren<{
-  defaultMode?: ThemeMode
+  defaultSettings?: Partial<ThemeSettings>
 }>
 
-const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultMode }) => {
-  const [myTheme, setMyTheme] = useState<ThemeMode>(defaultMode ?? defaultTheme)
+const STORAGE_KEY = 'pro-react-admin-theme-settings'
 
-  const themeProvider = useMemo<ProThemeContextValue>(() => ({ myTheme, setMyTheme }), [myTheme])
+const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSettings: initialSettings }) => {
+  const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      try {
+        return { ...defaultSettings, ...JSON.parse(stored), ...initialSettings }
+      } catch (e) {
+        console.error('Failed to parse theme settings from local storage', e)
+      }
+    }
+    return { ...defaultSettings, ...initialSettings }
+  })
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(themeSettings))
+
+    // Apply global styles for gray mode and color weak mode
+    const html = document.documentElement
+    if (themeSettings.grayMode) {
+      html.style.filter = 'grayscale(1)'
+    } else if (themeSettings.colorWeak) {
+      html.style.filter = 'invert(80%)'
+    } else {
+      html.style.filter = ''
+    }
+  }, [themeSettings])
+
+  const updateSettings = (settings: Partial<ThemeSettings>) => {
+    setThemeSettings((prev) => ({ ...prev, ...settings }))
+  }
+
+  const themeProvider = useMemo<ProThemeContextValue>(
+    () => ({ themeSettings, setThemeSettings, updateSettings }),
+    [themeSettings]
+  )
 
   return <ProThemeContext.Provider value={themeProvider}>{children}</ProThemeContext.Provider>
 }

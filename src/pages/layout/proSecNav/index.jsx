@@ -22,7 +22,7 @@ import { mainLayoutMenu } from '@src/config/menu.config'
 
 // 已弃用 pathSubmenu 静态映射，改为自动推导父级链
 
-const ProSecNav = () => {
+const ProSecNav = ({ mode = 'inline', theme = 'light' }) => {
   const { pathname } = useLocation()
   const { redirectTo } = useSafeNavigate()
 
@@ -311,15 +311,16 @@ const ProSecNav = () => {
 
   return (
     <>
+      {contextHolder}
       <Menu
         inlineIndent={10}
-        mode="inline"
+        mode={mode}
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}
         openKeys={openKeys}
-        theme="light"
-        className={styles.menu}
+        theme={theme}
+        className={mode === 'horizontal' ? styles.topMenu : styles.menu}
         items={menuItems}
         onOpenChange={onOpenChange}
         onSelect={onSelect}

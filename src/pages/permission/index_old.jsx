@@ -66,7 +66,7 @@ const PermissionDemo = () => {
 
       {/* 当前权限信息 */}
       <Card title="当前权限信息" style={{ marginBottom: '16px' }}>
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%' }}>
           <div>
             <Text strong>当前角色: </Text>
             <Select
@@ -134,7 +134,7 @@ const PermissionDemo = () => {
 
       {/* 权限组件示例 */}
       <Card title="权限组件示例" style={{ marginBottom: '16px' }}>
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%' }}>
           <Title level={4}>1. PermissionGuard 组件</Title>
           <Paragraph>
             根据权限控制内容的显示/隐藏。当前用户需要拥有 <Text code>user:read</Text> 权限才能看到下面的内容：

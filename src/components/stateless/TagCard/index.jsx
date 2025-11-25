@@ -46,11 +46,11 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
         {showMax < tagCardList.length && (
           <>
             {!isExpanded ? (
-              <Button type="primary" onClick={showAll} icon={<DownOutlined />} iconPosition="end">
+              <Button type="primary" onClick={showAll} icon={<DownOutlined />} iconPlacement="end">
                 展开全部标签
               </Button>
             ) : (
-              <Button type="primary" onClick={showPortion} icon={<UpOutlined />} iconPosition="end">
+              <Button type="primary" onClick={showPortion} icon={<UpOutlined />} iconPlacement="end">
                 折叠部分标签
               </Button>
             )}

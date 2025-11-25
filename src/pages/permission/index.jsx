@@ -82,7 +82,7 @@ const PermissionDemo = () => {
 
       {/* 当前权限信息 */}
       <Card title="当前权限信息" style={{ marginBottom: '16px' }}>
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%' }}>
           <div>
             <Text strong>当前角色: </Text>
             <Select
@@ -133,7 +133,7 @@ const PermissionDemo = () => {
 
       {/* 权限组件示例 */}
       <Card title="权限组件示例">
-        <Space direction="vertical" style={{ width: '100%' }}>
+        <Space orientation="vertical" style={{ width: '100%' }}>
           <Title level={4}>PermissionGuard 组件</Title>
           <PermissionGuard
             permission="admin:read"

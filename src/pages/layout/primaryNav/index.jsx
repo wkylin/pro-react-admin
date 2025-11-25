@@ -27,7 +27,7 @@ const PrimaryNav = () => {
   }
 
   return (
-    <Space>
+    <Space style={{ marginRight: 16 }}>
       <Button type="link" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
         首页
       </Button>
