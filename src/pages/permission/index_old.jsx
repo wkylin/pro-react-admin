@@ -182,7 +182,7 @@ const PermissionDemo = () => {
 
           <PermissionGuard
             permissions={['user:read', 'user:update']}
-            requireAll={true}
+            requireAll
             fallback={<Text type="danger">您需要同时拥有 user:read 和 user:update 权限</Text>}
           >
             <Card size="small" style={{ background: '#f0f9ff' }}>

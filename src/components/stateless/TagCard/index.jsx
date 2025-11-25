@@ -73,7 +73,7 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
                 backgroundColor: cardConfig.borderBackgroundColor[index % cardConfig.borderBackgroundColor.length],
                 borderRadius: '3px 3px 0px 0px',
               }}
-            ></div>
+            />
             <div className={styles.tagCardBody}>
               <div className={styles.cardName}>
                 <img src={cardConfig.cardIcon[index % cardConfig.cardIcon.length]} width="22" alt="icon" />
