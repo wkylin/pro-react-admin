@@ -32,56 +32,54 @@ export const mainLayoutMenu = [
   { label: 'Geo Chart', key: '/geo', icon: <QrcodeOutlined /> },
   { label: 'D3 Chart', key: '/d3-chart', icon: <QrcodeOutlined /> },
   { label: 'Print', key: '/print', icon: <QrcodeOutlined /> },
-  // Dashboard 和 Portfilo 已移除，因为它们属于独立布局
-  { label: 'Permission', key: '/permission', icon: <QrcodeOutlined /> },
   { label: 'Profile', key: '/profile', icon: <FireOutlined /> },
   { label: 'Contact', key: '/contact', icon: <QrcodeOutlined /> },
   {
     label: '技术栈',
-    key: '/sub-act',
+    key: '/tech',
     icon: <HeatMapOutlined />,
     children: [
       {
         label: '前端技术栈',
-        key: '/sub-coupons',
+        key: '/tech/frontend',
         icon: <FireOutlined />,
         children: [
           {
             label: '框架生态',
-            key: '/sub-fe-framework',
+            key: '/tech/frontend/framework',
             icon: <FireOutlined />,
             children: [
               {
                 label: 'Vue',
-                key: '/coupons/add',
+                key: '/tech/frontend/vue',
                 icon: <FireOutlined />,
                 children: [
                   {
                     label: 'Vue 插件',
-                    key: '/coupons/add/plugins',
+                    key: '/tech/frontend/vue/plugins',
                     icon: <FireOutlined />,
                     children: [
-                      { label: 'Vue3 API', key: '/coupons/add/plugins/vue3' },
-                      { label: '性能优化', key: '/coupons/add/plugins/perf' },
+                      { label: 'Vue3 API', key: '/tech/frontend/vue/plugins/vue3' },
+                      { label: '性能优化', key: '/tech/frontend/vue/plugins/perf' },
                     ],
                   },
                 ],
               },
-              { label: 'Angular', key: '/coupons/edit' },
+              { label: 'Angular', key: '/tech/frontend/angular' },
             ],
           },
         ],
       },
       {
         label: '后端技术栈',
-        key: '/backend',
+        key: '/tech/backend',
         icon: <DeploymentUnitOutlined />,
       },
     ],
   },
   {
     label: '构建工具',
-    key: '/sub-list',
+    key: '/build',
     icon: <ApartmentOutlined />,
     children: [
       { label: 'Webpack', key: '/build/webpack' },

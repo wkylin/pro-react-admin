@@ -26,16 +26,10 @@ export const businessRoutes = [
     element: <lazyComponents.Business />,
   },
   {
-    path: 'backend',
+    path: 'tech/backend',
     name: '后端技术栈',
-    key: '/backend',
+    key: '/tech/backend',
     element: <lazyComponents.Product />,
-  },
-  {
-    path: 'permission',
-    name: '权限管理示例',
-    key: '/permission',
-    element: <lazyComponents.PermissionDemo />,
   },
   {
     path: 'build/vite',

@@ -6,54 +6,54 @@ import { lazyComponents } from '../config/lazyLoad.config'
  * 包含需要嵌套子路由的模块
  */
 export const nestedRoutes = [
-  // 优惠券模块（嵌套路由）
+  // 技术栈模块（嵌套路由）
   {
-    path: 'coupons',
+    path: 'tech/frontend',
     name: '前端技术栈',
-    key: '/coupons',
+    key: '/tech/frontend',
     element: <lazyComponents.Coupons />,
     children: [
       {
-        path: 'home',
+        path: 'react',
         name: 'React',
-        key: '/coupons/home',
+        key: '/tech/frontend/react',
         element: <lazyComponents.CouponsHome />,
       },
       {
-        path: 'add',
+        path: 'vue',
         name: 'Vue',
-        key: '/coupons/add',
+        key: '/tech/frontend/vue',
         element: <lazyComponents.CouponsAdd />,
       },
       {
-        path: 'edit',
+        path: 'angular',
         name: 'Angular',
-        key: '/coupons/edit',
+        key: '/tech/frontend/angular',
         element: <lazyComponents.CouponsEdit />,
       },
       {
-        path: 'detail',
+        path: 'node',
         name: 'Node',
-        key: '/coupons/detail',
+        key: '/tech/frontend/node',
         element: <lazyComponents.CouponsDetail />,
       },
       // 补充中间层级路由（用于面包屑显示）
       {
-        path: 'add/plugins',
+        path: 'vue/plugins',
         name: 'Vue 插件',
-        key: '/coupons/add/plugins',
+        key: '/tech/frontend/vue/plugins',
         element: <lazyComponents.CouponsAddPlugins />,
       },
       {
-        path: 'add/plugins/vue3',
+        path: 'vue/plugins/vue3',
         name: 'Vue3 API',
-        key: '/coupons/add/plugins/vue3',
+        key: '/tech/frontend/vue/plugins/vue3',
         element: <lazyComponents.Vue3Plugin />,
       },
       {
-        path: 'add/plugins/perf',
+        path: 'vue/plugins/perf',
         name: '性能优化',
-        key: '/coupons/add/plugins/perf',
+        key: '/tech/frontend/vue/plugins/perf',
         element: <lazyComponents.VuePerfPlugin />,
       },
     ],

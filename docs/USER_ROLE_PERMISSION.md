@@ -35,20 +35,18 @@
 - **权限列表**:
   - `user:*` - 用户管理所有权限
   - `role:read` - 角色查看权限
-  - `permission:read` - 权限查看权限
   - `dashboard:*` - 仪表盘所有权限
   - `system:*` - 系统管理所有权限
   - `business:*` - 业务管理所有权限
   - `chart:*` - 图表所有权限
   - `ui:*` - UI组件所有权限
-  - `coupons:*` - 优惠券管理所有权限
-  - `product:*` - 产品管理所有权限
+  - `tech:*` - 技术栈管理所有权限
   - `home:*` - 首页所有权限
   - `demo:*` - 演示页面所有权限
 - **可访问路由**:
   - `/`, `/dashboard`, `/business`, `/chart`, `/ui`
-  - `/coupons`, `/coupons/home`, `/coupons/add`, `/coupons/edit/:id`, `/coupons/detail/:id`
-  - `/backend`, `/demo`, `/permission`
+  - `/tech/frontend`, `/tech/frontend/react`, `/tech/frontend/vue`, `/tech/frontend/angular`
+  - `/tech/backend`, `/demo`
 - **描述**: 拥有大部分管理权限
 
 ### 3. 业务员 (business_user)
@@ -57,14 +55,13 @@
 - **角色ID**: `3`
 - **权限列表**:
   - `business:read`, `business:create`, `business:update` - 业务管理权限
-  - `coupons:read`, `coupons:create` - 优惠券查看和创建权限
-  - `product:read` - 产品查看权限
+  - `tech:read` - 技术栈查看权限
   - `dashboard:read` - 仪表盘查看权限
   - `home:read` - 首页查看权限
   - `chart:read` - 图表查看权限
 - **可访问路由**:
   - `/`, `/dashboard`, `/business`
-  - `/coupons`, `/coupons/home`, `/backend`, `/chart`
+  - `/tech/frontend`, `/tech/backend`, `/chart`
 - **描述**: 拥有业务相关操作权限
 
 ### 4. 普通用户 (user)
@@ -101,10 +98,6 @@ localStorage.setItem('user_role', 'business_user') // 切换为业务员
 localStorage.setItem('user_role', 'super_admin') // 切换为超级管理员
 localStorage.setItem('user_role', 'user') // 切换为普通用户
 ```
-
-### 3. 通过权限示例页面切换
-
-访问 `/permission` 页面，可以通过界面切换角色进行测试。
 
 ## 四、用户-角色-权限关系图
 
@@ -275,15 +268,11 @@ export const mockGetUserPermissions = async (userId?: string, roleCode?: string)
 | `/`                   | `home:read`       | 首页       |
 | `/dashboard`          | `dashboard:read`  | 仪表盘     |
 | `/business`           | `business:read`   | 业务管理   |
-| `/coupons`            | `coupons:read`    | 优惠券列表 |
-| `/coupons/add`        | `coupons:create`  | 创建优惠券 |
-| `/coupons/edit/:id`   | `coupons:update`  | 编辑优惠券 |
-| `/coupons/detail/:id` | `coupons:read`    | 优惠券详情 |
-| `/backend`            | `backend:read`    | 产品管理   |
+| `/tech/frontend`      | `tech:read`       | 前端技术栈 |
+| `/tech/backend`       | `tech:read`       | 后端技术栈 |
 | `/chart`              | `chart:read`      | 图表       |
 | `/ui`                 | `ui:read`         | UI组件     |
 | `/demo`               | `demo:read`       | 演示页面   |
-| `/permission`         | `permission:read` | 权限示例   |
 
 ## 八、使用示例
 

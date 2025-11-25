@@ -1,30 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import CryptoJS, { AES, enc } from 'crypto-js'
 import JSEncrypt from 'jsencrypt'
+import { Card, Tabs, Input, Button, Space, Typography, Row, Col, message, Divider, Alert, theme } from 'antd'
+import { LockOutlined, UnlockOutlined, KeyOutlined, ReloadOutlined } from '@ant-design/icons'
 
-const MyCrypto = () => {
-  const [aesData, setAesData] = useState()
-  const [aesKey, setAesKey] = useState('')
-  const [aesEncryptData, setAesEncrypt] = useState('')
-  const [aesDecryptData, setAesDecryptData] = useState('')
+const { TextArea } = Input
+const { Title, Text, Paragraph } = Typography
 
-  const [reaData, setReaData] = useState('')
-  const [reaEncryptData, setReaEncryptData] = useState('')
-  const [reaDecryptData, setReaDecryptData] = useState('')
-
-  // 导入RSA密钥对
-  const publicKey = `
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0BDRgoeZCRRvH/QLbGhe
+// 预置的 RSA 密钥对 (仅作演示使用，实际生产环境请勿在前端硬编码私钥)
+const DEFAULT_PUBLIC_KEY = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0BDRgoeZCRRvH/QLbGhe
 M6ecmHUzm4ofqRgBPl1yThEryOQ8gGjmr16Xlj7cAedZz0vqvUsWnZh5KMZ5b5vQ
 Y4HGhPfPL3CzlI+iL0JyfFN9DsIe7uSDsStBfbLQas+IYIu47RMW9YNAmS8QFmqn
 4Gpw6S1t3H+1AfwQpAGxXHm3+2mTClkautPOAqmTkAzM5eLIisOI/RE4YZiHRl49
 l+yUAmpAqRw0WnvqRlw76ES6naSBxHM7iQeAlo8R5YqheD2kNzJbEcJ7Owd4Rcfo
 kKZxSh7Qy/Pre8QFvIKdsCu4hpIGkws86s1IHvFLCXsXUxPR5z3E69VuW6K6rkXT
-lwIDAQAB
-`
-  const privateKey = `
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDQENGCh5kJFG8f
+lwIDAQAB`
+
+const DEFAULT_PRIVATE_KEY = `MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDQENGCh5kJFG8f
 9AtsaF4zp5yYdTObih+pGAE+XXJOESvI5DyAaOavXpeWPtwB51nPS+q9SxadmHko
 xnlvm9BjgcaE988vcLOUj6IvQnJ8U30Owh7u5IOxK0F9stBqz4hgi7jtExb1g0CZ
 LxAWaqfganDpLW3cf7UB/BCkAbFcebf7aZMKWRq6084CqZOQDMzl4siKw4j9EThh
@@ -49,56 +42,292 @@ tmkGmcQpfHblBLpW8U5sQduJKGg17TruTiOVQbKxR2ZrYROHrs2iWEDXVJvQ/2hQ
 5oWNYV16F3C72LbP2WFWJSJmNKHWBwLiSO1Ch7ffAoGBAOEGk+98m4l1jtDkIr/w
 EYOns+p9wj3be5YfARMRHxFjJCyXyaZstuk4RsmHhOlnO999nVX7eCAU36HfEahQ
 l5BNkobjNZF/xd9XTWywJFTGJNg6ejF991ucWnfSwnlRbJN8sGYRrr/IYyd6a/YL
-v4U73TKOI+a1xxr6ZMQ4vzwt
-`
-  useEffect(() => {
-    const encryptData = () => {
-      setAesKey(CryptoJS.lib.WordArray.random(32).toString())
-      // const aseParameter = CryptoJS.lib.WordArray.random(80000 / 4).toString()
-      const aseParameter = `大型语言模型（LLM）是基于大量数据进行预训练的超大型深度学习模型。底层转换器是一组神经网络，这些神经网络由具有自注意力功能的编码器和解码器组成。编码器和解码器从一系列文本中提取含义，并理解其中的单词和短语之间的关系。
-转换器 LLM 能够进行无监督的训练，但更精确的解释是转换器可以执行自主学习。通过此过程，转换器可学会理解基本的语法、语言和知识。
-与早期按顺序处理输入的循环神经网络（RNN）不同，转换器并行处理整个序列。这可让数据科学家使用 GPU 训练基于转换器的 LLM，从而大幅度缩短训练时间。
-借助转换器神经网络架构，您可使用非常大规模的模型，其中通常具有数千亿个参数。这种大规模模型可以摄取通常来自互联网的大量数据，但也可以从包含 500 多亿个网页的 Common Crawl 和拥有约 5700 万个页面的 Wikipedia 等来源摄取数据。`
-      const aesEncrypt = AES.encrypt(aseParameter, aesKey).toString()
-      setAesData(aseParameter)
-      setAesEncrypt(aesEncrypt)
-      const aesDecrypted = AES.decrypt(aesEncrypt, aesKey).toString(enc.Utf8)
-      setAesDecryptData(aesDecrypted)
+v4U73TKOI+a1xxr6ZMQ4vzwt`
 
-      const encrypt = new JSEncrypt()
-      encrypt.setPublicKey(publicKey)
+const AESPanel = () => {
+  const { token } = theme.useToken()
+  const [plainText, setPlainText] = useState('大型语言模型（LLM）是基于大量数据进行预训练的超大型深度学习模型。')
+  const [secretKey, setSecretKey] = useState('')
+  const [cipherText, setCipherText] = useState('')
+  const [decryptedText, setDecryptedText] = useState('')
 
-      // const reaParameter = CryptoJS.lib.WordArray.random(80 / 4).toString()
-      const reaParameter =
-        '基于转换器的大型神经网络可以有数十亿个参数。模型的大小通常由模型大小、参数数量和训练数据规模之间的经验关系决定。'
+  const generateKey = () => {
+    const key = CryptoJS.lib.WordArray.random(16).toString()
+    setSecretKey(key)
+    message.success('已生成随机 AES 密钥')
+  }
 
-      const reaEncrypt = encrypt.encrypt(reaParameter)
-      setReaData(reaParameter)
-
-      setReaEncryptData(reaEncrypt)
-
-      const decrypt = new JSEncrypt()
-      decrypt.setPrivateKey(privateKey)
-      const uncrypted = decrypt.decrypt(reaEncrypt)
-      setReaDecryptData(uncrypted)
+  const handleEncrypt = () => {
+    if (!plainText) return message.warning('请输入需要加密的内容')
+    if (!secretKey) return message.warning('请输入或生成密钥')
+    try {
+      const encrypted = AES.encrypt(plainText, secretKey).toString()
+      setCipherText(encrypted)
+      setDecryptedText('') // 清空之前的解密结果
+      message.success('加密成功')
+    } catch (error) {
+      message.error('加密失败')
     }
+  }
 
-    encryptData()
+  const handleDecrypt = () => {
+    if (!cipherText) return message.warning('没有可解密的密文')
+    if (!secretKey) return message.warning('请输入密钥')
+    try {
+      const decrypted = AES.decrypt(cipherText, secretKey).toString(enc.Utf8)
+      if (!decrypted) throw new Error('解密失败，可能是密钥错误')
+      setDecryptedText(decrypted)
+      message.success('解密成功')
+    } catch (error) {
+      setDecryptedText('')
+      message.error('解密失败，请检查密钥是否正确')
+    }
+  }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  return (
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Alert
+        message="AES (Advanced Encryption Standard)"
+        description="对称加密算法，加密和解密使用相同的密钥。速度快，适合大量数据加密。"
+        type="info"
+        showIcon
+      />
+
+      <Row gutter={24}>
+        <Col span={12}>
+          <Card title="加密区 (Encryption)" bordered={false} className="shadow-sm">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div>
+                <Text strong>1. 输入明文</Text>
+                <TextArea
+                  rows={4}
+                  value={plainText}
+                  onChange={(e) => setPlainText(e.target.value)}
+                  placeholder="请输入要加密的文本..."
+                  style={{ marginTop: 8 }}
+                />
+              </div>
+
+              <div>
+                <Text strong>2. 设置密钥</Text>
+                <div style={{ display: 'flex', marginTop: 8, gap: 8 }}>
+                  <Input.Password
+                    prefix={<KeyOutlined />}
+                    value={secretKey}
+                    onChange={(e) => setSecretKey(e.target.value)}
+                    placeholder="输入密钥"
+                  />
+                  <Button icon={<ReloadOutlined />} onClick={generateKey}>
+                    随机生成
+                  </Button>
+                </div>
+              </div>
+
+              <Button type="primary" icon={<LockOutlined />} onClick={handleEncrypt} block>
+                执行加密
+              </Button>
+            </Space>
+          </Card>
+        </Col>
+
+        <Col span={12}>
+          <Card title="结果区 (Result)" bordered={false} className="shadow-sm">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <div>
+                <Text strong>3. 密文输出</Text>
+                <TextArea
+                  rows={4}
+                  value={cipherText}
+                  onChange={(e) => setCipherText(e.target.value)}
+                  placeholder="加密后的内容将显示在这里..."
+                  style={{ marginTop: 8, backgroundColor: token.colorFillAlter, color: token.colorText }}
+                />
+              </div>
+
+              <Button icon={<UnlockOutlined />} onClick={handleDecrypt} block disabled={!cipherText}>
+                尝试解密 (使用左侧密钥)
+              </Button>
+
+              <div>
+                <Text strong>4. 解密验证</Text>
+                <div
+                  style={{
+                    marginTop: 8,
+                    padding: '8px 12px',
+                    background: decryptedText ? token.colorSuccessBg : token.colorFillAlter,
+                    border: decryptedText ? `1px solid ${token.colorSuccessBorder}` : `1px solid ${token.colorBorder}`,
+                    borderRadius: 6,
+                    minHeight: 100,
+                  }}
+                >
+                  {decryptedText || <Text type="secondary">解密后的明文将显示在这里...</Text>}
+                </div>
+              </div>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
+    </Space>
+  )
+}
+
+const RSAPanel = () => {
+  const { token } = theme.useToken()
+  const [plainText, setPlainText] = useState('基于转换器的大型神经网络可以有数十亿个参数。')
+  const [cipherText, setCipherText] = useState('')
+  const [decryptedText, setDecryptedText] = useState('')
+
+  const handleEncrypt = () => {
+    if (!plainText) return message.warning('请输入需要加密的内容')
+    try {
+      const encrypt = new JSEncrypt()
+      encrypt.setPublicKey(DEFAULT_PUBLIC_KEY)
+      const encrypted = encrypt.encrypt(plainText)
+      if (!encrypted) throw new Error('加密失败')
+      setCipherText(encrypted)
+      setDecryptedText('')
+      message.success('使用公钥加密成功')
+    } catch (error) {
+      message.error('加密失败，可能是文本过长')
+    }
+  }
+
+  const handleDecrypt = () => {
+    if (!cipherText) return message.warning('没有可解密的密文')
+    try {
+      const decrypt = new JSEncrypt()
+      decrypt.setPrivateKey(DEFAULT_PRIVATE_KEY)
+      const decrypted = decrypt.decrypt(cipherText)
+      if (!decrypted) throw new Error('解密失败')
+      setDecryptedText(decrypted)
+      message.success('使用私钥解密成功')
+    } catch (error) {
+      message.error('解密失败')
+    }
+  }
+
+  return (
+    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+      <Alert
+        message="RSA (Rivest-Shamir-Adleman)"
+        description="非对称加密算法，使用公钥加密，私钥解密。安全性高，但速度较慢，适合加密少量数据（如密钥交换）。"
+        type="warning"
+        showIcon
+      />
+
+      <Row gutter={24}>
+        <Col span={24}>
+          <Card title="密钥对配置 (Key Pair)" size="small" bordered={false}>
+            <Row gutter={24}>
+              <Col span={12}>
+                <Text type="secondary">公钥 (Public Key) - 用于加密</Text>
+                <Paragraph
+                  ellipsis={{ rows: 2, expandable: true, symbol: '展开' }}
+                  copyable
+                  style={{ fontFamily: 'monospace', marginTop: 4 }}
+                >
+                  {DEFAULT_PUBLIC_KEY}
+                </Paragraph>
+              </Col>
+              <Col span={12}>
+                <Text type="secondary">私钥 (Private Key) - 用于解密</Text>
+                <Paragraph
+                  ellipsis={{ rows: 2, expandable: true, symbol: '展开' }}
+                  copyable={{ text: DEFAULT_PRIVATE_KEY }}
+                  style={{ fontFamily: 'monospace', marginTop: 4 }}
+                >
+                  {DEFAULT_PRIVATE_KEY.substring(0, 100)}... (安全起见仅显示部分)
+                </Paragraph>
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={24}>
+        <Col span={12}>
+          <Card title="公钥加密 (Public Key Encryption)" bordered={false} className="shadow-sm">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Text strong>输入明文</Text>
+              <TextArea
+                rows={6}
+                value={plainText}
+                onChange={(e) => setPlainText(e.target.value)}
+                placeholder="请输入要加密的文本..."
+              />
+              <Button type="primary" icon={<LockOutlined />} onClick={handleEncrypt} block>
+                使用公钥加密
+              </Button>
+            </Space>
+          </Card>
+        </Col>
+
+        <Col span={12}>
+          <Card title="私钥解密 (Private Key Decryption)" bordered={false} className="shadow-sm">
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <Text strong>密文结果</Text>
+              <TextArea
+                rows={4}
+                value={cipherText}
+                onChange={(e) => setCipherText(e.target.value)}
+                placeholder="加密后的密文..."
+                style={{ backgroundColor: token.colorFillAlter, color: token.colorText }}
+              />{' '}
+              <Button icon={<UnlockOutlined />} onClick={handleDecrypt} block disabled={!cipherText}>
+                使用私钥解密
+              </Button>
+              <div
+                style={{
+                  marginTop: 8,
+                  padding: '8px 12px',
+                  background: decryptedText ? token.colorWarningBg : token.colorFillAlter,
+                  border: decryptedText ? `1px solid ${token.colorWarningBorder}` : `1px solid ${token.colorBorder}`,
+                  borderRadius: 6,
+                  minHeight: 60,
+                }}
+              >
+                {decryptedText ? <Text>{decryptedText}</Text> : <Text type="secondary">解密结果...</Text>}
+              </div>
+            </Space>
+          </Card>
+        </Col>
+      </Row>
+    </Space>
+  )
+}
+
+const MyCrypto = () => {
+  const items = [
+    {
+      key: 'aes',
+      label: (
+        <span>
+          <LockOutlined />
+          AES 加密
+        </span>
+      ),
+      children: <AESPanel />,
+    },
+    {
+      key: 'rsa',
+      label: (
+        <span>
+          <KeyOutlined />
+          RSA 加密
+        </span>
+      ),
+      children: <RSAPanel />,
+    },
+  ]
 
   return (
     <FixTabPanel>
-      <section style={{ wordBreak: 'break-all' }}>
-        <h3>AES加密明文： {aesData}</h3>
-        <h4>AES密钥：{aesKey}</h4>
-        <h3>AES加密密文：{aesEncryptData}</h3>
-        <h3>AES解密后文件：{aesDecryptData}</h3>
-        <h3>REA加密明文：{reaData}</h3>
-        <h4>REA加密密文：{reaEncryptData}</h4>
-        <h4>REA解密后：{reaDecryptData}</h4>
-      </section>
+      <Card bordered={false} style={{ minHeight: '100%' }}>
+        <Title level={3}>加密算法实验室</Title>
+        <Paragraph type="secondary">提供常用的对称加密 (AES) 和非对称加密 (RSA) 在线测试工具。</Paragraph>
+        <Divider />
+        <Tabs defaultActiveKey="aes" items={items} type="card" />
+      </Card>
     </FixTabPanel>
   )
 }
