@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Table } from 'antd'
+import PageContainer from '@stateless/PageContainer'
 import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
 import LogoSlider from '@stateless/LogoSlider'
 import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
 import GradientTracing from '@stateless/GradientTracing'
-import Footer from '@stateless/Footer'
 import StarBack from '@stateless/StarBackground'
 // import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
 import FixTabs from '@stateless/FixTabs'
@@ -247,7 +247,7 @@ const ProDemo = () => {
 
   return (
     <FixTabPanel>
-      <section style={{ position: 'relative', zIndex: 1, transform: 'translate3d(0, 0, 0)' }}>
+      <PageContainer>
         <MusicPlayer />
         <FixTabs />
         <StatisticCard />
@@ -424,8 +424,7 @@ const ProDemo = () => {
         <section style={{ marginBottom: '15px' }}>
           <OrgChart />
         </section>
-      </section>
-      <Footer />
+      </PageContainer>
     </FixTabPanel>
   )
 }
