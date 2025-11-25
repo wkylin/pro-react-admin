@@ -22,6 +22,8 @@ export const lazyComponents = {
   // 认证相关（直接导入，不需要懒加载）
   // SignIn 和 SignUp 在路由中直接导入，不使用懒加载
   AuthCallback: lazyLoad(() => import('@src/components/auth/AuthCallback')),
+  Terms: lazyLoad(() => import('@pages/terms')),
+  Privacy: lazyLoad(() => import('@pages/privacy')),
 
   // 业务页面
   Home: lazyLoad(() => import('@pages/home'), { preload: true }),

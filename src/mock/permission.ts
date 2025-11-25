@@ -193,6 +193,8 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/signin': 'system:read',
   '/signup': 'system:read',
   '/auth/callback': 'system:read',
+  '/terms': 'system:read',
+  '/privacy': 'system:read',
   '/setting': 'system:read',
   '/faker/shops': 'business:read',
   '/motion': 'motion:read',

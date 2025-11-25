@@ -1,7 +1,7 @@
 import React from 'react'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import AlignCenter from '@stateless/AlignCenter'
-import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme } from 'antd'
+import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
 import {
   UserOutlined,
   LockOutlined,
@@ -36,16 +36,6 @@ const SignUp = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('表单验证失败:', errorInfo)
   }
-
-  // 手机号前缀选择器
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle initialValue="86">
-      <Select style={{ width: 70 }}>
-        <Option value="86">+86</Option>
-        <Option value="44">+44</Option>
-      </Select>
-    </Form.Item>
-  )
 
   return (
     <Layout style={{ height: '100%', overflow: 'auto' }}>
@@ -115,7 +105,9 @@ const SignUp = () => {
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 size="large"
-                layout="vertical"
+                layout="horizontal"
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 18 }}
                 scrollToFirstError
               >
                 {/* 用户名 */}
@@ -156,23 +148,32 @@ const SignUp = () => {
                 </Form.Item>
 
                 {/* 手机号 */}
-                <Form.Item
-                  label="手机号码"
-                  name="phone"
-                  rules={[
-                    { required: true, message: '请输入手机号码!' },
-                    {
-                      pattern: /^1[3-9]\d{9}$/,
-                      message: '请输入有效的手机号码!',
-                    },
-                  ]}
-                >
-                  <Input
-                    addonBefore={prefixSelector}
-                    prefix={<PhoneOutlined style={{ color: '#bfbfbf' }} />}
-                    placeholder="请输入手机号码"
-                    style={{ height: 44 }}
-                  />
+                <Form.Item label="手机号码" required>
+                  <Space.Compact style={{ width: '100%' }}>
+                    <Form.Item name="prefix" noStyle initialValue="86">
+                      <Select style={{ width: 90, height: 44 }} size="large">
+                        <Option value="86">+86</Option>
+                        <Option value="44">+44</Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item
+                      name="phone"
+                      noStyle
+                      rules={[
+                        { required: true, message: '请输入手机号码!' },
+                        {
+                          pattern: /^1[3-9]\d{9}$/,
+                          message: '请输入有效的手机号码!',
+                        },
+                      ]}
+                    >
+                      <Input
+                        prefix={<PhoneOutlined style={{ color: '#bfbfbf' }} />}
+                        placeholder="请输入手机号码"
+                        style={{ height: 44, width: 'calc(100% - 90px)' }}
+                      />
+                    </Form.Item>
+                  </Space.Compact>
                 </Form.Item>
 
                 {/* 密码 */}
@@ -229,6 +230,7 @@ const SignUp = () => {
                 <Form.Item
                   name="agreement"
                   valuePropName="checked"
+                  wrapperCol={{ offset: 6, span: 18 }}
                   rules={[
                     {
                       validator: (_, value) =>
@@ -244,7 +246,7 @@ const SignUp = () => {
                 </Form.Item>
 
                 {/* 注册按钮 */}
-                <Form.Item style={{ marginBottom: 16 }}>
+                <Form.Item style={{ marginBottom: 16 }} wrapperCol={{ offset: 6, span: 18 }}>
                   <Button
                     type="primary"
                     htmlType="submit"

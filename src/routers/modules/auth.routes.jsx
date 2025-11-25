@@ -27,4 +27,16 @@ export const authRoutes = [
     key: '/auth/callback',
     element: <AuthCallback />,
   },
+  {
+    path: 'terms',
+    name: '用户协议',
+    key: '/terms',
+    element: <lazyComponents.Terms />,
+  },
+  {
+    path: 'privacy',
+    name: '隐私政策',
+    key: '/privacy',
+    element: <lazyComponents.Privacy />,
+  },
 ]
