@@ -182,7 +182,7 @@ const ProTabs = (props) => {
         closable: pane.closable,
         forceRender: true,
         children: (
-          <MyErrorBoundary fixError={fixError}>
+          <MyErrorBoundary onReset={fixError} navigate={redirectTo}>
             <div className="layout-tabpanel">
               <KeepAlive id={pane.key} active={pane.key === fullPath} persistOnUnmount={pane.key === '/'}>
                 {isReload && pane.key === fullPath && pane.key !== '/404' ? (

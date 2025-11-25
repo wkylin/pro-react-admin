@@ -1,3 +1,3 @@
-import MyErrorBoundary from './ErrorBoundary'
+import ErrorBoundary from '@/components/ErrorBoundary'
 
-export default MyErrorBoundary
+export default ErrorBoundary

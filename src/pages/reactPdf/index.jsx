@@ -2,34 +2,12 @@ import React, { useState, useCallback } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Loader2 } from 'lucide-react'
 import FixTabPanel from '@stateless/FixTabPanel'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css'
 import 'react-pdf/dist/esm/Page/TextLayer.css'
 
 // 设置PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.mjs`
-
-// 错误边界组件，用于捕获子组件错误
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { hasError: false, error: null }
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true, error }
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('PDF渲染错误:', error, errorInfo)
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return this.props.fallback || <div>加载PDF时发生错误，请重试。</div>
-    }
-    return this.props.children
-  }
-}
 
 const ReactPdf = () => {
   const [numPages, setNumPages] = useState(null)
