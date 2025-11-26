@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import screenfull from 'screenfull'
-import { message, Space, Tooltip } from 'antd'
+import { message, Tooltip, Button } from 'antd'
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 
 interface FullScreenProps {
@@ -84,13 +84,19 @@ const FullScreen: React.FC<FullScreenProps> = ({ ele, tips = '全屏', placement
 
   return (
     <Tooltip placement={placement} title={tips}>
-      <Space style={{ cursor: 'pointer' }} onClick={handleFullScreen}>
-        {isFullScreen ? (
-          <FullscreenExitOutlined style={{ fontSize: 16 }} />
-        ) : (
-          <FullscreenOutlined style={{ fontSize: 16 }} />
-        )}
-      </Space>
+      <Button
+        type="text"
+        size="small"
+        aria-label={tips}
+        onClick={handleFullScreen}
+        icon={
+          isFullScreen ? (
+            <FullscreenExitOutlined style={{ fontSize: 16 }} />
+          ) : (
+            <FullscreenOutlined style={{ fontSize: 16 }} />
+          )
+        }
+      />
     </Tooltip>
   )
 }

@@ -1,5 +1,8 @@
 import React from 'react'
-import { Layout, Space, Dropdown, theme, Avatar, message } from 'antd'
+import LightSvg from '@assets/svg/light.svg'
+import DarkSvg from '@assets/svg/dark.svg'
+import { useProThemeContext } from '@src/theme/hooks'
+import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button } from 'antd'
 import {
   UserOutlined,
   LogoutOutlined,
@@ -9,18 +12,15 @@ import {
   SettingOutlined,
   MenuOutlined,
   MoreOutlined,
+  RocketOutlined,
+  BookOutlined,
 } from '@ant-design/icons'
-// import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage } from '@utils/publicFn'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
-// import { ReactComponent as LightSvg } from '@assets/svg/light.svg'
-// import { ReactComponent as DarkSvg } from '@assets/svg/dark.svg'
-// import LightSvg from '@assets/svg/light.svg'
-// import DarkSvg from '@assets/svg/dark.svg'
-import WikiSvg from '@assets/svg/wikipedia.svg'
-import RocketSvg from '@assets/svg/rocket.svg'
+// import WikiSvg from '@assets/svg/wikipedia.svg'
+// import RocketSvg from '@assets/svg/rocket.svg'
 
 import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
@@ -149,13 +149,13 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     {
       key: 'wiki',
       label: 'Wiki',
-      icon: <WikiSvg style={{ fontSize: 16 }} />,
+      icon: <BookOutlined style={{ fontSize: 16 }} />,
       onClick: redirectWiki,
     },
     {
       key: 'wrapped',
       label: 'Wrapped',
-      icon: <RocketSvg style={{ fontSize: 16 }} />,
+      icon: <RocketOutlined style={{ fontSize: 16 }} />,
       onClick: redirectWrapped,
     },
     {
@@ -169,6 +169,12 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
   const {
     token: { colorBgContainer, colorBorder },
   } = theme.useToken()
+  const { themeSettings, updateSettings } = useProThemeContext()
+  const isDark = themeSettings.themeMode === 'dark'
+
+  const handleThemeToggle = () => {
+    updateSettings({ themeMode: isDark ? 'light' : 'dark' })
+  }
 
   return (
     <Layout.Header
@@ -210,9 +216,29 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
               <SoundBar />
               <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
               <Fullscreen />
-              <SettingOutlined style={{ fontSize: 16 }} onClick={onSettingClick} />
-              <RocketSvg style={{ fontSize: 16 }} onClick={redirectWrapped} />
-              <WikiSvg style={{ fontSize: 16 }} onClick={redirectWiki} />
+              <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
+                <Button
+                  onClick={handleThemeToggle}
+                  size="small"
+                  style={{ margin: '0 4px', fontSize: 16 }}
+                  icon={
+                    isDark ? (
+                      <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
+                    ) : (
+                      <DarkSvg style={{ fontSize: 16, color: '#222' }} />
+                    )
+                  }
+                />
+              </Tooltip>
+              <Tooltip title="主题设置" placement="bottom">
+                <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={{ fontSize: 16 }} />
+              </Tooltip>
+              <Tooltip title="GitHub Wrapped" placement="bottom">
+                <Button icon={<RocketOutlined style={{ fontSize: 16 }} />} size="small" onClick={redirectWrapped} />
+              </Tooltip>
+              <Tooltip title="DeepWiki" placement="bottom">
+                <Button icon={<BookOutlined style={{ fontSize: 16 }} />} size="small" onClick={redirectWiki} />
+              </Tooltip>
               <LanguageSwitcher />
             </Space>
           ) : (

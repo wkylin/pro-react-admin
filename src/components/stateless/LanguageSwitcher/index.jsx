@@ -1,21 +1,30 @@
 import React from 'react'
-import { Button, Space } from 'antd'
+import { Button, Space, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { GlobalOutlined, TranslationOutlined } from '@ant-design/icons'
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation()
 
   const handleLanguageChange = (language) => {
     i18n.changeLanguage(language)
-    // window.location.reload()
   }
+
+  const isZh = i18n.language === 'zh-CN' || i18n.language === 'zh'
+  const isEn = i18n.language === 'en'
 
   return (
     <Space>
-      {(i18n.language === 'zh-CN' || i18n.language === 'zh') && (
-        <Button onClick={() => handleLanguageChange('en')}>英文</Button>
+      {isZh && (
+        <Tooltip title="Switch to English" placement="bottom">
+          <Button icon={<GlobalOutlined />} size="small" onClick={() => handleLanguageChange('en')} />
+        </Tooltip>
       )}
-      {i18n.language === 'en' && <Button onClick={() => handleLanguageChange('zh')}>中文</Button>}
+      {isEn && (
+        <Tooltip title="切换为中文" placement="bottom">
+          <Button size="small" icon={<TranslationOutlined />} onClick={() => handleLanguageChange('zh')} />
+        </Tooltip>
+      )}
     </Space>
   )
 }
