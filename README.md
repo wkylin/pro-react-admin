@@ -133,6 +133,7 @@ npm run dev
 Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ## 🌐 约定式提交
+
 1. [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
 2. [语义化版本 2.0.0](https://semver.org/lang/zh-CN/)
 
@@ -149,7 +150,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
      > baize
   ```
 
-##  📝自动化持续代码审查工具
+## 📝自动化持续代码审查工具
 
 1. [DeepSource/](https://deepsource.io/)
 2. [DeepScan](https://deepscan.io/)
@@ -277,9 +278,6 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
    4. rm -rf package-lock.json
 ```
 
-
-
-
 ## 📝 GitHub Proxy
 
 1. 首先确认自己 git 拉取代码的方式
@@ -315,6 +313,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
      git config --global --unset http.proxy
      git config --global --unset https.proxy
    ```
+
 ## 🤝 Show your support
 
 <!-- Give a ⭐️ if this project helped you! -->
