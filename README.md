@@ -133,7 +133,8 @@ npm run dev
 Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ## 🌐 约定式提交
-1. [Conventional Commits](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+1. [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+2. [语义化版本 2.0.0](https://semver.org/lang/zh-CN/)
 
 ## 📄 架构
 
