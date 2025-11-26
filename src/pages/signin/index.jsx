@@ -8,14 +8,12 @@ import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
 import { testAccounts } from '@src/mock/permission'
-import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 
 const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
 const { useBreakpoint } = Grid
 
 const SignIn = () => {
-  useRemoveGlobalLoader()
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const {

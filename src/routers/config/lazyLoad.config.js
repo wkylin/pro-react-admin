@@ -1,8 +1,11 @@
 import React from 'react'
 import loadable from '@loadable/component'
 import Loading from '@stateless/Loading'
+
 import Home from '@pages/home'
 import Layout from '@pages/layout'
+import Dashboard from '@pages/dashboard'
+import MyPortfilo from '@pages/portfilo'
 
 /**
  * 统一懒加载处理函数
@@ -20,7 +23,9 @@ export const lazyComponents = {
   // 布局组件
   // Layout: lazyLoad(() => import('@pages/layout')),
   Layout, // 布局改为同步加载，避免白屏
-  Dashboard: lazyLoad(() => import('@/pages/dashboard'), { preload: true }),
+  // Dashboard: lazyLoad(() => import('@/pages/dashboard'), { preload: true }),
+  Dashboard, // Dashboard 改为同步加载，避免刷新时一直 loading
+  MyPortfilo, // MyPortfilo 改为同步加载，避免刷新时一直 loading
 
   // 认证相关（直接导入，不需要懒加载）
   // SignIn 和 SignUp 在路由中直接导入，不使用懒加载

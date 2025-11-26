@@ -10,11 +10,13 @@ import './styles/reset.css'
 
 import App from './App'
 import { useProThemeContext } from './theme/hooks'
+import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 import { setMessageInstance } from '@utils/message'
 
 dayjs.locale('zh-cn')
 
 const ThemeIndex: React.FC = () => {
+  useRemoveGlobalLoader()
   const { themeSettings } = useProThemeContext()
 
   // 统一自定义前缀
