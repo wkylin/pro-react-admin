@@ -249,8 +249,7 @@ const ProDemo = () => {
     <FixTabPanel>
       <PageContainer>
         <MusicPlayer />
-        <FixTabs />
-        <StatisticCard />
+
         <TransferHistory />
         <FixCarousel />
         <TrapezoidTabs
@@ -391,7 +390,8 @@ const ProDemo = () => {
         </div>
 
         <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
-
+        <FixTabs />
+        <StatisticCard />
         <section className="m-10 flex items-center justify-center gap-5">
           <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
             <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
