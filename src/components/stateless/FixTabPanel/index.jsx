@@ -25,6 +25,7 @@ const FixTabPanel = React.forwardRef(({ style, children, className, ...rest }, r
         position: 'relative',
         overflowX: 'hidden',
         overflowY: 'auto',
+        padding: '5px',
         ...style,
       }}
     >
