@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
@@ -190,11 +190,13 @@ const ProTabs = (props) => {
           <MyErrorBoundary onReset={fixError} navigate={redirectTo}>
             <div className="layout-tabpanel">
               <KeepAlive id={pane.key} active={pane.key === fullPath} persistOnUnmount={pane.key === '/'}>
-                {isReload && pane.key === fullPath && pane.key !== '/404' ? (
-                  <Loading tip="刷新中..." />
-                ) : (
-                  <>{pane.content}</>
-                )}
+                <Suspense fallback={<Loading />}>
+                  {isReload && pane.key === fullPath && pane.key !== '/404' ? (
+                    <Loading tip="刷新中..." />
+                  ) : (
+                    <>{pane.content}</>
+                  )}
+                </Suspense>
               </KeepAlive>
             </div>
           </MyErrorBoundary>

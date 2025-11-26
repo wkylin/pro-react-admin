@@ -11,10 +11,12 @@ import ProSecNav from './proSecNav'
 import styles from './index.module.less'
 import { constant } from 'lodash'
 import { useProThemeContext } from '@theme/hooks'
+import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 
 const { useBreakpoint } = Grid
 
 const ProLayout = () => {
+  useRemoveGlobalLoader()
   const layoutRef = useRef(null)
   const [settingOpen, setSettingOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)

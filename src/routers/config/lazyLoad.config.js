@@ -1,6 +1,8 @@
 import React from 'react'
 import loadable from '@loadable/component'
 import Loading from '@stateless/Loading'
+import Home from '@pages/home'
+import Layout from '@pages/layout'
 
 /**
  * 统一懒加载处理函数
@@ -16,7 +18,8 @@ const lazyLoad = (importFunc, options = {}) => loadable(importFunc, { fallback: 
  */
 export const lazyComponents = {
   // 布局组件
-  Layout: lazyLoad(() => import('@pages/layout')),
+  // Layout: lazyLoad(() => import('@pages/layout')),
+  Layout, // 布局改为同步加载，避免白屏
   Dashboard: lazyLoad(() => import('@/pages/dashboard'), { preload: true }),
 
   // 认证相关（直接导入，不需要懒加载）
@@ -26,7 +29,8 @@ export const lazyComponents = {
   Privacy: lazyLoad(() => import('@pages/privacy')),
 
   // 业务页面
-  Home: lazyLoad(() => import('@pages/home'), { preload: true }),
+  // Home: lazyLoad(() => import('@pages/home'), { preload: true }),
+  Home, // 首页改为同步加载，避免首屏白屏闪烁
   Demo: lazyLoad(() => import('@pages/demo'), { preload: true }),
   Business: lazyLoad(() => import('@pages/business')),
   Product: lazyLoad(() => import('@pages/product'), { preload: true }),

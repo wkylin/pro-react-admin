@@ -29,6 +29,7 @@ import {
 } from '@ant-design/icons'
 
 import { setLocalStorage } from '@utils/publicFn'
+import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 
 const { Title, Text, Link } = Typography
 const { Option } = Select
@@ -36,6 +37,7 @@ const { Content } = Layout
 const { useBreakpoint } = Grid
 
 const SignUp = () => {
+  useRemoveGlobalLoader()
   const { redirectTo } = useSafeNavigate()
   const {
     token: { colorBgContainer },
