@@ -1,7 +1,22 @@
 import React from 'react'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import AlignCenter from '@stateless/AlignCenter'
-import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
+import {
+  Form,
+  Input,
+  Button,
+  Card,
+  Divider,
+  Checkbox,
+  Typography,
+  Row,
+  Col,
+  Select,
+  Layout,
+  theme,
+  Space,
+  Grid,
+} from 'antd'
 import {
   UserOutlined,
   LockOutlined,
@@ -18,12 +33,15 @@ import { setLocalStorage } from '@utils/publicFn'
 const { Title, Text, Link } = Typography
 const { Option } = Select
 const { Content } = Layout
+const { useBreakpoint } = Grid
 
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+  const screens = useBreakpoint()
+  const isMobile = !screens.md
 
   const [form] = Form.useForm()
 
@@ -48,7 +66,7 @@ const SignUp = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '20px',
+              padding: isMobile ? '16px' : '20px',
               width: '100%',
             }}
           >
@@ -58,8 +76,8 @@ const SignUp = () => {
                 maxWidth: 450,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 borderRadius: '12px',
-                padding: '40px 32px',
               }}
+              styles={{ body: { padding: isMobile ? '20px 16px' : '40px 32px' } }}
             >
               {/* 头部标题 */}
               <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -105,9 +123,9 @@ const SignUp = () => {
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 size="large"
-                layout="horizontal"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 18 }}
+                layout={isMobile ? 'vertical' : 'horizontal'}
+                labelCol={isMobile ? null : { span: 6 }}
+                wrapperCol={isMobile ? null : { span: 18 }}
                 scrollToFirstError
               >
                 {/* 用户名 */}
@@ -230,7 +248,7 @@ const SignUp = () => {
                 <Form.Item
                   name="agreement"
                   valuePropName="checked"
-                  wrapperCol={{ offset: 6, span: 18 }}
+                  wrapperCol={isMobile ? null : { offset: 6, span: 18 }}
                   rules={[
                     {
                       validator: (_, value) =>
@@ -239,14 +257,20 @@ const SignUp = () => {
                   ]}
                   style={{ marginBottom: 16 }}
                 >
-                  <Checkbox>
+                  <Checkbox style={{ fontSize: isMobile ? '13px' : '14px' }}>
                     我已阅读并同意
-                    <Link href="#/terms">用户协议</Link>和<Link href="#/privacy">隐私政策</Link>
+                    <Link href="#/terms" style={{ fontSize: isMobile ? '13px' : '14px' }}>
+                      用户协议
+                    </Link>
+                    和
+                    <Link href="#/privacy" style={{ fontSize: isMobile ? '13px' : '14px' }}>
+                      隐私政策
+                    </Link>
                   </Checkbox>
                 </Form.Item>
 
                 {/* 注册按钮 */}
-                <Form.Item style={{ marginBottom: 16 }} wrapperCol={{ offset: 6, span: 18 }}>
+                <Form.Item style={{ marginBottom: 16 }} wrapperCol={isMobile ? null : { offset: 6, span: 18 }}>
                   <Button
                     type="primary"
                     htmlType="submit"

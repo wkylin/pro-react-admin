@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import useSafeNavigate from '@hooks/useSafeNavigate'
-import { Form, Input, Button, Typography, Layout, Card, theme, App, Space, Tag } from 'antd'
+import { Form, Input, Button, Typography, Layout, Card, theme, App, Space, Tag, Grid } from 'antd'
 import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
 import { setLocalStorage } from '@utils/publicFn'
@@ -11,6 +11,7 @@ import { testAccounts } from '@src/mock/permission'
 
 const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
+const { useBreakpoint } = Grid
 
 const SignIn = () => {
   const { redirectTo } = useSafeNavigate()
@@ -20,6 +21,8 @@ const SignIn = () => {
   } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm()
+  const screens = useBreakpoint()
+  const isMobile = !screens.md
 
   useEffect(() => {
     const redirectIfLoggedIn = async () => {
@@ -127,7 +130,7 @@ const SignIn = () => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              padding: '20px',
+              padding: isMobile ? '16px' : '20px',
               width: '100%',
             }}
           >
@@ -137,8 +140,9 @@ const SignIn = () => {
                 maxWidth: 450,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 borderRadius: '12px',
-                padding: '20px',
+                padding: isMobile ? '12px' : '20px',
               }}
+              styles={{ body: { padding: isMobile ? '12px' : '24px' } }}
             >
               <div style={{ textAlign: 'center', marginBottom: '32px' }}>
                 <Title level={2} style={{ marginBottom: '8px' }}>
