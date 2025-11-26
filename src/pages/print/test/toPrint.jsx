@@ -22,11 +22,13 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
   }, [])
 
   React.useEffect(() => {
-    const shadowRoot = shadowRootHostEl.current?.attachShadow({ mode: 'open' })
-    if (shadowRoot) {
-      const div = document.createElement('div')
-      div.innerHTML = 'Shadow DOM Content'
-      shadowRoot.appendChild(div)
+    if (shadowRootHostEl.current && !shadowRootHostEl.current.shadowRoot) {
+      const shadowRoot = shadowRootHostEl.current.attachShadow({ mode: 'open' })
+      if (shadowRoot) {
+        const div = document.createElement('div')
+        div.innerHTML = 'Shadow DOM Content'
+        shadowRoot.appendChild(div)
+      }
     }
   }, [])
 

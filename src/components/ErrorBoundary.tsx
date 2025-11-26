@@ -48,33 +48,37 @@ export default class ErrorBoundary extends React.Component<Props, State> {
       }
 
       return (
-        <div className="flex h-full w-full items-center justify-center p-4">
-          <Result
-            status="500"
-            title="出错了"
-            subTitle="抱歉，系统发生了一些意外错误。"
-            extra={
-              <div className="flex justify-center gap-4">
-                <Button type="primary" onClick={this.handleReset}>
-                  重试
-                </Button>
-                <Button onClick={this.handleBackHome}>返回首页</Button>
-              </div>
-            }
-          >
-            {this.props.showDetails && this.state.error && (
-              <div className="desc text-left">
-                <Paragraph>
-                  <Text strong style={{ fontSize: 16 }}>
-                    错误详情:
-                  </Text>
-                </Paragraph>
-                <Paragraph>
-                  <code className="block rounded bg-gray-100 p-2 whitespace-pre-wrap">{this.state.error.message}</code>
-                </Paragraph>
-              </div>
-            )}
-          </Result>
+        <div className="h-full w-full overflow-y-auto">
+          <div className="flex min-h-full w-full items-center justify-center p-4">
+            <Result
+              status="500"
+              title="出错了"
+              subTitle="抱歉，系统发生了一些意外错误。"
+              extra={
+                <div className="flex justify-center gap-4">
+                  <Button type="primary" onClick={this.handleReset}>
+                    重试
+                  </Button>
+                  <Button onClick={this.handleBackHome}>返回首页</Button>
+                </div>
+              }
+            >
+              {this.props.showDetails && this.state.error && (
+                <div className="desc text-left">
+                  <Paragraph>
+                    <Text strong style={{ fontSize: 16 }}>
+                      错误详情:
+                    </Text>
+                  </Paragraph>
+                  <Paragraph>
+                    <code className="block rounded bg-gray-100 p-2 whitespace-pre-wrap">
+                      {this.state.error.message}
+                    </code>
+                  </Paragraph>
+                </div>
+              )}
+            </Result>
+          </div>
         </div>
       )
     }

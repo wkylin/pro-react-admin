@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { useReactToPrint } from 'react-to-print'
@@ -7,14 +7,19 @@ import ComponentToPrint from './test/toPrint'
 
 const MyPrint = () => {
   const componentRef = React.useRef(null)
+  const [loading, setLoading] = useState(false)
 
   const handleAfterPrint = React.useCallback(() => {
-    console.log('`onAfterPrint` called')
+    setLoading(false)
   }, [])
 
   const handleBeforePrint = React.useCallback(() => {
-    console.log('`onBeforePrint` called')
+    setLoading(true)
     return Promise.resolve()
+  }, [])
+
+  const handlePrintError = React.useCallback(() => {
+    setLoading(false)
   }, [])
 
   const printFn = useReactToPrint({
@@ -22,11 +27,12 @@ const MyPrint = () => {
     documentTitle: 'AwesomeFileName',
     onAfterPrint: handleAfterPrint,
     onBeforePrint: handleBeforePrint,
+    onPrintError: handlePrintError,
   })
   return (
     <FixTabPanel>
       <ComponentToPrint ref={componentRef} />
-      <Button type="primary" onClick={printFn}>
+      <Button type="primary" onClick={printFn} loading={loading}>
         Print
       </Button>
     </FixTabPanel>
