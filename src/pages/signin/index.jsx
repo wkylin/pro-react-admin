@@ -8,6 +8,7 @@ import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
 import { testAccounts } from '@src/mock/permission'
+import styles from './index.module.less'
 
 const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
@@ -123,37 +124,18 @@ const SignIn = () => {
     <Layout style={{ height: '100%', overflow: 'auto' }}>
       <Content style={{ height: '100%', background: colorBgContainer }}>
         <AlignCenter>
-          <div
-            style={{
-              minHeight: '100vh',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: isMobile ? '16px' : '20px',
-              width: '100%',
-            }}
-          >
-            <Card
-              style={{
-                width: '100%',
-                maxWidth: 450,
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                borderRadius: '12px',
-                padding: isMobile ? '12px' : '20px',
-              }}
-              styles={{ body: { padding: isMobile ? '12px' : '24px' } }}
-            >
-              <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-                <Title level={2} style={{ marginBottom: '8px' }}>
+          <div className={styles.signinBg} style={{ padding: isMobile ? '16px' : '20px', width: '100%' }}>
+            <Card className={styles.signinCard} styles={{ body: { padding: isMobile ? '12px' : '24px' } }}>
+              <div className={styles.titleBox}>
+                <Title level={2} className={styles.title}>
                   登录系统
                 </Title>
                 <Text type="secondary">请选择测试账号或输入凭据</Text>
               </div>
 
               {/* 测试账号快捷选择 */}
-              <Card size="small" style={{ marginBottom: '24px', background: colorBgLayout }}>
-                <Paragraph style={{ margin: 0, marginBottom: '12px' }}>
+              <Card size="small" className={styles.accountCard} style={{ background: colorBgLayout }}>
+                <Paragraph className={styles.accountTitle}>
                   <Text strong>测试账号（点击快速填充）：</Text>
                 </Paragraph>
                 <Space orientation="vertical" style={{ width: '100%' }} size="small">
@@ -163,11 +145,11 @@ const SignIn = () => {
                       block
                       size="small"
                       onClick={() => fillAccount(email)}
-                      style={{ textAlign: 'left', height: 'auto', padding: '8px 12px' }}
+                      className={styles.accountBtn}
                     >
                       <Space>
                         <Tag color="blue">{account.name}</Tag>
-                        <Text type="secondary" style={{ fontSize: '12px' }}>
+                        <Text type="secondary" className={styles.accountText}>
                           {email} / {account.password}
                         </Text>
                       </Space>
@@ -206,13 +188,20 @@ const SignIn = () => {
                 </Form.Item>
               </Form>
 
-              <div style={{ textAlign: 'center', marginTop: '16px' }}>
+              <div className={styles.orBox}>
                 <Text type="secondary">或者</Text>
               </div>
 
-              <Button icon={<GithubOutlined />} onClick={handleLogin} block size="large" style={{ marginTop: '16px' }}>
+              {/* <Button icon={<GithubOutlined />} onClick={handleLogin} block size="large" style={{ marginTop: '16px' }}>
                 使用 GitHub 登录
-              </Button>
+              </Button> */}
+
+              <div className={styles.registerBox}>
+                <Text type="secondary">还没有账号？ </Text>
+                <Button type="link" className={styles.registerBtn} onClick={() => redirectTo('/signup')}>
+                  去注册
+                </Button>
+              </div>
             </Card>
           </div>
         </AlignCenter>
