@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { Button } from 'antd'
 import styles from './index.module.less'
+import { useProThemeContext } from '@src/theme/hooks'
 
 /**
  * 转让历史组件
@@ -8,6 +9,8 @@ import styles from './index.module.less'
  * @param {number} [props.defaultDisplayCount=3] - 默认显示的子项数量
  */
 const TransferHistory = ({ defaultDisplayCount = 3 }) => {
+  const { themeSettings } = useProThemeContext()
+  const isDark = themeSettings?.themeMode === 'dark'
   const [expanded, setExpanded] = useState(false)
   const [leftLineHeight, setLeftLineHeight] = useState('100%')
   const leftLineRef = useRef(null)
@@ -134,8 +137,18 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
     }
   }, [expanded])
 
+  // 主题色彩
+  const mainBg = isDark ? 'rgba(40,120,255,0.15)' : 'rgba(40,120,255,0.07)'
+  const mainBorder = isDark ? 'rgba(40,120,255,0.5)' : 'rgba(40,120,255,0.5)'
+  const mainText = isDark ? '#eee' : '#333'
+  const cardBg = isDark ? '#222' : '#fff'
+  const cardText = isDark ? '#eee' : '#333'
+
   return (
-    <div className={styles.transferHistoryContainer}>
+    <div
+      className={styles.transferHistoryContainer}
+      style={{ overflowX: 'auto', background: isDark ? '#181c24' : '#fff' }}
+    >
       {transferData.map((item, index) => (
         <div key={index} className={styles.historyItem}>
           {item.level === 1 && (
@@ -145,7 +158,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           )}
 
           {/* 主体内容区域 */}
-          <div className={styles.contentWrapper} ref={contentWrapperRef}>
+          <div className={styles.contentWrapper} ref={contentWrapperRef} style={{ minWidth: 800 }}>
             <div className={styles.leftContent}>
               <div className={styles.levelTwo}>
                 <div className={styles.verticalConnector} style={{ height: leftLineHeight }}></div>
@@ -163,7 +176,16 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                           ref={(el) => (itemRefs.current[cIndex] = el)}
                         >
                           {/* 第二级菜单 */}
-                          <div className={styles.subItem}>{cItem.name}</div>
+                          <div
+                            className={styles.subItem}
+                            style={{
+                              background: mainBg,
+                              border: `1px solid ${mainBorder}`,
+                              color: mainText,
+                            }}
+                          >
+                            {cItem.name}
+                          </div>
 
                           {/* 第三级菜单 */}
                           {cItem.children && cItem.children.length > 0 && (
@@ -179,7 +201,14 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                 >
                                   {tIndex < cItem.children.length && (
                                     <>
-                                      <div className={styles.transferInfo}>
+                                      <div
+                                        className={styles.transferInfo}
+                                        style={{
+                                          background: cardBg,
+                                          color: cardText,
+                                          border: isDark ? '1px solid #444' : '1px solid #d2d2d2',
+                                        }}
+                                      >
                                         <div>
                                           转让<span style={{ color: '#EF4A10' }}>20%</span>股权
                                         </div>
@@ -193,12 +222,21 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                             : `${styles.horizontalConnector} ${styles.lastConnector}`
                                         }
                                       ></div>
-                                      <div className={styles.transferYear}>{tItem.value}</div>
+                                      <div className={styles.transferYear} style={{ color: cardText }}>
+                                        {tItem.value}
+                                      </div>
                                     </>
                                   )}
                                 </div>
                               ))}
-                              <div className={styles.currentHolding}>
+                              <div
+                                className={styles.currentHolding}
+                                style={{
+                                  background: mainBg,
+                                  border: `1px solid ${mainBorder}`,
+                                  color: mainText,
+                                }}
+                              >
                                 <div>现持有股权：</div>
                                 <div style={{ color: '#EF4A10' }}>{cItem.ratio}</div>
                               </div>
