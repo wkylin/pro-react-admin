@@ -22,7 +22,7 @@ import { mainLayoutMenu } from '@src/config/menu.config'
 
 // 已弃用 pathSubmenu 静态映射，改为自动推导父级链
 
-const ProSecNav = ({ mode = 'inline', theme = 'light' }) => {
+const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const { pathname } = useLocation()
   const { redirectTo } = useSafeNavigate()
 
@@ -154,6 +154,9 @@ const ProSecNav = ({ mode = 'inline', theme = 'light' }) => {
       // 有权限再导航
       redirectTo(key)
       setIsOpenChange(false)
+      if (onMenuClick) {
+        onMenuClick()
+      }
     } catch (error) {
       console.error('菜单权限检查失败:', error)
       // 失败时保守不导航，并显示提示

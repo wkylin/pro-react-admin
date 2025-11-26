@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Layout } from 'antd'
+import { Layout, Grid, Drawer } from 'antd'
 import { ProTabProvider } from '@hooks/proTabsContext'
 import PointerMove from '@stateless/PointerMove'
 import MagicTrail from '@stateless/MagicTrail'
@@ -12,9 +12,16 @@ import styles from './index.module.less'
 import { constant } from 'lodash'
 import { useProThemeContext } from '@theme/hooks'
 
+const { useBreakpoint } = Grid
+
 const ProLayout = () => {
   const layoutRef = useRef(null)
   const [settingOpen, setSettingOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const screens = useBreakpoint()
+  const isMobile = !screens.md
+
   const { themeSettings } = useProThemeContext()
   const { layout, themeMode, navTheme } = themeSettings
 
@@ -33,14 +40,33 @@ const ProLayout = () => {
         smoothing={0.65}
       />
       <ProTabProvider>
-        <ProHeader layout={layout} onSettingClick={() => setSettingOpen(true)}>
-          {layout === 'top' ? <ProSecNav mode="horizontal" theme={effectiveNavTheme} /> : null}
+        <ProHeader
+          layout={layout}
+          onSettingClick={() => setSettingOpen(true)}
+          isMobile={isMobile}
+          onMobileMenuClick={() => setMobileOpen(true)}
+        >
+          {layout === 'top' && !isMobile ? <ProSecNav mode="horizontal" theme={effectiveNavTheme} /> : null}
         </ProHeader>
         <Layout className={styles.layout}>
-          {layout !== 'top' && (
-            <ProSider theme={effectiveNavTheme}>
-              <ProSecNav mode="inline" theme={effectiveNavTheme} />
-            </ProSider>
+          {isMobile ? (
+            <Drawer
+              placement="left"
+              onClose={() => setMobileOpen(false)}
+              open={mobileOpen}
+              styles={{ body: { padding: 0 }, wrapper: { width: 208 } }}
+              closable={false}
+            >
+              <ProSider theme={effectiveNavTheme} isMobile={true} collapsed={false}>
+                <ProSecNav mode="inline" theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
+              </ProSider>
+            </Drawer>
+          ) : (
+            layout !== 'top' && (
+              <ProSider theme={effectiveNavTheme} collapsed={collapsed} onCollapse={setCollapsed}>
+                <ProSecNav mode="inline" theme={effectiveNavTheme} />
+              </ProSider>
+            )
           )}
           <ProContent />
         </Layout>

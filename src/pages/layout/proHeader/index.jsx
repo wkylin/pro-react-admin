@@ -7,6 +7,8 @@ import {
   DownOutlined,
   SmileOutlined,
   SettingOutlined,
+  MenuOutlined,
+  MoreOutlined,
 } from '@ant-design/icons'
 // import Icon, { UserOutlined, LogoutOutlined, SettingOutlined, GithubOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
@@ -27,14 +29,15 @@ import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
 import { getLocalStorage } from '@utils/publicFn'
-import PrimaryNav from '../primaryNav'
+import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
 
-const ProHeader = ({ layout, onSettingClick, children }) => {
+const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuClick }) => {
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
   const lastDeniedRef = React.useRef(null)
+  const primaryNavItems = usePrimaryNavItems()
 
   const redirectTo = async (path) => {
     // 公共页面直接跳转
@@ -134,6 +137,35 @@ const ProHeader = ({ layout, onSettingClick, children }) => {
     },
   ]
 
+  const mobileMoreItems = [
+    ...primaryNavItems,
+    { type: 'divider' },
+    {
+      key: 'github',
+      label: 'Github',
+      icon: <GithubOutlined />,
+      onClick: redirectGithub,
+    },
+    {
+      key: 'wiki',
+      label: 'Wiki',
+      icon: <WikiSvg style={{ fontSize: 16 }} />,
+      onClick: redirectWiki,
+    },
+    {
+      key: 'wrapped',
+      label: 'Wrapped',
+      icon: <RocketSvg style={{ fontSize: 16 }} />,
+      onClick: redirectWrapped,
+    },
+    {
+      key: 'setting',
+      label: '设置',
+      icon: <SettingOutlined />,
+      onClick: onSettingClick,
+    },
+  ]
+
   const {
     token: { colorBgContainer, colorBorder },
   } = theme.useToken()
@@ -144,32 +176,52 @@ const ProHeader = ({ layout, onSettingClick, children }) => {
       style={{
         background: colorBgContainer,
         borderBottom: `1px solid ${colorBorder}`,
+        padding: isMobile ? '0 16px' : 0,
       }}
     >
+      {isMobile && (
+        <div
+          onClick={onMobileMenuClick}
+          style={{ marginRight: 16, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+        >
+          <MenuOutlined style={{ fontSize: 20 }} />
+        </div>
+      )}
       <div
         aria-hidden="true"
         className={`${styles.logo} ${layout === 'top' ? styles.topLayoutLogo : ''}`}
         onClick={() => redirectTo('/')}
+        style={isMobile ? { flex: '0 0 auto', justifyContent: 'flex-start' } : {}}
       >
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         <img src={Logo} alt="logo" />
         <GradientAnimationText text="Pro React Admin" />
       </div>
-      <div className={styles.headerMeta}>
-        <div className={styles.headerMenu} style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center' }}>
-          <PrimaryNav />
-          {layout === 'top' && <div style={{ flex: 1, minWidth: 0 }}>{children}</div>}
-        </div>
-        <div className={styles.headerRight}>
-          <Space orientation="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
-            <SoundBar />
-            <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
-            <Fullscreen />
-            <SettingOutlined style={{ fontSize: 16 }} onClick={onSettingClick} />
-            <RocketSvg style={{ fontSize: 16 }} onClick={redirectWrapped} />
-            <WikiSvg style={{ fontSize: 16 }} onClick={redirectWiki} />
-            <LanguageSwitcher />
-          </Space>
+      <div className={styles.headerMeta} style={isMobile ? { justifyContent: 'flex-end' } : {}}>
+        {!isMobile && (
+          <div className={styles.headerMenu} style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center' }}>
+            <PrimaryNav />
+            {layout === 'top' && <div style={{ flex: 1, minWidth: 0 }}>{children}</div>}
+          </div>
+        )}
+        <div className={styles.headerRight} style={isMobile ? { flex: 1 } : {}}>
+          {!isMobile ? (
+            <Space orientation="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+              <SoundBar />
+              <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
+              <Fullscreen />
+              <SettingOutlined style={{ fontSize: 16 }} onClick={onSettingClick} />
+              <RocketSvg style={{ fontSize: 16 }} onClick={redirectWrapped} />
+              <WikiSvg style={{ fontSize: 16 }} onClick={redirectWiki} />
+              <LanguageSwitcher />
+            </Space>
+          ) : (
+            <Space style={{ paddingRight: 8 }}>
+              <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
+                <MoreOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+              </Dropdown>
+            </Space>
+          )}
 
           <Dropdown
             arrow
@@ -180,7 +232,19 @@ const ProHeader = ({ layout, onSettingClick, children }) => {
             <Space>
               {isAuthenticated && user ? (
                 <>
-                  <Avatar src={user.avatar_url} /> <span>{user.name || user.login}</span>
+                  <Avatar src={user.avatar_url} />{' '}
+                  <span
+                    style={{
+                      maxWidth: isMobile ? 80 : 120,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      display: 'inline-block',
+                      verticalAlign: 'middle',
+                    }}
+                  >
+                    {user.name || user.login}
+                  </span>
                 </>
               ) : (
                 <span style={{ fontSize: 18 }}>{getLocalStorage('token')?.token || 'wkylin.w'}</span>
