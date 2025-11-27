@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
+import request from '@/service/request'
 
 // useTable: 提供分页管理、响应式 scroll 计算，以及删除后回退上一页的辅助方法
 export default function useTable({
@@ -10,12 +11,44 @@ export default function useTable({
   onPaginationChange = () => {},
   // 可选：用于在删除/操作后重新加载指定页的数据，函数签名 (page, pageSize) => Promise
   reloadPage = null,
+  // 可选：从后端拉取数据的函数 (page, pageSize, sort) => Promise
+  fetchData = null,
+  // 可选：直接提供 fetch URL（当未提供 fetchData 时使用内部 request）
+  fetchUrl = null,
+  // 自定义请求库（需要包含 get/post 等），默认使用项目 request
+  requestLib = request,
+  // 请求参数映射：{ currentField, pageField, pageSizeField, sortField, orderField }
+  // 支持后端使用不同字段名，如 'current' / 'page' / 'pageNum'
+  requestParamMap = {
+    pageField: 'page',
+    pageSizeField: 'pageSize',
+    sortField: 'sort',
+    orderField: 'order',
+  },
+  // 响应字段映射：{ listField, totalField } 可以是点路径，如 'data.items'
+  responseFieldMap = { listField: 'data', totalField: 'total' },
+  // 是否在组件初始化自动加载（当 fetchData 提供时生效）
+  autoLoad = false,
+  // 服务端排序
+  serverSort = false,
+  // 默认排序状态 { field, order }
+  defaultSort = null,
   // 选择配置： mode = 'multiple' | 'single', selectable: (record) => boolean
   selectionMode = 'multiple',
   rowSelectable = null,
 } = {}) {
   const containerRef = useRef(null)
   const [pagination, setPagination] = useState(initialPagination)
+  // ensure pagination numbers are normalized
+  useEffect(() => {
+    setPagination((p) => {
+      const current = Number(p.current) || 1
+      const pageSize = Number(p.pageSize) || 10
+      if (current !== p.current || pageSize !== p.pageSize) return { current, pageSize }
+      return p
+    })
+    // run once on mount
+  }, [])
   const [tableScroll, setTableScroll] = useState({ x: Math.max(minWidth, 800), y: 280 })
 
   // 同步 URL（可选）
@@ -45,12 +78,35 @@ export default function useTable({
     }
   }, [pagination.current, pagination.pageSize])
 
-  // 计算分页切片
+  // internal data 支持本地或服务端返回的数据
+  const [internalData, setInternalData] = useState(dataSource || [])
+  const [total, setTotal] = useState(Array.isArray(dataSource) ? dataSource.length : 0)
+  const [sortState, setSortState] = useState(defaultSort || { field: null, order: null })
+
   const pagedData = useMemo(() => {
     const { current, pageSize } = pagination
-    const start = (current - 1) * pageSize
-    return dataSource.slice(start, start + pageSize)
-  }, [dataSource, pagination.current, pagination.pageSize])
+    const isServerMode = typeof fetchData === 'function' || typeof reloadPage === 'function'
+    if (isServerMode) {
+      // internalData expected to be current page data when in server mode
+      return internalData || []
+    }
+    const ps = Number(pageSize) || 0
+    if (!ps || ps <= 0) return internalData || dataSource || []
+    const start = (Number(current) - 1) * ps
+    return (internalData || dataSource || []).slice(start, start + ps)
+  }, [dataSource, internalData, pagination.current, pagination.pageSize, sortState])
+
+  // Helper: get nested value by path
+  const getByPath = (obj, path) => {
+    if (!obj || !path) return undefined
+    const parts = path.split('.')
+    let cur = obj
+    for (const p of parts) {
+      if (cur == null) return undefined
+      cur = cur[p]
+    }
+    return cur
+  }
 
   // 响应式计算 scroll
   useEffect(() => {
@@ -88,21 +144,17 @@ export default function useTable({
     if (pagedData && pagedData.length <= 1 && current > 1) {
       const prev = current - 1
       setPagination((p) => ({ ...p, current: prev }))
-      if (typeof reloadPage === 'function') {
-        try {
-          await reloadPage(prev, pageSize)
-        } catch (e) {
-          // ignore - caller can handle
-        }
+      try {
+        await fetchPage(prev, pageSize)
+      } catch (e) {
+        // ignore - caller can handle
       }
     } else {
       // 否则重新加载当前页
-      if (typeof reloadPage === 'function') {
-        try {
-          await reloadPage(current, pageSize)
-        } catch (e) {
-          // ignore
-        }
+      try {
+        await fetchPage(current, pageSize)
+      } catch (e) {
+        // ignore
       }
     }
   }
@@ -129,6 +181,115 @@ export default function useTable({
     return true
   }
 
+  // fetch page helper（用于服务端模式）
+  const fetchPage = async (page = pagination.current, pageSize = pagination.pageSize, sort = sortState) => {
+    const fetcher = fetchData || reloadPage
+    try {
+      let res
+      if (typeof fetcher === 'function') {
+        res = await fetcher(page, pageSize, sort)
+      } else if (fetchUrl) {
+        // build params according to requestParamMap
+        const params = {}
+        // use configured pageField to represent current page
+        if (requestParamMap.pageField) params[requestParamMap.pageField] = page
+        params[requestParamMap.pageSizeField] = pageSize
+        if (sort && sort.field) params[requestParamMap.sortField] = sort.field
+        if (sort && sort.order) params[requestParamMap.orderField] = sort.order
+        // use requestLib.get
+        res = await requestLib.get(fetchUrl, params).catch((e) => {
+          console.error('fetchPage request failed', e)
+          return null
+        })
+      } else {
+        return Promise.resolve()
+      }
+      if (!res) return Promise.resolve(res)
+
+      // Try using responseFieldMap first (listField / totalField)
+      let list = undefined
+      let totalNum = undefined
+      try {
+        list = getByPath(res, responseFieldMap.listField)
+        totalNum = getByPath(res, responseFieldMap.totalField)
+      } catch (err) {
+        // ignore
+      }
+
+      // If mapping didn't yield an array, try a list of common candidate paths
+      if (!Array.isArray(list)) {
+        const listCandidates = []
+        if (responseFieldMap && responseFieldMap.listField) listCandidates.push(responseFieldMap.listField)
+        // common fallback paths
+        listCandidates.push('data.items', 'items', 'data', 'list')
+
+        for (const p of listCandidates) {
+          const v = getByPath(res, p)
+          if (Array.isArray(v)) {
+            list = v
+            break
+          }
+        }
+
+        // final fallback: if response itself is array
+        if (!Array.isArray(list) && Array.isArray(res)) list = res
+      }
+
+      if (Array.isArray(list)) {
+        setInternalData(list)
+
+        // resolve total using mapping first, then common fields
+        let totalCandidates = []
+        if (responseFieldMap && responseFieldMap.totalField) totalCandidates.push(responseFieldMap.totalField)
+        totalCandidates.push('total', 'count', 'data.total', 'data.count')
+
+        let resolvedTotal = undefined
+        for (const p of totalCandidates) {
+          const v = getByPath(res, p)
+          if (typeof v === 'number') {
+            resolvedTotal = v
+            break
+          }
+        }
+
+        if (typeof resolvedTotal === 'number') setTotal(resolvedTotal)
+        else setTotal(list.length)
+      }
+      return Promise.resolve(res)
+    } catch (e) {
+      console.error('fetchPage error', e)
+      return Promise.reject(e)
+    }
+  }
+
+  // autoLoad on mount when fetchUrl or fetchData provided and autoLoad true
+  const autoLoadRef = useRef(false)
+  const inFlightRef = useRef(false)
+
+  useEffect(() => {
+    if (!autoLoad) return
+    const isServerMode = typeof fetchData === 'function' || typeof reloadPage === 'function' || fetchUrl
+    if (!isServerMode) return
+    // guard against React StrictMode double-invocation in dev
+    if (autoLoadRef.current) return
+    autoLoadRef.current = true
+
+    // fetch initial page, avoid concurrent duplicate fetches
+    const doFetch = async () => {
+      if (inFlightRef.current) return
+      inFlightRef.current = true
+      try {
+        await fetchPage(pagination.current, pagination.pageSize, sortState)
+      } catch (e) {
+        console.error('autoLoad fetchPage failed', e)
+      } finally {
+        inFlightRef.current = false
+      }
+    }
+
+    doFetch()
+  }, [])
+
   return {
     containerRef,
     pagination,
@@ -142,5 +303,11 @@ export default function useTable({
     selectionMode,
     isRowSelectable,
     calcIndex,
+    // server-mode helpers
+    internalData,
+    total,
+    fetchPage,
+    sortState,
+    setSortState,
   }
 }

@@ -30,12 +30,33 @@ const ResponsiveTable = ({
   onDelete,
   // optional reload function passed to hook to trigger server reload after deletes
   reloadPage,
-  // show serial index column
+  // show serial index column (默认不显示，建议在 columns 中用 { index: true } 指定)
   showIndex = false,
-  // selection config: 'multiple' | 'single' | null (disable)
-  rowSelectionMode = 'multiple',
+  // indexMode: 'global' | 'page' | 'custom'
+  indexMode = 'global',
+  // 默认固定位置（可配置为 false | 'left' | 'right'），定义序号列和操作列的默认 fixed 行为
+  indexFixed = 'left',
+  actionsFixed = 'right',
+  // customIndexRender: (record, index, pagination) => ReactNode
+  customIndexRender = null,
+  // rowSelection: null | 'multiple' | 'single' - 控制是否显示选择列及模式
+  // 当为 null 时不显示选择列；'multiple' 显示多选框；'single' 显示单选框
+  rowSelection = null,
   // rowSelectable: function(record) or string key
   rowSelectable = null,
+  // server/data fetch options
+  fetchData = null,
+  autoLoad = false,
+  // fetchUrl and mapping
+  fetchUrl = null,
+  requestParamMap = { pageField: 'page', pageSizeField: 'pageSize', sortField: 'sort', orderField: 'order' },
+  responseFieldMap = { listField: 'data', totalField: 'total' },
+  serverSort = false,
+  defaultSort = null,
+  // 是否启用虚拟列表（提高大量数据渲染性能）。默认开启，可通过 `tableProps.virtual` 覆写。
+  virtualized = true,
+  // rest props passthrough to antd Table
+  ...tableProps
 }) => {
   const {
     containerRef,
@@ -48,6 +69,11 @@ const ResponsiveTable = ({
     handleSelectionChange,
     isRowSelectable,
     calcIndex,
+    internalData,
+    total,
+    fetchPage,
+    sortState,
+    setSortState,
   } = useTable({
     dataSource,
     initialPagination,
@@ -56,8 +82,15 @@ const ResponsiveTable = ({
     pageSyncToUrl,
     onPaginationChange,
     reloadPage,
-    selectionMode: rowSelectionMode,
+    fetchData,
+    autoLoad,
+    serverSort,
+    defaultSort,
+    selectionMode: rowSelection,
     rowSelectable,
+    fetchUrl,
+    requestParamMap,
+    responseFieldMap,
   })
 
   const [visibleKeys, setVisibleKeys] = React.useState(() => columns.map((c) => c.dataIndex || c.key).filter(Boolean))
@@ -68,6 +101,28 @@ const ResponsiveTable = ({
     const keys = new Set(visibleKeys)
     return columns.filter((c) => keys.has(c.dataIndex || c.key))
   }, [columns, visibleKeys])
+
+  // 如果 columns 中包含 index 标识字段，则使用该列作为序号列（并从 currentColumns 中移除）
+  const indexColumnFromColumns = React.useMemo(() => {
+    const idx = columns.find((c) => c && (c.index === true || c.type === 'index'))
+    if (!idx) return null
+    // create a normalized index column object
+    const col = {
+      ...idx,
+      key: idx.key || '__index',
+      // 优先使用列自身的 fixed 定义，否则使用组件传入的 indexFixed
+      fixed: typeof idx.fixed !== 'undefined' ? idx.fixed : indexFixed,
+      render: idx.render || ((text, record, rowIndex) => (indexMode === 'page' ? rowIndex + 1 : calcIndex(rowIndex))),
+    }
+    return col
+  }, [columns, indexMode, calcIndex])
+
+  // 如果使用了 indexColumnFromColumns，需要从 currentColumns 中移除它，避免重复
+  const effectiveColumns = React.useMemo(() => {
+    if (!indexColumnFromColumns) return currentColumns
+    const key = indexColumnFromColumns.dataIndex || indexColumnFromColumns.key
+    return currentColumns.filter((c) => (c.dataIndex || c.key) !== key)
+  }, [currentColumns, indexColumnFromColumns])
 
   const columnOptions = columns
     .map((c) => ({ label: c.title || c.dataIndex || c.key, value: c.dataIndex || c.key }))
@@ -127,7 +182,8 @@ const ResponsiveTable = ({
     ),
     key: '__actions',
     width: 180,
-    fixed: false,
+    // 默认固定到右侧（可通过 actionsFixed 覆写）
+    fixed: actionsFixed,
     render: (_text, record) => {
       return (
         <Space size="small">
@@ -165,52 +221,106 @@ const ResponsiveTable = ({
   }
 
   // 如果需要显示序号，则插入到最前面
-  const indexColumn = showIndex
-    ? {
-        title: '序号',
-        key: '__index',
-        width: 80,
-        render: (_t, _r, idx) => calcIndex(idx),
-      }
-    : null
-
-  const columnsWithActions = indexColumn ? [indexColumn, ...currentColumns, opColumn] : [...currentColumns, opColumn]
-
-  // rowSelection 配置
-  const rowSelection =
-    rowSelectionMode && rowSelectionMode !== 'none'
+  // 优先使用 columns 中的 index 列（如果存在），否则根据 showIndex 决定是否插入默认序号列
+  const indexColumn = indexColumnFromColumns
+    ? indexColumnFromColumns
+    : showIndex
       ? {
-          type: rowSelectionMode === 'single' ? 'radio' : 'checkbox',
+          title: '序号',
+          key: '__index',
+          width: 80,
+          // 默认固定到左侧（可通过 indexFixed 覆写）
+          fixed: indexFixed,
+          render: (text, record, idx) => {
+            if (indexMode === 'page') return idx + 1
+            if (indexMode === 'custom' && typeof customIndexRender === 'function')
+              return customIndexRender(record, idx, pagination)
+            return calcIndex(idx)
+          },
+        }
+      : null
+
+  const columnsWithActions = indexColumn
+    ? [indexColumn, ...effectiveColumns, opColumn]
+    : [...effectiveColumns, opColumn]
+
+  // rowSelection 配置：由单个 prop `rowSelection` 控制
+  const rowSelectionConfig =
+    rowSelection && rowSelection !== 'none'
+      ? {
+          type: rowSelection === 'single' ? 'radio' : 'checkbox',
           selectedRowKeys,
           onChange: (keys, rows) => handleSelectionChange(keys, rows),
           getCheckboxProps: (record) => ({ disabled: !isRowSelectable(record) }),
         }
       : null
 
+  // Table onChange 处理：支持服务端排序/本地排序
+  const onTableChange = async (pg, filters, sorter, extra) => {
+    // sorter 可以是对象或数组（多列排序）；这里只处理单列常见场景
+    const { current = 1, pageSize = pagination.pageSize } = pg || {}
+    // 更新分页
+    setPagination({ current, pageSize })
+
+    if (serverSort) {
+      const sort = { field: sorter.field || null, order: sorter.order || null }
+      setSortState(sort)
+      // fetch server page with new sort
+      try {
+        await fetchPage(current, pageSize, sort)
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // 向外部透传事件
+    if (typeof onChange === 'function') onChange(pg, filters, sorter, extra)
+  }
+
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
+        {/* allow explicit override from tableProps.virtual, otherwise use virtualized prop */}
         <Table
           rowKey={rowKey}
           columns={columnsWithActions}
           dataSource={pagedData}
-          rowSelection={rowSelection}
+          rowSelection={rowSelectionConfig}
           pagination={false}
           scroll={{ x: tableScroll.x, y: tableScroll.y }}
+          virtual={typeof tableProps.virtual !== 'undefined' ? tableProps.virtual : virtualized}
           style={{ width: '100%' }}
-          onChange={(...args) => onChange(...args)}
+          onChange={onTableChange}
+          {...tableProps}
         />
       </div>
       <div style={{ flex: '0 0 auto', padding: 8, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         <Pagination
           current={pagination.current}
           pageSize={pagination.pageSize}
-          total={dataSource.length}
+          total={typeof total === 'number' && total > 0 ? total : dataSource.length}
           showSizeChanger
           showQuickJumper
           showTotal={(total) => `共 ${total} 条`}
-          onChange={(current, pageSize) => setPagination({ current, pageSize })}
-          onShowSizeChange={(current, size) => setPagination({ current, pageSize: size })}
+          onChange={async (current, pageSize) => {
+            setPagination({ current, pageSize })
+            // 如果是服务端模式，触发 fetch
+            if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
+              try {
+                await fetchPage(current, pageSize, sortState)
+              } catch (e) {
+                // ignore
+              }
+            }
+          }}
+          onShowSizeChange={async (current, size) => {
+            setPagination({ current, pageSize: size })
+            if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
+              try {
+                await fetchPage(current, size, sortState)
+              } catch (e) {}
+            }
+          }}
         />
       </div>
     </div>

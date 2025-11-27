@@ -35,6 +35,12 @@ const NotificationsPage = () => {
 
   const columns = [
     {
+      title: '序号',
+      key: '__index',
+      index: true,
+      width: 80,
+    },
+    {
       title: '标题',
       dataIndex: 'title',
       width: 200,
@@ -101,6 +107,14 @@ const NotificationsPage = () => {
               },
             },
             {
+              key: 'detail',
+              label: '详情',
+              onClick: (r) => {
+                // 示例编辑行为：打开详情 modal（可替换为编辑表单）
+                console.log('detail', r)
+              },
+            },
+            {
               key: 'delete',
               label: '删除',
               confirm: '确认删除该消息吗？',
@@ -118,43 +132,15 @@ const NotificationsPage = () => {
               },
             },
           ]}
-          // reloadPage: 在 hook 中删除后需要由父组件触发实际数据加载或校验页码
-          reloadPage={async (page, pageSize) => {
-            setPagination({ current: page, pageSize })
-            // 从服务器请求指定页的数据并替换 items（根据后端返回结构适配）
-            try {
-              const res = await request.get('/api/notifications', { page, pageSize }).catch((err) => {
-                console.error('reloadPage request failed', err)
-                return null
-              })
-
-              if (!res) {
-                // 请求失败或被中断，保留现有数据
-                return Promise.resolve()
-              }
-
-              // 兼容多种后端返回格式：
-              // 1) 直接返回数组
-              // 2) { data: [...] }
-              // 3) { data: { items: [...] } } 或 { items: [...] } 或 { list: [...] }
-              let list = []
-              if (Array.isArray(res)) list = res
-              else if (Array.isArray(res.data)) list = res.data
-              else if (res.data && Array.isArray(res.data.items)) list = res.data.items
-              else if (Array.isArray(res.items)) list = res.items
-              else if (Array.isArray(res.list)) list = res.list
-
-              if (list && Array.isArray(list)) {
-                setItems(list)
-              }
-
-              return Promise.resolve()
-            } catch (e) {
-              console.error('reloadPage error', e)
-              // 读取失败时回退到本地（不改变 items）
-              return Promise.resolve()
-            }
-          }}
+          // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
+          fetchUrl="/api/notifications"
+          autoLoad={true}
+          requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
+          responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
+          serverSort={false}
+          showIndex={true}
+          indexMode={'global'}
+          rowSelection={null}
         />
       </div>
       <Modal
