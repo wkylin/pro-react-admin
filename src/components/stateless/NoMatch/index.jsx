@@ -1,14 +1,27 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
-import { Button, Result, Flex, Typography } from 'antd'
+import { Button, Result, Flex, Typography, theme } from 'antd'
 import { HomeOutlined, RollbackOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@hooks/useSafeNavigate'
+import { useProThemeContext } from '@src/theme/hooks'
 
 const { Text, Paragraph } = Typography
 
 const NoMatch = () => {
   const location = useLocation()
   const { redirectTo, goBack } = useSafeNavigate()
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken()
+
+  // 禁止页面滚动
+  React.useEffect(() => {
+    const original = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = original
+    }
+  }, [])
 
   return (
     <div
@@ -17,7 +30,8 @@ const NoMatch = () => {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
-        padding: '20px',
+        padding: 20,
+        background: colorBgContainer,
       }}
     >
       <Result

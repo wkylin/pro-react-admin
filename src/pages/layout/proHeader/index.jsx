@@ -97,7 +97,14 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     redirectTo('/signin')
   }
 
+  const tokenValue = getLocalStorage('token')?.token || 'wkylin.w'
   const items = [
+    {
+      key: 'token',
+      label: <>{tokenValue}</>,
+      disabled: true,
+    },
+    { type: 'divider' },
     {
       key: '1',
       label: <Space>个人中心</Space>,
@@ -255,28 +262,11 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
               items,
             }}
           >
-            <Space>
-              {isAuthenticated && user ? (
-                <>
-                  <Avatar src={user.avatar_url} />{' '}
-                  <span
-                    style={{
-                      maxWidth: isMobile ? 80 : 120,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      display: 'inline-block',
-                      verticalAlign: 'middle',
-                    }}
-                  >
-                    {user.name || user.login}
-                  </span>
-                </>
-              ) : (
-                <span style={{ fontSize: 18 }}>{getLocalStorage('token')?.token || 'wkylin.w'}</span>
-              )}
-              <DownOutlined />
-            </Space>
+            {isAuthenticated && user ? (
+              <Avatar src={user.avatar_url} />
+            ) : (
+              <Button icon={<UserOutlined style={{ fontSize: 16 }} />} size="small" />
+            )}
           </Dropdown>
         </div>
         {contextHolder}
