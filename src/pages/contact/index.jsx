@@ -16,7 +16,7 @@ const Contact = () => {
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState(null)
   const validateForm = () => {
-    let tempErrors = {}
+    const tempErrors = {}
     let isValid = true
 
     if (!formData.name.trim()) {
@@ -176,7 +176,7 @@ const Contact = () => {
                   } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
                   value={formData.message}
                   onChange={handleInputChange}
-                ></textarea>
+                />
                 {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message}</p>}
               </div>
             </div>
