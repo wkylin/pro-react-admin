@@ -218,12 +218,12 @@ const NotificationsPage = () => {
           }}
           // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
           fetchUrl="/api/notifications"
-          autoLoad={true}
+          autoLoad
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
           responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
           serverSort={false}
-          showIndex={true}
-          indexMode={'global'}
+          showIndex
+          indexMode="global"
           rowSelection={null}
           // 示例：覆盖默认序号列与操作列宽度，并精确控制横向滚动行为
           indexWidth={60}

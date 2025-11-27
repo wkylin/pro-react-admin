@@ -1,6 +1,7 @@
 # ResponsiveTable 组件 使用说明
 
 ## 概览
+
 `ResponsiveTable` 是基于 Ant Design `Table` 封装的高级表格组件，支持：
 
 - 自适应容器、自动计算 `scroll.x` / `scroll.y`。
@@ -21,7 +22,7 @@
 
 `toolbar` 是一个对象，常用结构示例：
 
-```js
+````js
 toolbar: {
   showLeft: true,   // 可选，显式控制是否显示左侧
   showRight: true,  // 可选，显式控制是否显示右侧
@@ -86,26 +87,18 @@ toolbar: {
   columns={columns}
   dataSource={data}
 />
-```
+````
 
-2) 使用 `tableProps.scroll` 覆盖计算值（中等优先级）
-
-```jsx
-<ResponsiveTable
-  columns={columns}
-  dataSource={data}
-  tableProps={{ scroll: { x: 1400 } }}
-/>
-```
-
-3) 使用 `scroll` prop（最高优先级，推荐用于需要精确控制时）
+2. 使用 `tableProps.scroll` 覆盖计算值（中等优先级）
 
 ```jsx
-<ResponsiveTable
-  columns={columns}
-  dataSource={data}
-  scroll={{ x: 'max-content', y: 520 }}
-/>
+<ResponsiveTable columns={columns} dataSource={data} tableProps={{ scroll: { x: 1400 } }} />
+```
+
+3. 使用 `scroll` prop（最高优先级，推荐用于需要精确控制时）
+
+```jsx
+<ResponsiveTable columns={columns} dataSource={data} scroll={{ x: 'max-content', y: 520 }} />
 ```
 
 注意事项：
@@ -130,11 +123,7 @@ toolbar: {
 - 只传 `x`，保留自动计算 `y`：
 
 ```jsx
-<ResponsiveTable
-  columns={columns}
-  dataSource={data}
-  scroll={{ x: 'max-content' }}
-/>
+<ResponsiveTable columns={columns} dataSource={data} scroll={{ x: 'max-content' }} />
 ```
 
 最终传递给 AntD `Table` 的 `scroll` 类似 `{ x: 'max-content', y: <自动计算值> }`。
@@ -142,20 +131,15 @@ toolbar: {
 - 通过 `tableProps.scroll` 提供 `y`，同时在显式 `scroll` 中只提供 `x`：
 
 ```jsx
-<ResponsiveTable
-  columns={columns}
-  dataSource={data}
-  tableProps={{ scroll: { y: 600 } }}
-  scroll={{ x: 1400 }}
-/>
+<ResponsiveTable columns={columns} dataSource={data} tableProps={{ scroll: { y: 600 } }} scroll={{ x: 1400 }} />
 ```
 
 最终 `y` 来自 `tableProps.scroll`（600），`x` 来自显式 `scroll`（1400）。
 
 注意与最佳实践：
 
-- 内部计算的 `y` 为像素数（number），若你的应用对高度非常敏感（例如需要精确对齐或与其它布局组件联动），建议显式传入 `y`。 
-- 在启用 `virtual`（虚拟渲染）时，建议显式设置 `y` 以避免虚拟化渲染导致的高度计算不一致。 
+- 内部计算的 `y` 为像素数（number），若你的应用对高度非常敏感（例如需要精确对齐或与其它布局组件联动），建议显式传入 `y`。
+- 在启用 `virtual`（虚拟渲染）时，建议显式设置 `y` 以避免虚拟化渲染导致的高度计算不一致。
 - 对于固定列（`fixed`），请同时确保：1) 固定列有 `width`；2) `scroll.x` 能触发横向滚动（可通过显式传入 `scroll.x`、增加 `minWidth` 或为列指定宽度来实现）。
 
 ````
@@ -178,7 +162,7 @@ toolbar: {
 ---
 
 如果你希望，我可以再把一个小示例页面 (例如 `examples/responsive-table-demo.md`) 加到仓库里，包含完整的 `ResponsiveTable` 使用代码片段和后端 mock 数据示例。
- 
+
 ---
 
 ## 新增：`indexWidth` / `actionsWidth` 与 `virtualized` 默认
@@ -200,3 +184,4 @@ toolbar: {
 ```
 
 另外，组件默认将 `virtualized` 设置为 `false`，如果你需要虚拟化渲染以提高大量数据的性能，请显式开启：`virtualized={true}` 或通过 `tableProps={{ virtual: true }}`。
+````
