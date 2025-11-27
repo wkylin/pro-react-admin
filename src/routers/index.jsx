@@ -19,6 +19,7 @@ import { chartRoutes } from './modules/chart.routes'
 import { nestedRoutes } from './modules/nested.routes'
 import { layoutRoutes } from './modules/layout.routes'
 import { errorRoutes } from './modules/error.routes'
+import { notificationRoutes } from './modules/notification.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
 import { permissionService } from '@src/service/permissionService'
 
@@ -29,6 +30,7 @@ mainLayoutRoute.children = [
   ...uiRoutes,
   ...chartRoutes,
   ...nestedRoutes,
+  ...notificationRoutes,
 ]
 
 // 构建完整路由配置
