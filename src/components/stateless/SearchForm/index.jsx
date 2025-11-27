@@ -11,7 +11,7 @@ const SearchForm = forwardRef((props, ref) => {
   const {
     onFinish,
     dataSource,
-    btnText = '搜索',
+    btnText = '查询',
     exportText = '导出',
     resetText = '重置',
     isReset,

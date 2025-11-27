@@ -54,7 +54,8 @@ const ProLayout = () => {
               placement="left"
               onClose={() => setMobileOpen(false)}
               open={mobileOpen}
-              styles={{ body: { padding: 0 }, wrapper: { width: 208 } }}
+              size={208}
+              styles={{ body: { padding: 0 } }}
               closable={false}
             >
               <ProSider theme={effectiveNavTheme} isMobile={true} collapsed={false}>

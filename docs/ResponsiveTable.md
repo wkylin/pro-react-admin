@@ -51,7 +51,7 @@ toolbar: {
     },
     // 可选：在用户点击查询时替换默认行为
     onSearch: async (payload, { fetchPage }) => {
-      // 自定义搜索逻辑：例如在本地过滤或调整参数
+      // 自定义查询逻辑：例如在本地过滤或调整参数
       await fetchPage(1, 10, null, payload)
     },
     initialValues: {},

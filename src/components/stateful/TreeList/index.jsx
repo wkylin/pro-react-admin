@@ -9,7 +9,7 @@ const { Search } = Input
 const Index = forwardRef((props, ref) => {
   const {
     getTreeList, // 获取数据的接口
-    search = false, // 是否展示搜索框
+    search = false, // 是否展示查询框
     selectedKeys, // 选中的节点
     setSelectedKeys, // 选中外传函数
     selectable = false, // 父级节点是否可以选中
@@ -221,7 +221,7 @@ const Index = forwardRef((props, ref) => {
     <div className={`${styles.treeList} treeList`}>
       <div>
         {search && (
-          <Search placeholder="搜索" onSearch={onSearch} style={{ marginBottom: 10, width: '100%' }} allowClear />
+          <Search placeholder="查询" onSearch={onSearch} style={{ marginBottom: 10, width: '100%' }} allowClear />
         )}
         <Tree
           selectedKeys={!isEmpty(selectedKeys) ? selectedKeys : fixSelectedKeys}

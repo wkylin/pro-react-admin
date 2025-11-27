@@ -3,8 +3,9 @@ import { HashRouter as Router } from 'react-router-dom'
 // import { BrowserRouter as Router } from 'react-router-dom'
 import { ConfigProvider, theme, App as AntdApp } from 'antd'
 import { StyleProvider } from '@ant-design/cssinjs'
-import 'dayjs/locale/zh-cn'
 import dayjs from 'dayjs'
+import zhCN from 'antd/locale/zh_CN'
+import 'dayjs/locale/zh-cn'
 import 'antd/dist/reset.css'
 import './styles/reset.css'
 
@@ -18,12 +19,6 @@ dayjs.locale('zh-cn')
 const ThemeIndex: React.FC = () => {
   useRemoveGlobalLoader()
   const { themeSettings } = useProThemeContext()
-
-  // 统一自定义前缀
-  ConfigProvider.config({
-    prefixCls: 'wui-ant',
-    iconPrefixCls: 'wui-icon',
-  })
 
   // 拿到 Antd App 实例（message、notification 等）
   const { message } = AntdApp.useApp()
@@ -60,6 +55,7 @@ const ThemeIndex: React.FC = () => {
           input={{ autoComplete: 'off' }}
           prefixCls="wui-ant"
           iconPrefixCls="wui-icon"
+          locale={zhCN}
         >
           {/* <AntdApp> */}
           <App />

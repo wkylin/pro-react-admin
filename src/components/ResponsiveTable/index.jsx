@@ -16,6 +16,7 @@ import {
   TreeSelect,
   Switch,
   Drawer,
+  theme,
 } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import useTable from './useTable'
@@ -142,6 +143,9 @@ const ResponsiveTable = ({
   const [form] = Form.useForm()
   const [showAdvanced, setShowAdvanced] = React.useState(false)
   const [drawerVisible, setDrawerVisible] = React.useState(false)
+  const [popoverVisible, setPopoverVisible] = React.useState(false)
+
+  const { token } = theme.useToken()
 
   const toolbarConfig = toolbar || {}
   // 强制使用新命名：`toolbar.actions`（左侧按钮）和 `toolbar.search`（右侧查询）
@@ -237,6 +241,8 @@ const ResponsiveTable = ({
       key: idx.key || '__index',
       // 保证当列自身未指定 width 时使用组件传入的 indexWidth
       width: typeof idx.width !== 'undefined' ? idx.width : indexWidth,
+      // 默认居中对齐，除非列自身提供 align
+      align: typeof idx.align !== 'undefined' ? idx.align : 'center',
       // 优先使用列自身的 fixed 定义，否则使用组件传入的 indexFixed
       fixed: typeof idx.fixed !== 'undefined' ? idx.fixed : indexFixed,
       render: idx.render || ((text, record, rowIndex) => (indexMode === 'page' ? rowIndex + 1 : calcIndex(rowIndex))),
@@ -309,6 +315,7 @@ const ResponsiveTable = ({
     ),
     key: '__actions',
     width: typeof actionsWidth !== 'undefined' ? actionsWidth : 180,
+    align: 'center',
     // 默认固定到右侧（可通过 actionsFixed 覆写）
     fixed: actionsFixed,
     render: (_text, record) => {
@@ -356,6 +363,7 @@ const ResponsiveTable = ({
           title: '序号',
           key: '__index',
           width: typeof indexWidth !== 'undefined' ? indexWidth : 80,
+          align: 'center',
           // 默认固定到左侧（可通过 indexFixed 覆写）
           fixed: indexFixed,
           render: (text, record, idx) => {
@@ -443,7 +451,7 @@ const ResponsiveTable = ({
                 const threshold = queryConfig.advancedThreshold || 3
                 const baseFields = fields.slice(0, threshold)
                 const advFields = fields.slice(threshold)
-                const advancedPlacement = queryConfig.advancedPlacement || 'inline' // 'inline' | 'popover' | 'drawer'
+                const advancedPlacement = queryConfig.advancedPlacement || 'drawer' // 'inline' | 'popover' | 'drawer'
 
                 const renderField = (f) => (
                   <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
@@ -534,27 +542,47 @@ const ResponsiveTable = ({
                       {advFields.length > 0 && (
                         <Popover
                           placement={queryConfig.advancedPlacementPos || 'bottomRight'}
-                          title="高级筛选"
                           trigger="click"
+                          open={popoverVisible}
+                          onOpenChange={(open) => setPopoverVisible(open)}
+                          getPopupContainer={() => document.body}
                           content={
-                            <div style={{ minWidth: 320 }}>
-                              <Form form={form} layout="vertical">
-                                {advFields.map((f) => (
-                                  <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
-                                    {f.render ? f.render() : renderField(f).props.children}
-                                  </Form.Item>
-                                ))}
-                                <div style={{ textAlign: 'right' }}>
-                                  <Space>
-                                    <Button onClick={handleReset}>
-                                      {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
-                                    </Button>
-                                    <Button type="primary" onClick={handleSearch}>
-                                      {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
-                                    </Button>
-                                  </Space>
-                                </div>
-                              </Form>
+                            <div style={{ minWidth: 320, maxWidth: 420, display: 'flex', flexDirection: 'column' }}>
+                              {/* title */}
+                              <div style={{ padding: '12px 16px', borderBottom: `1px solid ${token.colorBorder}` }}>
+                                高级筛选
+                              </div>
+
+                              {/* middle: scrollable form area */}
+                              <div style={{ maxHeight: 360, overflowY: 'auto', padding: 16 }}>
+                                <Form form={form} layout="vertical">
+                                  {advFields.map((f) => (
+                                    <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
+                                      {f.render ? f.render() : renderField(f).props.children}
+                                    </Form.Item>
+                                  ))}
+                                </Form>
+                              </div>
+
+                              {/* bottom: fixed action bar */}
+                              <div
+                                style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}
+                              >
+                                <Space>
+                                  <Button onClick={handleReset}>
+                                    {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                                  </Button>
+                                  <Button
+                                    type="primary"
+                                    onClick={async () => {
+                                      await handleSearch()
+                                      setPopoverVisible(false)
+                                    }}
+                                  >
+                                    {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                                  </Button>
+                                </Space>
+                              </div>
                             </div>
                           }
                         >
@@ -589,19 +617,29 @@ const ResponsiveTable = ({
                             高级筛选
                           </Button>
                           <Drawer
-                            title="高级筛选"
+                            title={'高级筛选'}
                             placement="right"
                             onClose={() => setDrawerVisible(false)}
                             open={drawerVisible}
-                            width={420}
+                            size={420}
+                            styles={{ body: { padding: 0 } }}
                           >
-                            <Form form={form} layout="vertical">
-                              {advFields.map((f) => (
-                                <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
-                                  {f.render ? f.render() : renderField(f).props.children}
-                                </Form.Item>
-                              ))}
-                              <div style={{ textAlign: 'right' }}>
+                            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                              {/* middle: scrollable form area */}
+                              <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+                                <Form form={form} layout="vertical">
+                                  {advFields.map((f) => (
+                                    <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
+                                      {f.render ? f.render() : renderField(f).props.children}
+                                    </Form.Item>
+                                  ))}
+                                </Form>
+                              </div>
+
+                              {/* bottom: fixed action bar */}
+                              <div
+                                style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}
+                              >
                                 <Space>
                                   <Button onClick={handleReset}>
                                     {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
@@ -617,7 +655,7 @@ const ResponsiveTable = ({
                                   </Button>
                                 </Space>
                               </div>
-                            </Form>
+                            </div>
                           </Drawer>
                         </>
                       )}

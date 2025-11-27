@@ -14,7 +14,7 @@ const NotificationsPage = () => {
   // 使用 state 存放完整数据，以便删除后更新
   const initialMock = useMemo(
     () =>
-      Array.from({ length: 32 }).map((_, i) => ({
+      Array.from({ length: 12 }).map((_, i) => ({
         id: i + 1,
         title: `消息标题 ${i + 1}`,
         description: `这是第 ${i + 1} 条消息的内容，支持详情查看。`,
@@ -150,7 +150,7 @@ const NotificationsPage = () => {
               onClick: async (r) => {
                 // 调用后端删除接口（请根据后端实际接口调整 URL）
                 try {
-                  await request.delete(`/api/notifications/${r.id}`)
+                  // await request.delete(`/api/notifications/${r.id}`)
                 } catch (e) {
                   // 如果删除失败，抛出以便父 hook 处理（handleDelete 可捕获）
                   return Promise.reject(e)
@@ -212,13 +212,14 @@ const NotificationsPage = () => {
               initialValues: {
                 read: '',
               },
-              advancedThreshold: 2,
-              buttons: { searchText: '搜索', resetText: '重置' },
+              advancedThreshold: 3,
+              advancedPlacement: 'drawer', // 'inline' | 'popover' | 'drawer'
+              buttons: { searchText: '查询', resetText: '重置' },
             },
           }}
           // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
           fetchUrl="/api/notifications"
-          autoLoad={true}
+          autoLoad={false}
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
           responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
           serverSort={false}

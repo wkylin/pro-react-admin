@@ -85,7 +85,8 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       placement="right"
       onClose={onClose}
       open={open}
-      styles={{ body: { padding: '20px 24px' }, wrapper: { width: 300 } }}
+      size={300}
+      styles={{ body: { padding: '20px 24px' } }}
     >
       <div className="mb-6">
         <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-gray-100">整体风格设置</h3>

@@ -25,7 +25,7 @@ import avatarPng from '@assets/images/w.png'
 
 import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
-import NotificationDropdown from '@stateless/NotificationDropdown'
+import NotificationDrawer from '@stateless/NotificationDrawer'
 
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
@@ -223,7 +223,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
           {!isMobile ? (
             <Space orientation="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
               <SoundBar />
-              <NotificationDropdown />
+              <NotificationDrawer />
               <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
               <Fullscreen />
               <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">

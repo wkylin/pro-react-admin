@@ -296,7 +296,8 @@ const MyPortfilo = () => {
             placement="right"
             onClose={() => setMobileMenuOpen(false)}
             open={mobileMenuOpen}
-            styles={{ body: { padding: 0 }, wrapper: { width: 200 } }}
+            size={200}
+            styles={{ body: { padding: 0 } }}
           >
             <Anchor
               targetOffset={targetOffset}
