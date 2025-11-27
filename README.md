@@ -85,7 +85,7 @@ npm install
 npm run dev
 ```
 
-更多用法详见 [详细文档](./README_PERMISSION.md) 与 [用户角色权限说明](./docs/USER_ROLE_PERMISSION.md)。
+更多用法详见 [详细文档](./docs/README_PERMISSION.md) 与 [用户角色权限说明](./docs/USER_ROLE_PERMISSION.md)。
 
 ---
 
