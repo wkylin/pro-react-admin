@@ -207,8 +207,8 @@ export default function useTable({
       if (!res) return Promise.resolve(res)
 
       // Try using responseFieldMap first (listField / totalField)
-      let list = undefined
-      let totalNum = undefined
+      let list
+      let totalNum
       try {
         list = getByPath(res, responseFieldMap.listField)
         totalNum = getByPath(res, responseFieldMap.totalField)
@@ -239,11 +239,11 @@ export default function useTable({
         setInternalData(list)
 
         // resolve total using mapping first, then common fields
-        let totalCandidates = []
+        const totalCandidates = []
         if (responseFieldMap && responseFieldMap.totalField) totalCandidates.push(responseFieldMap.totalField)
         totalCandidates.push('total', 'count', 'data.total', 'data.count')
 
-        let resolvedTotal = undefined
+        let resolvedTotal
         for (const p of totalCandidates) {
           const v = getByPath(res, p)
           if (typeof v === 'number') {
