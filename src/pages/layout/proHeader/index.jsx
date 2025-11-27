@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage } from '@utils/publicFn'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
+import avatarPng from '@assets/images/w.png'
 // import WikiSvg from '@assets/svg/wikipedia.svg'
 // import RocketSvg from '@assets/svg/rocket.svg'
 
@@ -265,7 +266,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
             {isAuthenticated && user ? (
               <Avatar src={user.avatar_url} />
             ) : (
-              <Button icon={<UserOutlined style={{ fontSize: 16 }} />} size="small" />
+              <Avatar src={<img draggable={false} src={avatarPng} alt="avatar" />} />
             )}
           </Dropdown>
         </div>

@@ -34,6 +34,7 @@ import {
   XOutlined,
   MenuOutlined,
 } from '@ant-design/icons'
+import avatarPng from '@assets/images/w.png'
 
 const { Title, Paragraph, Text } = Typography
 const { useToken } = theme
@@ -344,7 +345,7 @@ const MyPortfilo = () => {
           >
             <Avatar
               size={160}
-              src="https://github.com/wkylin.png"
+              src={avatarPng}
               style={{ border: `4px solid ${token.colorPrimary}`, marginBottom: 32 }}
             />
           </motion.div>
