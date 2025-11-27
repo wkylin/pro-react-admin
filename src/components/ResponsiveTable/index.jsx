@@ -1,13 +1,51 @@
 import React from 'react'
-import { Table, Pagination, Popover, Checkbox, Button, Popconfirm, Space } from 'antd'
+import {
+  Table,
+  Pagination,
+  Popover,
+  Checkbox,
+  Button,
+  Popconfirm,
+  Space,
+  Form,
+  Input,
+  Select,
+  DatePicker,
+  InputNumber,
+  Cascader,
+  TreeSelect,
+  Switch,
+  Drawer,
+} from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import useTable from './useTable'
 
 /**
  * ResponsiveTable
- * - 自适应父容器尺寸，自动计算 scroll.x / scroll/y
- * - 底部独立分页，始终显示在容器底部右侧
- * - 支持动态列显示设置（列可开关）
+ *
+ * 高级可配置表格组件（基于 antd Table 封装），功能包括：
+ * - 自适应父容器尺寸，自动计算 `scroll.x` / `scroll.y`（基于 ResizeObserver）
+ * - 底部独立分页（可与服务端分页配合使用）
+ * - 列显示配置（可选择隐藏/显示列）
+ * - 可配置的序号列（支持 `index` 列定义或 `showIndex`），可默认固定到左侧
+ * - 操作列（actions）支持可配置按钮、权限控制、确认框、并默认固定到右侧
+ * - 支持行选择（`rowSelection`：`null | 'multiple' | 'single'`），并支持基于记录的可选判断 `rowSelectable`
+ * - 支持服务端数据拉取：`fetchData`（自定义函数）或 `fetchUrl`（内部使用 `requestLib.get`）
+ *   - 支持请求/响应字段映射：`requestParamMap` / `responseFieldMap`
+ *   - `fetchPage(page,pageSize,sort,extraParams)` 会将 `extraParams` 合并到请求参数中，便于传递查询表单数据
+ * - 支持 server sort（`serverSort`）及默认排序 `defaultSort`
+ * - 支持虚拟列表（`virtualized`），默认启用；可通过 `tableProps.virtual` 覆写
+ * - 顶部 `toolbar`：左右两侧布局，左侧为固定操作按钮（新增/导出等），右侧为查询表单（支持校验、默认值、高级筛选、查询/重置按钮）
+ *
+ * Props（常用）：
+ * - `columns`：antd Table 的列定义，支持在某列加 `index: true` 或 `type: 'index'` 来定义序号列
+ * - `dataSource`：本地数据（非服务端模式）
+ * - `fetchUrl` / `fetchData`：服务端拉取数据的配置
+ * - `requestParamMap`：请求参数映射，例如 `{ pageField: 'page', pageSizeField: 'pageSize' }`
+ * - `responseFieldMap`：响应字段映射，例如 `{ listField: 'data.items', totalField: 'data.total' }`
+ * - `toolbar`：工具栏配置示例见源码
+ * - `indexFixed` / `actionsFixed`：默认的 `fixed` 值（`'left' | 'right' | false`）
+ * - `virtualized`：是否启用虚拟列表（默认 `true`）
  */
 const ResponsiveTable = ({
   columns = [],
@@ -53,8 +91,15 @@ const ResponsiveTable = ({
   responseFieldMap = { listField: 'data', totalField: 'total' },
   serverSort = false,
   defaultSort = null,
-  // 是否启用虚拟列表（提高大量数据渲染性能）。默认开启，可通过 `tableProps.virtual` 覆写。
-  virtualized = true,
+  // 是否启用虚拟列表（提高大量数据渲染性能）。默认关闭，可通过 `tableProps.virtual` 覆写。
+  virtualized = false,
+  // 可配置序号列与操作列的默认宽度（若列定义中已包含 width 则以列定义为准）
+  indexWidth = 80,
+  actionsWidth = 180,
+  // toolbar 配置：{ leftActions: [{ key,label,onClick,... }], query: { fields: [], initialValues: {}, advancedThreshold: 3, buttons: { searchText, resetText } } }
+  toolbar = null,
+  // explicit scroll override for Table (object same shape as antd `scroll` prop)
+  scroll: scrollProp = undefined,
   // rest props passthrough to antd Table
   ...tableProps
 }) => {
@@ -93,6 +138,86 @@ const ResponsiveTable = ({
     responseFieldMap,
   })
 
+  // toolbar 表单（右侧查询）
+  const [form] = Form.useForm()
+  const [showAdvanced, setShowAdvanced] = React.useState(false)
+  const [drawerVisible, setDrawerVisible] = React.useState(false)
+
+  const toolbarConfig = toolbar || {}
+  // 强制使用新命名：`toolbar.actions`（左侧按钮）和 `toolbar.search`（右侧查询）
+  const leftActions = Array.isArray(toolbarConfig.actions) ? toolbarConfig.actions : []
+  const queryConfig = toolbarConfig.search && typeof toolbarConfig.search === 'object' ? toolbarConfig.search : null
+
+  // 控制左右 toolbar 是否显示：如果 toolbar.showLeft/showRight 显式设置则以其为准，
+  // 否则根据内容自动决定（有 leftActions 则显示左侧，有 queryConfig 则显示右侧）
+  const showToolbarLeft =
+    typeof toolbarConfig.showLeft !== 'undefined' ? !!toolbarConfig.showLeft : leftActions.length > 0
+  const showToolbarRight = typeof toolbarConfig.showRight !== 'undefined' ? !!toolbarConfig.showRight : !!queryConfig
+
+  // 提供给 action handler 的受控 API（浅拷贝，避免 action 直接修改内部 state）
+  const toolbarApi = React.useMemo(
+    () => ({
+      selectedRowKeys: Array.isArray(selectedRowKeys) ? [...selectedRowKeys] : [],
+      fetchPage: async (...args) => {
+        try {
+          return await fetchPage(...args)
+        } catch (err) {
+          console.error('toolbar fetchPage error', err)
+          throw err
+        }
+      },
+      pagination: { ...pagination },
+      form,
+    }),
+    [selectedRowKeys, fetchPage, pagination, form]
+  )
+
+  // 初始化表单默认值
+  React.useEffect(() => {
+    if (queryConfig && queryConfig.initialValues) {
+      form.setFieldsValue(queryConfig.initialValues)
+    }
+  }, [queryConfig && queryConfig.initialValues])
+
+  const handleSearch = async () => {
+    try {
+      const values = await form.validateFields()
+      // 支持字段级 transform 或全局 transformValues
+      let payload = { ...values }
+      if (queryConfig && Array.isArray(queryConfig.fields)) {
+        for (const f of queryConfig.fields) {
+          if (f && typeof f.transform === 'function') {
+            payload[f.name] = f.transform(values[f.name], values)
+          }
+        }
+      }
+      if (queryConfig && typeof queryConfig.transformValues === 'function') {
+        payload = queryConfig.transformValues(payload) || payload
+      }
+      // reset to first page when searching
+      setPagination((p) => ({ ...p, current: 1 }))
+      // 优先使用自定义 onSearch 回调
+      if (queryConfig && typeof queryConfig.onSearch === 'function') {
+        await queryConfig.onSearch(payload, { fetchPage, form, setPagination, pagination })
+      } else {
+        await fetchPage(1, pagination.pageSize, sortState, payload)
+      }
+    } catch (e) {
+      // validation error will be shown by Form
+    }
+  }
+
+  const handleReset = async () => {
+    form.resetFields()
+    setPagination((p) => ({ ...p, current: 1 }))
+    if (queryConfig && typeof queryConfig.onReset === 'function') {
+      await queryConfig.onReset({ fetchPage, form, setPagination, pagination })
+    } else {
+      // fetch without extra params
+      await fetchPage(1, pagination.pageSize, sortState, {})
+    }
+  }
+
   const [visibleKeys, setVisibleKeys] = React.useState(() => columns.map((c) => c.dataIndex || c.key).filter(Boolean))
 
   React.useEffect(() => setVisibleKeys(columns.map((c) => c.dataIndex || c.key).filter(Boolean)), [columns])
@@ -110,6 +235,8 @@ const ResponsiveTable = ({
     const col = {
       ...idx,
       key: idx.key || '__index',
+      // 保证当列自身未指定 width 时使用组件传入的 indexWidth
+      width: typeof idx.width !== 'undefined' ? idx.width : indexWidth,
       // 优先使用列自身的 fixed 定义，否则使用组件传入的 indexFixed
       fixed: typeof idx.fixed !== 'undefined' ? idx.fixed : indexFixed,
       render: idx.render || ((text, record, rowIndex) => (indexMode === 'page' ? rowIndex + 1 : calcIndex(rowIndex))),
@@ -181,7 +308,7 @@ const ResponsiveTable = ({
       </div>
     ),
     key: '__actions',
-    width: 180,
+    width: typeof actionsWidth !== 'undefined' ? actionsWidth : 180,
     // 默认固定到右侧（可通过 actionsFixed 覆写）
     fixed: actionsFixed,
     render: (_text, record) => {
@@ -228,7 +355,7 @@ const ResponsiveTable = ({
       ? {
           title: '序号',
           key: '__index',
-          width: 80,
+          width: typeof indexWidth !== 'undefined' ? indexWidth : 80,
           // 默认固定到左侧（可通过 indexFixed 覆写）
           fixed: indexFixed,
           render: (text, record, idx) => {
@@ -279,20 +406,289 @@ const ResponsiveTable = ({
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
-        {/* allow explicit override from tableProps.virtual, otherwise use virtualized prop */}
-        <Table
-          rowKey={rowKey}
-          columns={columnsWithActions}
-          dataSource={pagedData}
-          rowSelection={rowSelectionConfig}
-          pagination={false}
-          scroll={{ x: tableScroll.x, y: tableScroll.y }}
-          virtual={typeof tableProps.virtual !== 'undefined' ? tableProps.virtual : virtualized}
-          style={{ width: '100%' }}
-          onChange={onTableChange}
-          {...tableProps}
-        />
+      {/* toolbar：左侧为操作按钮，右侧为查询表单（可分别控制显示） */}
+      {(showToolbarLeft || showToolbarRight) && (
+        <div
+          className="responsive-table-toolbar"
+          style={{ padding: '8px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
+          <div>
+            {showToolbarLeft && (
+              <Space>
+                {leftActions.map((act) => (
+                  <Button
+                    key={act.key || act.label}
+                    type={act.type || 'default'}
+                    danger={act.danger}
+                    onClick={() => {
+                      try {
+                        if (typeof act.onClick === 'function') act.onClick(toolbarApi)
+                      } catch (err) {
+                        console.error('toolbar action error', err)
+                      }
+                    }}
+                  >
+                    {act.icon ? act.icon : null}
+                    {act.label}
+                  </Button>
+                ))}
+              </Space>
+            )}
+          </div>
+          <div>
+            {showToolbarRight &&
+              queryConfig &&
+              (() => {
+                const fields = queryConfig.fields || []
+                const threshold = queryConfig.advancedThreshold || 3
+                const baseFields = fields.slice(0, threshold)
+                const advFields = fields.slice(threshold)
+                const advancedPlacement = queryConfig.advancedPlacement || 'inline' // 'inline' | 'popover' | 'drawer'
+
+                const renderField = (f) => (
+                  <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
+                    {f.render
+                      ? f.render()
+                      : (() => {
+                          const t = f.type || 'input'
+                          switch (t) {
+                            case 'select':
+                              return (
+                                <Select
+                                  style={{ minWidth: f.width || 160 }}
+                                  placeholder={f.placeholder}
+                                  options={f.options}
+                                />
+                              )
+                            case 'date':
+                              return <DatePicker {...(f.props || {})} />
+                            case 'dateRange':
+                              return <DatePicker.RangePicker {...(f.props || {})} />
+                            case 'number':
+                              return <InputNumber style={{ minWidth: f.width || 120 }} {...(f.props || {})} />
+                            case 'switch':
+                              return <Switch {...(f.props || {})} />
+                            case 'cascader':
+                              return <Cascader options={f.options} {...(f.props || {})} />
+                            case 'treeSelect':
+                              return <TreeSelect treeData={f.options} {...(f.props || {})} />
+                            case 'custom':
+                              return f.render ? f.render() : null
+                            default:
+                              return <Input placeholder={f.placeholder} {...(f.props || {})} />
+                          }
+                        })()}
+                  </Form.Item>
+                )
+
+                if (advancedPlacement === 'inline') {
+                  return (
+                    <Form
+                      form={form}
+                      {...(queryConfig.formProps || {})}
+                      layout={queryConfig.layout || 'inline'}
+                      style={{ display: 'flex', alignItems: 'center' }}
+                    >
+                      <Space wrap>
+                        {baseFields.map((f) => renderField(f))}
+                        {showAdvanced && advFields.map((f) => renderField(f))}
+                        {advFields.length > 0 && (
+                          <Button type="link" onClick={() => setShowAdvanced((s) => !s)}>
+                            {showAdvanced ? '收起' : '高级筛选'}
+                          </Button>
+                        )}
+                        <Form.Item>
+                          <Space>
+                            <Button type="primary" onClick={handleSearch}>
+                              {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                            </Button>
+                            <Button onClick={handleReset}>
+                              {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                            </Button>
+                          </Space>
+                        </Form.Item>
+                      </Space>
+                    </Form>
+                  )
+                }
+
+                if (advancedPlacement === 'popover') {
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Form form={form} {...(queryConfig.formProps || {})} layout={queryConfig.layout || 'inline'}>
+                        <Space wrap>
+                          {baseFields.map((f) => renderField(f))}
+                          <Form.Item>
+                            <Space>
+                              <Button type="primary" onClick={handleSearch}>
+                                {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                              </Button>
+                              <Button onClick={handleReset}>
+                                {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                              </Button>
+                            </Space>
+                          </Form.Item>
+                        </Space>
+                      </Form>
+
+                      {advFields.length > 0 && (
+                        <Popover
+                          placement={queryConfig.advancedPlacementPos || 'bottomRight'}
+                          title="高级筛选"
+                          trigger="click"
+                          content={
+                            <div style={{ minWidth: 320 }}>
+                              <Form form={form} layout="vertical">
+                                {advFields.map((f) => (
+                                  <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
+                                    {f.render ? f.render() : renderField(f).props.children}
+                                  </Form.Item>
+                                ))}
+                                <div style={{ textAlign: 'right' }}>
+                                  <Space>
+                                    <Button onClick={handleReset}>
+                                      {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                                    </Button>
+                                    <Button type="primary" onClick={handleSearch}>
+                                      {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                                    </Button>
+                                  </Space>
+                                </div>
+                              </Form>
+                            </div>
+                          }
+                        >
+                          <Button type="link">高级筛选</Button>
+                        </Popover>
+                      )}
+                    </div>
+                  )
+                }
+
+                if (advancedPlacement === 'drawer') {
+                  return (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Form form={form} {...(queryConfig.formProps || {})} layout={queryConfig.layout || 'inline'}>
+                        <Space wrap>
+                          {baseFields.map((f) => renderField(f))}
+                          <Form.Item>
+                            <Space>
+                              <Button type="primary" onClick={handleSearch}>
+                                {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                              </Button>
+                              <Button onClick={handleReset}>
+                                {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                              </Button>
+                            </Space>
+                          </Form.Item>
+                        </Space>
+                      </Form>
+                      {advFields.length > 0 && (
+                        <>
+                          <Button type="link" onClick={() => setDrawerVisible(true)}>
+                            高级筛选
+                          </Button>
+                          <Drawer
+                            title="高级筛选"
+                            placement="right"
+                            onClose={() => setDrawerVisible(false)}
+                            open={drawerVisible}
+                            width={420}
+                          >
+                            <Form form={form} layout="vertical">
+                              {advFields.map((f) => (
+                                <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
+                                  {f.render ? f.render() : renderField(f).props.children}
+                                </Form.Item>
+                              ))}
+                              <div style={{ textAlign: 'right' }}>
+                                <Space>
+                                  <Button onClick={handleReset}>
+                                    {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                                  </Button>
+                                  <Button
+                                    type="primary"
+                                    onClick={() => {
+                                      handleSearch()
+                                      setDrawerVisible(false)
+                                    }}
+                                  >
+                                    {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                                  </Button>
+                                </Space>
+                              </div>
+                            </Form>
+                          </Drawer>
+                        </>
+                      )}
+                    </div>
+                  )
+                }
+
+                return (
+                  <Form
+                    form={form}
+                    {...(queryConfig.formProps || {})}
+                    layout={queryConfig.layout || 'inline'}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                  >
+                    <Space wrap>
+                      {baseFields.map((f) => renderField(f))}
+                      {showAdvanced && advFields.map((f) => renderField(f))}
+                      {advFields.length > 0 && (
+                        <Button type="link" onClick={() => setShowAdvanced((s) => !s)}>
+                          {showAdvanced ? '收起' : '高级筛选'}
+                        </Button>
+                      )}
+                      <Form.Item>
+                        <Space>
+                          <Button type="primary" onClick={handleSearch}>
+                            {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
+                          </Button>
+                          <Button onClick={handleReset}>
+                            {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                          </Button>
+                        </Space>
+                      </Form.Item>
+                    </Space>
+                  </Form>
+                )
+              })()}
+          </div>
+        </div>
+      )}
+
+      <div style={{ flex: '1 1 auto', overflowX: 'auto', overflowY: 'hidden' }}>
+        {/* allow explicit override from `scroll` prop, then `tableProps.scroll`, otherwise use computed `tableScroll` */}
+        {(() => {
+          const computed = { x: tableScroll.x, y: tableScroll.y }
+          const tableScrollFromProps = tableProps && tableProps.scroll ? tableProps.scroll : {}
+          // merge: computed <- tableProps.scroll <- explicit scrollProp (explicit wins)
+          const finalScroll = {
+            ...(typeof computed === 'object' ? computed : {}),
+            ...(typeof tableScrollFromProps === 'object' ? tableScrollFromProps : {}),
+            ...(typeof scrollProp === 'object' ? scrollProp : {}),
+          }
+
+          // avoid passing through original scroll in tableProps to prevent override
+          const restTableProps = { ...tableProps }
+          if (restTableProps && restTableProps.scroll) delete restTableProps.scroll
+
+          return (
+            <Table
+              rowKey={rowKey}
+              columns={columnsWithActions}
+              dataSource={pagedData}
+              rowSelection={rowSelectionConfig}
+              pagination={false}
+              scroll={finalScroll}
+              virtual={typeof tableProps.virtual !== 'undefined' ? tableProps.virtual : virtualized}
+              style={{ width: '100%' }}
+              onChange={onTableChange}
+              {...restTableProps}
+            />
+          )
+        })()}
       </div>
       <div style={{ flex: '0 0 auto', padding: 8, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         <Pagination

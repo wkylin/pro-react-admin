@@ -2,6 +2,10 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import request from '@/service/request'
 
 // useTable: 提供分页管理、响应式 scroll 计算，以及删除后回退上一页的辅助方法
+//
+// 重要变更：fetchPage 支持第四个参数 `extraParams`，用于传递来自查询表单的过滤条件。
+// fetchPage(page, pageSize, sort, extraParams) 会把 extraParams 合并到通过 `fetchUrl` 发出的请求参数中；
+// 如果使用自定义 `fetchData`/`reloadPage`，则会以第四个参数的形式传入（向后兼容旧签名）。
 export default function useTable({
   dataSource = [],
   initialPagination = { current: 1, pageSize: 10 },
@@ -115,16 +119,40 @@ export default function useTable({
 
     const calc = () => {
       const rect = node.getBoundingClientRect()
-      const width = Math.max(Math.floor(rect.width || minWidth), minWidth)
-      const height = Math.max(Math.floor(rect.height || 400), minBodyHeight + 120)
 
+      // Prefer clientHeight when available (excludes border), fallback to rect.height
+      const containerH =
+        typeof node.clientHeight === 'number' && node.clientHeight > 0
+          ? Math.floor(node.clientHeight)
+          : typeof rect.height === 'number' && rect.height > 0
+            ? Math.floor(rect.height)
+            : minBodyHeight + 120
+
+      const width = Math.max(Math.floor(rect.width || minWidth), minWidth)
+
+      // table header inside the antd Table
       const headerEl = node.querySelector('.ant-table-header') || node.querySelector('.ant-table-thead')
       const headerH = headerEl ? headerEl.offsetHeight : 56
+
+      // toolbar (top actions / search) - subtract its height if present
+      const toolbarEl = node.querySelector('.responsive-table-toolbar')
+      const toolbarH = toolbarEl ? toolbarEl.offsetHeight : 0
+
       const footerH = 64 // pagination area
       const padding = 16
 
-      const bodyH = Math.max(minBodyHeight, height - headerH - footerH - padding)
-      setTableScroll({ x: Math.max(width, minWidth), y: bodyH })
+      // available space for table body inside container
+      const availableBodyH = containerH - toolbarH - headerH - footerH - padding
+
+      // If availableBodyH is smaller than minBodyHeight, we allow shrinking
+      // to avoid creating an outer vertical scrollbar. But keep a hard lower
+      // bound so table remains usable.
+      const hardMin = 50
+      let bodyH = availableBodyH
+      if (availableBodyH <= 0) bodyH = hardMin
+      else if (availableBodyH < minBodyHeight) bodyH = Math.max(hardMin, availableBodyH)
+
+      setTableScroll({ x: Math.max(width, minWidth), y: Math.max(bodyH, hardMin) })
     }
 
     calc()
@@ -182,15 +210,24 @@ export default function useTable({
   }
 
   // fetch page helper（用于服务端模式）
-  const fetchPage = async (page = pagination.current, pageSize = pagination.pageSize, sort = sortState) => {
+  // fetchPage 支持可选的 extraParams（例如查询表单的 filter 字段）
+  const fetchPage = async (
+    page = pagination.current,
+    pageSize = pagination.pageSize,
+    sort = sortState,
+    extraParams = {}
+  ) => {
     const fetcher = fetchData || reloadPage
     try {
       let res
       if (typeof fetcher === 'function') {
-        res = await fetcher(page, pageSize, sort)
+        // 兼容性：向后兼容旧的 fetcher 签名，额外的参数会被忽略
+        res = await fetcher(page, pageSize, sort, extraParams)
       } else if (fetchUrl) {
         // build params according to requestParamMap
         const params = {}
+        // merge extraParams first so explicit page/pageSize/sort override if provided
+        Object.assign(params, extraParams || {})
         // use configured pageField to represent current page
         if (requestParamMap.pageField) params[requestParamMap.pageField] = page
         params[requestParamMap.pageSizeField] = pageSize

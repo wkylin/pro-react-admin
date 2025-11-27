@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react'
-import { Button, Badge, Typography, Modal } from 'antd'
+import { Button, Badge, Typography, Modal, message } from 'antd'
 import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -26,6 +26,35 @@ const NotificationsPage = () => {
 
   const [items, setItems] = useState(initialMock)
   const { permissions = [] } = usePermission()
+
+  // 新增/导出示例处理器
+  const handleAdd = () => {
+    setModal({ visible: true, record: null })
+  }
+
+  const exportRows = (selectedRowKeys = []) => {
+    const rows = selectedRowKeys && selectedRowKeys.length ? items.filter((i) => selectedRowKeys.includes(i.id)) : items
+    if (!rows || rows.length === 0) {
+      message.info('没有数据可导出')
+      return
+    }
+
+    const header = ['id', 'title', 'description', 'time', 'read']
+    const csv = [header]
+      .concat(rows.map((r) => [r.id, r.title, r.description, r.time, r.read ? '已读' : '未读']))
+      .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+      .join('\n')
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'notifications.csv'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
 
   // 主题色适配
   const bgColor = themeSettings.themeMode === 'dark' ? '#18191c' : '#fff'
@@ -132,6 +161,61 @@ const NotificationsPage = () => {
               },
             },
           ]}
+          // toolbar 示例：左侧新增/导出，右侧查询表单
+          toolbar={{
+            actions: [
+              { key: 'add', label: '新增', type: 'primary', onClick: () => handleAdd() },
+              { key: 'export', label: '导出', onClick: ({ selectedRowKeys } = {}) => exportRows(selectedRowKeys) },
+            ],
+            search: {
+              // fields 演示多种类型：input/select/dateRange/number
+              fields: [
+                { name: 'title', label: '标题', placeholder: '请输入标题' },
+                {
+                  name: 'read',
+                  label: '状态',
+                  type: 'select',
+                  options: [
+                    { label: '全部', value: '' },
+                    { label: '未读', value: false },
+                    { label: '已读', value: true },
+                  ],
+                },
+                {
+                  name: 'createdAt',
+                  label: '创建时间',
+                  type: 'dateRange',
+                  placeholder: '请选择创建时间范围',
+                },
+                {
+                  name: 'minId',
+                  label: '最小 ID',
+                  type: 'number',
+                  placeholder: '>=',
+                },
+              ],
+              // transformValues 将前端表单值转换为后端期望的参数
+              // 这里把 createdAt 的范围转换为 start / end（ISO 字符串），并保持其它字段
+              transformValues: (vals) => {
+                const out = { ...vals }
+                if (vals.createdAt && Array.isArray(vals.createdAt)) {
+                  const [s, e] = vals.createdAt
+                  // moment / dayjs 或 Date 都支持 toISOString
+                  out.start = s ? (typeof s.toISOString === 'function' ? s.toISOString() : s) : undefined
+                  out.end = e ? (typeof e.toISOString === 'function' ? e.toISOString() : e) : undefined
+                  delete out.createdAt
+                }
+                // 如果 minId 为空字符串或未设置，删除该字段
+                if (out.minId === '' || out.minId == null) delete out.minId
+                return out
+              },
+              initialValues: {
+                read: '',
+              },
+              advancedThreshold: 2,
+              buttons: { searchText: '搜索', resetText: '重置' },
+            },
+          }}
           // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
           fetchUrl="/api/notifications"
           autoLoad={true}
@@ -141,6 +225,11 @@ const NotificationsPage = () => {
           showIndex={true}
           indexMode={'global'}
           rowSelection={null}
+          // 示例：覆盖默认序号列与操作列宽度，并精确控制横向滚动行为
+          indexWidth={60}
+          actionsWidth={220}
+          // scroll 支持像素、字符串（'100%'|'max-content'）或数字
+          scroll={{ x: 'max-content' }}
         />
       </div>
       <Modal
