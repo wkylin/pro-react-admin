@@ -135,6 +135,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 ---
 
 ## 🌐 约定式提交
+
 1. [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
 2. [语义化版本 2.0.0](https://semver.org/lang/zh-CN/)
 
@@ -157,7 +158,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-##  📝自动化持续代码审查工具
+## 📝自动化持续代码审查工具
 
 1. [DeepSource/](https://deepsource.io/)
 2. [DeepScan](https://deepscan.io/)
@@ -270,9 +271,9 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ## 📝 Tree Node Cli
 
-  1. npm install -g tree-node-cli
-  2. Mac: tree -L 2 -I "node_modules" -r -F
-  3. Win: treee -L 2 -I "node_modules" -r -F
+1. npm install -g tree-node-cli
+2. Mac: tree -L 2 -I "node_modules" -r -F
+3. Win: treee -L 2 -I "node_modules" -r -F
 
 ---
 
@@ -286,15 +287,14 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 2. 依赖分析
 
-    ```bash
-      1. npm run js-analyzer
-      2. "standard": "standard src/\*_/_",
-      3. "standard:fix": "standard --fix src/\*_/_",
-      4. rm -rf package-lock.json
-    ```
+   ```bash
+     1. npm run js-analyzer
+     2. "standard": "standard src/\*_/_",
+     3. "standard:fix": "standard --fix src/\*_/_",
+     4. rm -rf package-lock.json
+   ```
 
 ---
-
 
 ## 📝 GitHub Proxy
 
@@ -331,6 +331,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
      git config --global --unset http.proxy
      git config --global --unset https.proxy
    ```
+
 ## 🤝 Show your support
 
 <!-- Give a ⭐️ if this project helped you! -->

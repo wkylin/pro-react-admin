@@ -11,13 +11,12 @@
  */
 
 import React from 'react'
-import { mainLayoutRoute } from './modules/layout.routes'
+import { mainLayoutRoute, layoutRoutes } from './modules/layout.routes'
 import { authRoutes } from './modules/auth.routes'
 import { businessRoutes } from './modules/business.routes'
 import { uiRoutes } from './modules/ui.routes'
 import { chartRoutes } from './modules/chart.routes'
 import { nestedRoutes } from './modules/nested.routes'
-import { layoutRoutes } from './modules/layout.routes'
 import { errorRoutes } from './modules/error.routes'
 import { notificationRoutes } from './modules/notification.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
