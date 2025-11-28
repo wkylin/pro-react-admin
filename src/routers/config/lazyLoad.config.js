@@ -63,6 +63,7 @@ export const lazyComponents = {
   Print: lazyLoad(() => import('@pages/print'), { preload: true }),
   // 通知页面
   Notifications: lazyLoad(() => import('@pages/notifications'), { preload: true }),
+  NotificationDetail: lazyLoad(() => import('@pages/notifications/NotificationDetail'), { preload: true }),
   PHBar: lazyLoad(() => import('@pages/phbar'), { preload: true }),
 
   // 用户相关

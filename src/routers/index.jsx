@@ -84,14 +84,42 @@ export function getKeyName(path = '/') {
       return path
     }
 
-    const route = flatRoutes.find((r) => r?.path === path)
+    // normalize incoming path (remove leading slash and query)
+    const normalized = String(path || '')
+      .split('?')[0]
+      .replace(/^\//, '')
+
+    const matchRoute = (r) => {
+      if (!r || !r.path) return false
+      const rp = String(r.path).replace(/^\//, '')
+      if (rp === normalized) return true
+      // support param routes like 'notification/:id' -> match '/notification/1'
+      if (rp.includes(':')) {
+        const pattern = '^' + rp.replace(/:[^/]+/g, '[^/]+') + '$'
+        try {
+          const re = new RegExp(pattern)
+          return re.test(normalized)
+        } catch (err) {
+          return false
+        }
+      }
+      // support wildcard routes ending with *
+      if (rp.endsWith('*')) {
+        const base = rp.replace(/\*$/, '')
+        return normalized.startsWith(base)
+      }
+      return false
+    }
+
+    const route = flatRoutes.find(matchRoute)
 
     if (!route) {
       console.warn(`getKeyName: route not found for path "${path}"`)
       return path
     }
 
-    return route.meta?.key || route.meta?.title || path
+    // prefer explicit meta.key, then route.key, then meta.title, then path
+    return route.meta?.key || route.key || route.meta?.title || path
   } catch (error) {
     console.error('getKeyName error:', error)
     return path

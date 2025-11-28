@@ -29,8 +29,10 @@ const ProContent = () => {
     token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
   useEffect(() => {
-    const { tabKey, title, element, i18nKey } = getKeyName(pathname)
-    const newPath = search ? pathname + search : pathname
+    // pass full path (including search) so getKeyName can consider query params
+    const full = search ? pathname + search : pathname
+    const { tabKey, title, element, i18nKey } = getKeyName(full)
+    const newPath = full
     pathRef.current = newPath
 
     setPanesItem({

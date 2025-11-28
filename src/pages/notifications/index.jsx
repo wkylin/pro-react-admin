@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
+import useSafeNavigate from '@hooks/useSafeNavigate'
+import { useLocation } from 'react-router-dom'
 import { Button, Badge, Typography, Modal, message } from 'antd'
 import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
@@ -28,6 +30,8 @@ const NotificationsPage = () => {
   const { permissions = [] } = usePermission()
   // 用于演示从父组件/外部控制 toolbar 表单的 apiRef
   const tableApiRef = useRef(null)
+  const { redirectTo } = useSafeNavigate()
+  const { search } = useLocation()
 
   // 演示：组件挂载后通过 apiRef 设置表单初始值（示例用途，可删除）
   useEffect(() => {
@@ -150,11 +154,36 @@ const NotificationsPage = () => {
               },
             },
             {
-              key: 'detail',
-              label: '详情',
+              key: 'open_tab',
+              label: '在新标签打开',
               onClick: (r) => {
-                // 示例编辑行为：打开详情 modal（可替换为编辑表单）
-                console.log('detail', r)
+                // 导航到动态详情路由，ProTabs 会为该路径创建一个新的 tab
+                try {
+                  // 使用 react-router 的 location.search（比直接访问 window.location 更可靠）
+                  // 如果当前 URL 含查询，则复用当前查询；否则附带示例 query
+                  // 打印调试信息便于排查为何找不到 query
+                  try {
+                    console.debug('current search (from useLocation):', search)
+                    const qs = search && search.length > 1 ? search : '?type=2'
+                    redirectTo(`/notification/${r.id}${qs}`)
+                  } catch (e) {
+                    console.error('open tab navigate error', e)
+                  }
+                } catch (e) {
+                  console.error('open tab navigate error', e)
+                }
+              },
+            },
+            {
+              key: 'open_tab_with_query',
+              label: '在新标签打开(带 query)',
+              onClick: (r) => {
+                try {
+                  // 示例：打开带固定 query 的详情页
+                  redirectTo(`/notification/${r.id}?type=2&del=0`)
+                } catch (e) {
+                  console.error('open tab navigate error', e)
+                }
               },
             },
             {

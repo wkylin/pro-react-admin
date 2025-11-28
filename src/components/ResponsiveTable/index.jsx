@@ -18,6 +18,7 @@ import {
   Drawer,
   theme,
 } from 'antd'
+import { useLocation } from 'react-router-dom'
 import { SettingOutlined } from '@ant-design/icons'
 import useTable from './useTable'
 
@@ -184,10 +185,39 @@ const ResponsiveTable = ({
           throw err
         }
       },
+      // 返回当前 URL 查询对象（key -> value），供外部使用
+      getSearch: () => {
+        try {
+          const params = new URLSearchParams(location.search || '')
+          const obj = {}
+          for (const [k, v] of params.entries()) obj[k] = v
+          return obj
+        } catch (e) {
+          return {}
+        }
+      },
+      // fetchPage 并把当前 URL 查询合并到 extraParams 中
+      fetchPageWithSearch: async (
+        page = pagination.current,
+        pageSize = pagination.pageSize,
+        sort = sortState,
+        extraParams = {}
+      ) => {
+        try {
+          const params = new URLSearchParams(location.search || '')
+          const searchObj = {}
+          for (const [k, v] of params.entries()) searchObj[k] = v
+          const merged = { ...searchObj, ...(extraParams || {}) }
+          return await fetchPage(page, pageSize, sort, merged)
+        } catch (err) {
+          console.error('toolbar fetchPageWithSearch error', err)
+          throw err
+        }
+      },
       pagination: { ...pagination },
       form,
     }),
-    [selectedRowKeys, fetchPage, pagination, form]
+    [selectedRowKeys, fetchPage, pagination, form, location.search, sortState]
   )
 
   // 如果父组件传入了 ref，则把 toolbarApi 暴露给父组件，方便外部调用 form / fetchPage 等

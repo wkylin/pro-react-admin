@@ -11,11 +11,33 @@ export const flattenRoutes = (arr) =>
   }, [])
 
 export const getKeyName = (pathName = '/404') => {
-  const thePath = pathName.split('?')[0]
-  const curRoute = flattenRoutes(routes)
-    .filter((item) => !item.index)
-    .filter((item) => item.key?.indexOf(thePath) !== -1)
-  if (!curRoute[0]) {
+  const fullPath = String(pathName || '/')
+  const basePath = fullPath.split('?')[0].replace(/^\//, '')
+
+  const flat = flattenRoutes(routes).filter((item) => !item.index)
+
+  const matchRoute = (r) => {
+    if (!r || !r.path) return false
+    const rp = String(r.path).replace(/^\//, '')
+    if (rp === basePath) return true
+    if (rp.includes(':')) {
+      const pattern = '^' + rp.replace(/:[^/]+/g, '[^/]+') + '$'
+      try {
+        return new RegExp(pattern).test(basePath)
+      } catch (e) {
+        return false
+      }
+    }
+    if (rp.endsWith('*')) {
+      const base = rp.replace(/\*$/, '')
+      return basePath.startsWith(base)
+    }
+    return false
+  }
+
+  const found = flat.find(matchRoute)
+
+  if (!found) {
     return {
       title: 'Not Found',
       tabKey: '/404',
@@ -24,13 +46,37 @@ export const getKeyName = (pathName = '/404') => {
     }
   }
 
-  const { name, key, element, index, path, auth, i18nKey } = curRoute[0]
+  const { name, key, element, index, path, auth, i18nKey } = found
+
+  // Behavior:
+  // - For parameterized routes (path includes ':'), by default use pathname (without query)
+  //   so different query strings won't create new tabs. If route.meta.keepQueryTabs === true,
+  //   use the full path (including query) instead.
+  // - For non-parameterized routes, if route.meta.keepQueryTabs === true OR the URL
+  //   contains query params and meta explicitly asks to keep them, we will use fullPath.
+  const isParamRoute = String(found.path || '').includes(':')
+  const keepQuery = found.meta && found.meta.keepQueryTabs === true
+
+  let tabKey
+  // If URL contains query params, use fullPath so tabs opened with queries render correctly
+  if (fullPath.includes('?')) {
+    tabKey = fullPath
+  } else if (isParamRoute) {
+    tabKey = keepQuery ? fullPath : basePath
+  } else {
+    tabKey = keepQuery ? fullPath : key || path || fullPath
+  }
+
+  // normalize tabKey to be a string and ensure it starts with '/'
+  tabKey = String(tabKey || '')
+  if (!tabKey.startsWith('/')) tabKey = '/' + tabKey
+
   return {
     index: index ?? false,
     path,
     auth,
     title: name,
-    tabKey: key,
+    tabKey,
     element,
     i18nKey,
   }

@@ -20,7 +20,7 @@ const initialNotifications = [
     time: '10分钟前',
   },
   { id: 4, title: '新功能上线', description: '权限系统与主题切换已支持。', read: false, time: '15分钟前' },
-  { id: 4, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
+  { id: 5, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
 ]
 
 const NotificationDropdown = () => {

@@ -61,10 +61,12 @@ const ProTabs = (props) => {
     }
 
     if (index > -1) {
-      panes[index].path = newPath
-      setPanes(panes)
+      // avoid mutating existing panes array in place
+      const newPanes = panes.map((p, i) => (i === index ? { ...p, path: newPath } : p))
+      setPanes(newPanes)
       return
     }
+
     setPanes([...panes, panesItem])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
