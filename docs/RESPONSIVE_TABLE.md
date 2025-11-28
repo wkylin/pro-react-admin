@@ -87,8 +87,7 @@ const columns = [
   - 由于 `clearUrlAfterInitialMerge` 为 `true`，地址栏中 `type` 与 `source` 会被移除（URL 被 `replaceState` 更新）；不会新增历史条目。
   - 如果 `showUrlAppliedTag` 为 `true`，toolbar 上会显示 `已应用地址栏初始筛选` 的提示。
 
-场景 A（merge once + 清除 URL + 显示 Tag）
------------------------------------------
+## 场景 A（merge once + 清除 URL + 显示 Tag）
 
 配置组件：
 
@@ -111,8 +110,7 @@ const columns = [
 - `toolbar` 上会短显示 `已应用地址栏初始筛选`（一次性提示）。
 - 之后再点击“查询”/改变分页/重置，后续请求不再把已合并的 URL 参数重新带上（因为组件已记录初始合并状态）。
 
-场景 B（保留 URL）
--------------------
+## 场景 B（保留 URL）
 
 如果你希望保留 URL，可以把 `clearUrlAfterInitialMerge={false}`。在这种模式下：
 
@@ -242,4 +240,4 @@ useEffect(() => {
 
 - **稳健性建议**：尽管已同步赋值，仍建议在调用前做空值检查（`tableApiRef.current?.form`），以在非标准使用路径下保持健壮性。
 
-*** End of Document
+\*\*\* End of Document
