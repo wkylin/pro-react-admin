@@ -61,6 +61,8 @@ export const lazyComponents = {
   PostMessage: lazyLoad(() => import('@pages/postmessage'), { preload: true }),
   MyIframe: lazyLoad(() => import('@pages/postmessage/myIframe'), { preload: true }),
   Print: lazyLoad(() => import('@pages/print'), { preload: true }),
+  // 通知页面
+  Notifications: lazyLoad(() => import('@pages/notifications'), { preload: true }),
   PHBar: lazyLoad(() => import('@pages/phbar'), { preload: true }),
 
   // 用户相关

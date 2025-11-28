@@ -212,7 +212,7 @@ const NotificationsPage = () => {
               initialValues: {
                 read: '',
               },
-              advancedThreshold: 3,
+              advancedThreshold: 1,
               advancedPlacement: 'drawer', // 'inline' | 'popover' | 'drawer'
               buttons: { searchText: '查询', resetText: '重置' },
             },
