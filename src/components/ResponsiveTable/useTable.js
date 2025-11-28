@@ -25,6 +25,11 @@ export default function useTable({
   requestMethod = 'get',
   // 是否把外部传入的 initialSearch 合并到内部 fetch 调用中
   mergeSearchToFetch = false,
+  // 如果为 true，只在首次 fetch 时合并 initialSearch，之后不再合并
+  mergeSearchToFetchOnce = false,
+  // 如果为 true，则在首次合并 initialSearch 到请求后，从地址栏移除这些已合并的查询键（replaceState）
+  // 默认启用，避免地址栏与后续交互产生误导
+  clearUrlAfterInitialMerge = true,
   // initialSearch: 可选的对象，代表初始 location.search 解析结果（会在 autoLoad / pagination / reset 等场景合并）
   initialSearch = {},
   // 请求参数映射：{ currentField, pageField, pageSizeField, sortField, orderField }
@@ -236,7 +241,28 @@ export default function useTable({
         const params = {}
         // if mergeSearchToFetch is enabled, merge initialSearch first (so extraParams override)
         if (mergeSearchToFetch && initialSearch && typeof initialSearch === 'object') {
-          Object.assign(params, initialSearch)
+          // if configured to merge only once, ensure we only merge the first time
+          if (!mergeSearchToFetchOnce || !initialMergedRef.current) {
+            Object.assign(params, initialSearch)
+            // mark as merged
+            initialMergedRef.current = true
+
+            // optionally clear the used query keys from the URL to avoid user confusion
+            try {
+              if (clearUrlAfterInitialMerge && typeof window !== 'undefined' && window && window.location) {
+                const usedKeys = Object.keys(initialSearch || {})
+                if (usedKeys.length > 0) {
+                  const sp = new URLSearchParams(window.location.search)
+                  for (const k of usedKeys) sp.delete(k)
+                  const qs = sp.toString()
+                  const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname
+                  window.history.replaceState({}, '', newUrl)
+                }
+              }
+            } catch (e) {
+              // ignore URL modification errors
+            }
+          }
         }
         // merge extraParams so explicit page/pageSize/sort override if provided
         Object.assign(params, extraParams || {})
@@ -325,6 +351,7 @@ export default function useTable({
   // autoLoad on mount when fetchUrl or fetchData provided and autoLoad true
   const autoLoadRef = useRef(false)
   const inFlightRef = useRef(false)
+  const initialMergedRef = useRef(false)
 
   useEffect(() => {
     if (!autoLoad) return
@@ -339,8 +366,8 @@ export default function useTable({
       if (inFlightRef.current) return
       inFlightRef.current = true
       try {
-        const extra = mergeSearchToFetch ? initialSearch || {} : undefined
-        await fetchPage(pagination.current, pagination.pageSize, sortState, extra)
+        // let fetchPage handle merging initialSearch according to mergeSearchToFetch/Once
+        await fetchPage(pagination.current, pagination.pageSize, sortState)
       } catch (e) {
         console.error('autoLoad fetchPage failed', e)
       } finally {
@@ -370,5 +397,7 @@ export default function useTable({
     fetchPage,
     sortState,
     setSortState,
+    // indicate whether initialSearch has been merged already
+    hasMergedInitialSearch: () => !!initialMergedRef.current,
   }
 }

@@ -3,6 +3,7 @@ import {
   Table,
   Pagination,
   Popover,
+  Tag,
   Checkbox,
   Button,
   Popconfirm,
@@ -109,8 +110,14 @@ const ResponsiveTable = ({
   virtualized = false,
   // 如果为 true，会把当前地址栏的 query (`location.search`) 自动合并到所有内部 fetch 调用中
   mergeSearchToFetch = false,
+  // 如果为 true，则只在第一次自动加载时合并地址栏 query，之后的交互不再合并（useTable 支持）
+  mergeSearchToFetchOnce = false,
   // 请求方法（传给内部 useTable），'get' 或 'post' 等，默认 'get'
   requestMethod = 'get',
+  // 首次合并后是否从 URL 中移除这些已合并的 query（replaceState）
+  clearUrlAfterInitialMerge = true,
+  // 是否在 toolbar 上显示一次性提示 Tag，表明地址栏参数已被用作初始筛选（可选）
+  showUrlAppliedTag = false,
   // 可配置序号列与操作列的默认宽度（若列定义中已包含 width 则以列定义为准）
   indexWidth = 80,
   actionsWidth = 180,
@@ -118,6 +125,8 @@ const ResponsiveTable = ({
   toolbar = null,
   // apiRef: optional React ref from parent to expose toolbarApi (contains `form`, `fetchPage`, `selectedRowKeys`, etc.)
   apiRef = null,
+  // onToolbarReady: optional callback (toolbarApi) called once when toolbar/form is ready
+  onToolbarReady = null,
   // explicit scroll override for Table (object same shape as antd `scroll` prop)
   scroll: scrollProp = undefined,
   // rest props passthrough to antd Table
@@ -137,6 +146,30 @@ const ResponsiveTable = ({
     }
   }, [location && location.search])
 
+  // derive toolbar/query config early so initial form values can be merged into initialSearch
+  const toolbarConfig = toolbar || {}
+  const queryConfig = toolbarConfig.search && typeof toolbarConfig.search === 'object' ? toolbarConfig.search : null
+
+  const initialFormPayload = React.useMemo(() => {
+    if (!queryConfig) return {}
+    let payload = { ...(queryConfig.initialValues || {}) }
+    if (queryConfig && Array.isArray(queryConfig.fields)) {
+      for (const f of queryConfig.fields) {
+        if (f && typeof f.transform === 'function') {
+          payload[f.name] = f.transform(payload[f.name], payload)
+        }
+      }
+    }
+    if (queryConfig && typeof queryConfig.transformValues === 'function') {
+      payload = queryConfig.transformValues(payload) || payload
+    }
+    return payload
+  }, [
+    queryConfig && queryConfig.initialValues,
+    queryConfig && queryConfig.fields,
+    queryConfig && queryConfig.transformValues,
+  ])
+
   const {
     containerRef,
     pagination,
@@ -153,6 +186,7 @@ const ResponsiveTable = ({
     fetchPage,
     sortState,
     setSortState,
+    hasMergedInitialSearch,
   } = useTable({
     dataSource,
     initialPagination,
@@ -172,7 +206,10 @@ const ResponsiveTable = ({
     responseFieldMap,
     // forward search/merge options to hook
     mergeSearchToFetch,
-    initialSearch: parseLocationSearch(),
+    mergeSearchToFetchOnce,
+    clearUrlAfterInitialMerge,
+    // initialSearch merges URL search and toolbar initialValues so autoLoad includes form defaults
+    initialSearch: { ...parseLocationSearch(), ...(initialFormPayload || {}) },
     requestMethod,
   })
 
@@ -184,10 +221,8 @@ const ResponsiveTable = ({
 
   const { token } = theme.useToken()
 
-  const toolbarConfig = toolbar || {}
   // 强制使用新命名：`toolbar.actions`（左侧按钮）和 `toolbar.search`（右侧查询）
   const leftActions = Array.isArray(toolbarConfig.actions) ? toolbarConfig.actions : []
-  const queryConfig = toolbarConfig.search && typeof toolbarConfig.search === 'object' ? toolbarConfig.search : null
 
   // 控制左右 toolbar 是否显示：如果 toolbar.showLeft/showRight 显式设置则以其为准，
   // 否则根据内容自动决定（有 leftActions 则显示左侧，有 queryConfig 则显示右侧）
@@ -235,14 +270,34 @@ const ResponsiveTable = ({
   )
 
   // 如果父组件传入了 ref，则把 toolbarApi 暴露给父组件，方便外部调用 form / fetchPage 等
+  // expose toolbarApi synchronously so parent mount effects can use it immediately
+  if (apiRef && typeof apiRef === 'object') {
+    apiRef.current = toolbarApi
+  }
+
+  // cleanup on unmount only
   React.useEffect(() => {
-    if (apiRef && typeof apiRef === 'object') {
-      apiRef.current = toolbarApi
-    }
     return () => {
       if (apiRef && typeof apiRef === 'object') apiRef.current = null
     }
-  }, [apiRef, toolbarApi])
+  }, [apiRef])
+
+  // onToolbarReady: notify parent once when toolbar/form is ready
+  const _toolbarReadyFired = React.useRef(false)
+  React.useEffect(() => {
+    if (_toolbarReadyFired.current) return
+    if (typeof onToolbarReady === 'function') {
+      // ensure form exists on toolbarApi
+      if (toolbarApi && toolbarApi.form) {
+        try {
+          onToolbarReady(toolbarApi)
+          _toolbarReadyFired.current = true
+        } catch (e) {
+          console.error('onToolbarReady callback error', e)
+        }
+      }
+    }
+  }, [onToolbarReady, toolbarApi])
 
   // 初始化表单默认值
   React.useEffect(() => {
@@ -515,6 +570,11 @@ const ResponsiveTable = ({
             )}
           </div>
           <div>
+            {showUrlAppliedTag && hasMergedInitialSearch && hasMergedInitialSearch() && (
+              <Tag color="blue" style={{ marginRight: 8 }}>
+                已应用地址栏初始筛选
+              </Tag>
+            )}
             {showToolbarRight &&
               queryConfig &&
               (() => {

@@ -33,16 +33,9 @@ const NotificationsPage = () => {
   const { redirectTo } = useSafeNavigate()
   const { search } = useLocation()
 
-  // 演示：组件挂载后通过 apiRef 设置表单初始值（示例用途，可删除）
-  useEffect(() => {
-    try {
-      if (tableApiRef.current && tableApiRef.current.form) {
-        tableApiRef.current.form.setFieldsValue({ title: '来自 apiRef 的初始标题' })
-      }
-    } catch (e) {
-      // ignore
-    }
-  }, [])
+  // 示例：我们建议使用 `initialValues` 或 `onToolbarReady` 来初始化表单。
+  // 已在下面的 <ResponsiveTable /> props 中将 title 放入 toolbar.search.initialValues 做示例。
+  // 也可以使用 onToolbarReady 回调在表单就绪时进行更精确的初始化（见组件 props 示例）。
 
   // 新增/导出示例处理器
   const handleAdd = () => {
@@ -288,6 +281,8 @@ const NotificationsPage = () => {
               },
               initialValues: {
                 read: '',
+                minId: 12,
+                title: '初始化title',
               },
               advancedThreshold: 1,
               advancedPlacement: 'drawer', // 'inline' | 'popover' | 'drawer'
@@ -295,6 +290,18 @@ const NotificationsPage = () => {
             },
           }}
           // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
+          onToolbarReady={(api) => {
+            try {
+              if (api && api.form) {
+                // 在表单就绪时设置初始标题（示例）
+                api.form.setFieldsValue({ title: '来自 onToolbarReady 的初始标题' })
+                // 如果需要立即触发一次基于表单当前值的查询，可取消下面注释：
+                // api.fetchPage(1, api.pagination.pageSize, null, api.form.getFieldsValue())
+              }
+            } catch (e) {
+              console.error('onToolbarReady handler error', e)
+            }
+          }}
           fetchUrl="/api/notifications"
           mergeSearchToFetch={true}
           autoLoad={true}
