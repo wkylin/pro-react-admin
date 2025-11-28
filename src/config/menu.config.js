@@ -35,7 +35,7 @@ import { t } from 'i18next' // 注意：这里可能需要处理 i18n
 
 // 静态菜单配置
 // 这里的 key 对应路由 path
-export const mainLayoutMenu = [
+const rawMainLayoutMenu = [
   { label: 'home', i18nKey: 'home', key: '/', icon: <HomeOutlined /> },
   { label: 'demo', i18nKey: 'demo', key: '/demo', icon: <GlobalOutlined /> },
   { label: 'Motion', key: '/motion', icon: <RocketOutlined /> },
@@ -115,3 +115,17 @@ export const mainLayoutMenu = [
     children: [{ label: 'ErrorBoundary', key: '/error' }],
   },
 ]
+
+// 规范化菜单：为每个项保证存在 `path` 字段（优先使用已有 path，否则复制 key）。
+function normalizeMenu(items) {
+  return items.map((it) => {
+    const { children, ...rest } = it
+    const normalized = { ...rest, path: (it && it.path) || it.key }
+    if (children && Array.isArray(children)) {
+      normalized.children = normalizeMenu(children)
+    }
+    return normalized
+  })
+}
+
+export const mainLayoutMenu = normalizeMenu(rawMainLayoutMenu)

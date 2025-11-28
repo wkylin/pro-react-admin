@@ -76,7 +76,8 @@ const ProTabs = (props) => {
 
   // tab点击
   const onTabClick = (targetKey) => {
-    const { path } = panes.filter((item) => item.key === targetKey)[0]
+    const pane = panes.filter((item) => item.key === targetKey)[0]
+    const path = (pane && (pane.path || pane.key)) || targetKey
     redirectTo(path)
   }
 

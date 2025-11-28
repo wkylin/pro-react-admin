@@ -73,18 +73,18 @@ const ProBreadcrumb = () => {
       const content = !canClick ? (
         <span>{item.i18nKey ? t(item.i18nKey) : item.name}</span>
       ) : (
-        <Button type="link" style={{ padding: 0, height: 'auto' }} onClick={() => linkTo(item.key)}>
+        <Button type="link" style={{ padding: 0, height: 'auto' }} onClick={() => linkTo(item.path || item.key)}>
           {item.i18nKey ? t(item.i18nKey) : item.name}
         </Button>
       )
 
       return {
         title: (
-          <span className={styles.breadcrumb} key={item.key}>
+          <span className={styles.breadcrumb} key={item.key || item.path}>
             {content}
           </span>
         ),
-        key: item.key,
+        key: item.key || item.path,
       }
     })
 

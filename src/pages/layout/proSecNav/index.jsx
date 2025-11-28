@@ -71,19 +71,21 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     const dfs = (nodes, chain) => {
       for (const node of nodes) {
         const nextChain = [...chain, node.key]
+        const nodePath = node.path || node.key
         // 匹配规则：精确匹配 或 前缀匹配（允许 /a/b 命中 /a）
-        const isExact = targetPath === node.key
-        const isPrefix = targetPath.startsWith(node.key + '/')
+        const isExact = targetPath === nodePath
+        const isPrefix = targetPath.startsWith(nodePath + '/')
         // 动态参数匹配（如 /coupons/edit/123 与 /coupons/edit）
         const dynParamMatch =
-          node.key.includes(':') &&
+          nodePath &&
+          nodePath.includes(':') &&
           (() => {
-            const pattern = node.key.replace(/:[^/]+/g, '[^/]+')
+            const pattern = nodePath.replace(/:[^/]+/g, '[^/]+')
             return new RegExp(`^${pattern}$`).test(targetPath)
           })()
         if (isExact || isPrefix || dynParamMatch) {
-          // 选择更长 key 的链作为最佳链（更具体）
-          if (!bestChain || node.key.length > bestChain[bestChain.length - 1].length) {
+          // 选择更长 path 的链作为最佳链（更具体）
+          if (!bestChain || nodePath.length > (bestChain[bestChain.length - 1] || '').length) {
             bestChain = nextChain
           }
         }
@@ -135,12 +137,26 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
   const onSelect = async ({ key }) => {
     try {
-      // 先做权限检查，阻止无权限导航
-      const ok = await permissionService.canAccessRoute(key, false)
+      // key 是菜单项的 key（标识），但实际跳转/权限检查应以 path 为准。
+      const selected = (function findByKey(items, k) {
+        for (const it of items) {
+          if (it.key === k) return it
+          if (it.children) {
+            const res = findByKey(it.children, k)
+            if (res) return res
+          }
+        }
+        return null
+      })(menuItems, key)
+
+      const selectedPath = (selected && (selected.path || selected.key)) || key
+
+      // 先做权限检查，阻止无权限导航（使用 resolved path）
+      const ok = await permissionService.canAccessRoute(selectedPath, false)
       if (!ok) {
-        // 避免短时间内重复提示同一个 key
-        if (lastDeniedRef.current !== key) {
-          lastDeniedRef.current = key
+        // 避免短时间内重复提示同一个 key/path
+        if (lastDeniedRef.current !== selectedPath) {
+          lastDeniedRef.current = selectedPath
           try {
             messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
           } catch (e) {
@@ -152,7 +168,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         return
       }
       // 有权限再导航
-      redirectTo(key)
+      redirectTo(selectedPath)
       setIsOpenChange(false)
       if (onMenuClick) {
         onMenuClick()
@@ -190,15 +206,16 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       })
     }
 
-    // 使用配置文件的菜单，并进行翻译
+    // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
     const allMenuItems = mainLayoutMenu.map((item) => {
       const translateItem = (i) => {
         const { i18nKey, children, ...rest } = i
-        return {
+        const base = {
           ...rest,
+          path: i.path || i.key,
           label: i18nKey ? t(i18nKey) : i.label,
-          children: children ? children.map(translateItem) : undefined,
         }
+        return children ? { ...base, children: children.map(translateItem) } : base
       }
       return translateItem(item)
     })
@@ -218,18 +235,19 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
         // 直接路径可访问则保留
         try {
-          if (hasAccess(item.key)) {
+          if (hasAccess(item.path || item.key)) {
             result.push(item)
             continue
           }
         } catch (e) {
           // 忽略匹配错误，继续后续逻辑
-          console.warn('菜单访问判断异常', item.key, e)
+          console.warn('菜单访问判断异常', item.key || item.path, e)
         }
 
-        // 处理动态参数形式的 menu key（如 /coupons/edit/:id）
-        if (typeof item.key === 'string' && item.key.includes(':')) {
-          const pattern = item.key.replace(/:[^/]+/g, '[^/]+')
+        // 处理动态参数形式的 menu key/path（如 /coupons/edit/:id）
+        const checkKeyForParam = typeof item.path === 'string' ? item.path : item.key
+        if (typeof checkKeyForParam === 'string' && checkKeyForParam.includes(':')) {
+          const pattern = checkKeyForParam.replace(/:[^/]+/g, '[^/]+')
           const regex = new RegExp(`^${pattern}$`)
           // 如果用户的 routes 中有任一路由能匹配该 pattern，则保留
           if (routes.some((r) => regex.test(r))) {
@@ -287,8 +305,8 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
             }
           }
 
-          // 降级：使用 routes 列表匹配
-          if (hasAccessFallback(item.key)) return item
+          // 降级：使用 routes 列表匹配（使用 path 优先）
+          if (hasAccessFallback(item.path || item.key)) return item
           return null
         })
       )
@@ -296,15 +314,16 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       return results.filter(Boolean)
     }
 
-    // 使用配置文件的菜单
+    // 使用配置文件的菜单；同时规范化 path 字段
     const allMenuItems = mainLayoutMenu.map((item) => {
       const translateItem = (i) => {
         const { i18nKey, children, ...rest } = i
-        return {
+        const base = {
           ...rest,
+          path: i.path || i.key,
           label: i18nKey ? t(i18nKey) : i.label,
-          children: children ? children.map(translateItem) : undefined,
         }
+        return children ? { ...base, children: children.map(translateItem) } : base
       }
       return translateItem(item)
     })

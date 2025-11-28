@@ -3,6 +3,7 @@ import LightSvg from '@assets/svg/light.svg'
 import DarkSvg from '@assets/svg/dark.svg'
 import { useProThemeContext } from '@src/theme/hooks'
 import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button } from 'antd'
+import GlobalSearch from '@src/components/GlobalSearch'
 import {
   UserOutlined,
   LogoutOutlined,
@@ -14,6 +15,7 @@ import {
   MoreOutlined,
   RocketOutlined,
   BookOutlined,
+  SearchOutlined,
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage } from '@utils/publicFn'
@@ -191,6 +193,20 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     updateSettings({ themeMode: isDark ? 'light' : 'dark' })
   }
 
+  // 全局搜索弹窗控制
+  const [searchOpen, setSearchOpen] = React.useState(false)
+  // 快捷键 ctrl+k/command+k 打开搜索
+  React.useEffect(() => {
+    const handler = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setSearchOpen(true)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
+
   return (
     <Layout.Header
       className={styles.header}
@@ -228,6 +244,15 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         <div className={styles.headerRight} style={isMobile ? { flex: 1 } : {}}>
           {!isMobile ? (
             <Space orientation="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+              {/* 全局搜索按钮 */}
+              <Tooltip title="全局菜单搜索 (Ctrl+K)" placement="bottom">
+                <Button
+                  icon={<SearchOutlined />}
+                  size="small"
+                  style={{ fontSize: 16 }}
+                  onClick={() => setSearchOpen(true)}
+                />
+              </Tooltip>
               <SoundBar />
               <NotificationDrawer />
               <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
@@ -259,18 +284,29 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
             </Space>
           ) : (
             <Space>
+              {/* 移动端全局搜索按钮 */}
+              <Tooltip title="菜单搜索">
+                <Button
+                  icon={<SearchOutlined />}
+                  size="small"
+                  style={{ fontSize: 18 }}
+                  onClick={() => setSearchOpen(true)}
+                />
+              </Tooltip>
               <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
                 <MoreOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
               </Dropdown>
-              <Dropdown arrow menu={{ items }} trigger={['click']}>
-                {isAuthenticated && user ? (
-                  <Avatar src={user.avatar_url} />
-                ) : (
-                  <UserOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
-                )}
-              </Dropdown>
             </Space>
           )}
+          <Dropdown arrow menu={{ items }} trigger={['click']}>
+            {isAuthenticated && user ? (
+              <Avatar src={user.avatar_url} />
+            ) : (
+              <UserOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+            )}
+          </Dropdown>
+          {/* 全局搜索弹窗 */}
+          <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={redirectTo} />
         </div>
         {contextHolder}
       </div>
