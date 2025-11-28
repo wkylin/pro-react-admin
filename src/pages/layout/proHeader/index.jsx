@@ -158,7 +158,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     {
       key: 'github',
       label: 'Github',
-      icon: <GithubOutlined />,
+      icon: <GithubOutlined style={{ fontSize: 16 }} />,
       onClick: redirectGithub,
     },
     {
@@ -176,7 +176,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     {
       key: 'setting',
       label: '设置',
-      icon: <SettingOutlined />,
+      icon: <SettingOutlined style={{ fontSize: 16 }} />,
       onClick: onSettingClick,
     },
   ]
@@ -203,7 +203,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       {isMobile && (
         <div
           onClick={onMobileMenuClick}
-          style={{ marginRight: 16, cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+          style={{ margin: '0 16px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
         >
           <MenuOutlined style={{ fontSize: 20 }} />
         </div>
@@ -258,25 +258,19 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
               <LanguageSwitcher />
             </Space>
           ) : (
-            <Space style={{ paddingRight: 8 }}>
+            <Space>
               <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
                 <MoreOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
               </Dropdown>
+              <Dropdown arrow menu={{ items }} trigger={['click']}>
+                {isAuthenticated && user ? (
+                  <Avatar src={user.avatar_url} />
+                ) : (
+                  <UserOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+                )}
+              </Dropdown>
             </Space>
           )}
-
-          <Dropdown
-            arrow
-            menu={{
-              items,
-            }}
-          >
-            {isAuthenticated && user ? (
-              <Avatar src={user.avatar_url} />
-            ) : (
-              <Avatar src={<img draggable={false} src={avatarPng} alt="avatar" />} />
-            )}
-          </Dropdown>
         </div>
         {contextHolder}
       </div>

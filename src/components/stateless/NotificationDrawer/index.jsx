@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { Badge, Button, Space, Typography, theme, Drawer } from 'antd'
+import { Badge, Button, Space, Typography, theme, Drawer, Grid } from 'antd'
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@hooks/useSafeNavigate'
-
+const { useBreakpoint } = Grid
 const initialNotifications = [
   { id: 1, title: '欢迎使用 Pro React Admin', description: '感谢您的体验与支持！', read: false, time: '1分钟前' },
   { id: 2, title: '新功能上线', description: '权限系统与主题切换已支持。', read: false, time: '5分钟前' },
@@ -15,6 +15,8 @@ const NotificationDropdown = () => {
   const { redirectTo } = useSafeNavigate()
   // 最大在 Drawer 中显示的通知数量（防止列表过长影响性能/体验）
   const MAX_ITEMS = 50
+  const screens = useBreakpoint()
+  const isMobile = !screens.md
 
   const markAllRead = () => {
     setNotifications((list) => list.map((n) => ({ ...n, read: true })))
@@ -111,9 +113,10 @@ const NotificationDropdown = () => {
   return (
     <>
       <span onClick={() => setPopVisible(true)} style={{ cursor: 'pointer' }}>
-        <Badge count={unreadCount} size="small" offset={[-2, 2]}>
-          <BellOutlined style={{ fontSize: 20 }} />
+        <Badge count={unreadCount} size="small" overflowCount={49}>
+          <BellOutlined style={{ fontSize: 16 }} />
         </Badge>
+        {isMobile && <span style={{ marginLeft: 4 }}>通知</span>}
       </span>
       <Drawer
         title="通知"
