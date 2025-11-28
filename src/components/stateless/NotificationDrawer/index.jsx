@@ -5,8 +5,22 @@ import useSafeNavigate from '@hooks/useSafeNavigate'
 const { useBreakpoint } = Grid
 const initialNotifications = [
   { id: 1, title: '欢迎使用 Pro React Admin', description: '感谢您的体验与支持！', read: false, time: '1分钟前' },
-  { id: 2, title: '新功能上线', description: '权限系统与主题切换已支持。', read: false, time: '5分钟前' },
-  { id: 3, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
+  {
+    id: 2,
+    title: '新功能上线',
+    description: '全站菜单查询功能全新上线，支持快速定位与跳转！',
+    read: false,
+    time: '5分钟前',
+  },
+  {
+    id: 3,
+    title: '新功能上线',
+    description: 'ResponsiveTable高复用表格上线，欢迎试用！',
+    read: false,
+    time: '10分钟前',
+  },
+  { id: 4, title: '新功能上线', description: '权限系统与主题切换已支持。', read: false, time: '15分钟前' },
+  { id: 4, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
 ]
 
 const NotificationDropdown = () => {
