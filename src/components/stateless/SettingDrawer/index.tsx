@@ -133,7 +133,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
           value={themeSettings.colorPrimary}
           onChange={(val) => changeSetting('colorPrimary', val)}
         />
-        <div className="mt-4">
+        <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
           <span className="mr-2 text-sm">自定义颜色:</span>
           <ColorPicker
             value={themeSettings.colorPrimary}

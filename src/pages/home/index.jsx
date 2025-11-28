@@ -393,7 +393,7 @@ const Home = () => {
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
-      <section style={{ width: 600, margin: '30px 0' }}>
+      <section style={{ width: 400, margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
           <Input.TextArea
@@ -403,30 +403,30 @@ const Home = () => {
             onChange={changeChatText}
             onKeyDown={onInputKeyDown}
             autoSize
-            style={{ width: 300, height: 30, caretColor: '#ff0000' }}
+            style={{ height: 30, caretColor: '#ff0000' }}
           />
-          <Button
-            style={{ margin: '0 10px' }}
-            icon={<SendOutlined rotate={-60} />}
-            type="primary"
-            disabled={isStream}
-            onClick={onSubmit}
-          >
-            发送
-          </Button>
-          <Button
-            style={{ margin: '0 10px' }}
-            icon={<SendOutlined rotate={-60} />}
-            type="primary"
-            disabled={isStream}
-            onClick={onSubmitImage}
-          >
-            生成图片
-          </Button>
-          <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
-            停止
-          </Button>
         </Flex>
+        <Button
+          style={{ margin: '10px' }}
+          icon={<SendOutlined rotate={-60} />}
+          type="primary"
+          disabled={isStream}
+          onClick={onSubmit}
+        >
+          发送
+        </Button>
+        <Button
+          style={{ margin: '10px' }}
+          icon={<SendOutlined rotate={-60} />}
+          type="primary"
+          disabled={isStream}
+          onClick={onSubmitImage}
+        >
+          生成图片
+        </Button>
+        <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+          停止
+        </Button>
       </section>
       <section className="mb-10">
         {isStream && <div>正在输入...</div>}
