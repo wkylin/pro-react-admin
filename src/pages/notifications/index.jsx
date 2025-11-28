@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef, useEffect } from 'react'
 import { Button, Badge, Typography, Modal, message } from 'antd'
 import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
@@ -26,6 +26,19 @@ const NotificationsPage = () => {
 
   const [items, setItems] = useState(initialMock)
   const { permissions = [] } = usePermission()
+  // 用于演示从父组件/外部控制 toolbar 表单的 apiRef
+  const tableApiRef = useRef(null)
+
+  // 演示：组件挂载后通过 apiRef 设置表单初始值（示例用途，可删除）
+  useEffect(() => {
+    try {
+      if (tableApiRef.current && tableApiRef.current.form) {
+        tableApiRef.current.form.setFieldsValue({ title: '来自 apiRef 的初始标题' })
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [])
 
   // 新增/导出示例处理器
   const handleAdd = () => {
@@ -100,6 +113,7 @@ const NotificationsPage = () => {
         <ResponsiveTable
           columns={columns}
           dataSource={items}
+          apiRef={tableApiRef}
           rowKey="id"
           initialPagination={pagination}
           minBodyHeight={120}
@@ -166,6 +180,24 @@ const NotificationsPage = () => {
             actions: [
               { key: 'add', label: '新增', type: 'primary', onClick: () => handleAdd() },
               { key: 'export', label: '导出', onClick: ({ selectedRowKeys } = {}) => exportRows(selectedRowKeys) },
+              // 示例：通过 action 的 onClick 回调使用 api（action 会接收到 toolbarApi）
+              {
+                key: 'set-from-ref',
+                label: 'Ref 设置标题',
+                onClick: (api) => {
+                  try {
+                    // 通过 api（或 tableApiRef.current）设置 toolbar 表单的 title 字段
+                    const refApi = api || tableApiRef.current
+                    if (refApi && refApi.form) {
+                      refApi.form.setFieldsValue({ title: '由 Ref 设置的标题' })
+                      // 可选择立即触发一次查询
+                      refApi.fetchPage(1, refApi.pagination.pageSize, null, refApi.form.getFieldsValue())
+                    }
+                  } catch (e) {
+                    console.error('set-from-ref error', e)
+                  }
+                },
+              },
             ],
             search: {
               // fields 演示多种类型：input/select/dateRange/number
@@ -233,6 +265,7 @@ const NotificationsPage = () => {
           scroll={{ x: 'max-content' }}
         />
       </div>
+
       <Modal
         open={modal.visible}
         title={modal.record?.title}

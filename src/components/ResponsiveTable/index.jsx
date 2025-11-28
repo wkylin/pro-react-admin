@@ -38,6 +38,18 @@ import useTable from './useTable'
  * - 支持虚拟列表（`virtualized`），默认启用；可通过 `tableProps.virtual` 覆写
  * - 顶部 `toolbar`：左右两侧布局，左侧为固定操作按钮（新增/导出等），右侧为查询表单（支持校验、默认值、高级筛选、查询/重置按钮）
  *
+ * Exposing API:
+ * - 通过传入 `apiRef`（React ref）可以在父组件获取到内部暴露的 `toolbarApi` 对象，包含：
+ *   `{ form, fetchPage, selectedRowKeys, pagination }`。
+ * - 示例：
+ *   ```
+ *   const apiRef = useRef(null)
+ *   <ResponsiveTable apiRef={apiRef} ... />
+ *   // 之后可以调用：
+ *   apiRef.current.form.setFieldsValue({ title: '示例' })
+ *   apiRef.current.fetchPage(1, apiRef.current.pagination.pageSize, null, apiRef.current.form.getFieldsValue())
+ *   ```
+ *
  * Props（常用）：
  * - `columns`：antd Table 的列定义，支持在某列加 `index: true` 或 `type: 'index'` 来定义序号列
  * - `dataSource`：本地数据（非服务端模式）
@@ -99,6 +111,8 @@ const ResponsiveTable = ({
   actionsWidth = 180,
   // toolbar 配置：{ leftActions: [{ key,label,onClick,... }], query: { fields: [], initialValues: {}, advancedThreshold: 3, buttons: { searchText, resetText } } }
   toolbar = null,
+  // apiRef: optional React ref from parent to expose toolbarApi (contains `form`, `fetchPage`, `selectedRowKeys`, etc.)
+  apiRef = null,
   // explicit scroll override for Table (object same shape as antd `scroll` prop)
   scroll: scrollProp = undefined,
   // rest props passthrough to antd Table
@@ -175,6 +189,16 @@ const ResponsiveTable = ({
     }),
     [selectedRowKeys, fetchPage, pagination, form]
   )
+
+  // 如果父组件传入了 ref，则把 toolbarApi 暴露给父组件，方便外部调用 form / fetchPage 等
+  React.useEffect(() => {
+    if (apiRef && typeof apiRef === 'object') {
+      apiRef.current = toolbarApi
+    }
+    return () => {
+      if (apiRef && typeof apiRef === 'object') apiRef.current = null
+    }
+  }, [apiRef, toolbarApi])
 
   // 初始化表单默认值
   React.useEffect(() => {
