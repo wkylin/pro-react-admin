@@ -303,17 +303,17 @@ const NotificationsPage = () => {
             }
           }}
           fetchUrl="/api/notifications"
-          mergeSearchToFetch={true}
+          mergeSearchToFetch
           autoLoad={false}
           requestMethod="post"
           clearUrlAfterInitialMerge={false}
           mergeSearchToFetchOnce={false}
-          showUrlAppliedTag={true}
+          showUrlAppliedTag
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
           responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
           serverSort={false}
-          showIndex={true}
-          indexMode={'global'}
+          showIndex
+          indexMode="global"
           rowSelection={null}
           // 示例：覆盖默认序号列与操作列宽度，并精确控制横向滚动行为
           indexWidth={60}
