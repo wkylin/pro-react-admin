@@ -217,3 +217,45 @@ generateMenuItems(routes) 过滤菜单
 - ✅ 菜单仅在组件初始化时生成一次
 - ✅ 使用 useState 缓存过滤结果，避免重复计算
 - ✅ 路由变化时不重新获取权限（除非刷新页面）
+
+## 🧭 多页签、参数化路由与懒加载提示（新增功能说明）
+
+> 说明：近期实现了对参数化路由与按查询参数区分页签的支持，同时补充了路由懒加载与公共安全跳转的最佳实践。请在新增路由或使用多页签功能时参考下列要点。
+
+- **参数化路由（示例）**：支持类似 `/notification/:id` 的动态路由，推荐在 `src/routers/modules` 中像下面这样声明：
+
+```js
+{
+  path: 'notification/:id',
+  key: '/notification/:id',
+  element: <NotificationDetail />
+}
+```
+
+- **tab key 策略（Query-sensitive）**：当 URL 包含查询字符串（例如 `?type=2`）时，系统会将 tab 的 key 设为 `pathname + search`（例如 `/notification/1?type=2`），从而保证：
+  - 每个不同的查询会创建独立的 tab（如果路由的 `meta.keepQueryTabs` 未显式禁用）。
+  - 与 KeepAlive 缓存/激活逻辑保持一致：`pane.key` 必须和 `fullPath`（`pathname+search`）精确匹配，才能正确显示已缓存的组件实例。
+
+- **路由匹配逻辑（getKeyName）**：路由解析器会在路由表中匹配静态路由、参数化路由和通配符路由；在存在查询时优先使用完整路径作为 tab key。请注意避免在不同路由中使用重复的 key，否则会触发 React 的 key 冲突警告。
+
+- **新增路由时的懒加载配置提醒**：如果你的路由采用了项目中的懒加载约定（路由按需加载），请务必在路由懒加载配置中注册新组件/路由，以便构建工具与运行时能够正确处理懒加载。配置文件位置示例：
+
+```
+src/routers/config/lazyLoad.config.js
+```
+
+在添加新路由后，检查并适配该配置（例如：将新路由对应的 chunk 名称或懒加载资源路径加入配置），否则用户在首次访问该路由时可能出现加载异常或找不到资源的问题。
+
+- **公共安全跳转（useSafeNavigate）**：项目提供 `useSafeNavigate` 钩子用于统一的、安全的路由跳转（会先做权限检查再执行导航），使用示例：
+
+```jsx
+const { redirectTo } = useSafeNavigate()
+// 带查询和权限检查的跳转
+redirectTo(`/notification/${id}${search || ''}`)
+```
+
+如果跳转被权限策略阻止，`useSafeNavigate` 会处理友好提示并阻止导航，从而避免在未授权场景出现空白页或报错。
+
+---
+
+建议：新增复杂的参数化/查询敏感页面时，同时验证：路由配置（含懒加载）、菜单 key（避免重复）、以及是否需要在 `meta` 中设置 `keepQueryTabs` 来显式控制是否按查询拆分 tab。

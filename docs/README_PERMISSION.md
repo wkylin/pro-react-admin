@@ -60,6 +60,32 @@
 // 无需额外配置，系统会自动根据用户权限控制路由访问
 ```
 
+### 公共安全跳转（useSafeNavigate）
+
+项目提供 `useSafeNavigate` 钩子用于在执行路由跳转前进行统一的权限检查与友好处理。使用该钩子可以避免在无权限场景直接跳转到受限页面导致空白或报错。
+
+示例：
+
+```tsx
+import useSafeNavigate from '@hooks/useSafeNavigate'
+
+const MyComponent = () => {
+  const { redirectTo } = useSafeNavigate()
+
+  const openDetail = (id, qs = '') => {
+    // redirectTo 会先检查权限，若不允许则阻止并给出提示
+    redirectTo(`/notification/${id}${qs}`)
+  }
+
+  return <Button onClick={() => openDetail(1, '?type=2')}>打开详情</Button>
+}
+```
+
+要点：
+
+- `redirectTo` 会优先使用内部的 `permissionService` 检查是否可访问目标路由；若不可访问，会进行友好提示（如 message）并阻止导航。
+- 当需要携带当前列表的筛选条件返回或打开详情时，建议先从 `ResponsiveTable` 的 `apiRef.getSearch()` 获取过滤条件，再拼接到跳转 URL（以便用户返回时恢复状态）。
+
 ### 2. 组件级权限控制
 
 使用 `PermissionGuard` 组件控制内容的显示/隐藏：

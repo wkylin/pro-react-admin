@@ -66,6 +66,12 @@ export const lazyComponents = {
   NotificationDetail: lazyLoad(() => import('@pages/notifications/NotificationDetail'), { preload: true }),
   PHBar: lazyLoad(() => import('@pages/phbar'), { preload: true }),
 
+  // 示例：如果新增一个按需加载的路由组件，请在此处注册（示例）
+  // 例如：新增 pages/alerts/AlertDetail.jsx
+  // AlertDetail: lazyLoad(() => import('@pages/alerts/AlertDetail'), { preload: false }),
+  // 注意：如果你的构建/运行时使用 chunk 名称或外部映射，请同时在
+  // `src/routers/config/lazyLoad.config.js` 中维护对应条目，确保首次访问时能够正确加载。
+
   // 用户相关
   Profile: lazyLoad(() => import('@pages/profile')),
   Contact: lazyLoad(() => import('@pages/contact')),

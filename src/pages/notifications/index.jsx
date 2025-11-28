@@ -163,8 +163,24 @@ const NotificationsPage = () => {
                   // 如果当前 URL 含查询，则复用当前查询；否则附带示例 query
                   // 打印调试信息便于排查为何找不到 query
                   try {
-                    console.debug('current search (from useLocation):', search)
-                    const qs = search && search.length > 1 ? search : '?type=2'
+                    // 优先尝试从 tableApiRef 获取搜索/筛选参数（组件新增的 api）
+                    const refApi = tableApiRef.current
+                    let qs = ''
+                    try {
+                      const searchObj = refApi?.getSearch?.() || null
+                      if (searchObj && typeof searchObj === 'object') {
+                        const s = new URLSearchParams(searchObj).toString()
+                        qs = s ? `?${s}` : ''
+                      }
+                    } catch (e) {
+                      // ignore parse
+                    }
+
+                    // 如果没有从 tableApiRef 获取到查询，则回退到当前 location.search 或示例参数
+                    if (!qs) {
+                      console.debug('current search (from useLocation):', search)
+                      qs = search && search.length > 1 ? search : '?type=2'
+                    }
                     redirectTo(`/notification/${r.id}${qs}`)
                   } catch (e) {
                     console.error('open tab navigate error', e)
