@@ -304,8 +304,11 @@ const NotificationsPage = () => {
           }}
           fetchUrl="/api/notifications"
           mergeSearchToFetch={true}
-          autoLoad={true}
+          autoLoad={false}
           requestMethod="post"
+          clearUrlAfterInitialMerge={false}
+          mergeSearchToFetchOnce={false}
+          showUrlAppliedTag={true}
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
           responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
           serverSort={false}

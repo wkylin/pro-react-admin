@@ -184,7 +184,10 @@ export default function useTable({
       const prev = current - 1
       setPagination((p) => ({ ...p, current: prev }))
       try {
-        const extra = mergeSearchToFetch ? initialSearch || {} : undefined
+        // only include initialSearch if mergeSearchToFetch is enabled and
+        // either not configured to merge-once or hasn't merged yet
+        const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !initialMergedRef.current)
+        const extra = includeSearch ? initialSearch || {} : undefined
         await fetchPage(prev, pageSize, undefined, extra)
       } catch (e) {
         // ignore - caller can handle
@@ -192,7 +195,8 @@ export default function useTable({
     } else {
       // 否则重新加载当前页
       try {
-        const extra = mergeSearchToFetch ? initialSearch || {} : undefined
+        const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !initialMergedRef.current)
+        const extra = includeSearch ? initialSearch || {} : undefined
         await fetchPage(current, pageSize, undefined, extra)
       } catch (e) {
         // ignore

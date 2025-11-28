@@ -325,7 +325,9 @@ const ResponsiveTable = ({
       setPagination((p) => ({ ...p, current: 1 }))
       // 优先使用自定义 onSearch 回调
       // 如果开启了 mergeSearchToFetch，则把 URL 查询合并到请求参数中（表单字段优先）
-      const finalPayload = mergeSearchToFetch ? { ...parseLocationSearch(), ...(payload || {}) } : payload
+      const includeSearch =
+        mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
+      const finalPayload = includeSearch ? { ...parseLocationSearch(), ...(payload || {}) } : payload
       if (queryConfig && typeof queryConfig.onSearch === 'function') {
         await queryConfig.onSearch(finalPayload, { fetchPage, form, setPagination, pagination })
       } else {
@@ -343,7 +345,9 @@ const ResponsiveTable = ({
       await queryConfig.onReset({ fetchPage, form, setPagination, pagination })
     } else {
       // fetch without extra params (但可选地合并 location.search)
-      const extra = mergeSearchToFetch ? parseLocationSearch() : {}
+      const includeSearch =
+        mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
+      const extra = includeSearch ? parseLocationSearch() : {}
       await fetchPage(1, pagination.pageSize, sortState, extra)
     }
   }
@@ -873,7 +877,10 @@ const ResponsiveTable = ({
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
               try {
                 // 如果配置了 mergeSearchToFetch，则把 location.search 合并进请求
-                const extra = mergeSearchToFetch ? parseLocationSearch() : undefined
+                const includeSearch =
+                  mergeSearchToFetch &&
+                  (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
+                const extra = includeSearch ? parseLocationSearch() : undefined
                 await fetchPage(current, pageSize, sortState, extra)
               } catch (e) {
                 // ignore
@@ -884,7 +891,10 @@ const ResponsiveTable = ({
             setPagination({ current, pageSize: size })
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
               try {
-                const extra = mergeSearchToFetch ? parseLocationSearch() : undefined
+                const includeSearch =
+                  mergeSearchToFetch &&
+                  (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
+                const extra = includeSearch ? parseLocationSearch() : undefined
                 await fetchPage(current, size, sortState, extra)
               } catch (e) {}
             }

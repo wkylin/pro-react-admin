@@ -87,6 +87,53 @@ const columns = [
   - 由于 `clearUrlAfterInitialMerge` 为 `true`，地址栏中 `type` 与 `source` 会被移除（URL 被 `replaceState` 更新）；不会新增历史条目。
   - 如果 `showUrlAppliedTag` 为 `true`，toolbar 上会显示 `已应用地址栏初始筛选` 的提示。
 
+场景 A（merge once + 清除 URL + 显示 Tag）
+-----------------------------------------
+
+配置组件：
+
+```jsx
+<ResponsiveTable
+  mergeSearchToFetch={true}
+  mergeSearchToFetchOnce={true}
+  clearUrlAfterInitialMerge={true}
+  showUrlAppliedTag={true}
+  fetchUrl="/api/items"
+  autoLoad={true}
+  ...
+/>
+```
+
+观察：
+
+- 首次 autoLoad 请求应包含 `type=2`、`foo=bar`（除非被 `toolbar.search.initialValues` 覆盖）。
+- 请求完成后地址栏应把被合并的键删除（使用 `replaceState`，不会新增历史条目）。
+- `toolbar` 上会短显示 `已应用地址栏初始筛选`（一次性提示）。
+- 之后再点击“查询”/改变分页/重置，后续请求不再把已合并的 URL 参数重新带上（因为组件已记录初始合并状态）。
+
+场景 B（保留 URL）
+-------------------
+
+如果你希望保留 URL，可以把 `clearUrlAfterInitialMerge={false}`。在这种模式下：
+
+- 地址栏不会被自动清理，仍然显示原始查询参数（便于分享/书签）。
+- 即便如此，如果使用 `mergeSearchToFetchOnce={true}`，组件仍然只会在首次合并时把 URL 参数并入请求，之后的交互（查询/分页/重置）不会再次合并这些初始参数。
+- 建议同时开启 `showUrlAppliedTag={true}` 来向用户表明“当前的初始筛选来自 URL”。
+
+示例：
+
+```jsx
+<ResponsiveTable
+  mergeSearchToFetch={true}
+  mergeSearchToFetchOnce={true}
+  clearUrlAfterInitialMerge={false}
+  showUrlAppliedTag={true}
+  fetchUrl="/api/items"
+  autoLoad={true}
+  ...
+/>
+```
+
 如果你希望地址栏始终是当前表格的单一真相（例如便于分享与书签），另一个可选方案是启用将表格状态持续同步回 URL（参见 `pageSyncToUrl` 及未来可能的 `syncStateToUrl` 功能），这样每次筛选/分页都会更新地址栏，使 URL 与视图保持一致。
 
 - `requestMethod` (String): 当使用 `fetchUrl` 时，指定 HTTP 方法，默认为 `'get'`。支持 `'get'`, `'post'` 或 `requestLib` 支持的其他方法名。
