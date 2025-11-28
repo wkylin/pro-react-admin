@@ -150,6 +150,12 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     ...primaryNavItems,
     { type: 'divider' },
     {
+      key: 'notification',
+      label: <NotificationDrawer />,
+      icon: null,
+      onClick: undefined,
+    },
+    {
       key: 'github',
       label: 'Github',
       icon: <GithubOutlined />,
