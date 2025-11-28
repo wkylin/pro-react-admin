@@ -427,9 +427,9 @@ const ResponsiveTable = ({
 
   // 如果需要显示序号，则插入到最前面
   // 优先使用 columns 中的 index 列（如果存在），否则根据 showIndex 决定是否插入默认序号列
-  const indexColumn = indexColumnFromColumns
-    ? indexColumnFromColumns
-    : showIndex
+  const indexColumn =
+    indexColumnFromColumns ||
+    (showIndex
       ? {
           title: '序号',
           key: '__index',
@@ -439,12 +439,13 @@ const ResponsiveTable = ({
           fixed: indexFixed,
           render: (text, record, idx) => {
             if (indexMode === 'page') return idx + 1
-            if (indexMode === 'custom' && typeof customIndexRender === 'function')
+            if (indexMode === 'custom' && typeof customIndexRender === 'function') {
               return customIndexRender(record, idx, pagination)
+            }
             return calcIndex(idx)
           },
         }
-      : null
+      : null)
 
   const columnsWithActions = indexColumn
     ? [indexColumn, ...effectiveColumns, opColumn]
@@ -688,7 +689,7 @@ const ResponsiveTable = ({
                             高级筛选
                           </Button>
                           <Drawer
-                            title={'高级筛选'}
+                            title="高级筛选"
                             placement="right"
                             onClose={() => setDrawerVisible(false)}
                             open={drawerVisible}
