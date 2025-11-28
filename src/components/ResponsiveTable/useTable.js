@@ -21,6 +21,12 @@ export default function useTable({
   fetchUrl = null,
   // 自定义请求库（需要包含 get/post 等），默认使用项目 request
   requestLib = request,
+  // 请求方法: 'get' | 'post' | custom method name supported by requestLib
+  requestMethod = 'get',
+  // 是否把外部传入的 initialSearch 合并到内部 fetch 调用中
+  mergeSearchToFetch = false,
+  // initialSearch: 可选的对象，代表初始 location.search 解析结果（会在 autoLoad / pagination / reset 等场景合并）
+  initialSearch = {},
   // 请求参数映射：{ currentField, pageField, pageSizeField, sortField, orderField }
   // 支持后端使用不同字段名，如 'current' / 'page' / 'pageNum'
   requestParamMap = {
@@ -173,14 +179,16 @@ export default function useTable({
       const prev = current - 1
       setPagination((p) => ({ ...p, current: prev }))
       try {
-        await fetchPage(prev, pageSize)
+        const extra = mergeSearchToFetch ? initialSearch || {} : undefined
+        await fetchPage(prev, pageSize, undefined, extra)
       } catch (e) {
         // ignore - caller can handle
       }
     } else {
       // 否则重新加载当前页
       try {
-        await fetchPage(current, pageSize)
+        const extra = mergeSearchToFetch ? initialSearch || {} : undefined
+        await fetchPage(current, pageSize, undefined, extra)
       } catch (e) {
         // ignore
       }
@@ -226,18 +234,33 @@ export default function useTable({
       } else if (fetchUrl) {
         // build params according to requestParamMap
         const params = {}
-        // merge extraParams first so explicit page/pageSize/sort override if provided
+        // if mergeSearchToFetch is enabled, merge initialSearch first (so extraParams override)
+        if (mergeSearchToFetch && initialSearch && typeof initialSearch === 'object') {
+          Object.assign(params, initialSearch)
+        }
+        // merge extraParams so explicit page/pageSize/sort override if provided
         Object.assign(params, extraParams || {})
         // use configured pageField to represent current page
         if (requestParamMap.pageField) params[requestParamMap.pageField] = page
         params[requestParamMap.pageSizeField] = pageSize
         if (sort && sort.field) params[requestParamMap.sortField] = sort.field
         if (sort && sort.order) params[requestParamMap.orderField] = sort.order
-        // use requestLib.get
-        res = await requestLib.get(fetchUrl, params).catch((e) => {
+        // choose request method
+        const method = (requestMethod || 'get').toLowerCase()
+        try {
+          if (method === 'get') {
+            res = await requestLib.get(fetchUrl, params)
+          } else if (typeof requestLib[method] === 'function') {
+            // POST/PUT etc: send params as body
+            res = await requestLib[method](fetchUrl, params)
+          } else {
+            // fallback to get
+            res = await requestLib.get(fetchUrl, params)
+          }
+        } catch (e) {
           console.error('fetchPage request failed', e)
-          return null
-        })
+          res = null
+        }
       } else {
         return Promise.resolve()
       }
@@ -316,7 +339,8 @@ export default function useTable({
       if (inFlightRef.current) return
       inFlightRef.current = true
       try {
-        await fetchPage(pagination.current, pagination.pageSize, sortState)
+        const extra = mergeSearchToFetch ? initialSearch || {} : undefined
+        await fetchPage(pagination.current, pagination.pageSize, sortState, extra)
       } catch (e) {
         console.error('autoLoad fetchPage failed', e)
       } finally {

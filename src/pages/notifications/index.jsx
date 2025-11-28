@@ -296,7 +296,9 @@ const NotificationsPage = () => {
           }}
           // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
           fetchUrl="/api/notifications"
-          autoLoad={false}
+          mergeSearchToFetch={true}
+          autoLoad={true}
+          requestMethod="post"
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
           responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
           serverSort={false}

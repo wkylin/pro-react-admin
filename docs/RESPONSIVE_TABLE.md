@@ -51,6 +51,11 @@ const columns = [
 - `pageSyncToUrl` (Boolean): 是否将页码写入 URL 查询参数（`page`、`pageSize`）
 - `onPaginationChange` (Function): 分页变化回调，参数为 `{ current, pageSize }`
 - `onChange` (Function): antd Table 的 onChange
+- `mergeSearchToFetch` (Boolean): 是否把当前地址栏的 `location.search` 自动合并到内部的 fetch 调用中（默认 `false`）。
+  - 场景：当外部链接或共享 URL 带有查询参数，需要在分页/重置/跳转等场景自动应用这些查询时启用。
+
+- `requestMethod` (String): 当使用 `fetchUrl` 时，指定 HTTP 方法，默认为 `'get'`。支持 `'get'`, `'post'` 或 `requestLib` 支持的其他方法名。
+  - 说明：默认情况下组件使用 GET 请求把参数作为查询参数发送；若你希望以 POST 方式把分页/筛选参数作为请求体发送，可设置 `requestMethod='post'` 并确保 `requestLib`（项目默认的 `request`）支持该方法。
 
 ## useTable Hook
 
@@ -102,6 +107,11 @@ useEffect(() => {
 ```
 
 说明：为保证行为一致，建议在父组件中始终使用 React Router 的 `useLocation().search` 以及组件提供的 `getSearch()`，而不要直接使用 `window.location.search`（SPA 环境中可能不稳定）。
+
+额外说明：
+
+- 组件现在使用 React Router 的 `useLocation()`（而非直接读取 `window.location`），以确保在 SPA 路由切换时能稳定读取到 `search`。
+- 如果你希望组件在分页或重置等内置交互中自动把 URL 查询并入请求，请将 `mergeSearchToFetch` 设为 `true`：这会使组件在分页、改变 pageSize、重置和搜索提交时把 `location.search` 的键值合并到请求参数里（表单参数优先覆盖 URL 相同字段）。
 
 ## 截图（示例）
 

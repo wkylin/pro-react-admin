@@ -107,6 +107,10 @@ const ResponsiveTable = ({
   defaultSort = null,
   // 是否启用虚拟列表（提高大量数据渲染性能）。默认关闭，可通过 `tableProps.virtual` 覆写。
   virtualized = false,
+  // 如果为 true，会把当前地址栏的 query (`location.search`) 自动合并到所有内部 fetch 调用中
+  mergeSearchToFetch = false,
+  // 请求方法（传给内部 useTable），'get' 或 'post' 等，默认 'get'
+  requestMethod = 'get',
   // 可配置序号列与操作列的默认宽度（若列定义中已包含 width 则以列定义为准）
   indexWidth = 80,
   actionsWidth = 180,
@@ -119,6 +123,20 @@ const ResponsiveTable = ({
   // rest props passthrough to antd Table
   ...tableProps
 }) => {
+  // location/search parser must be defined before passing initialSearch into useTable
+  const location = useLocation()
+
+  const parseLocationSearch = React.useCallback(() => {
+    try {
+      const params = new URLSearchParams(location?.search || '')
+      const obj = {}
+      for (const [k, v] of params.entries()) obj[k] = v
+      return obj
+    } catch (e) {
+      return {}
+    }
+  }, [location && location.search])
+
   const {
     containerRef,
     pagination,
@@ -152,6 +170,10 @@ const ResponsiveTable = ({
     fetchUrl,
     requestParamMap,
     responseFieldMap,
+    // forward search/merge options to hook
+    mergeSearchToFetch,
+    initialSearch: parseLocationSearch(),
+    requestMethod,
   })
 
   // toolbar 表单（右侧查询）
@@ -187,14 +209,8 @@ const ResponsiveTable = ({
       },
       // 返回当前 URL 查询对象（key -> value），供外部使用
       getSearch: () => {
-        try {
-          const params = new URLSearchParams(location.search || '')
-          const obj = {}
-          for (const [k, v] of params.entries()) obj[k] = v
-          return obj
-        } catch (e) {
-          return {}
-        }
+        // 返回当前地址栏的查询对象，优先使用 react-router 的 location
+        return parseLocationSearch()
       },
       // fetchPage 并把当前 URL 查询合并到 extraParams 中
       fetchPageWithSearch: async (
@@ -204,9 +220,7 @@ const ResponsiveTable = ({
         extraParams = {}
       ) => {
         try {
-          const params = new URLSearchParams(location.search || '')
-          const searchObj = {}
-          for (const [k, v] of params.entries()) searchObj[k] = v
+          const searchObj = parseLocationSearch()
           const merged = { ...searchObj, ...(extraParams || {}) }
           return await fetchPage(page, pageSize, sort, merged)
         } catch (err) {
@@ -217,7 +231,7 @@ const ResponsiveTable = ({
       pagination: { ...pagination },
       form,
     }),
-    [selectedRowKeys, fetchPage, pagination, form, location.search, sortState]
+    [selectedRowKeys, fetchPage, pagination, form, parseLocationSearch, sortState]
   )
 
   // 如果父组件传入了 ref，则把 toolbarApi 暴露给父组件，方便外部调用 form / fetchPage 等
@@ -255,10 +269,12 @@ const ResponsiveTable = ({
       // reset to first page when searching
       setPagination((p) => ({ ...p, current: 1 }))
       // 优先使用自定义 onSearch 回调
+      // 如果开启了 mergeSearchToFetch，则把 URL 查询合并到请求参数中（表单字段优先）
+      const finalPayload = mergeSearchToFetch ? { ...parseLocationSearch(), ...(payload || {}) } : payload
       if (queryConfig && typeof queryConfig.onSearch === 'function') {
-        await queryConfig.onSearch(payload, { fetchPage, form, setPagination, pagination })
+        await queryConfig.onSearch(finalPayload, { fetchPage, form, setPagination, pagination })
       } else {
-        await fetchPage(1, pagination.pageSize, sortState, payload)
+        await fetchPage(1, pagination.pageSize, sortState, finalPayload)
       }
     } catch (e) {
       // validation error will be shown by Form
@@ -271,8 +287,9 @@ const ResponsiveTable = ({
     if (queryConfig && typeof queryConfig.onReset === 'function') {
       await queryConfig.onReset({ fetchPage, form, setPagination, pagination })
     } else {
-      // fetch without extra params
-      await fetchPage(1, pagination.pageSize, sortState, {})
+      // fetch without extra params (但可选地合并 location.search)
+      const extra = mergeSearchToFetch ? parseLocationSearch() : {}
+      await fetchPage(1, pagination.pageSize, sortState, extra)
     }
   }
 
@@ -795,7 +812,9 @@ const ResponsiveTable = ({
             // 如果是服务端模式，触发 fetch
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
               try {
-                await fetchPage(current, pageSize, sortState)
+                // 如果配置了 mergeSearchToFetch，则把 location.search 合并进请求
+                const extra = mergeSearchToFetch ? parseLocationSearch() : undefined
+                await fetchPage(current, pageSize, sortState, extra)
               } catch (e) {
                 // ignore
               }
@@ -805,7 +824,8 @@ const ResponsiveTable = ({
             setPagination({ current, pageSize: size })
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
               try {
-                await fetchPage(current, size, sortState)
+                const extra = mergeSearchToFetch ? parseLocationSearch() : undefined
+                await fetchPage(current, size, sortState, extra)
               } catch (e) {}
             }
           }}
