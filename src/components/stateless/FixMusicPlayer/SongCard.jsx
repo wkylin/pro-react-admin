@@ -31,10 +31,7 @@ const SongCard = ({ song, isPlaying, isActive, onClick, themeMode, textColor, se
         </div>
         {isCurrentSong && (
           <div className="absolute right-2 bottom-2 rounded-full p-1" style={{ backgroundColor: activeColor }}>
-            <div
-              className="h-2 w-2 animate-pulse rounded-full sm:h-3 sm:w-3"
-              style={{ backgroundColor: textColor }}
-            ></div>
+            <div className="h-2 w-2 animate-pulse rounded-full sm:h-3 sm:w-3" style={{ backgroundColor: textColor }} />
           </div>
         )}
       </div>
