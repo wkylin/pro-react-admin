@@ -1,34 +1,64 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 
 const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate, onLoadedData, repeat }) => {
-  const ref = useRef(null)
-  if (ref.current) {
-    if (isPlaying) {
-      ref.current.play()
-    } else {
-      ref.current.pause()
-    }
-  }
+  const audioRef = useRef(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    ref.current.volume = volume
+    const audio = audioRef.current
+    if (!audio) return
+
+    if (isPlaying && !isLoading) {
+      audio.play().catch((error) => {
+        console.error('Error playing audio:', error)
+      })
+    } else {
+      audio.pause()
+    }
+  }, [isPlaying, isLoading])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.volume = volume
+    }
   }, [volume])
 
   useEffect(() => {
-    ref.current.currentTime = seekTime
+    const audio = audioRef.current
+    if (audio && seekTime !== undefined) {
+      audio.currentTime = seekTime
+    }
   }, [seekTime])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio && activeSong?.audioUrl) {
+      setIsLoading(true)
+      audio.load()
+
+      const handleLoadedData = () => {
+        setIsLoading(false)
+      }
+
+      audio.addEventListener('loadeddata', handleLoadedData)
+
+      return () => {
+        audio.removeEventListener('loadeddata', handleLoadedData)
+      }
+    }
+  }, [activeSong?.audioUrl])
 
   return (
     <audio
-      src={activeSong?.hub?.actions[1]?.uri}
-      ref={ref}
+      src={activeSong?.audioUrl}
+      ref={audioRef}
       loop={repeat}
       onEnded={onEnded}
       onTimeUpdate={onTimeUpdate}
       onLoadedData={onLoadedData}
-    >
-      <track src="aaaa" kind="subtitles" srcLang="en" label="English" />
-    </audio>
+      preload="metadata"
+    />
   )
 }
 

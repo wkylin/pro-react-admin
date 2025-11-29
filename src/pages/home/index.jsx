@@ -68,6 +68,7 @@ import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@stateless/AnimText'
 import SlideButton from '@stateless/SlideButton'
 import NumberViewCard from '@stateless/NumberViewCard'
+import FixMusicPlayer from '@stateless/FixMusicPlayer'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 import SpringPng from '@assets/images/spring.png'
@@ -393,7 +394,7 @@ const Home = () => {
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
-      <section style={{ width: 400, margin: '30px 0' }}>
+      <section style={{ width: '300px', margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
           <Input.TextArea
@@ -952,6 +953,7 @@ const Home = () => {
         <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
           <Masonry gutter="10px">
             <section
+              key="masonry-1"
               style={{
                 height: 100,
                 width: '100%',
@@ -960,6 +962,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-2"
               style={{
                 height: 200,
                 width: '100%',
@@ -968,6 +971,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-3"
               style={{
                 height: 150,
                 width: '100%',
@@ -976,6 +980,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-4"
               style={{
                 height: 150,
                 width: '100%',
@@ -984,6 +989,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-5"
               style={{
                 height: 200,
                 width: '100%',
@@ -992,6 +998,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-6"
               style={{
                 height: 100,
                 width: '100%',
@@ -1000,6 +1007,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-7"
               style={{
                 height: 200,
                 width: '100%',
@@ -1008,6 +1016,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-8"
               style={{
                 height: 150,
                 width: '100%',
@@ -1016,6 +1025,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-9"
               style={{
                 height: 100,
                 width: '100%',
@@ -1024,6 +1034,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-10"
               style={{
                 height: 150,
                 width: '100%',
@@ -1032,6 +1043,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-11"
               style={{
                 height: 100,
                 width: '100%',
@@ -1040,6 +1052,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-12"
               style={{
                 height: 200,
                 width: '100%',
@@ -1048,6 +1061,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-13"
               style={{
                 height: 150,
                 width: '100%',
@@ -1056,6 +1070,7 @@ const Home = () => {
               }}
             />
             <section
+              key="masonry-14"
               style={{
                 height: 150,
                 width: '100%',
@@ -1119,6 +1134,7 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <AutoSlider />
       </section>
+      <FixMusicPlayer />
     </FixTabPanel>
   )
 }

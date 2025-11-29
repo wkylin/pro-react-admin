@@ -1,23 +1,23 @@
 import React from 'react'
 import { FastForward, Rewind } from 'lucide-react'
-const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime }) => {
-  // converts the time to format 0:00
-  const getTime = (time) => {
-    const minutes = Math.floor(time / 60)
-    const rawSeconds = Math.floor(time % 60)
-    const formattedSeconds = `0${rawSeconds}`.slice(-2)
-    return `${minutes}:${formattedSeconds}`
-  }
 
+const formatTime = (time) => {
+  const minutes = Math.floor(time / 60)
+  const seconds = Math.floor(time % 60)
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`
+}
+
+const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime }) => {
   return (
     <div className="hidden flex-row items-center sm:flex">
       <Rewind
         size={16}
         color="#FFF"
-        onClick={() => setSeekTime(appTime - 5)}
-        className="hidden text-white lg:mr-1 lg:block"
+        onClick={() => setSeekTime(Math.max(0, appTime - 5))}
+        className="hidden cursor-pointer text-white lg:mr-1 lg:block"
+        title="快退5秒"
       />
-      <span className="mr-1 text-white">{value === 0 ? '0:00' : getTime(value)}</span>
+      <span className="mr-1 text-white">{formatTime(value)}</span>
       <input
         type="range"
         step="any"
@@ -26,13 +26,15 @@ const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime }) => {
         max={max}
         onInput={onInput}
         className="mx-4 h-1 w-24 rounded-lg md:block md:w-56 2xl:mx-6 2xl:w-96"
+        title={`进度: ${formatTime(value)} / ${formatTime(max)}`}
       />
-      <span className="mb-0 text-white">{max === 0 ? '0:00' : getTime(max)}</span>
+      <span className="mb-0 text-white">{formatTime(max)}</span>
       <FastForward
         size={16}
         color="#FFF"
-        onClick={() => setSeekTime(appTime + 5)}
-        className="hidden text-white lg:ml-1 lg:block"
+        onClick={() => setSeekTime(Math.min(max, appTime + 5))}
+        className="hidden cursor-pointer text-white lg:ml-1 lg:block"
+        title="快进5秒"
       />
     </div>
   )
