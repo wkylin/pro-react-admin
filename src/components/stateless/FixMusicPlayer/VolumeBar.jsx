@@ -5,12 +5,14 @@ const VolumeBar = ({ value, min, max, onChange, setVolume }) => {
   const volumeValue = parseFloat(value)
 
   const getVolumeIcon = () => {
-    if (volumeValue === 0)
+    if (volumeValue === 0) {
       return (
         <VolumeX size={25} color="#FFF" onClick={() => setVolume(1)} className="cursor-pointer" title="点击恢复音量" />
       )
-    if (volumeValue <= 0.5)
+    }
+    if (volumeValue <= 0.5) {
       return <Volume1 size={25} color="#FFF" onClick={() => setVolume(0)} className="cursor-pointer" title="点击静音" />
+    }
     return <Volume2 size={25} color="#FFF" onClick={() => setVolume(0)} className="cursor-pointer" title="点击静音" />
   }
 

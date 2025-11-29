@@ -21,7 +21,7 @@ const SongCard = ({ song, isPlaying, isActive, onClick }) => {
         </div>
         {isCurrentSong && (
           <div className="absolute right-2 bottom-2 rounded-full bg-green-500 p-1">
-            <div className="h-3 w-3 animate-pulse rounded-full bg-white"></div>
+            <div className="h-3 w-3 animate-pulse rounded-full bg-white" />
           </div>
         )}
       </div>
