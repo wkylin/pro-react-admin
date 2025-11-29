@@ -8,8 +8,11 @@ import VolumeBar from './VolumeBar'
 import Playlist from './Playlist'
 import useMusicPlayer from './hooks/useMusicPlayer'
 import songData from './data/songs'
+import { useProThemeContext } from '@/theme/hooks'
+import { theme } from 'antd'
 
 const MusicPlayer = () => {
+  const { themeSettings } = useProThemeContext()
   const {
     currentIndex,
     isPlaying,
@@ -35,11 +38,26 @@ const MusicPlayer = () => {
     handleSongClick,
   } = useMusicPlayer(songData)
 
+  // 根据主题调整背景色和文本色
+  const isDark = themeSettings.themeMode === 'dark'
+  const bgClass = isDark
+    ? 'bg-linear-to-br from-black/20 to-[#1a1a4a] backdrop-blur-lg'
+    : 'bg-linear-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg'
+  const textColor = isDark ? '#ffffff' : '#000000d9'
+  const secondaryTextColor = isDark ? '#ffffffa6' : '#00000073'
+  const activeColor = themeSettings.colorPrimary || '#1677ff'
+
   return (
     <>
-      <div className="animate-slideup absolute right-0 bottom-0 left-0 z-10 flex h-28 bg-linear-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg">
-        <div className="relative flex w-full items-center justify-between px-8 sm:px-12">
-          <Track isPlaying={isPlaying} isActive={isActive} activeSong={activeSong} />
+      <div className={`animate-slideup absolute right-0 bottom-0 left-0 z-10 flex h-20 sm:h-28 ${bgClass}`}>
+        <div className="relative flex w-full items-center justify-between px-4 sm:px-8 md:px-12">
+          <Track
+            isPlaying={isPlaying}
+            isActive={isActive}
+            activeSong={activeSong}
+            textColor={textColor}
+            secondaryTextColor={secondaryTextColor}
+          />
           <div className="flex flex-1 flex-col items-center justify-center">
             <Controls
               isPlaying={isPlaying}
@@ -52,6 +70,8 @@ const MusicPlayer = () => {
               handlePlayPause={handlePlayPause}
               handlePrevSong={handlePrevSong}
               handleNextSong={handleNextSong}
+              textColor={textColor}
+              themeMode={themeSettings.themeMode}
             />
             <Seekbar
               value={appTime}
@@ -60,6 +80,8 @@ const MusicPlayer = () => {
               onInput={(event) => handleSeek(event.target.value)}
               setSeekTime={handleSeek}
               appTime={appTime}
+              textColor={textColor}
+              themeMode={themeSettings.themeMode}
             />
             <Player
               activeSong={activeSong}
@@ -78,6 +100,8 @@ const MusicPlayer = () => {
             max="1"
             onChange={(event) => handleVolumeChange(event.target.value)}
             setVolume={handleVolumeChange}
+            textColor={textColor}
+            themeMode={themeSettings.themeMode}
           />
         </div>
       </div>
@@ -87,6 +111,10 @@ const MusicPlayer = () => {
         isPlaying={isPlaying}
         isActive={isActive}
         onSongClick={handleSongClick}
+        themeMode={themeSettings.themeMode}
+        textColor={textColor}
+        secondaryTextColor={secondaryTextColor}
+        activeColor={activeColor}
       />
     </>
   )
