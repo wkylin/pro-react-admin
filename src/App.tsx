@@ -1,32 +1,45 @@
-import React, { useEffect, useState } from 'react'
-import { useRoutes } from 'react-router-dom'
-import Watermark from '@stateless/Watermark'
-import rootRouter from './routers'
+import React, { useEffect } from 'react'
+import { useRoutes, type RouteObject } from 'react-router-dom'
+import rootRouter from '@/routers'
 import AuthRouter from './routers/authRouter'
-import { sentryInit } from './utils'
 
-const App = () => {
-  const [loading, setLoading] = useState(true)
-  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 500))
+const AppContent: React.FC = () => {
+  const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1000))
+
   useEffect(() => {
-    sentryInit()
+    // 可在此处初始化非阻塞逻辑（如 Sentry）
+    // sentryInit()
+
     asyncCall()
-      .then(() => setLoading(false))
-      .catch(() => setLoading(false))
-    Watermark({
-      content: 'Pro React Admin', // 水印文本
-      container: document.getElementById('root'), // 水印容器区域
-    })
+      .then(() => {})
+      .catch(() => {})
+
+    // const fetchUserLanguage = async () => {
+    //   // 从数据库中获取用户的语言选择
+    //   const userLanguage = await fetchUserLanguageFromDatabase()
+    //   if (userLanguage) {
+    //     // 如果数据库中存在用户的语言选择，则使用该选择作为应用程序的语言
+    //     i18n.changeLanguage(userLanguage)
+    //   } else {
+    //     // 如果数据库中不存在用户的语言选择，则检查本地存储
+    //     const localStorageLanguage = localStorage.getItem('language')
+    //     if (localStorageLanguage) {
+    //       // 如果本地存储中存在用户的语言选择，则使用该选择作为应用程序的语言
+    //       i18n.changeLanguage(localStorageLanguage)
+    //     }
+    //   }
+    // }
+    // fetchUserLanguage()
   }, [])
 
-  const element = useRoutes(rootRouter as any)
-
-  if (loading) return null
-  return (
-    <>
-      <AuthRouter>{element}</AuthRouter>
-    </>
-  )
+  const element = useRoutes(rootRouter as RouteObject[])
+  return element
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthRouter>
+      <AppContent />
+    </AuthRouter>
+  )
+}

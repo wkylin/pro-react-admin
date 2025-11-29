@@ -18,7 +18,7 @@ const MarkmapHooks = ({ markmap }) => {
 
   useEffect(() => {
     const mm = refMm.current
-    // if (!mm) return
+    if (!mm) return
     const { root } = transformer.transform(markmap)
     mm.setData(root)
     mm.fit()
@@ -26,7 +26,7 @@ const MarkmapHooks = ({ markmap }) => {
 
   return (
     <>
-      <svg style={{ width: '100%', minHeight: 400 }} ref={refSvg} />
+      <svg style={{ width: '100%', height: '400px' }} ref={refSvg} />
     </>
   )
 }

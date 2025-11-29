@@ -1,50 +1,35 @@
 import React from 'react'
-// import { Routes, Route, useNavigate, useNavigationType } from 'react-router-dom'
-import { Routes, Route, useNavigate } from 'react-router-dom'
-import { Button, Layout, theme, Space } from 'antd'
+import { Routes, Route } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
+import { Button, Layout, theme } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import FixLayout from '@src/components/stateless/FixLayout'
+import ViteLanding from './ViteLanding'
 
 const { Content } = Layout
 
 const Dashboard = () => {
-  const navigate = useNavigate()
-  // const navigateType = useNavigationType()
+  const { redirectTo } = useSafeNavigate()
   const {
     token: { colorBgContainer },
   } = theme.useToken()
 
+  // 右上角返回首页按钮
+  const renderBackHome = () => (
+    <div style={{ position: 'fixed', top: 50, left: 26, zIndex: 20 }}>
+      <Button type="primary" icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/')} style={{ borderRadius: 20 }}>
+        返回首页
+      </Button>
+    </div>
+  )
+
   return (
     <FixLayout>
-      <Layout style={{ height: '100%' }}>
-        <Content style={{ height: '100%', background: colorBgContainer }}>
+      <Layout style={{ minHeight: '100vh', background: 'none', position: 'relative' }}>
+        <Content style={{ minHeight: '100vh', background: colorBgContainer, position: 'relative' }}>
+          {renderBackHome()}
           <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  {/* <h2>Look, more routes!</h2> */}
-                  {/* <h2>Navigate type: {navigateType}</h2> */}
-                  <Space>
-                    <Button type="primary" onClick={() => navigate('/')}>
-                      Navigate /
-                    </Button>
-                    <Button type="primary" onClick={() => navigate('invoices')}>
-                      navigate to invoices
-                    </Button>
-                  </Space>
-                </>
-              }
-            />
-            <Route
-              path="invoices"
-              element={
-                <>
-                  <Button type="primary" onClick={() => navigate(-1)}>
-                    navigate to dashborad
-                  </Button>
-                </>
-              }
-            />
+            <Route path="/" element={<ViteLanding />} />
           </Routes>
         </Content>
       </Layout>

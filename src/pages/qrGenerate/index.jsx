@@ -2,6 +2,7 @@ import QRCode from 'qrcode'
 import React, { useState } from 'react'
 import { Button, Input, Space } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
+import PDFExportDemo from '@stateless/PDFExport'
 
 const QrCode = () => {
   const [url, setUrl] = useState('')
@@ -47,6 +48,7 @@ const QrCode = () => {
           </Space>
         )}
       </section>
+      <PDFExportDemo />
     </FixTabPanel>
   )
 }

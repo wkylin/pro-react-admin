@@ -1,0 +1,209 @@
+.lineBordered {
+  border: none;
+  outline: none;
+  position: relative;
+}
+
+.lineBordered::before,
+.lineBordered::after {
+  border: 0 solid transparent;
+  transition: all 0.3s;
+  content: '';
+  height: 0;
+  position: absolute;
+  width: 24px;
+}
+
+.lineBordered::before {
+  border-top: 2px solid #4f7df3;
+  right: 0;
+  top: -4px;
+}
+
+.lineBordered::after {
+  border-bottom: 2px solid #4f7df3;
+  bottom: -4px;
+  left: 0;
+}
+
+.lineBordered:hover::before,
+.lineBordered:hover::after {
+  width: 100%;
+}
+
+.hover-underline-animation {
+  display: inline-block;
+  position: relative;
+}
+
+.hover-underline-animation::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #0087ca;
+  transition: transform 0.25s ease-out;
+}
+
+.hover-underline-animation:hover::after {
+  transform: scaleX(1);
+}
+
+.hover-underline-animation.left::after {
+  transform-origin: bottom right;
+}
+
+.hover-underline-animation.left:hover::after {
+  transform-origin: bottom left;
+}
+
+.hover-underline-animation.center::after {
+  transform-origin: bottom center;
+}
+
+.hover-underline-animation.center:hover::after {
+  transform-origin: bottom center;
+}
+
+.hover-underline-animation.right::after {
+  transform-origin: bottom left;
+}
+
+.hover-underline-animation.right:hover::after {
+  transform-origin: bottom right;
+}
+
+.dynamic-shadow {
+  position: relative;
+  width: 10rem;
+  height: 10rem;
+  background: linear-gradient(75deg, #f953c6, #b91d73);
+}
+
+.dynamic-shadow::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: inherit;
+  top: 0.5rem;
+  filter: blur(0.4rem);
+  opacity: 0.7;
+  z-index: -1;
+}
+
+.image-contain {
+  object-fit: contain;
+  object-position: center;
+}
+
+.image-cover {
+  object-fit: cover;
+  object-position: right top;
+}
+
+.image-cover p:first-child::first-letter {
+  color: #5f79ff;
+  float: left;
+  margin: 0 8px 0 4px;
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.container {
+  position: relative;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.container::before,
+.container::after {
+  content: '';
+  position: absolute;
+  border: 11px solid transparent;
+}
+
+.container::after {
+  border: 10px solid transparent;
+}
+
+.container.top::before,
+.container.top::after {
+  bottom: 100%;
+  left: 19px;
+  border-bottom-color: #ccc;
+}
+
+.container.top::after {
+  left: 20px;
+  border-bottom-color: #fff;
+}
+
+.container.bottom::before,
+.container.bottom::after {
+  top: 100%;
+  right: 19px;
+  border-top-color: #ccc;
+}
+
+.container.bottom::after {
+  right: 20px;
+  border-top-color: #fff;
+}
+
+.no-scrollbars {
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.no-scrollbars::-webkit-scrollbar {
+  display: none;
+}
+
+.engraved-text {
+  background-color: #666;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 3px 5px 1px rgb(245 245 245 / 50%);
+}
+
+.embossed-text {
+  color: #f0f0f0;
+  background-color: #666;
+  text-shadow: 1px 4px 4px #555;
+  background-clip: text;
+}
+
+:root {
+  /* ease-in corresponds to cubic-bezier(0.42, 0, 1.0, 1.0) */
+  --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  --ease-in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --ease-in-quart: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+  --ease-in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+  --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+  --ease-in-circ: cubic-bezier(0.6, 0.04, 0.98, 0.335);
+
+  /* ease-out corresponds to cubic-bezier(0, 0, 0.58, 1.0) */
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
+  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-out-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  /* ease-in-out corresponds to cubic-bezier(0.42, 0, 0.58, 1.0) */
+  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
+  --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
+  --ease-in-out-circ: cubic-bezier(0.785, 0.135, 0.15, 0.86);
+}

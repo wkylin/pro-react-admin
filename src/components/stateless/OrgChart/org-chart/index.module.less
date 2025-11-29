@@ -1,0 +1,316 @@
+.chartContainer {
+  width: 100%;
+  overflow-x: auto;
+  padding: 20px 0;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+  font-size: 16px;
+}
+
+.orgChart {
+  margin: 5px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: max-content;
+}
+
+.current-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.current-box,
+.child-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 12px;
+  background: rgb(40 120 255 / 7%);
+  border-radius: 2px;
+  border: 1px solid rgb(40 120 255 / 50%);
+  text-align: center;
+  box-sizing: border-box;
+  width: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.current-box {
+  background: rgb(40 120 255 / 80%);
+  box-shadow: 0 2px 8px rgb(40 120 255 / 30%);
+}
+
+.rootBox {
+  background: rgb(40 120 255 / 100%);
+  font-weight: bold;
+  height: 32px;
+  line-height: 32px;
+  font-size: 16px;
+}
+
+.hasChildren {
+  &:hover {
+    background: rgb(40 120 255 / 90%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgb(40 120 255 / 40%);
+  }
+}
+
+.highlightedParent {
+  background: rgb(40 120 255 / 95%) !important;
+  box-shadow: 0 4px 12px rgb(40 120 255 / 50%) !important;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.highlightedChild {
+  background: rgb(40 120 255 / 15%) !important;
+  border-color: rgb(40 120 255 / 80%) !important;
+  transform: scale(1.05);
+  z-index: 10;
+}
+
+.current-title,
+.child-title {
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.current-title {
+  color: #fff;
+}
+
+.expandIcon {
+  font-size: 10px;
+  transition: transform 0.3s ease;
+  opacity: 0.8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: rgb(255 255 255 / 20%);
+  border-radius: 50%;
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}
+
+.arrow {
+  position: relative;
+  height: 30px;
+  margin: 0 0 3px;
+}
+
+.arrowChild {
+  height: 14px;
+}
+
+.downArrowWithLine {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 1px;
+    background: #2878ff;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #2878ff;
+  }
+}
+
+.line {
+  position: relative;
+  height: 16px;
+  margin: 0;
+}
+
+.downWithLine {
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 100%;
+    width: 1px;
+    background: #2878ff;
+  }
+}
+
+.childrenContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  width: 100%;
+}
+
+.childrenScroll {
+  width: 100%;
+  overflow: auto visible;
+  padding-bottom: 10px;
+  position: relative;
+
+  /* 自定义滚动条样式 */
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+    margin: 0 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #2878ff 0%, #1a68e6 100%);
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 10%);
+
+    &:hover {
+      background: linear-gradient(180deg, #1a68e6 0%, #1558d6 100%);
+      box-shadow: inset 0 0 8px rgb(0 0 0 / 20%);
+    }
+
+    &:active {
+      background: linear-gradient(180deg, #1558d6 0%, #1048c6 100%);
+    }
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #f1f1f1;
+  }
+
+  /* Firefox 滚动条样式 */
+  scrollbar-width: thin;
+  scrollbar-color: #2878ff #f1f1f1;
+}
+
+.childrenWrapper {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  width: max-content;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.childWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 8px;
+  min-width: 100px;
+  flex-shrink: 0;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 1px;
+    background-color: #2878ff;
+    width: 50%;
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
+
+  &:first-child::before {
+    display: none;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+}
+
+.childBox {
+  text-align: center;
+}
+
+.animated {
+  animation: fade-in 0.5s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 响应式调整 */
+@media (width <= 768px) {
+  .current-box,
+  .child-box {
+    padding: 0 8px;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .rootBox {
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
+  }
+
+  .childWrapper {
+    padding: 0 4px;
+    min-width: 80px;
+  }
+
+  .expandIcon {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+  }
+
+  .childrenScroll {
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -12,6 +12,155 @@
     <!-- antd theme less -->
     <noscript id="inject-styles-here"></noscript>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" class="loader"></div>
+
+    <style>
+      :root {
+        --loader-bg: #ffffff;
+        --loader-text: #333333;
+        --loader-primary: #1677ff;
+        --loader-secondary: #a0c5e8;
+      }
+
+      .loader-container {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--loader-bg);
+        z-index: 9999;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        transition: background-color 0.3s ease;
+      }
+
+      .loader-container.fade-out {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .quantum-spinner {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 24px;
+      }
+
+      .quantum-spinner .electron {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: var(--loader-primary);
+        animation: spin 1.5s linear infinite;
+      }
+
+      .quantum-spinner .electron:nth-child(1) {
+        border-top-color: var(--loader-primary);
+        animation: spin 1s linear infinite;
+      }
+
+      .quantum-spinner .electron:nth-child(2) {
+        border-right-color: var(--loader-secondary);
+        border-top-color: transparent;
+        transform: rotate(120deg);
+        animation: spin 1.5s linear infinite reverse;
+      }
+
+      .quantum-spinner .electron:nth-child(3) {
+        border-bottom-color: var(--loader-primary);
+        border-top-color: transparent;
+        transform: rotate(240deg);
+        animation: spin 2s linear infinite;
+      }
+
+      .core {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        background: var(--loader-primary);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 15px var(--loader-primary);
+        animation: pulse 1.5s ease-in-out infinite alternate;
+      }
+
+      .loading-text {
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        background: linear-gradient(90deg, var(--loader-text) 0%, var(--loader-primary) 50%, var(--loader-text) 100%);
+        background-size: 200% auto;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 3s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes pulse {
+        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
+        100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+      }
+
+      @keyframes shimmer {
+        0% { background-position: 0% center; }
+        100% { background-position: 200% center; }
+      }
+    </style>
+
+    <script>
+      (function() {
+        try {
+          const STORAGE_KEY = 'pro-react-admin-theme-settings';
+          const stored = localStorage.getItem(STORAGE_KEY);
+          const root = document.documentElement;
+
+          if (stored) {
+            const settings = JSON.parse(stored);
+            const mode = settings.themeMode || 'light';
+            const primary = settings.colorPrimary || '#1677ff';
+
+            if (mode === 'dark') {
+              root.style.setProperty('--loader-bg', '#141414');
+              root.style.setProperty('--loader-text', '#ffffff');
+              root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)');
+            }
+
+            if (primary) {
+              root.style.setProperty('--loader-primary', primary);
+            }
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+              // Fallback to system preference
+              root.style.setProperty('--loader-bg', '#141414');
+              root.style.setProperty('--loader-text', '#ffffff');
+              root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)');
+          }
+        } catch (e) {
+          console.error('Error setting loader theme:', e);
+        }
+      })();
+    </script>
+
+    <div id="root"></div>
+
+    <div id="global-loader" class="loader-container">
+      <div class="quantum-spinner">
+        <div class="electron"></div>
+        <div class="electron"></div>
+        <div class="electron"></div>
+        <div class="core"></div>
+      </div>
+      <div class="loading-text">Pro React Admin</div>
+    </div>
   </body>
 </html>

@@ -4,7 +4,7 @@ import { Alert } from 'antd'
 const HomeCoupons = () => (
   <>
     <Alert
-      message="Success Tips"
+      title="Success Tips"
       description="Detailed description and advice about successful copywriting."
       type="success"
       showIcon

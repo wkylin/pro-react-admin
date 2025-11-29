@@ -1,0 +1,39 @@
+.slider {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.content {
+  display: flex;
+  white-space: nowrap;
+  animation: 90s linear 0s infinite normal none running slide-right;
+}
+
+@keyframes slide-left {
+  0% {
+    transform: translate(0);
+  }
+
+  50% {
+    transform: translate(-100%);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translate(0);
+  }
+
+  50% {
+    transform: translate(100%);
+  }
+
+  100% {
+    transform: translate(0);
+  }
+}

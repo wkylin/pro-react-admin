@@ -1,0 +1,78 @@
+Pro React Admin
+多路由设置
+SkyLine
+SkyLine
+英 文
+admin@test.com
+首页
+演示
+Motion
+Business
+Big Screen
+PH Bar
+Qr Generate
+Prism Render
+React Tilt
+Music
+Crypto
+Video
+Echarts
+ChatGPT
+Post Message
+Geo Chart
+D3 Chart
+Print
+Dashboard
+Permission
+Profile
+Contact
+Portfilo
+技术栈
+构建工具
+Error
+首页
+>
+权限管理示例
+首页
+权限管理示例
+权限系统示例
+系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。
+权限说明
+超级管理员：拥有所有路由访问权限（100%）
+管理员：随机分配约 75% 的路由
+业务员：随机分配约 50% 的路由
+普通用户：随机分配约 25% 的路由
+当前权限信息
+当前角色: 
+超级管理员
+角色列表:
+可访问路由 (0 个):
+无可用路由
+角色列表
+角色	描述	可访问路由数	操作
+
+超级管理员
+当前
+	拥有所有权限	29 个	
+当前角色
+
+
+管理员
+	拥有大部分权限	16 个	
+切 换
+
+
+业务员
+	拥有业务相关权限	10 个	
+切 换
+
+
+普通用户
+	仅拥有基本权限	7 个	
+切 换
+权限组件示例
+PermissionGuard 组件
+AuthButton 组件
+©
+2025
+Pro React Admin

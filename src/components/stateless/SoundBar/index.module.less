@@ -1,0 +1,37 @@
+.audio {
+  --i: 0;
+  --state: paused;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  cursor: pointer;
+  z-index: 3;
+  position: relative;
+
+  .line {
+    background: #00ff7f;
+    animation: play 1s ease infinite;
+    animation-delay: calc(var(--i) * 0.1s);
+    animation-play-state: var(--state);
+    height: 10px;
+    width: 2px;
+    margin: 0 1px;
+  }
+}
+
+@keyframes play {
+  0% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(1.5);
+  }
+
+  100% {
+    transform: scaleY(1);
+  }
+}

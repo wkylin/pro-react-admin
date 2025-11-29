@@ -4,31 +4,28 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
 import styles from './index.module.less'
 
-const ProSider = (props) => {
-  const [collapsed, setCollapsed] = useState(false)
-
-  const onCollapse = () => {
-    setCollapsed(!collapsed)
-  }
-
+const ProSider = ({ children, theme = 'light', collapsed, onCollapse, isMobile }) => {
   return (
     <Layout.Sider
       width={208}
       collapsedWidth={80}
-      theme="light"
+      theme={theme}
       collapsible
       collapsed={collapsed}
       trigger={null}
       className={styles.sider}
+      style={isMobile ? { height: '100%' } : undefined}
     >
-      {props.children}
-      <div className={styles.proLink} onClick={onCollapse}>
-        {collapsed ? (
-          <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
-        ) : (
-          <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
-        )}
-      </div>
+      {children}
+      {!isMobile && (
+        <div className={styles.proLink} onClick={() => onCollapse(!collapsed)} role="button">
+          {collapsed ? (
+            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+          ) : (
+            <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+          )}
+        </div>
+      )}
     </Layout.Sider>
   )
 }

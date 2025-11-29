@@ -1,0 +1,47 @@
+.avatarCard {
+  .card {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f3f1fe;
+    border-radius: 10px;
+    margin: 8px;
+    margin-top: 100px;
+  }
+
+  .card figure {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-top: -60px;
+    position: relative;
+  }
+
+  .card figure::before {
+    content: '';
+    border-radius: inherit;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    border: 1rem solid #fff;
+    box-shadow: 0 1px #fff;
+  }
+
+  .card figure img {
+    border-radius: inherit;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card .content {
+    text-align: center;
+    margin: 2rem;
+    line-height: 1.5;
+    color: #101010;
+  }
+}

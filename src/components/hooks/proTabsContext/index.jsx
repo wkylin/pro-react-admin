@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import Home from '@src/pages/home'
 
 const defaultValue = {
@@ -13,6 +14,7 @@ const defaultValue = {
 const initialPanes = [
   {
     title: '首页',
+    i18nKey: 'home',
     key: '/',
     content: <Home />,
     closable: false,
@@ -23,7 +25,7 @@ const initialPanes = [
 const ProTabContext = createContext(defaultValue)
 const useProTabContext = () => {
   const context = useContext(ProTabContext)
-  if (context === undefined) {
+  if (context == undefined) {
     throw new Error('useValue must be used within a ValueProvider')
   }
   return context
@@ -33,6 +35,7 @@ const ProTabProvider = ({ children }) => {
   const [activeKey, setActiveKey] = useState('')
   const [panes, setPanes] = useState(initialPanes)
   const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
 
   const removeTab = useCallback(
     (targetKey, callbackFun = () => {}) => {
@@ -43,7 +46,7 @@ const ProTabProvider = ({ children }) => {
         setPanes(filterPanes)
       } else {
         const nextPath = filterPanes[delIndex - 1].key
-        navigate(nextPath)
+        redirectTo(nextPath)
         setActiveKey(nextPath)
         setPanes(filterPanes)
       }
@@ -64,11 +67,7 @@ const ProTabProvider = ({ children }) => {
     [activeKey, setActiveKey, panes, setPanes, removeTab]
   )
 
-  return (
-    <>
-      <ProTabContext.Provider value={providerValue}>{children}</ProTabContext.Provider>
-    </>
-  )
+  return <ProTabContext.Provider value={providerValue}>{children}</ProTabContext.Provider>
 }
 
 export { ProTabProvider, useProTabContext }

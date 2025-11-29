@@ -20,6 +20,7 @@
     "paren",
     "parmas",
     "pmmmwh",
+    "popmotion",
     "precommit",
     "predeploy",
     "raw",
@@ -28,7 +29,7 @@
     "tryer",
     "urlparams"
   ],
-  "files.autoSave": "onWindowChange",
+  "files.autoSave": "off",
   "npm-scripts.showStartNotification": false,
   "editor.suggest.snippetsPreventQuickSuggestions": false,
   "aiXcoder.showTrayIcon": true,
@@ -44,6 +45,8 @@
     "flexbugs",
     "hashmark",
     "jsonlint",
+    "katex",
+    "Katex",
     "maath",
     "markmap",
     "Markmap",
@@ -57,6 +60,8 @@
     "purgecss",
     "qrcode",
     "reduxjs",
+    "rehype",
+    "Rehype",
     "screenfull",
     "scripty",
     "singleline",
@@ -65,7 +70,8 @@
     "svgr",
     "tailwindcss",
     "trycatch",
-    "tsbuildinfo",
+    "uncrypted",
+    "videojs",
     "webapck",
     "webpackbar",
     "welldone",
@@ -85,6 +91,24 @@
     ]
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
+    "source.fixAll.eslint": "explicit"
+  },
+  "cSpell.customDictionaries": {
+    "custom-dictionary-workspace": {
+      "name": "custom-dictionary-workspace",
+      "path": "${workspaceFolder:pro-react-admin}/.cspell/custom-dictionary-workspace.txt",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  },
+  "i18n-ally.localesPaths": [
+    "public/locales"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "pro-react-admin2"
+  },
+  "bitoAI.codeCompletion.enableAutoCompletion": false,
+  "i18n-ally.sourceLanguage": "zh",
+  "task.autoDetect": "off"
 }

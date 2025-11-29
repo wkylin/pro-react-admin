@@ -8,15 +8,32 @@
   flex: 0 1 208px;
   text-align: center;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  width: 24px;
+  margin-right: 10px;
 }
 
 .headerMeta {
   flex: 1;
   display: flex;
+  min-width: 0;
+  align-items: center;
 }
 
 .headerRight {
-  flex: 1;
+  flex: 0 0 auto;
   text-align: right;
-  padding-right: 24px;
+  padding-right: 10px;
+}
+
+.topLayoutLogo {
+  flex: 0 0 auto;
+  width: auto;
+  padding: 0 24px;
+  margin-right: 0;
 }

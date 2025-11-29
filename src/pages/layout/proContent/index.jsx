@@ -3,7 +3,8 @@ import { Layout, FloatButton, theme, Space } from 'antd'
 import { useLocation } from 'react-router-dom'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import { getKeyName } from '@utils/publicFn'
-import { useProTabContext } from '@src/components/hooks/proTabsContext'
+import { useProTabContext } from '@hooks/proTabsContext'
+import ClockFace from '@stateless/ClockFace'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
@@ -19,6 +20,7 @@ const ProContent = () => {
     key: '',
     closable: false,
     path: '',
+    i18nKey: '',
   })
 
   const pathRef = useRef('')
@@ -27,8 +29,10 @@ const ProContent = () => {
     token: { colorBgContainer, colorBgLayout },
   } = theme.useToken()
   useEffect(() => {
-    const { tabKey, title, element } = getKeyName(pathname)
-    const newPath = search ? pathname + search : pathname
+    // pass full path (including search) so getKeyName can consider query params
+    const full = search ? pathname + search : pathname
+    const { tabKey, title, element, i18nKey } = getKeyName(full)
+    const newPath = full
     pathRef.current = newPath
 
     setPanesItem({
@@ -37,23 +41,24 @@ const ProContent = () => {
       key: tabKey,
       closable: tabKey !== '/',
       path: newPath,
+      i18nKey,
     })
     setTabActiveKey(tabKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, search, panes, activeKey])
 
   return (
-    <Layout className={styles.layout}>
+    <Layout className={styles.layout} id="fullScreen">
       <Header className="layout-header" style={{ background: colorBgLayout }}>
-        <ProBreadcrumb />
+        <section className="flex items-center justify-between">
+          <ProBreadcrumb />
+          {/* <ClockFace /> */}
+        </section>
       </Header>
-      <Content className="layout-content" id="fullScreen" style={{ background: colorBgContainer }}>
+      <Content className="layout-content" id="fullScreenContent" style={{ background: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">
-        <FloatButton.BackTop target={() => document.querySelector('#container')}>
-          <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
-        </FloatButton.BackTop>
         <Space>&copy; {new Date().getFullYear()} Pro React Admin</Space>
       </Footer>
     </Layout>

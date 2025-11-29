@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
-import { Routes, Route, useNavigate, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 
 function NoFundPage() {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const { url, path } = useMatch()
   useEffect(() => {
-    navigate(`${url}/404`)
-  }, [path, url, navigate])
+    redirectTo(`${url}/404`)
+  }, [path, url])
   return null
 }
 const CustomSwitch = (props) => {

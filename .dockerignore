@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.yarn
+.pnpm-debug.log
+.env
+.env.*
+.git
+coverage
+dist
+.vscode
+.DS_Store
+.idea
+*.local

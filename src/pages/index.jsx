@@ -1,13 +1,11 @@
 import React from 'react'
-import { useNavigate, useMatch } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
+import { useMatch } from 'react-router-dom'
 import { Button } from 'antd'
 
 const Index = () => {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   const { url } = useMatch()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
   return (
     <>
       <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo(`${url}layout`)}>

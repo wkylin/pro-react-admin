@@ -2,7 +2,7 @@ const suffix = (map) => {
   const timestamp = Math.round(new Date().getTime())
   return {
     ...map,
-    timestamp,
+    _: timestamp,
   }
 }
 export default suffix

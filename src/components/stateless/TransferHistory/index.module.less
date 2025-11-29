@@ -1,0 +1,245 @@
+.transferHistoryContainer {
+  padding: 100px 20px 20px;
+
+  .historyItem {
+    display: flex;
+    align-items: center;
+
+    .levelOne {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-right: 24px;
+      position: relative;
+      min-width: 104px;
+
+      .levelName {
+        padding: 8px 20px;
+        background: rgb(40 120 255 / 80%);
+        border-radius: 2px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #fff;
+        line-height: 21px;
+        text-align: right;
+      }
+    }
+
+    .levelOne::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -22px;
+      transform: translateY(-50%);
+      background: #2878ff;
+      height: 1px;
+      width: 22px;
+    }
+  }
+
+  .contentWrapper {
+    flex: 1;
+  }
+
+  .leftContent {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .levelTwo {
+    position: relative;
+    margin-left: 15px;
+  }
+
+  .verticalConnector {
+    width: 1px;
+    position: absolute;
+    top: 31px;
+    left: -17px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 1px;
+      height: 100%;
+      background: #2878ff;
+    }
+  }
+
+  .leftLine {
+    position: relative;
+    padding-left: 14px;
+  }
+
+  .subItemContainer {
+    margin-left: -13px;
+    position: relative;
+    margin-bottom: 75px;
+    height: 62px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+
+    .subItem {
+      min-width: 152px;
+      padding: 8px 20px;
+      height: 62px;
+      background: rgb(40 120 255 / 7%);
+      border-radius: 2px;
+      border: 1px solid rgb(40 120 255 / 50%);
+      font-size: 16px;
+      color: #333;
+      line-height: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tertiaryItem {
+      padding: 0 20px;
+      margin-top: -78px;
+      position: relative;
+
+      .transferInfo {
+        margin-top: 16px;
+        padding: 8px;
+        min-width: 280px;
+        height: 76px;
+        background: #fff;
+        border-radius: 2px;
+        border: 1px solid #d2d2d2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-size: 16px;
+        color: #333;
+        line-height: 24px;
+        text-align: right;
+      }
+
+      .infoConnector {
+        height: 20px;
+        width: 1px;
+        background: rgb(40 120 255 / 50%);
+        position: absolute;
+        left: 50%;
+        top: 97px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          transform: translate(-50%, -50%);
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-bottom: 10px solid #2878ff;
+        }
+
+        &::after {
+          content: '';
+          position: absolute;
+          top: 100%;
+          left: 0.5px;
+          transform: translate(-50%, -50%);
+          width: 5px;
+          height: 5px;
+          background: #2878ff;
+          border-radius: 50%;
+        }
+      }
+
+      .horizontalConnector {
+        margin-left: -20px;
+        width: calc(100% + 40px);
+        height: 1px;
+        margin-top: 23.83px;
+        background: rgb(40 120 255 / 50%);
+      }
+
+      .lastConnector {
+        width: calc(100% + 60px) !important;
+      }
+
+      .transferYear {
+        margin-top: 10px;
+        font-size: 16px;
+        color: #333;
+        line-height: 24px;
+      }
+    }
+
+    .currentHolding {
+      white-space: nowrap;
+      min-width: 132px;
+      padding: 8px 20px;
+      height: 38px;
+      background: rgb(40 120 255 / 7%);
+      border-radius: 2px;
+      border: 1px solid rgb(40 120 255 / 50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 4px;
+      margin-left: 21px;
+      position: relative;
+      font-size: 16px;
+      color: #333;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -5px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 0;
+        height: 0;
+        border-top: 5px solid transparent;
+        border-left: 10px solid #2878ff;
+        border-bottom: 5px solid transparent;
+      }
+    }
+  }
+
+  .subItemLine {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -10px;
+      transform: translateX(-50%);
+      background: #2878ff;
+      height: 1px;
+      width: 15px;
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -4px;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid #2878ff;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+    }
+
+    &:last-child {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .expandButtonContainer {
+    margin-top: 20px;
+  }
+
+  .expandButton {
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+  }
+}

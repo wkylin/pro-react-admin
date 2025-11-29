@@ -26,15 +26,16 @@ const devWebpackConfig = merge(common, {
       directory: path.join(__dirname, '../public'),
     },
     compress: true,
-    open: true,
+    // open: true,
     hot: true,
     proxy: devProxy,
   },
-  watchOptions: {
-    aggregateTimeout: 500,
-    poll: 1000,
-    ignored: /node_modules/,
-  },
+  // watch: true,
+  // watchOptions: {
+  //   aggregateTimeout: 500,
+  //   poll: 1000,
+  //   ignored: /node_modules/,
+  // },
   module: {
     rules: [
       {
@@ -56,14 +57,24 @@ const devWebpackConfig = merge(common, {
     new ReactRefreshWebpackPlugin({
       overlay: false,
     }),
-    new webpack.debug.ProfilingPlugin({
-      outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
-    }),
-  ].filter(Boolean),
+    // new webpack.debug.ProfilingPlugin({
+    //   outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
+    // }),
+  ],
   optimization: {
     removeAvailableModules: false,
     removeEmptyChunks: false,
-    splitChunks: false,
+    splitChunks: {
+      chunks: 'async',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+        },
+      },
+    },
     minimize: false,
     concatenateModules: false,
     usedExports: false,

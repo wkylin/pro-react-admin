@@ -4,11 +4,12 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-const CircularDependencyPlugin = require('circular-dependency-plugin')
+// const CircularDependencyPlugin = require('circular-dependency-plugin')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const WebpackBar = require('webpackbar')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const ESLintWebpackPlugin = require('eslint-webpack-plugin')
+const { codeInspectorPlugin } = require('code-inspector-plugin')
 const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -50,8 +51,9 @@ const config = {
     // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '...'],
     alias: {
+      '@': path.resolve('./src'),
       '@src': path.resolve('./src'),
       '@stateless': path.resolve('./src/components/stateless'),
       '@stateful': path.resolve('./src/components/stateful'),
@@ -69,8 +71,11 @@ const config = {
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),
     }),
+    codeInspectorPlugin({
+      bundler: 'webpack',
+    }),
     new HtmlWebpackPlugin({
-      title: isDev ? 'Pro React Dev' : 'Pro React',
+      title: isDev ? 'Pro React Dev' : 'Pro React Admin',
       template: `${paths.public}/index.html`,
       favicon: `${paths.public}/favicon.ico`,
       filename: 'index.html',
@@ -96,17 +101,17 @@ const config = {
     }),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
-    new CircularDependencyPlugin({
-      exclude: /node_modules/,
-      include: /src/,
-      failOnError: true,
-      allowAsyncCycles: false,
-      cwd: process.cwd(),
-    }),
+    // new CircularDependencyPlugin({
+    //   exclude: /node_modules/,
+    //   include: /src/,
+    //   failOnError: true,
+    //   allowAsyncCycles: false,
+    //   cwd: process.cwd(),
+    // }),
     new NodePolyfillPlugin(),
     new WebpackBar(),
     new ForkTsCheckerWebpackPlugin({
-      async: false,
+      async: true,
     }),
     new ESLintWebpackPlugin({
       // 指定检查文件的根目录
@@ -121,6 +126,12 @@ const config = {
     // 将缺失的导出提示成错误而不是警告
     strictExportPresence: true,
     rules: [
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
@@ -178,20 +189,20 @@ const config = {
             loader: 'esbuild-loader',
             options: {
               // loader: 'tsx',
-              target: 'es2015',
+              target: 'es2020',
             },
           },
           {
-            loader: 'babel-loader?cacheDirectory',
+            loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env', '@babel/preset-react'],
-              plugins: ['@babel/plugin-proposal-object-rest-spread', '@babel/plugin-transform-runtime'],
+              plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime'],
             },
           },
         ],
       },
       {
-        test: /\.(png|jpe?g|gif|webp|eot|ttf|woff|woff2|mp4)$/i,
+        test: /\.(png|jpe?g|gif|webp|eot|ttf|woff|woff2|mp4|mp3|mkv|pdf)$/i,
         type: 'asset',
         parser: {
           // Conditions for converting to base64
@@ -218,15 +229,21 @@ const config = {
           },
         ],
       },
-      {
-        test: /\.json$/,
-        type: 'asset/resource', // 将json文件视为文件类型
-        generator: {
-          // 这里专门针对json文件的处理
-          filename: 'static/json/[name].[hash][ext][query]',
-        },
-      },
     ],
+  },
+  stats: {
+    all: false,
+    errors: true,
+    warnings: true,
+    errorDetails: true,
+    moduleTrace: true, // 打印模块追踪信息，与--trace - warnings类似
+    excludeAssets: /node_modules/,
+  },
+  // 性能提示
+  performance: {
+    hints: isDev ? false : 'warning',
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000,
   },
 }
 

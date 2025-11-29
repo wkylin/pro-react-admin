@@ -1,6 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
+import { message } from 'antd'
 import { Menu } from 'antd'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
+import { useTranslation } from 'react-i18next'
 import {
   HomeOutlined,
   DeploymentUnitOutlined,
@@ -11,115 +14,396 @@ import {
   GlobalOutlined,
   QrcodeOutlined,
 } from '@ant-design/icons'
+import { permissionService } from '@src/service/permissionService'
+import { annotatedRootRouter, flattenRoutes } from '@src/routers'
+import { lazyComponents } from '@src/routers/config/lazyLoad.config'
 
 import styles from './index.module.less'
 
-const pathSubmenu = {
-  '/home': ['home'],
-  '/coupons/add': ['/sub-act', '/sub-coupons'],
-  '/coupons/edit': ['/sub-act', '/sub-coupons'],
-  '/product': ['/sub-act', '/sub-coupons'],
-}
+import { mainLayoutMenu } from '@src/config/menu.config'
 
-const ProSecNav = () => {
-  const navigate = useNavigate()
+// 已弃用 pathSubmenu 静态映射，改为自动推导父级链
+
+const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const { pathname } = useLocation()
-  const redirectTo = (path) => {
-    navigate(path)
-  }
+  const { redirectTo } = useSafeNavigate()
 
+  const { t } = useTranslation()
+  const [messageApi, contextHolder] = message.useMessage()
+  const lastDeniedRef = useRef(null)
   const [selectedKeys, setSelectedKeys] = useState(['home'])
+  const [menuItems, setMenuItems] = useState([])
+  const [accessibleRoutes, setAccessibleRoutes] = useState([])
 
   // 当前路由对应的 sub menu key
-  const [openKeys, setOpenKeys] = useState(['home'])
+  const [openKeys, setOpenKeys] = useState([])
 
   // 提取放在redux中, tab 切换时改成 false
   const [isOpenChange, setIsOpenChange] = useState(false)
 
-  // NOT READY FOR PRIME TIME
-  // submenu keys of first level
-  const [rootSubmenuKeys] = useState(['/sub-act', '/sub-list', '/sub-error'])
+  // 支持多层（最多五层示例），不再限制根层 key 列表
 
+  // 初始化：获取用户可访问路由
   useEffect(() => {
-    const selectedPathKey = pathname
-    setSelectedKeys([selectedPathKey])
-    setOpenKeys(isOpenChange ? openKeys : pathSubmenu[pathname] ?? openKeys)
-  }, [pathname, openKeys, isOpenChange])
+    const initMenus = async () => {
+      try {
+        const userPermissions = await permissionService.getPermissions()
+        // 确保根路径 '/' 总是包含（首页对所有账号可见）
+        const rawRoutes = Array.isArray(userPermissions?.routes) ? userPermissions.routes : []
+        const routes = Array.from(new Set(['/'].concat(rawRoutes)))
+        console.log('用户可访问路由:', routes)
+        setAccessibleRoutes(routes)
+
+        // 生成动态菜单
+        const dynamicMenus = generateMenuItems(routes)
+        console.log('生成的菜单:', dynamicMenus)
+        setMenuItems(dynamicMenus)
+      } catch (error) {
+        console.error('获取用户权限失败:', error)
+        // 降级：显示基础菜单
+        setMenuItems([{ label: t('home'), key: '/', icon: <HomeOutlined /> }])
+      }
+    }
+    initMenus()
+  }, [])
+
+  // 递归查找与当前路径最匹配的菜单项父级链
+  const findPathChain = (items, targetPath) => {
+    let bestChain = null
+    const dfs = (nodes, chain) => {
+      for (const node of nodes) {
+        const nextChain = [...chain, node.key]
+        const nodePath = node.path || node.key
+        // 匹配规则：精确匹配 或 前缀匹配（允许 /a/b 命中 /a）
+        const isExact = targetPath === nodePath
+        const isPrefix = targetPath.startsWith(nodePath + '/')
+        // 动态参数匹配（如 /coupons/edit/123 与 /coupons/edit）
+        const dynParamMatch =
+          nodePath &&
+          nodePath.includes(':') &&
+          (() => {
+            const pattern = nodePath.replace(/:[^/]+/g, '[^/]+')
+            return new RegExp(`^${pattern}$`).test(targetPath)
+          })()
+        if (isExact || isPrefix || dynParamMatch) {
+          // 选择更长 path 的链作为最佳链（更具体）
+          if (!bestChain || nodePath.length > (bestChain[bestChain.length - 1] || '').length) {
+            bestChain = nextChain
+          }
+        }
+        if (node.children) dfs(node.children, nextChain)
+      }
+    }
+    dfs(items, [])
+    return bestChain
+  }
+
+  // 构建路由 path -> element.type 映射以支持菜单 hover 预加载
+  const routeComponentMap = React.useMemo(() => {
+    try {
+      const flat = flattenRoutes(annotatedRootRouter)
+      const map = new Map()
+      flat.forEach((r) => {
+        const key = r.path || r.key
+        if (!key) return
+        // element 可能是 React element，element.type 为组件函数/对象
+        const comp = r.element && r.element.type ? r.element.type : null
+        map.set(key, comp)
+      })
+      return map
+    } catch (e) {
+      return new Map()
+    }
+  }, [])
+
+  // 路由变化时自动计算选中与展开（除非用户刚手动操作）
+  useEffect(() => {
+    if (!Array.isArray(menuItems) || menuItems.length === 0) return
+    const chain = findPathChain(menuItems, pathname)
+    if (chain && chain.length > 0) {
+      const leaf = chain[chain.length - 1]
+      setSelectedKeys([leaf])
+      if (!isOpenChange) {
+        // 父级链（不包含当前叶子）作为展开 keys
+        setOpenKeys(chain.slice(0, -1))
+      }
+    } else {
+      // 找不到匹配链，仍然设置选中（可能是无菜单对应的裸路由）
+      setSelectedKeys([pathname])
+      if (!isOpenChange) {
+        setOpenKeys([])
+      }
+    }
+  }, [pathname, menuItems, isOpenChange])
 
   const onOpenChange = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)
     setIsOpenChange(true)
-    if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      setOpenKeys(keys)
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
+    // 简单互斥：同层级仅保留一个展开；通过比较链长度实现
+    // 计算所有当前 key 的父链深度（根据 menuItems）
+    const depthMap = {}
+    const buildDepth = (items, depth) => {
+      for (const item of items) {
+        depthMap[item.key] = depth
+        if (item.children) buildDepth(item.children, depth + 1)
+      }
+    }
+    buildDepth(menuItems, 0)
+    // 按层分组，取最后一个操作的 key 所在层，仅保留该层的最后一个
+    const latestKey = keys.find((k) => !openKeys.includes(k)) || keys[keys.length - 1]
+    const layer = depthMap[latestKey]
+    const filtered = keys.filter((k) => depthMap[k] !== layer || k === latestKey)
+    setOpenKeys(filtered)
+  }
+
+  const onSelect = async ({ key }) => {
+    try {
+      // key 是菜单项的 key（标识），但实际跳转/权限检查应以 path 为准。
+      const selected = (function findByKey(items, k) {
+        for (const it of items) {
+          if (it.key === k) return it
+          if (it.children) {
+            const res = findByKey(it.children, k)
+            if (res) return res
+          }
+        }
+        return null
+      })(menuItems, key)
+
+      const selectedPath = (selected && (selected.path || selected.key)) || key
+
+      // 先做权限检查，阻止无权限导航（使用 resolved path）
+      const ok = await permissionService.canAccessRoute(selectedPath, false)
+      if (!ok) {
+        // 避免短时间内重复提示同一个 key/path
+        if (lastDeniedRef.current !== selectedPath) {
+          lastDeniedRef.current = selectedPath
+          try {
+            messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+          } catch (e) {
+            try {
+              message.error('您没有权限访问该页面')
+            } catch (err) {}
+          }
+        }
+        return
+      }
+      // 有权限再导航
+      redirectTo(selectedPath)
+      setIsOpenChange(false)
+      if (onMenuClick) {
+        onMenuClick()
+      }
+    } catch (error) {
+      console.error('菜单权限检查失败:', error)
+      // 失败时保守不导航，并显示提示
+      if (lastDeniedRef.current !== key) {
+        lastDeniedRef.current = key
+        try {
+          messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
+        } catch (e) {
+          try {
+            message.error('您没有权限访问该页面')
+          } catch (err) {}
+        }
+      }
     }
   }
 
-  const onSelect = ({ key }) => {
-    redirectTo(key)
-    setIsOpenChange(false)
+  /**
+   * 生成动态菜单项（根据用户可访问路由过滤）
+   */
+  const generateMenuItems = (routes) => {
+    // 保留兼容函数（用于当没有 meta.permission 时的回退）
+    const hasAccess = (path) => {
+      return routes.some((route) => {
+        if (route === path) return true
+        if (path.startsWith(route + '/')) return true
+        if (route.includes('*')) {
+          const pattern = route.replace('*', '.*')
+          return new RegExp(`^${pattern}$`).test(path)
+        }
+        return false
+      })
+    }
+
+    // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
+    const allMenuItems = mainLayoutMenu.map((item) => {
+      const translateItem = (i) => {
+        const { i18nKey, children, ...rest } = i
+        const path = i.path || i.key
+        const labelText = i18nKey ? t(i.i18nKey) : i.label
+
+        // 包装 label，增加 hover 预加载行为（若找到对应路由组件且组件支持 preload）
+        const Label = (
+          <span
+            onMouseEnter={() => {
+              try {
+                // 确保每个 path 只预加载一次
+                if (!ProSecNav._preloaded) ProSecNav._preloaded = new Set()
+                if (ProSecNav._preloaded.has(path)) return
+                const comp = routeComponentMap.get(path)
+                if (!comp && lazyComponents) {
+                  const name = (path || '')
+                    .replace(/^\//, '')
+                    .split('/')
+                    .map((s) => (s && s[0] ? s[0].toUpperCase() + s.slice(1) : ''))
+                    .join('')
+                  const candidate = lazyComponents[name]
+                  if (candidate && typeof candidate.preload === 'function') {
+                    candidate.preload()
+                    ProSecNav._preloaded.add(path)
+                    return
+                  }
+                }
+                if (comp && typeof comp.preload === 'function') {
+                  comp.preload()
+                  ProSecNav._preloaded.add(path)
+                }
+              } catch (e) {
+                // 忽略预加载错误
+              }
+            }}
+          >
+            {labelText}
+          </span>
+        )
+
+        const base = {
+          ...rest,
+          path,
+          label: Label,
+        }
+        return children ? { ...base, children: children.map(translateItem) } : base
+      }
+      return translateItem(item)
+    })
+
+    // 递归过滤菜单：仅保留用户可访问的节点或其子节点
+    const filterItems = (items) => {
+      const result = []
+      for (const item of items) {
+        // 处理 children
+        if (item.children && Array.isArray(item.children)) {
+          const children = filterItems(item.children)
+          if (children.length > 0) {
+            result.push({ ...item, children })
+            continue
+          }
+        }
+
+        // 直接路径可访问则保留
+        try {
+          if (hasAccess(item.path || item.key)) {
+            result.push(item)
+            continue
+          }
+        } catch (e) {
+          // 忽略匹配错误，继续后续逻辑
+          console.warn('菜单访问判断异常', item.key || item.path, e)
+        }
+
+        // 处理动态参数形式的 menu key/path（如 /coupons/edit/:id）
+        const checkKeyForParam = typeof item.path === 'string' ? item.path : item.key
+        if (typeof checkKeyForParam === 'string' && checkKeyForParam.includes(':')) {
+          const pattern = checkKeyForParam.replace(/:[^/]+/g, '[^/]+')
+          const regex = new RegExp(`^${pattern}$`)
+          // 如果用户的 routes 中有任一路由能匹配该 pattern，则保留
+          if (routes.some((r) => regex.test(r))) {
+            result.push(item)
+            continue
+          }
+        }
+      }
+      return result
+    }
+
+    return filterItems(allMenuItems)
   }
 
-  const menuItems = [
-    { label: 'Home', key: '/', icon: <HomeOutlined /> },
-    { label: 'Demo', key: '/demo', icon: <GlobalOutlined /> },
-    { label: 'Parallax', key: '/parallax', icon: <FireOutlined /> },
-    { label: 'QrGenerate', key: '/qrcode', icon: <QrcodeOutlined /> },
-    { label: 'PrismRender', key: '/prism', icon: <FireOutlined /> },
-    { label: 'ReactTilt', key: '/tilt', icon: <QrcodeOutlined /> },
-    { label: 'Music', key: '/music', icon: <FireOutlined /> },
-    { label: 'Three', key: '/three', icon: <QrcodeOutlined /> },
-    { label: 'Echarts', key: '/echarts', icon: <FireOutlined /> },
-    { label: 'ChatGPT', key: '/markmap', icon: <QrcodeOutlined /> },
-    { label: 'Mermaid', key: '/mermaid', icon: <FireOutlined /> },
-    {
-      label: '技术栈',
-      key: '/sub-act',
-      icon: <HeatMapOutlined />,
-      children: [
-        {
-          label: '前端技术栈',
-          key: '/sub-coupons',
-          icon: <FireOutlined />,
-          children: [
-            { label: 'Vue', key: '/coupons/add' },
-            { label: 'Angular', key: '/coupons/edit' },
-          ],
-        },
-        { label: '后端技术栈', key: '/product', icon: <DeploymentUnitOutlined /> },
-      ],
-    },
-    {
-      label: '构建工具',
-      key: '/sub-list',
-      icon: <ApartmentOutlined />,
-      children: [
-        { label: 'Webpack', key: '/coupons/list' },
-        { label: 'Vite', key: '/order/list' },
-      ],
-    },
-    {
-      label: 'Error',
-      key: '/sub-error',
-      icon: <QuestionCircleOutlined />,
-      children: [{ label: 'ErrorBoundary', key: '/error' }],
-    },
-  ]
+  // 异步版生成菜单：基于 permissionMap 做逐项权限检查
+  const generateMenuItemsAsync = async (routes, permissionMap) => {
+    const hasAccessFallback = (path) => {
+      return routes.some((route) => {
+        if (route === path) return true
+        if (path.startsWith(route + '/')) return true
+        if (route.includes('*')) {
+          const pattern = route.replace('*', '.*')
+          return new RegExp(`^${pattern}$`).test(path)
+        }
+        return false
+      })
+    }
+
+    // 递归异步过滤
+    const filterAsync = async (items) => {
+      const results = await Promise.all(
+        items.map(async (item) => {
+          if (item.children) {
+            const children = await filterAsync(item.children)
+            if (children.length > 0) return { ...item, children }
+            return null
+          }
+
+          // 先看是否有 meta.permission
+          const perm = permissionMap.get(item.key) || permissionMap.get(item.path)
+          if (perm) {
+            try {
+              // 支持数组或单个 permission
+              if (Array.isArray(perm)) {
+                // 使用任一权限通过即可
+                const any = await permissionService.hasAnyPermission(perm)
+                if (any.hasPermission) return item
+                return null
+              }
+              const ok = await permissionService.hasPermission(perm)
+              if (ok) return item
+              return null
+            } catch (e) {
+              return null
+            }
+          }
+
+          // 降级：使用 routes 列表匹配（使用 path 优先）
+          if (hasAccessFallback(item.path || item.key)) return item
+          return null
+        })
+      )
+
+      return results.filter(Boolean)
+    }
+
+    // 使用配置文件的菜单；同时规范化 path 字段
+    const allMenuItems = mainLayoutMenu.map((item) => {
+      const translateItem = (i) => {
+        const { i18nKey, children, ...rest } = i
+        const base = {
+          ...rest,
+          path: i.path || i.key,
+          label: i18nKey ? t(i18nKey) : i.label,
+        }
+        return children ? { ...base, children: children.map(translateItem) } : base
+      }
+      return translateItem(item)
+    })
+
+    return filterAsync(allMenuItems)
+  }
 
   return (
     <>
+      {contextHolder}
       <Menu
-        mode="inline"
+        inlineIndent={10}
+        mode={mode}
         defaultSelectedKeys={selectedKeys}
         defaultOpenKeys={openKeys}
         selectedKeys={selectedKeys}
         openKeys={openKeys}
-        theme="light"
-        className={styles.menu}
+        theme={theme}
+        className={mode === 'horizontal' ? styles.topMenu : styles.menu}
+        items={menuItems}
         onOpenChange={onOpenChange}
         onSelect={onSelect}
-        items={menuItems}
       />
     </>
   )

@@ -1,239 +1,151 @@
-import React, { Suspense, lazy } from 'react'
-import Loading from '@src/components/stateless/Loading'
+/**
+ * 路由配置主文件
+ * 整合所有模块化的路由配置
+ *
+ * @description
+ * 路由结构说明：
+ * 1. 主布局路由（/）：包含 Layout 和所有需要布局的子路由
+ * 2. 认证路由：登录、注册、回调等公开路由
+ * 3. 独立布局路由：Dashboard、Portfilo 等独立布局的模块
+ * 4. 错误路由：404、403 等异常页面
+ */
 
-const lazyLoad = (Component) => (
-  <Suspense fallback={<Loading />}>
-    <Component />
-  </Suspense>
-)
+import React from 'react'
+import { mainLayoutRoute } from './modules/layout.routes'
+import { authRoutes } from './modules/auth.routes'
+import { businessRoutes } from './modules/business.routes'
+import { uiRoutes } from './modules/ui.routes'
+import { chartRoutes } from './modules/chart.routes'
+import { nestedRoutes } from './modules/nested.routes'
+import { layoutRoutes } from './modules/layout.routes'
+import { errorRoutes } from './modules/error.routes'
+import { notificationRoutes } from './modules/notification.routes'
+import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
+import { permissionService } from '@src/service/permissionService'
 
-// 以下路由可根据需求另分成不同的文件维护
-// 结合 proSecNav组件中的menuItems
-
-const SignIn = lazy(() => import('@pages/signin'))
-const SignUp = lazy(() => import('@pages/signup'))
-const Layout = lazy(() => import('@pages/layout'))
-const Home = lazy(() => import('@pages/home'))
-const Demo = lazy(() => import('@pages/demo'))
-const Coupons = lazy(() => import('@pages/coupons'))
-const CouponsHome = lazy(() => import('@pages/coupons/home'))
-const CouponsAdd = lazy(() => import('@pages/coupons/add'))
-const CouponsEdit = lazy(() => import('@pages/coupons/edit'))
-const CouponsDetail = lazy(() => import('@pages/coupons/detail'))
-const Product = lazy(() => import('@pages/product'))
-const ErrorPage = lazy(() => import('@pages/error'))
-const Dashboard = lazy(() => import('@pages/dashboard'))
-const ParallaxVert = lazy(() => import('@pages/parallax'))
-const ReactTilt = lazy(() => import('@pages/tilt'))
-const ReactMusic = lazy(() => import('@pages/music'))
-const ReactThree = lazy(() => import('@pages/three'))
-const ChatGpt = lazy(() => import('@pages/chatgpt'))
-const Echarts = lazy(() => import('@pages/echarts'))
-const QrCode = lazy(() => import('@pages/qrGenerate'))
-const PrismRender = lazy(() => import('@pages/prism'))
-const Mermaid = lazy(() => import('@pages/mermaid'))
-const Exception403 = lazy(() => import('@stateless/Exception/exception403'))
-const NoMatch = lazy(() => import('@stateless/NoMatch'))
-
-const rootRouter = [
-  {
-    path: '/',
-    name: '首页',
-    key: '/',
-    auth: true,
-    element: lazyLoad(Layout),
-    children: [
-      {
-        index: true,
-        name: '首页',
-        key: '/',
-        auth: true,
-        element: lazyLoad(Home),
-      },
-      {
-        index: false,
-        path: 'demo',
-        name: 'Demo',
-        key: '/demo',
-        auth: true,
-        element: lazyLoad(Demo),
-      },
-      {
-        index: false,
-        path: 'parallax',
-        name: 'Parallax',
-        key: '/parallax',
-        auth: true,
-        element: lazyLoad(ParallaxVert),
-      },
-      {
-        index: false,
-        path: 'qrcode',
-        name: 'QrGenerate',
-        key: '/qrcode',
-        auth: true,
-        element: lazyLoad(QrCode),
-      },
-      {
-        index: false,
-        path: 'tilt',
-        name: 'React Tilt',
-        key: '/tilt',
-        auth: true,
-        element: lazyLoad(ReactTilt),
-      },
-      {
-        index: false,
-        path: 'music',
-        name: 'React Music',
-        key: '/music',
-        auth: false,
-        element: lazyLoad(ReactMusic),
-      },
-      {
-        index: false,
-        path: 'markmap',
-        name: 'ChatGPT Markmap',
-        key: '/markmap',
-        auth: false,
-        element: lazyLoad(ChatGpt),
-      },
-      {
-        index: false,
-        path: 'mermaid',
-        name: 'ChatGPT Mermaid',
-        key: '/mermaid',
-        auth: false,
-        element: lazyLoad(Mermaid),
-      },
-      {
-        index: false,
-        path: 'prism',
-        name: 'PrismRender',
-        key: '/prism',
-        auth: true,
-        element: lazyLoad(PrismRender),
-      },
-      {
-        index: false,
-        path: 'three',
-        name: 'ReactThree',
-        key: '/three',
-        auth: true,
-        element: lazyLoad(ReactThree),
-      },
-      {
-        index: false,
-        path: 'echarts',
-        name: 'ReactEcharts',
-        key: '/echarts',
-        auth: true,
-        element: lazyLoad(Echarts),
-      },
-      {
-        index: false,
-        path: 'coupons',
-        name: '前端技术栈',
-        isSubMenu: true, // 是否是子菜单 proSecNav
-        key: '/coupons',
-        element: lazyLoad(Coupons),
-        children: [
-          {
-            index: false,
-            path: 'home',
-            name: 'React',
-            key: '/coupons/home',
-            auth: false,
-            element: lazyLoad(CouponsHome),
-          },
-          {
-            index: false,
-            name: 'Vue',
-            path: 'add',
-            key: '/coupons/add',
-            auth: false,
-            element: lazyLoad(CouponsAdd),
-          },
-          {
-            index: false,
-            path: 'edit',
-            name: 'Angular',
-            key: '/coupons/edit',
-            auth: false,
-            element: lazyLoad(CouponsEdit),
-          },
-          {
-            index: false,
-            path: 'detail',
-            name: 'Node',
-            key: '/coupons/detail',
-            auth: false,
-            element: lazyLoad(CouponsDetail),
-          },
-        ],
-      },
-      {
-        index: false,
-        path: 'product',
-        name: '后端技术栈',
-        key: '/product',
-        auth: false,
-        element: lazyLoad(Product),
-      },
-      {
-        index: false,
-        path: 'error',
-        name: 'Error',
-        key: '/error',
-        auth: false,
-        element: lazyLoad(ErrorPage),
-      },
-      {
-        path: '*',
-        name: 'No Match',
-        key: '*',
-        element: lazyLoad(NoMatch),
-      },
-    ],
-  },
-  {
-    index: false,
-    path: 'signin',
-    name: '登录',
-    key: '/signin',
-    auth: false,
-    element: lazyLoad(SignIn),
-  },
-  {
-    index: false,
-    path: 'signup',
-    name: '注册',
-    key: '/signup',
-    auth: false,
-    element: lazyLoad(SignUp),
-  },
-  {
-    index: false,
-    path: 'dashboard/*',
-    name: 'Dashboard',
-    key: '/dashboard',
-    auth: true,
-    element: lazyLoad(Dashboard),
-  },
-  {
-    index: false,
-    path: '/403',
-    name: '403',
-    key: '/403',
-    auth: false,
-    element: lazyLoad(Exception403),
-  },
-  {
-    path: '*',
-    name: 'No Match',
-    key: '*',
-    element: lazyLoad(NoMatch),
-  },
+// 整合主布局的子路由
+mainLayoutRoute.children = [
+  ...mainLayoutRoute.children,
+  ...businessRoutes,
+  ...uiRoutes,
+  ...chartRoutes,
+  ...nestedRoutes,
+  ...notificationRoutes,
 ]
 
-export default rootRouter
+// 构建完整路由配置
+const rootRouter = [
+  // 主布局路由（包含所有子路由）
+  mainLayoutRoute,
+  // 认证相关路由
+  ...authRoutes,
+  // 独立布局路由
+  ...layoutRoutes,
+  // 错误路由（404 放在最后）
+  ...errorRoutes.filter((route) => route.path !== '*'),
+  // 全局 404（必须放在最后）
+  ...errorRoutes.filter((route) => route.path === '*'),
+]
+
+// ✅ 注入 meta.permission（不改变现有结构，仅增强）
+const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
+
+// ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
+export function flattenRoutes(routes) {
+  if (!Array.isArray(routes)) {
+    console.error('flattenRoutes: expected array, got:', typeof routes, routes)
+    return []
+  }
+
+  return routes.reduce((acc, route) => {
+    if (!route || typeof route !== 'object') {
+      console.warn('flattenRoutes: invalid route item:', route)
+      return acc
+    }
+
+    acc.push(route)
+
+    if (Array.isArray(route.children) && route.children.length > 0) {
+      const childRoutes = flattenRoutes(route.children)
+      acc.push(...childRoutes)
+    }
+
+    return acc
+  }, [])
+}
+
+// ✅ 新增：根据路径获取路由 key
+export function getKeyName(path = '/') {
+  try {
+    const flatRoutes = flattenRoutes(annotatedRootRouter)
+
+    if (!flatRoutes || flatRoutes.length === 0) {
+      console.warn('getKeyName: no routes available')
+      return path
+    }
+
+    // normalize incoming path (remove leading slash and query)
+    const normalized = String(path || '')
+      .split('?')[0]
+      .replace(/^\//, '')
+
+    const matchRoute = (r) => {
+      if (!r || !r.path) return false
+      const rp = String(r.path).replace(/^\//, '')
+      if (rp === normalized) return true
+      // support param routes like 'notification/:id' -> match '/notification/1'
+      if (rp.includes(':')) {
+        const pattern = '^' + rp.replace(/:[^/]+/g, '[^/]+') + '$'
+        try {
+          const re = new RegExp(pattern)
+          return re.test(normalized)
+        } catch (err) {
+          return false
+        }
+      }
+      // support wildcard routes ending with *
+      if (rp.endsWith('*')) {
+        const base = rp.replace(/\*$/, '')
+        return normalized.startsWith(base)
+      }
+      return false
+    }
+
+    const route = flatRoutes.find(matchRoute)
+
+    if (!route) {
+      console.warn(`getKeyName: route not found for path "${path}"`)
+      return path
+    }
+
+    // prefer explicit meta.key, then route.key, then meta.title, then path
+    return route.meta?.key || route.key || route.meta?.title || path
+  } catch (error) {
+    console.error('getKeyName error:', error)
+    return path
+  }
+}
+
+/**
+ * ✅ 新增：菜单/导航可见路由（异步按需获取）
+ * 仅对主布局的 children 做过滤；其余（auth/error/独立布局）不参与菜单
+ * @returns {Promise<Array>} 过滤后的路由配置
+ */
+export async function getVisibleMenuRoutes() {
+  try {
+    const accessible = await permissionService.getAccessibleRoutes()
+    const main = annotatedRootRouter.find((r) => r.key === '/')
+    if (!main) return []
+    const filteredChildren = filterRoutesByAccessiblePaths(main.children || [], accessible)
+    return [{ ...main, children: filteredChildren }]
+  } catch (error) {
+    console.error('getVisibleMenuRoutes error:', error)
+    return []
+  }
+}
+
+// ✅ 命名导出（供其他模块使用）
+export { rootRouter, annotatedRootRouter }
+
+// ✅ 默认导出注入权限后的路由（保持原有导出方式，增强功能）
+export default annotatedRootRouter

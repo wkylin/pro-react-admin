@@ -14,7 +14,14 @@ const TsDemo: React.FC = () => {
       <h4>{booksError && 'error'}</h4>
       {/* <h4>{booksRes?.map((item: { shopName: any }) => item.shopName)}</h4> */}
 
-      <UserDemo user={{ name: 'wkylin', age: 16, address: 'shanghai', dob: new Date('2022-01-01') }} />
+      <UserDemo
+        user={{
+          name: 'wkylin',
+          age: 16,
+          address: 'shanghai',
+          dob: new Date('2022-01-01'),
+        }}
+      />
     </>
   )
 }

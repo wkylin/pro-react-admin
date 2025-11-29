@@ -1,10 +1,182 @@
-/* stylelint-disable at-rule-no-unknown */
+@import 'tailwindcss';
 
-/* @import '~sanitize.css'; */
+:root {
+  --animate-wiggle: wiggle 1s ease-in-out infinite;
+  --animate-hue-rotate: hue-rotate 5s infinite linear;
+  --animate-slide-in-left: slide-in-left 1s;
+  --animate-slide-in-right: slide-in-right 1s;
+  --animate-wui-slide-right: wui-slide-right 2s linear infinite;
+  --animate-wui-slide-down: wui-slide-down 2s linear infinite;
+  --animate-wui-slide-left: wui-slide-left 2s linear infinite;
+  --animate-my-orbit: ui-orbit calc(var(--duration) * 1s) linear infinite;
+  --animate-move-dot: move-dot 6s linear infinite;
+}
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes hue-rotate {
+  from {
+    filter: hue-rotate(0deg);
+  }
+
+  to {
+    filter: hue-rotate(-360deg);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translate3d(-100%, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translate3d(100%, 0, 0);
+    visibility: visible;
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes wui-slide-right {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes wui-slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes wui-slide-left {
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes wui-slide-up {
+  0% {
+    transform: translateY(100%);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes ui-orbit {
+  0% {
+    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px))
+      rotate(calc(var(--angle) * -1deg));
+  }
+
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg + 1turn)) translateY(calc(var(--radius) * 1px))
+      rotate(calc(var(--angle) * -1deg - 1turn));
+  }
+}
+
+@keyframes move-dot {
+  0% {
+    top: 10%;
+    right: 10%;
+  }
+
+  25% {
+    top: 10%;
+    right: calc(100% - 40px);
+  }
+
+  50% {
+    top: calc(100% - 23px);
+    right: calc(100% - 45px);
+  }
+
+  75% {
+    top: calc(100% - 23px);
+    right: 10%;
+  }
+
+  100% {
+    top: 10%;
+    right: 10%;
+  }
+}
+
+.hue-clip {
+  color: var(--color-red-pers);
+  background-image: linear-gradient(92deg, var(--color-red-pers), var(--color-yellow-saff));
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+:root {
+  --background: #fff;
+  --foreground: #171717;
+  --duration: 0.5;
+  --color-gray-200: #e5e7eb;
+  --color-red-pers: #f35626;
+  --color-yellow-saff: #feab3a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
 
 html,
 body {
@@ -13,13 +185,13 @@ body {
   text-size-adjust: 100%;
   box-sizing: border-box;
   scrollbar-width: thin;
+  scroll-behavior: smooth;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: inherit;
-  scrollbar-width: inherit;
 }
 
 *::-webkit-scrollbar {
@@ -44,7 +216,9 @@ select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus,
 select:-webkit-autofill:active {
-  transition: background-color 600000s ease-in-out 0s, color 600000s ease-in-out 0s;
+  transition:
+    background-color 600000s ease-in-out 0s,
+    color 600000s ease-in-out 0s;
 }
 
 .text-nowrap {
@@ -56,18 +230,24 @@ select:-webkit-autofill:active {
 .text-more-line-nowrap {
   overflow: hidden;
   text-overflow: ellipsis;
-
-  /* display: -webkit-box; */
+  line-clamp: 2;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
 #root {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.ant-app {
+  width: 100%;
+  height: 100%;
 }
 
 .loader:empty {
@@ -92,10 +272,6 @@ select:-webkit-autofill:active {
     transform: rotate(360deg);
   }
 }
-
-/* ::-webkit-scrollbar-thumb {
-  background: #aaa;
-} */
 
 .layout-footer {
   text-align: center;
@@ -125,29 +301,46 @@ select:-webkit-autofill:active {
 }
 
 .layout-container {
-  overflow: auto;
+  overflow: hidden;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.layout-container .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
-  padding: 16px;
+.layout-container > .wui-ant-tabs-nav {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+.layout-container > .wui-ant-tabs-content-holder {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content {
+  height: 100%;
+}
+
+.layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
+  height: 100%;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .layout-container .pro-tabs {
   z-index: 10;
-}
-
-.layout-container .pro-tabs .wui-ant-tabs-nav-wrap {
-  overflow: visible !important;
+  margin-bottom: 0;
 }
 
 .layout-container .layout-tabpanel {
   width: 100%;
-  min-height: calc(100vh - 232px);
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 @keyframes rotate {
@@ -158,4 +351,21 @@ select:-webkit-autofill:active {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.rounded-tab {
+  --r: 12px;
+
+  padding-inline: 0.8em;
+  border-inline: var(--r) solid #0000;
+  border-radius: calc(2 * var(--r)) calc(2 * var(--r)) 0 0 / var(--r);
+  mask:
+    radial-gradient(var(--r) at var(--r) 0, #0000 98%, #000 101%) calc(-1 * var(--r)) 100%/100% var(--r) repeat-x,
+    conic-gradient(#000 0 0) padding-box;
+  background: #e1e1e1 border-box;
+  width: fit-content;
+}
+
+div[className*='cursor-pointer'] {
+  transition: all 0.2s ease-in-out;
 }

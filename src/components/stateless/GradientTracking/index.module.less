@@ -1,0 +1,38 @@
+.gradientTracking {
+  position: relative;
+  margin: 10px 0;
+  background: #7983ff;
+  padding: 5px 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+}
+
+.gradientTracking span {
+  position: relative;
+  pointer-events: none;
+}
+
+.gradientTracking::before {
+  --size: 0;
+
+  content: '';
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  background: radial-gradient(circle closest-side, pink, transparent);
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.2s ease,
+    height 0.2s ease;
+}
+
+.gradientTracking:hover::before {
+  --size: 200px;
+}

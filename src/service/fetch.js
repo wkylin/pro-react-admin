@@ -10,14 +10,15 @@
  *    }
  * 2. postFetch --- method==='POST' 其他入参同 reqFetch
  * 3. getFetch --- method==='POST'  其他入参同 reqFetch
- * 4. putFethch
+ * 4. putFetch
  * 5. deleteFetch
  * 6. patchFetch
  */
-import { message } from 'antd'
+import { showMessage } from '@utils/message'
 import suffix from '../utils/suffix'
 
-const baseUrl = process?.env?.APP_BASE_URL ? process.env.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
+// const baseUrl = process?.env?.APP_BASE_URL ? process?.env?.APP_BASE_URL : import.meta.env?.APP_BASE_URL ?? ''
+const baseUrl = ''
 const parseToQuery = (query) =>
   Object.keys(query)
     .reduce((ary, key) => {
@@ -35,7 +36,7 @@ const initOptions = {
   },
   signal: null,
   credentials: 'include', // include *same-origin
-  // mode: 'cors', // no-cors, cors, *same-origin
+  mode: 'cors', // no-cors, cors, *same-origin
   // redirect: 'follow', // manual, *follow, error
   // referrer: 'no-referrer', // no-referrer *client,
   // referrerPolicy: 'no-referrer-when-downgrade',
@@ -49,7 +50,7 @@ const handleFailedResult = (response, error, isShowError, reject) => {
 
   if (((status && status !== 200) || error) && isShowError) {
     const statusTips = `${status}: ${statusText}`
-    message.error(`${status ? statusTips : error?.message}`, 2)
+    showMessage.error(`${status ? statusTips : error?.message}`)
   }
   if (reject) reject(response)
 }
@@ -64,7 +65,7 @@ const handleSuccessResult = (resolve, result, isShowError) => {
 
     if (isShowError && result.code) {
       const errStr = `${result.code}: ${result.message}`
-      message.error(errStr, 2)
+      showMessage.error(errStr)
     }
   }
   resolve(result)
@@ -87,19 +88,19 @@ const handleFetchData = (url, options) => {
     const fetchStartTime = +new Date()
     fetch(url, { ...otherOptions, signal })
       .then((response) => {
-        const fetchEndTime = +new Date()
-        const delay = fetchEndTime - fetchStartTime
-        fetch('http://localhost:5200/apis', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: url.split('?')[0], delay }),
-        })
-          .then((res) => res.json())
-          .then((data) => console.log(data))
-          .catch((err) => {
-            console.error('err.name', err.name)
-            console.error('err.message', err.message)
-          })
+        // const fetchEndTime = +new Date()
+        // const delay = fetchEndTime - fetchStartTime
+        // fetch('http://localhost:5200/apis', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify({ url: url.split('?')[0], delay }),
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => console.log(data))
+        //   .catch((err) => {
+        //     console.error('err.name', err.name)
+        //     console.error('err.message', err.message)
+        //   })
         const contentType = response.headers.get('Content-Type')
         if (response.status >= 200 && response.status < 300) {
           if (contentType.includes('application/json')) {
@@ -148,6 +149,8 @@ const handleFetchData = (url, options) => {
       })
       .catch((error) => {
         handleFailedResult(error, error, isShowError)
+        // return error  会正常处理
+        // return Promise.reject(error.response); 会进入catch
       })
       .finally(() => clearTimeout(timer))
   })
@@ -155,7 +158,14 @@ const handleFetchData = (url, options) => {
 
 export const reqFetch = (
   url,
-  params = { method: 'GET', payload: null, headers: null, isShowError: true, timeout: 20000, controller: null }
+  params = {
+    method: 'GET',
+    payload: null,
+    headers: null,
+    isShowError: true,
+    timeout: 20000,
+    controller: null,
+  }
 ) => {
   const {
     method = 'GET',

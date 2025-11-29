@@ -1,16 +1,16 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Result, Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 
 const Exception403 = () => {
-  const navigate = useNavigate()
+  const { redirectTo } = useSafeNavigate()
   return (
     <FixTabPanel>
       <Result
         status="403"
         title={
-          <Button type="primary" ghost onClick={() => navigate('/')}>
+          <Button type="primary" ghost onClick={() => redirectTo('/')}>
             去首页
           </Button>
         }

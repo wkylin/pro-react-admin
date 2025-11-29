@@ -38,10 +38,8 @@ export const useReqFetch = (url, opts) => {
       canceled = true
       controller.abort()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, opts])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(reFetch, [])
 
   return [res, loading, error]

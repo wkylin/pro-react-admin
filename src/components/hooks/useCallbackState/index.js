@@ -1,18 +1,23 @@
 import { useEffect, useRef, useState } from 'react'
 
 const useCallbackState = (initialValue) => {
-  const [state, _setState] = useState(initialValue)
+  // Use a more descriptive name for the state value and follow the setter naming convention
+  const [callbackState, setCallbackState] = useState(initialValue)
   const callbackQueue = useRef([])
+
   useEffect(() => {
-    callbackQueue.current.forEach((cb) => cb(state))
+    callbackQueue.current.forEach((cb) => cb(callbackState))
     callbackQueue.current = []
-  }, [state])
+  }, [callbackState])
+
   const setState = (newValue, callback) => {
-    _setState(newValue)
+    setCallbackState(newValue)
     if (callback && typeof callback === 'function') {
       callbackQueue.current.push(callback)
     }
   }
-  return [state, setState]
+
+  return [callbackState, setState]
 }
+
 export default useCallbackState

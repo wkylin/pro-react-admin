@@ -1,6 +1,1 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-# npm test
 npx lint-staged
-npx pretty-quick --staged

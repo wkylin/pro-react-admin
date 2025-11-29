@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import React, { useRef, useCallback, useState, useEffect } from 'react'
 import MarkmapHooks from '@stateful/markmap'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -7,7 +8,7 @@ import { toPng, toSvg } from 'html-to-image'
 import { Button, Dropdown, Form, Input, Space, message } from 'antd'
 import { DownloadOutlined, CopyOutlined } from '@ant-design/icons'
 import { copyTextToClipboard } from '@utils/aidFn'
-import initSSE from './sse'
+import initSSE from './fixSse'
 
 const ChatGpt = () => {
   const markmapRef = useRef(null)
@@ -44,24 +45,41 @@ const ChatGpt = () => {
     structureResultRef.current = ''
     const source = initSSE(apiKey, text)
     source.addEventListener('message', (e) => {
+      console.log('message', e.data)
       if (e.data !== '[DONE]') {
+        console.log('NOT DONE')
         const payload = JSON.parse(e.data)
         const {
           delta: { content },
-        } = payload.choices[0]
+        } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           apiResultRef.current += content
           setApiResult(apiResultRef.current)
         }
       } else {
+        console.log('DONE')
+        setReadyState(2)
         source.close()
       }
     })
 
     source.addEventListener('readystatechange', (e) => {
       setReadyState(e.readyState)
-      // if (e.readyState === 2) {
-      // }
+      console.log('readyState', e.readyState)
+      if (e.readyState === 2) {
+        console.log('SSE connection closed')
+      }
+    })
+
+    source.addEventListener('error', (e) => {
+      console.error('SSE error:', e)
+      source.close()
+    })
+    source.addEventListener('open', (e) => {
+      console.log('SSE connection opened:', e)
+    })
+    source.addEventListener('abort', (e) => {
+      console.log('SSE connection closed:', e)
     })
 
     source.stream()
@@ -125,12 +143,13 @@ const ChatGpt = () => {
         const payload = JSON.parse(e.data)
         const {
           delta: { content },
-        } = payload.choices[0]
+        } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           structureResultRef.current += content
           setStructureResult(structureResultRef.current)
         }
       } else {
+        setStructureReadyState(2)
         source.close()
       }
     })
@@ -145,132 +164,139 @@ const ChatGpt = () => {
   }
 
   return (
-    <>
-      <FixTabPanel>
-        <section style={{ width: 600 }}>
-          <Form
-            form={form}
-            layout="vertical"
-            initialValues={{
-              apiKey: '',
-              text: '作为产品经理，帮我生成一份PRD文档，功能是公园入园人数大屏展示功能，采用 markdown 格式区分标题和正文，标题加上序号',
-            }}
-            onFinish={onFinish}
-            requiredMark={false}
-            autoComplete="off"
-          >
-            <Form.Item name="apiKey" label="OPEN AI KEY" rules={[{ required: true, message: '请输入open ai key' }]}>
-              <Input.TextArea
-                onChange={onChange}
-                rows={1}
-                style={{ resize: 'none', padding: 2 }}
-                placeholder="open ai key"
-              />
-            </Form.Item>
-            <Form.Item name="text" label="您的输入" rules={[{ required: true, message: '请输您的需求' }]}>
-              <Input.TextArea
-                rows={4}
-                showCount
-                maxLength={1000}
-                style={{ resize: 'none', padding: 2 }}
-                placeholder=""
-              />
-            </Form.Item>
+    <FixTabPanel>
+      <section style={{ width: 600 }}>
+        <Form
+          form={form}
+          layout="vertical"
+          initialValues={{
+            apiKey: '',
+            text: '作为产品经理，帮我生成一份PRD文档，功能是公园入园人数大屏展示功能，采用 markdown 格式区分标题和正文，标题加上序号',
+          }}
+          onFinish={onFinish}
+          requiredMark={false}
+          autoComplete="off"
+        >
+          <Form.Item name="apiKey" label="OPEN AI KEY" rules={[{ required: true, message: '请输入open ai key' }]}>
+            <Input.TextArea
+              onChange={onChange}
+              rows={1}
+              style={{ resize: 'none', padding: 2 }}
+              placeholder="open ai key"
+            />
+          </Form.Item>
+          <Form.Item name="text" label="您的输入" rules={[{ required: true, message: '请输您的需求' }]}>
+            <Input.TextArea
+              rows={4}
+              showCount
+              maxLength={1000}
+              style={{ resize: 'none', padding: 2 }}
+              placeholder=""
+              onPressEnter={onFinish}
+            />
+          </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-              <Button block type="primary" htmlType="submit" disabled={[0, 1].includes(readyState)}>
-                {apiResult && readyState === 2 ? '再来一次' : 'ChatGPT'}
-              </Button>
-            </Form.Item>
-          </Form>
-        </section>
+          <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+            <Button block type="primary" htmlType="submit" disabled={[0, 1].includes(readyState)}>
+              {apiResult && readyState === 2 ? '再来一次' : 'ChatGPT'}
+            </Button>
+          </Form.Item>
+        </Form>
+      </section>
 
-        <h3 style={{ marginBottom: 15 }}>
-          <span>ChatGPT的回答：</span>
-          {apiResult && readyState === 2 && (
-            <Dropdown
-              menu={{
-                onClick: ({ key }) => {
-                  copyToClipboard(key)
+      <h3 style={{ marginBottom: 15 }}>
+        <span>ChatGPT的回答：</span>
+        {apiResult && readyState === 2 && (
+          <Dropdown
+            menu={{
+              onClick: ({ key }) => {
+                copyToClipboard(key)
+              },
+              items: [
+                {
+                  key: '1',
+                  label: '复制文本',
                 },
-                items: [
-                  {
-                    key: '1',
-                    label: '复制文本',
-                  },
-                  {
-                    key: '2',
-                    label: '复制Markdown',
-                  },
-                ],
-              }}
-              placement="bottom"
-              arrow
-            >
-              <Button>
-                <Space>
-                  <CopyOutlined /> 复制
-                </Space>
-              </Button>
-            </Dropdown>
-          )}
-        </h3>
-
-        <section style={{ marginBottom: 15, minHeight: 150, border: '1px solid #eee', borderRadius: 4, padding: 15 }}>
-          {/* {readyState === 0 && <h3>Loading...</h3>} */}
-          {readyState === 0 && <h3>AI正在理解您的需求...</h3>}
-          {/* {apiResult && <section> {apiResult}</section>} */}
-          {apiResult && <ReactMarkdown children={apiResult} remarkPlugins={[remarkGfm]} />}
-        </section>
-
-        <section>
-          {apiResult && readyState === 2 && (
-            <Space>
-              <Button type="primary" disabled={[0, 1].includes(structureReadyState)} onClick={buildStructure}>
-                {structureResult && structureReadyState === 2 ? '重新生成' : '生成页面结构'}
-              </Button>
-
-              {structureResult && structureReadyState === 2 && (
-                <Dropdown
-                  menu={{
-                    onClick: ({ key }) => {
-                      onButtonClick(key)
-                    },
-                    items: [
-                      {
-                        key: '1',
-                        label: '导出png格式',
-                      },
-                      {
-                        key: '2',
-                        label: '导出svg格式',
-                      },
-                    ],
-                  }}
-                  placement="bottom"
-                  arrow
-                >
-                  <Button type="primary">
-                    <DownloadOutlined />
-                    导出
-                  </Button>
-                </Dropdown>
-              )}
-            </Space>
-          )}
-        </section>
-        {/* {JSON.stringify(structureReadyState, null, 2)} */}
-        {structureReadyState === 0 && <h3>Ai 正在理解的需求...</h3>}
-        {structureReadyState === 1 && <h3>生成中...</h3>}
-        {structureResult && (
-          <section ref={markmapRef}>
-            <MarkmapHooks markmap={structureResult} />
-          </section>
+                {
+                  key: '2',
+                  label: '复制Markdown',
+                },
+              ],
+            }}
+            placement="bottom"
+            arrow
+          >
+            <Button>
+              <Space>
+                <CopyOutlined /> 复制
+              </Space>
+            </Button>
+          </Dropdown>
         )}
+      </h3>
 
-        <div ref={bottomRef} style={{ height: 20, marginBottom: 20 }} />
-      </FixTabPanel>
-    </>
+      <section
+        style={{
+          marginBottom: 15,
+          minHeight: 150,
+          border: '1px solid #eee',
+          borderRadius: 4,
+          padding: 15,
+        }}
+      >
+        {/* {readyState === 0 && <h3>Loading...</h3>} */}
+        {readyState === 0 && <h3>AI正在理解您的需求...</h3>}
+        {/* {apiResult && <section> {apiResult}</section>} */}
+        {apiResult && <ReactMarkdown children={apiResult} remarkPlugins={[remarkGfm]} />}
+      </section>
+
+      <section>
+        {apiResult && readyState === 2 && (
+          <Space>
+            <Button type="primary" disabled={[0, 1].includes(structureReadyState)} onClick={buildStructure}>
+              {structureResult && structureReadyState === 2 ? '重新生成' : '生成页面结构'}
+            </Button>
+
+            {structureResult && structureReadyState === 2 && (
+              <Dropdown
+                menu={{
+                  onClick: ({ key }) => {
+                    onButtonClick(key)
+                  },
+                  items: [
+                    {
+                      key: '1',
+                      label: '导出png格式',
+                    },
+                    {
+                      key: '2',
+                      label: '导出svg格式',
+                    },
+                  ],
+                }}
+                placement="bottom"
+                arrow
+              >
+                <Button type="primary">
+                  <DownloadOutlined />
+                  导出
+                </Button>
+              </Dropdown>
+            )}
+          </Space>
+        )}
+      </section>
+      {JSON.stringify(structureResult, null, 2)}
+      {structureReadyState === 0 && <h3>Ai 正在理解的需求...</h3>}
+      {structureReadyState === 1 && <h3>生成中...</h3>}
+      {structureResult && (
+        <section ref={markmapRef}>
+          <MarkmapHooks markmap={structureResult} />
+        </section>
+      )}
+
+      <div ref={bottomRef} style={{ height: 20, marginBottom: 20 }} />
+    </FixTabPanel>
   )
 }
 
