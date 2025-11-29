@@ -4,6 +4,7 @@ const plugins = [
   ['@babel/plugin-transform-runtime'],
   ['@babel/plugin-transform-modules-commonjs'],
   ['@babel/plugin-transform-object-rest-spread'],
+  ['babel-plugin-react-compiler'],
 ]
 
 module.exports = {

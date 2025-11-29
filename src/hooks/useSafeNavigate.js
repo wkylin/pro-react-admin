@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, startTransition } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
 import { permissionService } from '@src/service/permissionService'
@@ -11,7 +11,7 @@ export default function useSafeNavigate() {
     if (!path) return
     // allow common public pages
     if (path === '/' || path === '/signin' || path === '/signup') {
-      navigate(path)
+      startTransition(() => navigate(path))
       return
     }
 
@@ -28,7 +28,7 @@ export default function useSafeNavigate() {
         }
         return
       }
-      navigate(path)
+      startTransition(() => navigate(path))
     } catch (err) {
       console.error('safe navigate error', err)
       if (lastDeniedRef.current !== path) {

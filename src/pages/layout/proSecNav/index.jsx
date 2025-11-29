@@ -15,6 +15,8 @@ import {
   QrcodeOutlined,
 } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
+import { annotatedRootRouter, flattenRoutes } from '@src/routers'
+import { lazyComponents } from '@src/routers/config/lazyLoad.config'
 
 import styles from './index.module.less'
 
@@ -95,6 +97,24 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     dfs(items, [])
     return bestChain
   }
+
+  // 构建路由 path -> element.type 映射以支持菜单 hover 预加载
+  const routeComponentMap = React.useMemo(() => {
+    try {
+      const flat = flattenRoutes(annotatedRootRouter)
+      const map = new Map()
+      flat.forEach((r) => {
+        const key = r.path || r.key
+        if (!key) return
+        // element 可能是 React element，element.type 为组件函数/对象
+        const comp = r.element && r.element.type ? r.element.type : null
+        map.set(key, comp)
+      })
+      return map
+    } catch (e) {
+      return new Map()
+    }
+  }, [])
 
   // 路由变化时自动计算选中与展开（除非用户刚手动操作）
   useEffect(() => {
@@ -210,10 +230,48 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     const allMenuItems = mainLayoutMenu.map((item) => {
       const translateItem = (i) => {
         const { i18nKey, children, ...rest } = i
+        const path = i.path || i.key
+        const labelText = i18nKey ? t(i.i18nKey) : i.label
+
+        // 包装 label，增加 hover 预加载行为（若找到对应路由组件且组件支持 preload）
+        const Label = (
+          <span
+            onMouseEnter={() => {
+              try {
+                // 确保每个 path 只预加载一次
+                if (!ProSecNav._preloaded) ProSecNav._preloaded = new Set()
+                if (ProSecNav._preloaded.has(path)) return
+                const comp = routeComponentMap.get(path)
+                if (!comp && lazyComponents) {
+                  const name = (path || '')
+                    .replace(/^\//, '')
+                    .split('/')
+                    .map((s) => (s && s[0] ? s[0].toUpperCase() + s.slice(1) : ''))
+                    .join('')
+                  const candidate = lazyComponents[name]
+                  if (candidate && typeof candidate.preload === 'function') {
+                    candidate.preload()
+                    ProSecNav._preloaded.add(path)
+                    return
+                  }
+                }
+                if (comp && typeof comp.preload === 'function') {
+                  comp.preload()
+                  ProSecNav._preloaded.add(path)
+                }
+              } catch (e) {
+                // 忽略预加载错误
+              }
+            }}
+          >
+            {labelText}
+          </span>
+        )
+
         const base = {
           ...rest,
-          path: i.path || i.key,
-          label: i18nKey ? t(i18nKey) : i.label,
+          path,
+          label: Label,
         }
         return children ? { ...base, children: children.map(translateItem) } : base
       }

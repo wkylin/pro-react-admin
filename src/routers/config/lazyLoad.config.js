@@ -4,7 +4,6 @@ import Loading from '@stateless/Loading'
 
 import Home from '@pages/home'
 import Layout from '@pages/layout'
-import Dashboard from '@pages/dashboard'
 import MyPortfilo from '@pages/portfilo'
 
 /**
@@ -23,8 +22,7 @@ export const lazyComponents = {
   // 布局组件
   // Layout: lazyLoad(() => import('@pages/layout')),
   Layout, // 布局改为同步加载，避免白屏
-  // Dashboard: lazyLoad(() => import('@/pages/dashboard'), { preload: true }),
-  Dashboard, // Dashboard 改为同步加载，避免刷新时一直 loading
+  Dashboard: lazyLoad(() => import('@pages/dashboard'), { preload: true }),
   MyPortfilo, // MyPortfilo 改为同步加载，避免刷新时一直 loading
 
   // 认证相关（直接导入，不需要懒加载）
