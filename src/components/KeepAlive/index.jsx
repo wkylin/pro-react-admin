@@ -75,8 +75,9 @@ const createKeepAliveManager = () => {
     // set global options: { deactivateDelay, keepInactiveCount, limit }
     setOptions: (opts = {}) => {
       if (typeof opts.deactivateDelay === 'number') deactivateDelay = opts.deactivateDelay
-      if (typeof opts.keepInactiveCount === 'number')
+      if (typeof opts.keepInactiveCount === 'number') {
         keepInactiveCount = Math.max(0, Math.floor(opts.keepInactiveCount))
+      }
       if (typeof opts.limit === 'number') limit = Math.max(0, Math.floor(opts.limit))
     },
     register: (id, opts) => {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { message } from 'antd'
-import { Menu } from 'antd'
+import { message, Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
