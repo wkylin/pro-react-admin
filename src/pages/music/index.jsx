@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
-import MusicPlayer from '@container/musicPlayer/index'
-import SongCard from '@container/musicPlayer/SongCard'
-import songData from '@container/musicPlayer/songData/song'
+import MusicPlayer from '@stateless/FixMusicPlayer'
+import SongCard from '@stateless/FixMusicPlayer/SongCard'
+import songData from '@stateless/FixMusicPlayer/songData/song'
 
 const Music = () => {
   const audioRef = useRef(null)

@@ -107,5 +107,6 @@
     "projectKey": "pro-react-admin2"
   },
   "bitoAI.codeCompletion.enableAutoCompletion": false,
-  "i18n-ally.sourceLanguage": "zh"
+  "i18n-ally.sourceLanguage": "zh",
+  "task.autoDetect": "off"
 }

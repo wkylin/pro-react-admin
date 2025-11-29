@@ -545,6 +545,11 @@ const ResponsiveTable = ({
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* toolbar：左侧为操作按钮，右侧为查询表单（可分别控制显示） */}
+      {showUrlAppliedTag && hasMergedInitialSearch && hasMergedInitialSearch() && (
+        <Tag color="blue" style={{ marginRight: 8 }}>
+          已应用地址栏初始筛选
+        </Tag>
+      )}
       {(showToolbarLeft || showToolbarRight) && (
         <div
           className="responsive-table-toolbar"
@@ -574,11 +579,6 @@ const ResponsiveTable = ({
             )}
           </div>
           <div>
-            {showUrlAppliedTag && hasMergedInitialSearch && hasMergedInitialSearch() && (
-              <Tag color="blue" style={{ marginRight: 8 }}>
-                已应用地址栏初始筛选
-              </Tag>
-            )}
             {showToolbarRight &&
               queryConfig &&
               (() => {
