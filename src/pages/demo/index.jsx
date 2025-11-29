@@ -5,7 +5,6 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import AnimationTabs from '@stateless/AnimationTabs'
 import LogoSlider from '@stateless/LogoSlider'
 import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
-import GradientTracing from '@stateless/GradientTracing'
 import StarBack from '@stateless/StarBackground'
 // import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
 import FixTabs from '@stateless/FixTabs'
@@ -22,7 +21,6 @@ import XuePng from '@assets/images/xue.png'
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'
 // import ScriptView from '@stateless/ScriptView'
 // import AnimatedList from '@stateless/AnimatedList'
-// import { DraggableList, DraggableItem } from '@stateless/DraggableList'
 import FixCarousel from '@stateless/FixCarouse'
 import OrgChart from '@stateless/OrgChart'
 import TrapezoidTabs from '@stateless/TrapezoidTabs'
@@ -277,9 +275,6 @@ const ProDemo = () => {
               ))}
           </AnimatedList>
         </section> */}
-        {/* <section className="flex items-center justify-center gap-5">
-          <DraggableList items={items} onChange={handleReorder} className="w-[600px] max-w-md cursor-move" />
-        </section> */}
         <StarBack />
         <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
         <div className="relative w-full overflow-hidden bg-[#0a192f]">
@@ -323,68 +318,6 @@ const ProDemo = () => {
 
         <LogoSlider companies={companies} />
 
-        <section className="flex flex-row items-center justify-center gap-5">
-          <GradientTracing width={300} height={100} path="M0,50 Q150,0 300,50" />
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M100,0 L75,75 L125,75 L50,200 L100,100 L50,100 L100,0"
-            gradientColors={['#F1C40F', '#F1C40F', '#E67E22']}
-          />
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M100,100 m0,-75 a75,75 0 1,1 -0.1,0 z"
-            gradientColors={['#7B68EE', '#7B68EE', '#3498DB']}
-          />
-          <GradientTracing width={300} height={100} path="M0,50 L75,25 L150,75 L225,25 L300,50" />
-        </section>
-        <section className="flex flex-row items-center justify-center gap-5">
-          <GradientTracing
-            width={200}
-            height={50}
-            path="M 20,25 L 180,25"
-            gradientColors={['#FF5733', '#FF5733', '#C70039']}
-          />
-          <GradientTracing
-            width={250}
-            height={200}
-            path="M 50,20 L 50,60 L 80,80 L 200,60"
-            gradientColors={['#FFA07A', '#FFA07A', '#FF6347']}
-          />
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M 20,20 L 180,180"
-            gradientColors={['#5733FF', '#5733FF', '#C700C7']}
-          />
-        </section>
-        <section className="flex flex-row items-center justify-center gap-5">
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M 50,20 L 100,20 L 60, 25 L 180, 25"
-            gradientColors={['#FF69B4', '#FF69B4', '#8A2BE2']}
-          />
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M 50,20 L 100,20 L 100,30 L 150, 30"
-            gradientColors={['#FF1493', '#FF1493', '#9400D3']}
-          />
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M 20,30 L 40,30 L 40,10 L 180, 10"
-            gradientColors={['#FFA500', '#FFA500', '#FF4500']}
-          />
-          <GradientTracing
-            width={200}
-            height={200}
-            path="M 10 10 L 90 10 Q 100 50 90 90 C 50 100 10 50 10 10 Z"
-            gradientColors={['#FFA500', '#FFA500', '#FF4500']}
-          />
-        </section>
         <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
           <AnimationTabs tabs={tabs} />
         </div>

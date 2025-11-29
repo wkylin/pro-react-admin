@@ -68,7 +68,6 @@ import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@stateless/AnimText'
 import SlideButton from '@stateless/SlideButton'
 import NumberViewCard from '@stateless/NumberViewCard'
-import FixMusicPlayer from '@stateless/FixMusicPlayer'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 import SpringPng from '@assets/images/spring.png'
@@ -1134,7 +1133,6 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <AutoSlider />
       </section>
-      <FixMusicPlayer />
     </FixTabPanel>
   )
 }
