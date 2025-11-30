@@ -85,50 +85,50 @@ export type ResponsiveTableProps<T = any> = {
 
 const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => {
   const {
-      columns = [],
-      dataSource = [],
-      rowKey = 'id' as any,
-      initialPagination = { current: 1, pageSize: 10 },
-      minBodyHeight = 120,
-      minWidth = 600,
-      showColumnSettings = true,
-      pageSyncToUrl = false,
-      onPaginationChange = () => {},
-      onChange = () => {},
-      actions = ['view', 'edit', 'delete'] as Array<any>,
-      permissionChecker = () => true,
-      onView,
-      onEdit,
-      onDelete,
-      reloadPage,
-      showIndex = false,
-      indexMode = 'global',
-      indexFixed = 'left',
-      actionsFixed = 'right',
-      customIndexRender = null,
-      rowSelection = null,
-      rowSelectable = null,
-      fetchData = null,
-      autoLoad = false,
-      fetchUrl = null,
-      requestParamMap = { pageField: 'page', pageSizeField: 'pageSize', sortField: 'sort', orderField: 'order' },
-      responseFieldMap = { listField: 'data', totalField: 'total' },
-      serverSort = false,
-      defaultSort = null,
-      virtualized = false,
-      mergeSearchToFetch = false,
-      mergeSearchToFetchOnce = false,
-      clearUrlAfterInitialMerge = true,
-      showUrlAppliedTag = false,
-      indexWidth = 80,
-      actionsWidth = 180,
-      toolbar = null,
-      apiRef = null,
-      onToolbarReady = null,
-      scroll: scrollProp = undefined,
-      requestMethod = 'get',
-      ...tableProps
-    } = props
+    columns = [],
+    dataSource = [],
+    rowKey = 'id' as any,
+    initialPagination = { current: 1, pageSize: 10 },
+    minBodyHeight = 120,
+    minWidth = 600,
+    showColumnSettings = true,
+    pageSyncToUrl = false,
+    onPaginationChange = () => {},
+    onChange = () => {},
+    actions = ['view', 'edit', 'delete'] as Array<any>,
+    permissionChecker = () => true,
+    onView,
+    onEdit,
+    onDelete,
+    reloadPage,
+    showIndex = false,
+    indexMode = 'global',
+    indexFixed = 'left',
+    actionsFixed = 'right',
+    customIndexRender = null,
+    rowSelection = null,
+    rowSelectable = null,
+    fetchData = null,
+    autoLoad = false,
+    fetchUrl = null,
+    requestParamMap = { pageField: 'page', pageSizeField: 'pageSize', sortField: 'sort', orderField: 'order' },
+    responseFieldMap = { listField: 'data', totalField: 'total' },
+    serverSort = false,
+    defaultSort = null,
+    virtualized = false,
+    mergeSearchToFetch = false,
+    mergeSearchToFetchOnce = false,
+    clearUrlAfterInitialMerge = true,
+    showUrlAppliedTag = false,
+    indexWidth = 80,
+    actionsWidth = 180,
+    toolbar = null,
+    apiRef = null,
+    onToolbarReady = null,
+    scroll: scrollProp = undefined,
+    requestMethod = 'get',
+    ...tableProps
+  } = props
 
   // location/search parser must be defined before passing initialSearch into useTable
   const location = useLocation()
@@ -162,7 +162,11 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       payload = queryConfig.transformValues(payload) || payload
     }
     return payload
-  }, [queryConfig && queryConfig.initialValues, queryConfig && queryConfig.fields, queryConfig && queryConfig.transformValues])
+  }, [
+    queryConfig && queryConfig.initialValues,
+    queryConfig && queryConfig.fields,
+    queryConfig && queryConfig.transformValues,
+  ])
 
   const {
     containerRef,
@@ -217,7 +221,8 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
 
   const leftActions = Array.isArray(toolbarConfig.actions) ? toolbarConfig.actions : []
 
-  const showToolbarLeft = typeof toolbarConfig.showLeft !== 'undefined' ? !!toolbarConfig.showLeft : leftActions.length > 0
+  const showToolbarLeft =
+    typeof toolbarConfig.showLeft !== 'undefined' ? !!toolbarConfig.showLeft : leftActions.length > 0
   const showToolbarRight = typeof toolbarConfig.showRight !== 'undefined' ? !!toolbarConfig.showRight : !!queryConfig
 
   const toolbarApi = React.useMemo(
@@ -330,9 +335,14 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
     }
   }
 
-  const [visibleKeys, setVisibleKeys] = React.useState<React.Key[]>(() => (columns || []).map((c) => (c as any).dataIndex || (c as any).key).filter(Boolean))
+  const [visibleKeys, setVisibleKeys] = React.useState<React.Key[]>(() =>
+    (columns || []).map((c) => (c as any).dataIndex || (c as any).key).filter(Boolean)
+  )
 
-  React.useEffect(() => setVisibleKeys((columns || []).map((c) => (c as any).dataIndex || (c as any).key).filter(Boolean)), [columns])
+  React.useEffect(
+    () => setVisibleKeys((columns || []).map((c) => (c as any).dataIndex || (c as any).key).filter(Boolean)),
+    [columns]
+  )
 
   const currentColumns = React.useMemo(() => {
     const keys = new Set(visibleKeys)
@@ -348,7 +358,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       width: typeof idx.width !== 'undefined' ? idx.width : indexWidth,
       align: typeof idx.align !== 'undefined' ? idx.align : 'center',
       fixed: typeof idx.fixed !== 'undefined' ? idx.fixed : indexFixed,
-      render: idx.render || ((_text: any, _record: any, rowIndex: number) => (indexMode === 'page' ? rowIndex + 1 : calcIndex(rowIndex))),
+      render:
+        idx.render ||
+        ((_text: any, _record: any, rowIndex: number) => (indexMode === 'page' ? rowIndex + 1 : calcIndex(rowIndex))),
     }
     return col
   }, [columns, indexMode, calcIndex])
@@ -360,7 +372,10 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
   }, [currentColumns, indexColumnFromColumns])
 
   const columnOptions = columns
-    .map((c) => ({ label: (c as any).title || (c as any).dataIndex || (c as any).key, value: (c as any).dataIndex || (c as any).key }))
+    .map((c) => ({
+      label: (c as any).title || (c as any).dataIndex || (c as any).key,
+      value: (c as any).dataIndex || (c as any).key,
+    }))
     .filter((o) => o.value)
 
   const popContent = (
@@ -384,7 +399,10 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         >
           全部
         </Button>
-        <Button size="small" onClick={() => setVisibleKeys((columns || []).slice(0, 3).map((c) => (c as any).dataIndex || (c as any).key))}>
+        <Button
+          size="small"
+          onClick={() => setVisibleKeys((columns || []).slice(0, 3).map((c) => (c as any).dataIndex || (c as any).key))}
+        >
           恢复默认
         </Button>
       </div>
@@ -455,21 +473,24 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
   const indexColumn = indexColumnFromColumns
     ? indexColumnFromColumns
     : showIndex
-    ? {
-        title: '序号',
-        key: '__index',
-        width: typeof indexWidth !== 'undefined' ? indexWidth : 80,
-        align: 'center',
-        fixed: indexFixed,
-        render: (_text: any, record: any, idx: number) => {
-          if (indexMode === 'page') return idx + 1
-          if (indexMode === 'custom' && typeof customIndexRender === 'function') return customIndexRender(record, idx, pagination)
-          return calcIndex(idx)
-        },
-      }
-    : null
+      ? {
+          title: '序号',
+          key: '__index',
+          width: typeof indexWidth !== 'undefined' ? indexWidth : 80,
+          align: 'center',
+          fixed: indexFixed,
+          render: (_text: any, record: any, idx: number) => {
+            if (indexMode === 'page') return idx + 1
+            if (indexMode === 'custom' && typeof customIndexRender === 'function')
+              return customIndexRender(record, idx, pagination)
+            return calcIndex(idx)
+          },
+        }
+      : null
 
-  const columnsWithActions = indexColumn ? [indexColumn, ...effectiveColumns, opColumn] : [...effectiveColumns, opColumn]
+  const columnsWithActions = indexColumn
+    ? [indexColumn, ...effectiveColumns, opColumn]
+    : [...effectiveColumns, opColumn]
 
   const rowSelectionConfig =
     rowSelection && rowSelection !== null
@@ -479,7 +500,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           onChange: (keys: any, rows: any) => handleSelectionChange(keys, rows),
           getCheckboxProps: (record: any) => ({ disabled: !isRowSelectable(record) }),
         }
-        : undefined
+      : undefined
 
   const onTableChange = async (pg: any, filters: any, sorter: any, extra: any) => {
     const { current = 1, pageSize = pagination.pageSize } = pg || {}
@@ -549,7 +570,13 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                           const t = f.type || 'input'
                           switch (t) {
                             case 'select':
-                              return <Select style={{ minWidth: f.width || 160 }} placeholder={f.placeholder} options={f.options} />
+                              return (
+                                <Select
+                                  style={{ minWidth: f.width || 160 }}
+                                  placeholder={f.placeholder}
+                                  options={f.options}
+                                />
+                              )
                             case 'date':
                               return <DatePicker {...(f.props || {})} />
                             case 'dateRange':
@@ -592,7 +619,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                             <Button type="primary" onClick={handleSearch}>
                               {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
                             </Button>
-                            <Button onClick={handleReset}>{(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}</Button>
+                            <Button onClick={handleReset}>
+                              {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                            </Button>
                           </Space>
                         </Form.Item>
                       </Space>
@@ -611,7 +640,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                               <Button type="primary" onClick={handleSearch}>
                                 {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
                               </Button>
-                              <Button onClick={handleReset}>{(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}</Button>
+                              <Button onClick={handleReset}>
+                                {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                              </Button>
                             </Space>
                           </Form.Item>
                         </Space>
@@ -640,9 +671,13 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                                 </Form>
                               </div>
 
-                              <div style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}>
+                              <div
+                                style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}
+                              >
                                 <Space>
-                                  <Button onClick={handleReset}>{(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}</Button>
+                                  <Button onClick={handleReset}>
+                                    {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                                  </Button>
                                   <Button
                                     type="primary"
                                     onClick={async () => {
@@ -675,7 +710,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                               <Button type="primary" onClick={handleSearch}>
                                 {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
                               </Button>
-                              <Button onClick={handleReset}>{(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}</Button>
+                              <Button onClick={handleReset}>
+                                {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                              </Button>
                             </Space>
                           </Form.Item>
                         </Space>
@@ -685,7 +722,14 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                           <Button type="link" onClick={() => setDrawerVisible(true)}>
                             高级筛选
                           </Button>
-                          <Drawer title={'高级筛选'} placement="right" onClose={() => setDrawerVisible(false)} open={drawerVisible} size={420} styles={{ body: { padding: 0 } }}>
+                          <Drawer
+                            title={'高级筛选'}
+                            placement="right"
+                            onClose={() => setDrawerVisible(false)}
+                            open={drawerVisible}
+                            size={420}
+                            styles={{ body: { padding: 0 } }}
+                          >
                             <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
                               <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
                                 <Form form={form} layout="vertical">
@@ -697,9 +741,13 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                                 </Form>
                               </div>
 
-                              <div style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}>
+                              <div
+                                style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}
+                              >
                                 <Space>
-                                  <Button onClick={handleReset}>{(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}</Button>
+                                  <Button onClick={handleReset}>
+                                    {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                                  </Button>
                                   <Button
                                     type="primary"
                                     onClick={() => {
@@ -720,7 +768,12 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                 }
 
                 return (
-                  <Form form={form} {...(queryConfig.formProps || {})} layout={queryConfig.layout || 'inline'} style={{ display: 'flex', alignItems: 'center' }}>
+                  <Form
+                    form={form}
+                    {...(queryConfig.formProps || {})}
+                    layout={queryConfig.layout || 'inline'}
+                    style={{ display: 'flex', alignItems: 'center' }}
+                  >
                     <Space wrap>
                       {baseFields.map((f: any) => renderField(f))}
                       {showAdvanced && advFields.map((f: any) => renderField(f))}
@@ -734,7 +787,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                           <Button type="primary" onClick={handleSearch}>
                             {(queryConfig.buttons && queryConfig.buttons.searchText) || '查询'}
                           </Button>
-                          <Button onClick={handleReset}>{(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}</Button>
+                          <Button onClick={handleReset}>
+                            {(queryConfig.buttons && queryConfig.buttons.resetText) || '重置'}
+                          </Button>
                         </Space>
                       </Form.Item>
                     </Space>

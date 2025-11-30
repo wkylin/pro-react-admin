@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <MemoryRouter initialEntries={["/"]}>
+      <MemoryRouter initialEntries={['/']}>
         <Story />
       </MemoryRouter>
     ),
