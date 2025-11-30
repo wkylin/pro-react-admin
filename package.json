@@ -83,7 +83,8 @@
     "clean:modules": "rimraf  node_modules",
     "js-analyzer": "js-analyzer --root ./",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build -o storybook-static",
+    "postbuild-storybook": "node ./scripts/add-storybook-base.js"
   },
   "author": "wkylin",
   "contributors": [
