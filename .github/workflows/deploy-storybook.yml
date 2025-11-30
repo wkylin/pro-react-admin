@@ -23,7 +23,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Lighthouse@13 requires Node >=22.19 — use Node 22.x to match
+          node-version: '22'
 
       - name: Install dependencies
         run: npm ci
