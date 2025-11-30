@@ -12,7 +12,8 @@ const indexPath = path.join(outDir, 'index.html');
 
 const baseHref = process.env.STORYBOOK_BASE_HREF;
 
-if (!baseHref) {
+// Only accept a web-style base (starting with / or http), to avoid inserting local filesystem paths
+if (!baseHref || !(baseHref.startsWith('/') || baseHref.startsWith('http')) ) {
   console.log('No STORYBOOK_BASE_HREF provided, skipping base href insertion.');
   process.exit(0);
 }
