@@ -1,4 +1,63 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
+
+// --- Type helpers ---
+export type RequestParamMap = {
+  pageField: string
+  pageSizeField: string
+  sortField: string
+  orderField: string
+}
+
+export type ResponseFieldMap = {
+  listField: string
+  totalField: string
+}
+
+export type UseTableOptions<T = any> = {
+  dataSource?: T[]
+  initialPagination?: { current: number; pageSize: number }
+  minBodyHeight?: number
+  minWidth?: number
+  pageSyncToUrl?: boolean
+  onPaginationChange?: (pagination: { current: number; pageSize: number }) => void
+  reloadPage?: ((page: number, pageSize: number) => Promise<any>) | null
+  fetchData?: ((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise<any>) | null
+  fetchUrl?: string | null
+  requestLib?: any
+  requestMethod?: string
+  mergeSearchToFetch?: boolean
+  mergeSearchToFetchOnce?: boolean
+  clearUrlAfterInitialMerge?: boolean
+  initialSearch?: Record<string, any>
+  requestParamMap?: RequestParamMap
+  responseFieldMap?: ResponseFieldMap
+  autoLoad?: boolean
+  serverSort?: boolean
+  defaultSort?: any
+  selectionMode?: 'multiple' | 'single' | 'none'
+  rowSelectable?: ((record: T) => boolean) | string | null
+}
+
+export type UseTableReturn<T = any> = {
+  containerRef: ReturnType<typeof useRef>
+  pagination: { current: number; pageSize: number }
+  setPagination: (p: { current: number; pageSize: number } | ((prev: { current: number; pageSize: number }) => { current: number; pageSize: number })) => void
+  tableScroll: { x: number; y: number }
+  pagedData: T[]
+  handleDelete: (deleteFn: (record?: T) => Promise<any>, record?: T) => Promise<void>
+  selectedRowKeys: Array<React.Key>
+  setSelectedRowKeys: (keys: Array<React.Key>) => void
+  handleSelectionChange: (keys: Array<React.Key>, rows: T[]) => { keys: Array<React.Key>; rows: T[] }
+  selectionMode: 'multiple' | 'single' | 'none'
+  isRowSelectable: (record: T) => boolean
+  calcIndex: (localIndex: number) => number
+  internalData?: T[]
+  total?: number
+  fetchPage: (page?: number, pageSize?: number, sort?: any, extraParams?: any) => Promise<any>
+  sortState?: any
+  setSortState?: (s: any) => void
+  hasMergedInitialSearch?: () => boolean
+}
 import request from '@/service/request'
 
 // useTable: 提供分页管理、响应式 scroll 计算，以及删除后回退上一页的辅助方法
@@ -6,53 +65,39 @@ import request from '@/service/request'
 // 重要变更：fetchPage 支持第四个参数 `extraParams`，用于传递来自查询表单的过滤条件。
 // fetchPage(page, pageSize, sort, extraParams) 会把 extraParams 合并到通过 `fetchUrl` 发出的请求参数中；
 // 如果使用自定义 `fetchData`/`reloadPage`，则会以第四个参数的形式传入（向后兼容旧签名）。
-export default function useTable({
-  dataSource = [],
-  initialPagination = { current: 1, pageSize: 10 },
-  minBodyHeight = 120,
-  minWidth = 600,
-  pageSyncToUrl = false,
-  onPaginationChange = () => {},
-  // 可选：用于在删除/操作后重新加载指定页的数据，函数签名 (page, pageSize) => Promise
-  reloadPage = null,
-  // 可选：从后端拉取数据的函数 (page, pageSize, sort) => Promise
-  fetchData = null,
-  // 可选：直接提供 fetch URL（当未提供 fetchData 时使用内部 request）
-  fetchUrl = null,
-  // 自定义请求库（需要包含 get/post 等），默认使用项目 request
-  requestLib = request,
-  // 请求方法: 'get' | 'post' | custom method name supported by requestLib
-  requestMethod = 'get',
-  // 是否把外部传入的 initialSearch 合并到内部 fetch 调用中
-  mergeSearchToFetch = false,
-  // 如果为 true，只在首次 fetch 时合并 initialSearch，之后不再合并
-  mergeSearchToFetchOnce = false,
-  // 如果为 true，则在首次合并 initialSearch 到请求后，从地址栏移除这些已合并的查询键（replaceState）
-  // 默认启用，避免地址栏与后续交互产生误导
-  clearUrlAfterInitialMerge = true,
-  // initialSearch: 可选的对象，代表初始 location.search 解析结果（会在 autoLoad / pagination / reset 等场景合并）
-  initialSearch = {},
-  // 请求参数映射：{ currentField, pageField, pageSizeField, sortField, orderField }
-  // 支持后端使用不同字段名，如 'current' / 'page' / 'pageNum'
-  requestParamMap = {
-    pageField: 'page',
-    pageSizeField: 'pageSize',
-    sortField: 'sort',
-    orderField: 'order',
-  },
-  // 响应字段映射：{ listField, totalField } 可以是点路径，如 'data.items'
-  responseFieldMap = { listField: 'data', totalField: 'total' },
-  // 是否在组件初始化自动加载（当 fetchData 提供时生效）
-  autoLoad = false,
-  // 服务端排序
-  serverSort = false,
-  // 默认排序状态 { field, order }
-  defaultSort = null,
-  // 选择配置： mode = 'multiple' | 'single', selectable: (record) => boolean
-  selectionMode = 'multiple',
-  rowSelectable = null,
-} = {}) {
-  const containerRef = useRef(null)
+export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTableReturn<T> {
+  const {
+    dataSource = [],
+    initialPagination = { current: 1, pageSize: 10 },
+    minBodyHeight = 120,
+    minWidth = 600,
+    pageSyncToUrl = false,
+    onPaginationChange = () => {},
+    reloadPage = null,
+    fetchData = null,
+    fetchUrl = null,
+    requestLib = request,
+    requestMethod = 'get',
+    mergeSearchToFetch = false,
+    mergeSearchToFetchOnce = false,
+    clearUrlAfterInitialMerge = true,
+    initialSearch = {},
+    requestParamMap = {
+      pageField: 'page',
+      pageSizeField: 'pageSize',
+      sortField: 'sort',
+      orderField: 'order',
+    },
+    responseFieldMap = { listField: 'data', totalField: 'total' },
+    autoLoad = false,
+    serverSort = false,
+    defaultSort = null,
+    selectionMode = 'multiple',
+    rowSelectable = null,
+  } = opts
+  // ensure serverSort is referenced (used by consumer components); keep a no-op to avoid TS unused error
+  void serverSort
+  const containerRef = useRef<HTMLDivElement | null>(null)
   const [pagination, setPagination] = useState(initialPagination)
   // ensure pagination numbers are normalized
   useEffect(() => {
@@ -70,9 +115,11 @@ export default function useTable({
   useEffect(() => {
     if (!pageSyncToUrl) return
     const params = new URLSearchParams(window.location.search)
-    const current = params.get('page') ? parseInt(params.get('page'), 10) : null
-    const pageSize = params.get('pageSize') ? parseInt(params.get('pageSize'), 10) : null
-    if (current || pageSize) {
+    const pageStr = params.get('page')
+    const current = pageStr ? parseInt(pageStr, 10) : null
+    const pageSizeStr = params.get('pageSize')
+    const pageSize = pageSizeStr ? parseInt(pageSizeStr, 10) : null
+    if (current !== null || pageSize !== null) {
       setPagination((p) => ({
         current: current || p.current,
         pageSize: pageSize || p.pageSize,
@@ -112,7 +159,7 @@ export default function useTable({
   }, [dataSource, internalData, pagination.current, pagination.pageSize, sortState])
 
   // Helper: get nested value by path
-  const getByPath = (obj, path) => {
+  const getByPath = (obj: any, path: string) => {
     if (!obj || !path) return undefined
     const parts = path.split('.')
     let cur = obj
@@ -125,7 +172,7 @@ export default function useTable({
 
   // 响应式计算 scroll
   useEffect(() => {
-    const node = containerRef.current
+    const node = containerRef.current as HTMLDivElement | null
     if (!node) return
 
     const calc = () => {
@@ -142,11 +189,11 @@ export default function useTable({
       const width = Math.max(Math.floor(rect.width || minWidth), minWidth)
 
       // table header inside the antd Table
-      const headerEl = node.querySelector('.ant-table-header') || node.querySelector('.ant-table-thead')
+      const headerEl = (node.querySelector<HTMLElement>('.ant-table-header') || node.querySelector<HTMLElement>('.ant-table-thead'))
       const headerH = headerEl ? headerEl.offsetHeight : 56
 
       // toolbar (top actions / search) - subtract its height if present
-      const toolbarEl = node.querySelector('.responsive-table-toolbar')
+      const toolbarEl = node.querySelector<HTMLElement>('.responsive-table-toolbar')
       const toolbarH = toolbarEl ? toolbarEl.offsetHeight : 0
 
       const footerH = 64 // pagination area
@@ -173,7 +220,7 @@ export default function useTable({
   }, [containerRef, minBodyHeight, minWidth, pagination.pageSize])
 
   // 删除后处理：deleteFn 应返回 Promise；如果当前页删除后无条目且页码>1，则自动回退并触发 reload
-  const handleDelete = async (deleteFn, record) => {
+  const handleDelete = async (deleteFn: (record?: T) => Promise<any>, record?: T) => {
     if (typeof deleteFn !== 'function') throw new Error('deleteFn must be a function')
     // 执行删除
     await Promise.resolve(deleteFn(record))
@@ -205,24 +252,24 @@ export default function useTable({
   }
 
   // 选择相关
-  const [selectedRowKeys, setSelectedRowKeys] = useState([])
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
 
-  const handleSelectionChange = (keys, rows) => {
+  const handleSelectionChange = (keys: Array<React.Key>, rows: T[]) => {
     setSelectedRowKeys(keys || [])
     return { keys, rows }
   }
 
   // 计算序号（基于分页）
-  const calcIndex = (localIndex) => {
+  const calcIndex = (localIndex: number) => {
     const { current, pageSize } = pagination
     return (current - 1) * pageSize + (localIndex || 0) + 1
   }
 
   // 默认 rowSelectable 函数（如果未提供，所有行可选）
-  const isRowSelectable = (record) => {
+  const isRowSelectable = (record: T) => {
     if (typeof rowSelectable === 'function') return !!rowSelectable(record)
     // 如果传入的是字符串字段名，用其为 key 判断 truthy 值表示可选
-    if (typeof rowSelectable === 'string') return !!record[rowSelectable]
+    if (typeof rowSelectable === 'string') return !!(record as any)[rowSelectable]
     return true
   }
 
@@ -242,7 +289,7 @@ export default function useTable({
         res = await fetcher(page, pageSize, sort, extraParams)
       } else if (fetchUrl) {
         // build params according to requestParamMap
-        const params = {}
+        const params: Record<string, any> = {}
         // if mergeSearchToFetch is enabled, merge initialSearch first (so extraParams override)
         if (mergeSearchToFetch && initialSearch && typeof initialSearch === 'object') {
           // if configured to merge only once, ensure we only merge the first time
@@ -297,11 +344,9 @@ export default function useTable({
       if (!res) return Promise.resolve(res)
 
       // Try using responseFieldMap first (listField / totalField)
-      let list = undefined
-      let totalNum = undefined
+      let list: any = undefined
       try {
         list = getByPath(res, responseFieldMap.listField)
-        totalNum = getByPath(res, responseFieldMap.totalField)
       } catch (err) {
         // ignore
       }

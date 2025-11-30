@@ -81,7 +81,9 @@
     "clean:lock": "rimraf  package-lock.json yarn.lock pnpm-lock.yaml",
     "clean:dist": "rimraf  ./dist",
     "clean:modules": "rimraf  node_modules",
-    "js-analyzer": "js-analyzer --root ./"
+    "js-analyzer": "js-analyzer --root ./",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "author": "wkylin",
   "contributors": [
@@ -118,7 +120,6 @@
     "@playwright/test": "^1.56.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.6.1",
     "@svgr/webpack": "^8.1.0",
-
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -238,7 +239,14 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^6.0.1",
-    "webpackbar": "^7.0.0"
+    "webpackbar": "^7.0.0",
+    "storybook": "^10.1.2",
+    "@storybook/react-webpack5": "^10.1.2",
+    "@storybook/addon-webpack5-compiler-swc": "^4.0.2",
+    "@storybook/addon-a11y": "^10.1.2",
+    "@storybook/addon-docs": "^10.1.2",
+    "@storybook/addon-onboarding": "^10.1.2",
+    "eslint-plugin-storybook": "^10.1.2"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.0.1",
