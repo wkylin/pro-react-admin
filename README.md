@@ -14,7 +14,7 @@
 
 # 🚀 Pro React Admin
 
-**Pro React Admin** 是一款基于 **React 19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。
+**Pro React Admin** 是一款基于 **React v19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。
 
 ---
 
@@ -23,7 +23,7 @@
 - **🚀 极致性能体验**：基于 **React 19** 构建，重构 `KeepAlive` 缓存机制（采用 CSS 显隐策略替代 DOM 移动，大幅减少重排），配合 `useTransition` 实现丝滑的 Tab 切换与交互响应。
 - **🧩 丰富组件生态**：沉淀 **300+** 高质量业务组件，覆盖图表、地图、编辑器等场景。集成 **Storybook** 实现组件可视化开发与文档管理，显著提升复用效率。
 - **🛡️ 企业级权限体系**：完善的 **RBAC** 模型，支持路由、菜单、按钮级细粒度权限控制。内置路由自动过滤、`useSafeNavigate` 防越权跳转，保障系统安全。
-- **⚡️ 前沿技术栈**：采用 **TypeScript 5** + **Ant Design 6.x** + **Vite 4/Webpack 5** 双构建模式，紧跟社区最新标准，提供最佳开发体验。
+- **⚡️ 前沿技术栈**：采用 **TypeScript v5** + **Ant Design v6** + **Vite v7/Webpack v5** 双构建模式，紧跟社区最新标准，提供最佳开发体验。
 - **🤖 AI 智能化集成**：内置 ChatGPT 演示（支持 SSE 流式响应）、Markmap 思维导图生成、Mermaid 流程图渲染，探索 AI 在后台管理中的应用场景。
 - **🧪 全链路质量保障**：集成 **Playwright** E2E 自动化测试，配合 Mock Service Worker (MSW) 实现真实的网络模拟与多角色权限切换测试。
 - **📱 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
@@ -48,10 +48,10 @@
 
 ## 📦 技术栈
 
-- ⚛️ **Core**: React 19 / TypeScript 5
-- 🎨 **UI**: Ant Design 6.x
+- ⚛️ **Core**: React v19 / TypeScript v5
+- 🎨 **UI**: Ant Design v6
 - 🛣️ **Router**: React Router v7
-- ⚡ **Build**: Vite 4.x / Webpack 5
+- ⚡ **Build**: Vite v7 / Webpack v5
 - 🧪 **Test**: Playwright / Jest / Testing Library
 - 🎭 **Mock**: Mock Server（Faker/MSW）
 - 📏 **Lint**: ESLint / Prettier / Husky / Commitizen
