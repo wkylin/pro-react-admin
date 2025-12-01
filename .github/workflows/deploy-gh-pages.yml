@@ -1,0 +1,147 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build main app
+        run: npm run build:production
+        env:
+          NODE_ENV: production
+          PUBLIC_URL: /pro-react-admin
+
+      - name: Build Storybook
+        run: npm run build-storybook
+        env:
+          NODE_ENV: production
+
+      - name: Organize build output
+        run: |
+          mkdir -p ./dist-combined
+          # 主应用放在根目录
+          cp -r ./dist/* ./dist-combined/
+          # Storybook 放在 /storybook 子目录
+          mkdir -p ./dist-combined/storybook
+          cp -r ./storybook-static/* ./dist-combined/storybook/
+          # 创建根目录的 index.html（如果需要导航页）
+          echo '<!DOCTYPE html>
+          <html lang="zh-CN">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Pro React Admin</title>
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+                margin: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+              }
+              .container {
+                text-align: center;
+                padding: 2rem;
+              }
+              h1 { font-size: 3rem; margin-bottom: 1rem; }
+              p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+              .links {
+                display: flex;
+                gap: 1.5rem;
+                justify-content: center;
+                flex-wrap: wrap;
+              }
+              a {
+                display: inline-block;
+                padding: 1rem 2rem;
+                background: rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 12px;
+                color: white;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 1.1rem;
+                transition: all 0.3s ease;
+              }
+              a:hover {
+                background: rgba(255, 255, 255, 0.3);
+                border-color: rgba(255, 255, 255, 0.5);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+              }
+              .icon { margin-right: 0.5rem; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h1>🚀 Pro React Admin</h1>
+              <p>基于 React 19 的高性能企业级中后台解决方案</p>
+              <div class="links">
+                <a href="./index.html">
+                  <span class="icon">📱</span>
+                  主应用
+                </a>
+                <a href="./storybook/index.html">
+                  <span class="icon">📚</span>
+                  Storybook 组件库
+                </a>
+                <a href="https://github.com/wkylin/pro-react-admin" target="_blank">
+                  <span class="icon">💻</span>
+                  GitHub 仓库
+                </a>
+              </div>
+            </div>
+          </body>
+          </html>' > ./dist-combined/portal.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist-combined'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Output deployment URL
+        run: |
+          echo "🚀 Deployment successful!"
+          echo "📱 Main App: https://wkylin.github.io/pro-react-admin/"
+          echo "📚 Storybook: https://wkylin.github.io/pro-react-admin/storybook/"
