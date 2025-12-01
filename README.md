@@ -18,6 +18,14 @@
 
 ---
 
+## 🌐 在线预览
+
+- **主应用 (Main App)**: [https://wkylin.github.io/pro-react-admin/](https://wkylin.github.io/pro-react-admin/)
+- **组件文档 (Storybook)**: [https://wkylin.github.io/pro-react-admin/storybook/](https://wkylin.github.io/pro-react-admin/storybook/)
+- **导航页 (Portal)**: [https://wkylin.github.io/pro-react-admin/portal.html](https://wkylin.github.io/pro-react-admin/portal.html)
+
+---
+
 ## 🏆 项目亮点
 
 - **🚀 极致性能体验**：基于 **React 19** 构建，重构 `KeepAlive` 缓存机制（采用 CSS 显隐策略替代 DOM 移动，大幅减少重排），配合 `useTransition` 实现丝滑的 Tab 切换与交互响应。
