@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, type RefObject } from 'react'
+import { useCallback, useEffect, useState, useRef, type RefObject } from 'react'
+import { useActivate, useUnactivate } from '@src/components/KeepAlive'
 
 const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
   const video = ref.current
@@ -142,6 +143,22 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
       })
     }
   }, [video])
+
+  const pausedByDeactivate = useRef(false)
+
+  useUnactivate(() => {
+    if (video && !video.paused) {
+      pause()
+      pausedByDeactivate.current = true
+    }
+  })
+
+  useActivate(() => {
+    if (pausedByDeactivate.current) {
+      play()
+      pausedByDeactivate.current = false
+    }
+  })
 
   useEffect(() => {
     return () => {

@@ -12,35 +12,51 @@
   <a href="https://deepwiki.com/wkylin/pro-react-admin"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki" /></a>
 </div>
 
-# 🚦 Pro React Admin
+# 🚀 Pro React Admin
 
-高性能、企业级、现代化的 React 权限管理系统，支持多角色、多端适配、动态权限、Mock 测试、自动化 E2E、主题切换等特性，适合中大型管理后台、SaaS 平台、数据可视化等场景。
+**Pro React Admin** 是一款基于 **React 19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。
 
 ---
 
 ## 🏆 项目亮点
 
-- 动态权限与路由：多角色、菜单/路由/按钮级权限，自动过滤无权路由，体系灵活安全
-- 极致移动端适配：响应式布局，主流移动设备体验一致
-- 主题与国际化：内置主题切换、暗黑模式、i18n 国际化
-- Mock 多角色切换：内置 Mock 权限体系，开发/测试高效
-- 自动化测试：Playwright E2E 场景覆盖，保障权限与流程安全
-- 高可维护性：核心能力解耦，易扩展、易二次开发
-- 现代工程体系：Vite 构建、TypeScript、ESLint/Prettier、CI/CD、Sentry、SonarQube、代码分割、性能优化
+- **🚀 极致性能体验**：基于 **React 19** 构建，重构 `KeepAlive` 缓存机制（采用 CSS 显隐策略替代 DOM 移动，大幅减少重排），配合 `useTransition` 实现丝滑的 Tab 切换与交互响应。
+- **🧩 丰富组件生态**：沉淀 **300+** 高质量业务组件，覆盖图表、地图、编辑器等场景。集成 **Storybook** 实现组件可视化开发与文档管理，显著提升复用效率。
+- **🛡️ 企业级权限体系**：完善的 **RBAC** 模型，支持路由、菜单、按钮级细粒度权限控制。内置路由自动过滤、`useSafeNavigate` 防越权跳转，保障系统安全。
+- **⚡️ 前沿技术栈**：采用 **TypeScript 5** + **Ant Design 6.x** + **Vite 4/Webpack 5** 双构建模式，紧跟社区最新标准，提供最佳开发体验。
+- **🤖 AI 智能化集成**：内置 ChatGPT 演示（支持 SSE 流式响应）、Markmap 思维导图生成、Mermaid 流程图渲染，探索 AI 在后台管理中的应用场景。
+- **🧪 全链路质量保障**：集成 **Playwright** E2E 自动化测试，配合 Mock Service Worker (MSW) 实现真实的网络模拟与多角色权限切换测试。
+- **📱 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
+
+---
+
+
+## 🔑 核心功能
+
+- 🔐 **动态权限引擎**：登录后根据角色（Admin/Manager/Business/User）自动生成路由表，非权限路由自动拦截（403/404）。
+- 📑 **高性能多标签页**：支持 `ProTabs` 多页签切换，状态持久化保持，支持右键菜单（关闭其他/关闭所有/刷新）。
+- 📚 **组件文档库**：集成 Storybook，提供 300+ 组件的交互式文档与预览，支持 Props 动态调试与独立测试。
+- 📡 **健壮请求层**：封装统一请求库，支持并发控制、自动重试、取消重复请求、全局错误处理与消息去重。
+- 👤 **登录/注册流程**：完整的登录鉴权流程，支持一键测试账号切换，实时同步权限状态。
+- 📊 **数据可视化**：集成 ECharts、D3.js、Recharts 等多种图表库，支持大数据量展示。
+- 📝 **富文本与文档**：支持 Markdown 实时渲染与编辑、代码高亮、数学公式解析。
+- 🎬 **多媒体支持**：内置音频/视频播放器，支持 Tab 切换自动暂停/恢复播放，优化资源占用。
+- 🌍 **主题与国际化**：内置明亮/暗黑模式一键切换，支持多语言（i18n）动态切换。
+- 🎭 **Mock 数据模拟**：基于 Faker.js 和 MSW 的纯前端 Mock 方案，脱离后端独立开发。
 
 ---
 
 ## 📦 技术栈
 
-- React 19 / TypeScript 5
-- Ant Design 6.x
-- React Router v7
-- Vite 4.x / Webpack 5
-- Playwright / Jest / Testing Library
-- Mock Server（Faker/MSW）
-- ESLint / Prettier / Husky / Commitizen
-- Sentry / SonarQube / DeepScan
-- Docker / Nginx / Github Actions
+- ⚛️ **Core**: React 19 / TypeScript 5
+- 🎨 **UI**: Ant Design 6.x
+- 🛣️ **Router**: React Router v7
+- ⚡ **Build**: Vite 4.x / Webpack 5
+- 🧪 **Test**: Playwright / Jest / Testing Library
+- 🎭 **Mock**: Mock Server（Faker/MSW）
+- 📏 **Lint**: ESLint / Prettier / Husky / Commitizen
+- 🔍 **Quality**: Sentry / SonarQube / DeepScan
+- 🐳 **Deploy**: Docker / Nginx / Github Actions
 
 ---
 
@@ -89,30 +105,20 @@ npm run dev
 
 ---
 
-## 🔑 核心功能
-
-- 动态权限菜单与路由自动过滤
-- 登录/注册流程优化，支持一键测试账号与权限同步
-- Mock 权限体系与多角色切换
-- 移动端适配与响应式布局
-- 主题切换与国际化
-- Playwright E2E 自动化测试
-- 统一请求层（支持并发/串行/重试/取消/全局错误处理）
-- 消息去重与全局提示
-- 代码分割与性能优化
-
----
-
 ## 📝 近期主要更新
 
-- 权限体系重构，支持缓存、过期、强制刷新、单例获取，避免重复请求和竞态
-- 路由与菜单权限自动过滤，首页对所有账号可见
-- useSafeNavigate/SafeLink 封装，防止越权跳转
-- 请求层重构，支持并发/串行/重试/取消/全局错误处理
-- 消息去重，避免重复弹窗
-- Mock 多角色切换与权限同步
-- Playwright E2E 场景覆盖
-- 文档与示例完善
+- ⚡ **性能优化**：重构 `KeepAlive` 实现，支持 React 19 `<Activity>` (Offscreen) 原生冻结，降级模式采用 CSS 显隐替代 DOM 移动，大幅减少重排
+- 🎨 **体验优化**：`ProTabs` 切换引入 `useTransition`，交互响应更流畅；`global-loader` 移除逻辑优化，消除首屏白屏与卡顿
+- 🎬 **媒体控制**：音视频组件（MusicPlayer/Video）支持 Tab 切换自动暂停/恢复播放
+- 🛠️ **开发体验**：`KeepAlive` 支持 HMR 热更新，开发调试状态不丢失
+- 🛡️ **权限体系**：重构支持缓存、过期、强制刷新、单例获取，避免重复请求和竞态
+- 🛣️ **路由过滤**：路由与菜单权限自动过滤，首页对所有账号可见
+- 🔒 **安全跳转**：`useSafeNavigate`/`SafeLink` 封装，防止越权跳转
+- 📡 **请求重构**：支持并发/串行/重试/取消/全局错误处理
+- 🔔 **消息去重**：全局消息去重，避免重复弹窗干扰
+- 🎭 **Mock 增强**：多角色切换与权限同步
+- 🧪 **E2E 测试**：Playwright 核心场景覆盖
+- 📚 **文档完善**：文档与示例持续更新
 
 ---
 
@@ -146,7 +152,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📝 脚手架--白泽 baize
+## 🛠️ 脚手架--白泽 baize
 
 - 可以使用为此项目准备的脚手架开发--白泽 baize
 
@@ -157,7 +163,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-##  📝自动化持续代码审查工具
+##  🔍 自动化持续代码审查工具
 
 1. [DeepSource/](https://deepsource.io/)
 2. [DeepScan](https://deepscan.io/)
@@ -165,7 +171,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📝 Mac 本地部署 SonarQube
+## 🐳 Mac 本地部署 SonarQube
 
 1. [SonarQube for Mac](https://juejin.cn/post/7210005376652886077)
 2. [Gitlab for Mac](https://juejin.cn/post/7210746685802397755)
@@ -173,7 +179,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📝 Nginx
+## 🌏 Nginx 配置指南
 
 1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
 
@@ -268,7 +274,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📝 Tree Node Cli
+## 🌳 Tree Node Cli
 
   1. npm install -g tree-node-cli
   2. Mac: tree -L 2 -I "node_modules" -r -F
@@ -276,7 +282,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📝 Webpack Analyse
+## 📦 Webpack Analyse
 
 1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
 
@@ -296,7 +302,7 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 ---
 
 
-## 📝 GitHub Proxy
+## 🚀 GitHub Proxy
 
 1. 首先确认自己 git 拉取代码的方式
 

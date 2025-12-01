@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, Suspense } from 'react'
+import React, { useState, useEffect, useRef, Suspense, useTransition } from 'react'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
@@ -15,6 +15,7 @@ import KeepAlive from '@src/components/KeepAlive'
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
   const [isReload, setIsReload] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const pathRef = useRef('')
 
   const { redirectTo } = useSafeNavigate()
@@ -73,14 +74,18 @@ const ProTabs = (props) => {
   }, [pathname, tabActiveKey])
 
   const onChange = (key) => {
-    setActiveKey(key)
+    startTransition(() => {
+      setActiveKey(key)
+    })
   }
 
   // tab点击
   const onTabClick = (targetKey) => {
     const pane = panes.filter((item) => item.key === targetKey)[0]
     const path = (pane && (pane.path || pane.key)) || targetKey
-    redirectTo(path)
+    startTransition(() => {
+      redirectTo(path)
+    })
   }
 
   const onTabScroll = ({ direction }) => {

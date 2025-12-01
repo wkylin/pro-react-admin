@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useRef } from 'react'
+import { useActivate, useUnactivate } from '@src/components/KeepAlive'
 
 import Controls from './Controls'
 import Player from './Player'
@@ -37,6 +38,23 @@ const MusicPlayer = () => {
     handleEnded,
     handleSongClick,
   } = useMusicPlayer(songData)
+
+  // 自动处理 Tab 切换时的播放状态
+  const pausedByDeactivate = useRef(false)
+
+  useUnactivate(() => {
+    if (isPlaying) {
+      handlePlayPause()
+      pausedByDeactivate.current = true
+    }
+  })
+
+  useActivate(() => {
+    if (pausedByDeactivate.current) {
+      handlePlayPause()
+      pausedByDeactivate.current = false
+    }
+  })
 
   // 根据主题调整背景色和文本色
   const isDark = themeSettings.themeMode === 'dark'

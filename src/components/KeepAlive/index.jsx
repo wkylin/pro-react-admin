@@ -196,7 +196,19 @@ const createKeepAliveManager = () => {
   }
 }
 
-export const keepAliveManager = createKeepAliveManager()
+// 优化：支持 HMR (热更新)
+// 在开发环境下，将 manager 挂载到 window 上，防止模块重载导致 manager 状态丢失
+let manager
+if (typeof window !== 'undefined') {
+  if (!window.__keepAliveManager) {
+    window.__keepAliveManager = createKeepAliveManager()
+  }
+  manager = window.__keepAliveManager
+} else {
+  manager = createKeepAliveManager()
+}
+
+export const keepAliveManager = manager
 
 const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cacheLimit }) => {
   const placeholderRef = useRef(null)
@@ -215,7 +227,11 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
   // Register to manager (pass persistOnUnmount so manager knows whether to keep rendered)
   useEffect(() => {
     if (id) {
-      keepAliveManager.register(id, { setShouldRender, persistOnUnmount })
+      // 优化：如果使用 ActivityComponent，我们强制认为它是持久化的，
+      // 防止 Manager 在超时后销毁组件，从而避免状态丢失（如视频重播）。
+      // Activity 模式下，隐藏的开销很小，适合保留状态。
+      const effectivePersist = ActivityComponent ? true : persistOnUnmount
+      keepAliveManager.register(id, { setShouldRender, persistOnUnmount: effectivePersist })
     }
     return () => {
       if (id) {
@@ -238,12 +254,26 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
 
   // Initialize container once
   if (!containerRef.current && typeof document !== 'undefined') {
-    const div = document.createElement('div')
-    div.dataset.keepaliveId = id || ''
-    // Ensure the container takes full space
-    div.style.height = '100%'
-    div.style.width = '100%'
-    containerRef.current = div
+    // 优化：支持 HMR (热更新)
+    // 在开发环境下，尝试复用已存在的 DOM 节点，防止 HMR 导致 DOM 丢失或重复创建
+    let existing = null
+    if (process.env.NODE_ENV === 'development' && id) {
+      const hidden = document.getElementById('__keepalive_hidden_root')
+      if (hidden) {
+        existing = hidden.querySelector(`[data-keepalive-id="${id}"]`)
+      }
+    }
+
+    if (existing) {
+      containerRef.current = existing
+    } else {
+      const div = document.createElement('div')
+      div.dataset.keepaliveId = id || ''
+      // Ensure the container takes full space
+      div.style.height = '100%'
+      div.style.width = '100%'
+      containerRef.current = div
+    }
   }
 
   // Scroll restoration logic
@@ -270,22 +300,23 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
   // Mount/Unmount logic
   useEffect(() => {
     const container = containerRef.current
-    const hidden = ensureHiddenContainer()
+    // const hidden = ensureHiddenContainer() // 移除这里原本的 ensureHiddenContainer 逻辑，不要在挂载时立即移动
 
-    // Initial placement in hidden container if not attached
-    if (hidden && !container.parentNode) {
-      hidden.appendChild(container)
+    // 初始化样式
+    if (container) {
+      container.style.display = active ? 'block' : 'none'
     }
 
     return () => {
       // Cleanup on unmount
       if (!persistOnUnmount) {
-        if (container.parentNode) {
+        if (container && container.parentNode) {
           container.parentNode.removeChild(container)
         }
       } else {
-        // If persisting, move back to hidden container
-        if (hidden && container.parentNode !== hidden) {
+        // 只有在组件真正卸载且需要持久化时，才移动到隐藏容器
+        const hidden = ensureHiddenContainer()
+        if (container && hidden) {
           hidden.appendChild(container)
         }
       }
@@ -297,19 +328,19 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
   useLayoutEffect(() => {
     const container = containerRef.current
     const placeholder = placeholderRef.current
-    const hidden = ensureHiddenContainer()
 
-    if (!container || !placeholder || !hidden) return
+    if (!container || !placeholder) return
 
-    if (active && shouldRender) {
-      // Restore scroll positions before showing (if possible, or right after)
-      // Note: DOM move resets scroll, so we must restore AFTER move
+    // 如果 container 还在隐藏容器里（比如从缓存恢复），把它移到当前占位符下
+    if (container.parentNode !== placeholder) {
+      placeholder.appendChild(container)
+    }
 
-      // Move to placeholder
-      if (container.parentNode !== placeholder) {
-        placeholder.appendChild(container)
-
-        // Restore scroll positions
+    // 如果使用 Activity，我们让 Activity 控制可见性，但我们需要确保 container 本身是 block
+    // 并且我们仍然需要手动恢复滚动位置，因为 container 是我们手动管理的 DOM
+    if (ActivityComponent) {
+      container.style.display = 'block'
+      if (active && shouldRender) {
         scrollPos.current.forEach((pos, node) => {
           if (node.isConnected) {
             node.scrollLeft = pos.left
@@ -317,63 +348,59 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
           }
         })
       }
+      return
+    }
+
+    if (active && shouldRender) {
+      // 使用 CSS 切换可见性，性能远高于 appendChild
+      container.style.display = 'block'
+
+      // Restore scroll positions
+      scrollPos.current.forEach((pos, node) => {
+        if (node.isConnected) {
+          node.scrollLeft = pos.left
+          node.scrollTop = pos.top
+        }
+      })
     } else {
-      // Move to hidden
-      if (container.parentNode !== hidden) {
-        hidden.appendChild(container)
-      }
+      // 失活时：仅隐藏，不移动 DOM
+      container.style.display = 'none'
     }
   }, [active, shouldRender])
 
   // If Activity API is available, leverage it to control activation lifecycle
   if (ActivityComponent) {
+    // Sync manager state
+    useEffect(() => {
+      if (active && id) {
+        keepAliveManager.activate(id)
+      } else if (!active && id) {
+        keepAliveManager.deactivate(id)
+      }
+    }, [active, id])
+
+    // 增加一个状态来控制 Activity 的 mode，以便延迟隐藏
+    // 这确保了子组件的 useUnactivate (依赖 active 变化) 有机会在组件被冻结前执行
+    const [isActivityVisible, setIsActivityVisible] = useState(active)
+
+    useEffect(() => {
+      if (active) {
+        setIsActivityVisible(true)
+      } else {
+        // 延迟设置为 hidden，给子组件的 useUnactivate 留出执行时间
+        // 16ms 大约是一帧的时间，足够 React 处理副作用
+        const timer = setTimeout(() => {
+          setIsActivityVisible(false)
+        }, 16)
+        return () => clearTimeout(timer)
+      }
+    }, [active])
+
     if (!shouldRender) return null
 
-    const handleActive = () => {
-      // when Activity marks active, ensure manager activates and mount into placeholder
-      if (id) keepAliveManager.activate(id)
-      setShouldRender(true)
-      setActiveState(true)
-      // move container into placeholder and restore scroll
-      try {
-        const container = containerRef.current
-        const placeholder = placeholderRef.current
-        if (container && placeholder && container.parentNode !== placeholder) {
-          placeholder.appendChild(container)
-          // restore scroll positions
-          scrollPos.current.forEach((pos, node) => {
-            if (node.isConnected) {
-              node.scrollLeft = pos.left
-              node.scrollTop = pos.top
-            }
-          })
-        }
-      } catch (e) {
-        // ignore
-      }
-    }
-
-    const handleInactive = () => {
-      // when Activity marks inactive, move to hidden container and optionally stop rendering
-      try {
-        const container = containerRef.current
-        const hidden = ensureHiddenContainer()
-        if (container && hidden && container.parentNode !== hidden) {
-          hidden.appendChild(container)
-        }
-      } catch (e) {
-        // ignore
-      }
-      if (!persistOnUnmount) {
-        setShouldRender(false)
-      }
-      setActiveState(false)
-      if (id && keepAliveManager.deactivate) keepAliveManager.deactivate(id)
-    }
-
     return (
-      <KeepAliveContext.Provider value={activeState}>
-        <ActivityComponent onActive={handleActive} onInactive={handleInactive}>
+      <KeepAliveContext.Provider value={active}>
+        <ActivityComponent mode={isActivityVisible ? 'visible' : 'hidden'}>
           <div ref={placeholderRef} style={{ width: '100%', height: '100%' }} />
           {containerRef.current && createPortal(children, containerRef.current)}
         </ActivityComponent>
