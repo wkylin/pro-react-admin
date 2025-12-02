@@ -1,31 +1,86 @@
 .radioContainer {
-  display: block;
-  position: relative;
-  padding-left: 20px;
+  display: inline-flex;
+  align-items: center;
   cursor: pointer;
   user-select: none;
   font-size: 14px;
-  color: #333;
-}
+  color: var(--radio-text-color);
+  margin-right: 8px;
+  padding: 4px 0;
+  max-width: 100%;
+  vertical-align: middle;
 
-.radioContainer .checkmark {
-  position: absolute;
-  top: 3px;
-  left: 0;
-  height: 13px;
-  width: 13px;
-  background-color: #efefef;
-  border-radius: 50%;
-  border: 3px solid #dfe4ed;
-}
+  .indicator {
+    position: relative;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    border: 1px solid var(--radio-border-color);
+    background-color: var(--radio-bg-color);
+    transition: all 0.3s;
+    flex-shrink: 0;
+    box-sizing: border-box;
 
-.radioContainer .checked {
-  position: absolute;
-  top: 3px;
-  left: 0;
-  height: 13px;
-  width: 13px;
-  background-color: #999;
-  border-radius: 50%;
-  border: 3px solid #efefef;
+    &.radio {
+      border-radius: 50%;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background-color: var(--radio-primary-color);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+      }
+
+      &.checked {
+        border-color: var(--radio-primary-color);
+
+        &::after {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+    }
+
+    &.checkbox {
+      border-radius: 4px;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        width: 5px;
+        height: 9px;
+        border: 2px solid #fff;
+        border-top: 0;
+        border-left: 0;
+        transform: translate(-50%, -50%) rotate(45deg) scale(0);
+        transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46);
+      }
+
+      &.checked {
+        background-color: var(--radio-primary-color);
+        border-color: var(--radio-primary-color);
+
+        &::after {
+          transform: translate(-50%, -50%) rotate(45deg) scale(1);
+        }
+      }
+    }
+  }
+
+  .label {
+    line-height: 1.5;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }

@@ -1,35 +1,43 @@
 import React from 'react'
-import { Row, Col } from 'antd'
+import { Row, Col, theme } from 'antd'
 import RadioInput from '@stateless/RadioInput'
 import styles from './index.module.less'
 
 const DescBox = () => {
+  const { token } = theme.useToken()
+
+  const containerStyle = {
+    '--desc-label-color': token.colorTextSecondary,
+    '--desc-content-color': token.colorText,
+    '--desc-bg-color': token.colorBgContainer,
+  }
+
   return (
-    <div className={styles.descWrapper}>
+    <div className={styles.descWrapper} style={containerStyle}>
       <Row gutter={20}>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <div className={styles.descBox}>
             <div className={styles.descLabel}>客户名称:</div>
-            <div className={styles.descContentl}>客户名称客户名称客户名称客户名称客户名称</div>
+            <div className={styles.descContent}>客户名称客户名称客户名称客户名称客户名称</div>
           </div>
           <div className={styles.descBox}>
             <div className={styles.descLabel}>法人姓名:</div>
-            <div className={styles.descContentl}>王甜甜</div>
+            <div className={styles.descContent}>王甜甜</div>
           </div>
           <div className={styles.descBox}>
             <div className={styles.descLabel}>办公地址:</div>
-            <div className={styles.descContentl}>xx街道xx办事处</div>
+            <div className={styles.descContent}>xx街道xx办事处</div>
           </div>
           <div className={styles.descBox}>
             <div className={styles.descLabel}>注册地址:</div>
-            <div className={styles.descContentl}>广东省深圳南山区</div>
+            <div className={styles.descContent}>广东省深圳南山区</div>
           </div>
           <div className={styles.descBox}>
             <div className={styles.descLabel}>行业分类:</div>
-            <div className={styles.descContentl}>产权交易</div>
+            <div className={styles.descContent}>产权交易</div>
           </div>
         </Col>
-        <Col span={12}>
+        <Col xs={24} md={12}>
           <div className={styles.descBox}>
             <div className={styles.descLabel}>客户性质:</div>
             <div className={styles.descContent}>
@@ -81,13 +89,13 @@ const DescBox = () => {
             <div className={styles.descContent}>
               <div className={`${styles.descItem} ${styles.descItemNormal} ${styles.lastItem}`}>
                 <div className={styles.descItemBox}>
-                  <RadioInput text="大型企业" checked="true" />
+                  <RadioInput text="大型企业" checked="true" type="checkbox" />
                 </div>
                 <div className={styles.descItemBox}>
-                  <RadioInput text="中型企业" />
+                  <RadioInput text="中型企业" checked="true" type="checkbox" />
                 </div>
                 <div className={styles.descItemBox}>
-                  <RadioInput text="微型企业" />
+                  <RadioInput text="微型企业" checked="true" type="checkbox" />
                 </div>
               </div>
             </div>

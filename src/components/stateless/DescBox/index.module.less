@@ -1,5 +1,7 @@
 .descWrapper {
   padding: 10px;
+  overflow-x: auto;
+  background-color: var(--desc-bg-color);
 
   .descBox {
     display: flex;
@@ -9,15 +11,20 @@
 
     .descLabel {
       flex: 0 0 160px;
-      color: #666;
+      color: var(--desc-label-color);
       text-align: right;
       margin-right: 10px;
+
+      @media (max-width: 768px) {
+        flex: 0 0 100px;
+        margin-right: 5px;
+      }
     }
 
     .descContent {
       flex: 1;
       text-align: left;
-      color: #333;
+      color: var(--desc-content-color);
 
       .descItem {
         margin-bottom: 10px;
