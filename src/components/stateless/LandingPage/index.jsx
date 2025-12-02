@@ -2,7 +2,7 @@ import React from 'react'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import mediaVideo from '@assets/video/wkylin.skyline.mp4'
+import mediaVideo from '@assets/video/trailer.mp4'
 import styles from './index.module.less'
 
 const LandingPage = () => {

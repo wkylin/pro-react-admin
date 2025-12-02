@@ -1,0 +1,55 @@
+# 源代码
+src/
+public/
+tests/
+test-results/
+docs/
+scripts/
+webpack/
+faker/
+
+# 配置文件
+*.config.js
+*.config.ts
+*.config.mjs
+tsconfig.json
+babel.config.js
+biome.json
+cspell.json
+eslint.config.mjs
+playwright.config.ts
+postcss.config.js
+qodana.yaml
+workspace.jsonc
+docker-compose.yml
+Dockerfile
+
+# 开发文件
+.vscode/
+.idea/
+.github/
+*.log
+*.md
+!README.md
+.editorconfig
+.gitignore
+.prettierrc
+.eslintrc
+.eslintignore
+
+# 构建产物（保留 dist-lib）
+dist/
+coverage/
+storybook-static/
+node_modules/
+
+# 其他
+*.cmd
+*.sh
+.husky/
+.env
+.env.*
+*.tsbuildinfo
+stats.json
+compilation-stats.json
+packagehash.txt

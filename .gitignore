@@ -21,3 +21,4 @@ coverage
 
 *storybook.log
 storybook-static
+/dist-lib
