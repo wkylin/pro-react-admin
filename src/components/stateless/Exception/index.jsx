@@ -9,7 +9,7 @@ const Exception = {
   Exception401,
   Exception403,
   Exception404,
-  Exception500,
+  Exception500
 }
 
 export default Exception

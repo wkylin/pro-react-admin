@@ -29,7 +29,7 @@ const icons = [
   { size: 'sm', type: 'outline', icon: null },
   { size: 'md', type: 'fill', icon: <NPMIcon /> },
   { size: 'sm', type: 'outline', icon: null },
-  { size: 'sm', type: 'outline', icon: null },
+  { size: 'sm', type: 'outline', icon: null }
 ]
 
 export default icons
