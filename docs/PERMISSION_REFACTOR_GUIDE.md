@@ -13,6 +13,7 @@
 用于对路由或组件进行细粒度的权限控制。
 
 **Props**:
+
 - `permission`: `PermissionCode | PermissionCode[]` - 需要的权限码
 - `roles`: `string[]` - 需要的角色
 - `requireAll`: `boolean` - 多权限/角色时是否需要全部满足（默认为 `false`，即满足任一即可）
@@ -96,10 +97,10 @@ export const useMenuRoutes = () => {
     const load = async () => {
       // 1. 获取用户可访问的路径列表
       const accessiblePaths = await permissionService.getAccessibleRoutes()
-      
+
       // 2. 找到主布局路由（通常是 '/'）
-      const mainRoute = rootRouter.find(r => r.key === '/')
-      
+      const mainRoute = rootRouter.find((r) => r.key === '/')
+
       // 3. 过滤子路由
       if (mainRoute && mainRoute.children) {
         const filtered = filterRoutesByAccessiblePaths(mainRoute.children, accessiblePaths)
@@ -134,6 +135,7 @@ export const routePermissionMap = {
 `AuthRouter` 会自动检查当前路径是否在用户的 `accessibleRoutes` 中，或者是否满足 `meta.permission`。
 
 **方式 B：显式包裹（更细粒度）**
+
 ```jsx
 {
   path: 'add',
