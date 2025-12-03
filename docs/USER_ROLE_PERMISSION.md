@@ -1,387 +1,165 @@
-# 用户-角色-权限关系文档
+# 用户-角色-权限体系文档
 
-## 一、系统用户
+本文档详细说明了 `pro-react-admin` 项目中的用户、角色与权限管理系统的设计与实现。
 
-当前系统支持以下用户类型（通过不同方式登录）：
+## 一、系统架构概述
 
-### 1. GitHub OAuth 登录用户
+本项目采用基于角色的访问控制 (RBAC) 模型。权限控制贯穿于前端的各个层面：
+1.  **路由级控制**：用户只能访问其角色允许的路由。
+2.  **组件级控制**：根据权限码控制按钮、链接等 UI 元素的显示。
+3.  **接口级控制**：(模拟) 根据用户角色返回不同的数据。
 
-- **登录方式**: 通过 GitHub OAuth 授权
-- **用户信息**: 从 GitHub API 获取
-- **用户标识**: GitHub 邮箱地址
+## 二、用户体系与登录方式
 
-### 2. 表单登录用户
+系统支持两种登录方式，并根据登录信息自动映射角色。
 
-- **登录方式**: 邮箱 + 密码表单登录
-- **用户信息**: 表单输入的邮箱地址
-- **用户标识**: 邮箱地址
+### 1. 测试账号 (表单登录)
 
-## 二、预定义角色
+系统内置了以下测试账号，用于开发和演示不同角色的权限：
 
-系统预定义了 4 种角色：
+| 账号 (Email) | 密码 | 对应角色 | 角色代码 | 权限描述 |
+| :--- | :--- | :--- | :--- | :--- |
+| `admin@test.com` | `123456` | **超级管理员** | `super_admin` | 拥有系统所有权限 (`*:*`) |
+| `manager@test.com` | `123456` | **管理员** | `admin` | 拥有核心业务及大部分管理权限 |
+| `business@test.com` | `123456` | **业务员** | `business_user` | 仅拥有业务相关操作权限 |
+| `user@test.com` | `123456` | **普通用户** | `user` | 仅拥有基础查看权限 |
 
-### 1. 超级管理员 (super_admin)
+### 2. GitHub OAuth 登录
 
-- **角色代码**: `super_admin`
-- **角色ID**: `1`
-- **权限**: `*:*` (所有权限)
+- **登录方式**: 通过 GitHub 授权登录。
+- **角色映射**:
+    - 邮箱为 `wkylin.w@gmail.com` 的用户自动识别为 **超级管理员 (`super_admin`)**。
+    - 其他 GitHub 用户默认为 **普通用户 (`user`)**。
+
+## 三、角色与权限定义
+
+角色定义位于 `src/mock/permission.ts`，主要包含以下四种角色：
+
+### 1. 超级管理员 (`super_admin`)
+- **权限码**: `['*:*']`
 - **可访问路由**: 所有路由
-- **描述**: 拥有系统所有权限
+- **说明**: 系统最高权限，不受任何限制。
 
-### 2. 管理员 (admin)
+### 2. 管理员 (`admin`)
+- **基础权限**: `home:read`, `user:read`, `user:create`, `user:update`, `dashboard:read`
+- **动态权限**: 根据可访问路由自动推导 (如访问 `/tech` 自动获得 `tech:read`)。
+- **可访问路由**: 包含仪表盘、业务管理、技术栈管理、图表等大部分功能页面。
 
-- **角色代码**: `admin`
-- **角色ID**: `2`
-- **权限列表**:
-  - `user:*` - 用户管理所有权限
-  - `role:read` - 角色查看权限
-  - `dashboard:*` - 仪表盘所有权限
-  - `system:*` - 系统管理所有权限
-  - `business:*` - 业务管理所有权限
-  - `chart:*` - 图表所有权限
-  - `ui:*` - UI组件所有权限
-  - `tech:*` - 技术栈管理所有权限
-  - `home:*` - 首页所有权限
-  - `demo:*` - 演示页面所有权限
-- **可访问路由**:
-  - `/`, `/dashboard`, `/business`, `/chart`, `/ui`
-  - `/tech/frontend`, `/tech/frontend/react`, `/tech/frontend/vue`, `/tech/frontend/angular`
-  - `/tech/backend`, `/demo`
-- **描述**: 拥有大部分管理权限
+### 3. 业务员 (`business_user`)
+- **基础权限**: `home:read`, `business:*`, `coupons:*`, `dashboard:read`
+- **动态权限**: 同上。
+- **可访问路由**: 专注于业务模块 (`/business`) 及基础展示页面。
 
-### 3. 业务员 (business_user)
+### 4. 普通用户 (`user`)
+- **基础权限**: `home:read`, `dashboard:read`
+- **可访问路由**: 仅限首页、仪表盘、个人中心等基础页面。
 
-- **角色代码**: `business_user`
-- **角色ID**: `3`
-- **权限列表**:
-  - `business:read`, `business:create`, `business:update` - 业务管理权限
-  - `tech:read` - 技术栈查看权限
-  - `dashboard:read` - 仪表盘查看权限
-  - `home:read` - 首页查看权限
-  - `chart:read` - 图表查看权限
-- **可访问路由**:
-  - `/`, `/dashboard`, `/business`
-  - `/tech/frontend`, `/tech/backend`, `/chart`
-- **描述**: 拥有业务相关操作权限
+## 四、权限控制逻辑
 
-### 4. 普通用户 (user)
+### 1. 权限获取流程 (`src/service/api/permission.ts`)
 
-- **角色代码**: `user`
-- **角色ID**: `4`
-- **权限列表**:
-  - `home:read` - 首页查看权限
-  - `demo:read` - 演示页面查看权限
-  - `dashboard:read` - 仪表盘查看权限
-- **可访问路由**:
-  - `/`, `/dashboard`, `/demo`
-- **描述**: 仅拥有查看权限
+前端通过 `getUserPermissions` 获取权限，逻辑如下：
+1.  **Mock 模式**:
+    - 检查 `localStorage.getItem('user_role')` 是否有手动指定的角色（调试用）。
+    - 检查登录 Token 中的邮箱，匹配 `testAccounts` 中的测试账号。
+    - 检查 GitHub 邮箱 (`wkylin.w@gmail.com`)。
+    - 均不匹配则降级为 `user` 角色。
+2.  **API 模式**: 发送请求 `/api/permissions/current` 获取后端权限数据。
 
-## 三、用户与角色绑定关系
+### 2. 路由权限映射 (`routePermissionMap`)
 
-### 1. 基于邮箱的自动绑定
+系统维护了一个路由路径到权限码的映射表 (`src/mock/permission.ts`)，用于自动推导权限和校验路由访问：
 
-系统根据用户邮箱自动分配角色：
-
-| 用户邮箱             | 绑定角色 | 角色代码 |
-| -------------------- | -------- | -------- |
-| `wkylin.w@gmail.com` | 管理员   | `admin`  |
-| 其他邮箱             | 普通用户 | `user`   |
-
-### 2. 手动角色切换（开发/测试）
-
-可以通过以下方式手动切换角色：
-
-```javascript
-// 在浏览器控制台执行
-localStorage.setItem('user_role', 'admin') // 切换为管理员
-localStorage.setItem('user_role', 'business_user') // 切换为业务员
-localStorage.setItem('user_role', 'super_admin') // 切换为超级管理员
-localStorage.setItem('user_role', 'user') // 切换为普通用户
-```
-
-## 四、用户-角色-权限关系图
-
-```
-┌─────────────────┐
-│   用户 (User)    │
-│  - GitHub用户    │
-│  - 表单登录用户  │
-└────────┬────────┘
-         │
-         │ 拥有
-         ▼
-┌─────────────────┐
-│   角色 (Role)    │
-│  - super_admin   │
-│  - admin         │
-│  - business_user │
-│  - user          │
-└────────┬────────┘
-         │
-         │ 包含
-         ▼
-┌─────────────────┐
-│  权限 (Permission)│
-│  - resource:action│
-│  - resource:*     │
-│  - *:*           │
-└────────┬────────┘
-         │
-         │ 控制
-         ▼
-┌─────────────────┐
-│   路由 (Route)   │
-│  - /home        │
-│  - /dashboard   │
-│  - /business    │
-│  - ...          │
-└─────────────────┘
-```
-
-### 关系说明
-
-1. **用户 → 角色**: 一个用户可以有多个角色（当前实现为单角色）
-2. **角色 → 权限**: 一个角色包含多个权限
-3. **权限 → 路由**: 权限控制路由的访问
-
-## 五、登录表单与权限系统集成
-
-### 1. GitHub OAuth 登录流程
-
-```
-用户点击GitHub登录
-    ↓
-跳转到GitHub授权页面
-    ↓
-GitHub回调 /auth/callback
-    ↓
-AuthCallback 组件处理回调
-    ↓
-获取GitHub用户信息（包含邮箱）
-    ↓
-保存用户信息到 localStorage
-    ↓
-调用 permissionService.syncPermissions()
-    ↓
-根据用户邮箱分配角色（wkylin.w@gmail.com → admin）
-    ↓
-获取用户权限和可访问路由
-    ↓
-跳转到第一个有权限的路由（优先 /home）
-```
-
-### 2. 表单登录流程
-
-```
-用户填写邮箱+密码
-    ↓
-提交登录表单
-    ↓
-onFinish 处理登录
-    ↓
-保存 token 到 localStorage
-    ↓
-跳转到首页 /
-    ↓
-AuthRouter 路由守卫
-    ↓
-检查 token
-    ↓
-调用 permissionService.canAccessRoute()
-    ↓
-根据邮箱分配角色（wkylin.w@gmail.com → admin）
-    ↓
-检查路由权限
-    ↓
-有权限：渲染页面
-无权限：跳转 /403
-```
-
-### 3. 代码实现位置
-
-#### 登录表单 (`src/pages/signin/index.jsx`)
-
-```javascript
-const onFinish = (values) => {
-  // 模拟后端登录
-  const { email } = values
-  setLocalStorage('token', { token: email })
-  redirectTo('/')
+```typescript
+export const routePermissionMap = {
+  '/dashboard': 'dashboard:read',
+  '/business': 'business:read',
+  '/tech': 'tech:read',
+  // ...
+  '*': '*:*' // 通配符
 }
 ```
 
-#### GitHub 回调处理 (`src/components/auth/AuthCallback.tsx`)
+### 3. 路由守卫 (`src/routers/authRouter.jsx`)
 
-```typescript
-await authService.handleCallback(code)
-// 登录成功后立即同步权限
-await permissionService.syncPermissions()
-// 获取用户可访问的路由并跳转
-const routes = await permissionService.getAccessibleRoutes(true)
+`AuthRouter` 组件在页面渲染前拦截路由跳转：
+1.  **Token 检查**: 未登录用户重定向到登录页（白名单除外）。
+2.  **权限检查**:
+    - 调用 `permissionService.canAccessRoute(pathname)`。
+    - 检查用户允许的 `routes` 列表是否包含当前路径。
+    - 如果路由配置了 `meta.permission`，则进一步校验具体权限码。
+
+## 五、开发指南
+
+### 1. 核心文件结构
+
+- `src/mock/permission.ts`: **核心**。定义角色、测试账号、路由映射表、Mock 数据。
+- `src/service/permissionService.ts`: **服务层**。单例模式，负责权限的缓存、获取和校验方法 (`hasPermission`, `canAccessRoute`)。
+- `src/service/api/permission.ts`: **接口层**。处理 API 请求与 Mock 数据的切换。
+- `src/routers/authRouter.jsx`: **路由层**。实现路由守卫逻辑。
+- `src/components/auth/PermissionGuard.tsx`: **组件层**。用于包裹需要权限控制的 UI 组件。
+
+### 2. 如何在代码中使用权限
+
+#### 在组件中控制显示
+使用 `PermissionGuard` 组件或 `usePermission` Hook：
+
+```tsx
+import PermissionGuard from '@/components/auth/PermissionGuard'
+
+// 仅拥有 user:create 权限的用户可见
+<PermissionGuard permission="user:create">
+  <Button>创建用户</Button>
+</PermissionGuard>
 ```
 
-#### 权限获取逻辑 (`src/mock/permission.ts`)
-
-```typescript
-export const mockGetUserPermissions = async (userId?: string, roleCode?: string): Promise<UserPermission> => {
-  // 1. 检查是否有手动设置的角色
-  const storedRoleCode = localStorage.getItem('user_role')
-
-  // 2. 根据用户邮箱自动分配角色
-  const githubUser = localStorage.getItem('github_user')
-  if (githubUser && user.email === 'wkylin.w@gmail.com') {
-    return { ...mockUserPermissions['admin'] }
-  }
-
-  // 3. 默认返回普通用户权限
-  return { ...mockUserPermissions['user'] }
-}
-```
-
-## 六、权限代码格式
-
-### 权限代码规则
-
-格式：`资源:操作` 或 `资源` 或 `*:*`
-
-- **资源** (Resource): `user`, `role`, `dashboard`, `business`, `chart`, `ui`, `coupons`, `product`, `home`, `demo` 等
-- **操作** (Action): `create`, `read`, `update`, `delete`, `export`, `import`, `approve`, `reject`
-- **通配符**:
-  - `resource:*` - 资源的所有操作权限
-  - `*:*` - 所有权限（超级管理员）
-
-### 权限示例
-
-- `user:read` - 读取用户
-- `user:create` - 创建用户
-- `user:update` - 更新用户
-- `user:delete` - 删除用户
-- `user:*` - 用户的所有操作
-- `*:*` - 所有权限
-
-## 七、路由权限映射
-
-路由与权限的映射关系 (`src/mock/permission.ts`):
-
-| 路由路径              | 所需权限          | 说明       |
-| --------------------- | ----------------- | ---------- |
-| `/`                   | `home:read`       | 首页       |
-| `/dashboard`          | `dashboard:read`  | 仪表盘     |
-| `/business`           | `business:read`   | 业务管理   |
-| `/tech/frontend`      | `tech:read`       | 前端技术栈 |
-| `/tech/backend`       | `tech:read`       | 后端技术栈 |
-| `/chart`              | `chart:read`      | 图表       |
-| `/ui`                 | `ui:read`         | UI组件     |
-| `/demo`               | `demo:read`       | 演示页面   |
-
-## 八、使用示例
-
-### 1. 测试不同角色
-
-```javascript
-// 切换为管理员
-localStorage.setItem('user_role', 'admin')
-location.reload()
-
-// 切换为业务员
-localStorage.setItem('user_role', 'business_user')
-location.reload()
-
-// 切换为普通用户
-localStorage.setItem('user_role', 'user')
-location.reload()
-```
-
-### 2. 检查用户权限
+#### 在逻辑中检查权限
+使用 `permissionService`：
 
 ```typescript
 import { permissionService } from '@/service/permissionService'
 
-// 检查单个权限
 const canEdit = await permissionService.hasPermission('user:update')
-
-// 检查多个权限（全部需要）
-const result = await permissionService.hasAllPermissions(['user:read', 'user:update'])
-
-// 检查角色
-const isAdmin = await permissionService.hasRole('admin')
-
-// 检查路由权限
-const canAccess = await permissionService.canAccessRoute('/coupons/add')
-```
-
-### 3. 在组件中使用权限控制
-
-```tsx
-import PermissionGuard from '@/components/auth/PermissionGuard'
-import AuthButton from '@/components/auth/AuthButton'
-
-// 组件级权限控制
-<PermissionGuard permission="user:create">
-  <Button>创建用户</Button>
-</PermissionGuard>
-
-// 按钮级权限控制
-<AuthButton permission="user:delete" onClick={handleDelete}>
-  删除用户
-</AuthButton>
-```
-
-## 九、扩展说明
-
-### 添加新用户
-
-要添加新的用户-角色绑定关系，修改 `src/mock/permission.ts`:
-
-```typescript
-// 在 mockGetUserPermissions 函数中添加
-if (user.email === 'newuser@example.com') {
-  return { ...mockUserPermissions['admin'] } // 或其他角色
+if (canEdit) {
+  // 执行编辑逻辑
 }
 ```
 
-### 添加新角色
+### 3. 调试技巧
 
-1. 在 `src/mock/permission.ts` 的 `mockRoles` 中添加新角色定义
-2. 在 `mockUserPermissions` 中添加对应的权限配置
-3. 更新 `routePermissionMap` 添加路由映射
+在浏览器控制台执行以下代码可快速切换角色（无需重新登录）：
 
-### 添加新权限
+```javascript
+// 切换为超级管理员
+localStorage.setItem('user_role', 'super_admin'); location.reload();
 
-1. 在 `src/types/permission.ts` 的 `Resource` 或 `PermissionAction` 类型中添加
-2. 在角色权限列表中添加新的权限代码
-3. 在路由映射中添加对应的权限要求
+// 切换为管理员
+localStorage.setItem('user_role', 'admin'); location.reload();
 
-## 十、数据流程图
-
-```
-登录成功
-    ↓
-保存用户信息（localStorage）
-    ↓
-调用 permissionService.syncPermissions()
-    ↓
-清除权限缓存
-    ↓
-调用 mockGetUserPermissions()
-    ↓
-检查 localStorage['user_role'] → 手动设置的角色
-    ↓
-检查用户邮箱 → 自动分配角色
-    ↓
-返回用户权限信息（角色+权限+路由）
-    ↓
-保存权限到缓存
-    ↓
-路由守卫检查权限
-    ↓
-允许/拒绝访问
+// 切换为业务员
+localStorage.setItem('user_role', 'business_user'); location.reload();
 ```
 
-## 总结
+## 六、数据流向图
 
-- **用户**: 通过 GitHub OAuth 或表单登录
-- **角色**: 4 种预定义角色（super_admin, admin, business_user, user）
-- **权限**: 资源:操作格式的权限代码
-- **路由**: 根据权限控制访问
-- **绑定**: 基于邮箱自动分配，支持手动切换（测试用）
+```mermaid
+graph TD
+    A[用户登录] --> B{登录方式}
+    B -->|表单| C[匹配测试账号]
+    B -->|GitHub| D[匹配特定邮箱]
+    C --> E[确定角色 (Role)]
+    D --> E
+    E --> F[获取权限配置 (Mock/API)]
+    F --> G[生成 UserPermission 对象]
+    G -->|包含| H[Roles 列表]
+    G -->|包含| I[Permissions 列表]
+    G -->|包含| J[Routes 列表]
+    G --> K[存入 PermissionService & LocalStorage]
+    
+    L[路由跳转] --> M[AuthRouter 拦截]
+    M --> N{检查 Token}
+    N -->|无| O[跳转登录]
+    N -->|有| P{检查 Route 权限}
+    P -->|在 Routes 列表中| Q[放行]
+    P -->|不在列表| R[403 禁止访问]
+```

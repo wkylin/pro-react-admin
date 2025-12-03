@@ -1,3 +1,0 @@
-# CODE_QUALITY_ANALYSIS
-
-<!-- 原内容已移动自根目录 CODE_QUALITY_ANALYSIS.md -->
