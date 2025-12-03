@@ -44,6 +44,7 @@ jobs:
         run: npm run build-storybook
         env:
           NODE_ENV: production
+          STORYBOOK_BASE_HREF: /pro-react-admin/storybook/
 
       - name: Organize build output
         run: |
