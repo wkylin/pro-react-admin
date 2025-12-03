@@ -11,7 +11,7 @@ const TextComponent = ({ number, title, content, isOpen, loadingWidthPercent }) 
           : 'scale-95 border-transparent opacity-60 hover:opacity-100'
       )}
     >
-      <div className="flex w-full items-center gap-4 p-4">
+      <div className='flex w-full items-center gap-4 p-4'>
         <span
           className={clsx(
             'flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-medium transition-colors',
@@ -37,9 +37,9 @@ const TextComponent = ({ number, title, content, isOpen, loadingWidthPercent }) 
           isOpen ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
         )}
       >
-        <p className="px-4 pb-4 text-base text-neutral-600 dark:text-neutral-400">{content}</p>
-        <div className="w-full px-4 pb-4">
-          <div className="relative h-1 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800">
+        <p className='px-4 pb-4 text-base text-neutral-600 dark:text-neutral-400'>{content}</p>
+        <div className='w-full px-4 pb-4'>
+          <div className='relative h-1 w-full overflow-hidden rounded-full bg-neutral-100 dark:bg-neutral-800'>
             <div
               className={clsx(
                 'absolute top-0 left-0 h-full bg-neutral-900 transition-all duration-300 dark:bg-neutral-100'

@@ -15,14 +15,14 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
   const command = commandMap[packageManager]
 
   useEffect(() => {
-    async function loadHighlightedCode() {
+    async function loadHighlightedCode () {
       try {
         const { codeToHtml } = await import('shiki')
         const highlighted = await codeToHtml(command, {
           lang: codeLanguage,
           defaultColor: 'light',
           theme: 'github-dark',
-          wrap: false,
+          wrap: false
         })
         setHighlightedCode(highlighted)
       } catch (error) {
@@ -41,28 +41,28 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
 
   return (
     <div className={clsx('m-2 mx-auto flex w-full max-w-md items-center justify-center', className)}>
-      <div className="w-full space-y-2">
-        <div className="mb-2 flex items-center justify-between">
+      <div className='w-full space-y-2'>
+        <div className='mb-2 flex items-center justify-between'>
           {showMultiplePackageOptions && (
-            <div className="relative">
-              <div className="border-border inline-flex overflow-hidden rounded-md border text-xs">
+            <div className='relative'>
+              <div className='border-border inline-flex overflow-hidden rounded-md border text-xs'>
                 {packageManagers.map((pm, index) => (
-                  <div key={pm} className="flex items-center">
-                    {index > 0 && <div className={`h-4 w-px ${styles['bg-border']}`} aria-hidden="true" />}
+                  <div key={pm} className='flex items-center'>
+                    {index > 0 && <div className={`h-4 w-px ${styles['bg-border']}`} aria-hidden='true' />}
                     <span
-                      className={`bg-background hover:bg-background text-primary relative cursor-pointer rounded-none px-2 py-1`}
+                      className='bg-background hover:bg-background text-primary relative cursor-pointer rounded-none px-2 py-1'
                       onClick={() => setPackageManager(pm)}
                     >
                       {pm}
                       {packageManager === pm && (
                         <motion.div
                           className={`absolute inset-x-0 bottom-[1px] mx-auto h-0.5 w-[90%] ${styles['bg-primary']}`}
-                          layoutId="activeTab"
+                          layoutId='activeTab'
                           initial={false}
                           transition={{
                             type: 'spring',
                             stiffness: 500,
-                            damping: 30,
+                            damping: 30
                           }}
                         />
                       )}
@@ -73,23 +73,25 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
             </div>
           )}
         </div>
-        <div className="relative flex items-center">
-          <div className="min-w-[300px] grow font-mono">
-            {highlightedCode ? (
-              <div
-                className={`${styles.pre} light [&>pre]:overflow-x-auto [&>pre]:rounded-md [&>pre]:p-2 [&>pre]:px-4 [&>pre]:font-mono`}
-                dangerouslySetInnerHTML={{ __html: highlightedCode }}
-              />
-            ) : (
-              <pre
-                className={`${styles.pre} border-border rounded-md border bg-white p-2 px-4 font-mono dark:bg-black`}
-              >
-                {command}
-              </pre>
-            )}
+        <div className='relative flex items-center'>
+          <div className='min-w-[300px] grow font-mono'>
+            {highlightedCode
+              ? (
+                <div
+                  className={`${styles.pre} light [&>pre]:overflow-x-auto [&>pre]:rounded-md [&>pre]:p-2 [&>pre]:px-4 [&>pre]:font-mono`}
+                  dangerouslySetInnerHTML={{ __html: highlightedCode }}
+                />
+                )
+              : (
+                <pre
+                  className={`${styles.pre} border-border rounded-md border bg-white p-2 px-4 font-mono dark:bg-black`}
+                >
+                  {command}
+                </pre>
+                )}
           </div>
-          <span className="relative ml-2 cursor-pointer rounded-md" onClick={copyToClipboard}>
-            <span className="sr-only">{copied ? 'Copied' : 'Copy'}</span>
+          <span className='relative ml-2 cursor-pointer rounded-md' onClick={copyToClipboard}>
+            <span className='sr-only'>{copied ? 'Copied' : 'Copy'}</span>
             <Copy className={`h-4 w-4 transition-all duration-300 ${copied ? 'scale-0' : 'scale-100'}`} />
             <Check
               className={`absolute inset-0 m-auto h-4 w-4 transition-all duration-300 ${

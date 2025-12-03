@@ -15,7 +15,7 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
           backgroundColor: token.colorBgContainer,
           display: 'flex',
           flexDirection: 'column',
-          ...style,
+          ...style
         }}
       >
         {title && (
@@ -26,24 +26,25 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
               fontSize: '16px',
               fontWeight: 600,
               color: token.colorTextHeading,
-              flexShrink: 0,
+              flexShrink: 0
             }}
           >
             {title}
           </div>
         )}
         <div
-          className="page-container-content"
+          className='page-container-content'
           style={{
             flex: 1,
             overflow: 'auto',
             padding: '24px',
-            position: 'relative',
+            position: 'relative'
           }}
         >
           {children}
         </div>
-        <style>{`
+        <style>
+          {`
           .page-container-content::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -58,7 +59,8 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
           .page-container-content::-webkit-scrollbar-thumb:hover {
             background-color: ${token.colorFill};
           }
-        `}</style>
+        `}
+        </style>
       </section>
       {footer}
     </>

@@ -6,7 +6,7 @@ const SquaresGrid = ({
   speed = 1,
   borderColor = '#999',
   squareSize = 40,
-  hoverFillColor = '#222',
+  hoverFillColor = '#222'
 }) => {
   const canvasRef = useRef(null)
   const requestRef = useRef(null)
@@ -133,7 +133,7 @@ const SquaresGrid = ({
     }
   }, [direction, speed, borderColor, hoverFillColor, squareSize])
 
-  return <canvas ref={canvasRef} className={styles.squaresCanvas}></canvas>
+  return <canvas ref={canvasRef} className={styles.squaresCanvas} />
 }
 
 export default SquaresGrid

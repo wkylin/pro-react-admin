@@ -17,20 +17,20 @@ const WaveBackground = ({
   waves = [
     {
       fill: 'rgba(255, 255, 255, 0.2)',
-      options: { height: 20, amplitude: 20, speed: 0.15, points: 3 },
+      options: { height: 20, amplitude: 20, speed: 0.15, points: 3 }
     },
     {
       fill: 'rgba(255, 255, 255, 0.4)',
-      options: { height: 15, amplitude: 30, speed: 0.2, points: 4 },
+      options: { height: 15, amplitude: 30, speed: 0.2, points: 4 }
     },
     {
       fill: '#ffffff',
-      options: { height: 10, amplitude: 40, speed: 0.25, points: 5 },
-    },
+      options: { height: 10, amplitude: 40, speed: 0.25, points: 5 }
+    }
   ],
   className,
   style,
-  children,
+  children
 }) => {
   return (
     <section
@@ -38,10 +38,10 @@ const WaveBackground = ({
       style={{
         position: 'relative',
         background: backgroundColor,
-        height: height,
+        height,
         overflow: 'hidden',
         width: '100%',
-        ...style,
+        ...style
       }}
     >
       {children && (
@@ -50,7 +50,7 @@ const WaveBackground = ({
             position: 'relative',
             zIndex: 10,
             height: '100%',
-            width: '100%',
+            width: '100%'
           }}
         >
           {children}
@@ -64,7 +64,7 @@ const WaveBackground = ({
             bottom: 0,
             left: 0,
             width: '100%',
-            zIndex: index + 1,
+            zIndex: index + 1
           }}
         >
           <Wave
@@ -75,7 +75,7 @@ const WaveBackground = ({
               amplitude: 20,
               speed: 0.15,
               points: 3,
-              ...wave.options,
+              ...wave.options
             }}
             style={{ display: 'block', width: '100%' }}
           />

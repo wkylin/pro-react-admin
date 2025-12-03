@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 const defaultVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
+  visible: { opacity: 1, y: 0 }
 }
 
 const AnimationInView = ({
@@ -17,14 +17,14 @@ const AnimationInView = ({
   style,
   once = false,
   amount = 0.2,
-  margin,
+  margin
 }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, {
     once,
     amount,
     margin,
-    ...viewOptions,
+    ...viewOptions
   })
 
   const MotionComponent = motion[as]
@@ -32,7 +32,7 @@ const AnimationInView = ({
   return (
     <MotionComponent
       ref={ref}
-      initial="hidden"
+      initial='hidden'
       animate={isInView ? 'visible' : 'hidden'}
       variants={variants}
       transition={transition}

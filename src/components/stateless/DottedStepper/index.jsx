@@ -9,26 +9,26 @@ const defaultSteps = [
     label: 'Personal Information',
     fields: [
       { name: 'name', type: 'text', placeholder: 'Name' },
-      { name: 'email', type: 'email', placeholder: 'Email' },
-    ],
+      { name: 'email', type: 'email', placeholder: 'Email' }
+    ]
   },
   {
     label: 'Address Details',
     fields: [
       { name: 'address', type: 'text', placeholder: 'Address' },
       { name: 'city', type: 'text', placeholder: 'City' },
-      { name: 'country', type: 'text', placeholder: 'Country' },
-    ],
+      { name: 'country', type: 'text', placeholder: 'Country' }
+    ]
   },
-  { label: 'Review & Submit' },
+  { label: 'Review & Submit' }
 ]
 
 const StepIndicator = ({ currentStep, steps }) => (
-  <div className="relative w-full">
-    <div className="flex items-center justify-between">
+  <div className='relative w-full'>
+    <div className='flex items-center justify-between'>
       {steps.map((step, index) => (
         <React.Fragment key={step.label}>
-          <div className="flex flex-col items-center">
+          <div className='flex flex-col items-center'>
             <motion.div
               className={clsx(
                 'z-10 flex size-8 items-center justify-center rounded-full transition-all duration-300',
@@ -38,17 +38,17 @@ const StepIndicator = ({ currentStep, steps }) => (
               )}
               animate={{ scale: index === currentStep ? 1.1 : 1 }}
             >
-              {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill="currentColor" />}
+              {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill='currentColor' />}
             </motion.div>
           </div>
           {index < steps.length - 1 && (
-            <div className="relative mx-2 flex-grow">
-              <div className="absolute top-1/2 h-1 w-full -translate-y-1/2 bg-neutral-200 dark:bg-neutral-800" />
+            <div className='relative mx-2 flex-grow'>
+              <div className='absolute top-1/2 h-1 w-full -translate-y-1/2 bg-neutral-200 dark:bg-neutral-800' />
               <motion.div
-                className="absolute top-1/2 h-1 w-full -translate-y-1/2 bg-neutral-900 dark:bg-neutral-100"
+                className='absolute top-1/2 h-1 w-full -translate-y-1/2 bg-neutral-900 dark:bg-neutral-100'
                 initial={{ width: '0%' }}
                 animate={{
-                  width: index < currentStep ? '100%' : '0%',
+                  width: index < currentStep ? '100%' : '0%'
                 }}
                 transition={{ duration: 0.5, ease: 'easeInOut' }}
               />
@@ -62,10 +62,10 @@ const StepIndicator = ({ currentStep, steps }) => (
 
 const StepContent = ({ step }) => {
   return (
-    <div className="my-6 flex min-h-[200px] w-full items-center justify-center rounded-xl border border-neutral-200 bg-white/50 p-6 text-center backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/30">
-      <div className="space-y-2">
-        <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100">{step.label}</h3>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">Step content for {step.label}</p>
+    <div className='my-6 flex min-h-[200px] w-full items-center justify-center rounded-xl border border-neutral-200 bg-white/50 p-6 text-center backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/30'>
+      <div className='space-y-2'>
+        <h3 className='text-lg font-medium text-neutral-900 dark:text-neutral-100'>{step.label}</h3>
+        <p className='text-sm text-neutral-500 dark:text-neutral-400'>Step content for {step.label}</p>
       </div>
     </div>
   )
@@ -75,7 +75,7 @@ const ButtonClasses =
   'rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed'
 
 const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) => (
-  <div className="flex justify-between gap-3">
+  <div className='flex justify-between gap-3'>
     <button
       className={clsx(ButtonClasses, currentStep === 0 && 'invisible')}
       disabled={currentStep === 0}
@@ -106,7 +106,7 @@ const DottedStepper = ({ steps = defaultSteps }) => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl p-4 md:p-6">
+    <div className='mx-auto w-full max-w-3xl p-4 md:p-6'>
       <StepIndicator currentStep={currentStep} steps={steps} />
       <StepContent step={steps[currentStep]} />
       <NavigationButtons

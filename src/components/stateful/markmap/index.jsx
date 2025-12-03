@@ -105,7 +105,7 @@ const MarkmapHooks = ({ markmap, debounceDelay = 200 }) => {
     }
   }, [markmap, debounceDelay, isReady])
 
-  return <svg aria-hidden="true" style={{ width: '100%', height: 400 }} ref={refSvg} />
+  return <svg aria-hidden='true' style={{ width: '100%', height: 400 }} ref={refSvg} />
 }
 
 export default MarkmapHooks
