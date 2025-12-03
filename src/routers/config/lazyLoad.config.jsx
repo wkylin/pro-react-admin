@@ -90,7 +90,7 @@ export const lazyComponents = {
   ErrorPage: lazyLoad(() => import('@pages/error'), { preload: true }),
   Exception403: lazyLoad(() => import('@stateless/Exception/exception403'), { preload: true }),
   Exception404: lazyLoad(() => import('@stateless/Exception/exception404'), { preload: true }),
-  NoMatch: lazyLoad(() => import('@stateless/NoMatch'), { preload: true }),
+  NoMatch: lazyLoad(() => import('@stateless/NoMatch'), { preload: true })
 }
 
 // 兼容性导出（保持原有导入方式）
