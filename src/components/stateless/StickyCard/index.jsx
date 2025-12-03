@@ -16,7 +16,7 @@ const StickyCard = ({ cards, children }) => {
                 animateSlide
               )}
             >
-              <div className="animate-wiggle sticky top-9 h-[30vh]">
+              <div className="animate-wiggle h-[30vh]">
                 <p className="animate-hue-rotate hue-clip text-gradient text-2xl">Card Item</p>
               </div>
             </div>

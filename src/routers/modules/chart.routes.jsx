@@ -30,4 +30,16 @@ export const chartRoutes = [
     key: '/d3-chart',
     element: <lazyComponents.D3Chart />,
   },
+  {
+    path: 'markmap',
+    name: 'ChatGPT',
+    key: '/markmap',
+    element: <lazyComponents.ChatGpt />,
+  },
+  {
+    path: 'mermaid',
+    name: 'Mermaid',
+    key: '/mermaid',
+    element: <lazyComponents.Mermaid />,
+  },
 ]

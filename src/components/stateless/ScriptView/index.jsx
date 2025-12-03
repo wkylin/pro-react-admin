@@ -14,7 +14,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
   const [highlightedCode, setHighlightedCode] = useState('')
   const command = commandMap[packageManager]
 
-  useEffect(async () => {
+  useEffect(() => {
     async function loadHighlightedCode() {
       try {
         const { codeToHtml } = await import('shiki')
@@ -40,7 +40,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage, commandMa
   }
 
   return (
-    <div className={clsx('mx-auto flex max-w-md items-center justify-center', className)}>
+    <div className={clsx('m-2 mx-auto flex w-full max-w-md items-center justify-center', className)}>
       <div className="w-full space-y-2">
         <div className="mb-2 flex items-center justify-between">
           {showMultiplePackageOptions && (

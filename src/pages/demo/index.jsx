@@ -1,52 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import { Table } from 'antd'
+import { Smartphone, Monitor, Rocket } from 'lucide-react'
 import PageContainer from '@stateless/PageContainer'
 import FixTabPanel from '@stateless/FixTabPanel'
-import AnimationTabs from '@stateless/AnimationTabs'
+
 import LogoSlider from '@stateless/LogoSlider'
-import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
 import StarBack from '@stateless/StarBackground'
-// import OrbitingCirclesDemo from '@stateless/OrbitingCircles'
+import OrbitingCircles from '@stateless/OrbitingCircles'
 import FixTabs from '@stateless/FixTabs'
 import TagCard from '@stateless/TagCard'
 import DescBox from '@stateless/DescBox'
 import StatisticCard from '@stateless/StatisticCard'
 import TransferHistory from '@stateless/TransferHistory'
+import FixCarousel from '@stateless/FixCarouse'
+import OrgChart from '@stateless/OrgChart'
+import TrapezoidTabs from '@stateless/TrapezoidTabs'
+import MusicPlayer from '@stateless/MusicPlayer'
+import GradientStats from '@stateless/GradientStats'
+import WaveBackground from '@stateless/WaveBackground'
+import MarketingHero from '@stateless/MarketingHero'
+import ScriptView from '@stateless/ScriptView'
+import AnimatedList from '@stateless/AnimatedList'
+// import AnimationTabs from '@stateless/AnimationTabs'
 import StickyCard from '@stateless/StickyCard'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
-
-import { Command, Cannabis, Beer, Mail } from 'lucide-react'
-// import ScriptView from '@stateless/ScriptView'
-// import AnimatedList from '@stateless/AnimatedList'
-import FixCarousel from '@stateless/FixCarouse'
-import OrgChart from '@stateless/OrgChart'
-import TrapezoidTabs from '@stateless/TrapezoidTabs'
-import MusicPlayer from '@stateless/MusicPlayer'
 import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
-const columns = [
-  {
-    title: 'Name',
-    align: 'center',
-    dataIndex: 'name',
-    width: 150,
-  },
-  {
-    title: 'Age',
-    align: 'center',
-    dataIndex: 'age',
-    width: 150,
-  },
-  {
-    title: 'Address',
-    align: 'center',
-    dataIndex: 'address',
-  },
-]
 
 const tabs = [
   {
@@ -233,23 +216,36 @@ const tagCardList = [
   },
 ]
 
-const ProDemo = () => {
-  // const [items, setItems] = useState([
-  //   { id: '1', content: <DraggableItem>First Item</DraggableItem> },
-  //   { id: '2', content: <DraggableItem>Second Item</DraggableItem> },
-  //   { id: '3', content: <DraggableItem>Third Item</DraggableItem> },
-  // ])
-  // const handleReorder = (newItems) => {
-  //   setItems(newItems)
-  // }
+const orbitingItems = [
+  {
+    content: <Monitor className="h-6 w-6 text-purple-500" />,
+    radius: 80,
+    duration: 20,
+    reverse: true,
+  },
+  {
+    content: <Smartphone className="h-6 w-6 text-green-500" />,
+    radius: 140,
+    duration: 30,
+    delay: 15,
+    reverse: true,
+  },
+  {
+    content: <Rocket className="h-6 w-6 text-red-500" />,
+    radius: 200,
+    duration: 40,
+    reverse: false,
+  },
+]
 
+const ProDemo = () => {
   return (
     <FixTabPanel>
       <PageContainer>
         <MusicPlayer />
-
         <TransferHistory />
         <FixCarousel />
+        <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
         <TrapezoidTabs
           tabs={[
             { name: 'tab1', code: 'tab1' },
@@ -258,9 +254,15 @@ const ProDemo = () => {
           ]}
           defaultActiveTab="tab1"
         />
-        {/* <OrbitingCirclesDemo /> */}
-        {/* <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} /> */}
-        {/* <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
+
+        <OrbitingCircles items={orbitingItems} />
+        <StarBack />
+
+        <MarketingHero />
+        <FixTabs />
+        <StatisticCard />
+        <LogoSlider companies={companies} />
+        <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
           <AnimatedList>
             {Array.from({ length: 10 }, () => ({
               id: Math.random(),
@@ -274,86 +276,32 @@ const ProDemo = () => {
                 </div>
               ))}
           </AnimatedList>
-        </section> */}
-        <StarBack />
-        <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
-        <div className="relative w-full overflow-hidden bg-[#0a192f]">
-          <div className="absolute top-0 right-0 h-full w-1/2">
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20"
-              style={{
-                clipPath: 'polygon(100% 0, 100% 100%, 0 100%, 100% 0)',
-              }}
-            />
-          </div>
-          <div className="absolute top-0 left-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border-8 border-white/20" />
-          <div className="absolute right-0 bottom-0 h-64 w-64 translate-x-1/2 translate-y-1/2 rounded-full border-8 border-white/20" />
-
-          <div className="relative mx-auto max-w-7xl px-4 py-16">
-            <div className="mb-16 text-center">
-              <h1 className="mb-6 text-4xl font-bold text-white md:text-5xl">
-                Influencer And Affiliate Marketing Plans and Pricing
-              </h1>
-              <p className="mx-auto max-w-3xl text-lg text-gray-300">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita, in? Nemo, quas esse a id at quae
-                sunt! Temporibus, consectetur optio. Beatae, culpa nam quas eaque ipsa blanditiis adipisci rem.
-              </p>
-            </div>
-          </div>
-          <div className="relative mt-8 flex h-16 justify-center gap-8">
-            <FloatingIcon initialX={-150}>
-              <SocialIcon icon={Command} color="bg-blue-500" />
-            </FloatingIcon>
-            <FloatingIcon initialX={-50}>
-              <SocialIcon icon={Cannabis} color="bg-blue-400" />
-            </FloatingIcon>
-            <FloatingIcon initialX={50}>
-              <SocialIcon icon={Beer} color="bg-pink-500" />
-            </FloatingIcon>
-            <FloatingIcon initialX={150}>
-              <SocialIcon icon={Mail} color="bg-red-500" />
-            </FloatingIcon>
-          </div>
-        </div>
-
-        <LogoSlider companies={companies} />
-
-        <div className="b relative mx-auto flex h-[20rem] w-full max-w-5xl flex-col items-start justify-start [perspective:1000px]">
-          <AnimationTabs tabs={tabs} />
-        </div>
-
-        <Table columns={columns} dataSource={[]} pagination={{ pageSize: 50 }} scroll={{ y: 240 }} />
-        <FixTabs />
-        <StatisticCard />
-        <section className="m-10 flex items-center justify-center gap-5">
-          <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-            <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-              <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">200+</span>
-            </div>
-          </div>
-          <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-            <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-              <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">400+</span>
-            </div>
-          </div>
-          <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-            <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-              <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">1200+</span>
-            </div>
-          </div>
-          <div className="mb-5 inline-block rounded-xl bg-gradient-to-tl from-blue-600 via-transparent to-purple-400 p-px">
-            <div className="min-w-20 rounded-xl bg-white px-3 py-1.5 text-3xl font-bold md:text-4xl lg:text-5xl lg:leading-tight dark:bg-neutral-900">
-              <span className="bg-gradient-to-tl from-blue-600 to-purple-400 bg-clip-text text-transparent">2000+</span>
-            </div>
-          </div>
         </section>
+        {/* <AnimationTabs tabs={tabs} /> */}
+
+        <GradientStats items={['200+', '400+', '1200+', '2000+']} />
         <DescBox />
         <TagCard tagCardList={tagCardList} showMax={6} />
-        <section className={styles['section-gradient']}>
-          <div className={styles.wave} />
-          <div className={styles.wave} />
-          <div className={styles.wave} />
-        </section>
+        <WaveBackground
+          height={300}
+          backgroundColor="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+          waves={[
+            {
+              fill: 'rgba(255, 255, 255, 0.1)',
+              options: { height: 20, amplitude: 20, speed: 0.15, points: 3 },
+            },
+            {
+              fill: 'rgba(255, 255, 255, 0.3)',
+              options: { height: 15, amplitude: 30, speed: 0.2, points: 4 },
+            },
+            {
+              fill: 'rgba(255, 255, 255, 0.5)',
+              options: { height: 10, amplitude: 40, speed: 0.25, points: 5 },
+            },
+          ]}
+          className="my-4 rounded-xl"
+        />
+        <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
         <section style={{ marginBottom: '15px' }}>
           <OrgChart />
         </section>

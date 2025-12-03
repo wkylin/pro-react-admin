@@ -6,7 +6,7 @@ const NumberViewCard = () => {
       <div
         className="relative h-[150px] w-[360px] rounded-lg p-1"
         style={{
-          backgroundImage: `radial-gradient(circle 230px at 0% 0%, #ffffff, #0c0d0d)`,
+          backgroundImage: `radial-gradient(circle 320px at 0% 0%, #ffffff, #0c0d0d)`,
         }}
       >
         <div className="animate-move-dot absolute top-[10%] right-[10%] z-20 h-2 w-2 rounded-full bg-white shadow-md"></div>

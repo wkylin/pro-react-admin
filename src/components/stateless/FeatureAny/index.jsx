@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import clsx from 'clsx'
-import TextComponent from './TextComponent'
+import TextComponent from '@stateless/TextComponent'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
-const data = [
+
+const defaultData = [
   {
     title: '《咏柳》—— 贺知章',
     content: '碧玉妆成一树高，万条垂下绿丝绦。不知细叶谁裁出，二月春风似剪刀。',
@@ -28,25 +29,28 @@ const data = [
   },
 ]
 
-const FeatureFourImages = () => {
+const FeatureAny = ({ data = defaultData, autoPlay = true, intervalDuration = 5000 }) => {
   const [featureOpen, setFeatureOpen] = useState(0)
   const [timer, setTimer] = useState(0)
+
   useEffect(() => {
+    if (!autoPlay) return
+
     const interval = setInterval(() => {
       setTimer((prev) => prev + 10)
     }, 10)
     return () => clearInterval(interval)
-  }, [])
+  }, [autoPlay])
 
   useEffect(() => {
-    if (timer > 10000) {
+    if (timer > intervalDuration) {
       setFeatureOpen((prev) => (prev + 1) % data.length)
       setTimer(0)
     }
-  }, [timer])
+  }, [timer, data.length, intervalDuration])
 
   return (
-    <div className="grid grid-cols-1 gap-4 rounded-sm border p-4 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 rounded-sm border border-neutral-500/10 p-4 md:grid-cols-2 dark:border-neutral-500/15">
       <div className="space-y-6">
         {data.map((item, index) => (
           <button
@@ -61,21 +65,21 @@ const FeatureFourImages = () => {
             <TextComponent
               content={item.content}
               isOpen={featureOpen === index}
-              loadingWidthPercent={featureOpen === index ? timer / 100 : 0}
+              loadingWidthPercent={featureOpen === index ? (timer / intervalDuration) * 100 : 0}
               number={index + 1}
               title={item.title}
             />
           </button>
         ))}
       </div>
-      <div className="h-full">
-        <div className={clsx('relative h-96 w-full overflow-hidden rounded-lg md:h-[500px]')}>
+      <div className="h-full min-h-[300px]">
+        <div className={clsx('relative h-full w-full overflow-hidden rounded-lg')}>
           {data.map((item, index) => (
             <img
               alt={item.title}
               className={clsx(
-                'absolute h-[500px] w-full transform-gpu rounded-lg object-cover transition-all duration-300',
-                featureOpen === index ? 'scale-100' : 'scale-70',
+                'absolute h-full w-full transform-gpu rounded-lg object-cover transition-all duration-300',
+                featureOpen === index ? 'scale-100 opacity-100' : 'scale-70 opacity-0',
                 featureOpen > index ? 'translate-y-full' : ''
               )}
               key={item.title}
@@ -89,4 +93,4 @@ const FeatureFourImages = () => {
   )
 }
 
-export default FeatureFourImages
+export default FeatureAny

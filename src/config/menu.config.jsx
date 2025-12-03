@@ -50,6 +50,7 @@ const rawMainLayoutMenu = [
   { label: 'Video', key: '/video', icon: <VideoCameraOutlined /> },
   { label: 'Echarts', key: '/echarts', icon: <PieChartOutlined /> },
   { label: 'ChatGPT', key: '/markmap', icon: <RobotOutlined /> },
+  { label: 'Mermaid', key: '/mermaid', icon: <ProjectOutlined /> },
   { label: 'Post Message', key: '/postmessage', icon: <SendOutlined /> },
   { label: 'Geo Chart', key: '/geo', icon: <EnvironmentOutlined /> },
   { label: 'D3 Chart', key: '/d3-chart', icon: <DotChartOutlined /> },

@@ -1,0 +1,68 @@
+.stages {
+  position: relative;
+  height: 74px;
+
+  .cubeSpinner {
+    color: #42745a;
+    animation-name: spin-cube;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 8s;
+    transform-style: preserve-3d;
+    transform-origin: 40px 40px 0;
+    line-height: 1.3em;
+    font-size: 64px;
+
+    span {
+      position: absolute;
+      width: 100%;
+      backface-visibility: hidden;
+    }
+
+    .faceFront {
+      transform: translateZ(40px);
+    }
+
+    .faceTop {
+      transform: rotateX(240deg) translateZ(40px);
+    }
+
+    .faceBottom {
+      transform: rotateX(120deg) translateZ(40px);
+    }
+  }
+}
+
+@keyframes spin-cube {
+  0% {
+    transform: rotateX(0deg);
+  }
+
+  15% {
+    transform: rotateX(0deg);
+  }
+
+  25% {
+    transform: rotateX(120deg);
+  }
+
+  40% {
+    transform: rotateX(120deg);
+  }
+
+  50% {
+    transform: rotateX(240deg);
+  }
+
+  65% {
+    transform: rotateX(240deg);
+  }
+
+  75% {
+    transform: rotateX(360deg);
+  }
+
+  100% {
+    transform: rotateX(360deg);
+  }
+}

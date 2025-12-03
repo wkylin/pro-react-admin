@@ -1,75 +1,247 @@
-import React from 'react'
-import { Space, Button } from 'antd'
+import React, { useState, useRef, useCallback } from 'react'
 import MermaidHooks from '@stateful/mermaidHooks'
 import FixTabPanel from '@stateless/FixTabPanel'
-import MarkmapHooks from '@stateful/markmap'
+import PageContainer from '@stateless/PageContainer'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
+import { toPng, toSvg } from 'html-to-image'
+import copy from 'copy-to-clipboard'
+import {
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Download,
+  Copy,
+  Image as ImageIcon,
+  Code2,
+  GitBranch,
+  Activity,
+  Clock,
+  Move,
+  FileCode,
+} from 'lucide-react'
+import { Button, Tooltip, message, Space, Card, Segmented } from 'antd'
 
-const gitChart = `gitGraph
-  commit
-  commit
-  branch develop
-  commit
-  commit
-  commit
-  checkout main
-  commit
-  commit
-`
-const initMarkup = `# 登录注册模块功能页面结构图
+const SAMPLES = {
+  Flowchart: `graph TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]`,
+  Sequence: `sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>John: Hello John, how are you?
+    loop Healthcheck
+        John->>John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts <br/>prevail!
+    John-->>Alice: Great!
+    John->>Bob: How about you?
+    Bob-->>John: Jolly good!`,
+  State: `stateDiagram-v2
+    [*] --> Still
+    Still --> [*]
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]`,
+  Git: `gitGraph
+    commit
+    commit
+    branch develop
+    checkout develop
+    commit
+    commit
+    checkout main
+    merge develop
+    commit
+    commit`,
+  Timeline: `timeline
+    title History of Social Media Platform
+    2002 : LinkedIn
+    2003 : Facebook
+    2004 : Google
+    2005 : Youtube
+    2006 : Twitter`,
+}
 
-- 登录页面
-  - 输入用户名
-  - 输入密码
-  - 登录按钮
-  - 忘记密码链接
-  - 注册链接
+const MermaidDemo = () => {
+  const [chart, setChart] = useState(SAMPLES.Flowchart)
+  const [activeType, setActiveType] = useState('Flowchart')
+  const previewRef = useRef(null)
 
-- 注册页面
-  - 输入用户名
-  - 输入密码
-  - 确认密码
-  - 注册按钮
-  - 返回登录链接
+  const handleSampleChange = (type) => {
+    setActiveType(type)
+    setChart(SAMPLES[type])
+  }
 
-- 忘记密码页面
-  - 输入注册邮箱
-  - 发送重置密码链接按钮
-  - 返回登录链接
+  const handleDownload = useCallback(
+    async (format) => {
+      if (!previewRef.current) return
+      try {
+        const dataUrl =
+          format === 'png'
+            ? await toPng(previewRef.current, { backgroundColor: '#ffffff' })
+            : await toSvg(previewRef.current, { backgroundColor: '#ffffff' })
+        const link = document.createElement('a')
+        link.download = `mermaid-chart.${format}`
+        link.href = dataUrl
+        link.click()
+        message.success(`Downloaded as ${format.toUpperCase()}`)
+      } catch (err) {
+        console.error(err)
+        message.error('Download failed')
+      }
+    },
+    [previewRef]
+  )
 
-- 重置密码页面
-  - 输入新密码
-  - 确认新密码
-  - 重置密码按钮
-  - 返回登录链接
+  const handleCopyImage = useCallback(async () => {
+    if (!previewRef.current) return
+    try {
+      const dataUrl = await toPng(previewRef.current, { backgroundColor: '#ffffff' })
+      const blob = await (await fetch(dataUrl)).blob()
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob,
+        }),
+      ])
+      message.success('Image copied to clipboard')
+    } catch (err) {
+      console.error(err)
+      // Fallback for browsers that don't support ClipboardItem or if it fails
+      try {
+        copy(chart)
+        message.info('Copied code instead (Image copy failed)')
+      } catch (e) {
+        message.error('Copy failed')
+      }
+    }
+  }, [previewRef, chart])
 
-`
+  return (
+    <FixTabPanel>
+      <PageContainer title="Mermaid Live Editor" footer={null}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {/* Editor Section */}
+          <div className="flex flex-col gap-4">
+            <Card
+              title={
+                <div className="flex items-center gap-2">
+                  <Code2 size={18} />
+                  <span>Editor</span>
+                </div>
+              }
+              className="flex-1 shadow-sm"
+              styles={{ body: { padding: 0, height: 'calc(100% - 57px)', display: 'flex', flexDirection: 'column' } }}
+            >
+              <div className="relative flex-1 bg-neutral-50 dark:bg-neutral-900">
+                <textarea
+                  className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm leading-relaxed outline-none dark:text-neutral-200"
+                  onChange={(e) => setChart(e.target.value)}
+                  value={chart}
+                  spellCheck={false}
+                  placeholder="Enter Mermaid code here..."
+                />
+              </div>
+              <div className="border-t border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
+                <p className="mb-2 text-xs font-medium text-neutral-500">Sample Diagrams:</p>
+                <div className="flex flex-wrap gap-2">
+                  {Object.keys(SAMPLES).map((type) => (
+                    <Button
+                      key={type}
+                      size="small"
+                      type={activeType === type ? 'primary' : 'default'}
+                      onClick={() => handleSampleChange(type)}
+                      icon={
+                        type === 'Git' ? (
+                          <GitBranch size={14} />
+                        ) : type === 'Timeline' ? (
+                          <Clock size={14} />
+                        ) : type === 'State' ? (
+                          <Activity size={14} />
+                        ) : (
+                          <FileCode size={14} />
+                        )
+                      }
+                    >
+                      {type}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          </div>
 
-const Mermaid = () => (
-  <FixTabPanel>
-    <h2>Meraid: http://https://mermaid.js.org/</h2>
+          {/* Preview Section */}
+          <div className="flex flex-col gap-4">
+            <Card
+              title={
+                <div className="flex items-center gap-2">
+                  <ImageIcon size={18} />
+                  <span>Preview</span>
+                </div>
+              }
+              extra={
+                <Space>
+                  <Tooltip title="Copy Image">
+                    <Button icon={<Copy size={16} />} onClick={handleCopyImage} />
+                  </Tooltip>
+                  <Tooltip title="Download PNG">
+                    <Button icon={<Download size={16} />} onClick={() => handleDownload('png')}>
+                      PNG
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="Download SVG">
+                    <Button icon={<Download size={16} />} onClick={() => handleDownload('svg')}>
+                      SVG
+                    </Button>
+                  </Tooltip>
+                </Space>
+              }
+              className="flex-1 shadow-sm"
+              styles={{ body: { padding: 0, height: 'calc(100% - 57px)', position: 'relative', overflow: 'hidden' } }}
+            >
+              <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit wheel={{ step: 0.1 }}>
+                {({ zoomIn, zoomOut, resetTransform }) => (
+                  <>
+                    <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 rounded-lg bg-white/90 p-1 shadow-md backdrop-blur-sm dark:bg-neutral-800/90">
+                      <Tooltip title="Zoom In" placement="left">
+                        <Button type="text" icon={<ZoomIn size={18} />} onClick={() => zoomIn()} />
+                      </Tooltip>
+                      <Tooltip title="Zoom Out" placement="left">
+                        <Button type="text" icon={<ZoomOut size={18} />} onClick={() => zoomOut()} />
+                      </Tooltip>
+                      <Tooltip title="Reset" placement="left">
+                        <Button type="text" icon={<RotateCcw size={18} />} onClick={() => resetTransform()} />
+                      </Tooltip>
+                    </div>
+                    <div className="h-full w-full cursor-move bg-neutral-50 dark:bg-neutral-900">
+                      <TransformComponent
+                        wrapperStyle={{ width: '100%', height: '100%' }}
+                        contentStyle={{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <div ref={previewRef} className="p-8">
+                          <MermaidHooks chart={chart} />
+                        </div>
+                      </TransformComponent>
+                    </div>
+                  </>
+                )}
+              </TransformWrapper>
+            </Card>
+          </div>
+        </div>
+      </PageContainer>
+    </FixTabPanel>
+  )
+}
 
-    <h3 style={{ marginBottom: 30 }}>演示1:Git Diagram </h3>
-
-    <TransformWrapper centerOnInit centerZoomedOut>
-      {({ zoomIn, zoomOut, resetTransform }) => (
-        <React.Fragment>
-          <Space>
-            <Button onClick={() => zoomIn()}>放大</Button>
-            <Button onClick={() => zoomOut()}>缩小</Button>
-            <Button onClick={() => resetTransform()}>还原</Button>
-          </Space>
-          <TransformComponent>
-            <MermaidHooks chart={gitChart} />
-          </TransformComponent>
-        </React.Fragment>
-      )}
-    </TransformWrapper>
-    <h3> 演示2: Markmap</h3>
-    <section>
-      <MarkmapHooks markmap={initMarkup} />
-    </section>
-  </FixTabPanel>
-)
-
-export default Mermaid
+export default MermaidDemo

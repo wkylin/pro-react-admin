@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { CheckCircle, Circle } from 'lucide-react'
+import clsx from 'clsx'
 
-const steps = [
+const defaultSteps = [
   { label: 'Introduction' },
   {
     label: 'Personal Information',
@@ -29,21 +30,22 @@ const StepIndicator = ({ currentStep, steps }) => (
         <React.Fragment key={step.label}>
           <div className="flex flex-col items-center">
             <motion.div
-              className={`z-10 flex h-8 w-8 items-center justify-center rounded-full ${
+              className={clsx(
+                'z-10 flex size-8 items-center justify-center rounded-full transition-all duration-300',
                 index <= currentStep
-                  ? 'bg-gray-500 text-white'
-                  : 'bg-gray-200 text-white dark:bg-gray-800 dark:text-gray-600'
-              }`}
-              animate={{ scale: 1.02 }}
+                  ? 'bg-neutral-900 text-white shadow-lg shadow-neutral-900/20 dark:bg-neutral-100 dark:text-neutral-900 dark:shadow-neutral-100/20'
+                  : 'bg-neutral-200 text-neutral-400 dark:border dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-500'
+              )}
+              animate={{ scale: index === currentStep ? 1.1 : 1 }}
             >
-              {index < currentStep ? <CheckCircle size={17} /> : <Circle size={17} fill="currentColor" />}
+              {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill="currentColor" />}
             </motion.div>
           </div>
           {index < steps.length - 1 && (
-            <div className="relative flex-grow">
-              <div className="absolute -top-1 h-1.5 w-full bg-gray-100 dark:bg-gray-800" />
+            <div className="relative mx-2 flex-grow">
+              <div className="absolute top-1/2 h-1 w-full -translate-y-1/2 bg-neutral-200 dark:bg-neutral-800" />
               <motion.div
-                className="absolute -top-1 h-1.5 w-full bg-gray-500"
+                className="absolute top-1/2 h-1 w-full -translate-y-1/2 bg-neutral-900 dark:bg-neutral-100"
                 initial={{ width: '0%' }}
                 animate={{
                   width: index < currentStep ? '100%' : '0%',
@@ -58,33 +60,42 @@ const StepIndicator = ({ currentStep, steps }) => (
   </div>
 )
 
-const StepContent = () => {
+const StepContent = ({ step }) => {
   return (
-    <div className="my-4 flex min-h-[30vh] w-full items-center justify-center rounded-lg border bg-gray-100 text-center dark:border-gray-600 dark:bg-gray-800">
-      Stepper Content
+    <div className="my-6 flex min-h-[200px] w-full items-center justify-center rounded-xl border border-neutral-200 bg-white/50 p-6 text-center backdrop-blur-md dark:border-neutral-800 dark:bg-neutral-900/30">
+      <div className="space-y-2">
+        <h3 className="text-lg font-medium text-neutral-900 dark:text-neutral-100">{step.label}</h3>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">Step content for {step.label}</p>
+      </div>
     </div>
   )
 }
 
-const ButtonClasses = 'rounded-2xl bg-gray-500 px-2 py-1 text-sm font-medium text-white'
+const ButtonClasses =
+  'rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed'
 
 const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) => (
-  <div className="flex justify-end gap-3">
-    {currentStep === 0 ? null : (
-      <button onClick={handlePrev} className={ButtonClasses}>
-        Previous
-      </button>
-    )}
-    {currentStep === totalSteps - 1 ? null : (
-      <button onClick={handleNext} className={ButtonClasses}>
-        Next
-      </button>
-    )}
+  <div className="flex justify-between gap-3">
+    <button
+      className={clsx(ButtonClasses, currentStep === 0 && 'invisible')}
+      disabled={currentStep === 0}
+      onClick={handlePrev}
+    >
+      Previous
+    </button>
+
+    <button
+      className={clsx(ButtonClasses, currentStep === totalSteps - 1 && 'invisible')}
+      disabled={currentStep === totalSteps - 1}
+      onClick={handleNext}
+    >
+      Next
+    </button>
   </div>
 )
 
-const DottedStepper = () => {
-  const [currentStep, setCurrentStep] = useState(1)
+const DottedStepper = ({ steps = defaultSteps }) => {
+  const [currentStep, setCurrentStep] = useState(0)
 
   const handleNext = () => {
     setCurrentStep((prev) => Math.min(prev + 1, steps.length - 1))
@@ -95,14 +106,14 @@ const DottedStepper = () => {
   }
 
   return (
-    <div className="mx-auto w-full p-6">
+    <div className="mx-auto w-full max-w-3xl p-4 md:p-6">
       <StepIndicator currentStep={currentStep} steps={steps} />
-      <StepContent />
+      <StepContent step={steps[currentStep]} />
       <NavigationButtons
         currentStep={currentStep}
-        totalSteps={steps.length}
-        handlePrev={handlePrev}
         handleNext={handleNext}
+        handlePrev={handlePrev}
+        totalSteps={steps.length}
       />
     </div>
   )

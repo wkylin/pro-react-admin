@@ -29,6 +29,7 @@
     "tryer",
     "urlparams"
   ],
+  "css.lint.unknownAtRules": "ignore",
   "files.autoSave": "off",
   "npm-scripts.showStartNotification": false,
   "editor.suggest.snippetsPreventQuickSuggestions": false,

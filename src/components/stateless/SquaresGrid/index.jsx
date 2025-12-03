@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styles from './index.module.less'
 
 const SquaresGrid = ({
@@ -13,7 +13,7 @@ const SquaresGrid = ({
   const numSquaresX = useRef()
   const numSquaresY = useRef()
   const gridOffset = useRef({ x: 0, y: 0 })
-  const [hoveredSquare, setHoveredSquare] = useState(null)
+  const hoveredSquareRef = useRef(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -27,7 +27,11 @@ const SquaresGrid = ({
       numSquaresY.current = Math.ceil(canvas.height / squareSize) + 1
     }
 
-    window.addEventListener('resize', resizeCanvas)
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas()
+    })
+
+    resizeObserver.observe(canvas)
     resizeCanvas()
 
     const drawGrid = () => {
@@ -42,9 +46,9 @@ const SquaresGrid = ({
           const squareY = y - (gridOffset.current.y % squareSize)
 
           if (
-            hoveredSquare &&
-            Math.floor((x - startX) / squareSize) === hoveredSquare.x &&
-            Math.floor((y - startY) / squareSize) === hoveredSquare.y
+            hoveredSquareRef.current &&
+            Math.floor((x - startX) / squareSize) === hoveredSquareRef.current.x &&
+            Math.floor((y - startY) / squareSize) === hoveredSquareRef.current.y
           ) {
             ctx.fillStyle = hoverFillColor
             ctx.fillRect(squareX, squareY, squareSize, squareSize)
@@ -109,11 +113,11 @@ const SquaresGrid = ({
       const hoveredSquareX = Math.floor((mouseX + gridOffset.current.x - startX) / squareSize)
       const hoveredSquareY = Math.floor((mouseY + gridOffset.current.y - startY) / squareSize)
 
-      setHoveredSquare({ x: hoveredSquareX, y: hoveredSquareY })
+      hoveredSquareRef.current = { x: hoveredSquareX, y: hoveredSquareY }
     }
 
     const handleMouseLeave = () => {
-      setHoveredSquare(null)
+      hoveredSquareRef.current = null
     }
 
     canvas.addEventListener('mousemove', handleMouseMove)
@@ -122,12 +126,12 @@ const SquaresGrid = ({
     requestRef.current = requestAnimationFrame(updateAnimation)
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas)
+      resizeObserver.disconnect()
       cancelAnimationFrame(requestRef.current)
       canvas.removeEventListener('mousemove', handleMouseMove)
       canvas.removeEventListener('mouseleave', handleMouseLeave)
     }
-  }, [direction, speed, borderColor, hoverFillColor, hoveredSquare, squareSize])
+  }, [direction, speed, borderColor, hoverFillColor, squareSize])
 
   return <canvas ref={canvasRef} className={styles.squaresCanvas}></canvas>
 }

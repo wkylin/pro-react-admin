@@ -56,6 +56,7 @@ export const lazyComponents = {
   QrCode: lazyLoad(() => import('@pages/qrGenerate'), { preload: true }),
   PrismRender: lazyLoad(() => import('@pages/prism'), { preload: true }),
   ChatGpt: lazyLoad(() => import('@pages/chatgpt'), { preload: true }),
+  Mermaid: lazyLoad(() => import('@pages/mermaid'), { preload: true }),
   PostMessage: lazyLoad(() => import('@pages/postmessage'), { preload: true }),
   MyIframe: lazyLoad(() => import('@pages/postmessage/myIframe'), { preload: true }),
   Print: lazyLoad(() => import('@pages/print'), { preload: true }),

@@ -326,7 +326,7 @@
     "markmap-common": "^0.18.9",
     "markmap-lib": "^0.18.12",
     "markmap-view": "^0.18.12",
-    "mermaid": "^11.12.1",
+    "mermaid": "^11.12.2",
     "motion": "^12.23.24",
     "nanoid": "^5.1.6",
     "number-flow": "^0.5.8",

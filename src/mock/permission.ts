@@ -34,6 +34,7 @@ const allRoutes = [
   '/build/vite',
   '/error',
   '/dashboard',
+  '/mermaid',
   '/profile',
   '/contact',
   '/portfilo',

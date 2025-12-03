@@ -1,136 +1,141 @@
+/* stylelint-disable at-rule-no-unknown */
+/* stylelint-disable-next-line import-notation */
 @import 'tailwindcss';
 
-:root {
+@theme {
   --animate-wiggle: wiggle 1s ease-in-out infinite;
   --animate-hue-rotate: hue-rotate 5s infinite linear;
   --animate-slide-in-left: slide-in-left 1s;
   --animate-slide-in-right: slide-in-right 1s;
+
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+
+    50% {
+      transform: rotate(3deg);
+    }
+  }
+
+  @keyframes hue-rotate {
+    from {
+      filter: hue-rotate(0deg);
+    }
+
+    to {
+      filter: hue-rotate(-360deg);
+    }
+  }
+
+  @keyframes slide-in-left {
+    from {
+      transform: translate3d(-100%, 0, 0);
+      visibility: visible;
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes slide-in-right {
+    from {
+      transform: translate3d(100%, 0, 0);
+      visibility: visible;
+    }
+
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
   --animate-wui-slide-right: wui-slide-right 2s linear infinite;
   --animate-wui-slide-down: wui-slide-down 2s linear infinite;
   --animate-wui-slide-left: wui-slide-left 2s linear infinite;
+
+  @keyframes wui-slide-right {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes wui-slide-down {
+    0% {
+      transform: translateY(-100%);
+    }
+
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes wui-slide-left {
+    0% {
+      transform: translateX(100%);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes wui-slide-up {
+    0% {
+      transform: translateY(100%);
+    }
+
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+
   --animate-my-orbit: ui-orbit calc(var(--duration) * 1s) linear infinite;
+
+  @keyframes ui-orbit {
+    0% {
+      transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px))
+        rotate(calc(var(--angle) * -1deg));
+    }
+
+    100% {
+      transform: rotate(calc(var(--angle) * 1deg + 1turn)) translateY(calc(var(--radius) * 1px))
+        rotate(calc(var(--angle) * -1deg - 1turn));
+    }
+  }
+
   --animate-move-dot: move-dot 6s linear infinite;
-}
 
-@keyframes wiggle {
-  0%,
-  100% {
-    transform: rotate(-3deg);
-  }
+  @keyframes move-dot {
+    0% {
+      top: 10%;
+      right: 10%;
+    }
 
-  50% {
-    transform: rotate(3deg);
-  }
-}
+    25% {
+      top: 10%;
+      right: calc(100% - 40px);
+    }
 
-@keyframes hue-rotate {
-  from {
-    filter: hue-rotate(0deg);
-  }
+    50% {
+      top: calc(100% - 23px);
+      right: calc(100% - 45px);
+    }
 
-  to {
-    filter: hue-rotate(-360deg);
-  }
-}
+    75% {
+      top: calc(100% - 23px);
+      right: 10%;
+    }
 
-@keyframes slide-in-left {
-  from {
-    transform: translate3d(-100%, 0, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes slide-in-right {
-  from {
-    transform: translate3d(100%, 0, 0);
-    visibility: visible;
-  }
-
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes wui-slide-right {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-@keyframes wui-slide-down {
-  0% {
-    transform: translateY(-100%);
-  }
-
-  100% {
-    transform: translateY(100%);
-  }
-}
-
-@keyframes wui-slide-left {
-  0% {
-    transform: translateX(100%);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-@keyframes wui-slide-up {
-  0% {
-    transform: translateY(100%);
-  }
-
-  100% {
-    transform: translateY(-100%);
-  }
-}
-
-@keyframes ui-orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg)) translateY(calc(var(--radius) * 1px))
-      rotate(calc(var(--angle) * -1deg));
-  }
-
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 1turn)) translateY(calc(var(--radius) * 1px))
-      rotate(calc(var(--angle) * -1deg - 1turn));
-  }
-}
-
-@keyframes move-dot {
-  0% {
-    top: 10%;
-    right: 10%;
-  }
-
-  25% {
-    top: 10%;
-    right: calc(100% - 40px);
-  }
-
-  50% {
-    top: calc(100% - 23px);
-    right: calc(100% - 45px);
-  }
-
-  75% {
-    top: calc(100% - 23px);
-    right: 10%;
-  }
-
-  100% {
-    top: 10%;
-    right: 10%;
+    100% {
+      top: 10%;
+      right: 10%;
+    }
   }
 }
 

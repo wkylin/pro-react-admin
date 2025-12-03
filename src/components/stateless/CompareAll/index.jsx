@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react'
 import { GitMerge } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -16,14 +16,15 @@ const Compare = ({
   autoplay = false,
   autoplayDuration = 5000,
 }) => {
-  const [sliderXPercent, setSliderXPercent] = useState(initialSliderPercentage)
+  const x = useMotionValue(initialSliderPercentage)
   const [isDragging, setIsDragging] = useState(false)
-
   const sliderRef = useRef(null)
-
   const [isMouseOver, setIsMouseOver] = useState(false)
-
   const autoplayRef = useRef(null)
+
+  // Map x to style values
+  const left = useTransform(x, (value) => `${value}%`)
+  const clipPath = useTransform(x, (value) => `inset(0 ${100 - value}% 0 0)`)
 
   const startAutoplay = useCallback(() => {
     if (!autoplay) return
@@ -34,16 +35,16 @@ const Compare = ({
       const progress = (elapsedTime % (autoplayDuration * 2)) / autoplayDuration
       const percentage = progress <= 1 ? progress * 100 : (2 - progress) * 100
 
-      setSliderXPercent(percentage)
-      autoplayRef.current = setTimeout(animate, 16) // ~60fps
+      x.set(percentage)
+      autoplayRef.current = requestAnimationFrame(animate)
     }
 
     animate()
-  }, [autoplay, autoplayDuration])
+  }, [autoplay, autoplayDuration, x])
 
   const stopAutoplay = useCallback(() => {
     if (autoplayRef.current) {
-      clearTimeout(autoplayRef.current)
+      cancelAnimationFrame(autoplayRef.current)
       autoplayRef.current = null
     }
   }, [])
@@ -61,7 +62,7 @@ const Compare = ({
   function mouseLeaveHandler() {
     setIsMouseOver(false)
     if (slideMode === 'hover') {
-      setSliderXPercent(initialSliderPercentage)
+      x.set(initialSliderPercentage)
     }
     if (slideMode === 'drag') {
       setIsDragging(false)
@@ -89,17 +90,21 @@ const Compare = ({
       if (!sliderRef.current) return
       if (slideMode === 'hover' || (slideMode === 'drag' && isDragging)) {
         const rect = sliderRef.current.getBoundingClientRect()
-        const x = clientX - rect.left
-        const percent = (x / rect.width) * 100
-        requestAnimationFrame(() => {
-          setSliderXPercent(Math.max(0, Math.min(100, percent)))
-        })
+        const mouseX = clientX - rect.left
+        const percent = (mouseX / rect.width) * 100
+        x.set(Math.max(0, Math.min(100, percent)))
       }
     },
-    [slideMode, isDragging]
+    [slideMode, isDragging, x]
   )
 
-  const handleMouseDown = useCallback((e) => handleStart(e.clientX), [handleStart])
+  const handleMouseDown = useCallback(
+    (e) => {
+      e.preventDefault()
+      handleStart(e.clientX)
+    },
+    [handleStart]
+  )
   const handleMouseUp = useCallback(() => handleEnd(), [handleEnd])
   const handleMouseMove = useCallback((e) => handleMove(e.clientX), [handleMove])
 
@@ -148,7 +153,7 @@ const Compare = ({
         <motion.div
           className="absolute top-0 z-30 m-auto h-full w-px bg-linear-to-b from-transparent from-5% via-indigo-500 to-transparent to-95%"
           style={{
-            left: `${sliderXPercent}%`,
+            left,
             top: '0',
             zIndex: 40,
           }}
@@ -173,7 +178,7 @@ const Compare = ({
                 firstImageClassName
               )}
               style={{
-                clipPath: `inset(0 ${100 - sliderXPercent}% 0 0)`,
+                clipPath,
               }}
               transition={{ duration: 0 }}
             >

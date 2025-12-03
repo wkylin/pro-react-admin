@@ -31,7 +31,8 @@ import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
 import StaticStepper from '@stateless/StaticStepper'
-import FeatureFourImages from '@stateless/FeatureAny'
+import FeatureAny from '@stateless/FeatureAny'
+import UserIP from '@stateless/UserIP'
 import ScratchToReveal from '@stateless/ScratchToReveal'
 // import SlideLinear from '@stateless/SlideLinear'
 // import Masonry from '@container/masonryContainer'
@@ -68,6 +69,7 @@ import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@stateless/AnimText'
 import SlideButton from '@stateless/SlideButton'
 import NumberViewCard from '@stateless/NumberViewCard'
+import CubeSpinner from '@stateless/CubeSpinner'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 import SpringPng from '@assets/images/spring.png'
@@ -393,7 +395,7 @@ const Home = () => {
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
-      <section style={{ width: '300px', margin: '30px 0' }}>
+      <section style={{ width: '320px', margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
           <Input.TextArea
@@ -624,7 +626,7 @@ const Home = () => {
           margin: '20px 0',
           width: 360,
           height: 200,
-          background: '#000',
+          background: '#999',
         }}
       >
         <SquaresGrid
@@ -907,13 +909,7 @@ const Home = () => {
       </section>
 
       <section>
-        <div className={styles.stages}>
-          <div className={styles.cubeSpinner}>
-            <span className={styles.face1}>Web Services</span>
-            <span className={styles.face2}>Blockchain</span>
-            <span className={styles.face3}>Mobile Apps</span>
-          </div>
-        </div>
+        <CubeSpinner />
       </section>
       {/* <section style={{ margin: '20px 0', fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy />
@@ -924,8 +920,12 @@ const Home = () => {
 
       <section style={{ position: 'relative', fontSize: 36 }}>
         I build
-        <FlipWords className="mx-1 px-4 py-2" words={['creative', 'interactive', 'beautiful', 'modern']} />
-        <span className="block text-black sm:inline">websites and apps.</span>
+        <FlipWords
+          className="mx-1 px-4 py-2"
+          words={['creative', 'interactive', 'beautiful', 'modern']}
+          wordClassName="text-blue-500 font-bold"
+        />
+        <span className="block sm:inline">websites and apps.</span>
         {/* <AnimateWave /> */}
       </section>
       {/* <section style={{ margin: 20 }}>
@@ -937,13 +937,19 @@ const Home = () => {
 
       <section style={{ margin: 20 }}>
         {dataSteps.map((step, index) => (
-          <StaticStepper.StaticStep key={step.title} step={index + 1} title={step.title}>
+          <StaticStepper.StaticStep
+            key={step.title}
+            step={index + 1}
+            title={step.title}
+            stepClassName="bg-blue-100 text-blue-600 border-blue-200"
+            titleClassName="text-blue-500 font-bold"
+          >
             <StaticStepper.CodeContainer>{step.code}</StaticStepper.CodeContainer>
           </StaticStepper.StaticStep>
         ))}
       </section>
       <section style={{ margin: 20 }}>
-        <FeatureFourImages />
+        <FeatureAny />
       </section>
       <section style={{ margin: 20 }}>
         <SkeletonFix />
@@ -1129,6 +1135,9 @@ const Home = () => {
       </section>
       <section style={{ margin: 20 }}>
         <DynamicBackground />
+      </section>
+      <section style={{ margin: 20 }}>
+        <UserIP />
       </section>
       <section style={{ margin: 20 }}>
         <AutoSlider />
