@@ -5,7 +5,7 @@ import { showMessage } from '@src/utils/message'
 // ==================== 工具函数 ====================
 const addTimestampSuffix = (params = {}) => ({
   ...params,
-  _: Date.now(),
+  _: Date.now()
 })
 
 // ==================== 1. 配置常量 ====================
@@ -13,8 +13,8 @@ const CONFIG = {
   BASE_URL: process.env.APP_BASE_URL || '',
   TIMEOUT: 20000,
   HEADERS: {
-    'Content-Type': 'application/json;charset=utf-8',
-  },
+    'Content-Type': 'application/json;charset=utf-8'
+  }
 }
 
 // ==================== 2. 错误处理 ====================
@@ -28,15 +28,15 @@ const HTTP_STATUS_MSG = {
   502: '网关错误',
   503: '服务不可用',
   504: '网关超时',
-  default: '请求失败',
+  default: '请求失败'
 }
 
 class HttpClient {
-  constructor(config = {}) {
+  constructor (config = {}) {
     this.config = { ...CONFIG, ...config }
     this.interceptors = {
       request: [],
-      response: [],
+      response: []
     }
 
     // 添加默认请求拦截器：为 GET/DELETE 请求添加时间戳防止缓存
@@ -49,17 +49,17 @@ class HttpClient {
   }
 
   // 注册请求拦截器
-  useRequestInterceptor(handler) {
+  useRequestInterceptor (handler) {
     this.interceptors.request.push(handler)
   }
 
   // 注册响应拦截器
-  useResponseInterceptor(handler) {
+  useResponseInterceptor (handler) {
     this.interceptors.response.push(handler)
   }
 
   // 核心请求方法
-  async request(url, options = {}) {
+  async request (url, options = {}) {
     let config = {
       url,
       method: 'GET',
@@ -67,7 +67,7 @@ class HttpClient {
       timeout: this.config.TIMEOUT,
       baseURL: this.config.BASE_URL,
       isShowError: true,
-      ...options,
+      ...options
     }
 
     // 1. 执行请求拦截器
@@ -105,7 +105,7 @@ class HttpClient {
 
   // ===== 辅助方法 =====
 
-  _buildUrl(config) {
+  _buildUrl (config) {
     let { url, baseURL, params } = config
     if (baseURL && !url.startsWith('http')) {
       url = `${baseURL}${url}`
@@ -118,7 +118,7 @@ class HttpClient {
     return url
   }
 
-  _buildOptions(config) {
+  _buildOptions (config) {
     const { method, headers, payload, body } = config
     const options = { method, headers }
 
@@ -134,7 +134,7 @@ class HttpClient {
     return options
   }
 
-  async _handleResponseData(response, config) {
+  async _handleResponseData (response, config) {
     if (!response.ok) {
       const error = new Error(response.statusText || HTTP_STATUS_MSG[response.status] || HTTP_STATUS_MSG.default)
       error.status = response.status
@@ -167,7 +167,7 @@ class HttpClient {
     return response.text()
   }
 
-  _handleError(error, config) {
+  _handleError (error, config) {
     const isShowError = config.isShowError !== false
     let errorMsg = error.message
 
@@ -186,28 +186,28 @@ class HttpClient {
 
   // ===== 常用方法封装 =====
 
-  get(url, params = {}, config = {}) {
+  get (url, params = {}, config = {}) {
     return this.request(url, { ...config, method: 'GET', params })
   }
 
-  post(url, payload = {}, config = {}) {
+  post (url, payload = {}, config = {}) {
     return this.request(url, { ...config, method: 'POST', payload })
   }
 
-  put(url, payload = {}, config = {}) {
+  put (url, payload = {}, config = {}) {
     return this.request(url, { ...config, method: 'PUT', payload })
   }
 
-  delete(url, params = {}, config = {}) {
+  delete (url, params = {}, config = {}) {
     return this.request(url, { ...config, method: 'DELETE', params })
   }
 
-  patch(url, payload = {}, config = {}) {
+  patch (url, payload = {}, config = {}) {
     return this.request(url, { ...config, method: 'PATCH', payload })
   }
 
   // 文件上传
-  upload(url, formData, config = {}) {
+  upload (url, formData, config = {}) {
     return this.request(url, {
       ...config,
       method: 'POST',
@@ -215,17 +215,17 @@ class HttpClient {
       headers: {
         // Fetch 会自动设置 multipart/form-data 的 boundary，所以这里删除 Content-Type
         ...config.headers,
-        'Content-Type': undefined,
-      },
+        'Content-Type': undefined
+      }
     })
   }
 
   // 文件下载 (支持进度)
-  async download(url, params = {}, fileName, config = {}) {
+  async download (url, params = {}, fileName, config = {}) {
     const fullUrl = this._buildUrl({ url, baseURL: this.config.BASE_URL, params })
     const response = await fetch(fullUrl, {
       method: 'GET',
-      headers: { ...this.config.HEADERS, ...config.headers },
+      headers: { ...this.config.HEADERS, ...config.headers }
     })
 
     if (!response.ok) throw new Error(`Download failed: ${response.statusText}`)
@@ -245,7 +245,7 @@ class HttpClient {
         config.onProgress({
           loaded: receivedLength,
           total: contentLength,
-          percent: Math.round((receivedLength / contentLength) * 100),
+          percent: Math.round((receivedLength / contentLength) * 100)
         })
       }
     }
@@ -277,7 +277,7 @@ class HttpClient {
   // ===== 高级功能 =====
 
   // 重试
-  async retry(fn, retries = 3, delay = 1000) {
+  async retry (fn, retries = 3, delay = 1000) {
     for (let i = 0; i < retries; i++) {
       try {
         return await fn()
@@ -289,7 +289,7 @@ class HttpClient {
   }
 
   // 并发控制 (简单实现)
-  parallel(tasks) {
+  parallel (tasks) {
     return Promise.all(tasks.map((task) => (typeof task === 'function' ? task() : this.request(task.url, task))))
   }
 }
@@ -335,7 +335,7 @@ export const useRequest = (url, options = {}) => {
         const res = await http.request(url, {
           ...optionsRef.current,
           ...overrideOptions,
-          controller,
+          controller
         })
         setData(res)
         return res
