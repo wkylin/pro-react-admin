@@ -1,94 +1,109 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import styles from './index.module.less'
 
-// 模拟组件数据
-const mockComponents = {
-  '0': () => <div className={styles.mockContent}>首页内容</div>,
-  '1': () => <div className={styles.mockContent}>产品介绍内容</div>,
-  '2': () => <div className={styles.mockContent}>关于我们内容</div>,
-  '3-0': () => <div className={styles.mockContent}>服务概览内容</div>,
-  '3-1': () => <div className={styles.mockContent}>技术支持内容</div>,
-  '3-2': () => <div className={styles.mockContent}>售后服务内容</div>,
-  '4': () => <div className={styles.mockContent}>联系我们内容</div>,
+export interface TabItem {
+  label: string
+  key?: string | number
+  content?: React.ReactNode
+  children?: TabItem[]
 }
 
-const NavigationTabs: React.FC = () => {
+export interface NavigationTabsProps {
+  items?: TabItem[]
+  className?: string
+  style?: React.CSSProperties
+}
+
+// 默认模拟数据，用于演示组件功能
+const defaultItems: TabItem[] = [
+  {
+    label: '首页',
+    content: <div className={styles.mockContent}>首页内容</div>,
+  },
+  {
+    label: '产品',
+    content: <div className={styles.mockContent}>产品介绍内容</div>,
+  },
+  {
+    label: '关于',
+    content: <div className={styles.mockContent}>关于我们内容</div>,
+  },
+  {
+    label: '服务',
+    children: [
+      { label: '概览', content: <div className={styles.mockContent}>服务概览内容</div> },
+      { label: '技术支持', content: <div className={styles.mockContent}>技术支持内容</div> },
+      { label: '售后', content: <div className={styles.mockContent}>售后服务内容</div> },
+    ],
+  },
+  {
+    label: '联系',
+    content: <div className={styles.mockContent}>联系我们内容</div>,
+  },
+]
+
+const NavigationTabs: React.FC<NavigationTabsProps> = ({ items = defaultItems, className, style }) => {
   const [activeIndex, setActiveIndex] = useState<number>(0)
-  const [subActiveIndex, setSubActiveIndex] = useState<string>('')
+  const [subActiveIndex, setSubActiveIndex] = useState<number>(0)
 
-  // 导航数据
-  const navItems = [
-    { label: '首页' },
-    { label: '产品' },
-    { label: '关于' },
-    {
-      label: '服务',
-      children: [{ label: '概览' }, { label: '技术支持' }, { label: '售后' }],
-    },
-    { label: '联系' },
-  ]
-
-  // 处理一级导航点击
   const handleTabClick = (index: number) => {
     setActiveIndex(index)
-    const item = navItems[index]
+    setSubActiveIndex(0) // 切换一级导航时，重置二级导航选中项
+  }
 
-    // 如果有子项，默认选中第一个子项
-    if (item.children && item.children.length > 0) {
-      setSubActiveIndex(`${index}-0`)
-    } else {
-      setSubActiveIndex('')
+  const handleSubTabClick = (index: number) => {
+    setSubActiveIndex(index)
+  }
+
+  const activeItem = items[activeIndex]
+  const subItems = activeItem?.children || []
+  const hasChildren = subItems.length > 0
+
+  // 获取当前显示的内容
+  const currentContent = useMemo(() => {
+    if (hasChildren) {
+      return subItems[subActiveIndex]?.content || null
     }
-  }
-
-  // 处理二级导航点击
-  const handleSubTabClick = (parentIndex: number, subIndex: number) => {
-    setSubActiveIndex(`${parentIndex}-${subIndex}`)
-  }
-
-  // 获取当前要渲染的组件
-  const getCurrentComponent = () => {
-    const key = subActiveIndex || activeIndex.toString()
-    const Component = mockComponents[key as keyof typeof mockComponents]
-    return Component ? <Component /> : <div className={styles.mockContent}>默认内容</div>
-  }
+    return activeItem?.content || null
+  }, [activeItem, hasChildren, subItems, subActiveIndex])
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className || ''}`} style={style}>
       {/* 一级导航 */}
       <div className={styles.tabsContainer}>
         <div className={styles.tabsList}>
-          {navItems.map((item, index) => {
+          {items.map((item, index) => {
             const isActive = activeIndex === index
-            const hasChildren = item.children && item.children.length > 0
-            const isActiveWithChildren = isActive && hasChildren
+            const itemHasChildren = item.children && item.children.length > 0
 
             return (
               <div
                 key={index}
                 className={`${styles.tabItem} ${
-                  isActiveWithChildren ? styles.hasArrow : isActive ? styles.actived : ''
+                  itemHasChildren && isActive ? styles.hasArrow : isActive ? styles.actived : ''
                 }`}
                 onClick={() => handleTabClick(index)}
               >
                 <span>{item.label}</span>
-                {hasChildren && <span className={`${styles.arrow} ${isActive ? styles.arrowDown : ''}`}>▼</span>}
+                {itemHasChildren && <span className={`${styles.arrow} ${isActive ? styles.arrowDown : ''}`}>▼</span>}
               </div>
             )
           })}
         </div>
 
         {/* 二级导航 */}
-        {navItems[activeIndex]?.children && (
+        {hasChildren && (
           <div className={styles.subTabsList}>
-            {navItems[activeIndex].children!.map((subItem, subIndex) => {
-              const isSubActive = subActiveIndex === `${activeIndex}-${subIndex}`
-
+            {subItems.map((subItem, index) => {
+              const isSubActive = subActiveIndex === index
               return (
                 <div
-                  key={subIndex}
+                  key={index}
                   className={`${styles.subTabItem} ${isSubActive ? styles.presented : ''}`}
-                  onClick={() => handleSubTabClick(activeIndex, subIndex)}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleSubTabClick(index)
+                  }}
                 >
                   {subItem.label}
                 </div>
@@ -99,7 +114,7 @@ const NavigationTabs: React.FC = () => {
       </div>
 
       {/* 内容区域 */}
-      <div className={styles.contentArea}>{getCurrentComponent()}</div>
+      <div className={styles.contentArea}>{currentContent || <div className={styles.mockContent}>暂无内容</div>}</div>
     </div>
   )
 }

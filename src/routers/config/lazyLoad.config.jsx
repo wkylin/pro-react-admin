@@ -44,7 +44,6 @@ export const lazyComponents = {
   ReactMusic: lazyLoad(() => import('@pages/music'), { preload: true }),
   MyVideo: lazyLoad(() => import('@pages/video'), { preload: true }),
   MyCrypto: lazyLoad(() => import('@pages/crypto'), { preload: true }),
-  MyPortfilo: lazyLoad(() => import('@pages/portfilo'), { preload: true }),
 
   // 图表相关
   Echarts: lazyLoad(() => import('@pages/echarts'), { preload: true }),
