@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Table } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { postFetch, getFetch } from '@src/service/'
+import { http } from '@src/service/http'
 
 const fixColumns = [
   // {
@@ -64,19 +64,17 @@ const Business = () => {
       for (let i = 0; i < newFetchData.length; i++) {
         const item = newFetchData[i]
         try {
-          const res = await postFetch(
+          const res = await http.post(
             'https://capi.tianyancha.com/cloud-business-state/company/certificate/detail/list',
             {
-              payload: {
-                companyGid: item.grid,
-                pageSize: 1000,
-                pageNum: 1,
-                certificateName: '-100',
-                status: '-100',
-                issueYear: '-100',
-                searchKey: '',
-                sortType: '',
-              },
+              companyGid: item.grid,
+              pageSize: 1000,
+              pageNum: 1,
+              certificateName: '-100',
+              status: '-100',
+              issueYear: '-100',
+              searchKey: '',
+              sortType: '',
             }
           )
           setLoading(false)

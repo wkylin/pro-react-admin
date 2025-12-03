@@ -125,6 +125,15 @@ await request.get('/api/public/config', {}, {
 })
 ```
 
+### 11. 禁用时间戳后缀
+默认情况下，`GET` 和 `DELETE` 请求会自动添加时间戳参数 `_` 以防止缓存。如果不需要此行为，可手动禁用。
+
+```javascript
+await request.get('/api/static-data', {}, {
+  addTimestamp: false // 禁用自动添加时间戳
+})
+```
+
 ---
 
 ## 二、高级使用
@@ -278,6 +287,7 @@ console.log(`请求耗时: ${duration}ms`)
 | `cancelDuplicate` | boolean | `true` | 是否自动取消重复的进行中请求 |
 | `needToken` | boolean | `true` | 是否自动在 Header 中携带 Token |
 | `showError` | boolean | `true` | 请求失败时是否自动弹出错误提示 |
+| `addTimestamp` | boolean | `true` | 是否为 GET/DELETE 请求自动添加时间戳后缀 |
 | `requestId` | string | - | 自定义请求 ID，将放入 `X-Request-ID` 头 |
 | `returnFullResponse` | boolean | `false` | 是否返回完整的 Axios Response 对象，默认只返回 `data` |
 | `onProgress` | function | - | 上传/下载进度回调 |

@@ -94,6 +94,14 @@ const requestManager = new RequestManager()
 
 // ==================== 7. 工具函数 ====================
 class RequestUtils {
+  // 添加时间戳后缀（防缓存）
+  static addTimestampSuffix(params = {}) {
+    return {
+      ...params,
+      _: Date.now(),
+    }
+  }
+
   // 延迟函数
   static delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms))
@@ -197,7 +205,16 @@ axiosInstance.interceptors.request.use(
       config._requestKey = requestKey
     }
 
-    // 2. Authorization 处理
+    // 2. 为 GET/DELETE 请求添加时间戳防止缓存
+    if (
+      (config.method?.toUpperCase() === 'GET' || config.method?.toUpperCase() === 'DELETE') &&
+      config.addTimestamp !== false
+    ) {
+      config.params = RequestUtils.addTimestampSuffix(config.params)
+      logger.log('已添加时间戳参数')
+    }
+
+    // 3. Authorization 处理
     if (!config.headers.Authorization && config.needToken !== false) {
       // 直接从 localStorage 获取 token，避免循环依赖
       let token = null
@@ -216,7 +233,7 @@ axiosInstance.interceptors.request.use(
       }
     }
 
-    // 3. 处理请求数据格式
+    // 4. 处理请求数据格式
     const contentType = config.headers['Content-Type'] || config.headers['content-type']
 
     // FormData: 删除 Content-Type 让浏览器自动设置
@@ -230,10 +247,10 @@ axiosInstance.interceptors.request.use(
       logger.log('表单数据已序列化')
     }
 
-    // 4. 添加请求时间戳（用于性能监控）
+    // 5. 添加请求时间戳（用于性能监控）
     config.metadata = { startTime: Date.now() }
 
-    // 5. 添加自定义标识
+    // 6. 添加自定义标识
     if (config.requestId) {
       config.headers['X-Request-ID'] = config.requestId
     }
