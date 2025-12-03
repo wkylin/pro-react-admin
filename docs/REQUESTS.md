@@ -1,148 +1,295 @@
-**请求模块 使用说明**
+# Request 请求模块使用指南
 
 位置: `src/service/request.js`
 
-简介
-- 本文档说明如何使用仓库中增强过的 `request` 模块。该模块基于 `axios`，提供：可取消请求、并发/串行执行、重试机制、上传/下载进度回调、每次请求可开关错误弹窗及全局配置接口。
+基于 Axios 封装的企业级 HTTP 请求库，提供了统一的错误处理、请求拦截、响应拦截、并发控制、文件处理等高级功能。
 
-导入
+## 引入方式
 
-```js
+```javascript
 import request from '@/service/request'
 ```
 
-1) 全局配置
+---
 
-- 设置 baseURL:
+## 一、基础使用
 
-```js
-request.setBaseURL('https://api.example.com')
+### 1. GET 请求
+用于获取数据，参数会自动序列化到 URL 中。
+
+```javascript
+// 简单请求
+const res = await request.get('/api/users')
+
+// 带参数请求: /api/users?page=1&pageSize=10
+const data = await request.get('/api/users', { 
+  page: 1, 
+  pageSize: 10 
+})
 ```
 
-- 设置全局默认 headers:
+### 2. POST 请求
+用于提交数据，默认使用 `application/json`。
 
-```js
-request.setDefaultHeaders({ 'X-Trace-Id': 'abc123' })
+```javascript
+const res = await request.post('/api/users', {
+  username: 'john_doe',
+  email: 'john@example.com'
+})
 ```
 
-2) 基本请求（返回 Promise，同时附带 `.cancel()`）
+### 3. PUT / DELETE 请求
 
-```js
-// GET
-const p = request.get('/api/users', { page: 1 })
-p.then(res => console.log(res)).catch(err => console.error(err))
+```javascript
+// PUT: 更新资源
+await request.put('/api/users/123', {
+  role: 'admin'
+})
 
-// 取消请求
-p.cancel()
-
-// POST
-request.post('/api/user', { name: 'alice' })
-  .then(res => console.log(res))
-  .catch(err => console.error(err))
-
-// 禁用该次请求的错误弹窗
-request.get('/api/maybe-missing', {}, { showError: false })
+// DELETE: 删除资源
+await request.delete('/api/users/123')
 ```
 
-注意：当后端采用 `{ code, data, message }` 约定时，模块会在 `code === 0` 视作成功并返回后端对象；否则会按 `message` 展示错误（可用 `showError:false` 关闭）。如果后端返回不是该结构，则直接返回原始数据。
+### 4. 表单提交
+自动将 Content-Type 设置为 `application/x-www-form-urlencoded` 并序列化数据。
 
-3) 上传与下载（支持进度回调）
+```javascript
+// 发送 application/x-www-form-urlencoded 数据
+await request.form('/api/login', {
+  username: 'admin',
+  password: 'password123'
+})
+```
 
-```js
-// 上传
-const fd = new FormData()
-fd.append('file', fileInput.files[0])
-request.upload('/api/upload', fd, {
-  onUploadProgress: (e) => {
-    const pct = Math.round((e.loaded / e.total) * 100)
-    console.log('上传进度', pct)
-  },
-}).then(res => console.log('上传完成', res))
+### 5. 文件上传 (带进度)
+支持 `FormData` 或普通对象（自动转换），并提供上传进度回调。
 
-// 下载（会触发浏览器下载）
-request.download('/api/export', { q: 'all' }, 'report.xlsx', {
-  onDownloadProgress: (e) => {
-    const pct = Math.round((e.loaded / e.total) * 100)
-    console.log('下载进度', pct)
+```javascript
+const formData = new FormData()
+formData.append('file', fileObject)
+
+await request.upload('/api/upload', formData, {
+  // 监听上传进度
+  onProgress: ({ percent, loaded, total }) => {
+    console.log(`上传进度: ${percent}%`)
   }
-}).then(() => console.log('下载结束'))
+})
 ```
 
-4) 并行 / 并发控制
+### 6. 文件下载
+自动处理 Blob 响应，并触发浏览器下载行为。
 
-```js
-// 简单并行：传入请求描述数组，返回 Promise 数组结果
-// 描述可以是：函数、axios config 对象，或 [method, url, body, config]
-const results = await request.parallel([
-  ['get', '/api/a'],
-  ['post', '/api/b', { x: 1 }],
-  () => request.get('/api/c')
-], /* concurrency */ 3)
+```javascript
+// 简单下载，文件名优先从响应头 Content-Disposition 获取
+await request.download('/api/export/users')
+```
 
+### 7. 自定义文件名下载
+如果后端未返回文件名，或需要覆盖文件名。
+
+```javascript
+await request.download(
+  '/api/export/report', 
+  { year: 2024 }, // 查询参数
+  '2024年度报表.xlsx' // 指定文件名
+)
+```
+
+### 8. 自定义 Authorization
+默认会自动携带 Token，如需覆盖或使用特殊 Token。
+
+```javascript
+await request.get('/api/external/data', {}, {
+  headers: {
+    'Authorization': 'Bearer SPECIAL_TOKEN_123'
+  }
+})
+```
+
+### 9. 禁用重复请求取消
+默认情况下，相同的未完成请求会被自动取消（防抖）。如果业务需要允许重复请求（如聊天发送），可禁用此功能。
+
+```javascript
+await request.post('/api/chat/send', { msg: 'hello' }, {
+  cancelDuplicate: false // 允许重复发送
+})
+```
+
+### 10. 自定义配置
+控制 Token 携带和错误提示行为。
+
+```javascript
+await request.get('/api/public/config', {}, {
+  needToken: false, // 不携带 Token (适用于公开接口)
+  showError: false  // 关闭默认的错误提示 (适用于需要手动处理错误的场景)
+})
+```
+
+---
+
+## 二、高级使用
+
+### 1. 并发请求 (Parallel)
+同时发起多个请求，并限制最大并发数（默认 5）。
+
+```javascript
+const userIds = [1, 2, 3, 4, 5, 6]
+
+// 构建请求任务数组
+const tasks = userIds.map(id => ({
+  method: 'GET',
+  url: `/api/users/${id}`
+}))
+
+// 执行并发请求，限制同时最多执行 3 个
+const results = await request.parallel(tasks, 3)
 console.log(results)
 ```
 
-5) 串行
+### 2. 串行请求 (Series)
+按顺序执行请求，前一个完成后才执行下一个（适用于有依赖关系的请求）。
 
-```js
-// 依次执行
-const seriesResults = await request.series([
-  () => request.get('/api/step1'),
-  ['post', '/api/step2', { id: 123 }],
+```javascript
+const results = await request.series([
+  // 任务 1
+  { method: 'POST', url: '/api/step1', data: { init: true } },
+  // 任务 2
+  { method: 'POST', url: '/api/step2', data: { confirm: true } }
 ])
 ```
 
-6) 可取消的自定义请求
+或者使用函数形式处理依赖：
 
-```js
-const promise = request.request({ method: 'get', url: '/api/long', params: { t: 1 } })
-// 取消
-promise.cancel()
+```javascript
+await request.series([
+  async () => {
+    const user = await request.get('/api/user/current')
+    // 依赖上一步的结果
+    return request.get(`/api/orders/${user.id}`)
+  }
+])
 ```
 
-7) 重试（对任意返回 Promise 的函数）
+### 3. 轮询请求
+结合 `RequestUtils.delay` 实现轮询。
 
-```js
-await request.retry(() => request.get('/api/maybe-flaky'), 3, 1000)
+```javascript
+import request, { RequestUtils } from '@/service/request'
+
+async function pollStatus(taskId) {
+  while (true) {
+    const res = await request.get(`/api/tasks/${taskId}`)
+    
+    if (res.status === 'COMPLETED') {
+      return res.result
+    }
+    
+    if (res.status === 'FAILED') {
+      throw new Error('Task failed')
+    }
+    
+    // 等待 2 秒后再次请求
+    await RequestUtils.delay(2000)
+  }
+}
 ```
 
-8) 访问底层 axios（高级用法）
+### 4. 重试机制
+对于不稳定的接口，可以使用自动重试功能。
 
-```js
-const ax = request.axios()
-ax.get('/raw/endpoint').then(r => console.log(r))
+```javascript
+// 如果请求失败，会自动重试 3 次，每次间隔 1000ms
+const data = await request.retry(
+  () => request.get('/api/unstable-service'),
+  3,    // 重试次数
+  1000  // 延迟时间 (ms)
+)
 ```
 
-9) 常见使用场景示例
-- 场景 A：页面 mount 时保护性加载权限数据，避免重复请求
+### 5. 请求队列
+利用 `parallel` 的并发限制特性实现请求队列。
 
-```js
-// 使用 permissionService（单例）来避免多个组件重复向后端请求权限
-import permissionService from '@/service/permissionService'
-// 在 App 初始化处调用一次
-permissionService.getPermissions()
-```
+```javascript
+// 假设有 100 个文件需要处理
+const files = [...] 
 
-- 场景 B：文件导出，提供进度与取消
-
-```js
-const downloadPromise = request.download('/api/export', {}, 'report.xlsx', {
-  onDownloadProgress: (e) => console.log('progress', e.loaded)
+const uploadTasks = files.map(file => () => {
+  return request.upload('/api/upload', { file })
 })
-// 在需要时取消
-// downloadPromise.cancel()
+
+// 创建一个最大并发数为 2 的上传队列
+// 只有当前面的请求完成，后续请求才会开始
+await request.parallel(uploadTasks, 2)
 ```
 
-- 场景 C：批量请求但限制并发（防止后端压力）
+### 6. 批量上传文件（限制并发数）
+同上，这是处理大批量文件上传的最佳实践。
 
-```js
-const tasks = urls.map((u) => ['get', u])
-const results = await request.parallel(tasks, 4)
+```javascript
+const fileList = [file1, file2, file3, ...]
+
+// 封装上传任务
+const tasks = fileList.map(file => {
+  return () => request.upload('/api/files', { file }, {
+    onProgress: (p) => console.log(`${file.name}: ${p.percent}%`)
+  })
+})
+
+// 限制同时上传 3 个文件
+await request.parallel(tasks, 3)
 ```
 
-备注
-- 默认超时时间与 baseURL 可通过 `request.setBaseURL` 与 `request.setDefaultHeaders` 调整。
-- 单次请求关闭弹窗：传 `config.showError = false`。
-- 所有请求返回的 Promise 都包含 `.cancel()`（内部使用 AbortController）。
+### 7. 全局请求前置处理
+`request.js` 内部已内置了请求追踪和性能统计功能。
 
-如需我把示例中的某些场景自动替换到代码中（例如把多个直接调用 `permissionAPI.getUserPermissions()` 的位置替换为 `permissionService.getPermissions()`），我可以继续扫描并提交补丁。
+**请求追踪 (Request ID):**
+可以通过传入 `requestId` 来标记特定请求，方便在日志中追踪。
+
+```javascript
+import { v4 as uuidv4 } from 'uuid'
+
+request.get('/api/trace-test', {}, {
+  requestId: uuidv4() // 会添加到 Headers: X-Request-ID
+})
+```
+
+**响应时间统计:**
+开发模式下，控制台会自动输出每个请求的耗时。
+```
+[Logger] 请求完成: GET /api/users [150ms]
+```
+
+如果需要在业务代码中获取耗时，可以在拦截器中扩展（需修改 `request.js`），或者简单地在调用处计算：
+
+```javascript
+const start = Date.now()
+await request.get('/api/data')
+const duration = Date.now() - start
+console.log(`请求耗时: ${duration}ms`)
+```
+
+---
+
+## 三、API 参考
+
+### 配置对象 (Config)
+| 属性 | 类型 | 默认值 | 说明 |
+|---|---|---|---|
+| `cancelDuplicate` | boolean | `true` | 是否自动取消重复的进行中请求 |
+| `needToken` | boolean | `true` | 是否自动在 Header 中携带 Token |
+| `showError` | boolean | `true` | 请求失败时是否自动弹出错误提示 |
+| `requestId` | string | - | 自定义请求 ID，将放入 `X-Request-ID` 头 |
+| `returnFullResponse` | boolean | `false` | 是否返回完整的 Axios Response 对象，默认只返回 `data` |
+| `onProgress` | function | - | 上传/下载进度回调 |
+
+### 核心方法
+- `request.get(url, params, config)`
+- `request.post(url, data, config)`
+- `request.put(url, data, config)`
+- `request.delete(url, params, config)`
+- `request.form(url, data, config)`
+- `request.upload(url, data, config)`
+- `request.download(url, params, fileName, config)`
+- `request.parallel(tasks, concurrency)`
+- `request.series(tasks)`
+- `request.retry(fn, attempts, delay)`
