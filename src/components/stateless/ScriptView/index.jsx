@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Check, Copy } from 'lucide-react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import clsx from 'clsx'
 
 import styles from './index.module.less'

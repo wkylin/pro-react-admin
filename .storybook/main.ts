@@ -34,12 +34,12 @@ const config: StorybookConfig = {
     // you can set the STORYBOOK_BASE_HREF env var when running the build.
     // This will make webpack emit assets with the correct publicPath.
     // Example: STORYBOOK_BASE_HREF=/pro-react-admin/storybook/ npm run build-storybook
-    const baseHref = process.env.STORYBOOK_BASE_HREF;
-    if (baseHref) {
-      config.output = config.output || {};
-      // webpack expects a string, ensure it ends with a slash
-      config.output.publicPath = baseHref.endsWith('/') ? baseHref : baseHref + '/';
-    }
+    // const baseHref = process.env.STORYBOOK_BASE_HREF;
+    // if (baseHref) {
+    //   config.output = config.output || {};
+    //   // webpack expects a string, ensure it ends with a slash
+    //   config.output.publicPath = baseHref.endsWith('/') ? baseHref : baseHref + '/';
+    // }
 
     return config;
   },

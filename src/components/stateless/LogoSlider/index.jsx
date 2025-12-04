@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', radius = 180 }) => {
   const [activeIndex, setActiveIndex] = useState(0)

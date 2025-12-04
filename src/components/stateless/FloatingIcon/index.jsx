@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { motion, useAnimation } from 'motion/react'
+import { motion, useAnimation } from 'framer-motion'
 
 const FloatingIcon = ({ children, initialX }) => {
   const [isClient, setIsClient] = useState(false)
