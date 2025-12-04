@@ -12,7 +12,7 @@ const AnimatedListItem = ({ children }) => {
   }
 
   return (
-    <motion.div {...animations} layout className="mx-auto w-full">
+    <motion.div {...animations} className="mx-auto w-full">
       {children}
     </motion.div>
   )

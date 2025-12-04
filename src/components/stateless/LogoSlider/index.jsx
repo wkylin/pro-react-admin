@@ -71,7 +71,7 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
         <div className="relative h-[260px] overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative min-h-[500px] min-w-[500px]">
-              <AnimatePresence initial={false}>
+              <AnimatePresence initial={false} mode="popLayout">
                 {visibleLogos.map(({ offset, logo, index }) => (
                   <motion.div
                     key={index}

@@ -1,54 +1,35 @@
 import React from 'react'
 import { Tooltip } from 'antd'
+import { BookOpen, Wallet, TrendingUp, HelpCircle, LucideIcon } from 'lucide-react'
+import { useProThemeContext } from '@src/theme/hooks'
 import styles from './index.module.less'
 
-import iconQuestion from './icons/question.png'
-import iconBook from './icons/book.png'
-import iconWallet from './icons/wallet.png'
-import iconRate from './icons/rate.png'
-
-const defaultIcons = {
-  book: iconBook,
-  wallet: iconWallet,
-  question: iconQuestion,
-  rate: iconRate,
+const iconMap = {
+  book: BookOpen,
+  wallet: Wallet,
+  rate: TrendingUp,
 }
 
-const StatisticCard = ({
-  items = [
-    {
-      title: '参与项目数量',
-      value: 10,
-      unit: '宗',
-      icon: 'book',
-      showTooltip: true,
-      tooltipContent: '参与项目：缴纳保证金即为参与',
-      tooltipPlacement: 'top',
-    },
-    {
-      title: '同比增长',
-      value: 20,
-      unit: '%',
-      icon: 'rate',
-      showTooltip: false,
-    },
-  ],
-}) => {
-  const getIconPath = (iconName) => {
-    return defaultIcons[iconName]
+const StatisticCard = ({ items = [] }) => {
+  const { themeSettings } = useProThemeContext()
+  const isDark = themeSettings.themeMode === 'dark'
+
+  const getIcon = (iconName) => {
+    const Icon = iconMap[iconName] || BookOpen
+    return <Icon size={24} />
   }
 
   return (
-    <div className={styles.statisticCard}>
+    <div className={`${styles.statisticCard} ${isDark ? styles.dark : ''}`}>
       {items.map((item, index) => (
         <div key={index} className={styles.statisticCardItem}>
           <div className={styles.flexRoundSpace}>
             <div className={styles.flexRoundLeft}>
-              <img src={getIconPath(item.icon)} width="50" alt={`${item.title} icon`} />
+              <div className={styles.iconWrapper}>{getIcon(item.icon)}</div>
               <span>{item.title}</span>
               {item.showTooltip && (
-                <Tooltip placement={item.tooltipPlacement || 'leftTop'} title={item.tooltipContent}>
-                  <img src={iconQuestion} width="15" alt="question" />
+                <Tooltip placement={item.tooltipPlacement || 'top'} title={item.tooltipContent}>
+                  <HelpCircle size={16} className={styles.helpIcon} />
                 </Tooltip>
               )}
             </div>

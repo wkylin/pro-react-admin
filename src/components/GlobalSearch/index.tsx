@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react'
-import { Modal, Input, Avatar, InputRef } from 'antd'
+import { Modal, Input, Avatar, InputRef, theme } from 'antd'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { useMenuSearch, MenuSearchResult } from '@src/hooks/useMenuSearch'
-import { SearchOutlined } from '@ant-design/icons'
+import {
+  SearchOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
+  CloseOutlined,
+  EnterOutlined,
+  ArrowUpOutlined,
+  ArrowDownOutlined,
+} from '@ant-design/icons'
+import { useProThemeContext } from '@src/theme/hooks'
 
 interface GlobalSearchProps {
   open: boolean
@@ -12,14 +21,23 @@ interface GlobalSearchProps {
 
 const RECENT_KEY = 'global_search_recent_v1'
 
-function highlightWithIndices(text: string, indices?: Array<[number, number]>) {
+function highlightWithIndices(text: string, indices?: Array<[number, number]>, isDark: boolean = false) {
   if (!indices || indices.length === 0) return <>{text}</>
   const parts: React.ReactNode[] = []
   let last = 0
   indices.forEach(([s, e], i) => {
     if (s > last) parts.push(<span key={`t-${i}-${last}`}>{text.slice(last, s)}</span>)
     parts.push(
-      <span key={`h-${i}-${s}`} style={{ background: 'rgba(250,230,140,0.9)', padding: '0 2px', borderRadius: 2 }}>
+      <span
+        key={`h-${i}-${s}`}
+        style={{
+          background: isDark ? 'rgba(250, 230, 140, 0.4)' : 'rgba(250, 230, 140, 0.9)',
+          color: isDark ? '#fff' : '#000',
+          padding: '0 2px',
+          borderRadius: 2,
+          fontWeight: 500,
+        }}
+      >
         {text.slice(s, e + 1)}
       </span>
     )
@@ -33,8 +51,12 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
   const [inputValue, setInputValue] = useState('')
   const [keyword, setKeyword] = useState('')
   const [activeIndex, setActiveIndex] = useState(-1)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const inputRef = useRef<InputRef>(null)
   const { redirectTo } = useSafeNavigate()
+  const { themeSettings } = useProThemeContext()
+  const isDark = themeSettings.themeMode === 'dark'
+  const { token } = theme.useToken()
 
   const results = useMenuSearch(keyword, 100, true) as MenuSearchResult[]
   const allItems = useMenuSearch('', 2000, false) as MenuSearchResult[]
@@ -147,34 +169,34 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
     const i18nMatch = matches.find((m: any) => m.key === 'i18nKey' || m.key === 'i18n')
     const pinyinMatch = matches.find((m: any) => m.key === 'pinyin')
 
-    const labelEl = labelMatch ? highlightWithIndices(item.label, labelMatch.indices as any) : <>{item.label}</>
+    const labelEl = labelMatch ? highlightWithIndices(item.label, labelMatch.indices as any, isDark) : <>{item.label}</>
 
     let subEl: React.ReactNode = null
     if (!labelMatch) {
       if (i18nMatch) {
         subEl = (
-          <div style={{ color: '#999', fontSize: 12, marginTop: 4 }}>
-            {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices as any)}
+          <div style={{ color: isDark ? '#888' : '#999', fontSize: 12, marginTop: 4 }}>
+            {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices as any, isDark)}
           </div>
         )
       } else if (pinyinMatch) {
         subEl = (
-          <div style={{ color: '#999', fontSize: 12, marginTop: 4 }}>
-            {highlightWithIndices(pinyinMatch.value || item.pinyin || '', pinyinMatch.indices as any)}
+          <div style={{ color: isDark ? '#888' : '#999', fontSize: 12, marginTop: 4 }}>
+            {highlightWithIndices(pinyinMatch.value || item.pinyin || '', pinyinMatch.indices as any, isDark)}
           </div>
         )
       }
     } else if (i18nMatch) {
       subEl = (
-        <div style={{ color: '#999', fontSize: 12, marginTop: 4 }}>
-          {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices as any)}
+        <div style={{ color: isDark ? '#888' : '#999', fontSize: 12, marginTop: 4 }}>
+          {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices as any, isDark)}
         </div>
       )
     }
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div>{labelEl}</div>
+        <div style={{ color: isDark ? '#eee' : '#333', fontWeight: 500 }}>{labelEl}</div>
         {subEl}
       </div>
     )
@@ -185,30 +207,114 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
       open={open}
       onCancel={onClose}
       footer={null}
-      width={520}
+      width={isFullscreen ? '100%' : 600}
       title={null}
       closable={false}
-      styles={{ body: { padding: 0 }, mask: { background: 'rgba(0,0,0,0.15)' } }}
-      style={{ top: 80 }}
+      destroyOnHidden
+      className="fix-ant-modal"
+      modalRender={(modal) => (
+        <>
+          <style>
+            {`
+            .fix-ant-modal .wui-ant-modal-container {
+              padding: 0 !important;
+              overflow: hidden;
+            }
+            `}
+          </style>
+          {modal}
+        </>
+      )}
+      styles={{
+        body: {
+          padding: 0,
+          height: isFullscreen ? '100vh' : 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          backgroundColor: isDark ? '#1f1f1f' : '#fff',
+        },
+        mask: { background: 'rgba(0,0,0,0.45)' },
+      }}
+      style={
+        isFullscreen
+          ? { top: 0, margin: 0, maxWidth: '100vw', padding: 0, height: '100vh' }
+          : { top: 80, paddingBottom: 0 }
+      }
     >
-      <div style={{ padding: 24, paddingBottom: 0 }}>
+      {/* Header */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '16px 24px',
+          borderBottom: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
+          flexShrink: 0,
+        }}
+      >
+        <div style={{ fontSize: 16, fontWeight: 600, color: isDark ? '#eee' : '#333' }}>全局搜索</div>
+        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+          <span
+            onClick={() => setIsFullscreen(!isFullscreen)}
+            style={{
+              cursor: 'pointer',
+              color: isDark ? '#aaa' : '#666',
+              fontSize: 16,
+              transition: 'color 0.2s',
+            }}
+            title={isFullscreen ? '退出全屏' : '全屏'}
+          >
+            {isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+          </span>
+          <span
+            onClick={onClose}
+            style={{
+              cursor: 'pointer',
+              color: isDark ? '#aaa' : '#666',
+              fontSize: 16,
+              transition: 'color 0.2s',
+            }}
+            title="关闭"
+          >
+            <CloseOutlined />
+          </span>
+        </div>
+      </div>
+
+      <div style={{ padding: '16px 24px', flexShrink: 0 }}>
         <Input
           ref={inputRef}
-          prefix={<SearchOutlined />}
+          prefix={<SearchOutlined style={{ color: isDark ? '#666' : '#bbb' }} />}
           placeholder="搜索菜单（支持拼音/汉字/英文）"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           allowClear
           autoFocus
+          size="large"
+          style={{
+            backgroundColor: isDark ? '#141414' : '#fff',
+            borderColor: isDark ? '#424242' : '#d9d9d9',
+            color: isDark ? '#eee' : undefined,
+          }}
         />
       </div>
-      <div style={{ maxHeight: 360, overflow: 'auto', marginTop: 8 }}>
+      <div
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          marginTop: 0,
+          padding: '0 12px',
+          maxHeight: isFullscreen ? undefined : 280,
+        }}
+      >
         {listToRender.length === 0 ? (
-          <div style={{ padding: 16, color: '#999' }}>无匹配菜单</div>
+          <div style={{ padding: '32px 0', textAlign: 'center', color: isDark ? '#666' : '#999' }}>无匹配菜单</div>
         ) : (
           listToRender.map((entry, idx) => {
             const item = entry.item
+            const isActive = idx === activeIndex
             return (
               <div
                 key={item.key}
@@ -222,21 +328,69 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '10px 16px',
-                  background: idx === activeIndex ? '#e6f7ff' : undefined,
+                  padding: '12px 16px',
+                  marginBottom: 4,
+                  borderRadius: 8,
+                  background: isActive ? (isDark ? '#111b26' : '#e6f7ff') : 'transparent',
                   cursor: 'pointer',
+                  transition: 'background 0.2s',
                 }}
               >
-                {item.icon && <Avatar shape="square" size={24} icon={item.icon} style={{ marginRight: 12 }} />}
+                {item.icon && (
+                  <Avatar
+                    shape="square"
+                    size={28}
+                    icon={item.icon}
+                    style={{
+                      marginRight: 16,
+                      backgroundColor: isActive ? token.colorPrimary : isDark ? '#333' : '#f0f0f0',
+                      color: isActive ? '#fff' : isDark ? '#aaa' : '#666',
+                    }}
+                  />
+                )}
                 <div style={{ flex: 1 }}>{renderItemContent(entry)}</div>
-                <span style={{ color: '#999', marginLeft: 8, fontSize: 12 }}>{item.key}</span>
+                <span style={{ color: isDark ? '#555' : '#ccc', marginLeft: 12, fontSize: 12 }}>{item.key}</span>
+                {isActive && <EnterOutlined style={{ color: isDark ? '#666' : '#999', marginLeft: 12 }} />}
               </div>
             )
           })
         )}
       </div>
-      <div style={{ padding: '8px 24px', color: '#999', fontSize: 12 }}>
-        <span>↑↓ 导航&nbsp;&nbsp;⏎ 选择&nbsp;&nbsp;ESC 关闭</span>
+      <div
+        style={{
+          padding: '12px 24px',
+          color: isDark ? '#666' : '#999',
+          fontSize: 12,
+          borderTop: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          gap: 16,
+          backgroundColor: isDark ? '#1f1f1f' : '#fafafa',
+          flexShrink: 0,
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <ArrowUpOutlined style={{ fontSize: 10 }} />
+          <ArrowDownOutlined style={{ fontSize: 10 }} /> 导航
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <EnterOutlined style={{ fontSize: 10 }} /> 选择
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span
+            style={{
+              fontSize: 10,
+              border: `1px solid ${isDark ? '#444' : '#ddd'}`,
+              borderRadius: 3,
+              padding: '0 4px',
+              lineHeight: '14px',
+            }}
+          >
+            ESC
+          </span>{' '}
+          关闭
+        </span>
       </div>
     </Modal>
   )

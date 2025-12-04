@@ -31,6 +31,59 @@ import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
 
+const fixTabsData = [
+  {
+    id: 1,
+    label: '首页',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">首页</h2>
+        <p>这是首页的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 2,
+    label: '产品',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">产品</h2>
+        <p>这是产品的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 3,
+    label: '服务',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">服务</h2>
+        <p>这是服务的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 4,
+    label: '关于我们',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">关于我们</h2>
+        <p>这是关于我们的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 5,
+    label: '联系我们',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">联系我们</h2>
+        <p>这是联系我们的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+]
+
 const tabs = [
   {
     title: 'Product',
@@ -238,6 +291,25 @@ const orbitingItems = [
   },
 ]
 
+const statisticItems = [
+  {
+    title: '参与项目数量',
+    value: 10,
+    unit: '宗',
+    icon: 'book',
+    showTooltip: true,
+    tooltipContent: '参与项目：缴纳保证金即为参与',
+    tooltipPlacement: 'top',
+  },
+  {
+    title: '同比增长',
+    value: 20,
+    unit: '%',
+    icon: 'rate',
+    showTooltip: false,
+  },
+]
+
 const ProDemo = () => {
   return (
     <FixTabPanel>
@@ -245,7 +317,7 @@ const ProDemo = () => {
         <MusicPlayer />
         <TransferHistory />
         <FixCarousel />
-        <ScriptView showMultiplePackageOptions={true} codeLanguage="shell" commandMap={customCommandMap} />
+        <ScriptView codeLanguage="shell" commandMap={customCommandMap} />
         <TrapezoidTabs
           tabs={[
             { name: 'tab1', code: 'tab1' },
@@ -259,8 +331,8 @@ const ProDemo = () => {
         <StarBack />
 
         <MarketingHero />
-        <FixTabs />
-        <StatisticCard />
+        <FixTabs tabs={fixTabsData} />
+        <StatisticCard items={statisticItems} />
         <LogoSlider companies={companies} />
         <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
           <AnimatedList>
@@ -277,7 +349,6 @@ const ProDemo = () => {
               ))}
           </AnimatedList>
         </section>
-        {/* <AnimationTabs tabs={tabs} /> */}
 
         <GradientStats items={['200+', '400+', '1200+', '2000+']} />
         <DescBox />
@@ -305,6 +376,7 @@ const ProDemo = () => {
         <section style={{ marginBottom: '15px' }}>
           <OrgChart />
         </section>
+        {/* <AnimationTabs tabs={tabs} /> */}
       </PageContainer>
     </FixTabPanel>
   )

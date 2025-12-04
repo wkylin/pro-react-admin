@@ -42,22 +42,7 @@ const FloatingIcon = ({ children, initialX }) => {
   }, [isClient])
 
   return (
-    <motion.div
-      drag
-      dragMomentum={false}
-      dragElastic={0}
-      dragTransition={{ bounceStiffness: 600, bounceDamping: 20 }}
-      dragConstraints={{
-        top: -200,
-        left: -200,
-        right: 200,
-        bottom: 0,
-      }}
-      whileDrag={{ scale: 1.1 }}
-      initial={{ x: initialX, y: 0 }}
-      animate={controls}
-      className="cursor-move"
-    >
+    <motion.div initial={{ x: initialX, y: 0 }} animate={controls}>
       {children}
     </motion.div>
   )

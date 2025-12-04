@@ -1,0 +1,138 @@
+.container {
+  width: 100%;
+  max-width: 48rem;
+  margin-top: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+
+  &.dark {
+    .tabsHeader {
+      border-bottom-color: #374151;
+    }
+
+    .tabButton {
+      color: #9ca3af;
+
+      &:hover:not(.active) {
+        color: #e5e7eb;
+        background: #374151 border-box;
+      }
+
+      &.active {
+        background: #1f2937 border-box;
+        color: #60a5fa;
+      }
+    }
+
+    .title {
+      color: #f3f4f6;
+    }
+
+    .description {
+      color: #d1d5db;
+    }
+  }
+}
+
+.tabsHeader {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+}
+
+.tabButton {
+  position: relative;
+  cursor: pointer;
+
+  /* Layout stability: Reserve space for the active shape */
+  --r: 12px;
+
+  /* Increased padding for less crowded look */
+  padding-inline: 1.2em;
+  border-inline: var(--r) solid transparent;
+  width: fit-content;
+
+  /* Add spacing between tabs */
+  margin-right: 2px;
+
+  /* Flex alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #6b7280;
+  /* Removed background-color transition to prevent ghosting on active exit */
+  transition: color 0.2s ease-in-out;
+  background: transparent;
+  border-top: none;
+  border-bottom: none;
+  outline: none;
+  z-index: 0;
+
+  /* Hover effect for inactive tabs - same shape as active but lighter */
+  &:hover:not(.active) {
+    color: #374151;
+    border-radius: calc(2 * var(--r)) calc(2 * var(--r)) 0 0 / var(--r);
+    mask:
+      radial-gradient(var(--r) at var(--r) 0, #0000 98%, #000 101%) calc(-1 * var(--r)) 100%/100% var(--r) repeat-x,
+      conic-gradient(#000 0 0) padding-box;
+    background: #f3f4f6 border-box;
+  }
+
+  &.active {
+    /* Active shape with scooped corners */
+    border-radius: calc(2 * var(--r)) calc(2 * var(--r)) 0 0 / var(--r);
+    mask:
+      radial-gradient(var(--r) at var(--r) 0, #0000 98%, #000 101%) calc(-1 * var(--r)) 100%/100% var(--r) repeat-x,
+      conic-gradient(#000 0 0) padding-box;
+
+    background: #e1e1e1 border-box;
+    color: #2563eb;
+    z-index: 1;
+  }
+}
+
+.tabLabel {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0;
+  white-space: nowrap;
+}
+
+.content {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  min-height: 200px;
+}
+
+.tabContent {
+  display: none;
+  animation: fadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  &.active {
+    display: block;
+  }
+}
+
+.title {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.description {
+  color: #4b5563;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
