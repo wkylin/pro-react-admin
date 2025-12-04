@@ -344,6 +344,7 @@
     "react-countup": "^6.5.3",
     "react-css-theme-switcher": "^0.3.0",
     "react-dom": ">=19.0.0",
+    "react-draggable": "^4.5.0",
     "react-error-boundary": "^6.0.0",
     "react-fast-marquee": "^1.6.5",
     "react-i18next": "^16.3.5",

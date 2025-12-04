@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react'
 import { Modal, Input, Avatar, InputRef, theme } from 'antd'
+import Draggable from 'react-draggable'
 import useSafeNavigate from '@hooks/useSafeNavigate'
 import { useMenuSearch, MenuSearchResult } from '@src/hooks/useMenuSearch'
 import {
@@ -52,7 +53,10 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
   const [keyword, setKeyword] = useState('')
   const [activeIndex, setActiveIndex] = useState(-1)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
+  const dragRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<InputRef>(null)
+  const listRef = useRef<HTMLDivElement>(null)
   const { redirectTo } = useSafeNavigate()
   const { themeSettings } = useProThemeContext()
   const isDark = themeSettings.themeMode === 'dark'
@@ -135,6 +139,30 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
     else setActiveIndex((idx) => (idx < 0 ? 0 : Math.min(idx, list.length - 1)))
   }, [results, recentEntries, keyword])
 
+  useEffect(() => {
+    if (activeIndex >= 0 && listRef.current) {
+      const container = listRef.current
+      const activeElement = container.children[activeIndex] as HTMLElement
+      if (activeElement) {
+        activeElement.scrollIntoView({ block: 'nearest' })
+      }
+    }
+  }, [activeIndex])
+
+  const onStart = (_event: any, uiData: any) => {
+    const { clientWidth, clientHeight } = window.document.documentElement
+    const targetRect = dragRef.current?.getBoundingClientRect()
+    if (!targetRect) {
+      return
+    }
+    setBounds({
+      left: -targetRect.left + uiData.x,
+      right: clientWidth - (targetRect.right - uiData.x),
+      top: -targetRect.top + uiData.y,
+      bottom: clientHeight - (targetRect.bottom - uiData.y),
+    })
+  }
+
   const handleSelectEntry = (entry: MenuSearchResult) => {
     const path = entry.item.path || entry.item.key
     pushRecentItem(entry)
@@ -213,17 +241,25 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
       destroyOnHidden
       className="fix-ant-modal"
       modalRender={(modal) => (
-        <>
-          <style>
-            {`
+        <Draggable
+          disabled={isFullscreen}
+          bounds={bounds}
+          handle=".draggable-handle"
+          nodeRef={dragRef}
+          onStart={(event, uiData) => onStart(event, uiData)}
+        >
+          <div ref={dragRef} style={{ pointerEvents: 'auto' }}>
+            <style>
+              {`
             .fix-ant-modal .wui-ant-modal-container {
               padding: 0 !important;
               overflow: hidden;
             }
             `}
-          </style>
-          {modal}
-        </>
+            </style>
+            {modal}
+          </div>
+        </Draggable>
       )}
       styles={{
         body: {
@@ -244,6 +280,7 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
     >
       {/* Header */}
       <div
+        className="draggable-handle"
         style={{
           display: 'flex',
           justifyContent: 'space-between',
@@ -251,9 +288,10 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
           padding: '16px 24px',
           borderBottom: `1px solid ${isDark ? '#303030' : '#f0f0f0'}`,
           flexShrink: 0,
+          cursor: isFullscreen ? 'default' : 'move',
         }}
       >
-        <div style={{ fontSize: 16, fontWeight: 600, color: isDark ? '#eee' : '#333' }}>全局搜索</div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: isDark ? '#eee' : '#333' }}>菜单搜索</div>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
           <span
             onClick={() => setIsFullscreen(!isFullscreen)}
@@ -286,7 +324,7 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
         <Input
           ref={inputRef}
           prefix={<SearchOutlined style={{ color: isDark ? '#666' : '#bbb' }} />}
-          placeholder="搜索菜单（支持拼音/汉字/英文）"
+          placeholder="输入关键字搜索菜单（支持拼音/英文）"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -301,6 +339,7 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
         />
       </div>
       <div
+        ref={listRef}
         style={{
           flex: 1,
           overflowY: 'auto',
