@@ -26,12 +26,6 @@ export const businessRoutes = [
     element: <lazyComponents.Business />,
   },
   {
-    path: 'tech/backend',
-    name: '后端技术栈',
-    key: '/tech/backend',
-    element: <lazyComponents.Product />,
-  },
-  {
     path: 'build/vite',
     name: 'Vite',
     key: '/build/vite',

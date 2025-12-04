@@ -1,4 +1,5 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 import { lazyComponents } from '../config/lazyLoad.config'
 
 /**
@@ -6,55 +7,96 @@ import { lazyComponents } from '../config/lazyLoad.config'
  * 包含需要嵌套子路由的模块
  */
 export const nestedRoutes = [
-  // 技术栈模块（嵌套路由）
+  // 前端技术栈模块（嵌套路由）
   {
     path: 'tech/frontend',
     name: '前端技术栈',
     key: '/tech/frontend',
-    element: <lazyComponents.Coupons />,
+    element: <Outlet />,
     children: [
+      {
+        index: true,
+        name: '前端技术栈',
+        key: '/tech/frontend/index',
+        element: <lazyComponents.FrontendStack />,
+      },
       {
         path: 'react',
         name: 'React',
         key: '/tech/frontend/react',
-        element: <lazyComponents.CouponsHome />,
+        element: <lazyComponents.ReactDemo />,
       },
       {
         path: 'vue',
         name: 'Vue',
         key: '/tech/frontend/vue',
-        element: <lazyComponents.CouponsAdd />,
+        element: <lazyComponents.VueDemo />,
       },
       {
         path: 'angular',
         name: 'Angular',
         key: '/tech/frontend/angular',
-        element: <lazyComponents.CouponsEdit />,
+        element: <lazyComponents.AngularDemo />,
       },
       {
         path: 'node',
         name: 'Node',
         key: '/tech/frontend/node',
-        element: <lazyComponents.CouponsDetail />,
+        element: <lazyComponents.NodeDemo />,
       },
       // 补充中间层级路由（用于面包屑显示）
       {
         path: 'vue/plugins',
         name: 'Vue 插件',
         key: '/tech/frontend/vue/plugins',
-        element: <lazyComponents.CouponsAddPlugins />,
+        element: <Outlet />,
+        children: [
+          {
+            index: true,
+            name: 'Vue 插件列表',
+            key: '/tech/frontend/vue/plugins/index',
+            element: <lazyComponents.VuePlugins />,
+          },
+          {
+            path: 'vue3',
+            name: 'Vue3 API',
+            key: '/tech/frontend/vue/plugins/vue3',
+            element: <lazyComponents.Vue3Plugin />,
+          },
+          {
+            path: 'perf',
+            name: '性能优化',
+            key: '/tech/frontend/vue/plugins/perf',
+            element: <lazyComponents.VuePerfPlugin />,
+          },
+        ],
+      },
+    ],
+  },
+  // 后端技术栈模块（嵌套路由）
+  {
+    path: 'tech/backend',
+    name: '后端技术栈',
+    key: '/tech/backend',
+    element: <Outlet />,
+    children: [
+      {
+        index: true,
+        name: '后端技术栈',
+        key: '/tech/backend/index',
+        element: <lazyComponents.BackendStack />,
       },
       {
-        path: 'vue/plugins/vue3',
-        name: 'Vue3 API',
-        key: '/tech/frontend/vue/plugins/vue3',
-        element: <lazyComponents.Vue3Plugin />,
+        path: 'java',
+        name: 'Java',
+        key: '/tech/backend/java',
+        element: <lazyComponents.NodeDemo />,
       },
       {
-        path: 'vue/plugins/perf',
-        name: '性能优化',
-        key: '/tech/frontend/vue/plugins/perf',
-        element: <lazyComponents.VuePerfPlugin />,
+        path: 'go',
+        name: 'Go',
+        key: '/tech/backend/go',
+        element: <lazyComponents.NodeDemo />,
       },
     ],
   },

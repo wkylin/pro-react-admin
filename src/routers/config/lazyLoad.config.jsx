@@ -36,7 +36,7 @@ export const lazyComponents = {
   Home, // 首页改为同步加载，避免首屏白屏闪烁
   Demo: lazyLoad(() => import('@pages/demo'), { preload: true }),
   Business: lazyLoad(() => import('@pages/business')),
-  Product: lazyLoad(() => import('@pages/product'), { preload: true }),
+  BackendStack: lazyLoad(() => import('@pages/product'), { preload: true }),
 
   // UI 组件页面
   Motion: lazyLoad(() => import('@pages/motion')),
@@ -75,15 +75,16 @@ export const lazyComponents = {
   Contact: lazyLoad(() => import('@pages/contact')),
 
   // 优惠券模块（嵌套路由）
-  Coupons: lazyLoad(() => import('@pages/coupons'), { preload: true }),
-  CouponsHome: lazyLoad(() => import('@pages/coupons/home'), { preload: true }),
-  CouponsAdd: lazyLoad(() => import('@pages/coupons/add'), { preload: true }),
-  CouponsEdit: lazyLoad(() => import('@pages/coupons/edit'), { preload: true }),
-  CouponsDetail: lazyLoad(() => import('@pages/coupons/detail'), { preload: true }),
-  CouponsAddPlugins: lazyLoad(() => import('@pages/coupons/add/plugins'), { preload: true }),
-  Vue3Plugin: lazyLoad(() => import('@pages/coupons/add/plugins/vue3'), { preload: true }),
-  VuePerfPlugin: lazyLoad(() => import('@pages/coupons/add/plugins/perf'), { preload: true }),
-  WebpackList: lazyLoad(() => import('@pages/coupons/list'), { preload: true }),
+  FrontendTech: lazyLoad(() => import('@pages/tech/frontend'), { preload: true }),
+  FrontendStack: lazyLoad(() => import('@pages/tech/frontend'), { preload: true }),
+  ReactDemo: lazyLoad(() => import('@pages/tech/demos/react'), { preload: true }),
+  VueDemo: lazyLoad(() => import('@pages/tech/demos/vue'), { preload: true }),
+  AngularDemo: lazyLoad(() => import('@pages/tech/demos/angular'), { preload: true }),
+  NodeDemo: lazyLoad(() => import('@pages/tech/demos/node'), { preload: true }),
+  VuePlugins: lazyLoad(() => import('@pages/tech/demos/vue/plugins'), { preload: true }),
+  Vue3Plugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/vue3'), { preload: true }),
+  VuePerfPlugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/perf'), { preload: true }),
+  WebpackList: lazyLoad(() => import('@pages/tech/demos/webpack'), { preload: true }),
   ViteList: lazyLoad(() => import('@pages/order/list'), { preload: true }),
 
   // 异常页面

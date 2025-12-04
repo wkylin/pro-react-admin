@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
-import { HashRouter as Router } from 'react-router-dom'
-// import { BrowserRouter as Router } from 'react-router-dom'
+import React, { useEffect, useMemo } from 'react'
+import { RouterProvider, createHashRouter } from 'react-router-dom'
 import { ConfigProvider, theme, App as AntdApp } from 'antd'
 import { StyleProvider } from '@ant-design/cssinjs'
 import dayjs from 'dayjs'
@@ -9,7 +8,9 @@ import 'dayjs/locale/zh-cn'
 import 'antd/dist/reset.css'
 import './styles/reset.css'
 
-import App from './App'
+import RootLayout from '@/components/RootLayout'
+import RouterErrorElement from '@/components/RouterErrorElement'
+import rootRouter from '@/routers'
 import { useProThemeContext } from './theme/hooks'
 import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 import { setMessageInstance } from '@utils/message'
@@ -51,28 +52,36 @@ const ThemeIndex: React.FC = () => {
     return algorithms
   }
 
+  const router = useMemo(
+    () =>
+      createHashRouter([
+        {
+          element: <RootLayout />,
+          errorElement: <RouterErrorElement />,
+          children: rootRouter,
+        },
+      ]),
+    []
+  )
+
   return (
-    <Router>
-      <StyleProvider hashPriority="high">
-        <ConfigProvider
-          theme={{
-            algorithm: getAlgorithm(),
-            token: {
-              colorPrimary: themeSettings.colorPrimary,
-            },
-          }}
-          componentSize="middle"
-          input={{ autoComplete: 'off' }}
-          prefixCls="wui-ant"
-          iconPrefixCls="wui-icon"
-          locale={zhCN}
-        >
-          {/* <AntdApp> */}
-          <App />
-          {/* </AntdApp> */}
-        </ConfigProvider>
-      </StyleProvider>
-    </Router>
+    <StyleProvider hashPriority="high">
+      <ConfigProvider
+        theme={{
+          algorithm: getAlgorithm(),
+          token: {
+            colorPrimary: themeSettings.colorPrimary,
+          },
+        }}
+        componentSize="middle"
+        input={{ autoComplete: 'off' }}
+        prefixCls="wui-ant"
+        iconPrefixCls="wui-icon"
+        locale={zhCN}
+      >
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </StyleProvider>
   )
 }
 

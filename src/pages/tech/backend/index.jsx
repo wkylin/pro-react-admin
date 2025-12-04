@@ -1,16 +1,20 @@
 import React from 'react'
-import { Typography, Card } from 'antd'
-
-const { Title, Paragraph } = Typography
+import useSafeNavigate from '@hooks/useSafeNavigate'
+import { Button } from 'antd'
+import FixTabPanel from '@stateless/FixTabPanel'
 
 const BackendPage = () => {
+  const { redirectTo } = useSafeNavigate()
+
   return (
-    <div className="p-4">
-      <Card>
-        <Title level={2}>后端技术栈</Title>
-        <Paragraph>这里是后端技术栈的相关介绍页面。</Paragraph>
-      </Card>
-    </div>
+    <FixTabPanel>
+      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/')}>
+        Home
+      </Button>
+      <Button style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend')}>
+        Go to Frontend
+      </Button>
+    </FixTabPanel>
   )
 }
 

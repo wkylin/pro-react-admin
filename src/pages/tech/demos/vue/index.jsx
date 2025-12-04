@@ -4,12 +4,12 @@ import { Alert, Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { useProTabContext } from '@src/components/hooks/proTabsContext'
 
-const AddCoupons = () => {
+const VueDemo = () => {
   const { activeKey, removeTab } = useProTabContext()
   const { redirectTo } = useSafeNavigate()
   const closeActiveOpenAngular = () => {
     removeTab(activeKey, () => {
-      redirectTo('coupons/edit', { replace: true })
+      redirectTo('/tech/frontend/angular', { replace: true })
     })
   }
   return (

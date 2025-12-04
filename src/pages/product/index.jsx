@@ -3,22 +3,22 @@ import useSafeNavigate from '@hooks/useSafeNavigate'
 import { Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 
-const Products = () => {
+const BackendStack = () => {
   const { redirectTo } = useSafeNavigate()
 
   return (
     <FixTabPanel>
-      <Button type="primary" onClick={() => redirectTo('coupons/add')} style={{ margin: 10 }}>
-        Add Coupons
+      <Button type="primary" onClick={() => redirectTo('/tech/frontend/node')} style={{ margin: 10 }}>
+        Node
       </Button>
-      <Button onClick={() => redirectTo('coupons/edit?id=1')} style={{ margin: 10 }}>
-        Edit Coupons
+      <Button onClick={() => redirectTo('/tech/backend/java')} style={{ margin: 10 }}>
+        Java
       </Button>
-      <Button onClick={() => redirectTo('coupons/detail?id=2')} type="dashed" style={{ margin: 10 }}>
-        Detail Coupons
+      <Button onClick={() => redirectTo('/tech/backend/go')} type="dashed" style={{ margin: 10 }}>
+        Go
       </Button>
     </FixTabPanel>
   )
 }
 
-export default Products
+export default BackendStack

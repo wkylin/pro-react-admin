@@ -3,14 +3,14 @@ import { useSearchParams } from 'react-router-dom'
 import { Alert } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 
-const EditCoupons = () => {
+const AngularDemo = () => {
   const [searchParams] = useSearchParams()
   const term = searchParams.get('id')
   return (
     <FixTabPanel>
       <Alert
-        title="Success Tips"
-        description="Detailed description and advice about successful copywriting."
+        title="Angular Demo"
+        description="This is a demo page for Angular technology stack."
         type="success"
         showIcon
       />
@@ -19,4 +19,4 @@ const EditCoupons = () => {
   )
 }
 
-export default EditCoupons
+export default AngularDemo
