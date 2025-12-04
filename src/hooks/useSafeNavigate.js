@@ -40,5 +40,13 @@ export default function useSafeNavigate() {
     }
   }
 
-  return { redirectTo }
+  const goBack = () => {
+    if (window.history.length > 1) {
+      startTransition(() => navigate(-1))
+      return
+    }
+    redirectTo('/')
+  }
+
+  return { redirectTo, goBack }
 }
