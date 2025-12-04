@@ -293,6 +293,20 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                   onClick={() => setSearchOpen(true)}
                 />
               </Tooltip>
+              <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
+                <Button
+                  onClick={handleThemeToggle}
+                  size="small"
+                  style={{ margin: '0 4px', fontSize: 16 }}
+                  icon={
+                    isDark ? (
+                      <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
+                    ) : (
+                      <DarkSvg style={{ fontSize: 16, color: '#222' }} />
+                    )
+                  }
+                />
+              </Tooltip>
               <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
                 <MoreOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
               </Dropdown>

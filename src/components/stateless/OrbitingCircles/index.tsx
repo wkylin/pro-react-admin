@@ -1,5 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
+import { theme } from 'antd'
 
 export interface OrbitingItem {
   content: React.ReactNode
@@ -15,6 +16,8 @@ export interface OrbitingCirclesProps extends React.HTMLAttributes<HTMLDivElemen
   items?: OrbitingItem[]
   showPath?: boolean
   centerText?: string
+  centerTextStyle?: React.CSSProperties
+  centerTextClassName?: string
 }
 
 /**
@@ -29,20 +32,40 @@ export interface OrbitingCirclesProps extends React.HTMLAttributes<HTMLDivElemen
  *   - iconSize: number (size of the item)
  * @param {boolean} showPath - Whether to show the orbital path
  * @param {string} centerText - Text to display in the center
+ * @param {React.CSSProperties} centerTextStyle - Custom style for the center text
+ * @param {string} centerTextClassName - Custom class name for the center text
  */
 const OrbitingCircles = ({
   className,
   items = [],
   showPath = true,
   centerText = 'Orbit',
+  centerTextStyle,
+  centerTextClassName,
   ...props
 }: OrbitingCirclesProps) => {
+  const { token } = theme.useToken()
+
+  const calculatedItems = React.useMemo(
+    () =>
+      items.map((item, index) => ({
+        ...item,
+        radius: item.radius || 100 + index * 40,
+        duration: item.duration || 20,
+        reverse: item.reverse !== undefined ? item.reverse : index % 2 === 0,
+        iconSize: item.iconSize || 30,
+        delay: item.delay || 0,
+      })),
+    [items]
+  )
+
   return (
     <div
       className={clsx(
-        'bg-background relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg',
+        'relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg',
         className
       )}
+      style={{ backgroundColor: token.colorBgLayout, ...props.style }}
       {...props}
     >
       {/* Inject Keyframes locally to ensure they exist */}
@@ -58,68 +81,75 @@ const OrbitingCircles = ({
       `}</style>
 
       {/* Center Point (Optional, for visual reference) */}
-      <span className="pointer-events-none bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-8xl leading-none font-semibold whitespace-pre-wrap text-transparent dark:from-white dark:to-slate-900/10">
+      <span
+        className={clsx(
+          'pointer-events-none bg-clip-text text-center text-4xl leading-none font-bold tracking-tighter whitespace-pre-wrap text-transparent md:text-6xl',
+          centerTextClassName
+        )}
+        style={{
+          backgroundImage: `linear-gradient(to bottom, ${token.colorText}, ${token.colorTextQuaternary})`,
+          zIndex: 1,
+          ...centerTextStyle,
+        }}
+      >
         {centerText}
       </span>
 
-      {/* Render Orbits and Items */}
+      {/* Render Orbital Paths (Single SVG for performance) */}
+      {showPath && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          style={{ zIndex: 0 }}
+        >
+          {calculatedItems.map((item, index) => (
+            <circle
+              key={index}
+              className="stroke-1"
+              cx="50%"
+              cy="50%"
+              r={item.radius}
+              fill="none"
+              stroke={token.colorBorder}
+              style={{ opacity: 0.5 }}
+            />
+          ))}
+        </svg>
+      )}
+
+      {/* Render Orbiting Items */}
       <div className="absolute inset-0 flex items-center justify-center">
-        {items.map((item, index) => {
-          const radius = item.radius || 100 + index * 40 // Default radius increment if not provided
-          const duration = item.duration || 20
-          const reverse = item.reverse || index % 2 === 0 // Alternate direction by default
-          const iconSize = item.iconSize || 30
-          const delay = item.delay || 0
-
-          return (
-            <React.Fragment key={index}>
-              {/* Orbital Path */}
-              {showPath && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  version="1.1"
-                  className="pointer-events-none absolute inset-0 h-full w-full"
-                  style={{
-                    zIndex: 0,
-                  }}
-                >
-                  <circle
-                    className="stroke-black/10 stroke-1 dark:stroke-white/10"
-                    cx="50%"
-                    cy="50%"
-                    r={radius}
-                    fill="none"
-                  />
-                </svg>
-              )}
-
-              {/* Orbiting Item */}
-              <div
-                style={
-                  {
-                    '--radius': radius,
-                    '--duration': duration,
-                    '--icon-size': `${iconSize}px`,
-                    width: iconSize,
-                    height: iconSize,
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    marginTop: -iconSize / 2,
-                    marginLeft: -iconSize / 2,
-                    animation: `orbit ${duration}s linear infinite`,
-                    animationDirection: reverse ? 'reverse' : 'normal',
-                    animationDelay: `${delay}s`,
-                    zIndex: 10,
-                  } as React.CSSProperties
-                }
-                className="flex items-center justify-center rounded-full bg-white/10 backdrop-blur-sm"
-              >
-                {item.content}
-              </div>
-            </React.Fragment>
-          )
-        })}
+        {calculatedItems.map((item, index) => (
+          <div
+            key={index}
+            style={
+              {
+                '--radius': item.radius,
+                '--duration': item.duration,
+                '--icon-size': `${item.iconSize}px`,
+                width: item.iconSize,
+                height: item.iconSize,
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                marginTop: -item.iconSize / 2,
+                marginLeft: -item.iconSize / 2,
+                animation: `orbit ${item.duration}s linear infinite`,
+                animationDirection: item.reverse ? 'reverse' : 'normal',
+                animationDelay: `${item.delay}s`,
+                zIndex: 10,
+                backgroundColor: token.colorBgContainer,
+                // Set initial transform to prevent items from bunching in center before animation starts
+                transform: `rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg)`,
+                willChange: 'transform',
+              } as React.CSSProperties
+            }
+            className="flex items-center justify-center rounded-full shadow-sm backdrop-blur-sm"
+          >
+            {item.content}
+          </div>
+        ))}
       </div>
     </div>
   )

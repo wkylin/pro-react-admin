@@ -30,6 +30,9 @@ import {
   AppstoreOutlined,
   CodeOutlined,
   ProjectOutlined,
+  FileTextOutlined,
+  ThunderboltOutlined,
+  ToolOutlined,
 } from '@ant-design/icons'
 import { t } from 'i18next' // 注意：这里可能需要处理 i18n
 
@@ -82,13 +85,13 @@ const rawMainLayoutMenu = [
                     key: '/tech/frontend/vue/plugins',
                     icon: <AppstoreOutlined />,
                     children: [
-                      { label: 'Vue3 API', key: '/tech/frontend/vue/plugins/vue3' },
-                      { label: '性能优化', key: '/tech/frontend/vue/plugins/perf' },
+                      { label: 'Vue3 API', key: '/tech/frontend/vue/plugins/vue3', icon: <FileTextOutlined /> },
+                      { label: '性能优化', key: '/tech/frontend/vue/plugins/perf', icon: <ThunderboltOutlined /> },
                     ],
                   },
                 ],
               },
-              { label: 'Angular', key: '/tech/frontend/angular' },
+              { label: 'Angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> },
             ],
           },
         ],
@@ -105,8 +108,8 @@ const rawMainLayoutMenu = [
     key: '/build',
     icon: <ApartmentOutlined />,
     children: [
-      { label: 'Webpack', key: '/build/webpack' },
-      { label: 'Vite', key: '/build/vite' },
+      { label: 'Webpack', key: '/build/webpack', icon: <ToolOutlined /> },
+      { label: 'Vite', key: '/build/vite', icon: <ThunderboltOutlined /> },
     ],
   },
   {

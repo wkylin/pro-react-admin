@@ -22,7 +22,7 @@ const SlideButton = ({
   return (
     <span
       className={clsx(
-        'relative cursor-pointer overflow-hidden px-[10px] py-[10px] text-[14px] tracking-[5px] uppercase no-underline shadow-[0_20px_50px_rgba(0,0,0,0.5)]',
+        'relative cursor-pointer overflow-hidden py-[10px] pr-[10px] pl-[15px] text-[14px] tracking-[5px] uppercase no-underline shadow-[0_20px_50px_rgba(0,0,0,0.5)]',
         'bg-[var(--bg-color)] text-[var(--text-color)]',
         className
       )}

@@ -19,7 +19,7 @@ import {
   Move,
   FileCode,
 } from 'lucide-react'
-import { Button, Tooltip, message, Space, Card, Segmented } from 'antd'
+import { Button, Tooltip, message, Space, Card, Segmented, theme } from 'antd'
 
 const SAMPLES = {
   Flowchart: `graph TD
@@ -67,6 +67,7 @@ const SAMPLES = {
 }
 
 const MermaidDemo = () => {
+  const { token } = theme.useToken()
   const [chart, setChart] = useState(SAMPLES.Flowchart)
   const [activeType, setActiveType] = useState('Flowchart')
   const previewRef = useRef(null)
@@ -82,8 +83,8 @@ const MermaidDemo = () => {
       try {
         const dataUrl =
           format === 'png'
-            ? await toPng(previewRef.current, { backgroundColor: '#ffffff' })
-            : await toSvg(previewRef.current, { backgroundColor: '#ffffff' })
+            ? await toPng(previewRef.current, { backgroundColor: token.colorBgLayout })
+            : await toSvg(previewRef.current, { backgroundColor: token.colorBgLayout })
         const link = document.createElement('a')
         link.download = `mermaid-chart.${format}`
         link.href = dataUrl
@@ -94,13 +95,13 @@ const MermaidDemo = () => {
         message.error('Download failed')
       }
     },
-    [previewRef]
+    [previewRef, token.colorBgLayout]
   )
 
   const handleCopyImage = useCallback(async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await toPng(previewRef.current, { backgroundColor: '#ffffff' })
+      const dataUrl = await toPng(previewRef.current, { backgroundColor: token.colorBgLayout })
       const blob = await (await fetch(dataUrl)).blob()
       await navigator.clipboard.write([
         new ClipboardItem({
@@ -118,7 +119,7 @@ const MermaidDemo = () => {
         message.error('Copy failed')
       }
     }
-  }, [previewRef, chart])
+  }, [previewRef, chart, token.colorBgLayout])
 
   return (
     <FixTabPanel>
@@ -136,17 +137,23 @@ const MermaidDemo = () => {
               className="flex-1 shadow-sm"
               styles={{ body: { padding: 0, height: 'calc(100% - 57px)', display: 'flex', flexDirection: 'column' } }}
             >
-              <div className="relative flex-1 bg-neutral-50 dark:bg-neutral-900">
+              <div className="relative flex-1" style={{ backgroundColor: token.colorBgLayout }}>
                 <textarea
-                  className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm leading-relaxed outline-none dark:text-neutral-200"
+                  className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm leading-relaxed outline-none"
+                  style={{ color: token.colorText }}
                   onChange={(e) => setChart(e.target.value)}
                   value={chart}
                   spellCheck={false}
                   placeholder="Enter Mermaid code here..."
                 />
               </div>
-              <div className="border-t border-neutral-200 bg-white p-3 dark:border-neutral-800 dark:bg-neutral-900">
-                <p className="mb-2 text-xs font-medium text-neutral-500">Sample Diagrams:</p>
+              <div
+                className="border-t p-3"
+                style={{ borderColor: token.colorBorderSecondary, backgroundColor: token.colorBgContainer }}
+              >
+                <p className="mb-2 text-xs font-medium" style={{ color: token.colorTextSecondary }}>
+                  Sample Diagrams:
+                </p>
                 <div className="flex flex-wrap gap-2">
                   {Object.keys(SAMPLES).map((type) => (
                     <Button
@@ -206,7 +213,10 @@ const MermaidDemo = () => {
               <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit wheel={{ step: 0.1 }}>
                 {({ zoomIn, zoomOut, resetTransform }) => (
                   <>
-                    <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 rounded-lg bg-white/90 p-1 shadow-md backdrop-blur-sm dark:bg-neutral-800/90">
+                    <div
+                      className="absolute top-4 right-4 z-10 flex flex-col gap-2 rounded-lg p-1 shadow-md backdrop-blur-sm"
+                      style={{ backgroundColor: token.colorBgContainer }}
+                    >
                       <Tooltip title="Zoom In" placement="left">
                         <Button type="text" icon={<ZoomIn size={18} />} onClick={() => zoomIn()} />
                       </Tooltip>
@@ -217,7 +227,7 @@ const MermaidDemo = () => {
                         <Button type="text" icon={<RotateCcw size={18} />} onClick={() => resetTransform()} />
                       </Tooltip>
                     </div>
-                    <div className="h-full w-full cursor-move bg-neutral-50 dark:bg-neutral-900">
+                    <div className="h-full w-full cursor-move" style={{ backgroundColor: token.colorBgLayout }}>
                       <TransformComponent
                         wrapperStyle={{ width: '100%', height: '100%' }}
                         contentStyle={{

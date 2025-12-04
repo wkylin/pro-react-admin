@@ -11,6 +11,7 @@ const PointerMove = () => {
     if (ref.current) {
       const handlePointerMove = ({ clientX, clientY }) => {
         const element = ref.current
+        if (!element) return
         // calculate x and y coordinates
         const x = clientX + (element.offsetLeft + element.offsetWidth)
         const y = clientY + (element.offsetTop + element.offsetHeight)

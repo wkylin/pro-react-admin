@@ -85,7 +85,7 @@ const AESPanel = () => {
   }
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Space orientation="vertical" size="large" style={{ width: '100%' }}>
       <Alert
         message="AES (Advanced Encryption Standard)"
         description="对称加密算法，加密和解密使用相同的密钥。速度快，适合大量数据加密。"
@@ -93,10 +93,10 @@ const AESPanel = () => {
         showIcon
       />
 
-      <Row gutter={24}>
-        <Col span={12}>
-          <Card title="加密区 (Encryption)" bordered={false} className="shadow-sm">
-            <Space direction="vertical" style={{ width: '100%' }}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={12}>
+          <Card title="加密区 (Encryption)" variant="borderless" className="shadow-sm">
+            <Space orientation="vertical" style={{ width: '100%' }}>
               <div>
                 <Text strong>1. 输入明文</Text>
                 <TextArea
@@ -130,9 +130,9 @@ const AESPanel = () => {
           </Card>
         </Col>
 
-        <Col span={12}>
-          <Card title="结果区 (Result)" bordered={false} className="shadow-sm">
-            <Space direction="vertical" style={{ width: '100%' }}>
+        <Col xs={24} md={12}>
+          <Card title="结果区 (Result)" variant="borderless" className="shadow-sm">
+            <Space orientation="vertical" style={{ width: '100%' }}>
               <div>
                 <Text strong>3. 密文输出</Text>
                 <TextArea
@@ -207,7 +207,7 @@ const RSAPanel = () => {
   }
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Space orientation="vertical" size="large" style={{ width: '100%' }}>
       <Alert
         message="RSA (Rivest-Shamir-Adleman)"
         description="非对称加密算法，使用公钥加密，私钥解密。安全性高，但速度较慢，适合加密少量数据（如密钥交换）。"
@@ -215,11 +215,11 @@ const RSAPanel = () => {
         showIcon
       />
 
-      <Row gutter={24}>
+      <Row gutter={[24, 24]}>
         <Col span={24}>
-          <Card title="密钥对配置 (Key Pair)" size="small" bordered={false}>
-            <Row gutter={24}>
-              <Col span={12}>
+          <Card title="密钥对配置 (Key Pair)" size="small" variant="borderless">
+            <Row gutter={[24, 24]}>
+              <Col xs={24} md={12}>
                 <Text type="secondary">公钥 (Public Key) - 用于加密</Text>
                 <Paragraph
                   ellipsis={{ rows: 2, expandable: true, symbol: '展开' }}
@@ -229,7 +229,7 @@ const RSAPanel = () => {
                   {DEFAULT_PUBLIC_KEY}
                 </Paragraph>
               </Col>
-              <Col span={12}>
+              <Col xs={24} md={12}>
                 <Text type="secondary">私钥 (Private Key) - 用于解密</Text>
                 <Paragraph
                   ellipsis={{ rows: 2, expandable: true, symbol: '展开' }}
@@ -244,10 +244,10 @@ const RSAPanel = () => {
         </Col>
       </Row>
 
-      <Row gutter={24}>
-        <Col span={12}>
-          <Card title="公钥加密 (Public Key Encryption)" bordered={false} className="shadow-sm">
-            <Space direction="vertical" style={{ width: '100%' }}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} md={12}>
+          <Card title="公钥加密 (Public Key Encryption)" variant="borderless" className="shadow-sm">
+            <Space orientation="vertical" style={{ width: '100%' }}>
               <Text strong>输入明文</Text>
               <TextArea
                 rows={6}
@@ -262,9 +262,9 @@ const RSAPanel = () => {
           </Card>
         </Col>
 
-        <Col span={12}>
-          <Card title="私钥解密 (Private Key Decryption)" bordered={false} className="shadow-sm">
-            <Space direction="vertical" style={{ width: '100%' }}>
+        <Col xs={24} md={12}>
+          <Card title="私钥解密 (Private Key Decryption)" variant="borderless" className="shadow-sm">
+            <Space orientation="vertical" style={{ width: '100%' }}>
               <Text strong>密文结果</Text>
               <TextArea
                 rows={4}
@@ -322,7 +322,7 @@ const MyCrypto = () => {
 
   return (
     <FixTabPanel>
-      <Card bordered={false} style={{ minHeight: '100%' }}>
+      <Card variant="borderless" style={{ minHeight: '100%' }}>
         <Title level={3}>加密算法实验室</Title>
         <Paragraph type="secondary">提供常用的对称加密 (AES) 和非对称加密 (RSA) 在线测试工具。</Paragraph>
         <Divider />

@@ -3,8 +3,10 @@ import Particles, { initParticlesEngine } from '@tsparticles/react'
 import { loadSlim } from '@tsparticles/slim'
 import clsx from 'clsx'
 import { motion, useAnimation } from 'motion/react'
+import { theme } from 'antd'
 
 const SparklesCore = (props) => {
+  const { token } = theme.useToken()
   const { id, className, background, minSize, maxSize, speed, particleColor, particleDensity } = props
   const [init, setInit] = useState(false)
   useEffect(() => {
@@ -38,7 +40,7 @@ const SparklesCore = (props) => {
           options={{
             background: {
               color: {
-                value: background || '#0d47a1',
+                value: background || token.colorBgLayout,
               },
             },
             fullScreen: {
@@ -99,7 +101,7 @@ const SparklesCore = (props) => {
                 },
               },
               color: {
-                value: particleColor || '#ffffff',
+                value: particleColor || token.colorText,
                 animation: {
                   h: {
                     count: 0,
