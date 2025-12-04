@@ -14,8 +14,8 @@ const FloatingIcon = ({ children, initialX }) => {
         y: Math.random() * 30 - 15,
         transition: {
           duration: 3,
-          ease: 'easeInOut',
-        },
+          ease: 'easeInOut'
+        }
       })
 
       // 递归调用前再次检查组件是否挂载
@@ -51,12 +51,12 @@ const FloatingIcon = ({ children, initialX }) => {
         top: -200,
         left: -200,
         right: 200,
-        bottom: 0,
+        bottom: 0
       }}
       whileDrag={{ scale: 1.1 }}
       initial={{ x: initialX, y: 0 }}
       animate={controls}
-      className="cursor-move"
+      className='cursor-move'
     >
       {children}
     </motion.div>
@@ -65,7 +65,7 @@ const FloatingIcon = ({ children, initialX }) => {
 
 export const SocialIcon = ({ icon: Icon, color, ...props }) => (
   <div className={`rounded-full p-3 ${color} shadow-lg transition-shadow hover:shadow-xl`}>
-    <Icon className="h-6 w-6 text-white" />
+    <Icon className='h-6 w-6 text-white' />
   </div>
 )
 
