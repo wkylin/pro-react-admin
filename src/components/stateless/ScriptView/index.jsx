@@ -52,7 +52,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage = 'bash', 
                     background: 'transparent',
                     margin: 0,
                     padding: '0.625rem 1rem',
-                    overflowX: 'auto',
+                    overflowX: 'auto'
                   }}
                 >
                   {tokens.map((line, i) => (
@@ -66,7 +66,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage = 'bash', 
               )}
             </Highlight>
           </div>
-          <button className={styles.copyButton} onClick={copyToClipboard} title="Copy command">
+          <button className={styles.copyButton} onClick={copyToClipboard} title='Copy command'>
             {copied ? <Check className={`${styles.icon} ${styles.checkIcon}`} /> : <Copy className={styles.icon} />}
           </button>
         </div>

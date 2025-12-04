@@ -31,8 +31,8 @@ const SectionNotFound = () => {
   return (
     <FixTabPanel>
       <Result
-        status="404"
-        title="模块子页面不存在"
+        status='404'
+        title='模块子页面不存在'
         subTitle={
           <Paragraph style={{ marginBottom: 0 }}>
             当前路径 <Text code>{pathname}</Text> 不在该模块的有效子路由列表中。
@@ -41,11 +41,11 @@ const SectionNotFound = () => {
           </Paragraph>
         }
         extra={
-          <Space size="middle">
+          <Space size='middle'>
             <Button icon={<ArrowLeftOutlined />} onClick={handleBackToSection}>
               返回模块首页
             </Button>
-            <Button type="primary" icon={<HomeOutlined />} onClick={handleBackHome}>
+            <Button type='primary' icon={<HomeOutlined />} onClick={handleBackHome}>
               返回首页
             </Button>
           </Space>

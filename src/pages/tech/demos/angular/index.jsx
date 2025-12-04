@@ -9,9 +9,9 @@ const AngularDemo = () => {
   return (
     <FixTabPanel>
       <Alert
-        title="Angular Demo"
-        description="This is a demo page for Angular technology stack."
-        type="success"
+        title='Angular Demo'
+        description='This is a demo page for Angular technology stack.'
+        type='success'
         showIcon
       />
       <span>Search Id: {term}</span>

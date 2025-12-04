@@ -10,8 +10,8 @@ export const techRoutes = [
     element: <WebpackPage />,
     meta: {
       title: 'Webpack',
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/build/vite',
@@ -19,7 +19,7 @@ export const techRoutes = [
     element: <VitePage />,
     meta: {
       title: 'Vite',
-      requiresAuth: true,
-    },
-  },
+      requiresAuth: true
+    }
+  }
 ]

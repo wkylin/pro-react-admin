@@ -32,7 +32,7 @@ import {
   ProjectOutlined,
   FileTextOutlined,
   ThunderboltOutlined,
-  ToolOutlined,
+  ToolOutlined
 } from '@ant-design/icons'
 import { t } from 'i18next' // 注意：这里可能需要处理 i18n
 
@@ -77,14 +77,14 @@ const rawMainLayoutMenu = [
             icon: <AppstoreOutlined />,
             children: [
               { label: 'Vue3 API', key: '/tech/frontend/plugins/vue3', icon: <FileTextOutlined /> },
-              { label: '性能优化', key: '/tech/frontend/plugins/perf', icon: <ThunderboltOutlined /> },
-            ],
-          },
-        ],
+              { label: '性能优化', key: '/tech/frontend/plugins/perf', icon: <ThunderboltOutlined /> }
+            ]
+          }
+        ]
       },
       { label: 'Angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> },
-      { label: 'Node', key: '/tech/frontend/node', icon: <CloudServerOutlined /> },
-    ],
+      { label: 'Node', key: '/tech/frontend/node', icon: <CloudServerOutlined /> }
+    ]
   },
   {
     label: '后端技术栈',
@@ -93,8 +93,8 @@ const rawMainLayoutMenu = [
     children: [
       { label: 'Node', key: '/tech/backend/node', icon: <CodeOutlined /> },
       { label: 'Java', key: '/tech/backend/java', icon: <CodeOutlined /> },
-      { label: 'Go', key: '/tech/backend/go', icon: <CodeOutlined /> },
-    ],
+      { label: 'Go', key: '/tech/backend/go', icon: <CodeOutlined /> }
+    ]
   },
   {
     label: '构建工具',
@@ -102,19 +102,19 @@ const rawMainLayoutMenu = [
     icon: <ApartmentOutlined />,
     children: [
       { label: 'Webpack', key: '/build/webpack', icon: <ToolOutlined /> },
-      { label: 'Vite', key: '/build/vite', icon: <ThunderboltOutlined /> },
-    ],
+      { label: 'Vite', key: '/build/vite', icon: <ThunderboltOutlined /> }
+    ]
   },
   {
     label: 'Error',
     key: '/sub-error',
     icon: <QuestionCircleOutlined />,
-    children: [{ label: 'ErrorBoundary', key: '/error' }],
-  },
+    children: [{ label: 'ErrorBoundary', key: '/error' }]
+  }
 ]
 
 // 规范化菜单：为每个项保证存在 `path` 字段（优先使用已有 path，否则复制 key）。
-function normalizeMenu(items) {
+function normalizeMenu (items) {
   return items.map((it) => {
     const { children, ...rest } = it
     const normalized = { ...rest, path: (it && it.path) || it.key }

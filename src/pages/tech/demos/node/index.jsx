@@ -13,9 +13,9 @@ const NodeDemo = () => {
   return (
     <FixTabPanel>
       <Alert
-        title="Node.js Demo"
-        description="This is a demo page for Node.js technology stack."
-        type="success"
+        title='Node.js Demo'
+        description='This is a demo page for Node.js technology stack.'
+        type='success'
         showIcon
       />
       <div>useParams: {JSON.stringify(params, null, 2)}</div>

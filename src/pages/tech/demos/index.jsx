@@ -8,13 +8,13 @@ const FrontendStack = () => {
 
   return (
     <FixTabPanel>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend/react')}>
+      <Button type='primary' style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend/react')}>
         React
       </Button>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend/vue')}>
+      <Button type='primary' style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend/vue')}>
         Vue
       </Button>
-      <Button type="primary" style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend/angular')}>
+      <Button type='primary' style={{ margin: 10 }} onClick={() => redirectTo('/tech/frontend/angular')}>
         Angular
       </Button>
     </FixTabPanel>
