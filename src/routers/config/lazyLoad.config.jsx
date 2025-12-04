@@ -36,7 +36,6 @@ export const lazyComponents = {
   Home, // 首页改为同步加载，避免首屏白屏闪烁
   Demo: lazyLoad(() => import('@pages/demo'), { preload: true }),
   Business: lazyLoad(() => import('@pages/business')),
-  BackendStack: lazyLoad(() => import('@pages/product'), { preload: true }),
 
   // UI 组件页面
   Motion: lazyLoad(() => import('@pages/motion')),
@@ -74,8 +73,8 @@ export const lazyComponents = {
   Profile: lazyLoad(() => import('@pages/profile')),
   Contact: lazyLoad(() => import('@pages/contact')),
 
-  // 优惠券模块（嵌套路由）
-  FrontendTech: lazyLoad(() => import('@pages/tech/frontend'), { preload: true }),
+  // 嵌套路由
+  BackendStack: lazyLoad(() => import('@pages/tech/backend'), { preload: true }),
   FrontendStack: lazyLoad(() => import('@pages/tech/frontend'), { preload: true }),
   ReactDemo: lazyLoad(() => import('@pages/tech/demos/react'), { preload: true }),
   VueDemo: lazyLoad(() => import('@pages/tech/demos/vue'), { preload: true }),
@@ -92,6 +91,7 @@ export const lazyComponents = {
   Exception403: lazyLoad(() => import('@stateless/Exception/exception403'), { preload: true }),
   Exception404: lazyLoad(() => import('@stateless/Exception/exception404'), { preload: true }),
   NoMatch: lazyLoad(() => import('@stateless/NoMatch'), { preload: true }),
+  SectionNotFound: lazyLoad(() => import('@stateless/SectionNotFound'), { preload: true }),
 }
 
 // 兼容性导出（保持原有导入方式）

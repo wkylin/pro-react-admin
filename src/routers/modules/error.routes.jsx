@@ -29,7 +29,7 @@ export const errorRoutes = [
   {
     path: '*',
     name: 'No Match',
-    key: '*',
+    key: '/404/*',
     element: <lazyComponents.NoMatch />,
   },
 ]

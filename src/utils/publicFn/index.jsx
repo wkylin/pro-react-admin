@@ -2,42 +2,29 @@ import React from 'react'
 import routes from '@src/routers/index'
 import Exception404 from '@src/components/stateless/Exception/exception404'
 
-export const flattenRoutes = (arr) =>
+export const flattenRoutes = (arr = []) =>
   arr.reduce((prev, item) => {
-    if (Array.isArray(item.children)) {
-      prev.push(item)
+    if (!item) return prev
+    prev.push(item)
+    if (Array.isArray(item.children) && item.children.length > 0) {
+      prev.push(...flattenRoutes(item.children))
     }
-    return prev.concat(Array.isArray(item.children) ? flattenRoutes(item.children) : item)
+    return prev
   }, [])
 
 export const getKeyName = (pathName = '/404') => {
   const fullPath = String(pathName || '/')
-  const basePath = fullPath.split('?')[0].replace(/^\//, '')
+  const normalizedPath = normalizeMatchTarget(fullPath)
 
-  const flat = flattenRoutes(routes).filter((item) => !item.index)
+  const flat = flattenRoutes(routes).filter((item) => item && !item.index)
 
-  const matchRoute = (r) => {
-    if (!r || !r.path) return false
-    const rp = String(r.path).replace(/^\//, '')
-    if (rp === basePath) return true
-    if (rp.includes(':')) {
-      const pattern = '^' + rp.replace(/:[^/]+/g, '[^/]+') + '$'
-      try {
-        return new RegExp(pattern).test(basePath)
-      } catch (e) {
-        return false
-      }
-    }
-    if (rp.endsWith('*')) {
-      const base = rp.replace(/\*$/, '')
-      return basePath.startsWith(base)
-    }
-    return false
-  }
+  const matched = flat
+    .map((route) => buildMatchEntry(route, normalizedPath))
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score)
+    .at(0)
 
-  const found = flat.find(matchRoute)
-
-  if (!found) {
+  if (!matched) {
     return {
       title: 'Not Found',
       tabKey: '/404',
@@ -46,40 +33,126 @@ export const getKeyName = (pathName = '/404') => {
     }
   }
 
-  const { name, key, element, index, path, auth, i18nKey } = found
+  const { route, candidate } = matched
+  const { name, element, index, auth, i18nKey } = route
 
-  // Behavior:
-  // - For parameterized routes (path includes ':'), by default use pathname (without query)
-  //   so different query strings won't create new tabs. If route.meta.keepQueryTabs === true,
-  //   use the full path (including query) instead.
-  // - For non-parameterized routes, if route.meta.keepQueryTabs === true OR the URL
-  //   contains query params and meta explicitly asks to keep them, we will use fullPath.
-  const isParamRoute = String(found.path || '').includes(':')
-  const keepQuery = found.meta && found.meta.keepQueryTabs === true
+  const keepQuery = route.meta?.keepQueryTabs === true
+  const routePattern = String(route.meta?.routeKey || route.key || route.path || candidate || '')
+  const isParamRoute = routePattern.includes(':')
+  const matchedByWildcard = routePattern.includes('*') || (candidate && String(candidate).includes('*'))
+  const normalizedActualPath = normalizeTabKey(`/${normalizedPath}`)
+  const baseTabKey = normalizeTabKey(route.meta?.routeKey || route.key || candidate || normalizedActualPath)
 
   let tabKey
-  // If URL contains query params, use fullPath so tabs opened with queries render correctly
   if (fullPath.includes('?')) {
     tabKey = fullPath
-  } else if (isParamRoute) {
-    tabKey = keepQuery ? fullPath : basePath
+  } else if (isParamRoute || matchedByWildcard) {
+    tabKey = keepQuery ? fullPath : normalizedActualPath
   } else {
-    tabKey = keepQuery ? fullPath : key || path || fullPath
+    tabKey = keepQuery ? fullPath : baseTabKey
   }
 
-  // normalize tabKey to be a string and ensure it starts with '/'
-  tabKey = String(tabKey || '')
-  if (!tabKey.startsWith('/')) tabKey = '/' + tabKey
+  tabKey = normalizeTabKey(tabKey)
 
   return {
     index: index ?? false,
-    path,
+    path: route.meta?.routePath || route.path,
     auth,
-    title: name,
+    title: name || route.meta?.title || 'Unknown Route',
     tabKey,
-    element,
+    element: element || <Exception404 />,
     i18nKey,
   }
+}
+
+const buildMatchEntry = (route, normalizedPath) => {
+  const candidates = collectRouteIdentifiers(route)
+  let bestCandidate = null
+  let bestScore = -1
+
+  candidates.forEach((candidate) => {
+    if (!doesPathMatch(normalizedPath, candidate)) return
+    const score = calcMatchScore(candidate)
+    if (score > bestScore) {
+      bestScore = score
+      bestCandidate = candidate
+    }
+  })
+
+  if (!bestCandidate) return null
+
+  return {
+    route,
+    candidate: bestCandidate,
+    score: bestScore,
+  }
+}
+
+const collectRouteIdentifiers = (route = {}) => {
+  const identifiers = []
+  const add = (value) => {
+    if (value === undefined || value === null) return
+    const val = String(value).trim()
+    if (val === '') return
+    identifiers.push(val)
+  }
+
+  add(route.meta?.routePath)
+  add(route.meta?.routeKey)
+  add(route.meta?.legacyKey)
+  add(route.key)
+  add(route.path)
+
+  return Array.from(new Set(identifiers))
+}
+
+const normalizeMatchTarget = (fullPath) =>
+  String(fullPath || '/')
+    .split('?')[0]
+    .replace(/^\//, '')
+
+const doesPathMatch = (normalizedPath, candidate) => {
+  if (candidate === undefined || candidate === null) return false
+  const value = String(candidate).trim()
+  const candidatePath = value.replace(/^\//, '')
+
+  if (!candidatePath) {
+    return normalizedPath === ''
+  }
+
+  if (candidatePath === normalizedPath) {
+    return true
+  }
+
+  if (candidatePath.includes(':')) {
+    const pattern = '^' + candidatePath.replace(/:[^/]+/g, '[^/]+') + '$'
+    try {
+      return new RegExp(pattern).test(normalizedPath)
+    } catch (error) {
+      console.warn('getKeyName: invalid route pattern', candidatePath, error)
+      return false
+    }
+  }
+
+  if (candidatePath.endsWith('*')) {
+    const base = candidatePath.replace(/\*$/, '')
+    if (!base) return false
+    const normalizedBase = base.replace(/\/$/, '')
+    return normalizedPath.startsWith(normalizedBase)
+  }
+
+  return false
+}
+
+const calcMatchScore = (candidate) => {
+  if (!candidate) return 0
+  return String(candidate).replace(/^\//, '').replace(/\*/g, '').length
+}
+
+const normalizeTabKey = (value) => {
+  if (!value) return '/'
+  const str = String(value)
+  return str.startsWith('/') ? str : `/${str}`
 }
 
 export const getLocalStorage = (key) => {

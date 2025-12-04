@@ -61,46 +61,39 @@ const rawMainLayoutMenu = [
   { label: 'Profile', key: '/profile', icon: <UserOutlined /> },
   { label: 'Contact', key: '/contact', icon: <ContactsOutlined /> },
   {
-    label: '技术栈',
-    key: '/tech',
+    label: '前端技术栈',
+    key: '/tech/frontend',
     icon: <DeploymentUnitOutlined />,
     children: [
+      { label: 'React', key: '/tech/frontend/react', icon: <CodeOutlined /> },
       {
-        label: '前端技术栈',
-        key: '/tech/frontend',
-        icon: <Html5Outlined />,
+        label: 'Vue',
+        key: '/tech/frontend/vue',
+        icon: <CodeOutlined />,
         children: [
           {
-            label: '框架生态',
-            key: '/tech/frontend/framework',
+            label: 'Vue 插件',
+            key: '/tech/frontend/plugins',
             icon: <AppstoreOutlined />,
             children: [
-              {
-                label: 'Vue',
-                key: '/tech/frontend/vue',
-                icon: <CodeOutlined />,
-                children: [
-                  {
-                    label: 'Vue 插件',
-                    key: '/tech/frontend/vue/plugins',
-                    icon: <AppstoreOutlined />,
-                    children: [
-                      { label: 'Vue3 API', key: '/tech/frontend/vue/plugins/vue3', icon: <FileTextOutlined /> },
-                      { label: '性能优化', key: '/tech/frontend/vue/plugins/perf', icon: <ThunderboltOutlined /> },
-                    ],
-                  },
-                ],
-              },
-              { label: 'Angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> },
+              { label: 'Vue3 API', key: '/tech/frontend/plugins/vue3', icon: <FileTextOutlined /> },
+              { label: '性能优化', key: '/tech/frontend/plugins/perf', icon: <ThunderboltOutlined /> },
             ],
           },
         ],
       },
-      {
-        label: '后端技术栈',
-        key: '/tech/backend',
-        icon: <CloudServerOutlined />,
-      },
+      { label: 'Angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> },
+      { label: 'Node', key: '/tech/frontend/node', icon: <CloudServerOutlined /> },
+    ],
+  },
+  {
+    label: '后端技术栈',
+    key: '/tech/backend',
+    icon: <CloudServerOutlined />,
+    children: [
+      { label: 'Node', key: '/tech/backend/node', icon: <CodeOutlined /> },
+      { label: 'Java', key: '/tech/backend/java', icon: <CodeOutlined /> },
+      { label: 'Go', key: '/tech/backend/go', icon: <CodeOutlined /> },
     ],
   },
   {

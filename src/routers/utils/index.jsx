@@ -113,11 +113,10 @@ export const annotateRoutesWithPermissions = (routes = []) => {
     arr.map((r) => {
       const meta = { ...(r.meta || {}) }
       // 首先按 key 匹配 permission map
-      if (r.key && routePermissionMap[r.key]) {
-        meta.permission = routePermissionMap[r.key]
-      } else if (r.path && routePermissionMap[r.path]) {
-        // 回退：按 path 精确匹配（若 key 不可用）
-        meta.permission = routePermissionMap[r.path]
+      const identifiers = collectRouteIdentifiers(r)
+      const matched = identifiers.find((id) => routePermissionMap[id])
+      if (matched) {
+        meta.permission = routePermissionMap[matched]
       }
       const next = { ...r, meta }
       if (Array.isArray(r.children)) {
@@ -140,8 +139,8 @@ export const annotateRoutesWithPermissions = (routes = []) => {
 export const filterRoutesByAccessiblePaths = (routes = [], accessiblePaths = []) => {
   const set = new Set(accessiblePaths)
   const match = (route) => {
-    // 优先使用 key，其次 path
-    return (route.key && set.has(route.key)) || (route.path && set.has(route.path))
+    const identifiers = collectRouteIdentifiers(route)
+    return identifiers.some((id) => set.has(id))
   }
 
   const walk = (arr = []) =>
@@ -155,4 +154,25 @@ export const filterRoutesByAccessiblePaths = (routes = [], accessiblePaths = [])
       .filter(Boolean)
 
   return walk(routes)
+}
+
+const collectRouteIdentifiers = (route = {}) => {
+  const identifiers = []
+  const add = (value) => {
+    if (!value) return
+    if (value === '*') {
+      identifiers.push('/*')
+      return
+    }
+    const normalized = value.startsWith('/') ? value : `/${value}`
+    identifiers.push(normalized)
+  }
+
+  add(route.key)
+  add(route.meta?.routeKey)
+  add(route.meta?.routePath)
+  add(route.meta?.legacyKey)
+  add(route.path)
+
+  return Array.from(new Set(identifiers))
 }

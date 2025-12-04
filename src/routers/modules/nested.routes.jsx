@@ -1,10 +1,15 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import { lazyComponents } from '../config/lazyLoad.config'
+import RouterErrorElement from '@/components/RouterErrorElement'
 
 /**
  * 嵌套路由配置
- * 包含需要嵌套子路由的模块
+ * 规则总结：
+ * 1. 所有 key 必须等于该路由真实匹配的完整 URL
+ * 2. index: true 的路由，其 key = 父路由的完整路径（绝不能写成 /xxx/index）
+ * 3. 中间层级路由（有子路由）必须使用 <Outlet />
+ * 4. 面包屑、菜单高亮、权限控制全部依赖 key，保持一致极为重要
  */
 export const nestedRoutes = [
   // 前端技术栈模块（嵌套路由）
@@ -13,11 +18,12 @@ export const nestedRoutes = [
     name: '前端技术栈',
     key: '/tech/frontend',
     element: <Outlet />,
+    errorElement: <RouterErrorElement />,
     children: [
       {
         index: true,
-        name: '前端技术栈',
-        key: '/tech/frontend/index',
+        name: '前端技术栈首页',
+        key: '/tech/frontend',
         element: <lazyComponents.FrontendStack />,
       },
       {
@@ -39,52 +45,68 @@ export const nestedRoutes = [
         element: <lazyComponents.AngularDemo />,
       },
       {
-        path: 'node',
-        name: 'Node',
-        key: '/tech/frontend/node',
-        element: <lazyComponents.NodeDemo />,
-      },
-      // 补充中间层级路由（用于面包屑显示）
-      {
-        path: 'vue/plugins',
+        path: 'plugins',
         name: 'Vue 插件',
-        key: '/tech/frontend/vue/plugins',
+        key: '/tech/frontend/plugins',
         element: <Outlet />,
+        errorElement: <RouterErrorElement />,
         children: [
           {
             index: true,
-            name: 'Vue 插件列表',
-            key: '/tech/frontend/vue/plugins/index',
+            name: '插件总览',
+            key: '/tech/frontend/plugins',
             element: <lazyComponents.VuePlugins />,
           },
           {
             path: 'vue3',
-            name: 'Vue3 API',
-            key: '/tech/frontend/vue/plugins/vue3',
+            name: 'Vue3 插件开发',
+            key: '/tech/frontend/plugins/vue3',
             element: <lazyComponents.Vue3Plugin />,
           },
           {
             path: 'perf',
-            name: '性能优化',
-            key: '/tech/frontend/vue/plugins/perf',
+            name: '性能优化插件',
+            key: '/tech/frontend/plugins/perf',
             element: <lazyComponents.VuePerfPlugin />,
+          },
+          {
+            path: '*',
+            name: '插件页面未找到',
+            key: '/tech/frontend/plugins/*',
+            element: <lazyComponents.SectionNotFound />,
           },
         ],
       },
+
+      // 前端模块 404
+      {
+        path: '*',
+        name: '前端页面未找到',
+        key: '/tech/frontend/*',
+        element: <lazyComponents.SectionNotFound />,
+      },
     ],
   },
+
   // 后端技术栈模块（嵌套路由）
   {
     path: 'tech/backend',
     name: '后端技术栈',
     key: '/tech/backend',
     element: <Outlet />,
+    errorElement: <RouterErrorElement />,
     children: [
       {
         index: true,
-        name: '后端技术栈',
-        key: '/tech/backend/index',
+        name: '后端技术栈首页',
+        key: '/tech/backend',
         element: <lazyComponents.BackendStack />,
+      },
+      {
+        path: 'node',
+        name: 'Node.js',
+        key: '/tech/backend/node',
+        element: <lazyComponents.NodeDemo />,
       },
       {
         path: 'java',
@@ -97,6 +119,14 @@ export const nestedRoutes = [
         name: 'Go',
         key: '/tech/backend/go',
         element: <lazyComponents.NodeDemo />,
+      },
+
+      // 后端模块 404
+      {
+        path: '*',
+        name: '后端页面未找到',
+        key: '/tech/backend/*',
+        element: <lazyComponents.SectionNotFound />,
       },
     ],
   },

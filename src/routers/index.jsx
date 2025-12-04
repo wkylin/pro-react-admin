@@ -35,8 +35,8 @@ mainLayoutRoute.children = [
   ...techRoutes,
 ]
 
-// 构建完整路由配置
-const rootRouter = [
+// 构建完整路由配置（原始数据）
+const rawRootRouter = [
   // 主布局路由（包含所有子路由）
   mainLayoutRoute,
   // 认证相关路由
@@ -49,8 +49,94 @@ const rootRouter = [
   ...errorRoutes.filter((route) => route.path === '*'),
 ]
 
+// 统一 path/key，补齐缺失信息，输出标准化路由树
+const rootRouter = normalizeRouteTree(rawRootRouter)
+
 // ✅ 注入 meta.permission（不改变现有结构，仅增强）
 const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
+
+function normalizeRouteTree(routes, parentFullPath = '') {
+  if (!Array.isArray(routes)) return []
+
+  return routes.map((route) => {
+    const fullPath = buildFullPath(parentFullPath, route)
+    const normalizedKey = normalizeKeyValue(route.key || fullPath)
+    const next = {
+      ...route,
+      key: normalizedKey,
+      meta: {
+        ...(route.meta || {}),
+        routePath: fullPath,
+        routeKey: fullPath,
+        ...(route.key && normalizedKey !== route.key ? { legacyKey: route.key } : {}),
+      },
+    }
+
+    if (!next.path && !next.index && fullPath && fullPath !== '/') {
+      next.path = fullPath.startsWith('/') ? fullPath.slice(1) : fullPath
+    }
+
+    if (Array.isArray(route.children) && route.children.length > 0) {
+      next.children = normalizeRouteTree(route.children, fullPath)
+    }
+
+    return next
+  })
+}
+
+function buildFullPath(parentFullPath = '', route = {}) {
+  const safeParent = stripWildcardSuffix(parentFullPath)
+  const base = !safeParent || safeParent === '/' ? '' : safeParent
+
+  if (route.index) {
+    return safeParent || '/'
+  }
+
+  const rawPath = route.path
+  if (!rawPath || rawPath === '/') {
+    return safeParent || '/'
+  }
+
+  if (rawPath === '*') {
+    return safeParent ? `${safeParent}/*` : '/*'
+  }
+
+  const candidate = rawPath.startsWith('/') ? rawPath : `${base}/${rawPath}`
+  return normalizePattern(candidate)
+}
+
+function normalizePattern(value = '/') {
+  if (!value) return '/'
+
+  const hasWildcard = value.endsWith('/*')
+  const trimmed = hasWildcard ? value.slice(0, -2) : value
+  let normalized = trimmed.replace(/\/+/g, '/')
+  if (!normalized.startsWith('/')) {
+    normalized = `/${normalized}`
+  }
+  if (normalized.length > 1 && normalized.endsWith('/')) {
+    normalized = normalized.slice(0, -1)
+  }
+  if (hasWildcard) {
+    return normalized === '/' ? '/*' : `${normalized}/*`
+  }
+  return normalized
+}
+
+function normalizeKeyValue(value = '/') {
+  if (!value) return '/'
+  if (value === '*') return '/*'
+  if (value.startsWith('/')) return value
+  return `/${value}`
+}
+
+function stripWildcardSuffix(path = '') {
+  if (!path) return ''
+  if (path.endsWith('/*')) {
+    return path.slice(0, -2) || '/'
+  }
+  return path
+}
 
 // ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
 export function flattenRoutes(routes) {
@@ -91,26 +177,47 @@ export function getKeyName(path = '/') {
       .split('?')[0]
       .replace(/^\//, '')
 
-    const matchRoute = (r) => {
-      if (!r || !r.path) return false
-      const rp = String(r.path).replace(/^\//, '')
-      if (rp === normalized) return true
-      // support param routes like 'notification/:id' -> match '/notification/1'
-      if (rp.includes(':')) {
-        const pattern = '^' + rp.replace(/:[^/]+/g, '[^/]+') + '$'
+    const doesMatch = (candidate) => {
+      if (!candidate && candidate !== '') return false
+      const value = String(candidate).trim()
+      if (!value) {
+        return normalized === ''
+      }
+      const candidatePath = value.replace(/^\//, '')
+
+      if (candidatePath === '' && normalized === '') {
+        return true
+      }
+
+      if (candidatePath === normalized) {
+        return true
+      }
+
+      if (candidatePath.includes(':')) {
+        const pattern = '^' + candidatePath.replace(/:[^/]+/g, '[^/]+') + '$'
         try {
-          const re = new RegExp(pattern)
-          return re.test(normalized)
+          return new RegExp(pattern).test(normalized)
         } catch (err) {
+          console.warn('getKeyName: invalid route pattern', candidatePath, err)
           return false
         }
       }
-      // support wildcard routes ending with *
-      if (rp.endsWith('*')) {
-        const base = rp.replace(/\*$/, '')
-        return normalized.startsWith(base)
+
+      if (candidatePath.endsWith('*')) {
+        const base = candidatePath.replace(/\*$/, '')
+        if (!base) {
+          return false
+        }
+        return normalized.startsWith(base.replace(/\/$/, ''))
       }
+
       return false
+    }
+
+    const matchRoute = (r) => {
+      if (!r) return false
+      const candidates = [r.meta?.routePath, r.key, r.meta?.legacyKey, r.path]
+      return candidates.some((candidate) => doesMatch(candidate))
     }
 
     const route = flatRoutes.find(matchRoute)
@@ -120,8 +227,8 @@ export function getKeyName(path = '/') {
       return path
     }
 
-    // prefer explicit meta.key, then route.key, then meta.title, then path
-    return route.meta?.key || route.key || route.meta?.title || path
+    // prefer explicit meta.key, then existing key, then normalized path, title, fallback path
+    return route.meta?.key || route.key || route.meta?.routeKey || route.meta?.title || path
   } catch (error) {
     console.error('getKeyName error:', error)
     return path
