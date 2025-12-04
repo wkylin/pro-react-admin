@@ -32,7 +32,7 @@ import {
   ProjectOutlined,
   FileTextOutlined,
   ThunderboltOutlined,
-  ToolOutlined,
+  ToolOutlined
 } from '@ant-design/icons'
 import { t } from 'i18next' // 注意：这里可能需要处理 i18n
 
@@ -86,22 +86,22 @@ const rawMainLayoutMenu = [
                     icon: <AppstoreOutlined />,
                     children: [
                       { label: 'Vue3 API', key: '/tech/frontend/vue/plugins/vue3', icon: <FileTextOutlined /> },
-                      { label: '性能优化', key: '/tech/frontend/vue/plugins/perf', icon: <ThunderboltOutlined /> },
-                    ],
-                  },
-                ],
+                      { label: '性能优化', key: '/tech/frontend/vue/plugins/perf', icon: <ThunderboltOutlined /> }
+                    ]
+                  }
+                ]
               },
-              { label: 'Angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> },
-            ],
-          },
-        ],
+              { label: 'Angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> }
+            ]
+          }
+        ]
       },
       {
         label: '后端技术栈',
         key: '/tech/backend',
-        icon: <CloudServerOutlined />,
-      },
-    ],
+        icon: <CloudServerOutlined />
+      }
+    ]
   },
   {
     label: '构建工具',
@@ -109,19 +109,19 @@ const rawMainLayoutMenu = [
     icon: <ApartmentOutlined />,
     children: [
       { label: 'Webpack', key: '/build/webpack', icon: <ToolOutlined /> },
-      { label: 'Vite', key: '/build/vite', icon: <ThunderboltOutlined /> },
-    ],
+      { label: 'Vite', key: '/build/vite', icon: <ThunderboltOutlined /> }
+    ]
   },
   {
     label: 'Error',
     key: '/sub-error',
     icon: <QuestionCircleOutlined />,
-    children: [{ label: 'ErrorBoundary', key: '/error' }],
-  },
+    children: [{ label: 'ErrorBoundary', key: '/error' }]
+  }
 ]
 
 // 规范化菜单：为每个项保证存在 `path` 字段（优先使用已有 path，否则复制 key）。
-function normalizeMenu(items) {
+function normalizeMenu (items) {
   return items.map((it) => {
     const { children, ...rest } = it
     const normalized = { ...rest, path: (it && it.path) || it.key }

@@ -13,47 +13,47 @@ export const techRoutes = [
     element: <Vue3Api />,
     meta: {
       title: 'Vue3 API',
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/tech/frontend/vue/plugins/perf',
     element: <VuePerf />,
     meta: {
       title: 'Vue 性能优化',
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/tech/frontend/angular',
     element: <AngularPage />,
     meta: {
       title: 'Angular',
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/tech/backend',
     element: <BackendPage />,
     meta: {
       title: '后端技术栈',
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/build/webpack',
     element: <WebpackPage />,
     meta: {
       title: 'Webpack',
-      requiresAuth: true,
-    },
+      requiresAuth: true
+    }
   },
   {
     path: '/build/vite',
     element: <VitePage />,
     meta: {
       title: 'Vite',
-      requiresAuth: true,
-    },
-  },
+      requiresAuth: true
+    }
+  }
 ]
