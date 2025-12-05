@@ -20,13 +20,13 @@ const ProContent = () => {
     key: '',
     closable: false,
     path: '',
-    i18nKey: '',
+    i18nKey: ''
   })
 
   const pathRef = useRef('')
   const { pathname, search } = useLocation()
   const {
-    token: { colorBgContainer, colorBgLayout },
+    token: { colorBgContainer, colorBgLayout }
   } = theme.useToken()
   useEffect(() => {
     // pass full path (including search) so getKeyName can consider query params
@@ -41,24 +41,24 @@ const ProContent = () => {
       key: tabKey,
       closable: tabKey !== '/',
       path: newPath,
-      i18nKey,
+      i18nKey
     })
     setTabActiveKey(tabKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, search, panes, activeKey])
 
   return (
-    <Layout className={styles.layout} id="fullScreen">
-      <Header className="layout-header" style={{ backgroundColor: colorBgLayout }}>
-        <section className="flex items-center justify-between">
+    <Layout className={styles.layout} id='fullScreen'>
+      <Header className='layout-header' style={{ backgroundColor: colorBgLayout }}>
+        <section className='flex items-center justify-between'>
           <ProBreadcrumb />
           {/* <ClockFace /> */}
         </section>
       </Header>
-      <Content className="layout-content" id="fullScreenContent" style={{ backgroundColor: colorBgContainer }}>
+      <Content className='layout-content' id='fullScreenContent' style={{ backgroundColor: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
-      <Footer className="layout-footer">
+      <Footer className='layout-footer'>
         <Space>&copy; {new Date().getFullYear()} Pro React Admin</Space>
       </Footer>
     </Layout>

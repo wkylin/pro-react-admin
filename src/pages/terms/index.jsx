@@ -10,7 +10,7 @@ const { Content } = Layout
 const Terms = () => {
   const { redirectTo } = useSafeNavigate()
   const {
-    token: { colorBgContainer, colorBgLayout, colorText },
+    token: { colorBgContainer, colorBgLayout, colorText }
   } = theme.useToken()
 
   return (
@@ -25,20 +25,20 @@ const Terms = () => {
             backgroundColor: colorBgContainer,
             height: '90vh',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'column'
           }}
           styles={{
             body: {
               padding: 0,
               height: '100%',
               display: 'flex',
-              flexDirection: 'column',
-            },
+              flexDirection: 'column'
+            }
           }}
         >
           <div style={{ padding: '24px 40px 0 40px', flexShrink: 0 }}>
             <Button
-              type="text"
+              type='text'
               icon={<ArrowLeftOutlined />}
               onClick={() => redirectTo('/signup')}
               style={{ marginBottom: 16, paddingLeft: 0, color: colorText }}
@@ -49,7 +49,7 @@ const Terms = () => {
           <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '0 40px 40px 40px' }}>
             <Title level={2}>用户协议 (Terms of Service)</Title>
             <Paragraph>
-              <Text type="secondary">最后更新日期：2025年11月25日</Text>
+              <Text type='secondary'>最后更新日期：2025年11月25日</Text>
             </Paragraph>
 
             <Title level={4}>1. 服务条款的接受</Title>

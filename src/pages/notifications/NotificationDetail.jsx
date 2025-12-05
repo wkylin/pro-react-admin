@@ -48,18 +48,20 @@ const NotificationDetail = () => {
       title={data ? data.title : `通知 ${id}`}
       style={{ width: '100%', backgroundColor: bgColor, boxShadow, border: `1px solid ${borderColor}` }}
     >
-      {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-          <Spin />
-        </div>
-      ) : (
-        <>
-          <p style={{ color }}>{data ? data.body : '暂无数据'}</p>
-          <div style={{ marginTop: 12 }}>
-            <Button onClick={() => redirectTo('/notifications' + (search || ''))}>返回通知中心</Button>
+      {loading
+        ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+            <Spin />
           </div>
-        </>
-      )}
+          )
+        : (
+          <>
+            <p style={{ color }}>{data ? data.body : '暂无数据'}</p>
+            <div style={{ marginTop: 12 }}>
+              <Button onClick={() => redirectTo('/notifications' + (search || ''))}>返回通知中心</Button>
+            </div>
+          </>
+          )}
     </Card>
   )
 }

@@ -46,29 +46,31 @@ const ProLayout = () => {
           isMobile={isMobile}
           onMobileMenuClick={() => setMobileOpen(true)}
         >
-          {layout === 'top' && !isMobile ? <ProSecNav mode="horizontal" theme={effectiveNavTheme} /> : null}
+          {layout === 'top' && !isMobile ? <ProSecNav mode='horizontal' theme={effectiveNavTheme} /> : null}
         </ProHeader>
         <Layout className={styles.layout}>
-          {isMobile ? (
-            <Drawer
-              placement="left"
-              onClose={() => setMobileOpen(false)}
-              open={mobileOpen}
-              size={208}
-              styles={{ body: { padding: 0 } }}
-              closable={false}
-            >
-              <ProSider theme={effectiveNavTheme} isMobile={true} collapsed={false}>
-                <ProSecNav mode="inline" theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
-              </ProSider>
-            </Drawer>
-          ) : (
-            layout !== 'top' && (
-              <ProSider theme={effectiveNavTheme} collapsed={collapsed} onCollapse={setCollapsed}>
-                <ProSecNav mode="inline" theme={effectiveNavTheme} />
-              </ProSider>
-            )
-          )}
+          {isMobile
+            ? (
+              <Drawer
+                placement='left'
+                onClose={() => setMobileOpen(false)}
+                open={mobileOpen}
+                size={208}
+                styles={{ body: { padding: 0 } }}
+                closable={false}
+              >
+                <ProSider theme={effectiveNavTheme} isMobile collapsed={false}>
+                  <ProSecNav mode='inline' theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
+                </ProSider>
+              </Drawer>
+              )
+            : (
+                layout !== 'top' && (
+                  <ProSider theme={effectiveNavTheme} collapsed={collapsed} onCollapse={setCollapsed}>
+                    <ProSecNav mode='inline' theme={effectiveNavTheme} />
+                  </ProSider>
+                )
+              )}
           <ProContent />
         </Layout>
       </ProTabProvider>

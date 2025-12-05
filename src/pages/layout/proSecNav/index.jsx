@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { message } from 'antd'
-import { Menu } from 'antd'
+import { message, Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +11,7 @@ import {
   QuestionCircleOutlined,
   FireOutlined,
   GlobalOutlined,
-  QrcodeOutlined,
+  QrcodeOutlined
 } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
 import { annotatedRootRouter, flattenRoutes } from '@src/routers'
@@ -154,7 +153,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const onSelect = async ({ key }) => {
     try {
       // key 是菜单项的 key（标识），但实际跳转/权限检查应以 path 为准。
-      const selected = (function findByKey(items, k) {
+      const selected = (function findByKey (items, k) {
         for (const it of items) {
           if (it.key === k) return it
           if (it.children) {
@@ -267,7 +266,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         const base = {
           ...rest,
           path,
-          label: Label,
+          label: Label
         }
         return children ? { ...base, children: children.map(translateItem) } : base
       }
@@ -375,7 +374,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         const base = {
           ...rest,
           path: i.path || i.key,
-          label: i18nKey ? t(i18nKey) : i.label,
+          label: i18nKey ? t(i18nKey) : i.label
         }
         return children ? { ...base, children: children.map(translateItem) } : base
       }
