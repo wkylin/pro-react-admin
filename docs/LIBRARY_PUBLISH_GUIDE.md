@@ -52,6 +52,7 @@
 ## 2. 开发规范
 
 ### 2.1 组件开发
+
 - **目录结构**:
   - `src/components/stateless/`: 无状态组件（UI 组件）
   - `src/components/stateful/`: 有状态组件（业务组件）
@@ -60,12 +61,13 @@
 - **资源引用**: 图片、视频等资源应放在 `src/assets` 下，并使用别名 `@assets` 引用。
 
 ### 2.2 导出组件
+
 所有需要发布的组件必须在 `src/components/index.ts` 中导出：
 
 ```typescript
-export { default as MyComponent } from './stateless/MyComponent';
+export { default as MyComponent } from './stateless/MyComponent'
 // 或者命名导出
-export { MyComponent } from './stateless/MyComponent';
+export { MyComponent } from './stateless/MyComponent'
 ```
 
 ## 3. 构建流程
@@ -78,6 +80,7 @@ npm run build:lib
 ```
 
 构建产物包括：
+
 - `pro-react-components.es.js`: ESM 格式（用于现代构建工具）
 - `pro-react-components.umd.js`: UMD 格式（用于浏览器直接引入）
 - `style.css`: 所有组件的样式汇总
@@ -86,6 +89,7 @@ npm run build:lib
 ## 4. 发布流程
 
 ### 4.1 准备工作
+
 1. 确保代码已提交并推送到远程仓库。
 2. 登录 NPM 账号：
    ```bash
@@ -93,6 +97,7 @@ npm run build:lib
    ```
 
 ### 4.2 版本管理
+
 使用 `standard-version` 自动更新版本号并生成 CHANGELOG：
 
 ```bash
@@ -131,4 +136,3 @@ npm run pub:beta
 
 3. **样式丢失**:
    - 确保在使用库的项目中引入了样式文件：`import '@w.ui/wui-react/style.css';`
-

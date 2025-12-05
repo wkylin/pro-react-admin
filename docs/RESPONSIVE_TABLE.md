@@ -16,8 +16,8 @@
 ## 2. 快速开始
 
 ```tsx
-import React from 'react';
-import ResponsiveTable from '@/components/ResponsiveTable';
+import React from 'react'
+import ResponsiveTable from '@/components/ResponsiveTable'
 
 const UserList = () => {
   const columns = [
@@ -25,7 +25,7 @@ const UserList = () => {
     { title: '姓名', dataIndex: 'name', width: 120 },
     { title: '邮箱', dataIndex: 'email' },
     { title: '角色', dataIndex: 'role', width: 100 },
-  ];
+  ]
 
   return (
     <div style={{ height: '100vh', padding: 20 }}>
@@ -33,18 +33,20 @@ const UserList = () => {
         columns={columns}
         rowKey="id"
         fetchUrl="/api/users" // 自动从该 URL 获取数据
-        autoLoad={true}       // 挂载时自动加载
-        pageSyncToUrl={true}  // 分页同步到 URL
+        autoLoad={true} // 挂载时自动加载
+        pageSyncToUrl={true} // 分页同步到 URL
         toolbar={{
           search: {
             fields: [
               { name: 'name', label: '姓名', type: 'input' },
-              { name: 'role', label: '角色', type: 'select', options: [{ label: 'Admin', value: 'admin' }] }
-            ]
+              { name: 'role', label: '角色', type: 'select', options: [{ label: 'Admin', value: 'admin' }] },
+            ],
           },
           actions: [
-            <Button type="primary" key="add">新增用户</Button>
-          ]
+            <Button type="primary" key="add">
+              新增用户
+            </Button>,
+          ],
         }}
         actions={['view', 'edit', 'delete']} // 启用默认操作列
         onView={(record) => console.log('View', record)}
@@ -52,46 +54,46 @@ const UserList = () => {
         onDelete={(record) => console.log('Delete', record)}
       />
     </div>
-  );
-};
+  )
+}
 ```
 
 ## 3. API 参考 (Props)
 
 ### 3.1 基础配置
 
-| 属性 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `columns` | `ColumnsType<T>` | `[]` | 表格列定义（同 Antd Table）。 |
-| `dataSource` | `T[]` | `[]` | 数据源（当不使用自动获取时使用）。 |
-| `rowKey` | `string \| (record) => string` | `'id'` | 数据主键。 |
-| `minBodyHeight` | `number` | `120` | 表格内容区域的最小高度，用于计算 scroll.y。 |
-| `minWidth` | `number` | `600` | 表格的最小宽度，用于计算 scroll.x。 |
-| `scroll` | `object` | - | 覆盖自动计算的 scroll 属性。 |
+| 属性            | 类型                           | 默认值 | 说明                                        |
+| --------------- | ------------------------------ | ------ | ------------------------------------------- |
+| `columns`       | `ColumnsType<T>`               | `[]`   | 表格列定义（同 Antd Table）。               |
+| `dataSource`    | `T[]`                          | `[]`   | 数据源（当不使用自动获取时使用）。          |
+| `rowKey`        | `string \| (record) => string` | `'id'` | 数据主键。                                  |
+| `minBodyHeight` | `number`                       | `120`  | 表格内容区域的最小高度，用于计算 scroll.y。 |
+| `minWidth`      | `number`                       | `600`  | 表格的最小宽度，用于计算 scroll.x。         |
+| `scroll`        | `object`                       | -      | 覆盖自动计算的 scroll 属性。                |
 
 ### 3.2 数据获取与分页
 
-| 属性 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `fetchUrl` | `string` | `null` | 数据接口地址。组件会自动发起请求。 |
-| `requestMethod` | `'get' \| 'post'` | `'get'` | 请求方法。 |
-| `fetchData` | `(page, pageSize, sort, extra) => Promise` | `null` | 自定义数据获取函数，需返回 `{ data: [], total: 0 }` 结构（字段名可配置）。 |
-| `autoLoad` | `boolean` | `false` | 是否在组件挂载时自动触发首次加载。 |
-| `initialPagination` | `{ current, pageSize }` | `{ current: 1, pageSize: 10 }` | 初始分页配置。 |
-| `pageSyncToUrl` | `boolean` | `false` | 是否将 `page` 和 `pageSize` 同步到 URL 查询参数。 |
-| `requestParamMap` | `object` | `{ pageField: 'page', pageSizeField: 'pageSize', ... }` | 请求参数字段映射。 |
-| `responseFieldMap` | `object` | `{ listField: 'data', totalField: 'total' }` | 响应数据字段映射。 |
-| `serverSort` | `boolean` | `false` | 是否启用服务端排序。启用后点击表头会触发重新请求。 |
-| `defaultSort` | `{ field, order }` | `null` | 默认排序状态。 |
+| 属性                | 类型                                       | 默认值                                                  | 说明                                                                       |
+| ------------------- | ------------------------------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `fetchUrl`          | `string`                                   | `null`                                                  | 数据接口地址。组件会自动发起请求。                                         |
+| `requestMethod`     | `'get' \| 'post'`                          | `'get'`                                                 | 请求方法。                                                                 |
+| `fetchData`         | `(page, pageSize, sort, extra) => Promise` | `null`                                                  | 自定义数据获取函数，需返回 `{ data: [], total: 0 }` 结构（字段名可配置）。 |
+| `autoLoad`          | `boolean`                                  | `false`                                                 | 是否在组件挂载时自动触发首次加载。                                         |
+| `initialPagination` | `{ current, pageSize }`                    | `{ current: 1, pageSize: 10 }`                          | 初始分页配置。                                                             |
+| `pageSyncToUrl`     | `boolean`                                  | `false`                                                 | 是否将 `page` 和 `pageSize` 同步到 URL 查询参数。                          |
+| `requestParamMap`   | `object`                                   | `{ pageField: 'page', pageSizeField: 'pageSize', ... }` | 请求参数字段映射。                                                         |
+| `responseFieldMap`  | `object`                                   | `{ listField: 'data', totalField: 'total' }`            | 响应数据字段映射。                                                         |
+| `serverSort`        | `boolean`                                  | `false`                                                 | 是否启用服务端排序。启用后点击表头会触发重新请求。                         |
+| `defaultSort`       | `{ field, order }`                         | `null`                                                  | 默认排序状态。                                                             |
 
 ### 3.3 URL 参数合并 (高级)
 
-| 属性 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `mergeSearchToFetch` | `boolean` | `false` | 是否将 URL 中的查询参数合并到 `fetchUrl` 或 `fetchData` 的请求参数中。 |
-| `mergeSearchToFetchOnce` | `boolean` | `false` | 是否仅在首次加载时合并 URL 参数。 |
-| `clearUrlAfterInitialMerge` | `boolean` | `true` | 首次合并后是否清除 URL 中的查询参数（避免参数滞留）。 |
-| `showUrlAppliedTag` | `boolean` | `false` | 是否在工具栏显示“已应用地址栏初始筛选”的提示标签。 |
+| 属性                        | 类型      | 默认值  | 说明                                                                   |
+| --------------------------- | --------- | ------- | ---------------------------------------------------------------------- |
+| `mergeSearchToFetch`        | `boolean` | `false` | 是否将 URL 中的查询参数合并到 `fetchUrl` 或 `fetchData` 的请求参数中。 |
+| `mergeSearchToFetchOnce`    | `boolean` | `false` | 是否仅在首次加载时合并 URL 参数。                                      |
+| `clearUrlAfterInitialMerge` | `boolean` | `true`  | 首次合并后是否清除 URL 中的查询参数（避免参数滞留）。                  |
+| `showUrlAppliedTag`         | `boolean` | `false` | 是否在工具栏显示“已应用地址栏初始筛选”的提示标签。                     |
 
 ### 3.4 工具栏 (Toolbar)
 
@@ -121,47 +123,48 @@ const UserList = () => {
 
 ### 3.5 操作列 (Actions)
 
-| 属性 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `actions` | `Array<'view' \| 'edit' \| 'delete' \| ActionConfig>` | `['view', 'edit', 'delete']` | 配置操作列显示的按钮。支持预设字符串或自定义对象。 |
-| `actionsFixed` | `false \| 'left' \| 'right'` | `'right'` | 操作列是否固定。 |
-| `actionsWidth` | `number` | `180` | 操作列宽度。 |
-| `permissionChecker` | `(actionKey, record) => boolean` | `() => true` | 权限检查函数，返回 false 则隐藏对应按钮。 |
-| `onView` | `(record) => void` | - | 点击“查看”的回调。 |
-| `onEdit` | `(record) => void` | - | 点击“编辑”的回调。 |
-| `onDelete` | `(record) => void` | - | 点击“删除”的回调（已内置 Popconfirm）。 |
+| 属性                | 类型                                                  | 默认值                       | 说明                                               |
+| ------------------- | ----------------------------------------------------- | ---------------------------- | -------------------------------------------------- |
+| `actions`           | `Array<'view' \| 'edit' \| 'delete' \| ActionConfig>` | `['view', 'edit', 'delete']` | 配置操作列显示的按钮。支持预设字符串或自定义对象。 |
+| `actionsFixed`      | `false \| 'left' \| 'right'`                          | `'right'`                    | 操作列是否固定。                                   |
+| `actionsWidth`      | `number`                                              | `180`                        | 操作列宽度。                                       |
+| `permissionChecker` | `(actionKey, record) => boolean`                      | `() => true`                 | 权限检查函数，返回 false 则隐藏对应按钮。          |
+| `onView`            | `(record) => void`                                    | -                            | 点击“查看”的回调。                                 |
+| `onEdit`            | `(record) => void`                                    | -                            | 点击“编辑”的回调。                                 |
+| `onDelete`          | `(record) => void`                                    | -                            | 点击“删除”的回调（已内置 Popconfirm）。            |
 
 **ActionConfig 定义**:
+
 ```typescript
 type ActionConfig<T> = {
-  key: string;
-  label?: ReactNode;
-  onClick?: (record: T) => void;
-  confirm?: string; // 配置此项则显示 Popconfirm
-  icon?: ReactNode;
-  type?: 'link' | 'text' | 'primary' | 'default' | 'dashed';
-  danger?: boolean;
+  key: string
+  label?: ReactNode
+  onClick?: (record: T) => void
+  confirm?: string // 配置此项则显示 Popconfirm
+  icon?: ReactNode
+  type?: 'link' | 'text' | 'primary' | 'default' | 'dashed'
+  danger?: boolean
 }
 ```
 
 ### 3.6 序号与选择
 
-| 属性 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `showIndex` | `boolean` | `false` | 是否显示序号列。 |
-| `indexMode` | `'global' \| 'page'` | `'global'` | `global`: 全局连续序号；`page`: 每页从 1 开始。 |
-| `indexFixed` | `false \| 'left' \| 'right'` | `'left'` | 序号列是否固定。 |
-| `indexWidth` | `number` | `80` | 序号列宽度。 |
-| `rowSelection` | `'multiple' \| 'single' \| null` | `null` | 行选择模式。 |
-| `rowSelectable` | `(record) => boolean` | `null` | 判断某行是否可选。 |
+| 属性            | 类型                             | 默认值     | 说明                                            |
+| --------------- | -------------------------------- | ---------- | ----------------------------------------------- |
+| `showIndex`     | `boolean`                        | `false`    | 是否显示序号列。                                |
+| `indexMode`     | `'global' \| 'page'`             | `'global'` | `global`: 全局连续序号；`page`: 每页从 1 开始。 |
+| `indexFixed`    | `false \| 'left' \| 'right'`     | `'left'`   | 序号列是否固定。                                |
+| `indexWidth`    | `number`                         | `80`       | 序号列宽度。                                    |
+| `rowSelection`  | `'multiple' \| 'single' \| null` | `null`     | 行选择模式。                                    |
+| `rowSelectable` | `(record) => boolean`            | `null`     | 判断某行是否可选。                              |
 
 ### 3.7 其他
 
-| 属性 | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `apiRef` | `MutableRefObject` | `null` | 传入 ref 以获取组件实例 API。 |
-| `onToolbarReady` | `(api) => void` | `null` | 工具栏就绪时的回调，返回 api 对象。 |
-| `showColumnSettings` | `boolean` | `true` | 是否显示列设置按钮。 |
+| 属性                 | 类型               | 默认值 | 说明                                |
+| -------------------- | ------------------ | ------ | ----------------------------------- |
+| `apiRef`             | `MutableRefObject` | `null` | 传入 ref 以获取组件实例 API。       |
+| `onToolbarReady`     | `(api) => void`    | `null` | 工具栏就绪时的回调，返回 api 对象。 |
+| `showColumnSettings` | `boolean`          | `true` | 是否显示列设置按钮。                |
 
 ## 4. 组件实例 API (apiRef)
 
@@ -180,19 +183,19 @@ type ActionConfig<T> = {
 
 ```typescript
 const {
-  pagedData,       // 当前页数据
-  pagination,      // 分页状态
-  setPagination,   // 设置分页
-  tableScroll,     // 计算出的 scroll { x, y }
-  fetchPage,       // 数据加载函数
-  handleDelete,    // 删除处理（自动回退页码）
+  pagedData, // 当前页数据
+  pagination, // 分页状态
+  setPagination, // 设置分页
+  tableScroll, // 计算出的 scroll { x, y }
+  fetchPage, // 数据加载函数
+  handleDelete, // 删除处理（自动回退页码）
   selectedRowKeys, // 选中行
   // ...
 } = useTable({
   fetchUrl: '/api/data',
   autoLoad: true,
   // ... 其他配置同组件 Props
-});
+})
 ```
 
 ## 6. 最佳实践
@@ -235,7 +238,7 @@ actions={[
     icon: <AuditOutlined />,
     onClick: (record) => handleAudit(record),
     // 仅状态为 pending 时显示
-    permissionChecker: (key, record) => record.status === 'pending' 
+    permissionChecker: (key, record) => record.status === 'pending'
   },
   {
     key: 'danger_op',

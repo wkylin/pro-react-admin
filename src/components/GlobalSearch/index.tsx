@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, KeyboardEvent } from 'react'
 import { Modal, Input, Avatar, InputRef, theme } from 'antd'
 import Draggable from 'react-draggable'
 import useSafeNavigate from '@hooks/useSafeNavigate'
-import { useMenuSearch, MenuSearchResult } from '@src/hooks/useMenuSearch'
+import { useMenuSearch, MenuSearchResult } from '@src/app-hooks/useMenuSearch'
 import {
   SearchOutlined,
   FullscreenOutlined,

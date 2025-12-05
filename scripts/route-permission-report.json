@@ -203,10 +203,6 @@
     "tilt",
     "video"
   ],
-  "staleMappedKeys": [
-    "/chart",
-    "/ui",
-    "id"
-  ],
+  "staleMappedKeys": ["/chart", "/ui", "id"],
   "timestamp": "2025-11-23T12:57:54.890Z"
 }

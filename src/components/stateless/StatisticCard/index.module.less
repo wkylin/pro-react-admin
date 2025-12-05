@@ -4,36 +4,11 @@
   gap: 1.5rem;
   width: 100%;
   padding: 1rem;
-
-  &.dark {
-    .statisticCardItem {
-      background-color: #1f2937;
-      border-color: #374151;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-    }
-
-    .flexRoundLeft {
-      color: #e5e7eb;
-
-      .iconWrapper {
-        background-color: #1e3a8a;
-        color: #60a5fa;
-      }
-    }
-
-    .flexRoundRight {
-      color: #9ca3af;
-
-      .num {
-        color: #60a5fa;
-      }
-    }
-  }
 }
 
 .statisticCardItem {
   background: #fff;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px 0 rgb(0 0 0 / 5%);
   border-radius: 0.75rem;
   border: 1px solid #e5e7eb;
   padding: 1.5rem;
@@ -41,7 +16,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%);
   }
 }
 
@@ -96,7 +71,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .statisticCard {
     grid-template-columns: 1fr;
     padding: 0.5rem;
@@ -104,5 +79,30 @@
 
   .statisticCardItem {
     padding: 1.25rem;
+  }
+}
+
+.statisticCard.dark {
+  .statisticCardItem {
+    background-color: #1f2937;
+    border-color: #374151;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 30%);
+  }
+
+  .flexRoundLeft {
+    color: #e5e7eb;
+
+    .iconWrapper {
+      background-color: #1e3a8a;
+      color: #60a5fa;
+    }
+  }
+
+  .flexRoundRight {
+    color: #9ca3af;
+
+    .num {
+      color: #60a5fa;
+    }
   }
 }

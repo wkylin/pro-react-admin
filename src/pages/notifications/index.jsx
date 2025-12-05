@@ -5,7 +5,7 @@ import { Button, Badge, Typography, Modal, message } from 'antd'
 import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { usePermission } from '@/hooks/usePermission'
+import { usePermission } from '@/app-hooks/usePermission'
 import request from '@/service/request'
 
 const NotificationsPage = () => {

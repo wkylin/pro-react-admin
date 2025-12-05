@@ -103,52 +103,66 @@
       }
 
       @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
 
       @keyframes pulse {
-        0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.6; }
-        100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        0% {
+          transform: translate(-50%, -50%) scale(0.8);
+          opacity: 0.6;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1.2);
+          opacity: 1;
+        }
       }
 
       @keyframes shimmer {
-        0% { background-position: 0% center; }
-        100% { background-position: 200% center; }
+        0% {
+          background-position: 0% center;
+        }
+        100% {
+          background-position: 200% center;
+        }
       }
     </style>
 
     <script>
-      (function() {
+      ;(function () {
         try {
-          const STORAGE_KEY = 'pro-react-admin-theme-settings';
-          const stored = localStorage.getItem(STORAGE_KEY);
-          const root = document.documentElement;
+          const STORAGE_KEY = 'pro-react-admin-theme-settings'
+          const stored = localStorage.getItem(STORAGE_KEY)
+          const root = document.documentElement
 
           if (stored) {
-            const settings = JSON.parse(stored);
-            const mode = settings.themeMode || 'light';
-            const primary = settings.colorPrimary || '#1677ff';
+            const settings = JSON.parse(stored)
+            const mode = settings.themeMode || 'light'
+            const primary = settings.colorPrimary || '#1677ff'
 
             if (mode === 'dark') {
-              root.style.setProperty('--loader-bg', '#141414');
-              root.style.setProperty('--loader-text', '#ffffff');
-              root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)');
+              root.style.setProperty('--loader-bg', '#141414')
+              root.style.setProperty('--loader-text', '#ffffff')
+              root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)')
             }
 
             if (primary) {
-              root.style.setProperty('--loader-primary', primary);
+              root.style.setProperty('--loader-primary', primary)
             }
           } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-              // Fallback to system preference
-              root.style.setProperty('--loader-bg', '#141414');
-              root.style.setProperty('--loader-text', '#ffffff');
-              root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)');
+            // Fallback to system preference
+            root.style.setProperty('--loader-bg', '#141414')
+            root.style.setProperty('--loader-text', '#ffffff')
+            root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)')
           }
         } catch (e) {
-          console.error('Error setting loader theme:', e);
+          console.error('Error setting loader theme:', e)
         }
-      })();
+      })()
     </script>
 
     <div id="root"></div>

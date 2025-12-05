@@ -5,44 +5,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  &.dark {
-    .tabs {
-      background-color: #1f2937;
-    }
-
-    .tabButton {
-      color: #9ca3af;
-
-      &:hover {
-        color: #f3f4f6;
-      }
-
-      &.active {
-        background-color: #374151;
-        color: #f3f4f6;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-      }
-    }
-
-    .codeWrapper {
-      border-color: #374151;
-      background-color: #1f2937;
-    }
-
-    .copyButton {
-      color: #9ca3af;
-
-      &:hover {
-        background-color: #374151;
-        color: #f3f4f6;
-      }
-    }
-
-    .fallbackPre {
-      color: #e5e7eb;
-    }
-  }
 }
 
 .wrapper {
@@ -91,7 +53,7 @@
   &.active {
     background-color: #fff;
     color: #0f172a;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 5%);
   }
 }
 
@@ -109,7 +71,7 @@
 .codeContent {
   flex-grow: 1;
   min-width: 0; /* 防止 flex 子项溢出 */
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   font-size: 0.875rem;
 
   /* Shiki output styles override */
@@ -156,4 +118,42 @@
 
 .checkIcon {
   color: #10b981;
+}
+
+.container.dark {
+  .tabs {
+    background-color: #1f2937;
+  }
+
+  .tabButton {
+    color: #9ca3af;
+
+    &:hover {
+      color: #f3f4f6;
+    }
+
+    &.active {
+      background-color: #374151;
+      color: #f3f4f6;
+      box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
+    }
+  }
+
+  .codeWrapper {
+    border-color: #374151;
+    background-color: #1f2937;
+  }
+
+  .copyButton {
+    color: #9ca3af;
+
+    &:hover {
+      background-color: #374151;
+      color: #f3f4f6;
+    }
+  }
+
+  .fallbackPre {
+    color: #e5e7eb;
+  }
 }

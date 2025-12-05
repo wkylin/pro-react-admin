@@ -41,7 +41,11 @@ export type UseTableOptions<T = any> = {
 export type UseTableReturn<T = any> = {
   containerRef: ReturnType<typeof useRef>
   pagination: { current: number; pageSize: number }
-  setPagination: (p: { current: number; pageSize: number } | ((prev: { current: number; pageSize: number }) => { current: number; pageSize: number })) => void
+  setPagination: (
+    p:
+      | { current: number; pageSize: number }
+      | ((prev: { current: number; pageSize: number }) => { current: number; pageSize: number })
+  ) => void
   tableScroll: { x: number; y: number }
   pagedData: T[]
   handleDelete: (deleteFn: (record?: T) => Promise<any>, record?: T) => Promise<void>
@@ -189,7 +193,8 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
       const width = Math.max(Math.floor(rect.width || minWidth), minWidth)
 
       // table header inside the antd Table
-      const headerEl = (node.querySelector<HTMLElement>('.ant-table-header') || node.querySelector<HTMLElement>('.ant-table-thead'))
+      const headerEl =
+        node.querySelector<HTMLElement>('.ant-table-header') || node.querySelector<HTMLElement>('.ant-table-thead')
       const headerH = headerEl ? headerEl.offsetHeight : 56
 
       // toolbar (top actions / search) - subtract its height if present

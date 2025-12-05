@@ -1,6 +1,6 @@
 import React from 'react'
 // @ts-ignore: storybook types resolution can be environment-specific in CI/TS config
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-webpack5'
 import { MemoryRouter } from 'react-router-dom'
 
 import ResponsiveTable, { ResponsiveTableProps } from './index'

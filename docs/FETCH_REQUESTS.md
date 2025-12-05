@@ -55,7 +55,7 @@ await http.upload('/api/upload', formData)
 await http.download('/api/export', { id: 123 }, 'report.xlsx', {
   onProgress: ({ percent, loaded, total }) => {
     console.log(`下载进度: ${percent}%`)
-  }
+  },
 })
 ```
 
@@ -65,7 +65,7 @@ await http.download('/api/export', { id: 123 }, 'report.xlsx', {
 
 ```javascript
 // 请求拦截器
-http.useRequestInterceptor(config => {
+http.useRequestInterceptor((config) => {
   config.headers['Authorization'] = 'Bearer token'
   return config
 })
@@ -86,10 +86,7 @@ await http.retry(() => http.get('/api/unstable'), 3, 1000)
 **并发请求**:
 
 ```javascript
-const [user, posts] = await http.parallel([
-  { url: '/api/user/1' },
-  { url: '/api/user/1/posts' }
-])
+const [user, posts] = await http.parallel([{ url: '/api/user/1' }, { url: '/api/user/1/posts' }])
 ```
 
 **取消请求**:
@@ -105,9 +102,13 @@ controller.abort() // 取消请求
 默认情况下，`GET` 和 `DELETE` 请求会自动添加时间戳参数 `_` 以防止缓存。如果不需要此行为，可手动禁用。
 
 ```javascript
-await http.get('/api/static-data', {}, {
-  addTimestamp: false // 禁用自动添加时间戳
-})
+await http.get(
+  '/api/static-data',
+  {},
+  {
+    addTimestamp: false, // 禁用自动添加时间戳
+  }
+)
 ```
 
 ---
@@ -121,17 +122,17 @@ await http.get('/api/static-data', {}, {
 ```javascript
 const [data, loading, error, refetch] = useRequest('/api/data', {
   method: 'GET',
-  params: { id: 1 }
+  params: { id: 1 },
 })
 ```
 
 ### 2. 快捷 Hooks
 
-*   `useGet(url, options)` - GET 请求
-*   `usePost(url, options)` - POST 请求
-*   `usePut(url, options)` - PUT 请求
-*   `useDelete(url, options)` - DELETE 请求
-*   `usePatch(url, options)` - PATCH 请求
+- `useGet(url, options)` - GET 请求
+- `usePost(url, options)` - POST 请求
+- `usePut(url, options)` - PUT 请求
+- `useDelete(url, options)` - DELETE 请求
+- `usePatch(url, options)` - PATCH 请求
 
 **示例**:
 
@@ -164,15 +165,17 @@ const UserProfile = ({ id }) => {
 ## 四、API 参考
 
 ### FetchClient 配置 (Config)
-| 属性 | 类型 | 默认值 | 说明 |
-|---|---|---|---|
-| `BASE_URL` | string | `process.env.APP_BASE_URL` | 基础 URL |
-| `TIMEOUT` | number | `20000` | 超时时间 (ms) |
-| `HEADERS` | object | `{'Content-Type': 'application/json'}` | 默认请求头 |
-| `isShowError` | boolean | `true` | 请求失败时是否自动弹出错误提示 |
-| `addTimestamp` | boolean | `true` | 是否为 GET/DELETE 请求自动添加时间戳后缀 |
+
+| 属性           | 类型    | 默认值                                 | 说明                                     |
+| -------------- | ------- | -------------------------------------- | ---------------------------------------- |
+| `BASE_URL`     | string  | `process.env.APP_BASE_URL`             | 基础 URL                                 |
+| `TIMEOUT`      | number  | `20000`                                | 超时时间 (ms)                            |
+| `HEADERS`      | object  | `{'Content-Type': 'application/json'}` | 默认请求头                               |
+| `isShowError`  | boolean | `true`                                 | 请求失败时是否自动弹出错误提示           |
+| `addTimestamp` | boolean | `true`                                 | 是否为 GET/DELETE 请求自动添加时间戳后缀 |
 
 ### http 实例方法
+
 - `request(url, options)`
 - `get(url, params, config)`
 - `post(url, payload, config)`

@@ -1,1 +1,81 @@
-{"hash":"5fcfa8d470678361e65e","version":"5.103.0","time":100,"builtAt":1764379721284,"publicPath":"auto","outputPath":"C:\\wui\\pro-react\\pro-react-admin\\dist","assetsByChunkName":{},"assets":[],"chunks":[{"rendered":false,"initial":true,"entry":true,"recorded":false,"size":0,"sizes":{},"names":["main"],"idHints":[],"runtime":["main"],"files":[],"auxiliaryFiles":[],"hash":"a6f7b40679d07a6795e1","childrenByOrder":{},"id":792,"siblings":[],"parents":[],"children":[],"modules":[],"origins":[{"module":"","moduleIdentifier":"","moduleName":"","loc":"main","request":"./src"}]}],"modules":[],"entrypoints":{"main":{"name":"main","chunks":[792],"assets":[],"filteredAssets":0,"assetsSize":0,"auxiliaryAssets":[],"filteredAuxiliaryAssets":0,"auxiliaryAssetsSize":0,"children":{},"childAssets":{},"isOverSizeLimit":false}},"namedChunkGroups":{"main":{"name":"main","chunks":[792],"assets":[],"filteredAssets":0,"assetsSize":0,"auxiliaryAssets":[],"filteredAuxiliaryAssets":0,"auxiliaryAssetsSize":0,"children":{},"childAssets":{},"isOverSizeLimit":false}},"errors":[{"loc":"main","message":"Module not found: Error: Can't resolve './src' in 'C:\\wui\\pro-react\\pro-react-admin'","details":"resolve './src' in 'C:\\wui\\pro-react\\pro-react-admin'\n  using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: .)\n    Field 'browser' doesn't contain a valid alias configuration\n    using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: ./src)\n      no extension\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src is not a file\n      .js\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src.js doesn't exist\n      .json\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src.json doesn't exist\n      .wasm\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src.wasm doesn't exist\n      as directory\n        existing directory C:\\wui\\pro-react\\pro-react-admin\\src\n          using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: ./src)\n            using path: C:\\wui\\pro-react\\pro-react-admin\\src\\index\n              using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: ./src/index)\n                no extension\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index doesn't exist\n                .js\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index.js doesn't exist\n                .json\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index.json doesn't exist\n                .wasm\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index.wasm doesn't exist","stack":"ModuleNotFoundError: Module not found: Error: Can't resolve './src' in 'C:\\wui\\pro-react\\pro-react-admin'\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compilation.js:2052:28\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1031:13\n    at eval (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10), <anonymous>:10:1)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:432:22\n    at eval (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10), <anonymous>:9:1)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:617:22\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:179:10\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:887:25\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1116:8\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1245:5"}],"errorsCount":1,"warnings":[{"message":"configuration\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value.\nSet 'mode' option to 'development' or 'production' to enable defaults for each environment.\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/","stack":"NoModeWarning: configuration\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value.\nSet 'mode' option to 'development' or 'production' to enable defaults for each environment.\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\WarnNoModeSetPlugin.js:22:30\n    at Hook.eval [as call] (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:19:10), <anonymous>:17:1)\n    at Hook.CALL_DELEGATE [as _call] (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\Hook.js:16:14)\n    at Compiler.newCompilation (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1304:30)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1348:29\n    at Hook.eval [as callAsync] (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10), <anonymous>:6:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\Hook.js:21:14)\n    at Compiler.compile (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1343:28)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:616:12\n    at Compiler.readRecords (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1141:4)"}],"warningsCount":1,"children":[]}
+{
+  "hash": "5fcfa8d470678361e65e",
+  "version": "5.103.0",
+  "time": 100,
+  "builtAt": 1764379721284,
+  "publicPath": "auto",
+  "outputPath": "C:\\wui\\pro-react\\pro-react-admin\\dist",
+  "assetsByChunkName": {},
+  "assets": [],
+  "chunks": [
+    {
+      "rendered": false,
+      "initial": true,
+      "entry": true,
+      "recorded": false,
+      "size": 0,
+      "sizes": {},
+      "names": ["main"],
+      "idHints": [],
+      "runtime": ["main"],
+      "files": [],
+      "auxiliaryFiles": [],
+      "hash": "a6f7b40679d07a6795e1",
+      "childrenByOrder": {},
+      "id": 792,
+      "siblings": [],
+      "parents": [],
+      "children": [],
+      "modules": [],
+      "origins": [{ "module": "", "moduleIdentifier": "", "moduleName": "", "loc": "main", "request": "./src" }]
+    }
+  ],
+  "modules": [],
+  "entrypoints": {
+    "main": {
+      "name": "main",
+      "chunks": [792],
+      "assets": [],
+      "filteredAssets": 0,
+      "assetsSize": 0,
+      "auxiliaryAssets": [],
+      "filteredAuxiliaryAssets": 0,
+      "auxiliaryAssetsSize": 0,
+      "children": {},
+      "childAssets": {},
+      "isOverSizeLimit": false
+    }
+  },
+  "namedChunkGroups": {
+    "main": {
+      "name": "main",
+      "chunks": [792],
+      "assets": [],
+      "filteredAssets": 0,
+      "assetsSize": 0,
+      "auxiliaryAssets": [],
+      "filteredAuxiliaryAssets": 0,
+      "auxiliaryAssetsSize": 0,
+      "children": {},
+      "childAssets": {},
+      "isOverSizeLimit": false
+    }
+  },
+  "errors": [
+    {
+      "loc": "main",
+      "message": "Module not found: Error: Can't resolve './src' in 'C:\\wui\\pro-react\\pro-react-admin'",
+      "details": "resolve './src' in 'C:\\wui\\pro-react\\pro-react-admin'\n  using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: .)\n    Field 'browser' doesn't contain a valid alias configuration\n    using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: ./src)\n      no extension\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src is not a file\n      .js\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src.js doesn't exist\n      .json\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src.json doesn't exist\n      .wasm\n        Field 'browser' doesn't contain a valid alias configuration\n        C:\\wui\\pro-react\\pro-react-admin\\src.wasm doesn't exist\n      as directory\n        existing directory C:\\wui\\pro-react\\pro-react-admin\\src\n          using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: ./src)\n            using path: C:\\wui\\pro-react\\pro-react-admin\\src\\index\n              using description file: C:\\wui\\pro-react\\pro-react-admin\\package.json (relative path: ./src/index)\n                no extension\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index doesn't exist\n                .js\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index.js doesn't exist\n                .json\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index.json doesn't exist\n                .wasm\n                  Field 'browser' doesn't contain a valid alias configuration\n                  C:\\wui\\pro-react\\pro-react-admin\\src\\index.wasm doesn't exist",
+      "stack": "ModuleNotFoundError: Module not found: Error: Can't resolve './src' in 'C:\\wui\\pro-react\\pro-react-admin'\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compilation.js:2052:28\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1031:13\n    at eval (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10), <anonymous>:10:1)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:432:22\n    at eval (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10), <anonymous>:9:1)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:617:22\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:179:10\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:887:25\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1116:8\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\NormalModuleFactory.js:1245:5"
+    }
+  ],
+  "errorsCount": 1,
+  "warnings": [
+    {
+      "message": "configuration\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value.\nSet 'mode' option to 'development' or 'production' to enable defaults for each environment.\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
+      "stack": "NoModeWarning: configuration\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value.\nSet 'mode' option to 'development' or 'production' to enable defaults for each environment.\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\WarnNoModeSetPlugin.js:22:30\n    at Hook.eval [as call] (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:19:10), <anonymous>:17:1)\n    at Hook.CALL_DELEGATE [as _call] (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\Hook.js:16:14)\n    at Compiler.newCompilation (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1304:30)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1348:29\n    at Hook.eval [as callAsync] (eval at create (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\HookCodeFactory.js:31:10), <anonymous>:6:1)\n    at Hook.CALL_ASYNC_DELEGATE [as _callAsync] (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\tapable\\lib\\Hook.js:21:14)\n    at Compiler.compile (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1343:28)\n    at C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:616:12\n    at Compiler.readRecords (C:\\wui\\pro-react\\pro-react-admin\\node_modules\\webpack\\lib\\Compiler.js:1141:4)"
+    }
+  ],
+  "warningsCount": 1,
+  "children": []
+}

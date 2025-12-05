@@ -24,26 +24,26 @@ pnpm add @w.ui/wui-react
 ## 🔨 使用
 
 ```jsx
-import React from 'react';
-import { DescBox, RadioInput, Exception } from '@w.ui/wui-react';
-import '@w.ui/wui-react/style.css';
+import React from 'react'
+import { DescBox, RadioInput, Exception } from '@w.ui/wui-react'
+import '@w.ui/wui-react/style.css'
 
 const App = () => {
   return (
     <div>
       <DescBox title="示例标题" description="这是一个描述框组件" />
-      <RadioInput 
+      <RadioInput
         options={[
           { label: '选项1', value: '1' },
-          { label: '选项2', value: '2' }
+          { label: '选项2', value: '2' },
         ]}
         onChange={(value) => console.log(value)}
       />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
 ```
 
 ## 📚 组件列表
@@ -51,6 +51,7 @@ export default App;
 本库包含 100+ 组件，包括但不限于：
 
 ### 核心组件
+
 - ErrorBoundary - 错误边界
 - WatermarkProvider - 水印
 - KeepAlive - 页面缓存
@@ -58,6 +59,7 @@ export default App;
 - GlobalSearch - 全局搜索
 
 ### UI 组件
+
 - AdvancedCodeBlock - 高级代码块
 - AnimatedList - 动画列表
 - BackgroundBeams - 背景光束效果
@@ -67,6 +69,7 @@ export default App;
 - RadioInput - 单选/多选输入
 
 ### 动画组件
+
 - AnimateOnScreen - 进入视口动画
 - AnimateRipple - 波纹动画
 - BlurFade - 模糊渐显
@@ -116,6 +119,7 @@ MIT © [wkylin](https://github.com/wkylin)
 ## 👨‍💻 作者
 
 **wkylin**
+
 - GitHub: [@wkylin](https://github.com/wkylin)
 - Email: wkylin.w@gmail.com
 

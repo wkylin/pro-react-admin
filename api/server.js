@@ -47,7 +47,7 @@ function postToGitHubToken({ code, redirect_uri, client_id, client_secret }) {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(postData),
         Accept: 'application/json',
-        'User-Agent': 'pro-react-admin-server'
+        'User-Agent': 'pro-react-admin-server',
       },
     }
 
