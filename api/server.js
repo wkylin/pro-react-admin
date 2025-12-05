@@ -20,7 +20,7 @@ const { Schema } = mongoose
 const ApiSchema = new Schema({
   url: { type: String },
   delay: { type: Number },
-  date: { type: Date, default: Date.now },
+  date: { type: Date, default: Date.now }
 })
 
 const ApiModel = mongoose.model('apis', ApiSchema)
@@ -35,7 +35,7 @@ app.post('/apis', (req, res) => {
 const https = require('https')
 const querystring = require('querystring')
 
-function postToGitHubToken({ code, redirect_uri, client_id, client_secret }) {
+function postToGitHubToken ({ code, redirect_uri, client_id, client_secret }) {
   return new Promise((resolve, reject) => {
     const postData = querystring.stringify({ client_id, client_secret, code, redirect_uri })
 
@@ -47,8 +47,8 @@ function postToGitHubToken({ code, redirect_uri, client_id, client_secret }) {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': Buffer.byteLength(postData),
         Accept: 'application/json',
-        'User-Agent': 'pro-react-admin-server',
-      },
+        'User-Agent': 'pro-react-admin-server'
+      }
     }
 
     const req = https.request(options, (res) => {
@@ -71,7 +71,7 @@ function postToGitHubToken({ code, redirect_uri, client_id, client_secret }) {
   })
 }
 
-function getFromGitHubApi(path, accessToken) {
+function getFromGitHubApi (path, accessToken) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'api.github.com',
@@ -79,8 +79,8 @@ function getFromGitHubApi(path, accessToken) {
       method: 'GET',
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'pro-react-admin-server',
-      },
+        'User-Agent': 'pro-react-admin-server'
+      }
     }
 
     if (accessToken) {
