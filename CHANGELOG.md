@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/wkylin/pro-react-admin/compare/v2.1.1...v2.2.0) (2025-12-05)
+
+
+### Features
+
+* fix permission hooks ([e972aaa](https://github.com/wkylin/pro-react-admin/commits/e972aaa895da0a46faddf1b8d219c1d3d762ea20))
+* fix theme ([1726081](https://github.com/wkylin/pro-react-admin/commits/1726081d03553e2fa3c5d5323e089e747980fe4f))
+* global search ([dcc0a98](https://github.com/wkylin/pro-react-admin/commits/dcc0a98b070ae4ed8d40cc6c5ff8988adb90cc0b))
+* request update ([d5b17cd](https://github.com/wkylin/pro-react-admin/commits/d5b17cd62064dc2f205c4f3587a58f6cbf3c4030))
+* update component ([288fa67](https://github.com/wkylin/pro-react-admin/commits/288fa676bc8bd67e59364ec85be526704518adea))
+* update components ([74c00e1](https://github.com/wkylin/pro-react-admin/commits/74c00e1e3a6edf0a8d335be5dbbd91020f7ccc7c))
+* update patch ([afb1f9f](https://github.com/wkylin/pro-react-admin/commits/afb1f9fa61ca110b6e04408a8008361a6a988872))
+* update request ([e4bff0f](https://github.com/wkylin/pro-react-admin/commits/e4bff0f7250eb7ab1e0acd5b1a9170c1e759b00d))
+
+
+### Bug Fixes
+
+* fix error ([fab78ae](https://github.com/wkylin/pro-react-admin/commits/fab78aee52c8bc388bec6dd780de4fb74d9dce4d))
+* fix go back ([60bf3ee](https://github.com/wkylin/pro-react-admin/commits/60bf3ee8dbc37458a3b327bfa7a1b443c7a1bb57))
+* fix routes ([7a6eaf3](https://github.com/wkylin/pro-react-admin/commits/7a6eaf3781f07ae8cb9099fa36baaf35f95261ad))
+* fix style ([54dc27b](https://github.com/wkylin/pro-react-admin/commits/54dc27b8baa9f2d49fb79ec0376be74c6c64f52d))
+* fix theme ([ee689b8](https://github.com/wkylin/pro-react-admin/commits/ee689b87f3a19eec5e281100c9b72923f02f36e1))
+* fix theme ([6487a12](https://github.com/wkylin/pro-react-admin/commits/6487a124b3b7b2d0437359351b758c253f410029))
+* fix theme ([6ee4738](https://github.com/wkylin/pro-react-admin/commits/6ee4738db7e588f983328aa2168a0d50331d89c0))
+* mobile ([cbf98af](https://github.com/wkylin/pro-react-admin/commits/cbf98af063ffb3654fff491fd15e1f941bcfd0f7))
+* route ([d5e2752](https://github.com/wkylin/pro-react-admin/commits/d5e2752797d81bac4fed0a676e9cf9b9b7cae3d1))
+* src/hooks->app hooks ([88fb0d4](https://github.com/wkylin/pro-react-admin/commits/88fb0d48c0b879a102a6ae333bdc8887500a51d4))
+
 ### [2.1.1](https://github.com/wkylin/pro-react-admin/compare/v2.1.0...v2.1.1) (2025-12-03)
 
 ### Features
