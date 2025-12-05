@@ -242,7 +242,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       <div className={styles.headerMeta} style={isMobile ? { justifyContent: 'flex-end' } : {}}>
         {!isMobile && (
           <div className={styles.headerMenu} style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center' }}>
-            <PrimaryNav />
+            <PrimaryNav layout={layout} />
             {layout === 'top' && <div style={{ flex: 1, minWidth: 0 }}>{children}</div>}
           </div>
         )}

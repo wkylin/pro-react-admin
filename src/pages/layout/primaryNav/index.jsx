@@ -49,12 +49,12 @@ export const usePrimaryNavItems = () => {
   return items.filter((item) => item.show).map(({ show, ...rest }) => rest)
 }
 
-const PrimaryNav = () => {
+const PrimaryNav = ({ layout = '' }) => {
   const items = usePrimaryNavItems()
-
+  const filterItems = layout === 'top' ? items.filter((item) => item.key !== 'home') : items
   return (
     <Space style={{ marginRight: 16 }}>
-      {items.map((item) => (
+      {filterItems.map((item) => (
         <Button key={item.key} type="link" icon={item.icon} onClick={item.onClick}>
           {item.label}
         </Button>
