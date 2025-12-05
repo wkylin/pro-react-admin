@@ -15,10 +15,10 @@ import {
   MoreOutlined,
   RocketOutlined,
   BookOutlined,
-  SearchOutlined,
+  SearchOutlined
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import { removeLocalStorage } from '@utils/publicFn'
+import { removeLocalStorage, getLocalStorage } from '@utils/publicFn'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
 import avatarPng from '@assets/images/w.png'
@@ -30,7 +30,6 @@ import NotificationDrawer from '@stateless/NotificationDrawer'
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
-import { getLocalStorage } from '@utils/publicFn'
 import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
@@ -104,7 +103,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     {
       key: 'token',
       label: <>{tokenValue}</>,
-      disabled: true,
+      disabled: true
     },
     { type: 'divider' },
     {
@@ -113,7 +112,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       icon: <UserOutlined />,
       onClick: () => {
         redirectTo('/profile')
-      },
+      }
     },
     {
       key: '2',
@@ -121,7 +120,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/setting')
-      },
+      }
     },
     {
       key: '3',
@@ -129,7 +128,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       icon: <SmileOutlined />,
       onClick: () => {
         redirectTo('/contact')
-      },
+      }
     },
     {
       key: '4',
@@ -142,8 +141,8 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
           removeLocalStorage('token')
           redirectTo('/signin')
         }
-      },
-    },
+      }
+    }
   ]
 
   const mobileMoreItems = [
@@ -153,36 +152,36 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       key: 'notification',
       label: <NotificationDrawer />,
       icon: null,
-      onClick: undefined,
+      onClick: undefined
     },
     {
       key: 'github',
       label: 'Github',
       icon: <GithubOutlined style={{ fontSize: 16 }} />,
-      onClick: redirectGithub,
+      onClick: redirectGithub
     },
     {
       key: 'wiki',
       label: 'Wiki',
       icon: <BookOutlined style={{ fontSize: 16 }} />,
-      onClick: redirectWiki,
+      onClick: redirectWiki
     },
     {
       key: 'wrapped',
       label: 'Wrapped',
       icon: <RocketOutlined style={{ fontSize: 16 }} />,
-      onClick: redirectWrapped,
+      onClick: redirectWrapped
     },
     {
       key: 'setting',
       label: '偏好设置',
       icon: <SettingOutlined style={{ fontSize: 16 }} />,
-      onClick: onSettingClick,
-    },
+      onClick: onSettingClick
+    }
   ]
 
   const {
-    token: { colorBgContainer, colorBorder },
+    token: { colorBgContainer, colorBorder }
   } = theme.useToken()
   const { themeSettings, updateSettings } = useProThemeContext()
   const isDark = themeSettings.themeMode === 'dark'
@@ -218,7 +217,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
       style={{
         backgroundColor: headerBackground,
         borderBottom: headerBorder,
-        padding: isMobile ? '0 16px' : 0,
+        padding: isMobile ? '0 16px' : 0
       }}
     >
       {isMobile && (
@@ -230,14 +229,14 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         </div>
       )}
       <div
-        aria-hidden="true"
+        aria-hidden='true'
         className={`${styles.logo} ${layout === 'top' ? styles.topLayoutLogo : ''}`}
         onClick={() => redirectTo('/')}
         style={isMobile ? { flex: '0 0 auto', justifyContent: 'flex-start' } : {}}
       >
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
-        {!isMobile && <img src={Logo} alt="logo" />}
-        <GradientAnimationText text="Pro React Admin" />
+        {!isMobile && <img src={Logo} alt='logo' />}
+        <GradientAnimationText text='Pro React Admin' />
       </div>
       <div className={styles.headerMeta} style={isMobile ? { justifyContent: 'flex-end' } : {}}>
         {!isMobile && (
@@ -248,58 +247,60 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         )}
         <div className={styles.headerRight} style={isMobile ? { flex: 1 } : {}}>
           {!isMobile ? (
-            <Space orientation="horizontal" style={{ paddingRight: 8 }}>
+            <Space orientation='horizontal' style={{ paddingRight: 8 }}>
               <SoundBar buttonStyle={{ border: 'none' }} />
               {/* 全局搜索按钮 */}
-              <Tooltip title="全局菜单搜索 (Ctrl+K)" placement="bottom">
+              <Tooltip title='全局菜单搜索 (Ctrl+K)' placement='bottom'>
                 <Button
                   icon={<SearchOutlined />}
-                  size="small"
+                  size='small'
                   style={iconButtonStyle}
                   onClick={() => setSearchOpen(true)}
                 />
               </Tooltip>
 
-              <NotificationDrawer variant="button" buttonStyle={iconButtonStyle} />
-              <Tooltip title="GitHub" placement="bottom">
+              <NotificationDrawer variant='button' buttonStyle={iconButtonStyle} />
+              <Tooltip title='GitHub' placement='bottom'>
                 <Button
                   icon={<GithubOutlined style={{ fontSize: 16 }} />}
-                  size="small"
-                  type="default"
+                  size='small'
+                  type='default'
                   onClick={redirectGithub}
                   style={iconButtonStyle}
                 />
               </Tooltip>
               <Fullscreen buttonStyle={iconButtonStyle} />
-              <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
+              <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement='bottom'>
                 <Button
                   onClick={handleThemeToggle}
-                  size="small"
+                  size='small'
                   style={{ margin: '0 4px', fontSize: 16 }}
                   icon={
-                    isDark ? (
-                      <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
-                    ) : (
-                      <DarkSvg style={{ fontSize: 16, color: '#222' }} />
-                    )
+                    isDark
+                      ? (
+                        <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
+                        )
+                      : (
+                        <DarkSvg style={{ fontSize: 16, color: '#222' }} />
+                        )
                   }
                 />
               </Tooltip>
-              <Tooltip title="偏好设置" placement="bottom">
-                <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={iconButtonStyle} />
+              <Tooltip title='偏好设置' placement='bottom'>
+                <Button icon={<SettingOutlined />} size='small' onClick={onSettingClick} style={iconButtonStyle} />
               </Tooltip>
-              <Tooltip title="GitHub Wrapped" placement="bottom">
+              <Tooltip title='GitHub Wrapped' placement='bottom'>
                 <Button
                   icon={<RocketOutlined style={{ fontSize: 16 }} />}
-                  size="small"
+                  size='small'
                   onClick={redirectWrapped}
                   style={iconButtonStyle}
                 />
               </Tooltip>
-              <Tooltip title="DeepWiki" placement="bottom">
+              <Tooltip title='DeepWiki' placement='bottom'>
                 <Button
                   icon={<BookOutlined style={{ fontSize: 16 }} />}
-                  size="small"
+                  size='small'
                   onClick={redirectWiki}
                   style={iconButtonStyle}
                 />
@@ -309,25 +310,27 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
           ) : (
             <Space>
               {/* 移动端全局搜索按钮 */}
-              <Tooltip title="菜单搜索">
+              <Tooltip title='菜单搜索'>
                 <Button
                   icon={<SearchOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />}
-                  size="small"
+                  size='small'
                   style={{ fontSize: 18 }}
                   onClick={() => setSearchOpen(true)}
                 />
               </Tooltip>
-              <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
+              <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement='bottom'>
                 <Button
                   onClick={handleThemeToggle}
-                  size="small"
+                  size='small'
                   style={{ margin: '0 4px', fontSize: 16 }}
                   icon={
-                    isDark ? (
-                      <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
-                    ) : (
-                      <DarkSvg style={{ fontSize: 16, color: '#222' }} />
-                    )
+                    isDark
+                      ? (
+                        <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
+                        )
+                      : (
+                        <DarkSvg style={{ fontSize: 16, color: '#222' }} />
+                        )
                   }
                 />
               </Tooltip>
@@ -345,8 +348,8 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
               <Button
                 icon={<UserOutlined style={{ fontSize: 16 }} />}
                 // size="small"
-                type="default"
-                shape="round"
+                type='default'
+                shape='round'
                 style={iconButtonStyle}
               />
             )}

@@ -22,7 +22,7 @@ const SoundBar = ({ iconColor, buttonStyle, ghost = false }) => {
           key={index}
           style={{
             '--i': index,
-            '--state': isPlaying ? 'running' : 'paused',
+            '--state': isPlaying ? 'running' : 'paused'
           }}
           className={styles.line}
         />
@@ -33,9 +33,9 @@ const SoundBar = ({ iconColor, buttonStyle, ghost = false }) => {
   return (
     <>
       <Button
-        type="default"
-        size="small"
-        shape="default"
+        type='default'
+        size='small'
+        shape='default'
         ghost={ghost}
         aria-label={isPlaying ? '暂停播放' : '播放音乐'}
         aria-pressed={isPlaying}
@@ -44,7 +44,7 @@ const SoundBar = ({ iconColor, buttonStyle, ghost = false }) => {
         style={{ fontSize: 16, ...(buttonStyle || {}) }}
       />
       <audio src={music} ref={audioRef} loop>
-        <track kind="captions" default />
+        <track kind='captions' default />
       </audio>
     </>
   )
