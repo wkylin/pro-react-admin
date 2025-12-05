@@ -231,7 +231,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         style={isMobile ? { flex: '0 0 auto', justifyContent: 'flex-start' } : {}}
       >
         {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
-        <img src={Logo} alt="logo" />
+        {!isMobile && <img src={Logo} alt="logo" />}
         <GradientAnimationText text="Pro React Admin" />
       </div>
       <div className={styles.headerMeta} style={isMobile ? { justifyContent: 'flex-end' } : {}}>

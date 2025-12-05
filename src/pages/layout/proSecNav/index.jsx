@@ -22,8 +22,6 @@ import styles from './index.module.less'
 
 import { mainLayoutMenu } from '@src/config/menu.config'
 
-// 已弃用 pathSubmenu 静态映射，改为自动推导父级链
-
 const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const { pathname } = useLocation()
   const { redirectTo } = useSafeNavigate()
@@ -40,8 +38,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
   // 提取放在redux中, tab 切换时改成 false
   const [isOpenChange, setIsOpenChange] = useState(false)
-
-  // 支持多层（最多五层示例），不再限制根层 key 列表
 
   // 初始化：获取用户可访问路由
   useEffect(() => {

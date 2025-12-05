@@ -87,7 +87,7 @@ const AESPanel = () => {
   return (
     <Space orientation="vertical" size="large" style={{ width: '100%' }}>
       <Alert
-        message="AES (Advanced Encryption Standard)"
+        title="AES (Advanced Encryption Standard)"
         description="对称加密算法，加密和解密使用相同的密钥。速度快，适合大量数据加密。"
         type="info"
         showIcon
@@ -209,7 +209,7 @@ const RSAPanel = () => {
   return (
     <Space orientation="vertical" size="large" style={{ width: '100%' }}>
       <Alert
-        message="RSA (Rivest-Shamir-Adleman)"
+        title="RSA (Rivest-Shamir-Adleman)"
         description="非对称加密算法，使用公钥加密，私钥解密。安全性高，但速度较慢，适合加密少量数据（如密钥交换）。"
         type="warning"
         showIcon

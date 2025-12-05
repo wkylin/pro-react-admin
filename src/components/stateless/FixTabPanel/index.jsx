@@ -30,7 +30,7 @@ const FixTabPanel = React.forwardRef(({ style, children, className, ...rest }, r
       }}
     >
       {children}
-      <FloatButton.BackTop target={() => innerRef.current} style={{ right: 20, bottom: 10 }}>
+      <FloatButton.BackTop target={() => innerRef.current} style={{ right: 6, bottom: 2 }}>
         <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
       </FloatButton.BackTop>
     </div>

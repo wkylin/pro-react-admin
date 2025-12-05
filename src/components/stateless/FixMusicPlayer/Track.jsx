@@ -1,8 +1,8 @@
 import React from 'react'
-import wkylinPng from '@assets/images/wkylin.png'
+import defaultPng from '@assets/images/music/music00.png'
 
 const Track = ({ isPlaying, isActive, activeSong, textColor, secondaryTextColor }) => {
-  const coverArt = activeSong?.coverart ?? wkylinPng
+  const coverArt = activeSong?.coverart ?? defaultPng
   const title = activeSong?.title ?? 'No active Song'
   const subtitle = activeSong?.subtitle ?? 'No active Song'
 

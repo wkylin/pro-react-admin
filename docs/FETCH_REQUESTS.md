@@ -140,7 +140,7 @@ const UserProfile = ({ id }) => {
   const [user, loading, error, refresh] = useGet('/api/user', { id })
 
   if (loading) return <Spin />
-  if (error) return <Alert message={error.message} />
+  if (error) return <Alert title={error.message} />
 
   return (
     <div>

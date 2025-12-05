@@ -155,7 +155,7 @@ const ProTabs = (props) => {
       destroyOnHidden={false}
       tabBarExtraContent={{
         left: (
-          <Space align="center" size={30} style={{ margin: '0 25px' }}>
+          <Space align="center" size={30} style={{ margin: '0 10px' }}>
             <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
           </Space>
         ),

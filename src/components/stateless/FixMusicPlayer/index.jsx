@@ -66,8 +66,21 @@ const MusicPlayer = () => {
   const activeColor = themeSettings.colorPrimary || '#1677ff'
 
   return (
-    <>
-      <div className={`animate-slideup absolute right-0 bottom-0 left-0 z-10 flex h-20 sm:h-28 ${bgClass}`}>
+    <div className="flex h-full flex-col">
+      <div className="flex-1">
+        <Playlist
+          songs={currentSongs}
+          currentIndex={currentIndex}
+          isPlaying={isPlaying}
+          isActive={isActive}
+          onSongClick={handleSongClick}
+          themeMode={themeSettings.themeMode}
+          textColor={textColor}
+          secondaryTextColor={secondaryTextColor}
+          activeColor={activeColor}
+        />
+      </div>
+      <div className={`animate-slideup sticky right-0 bottom-0 left-0 z-10 mt-auto flex h-20 sm:h-28 ${bgClass}`}>
         <div className="relative flex w-full items-center justify-between px-4 sm:px-8 md:px-12">
           <Track
             isPlaying={isPlaying}
@@ -123,18 +136,7 @@ const MusicPlayer = () => {
           />
         </div>
       </div>
-      <Playlist
-        songs={currentSongs}
-        currentIndex={currentIndex}
-        isPlaying={isPlaying}
-        isActive={isActive}
-        onSongClick={handleSongClick}
-        themeMode={themeSettings.themeMode}
-        textColor={textColor}
-        secondaryTextColor={secondaryTextColor}
-        activeColor={activeColor}
-      />
-    </>
+    </div>
   )
 }
 
