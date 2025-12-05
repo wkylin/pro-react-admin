@@ -46,7 +46,7 @@ const NotificationDetail = () => {
   return (
     <Card
       title={data ? data.title : `通知 ${id}`}
-      style={{ width: '100%', background: bgColor, boxShadow, border: `1px solid ${borderColor}` }}
+      style={{ width: '100%', backgroundColor: bgColor, boxShadow, border: `1px solid ${borderColor}` }}
     >
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>

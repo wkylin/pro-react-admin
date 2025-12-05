@@ -15,14 +15,14 @@ const Privacy = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Content style={{ background: colorBgLayout, padding: '24px', display: 'flex', justifyContent: 'center' }}>
+      <Content style={{ backgroundColor: colorBgLayout, padding: '24px', display: 'flex', justifyContent: 'center' }}>
         <Card
           style={{
             width: '100%',
             maxWidth: 800,
             borderRadius: '8px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
-            background: colorBgContainer,
+            backgroundColor: colorBgContainer,
             height: '90vh',
             display: 'flex',
             flexDirection: 'column',

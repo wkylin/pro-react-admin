@@ -6,7 +6,7 @@ import Wave from 'react-wavify'
  * A customizable wave background component using react-wavify.
  * Supports multiple wave layers, custom colors, and configuration.
  *
- * @param {string} backgroundColor - CSS background property for the container
+ * @param {string} backgroundColor - CSS background color or gradient for the container
  * @param {number|string} height - Height of the container
  * @param {Array} waves - Array of wave configurations
  * @param {React.ReactNode} children - Content to render above the waves
@@ -32,12 +32,17 @@ const WaveBackground = ({
   style,
   children,
 }) => {
+  const backgroundStyle =
+    typeof backgroundColor === 'string' && backgroundColor.includes('gradient')
+      ? { backgroundImage: backgroundColor }
+      : { backgroundColor }
+
   return (
     <section
       className={className}
       style={{
         position: 'relative',
-        background: backgroundColor,
+        ...backgroundStyle,
         height: height,
         overflow: 'hidden',
         width: '100%',

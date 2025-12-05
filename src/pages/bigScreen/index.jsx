@@ -947,8 +947,8 @@ const BigScreen = () => {
     series: chartData?.seriesData ?? [],
   }
   return (
-    <FixTabPanel style={{ background: '#04060D' }}>
-      <section ref={scaleDom} className={styles.bigScreen} style={{ background: '#04060D' }}>
+    <FixTabPanel style={{ backgroundColor: '#04060D' }}>
+      <section ref={scaleDom} className={styles.bigScreen} style={{ backgroundColor: '#04060D' }}>
         <BigHeader />
         <section className="flex justify-between text-white">
           <div

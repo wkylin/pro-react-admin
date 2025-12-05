@@ -25,8 +25,8 @@ const Dashboard = () => {
 
   return (
     <FixLayout>
-      <Layout style={{ minHeight: '100vh', background: 'none', position: 'relative' }}>
-        <Content style={{ minHeight: '100vh', background: colorBgContainer, position: 'relative' }}>
+      <Layout style={{ minHeight: '100vh', backgroundColor: 'transparent', position: 'relative' }}>
+        <Content style={{ minHeight: '100vh', backgroundColor: colorBgContainer, position: 'relative' }}>
           {renderBackHome()}
           <Routes>
             <Route path="/" element={<ViteLanding />} />

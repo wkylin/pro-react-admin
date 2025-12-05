@@ -317,7 +317,7 @@ const MyPortfilo = () => {
             right: 24,
             transform: 'translateY(-50%)',
             zIndex: 100,
-            background: token.colorBgElevated,
+            backgroundColor: token.colorBgElevated,
             borderRadius: token.borderRadiusLG,
             padding: '16px 12px',
             boxShadow: token.boxShadowSecondary,
@@ -331,7 +331,7 @@ const MyPortfilo = () => {
             direction="vertical"
             onClick={handleAnchorClick}
             items={navItems}
-            style={{ background: 'transparent' }}
+            style={{ backgroundColor: 'transparent' }}
           />
         </div>
       )}

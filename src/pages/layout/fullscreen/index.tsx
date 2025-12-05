@@ -8,9 +8,18 @@ interface FullScreenProps {
   tips?: string
   placement?: 'top' | 'left' | 'right' | 'bottom' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
   iconColor?: string
+  buttonStyle?: React.CSSProperties
+  ghost?: boolean
 }
 
-const FullScreen: React.FC<FullScreenProps> = ({ ele, tips = '全屏', placement = 'bottom', iconColor }) => {
+const FullScreen: React.FC<FullScreenProps> = ({
+  ele,
+  tips = '全屏',
+  placement = 'bottom',
+  iconColor,
+  buttonStyle,
+  ghost = false,
+}) => {
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false)
   const targetRef = useRef<HTMLElement | null>(null)
   const handlerRef = useRef<(() => void) | null>(null)
@@ -86,11 +95,16 @@ const FullScreen: React.FC<FullScreenProps> = ({ ele, tips = '全屏', placement
   return (
     <Tooltip placement={placement} title={tips}>
       <Button
-        type="text"
+        type="default"
         size="small"
+        ghost={ghost}
         aria-label={tips}
         onClick={handleFullScreen}
-        style={iconColor ? { color: iconColor } : undefined}
+        style={{
+          fontSize: 16,
+          ...(buttonStyle || {}),
+          ...(iconColor ? { color: iconColor } : {}),
+        }}
         icon={
           isFullScreen ? (
             <FullscreenExitOutlined style={{ fontSize: 16, color: iconColor }} />

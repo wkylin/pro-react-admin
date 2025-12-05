@@ -23,7 +23,7 @@ const initialNotifications = [
   { id: 5, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
 ]
 
-const NotificationDropdown = ({ iconColor }) => {
+const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghost = false }) => {
   const [notifications, setNotifications] = useState(initialNotifications)
   const unreadCount = notifications.filter((n) => !n.read).length
   const { redirectTo } = useSafeNavigate()
@@ -48,7 +48,7 @@ const NotificationDropdown = ({ iconColor }) => {
     <div
       style={{
         height: '100%',
-        background: colorBgContainer,
+        backgroundColor: colorBgContainer,
         color: colorText,
         display: 'flex',
         flexDirection: 'column',
@@ -98,7 +98,12 @@ const NotificationDropdown = ({ iconColor }) => {
       </div>
 
       <div
-        style={{ borderTop: `1px solid ${colorBorder}`, padding: 8, background: colorBgContainer, textAlign: 'right' }}
+        style={{
+          borderTop: `1px solid ${colorBorder}`,
+          padding: 8,
+          backgroundColor: colorBgContainer,
+          textAlign: 'right',
+        }}
       >
         <Space>
           <Button size="small" onClick={markAllRead} icon={<CheckCircleOutlined />}>
@@ -124,14 +129,42 @@ const NotificationDropdown = ({ iconColor }) => {
     }, 10)
   }
 
-  return (
-    <>
-      <span onClick={() => setPopVisible(true)} style={{ cursor: 'pointer', color: iconColor }}>
-        <Badge count={unreadCount} size="small" overflowCount={49}>
-          <BellOutlined style={{ fontSize: 16, color: iconColor }} />
-        </Badge>
+  const openDrawer = () => setPopVisible(true)
+
+  const iconNode = (
+    <Badge count={unreadCount} size="small" overflowCount={49}>
+      <BellOutlined style={{ fontSize: 16, color: iconColor }} />
+    </Badge>
+  )
+
+  const triggerNode =
+    variant === 'button' ? (
+      <Button
+        type="default"
+        size="small"
+        ghost={ghost}
+        icon={iconNode}
+        onClick={openDrawer}
+        aria-haspopup="dialog"
+        aria-expanded={popVisible}
+        style={{
+          fontSize: 16,
+          ...(buttonStyle || {}),
+          ...(iconColor ? { color: iconColor } : {}),
+        }}
+      >
+        {isMobile ? '通知' : null}
+      </Button>
+    ) : (
+      <span onClick={openDrawer} style={{ cursor: 'pointer', color: iconColor }}>
+        {iconNode}
         {isMobile && <span style={{ marginLeft: 4 }}>通知</span>}
       </span>
+    )
+
+  return (
+    <>
+      {triggerNode}
       <Drawer
         title="通知"
         placement="right"

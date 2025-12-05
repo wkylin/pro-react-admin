@@ -1,15 +1,16 @@
+
 .audio {
   --i: 0;
   --state: paused;
 
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  cursor: pointer;
+  align-items: flex-end;
+  min-width: 16px;
   z-index: 3;
   position: relative;
+  pointer-events: none;
 
   .line {
     background: var(--line-color, #00ff7f);

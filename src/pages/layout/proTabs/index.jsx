@@ -34,7 +34,7 @@ const ProTabs = (props) => {
         key={nanoid()}
         {...props}
         className="pro-tabs"
-        style={{ ...props.style, background: colorBgContainer }}
+        style={{ ...props.style, backgroundColor: colorBgContainer }}
       />
     </StickyBox>
   )

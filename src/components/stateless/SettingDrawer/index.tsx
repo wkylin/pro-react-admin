@@ -61,7 +61,7 @@ const ThemeColor = ({
         <Tooltip title={item.key} key={item.key}>
           <div
             className="flex h-6 w-6 cursor-pointer items-center justify-center rounded text-white shadow-sm"
-            style={{ background: item.color }}
+            style={{ backgroundColor: item.color }}
             onClick={() => onChange(item.color)}
           >
             {value === item.color && <CheckOutlined />}

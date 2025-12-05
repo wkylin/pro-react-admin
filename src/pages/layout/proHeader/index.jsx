@@ -210,11 +210,13 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
+  const iconButtonStyle = React.useMemo(() => ({ fontSize: 16 }), [])
+
   return (
     <Layout.Header
       className={styles.header}
       style={{
-        background: headerBackground,
+        backgroundColor: headerBackground,
         borderBottom: headerBorder,
         padding: isMobile ? '0 16px' : 0,
       }}
@@ -246,26 +248,29 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         )}
         <div className={styles.headerRight} style={isMobile ? { flex: 1 } : {}}>
           {!isMobile ? (
-            <Space
-              orientation="horizontal"
-              style={{ cursor: 'pointer', paddingRight: 8, color: isTopDarkHeader ? '#fff' : undefined }}
-            >
+            <Space orientation="horizontal" style={{ paddingRight: 8 }}>
+              <SoundBar buttonStyle={{ border: 'none' }} />
               {/* 全局搜索按钮 */}
               <Tooltip title="全局菜单搜索 (Ctrl+K)" placement="bottom">
                 <Button
                   icon={<SearchOutlined />}
                   size="small"
-                  style={{ fontSize: 16 }}
+                  style={iconButtonStyle}
                   onClick={() => setSearchOpen(true)}
                 />
               </Tooltip>
-              <SoundBar iconColor={isTopDarkHeader ? '#fff' : undefined} />
-              <NotificationDrawer iconColor={isTopDarkHeader ? '#fff' : undefined} />
-              <GithubOutlined
-                style={{ fontSize: 16, color: isTopDarkHeader ? '#fff' : undefined }}
-                onClick={redirectGithub}
-              />
-              <Fullscreen iconColor={isTopDarkHeader ? '#fff' : undefined} />
+
+              <NotificationDrawer variant="button" buttonStyle={iconButtonStyle} />
+              <Tooltip title="GitHub" placement="bottom">
+                <Button
+                  icon={<GithubOutlined style={{ fontSize: 16 }} />}
+                  size="small"
+                  type="default"
+                  onClick={redirectGithub}
+                  style={iconButtonStyle}
+                />
+              </Tooltip>
+              <Fullscreen buttonStyle={iconButtonStyle} />
               <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
                 <Button
                   onClick={handleThemeToggle}
@@ -281,13 +286,23 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                 />
               </Tooltip>
               <Tooltip title="偏好设置" placement="bottom">
-                <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={{ fontSize: 16 }} />
+                <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={iconButtonStyle} />
               </Tooltip>
               <Tooltip title="GitHub Wrapped" placement="bottom">
-                <Button icon={<RocketOutlined style={{ fontSize: 16 }} />} size="small" onClick={redirectWrapped} />
+                <Button
+                  icon={<RocketOutlined style={{ fontSize: 16 }} />}
+                  size="small"
+                  onClick={redirectWrapped}
+                  style={iconButtonStyle}
+                />
               </Tooltip>
               <Tooltip title="DeepWiki" placement="bottom">
-                <Button icon={<BookOutlined style={{ fontSize: 16 }} />} size="small" onClick={redirectWiki} />
+                <Button
+                  icon={<BookOutlined style={{ fontSize: 16 }} />}
+                  size="small"
+                  onClick={redirectWiki}
+                  style={iconButtonStyle}
+                />
               </Tooltip>
               <LanguageSwitcher />
             </Space>
@@ -327,7 +342,13 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
             {isAuthenticated && user ? (
               <Avatar src={user.avatar_url} />
             ) : (
-              <UserOutlined style={{ fontSize: 20, cursor: 'pointer', color: isTopDarkHeader ? '#fff' : undefined }} />
+              <Button
+                icon={<UserOutlined style={{ fontSize: 16 }} />}
+                // size="small"
+                type="default"
+                shape="round"
+                style={iconButtonStyle}
+              />
             )}
           </Dropdown>
           {/* 全局搜索弹窗 */}

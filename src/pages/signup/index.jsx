@@ -57,7 +57,7 @@ const SignUp = () => {
 
   return (
     <Layout style={{ height: '100%', overflow: 'auto' }}>
-      <Content style={{ height: '100%', background: colorBgContainer }}>
+      <Content style={{ height: '100%', backgroundColor: colorBgContainer }}>
         <AlignCenter>
           <div
             style={{

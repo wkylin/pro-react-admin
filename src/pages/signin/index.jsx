@@ -122,7 +122,7 @@ const SignIn = () => {
 
   return (
     <Layout style={{ height: '100%', overflow: 'auto' }}>
-      <Content style={{ height: '100%', background: colorBgContainer }}>
+      <Content style={{ height: '100%', backgroundColor: colorBgContainer }}>
         <AlignCenter>
           <div className={styles.signinBg} style={{ padding: isMobile ? '16px' : '20px', width: '100%' }}>
             <Card className={styles.signinCard} styles={{ body: { padding: isMobile ? '12px' : '24px' } }}>
@@ -134,7 +134,7 @@ const SignIn = () => {
               </div>
 
               {/* 测试账号快捷选择 */}
-              <Card size="small" className={styles.accountCard} style={{ background: colorBgLayout }}>
+              <Card size="small" className={styles.accountCard} style={{ backgroundColor: colorBgLayout }}>
                 <Paragraph className={styles.accountTitle}>
                   <Text strong>测试账号（点击快速填充）：</Text>
                 </Paragraph>

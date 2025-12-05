@@ -35,12 +35,13 @@ const SoundBar = ({ iconColor, buttonStyle, ghost = false }) => {
       <Button
         type="default"
         size="small"
+        shape="default"
         ghost={ghost}
         aria-label={isPlaying ? '暂停播放' : '播放音乐'}
         aria-pressed={isPlaying}
         onClick={togglePlay}
         icon={iconNode}
-        style={{ fontSize: 16, ...buttonStyle }}
+        style={{ fontSize: 16, ...(buttonStyle || {}) }}
       />
       <audio src={music} ref={audioRef} loop>
         <track kind="captions" default />

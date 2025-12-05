@@ -49,13 +49,13 @@ const ProContent = () => {
 
   return (
     <Layout className={styles.layout} id="fullScreen">
-      <Header className="layout-header" style={{ background: colorBgLayout }}>
+      <Header className="layout-header" style={{ backgroundColor: colorBgLayout }}>
         <section className="flex items-center justify-between">
           <ProBreadcrumb />
           {/* <ClockFace /> */}
         </section>
       </Header>
-      <Content className="layout-content" id="fullScreenContent" style={{ background: colorBgContainer }}>
+      <Content className="layout-content" id="fullScreenContent" style={{ backgroundColor: colorBgContainer }}>
         <ProTabs panesItem={panesItem} tabActiveKey={tabActiveKey} />
       </Content>
       <Footer className="layout-footer">
