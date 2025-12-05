@@ -11,22 +11,22 @@ export const songData = [
     title: 'Hearty',
     subtitle: 'Aventure - Hearty',
     coverart: music01Png,
-    audioUrl: heartyAudio,
+    audioUrl: heartyAudio
   },
   {
     key: 'song-2',
     title: 'Long Night',
     subtitle: 'Bohdan Hlukhov - Long Night',
     coverart: music02Png,
-    audioUrl: longnightAudio,
+    audioUrl: longnightAudio
   },
   {
     key: 'song-3',
     title: 'Yesterday',
     subtitle: 'Aventure - Yesterday',
     coverart: music03Png,
-    audioUrl: yesterdayAudio,
-  },
+    audioUrl: yesterdayAudio
+  }
 ]
 
 export default songData

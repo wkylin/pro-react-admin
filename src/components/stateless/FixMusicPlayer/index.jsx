@@ -36,7 +36,7 @@ const MusicPlayer = () => {
     handleLoadedData,
     handleTimeUpdate,
     handleEnded,
-    handleSongClick,
+    handleSongClick
   } = useMusicPlayer(songData)
 
   // 自动处理 Tab 切换时的播放状态
@@ -66,8 +66,8 @@ const MusicPlayer = () => {
   const activeColor = themeSettings.colorPrimary || '#1677ff'
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex-1">
+    <div className='flex h-full flex-col'>
+      <div className='flex-1'>
         <Playlist
           songs={currentSongs}
           currentIndex={currentIndex}
@@ -81,7 +81,7 @@ const MusicPlayer = () => {
         />
       </div>
       <div className={`animate-slideup sticky right-0 bottom-0 left-0 z-10 mt-auto flex h-20 sm:h-28 ${bgClass}`}>
-        <div className="relative flex w-full items-center justify-between px-4 sm:px-8 md:px-12">
+        <div className='relative flex w-full items-center justify-between px-4 sm:px-8 md:px-12'>
           <Track
             isPlaying={isPlaying}
             isActive={isActive}
@@ -89,7 +89,7 @@ const MusicPlayer = () => {
             textColor={textColor}
             secondaryTextColor={secondaryTextColor}
           />
-          <div className="flex flex-1 flex-col items-center justify-center">
+          <div className='flex flex-1 flex-col items-center justify-center'>
             <Controls
               isPlaying={isPlaying}
               isActive={isActive}
@@ -106,7 +106,7 @@ const MusicPlayer = () => {
             />
             <Seekbar
               value={appTime}
-              min="0"
+              min='0'
               max={duration}
               onInput={(event) => handleSeek(event.target.value)}
               setSeekTime={handleSeek}
@@ -127,8 +127,8 @@ const MusicPlayer = () => {
           </div>
           <VolumeBar
             value={volume}
-            min="0"
-            max="1"
+            min='0'
+            max='1'
             onChange={(event) => handleVolumeChange(event.target.value)}
             setVolume={handleVolumeChange}
             textColor={textColor}
