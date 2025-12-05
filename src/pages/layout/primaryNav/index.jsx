@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Space } from 'antd'
 import { DashboardOutlined, ProjectOutlined, HomeOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { usePermission } from '@src/app-hooks/usePermission'
 
 export const usePrimaryNavItems = () => {

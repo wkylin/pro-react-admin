@@ -1,6 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Button, Layout, theme } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import FixLayout from '@src/components/stateless/FixLayout'

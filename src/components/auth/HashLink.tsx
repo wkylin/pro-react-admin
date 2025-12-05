@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react'
 import { LinkProps } from 'react-router-dom'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { HashRouterUtils } from '@src/utils/hashRouter'
 
 export const HashLink = forwardRef<HTMLAnchorElement, LinkProps>(({ to, replace = false, children, ...props }, ref) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import mediaVideo from '@assets/video/trailer.mp4'

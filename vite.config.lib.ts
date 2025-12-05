@@ -22,6 +22,7 @@ export default defineConfig({
       '@stateless': path.resolve(__dirname, 'src/components/stateless'),
       '@stateful': path.resolve(__dirname, 'src/components/stateful'),
       '@hooks': path.resolve(__dirname, 'src/components/hooks'),
+      '@app-hooks': path.resolve(__dirname, 'src/app-hooks'),
       '@container': path.resolve(__dirname, 'src/components/container'),
       '@assets': path.resolve(__dirname, 'src/assets'),
       '@pages': path.resolve(__dirname, 'src/pages'),

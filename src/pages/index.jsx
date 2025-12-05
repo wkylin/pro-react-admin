@@ -1,5 +1,5 @@
 import React from 'react'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { useMatch } from 'react-router-dom'
 import { Button } from 'antd'
 

@@ -3,7 +3,7 @@ import { Card, Spin, Button } from 'antd'
 import { useParams, useLocation } from 'react-router-dom'
 import request from '@/service/request'
 import { useProThemeContext } from '@/theme/hooks'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 
 const NotificationDetail = () => {
   const { id } = useParams()

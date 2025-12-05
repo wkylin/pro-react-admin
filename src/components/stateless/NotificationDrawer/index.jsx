@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Badge, Button, Space, Typography, theme, Drawer, Grid } from 'antd'
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 const { useBreakpoint } = Grid
 const initialNotifications = [
   { id: 1, title: '欢迎使用 Pro React Admin', description: '感谢您的体验与支持！', read: false, time: '1分钟前' },

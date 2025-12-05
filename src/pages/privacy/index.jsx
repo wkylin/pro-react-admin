@@ -1,7 +1,7 @@
 import React from 'react'
 import { Layout, Typography, Card, Button, theme } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import AlignCenter from '@stateless/AlignCenter'
 
 const { Title, Paragraph, Text } = Typography

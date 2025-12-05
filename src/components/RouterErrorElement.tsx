@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRouteError } from 'react-router-dom'
 import { Button, Result, Typography } from 'antd'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 
 const { Paragraph, Text } = Typography
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Breadcrumb, Button } from 'antd'
 import { useTranslation } from 'react-i18next'
 import rootRouter from '@src/routers'

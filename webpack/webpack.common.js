@@ -58,6 +58,7 @@ const config = {
       '@stateless': path.resolve('./src/components/stateless'),
       '@stateful': path.resolve('./src/components/stateful'),
       '@hooks': path.resolve('./src/components/hooks'),
+      '@app-hooks': path.resolve('./src/app-hooks'),
       '@container': path.resolve('./src/components/container'),
       '@assets': path.resolve('./src/assets'),
       '@pages': path.resolve('./src/pages'),

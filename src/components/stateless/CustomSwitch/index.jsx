@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { Routes, Route, useMatch } from 'react-router-dom'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 
 function NoFundPage() {
   const { redirectTo } = useSafeNavigate()

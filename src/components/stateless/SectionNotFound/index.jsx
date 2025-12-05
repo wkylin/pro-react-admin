@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import { Result, Button, Typography, Space } from 'antd'
 import { useLocation } from 'react-router-dom'
 import { HomeOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import FixTabPanel from '@stateless/FixTabPanel'
 
 const { Paragraph, Text } = Typography

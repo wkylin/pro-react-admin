@@ -34,6 +34,7 @@
       "@stateless/*": ["./src/components/stateless/*"],
       "@stateful/*": ["./src/components/stateful/*"],
       "@hooks/*": ["./src/components/hooks/*"],
+      "@app-hooks/*": ["./src/app-hooks/*"],
       "@container/*": ["./src/components/container/*"],
       "@assets/*": ["./src/assets/*"],
       "@pages/*": ["./src/pages/*"],

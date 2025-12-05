@@ -1,5 +1,5 @@
 import React from 'react'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import AlignCenter from '@stateless/AlignCenter'
 import {
   Form,

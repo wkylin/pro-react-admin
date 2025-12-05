@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { Layout, Grid, Drawer } from 'antd'
-import { ProTabProvider } from '@hooks/proTabsContext'
+import { ProTabProvider } from '@app-hooks/proTabsContext'
 import PointerMove from '@stateless/PointerMove'
 import MagicTrail from '@stateless/MagicTrail'
 import SettingDrawer from '@stateless/SettingDrawer'

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { useLocation } from 'react-router-dom'
 import { Button, Badge, Typography, Modal, message } from 'antd'
 import ResponsiveTable from '@/components/ResponsiveTable'

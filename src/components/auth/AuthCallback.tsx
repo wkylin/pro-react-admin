@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Result, Spin } from 'antd'
 import { useLocation } from 'react-router-dom'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Space, Tag, Grid } from 'antd'
 import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import AlignCenter from '@stateless/AlignCenter'
