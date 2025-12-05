@@ -1,7 +1,9 @@
 import React, { useRef, useState } from 'react'
+import { Button } from 'antd'
 import styles from './index.module.less'
 import music from '@assets/audio/heart-of-the-sea.mp3'
-const SoundBar = () => {
+
+const SoundBar = ({ iconColor, buttonStyle, ghost = false }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef(null)
   const togglePlay = () => {
@@ -13,20 +15,33 @@ const SoundBar = () => {
     setIsPlaying(!isPlaying)
   }
 
+  const iconNode = (
+    <span className={styles.audio} style={iconColor ? { '--line-color': iconColor } : undefined}>
+      {Array.from({ length: 5 }, (_, index) => (
+        <span
+          key={index}
+          style={{
+            '--i': index,
+            '--state': isPlaying ? 'running' : 'paused',
+          }}
+          className={styles.line}
+        />
+      ))}
+    </span>
+  )
+
   return (
     <>
-      <span className={styles.audio} onClick={togglePlay}>
-        {Array.from({ length: 5 }, () => ({ id: Math.random() })).map((item, index) => (
-          <span
-            key={item.id}
-            style={{
-              '--i': index,
-              '--state': isPlaying ? 'running' : 'paused',
-            }}
-            className={styles.line}
-          />
-        ))}
-      </span>
+      <Button
+        type="default"
+        size="small"
+        ghost={ghost}
+        aria-label={isPlaying ? '暂停播放' : '播放音乐'}
+        aria-pressed={isPlaying}
+        onClick={togglePlay}
+        icon={iconNode}
+        style={{ fontSize: 16, ...buttonStyle }}
+      />
       <audio src={music} ref={audioRef} loop>
         <track kind="captions" default />
       </audio>

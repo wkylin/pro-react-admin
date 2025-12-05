@@ -22,8 +22,6 @@ import { removeLocalStorage } from '@utils/publicFn'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
 import avatarPng from '@assets/images/w.png'
-// import WikiSvg from '@assets/svg/wikipedia.svg'
-// import RocketSvg from '@assets/svg/rocket.svg'
 
 import Logo from '@assets/images/pro-logo.png'
 import SoundBar from '@stateless/SoundBar'
@@ -177,7 +175,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     },
     {
       key: 'setting',
-      label: '设置',
+      label: '偏好设置',
       icon: <SettingOutlined style={{ fontSize: 16 }} />,
       onClick: onSettingClick,
     },
@@ -188,6 +186,11 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
   } = theme.useToken()
   const { themeSettings, updateSettings } = useProThemeContext()
   const isDark = themeSettings.themeMode === 'dark'
+  const effectiveNavTheme = isDark ? 'dark' : themeSettings.navTheme
+
+  const isTopDarkHeader = layout === 'top' && effectiveNavTheme === 'dark'
+  const headerBackground = isTopDarkHeader ? '#001529' : colorBgContainer
+  const headerBorder = isTopDarkHeader ? '1px solid rgba(255, 255, 255, 0.12)' : `1px solid ${colorBorder}`
 
   const handleThemeToggle = () => {
     updateSettings({ themeMode: isDark ? 'light' : 'dark' })
@@ -211,8 +214,8 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
     <Layout.Header
       className={styles.header}
       style={{
-        background: colorBgContainer,
-        borderBottom: `1px solid ${colorBorder}`,
+        background: headerBackground,
+        borderBottom: headerBorder,
         padding: isMobile ? '0 16px' : 0,
       }}
     >
@@ -243,7 +246,10 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         )}
         <div className={styles.headerRight} style={isMobile ? { flex: 1 } : {}}>
           {!isMobile ? (
-            <Space orientation="horizontal" style={{ cursor: 'pointer', paddingRight: 8 }}>
+            <Space
+              orientation="horizontal"
+              style={{ cursor: 'pointer', paddingRight: 8, color: isTopDarkHeader ? '#fff' : undefined }}
+            >
               {/* 全局搜索按钮 */}
               <Tooltip title="全局菜单搜索 (Ctrl+K)" placement="bottom">
                 <Button
@@ -253,10 +259,13 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                   onClick={() => setSearchOpen(true)}
                 />
               </Tooltip>
-              <SoundBar />
-              <NotificationDrawer />
-              <GithubOutlined style={{ fontSize: 16 }} onClick={redirectGithub} />
-              <Fullscreen />
+              <SoundBar iconColor={isTopDarkHeader ? '#fff' : undefined} />
+              <NotificationDrawer iconColor={isTopDarkHeader ? '#fff' : undefined} />
+              <GithubOutlined
+                style={{ fontSize: 16, color: isTopDarkHeader ? '#fff' : undefined }}
+                onClick={redirectGithub}
+              />
+              <Fullscreen iconColor={isTopDarkHeader ? '#fff' : undefined} />
               <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
                 <Button
                   onClick={handleThemeToggle}
@@ -271,7 +280,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                   }
                 />
               </Tooltip>
-              <Tooltip title="主题设置" placement="bottom">
+              <Tooltip title="偏好设置" placement="bottom">
                 <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={{ fontSize: 16 }} />
               </Tooltip>
               <Tooltip title="GitHub Wrapped" placement="bottom">
@@ -287,7 +296,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
               {/* 移动端全局搜索按钮 */}
               <Tooltip title="菜单搜索">
                 <Button
-                  icon={<SearchOutlined />}
+                  icon={<SearchOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />}
                   size="small"
                   style={{ fontSize: 18 }}
                   onClick={() => setSearchOpen(true)}
@@ -308,7 +317,9 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                 />
               </Tooltip>
               <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
-                <MoreOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+                <MoreOutlined
+                  style={{ fontSize: 20, cursor: 'pointer', color: isTopDarkHeader ? '#fff' : undefined }}
+                />
               </Dropdown>
             </Space>
           )}
@@ -316,7 +327,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
             {isAuthenticated && user ? (
               <Avatar src={user.avatar_url} />
             ) : (
-              <UserOutlined style={{ fontSize: 20, cursor: 'pointer' }} />
+              <UserOutlined style={{ fontSize: 20, cursor: 'pointer', color: isTopDarkHeader ? '#fff' : undefined }} />
             )}
           </Dropdown>
           {/* 全局搜索弹窗 */}

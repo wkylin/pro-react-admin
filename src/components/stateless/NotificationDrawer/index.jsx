@@ -23,7 +23,7 @@ const initialNotifications = [
   { id: 5, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
 ]
 
-const NotificationDropdown = () => {
+const NotificationDropdown = ({ iconColor }) => {
   const [notifications, setNotifications] = useState(initialNotifications)
   const unreadCount = notifications.filter((n) => !n.read).length
   const { redirectTo } = useSafeNavigate()
@@ -126,9 +126,9 @@ const NotificationDropdown = () => {
 
   return (
     <>
-      <span onClick={() => setPopVisible(true)} style={{ cursor: 'pointer' }}>
+      <span onClick={() => setPopVisible(true)} style={{ cursor: 'pointer', color: iconColor }}>
         <Badge count={unreadCount} size="small" overflowCount={49}>
-          <BellOutlined style={{ fontSize: 16 }} />
+          <BellOutlined style={{ fontSize: 16, color: iconColor }} />
         </Badge>
         {isMobile && <span style={{ marginLeft: 4 }}>通知</span>}
       </span>
