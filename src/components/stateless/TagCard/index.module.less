@@ -13,17 +13,22 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 15px;
 }
 
 .tagCardItem {
   border: 1px solid #96c2ee;
   border-radius: 3px 3px 0 0;
   background-color: #fff;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   width: calc(33.3333% - 10px);
+  flex: 1 1 calc(33.3333% - 10px);
   box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   transition: all 0.3s ease;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
 }
 
 .tagCardTop {
@@ -35,6 +40,9 @@
 
 .tagCardBody {
   padding: 16px 16px 6px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .cardName {
@@ -54,7 +62,7 @@
 }
 
 .cardBody {
-  height: 78px;
+  height: 90px;
   overflow: auto;
   display: flex;
   flex-wrap: wrap;
@@ -71,4 +79,36 @@
 
 .tagName {
   font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+  .tagCardItem {
+    width: calc(50% - 10px);
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+
+@media (max-width: 992px) {
+  .tagCardItem {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .tagCard {
+    padding: 0 4px;
+  }
+
+  .tagCardExtra {
+    justify-content: flex-end;
+  }
+
+  .tagCardList {
+    gap: 12px;
+  }
+
+  .cardBody {
+    max-height: none;
+  }
 }
