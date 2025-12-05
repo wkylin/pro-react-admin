@@ -35,7 +35,7 @@ const BlockCheckbox = ({
           >
             <img src={item.url} alt={item.title} style={{ width: '100%', height: '100%' }} />
             {value === item.key && (
-              <div className="absolute right-0 bottom-0 text-xs font-bold text-blue-600">
+              <div className="absolute right-0 bottom-0 text-xs font-bold" style={{ color: token.colorPrimary }}>
                 <CheckOutlined />
               </div>
             )}
@@ -55,6 +55,7 @@ const ThemeColor = ({
   value: string
   onChange: (color: string) => void
 }) => {
+  const { token } = useToken()
   return (
     <div className="flex flex-wrap gap-3">
       {colors.map((item) => (
@@ -64,7 +65,7 @@ const ThemeColor = ({
             style={{ backgroundColor: item.color }}
             onClick={() => onChange(item.color)}
           >
-            {value === item.color && <CheckOutlined />}
+            {value === item.color && <CheckOutlined style={{ color: token.colorBgContainer }} />}
           </div>
         </Tooltip>
       ))}
@@ -89,7 +90,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       styles={{ body: { padding: '20px 24px' } }}
     >
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-gray-100">整体风格设置</h3>
+        <h3 className="mb-4 text-sm font-bold">整体风格设置</h3>
         <div className="flex gap-4">
           <BlockCheckbox
             list={[
@@ -109,7 +110,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
           />
         </div>
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm text-gray-600 dark:text-gray-400">开启暗黑模式</span>
+          <span className="text-sm">开启暗黑模式</span>
           <Switch
             checked={themeSettings.themeMode === 'dark'}
             onChange={(checked) => changeSetting('themeMode', checked ? 'dark' : 'light')}
@@ -118,7 +119,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       </div>
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-gray-100">主题色</h3>
+        <h3 className="mb-4 text-sm font-bold">主题色</h3>
         <ThemeColor
           colors={[
             { key: '拂晓蓝 (默认)', color: '#1677ff' },
@@ -146,7 +147,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       <Divider />
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-gray-100">导航模式</h3>
+        <h3 className="mb-4 text-sm font-bold">导航模式</h3>
         <BlockCheckbox
           list={[
             {
@@ -171,7 +172,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       </div>
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-gray-100">内容区域宽度</h3>
+        <h3 className="mb-4 text-sm font-bold">内容区域宽度</h3>
         <div className="flex justify-between">
           <span>内容区域宽度</span>
           <Switch
@@ -187,7 +188,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       <Divider />
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold text-gray-900 dark:text-gray-100">其他设置</h3>
+        <h3 className="mb-4 text-sm font-bold">其他设置</h3>
         <div className="mb-3 flex justify-between">
           <span>色弱模式</span>
           <Switch checked={themeSettings.colorWeak} onChange={(checked) => changeSetting('colorWeak', checked)} />
