@@ -180,11 +180,11 @@ Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨�
 🛠 规范集成：内置 ESLint、Prettier 等代码规范配置。
 🎨 交互友好：优雅的命令行交互体验。
 🌏 线上地址：[Baize](https://www.npmjs.com/package/baize-cli)
+
 ```bash
   > npm install -g baize-cli
   > baize
 ```
-
 
 ## 🔍 自动化持续代码审查工具
 
