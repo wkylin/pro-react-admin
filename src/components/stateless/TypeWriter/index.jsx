@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { motion, Variants } from 'motion/react'
+import { motion } from 'motion/react'
 import clsx from 'clsx'
 
 const TypeWriter = ({

@@ -6,13 +6,16 @@
 import { UserPermission, Role, PermissionCode } from '../../types/permission'
 import { mockGetUserPermissions, mockGetRoles, mockCheckPermission } from '../../mock/permission'
 import request from '@/service/request'
+import { getEnv, getEnvBool } from '@utils/env'
 
 export type Permission = {
   code: string
   name?: string
 }
 
-const USE_MOCK = process.env.REACT_APP_USE_MOCK === 'true'
+// Prefer mock when backend base URL is not configured to avoid 404s during static preview
+const BASE_URL = getEnv('APP_BASE_URL', '')
+const USE_MOCK = getEnvBool('REACT_APP_USE_MOCK', false) || !BASE_URL
 
 /**
  * 获取当前用户权限信息

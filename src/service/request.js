@@ -3,10 +3,11 @@ import qs from 'qs'
 import { showMessage } from '@src/utils/message'
 // import { authService } from '@src/service/authService' // 移除以避免循环依赖
 import logger from '../utils/logger'
+import { getEnv } from '@utils/env'
 
 // ==================== 1. 配置常量 ====================
 const CONFIG = {
-  BASE_URL: process.env.APP_BASE_URL || '',
+  BASE_URL: getEnv('APP_BASE_URL', ''),
   TIMEOUT: 60000,
   WITH_CREDENTIALS: true,
   RETRY_ATTEMPTS: 3,

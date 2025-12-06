@@ -7,9 +7,7 @@
     <meta name="description" content="Pro React Admin" />
     <title>Pro React Admin</title>
   </head>
-
   <body>
-    <!-- antd theme less -->
     <noscript id="inject-styles-here"></noscript>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
@@ -132,39 +130,6 @@
       }
     </style>
 
-    <script>
-      ;(function () {
-        try {
-          const STORAGE_KEY = 'pro-react-admin-theme-settings'
-          const stored = localStorage.getItem(STORAGE_KEY)
-          const root = document.documentElement
-
-          if (stored) {
-            const settings = JSON.parse(stored)
-            const mode = settings.themeMode || 'light'
-            const primary = settings.colorPrimary || '#1677ff'
-
-            if (mode === 'dark') {
-              root.style.setProperty('--loader-bg', '#141414')
-              root.style.setProperty('--loader-text', '#ffffff')
-              root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)')
-            }
-
-            if (primary) {
-              root.style.setProperty('--loader-primary', primary)
-            }
-          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            // Fallback to system preference
-            root.style.setProperty('--loader-bg', '#141414')
-            root.style.setProperty('--loader-text', '#ffffff')
-            root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)')
-          }
-        } catch (e) {
-          console.error('Error setting loader theme:', e)
-        }
-      })()
-    </script>
-
     <div id="root"></div>
 
     <div id="global-loader" class="loader-container">
@@ -176,5 +141,6 @@
       </div>
       <div class="loading-text">Pro React Admin</div>
     </div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

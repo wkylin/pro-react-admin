@@ -1,7 +1,9 @@
+import { getEnv } from '@utils/env'
+
 export const GITHUB_OAUTH_CONFIG = {
-  clientId: process.env.REACT_APP_GITHUB_CLIENT_ID || '',
-  clientSecret: process.env.REACT_APP_GITHUB_CLIENT_SECRET || '',
-  redirectUri: process.env.REACT_APP_GITHUB_REDIRECT_URI || '',
+  clientId: getEnv('REACT_APP_GITHUB_CLIENT_ID', ''),
+  clientSecret: getEnv('REACT_APP_GITHUB_CLIENT_SECRET', ''),
+  redirectUri: getEnv('REACT_APP_GITHUB_REDIRECT_URI', ''),
   scope: 'user:email read:user',
   authUrl: 'https://github.com/login/oauth/authorize',
   tokenUrl: 'https://github.com/login/oauth/access_token',

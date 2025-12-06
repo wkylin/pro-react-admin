@@ -1,6 +1,6 @@
 import React from 'react'
-import LightSvg from '@assets/svg/light.svg'
-import DarkSvg from '@assets/svg/dark.svg'
+import LightIcon from '@assets/svg/light.svg'
+import DarkIcon from '@assets/svg/dark.svg'
 import { useProThemeContext } from '@src/theme/hooks'
 import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button } from 'antd'
 import GlobalSearch from '@src/components/GlobalSearch'
@@ -278,9 +278,9 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                   style={{ margin: '0 4px', fontSize: 16 }}
                   icon={
                     isDark ? (
-                      <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
+                      <LightIcon width={16} height={16} style={{ width: 16, height: 16 }} />
                     ) : (
-                      <DarkSvg style={{ fontSize: 16, color: '#222' }} />
+                      <DarkIcon width={16} height={16} style={{ width: 16, height: 16 }} />
                     )
                   }
                 />
@@ -324,9 +324,9 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
                   style={{ margin: '0 4px', fontSize: 16 }}
                   icon={
                     isDark ? (
-                      <LightSvg style={{ fontSize: 16, color: '#fadb14' }} />
+                      <LightIcon width={16} height={16} style={{ width: 16, height: 16 }} />
                     ) : (
-                      <DarkSvg style={{ fontSize: 16, color: '#222' }} />
+                      <DarkIcon width={16} height={16} style={{ width: 16, height: 16 }} />
                     )
                   }
                 />

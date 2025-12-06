@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { AnimatePresence, motion, useInView, UseInViewOptions, Variants } from 'motion/react'
+import { AnimatePresence, motion, useInView } from 'motion/react'
 
 const BlurFade = ({
   children,

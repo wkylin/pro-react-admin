@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tooltip } from 'antd'
-import { BookOpen, Wallet, TrendingUp, HelpCircle, LucideIcon } from 'lucide-react'
+import { BookOpen, Wallet, TrendingUp, HelpCircle } from 'lucide-react'
 import { useProThemeContext } from '@src/theme/hooks'
 import styles from './index.module.less'
 

@@ -1,6 +1,7 @@
 import qs from 'qs'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { showMessage } from '@src/utils/message'
+import { getEnv } from '@utils/env'
 
 // ==================== 工具函数 ====================
 const addTimestampSuffix = (params = {}) => ({
@@ -10,7 +11,7 @@ const addTimestampSuffix = (params = {}) => ({
 
 // ==================== 1. 配置常量 ====================
 const CONFIG = {
-  BASE_URL: process.env.APP_BASE_URL || '',
+  BASE_URL: getEnv('APP_BASE_URL', ''),
   TIMEOUT: 20000,
   HEADERS: {
     'Content-Type': 'application/json;charset=utf-8',

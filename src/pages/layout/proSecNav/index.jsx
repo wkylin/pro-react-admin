@@ -16,11 +16,29 @@ import {
 } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
 import { annotatedRootRouter, flattenRoutes } from '@src/routers'
-import { lazyComponents } from '@src/routers/config/lazyLoad.config'
 
 import styles from './index.module.less'
 
 import { mainLayoutMenu } from '@src/config/menu.config'
+
+// Defer lazyComponents import to avoid layout/lazyLoad circular reference during module evaluation
+let lazyComponentsCache = null
+let lazyComponentsPromise = null
+const loadLazyComponents = () => {
+  if (lazyComponentsCache) return Promise.resolve(lazyComponentsCache)
+  if (!lazyComponentsPromise) {
+    lazyComponentsPromise = import('@src/routers/config/lazyLoad.config')
+      .then((mod) => {
+        lazyComponentsCache = mod.lazyComponents || {}
+        return lazyComponentsCache
+      })
+      .catch(() => {
+        lazyComponentsCache = {}
+        return lazyComponentsCache
+      })
+  }
+  return lazyComponentsPromise
+}
 
 const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const { pathname } = useLocation()
@@ -238,19 +256,21 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
                 if (!ProSecNav._preloaded) ProSecNav._preloaded = new Set()
                 if (ProSecNav._preloaded.has(path)) return
                 const comp = routeComponentMap.get(path)
-                if (!comp && lazyComponents) {
-                  const name = (path || '')
-                    .replace(/^\//, '')
-                    .split('/')
-                    .map((s) => (s && s[0] ? s[0].toUpperCase() + s.slice(1) : ''))
-                    .join('')
-                  const candidate = lazyComponents[name]
-                  if (candidate && typeof candidate.preload === 'function') {
-                    candidate.preload()
-                    ProSecNav._preloaded.add(path)
-                    return
-                  }
-                }
+                loadLazyComponents()
+                  .then((lazy) => {
+                    if (!lazy || ProSecNav._preloaded.has(path)) return
+                    const name = (path || '')
+                      .replace(/^\//, '')
+                      .split('/')
+                      .map((s) => (s && s[0] ? s[0].toUpperCase() + s.slice(1) : ''))
+                      .join('')
+                    const candidate = lazy[name]
+                    if (candidate && typeof candidate.preload === 'function') {
+                      candidate.preload()
+                      ProSecNav._preloaded.add(path)
+                    }
+                  })
+                  .catch(() => {})
                 if (comp && typeof comp.preload === 'function') {
                   comp.preload()
                   ProSecNav._preloaded.add(path)

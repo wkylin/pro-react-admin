@@ -1,5 +1,5 @@
 import React from 'react'
-import { motion, MotionStyle, Transition } from 'motion/react'
+import { motion } from 'motion/react'
 import clsx from 'clsx'
 
 const BorderBeam = ({
