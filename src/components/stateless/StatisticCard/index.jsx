@@ -7,7 +7,7 @@ import styles from './index.module.less'
 const iconMap = {
   book: BookOpen,
   wallet: Wallet,
-  rate: TrendingUp,
+  rate: TrendingUp
 }
 
 const StatisticCard = ({ items = [] }) => {
