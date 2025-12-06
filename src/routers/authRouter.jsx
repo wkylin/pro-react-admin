@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation, matchPath } from 'react-router-dom'
 import { getLocalStorage } from '@utils/publicFn'
 import { permissionService } from '@src/service/permissionService'
 import { isPublicRoute, isRouteConfigPublic } from './config/publicRoutes'
@@ -18,16 +18,33 @@ const AuthRouter = (props) => {
   const [messageApi, contextHolder] = message.useMessage()
 
   useEffect(() => {
+    const resolveRoutePolicy = (targetPath) => {
+      const flat = flattenRoutes(annotatedRootRouter || [])
+      const normalized = String(targetPath || '').split('?')[0] || '/'
+
+      return flat.find((route) => {
+        const candidate = route?.meta?.routePath || route?.meta?.routeKey || route?.path
+        if (!candidate) return false
+        const pattern = candidate.startsWith('/') ? candidate : `/${candidate}`
+        return (
+          matchPath({ path: pattern, end: true }, normalized) ||
+          matchPath({ path: pattern.endsWith('/*') ? pattern : `${pattern}/*`, end: false }, normalized)
+        )
+      })
+    }
+
     const checkAuth = async () => {
       const { token } = getLocalStorage('token') || getLocalStorage('github_token') || { token: null }
+      const policyRoute = resolveRoutePolicy(pathname)
+      const policyMeta = policyRoute?.meta || {}
+      const isPolicyPublic = policyMeta.auth === false || isRouteConfigPublic(policyRoute)
 
-      // 已登录访问 signin/signup 等公开页：重定向到可访问路由首项
+      // 已登录访问纯公开页：跳转到可访问路由的首项
       if (token && isPublicRoute(pathname)) {
         try {
           const routes = await permissionService.getAccessibleRoutes()
           const target = routes.includes('/') ? '/' : routes[0] || '/'
           setCanAccess(true)
-          // 使用 replace 避免产生历史记录
           window.history.replaceState(null, '', target)
           return
         } catch {
@@ -36,55 +53,60 @@ const AuthRouter = (props) => {
           return
         }
       }
-      // 未登录访问公开路由（路径或路由配置标记）直接放行
-      if (!token && (isPublicRoute(pathname) || isRouteConfigPublic(props.route))) {
-        setCanAccess(true)
-        return
-      }
 
+      // 未登录：公开路由放行，其余重定向到登录
       if (!token) {
+        if (isPublicRoute(pathname) || isPolicyPublic) {
+          setCanAccess(true)
+          return
+        }
         setCanAccess(false)
         return
       }
 
-      // 路由配置标记公开
-      if (isRouteConfigPublic(props.route)) {
+      // 登录态下，公开路由直接放行
+      if (isPublicRoute(pathname) || isPolicyPublic) {
         setCanAccess(true)
         return
       }
 
-      // 优先基于路由元数据做精确权限检查（在路由渲染前拦截）
-      try {
-        const flat = flattenRoutes(annotatedRootRouter || [])
-        const target = flat.find((r) => r.path === pathname)
-        const permissionMeta = target?.meta?.permission
-        const requireAll = target?.meta?.requireAll || false
+      // 优先使用路由策略 meta.permission / meta.roles
+      const permissionsRequired = policyMeta.permission
+      const rolesRequired = policyMeta.roles
+      const requireAll = policyMeta.requireAll || false
 
-        if (permissionMeta) {
-          // 支持单个 permission 或数组
-          if (Array.isArray(permissionMeta)) {
+      try {
+        if (permissionsRequired) {
+          if (Array.isArray(permissionsRequired)) {
             const result = requireAll
-              ? await permissionService.hasAllPermissions(permissionMeta)
-              : await permissionService.hasAnyPermission(permissionMeta)
-            if (!result.hasPermission) {
-              setCanAccess(false)
-              return
-            }
-          } else {
-            const ok = await permissionService.hasPermission(permissionMeta)
-            if (!ok) {
-              setCanAccess(false)
-              return
-            }
+              ? await permissionService.hasAllPermissions(permissionsRequired)
+              : await permissionService.hasAnyPermission(permissionsRequired)
+            setCanAccess(result.hasPermission)
+            return
           }
+          const ok = await permissionService.hasPermission(permissionsRequired)
+          setCanAccess(!!ok)
+          return
+        }
+
+        if (rolesRequired) {
+          if (Array.isArray(rolesRequired)) {
+            const result = requireAll
+              ? await permissionService.hasAllRoles(rolesRequired)
+              : await permissionService.hasAnyRole(rolesRequired)
+            setCanAccess(result.hasPermission)
+            return
+          }
+          const ok = await permissionService.hasRole(rolesRequired)
+          setCanAccess(!!ok)
+          return
         }
       } catch (err) {
-        // 如果元数据检查出现错误，不阻塞后续检查（但已在超时/异常处采取保守拒绝）
-        console.warn('基于 meta.permission 的前置检查失败，继续使用路径检查', err)
+        console.warn('基于路由策略的权限检查失败，尝试路由白名单回退', err)
       }
 
+      // 回退：基于可访问路由列表校验
       try {
-        // 带超时的权限检查
         const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve('timeout'), 3000))
         const permissionPromise = permissionService.canAccessRoute(pathname, false).catch(() => null)
         const hasAccess = await Promise.race([permissionPromise, timeoutPromise])
@@ -102,11 +124,10 @@ const AuthRouter = (props) => {
           console.warn('权限检查返回 null，拒绝访问')
           setCanAccess(false)
         } else {
-          setCanAccess(hasAccess)
+          setCanAccess(!!hasAccess)
         }
       } catch (error) {
         console.error('权限检查失败:', error)
-        // 出错时采用保守策略，拒绝访问
         setCanAccess(false)
       }
     }
