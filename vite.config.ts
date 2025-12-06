@@ -1,6 +1,8 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
+import compression from 'vite-plugin-compression'
+import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -22,6 +24,9 @@ export default defineConfig(({ mode }) => {
     REACT_APP_GITHUB_CLIENT_SECRET: env.REACT_APP_GITHUB_CLIENT_SECRET,
     REACT_APP_GITHUB_REDIRECT_URI: env.REACT_APP_GITHUB_REDIRECT_URI,
   }
+
+  const useAnalyze = env.USE_ANALYZE === '1' || env.USE_ANALYZE === 'true'
+  const isProd = mode === 'production'
 
   const injectAppEntry = {
     name: 'inject-app-entry',
@@ -49,7 +54,16 @@ export default defineConfig(({ mode }) => {
         },
       }),
       react(),
-      injectAppEntry,
+      // injectAppEntry,
+      ...(useAnalyze
+        ? [visualizer({ filename: 'dist-vite/stats.html', gzipSize: true, brotliSize: true, open: false })]
+        : []),
+      ...(isProd
+        ? [
+            compression({ algorithm: 'gzip', deleteOriginFile: false }),
+            compression({ algorithm: 'brotliCompress', ext: '.br', deleteOriginFile: false }),
+          ]
+        : []),
     ],
     define: {
       'process.env': clientEnv,
@@ -82,6 +96,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist-vite',
       sourcemap: false,
+      chunkSizeWarningLimit: 800,
       rollupOptions: {
         input: path.resolve(__dirname, 'index.html'),
       },

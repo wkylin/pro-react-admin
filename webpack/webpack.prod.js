@@ -106,9 +106,9 @@ const prodWebpackConfig = merge(common, {
     },
   },
   performance: {
-    hints: false,
-    maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
+    hints: 'warning',
+    maxEntrypointSize: 800000,
+    maxAssetSize: 400000,
   },
 })
 
