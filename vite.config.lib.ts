@@ -3,8 +3,20 @@ import react from '@vitejs/plugin-react'
 import dts from 'vite-plugin-dts'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const useAnalyze = Boolean(process.env.USE_ANALYZE)
+
+const analyzePlugin =
+  useAnalyze &&
+  visualizer({
+    filename: 'dist-lib/bundle-report.html',
+    title: 'pro-react-admin library bundle',
+    gzipSize: true,
+    brotliSize: true,
+    template: 'treemap',
+  })
 
 export default defineConfig({
   plugins: [
@@ -12,9 +24,12 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       tsconfigPath: './tsconfig.json',
-      include: ['src/components'],
+      // 需要覆盖 .module.less 声明（位于 src/vite-env.d.ts），因此包含整个 src
+      include: ['src'],
     }),
-  ],
+    // 仅在 USE_ANALYZE=1 时生成体积分布报告
+    analyzePlugin,
+  ].filter(Boolean),
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

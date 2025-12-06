@@ -102,6 +102,8 @@
     "build-storybook": "storybook build -o storybook-static",
     "postbuild-storybook": "node ./scripts/add-storybook-base.js",
     "build:lib": "vite build -c vite.config.lib.ts",
+    "build:lib:analyze": "cross-env USE_ANALYZE=1 vite build -c vite.config.lib.ts",
+    "analyze:lib": "cross-env USE_ANALYZE=1 vite build -c vite.config.lib.ts",
     "prepublishOnly": "npm run build:lib",
     "pub": "npm publish --access public",
     "pub:beta": "npm publish --tag beta --access public"
