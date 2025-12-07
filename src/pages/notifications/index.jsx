@@ -21,7 +21,7 @@ const NotificationsPage = () => {
         title: `消息标题 ${i + 1}`,
         description: `这是第 ${i + 1} 条消息的内容，支持详情查看。`,
         read: i % 3 === 0,
-        time: `${i + 1} 分钟前`,
+        time: `${i + 1} 分钟前`
       })),
     []
   )
@@ -74,30 +74,30 @@ const NotificationsPage = () => {
       title: '序号',
       key: '__index',
       index: true,
-      width: 80,
+      width: 80
     },
     {
       title: '标题',
       dataIndex: 'title',
       width: 200,
-      render: (text) => <Typography.Text strong>{text}</Typography.Text>,
+      render: (text) => <Typography.Text strong>{text}</Typography.Text>
     },
     {
       title: '内容',
       dataIndex: 'description',
-      ellipsis: true,
+      ellipsis: true
     },
     {
       title: '时间',
       dataIndex: 'time',
-      width: 120,
+      width: 120
     },
     {
       title: '状态',
       dataIndex: 'read',
       width: 80,
-      render: (read) => (!read ? <Badge status="processing" text="未读" /> : <Badge status="default" text="已读" />),
-    },
+      render: (read) => (!read ? <Badge status='processing' text='未读' /> : <Badge status='default' text='已读' />)
+    }
     // 操作列由 ResponsiveTable 提供（通过 actions prop），这里不再在 columns 中定义操作列
   ]
 
@@ -108,7 +108,7 @@ const NotificationsPage = () => {
           columns={columns}
           dataSource={items}
           apiRef={tableApiRef}
-          rowKey="id"
+          rowKey='id'
           initialPagination={pagination}
           minBodyHeight={120}
           minWidth={800}
@@ -119,7 +119,7 @@ const NotificationsPage = () => {
             const map = {
               view: 'notifications:view',
               edit: 'notifications:edit',
-              delete: 'notifications:delete',
+              delete: 'notifications:delete'
             }
             const perm = map[actionKey]
             if (!perm) return true
@@ -133,7 +133,7 @@ const NotificationsPage = () => {
             {
               key: 'view',
               label: '查看',
-              onClick: (r) => setModal({ visible: true, record: r }),
+              onClick: (r) => setModal({ visible: true, record: r })
             },
             {
               key: 'edit',
@@ -141,7 +141,7 @@ const NotificationsPage = () => {
               onClick: (r) => {
                 // 示例编辑行为：打开详情 modal（可替换为编辑表单）
                 console.log('edit', r)
-              },
+              }
             },
             {
               key: 'open_tab',
@@ -178,7 +178,7 @@ const NotificationsPage = () => {
                 } catch (e) {
                   console.error('open tab navigate error', e)
                 }
-              },
+              }
             },
             {
               key: 'open_tab_with_query',
@@ -190,7 +190,7 @@ const NotificationsPage = () => {
                 } catch (e) {
                   console.error('open tab navigate error', e)
                 }
-              },
+              }
             },
             {
               key: 'delete',
@@ -207,8 +207,8 @@ const NotificationsPage = () => {
 
                 // 成功返回，父 hook 的 handleDelete 会调用 reloadPage 或者本地数据更新
                 return Promise.resolve()
-              },
-            },
+              }
+            }
           ]}
           // toolbar 示例：左侧新增/导出，右侧查询表单
           toolbar={{
@@ -231,8 +231,8 @@ const NotificationsPage = () => {
                   } catch (e) {
                     console.error('set-from-ref error', e)
                   }
-                },
-              },
+                }
+              }
             ],
             search: {
               // fields 演示多种类型：input/select/dateRange/number
@@ -245,21 +245,21 @@ const NotificationsPage = () => {
                   options: [
                     { label: '全部', value: '' },
                     { label: '未读', value: false },
-                    { label: '已读', value: true },
-                  ],
+                    { label: '已读', value: true }
+                  ]
                 },
                 {
                   name: 'createdAt',
                   label: '创建时间',
                   type: 'dateRange',
-                  placeholder: '请选择创建时间范围',
+                  placeholder: '请选择创建时间范围'
                 },
                 {
                   name: 'minId',
                   label: '最小 ID',
                   type: 'number',
-                  placeholder: '>=',
-                },
+                  placeholder: '>='
+                }
               ],
               // transformValues 将前端表单值转换为后端期望的参数
               // 这里把 createdAt 的范围转换为 start / end（ISO 字符串），并保持其它字段
@@ -279,12 +279,12 @@ const NotificationsPage = () => {
               initialValues: {
                 read: '',
                 minId: 12,
-                title: '初始化title',
+                title: '初始化title'
               },
               advancedThreshold: 1,
               advancedPlacement: 'drawer', // 'inline' | 'popover' | 'drawer'
-              buttons: { searchText: '查询', resetText: '重置' },
-            },
+              buttons: { searchText: '查询', resetText: '重置' }
+            }
           }}
           // 使用服务端 fetchUrl 自动加载（示例：开启后组件会在 mount 时调用 /api/notifications）
           onToolbarReady={(api) => {
@@ -299,18 +299,18 @@ const NotificationsPage = () => {
               console.error('onToolbarReady handler error', e)
             }
           }}
-          fetchUrl="/api/notifications"
-          mergeSearchToFetch={true}
+          fetchUrl='/api/notifications'
+          mergeSearchToFetch
           autoLoad={false}
-          requestMethod="post"
+          requestMethod='post'
           clearUrlAfterInitialMerge={false}
           mergeSearchToFetchOnce={false}
-          showUrlAppliedTag={true}
+          showUrlAppliedTag
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
           responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
           serverSort={false}
-          showIndex={true}
-          indexMode={'global'}
+          showIndex
+          indexMode='global'
           rowSelection={null}
           // 示例：覆盖默认序号列与操作列宽度，并精确控制横向滚动行为
           indexWidth={60}
@@ -327,8 +327,8 @@ const NotificationsPage = () => {
         footer={<Button onClick={() => setModal({ visible: false, record: null })}>关闭</Button>}
         styles={{
           body: {
-            color,
-          },
+            color
+          }
         }}
       >
         <Typography.Paragraph style={{ color }}>{modal.record?.description}</Typography.Paragraph>

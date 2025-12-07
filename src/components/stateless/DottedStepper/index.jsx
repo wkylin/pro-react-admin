@@ -15,18 +15,18 @@ const defaultSteps = [
     label: 'Personal Information',
     fields: [
       { name: 'name', type: 'text', placeholder: 'Name' },
-      { name: 'email', type: 'email', placeholder: 'Email' },
-    ],
+      { name: 'email', type: 'email', placeholder: 'Email' }
+    ]
   },
   {
     label: 'Address Details',
     fields: [
       { name: 'address', type: 'text', placeholder: 'Address' },
       { name: 'city', type: 'text', placeholder: 'City' },
-      { name: 'country', type: 'text', placeholder: 'Country' },
-    ],
+      { name: 'country', type: 'text', placeholder: 'Country' }
+    ]
   },
-  { label: 'Review & Submit' },
+  { label: 'Review & Submit' }
 ]
 
 const StepIndicator = ({ currentStep, steps }) => {
@@ -42,12 +42,12 @@ const StepIndicator = ({ currentStep, steps }) => {
   const inactiveTextColor = isDark ? '#8c8c8c' : '#bfbfbf'
 
   return (
-    <div className="relative w-full">
+    <div className='relative w-full'>
       {isMobile ? (
         // 移动端垂直布局
-        <div className="flex flex-col space-y-4">
+        <div className='flex flex-col space-y-4'>
           {steps.map((step, index) => (
-            <div key={step.label} className="flex items-center space-x-3">
+            <div key={step.label} className='flex items-center space-x-3'>
               <motion.div
                 className={clsx(
                   'flex size-8 items-center justify-center rounded-full border-2 transition-all duration-300',
@@ -58,25 +58,25 @@ const StepIndicator = ({ currentStep, steps }) => {
                   backgroundColor: index <= currentStep ? activeColor : inactiveBgColor,
                   color: index <= currentStep ? activeTextColor : inactiveTextColor,
                   borderColor: index <= currentStep ? activeColor : undefined,
-                  boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined,
+                  boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined
                 }}
               >
-                {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill="currentColor" />}
+                {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill='currentColor' />}
               </motion.div>
-              <div className="flex-1">
+              <div className='flex-1'>
                 <div
                   className={clsx(
                     'text-sm font-medium transition-colors duration-300',
                     index <= currentStep ? '' : 'text-gray-500 dark:text-gray-400'
                   )}
                   style={{
-                    color: index <= currentStep ? activeColor : undefined,
+                    color: index <= currentStep ? activeColor : undefined
                   }}
                 >
                   {step.label}
                 </div>
                 {index === currentStep && (
-                  <div className="mt-1 text-xs" style={{ color: activeColor }}>
+                  <div className='mt-1 text-xs' style={{ color: activeColor }}>
                     当前步骤
                   </div>
                 )}
@@ -86,10 +86,10 @@ const StepIndicator = ({ currentStep, steps }) => {
         </div>
       ) : (
         // 桌面端水平布局
-        <div className="flex items-center justify-between">
+        <div className='flex items-center justify-between'>
           {steps.map((step, index) => (
             <React.Fragment key={step.label}>
-              <div className="flex flex-col items-center">
+              <div className='flex flex-col items-center'>
                 <motion.div
                   className={clsx(
                     'flex size-8 items-center justify-center rounded-full border-2 transition-all duration-300',
@@ -100,10 +100,10 @@ const StepIndicator = ({ currentStep, steps }) => {
                     backgroundColor: index <= currentStep ? activeColor : inactiveBgColor,
                     color: index <= currentStep ? activeTextColor : inactiveTextColor,
                     borderColor: index <= currentStep ? activeColor : undefined,
-                    boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined,
+                    boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined
                   }}
                 >
-                  {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill="currentColor" />}
+                  {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill='currentColor' />}
                 </motion.div>
                 <div
                   className={clsx(
@@ -111,27 +111,27 @@ const StepIndicator = ({ currentStep, steps }) => {
                     index <= currentStep ? '' : 'text-gray-500 dark:text-gray-400'
                   )}
                   style={{
-                    color: index <= currentStep ? activeColor : undefined,
+                    color: index <= currentStep ? activeColor : undefined
                   }}
                 >
                   {step.label}
                 </div>
               </div>
               {index < steps.length - 1 && (
-                <div className="relative mx-4 flex-grow">
+                <div className='relative mx-4 flex-grow'>
                   <div
-                    className="absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full"
+                    className='absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full'
                     style={{ backgroundColor: inactiveBgColor }}
                   />
                   <motion.div
-                    className="absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full"
+                    className='absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full'
                     style={{
                       backgroundColor: activeColor,
-                      boxShadow: `0 0 8px ${activeColor}60`,
+                      boxShadow: `0 0 8px ${activeColor}60`
                     }}
                     initial={{ width: '0%' }}
                     animate={{
-                      width: index < currentStep ? '100%' : '0%',
+                      width: index < currentStep ? '100%' : '0%'
                     }}
                     transition={{ duration: 0.5, ease: 'easeInOut' }}
                   />
@@ -147,7 +147,7 @@ const StepIndicator = ({ currentStep, steps }) => {
 
 StepIndicator.propTypes = {
   currentStep: PropTypes.number.isRequired,
-  steps: PropTypes.array.isRequired,
+  steps: PropTypes.array.isRequired
 }
 
 const StepContent = ({ step }) => {
@@ -157,33 +157,33 @@ const StepContent = ({ step }) => {
 
   return (
     <Card
-      className="my-6 min-h-[200px] w-full transition-all duration-300"
+      className='my-6 min-h-[200px] w-full transition-all duration-300'
       style={{
         backgroundColor: isDark ? token.colorBgContainer : token.colorBgLayout,
         borderColor: token.colorBorderSecondary,
-        boxShadow: isDark ? '0 4px 12px rgba(0, 0, 0, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.1)',
+        boxShadow: isDark ? '0 4px 12px rgba(0, 0, 0, 0.3)' : '0 2px 8px rgba(0, 0, 0, 0.1)'
       }}
     >
-      <div className="flex items-center justify-center p-6 text-center">
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium transition-colors duration-300" style={{ color: token.colorTextHeading }}>
+      <div className='flex items-center justify-center p-6 text-center'>
+        <div className='space-y-2'>
+          <h3 className='text-lg font-medium transition-colors duration-300' style={{ color: token.colorTextHeading }}>
             {step.label}
           </h3>
-          <p className="text-sm transition-colors duration-300" style={{ color: token.colorTextSecondary }}>
+          <p className='text-sm transition-colors duration-300' style={{ color: token.colorTextSecondary }}>
             Step content for {step.label}
           </p>
           {step.fields && (
-            <div className="mt-4 space-y-2">
+            <div className='mt-4 space-y-2'>
               {step.fields.map((field) => (
                 <div key={field.name}>
                   <input
                     type={field.type}
                     placeholder={field.placeholder}
-                    className="w-full rounded-md border px-3 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                    className='w-full rounded-md border px-3 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500'
                     style={{
                       backgroundColor: token.colorBgContainer,
                       borderColor: token.colorBorder,
-                      color: token.colorText,
+                      color: token.colorText
                     }}
                   />
                 </div>
@@ -197,7 +197,7 @@ const StepContent = ({ step }) => {
 }
 
 StepContent.propTypes = {
-  step: PropTypes.object.isRequired,
+  step: PropTypes.object.isRequired
 }
 
 const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) => {
@@ -217,27 +217,27 @@ const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) 
       <Button
         disabled={currentStep === 0}
         onClick={handlePrev}
-        className="transition-all duration-200 hover:shadow-md"
+        className='transition-all duration-200 hover:shadow-md'
         style={{
           visibility: currentStep === 0 ? 'hidden' : 'visible',
           backgroundColor: secondaryBg,
           borderColor: secondaryBorder,
-          color: secondaryText,
+          color: secondaryText
         }}
       >
         Previous
       </Button>
 
       <Button
-        type="primary"
+        type='primary'
         disabled={currentStep === totalSteps - 1}
         onClick={handleNext}
-        className="font-medium transition-all duration-200 hover:shadow-lg"
+        className='font-medium transition-all duration-200 hover:shadow-lg'
         style={{
           visibility: currentStep === totalSteps - 1 ? 'hidden' : 'visible',
           backgroundColor: primaryColor,
           borderColor: primaryColor,
-          boxShadow: `0 2px 8px ${primaryColor}30`,
+          boxShadow: `0 2px 8px ${primaryColor}30`
         }}
       >
         Next
@@ -250,7 +250,7 @@ NavigationButtons.propTypes = {
   currentStep: PropTypes.number.isRequired,
   totalSteps: PropTypes.number.isRequired,
   handlePrev: PropTypes.func.isRequired,
-  handleNext: PropTypes.func.isRequired,
+  handleNext: PropTypes.func.isRequired
 }
 
 const DottedStepper = ({ steps = defaultSteps, className }) => {
@@ -283,5 +283,5 @@ export default DottedStepper
 
 DottedStepper.propTypes = {
   steps: PropTypes.array,
-  className: PropTypes.string,
+  className: PropTypes.string
 }
