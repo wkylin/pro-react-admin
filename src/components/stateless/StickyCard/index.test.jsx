@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import StickyCard from './index'
 
@@ -14,7 +14,7 @@ describe('StickyCard Component', () => {
 
   test('应用正确的粘性定位样式', () => {
     const { container } = render(<StickyCard cards={mockCards} />)
-    const firstCard = container.querySelectorAll('.animate-wiggle')[0]
+    const firstCard = container.querySelectorAll('.animate-wiggle')[0].parentElement
 
     // 验证 sticky 定位
     expect(firstCard).toHaveClass('sticky')

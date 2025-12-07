@@ -3,29 +3,19 @@ import React, { useEffect, useState } from 'react'
 import styles from './index.module.less'
 
 const AlternatingText = ({ alternateText = [] }) => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
   useEffect(() => {
-    const element = document.getElementById('alternating-text')
+    if (alternateText.length <= 1) return
 
-    if (!element) return
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % alternateText.length)
+    }, 2000) // 2秒切换一次
 
-    let i = 0
-    const listener = () => {
-      i = i < alternateText.length - 1 ? i + 1 : 0
-      if (element) element.innerHTML = alternateText[i]
-    }
+    return () => clearInterval(interval)
+  }, [alternateText.length])
 
-    element.innerHTML = alternateText[0] ?? ''
-    element.addEventListener('animationiteration', listener, false)
-
-    return () => {
-      if (element) element.removeEventListener('animationiteration', listener, false)
-    }
-  }, [])
-
-  return (
-    <span className={styles.alternating} id="alternating-text">
-      {alternateText[0] || 'Text goes here'}
-    </span>
-  )
+  return <span className={styles.alternating}>{alternateText[currentIndex] || 'Text goes here'}</span>
 }
+
 export default AlternatingText

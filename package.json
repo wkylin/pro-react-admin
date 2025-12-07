@@ -109,7 +109,8 @@
     "analyze:lib": "cross-env USE_ANALYZE=1 vite build -c vite.config.lib.ts",
     "prepublishOnly": "npm run build:lib",
     "pub": "npm publish --access public",
-    "pub:beta": "npm publish --tag beta --access public"
+    "pub:beta": "npm publish --tag beta --access public",
+    "sonar": "npm run test && sonar-scanner -Dsonar.token=sqp_"
   },
   "peerDependencies": {
     "antd": ">=6.0.0",
@@ -257,6 +258,7 @@
     "serve": "^14.2.5",
     "shelljs": "^0.10.0",
     "shiki": "^3.15.0",
+    "sonar-scanner": "^3.1.0",
     "standard": "^17.1.2",
     "standard-version": "^9.5.0",
     "storybook": "^10.1.2",
@@ -272,6 +274,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-dts": "^4.5.4",
     "vite-plugin-svgr": "^4.2.0",
+    "web-streams-polyfill": "^4.2.0",
     "webpack": "^5.103.0",
     "webpack-bundle-analyzer": "^5.0.1",
     "webpack-cli": "^6.0.1",
@@ -427,7 +430,13 @@
   },
   "jest": {
     "collectCoverage": true,
-    "testEnvironment": "jsdom"
+    "testEnvironment": "jsdom",
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/e2e/"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/e2e/setup.ts"
+    ]
   },
   "config": {
     "commitizen": {

@@ -27,4 +27,5 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
+  setupFilesAfterEnv: ['./tests/e2e/setup.ts'],
 })

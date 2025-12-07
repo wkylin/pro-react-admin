@@ -26,7 +26,7 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
       const shadowRoot = shadowRootHostEl.current.attachShadow({ mode: 'open' })
       if (shadowRoot) {
         const div = document.createElement('div')
-        div.innerHTML = 'Shadow DOM Content'
+        div.textContent = 'Shadow DOM Content'
         shadowRoot.appendChild(div)
       }
     }

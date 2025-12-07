@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { useLocation } from 'react-router-dom'
 import { Button, Badge, Typography, Modal, message } from 'antd'
@@ -6,7 +6,7 @@ import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { usePermission } from '@/app-hooks/usePermission'
-import request from '@/service/request'
+// import request from '@/service/request'
 
 const NotificationsPage = () => {
   const { themeSettings } = useProThemeContext()
@@ -67,9 +67,6 @@ const NotificationsPage = () => {
   }
 
   // 主题色适配
-  const bgColor = themeSettings.themeMode === 'dark' ? '#18191c' : '#fff'
-  const boxShadow = themeSettings.themeMode === 'dark' ? '0 2px 8px #0006' : '0 2px 8px #0001'
-  const borderColor = themeSettings.themeMode === 'dark' ? '#333639' : '#f0f0f0'
   const color = themeSettings.themeMode === 'dark' ? '#eee' : '#222'
 
   const columns = [
@@ -166,7 +163,7 @@ const NotificationsPage = () => {
                         qs = s ? `?${s}` : ''
                       }
                     } catch (e) {
-                      // ignore parse
+                      console.error('获取 tableApiRef search 参数失败', e)
                     }
 
                     // 如果没有从 tableApiRef 获取到查询，则回退到当前 location.search 或示例参数
