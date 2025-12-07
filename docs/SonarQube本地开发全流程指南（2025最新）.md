@@ -62,6 +62,8 @@ sonar.sourceEncoding=UTF-8
 sonar.qualitygate.wait=true
 sonar.scm.disabled=true
 
+# ==== sonar-scanner.bat ===
+sonar-scanner.bat
 ```
 
 ### 5.2 方式二：纯命令行（最快）
