@@ -3,7 +3,7 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
+    node: true
   },
   extends: [
     'eslint:recommended',
@@ -12,28 +12,28 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:promise/recommended',
     'plugin:unicorn/recommended',
-    'prettier',
+    'prettier'
   ],
   plugins: ['react', '@typescript-eslint', 'import', 'promise', 'unicorn', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true,
+      jsx: true
     },
     ecmaVersion: 'latest',
-    sourceType: 'module',
+    sourceType: 'module'
   },
   settings: {
     react: {
-      version: 'detect',
-    },
+      version: 'detect'
+    }
   },
   rules: {
     'prettier/prettier': 'error',
     'react/react-in-jsx-scope': 'off',
     'unicorn/prevent-abbreviations': 'off',
     'import/no-unresolved': 'off',
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }]
   },
-  ignorePatterns: ['dist-lib/', 'coverage/', 'node_modules/'],
+  ignorePatterns: ['dist-lib/', 'coverage/', 'node_modules/']
 }
