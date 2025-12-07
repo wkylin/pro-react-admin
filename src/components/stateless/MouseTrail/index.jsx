@@ -8,7 +8,7 @@ const ImageMouseTrail = ({
   maxNumberOfImages = 5,
   imgClass = 'w-40 h-48',
   distance = 20,
-  fadeAnimation = false,
+  fadeAnimation = false
 }) => {
   const containerRef = useRef(null)
   const refs = useRef(items.map(() => createRef()))
@@ -71,14 +71,14 @@ const ImageMouseTrail = ({
               imgClass
             )}
             data-index={index}
-            data-status="inactive"
+            data-status='inactive'
             src={item}
             alt={`image-${index}`}
             ref={refs.current[index]}
           />
         </>
       ))}
-      <article className="relative z-40">{children}</article>
+      <article className='relative z-40'>{children}</article>
     </section>
   )
 }
