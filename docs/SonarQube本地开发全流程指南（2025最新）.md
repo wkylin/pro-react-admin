@@ -20,10 +20,10 @@
 ## 3. 三种核心使用方式对比
 
 | 方式                 | 实时性 | 报告完整度 | 覆盖率 | 质量门 | 推荐场景                 |
-|----------------------|--------|------------|--------|--------|--------------------------|
-| SonarLint 实时绑定   | ★★★★★ | ★★★★☆     | 支持   | 不支持 | 日常写代码、快速发现问题   |
-| sonar-scanner 命令行 | ★☆☆☆☆ | ★★★★★     | 支持   | 支持   | 提交前、PR 前正式检查    |
-| VS Code 一键任务     | ★★☆☆☆ | ★★★★★     | 支持   | 支持   | 懒人终极方案（强烈推荐） |
+| -------------------- | ------ | ---------- | ------ | ------ | ------------------------ |
+| SonarLint 实时绑定   | ★★★★★  | ★★★★☆      | 支持   | 不支持 | 日常写代码、快速发现问题 |
+| sonar-scanner 命令行 | ★☆☆☆☆  | ★★★★★      | 支持   | 支持   | 提交前、PR 前正式检查    |
+| VS Code 一键任务     | ★★☆☆☆  | ★★★★★      | 支持   | 支持   | 懒人终极方案（强烈推荐） |
 
 ## 4. 方式一：SonarLint 实时分析（写代码即出报告）
 
@@ -66,7 +66,7 @@ sonar.scm.disabled=true
 
 ### 5.2 方式二：纯命令行（最快）
 
-``` shell
+```shell
 # 1. 生成覆盖率报告（React 示例）
 npm test -- --coverage --watchAll=false
 
@@ -105,27 +105,31 @@ sonar-scanner -Dsonar.token=
 ```
 
 package.json 加上脚本：
+
 ```json
 "scripts": {
   "test:coverage": "react-scripts test --coverage --watchAll=false"
 }
 ```
+
 以后永远只按 Ctrl+Shift+B → 选择任务即可！
 
 ## 6. 查看报告
+
 http://localhost:9000/dashboard?id=pro-react-admin
 
 ## 7. 常见问题秒解
 
-| 问题 | 解决方案 |
-|---|---|
-|扫描卡住|检查 token / 防火墙 / localhost:9000 是否可访问|
-|覆盖率 0%|确认 coverage/lcov.info 已生成|
-|项目没出现|第一次扫描自动创建，刷新页面|
-|连接到 activate.navicat.com|删除 hosts 错误记录 或加 sonar.search.host=127.0.0.1|
-|Java 模块错误| wrapper.conf 加入 --add-opens 参数|
+| 问题                        | 解决方案                                             |
+| --------------------------- | ---------------------------------------------------- |
+| 扫描卡住                    | 检查 token / 防火墙 / localhost:9000 是否可访问      |
+| 覆盖率 0%                   | 确认 coverage/lcov.info 已生成                       |
+| 项目没出现                  | 第一次扫描自动创建，刷新页面                         |
+| 连接到 activate.navicat.com | 删除 hosts 错误记录 或加 sonar.search.host=127.0.0.1 |
+| Java 模块错误               | wrapper.conf 加入 --add-opens 参数                   |
 
 ## 8. 多语言额外配置（追加到 sonar-project.properties）
+
 ```shell
 # properties# Java
 sonar.java.source=21
@@ -139,12 +143,12 @@ sonar.go.coverage.reportPaths=coverage.out
 ## 9. 终极进阶
 
 - 质量门（Quality Gate）
-Administration → Quality Gates → Create
-示例：Coverage < 80% / New Bugs > 0 → Fail
+  Administration → Quality Gates → Create
+  示例：Coverage < 80% / New Bugs > 0 → Fail
 
- - 生产环境推荐配置（sonar.properties 追加）
-    ```shell
-    propertiessonar.web.javaOpts=-Xmx4g
-    sonar.search.javaOpts=-Xmx4g
-    sonar.ce.javaOpts=-Xmx4g
-    ```
+- 生产环境推荐配置（sonar.properties 追加）
+  ```shell
+  propertiessonar.web.javaOpts=-Xmx4g
+  sonar.search.javaOpts=-Xmx4g
+  sonar.ce.javaOpts=-Xmx4g
+  ```
