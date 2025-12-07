@@ -1,6 +1,6 @@
-projectKey=pro-react-admin2
+projectKey=pro-react-admin
 serverUrl=http://localhost:9000
-serverVersion=10.7.0.96327
-dashboardUrl=http://localhost:9000/dashboard?id=pro-react-admin2
-ceTaskId=c3149e46-71a2-4a05-9527-1164a19fdd3d
-ceTaskUrl=http://localhost:9000/api/ce/task?id=c3149e46-71a2-4a05-9527-1164a19fdd3d
+serverVersion=25.2.0.102705
+dashboardUrl=http://localhost:9000/dashboard?id=pro-react-admin
+ceTaskId=623f17c3-08ba-46f2-96ae-2f2444ee1817
+ceTaskUrl=http://localhost:9000/api/ce/task?id=623f17c3-08ba-46f2-96ae-2f2444ee1817

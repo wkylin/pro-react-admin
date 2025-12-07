@@ -105,11 +105,11 @@
   "i18n-ally.localesPaths": [
     "public/locales"
   ],
-  "sonarlint.connectedMode.project": {
-    "connectionId": "http-localhost-9000",
-    "projectKey": "pro-react-admin2"
-  },
   "bitoAI.codeCompletion.enableAutoCompletion": false,
   "i18n-ally.sourceLanguage": "zh",
-  "task.autoDetect": "off"
+  "task.autoDetect": "off",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000-",
+    "projectKey": "pro-react-admin"
+  }
 }
