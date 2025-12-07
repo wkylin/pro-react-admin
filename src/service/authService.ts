@@ -311,12 +311,16 @@ class AuthService {
     } catch (e) {
       logger.warn('清除权限缓存失败:', e)
     }
-    // 保险措施：确保 localStorage 中的权限相关键被移除
+    // 清除所有相关的 localStorage 键
     try {
       localStorage.removeItem('user_permissions')
+      localStorage.removeItem('user_role')
       localStorage.removeItem('permissions_fetch_time')
+      localStorage.removeItem('token') // 测试账号登录的 token
+      localStorage.removeItem('github_token') // GitHub OAuth token
+      localStorage.removeItem('github_user') // GitHub user info
     } catch (e) {
-      logger.warn('移除本地权限存储键失败:', e)
+      logger.warn('移除本地存储键失败:', e)
     }
     this.saveToStorage()
     this.notifyListeners()

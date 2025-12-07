@@ -63,6 +63,9 @@ export const lazyComponents = {
   NotificationDetail: lazyLoad(() => import('@pages/notifications/NotificationDetail'), { preload: true }),
   PHBar: lazyLoad(() => import('@pages/phbar'), { preload: true }),
 
+  // 权限示例页面
+  PermissionExample: lazyLoad(() => import('@pages/permission'), { preload: true }),
+
   // 示例：如果新增一个按需加载的路由组件，请在此处注册（示例）
   // 例如：新增 pages/alerts/AlertDetail.jsx
   // AlertDetail: lazyLoad(() => import('@pages/alerts/AlertDetail'), { preload: false }),

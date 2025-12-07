@@ -89,6 +89,13 @@ const SignIn = () => {
     // 保存登录信息
     setLocalStorage('token', { token: email })
 
+    // 清除可能的手动设置角色，确保使用正确的账号角色
+    try {
+      localStorage.removeItem('user_role')
+    } catch (e) {
+      console.warn('清除手动设置角色失败:', e)
+    }
+
     // 同步权限
     try {
       await permissionService.syncPermissions()

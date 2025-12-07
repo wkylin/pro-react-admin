@@ -84,4 +84,10 @@ export const uiRoutes = [
     key: '/ph-bar',
     element: <lazyComponents.PHBar />,
   },
+  {
+    path: 'permission',
+    name: '权限示例',
+    key: '/permission',
+    element: <lazyComponents.PermissionExample />,
+  },
 ]

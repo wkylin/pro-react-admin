@@ -11,7 +11,7 @@ class PermissionService {
   private static instance: PermissionService
   private userPermissions: UserPermission | null = null
   private loadingPromise: Promise<UserPermission> | null = null
-  private cacheExpireTime: number = 30 * 60 * 1000 // 30分钟
+  private readonly cacheExpireTime: number = 30 * 60 * 1000 // 30分钟
   private lastFetchTime: number = 0
 
   private constructor() {

@@ -38,6 +38,7 @@ const allRoutes = [
   '/profile',
   '/contact',
   '/portfilo',
+  '/permission',
 ]
 
 /**
@@ -201,6 +202,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/sub-error': 'error:read',
   '/tech/frontend/framework': 'tech:read',
   '/build': 'build:read',
+  '/permission': 'permission:read',
   '*': '*:*',
 }
 

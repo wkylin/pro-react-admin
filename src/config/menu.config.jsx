@@ -105,6 +105,7 @@ const rawMainLayoutMenu = [
       { label: 'Vite', key: '/build/vite', icon: <ThunderboltOutlined /> },
     ],
   },
+  { label: '权限示例', key: '/permission', icon: <LockOutlined /> },
   {
     label: 'Error',
     key: '/sub-error',

@@ -44,6 +44,7 @@ export type Resource =
   | 'geo'
   | 'd3chart'
   | 'print'
+  | 'permission'
 
 /**
  * 权限点定义
