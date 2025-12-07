@@ -173,15 +173,15 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨在帮助开发者快速搭建基于 React、Vue 等现代框架的标准化项目结构。
 
- - 🚀 快速启动：秒级生成项目模板，开箱即用。
- - 🛠 规范集成：内置 ESLint、Prettier 等代码规范配置。
- - 🎨 交互友好：优雅的命令行交互体验。
- - 🌏 线上地址：[Baize](https://www.npmjs.com/package/baize-cli)
+- 🚀 快速启动：秒级生成项目模板，开箱即用。
+- 🛠 规范集成：内置 ESLint、Prettier 等代码规范配置。
+- 🎨 交互友好：优雅的命令行交互体验。
+- 🌏 线上地址：[Baize](https://www.npmjs.com/package/baize-cli)
+
 ```bash
   > npm install -g baize-cli
   > baize
 ```
-
 
 ## 🔍 自动化持续代码审查工具
 

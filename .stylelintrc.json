@@ -22,5 +22,6 @@
         "ignoreAtRules": ["tailwind", "apply", "variants", "responsive", "screen", "layer", "theme", "utility"]
       }
     ]
-  }
+  },
+  "ignoreFiles": ["dist-lib/**", "coverage/**", "node_modules/**"]
 }

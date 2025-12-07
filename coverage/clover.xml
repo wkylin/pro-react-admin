@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1765090584177" clover="3.2.0">
-  <project timestamp="1765090584177" name="All files">
+<coverage generated="1765112617190" clover="3.2.0">
+  <project timestamp="1765112617191" name="All files">
     <metrics statements="3" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2" elements="7" coveredelements="7" complexity="0" loc="3" ncloc="3" packages="1" files="1" classes="1"/>
     <file name="index.jsx" path="C:\wui\pro-react\pro-react-admin\src\components\stateless\StickyCard\index.jsx">
       <metrics statements="3" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>

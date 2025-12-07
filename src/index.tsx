@@ -2,6 +2,7 @@ import React, { StrictMode, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { App as AntdApp } from 'antd'
 import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
@@ -33,7 +34,12 @@ root.render(
                 <ThemeIndex />
                 {process.env.NODE_ENV === 'production' &&
                   !window.location.hostname.includes('localhost') &&
-                  !window.location.hostname.includes('127.0.0.1') && <Analytics />}
+                  !window.location.hostname.includes('127.0.0.1') && (
+                    <>
+                      <Analytics />
+                      <SpeedInsights />
+                    </>
+                  )}
               </WatermarkProvider>
             </ProThemeProvider>
           </Suspense>
