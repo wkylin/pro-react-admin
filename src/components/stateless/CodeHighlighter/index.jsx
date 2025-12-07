@@ -5,7 +5,7 @@ import clsx from 'clsx'
 const ShikiCode = ({ code, lang, theme, className, ...props }) => {
   const [html, setHtml] = useState('')
 
-  useEffect(async () => {
+  useEffect(() => {
     const loadHtml = async () => {
       const result = await codeToHtml(code, { lang, theme })
       setHtml(result)

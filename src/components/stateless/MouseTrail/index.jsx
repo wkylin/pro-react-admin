@@ -17,6 +17,8 @@ const ImageMouseTrail = ({
   let last = { x: 0, y: 0 }
   const activate = (image, x, y) => {
     const containerRect = containerRef.current?.getBoundingClientRect()
+    if (!containerRect) return
+
     const relativeX = x - containerRect.left
     const relativeY = y - containerRect.top
     image.style.left = `${relativeX}px`

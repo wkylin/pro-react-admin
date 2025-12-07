@@ -312,7 +312,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       const includeSearch =
         mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
       const finalPayload = includeSearch ? { ...parseLocationSearch(), ...(payload || {}) } : payload
-      if (queryConfig && typeof queryConfig.onSearch === 'function') {
+      if (typeof queryConfig?.onSearch === 'function') {
         await queryConfig.onSearch(finalPayload, { fetchPage, form, setPagination, pagination })
       } else {
         await fetchPage(1, pagination.pageSize, sortState, finalPayload)
@@ -325,7 +325,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
   const handleReset = async () => {
     form.resetFields()
     setPagination((p: any) => ({ ...p, current: 1 }))
-    if (queryConfig && typeof queryConfig.onReset === 'function') {
+    if (typeof queryConfig?.onReset === 'function') {
       await queryConfig.onReset({ fetchPage, form, setPagination, pagination })
     } else {
       const includeSearch =
@@ -519,7 +519,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
 
   return (
     <div ref={containerRef as any} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      {showUrlAppliedTag && hasMergedInitialSearch && hasMergedInitialSearch() && (
+      {showUrlAppliedTag && hasMergedInitialSearch?.() && (
         <Tag color="blue" style={{ marginRight: 8 }}>
           已应用地址栏初始筛选
         </Tag>
@@ -804,11 +804,11 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         {(() => {
           const computed = { x: tableScroll.x, y: tableScroll.y }
           const tablePropsAny = tableProps as any
-          const tableScrollFromProps = tablePropsAny && tablePropsAny.scroll ? tablePropsAny.scroll : {}
+          const tableScrollFromProps = tablePropsAny?.scroll || {}
           const finalScroll = {
             ...(typeof computed === 'object' ? computed : {}),
-            ...(typeof tableScrollFromProps === 'object' ? tableScrollFromProps : {}),
-            ...(typeof scrollProp === 'object' ? scrollProp : {}),
+            ...(tableScrollFromProps || {}),
+            ...(scrollProp || {}),
           }
 
           const restTableProps: any = { ...tableProps }
