@@ -6,9 +6,6 @@ const RootLayout: React.FC = () => {
   const asyncCall = () => new Promise<void>((resolve) => setTimeout(() => resolve(), 1000))
 
   useEffect(() => {
-    // 可在此处初始化非阻塞逻辑（如 Sentry）
-    // sentryInit()
-
     asyncCall()
       .then(() => {})
       .catch(() => {})

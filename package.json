@@ -287,6 +287,7 @@
     "@number-flow/react": "^0.5.10",
     "@react-spring/web": "^10.0.3",
     "@reduxjs/toolkit": "^2.11.0",
+    "@sentry/react": "^10.29.0",
     "@smakss/react-scroll-direction": "^4.2.0",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
