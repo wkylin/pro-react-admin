@@ -150,7 +150,7 @@ const SignIn = () => {
                     <Button
                       key={email}
                       block
-                      size="small"
+                      size="middle"
                       onClick={() => fillAccount(email)}
                       className={styles.accountBtn}
                     >
