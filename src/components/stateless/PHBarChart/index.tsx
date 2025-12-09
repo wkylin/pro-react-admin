@@ -337,9 +337,22 @@ const PHBarChart: React.FC = () => {
       }
     }
     window.addEventListener('resize', handleResize)
+
+    // 监听页面激活事件
+    const handleActivate = () => {
+      if (chartInstance.current) {
+        // 延迟执行，确保DOM已经完全渲染
+        setTimeout(() => {
+          chartInstance.current?.resize()
+        }, 100)
+      }
+    }
+    window.addEventListener('phbar-activate', handleActivate)
+
     // 清理函数
     return () => {
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('phbar-activate', handleActivate)
       if (chartInstance.current) {
         chartInstance.current.dispose()
         chartInstance.current = null

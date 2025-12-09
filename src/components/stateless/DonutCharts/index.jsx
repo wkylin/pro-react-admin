@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import * as echarts from 'echarts'
 
 const DonutChart = ({ height = '100%', eOptions }) => {
@@ -192,18 +192,33 @@ const DonutChart = ({ height = '100%', eOptions }) => {
     chartInstance.current.setOption(defaultOption)
   }
 
+  // 重新初始化图表
+  const reinitChart = useCallback(() => {
+    if (chartInstance.current) {
+      chartInstance.current.dispose()
+    }
+    initChart()
+  }, [initChart])
+
   // 组件挂载和卸载时的处理
   useEffect(() => {
     initChart()
     window.addEventListener('resize', handleResize)
 
+    // 监听 BigScreen 页面重新初始化事件
+    const handleReinit = () => {
+      reinitChart()
+    }
+    window.addEventListener('bigscreen-charts-reinit', handleReinit)
+
     return () => {
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('bigscreen-charts-reinit', handleReinit)
       if (chartInstance.current) {
         chartInstance.current.dispose()
       }
     }
-  }, [])
+  }, [reinitChart])
 
   // 当props变化时重新初始化图表
   useEffect(() => {

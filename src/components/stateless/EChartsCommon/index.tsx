@@ -142,7 +142,18 @@ const EChartsCommon = (props: {
   useEffect(() => {
     initHandle()
 
+    // 监听 BigScreen 页面重新初始化事件
+    const handleReinit = () => {
+      // 延迟执行，确保容器可见
+      setTimeout(() => {
+        dispose()
+        initChart(drawDomRef.current)
+      }, 50)
+    }
+    window.addEventListener('bigscreen-charts-reinit', handleReinit)
+
     return () => {
+      window.removeEventListener('bigscreen-charts-reinit', handleReinit)
       // 清理 ResizeObserver
       if (resizeObserverRef.current) {
         resizeObserverRef.current.disconnect()

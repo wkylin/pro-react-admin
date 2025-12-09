@@ -333,7 +333,18 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
 
     // 如果 container 还在隐藏容器里（比如从缓存恢复），把它移到当前占位符下
     if (container.parentNode !== placeholder) {
-      placeholder.appendChild(container)
+      // 在移动DOM之前，发送自定义事件通知子组件
+      const event = new CustomEvent('keepalive-dom-move', {
+        detail: { from: container.parentNode, to: placeholder },
+      })
+      container.dispatchEvent(event)
+
+      // 短暂延迟确保子组件有机会处理事件
+      setTimeout(() => {
+        if (container.parentNode !== placeholder) {
+          placeholder.appendChild(container)
+        }
+      }, 0)
     }
 
     // 如果使用 Activity，我们让 Activity 控制可见性，但我们需要确保 container 本身是 block

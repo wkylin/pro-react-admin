@@ -139,13 +139,20 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
     window.addEventListener('resize', handleResize)
     initChart()
 
+    // 监听 BigScreen 页面重新初始化事件
+    const handleReinit = () => {
+      reinitChart()
+    }
+    window.addEventListener('bigscreen-charts-reinit', handleReinit)
+
     return () => {
       window.removeEventListener('resize', handleResize)
+      window.removeEventListener('bigscreen-charts-reinit', handleReinit)
       if (myChartRef.current) {
         myChartRef.current.dispose()
       }
     }
-  }, [handleResize, initChart])
+  }, [handleResize, initChart, reinitChart])
 
   // 监听 eOptions 变化
   useEffect(() => {
