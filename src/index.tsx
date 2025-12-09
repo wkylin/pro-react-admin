@@ -27,6 +27,8 @@ Sentry.init({
   // Enable logs to be sent to Sentry
   enableLogs: true,
 })
+// 发送测试消息
+Sentry.captureMessage('Test message from pro-react-admin')
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement, {
   onCaughtError: (error) => {

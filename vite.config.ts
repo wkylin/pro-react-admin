@@ -3,8 +3,10 @@ import react from '@vitejs/plugin-react'
 import svgr from 'vite-plugin-svgr'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import packageJson from './package.json'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -27,6 +29,7 @@ export default defineConfig(({ mode }) => {
 
   const useAnalyze = env.USE_ANALYZE === '1' || env.USE_ANALYZE === 'true'
   const isProd = mode === 'production'
+  const useSentry = env.SENTRY_SOURCE_MAP === 'map' && isProd
 
   const injectAppEntry = {
     name: 'inject-app-entry',
@@ -64,6 +67,28 @@ export default defineConfig(({ mode }) => {
             compression({ algorithm: 'brotliCompress', ext: '.br', deleteOriginFile: false }),
           ]
         : []),
+      ...(useSentry
+        ? [
+            sentryVitePlugin({
+              org: env.SENTRY_ORG || 'wkylin',
+              project: env.SENTRY_PROJECT || 'pro-react-admin',
+              authToken: env.SENTRY_AUTH_TOKEN,
+              release: {
+                name: packageJson.version,
+              },
+              sourcemaps: {
+                assets: './dist-vite/assets/**',
+              },
+              bundleSizeOptimizations: {
+                excludeDebugStatements: true,
+                excludeTracing: false,
+                excludeReplayIframe: true,
+                excludeReplayShadowDom: true,
+                excludeReplayWorker: true,
+              },
+            }),
+          ]
+        : []),
     ],
     define: {
       'process.env': clientEnv,
@@ -95,7 +120,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: 'dist-vite',
-      sourcemap: false,
+      sourcemap: useSentry ? 'hidden' : false,
       chunkSizeWarningLimit: 800,
       rollupOptions: {
         input: path.resolve(__dirname, 'index.html'),

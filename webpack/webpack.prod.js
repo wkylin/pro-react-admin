@@ -9,13 +9,16 @@ const glob = require('glob')
 const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
-// const SentryWebpackPlugin = require('@sentry/webpack-plugin')
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const { EsbuildPlugin } = require('esbuild-loader')
 
 const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
+
+// Load environment variables
+require('dotenv').config({ path: path.resolve(__dirname, '../.env.production') })
 
 // 第三方库正则匹配（用于代码分割）
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|lodash)[\\/]/
@@ -112,15 +115,18 @@ const prodWebpackConfig = merge(common, {
   },
 })
 
-// if (useSentryMap) {
-//   prodWebpackConfig.plugins.push(
-//     new SentryWebpackPlugin({
-//       release: packageJson.version,
-//       include: path.join(__dirname, '../dist/static/js'),
-//       configFile: '../.sentryclirc',
-//       urlPrefix: '~/static/js',
-//     })
-//   )
-// }
+if (useSentryMap) {
+  prodWebpackConfig.plugins.push(
+    sentryWebpackPlugin({
+      release: packageJson.version,
+      include: path.join(__dirname, '../dist/static/js'),
+      urlPrefix: '~/static/js',
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      telemetry: false,
+    })
+  )
+}
 
 module.exports = prodWebpackConfig
