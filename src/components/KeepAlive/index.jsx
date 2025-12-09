@@ -75,8 +75,9 @@ const createKeepAliveManager = () => {
     // set global options: { deactivateDelay, keepInactiveCount, limit }
     setOptions: (opts = {}) => {
       if (typeof opts.deactivateDelay === 'number') deactivateDelay = opts.deactivateDelay
-      if (typeof opts.keepInactiveCount === 'number')
+      if (typeof opts.keepInactiveCount === 'number') {
         keepInactiveCount = Math.max(0, Math.floor(opts.keepInactiveCount))
+      }
       if (typeof opts.limit === 'number') limit = Math.max(0, Math.floor(opts.limit))
     },
     register: (id, opts) => {
@@ -192,7 +193,7 @@ const createKeepAliveManager = () => {
       instances.delete(id)
       activeMap.delete(id)
       keys = keys.filter((k) => k !== id)
-    },
+    }
   }
 }
 
@@ -285,7 +286,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       if (!active) return
       scrollPos.current.set(e.target, {
         left: e.target.scrollLeft,
-        top: e.target.scrollTop,
+        top: e.target.scrollTop
       })
     }
 
@@ -335,7 +336,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     if (container.parentNode !== placeholder) {
       // 在移动DOM之前，发送自定义事件通知子组件
       const event = new CustomEvent('keepalive-dom-move', {
-        detail: { from: container.parentNode, to: placeholder },
+        detail: { from: container.parentNode, to: placeholder }
       })
       container.dispatchEvent(event)
 
