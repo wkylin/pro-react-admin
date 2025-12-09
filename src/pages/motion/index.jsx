@@ -11,6 +11,7 @@ import {
 import clsx from 'clsx'
 import FixTabPanel from '@stateless/FixTabPanel'
 import HorizontalScrollParallax from '@stateless/HorizontalScroll'
+import ScrollProgressBar from '@stateless/ScrollProgressBar'
 import styles from './index.module.less'
 
 const ParallaxVert = ({ props }) => {
@@ -35,12 +36,6 @@ const ParallaxVert = ({ props }) => {
     // offset: ['start end', 'end start']
   })
   const scrYProCardX = useTransform(scrYProCard, [0, 1], ['1%', '-50%'])
-
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  })
 
   const navItemsRef = useRef([])
   const sectionRefs = useRef({})
@@ -114,21 +109,16 @@ const ParallaxVert = ({ props }) => {
   }
 
   return (
-    <FixTabPanel ref={scrollRef}>
+    <FixTabPanel
+      ref={scrollRef}
+      showScrollProgress={true}
+      scrollProgressProps={{
+        height: 3,
+        color: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
+      }}
+      style={{ height: '100vh' }} // 设置为视窗高度
+    >
       <h2>Hi, Motion</h2>
-      <motion.div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: 3,
-          backgroundImage: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
-          borderRadius: '3px',
-          transformOrigin: 'left',
-          scaleX: scaleX,
-        }}
-      ></motion.div>
 
       <motion.nav
         layout

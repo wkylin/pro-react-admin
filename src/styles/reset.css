@@ -348,6 +348,18 @@ select:-webkit-autofill:active {
   overflow: hidden;
 }
 
+/* Fill mode for FixTabPanel - overrides flex centering */
+.layout-container .layout-tabpanel .fix-tab-panel-fill {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  display: block !important;
+  justify-content: initial !important;
+  align-items: initial !important;
+}
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);
