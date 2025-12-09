@@ -62,10 +62,7 @@ import * as Sentry from '@sentry/react'
 Sentry.init({
   dsn: process.env.SENTRY_DSN || 'https://3d8db323c44ddb1f24ba4ba3f60e01c6@o64827.ingest.us.sentry.io/4510499314860032',
   sendDefaultPii: true,
-  integrations: [
-    Sentry.browserTracingIntegration(),
-    Sentry.replayIntegration()
-  ],
+  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
   tracesSampleRate: 1.0,
   tracePropagationTargets: ['localhost', /^https:\/\/wkylin\.sentry\.io\/api/],
   replaysSessionSampleRate: 0.1,
@@ -170,6 +167,7 @@ export default defineConfig(({ mode }) => {
 Sentry 插件默认会发送遥测数据。要禁用遥测：
 
 ### Webpack
+
 ```javascript
 sentryWebpackPlugin({
   // ... 其他配置
@@ -178,6 +176,7 @@ sentryWebpackPlugin({
 ```
 
 ### Vite
+
 ```bash
 # 使用环境变量
 cross-env SENTRY_DISABLE_TELEMETRY=1 vite build --config vite.config.ts
@@ -201,8 +200,8 @@ Sentry.captureEvent({
   message: 'Custom event',
   level: 'info',
   tags: {
-    custom_tag: 'value'
-  }
+    custom_tag: 'value',
+  },
 })
 ```
 
@@ -227,11 +226,13 @@ function App() {
 ### 1. 看不到统计消息
 
 **原因：**
+
 - 应用在开发环境中运行
 - 没有触发错误或事件
 - DSN 配置错误
 
 **解决方案：**
+
 1. 确保在生产环境中运行
 2. 手动触发测试事件
 3. 检查 DSN 配置
@@ -239,19 +240,23 @@ function App() {
 ### 2. Source Map 上传失败
 
 **原因：**
+
 - Auth Token 无效
 - 网络连接问题
 
 **解决方案：**
+
 1. 检查 Auth Token 是否正确
 2. 验证网络连接
 
 ### 3. 构建时出现敏感信息警告
 
 **原因：**
+
 - Token 直接写在代码中
 
 **解决方案：**
+
 1. 使用环境变量存储敏感信息
 2. 不要将包含敏感信息的文件提交到版本控制
 
