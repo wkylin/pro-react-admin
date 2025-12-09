@@ -1,11 +1,14 @@
 import React from 'react'
-import { Card, Button, Space, Tag, message, Divider, Row, Col } from 'antd'
+import { Card, Button, Space, Tag, message, Divider, Row, Col, Grid, Switch, Select } from 'antd'
 import { usePermission } from '@app-hooks/usePermission'
 import PermissionGuard from '@/components/auth/PermissionGuard'
 import AuthButton from '@/components/auth/AuthButton'
 import { permissionService } from '@src/service/permissionService'
 import FixTabPanel from '@stateless/FixTabPanel'
+import { useProThemeContext } from '@/theme/hooks'
 const PermissionExample = () => {
+  const screens = Grid.useBreakpoint()
+  const { themeSettings, updateSettings } = useProThemeContext()
   const {
     permissions,
     roles,
@@ -27,34 +30,101 @@ const PermissionExample = () => {
     message.success(`已切换到 ${roleCode} 角色`)
   }
 
+  // 主题设置切换
+  const handleThemeModeChange = (checked: boolean) => {
+    updateSettings({ themeMode: checked ? 'dark' : 'light' })
+    message.success(`已切换到${checked ? '暗色' : '亮色'}主题`)
+  }
+
+  const handleCompactModeChange = (checked: boolean) => {
+    updateSettings({ compactAlgorithm: checked })
+    message.success(`${checked ? '开启' : '关闭'}紧凑模式`)
+  }
+
+  const handlePrimaryColorChange = (color: string) => {
+    updateSettings({ colorPrimary: color })
+    message.success('主题色已更新')
+  }
+
   if (loading) {
     return <div>加载权限中...</div>
   }
 
   return (
     <FixTabPanel>
-      <div style={{ padding: 24 }}>
-        <h1>权限系统示例</h1>
-        <p>系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。</p>
+      <div style={{ padding: screens.xs ? 16 : 24 }}>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} lg={18}>
+            <h1 style={{ fontSize: screens.xs ? '20px' : '24px', marginBottom: '8px' }}>权限系统示例</h1>
+            <p style={{ color: 'rgba(0, 0, 0, 0.65)', marginBottom: '16px' }}>
+              系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。
+            </p>
+          </Col>
+          <Col xs={24} lg={6}>
+            <Card title="主题设置" size="small">
+              <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>暗色主题</span>
+                  <Switch checked={themeSettings.themeMode === 'dark'} onChange={handleThemeModeChange} />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>紧凑模式</span>
+                  <Switch checked={themeSettings.compactAlgorithm} onChange={handleCompactModeChange} />
+                </div>
+                <div>
+                  <span style={{ marginRight: '8px' }}>主题色</span>
+                  <Select
+                    value={themeSettings.colorPrimary}
+                    onChange={handlePrimaryColorChange}
+                    style={{ width: '120px' }}
+                    size="small"
+                  >
+                    <Select.Option value="#1677ff">蓝色</Select.Option>
+                    <Select.Option value="#52c41a">绿色</Select.Option>
+                    <Select.Option value="#faad14">橙色</Select.Option>
+                    <Select.Option value="#f5222d">红色</Select.Option>
+                    <Select.Option value="#722ed1">紫色</Select.Option>
+                  </Select>
+                </div>
+              </div>
+            </Card>
+          </Col>
+        </Row>
 
         <Divider />
 
         {/* 权限说明 */}
-        <Card title="权限说明" style={{ marginBottom: 16 }}>
-          <ul>
-            <li>
-              <strong>超级管理员</strong>：拥有所有路由访问权限（100%）
-            </li>
-            <li>
-              <strong>管理员</strong>：随机分配约 75% 的路由
-            </li>
-            <li>
-              <strong>业务员</strong>：随机分配约 50% 的路由
-            </li>
-            <li>
-              <strong>普通用户</strong>：随机分配约 25% 的路由
-            </li>
-          </ul>
+        <Card title="权限说明" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+          <Row gutter={[16, 8]}>
+            <Col xs={24} sm={12} lg={6}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>超级管理员</strong>
+                <br />
+                <small>拥有所有路由访问权限（100%）</small>
+              </div>
+            </Col>
+            <Col xs={24} sm={12} lg={6}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>管理员</strong>
+                <br />
+                <small>随机分配约 75% 的路由</small>
+              </div>
+            </Col>
+            <Col xs={24} sm={12} lg={6}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>业务员</strong>
+                <br />
+                <small>随机分配约 50% 的路由</small>
+              </div>
+            </Col>
+            <Col xs={24} sm={12} lg={6}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>普通用户</strong>
+                <br />
+                <small>随机分配约 25% 的路由</small>
+              </div>
+            </Col>
+          </Row>
         </Card>
 
         {/* 当前权限信息 */}
@@ -92,126 +162,182 @@ const PermissionExample = () => {
         </Card>
 
         {/* 角色切换 */}
-        <Card title="角色列表" style={{ marginBottom: 16 }}>
-          <Space style={{ width: '100%' }}>
+        <Card title="角色列表" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+          <Row gutter={[16, 16]}>
             {[
               { code: 'super_admin', name: '超级管理员', desc: '拥有所有权限', routes: 29 },
               { code: 'admin', name: '管理员', desc: '拥有大部分权限', routes: 16 },
               { code: 'business_user', name: '业务员', desc: '拥有业务相关权限', routes: 10 },
               { code: 'user', name: '普通用户', desc: '仅拥有基本权限', routes: 7 },
             ].map((role) => (
-              <div key={role.code} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <strong>{role.name}</strong> - {role.desc} - {role.routes} 个路由
-                  {roles.includes(role.code) && (
-                    <Tag color="red" style={{ marginLeft: 8 }}>
-                      当前
-                    </Tag>
-                  )}
+              <Col xs={24} sm={12} key={role.code}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px',
+                    border: '1px solid #f0f0f0',
+                    borderRadius: '4px',
+                  }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <strong>{role.name}</strong>
+                    <br />
+                    <small>
+                      {role.desc} - {role.routes} 个路由
+                    </small>
+                    {roles.includes(role.code) && (
+                      <Tag color="red" style={{ marginLeft: 8 }}>
+                        当前
+                      </Tag>
+                    )}
+                  </div>
+                  <Button
+                    type={roles.includes(role.code) ? 'primary' : 'default'}
+                    onClick={() => switchRole(role.code)}
+                    size={screens.xs ? 'small' : 'middle'}
+                  >
+                    切换
+                  </Button>
                 </div>
-                <Button type={roles.includes(role.code) ? 'primary' : 'default'} onClick={() => switchRole(role.code)}>
-                  切换
-                </Button>
-              </div>
+              </Col>
             ))}
-          </Space>
+          </Row>
         </Card>
 
         {/* 权限组件示例 */}
-        <Card title="PermissionGuard 组件" style={{ marginBottom: 16 }}>
-          <Space style={{ width: '100%' }}>
-            <div>
-              <strong>单个权限检查：</strong>
-              <PermissionGuard permission="user:read" fallback={<span style={{ color: 'red' }}>无权限查看</span>}>
-                <span style={{ color: 'green' }}>您有 user:read 权限，可以看到这个内容</span>
-              </PermissionGuard>
-            </div>
-            <div>
-              <strong>多个权限检查（任一即可）：</strong>
-              <PermissionGuard
-                permissions={['user:create', 'role:create']}
-                fallback={<span style={{ color: 'red' }}>无权限查看</span>}
-              >
-                <span style={{ color: 'green' }}>您有 user:create 或 role:create 权限之一</span>
-              </PermissionGuard>
-            </div>
-            <div>
-              <strong>角色检查：</strong>
-              <PermissionGuard role="admin" fallback={<span style={{ color: 'red' }}>非管理员</span>}>
-                <span style={{ color: 'green' }}>您是管理员</span>
-              </PermissionGuard>
-            </div>
-          </Space>
+        <Card title="PermissionGuard 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={8}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>单个权限检查：</strong>
+                <br />
+                <PermissionGuard permission="user:read" fallback={<span style={{ color: 'red' }}>无权限查看</span>}>
+                  <span style={{ color: 'green' }}>您有 user:read 权限，可以看到这个内容</span>
+                </PermissionGuard>
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={8}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>多个权限检查（任一即可）：</strong>
+                <br />
+                <PermissionGuard
+                  permissions={['user:create', 'role:create']}
+                  fallback={<span style={{ color: 'red' }}>无权限查看</span>}
+                >
+                  <span style={{ color: 'green' }}>您有 user:create 或 role:create 权限之一</span>
+                </PermissionGuard>
+              </div>
+            </Col>
+            <Col xs={24} sm={24} md={8}>
+              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+                <strong>角色检查：</strong>
+                <br />
+                <PermissionGuard role="admin" fallback={<span style={{ color: 'red' }}>非管理员</span>}>
+                  <span style={{ color: 'green' }}>您是管理员</span>
+                </PermissionGuard>
+              </div>
+            </Col>
+          </Row>
         </Card>
 
         {/* 按钮权限示例 */}
-        <Card title="AuthButton 组件" style={{ marginBottom: 16 }}>
-          <Space>
-            <AuthButton permission="user:create" onClick={() => message.success('创建用户')}>
-              创建用户
-            </AuthButton>
-            <AuthButton
-              permission="user:delete"
-              hideWhenNoPermission={false}
-              onClick={() => message.success('删除用户')}
-            >
-              删除用户（禁用状态）
-            </AuthButton>
-            <AuthButton permissions={['user:update', 'role:update']} onClick={() => message.success('更新操作')}>
-              更新操作（需任一权限）
-            </AuthButton>
-          </Space>
+        <Card title="AuthButton 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+          <Row gutter={[8, 8]}>
+            <Col xs={24} sm={8}>
+              <AuthButton permission="user:create" onClick={() => message.success('创建用户')} block>
+                创建用户
+              </AuthButton>
+            </Col>
+            <Col xs={24} sm={8}>
+              <AuthButton
+                permission="user:delete"
+                hideWhenNoPermission={false}
+                onClick={() => message.success('删除用户')}
+                block
+              >
+                删除用户（禁用状态）
+              </AuthButton>
+            </Col>
+            <Col xs={24} sm={8}>
+              <AuthButton
+                permissions={['user:update', 'role:update']}
+                onClick={() => message.success('更新操作')}
+                block
+              >
+                更新操作（需任一权限）
+              </AuthButton>
+            </Col>
+          </Row>
         </Card>
 
         {/* Hook 检查示例 */}
-        <Card title="usePermission Hook 检查" style={{ marginBottom: 16 }}>
-          <Space>
-            <Button
-              onClick={async () => {
-                const canEdit = await hasPermission('user:update')
-                message.info(canEdit ? '有 user:update 权限' : '无 user:update 权限')
-              }}
-            >
-              检查单个权限 (user:update)
-            </Button>
-            <Button
-              onClick={async () => {
-                const canAccess = await canAccessRoute('/business')
-                message.info(canAccess ? '可访问 /business' : '不可访问 /business')
-              }}
-            >
-              检查路由权限 (/business)
-            </Button>
-            <Button
-              onClick={async () => {
-                const hasAll = await hasAllPermissions(['user:read', 'user:create'])
-                message.info(hasAll ? '同时拥有 user:read 和 user:create' : '缺少至少一个权限')
-              }}
-            >
-              检查多个权限（全部需要）
-            </Button>
-            <Button
-              onClick={async () => {
-                const hasAny = await hasAnyPermission(['user:read', 'role:read'])
-                message.info(hasAny ? '有 user:read 或 role:read 权限之一' : '都没有这些权限')
-              }}
-            >
-              检查多个权限（任一即可）
-            </Button>
-            <Button
-              onClick={async () => {
-                const hasRoleAdmin = await hasRole('admin')
-                message.info(hasRoleAdmin ? '是 admin 角色' : '不是 admin 角色')
-              }}
-            >
-              检查角色 (admin)
-            </Button>
-          </Space>
+        <Card title="usePermission Hook 检查" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+          <Row gutter={[8, 8]}>
+            <Col xs={24} sm={12} md={6}>
+              <Button
+                onClick={async () => {
+                  const canEdit = await hasPermission('user:update')
+                  message.info(canEdit ? '有 user:update 权限' : '无 user:update 权限')
+                }}
+                block
+              >
+                检查单个权限 (user:update)
+              </Button>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Button
+                onClick={async () => {
+                  const canAccess = await canAccessRoute('/business')
+                  message.info(canAccess ? '可访问 /business' : '不可访问 /business')
+                }}
+                block
+              >
+                检查路由权限 (/business)
+              </Button>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Button
+                onClick={async () => {
+                  const hasAll = await hasAllPermissions(['user:read', 'user:create'])
+                  message.info(hasAll ? '同时拥有 user:read 和 user:create' : '缺少至少一个权限')
+                }}
+                block
+              >
+                检查多个权限（全部需要）
+              </Button>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Button
+                onClick={async () => {
+                  const hasAny = await hasAnyPermission(['user:read', 'role:read'])
+                  message.info(hasAny ? '有 user:read 或 role:read 权限之一' : '都没有这些权限')
+                }}
+                block
+              >
+                检查多个权限（任一即可）
+              </Button>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Button
+                onClick={async () => {
+                  const hasRoleAdmin = await hasRole('admin')
+                  message.info(hasRoleAdmin ? '是 admin 角色' : '不是 admin 角色')
+                }}
+                block
+              >
+                检查角色 (admin)
+              </Button>
+            </Col>
+          </Row>
         </Card>
 
         {/* 刷新权限 */}
-        <Card title="权限操作">
-          <Button onClick={refreshPermissions}>刷新权限</Button>
+        <Card title="权限操作" size={screens.xs ? 'small' : 'default'}>
+          <Button onClick={refreshPermissions} block={!!screens.xs}>
+            刷新权限
+          </Button>
         </Card>
       </div>
     </FixTabPanel>
