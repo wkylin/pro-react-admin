@@ -48,7 +48,7 @@
     "start": "npm run pre:run && cross-env BUILD_GOAL=development NODE_ENV=development NODE_OPTIONS=--trace-deprecation webpack serve --config ./webpack/webpack.dev.js --stats-error-details",
     "dev:vite": "vite --host --config vite.config.ts",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
-    "build:prod": "cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "build:production": "cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:test": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:dev": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=dev NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:vite": "vite build --config vite.config.ts",
