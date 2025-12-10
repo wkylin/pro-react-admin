@@ -22,6 +22,8 @@ const ParallaxVert = ({ props }) => {
   const [listLabel, setListLabel] = useState(['JavaScript', 'html', 'css', 'webAssembly'])
 
   const scrollRef = useRef(null)
+  const [containerHeight, setContainerHeight] = useState('80vh')
+  const [navHeight, setNavHeight] = useState(80)
 
   const [scrollDirection, setScrollDirection] = useState('up')
 
@@ -83,6 +85,48 @@ const ParallaxVert = ({ props }) => {
     })
   }, [activeScrollY])
 
+  // 动态计算section高度（基于容器高度的100%）
+  useEffect(() => {
+    const updateSectionHeight = () => {
+      if (scrollRef.current) {
+        const containerHeight = scrollRef.current.offsetHeight
+        const sectionHeight = Math.round(containerHeight * 1)
+        setContainerHeight(`${sectionHeight}px`)
+      }
+    }
+
+    // 计算导航高度
+    const updateNavHeight = () => {
+      const navElement = document.querySelector(`.${styles.nav}`)
+      if (navElement) {
+        const height = navElement.offsetHeight
+        setNavHeight(height)
+      }
+    }
+
+    // 初始计算
+    updateSectionHeight()
+    updateNavHeight()
+
+    // 监听窗口大小变化
+    const resizeObserver = new ResizeObserver(() => {
+      updateSectionHeight()
+      updateNavHeight()
+    })
+
+    if (scrollRef.current) {
+      resizeObserver.observe(scrollRef.current)
+    }
+
+    // 监听窗口resize事件
+    window.addEventListener('resize', updateNavHeight)
+
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', updateNavHeight)
+    }
+  }, [])
+
   // 处理点击 navItem 滚动到对应 section 的逻辑
   const wordTargetRef = useRef(null)
   const words =
@@ -104,7 +148,13 @@ const ParallaxVert = ({ props }) => {
     const sectionId = `${navItems[index].toLowerCase()}-section`
     const section = sectionRefs.current[sectionId]
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      // 使用scrollTo，减去导航高度以避免遮挡
+      const elementPosition = section.offsetTop - navHeight - 20 // 多减去一些间距
+
+      scrollRef.current?.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth',
+      })
     }
   }
 
@@ -116,13 +166,13 @@ const ParallaxVert = ({ props }) => {
         height: 3,
         color: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
       }}
-      style={{ height: '100vh' }} // 设置为视窗高度
+      style={{ height: '100%' }} // 使用100%继承父容器高度
     >
-      <h2>Hi, Motion</h2>
+      <h2 className="mb-8 text-center text-2xl font-bold text-black sm:text-4xl dark:text-white">Hi, Motion</h2>
 
       <motion.nav
         layout
-        className={styles.nav}
+        className={clsx(styles.nav, 'bg-white/80 dark:bg-black/80')}
         style={{
           position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky',
         }}
@@ -132,11 +182,14 @@ const ParallaxVert = ({ props }) => {
         }}
         exit={{ opacity: 0 }}
       >
-        <ul>
+        <ul className="flex flex-wrap items-center justify-center gap-2 px-4 py-2 sm:justify-around sm:gap-4 sm:py-4">
           {navItems.map((item, index) => (
             <li
               key={index}
-              className={styles.navItem}
+              className={clsx(
+                styles.navItem,
+                'text-sm text-black transition-colors duration-200 hover:text-gray-600 sm:text-base dark:text-white dark:hover:text-gray-300'
+              )}
               onClick={() => handleNavItemClick(index)}
               style={{
                 transformStyle: 'preserve-3d',
@@ -155,16 +208,21 @@ const ParallaxVert = ({ props }) => {
           ))}
         </ul>
       </motion.nav>
-      <div className="content">
+      <div className="content" style={{ paddingTop: `${navHeight + 20}px` }}>
         {navItems.map((item) => (
           <div
             key={item}
             id={`${item.toLowerCase()}-section`}
             className={styles.section}
+            style={{ height: containerHeight }}
             ref={(el) => (sectionRefs.current[`${item.toLowerCase()}-section`] = el)}
           >
-            <h2>{item} Section</h2>
-            <p>这里是 {item} 部分的详细内容......</p>
+            <div className="text-center">
+              <h2 className="mb-4 text-2xl font-bold text-black sm:text-4xl dark:text-white">{item} Section</h2>
+              <p className="mx-auto max-w-md text-sm text-gray-600 sm:text-base dark:text-gray-300">
+                这里是 {item} 部分的详细内容......这里展示了各种动画效果和交互功能。
+              </p>
+            </div>
           </div>
         ))}
       </div>
@@ -175,13 +233,18 @@ const ParallaxVert = ({ props }) => {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          gap: 52,
-          width: 800,
+          gap: 32,
+          width: 'min(800px, 90vw)',
           height: 400,
-          border: '1px solid #cac1c1ff',
+          border: '1px solid rgb(202 193 193 / 0.5)',
+          borderRadius: '12px',
           margin: '20px auto',
+          padding: '20px',
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(10px)',
         }}
         ref={constraintsRef}
+        className="dark:border-gray-600 dark:bg-black/20"
       >
         <motion.div
           style={{
@@ -190,26 +253,22 @@ const ParallaxVert = ({ props }) => {
             backgroundColor: '#333',
             borderRadius: '20px',
           }}
+          className="dark:bg-gray-700"
           animate={controller}
           whileDrag={{
-            backgroundColor: '#aaa',
+            backgroundColor: '#666',
             scale: 1.2,
           }}
-          // drag="x"
           drag
           onDragStart={(event, info) => console.log(info.point.x, info.point.y)}
           onDragEnd={(event, info) => console.log(info.point.x, info.point.y)}
           onDirectionLock={(axis) => console.log('axis', axis)}
           dragSnapToOrigin={true}
-          // dragConstraints={{ left: 0, right: 300 }}
           dragConstraints={constraintsRef}
-          // dragElastic={false}
-          // dragElastic={0.8}
-          // dragPropagation={false}
         ></motion.div>
-        <div className="flex gap-5">
+        <div className="flex flex-col flex-wrap justify-center gap-3 sm:flex-row sm:gap-5">
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-8 py-2.5 tracking-wider whitespace-nowrap text-white dark:bg-white dark:text-black"
+            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
             onTap={() => {
               controller.start({ scale: 1.2 })
             }}
@@ -217,7 +276,7 @@ const ParallaxVert = ({ props }) => {
             大
           </motion.div>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-8 py-2.5 tracking-wider whitespace-nowrap text-white dark:bg-white dark:text-black"
+            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
             onTap={() => {
               controller.start({ rotate: 45 })
             }}
@@ -225,7 +284,7 @@ const ParallaxVert = ({ props }) => {
             旋转
           </motion.div>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-8 py-2.5 tracking-wider whitespace-nowrap text-white dark:bg-white dark:text-black"
+            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
             onClick={() => {
               controller.start({ opacity: 0.2 })
             }}
@@ -233,7 +292,7 @@ const ParallaxVert = ({ props }) => {
             透明度
           </motion.div>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-8 py-2.5 tracking-wider whitespace-nowrap text-white dark:bg-white dark:text-black"
+            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
             onTap={() => {
               controller.start({ opacity: 1, rotate: 0, scale: 1.0 })
             }}
@@ -251,9 +310,13 @@ const ParallaxVert = ({ props }) => {
         </div>
       </section>
 
-      <div ref={wordTargetRef} className={clsx('relative z-0 h-[200vh]')}>
-        <div className={'sticky top-0 mx-auto flex max-w-4xl items-center bg-transparent px-[1rem] py-[5rem]'}>
-          <p className={'flex flex-wrap p-5 text-2xl font-bold md:p-8 md:text-3xl lg:p-10 lg:text-4xl xl:text-5xl'}>
+      <div ref={wordTargetRef} className={clsx('relative z-0 h-[150vh] sm:h-[200vh]')}>
+        <div className={'sticky top-0 mx-auto flex items-center bg-transparent px-[1rem] py-[2rem] sm:py-[5rem]'}>
+          <p
+            className={
+              'flex flex-wrap justify-center p-3 text-xl font-bold text-black sm:p-5 sm:text-2xl md:p-8 lg:p-10 lg:text-3xl xl:text-4xl 2xl:text-5xl dark:text-white'
+            }
+          >
             {words.map((word, i) => {
               const start = i / words.length
               const end = start + 1 / words.length
@@ -273,8 +336,8 @@ const ParallaxVert = ({ props }) => {
 const Word = ({ children, progress, range }) => {
   const opacity = useTransform(progress, range, [0, 1])
   return (
-    <span className="xl:lg-3 relative mx-1 lg:mx-2.5">
-      <span className="absolute opacity-30">{children}</span>
+    <span className="relative mx-0.5 sm:mx-1 lg:mx-2.5">
+      <span className="absolute text-black opacity-30 dark:text-white">{children}</span>
       <motion.span style={{ opacity: opacity }} className={'text-black dark:text-white'}>
         {children}
       </motion.span>
