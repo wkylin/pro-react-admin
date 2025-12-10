@@ -6,7 +6,7 @@ import {
   useMotionValueEvent,
   useSpring,
   useTransform,
-  useMotionValue,
+  useMotionValue
 } from 'motion/react'
 import clsx from 'clsx'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -28,13 +28,13 @@ const ParallaxVert = ({ props }) => {
   const [scrollDirection, setScrollDirection] = useState('up')
 
   const { scrollYProgress, scrollY } = useScroll({
-    container: scrollRef,
+    container: scrollRef
   })
 
   const targetRef = useRef(null)
   const { scrollYProgress: scrYProCard } = useScroll({
     target: targetRef,
-    container: scrollRef,
+    container: scrollRef
     // offset: ['start end', 'end start']
   })
   const scrYProCardX = useTransform(scrYProCard, [0, 1], ['1%', '-50%'])
@@ -135,7 +135,7 @@ const ParallaxVert = ({ props }) => {
     )
   const { scrollYProgress: wordScrYPro } = useScroll({
     target: wordTargetRef,
-    container: scrollRef,
+    container: scrollRef
   })
 
   useMotionValueEvent(scrollY, 'change', (current) => {
@@ -153,7 +153,7 @@ const ParallaxVert = ({ props }) => {
 
       scrollRef.current?.scrollTo({
         top: elementPosition,
-        behavior: 'smooth',
+        behavior: 'smooth'
       })
     }
   }
@@ -161,28 +161,28 @@ const ParallaxVert = ({ props }) => {
   return (
     <FixTabPanel
       ref={scrollRef}
-      showScrollProgress={true}
+      showScrollProgress
       scrollProgressProps={{
         height: 3,
-        color: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)',
+        color: 'linear-gradient(108deg,#0894ff,#ff2e54 70%,#ff9004)'
       }}
       style={{ height: '100%' }} // 使用100%继承父容器高度
     >
-      <h2 className="mb-8 text-center text-2xl font-bold text-black sm:text-4xl dark:text-white">Hi, Motion</h2>
+      <h2 className='mb-8 text-center text-2xl font-bold text-black sm:text-4xl dark:text-white'>Hi, Motion</h2>
 
       <motion.nav
         layout
         className={clsx(styles.nav, 'bg-white/80 dark:bg-black/80')}
         style={{
-          position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky',
+          position: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 'relative' : 'sticky'
         }}
         initial={{ opacity: 1 }}
         animate={{
-          opacity: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1,
+          opacity: activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1
         }}
         exit={{ opacity: 0 }}
       >
-        <ul className="flex flex-wrap items-center justify-center gap-2 px-4 py-2 sm:justify-around sm:gap-4 sm:py-4">
+        <ul className='flex flex-wrap items-center justify-center gap-2 px-4 py-2 sm:justify-around sm:gap-4 sm:py-4'>
           {navItems.map((item, index) => (
             <li
               key={index}
@@ -192,13 +192,13 @@ const ParallaxVert = ({ props }) => {
               )}
               onClick={() => handleNavItemClick(index)}
               style={{
-                transformStyle: 'preserve-3d',
+                transformStyle: 'preserve-3d'
               }}
             >
               {item}
               {index === activeNavItemIndex && (
                 <motion.div
-                  layoutId="clickedButton"
+                  layoutId='clickedButton'
                   transition={{ type: 'spring', bounce: 0.3, duration: 0.6 }}
                   className={clsx('absolute inset-0 rounded-full bg-gray-200 dark:bg-zinc-800')}
                   style={{ zIndex: -1 }}
@@ -208,7 +208,7 @@ const ParallaxVert = ({ props }) => {
           ))}
         </ul>
       </motion.nav>
-      <div className="content" style={{ paddingTop: `${navHeight + 20}px` }}>
+      <div className='content' style={{ paddingTop: `${navHeight + 20}px` }}>
         {navItems.map((item) => (
           <div
             key={item}
@@ -217,9 +217,9 @@ const ParallaxVert = ({ props }) => {
             style={{ height: containerHeight }}
             ref={(el) => (sectionRefs.current[`${item.toLowerCase()}-section`] = el)}
           >
-            <div className="text-center">
-              <h2 className="mb-4 text-2xl font-bold text-black sm:text-4xl dark:text-white">{item} Section</h2>
-              <p className="mx-auto max-w-md text-sm text-gray-600 sm:text-base dark:text-gray-300">
+            <div className='text-center'>
+              <h2 className='mb-4 text-2xl font-bold text-black sm:text-4xl dark:text-white'>{item} Section</h2>
+              <p className='mx-auto max-w-md text-sm text-gray-600 sm:text-base dark:text-gray-300'>
                 这里是 {item} 部分的详细内容......这里展示了各种动画效果和交互功能。
               </p>
             </div>
@@ -241,34 +241,34 @@ const ParallaxVert = ({ props }) => {
           margin: '20px auto',
           padding: '20px',
           backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          backdropFilter: 'blur(10px)',
+          backdropFilter: 'blur(10px)'
         }}
         ref={constraintsRef}
-        className="dark:border-gray-600 dark:bg-black/20"
+        className='dark:border-gray-600 dark:bg-black/20'
       >
         <motion.div
           style={{
             width: 100,
             height: 100,
             backgroundColor: '#333',
-            borderRadius: '20px',
+            borderRadius: '20px'
           }}
-          className="dark:bg-gray-700"
+          className='dark:bg-gray-700'
           animate={controller}
           whileDrag={{
             backgroundColor: '#666',
-            scale: 1.2,
+            scale: 1.2
           }}
           drag
           onDragStart={(event, info) => console.log(info.point.x, info.point.y)}
           onDragEnd={(event, info) => console.log(info.point.x, info.point.y)}
           onDirectionLock={(axis) => console.log('axis', axis)}
-          dragSnapToOrigin={true}
+          dragSnapToOrigin
           dragConstraints={constraintsRef}
-        ></motion.div>
-        <div className="flex flex-col flex-wrap justify-center gap-3 sm:flex-row sm:gap-5">
+        />
+        <div className='flex flex-col flex-wrap justify-center gap-3 sm:flex-row sm:gap-5'>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
+            className='font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200'
             onTap={() => {
               controller.start({ scale: 1.2 })
             }}
@@ -276,7 +276,7 @@ const ParallaxVert = ({ props }) => {
             大
           </motion.div>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
+            className='font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200'
             onTap={() => {
               controller.start({ rotate: 45 })
             }}
@@ -284,7 +284,7 @@ const ParallaxVert = ({ props }) => {
             旋转
           </motion.div>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
+            className='font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200'
             onClick={() => {
               controller.start({ opacity: 0.2 })
             }}
@@ -292,7 +292,7 @@ const ParallaxVert = ({ props }) => {
             透明度
           </motion.div>
           <motion.div
-            className="font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200"
+            className='font-system cursor-pointer rounded-[20px] bg-black px-6 py-2.5 text-sm tracking-wider whitespace-nowrap text-white transition-colors duration-200 hover:bg-gray-800 sm:text-base dark:bg-white dark:text-black dark:hover:bg-gray-200'
             onTap={() => {
               controller.start({ opacity: 1, rotate: 0, scale: 1.0 })
             }}
@@ -302,21 +302,17 @@ const ParallaxVert = ({ props }) => {
         </div>
       </motion.div>
 
-      <section ref={targetRef} className="relative h-[300vh] pt-4">
-        <div className="sticky top-0 flex items-center overflow-hidden">
-          <motion.div style={{ x: scrYProCardX }} className="flex gap-4">
+      <section ref={targetRef} className='relative h-[300vh] pt-4'>
+        <div className='sticky top-0 flex items-center overflow-hidden'>
+          <motion.div style={{ x: scrYProCardX }} className='flex gap-4'>
             <HorizontalScrollParallax />
           </motion.div>
         </div>
       </section>
 
       <div ref={wordTargetRef} className={clsx('relative z-0 h-[150vh] sm:h-[200vh]')}>
-        <div className={'sticky top-0 mx-auto flex items-center bg-transparent px-[1rem] py-[2rem] sm:py-[5rem]'}>
-          <p
-            className={
-              'flex flex-wrap justify-center p-3 text-xl font-bold text-black sm:p-5 sm:text-2xl md:p-8 lg:p-10 lg:text-3xl xl:text-4xl 2xl:text-5xl dark:text-white'
-            }
-          >
+        <div className='sticky top-0 mx-auto flex items-center bg-transparent px-[1rem] py-[2rem] sm:py-[5rem]'>
+          <p className='flex flex-wrap justify-center p-3 text-xl font-bold text-black sm:p-5 sm:text-2xl md:p-8 lg:p-10 lg:text-3xl xl:text-4xl 2xl:text-5xl dark:text-white'>
             {words.map((word, i) => {
               const start = i / words.length
               const end = start + 1 / words.length
@@ -336,9 +332,9 @@ const ParallaxVert = ({ props }) => {
 const Word = ({ children, progress, range }) => {
   const opacity = useTransform(progress, range, [0, 1])
   return (
-    <span className="relative mx-0.5 sm:mx-1 lg:mx-2.5">
-      <span className="absolute text-black opacity-30 dark:text-white">{children}</span>
-      <motion.span style={{ opacity: opacity }} className={'text-black dark:text-white'}>
+    <span className='relative mx-0.5 sm:mx-1 lg:mx-2.5'>
+      <span className='absolute text-black opacity-30 dark:text-white'>{children}</span>
+      <motion.span style={{ opacity }} className='text-black dark:text-white'>
         {children}
       </motion.span>
     </span>
