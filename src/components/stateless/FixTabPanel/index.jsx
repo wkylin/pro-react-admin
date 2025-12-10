@@ -4,7 +4,7 @@ import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import ScrollProgressBar from '@stateless/ScrollProgressBar'
 
 const FixTabPanel = React.forwardRef(
-  ({ style, children, className, showScrollProgress = true, scrollProgressProps = {}, fill = false, ...rest }, ref) => {
+  ({ style, children, className, showScrollProgress = true, scrollProgressProps = {}, fill = true, ...rest }, ref) => {
     const innerRef = useRef(null)
     const [scrollContainer, setScrollContainer] = useState(null)
 
