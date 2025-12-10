@@ -15,14 +15,14 @@ const AboutSection = ({ scrollContainerRef, className = '' }) => {
 
   const { scrollYProgress: scrYProCard } = useScroll({
     target: targetRef,
-    container: scrollContainerRef,
+    container: scrollContainerRef
   })
   const scrYProCardX = useTransform(scrYProCard, [0, 1], ['1%', '-50%'])
 
   return (
     <section ref={targetRef} className={`relative h-[300vh] pt-4 ${className}`}>
-      <div className="sticky top-0 flex w-full items-center overflow-hidden">
-        <motion.div style={{ x: scrYProCardX }} className="flex w-full gap-4">
+      <div className='sticky top-0 flex w-full items-center overflow-hidden'>
+        <motion.div style={{ x: scrYProCardX }} className='flex w-full gap-4'>
           <HorizontalScrollParallax />
         </motion.div>
       </div>

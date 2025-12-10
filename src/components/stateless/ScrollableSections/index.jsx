@@ -26,7 +26,7 @@ const ScrollableSections = ({
   navLiClassName = '',
   titleClassName = '',
   contentClassName = '',
-  componentClassName = '',
+  componentClassName = ''
 }) => {
   const [containerHeight, setContainerHeight] = useState('80vh')
   const [navHeight, setNavHeight] = useState(80)
@@ -41,7 +41,7 @@ const ScrollableSections = ({
 
   // 获取样式类名，支持自定义样式
   const getClassName = (baseClass, customClass, additionalClasses = {}) => {
-    let classes = [styles[baseClass]]
+    const classes = [styles[baseClass]]
 
     if (customClass && styles[customClass]) {
       classes.push(styles[customClass])
@@ -213,7 +213,7 @@ const ScrollableSections = ({
 
       container.scrollTo({
         top: elementPosition,
-        behavior: 'smooth',
+        behavior: 'smooth'
       })
     }
   }
@@ -228,11 +228,11 @@ const ScrollableSections = ({
               ? 'relative'
               : 'sticky',
           top: 0,
-          zIndex: 10,
+          zIndex: 10
         }}
         initial={{ opacity: 1 }}
         animate={{
-          opacity: sectionPositions.length > 0 && activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1,
+          opacity: sectionPositions.length > 0 && activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1
         }}
         exit={{ opacity: 0 }}
       >
@@ -242,7 +242,7 @@ const ScrollableSections = ({
               key={index}
               className={getClassName('navItem', navLiClassName, {
                 active: index === activeNavItemIndex,
-                'scroll-highlight': index === scrollHighlightIndex,
+                'scroll-highlight': index === scrollHighlightIndex
               })}
               onClick={() => handleNavItemClick(index)}
             >
@@ -254,7 +254,7 @@ const ScrollableSections = ({
         </ul>
       </motion.nav>
 
-      <div className="content" style={{ paddingTop: `${navHeight + 20}px` }}>
+      <div className='content' style={{ paddingTop: `${navHeight + 20}px` }}>
         {sections.map((section, index) => (
           <div
             key={section.title}
