@@ -4,7 +4,7 @@ import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
 import StickyBox from 'react-sticky-box'
 import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
-import MyErrorBoundary from '@stateful'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import { nanoid } from 'nanoid'
 import { useTranslation } from 'react-i18next'
 import { useProTabContext } from '@app-hooks/proTabsContext'
@@ -195,7 +195,7 @@ const ProTabs = (props) => {
         closable: pane.closable,
         forceRender: true,
         children: (
-          <MyErrorBoundary onReset={fixError} navigate={redirectTo}>
+          <ErrorBoundary onReset={fixError} navigate={redirectTo}>
             <div className="layout-tabpanel">
               <KeepAlive id={pane.key} active={pane.key === fullPath} persistOnUnmount={pane.key === '/'}>
                 <Suspense fallback={<Loading />}>
@@ -207,7 +207,7 @@ const ProTabs = (props) => {
                 </Suspense>
               </KeepAlive>
             </div>
-          </MyErrorBoundary>
+          </ErrorBoundary>
         ),
       }))}
     />

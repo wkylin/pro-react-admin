@@ -1,208 +1,183 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
-import CytoscapeComponent from 'react-cytoscapejs'
-import cytoscape from 'cytoscape'
-import coseBilkent from 'cytoscape-cose-bilkent'
+import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge } from '@xyflow/react'
 
-// 注册布局扩展（关键！）
-cytoscape.use(coseBilkent)
+import '@xyflow/react/dist/style.css'
 
-const CytoscapeTopology = () => {
-  // 10台服务器，18个项目，参考真实微服务/集群案例
-  const serverList = [
-    { id: 'server-1', label: 'API 网关', color: '#4CAF50' },
-    { id: 'server-2', label: '认证中心', color: '#2196F3' },
-    { id: 'server-3', label: '用户服务', color: '#FF9800' },
-    { id: 'server-4', label: '订单服务', color: '#F44336' },
-    { id: 'server-5', label: '支付服务', color: '#9C27B0' },
-    { id: 'server-6', label: '商品服务', color: '#00BCD4' },
-    { id: 'server-7', label: '库存服务', color: '#8BC34A' },
-    { id: 'server-8', label: '消息队列', color: '#FFC107' },
-    { id: 'server-9', label: '日志中心', color: '#607D8B' },
-    { id: 'server-10', label: '监控中心', color: '#E91E63' },
-  ]
+// 定义节点样式，方便区分不同类型的组件
+const nodeStyles = {
+  frontend: { background: '#e6f7ff', border: '1px solid #91d5ff', color: '#1890ff' },
+  gateway: { background: '#fff7e6', border: '1px solid #ffd591', color: '#d46b08' },
+  service: { background: '#f6ffed', border: '1px solid #b7eb8f', color: '#52c41a' },
+  data: { background: '#f9f0ff', border: '1px solid #d3adf7', color: '#722ed1' },
+  // 修复：移除了 CSS 属性值中不必要的内部引号
+  infra: { background: '#fff1f0', border: '1px solid #ffccc7', color: '#f5222d' },
+}
 
-  // 18个项目，分布在不同服务器
-  const projectList = [
-    { id: 'proj-1', label: '前端 Web', parent: 'server-1' },
-    { id: 'proj-2', label: '移动端 App', parent: 'server-1' },
-    { id: 'proj-3', label: 'SSO 登录', parent: 'server-2' },
-    { id: 'proj-4', label: 'OAuth2 Provider', parent: 'server-2' },
-    { id: 'proj-5', label: '用户中心', parent: 'server-3' },
-    { id: 'proj-6', label: '用户画像', parent: 'server-3' },
-    { id: 'proj-7', label: '订单管理', parent: 'server-4' },
-    { id: 'proj-8', label: '订单结算', parent: 'server-4' },
-    { id: 'proj-9', label: '支付网关', parent: 'server-5' },
-    { id: 'proj-10', label: '第三方支付', parent: 'server-5' },
-    { id: 'proj-11', label: '商品检索', parent: 'server-6' },
-    { id: 'proj-12', label: '商品详情', parent: 'server-6' },
-    { id: 'proj-13', label: '库存查询', parent: 'server-7' },
-    { id: 'proj-14', label: '库存预警', parent: 'server-7' },
-    { id: 'proj-15', label: '消息生产', parent: 'server-8' },
-    { id: 'proj-16', label: '消息消费', parent: 'server-8' },
-    { id: 'proj-17', label: '日志采集', parent: 'server-9' },
-    { id: 'proj-18', label: '监控采集', parent: 'server-10' },
-  ]
+const initialNodes = [
+  // --- 前端层 ---
+  {
+    id: '1',
+    type: 'input', // 使用 input 类型作为起点
+    position: { x: 400, y: 0 },
+    data: { label: '用户', type: 'frontend' },
+    style: nodeStyles.frontend,
+  },
+  {
+    id: '2',
+    position: { x: 400, y: 80 },
+    data: { label: 'Web App (React)', type: 'frontend' },
+    style: nodeStyles.frontend,
+  },
 
-  // 服务器节点
-  const serverNodes = serverList.map((s) => ({ data: { id: s.id, label: s.label }, classes: s.id }))
-  // 项目节点
-  const projectNodes = projectList.map((p) => ({ data: { id: p.id, label: p.label, parent: p.parent } }))
+  // --- 网关层 ---
+  {
+    id: '3',
+    position: { x: 400, y: 180 },
+    data: { label: 'API Gateway', type: 'gateway' },
+    style: nodeStyles.gateway,
+  },
 
-  // 服务器间美观连线（如主干链路/分组）
-  const serverEdges = [
-    { data: { source: 'server-1', target: 'server-2', label: '认证' } },
-    { data: { source: 'server-1', target: 'server-3', label: '用户' } },
-    { data: { source: 'server-1', target: 'server-4', label: '订单' } },
-    { data: { source: 'server-1', target: 'server-5', label: '支付' } },
-    { data: { source: 'server-1', target: 'server-6', label: '商品' } },
-    { data: { source: 'server-1', target: 'server-7', label: '库存' } },
-    { data: { source: 'server-1', target: 'server-8', label: '消息' } },
-    { data: { source: 'server-1', target: 'server-9', label: '日志' } },
-    { data: { source: 'server-1', target: 'server-10', label: '监控' } },
-  ]
+  // --- 核心服务层 ---
+  {
+    id: '4',
+    position: { x: 50, y: 300 },
+    data: { label: '用户服务', type: 'service' },
+    style: nodeStyles.service,
+  },
+  {
+    id: '5',
+    position: { x: 250, y: 300 },
+    data: { label: '商品服务', type: 'service' },
+    style: nodeStyles.service,
+  },
+  {
+    id: '6',
+    position: { x: 450, y: 300 },
+    data: { label: '订单服务', type: 'service' },
+    style: nodeStyles.service,
+  },
+  {
+    id: '7',
+    position: { x: 650, y: 300 },
+    data: { label: '支付服务', type: 'service' },
+    style: nodeStyles.service,
+  },
+  {
+    id: '8',
+    position: { x: 850, y: 300 },
+    data: { label: '通知服务', type: 'service' },
+    style: nodeStyles.service,
+  },
+  {
+    id: '9',
+    position: { x: 150, y: 420 },
+    data: { label: '搜索服务', type: 'service' },
+    style: nodeStyles.service,
+  },
 
-  // 项目间依赖（部分示例，真实可扩展）
-  const projectEdges = [
-    { data: { source: 'proj-1', target: 'proj-3', label: '登录' } },
-    { data: { source: 'proj-2', target: 'proj-4', label: 'OAuth2' } },
-    { data: { source: 'proj-5', target: 'proj-7', label: '下单' } },
-    { data: { source: 'proj-7', target: 'proj-9', label: '支付' } },
-    { data: { source: 'proj-9', target: 'proj-10', label: '第三方' } },
-    { data: { source: 'proj-11', target: 'proj-13', label: '库存校验' } },
-    { data: { source: 'proj-13', target: 'proj-14', label: '预警' } },
-    { data: { source: 'proj-15', target: 'proj-16', label: '消息流转' } },
-    { data: { source: 'proj-17', target: 'proj-18', label: '监控' } },
-    // 交叉依赖
-    { data: { source: 'proj-8', target: 'proj-12', label: '商品详情' } },
-    { data: { source: 'proj-6', target: 'proj-11', label: '商品推荐' } },
-    { data: { source: 'proj-4', target: 'proj-5', label: '用户授权' } },
-  ]
+  // --- 基础设施层 ---
+  {
+    id: '10',
+    position: { x: 550, y: 420 },
+    data: { label: '消息队列', type: 'infra' },
+    style: nodeStyles.infra,
+  },
+  {
+    id: '11',
+    position: { x: 900, y: 180 },
+    data: { label: '监控系统', type: 'infra' },
+    style: nodeStyles.infra,
+  },
 
-  const elements = [...serverNodes, ...projectNodes, ...serverEdges, ...projectEdges]
+  // --- 数据层 ---
+  {
+    id: '12',
+    position: { x: 50, y: 520 },
+    data: { label: '用户数据库', type: 'data' },
+    style: nodeStyles.data,
+  },
+  {
+    id: '13',
+    position: { x: 250, y: 520 },
+    data: { label: '商品数据库', type: 'data' },
+    style: nodeStyles.data,
+  },
+  {
+    id: '14',
+    position: { x: 450, y: 520 },
+    data: { label: '订单数据库', type: 'data' },
+    style: nodeStyles.data,
+  },
+  {
+    id: '15',
+    position: { x: 650, y: 420 },
+    data: { label: '缓存', type: 'data' },
+    style: nodeStyles.data,
+  },
+]
 
-  // 服务器分组色彩
-  const stylesheet = [
-    {
-      selector: 'node',
-      style: {
-        content: 'data(label)',
-        'text-valign': 'center',
-        'text-halign': 'center',
-        'background-color': '#bbb',
-        shape: 'roundrectangle',
-        'font-size': 12,
-        width: 60,
-        height: 30,
-      },
-    },
-    // 服务器父节点分组色
-    ...serverList.map((s) => ({
-      selector: `.${s.id}`,
-      style: {
-        'background-opacity': 0.25,
-        'background-color': s.color,
-        'font-weight': 'bold',
-        'font-size': 16,
-        padding: 24,
-        'border-width': 2,
-        'border-color': s.color,
-      },
-    })),
-    {
-      selector: ':parent',
-      style: {
-        'text-valign': 'top',
-        'text-halign': 'center',
-        'font-size': 16,
-        'font-weight': 'bold',
-      },
-    },
-    {
-      selector: 'edge',
-      style: {
-        width: 3,
-        'line-color': '#aaa',
-        'target-arrow-color': '#aaa',
-        'target-arrow-shape': 'triangle',
-        'curve-style': 'bezier',
-        label: 'data(label)',
-        'font-size': 10,
-        'text-background-color': '#fff',
-        'text-background-opacity': 0.7,
-        'text-background-shape': 'roundrectangle',
-        'text-border-color': '#888',
-        'text-border-width': 1,
-        'text-border-opacity': 0.5,
-      },
-    },
-    // 服务器间主干线美化
-    {
-      selector: 'edge[source^="server-"][target^="server-"]',
-      style: {
-        'line-color': '#1976D2',
-        'target-arrow-color': '#1976D2',
-        width: 5,
-        'line-style': 'dashed',
-        opacity: 0.7,
-      },
-    },
-  ]
+const initialEdges = [
+  // 用户与前端
+  { id: 'e1-2', source: '1', target: '2', animated: true, label: '访问' },
+  // 前端到网关
+  { id: 'e2-3', source: '2', target: '3', animated: true, label: 'HTTPS/REST' },
 
-  const layout = { name: 'cose-bilkent', animate: true, idealEdgeLength: 100, nodeRepulsion: 4500 }
+  // 网关到各服务
+  { id: 'e3-4', source: '3', target: '4', label: '登录/注册' },
+  { id: 'e3-5', source: '3', target: '5', label: '获取商品' },
+  { id: 'e3-6', source: '3', target: '6', label: '创建订单' },
+  { id: 'e3-7', source: '3', target: '7', label: '发起支付' },
+  { id: 'e3-9', source: '3', target: '9', label: '搜索商品' },
 
-  const cyRef = useRef(null)
+  // 服务间调用
+  { id: 'e6-5', source: '6', target: '5', label: '检查库存' },
+  { id: 'e6-7', source: '6', target: '7', label: '请求支付' },
+  { id: 'e5-9', source: '5', target: '9', label: '同步数据' },
+  { id: 'e4-15', source: '4', target: '15', type: 'smoothstep', label: 'Session' },
 
-  useEffect(() => {
-    const cy = cyRef.current
-    if (!cy) return
-    let dashOffset = 0
-    let running = true
-    function animate() {
-      dashOffset = (dashOffset + 2) % 40
-      // 主干（服务器间）
-      cy.edges('edge[source^="server-"][target^="server-"]').forEach((edge) => {
-        edge.style('line-dash-pattern', [12, 8])
-        edge.style('line-dash-offset', dashOffset)
-        edge.style('line-color', '#1976D2')
-        edge.style('target-arrow-color', '#1976D2')
-        edge.style('width', 5)
-        edge.style('opacity', 0.7)
-        edge.style('line-style', 'dashed')
-      })
-      // 依赖（项目间）
-      cy.edges('edge[source^="proj-"]').forEach((edge) => {
-        edge.style('line-dash-pattern', [6, 4])
-        edge.style('line-dash-offset', dashOffset)
-        edge.style('line-color', '#aaa')
-        edge.style('target-arrow-color', '#aaa')
-        edge.style('width', 3)
-        edge.style('opacity', 1)
-        edge.style('line-style', 'dashed')
-      })
-      cy.style().update() // 强制刷新
-      if (running) requestAnimationFrame(animate)
-    }
-    animate()
-    return () => {
-      running = false
-    }
-  }, [])
+  // 异步通信
+  { id: 'e6-10', source: '6', target: '10', animated: true, label: '订单事件' },
+  { id: 'e7-10', source: '7', target: '10', animated: true, label: '支付结果' },
+  { id: 'e10-8', source: '10', target: '8', animated: true, label: '发送通知' },
+
+  // 服务到数据库
+  { id: 'e4-12', source: '4', target: '12', type: 'smoothstep' },
+  { id: 'e5-13', source: '5', target: '13', type: 'smoothstep' },
+  { id: 'e6-14', source: '6', target: '14', type: 'smoothstep' },
+  { id: 'e7-14', source: '7', target: '14', type: 'smoothstep' }, // 支付服务可能也需要读写订单状态
+
+  // 监控系统连接到所有核心服务（虚线表示）
+  { id: 'e4-11', source: '4', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  { id: 'e5-11', source: '5', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  { id: 'e6-11', source: '6', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  { id: 'e7-11', source: '7', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  { id: 'e8-11', source: '8', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  { id: 'e3-11', source: '3', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+]
+
+function Flow() {
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges])
 
   return (
     <FixTabPanel fill={true}>
-      <CytoscapeComponent
-        elements={elements}
-        style={{ width: '100%', height: '100%' }}
-        stylesheet={stylesheet}
-        layout={layout}
-        cy={(cy) => {
-          cyRef.current = cy
-          console.log('Cytoscape实例就绪', cy)
-        }}
-      />
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        fitView
+      >
+        <MiniMap />
+        <Controls />
+        <Background variant="dots" gap={12} size={1} />
+      </ReactFlow>
     </FixTabPanel>
   )
 }
 
-export default CytoscapeTopology
+export default Flow
