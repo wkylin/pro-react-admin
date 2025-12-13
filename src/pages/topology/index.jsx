@@ -11,7 +11,7 @@ const nodeStyles = {
   service: { background: '#f6ffed', border: '1px solid #b7eb8f', color: '#52c41a' },
   data: { background: '#f9f0ff', border: '1px solid #d3adf7', color: '#722ed1' },
   // 修复：移除了 CSS 属性值中不必要的内部引号
-  infra: { background: '#fff1f0', border: '1px solid #ffccc7', color: '#f5222d' },
+  infra: { background: '#fff1f0', border: '1px solid #ffccc7', color: '#f5222d' }
 }
 
 const initialNodes = [
@@ -21,13 +21,13 @@ const initialNodes = [
     type: 'input', // 使用 input 类型作为起点
     position: { x: 400, y: 0 },
     data: { label: '用户', type: 'frontend' },
-    style: nodeStyles.frontend,
+    style: nodeStyles.frontend
   },
   {
     id: '2',
     position: { x: 400, y: 80 },
     data: { label: 'Web App (React)', type: 'frontend' },
-    style: nodeStyles.frontend,
+    style: nodeStyles.frontend
   },
 
   // --- 网关层 ---
@@ -35,7 +35,7 @@ const initialNodes = [
     id: '3',
     position: { x: 400, y: 180 },
     data: { label: 'API Gateway', type: 'gateway' },
-    style: nodeStyles.gateway,
+    style: nodeStyles.gateway
   },
 
   // --- 核心服务层 ---
@@ -43,37 +43,37 @@ const initialNodes = [
     id: '4',
     position: { x: 50, y: 300 },
     data: { label: '用户服务', type: 'service' },
-    style: nodeStyles.service,
+    style: nodeStyles.service
   },
   {
     id: '5',
     position: { x: 250, y: 300 },
     data: { label: '商品服务', type: 'service' },
-    style: nodeStyles.service,
+    style: nodeStyles.service
   },
   {
     id: '6',
     position: { x: 450, y: 300 },
     data: { label: '订单服务', type: 'service' },
-    style: nodeStyles.service,
+    style: nodeStyles.service
   },
   {
     id: '7',
     position: { x: 650, y: 300 },
     data: { label: '支付服务', type: 'service' },
-    style: nodeStyles.service,
+    style: nodeStyles.service
   },
   {
     id: '8',
     position: { x: 850, y: 300 },
     data: { label: '通知服务', type: 'service' },
-    style: nodeStyles.service,
+    style: nodeStyles.service
   },
   {
     id: '9',
     position: { x: 150, y: 420 },
     data: { label: '搜索服务', type: 'service' },
-    style: nodeStyles.service,
+    style: nodeStyles.service
   },
 
   // --- 基础设施层 ---
@@ -81,13 +81,13 @@ const initialNodes = [
     id: '10',
     position: { x: 550, y: 420 },
     data: { label: '消息队列', type: 'infra' },
-    style: nodeStyles.infra,
+    style: nodeStyles.infra
   },
   {
     id: '11',
     position: { x: 900, y: 180 },
     data: { label: '监控系统', type: 'infra' },
-    style: nodeStyles.infra,
+    style: nodeStyles.infra
   },
 
   // --- 数据层 ---
@@ -95,26 +95,26 @@ const initialNodes = [
     id: '12',
     position: { x: 50, y: 520 },
     data: { label: '用户数据库', type: 'data' },
-    style: nodeStyles.data,
+    style: nodeStyles.data
   },
   {
     id: '13',
     position: { x: 250, y: 520 },
     data: { label: '商品数据库', type: 'data' },
-    style: nodeStyles.data,
+    style: nodeStyles.data
   },
   {
     id: '14',
     position: { x: 450, y: 520 },
     data: { label: '订单数据库', type: 'data' },
-    style: nodeStyles.data,
+    style: nodeStyles.data
   },
   {
     id: '15',
     position: { x: 650, y: 420 },
     data: { label: '缓存', type: 'data' },
-    style: nodeStyles.data,
-  },
+    style: nodeStyles.data
+  }
 ]
 
 const initialEdges = [
@@ -153,17 +153,17 @@ const initialEdges = [
   { id: 'e6-11', source: '6', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
   { id: 'e7-11', source: '7', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
   { id: 'e8-11', source: '8', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
-  { id: 'e3-11', source: '3', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  { id: 'e3-11', source: '3', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } }
 ]
 
-function Flow() {
+function Flow () {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges])
 
   return (
-    <FixTabPanel fill={true}>
+    <FixTabPanel fill>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -174,7 +174,7 @@ function Flow() {
       >
         <MiniMap />
         <Controls />
-        <Background variant="dots" gap={12} size={1} />
+        <Background variant='dots' gap={12} size={1} />
       </ReactFlow>
     </FixTabPanel>
   )
