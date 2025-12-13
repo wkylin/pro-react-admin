@@ -79,92 +79,180 @@ function Example() {
   </thead>
   <tbody>
     <tr>
-      <td><code>columns</code></td>
-      <td><code>ColumnsType&lt;T&gt;?</code></td>
-      <td><code>[]</code></td>
+      <td>
+        <code>columns</code>
+      </td>
+      <td>
+        <code>ColumnsType&lt;T&gt;?</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
       <td>表格列配置，遵循 antd Table 的 columns 格式。</td>
     </tr>
     <tr>
-      <td><code>dataSource</code></td>
-      <td><code>T[]?</code></td>
-      <td><code>[]</code></td>
+      <td>
+        <code>dataSource</code>
+      </td>
+      <td>
+        <code>T[]?</code>
+      </td>
+      <td>
+        <code>[]</code>
+      </td>
       <td>表格数据源。</td>
     </tr>
     <tr>
-      <td><code>rowKey</code></td>
-      <td><code>string | ((record: T) => React.Key)?</code></td>
-      <td><code>'id'</code></td>
+      <td>
+        <code>rowKey</code>
+      </td>
+      <td>
+        <code>string | ((record: T) => React.Key)?</code>
+      </td>
+      <td>
+        <code>'id'</code>
+      </td>
       <td>行唯一键。</td>
     </tr>
     <tr>
-      <td><code>initialPagination</code></td>
-      <td><code>{`{ current: number; pageSize: number }?`}</code></td>
-      <td><code>{`{ current: 1, pageSize: 10 }`}</code></td>
+      <td>
+        <code>initialPagination</code>
+      </td>
+      <td>
+        <code>{`{ current: number; pageSize: number }?`}</code>
+      </td>
+      <td>
+        <code>{`{ current: 1, pageSize: 10 }`}</code>
+      </td>
       <td>初始分页配置。</td>
     </tr>
     <tr>
-      <td><code>minBodyHeight</code></td>
-      <td><code>number?</code></td>
-      <td><code>120</code></td>
+      <td>
+        <code>minBodyHeight</code>
+      </td>
+      <td>
+        <code>number?</code>
+      </td>
+      <td>
+        <code>120</code>
+      </td>
       <td>表格体最小高度。</td>
     </tr>
     <tr>
-      <td><code>minWidth</code></td>
-      <td><code>number?</code></td>
-      <td><code>600</code></td>
+      <td>
+        <code>minWidth</code>
+      </td>
+      <td>
+        <code>number?</code>
+      </td>
+      <td>
+        <code>600</code>
+      </td>
       <td>表格最小宽度。</td>
     </tr>
     <tr>
-      <td><code>showColumnSettings</code></td>
-      <td><code>boolean?</code></td>
-      <td><code>true</code></td>
+      <td>
+        <code>showColumnSettings</code>
+      </td>
+      <td>
+        <code>boolean?</code>
+      </td>
+      <td>
+        <code>true</code>
+      </td>
       <td>是否显示列设置按钮。</td>
     </tr>
     <tr>
-      <td><code>pageSyncToUrl</code></td>
-      <td><code>boolean?</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>pageSyncToUrl</code>
+      </td>
+      <td>
+        <code>boolean?</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>分页是否同步到 URL。</td>
     </tr>
     <tr>
-      <td><code>actions</code></td>
-      <td><code>Array&lt;'view' | 'edit' | 'delete' | ActionConfig&lt;T&gt;&gt;?</code></td>
-      <td><code>['view', 'edit', 'delete']</code></td>
+      <td>
+        <code>actions</code>
+      </td>
+      <td>
+        <code>Array&lt;'view' | 'edit' | 'delete' | ActionConfig&lt;T&gt;&gt;?</code>
+      </td>
+      <td>
+        <code>['view', 'edit', 'delete']</code>
+      </td>
       <td>操作列配置。</td>
     </tr>
     <tr>
-      <td><code>showIndex</code></td>
-      <td><code>boolean?</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>showIndex</code>
+      </td>
+      <td>
+        <code>boolean?</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>是否显示序号列。</td>
     </tr>
     <tr>
-      <td><code>rowSelection</code></td>
-      <td><code>null | 'multiple' | 'single'?</code></td>
-      <td><code>null</code></td>
+      <td>
+        <code>rowSelection</code>
+      </td>
+      <td>
+        <code>null | 'multiple' | 'single'?</code>
+      </td>
+      <td>
+        <code>null</code>
+      </td>
       <td>行选择模式。</td>
     </tr>
     <tr>
-      <td><code>fetchData</code></td>
-      <td><code>((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise&lt;any&gt;)?</code></td>
-      <td><code>null</code></td>
+      <td>
+        <code>fetchData</code>
+      </td>
+      <td>
+        <code>((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise&lt;any&gt;)?</code>
+      </td>
+      <td>
+        <code>null</code>
+      </td>
       <td>数据获取函数，用于服务端分页。</td>
     </tr>
     <tr>
-      <td><code>fetchUrl</code></td>
-      <td><code>string?</code></td>
-      <td><code>null</code></td>
+      <td>
+        <code>fetchUrl</code>
+      </td>
+      <td>
+        <code>string?</code>
+      </td>
+      <td>
+        <code>null</code>
+      </td>
       <td>数据获取 URL。</td>
     </tr>
     <tr>
-      <td><code>virtualized</code></td>
-      <td><code>boolean?</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>virtualized</code>
+      </td>
+      <td>
+        <code>boolean?</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>是否启用虚拟列表。</td>
     </tr>
     <tr>
-      <td><code>toolbar</code></td>
-      <td><code>any?</code></td>
+      <td>
+        <code>toolbar</code>
+      </td>
+      <td>
+        <code>any?</code>
+      </td>
       <td>-</td>
       <td>工具栏配置。</td>
     </tr>

@@ -47,70 +47,129 @@ export default Example
   </thead>
   <tbody>
     <tr>
-      <td><code>length</code></td>
-      <td><code>number</code></td>
-      <td><code>6</code></td>
+      <td>
+        <code>length</code>
+      </td>
+      <td>
+        <code>number</code>
+      </td>
+      <td>
+        <code>6</code>
+      </td>
       <td>验证码的长度，即输入框的数量。必须大于 0。</td>
     </tr>
     <tr>
-      <td><code>value</code></td>
-      <td><code>string?</code></td>
+      <td>
+        <code>value</code>
+      </td>
+      <td>
+        <code>string?</code>
+      </td>
       <td>-</td>
       <td>受控模式下的值。如果提供此 prop，组件将变为受控组件，输入值由外部控制。</td>
     </tr>
     <tr>
-      <td><code>onChange</code></td>
-      <td><code>(value: string) => void?</code></td>
+      <td>
+        <code>onChange</code>
+      </td>
+      <td>
+        <code>(value: string) => void?</code>
+      </td>
       <td>-</td>
       <td>值变更时的回调函数。每次输入变更时都会调用，传入当前完整的验证码字符串。</td>
     </tr>
     <tr>
-      <td><code>autoFocus</code></td>
-      <td><code>boolean?</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>autoFocus</code>
+      </td>
+      <td>
+        <code>boolean?</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>是否自动聚焦到第一个输入框。适用于页面加载后立即输入的场景。</td>
     </tr>
     <tr>
-      <td><code>disabled</code></td>
-      <td><code>boolean?</code></td>
-      <td><code>false</code></td>
+      <td>
+        <code>disabled</code>
+      </td>
+      <td>
+        <code>boolean?</code>
+      </td>
+      <td>
+        <code>false</code>
+      </td>
       <td>是否禁用所有输入框。禁用状态下无法输入，但仍可显示值。</td>
     </tr>
     <tr>
-      <td><code>className</code></td>
-      <td><code>string?</code></td>
+      <td>
+        <code>className</code>
+      </td>
+      <td>
+        <code>string?</code>
+      </td>
       <td>-</td>
       <td>外层容器的 CSS 类名，用于自定义样式覆盖。</td>
     </tr>
     <tr>
-      <td><code>inputClassName</code></td>
-      <td><code>string?</code></td>
+      <td>
+        <code>inputClassName</code>
+      </td>
+      <td>
+        <code>string?</code>
+      </td>
       <td>-</td>
       <td>每个输入框的 CSS 类名，用于自定义单个输入框样式。</td>
     </tr>
     <tr>
-      <td><code>id</code></td>
-      <td><code>string?</code></td>
+      <td>
+        <code>id</code>
+      </td>
+      <td>
+        <code>string?</code>
+      </td>
       <td>-</td>
       <td>组件根元素的 id 属性，用于表单关联或测试。</td>
     </tr>
     <tr>
-      <td><code>name</code></td>
-      <td><code>string?</code></td>
+      <td>
+        <code>name</code>
+      </td>
+      <td>
+        <code>string?</code>
+      </td>
       <td>-</td>
       <td>表单 name 属性，用于表单提交时的字段名。</td>
     </tr>
     <tr>
-      <td><code>validateChar</code></td>
-      <td><code>(char: string) => boolean?</code></td>
+      <td>
+        <code>validateChar</code>
+      </td>
+      <td>
+        <code>(char: string) => boolean?</code>
+      </td>
       <td>-</td>
-      <td>字符验证函数。用于限制输入的字符类型。例如，<code>(ch) => /\d/.test(ch)</code> 只允许数字；<code>(ch) => ch === '' || /\d/.test(ch)</code> 允许数字和删除（空字符）。如果未提供，默认允许任何单字符（包括空字符）。</td>
+      <td>
+        字符验证函数。用于限制输入的字符类型。例如，<code>(ch) => /\d/.test(ch)</code> 只允许数字；
+        <code>(ch) => ch === '' || /\d/.test(ch)</code>{' '}
+        允许数字和删除（空字符）。如果未提供，默认允许任何单字符（包括空字符）。
+      </td>
     </tr>
     <tr>
-      <td><code>variant</code></td>
-      <td><code>'modern' | 'compact' | 'classic'?</code></td>
-      <td><code>'modern'</code></td>
-      <td>视觉变体。<code>modern</code> 为现代样式（渐变背景、阴影）；<code>compact</code> 为紧凑样式（小尺寸、无阴影）；<code>classic</code> 为经典样式（简单边框、无渐变）。</td>
+      <td>
+        <code>variant</code>
+      </td>
+      <td>
+        <code>'modern' | 'compact' | 'classic'?</code>
+      </td>
+      <td>
+        <code>'modern'</code>
+      </td>
+      <td>
+        视觉变体。<code>modern</code> 为现代样式（渐变背景、阴影）；<code>compact</code> 为紧凑样式（小尺寸、无阴影）；
+        <code>classic</code> 为经典样式（简单边框、无渐变）。
+      </td>
     </tr>
   </tbody>
 </table>
