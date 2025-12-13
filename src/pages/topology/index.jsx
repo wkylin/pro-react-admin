@@ -19,7 +19,7 @@ const CytoscapeTopology = () => {
     { id: 'server-7', label: '库存服务', color: '#8BC34A' },
     { id: 'server-8', label: '消息队列', color: '#FFC107' },
     { id: 'server-9', label: '日志中心', color: '#607D8B' },
-    { id: 'server-10', label: '监控中心', color: '#E91E63' },
+    { id: 'server-10', label: '监控中心', color: '#E91E63' }
   ]
 
   // 18个项目，分布在不同服务器
@@ -41,7 +41,7 @@ const CytoscapeTopology = () => {
     { id: 'proj-15', label: '消息生产', parent: 'server-8' },
     { id: 'proj-16', label: '消息消费', parent: 'server-8' },
     { id: 'proj-17', label: '日志采集', parent: 'server-9' },
-    { id: 'proj-18', label: '监控采集', parent: 'server-10' },
+    { id: 'proj-18', label: '监控采集', parent: 'server-10' }
   ]
 
   // 服务器节点
@@ -59,7 +59,7 @@ const CytoscapeTopology = () => {
     { data: { source: 'server-1', target: 'server-7', label: '库存' } },
     { data: { source: 'server-1', target: 'server-8', label: '消息' } },
     { data: { source: 'server-1', target: 'server-9', label: '日志' } },
-    { data: { source: 'server-1', target: 'server-10', label: '监控' } },
+    { data: { source: 'server-1', target: 'server-10', label: '监控' } }
   ]
 
   // 项目间依赖（部分示例，真实可扩展）
@@ -76,7 +76,7 @@ const CytoscapeTopology = () => {
     // 交叉依赖
     { data: { source: 'proj-8', target: 'proj-12', label: '商品详情' } },
     { data: { source: 'proj-6', target: 'proj-11', label: '商品推荐' } },
-    { data: { source: 'proj-4', target: 'proj-5', label: '用户授权' } },
+    { data: { source: 'proj-4', target: 'proj-5', label: '用户授权' } }
   ]
 
   const elements = [...serverNodes, ...projectNodes, ...serverEdges, ...projectEdges]
@@ -93,8 +93,8 @@ const CytoscapeTopology = () => {
         shape: 'roundrectangle',
         'font-size': 12,
         width: 60,
-        height: 30,
-      },
+        height: 30
+      }
     },
     // 服务器父节点分组色
     ...serverList.map((s) => ({
@@ -106,8 +106,8 @@ const CytoscapeTopology = () => {
         'font-size': 16,
         padding: 24,
         'border-width': 2,
-        'border-color': s.color,
-      },
+        'border-color': s.color
+      }
     })),
     {
       selector: ':parent',
@@ -115,8 +115,8 @@ const CytoscapeTopology = () => {
         'text-valign': 'top',
         'text-halign': 'center',
         'font-size': 16,
-        'font-weight': 'bold',
-      },
+        'font-weight': 'bold'
+      }
     },
     {
       selector: 'edge',
@@ -133,8 +133,8 @@ const CytoscapeTopology = () => {
         'text-background-shape': 'roundrectangle',
         'text-border-color': '#888',
         'text-border-width': 1,
-        'text-border-opacity': 0.5,
-      },
+        'text-border-opacity': 0.5
+      }
     },
     // 服务器间主干线美化
     {
@@ -144,15 +144,15 @@ const CytoscapeTopology = () => {
         'target-arrow-color': '#1976D2',
         width: 5,
         'line-style': 'dashed',
-        opacity: 0.7,
-      },
-    },
+        opacity: 0.7
+      }
+    }
   ]
 
   const layout = { name: 'cose-bilkent', animate: true, idealEdgeLength: 100, nodeRepulsion: 4500 }
 
   return (
-    <FixTabPanel fill={true}>
+    <FixTabPanel fill>
       <CytoscapeComponent
         elements={elements}
         style={{ width: '100%', height: '100%' }}
