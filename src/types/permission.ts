@@ -45,6 +45,7 @@ export type Resource =
   | 'd3chart'
   | 'print'
   | 'permission'
+  | 'topology'
 
 /**
  * 权限点定义

@@ -49,6 +49,7 @@ export const lazyComponents = {
   GeoChart: lazyLoad(() => import('@pages/geoChart'), { preload: true }),
   D3Chart: lazyLoad(() => import('@pages/d3Chart'), { preload: true }),
   BigScreen: lazyLoad(() => import('@pages/bigScreen'), { preload: true }),
+  Topology: lazyLoad(() => import('@pages/topology'), { preload: true }),
 
   // 工具类页面
   QrCode: lazyLoad(() => import('@pages/qrGenerate'), { preload: true }),

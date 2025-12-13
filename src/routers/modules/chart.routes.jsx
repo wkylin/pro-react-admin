@@ -37,6 +37,12 @@ export const chartRoutes = [
     element: <lazyComponents.ChatGpt />,
   },
   {
+    path: 'topology',
+    name: 'Topology',
+    key: '/topology',
+    element: <lazyComponents.Topology />,
+  },
+  {
     path: 'mermaid',
     name: 'Mermaid',
     key: '/mermaid',
