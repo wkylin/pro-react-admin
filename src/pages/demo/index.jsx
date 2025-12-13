@@ -27,6 +27,7 @@ import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
+import OneTimePasscode from '@stateless/OneTimePasscode'
 import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
@@ -314,6 +315,7 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       <PageContainer>
+        <OneTimePasscode length={6} variant="compact" onComplete={(code) => console.log('OTP Code:', code)} />
         <MusicPlayer />
         <TransferHistory />
         <FixCarousel />

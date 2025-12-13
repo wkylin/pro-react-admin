@@ -1,0 +1,107 @@
+:root {
+  --otp-primary: #1677ff;
+  --otp-primary-rgb: 22, 119, 255;
+  --otp-bg: #fff;
+  --otp-fg: #0f1720;
+}
+
+.wrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+.input {
+  width: 3.25rem; /* base size */
+  height: 3.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(15, 23, 32, 0.06);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(250, 250, 252, 0.85));
+  color: var(--otp-fg);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06);
+  transition:
+    box-shadow 180ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 160ms ease,
+    border-color 120ms ease;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  caret-color: var(--otp-primary);
+}
+
+/* Variants */
+.modern .input {
+  /* subtle elevation and slightly larger */
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.9rem;
+  font-size: 1.125rem;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(245, 247, 250, 0.92));
+}
+
+/* explicit variant classes to ensure CSS module exports these keys */
+.modern {
+  --otp-variant-scale: 1.02;
+}
+
+.compact .input {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(2, 6, 23, 0.04);
+}
+
+.compact {
+  --otp-variant-scale: 0.96;
+}
+
+.classic .input {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(15, 23, 32, 0.12);
+  background: linear-gradient(180deg, #fff, #f7fafc);
+  box-shadow: inset 0 -2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.classic {
+  --otp-variant-scale: 1;
+}
+
+.input:focus {
+  transform: translateY(-2px) scale(1.02);
+  border-color: var(--otp-primary);
+  box-shadow:
+    0 10px 30px rgba(2, 6, 23, 0.08),
+    0 0 0 8px rgba(var(--otp-primary-rgb), 0.12);
+}
+
+.input[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* smaller on mobile */
+@media (max-width: 480px) {
+  .input {
+    width: 2.1rem;
+    height: 2.1rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* small helper: center wrapper when used alone in story */
+.centeredWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}

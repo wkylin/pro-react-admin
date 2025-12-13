@@ -122,7 +122,7 @@ export const ServerMode: StoryObj<typeof Demo> = {
 
 export const SelectionAndActions: StoryObj<typeof Demo> = {
   args: {
-    rowSelection: 'multiple',
+    rowSelection: 'multiple' as any,
     actions: ['view', 'edit', { key: 'delete', label: '删除', confirm: '确认删除吗？' }],
     dataSource: new Array(12).fill(null).map((_, i) => ({
       title: `通知 ${i + 1}`,

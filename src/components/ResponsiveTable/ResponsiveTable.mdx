@@ -1,15 +1,12 @@
-import { Meta, Description, Preview, Story } from '@storybook/addon-docs/blocks'
+---
+title: Responsive Table
+---
 
-<Meta title="Responsive Table" />
+# Responsive Table
 
-<div className="sb-container">
-  <div className='sb-section-title'>
-    # Responsive Table
+> 高级可配置表格组件（基于 antd Table 封装）。本页为组件示例与使用范本 —— 包含常见用法、受控/服务端分页示例、行选择、操作列与工具栏搜索。
 
-    > 高级可配置表格组件（基于 antd Table 封装）。本页为组件示例与使用范本 —— 包含常见用法、受控/服务端分页示例、行选择、操作列与工具栏搜索。
-
-  </div>
-  ResponsiveTable 用于构建管理后台列表/表格：
+ResponsiveTable 用于构建管理后台列表/表格：
 
 - 自动计算表体 scroll（基于 ResizeObserver），在容器变化时自动调整高度与宽度
 - 支持本地分页与服务端分页（fetchData / fetchUrl），并能通过 request/response mapping 支持不同后端字段
@@ -17,15 +14,213 @@ import { Meta, Description, Preview, Story } from '@storybook/addon-docs/blocks'
 - 支持工具栏查询表单（inline / popover / drawer），可和地址栏 query 合并
 - 支持行选择（single/multiple）与虚拟列表（virtualized）
 
-</div>
+## 基本使用
 
-<style>
-  {`
-  .sb-container {
-    margin-bottom: 48px;
+### 简单表格
+
+```jsx
+import ResponsiveTable from './ResponsiveTable'
+
+const columns = [
+  { title: 'Name', dataIndex: 'name', key: 'name' },
+  { title: 'Age', dataIndex: 'age', key: 'age' },
+  { title: 'Address', dataIndex: 'address', key: 'address' },
+]
+
+const data = [
+  { key: '1', name: 'John Brown', age: 32, address: 'New York No. 1 Lake Park' },
+  { key: '2', name: 'Jim Green', age: 42, address: 'London No. 1 Lake Park' },
+]
+
+function Example() {
+  return <ResponsiveTable columns={columns} dataSource={data} rowKey="key" />
+}
+```
+
+### 带操作列的表格
+
+```jsx
+import ResponsiveTable from './ResponsiveTable'
+
+const columns = [
+  { title: 'Name', dataIndex: 'name', key: 'name' },
+  { title: 'Age', dataIndex: 'age', key: 'age' },
+]
+
+const data = [
+  { id: 1, name: 'John Brown', age: 32 },
+  { id: 2, name: 'Jim Green', age: 42 },
+]
+
+function Example() {
+  return (
+    <ResponsiveTable
+      columns={columns}
+      dataSource={data}
+      actions={['view', 'edit', 'delete']}
+      onView={(record) => console.log('View', record)}
+      onEdit={(record) => console.log('Edit', record)}
+      onDelete={(record) => console.log('Delete', record)}
+    />
+  )
+}
+```
+
+## 属性（Props）
+
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>columns</code></td>
+      <td><code>ColumnsType&lt;T&gt;?</code></td>
+      <td><code>[]</code></td>
+      <td>表格列配置，遵循 antd Table 的 columns 格式。</td>
+    </tr>
+    <tr>
+      <td><code>dataSource</code></td>
+      <td><code>T[]?</code></td>
+      <td><code>[]</code></td>
+      <td>表格数据源。</td>
+    </tr>
+    <tr>
+      <td><code>rowKey</code></td>
+      <td><code>string | ((record: T) => React.Key)?</code></td>
+      <td><code>'id'</code></td>
+      <td>行唯一键。</td>
+    </tr>
+    <tr>
+      <td><code>initialPagination</code></td>
+      <td><code>{`{ current: number; pageSize: number }?`}</code></td>
+      <td><code>{`{ current: 1, pageSize: 10 }`}</code></td>
+      <td>初始分页配置。</td>
+    </tr>
+    <tr>
+      <td><code>minBodyHeight</code></td>
+      <td><code>number?</code></td>
+      <td><code>120</code></td>
+      <td>表格体最小高度。</td>
+    </tr>
+    <tr>
+      <td><code>minWidth</code></td>
+      <td><code>number?</code></td>
+      <td><code>600</code></td>
+      <td>表格最小宽度。</td>
+    </tr>
+    <tr>
+      <td><code>showColumnSettings</code></td>
+      <td><code>boolean?</code></td>
+      <td><code>true</code></td>
+      <td>是否显示列设置按钮。</td>
+    </tr>
+    <tr>
+      <td><code>pageSyncToUrl</code></td>
+      <td><code>boolean?</code></td>
+      <td><code>false</code></td>
+      <td>分页是否同步到 URL。</td>
+    </tr>
+    <tr>
+      <td><code>actions</code></td>
+      <td><code>Array&lt;'view' | 'edit' | 'delete' | ActionConfig&lt;T&gt;&gt;?</code></td>
+      <td><code>['view', 'edit', 'delete']</code></td>
+      <td>操作列配置。</td>
+    </tr>
+    <tr>
+      <td><code>showIndex</code></td>
+      <td><code>boolean?</code></td>
+      <td><code>false</code></td>
+      <td>是否显示序号列。</td>
+    </tr>
+    <tr>
+      <td><code>rowSelection</code></td>
+      <td><code>null | 'multiple' | 'single'?</code></td>
+      <td><code>null</code></td>
+      <td>行选择模式。</td>
+    </tr>
+    <tr>
+      <td><code>fetchData</code></td>
+      <td><code>((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise&lt;any&gt;)?</code></td>
+      <td><code>null</code></td>
+      <td>数据获取函数，用于服务端分页。</td>
+    </tr>
+    <tr>
+      <td><code>fetchUrl</code></td>
+      <td><code>string?</code></td>
+      <td><code>null</code></td>
+      <td>数据获取 URL。</td>
+    </tr>
+    <tr>
+      <td><code>virtualized</code></td>
+      <td><code>boolean?</code></td>
+      <td><code>false</code></td>
+      <td>是否启用虚拟列表。</td>
+    </tr>
+    <tr>
+      <td><code>toolbar</code></td>
+      <td><code>any?</code></td>
+      <td>-</td>
+      <td>工具栏配置。</td>
+    </tr>
+  </tbody>
+</table>
+
+## 高级用法
+
+### 服务端分页
+
+```jsx
+function ServerPaginatedTable() {
+  const fetchData = async (page, pageSize) => {
+    const response = await fetch(`/api/data?page=${page}&size=${pageSize}`)
+    return response.json()
   }
-  .sb-section-title {
-    margin-bottom: 32px;
-  }
-  `}
-</style>
+
+  return (
+    <ResponsiveTable
+      columns={columns}
+      fetchData={fetchData}
+      responseFieldMap={{ listField: 'data', totalField: 'total' }}
+    />
+  )
+}
+```
+
+### 带搜索的表格
+
+```jsx
+function TableWithSearch() {
+  return (
+    <ResponsiveTable
+      columns={columns}
+      fetchUrl="/api/search"
+      toolbar={{
+        search: {
+          fields: [
+            { name: 'name', label: 'Name', component: 'Input' },
+            { name: 'status', label: 'Status', component: 'Select', options: ['active', 'inactive'] },
+          ],
+        },
+      }}
+    />
+  )
+}
+```
+
+## 自定义样式与主题
+
+- 组件继承 antd Table 的所有样式类名，可通过 CSS Module 或全局样式覆盖。
+- 支持通过 `className` 和 `style` prop 自定义容器样式。
+- 自动响应容器大小变化，无需手动设置 scroll。
+
+## 注意事项
+
+- 对于大数据集，建议启用 `virtualized` 以提升性能。
+- 服务端分页时，确保 `fetchData` 或 `fetchUrl` 返回正确的格式，并配置 `responseFieldMap`。
+- 权限控制通过 `permissionChecker` 函数实现。

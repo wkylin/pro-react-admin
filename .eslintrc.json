@@ -1,4 +1,5 @@
 {
+  "ignorePatterns": [],
   "settings": {
     "react": {
       "version": "detect"
@@ -17,6 +18,18 @@
     "sourceType": "module"
   },
   "plugins": ["react", "@typescript-eslint", "react-hooks", "prettier"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint", "react"],
+      "extends": ["plugin:react/recommended", "prettier"]
+    },
+    {
+      "files": ["*.test.ts", "*.test.tsx"],
+      "env": { "jest": true }
+    }
+  ],
   "rules": {
     "react-hooks/rules-of-hooks": "error",
     "react/display-name": "off",

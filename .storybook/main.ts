@@ -3,12 +3,8 @@ import path from 'path'
 const rootDir = process.cwd()
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: [
-    '@storybook/addon-webpack5-compiler-swc',
-    '@storybook/addon-a11y',
-    '@storybook/addon-docs',
-    '@storybook/addon-onboarding',
-  ],
+  addons: ['@storybook/addon-webpack5-compiler-swc', '@storybook/addon-a11y', '@storybook/addon-docs'],
+  docs: {},
   framework: '@storybook/react-webpack5',
   webpackFinal: async (config) => {
     config.resolve = config.resolve || {}
@@ -37,6 +33,43 @@ const config: StorybookConfig = {
     //   // webpack expects a string, ensure it ends with a slash
     //   config.output.publicPath = baseHref.endsWith('/') ? baseHref : baseHref + '/';
     // }
+
+    // add Less and Less Module support for project styles
+    config.module = config.module || { rules: [] }
+    const lessModuleRule = {
+      test: /\.module\.less$/,
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: { localIdentName: '[local]__[hash:base64:5]' },
+            importLoaders: 2,
+          },
+        },
+        'postcss-loader',
+        {
+          loader: 'less-loader',
+          options: { lessOptions: { javascriptEnabled: true } },
+        },
+      ],
+    }
+
+    const lessRule = {
+      test: /(?<!\.module)\.less$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        'postcss-loader',
+        {
+          loader: 'less-loader',
+          options: { lessOptions: { javascriptEnabled: true } },
+        },
+      ],
+    }
+
+    // prepend to ensure project rules take precedence
+    config.module.rules = [lessModuleRule, lessRule, ...(config.module.rules || [])]
 
     return config
   },
