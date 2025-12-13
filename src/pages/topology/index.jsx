@@ -151,6 +151,44 @@ const CytoscapeTopology = () => {
 
   const layout = { name: 'cose-bilkent', animate: true, idealEdgeLength: 100, nodeRepulsion: 4500 }
 
+  const cyRef = useRef(null)
+
+  useEffect(() => {
+    const cy = cyRef.current
+    if (!cy) return
+    let dashOffset = 0
+    let running = true
+    function animate() {
+      dashOffset = (dashOffset + 2) % 40
+      // 主干（服务器间）
+      cy.edges('edge[source^="server-"][target^="server-"]').forEach((edge) => {
+        edge.style('line-dash-pattern', [12, 8])
+        edge.style('line-dash-offset', dashOffset)
+        edge.style('line-color', '#1976D2')
+        edge.style('target-arrow-color', '#1976D2')
+        edge.style('width', 5)
+        edge.style('opacity', 0.7)
+        edge.style('line-style', 'dashed')
+      })
+      // 依赖（项目间）
+      cy.edges('edge[source^="proj-"]').forEach((edge) => {
+        edge.style('line-dash-pattern', [6, 4])
+        edge.style('line-dash-offset', dashOffset)
+        edge.style('line-color', '#aaa')
+        edge.style('target-arrow-color', '#aaa')
+        edge.style('width', 3)
+        edge.style('opacity', 1)
+        edge.style('line-style', 'dashed')
+      })
+      cy.style().update() // 强制刷新
+      if (running) requestAnimationFrame(animate)
+    }
+    animate()
+    return () => {
+      running = false
+    }
+  }, [])
+
   return (
     <FixTabPanel fill={true}>
       <CytoscapeComponent
@@ -159,6 +197,7 @@ const CytoscapeTopology = () => {
         stylesheet={stylesheet}
         layout={layout}
         cy={(cy) => {
+          cyRef.current = cy
           console.log('Cytoscape实例就绪', cy)
         }}
       />
