@@ -10,7 +10,7 @@ const initSSE = (apiKey, apiContent) => {
     method: 'POST',
     start: false,
     payload: JSON.stringify({
-      model: 'gpt-3.5-turbo',
+      model: 'grok-4-1-fast-reasoning',
       stream: true,
       messages: [
         {
