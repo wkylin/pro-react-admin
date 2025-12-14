@@ -20,7 +20,7 @@ import {
   Drawer,
   Switch,
   Tag,
-  Spin,
+  Spin
 } from 'antd'
 import {
   DownloadOutlined,
@@ -36,7 +36,7 @@ import {
   CodeOutlined,
   TableOutlined,
   PartitionOutlined,
-  NodeIndexOutlined,
+  NodeIndexOutlined
 } from '@ant-design/icons'
 import { copyTextToClipboard } from '@utils/aidFn'
 import initSSE from './fixSse'
@@ -57,14 +57,14 @@ mermaid.initialize({
     primaryBorderColor: '#d9d9d9',
     lineColor: '#52c41a',
     secondaryColor: '#f6ffed',
-    tertiaryColor: '#f0f9ff',
+    tertiaryColor: '#f0f9ff'
   },
   flowchart: {
     useMaxWidth: true,
     htmlLabels: true,
-    curve: 'basis',
+    curve: 'basis'
   },
-  securityLevel: 'loose',
+  securityLevel: 'loose'
 })
 
 const PROJECT_TEMPLATES = {
@@ -169,7 +169,7 @@ const PROJECT_TEMPLATES = {
 3. 包含至少 6 个代码块示例
 4. 包含至少 5 个数学公式
 5. 内容详实，符合大型企业级项目标准
-6. 所有图表都要有实际意义，不是占位符`,
+6. 所有图表都要有实际意义，不是占位符`
   },
   fintech: {
     title: '金融风控平台',
@@ -278,7 +278,7 @@ const PROJECT_TEMPLATES = {
 3. 包含至少 8 个代码块示例
 4. 包含至少 6 个数学公式
 5. 符合金融行业标准和监管要求
-6. 所有图表都要有实际业务意义`,
+6. 所有图表都要有实际业务意义`
   },
   smartCity: {
     title: '智慧城市运营中心',
@@ -400,8 +400,8 @@ const PROJECT_TEMPLATES = {
 3. 包含至少 10 个代码块示例
 4. 包含至少 6 个数学公式
 5. 符合智慧城市建设标准和规范
-6. 所有图表都要有实际应用场景`,
-  },
+6. 所有图表都要有实际应用场景`
+  }
 }
 
 // 修复后的 MermaidRenderer - 只在文档完成时渲染一次
@@ -505,7 +505,7 @@ const MermaidRenderer = ({ content, readyState }) => {
         <Text strong>
           正在渲染 {total} 个图表，已完成 {finished}/{total}
         </Text>
-        {finished < total && <Spin size="large" style={{ marginLeft: 16 }} />}
+        {finished < total && <Spin size='large' style={{ marginLeft: 16 }} />}
       </div>
       <div ref={containerRef} />
     </div>
@@ -562,7 +562,7 @@ const ChatGpt = () => {
   const handleTemplateChange = (templateKey) => {
     setSelectedTemplate(templateKey)
     form.setFieldsValue({
-      text: PROJECT_TEMPLATES[templateKey].prompt,
+      text: PROJECT_TEMPLATES[templateKey].prompt
     })
   }
 
@@ -581,7 +581,7 @@ const ChatGpt = () => {
       if (e.data !== '[DONE]') {
         const payload = JSON.parse(e.data)
         const {
-          delta: { content },
+          delta: { content }
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           apiResultRef.current += content
@@ -703,7 +703,7 @@ PRD文档内容：
       if (e.data !== '[DONE]') {
         const payload = JSON.parse(e.data)
         const {
-          delta: { content },
+          delta: { content }
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           structureResultRef.current += content
@@ -802,7 +802,7 @@ PRD文档内容：
 
     const content = format === 'markdown' ? apiResult : removeMd(apiResult)
     const blob = new Blob([content], {
-      type: format === 'markdown' ? 'text/markdown' : 'text/plain',
+      type: format === 'markdown' ? 'text/markdown' : 'text/plain'
     })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
@@ -823,7 +823,7 @@ PRD文档内容：
             borderCollapse: 'collapse',
             border: '1px solid #d9d9d9',
             borderRadius: '6px',
-            overflow: 'hidden',
+            overflow: 'hidden'
           }}
         >
           {children}
@@ -836,7 +836,7 @@ PRD文档内容：
         {...props}
         style={{
           backgroundColor: '#fafafa',
-          borderBottom: '2px solid #d9d9d9',
+          borderBottom: '2px solid #d9d9d9'
         }}
       >
         {children}
@@ -851,7 +851,7 @@ PRD文档内容：
           textAlign: 'left',
           fontWeight: 600,
           color: '#262626',
-          borderRight: '1px solid #d9d9d9',
+          borderRight: '1px solid #d9d9d9'
         }}
       >
         {children}
@@ -864,7 +864,7 @@ PRD文档内容：
         style={{
           padding: '12px 16px',
           borderBottom: '1px solid #f0f0f0',
-          borderRight: '1px solid #f0f0f0',
+          borderRight: '1px solid #f0f0f0'
         }}
       >
         {children}
@@ -883,7 +883,7 @@ PRD文档内容：
               padding: '16px',
               backgroundColor: '#f6f8fa',
               borderRadius: '6px',
-              border: '1px solid #d9d9d9',
+              border: '1px solid #d9d9d9'
             }}
           >
             <pre
@@ -894,7 +894,7 @@ PRD文档内容：
                 fontSize: '14px',
                 lineHeight: '1.5',
                 whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
+                wordBreak: 'break-word'
               }}
             >
               {children}
@@ -913,7 +913,7 @@ PRD文档内容：
               padding: '2px 6px',
               borderRadius: '4px',
               fontSize: '0.9em',
-              color: '#d73a49',
+              color: '#d73a49'
             }}
           >
             {children}
@@ -931,7 +931,7 @@ PRD文档内容：
             borderRadius: '6px',
             overflowX: 'auto',
             fontSize: '0.9em',
-            lineHeight: '1.5',
+            lineHeight: '1.5'
           }}
         >
           {children}
@@ -956,7 +956,7 @@ PRD文档内容：
             padding: '16px',
             borderRadius: '6px',
             overflowX: 'auto',
-            margin: '16px 0',
+            margin: '16px 0'
           }}
         >
           {children}
@@ -973,7 +973,7 @@ PRD文档内容：
           marginTop: '24px',
           marginBottom: '16px',
           borderBottom: '1px solid #eaecef',
-          paddingBottom: '8px',
+          paddingBottom: '8px'
         }}
       >
         {children}
@@ -987,7 +987,7 @@ PRD文档内容：
           fontSize: '1.5em',
           fontWeight: 600,
           marginTop: '24px',
-          marginBottom: '16px',
+          marginBottom: '16px'
         }}
       >
         {children}
@@ -1001,7 +1001,7 @@ PRD文档内容：
           fontSize: '1.25em',
           fontWeight: 600,
           marginTop: '20px',
-          marginBottom: '12px',
+          marginBottom: '12px'
         }}
       >
         {children}
@@ -1013,7 +1013,7 @@ PRD文档内容：
         {...props}
         style={{
           paddingLeft: '24px',
-          margin: '12px 0',
+          margin: '12px 0'
         }}
       >
         {children}
@@ -1025,7 +1025,7 @@ PRD文档内容：
         {...props}
         style={{
           paddingLeft: '24px',
-          margin: '12px 0',
+          margin: '12px 0'
         }}
       >
         {children}
@@ -1037,7 +1037,7 @@ PRD文档内容：
         {...props}
         style={{
           marginBottom: '8px',
-          lineHeight: '1.6',
+          lineHeight: '1.6'
         }}
       >
         {children}
@@ -1052,18 +1052,18 @@ PRD文档内容：
           paddingLeft: '16px',
           margin: '16px 0',
           color: '#6a737d',
-          fontStyle: 'italic',
+          fontStyle: 'italic'
         }}
       >
         {children}
       </blockquote>
-    ),
+    )
   }
 
   const previewStyle = {
     backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
     color: theme === 'light' ? '#24292e' : '#c9d1d9',
-    padding: '20px',
+    padding: '20px'
   }
 
   return (
@@ -1074,7 +1074,7 @@ PRD文档内容：
             <ThunderboltOutlined style={{ color: '#1890ff', marginRight: 10 }} />
             AI驱动的PRD智能生成平台
           </Title>
-          <Paragraph type="secondary">基于大语言模型，一键生成专业产品需求文档和架构思维导图</Paragraph>
+          <Paragraph type='secondary'>基于大语言模型，一键生成专业产品需求文档和架构思维导图</Paragraph>
         </div>
 
         <Card
@@ -1088,25 +1088,25 @@ PRD文档内容：
         >
           <Form
             form={form}
-            layout="vertical"
+            layout='vertical'
             initialValues={{
               apiKey: '',
-              text: PROJECT_TEMPLATES.supplyChain.prompt,
+              text: PROJECT_TEMPLATES.supplyChain.prompt
             }}
             onFinish={onFinish}
             requiredMark={false}
-            autoComplete="off"
+            autoComplete='off'
           >
             <Form.Item
-              name="apiKey"
-              label="OpenAI API Key"
+              name='apiKey'
+              label='OpenAI API Key'
               rules={[{ required: true, message: '请输入OpenAI API Key' }]}
-              extra="您的API Key将被安全处理，不会存储在服务器上"
+              extra='您的API Key将被安全处理，不会存储在服务器上'
             >
-              <TextArea onChange={onChange} rows={2} style={{ resize: 'none' }} placeholder="sk-..." />
+              <TextArea onChange={onChange} rows={2} style={{ resize: 'none' }} placeholder='sk-...' />
             </Form.Item>
 
-            <Form.Item label="项目模板">
+            <Form.Item label='项目模板'>
               <Space wrap>
                 {Object.entries(PROJECT_TEMPLATES).map(([key, template]) => (
                   <Button
@@ -1120,21 +1120,21 @@ PRD文档内容：
               </Space>
             </Form.Item>
 
-            <Form.Item name="text" label="需求描述" rules={[{ required: true, message: '请输入您的需求描述' }]}>
+            <Form.Item name='text' label='需求描述' rules={[{ required: true, message: '请输入您的需求描述' }]}>
               <TextArea
                 rows={8}
                 showCount
                 maxLength={4000}
                 style={{ resize: 'none' }}
-                placeholder="详细描述您的产品需求..."
+                placeholder='详细描述您的产品需求...'
               />
             </Form.Item>
 
             <Form.Item>
               <Button
-                type="primary"
-                htmlType="submit"
-                size="large"
+                type='primary'
+                htmlType='submit'
+                size='large'
                 block
                 disabled={[0, 1].includes(readyState)}
                 icon={<ThunderboltOutlined />}
@@ -1167,10 +1167,10 @@ PRD文档内容：
             {readyState === 1 && (
               <Progress
                 percent={Math.round(progress)}
-                status="active"
+                status='active'
                 strokeColor={{
                   '0%': '#108ee9',
-                  '100%': '#87d068',
+                  '100%': '#87d068'
                 }}
               />
             )}
@@ -1182,23 +1182,23 @@ PRD文档内容：
                 >
                   <Space>
                     <Text strong>文档内容预览</Text>
-                    <Tag color="blue" icon={<TableOutlined />}>
+                    <Tag color='blue' icon={<TableOutlined />}>
                       支持表格
                     </Tag>
-                    <Tag color="green" icon={<CodeOutlined />}>
+                    <Tag color='green' icon={<CodeOutlined />}>
                       代码高亮
                     </Tag>
-                    <Tag color="purple" icon={<PartitionOutlined />}>
+                    <Tag color='purple' icon={<PartitionOutlined />}>
                       数学公式
                     </Tag>
-                    <Tag color="orange" icon={<NodeIndexOutlined />}>
+                    <Tag color='orange' icon={<NodeIndexOutlined />}>
                       Mermaid图表
                     </Tag>
                   </Space>
                   <Space>
                     {readyState === 2 && (
                       <>
-                        <Tooltip title="全屏预览">
+                        <Tooltip title='全屏预览'>
                           <Button icon={<FullscreenOutlined />} onClick={() => setPreviewVisible(true)} />
                         </Tooltip>
                         <Dropdown
@@ -1218,27 +1218,27 @@ PRD文档内容：
                               {
                                 key: '1',
                                 label: '复制纯文本',
-                                icon: <CopyOutlined />,
+                                icon: <CopyOutlined />
                               },
                               {
                                 key: '2',
                                 label: '复制Markdown',
-                                icon: <CopyOutlined />,
+                                icon: <CopyOutlined />
                               },
                               {
-                                type: 'divider',
+                                type: 'divider'
                               },
                               {
                                 key: '3',
                                 label: '导出Markdown',
-                                icon: <DownloadOutlined />,
+                                icon: <DownloadOutlined />
                               },
                               {
                                 key: '4',
                                 label: '导出纯文本',
-                                icon: <DownloadOutlined />,
-                              },
-                            ],
+                                icon: <DownloadOutlined />
+                              }
+                            ]
                           }}
                         >
                           <Button icon={<DownloadOutlined />}>导出</Button>
@@ -1252,7 +1252,7 @@ PRD文档内容：
                     border: '1px solid #d9d9d9',
                     borderRadius: 6,
                     overflow: 'hidden',
-                    maxHeight: 600,
+                    maxHeight: 600
                   }}
                 >
                   <MDEditor.Markdown
@@ -1262,7 +1262,7 @@ PRD文档内容：
                       minHeight: 400,
                       maxHeight: 600,
                       overflow: 'auto',
-                      padding: previewStyle.padding,
+                      padding: previewStyle.padding
                     }}
                     data-color-mode={theme}
                     skipHtml={false}
@@ -1275,7 +1275,7 @@ PRD文档内容：
                   style={{
                     marginTop: 20,
                     borderTop: '1px solid #f0f0f0',
-                    paddingTop: 20,
+                    paddingTop: 20
                   }}
                 >
                   <Text strong>Mermaid 图表展示</Text>
@@ -1299,7 +1299,7 @@ PRD文档内容：
           >
             <Space style={{ marginBottom: 15 }}>
               <Button
-                type="primary"
+                type='primary'
                 disabled={[0, 1].includes(structureReadyState)}
                 onClick={buildStructure}
                 icon={<ThunderboltOutlined />}
@@ -1315,14 +1315,14 @@ PRD文档内容：
                       {
                         key: '1',
                         label: '导出为PNG',
-                        icon: <DownloadOutlined />,
+                        icon: <DownloadOutlined />
                       },
                       {
                         key: '2',
                         label: '导出为SVG',
-                        icon: <DownloadOutlined />,
-                      },
-                    ],
+                        icon: <DownloadOutlined />
+                      }
+                    ]
                   }}
                 >
                   <Button icon={<DownloadOutlined />}>导出</Button>
@@ -1343,10 +1343,10 @@ PRD文档内容：
             {structureReadyState === 1 && (
               <Progress
                 percent={Math.round(progress)}
-                status="active"
+                status='active'
                 strokeColor={{
                   '0%': '#108ee9',
-                  '100%': '#87d068',
+                  '100%': '#87d068'
                 }}
               />
             )}
@@ -1359,7 +1359,7 @@ PRD文档内容：
                   borderRadius: 6,
                   padding: 20,
                   backgroundColor: '#fafafa',
-                  minHeight: 400,
+                  minHeight: 400
                 }}
               >
                 <MarkmapHooks markmap={formatMindmapContent(structureResult)} />
@@ -1375,14 +1375,14 @@ PRD文档内容：
               <span>文档全屏预览</span>
             </Space>
           }
-          placement="right"
+          placement='right'
           onClose={() => setPreviewVisible(false)}
           open={previewVisible}
           extra={
             <Space>
               <Switch
-                checkedChildren="亮色"
-                unCheckedChildren="暗色"
+                checkedChildren='亮色'
+                unCheckedChildren='暗色'
                 checked={theme === 'light'}
                 onChange={(checked) => setTheme(checked ? 'light' : 'dark')}
               />
@@ -1394,14 +1394,14 @@ PRD文档内容：
               padding: 20,
               backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
               color: theme === 'light' ? '#24292e' : '#c9d1d9',
-              minHeight: '100%',
+              minHeight: '100%'
             }}
           >
             <MDEditor.Markdown
               source={apiResult}
               style={{
                 backgroundColor: 'transparent',
-                minHeight: '100%',
+                minHeight: '100%'
               }}
               data-color-mode={theme}
               skipHtml={false}
@@ -1413,7 +1413,7 @@ PRD文档内容：
               style={{
                 marginTop: 20,
                 borderTop: '1px solid #f0f0f0',
-                paddingTop: 20,
+                paddingTop: 20
               }}
             >
               <Text strong>Mermaid 图表展示</Text>
