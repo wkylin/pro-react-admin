@@ -49,9 +49,11 @@
     "dev:vite": "vite --host --config vite.config.ts",
     "dev:faker": "concurrently -r \"npm run start\" \"npm run faker\"",
     "build:production": "cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "build:production:zip": "cross-env DIST_ZIP=1 SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production NODE_OPTIONS=--trace-deprecation webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:test": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:dev": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=dev NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "build:vite": "vite build --config vite.config.ts",
+    "build:vite:zip": "cross-env ZIP_DIST=1 vite build --config vite.config.ts",
     "build:vite:sentry": "cross-env SENTRY_DISABLE_TELEMETRY=1 SENTRY_SOURCE_MAP=map vite build --config vite.config.ts",
     "preview:vite": "vite preview --host --config vite.config.ts",
     "prod:serve": "cross-env SENTRY_SOURCE_MAP=no BUILD_SERVE=prod BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
@@ -279,7 +281,9 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^6.0.1",
-    "webpackbar": "^7.0.0"
+    "webpackbar": "^7.0.0",
+    "filemanager-webpack-plugin": "^6.0.0",
+    "archiver": "^5.3.1"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.0.1",

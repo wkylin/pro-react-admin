@@ -10,6 +10,7 @@ const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
 
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
+const FileManagerPlugin = require('filemanager-webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const { EsbuildPlugin } = require('esbuild-loader')
@@ -125,6 +126,25 @@ if (useSentryMap) {
       org: process.env.SENTRY_ORG,
       project: process.env.SENTRY_PROJECT,
       telemetry: false,
+    })
+  )
+}
+
+// 如果设置了 DIST_ZIP 环境变量，则在构建完成后把 dist 压缩到 dist-zip/pro-react-admin.zip
+if (process.env.DIST_ZIP === '1' || process.env.DIST_ZIP === 'true') {
+  prodWebpackConfig.plugins.push(
+    new FileManagerPlugin({
+      events: {
+        onEnd: {
+          mkdir: [path.resolve(__dirname, '../dist-zip')],
+          archive: [
+            {
+              source: path.resolve(__dirname, '../dist'),
+              destination: path.resolve(__dirname, '../dist-zip/pro-react-admin.zip'),
+            },
+          ],
+        },
+      },
     })
   )
 }

@@ -5,6 +5,8 @@ import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import path from 'path'
+import fs from 'fs'
+import archiver from 'archiver'
 import { fileURLToPath } from 'url'
 import packageJson from './package.json'
 
@@ -30,6 +32,31 @@ export default defineConfig(({ mode }) => {
   const useAnalyze = env.USE_ANALYZE === '1' || env.USE_ANALYZE === 'true'
   const isProd = mode === 'production'
   const useSentry = env.SENTRY_SOURCE_MAP === 'map' && isProd
+
+  // 构建完成后压缩插件（受环境变量 ZIP_DIST 控制）
+  const zipAfterBuild = () => ({
+    name: 'zip-after-build',
+    async closeBundle() {
+      const doZip = env.ZIP_DIST === '1' || env.ZIP_DIST === 'true'
+      if (!doZip || !isProd) return
+
+      const outDir = path.resolve(__dirname, 'dist-vite')
+      const zipDir = path.resolve(__dirname, 'dist-vite-zip')
+      await fs.promises.mkdir(zipDir, { recursive: true })
+      const archivePath = path.join(zipDir, 'pro-react-admin.zip')
+
+      const output = fs.createWriteStream(archivePath)
+      const archive = archiver('zip', { zlib: { level: 9 } })
+
+      return new Promise<void>((resolve, reject) => {
+        output.on('close', () => resolve())
+        archive.on('error', (err) => reject(err))
+        archive.pipe(output)
+        archive.directory(outDir, false)
+        archive.finalize()
+      })
+    },
+  })
 
   const injectAppEntry = {
     name: 'inject-app-entry',
@@ -65,6 +92,7 @@ export default defineConfig(({ mode }) => {
         ? [
             compression({ algorithm: 'gzip', deleteOriginFile: false }),
             compression({ algorithm: 'brotliCompress', ext: '.br', deleteOriginFile: false }),
+            zipAfterBuild(),
           ]
         : []),
       ...(useSentry

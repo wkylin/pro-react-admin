@@ -24,3 +24,5 @@ coverage
 storybook-static
 /dist-lib
 /dist-vite
+/dist-vite-zip
+/dist-zip
