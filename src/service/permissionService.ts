@@ -14,9 +14,72 @@ class PermissionService {
   private readonly cacheExpireTime: number = 30 * 60 * 1000 // 30分钟
   private lastFetchTime: number = 0
 
+  private readonly STORAGE_KEYS = {
+    PERMISSIONS: 'user_permissions',
+    FETCH_TIME: 'permissions_fetch_time',
+    AUTH_KEY: 'permissions_auth_key',
+    // 用于开发/演示的本地覆盖（不应污染真实登录态）
+    ROLE_OVERRIDE: 'user_role',
+    FORCE_DEMO_SWITCH: 'force_demo_switch',
+  } as const
+
   private constructor() {
     // 从 localStorage 恢复权限信息
     this.loadFromStorage()
+  }
+
+  /**
+   * 当前登录身份指纹（用于避免“切换账号/登出后仍复用旧权限缓存”）
+   * - 测试账号：localStorage.token = { token: email }
+   * - GitHub OAuth：github_user / github_token
+   * - 开发覆盖：user_role（会影响 mock 权限计算）
+   */
+  private getCurrentAuthKey(): string {
+    const safeRead = (key: string) => {
+      try {
+        return localStorage.getItem(key) || ''
+      } catch {
+        return ''
+      }
+    }
+
+    const roleOverride = safeRead(this.STORAGE_KEYS.ROLE_OVERRIDE)
+
+    const githubUser = safeRead('github_user')
+    const githubToken = safeRead('github_token')
+    if (githubUser) {
+      try {
+        const obj = JSON.parse(githubUser)
+        const email = obj?.email || ''
+        const login = obj?.login || ''
+        const id = obj?.id || ''
+        return `github:${email || login || id}${roleOverride ? `|role:${roleOverride}` : ''}`
+      } catch {
+        return `github:${githubUser}${roleOverride ? `|role:${roleOverride}` : ''}`
+      }
+    }
+    if (githubToken) {
+      return `githubToken:${githubToken}${roleOverride ? `|role:${roleOverride}` : ''}`
+    }
+
+    // 测试账号 token
+    const rawToken = safeRead('token')
+    if (rawToken) {
+      try {
+        const obj = JSON.parse(rawToken)
+        const token = obj?.token || rawToken
+        return `token:${token}${roleOverride ? `|role:${roleOverride}` : ''}`
+      } catch {
+        return `token:${rawToken}${roleOverride ? `|role:${roleOverride}` : ''}`
+      }
+    }
+
+    // 未登录但存在 roleOverride 的情况（演示页）
+    if (roleOverride) {
+      return `anonymous|role:${roleOverride}`
+    }
+
+    return 'anonymous'
   }
 
   static getInstance(): PermissionService {
@@ -31,8 +94,22 @@ class PermissionService {
    */
   private loadFromStorage(): void {
     try {
-      const stored = localStorage.getItem('user_permissions')
-      const lastFetch = localStorage.getItem('permissions_fetch_time')
+      const stored = localStorage.getItem(this.STORAGE_KEYS.PERMISSIONS)
+      const lastFetch = localStorage.getItem(this.STORAGE_KEYS.FETCH_TIME)
+      const storedAuthKey = localStorage.getItem(this.STORAGE_KEYS.AUTH_KEY)
+      const currentAuthKey = this.getCurrentAuthKey()
+
+      // 如果登录身份发生变化，直接丢弃旧缓存，避免残留旧权限
+      if (storedAuthKey && storedAuthKey !== currentAuthKey) {
+        this.clearCache()
+        return
+      }
+
+      // 兼容旧版本：若存在权限缓存但没有 authKey，视为不可信，直接丢弃
+      if (!storedAuthKey && stored) {
+        this.clearCache()
+        return
+      }
 
       if (stored && lastFetch) {
         this.userPermissions = JSON.parse(stored)
@@ -55,8 +132,9 @@ class PermissionService {
    */
   private saveToStorage(permissions: UserPermission): void {
     try {
-      localStorage.setItem('user_permissions', JSON.stringify(permissions))
-      localStorage.setItem('permissions_fetch_time', Date.now().toString())
+      localStorage.setItem(this.STORAGE_KEYS.PERMISSIONS, JSON.stringify(permissions))
+      localStorage.setItem(this.STORAGE_KEYS.FETCH_TIME, Date.now().toString())
+      localStorage.setItem(this.STORAGE_KEYS.AUTH_KEY, this.getCurrentAuthKey())
       this.userPermissions = permissions
       this.lastFetchTime = Date.now()
     } catch (error) {
@@ -70,8 +148,23 @@ class PermissionService {
   clearCache(): void {
     this.userPermissions = null
     this.lastFetchTime = 0
-    localStorage.removeItem('user_permissions')
-    localStorage.removeItem('permissions_fetch_time')
+    localStorage.removeItem(this.STORAGE_KEYS.PERMISSIONS)
+    localStorage.removeItem(this.STORAGE_KEYS.FETCH_TIME)
+    localStorage.removeItem(this.STORAGE_KEYS.AUTH_KEY)
+  }
+
+  /**
+   * 登出时清理（仅清理“权限相关”本地状态，不直接清理 token）
+   * - 解决：登录/登出或 401 跳转时权限缓存残留，导致下个账号复用旧权限
+   */
+  logoutCleanup(): void {
+    this.clearCache()
+    try {
+      localStorage.removeItem(this.STORAGE_KEYS.ROLE_OVERRIDE)
+      localStorage.removeItem(this.STORAGE_KEYS.FORCE_DEMO_SWITCH)
+    } catch (e) {
+      console.warn('清理权限相关本地覆盖失败:', e)
+    }
   }
 
   /**
@@ -80,6 +173,18 @@ class PermissionService {
    * @param userId 用户ID（可选，用于获取特定用户的权限）
    */
   async getPermissions(forceRefresh: boolean = false, userId?: string): Promise<UserPermission> {
+    // 若登录身份发生变化，强制清理旧缓存并重新获取
+    try {
+      const storedAuthKey = localStorage.getItem(this.STORAGE_KEYS.AUTH_KEY)
+      const currentAuthKey = this.getCurrentAuthKey()
+      if (storedAuthKey && storedAuthKey !== currentAuthKey) {
+        this.clearCache()
+        forceRefresh = true
+      }
+    } catch {
+      // ignore
+    }
+
     // 如果强制刷新或缓存过期，重新获取
     const now = Date.now()
     const isExpired = now - this.lastFetchTime > this.cacheExpireTime

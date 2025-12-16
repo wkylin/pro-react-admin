@@ -273,6 +273,17 @@ axiosInstance.interceptors.request.use(
 // 处理未授权
 function handleUnauthorized(message) {
   // authService.logout() // 移除以避免循环依赖
+  // 清理权限缓存与开发覆盖，避免跳转登录后仍沿用旧权限
+  try {
+    localStorage.removeItem('user_permissions')
+    localStorage.removeItem('permissions_fetch_time')
+    localStorage.removeItem('permissions_auth_key')
+    localStorage.removeItem('user_role')
+    localStorage.removeItem('force_demo_switch')
+  } catch (e) {
+    // ignore
+  }
+
   localStorage.removeItem('token')
   localStorage.removeItem('github_token')
   localStorage.removeItem('github_user')

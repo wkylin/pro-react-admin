@@ -26,3 +26,5 @@ storybook-static
 /dist-vite
 /dist-vite-zip
 /dist-zip
+/playwright-report
+/test-results

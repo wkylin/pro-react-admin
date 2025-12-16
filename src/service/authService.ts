@@ -33,6 +33,23 @@ interface GitHubEmailResponse {
   visibility: string | null
 }
 
+function isLikelyEmail(value: string): boolean {
+  return /^\S+@\S+\.\S+$/.test(value)
+}
+
+function buildTestAccountUser(email: string): GitHubUser {
+  // 用于“测试账号登录”展示；不代表真实 GitHub 用户
+  const login = email
+  return {
+    id: 0,
+    login,
+    name: login,
+    email,
+    avatar_url: '',
+    html_url: '',
+  }
+}
+
 // ✅ 修复 2: parseGitHubUser - 正确的类型守卫
 function parseGitHubUser(jsonLike: unknown): GitHubUser | null {
   if (typeof jsonLike !== 'string') return null
@@ -121,6 +138,19 @@ class AuthService {
           isAuthenticated: true,
           isLoading: false,
         }
+        return
+      }
+
+      // 兼容“测试账号登录”：localStorage.token = { token: email }
+      const testTokenData = localStorage.getItem('token')
+      const testToken = parseToken(testTokenData)
+      if (testToken && isLikelyEmail(testToken)) {
+        this.authState = {
+          token: testToken,
+          user: buildTestAccountUser(testToken),
+          isAuthenticated: true,
+          isLoading: false,
+        }
       }
     } catch (error) {
       logger.error('Failed to load auth state from storage:', error)
@@ -182,6 +212,37 @@ class AuthService {
     }
 
     // 保持原有的短延迟行为以兼容订阅者
+    return new Promise((resolve) => setTimeout(resolve, 100))
+  }
+
+  /**
+   * 测试账号登录：将 demo 登录态也纳入 authService（避免 Header/菜单逻辑分裂）。
+   * - 不写入 github_token/github_user，仅依赖 localStorage.token
+   */
+  async setTestAccountAuthenticated(email: string): Promise<void> {
+    this.authState = {
+      user: buildTestAccountUser(email),
+      token: email,
+      isAuthenticated: true,
+      isLoading: false,
+    }
+
+    // 避免残留 GitHub 登录态影响鉴权逻辑
+    try {
+      localStorage.removeItem('github_token')
+      localStorage.removeItem('github_user')
+    } catch (e) {
+      // ignore
+    }
+
+    this.notifyListeners()
+
+    try {
+      await permissionService.syncPermissions()
+    } catch (e) {
+      logger.warn('同步权限失败:', e)
+    }
+
     return new Promise((resolve) => setTimeout(resolve, 100))
   }
 
@@ -305,17 +366,15 @@ class AuthService {
       isAuthenticated: false,
       isLoading: false,
     }
-    // 清除权限缓存，确保下次登录时重新获取并刷新菜单
+    // 登出时清理权限相关缓存与覆盖，避免下次登录残留旧权限
     try {
-      permissionService.clearCache()
+      permissionService.logoutCleanup()
     } catch (e) {
-      logger.warn('清除权限缓存失败:', e)
+      logger.warn('清除权限相关缓存失败:', e)
     }
-    // 清除所有相关的 localStorage 键
+
+    // 清除所有相关的 localStorage 键（token 等）
     try {
-      localStorage.removeItem('user_permissions')
-      localStorage.removeItem('user_role')
-      localStorage.removeItem('permissions_fetch_time')
       localStorage.removeItem('token') // 测试账号登录的 token
       localStorage.removeItem('github_token') // GitHub OAuth token
       localStorage.removeItem('github_user') // GitHub user info
@@ -326,7 +385,7 @@ class AuthService {
     this.notifyListeners()
     // SPA 跳转到登录页
     if (typeof window !== 'undefined') {
-      window.location.href = '/signin'
+      window.location.href = '#/signin'
     }
   }
 

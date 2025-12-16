@@ -45,7 +45,7 @@ const ProContent = () => {
     })
     setTabActiveKey(tabKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname, search, panes, activeKey])
+  }, [pathname, search])
 
   return (
     <Layout className={styles.layout} id="fullScreen">

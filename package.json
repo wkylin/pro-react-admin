@@ -75,6 +75,7 @@
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test --config=playwright.config.ts",
     "test:watch": "jest --watch",
+    "test:report": "npx playwright show-report",
     "update:yarn": "yarn upgrade --latest",
     "update:npm": "ncu -u && npm install",
     "lint:fix": "npm run eslint:fix && npm run stylelint:fix && npm run prettier:fix",

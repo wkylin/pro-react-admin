@@ -96,9 +96,9 @@ const SignIn = () => {
       console.warn('清除手动设置角色失败:', e)
     }
 
-    // 同步权限
+    // 纳入统一登录态（测试账号也算已登录），并同步权限
     try {
-      await permissionService.syncPermissions()
+      await authService.setTestAccountAuthenticated(email)
       const routes = await permissionService.getAccessibleRoutes(true)
 
       message.success(`登录成功！欢迎 ${testAccounts[email].name}`)

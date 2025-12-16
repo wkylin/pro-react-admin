@@ -94,9 +94,11 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
   const { isAuthenticated, user, isLoading } = useAuth()
 
   const handleLogout = () => {
+    try {
+      // 兼容“测试账号登录”(仅 token) 的登出路径，确保权限缓存被清理
+      permissionService.logoutCleanup()
+    } catch (e) {}
     authService.logout()
-    removeLocalStorage('token')
-    redirectTo('/signin')
   }
 
   const tokenValue = getLocalStorage('token')?.token || 'wkylin.w'
@@ -139,6 +141,10 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         if (isAuthenticated && user) {
           authService.logout()
         } else {
+          try {
+            // 测试账号登录不会进入 authService 的“已登录态”，这里也要清理权限缓存
+            permissionService.logoutCleanup()
+          } catch (e) {}
           removeLocalStorage('token')
           redirectTo('/signin')
         }
@@ -340,7 +346,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
           )}
           <Dropdown arrow menu={{ items }} trigger={['click']}>
             {isAuthenticated && user ? (
-              <Avatar src={user.avatar_url} />
+              <Avatar src={user.avatar_url || undefined} icon={<UserOutlined style={{ fontSize: 16 }} />} />
             ) : (
               <Button
                 icon={<UserOutlined style={{ fontSize: 16 }} />}

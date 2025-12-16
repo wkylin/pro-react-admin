@@ -5,7 +5,6 @@ import { Tabs, Dropdown, Space, theme, Button } from 'antd'
 import StickyBox from 'react-sticky-box'
 import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
 import ErrorBoundary from '@/components/ErrorBoundary'
-import { nanoid } from 'nanoid'
 import { useTranslation } from 'react-i18next'
 import { useProTabContext } from '@app-hooks/proTabsContext'
 import Loading from '@src/components/stateless/Loading'
@@ -30,12 +29,7 @@ const ProTabs = (props) => {
 
   const renderTabBar = (props, DefaultTabBar) => (
     <StickyBox offsetTop={0} style={{ zIndex: 10 }}>
-      <DefaultTabBar
-        key={nanoid()}
-        {...props}
-        className="pro-tabs"
-        style={{ ...props.style, backgroundColor: colorBgContainer }}
-      />
+      <DefaultTabBar {...props} className="pro-tabs" style={{ ...props.style, backgroundColor: colorBgContainer }} />
     </StickyBox>
   )
 
@@ -89,7 +83,7 @@ const ProTabs = (props) => {
   }
 
   const onTabScroll = ({ direction }) => {
-    console.log('direction', direction)
+    // no-op: avoid logging on scroll (can cause jank)
   }
 
   const onEdit = (targetKey, action) => {
