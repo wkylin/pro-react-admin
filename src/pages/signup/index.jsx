@@ -1,6 +1,5 @@
 import React from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
-import AlignCenter from '@stateless/AlignCenter'
 import {
   Form,
   Input,
@@ -29,6 +28,7 @@ import {
 } from '@ant-design/icons'
 
 import { setLocalStorage } from '@utils/publicFn'
+import styles from './index.module.less'
 
 const { Title, Text, Link } = Typography
 const { Option } = Select
@@ -37,9 +37,7 @@ const { useBreakpoint } = Grid
 
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken()
+  const { token } = theme.useToken()
   const screens = useBreakpoint()
   const isMobile = !screens.md
 
@@ -55,59 +53,74 @@ const SignUp = () => {
     console.log('表单验证失败:', errorInfo)
   }
 
+  const cssVars = {
+    '--signup-bg': token.colorBgBase,
+    '--signup-panel': token.colorBgContainer,
+    '--signup-panel-2': token.colorBgLayout,
+    '--signup-border': token.colorBorderSecondary,
+    '--signup-text': token.colorText,
+    '--signup-text-2': token.colorTextSecondary,
+    '--signup-primary': token.colorPrimary,
+    '--signup-primary-2': token.colorInfo,
+    '--signup-shadow': token.boxShadowSecondary,
+    '--signup-icon': token.colorTextTertiary,
+  }
+
   return (
-    <Layout style={{ height: '100%', overflow: 'auto' }}>
-      <Content style={{ height: '100%', backgroundColor: colorBgContainer }}>
-        <AlignCenter>
-          <div
-            style={{
-              minHeight: '100vh',
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: isMobile ? '16px' : '20px',
-              width: '100%',
-            }}
-          >
-            <Card
-              style={{
-                width: '100%',
-                maxWidth: 450,
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-                borderRadius: '12px',
-              }}
-              styles={{ body: { padding: isMobile ? '20px 16px' : '40px 32px' } }}
-            >
-              {/* 头部标题 */}
-              <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                <Title level={2} style={{ marginBottom: 8 }}>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Content className={styles.root} style={cssVars}>
+        <div className={styles.bg} aria-hidden="true" />
+        <div className={styles.grid} style={{ padding: isMobile ? 16 : 24 }}>
+          {!isMobile && (
+            <section className={styles.hero}>
+              <div className={styles.heroInner}>
+                <div className={styles.heroKicker}>PRO REACT ADMIN • SIGN UP</div>
+                <Title level={1} className={styles.heroTitle}>
+                  加入权限驱动的
+                  <br />
+                  大屏控制台
+                </Title>
+                <Text type="secondary" className={styles.heroDesc}>
+                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Vite/Webpack 构建与产物压缩自动化。
+                </Text>
+
+                <div className={styles.heroOrbit} aria-hidden="true">
+                  <div className={styles.orbitRing} />
+                  <div className={styles.orbitRing2} />
+                  <div className={styles.orbitDot} />
+                </div>
+              </div>
+            </section>
+          )}
+
+          <section className={styles.panel}>
+            <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 28 } }}>
+              <div className={styles.titleBox}>
+                <Title level={2} className={styles.title}>
                   创建账户
                 </Title>
-                <Text type="secondary">填写信息完成注册</Text>
+                <Text type="secondary">完成注册后进入 Pro React Admin 工作台</Text>
               </div>
 
-              {/* 社交注册按钮 */}
-              <Row gutter={12} style={{ marginBottom: 24 }}>
+              <Row gutter={12} className={styles.socialRow}>
                 <Col span={12}>
-                  <Button block icon={<GithubOutlined />} style={{ height: 40 }}>
+                  <Button block icon={<GithubOutlined />} className={styles.socialBtn}>
                     GitHub
                   </Button>
                 </Col>
                 <Col span={12}>
-                  <Button block icon={<GoogleOutlined />} style={{ height: 40 }}>
+                  <Button block icon={<GoogleOutlined />} className={styles.socialBtn}>
                     Google
                   </Button>
                 </Col>
               </Row>
 
-              <Divider>
+              <Divider className={styles.divider}>
                 <Text type="secondary" style={{ fontSize: 12 }}>
                   或者使用邮箱注册
                 </Text>
               </Divider>
 
-              {/* 注册表单 */}
               <Form
                 form={form}
                 name="register"
@@ -143,7 +156,7 @@ const SignUp = () => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined style={{ color: '#bfbfbf' }} />}
+                    prefix={<UserOutlined style={{ color: token.colorTextTertiary }} />}
                     placeholder="请输入用户名"
                     style={{ height: 44 }}
                   />
@@ -159,7 +172,7 @@ const SignUp = () => {
                   ]}
                 >
                   <Input
-                    prefix={<MailOutlined style={{ color: '#bfbfbf' }} />}
+                    prefix={<MailOutlined style={{ color: token.colorTextTertiary }} />}
                     placeholder="请输入邮箱地址"
                     style={{ height: 44 }}
                   />
@@ -186,7 +199,7 @@ const SignUp = () => {
                       ]}
                     >
                       <Input
-                        prefix={<PhoneOutlined style={{ color: '#bfbfbf' }} />}
+                        prefix={<PhoneOutlined style={{ color: token.colorTextTertiary }} />}
                         placeholder="请输入手机号码"
                         style={{ height: 44, width: 'calc(100% - 90px)' }}
                       />
@@ -211,7 +224,7 @@ const SignUp = () => {
                   hasFeedback
                 >
                   <Input.Password
-                    prefix={<LockOutlined style={{ color: '#bfbfbf' }} />}
+                    prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
                     placeholder="请输入密码"
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     style={{ height: 44 }}
@@ -237,7 +250,7 @@ const SignUp = () => {
                   ]}
                 >
                   <Input.Password
-                    prefix={<LockOutlined style={{ color: '#bfbfbf' }} />}
+                    prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
                     placeholder="请再次输入密码"
                     iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                     style={{ height: 44 }}
@@ -275,14 +288,8 @@ const SignUp = () => {
                     type="primary"
                     htmlType="submit"
                     block
-                    style={{
-                      height: 44,
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      border: 'none',
-                      borderRadius: '6px',
-                      fontSize: '16px',
-                      fontWeight: 500,
-                    }}
+                    className={styles.submitBtn}
+                    style={{ height: 44, border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 600 }}
                   >
                     立即注册
                   </Button>
@@ -299,8 +306,8 @@ const SignUp = () => {
                 </div>
               </Form>
             </Card>
-          </div>
-        </AlignCenter>
+          </section>
+        </div>
       </Content>
     </Layout>
   )

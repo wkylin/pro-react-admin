@@ -1,4 +1,289 @@
-.container {
-  width: 30%;
-  margin: 80px auto;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.root {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--signup-bg);
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 55% at 18% 22%, color-mix(in srgb, var(--signup-primary) 26%, transparent), transparent 65%),
+    radial-gradient(55% 55% at 82% 18%, color-mix(in srgb, var(--signup-primary-2) 22%, transparent), transparent 60%),
+    radial-gradient(70% 70% at 55% 92%, color-mix(in srgb, var(--signup-primary) 16%, transparent), transparent 62%);
+  opacity: 0.98;
+}
+
+/* neon grid */
+.bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, color-mix(in srgb, var(--signup-text) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--signup-text) 7%, transparent) 1px, transparent 1px);
+  background-size: 52px 52px;
+  transform: perspective(900px) rotateX(58deg) translateY(12%);
+  transform-origin: center;
+  opacity: 0.35;
+  mask-image: radial-gradient(circle at 50% 25%, #000 0%, transparent 70%);
+}
+
+/* shimmer layer */
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    110deg,
+    transparent,
+    color-mix(in srgb, var(--signup-primary) 22%, transparent),
+    transparent,
+    color-mix(in srgb, var(--signup-primary-2) 18%, transparent),
+    transparent
+  );
+  animation: bgFlow 9s linear infinite;
+  opacity: 0.75;
+}
+
+.grid {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr minmax(380px, 480px);
+  gap: 24px;
+  align-items: center;
+}
+
+.hero {
+  position: relative;
+  padding: 24px;
+}
+
+.heroInner {
+  position: relative;
+  padding: 34px;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--signup-border) 70%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--signup-panel) 70%, transparent),
+      color-mix(in srgb, var(--signup-panel-2) 82%, transparent)
+    );
+  box-shadow: var(--signup-shadow);
+  overflow: hidden;
+}
+
+.heroInner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(400px 400px at 30% 30%, color-mix(in srgb, var(--signup-primary) 14%, transparent), transparent 65%),
+    radial-gradient(420px 420px at 80% 40%, color-mix(in srgb, var(--signup-primary-2) 12%, transparent), transparent 70%);
+  opacity: 0.9;
+}
+
+.heroKicker {
+  position: relative;
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--signup-border) 65%, transparent);
+  background: color-mix(in srgb, var(--signup-panel) 55%, transparent);
+  color: var(--signup-text);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  margin-bottom: 16px;
+}
+
+.heroTitle {
+  position: relative;
+  margin: 0 0 12px 0 !important;
+  color: var(--signup-text) !important;
+  letter-spacing: 0.2px;
+}
+
+.heroDesc {
+  position: relative;
+  display: block;
+  margin-bottom: 0;
+  color: var(--signup-text-2) !important;
+}
+
+.heroOrbit {
+  position: absolute;
+  right: -70px;
+  bottom: -90px;
+  width: 320px;
+  height: 320px;
+  opacity: 0.9;
+}
+
+.orbitRing {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--signup-primary) 28%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--signup-primary) 12%, transparent);
+  animation: spin 12s linear infinite;
+}
+
+.orbitRing2 {
+  position: absolute;
+  inset: 44px;
+  border-radius: 999px;
+  border: 1px dashed color-mix(in srgb, var(--signup-primary-2) 26%, transparent);
+  animation: spin 18s linear infinite reverse;
+  opacity: 0.85;
+}
+
+.orbitDot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--signup-primary) 45%, transparent);
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 22px color-mix(in srgb, var(--signup-primary) 45%, transparent),
+    0 0 42px color-mix(in srgb, var(--signup-primary-2) 28%, transparent);
+}
+
+.panel {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--signup-border) 65%, transparent);
+  background: var(--signup-panel);
+  box-shadow: var(--signup-shadow);
+}
+
+.titleBox {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin-bottom: 6px !important;
+}
+
+.socialRow {
+  margin-bottom: 16px;
+}
+
+.socialBtn {
+  height: 42px;
+  border-radius: 12px;
+}
+
+.divider {
+  margin: 12px 0 18px;
+}
+
+.submitBtn {
+  position: relative;
+  overflow: hidden;
+}
+
+.submitBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--signup-primary) 55%, transparent),
+    color-mix(in srgb, var(--signup-primary-2) 45%, transparent)
+  );
+  opacity: 0.9;
+}
+
+.submitBtn::after {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -60%;
+  width: 60%;
+  height: 180%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--signup-text) 22%, transparent),
+    transparent
+  );
+  transform: skewX(-18deg);
+  animation: shine 3.8s ease-in-out infinite;
+  opacity: 0.55;
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+}
+
+@keyframes bgFlow {
+  0% {
+    transform: translate3d(-6%, -2%, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(6%, 2%, 0) rotate(10deg);
+  }
+  100% {
+    transform: translate3d(-6%, -2%, 0) rotate(0deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-10%) skewX(-18deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  55% {
+    transform: translateX(240%) skewX(-18deg);
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+    opacity: 0;
+  }
 }

@@ -17,9 +17,7 @@ const { useBreakpoint } = Grid
 const SignIn = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
-  const {
-    token: { colorBgContainer, colorBgLayout },
-  } = theme.useToken()
+  const { token } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm()
   const screens = useBreakpoint()
@@ -127,43 +125,78 @@ const SignIn = () => {
     })
   }
 
+  const cssVars = {
+    '--signin-bg': token.colorBgBase,
+    '--signin-panel': token.colorBgContainer,
+    '--signin-panel-2': token.colorBgLayout,
+    '--signin-border': token.colorBorderSecondary,
+    '--signin-text': token.colorText,
+    '--signin-text-2': token.colorTextSecondary,
+    '--signin-primary': token.colorPrimary,
+    '--signin-primary-2': token.colorInfo,
+    '--signin-shadow': token.boxShadowSecondary,
+  }
+
   return (
-    <Layout style={{ height: '100%', overflow: 'auto' }}>
-      <Content style={{ height: '100%', backgroundColor: colorBgContainer }}>
-        <AlignCenter>
-          <div className={styles.signinBg} style={{ padding: isMobile ? '16px' : '20px', width: '100%' }}>
-            <Card className={styles.signinCard} styles={{ body: { padding: isMobile ? '12px' : '24px' } }}>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Content className={styles.root} style={cssVars}>
+        <div className={styles.bg} aria-hidden="true" />
+
+        <div className={styles.grid} style={{ padding: isMobile ? 16 : 24 }}>
+          {/* Left: Brand / Tech hero */}
+          {!isMobile && (
+            <section className={styles.hero}>
+              <div className={styles.heroInner}>
+                <div className={styles.badgeRow}>
+                  <Tag variant="filled" color="processing">
+                    AI-ready Console
+                  </Tag>
+                  <Tag variant="filled">Pro React Admin</Tag>
+                </div>
+                <Title level={1} className={styles.heroTitle}>
+                  面向 AI 时代的
+                  <br />
+                  企业级控制台
+                </Title>
+                <Paragraph className={styles.heroDesc}>大屏沉浸式视觉 · 权限体系 · 可观测的交互反馈</Paragraph>
+
+                <div className={styles.heroPills}>
+                  <span className={styles.pill}>Fast Tabs</span>
+                  <span className={styles.pill}>Role-based Access</span>
+                  <span className={styles.pill}>Vite/Webpack Build</span>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Right: Auth card */}
+          <section className={styles.panel}>
+            <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 24 } }}>
               <div className={styles.titleBox}>
                 <Title level={2} className={styles.title}>
-                  登录系统
+                  登录
                 </Title>
-                <Text type="secondary">请选择测试账号或输入凭据</Text>
+                <Text type="secondary">选择测试账号快速填充，或输入凭据登录</Text>
               </div>
 
               {/* 测试账号快捷选择 */}
-              <Card size="small" className={styles.accountCard} style={{ backgroundColor: colorBgLayout }}>
-                <Paragraph className={styles.accountTitle}>
-                  <Text strong>测试账号（点击快速填充）：</Text>
-                </Paragraph>
-                <Space orientation="vertical" style={{ width: '100%' }} size="small">
+              <div className={styles.quickBox}>
+                <div className={styles.quickHeader}>
+                  <Text strong>测试账号</Text>
+                  <Text type="secondary">（点击填充）</Text>
+                </div>
+                <div className={styles.quickList}>
                   {Object.entries(testAccounts).map(([email, account]) => (
-                    <Button
-                      key={email}
-                      block
-                      size="middle"
-                      onClick={() => fillAccount(email)}
-                      className={styles.accountBtn}
-                    >
-                      <Space>
-                        <Tag color="blue">{account.name}</Tag>
-                        <Text type="secondary" className={styles.accountText}>
-                          {email} / {account.password}
-                        </Text>
-                      </Space>
-                    </Button>
+                    <button key={email} type="button" className={styles.quickItem} onClick={() => fillAccount(email)}>
+                      <div className={styles.quickLeft}>
+                        <span className={styles.quickTag}>{account.name}</span>
+                        <span className={styles.quickMeta}>{email}</span>
+                      </div>
+                      <span className={styles.quickPwd}>{account.password}</span>
+                    </button>
                   ))}
-                </Space>
-              </Card>
+                </div>
+              </div>
 
               <Form
                 form={form}
@@ -188,30 +221,22 @@ const SignIn = () => {
                   <Input.Password prefix={<LockOutlined />} placeholder="密码" />
                 </Form.Item>
 
-                <Form.Item>
+                <Form.Item style={{ marginBottom: 8 }}>
                   <Button type="primary" htmlType="submit" block>
                     登录
                   </Button>
                 </Form.Item>
               </Form>
 
-              <div className={styles.orBox}>
-                <Text type="secondary">或者</Text>
-              </div>
-
-              {/* <Button icon={<GithubOutlined />} onClick={handleLogin} block size="large" style={{ marginTop: '16px' }}>
-                使用 GitHub 登录
-              </Button> */}
-
-              <div className={styles.registerBox}>
-                <Text type="secondary">还没有账号？ </Text>
+              <div className={styles.footerRow}>
+                <Text type="secondary">还没有账号？</Text>
                 <Button type="link" className={styles.registerBtn} onClick={() => redirectTo('/signup')}>
                   去注册
                 </Button>
               </div>
             </Card>
-          </div>
-        </AlignCenter>
+          </section>
+        </div>
       </Content>
     </Layout>
   )

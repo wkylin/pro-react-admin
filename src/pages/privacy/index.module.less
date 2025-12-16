@@ -1,0 +1,114 @@
+.root {
+  min-height: 100vh;
+  background: var(--legal-bg);
+  color: var(--legal-text);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(1200px 820px at 22% 12%, color-mix(in srgb, var(--legal-primary) 16%, transparent), transparent 62%),
+    radial-gradient(980px 760px at 82% 18%, color-mix(in srgb, var(--legal-primary-2) 16%, transparent), transparent 64%),
+    linear-gradient(180deg, color-mix(in srgb, var(--legal-panel-2) 22%, transparent), transparent 56%);
+  filter: saturate(1.15);
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 980px;
+  height: min(86vh, 860px);
+  border: 1px solid color-mix(in srgb, var(--legal-border) 72%, transparent);
+  background: color-mix(in srgb, var(--legal-panel) 92%, transparent);
+  box-shadow: var(--legal-shadow);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--legal-border) 70%, transparent);
+  background: color-mix(in srgb, var(--legal-panel) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--legal-text-2);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.kicker {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--legal-border) 70%, transparent);
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--legal-primary) 14%, transparent),
+      color-mix(in srgb, var(--legal-primary-2) 18%, transparent));
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--legal-primary-2) 70%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--legal-primary-2) 12%, transparent);
+}
+
+.metaText {
+  opacity: 0.9;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px 22px 26px;
+}
+
+.title {
+  margin-bottom: 8px;
+}
+
+.subTitle {
+  margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    height: auto;
+    min-height: 72vh;
+    border-radius: 14px;
+  }
+
+  .body {
+    padding: 14px 16px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg {
+    filter: none;
+  }
+  .header {
+    backdrop-filter: none;
+  }
+}

@@ -1,57 +1,289 @@
-.signinBg {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.root {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--signin-bg);
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 60% at 15% 15%, color-mix(in srgb, var(--signin-primary) 22%, transparent), transparent 65%),
+    radial-gradient(60% 60% at 85% 20%, color-mix(in srgb, var(--signin-primary-2) 18%, transparent), transparent 60%),
+    radial-gradient(70% 70% at 55% 90%, color-mix(in srgb, var(--signin-primary) 14%, transparent), transparent 60%);
+  filter: saturate(1.1);
+  opacity: 0.95;
+}
+
+.bg::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background:
+    linear-gradient(
+      120deg,
+      color-mix(in srgb, var(--signin-primary) 18%, transparent),
+      transparent 40%,
+      color-mix(in srgb, var(--signin-primary-2) 16%, transparent)
+    );
+  animation: flow 10s linear infinite;
+  opacity: 0.8;
+}
+
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, color-mix(in srgb, var(--signin-text) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--signin-text) 6%, transparent) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at 30% 20%, #000 0%, transparent 70%);
+  opacity: 0.45;
+}
+
+.grid {
+  position: relative;
+  z-index: 1;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: 1fr minmax(360px, 440px);
+  gap: 24px;
   align-items: center;
-  justify-content: center;
-}
-
-.signinCard {
   width: 100%;
-  max-width: 450px;
-  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
-  border-radius: 12px;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
-.titleBox {
-  text-align: center;
-  margin-bottom: 32px;
+.hero {
+  position: relative;
+  padding: 24px;
 }
 
-.title {
-  margin-bottom: 8px;
+.heroInner {
+  position: relative;
+  padding: 28px;
+  border: 1px solid color-mix(in srgb, var(--signin-border) 70%, transparent);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--signin-panel) 72%, transparent),
+      color-mix(in srgb, var(--signin-panel-2) 80%, transparent)
+    );
+  box-shadow: var(--signin-shadow);
+  overflow: hidden;
 }
 
-.accountCard {
-  margin-bottom: 24px;
+.heroInner::before {
+  content: '';
+  position: absolute;
+  left: -30%;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--signin-primary) 18%, transparent),
+    transparent
+  );
+  transform: skewX(-18deg);
+  animation: scan 6s ease-in-out infinite;
+  opacity: 0.9;
 }
 
-.accountTitle {
-  margin: 0;
-  margin-bottom: 12px;
+.badgeRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
 }
 
-.accountBtn {
-  text-align: left;
-  height: auto;
-  padding: 8px 12px;
+.heroTitle {
+  margin: 0 0 12px 0 !important;
+  color: var(--signin-text) !important;
+  letter-spacing: 0.2px;
 }
 
-.accountText {
+.heroDesc {
+  margin: 0 0 18px 0 !important;
+  color: var(--signin-text-2) !important;
+}
+
+.heroPills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--signin-border) 65%, transparent);
+  background: color-mix(in srgb, var(--signin-panel) 60%, transparent);
+  color: var(--signin-text);
   font-size: 12px;
 }
 
-.orBox {
-  text-align: center;
-  margin-top: 16px;
+.panel {
+  display: flex;
+  justify-content: center;
 }
 
-.registerBox {
-  text-align: center;
-  margin-top: 24px;
+.card {
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: var(--signin-shadow);
+  border: 1px solid color-mix(in srgb, var(--signin-border) 65%, transparent);
+  background: var(--signin-panel);
+}
+
+.titleBox {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin-bottom: 6px !important;
+}
+
+.quickBox {
+  border: 1px solid color-mix(in srgb, var(--signin-border) 65%, transparent);
+  border-radius: 12px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--signin-panel-2) 70%, transparent);
+  margin-bottom: 16px;
+}
+
+.quickHeader {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.quickList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quickItem {
+  width: 100%;
+  border: 1px solid color-mix(in srgb, var(--signin-border) 55%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--signin-panel) 85%, transparent);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+
+.quickItem:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--signin-primary) 40%, var(--signin-border));
+}
+
+.quickLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.quickTag {
+  display: inline-flex;
+  width: fit-content;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--signin-primary) 12%, transparent);
+  color: var(--signin-text);
+  font-size: 12px;
+  border: 1px solid color-mix(in srgb, var(--signin-primary) 25%, transparent);
+}
+
+.quickMeta {
+  color: var(--signin-text-2);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.quickPwd {
+  color: var(--signin-text-2);
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+}
+
+.footerRow {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .registerBtn {
   padding: 0;
   font-weight: 500;
+}
+
+@media (max-width: 767px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+}
+
+@keyframes flow {
+  0% {
+    transform: translate3d(-6%, -2%, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(6%, 2%, 0) rotate(10deg);
+  }
+  100% {
+    transform: translate3d(-6%, -2%, 0) rotate(0deg);
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-10%) skewX(-18deg);
+    opacity: 0.0;
+  }
+  20% {
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateX(140%) skewX(-18deg);
+    opacity: 0.25;
+  }
+  100% {
+    transform: translateX(140%) skewX(-18deg);
+    opacity: 0.0;
+  }
 }
