@@ -1,5 +1,5 @@
-import React from 'react'
-import { Card, Button, Space, Tag, message, Divider, Row, Col, Grid, Switch, Select } from 'antd'
+import React, { useState, useEffect } from 'react'
+import { Card, Button, Space, Tag, message, Divider, Row, Col, Grid, Switch, Select, Alert } from 'antd'
 import { usePermission } from '@app-hooks/usePermission'
 import PermissionGuard from '@/components/auth/PermissionGuard'
 import AuthButton from '@/components/auth/AuthButton'
@@ -24,10 +24,32 @@ const PermissionExample = () => {
 
   // 角色切换（开发测试用）
   const switchRole = async (roleCode: string) => {
+    // 如果已登录且未强制启用示例切换，则阻止切换，以免与真实登录权限冲突
+    const token =
+      localStorage.getItem('token') || localStorage.getItem('github_token') || localStorage.getItem('github_user')
+    const force = localStorage.getItem('force_demo_switch') === '1'
+    if (token && !force) {
+      message.warning('当前为已登录状态，示例内角色切换已被禁用。如需测试切换，请先登出或在本页面启用开发强制开关。')
+      return
+    }
+
     localStorage.setItem('user_role', roleCode)
     await permissionService.syncPermissions()
     await refreshPermissions()
     message.success(`已切换到 ${roleCode} 角色`)
+  }
+
+  // 本地控制：开发时可强制启用示例切换（仅页面级别）
+  const [forceDemoSwitch, setForceDemoSwitch] = useState<boolean>(false)
+  useEffect(() => {
+    setForceDemoSwitch(localStorage.getItem('force_demo_switch') === '1')
+  }, [])
+
+  const toggleForceDemoSwitch = (checked: boolean) => {
+    setForceDemoSwitch(checked)
+    if (checked) localStorage.setItem('force_demo_switch', '1')
+    else localStorage.removeItem('force_demo_switch')
+    message.info(`开发强制切换已${checked ? '启用' : '禁用'}`)
   }
 
   // 主题设置切换
@@ -92,6 +114,32 @@ const PermissionExample = () => {
         </Row>
 
         <Divider />
+
+        {/* 登录时提示：已使用登录账户权限，示例切换已禁用 */}
+        {(localStorage.getItem('token') ||
+          localStorage.getItem('github_token') ||
+          localStorage.getItem('github_user')) &&
+          !forceDemoSwitch && (
+            <Alert
+              title="已使用登录账户权限，示例切换已禁用"
+              description={
+                <div>
+                  如需临时启用示例切换（仅用于开发），可在下方启用“开发强制开关”。启用后示例切换会覆盖当前页面权限视图，但不会修改后端用户数据。
+                </div>
+              }
+              type="warning"
+              showIcon
+              style={{ marginBottom: 16 }}
+            />
+          )}
+
+        {/* 开发强制开关，仅在非生产或 localhost 显示 */}
+        {(process.env.NODE_ENV !== 'production' || window.location.hostname.includes('localhost')) && (
+          <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Switch checked={forceDemoSwitch} onChange={toggleForceDemoSwitch} />
+            <span style={{ color: 'rgba(0,0,0,0.65)' }}>开发：强制启用示例切换（仅页面级别）</span>
+          </div>
+        )}
 
         {/* 权限说明 */}
         <Card title="权限说明" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
@@ -193,10 +241,18 @@ const PermissionExample = () => {
                       </Tag>
                     )}
                   </div>
+                  {/* 如果当前为已登录状态，禁用示例内切换按钮以避免覆盖真实用户权限 */}
                   <Button
                     type={roles.includes(role.code) ? 'primary' : 'default'}
                     onClick={() => switchRole(role.code)}
                     size={screens.xs ? 'small' : 'middle'}
+                    disabled={
+                      !!(
+                        localStorage.getItem('token') ||
+                        localStorage.getItem('github_token') ||
+                        localStorage.getItem('github_user')
+                      )
+                    }
                   >
                     切换
                   </Button>
