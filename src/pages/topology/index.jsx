@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { ReactFlow, MiniMap, Controls, Background, useNodesState, useEdgesState, addEdge } from '@xyflow/react'
+import { useActivate } from '@/components/KeepAlive'
 
 import '@xyflow/react/dist/style.css'
 
@@ -160,6 +161,10 @@ function Flow() {
   const [nodes, , onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
+  const containerRef = useRef(null)
+  const reactFlowInstanceRef = useRef(null)
+  const resizeTimerRef = useRef(null)
+
   const safeNodes = Array.isArray(nodes) ? nodes.filter((n) => n && typeof n === 'object' && n.id) : []
 
   const safeEdges = Array.isArray(edges)
@@ -168,20 +173,72 @@ function Flow() {
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges])
 
+  const refreshFlowViewport = useCallback(() => {
+    const instance = reactFlowInstanceRef.current
+    if (!instance) return
+
+    // KeepAlive 恢复时容器尺寸可能在下一帧才稳定，做一次“下一帧 + 轻微延迟”的 fitView。
+    requestAnimationFrame(() => {
+      if (typeof instance.fitView === 'function') {
+        instance.fitView({ padding: 0.2, duration: 0 })
+      }
+    })
+
+    setTimeout(() => {
+      if (typeof instance.fitView === 'function') {
+        instance.fitView({ padding: 0.2, duration: 0 })
+      }
+    }, 120)
+  }, [])
+
+  useActivate(() => {
+    refreshFlowViewport()
+  })
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    if (typeof ResizeObserver === 'undefined') return
+
+    const ro = new ResizeObserver(() => {
+      // 轻微防抖：避免布局抖动时反复 fitView
+      if (resizeTimerRef.current) {
+        clearTimeout(resizeTimerRef.current)
+      }
+      resizeTimerRef.current = setTimeout(() => {
+        refreshFlowViewport()
+      }, 60)
+    })
+
+    ro.observe(el)
+    return () => {
+      ro.disconnect()
+      if (resizeTimerRef.current) {
+        clearTimeout(resizeTimerRef.current)
+        resizeTimerRef.current = null
+      }
+    }
+  }, [refreshFlowViewport])
+
   return (
     <FixTabPanel fill={true}>
-      <ReactFlow
-        nodes={safeNodes}
-        edges={safeEdges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        fitView
-      >
-        <MiniMap />
-        <Controls />
-        <Background variant="dots" gap={12} size={1} />
-      </ReactFlow>
+      <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
+        <ReactFlow
+          nodes={safeNodes}
+          edges={safeEdges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onInit={(instance) => {
+            reactFlowInstanceRef.current = instance
+          }}
+          fitView
+        >
+          <MiniMap />
+          <Controls />
+          <Background variant="dots" gap={12} size={1} />
+        </ReactFlow>
+      </div>
     </FixTabPanel>
   )
 }

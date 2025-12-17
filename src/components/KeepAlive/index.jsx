@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, createContext, useContext, useLayoutEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import PropTypes from 'prop-types'
 
 // React 19.2+ 提供 Activity API；若存在则使用，用于更精确的激活/失活检测
-const ActivityComponent = React && React.Activity ? React.Activity : null
+const ActivityComponent = React?.Activity ?? null
 
 const KeepAliveContext = createContext(false)
 
@@ -68,6 +69,18 @@ const createKeepAliveManager = () => {
   let deactivateDelay = 3000 // ms to wait before hiding an inactive instance
   let keepInactiveCount = 1 // how many most-recent inactive instances to keep rendered
 
+  const safeInvoke = (fn, label) => {
+    try {
+      fn()
+    } catch (err) {
+      // 仅在开发环境输出，避免生产环境噪音；同时满足 Sonar 对异常处理的要求
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.warn(`[KeepAlive] ${label} failed`, err)
+      }
+    }
+  }
+
   return {
     setLimit: (n) => {
       limit = n
@@ -109,22 +122,14 @@ const createKeepAliveManager = () => {
         const idToDrop = keys.shift()
         const instance = instances.get(idToDrop)
         if (instance && !instance.persistOnUnmount) {
-          try {
-            instance.setShouldRender(false)
-          } catch (e) {
-            /* ignore */
-          }
+          safeInvoke(() => instance.setShouldRender(false), `setShouldRender(false) for ${idToDrop}`)
         }
       }
 
       // Ensure current is rendered
       const current = instances.get(id)
       if (current) {
-        try {
-          current.setShouldRender(true)
-        } catch (e) {
-          /* ignore */
-        }
+        safeInvoke(() => current.setShouldRender(true), `setShouldRender(true) for ${id}`)
       }
     },
     // advanced deactivate behavior: schedule hide with delay and preserve N most-recent inactive
@@ -164,11 +169,9 @@ const createKeepAliveManager = () => {
         const preserved = inactiveRendered.slice(-keepInactiveCount)
 
         if (!preserved.includes(id)) {
-          try {
-            const inst = instances.get(id)
-            if (inst) inst.setShouldRender(false)
-          } catch (e) {
-            /* ignore */
+          const inst = instances.get(id)
+          if (inst) {
+            safeInvoke(() => inst.setShouldRender(false), `setShouldRender(false) for ${id}`)
           }
         }
 
@@ -181,9 +184,7 @@ const createKeepAliveManager = () => {
     forceDrop: (id) => {
       const instance = instances.get(id)
       if (instance) {
-        try {
-          instance.setShouldRender(false)
-        } catch (e) {}
+        safeInvoke(() => instance.setShouldRender(false), `forceDrop setShouldRender(false) for ${id}`)
       }
       if (timeouts.has(id)) {
         clearTimeout(timeouts.get(id))
@@ -214,8 +215,10 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
   const placeholderRef = useRef(null)
   const containerRef = useRef(null)
   const [shouldRender, setShouldRender] = useState(true)
-  const [activeState, setActiveState] = useState(!!active)
   const scrollPos = useRef(new Map())
+
+  // Activity 模式下需要一个受控的可见性开关（用于延迟隐藏，给副作用留出执行时间）
+  const [isActivityVisible, setIsActivityVisible] = useState(active)
 
   // Update global limit if provided
   useEffect(() => {
@@ -240,16 +243,30 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     }
   }, [id, persistOnUnmount])
 
-  // Notify manager on active
+  // Notify manager on active; Activity 模式下同步 deactivate（非 Activity 维持原有行为，不触发 deactivate）
   useEffect(() => {
-    if (active && id) {
+    if (!id) return
+    if (active) {
       keepAliveManager.activate(id)
+      return
+    }
+    if (ActivityComponent) {
+      keepAliveManager.deactivate(id)
     }
   }, [active, id])
 
-  // keep internal activeState in sync with parent prop when provided
   useEffect(() => {
-    setActiveState(!!active)
+    if (!ActivityComponent) return
+    if (active) {
+      setIsActivityVisible(true)
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setIsActivityVisible(false)
+    }, 16)
+
+    return () => clearTimeout(timer)
   }, [active])
 
   // Initialize container once
@@ -310,9 +327,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     return () => {
       // Cleanup on unmount
       if (!persistOnUnmount) {
-        if (container && container.parentNode) {
-          container.parentNode.removeChild(container)
-        }
+        container?.parentNode?.removeChild(container)
       } else {
         // 只有在组件真正卸载且需要持久化时，才移动到隐藏容器
         const hidden = ensureHiddenContainer()
@@ -379,36 +394,9 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     }
   }, [active, shouldRender])
 
-  // If Activity API is available, leverage it to control activation lifecycle
+  if (!shouldRender) return null
+
   if (ActivityComponent) {
-    // Sync manager state
-    useEffect(() => {
-      if (active && id) {
-        keepAliveManager.activate(id)
-      } else if (!active && id) {
-        keepAliveManager.deactivate(id)
-      }
-    }, [active, id])
-
-    // 增加一个状态来控制 Activity 的 mode，以便延迟隐藏
-    // 这确保了子组件的 useUnactivate (依赖 active 变化) 有机会在组件被冻结前执行
-    const [isActivityVisible, setIsActivityVisible] = useState(active)
-
-    useEffect(() => {
-      if (active) {
-        setIsActivityVisible(true)
-      } else {
-        // 延迟设置为 hidden，给子组件的 useUnactivate 留出执行时间
-        // 16ms 大约是一帧的时间，足够 React 处理副作用
-        const timer = setTimeout(() => {
-          setIsActivityVisible(false)
-        }, 16)
-        return () => clearTimeout(timer)
-      }
-    }, [active])
-
-    if (!shouldRender) return null
-
     return (
       <KeepAliveContext.Provider value={active}>
         <ActivityComponent mode={isActivityVisible ? 'visible' : 'hidden'}>
@@ -419,14 +407,20 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     )
   }
 
-  if (!shouldRender) return null
-
   return (
     <KeepAliveContext.Provider value={active}>
       <div ref={placeholderRef} style={{ width: '100%', height: '100%' }} />
       {containerRef.current && createPortal(children, containerRef.current)}
     </KeepAliveContext.Provider>
   )
+}
+
+KeepAlive.propTypes = {
+  id: PropTypes.string,
+  active: PropTypes.bool,
+  children: PropTypes.node,
+  persistOnUnmount: PropTypes.bool,
+  cacheLimit: PropTypes.number,
 }
 
 export default KeepAlive

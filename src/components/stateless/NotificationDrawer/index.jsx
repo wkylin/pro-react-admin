@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Badge, Button, Space, Typography, theme, Drawer, Grid } from 'antd'
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
+import PropTypes from 'prop-types'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 const { useBreakpoint } = Grid
 const initialNotifications = [
@@ -27,10 +28,27 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
   const [notifications, setNotifications] = useState(initialNotifications)
   const unreadCount = notifications.filter((n) => !n.read).length
   const { redirectTo } = useSafeNavigate()
-  // 最大在 Drawer 中显示的通知数量（防止列表过长影响性能/体验）
   const MAX_ITEMS = 50
   const screens = useBreakpoint()
   const isMobile = !screens.md
+
+  const [popVisible, setPopVisible] = useState(false)
+
+  const safeNavigate = (path) => {
+    setPopVisible(false)
+    setTimeout(() => {
+      redirectTo(path)
+    }, 10)
+  }
+
+  const markNotificationRead = (id) => {
+    setNotifications((list) => list.map((n) => (n.id === id ? { ...n, read: true } : n)))
+  }
+
+  const handleNotificationOpen = (id) => {
+    markNotificationRead(id)
+    safeNavigate(`/notification/${id}`)
+  }
 
   const markAllRead = () => {
     setNotifications((list) => list.map((n) => ({ ...n, read: true })))
@@ -40,7 +58,7 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
   }
 
   const {
-    token: { colorBgContainer, colorBorder, colorText },
+    token: { colorBgContainer, colorBorder, colorText, colorTextSecondary, colorTextTertiary },
   } = theme.useToken()
 
   // content structure: header (optional) / list (scrollable) / footer (fixed)
@@ -56,24 +74,13 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
     >
       <div style={{ flex: 1, overflowY: 'auto', padding: 12 }}>
         {notifications.length === 0 ? (
-          <div style={{ color: '#999', textAlign: 'center', padding: '32px 0' }}>暂无通知</div>
+          <div style={{ color: colorTextTertiary, textAlign: 'center', padding: '32px 0' }}>暂无通知</div>
         ) : (
           notifications.slice(0, MAX_ITEMS).map((item) => (
-            <div
+            <button
               key={item.id}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  setNotifications((list) => list.map((n) => (n.id === item.id ? { ...n, read: true } : n)))
-                  safeNavigate(`/notification/${item.id}`)
-                }
-              }}
-              onClick={() => {
-                setNotifications((list) => list.map((n) => (n.id === item.id ? { ...n, read: true } : n)))
-                safeNavigate(`/notification/${item.id}`)
-              }}
+              type="button"
+              onClick={() => handleNotificationOpen(item.id)}
               style={{
                 opacity: item.read ? 0.6 : 1,
                 padding: '8px 0',
@@ -82,17 +89,23 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
                 flexDirection: 'column',
                 gap: 4,
                 cursor: 'pointer',
+                width: '100%',
+                textAlign: 'left',
+                background: 'transparent',
+                borderTop: 'none',
+                borderLeft: 'none',
+                borderRight: 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                {!item.read && <Badge status="processing" />}
+                {!item.read ? <Badge status="processing" /> : <Badge status="default" />}
                 <Typography.Text strong>{item.title}</Typography.Text>
               </div>
-              <div style={{ fontSize: 13, color: '#666', marginTop: 6 }}>
-                {item.description}
-                <span style={{ color: '#999', marginLeft: 8, fontSize: 12 }}>{item.time}</span>
+              <div style={{ fontSize: 13, color: colorTextSecondary, marginTop: 6 }}>{item.description}</div>
+              <div style={{ fontSize: 12, color: colorTextTertiary, marginTop: 4, textAlign: 'right' }}>
+                {item.time}
               </div>
-            </div>
+            </button>
           ))
         )}
       </div>
@@ -119,15 +132,6 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
       </div>
     </div>
   )
-
-  const [popVisible, setPopVisible] = useState(false)
-
-  const safeNavigate = (path) => {
-    setPopVisible(false)
-    setTimeout(() => {
-      redirectTo(path)
-    }, 10)
-  }
 
   const openDrawer = () => setPopVisible(true)
 
@@ -156,10 +160,24 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
         {isMobile ? '通知' : null}
       </Button>
     ) : (
-      <span onClick={openDrawer} style={{ cursor: 'pointer', color: iconColor }}>
+      <button
+        type="button"
+        onClick={openDrawer}
+        aria-haspopup="dialog"
+        aria-expanded={popVisible}
+        style={{
+          cursor: 'pointer',
+          color: iconColor,
+          background: 'transparent',
+          border: 'none',
+          padding: 0,
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      >
         {iconNode}
         {isMobile && <span style={{ marginLeft: 4 }}>通知</span>}
-      </span>
+      </button>
     )
 
   return (
@@ -177,6 +195,13 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
       </Drawer>
     </>
   )
+}
+
+NotificationDropdown.propTypes = {
+  iconColor: PropTypes.string,
+  variant: PropTypes.oneOf(['inline', 'button']),
+  buttonStyle: PropTypes.object,
+  ghost: PropTypes.bool,
 }
 
 export default NotificationDropdown

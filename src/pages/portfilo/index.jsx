@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import {
   theme,
@@ -15,14 +16,12 @@ import {
   Divider,
   Tooltip,
   Grid,
-  Drawer,
   FloatButton,
 } from 'antd'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import {
   GithubOutlined,
   MailOutlined,
-  LinkedinOutlined,
   RocketOutlined,
   CodeOutlined,
   ProjectOutlined,
@@ -52,6 +51,12 @@ const Section = ({ id, children, className = '' }) => {
   )
 }
 
+Section.propTypes = {
+  id: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+}
+
 const AnimatedCard = ({ children, delay = 0 }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -64,9 +69,14 @@ const AnimatedCard = ({ children, delay = 0 }) => (
   </motion.div>
 )
 
+AnimatedCard.propTypes = {
+  children: PropTypes.node.isRequired,
+  delay: PropTypes.number,
+}
+
 const MyPortfilo = () => {
   const navigate = useNavigate()
-  const { token } = useToken()
+  const { token, theme: antdTheme } = useToken()
   const screens = useBreakpoint()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const { scrollYProgress } = useScroll()
@@ -168,7 +178,7 @@ const MyPortfilo = () => {
         overflowY: 'auto',
         scrollBehavior: 'smooth',
         backgroundImage:
-          theme.useToken().theme.id === 1 // Dark mode check approximation or use token
+          antdTheme.id === 1 // Dark mode check approximation or use token
             ? `radial-gradient(circle at 50% 50%, ${token.colorPrimaryBg} 0%, transparent 50%), radial-gradient(circle at 0% 0%, ${token.colorFill} 0%, transparent 30%), radial-gradient(circle at 100% 100%, ${token.colorFill} 0%, transparent 30%)`
             : `radial-gradient(circle at 50% 50%, ${token.colorPrimaryBg} 0%, transparent 60%), radial-gradient(circle at 100% 0%, ${token.colorFill} 0%, transparent 40%)`,
         backgroundAttachment: 'fixed',
@@ -262,7 +272,7 @@ const MyPortfilo = () => {
           zIndex: 100,
         }}
       >
-        <Tooltip title="Return to Dashboard">
+        <Tooltip title="Back to Home">
           <Button
             shape="circle"
             size="large"
@@ -284,31 +294,45 @@ const MyPortfilo = () => {
 
       {/* Navigation */}
       {!screens.md ? (
-        <>
+        <FloatButton.Group
+          trigger="click"
+          type="primary"
+          icon={<MenuOutlined />}
+          open={mobileMenuOpen}
+          onOpenChange={(open) => setMobileMenuOpen(open)}
+          style={{ right: 24, bottom: 24 }}
+        >
           <FloatButton
-            icon={<MenuOutlined />}
-            type="primary"
-            onClick={() => setMobileMenuOpen(true)}
-            style={{ right: 24, bottom: 24 }}
+            icon={<RocketOutlined />}
+            tooltip="Home"
+            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#home' })}
           />
-          <Drawer
-            title="Navigation"
-            placement="right"
-            onClose={() => setMobileMenuOpen(false)}
-            open={mobileMenuOpen}
-            size={200}
-            styles={{ body: { padding: 0 } }}
-          >
-            <Anchor
-              targetOffset={targetOffset}
-              getContainer={() => document.getElementById('portfolio-container')}
-              direction="vertical"
-              onClick={handleAnchorClick}
-              items={navItems}
-              style={{ padding: 20 }}
-            />
-          </Drawer>
-        </>
+          <FloatButton
+            icon={<UserOutlined />}
+            tooltip="About"
+            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#about' })}
+          />
+          <FloatButton
+            icon={<ToolOutlined />}
+            tooltip="Skills"
+            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#skills' })}
+          />
+          <FloatButton
+            icon={<ProjectOutlined />}
+            tooltip="Work"
+            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#projects' })}
+          />
+          <FloatButton
+            icon={<CheckCircleOutlined />}
+            tooltip="Exp"
+            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#experience' })}
+          />
+          <FloatButton
+            icon={<MailOutlined />}
+            tooltip="Contact"
+            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#contact' })}
+          />
+        </FloatButton.Group>
       ) : (
         <div
           style={{
@@ -407,7 +431,7 @@ const MyPortfilo = () => {
                   { title: 'Problem Solver', icon: <ToolOutlined /> },
                   { title: 'Detail Oriented', icon: <CheckCircleOutlined /> },
                 ].map((item, index) => (
-                  <Col span={12} key={index}>
+                  <Col span={12} key={item.title}>
                     <AnimatedCard delay={index * 0.1}>
                       <Card
                         variant="borderless"
@@ -497,7 +521,7 @@ const MyPortfilo = () => {
           </Divider>
           <Row gutter={[24, 24]}>
             {projects.map((project, index) => (
-              <Col xs={24} md={8} key={index}>
+              <Col xs={24} md={8} key={project.title}>
                 <AnimatedCard delay={index * 0.2}>
                   <Card
                     hoverable

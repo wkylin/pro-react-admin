@@ -9,7 +9,6 @@ import ProSider from './proSider'
 import ProContent from './proContent'
 import ProSecNav from './proSecNav'
 import styles from './index.module.less'
-import { constant } from 'lodash'
 import { useProThemeContext } from '@theme/hooks'
 
 const { useBreakpoint } = Grid
@@ -30,15 +29,17 @@ const ProLayout = () => {
 
   return (
     <Layout className={styles.layout} ref={layoutRef}>
-      <PointerMove />
-      <MagicTrail
-        containerRef={layoutRef}
-        colors={['#f59e0b', '#ec4899', '#8b5cf6', '#38bdf8', '#4ade80']}
-        trailLength={35}
-        particleCount={75}
-        decay={0.03}
-        smoothing={0.65}
-      />
+      {themeSettings.pointerMove ? <PointerMove /> : null}
+      {themeSettings.magicTrail ? (
+        <MagicTrail
+          containerRef={layoutRef}
+          colors={['#f59e0b', '#ec4899', '#8b5cf6', '#38bdf8', '#4ade80']}
+          trailLength={35}
+          particleCount={75}
+          decay={0.03}
+          smoothing={0.65}
+        />
+      ) : null}
       <ProTabProvider>
         <ProHeader
           layout={layout}

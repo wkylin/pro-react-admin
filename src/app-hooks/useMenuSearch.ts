@@ -17,7 +17,7 @@ export interface MenuItem {
 // 递归扁平化菜单，并为每项生成拼音
 function flattenMenu(menu: MenuItem[], parentKeys: string[] = []): MenuItem[] {
   return menu.flatMap((item) => {
-    const pinyinLabel = pinyin(item.label, { toneType: 'none', type: 'array' }).join(' ')
+    const pinyinLabel = pinyin(item.label, { toneType: 'none', type: 'array' }).join(' ').toLowerCase()
     const flatItem = {
       ...item,
       parentKeys,
@@ -35,6 +35,8 @@ function flattenMenu(menu: MenuItem[], parentKeys: string[] = []): MenuItem[] {
 const menuList = flattenMenu(mainLayoutMenu)
 
 const fuse = new Fuse(menuList, {
+  // Ensure English (and pinyin strings) match case-insensitively.
+  isCaseSensitive: false,
   keys: [
     { name: 'label', weight: 0.7 },
     { name: 'pinyin', weight: 0.6 },
