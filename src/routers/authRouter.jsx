@@ -43,7 +43,7 @@ const AuthRouter = (props) => {
         const pattern = candidate.startsWith('/') ? candidate : `/${candidate}`
         return Boolean(
           matchPath({ path: pattern, end: true }, normalized) ||
-          matchPath({ path: pattern.endsWith('/*') ? pattern : `${pattern}/*`, end: false }, normalized)
+            matchPath({ path: pattern.endsWith('/*') ? pattern : `${pattern}/*`, end: false }, normalized)
         )
       })
     }
@@ -197,7 +197,7 @@ const AuthRouter = (props) => {
       return (
         <>
           {contextHolder}
-          <Navigate to="/signin" replace />
+          <Navigate to='/signin' replace />
         </>
       )
     }
@@ -216,7 +216,7 @@ const AuthRouter = (props) => {
 
 AuthRouter.propTypes = {
   route: PropTypes.object,
-  children: PropTypes.node,
+  children: PropTypes.node
 }
 
 export default AuthRouter

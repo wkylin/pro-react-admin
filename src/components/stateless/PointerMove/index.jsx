@@ -46,7 +46,7 @@ const PointerMove = () => {
       className={styles.star}
       animate={{ x: coordinates?.x ?? 0, y: coordinates?.y ?? 0, opacity: 1 }}
       transition={{
-        type: 'spring',
+        type: 'spring'
       }}
     />
   )

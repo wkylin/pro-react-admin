@@ -19,7 +19,7 @@ import {
   Switch,
   Tag,
   Spin,
-  theme,
+  theme
 } from 'antd'
 import {
   DownloadOutlined,
@@ -35,7 +35,7 @@ import {
   CodeOutlined,
   TableOutlined,
   PartitionOutlined,
-  NodeIndexOutlined,
+  NodeIndexOutlined
 } from '@ant-design/icons'
 import { copyTextToClipboard } from '@utils/aidFn'
 import initSSE from './fixSse'
@@ -120,14 +120,14 @@ const runMermaidBlocks = async ({ blocks, setCharts, setProgress, signal }) => {
   let idx = 0
   let finished = 0
 
-  function onSettled() {
+  function onSettled () {
     active -= 1
     finished += 1
     if (!signal.aborted) setProgress({ total, finished })
     pump()
   }
 
-  function pump() {
+  function pump () {
     if (signal.aborted) return
     while (!signal.aborted && active < concurrency && idx < total) {
       const i = idx
@@ -155,7 +155,7 @@ const hexToRgb = (hex) => {
     return {
       r: clamp(Number(rgbMatch[1]), 0, 255),
       g: clamp(Number(rgbMatch[2]), 0, 255),
-      b: clamp(Number(rgbMatch[3]), 0, 255),
+      b: clamp(Number(rgbMatch[3]), 0, 255)
     }
   }
 
@@ -165,9 +165,9 @@ const hexToRgb = (hex) => {
   const full =
     h.length === 3
       ? h
-          .split('')
-          .map((c) => c + c)
-          .join('')
+        .split('')
+        .map((c) => c + c)
+        .join('')
       : h
   const n = Number.parseInt(full, 16)
   if (Number.isNaN(n)) return null
@@ -218,7 +218,7 @@ const CustomComponents = {
           borderCollapse: 'collapse',
           border: '1px solid #d9d9d9',
           borderRadius: '6px',
-          overflow: 'hidden',
+          overflow: 'hidden'
         }}
       >
         {children}
@@ -231,7 +231,7 @@ const CustomComponents = {
       {...props}
       style={{
         backgroundColor: '#fafafa',
-        borderBottom: '2px solid #d9d9d9',
+        borderBottom: '2px solid #d9d9d9'
       }}
     >
       {children}
@@ -247,7 +247,7 @@ const CustomComponents = {
         fontWeight: 600,
         color: '#262626',
         borderRight: '1px solid #d9d9d9',
-        whiteSpace: 'normal',
+        whiteSpace: 'normal'
       }}
     >
       {children}
@@ -263,12 +263,12 @@ const CustomComponents = {
         borderRight: '1px solid #f0f0f0',
         verticalAlign: 'top',
         whiteSpace: 'normal',
-        wordBreak: 'break-word',
+        wordBreak: 'break-word'
       }}
     >
       {children}
     </td>
-  ),
+  )
 }
 
 const syncMermaidThemeFromToken = async (token, mode) => {
@@ -287,14 +287,14 @@ const syncMermaidThemeFromToken = async (token, mode) => {
         lineColor: token.colorPrimary,
         secondaryColor: isDark ? '#141414' : token.colorBgLayout,
         tertiaryColor: isDark ? '#0f0f0f' : token.colorFillQuaternary || token.colorBgLayout,
-        fontFamily: token.fontFamily,
+        fontFamily: token.fontFamily
       },
       flowchart: {
         useMaxWidth: true,
         htmlLabels: true,
-        curve: 'basis',
+        curve: 'basis'
       },
-      securityLevel: 'loose',
+      securityLevel: 'loose'
     })
   } catch (e) {
     console.warn('Mermaid 初始化失败:', e)
@@ -460,7 +460,7 @@ const PROJECT_TEMPLATES = {
 3. 包含至少 6 个代码块示例
 4. 包含至少 5 个数学公式
 5. 内容详实，符合大型企业级项目标准
-6. 所有图表都要有实际意义，不是占位符`,
+6. 所有图表都要有实际意义，不是占位符`
   },
   fintech: {
     title: '金融风控平台',
@@ -569,7 +569,7 @@ const PROJECT_TEMPLATES = {
 3. 包含至少 8 个代码块示例
 4. 包含至少 6 个数学公式
 5. 符合金融行业标准和监管要求
-6. 所有图表都要有实际业务意义`,
+6. 所有图表都要有实际业务意义`
   },
   smartCity: {
     title: '智慧城市运营中心',
@@ -691,8 +691,8 @@ const PROJECT_TEMPLATES = {
 3. 包含至少 10 个代码块示例
 4. 包含至少 6 个数学公式
 5. 符合智慧城市建设标准和规范
-6. 所有图表都要有实际应用场景`,
-  },
+6. 所有图表都要有实际应用场景`
+  }
 }
 
 // 修复后的 MermaidRenderer - 只在文档完成时渲染一次
@@ -775,7 +775,7 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
       startX: e.clientX,
       startY: e.clientY,
       baseX: translate.x,
-      baseY: translate.y,
+      baseY: translate.y
     }
     try {
       e.currentTarget.setPointerCapture(e.pointerId)
@@ -815,7 +815,7 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
       const dataUrl = await toPng(wrapRef.current, {
         cacheBust: true,
         backgroundColor: isDarkMode ? '#1e1e1e' : token.colorBgContainer,
-        pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
+        pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2))
       })
       const link = document.createElement('a')
       link.download = `${title || 'mermaid'}.png`
@@ -837,34 +837,34 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
         '--mm-text': isDarkMode ? 'rgba(255, 255, 255, 0.88)' : token.colorText,
         '--mm-text2': isDarkMode ? 'rgba(255, 255, 255, 0.65)' : token.colorTextSecondary,
         '--mm-shadow': isDarkMode ? 'none' : token.boxShadowSecondary,
-        '--mm-primary': token.colorPrimary,
+        '--mm-primary': token.colorPrimary
       }}
     >
       <div className={styles.mermaidHeader}>
         <div className={styles.mermaidTitle}>{title}</div>
         <div className={styles.mermaidTools}>
-          <Tooltip title="缩小">
-            <Button size="small" onClick={() => zoomBy(-0.15)}>
+          <Tooltip title='缩小'>
+            <Button size='small' onClick={() => zoomBy(-0.15)}>
               -
             </Button>
           </Tooltip>
-          <Tooltip title="放大">
-            <Button size="small" onClick={() => zoomBy(0.15)}>
+          <Tooltip title='放大'>
+            <Button size='small' onClick={() => zoomBy(0.15)}>
               +
             </Button>
           </Tooltip>
-          <Tooltip title="适配画布">
-            <Button size="small" onClick={fit}>
+          <Tooltip title='适配画布'>
+            <Button size='small' onClick={fit}>
               适配
             </Button>
           </Tooltip>
-          <Tooltip title="重置">
-            <Button size="small" onClick={reset}>
+          <Tooltip title='重置'>
+            <Button size='small' onClick={reset}>
               重置
             </Button>
           </Tooltip>
-          <Tooltip title="导出 PNG">
-            <Button size="small" icon={<DownloadOutlined />} onClick={exportPng} />
+          <Tooltip title='导出 PNG'>
+            <Button size='small' icon={<DownloadOutlined />} onClick={exportPng} />
           </Tooltip>
         </div>
       </div>
@@ -880,7 +880,7 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
         <div
           className={styles.mermaidCanvas}
           style={{
-            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
+            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`
           }}
         >
           <div ref={canvasRef} dangerouslySetInnerHTML={{ __html: svg }} />
@@ -893,7 +893,7 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
 MermaidChartViewer.propTypes = {
   svg: PropTypes.string,
   title: PropTypes.string,
-  themeMode: PropTypes.string,
+  themeMode: PropTypes.string
 }
 
 // NOSONAR
@@ -944,48 +944,52 @@ const MermaidRenderer = ({ content, readyState, themeMode }) => {
         '--mm-bg': isDarkMode ? '#141414' : token.colorBgContainer,
         '--mm-bg2': isDarkMode ? '#0f0f0f' : token.colorBgLayout,
         '--mm-shadow': isDarkMode ? 'none' : token.boxShadowSecondary,
-        '--mm-primary': token.colorPrimary,
+        '--mm-primary': token.colorPrimary
       }}
     >
-      {total > 0 ? (
-        <div className={styles.mermaidProgress}>
-          <Text strong>
-            正在渲染 {total} 个图表，已完成 {finished}/{total}
-          </Text>
-          {finished < total && <Spin size="large" style={{ marginLeft: 16 }} />}
-        </div>
-      ) : (
-        <div className={styles.mermaidEmpty}>
-          <Text type="secondary" style={{ color: 'var(--mm-text2)' }}>
-            未检测到 Mermaid 代码块
-          </Text>
-        </div>
-      )}
+      {total > 0
+        ? (
+          <div className={styles.mermaidProgress}>
+            <Text strong>
+              正在渲染 {total} 个图表，已完成 {finished}/{total}
+            </Text>
+            {finished < total && <Spin size='large' style={{ marginLeft: 16 }} />}
+          </div>
+          )
+        : (
+          <div className={styles.mermaidEmpty}>
+            <Text type='secondary' style={{ color: 'var(--mm-text2)' }}>
+              未检测到 Mermaid 代码块
+            </Text>
+          </div>
+          )}
 
       {charts.map((c) => {
         if (c?.pending) return null
         return (
           <div key={c.title}>
-            {c.svg ? (
-              <MermaidChartViewer title={c.title} svg={c.svg} themeMode={themeMode} />
-            ) : (
-              <div className={styles.mermaidError}>
-                <Alert
-                  type="error"
-                  showIcon
-                  title={`${c.title} 渲染失败`}
-                  description={
-                    <details>
-                      <summary style={{ cursor: 'pointer' }}>查看错误与原始代码</summary>
-                      <div style={{ marginTop: 8 }}>
-                        <Text type="secondary">{c.error}</Text>
-                      </div>
-                      <pre className={styles.mermaidCode}>{c.code}</pre>
-                    </details>
+            {c.svg
+              ? (
+                <MermaidChartViewer title={c.title} svg={c.svg} themeMode={themeMode} />
+                )
+              : (
+                <div className={styles.mermaidError}>
+                  <Alert
+                    type='error'
+                    showIcon
+                    title={`${c.title} 渲染失败`}
+                    description={
+                      <details>
+                        <summary style={{ cursor: 'pointer' }}>查看错误与原始代码</summary>
+                        <div style={{ marginTop: 8 }}>
+                          <Text type='secondary'>{c.error}</Text>
+                        </div>
+                        <pre className={styles.mermaidCode}>{c.code}</pre>
+                      </details>
                   }
-                />
-              </div>
-            )}
+                  />
+                </div>
+                )}
           </div>
         )
       })}
@@ -996,7 +1000,7 @@ const MermaidRenderer = ({ content, readyState, themeMode }) => {
 MermaidRenderer.propTypes = {
   content: PropTypes.string,
   readyState: PropTypes.number,
-  themeMode: PropTypes.string,
+  themeMode: PropTypes.string
 }
 
 const ChatGpt = () => {
@@ -1148,7 +1152,7 @@ const ChatGpt = () => {
   const handleTemplateChange = (templateKey) => {
     setSelectedTemplate(templateKey)
     form.setFieldsValue({
-      text: PROJECT_TEMPLATES[templateKey].prompt,
+      text: PROJECT_TEMPLATES[templateKey].prompt
     })
   }
 
@@ -1167,7 +1171,7 @@ const ChatGpt = () => {
       if (e.data !== '[DONE]') {
         const payload = JSON.parse(e.data)
         const {
-          delta: { content },
+          delta: { content }
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           apiResultRef.current += content
@@ -1291,7 +1295,7 @@ PRD文档内容：
       if (e.data !== '[DONE]') {
         const payload = JSON.parse(e.data)
         const {
-          delta: { content },
+          delta: { content }
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           structureResultRef.current += content
@@ -1376,25 +1380,25 @@ PRD文档内容：
         >
           <Form
             form={form}
-            layout="vertical"
+            layout='vertical'
             initialValues={{
               apiKey: '',
-              text: PROJECT_TEMPLATES.supplyChain.prompt,
+              text: PROJECT_TEMPLATES.supplyChain.prompt
             }}
             onFinish={onFinish}
             requiredMark={false}
-            autoComplete="off"
+            autoComplete='off'
           >
             <Form.Item
-              name="apiKey"
-              label="OpenAI API Key"
+              name='apiKey'
+              label='OpenAI API Key'
               rules={[{ required: true, message: '请输入OpenAI API Key' }]}
-              extra="您的API Key将被安全处理，不会存储在服务器上"
+              extra='您的API Key将被安全处理，不会存储在服务器上'
             >
-              <TextArea onChange={onChange} rows={2} style={{ resize: 'none' }} placeholder="sk-..." />
+              <TextArea onChange={onChange} rows={2} style={{ resize: 'none' }} placeholder='sk-...' />
             </Form.Item>
 
-            <Form.Item label="项目模板">
+            <Form.Item label='项目模板'>
               <Space wrap>
                 {Object.entries(PROJECT_TEMPLATES).map(([key, template]) => (
                   <Button
@@ -1408,21 +1412,21 @@ PRD文档内容：
               </Space>
             </Form.Item>
 
-            <Form.Item name="text" label="需求描述" rules={[{ required: true, message: '请输入您的需求描述' }]}>
+            <Form.Item name='text' label='需求描述' rules={[{ required: true, message: '请输入您的需求描述' }]}>
               <TextArea
                 rows={8}
                 showCount
                 maxLength={4000}
                 style={{ resize: 'none' }}
-                placeholder="详细描述您的产品需求..."
+                placeholder='详细描述您的产品需求...'
               />
             </Form.Item>
 
             <Form.Item>
               <Button
-                type="primary"
-                htmlType="submit"
-                size="large"
+                type='primary'
+                htmlType='submit'
+                size='large'
                 block
                 disabled={[0, 1].includes(readyState)}
                 icon={<ThunderboltOutlined />}
@@ -1455,10 +1459,10 @@ PRD文档内容：
             {readyState === 1 && (
               <Progress
                 percent={Math.round(progress)}
-                status="active"
+                status='active'
                 strokeColor={{
                   '0%': '#108ee9',
-                  '100%': '#87d068',
+                  '100%': '#87d068'
                 }}
               />
             )}
@@ -1470,23 +1474,23 @@ PRD文档内容：
                 >
                   <Space>
                     <Text strong>文档内容预览</Text>
-                    <Tag color="blue" icon={<TableOutlined />}>
+                    <Tag color='blue' icon={<TableOutlined />}>
                       支持表格
                     </Tag>
-                    <Tag color="green" icon={<CodeOutlined />}>
+                    <Tag color='green' icon={<CodeOutlined />}>
                       代码高亮
                     </Tag>
-                    <Tag color="purple" icon={<PartitionOutlined />}>
+                    <Tag color='purple' icon={<PartitionOutlined />}>
                       数学公式
                     </Tag>
-                    <Tag color="orange" icon={<NodeIndexOutlined />}>
+                    <Tag color='orange' icon={<NodeIndexOutlined />}>
                       Mermaid图表
                     </Tag>
                   </Space>
                   <Space>
                     {readyState === 2 && (
                       <>
-                        <Tooltip title="全屏预览">
+                        <Tooltip title='全屏预览'>
                           <Button icon={<FullscreenOutlined />} onClick={openPreviewFullscreen} />
                         </Tooltip>
                         <Dropdown
@@ -1510,37 +1514,37 @@ PRD文档内容：
                               {
                                 key: '1',
                                 label: '复制纯文本',
-                                icon: <CopyOutlined />,
+                                icon: <CopyOutlined />
                               },
                               {
                                 key: '2',
                                 label: '复制Markdown',
-                                icon: <CopyOutlined />,
+                                icon: <CopyOutlined />
                               },
                               {
-                                type: 'divider',
+                                type: 'divider'
                               },
                               {
                                 key: '3',
                                 label: '导出Markdown',
-                                icon: <DownloadOutlined />,
+                                icon: <DownloadOutlined />
                               },
                               {
                                 key: '4',
                                 label: '导出纯文本',
-                                icon: <DownloadOutlined />,
+                                icon: <DownloadOutlined />
                               },
                               {
                                 key: '5',
                                 label: '导出MDX',
-                                icon: <DownloadOutlined />,
+                                icon: <DownloadOutlined />
                               },
                               {
                                 key: '6',
                                 label: '导出DOC(Word)',
-                                icon: <DownloadOutlined />,
-                              },
-                            ],
+                                icon: <DownloadOutlined />
+                              }
+                            ]
                           }}
                         >
                           <Button icon={<DownloadOutlined />}>导出</Button>
@@ -1551,7 +1555,7 @@ PRD文档内容：
                 </div>
                 <div
                   style={{
-                    borderRadius: 6,
+                    borderRadius: 6
                   }}
                 >
                   <div ref={previewScrollRef} className={styles.previewScroll} onScroll={onPreviewScroll}>
@@ -1560,7 +1564,7 @@ PRD文档内容：
                       style={{
                         backgroundColor: previewStyle.backgroundColor,
                         minHeight: 400,
-                        padding: previewStyle.padding,
+                        padding: previewStyle.padding
                       }}
                       data-color-mode={theme}
                       skipHtml={false}
@@ -1575,7 +1579,7 @@ PRD文档内容：
                   style={{
                     marginTop: 20,
                     borderTop: '1px solid #f0f0f0',
-                    paddingTop: 20,
+                    paddingTop: 20
                   }}
                 >
                   <Text strong>Mermaid 图表展示</Text>
@@ -1599,7 +1603,7 @@ PRD文档内容：
           >
             <Space style={{ marginBottom: 15 }}>
               <Button
-                type="primary"
+                type='primary'
                 disabled={[0, 1].includes(structureReadyState)}
                 onClick={buildStructure}
                 icon={<ThunderboltOutlined />}
@@ -1615,14 +1619,14 @@ PRD文档内容：
                       {
                         key: '1',
                         label: '导出为PNG',
-                        icon: <DownloadOutlined />,
+                        icon: <DownloadOutlined />
                       },
                       {
                         key: '2',
                         label: '导出为SVG',
-                        icon: <DownloadOutlined />,
-                      },
-                    ],
+                        icon: <DownloadOutlined />
+                      }
+                    ]
                   }}
                 >
                   <Button icon={<DownloadOutlined />}>导出</Button>
@@ -1643,10 +1647,10 @@ PRD文档内容：
             {structureReadyState === 1 && (
               <Progress
                 percent={Math.round(progress)}
-                status="active"
+                status='active'
                 strokeColor={{
                   '0%': '#108ee9',
-                  '100%': '#87d068',
+                  '100%': '#87d068'
                 }}
               />
             )}
@@ -1659,7 +1663,7 @@ PRD文档内容：
                   borderRadius: 6,
                   padding: 20,
                   backgroundColor: '#fafafa',
-                  minHeight: 400,
+                  minHeight: 400
                 }}
               >
                 <MarkmapHooks markmap={formatMindmapContent(structureResult)} />
@@ -1679,7 +1683,7 @@ PRD文档内容：
               }`}
               style={{
                 backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
-                color: theme === 'light' ? '#24292e' : '#c9d1d9',
+                color: theme === 'light' ? '#24292e' : '#c9d1d9'
               }}
             >
               <div className={styles.previewFullscreenHeader}>
@@ -1689,8 +1693,8 @@ PRD文档内容：
                 </Space>
                 <Space>
                   <Switch
-                    checkedChildren="亮色"
-                    unCheckedChildren="暗色"
+                    checkedChildren='亮色'
+                    unCheckedChildren='暗色'
                     checked={theme === 'light'}
                     onChange={(checked) => setTheme(checked ? 'light' : 'dark')}
                   />
@@ -1703,7 +1707,7 @@ PRD文档内容：
                   source={apiResult}
                   style={{
                     backgroundColor: 'transparent',
-                    minHeight: '100%',
+                    minHeight: '100%'
                   }}
                   data-color-mode={theme}
                   skipHtml={false}
@@ -1716,7 +1720,7 @@ PRD文档内容：
                   style={{
                     marginTop: 20,
                     borderTop: '1px solid #f0f0f0',
-                    paddingTop: 20,
+                    paddingTop: 20
                   }}
                 >
                   <Text strong>Mermaid 图表展示</Text>
