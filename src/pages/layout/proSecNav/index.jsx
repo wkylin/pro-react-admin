@@ -1,19 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { message } from 'antd'
-import { Menu } from 'antd'
+import PropTypes from 'prop-types'
+import { message, Menu } from 'antd'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
-import {
-  HomeOutlined,
-  DeploymentUnitOutlined,
-  HeatMapOutlined,
-  ApartmentOutlined,
-  QuestionCircleOutlined,
-  FireOutlined,
-  GlobalOutlined,
-  QrcodeOutlined,
-} from '@ant-design/icons'
+import { HomeOutlined } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
 import { annotatedRootRouter, flattenRoutes } from '@src/routers'
 
@@ -49,10 +40,85 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const lastDeniedRef = useRef(null)
   const [selectedKeys, setSelectedKeys] = useState(['home'])
   const [menuItems, setMenuItems] = useState([])
-  const [accessibleRoutes, setAccessibleRoutes] = useState([])
 
   // 当前路由对应的 sub menu key
   const [openKeys, setOpenKeys] = useState([])
+
+  const safeSelectedKeys = Array.isArray(selectedKeys) ? selectedKeys : []
+  const safeOpenKeys = Array.isArray(openKeys) ? openKeys : []
+
+  const showDeniedOnce = (denyKey) => {
+    if (!denyKey) return
+    if (lastDeniedRef.current === denyKey) return
+    lastDeniedRef.current = denyKey
+
+    Promise.resolve()
+      .then(() => messageApi.open({ type: 'error', content: '您没有权限访问该页面' }))
+      .catch((e) => {
+        console.warn('Menu item permission check error:', e)
+        return Promise.resolve(message.error('您没有权限访问该页面'))
+      })
+      .catch((err) => {
+        console.warn('Failed to show error message:', err)
+      })
+  }
+
+  const findMenuItemByKey = (items, targetKey) => {
+    if (!Array.isArray(items) || !targetKey) return null
+    for (const it of items) {
+      if (it?.key === targetKey) return it
+      if (it?.children) {
+        const res = findMenuItemByKey(it.children, targetKey)
+        if (res) return res
+      }
+    }
+    return null
+  }
+
+  const ensurePreloadedSet = () => {
+    if (!ProSecNav._preloaded) ProSecNav._preloaded = new Set()
+    return ProSecNav._preloaded
+  }
+
+  const getLazyNameFromPath = (p) => {
+    return String(p || '')
+      .replace(/^\//, '')
+      .split('/')
+      .map((s) => (s?.[0] ? s[0].toUpperCase() + s.slice(1) : ''))
+      .join('')
+  }
+
+  const preloadRouteComponent = (p) => {
+    try {
+      const pathKey = String(p || '')
+      if (!pathKey) return
+      const preloaded = ensurePreloadedSet()
+      if (preloaded.has(pathKey)) return
+
+      const comp = routeComponentMap.get(pathKey)
+      if (comp && typeof comp.preload === 'function') {
+        comp.preload()
+        preloaded.add(pathKey)
+        return
+      }
+
+      loadLazyComponents()
+        .then((lazy) => {
+          if (!lazy || preloaded.has(pathKey)) return
+          const name = getLazyNameFromPath(pathKey)
+          const candidate = lazy[name]
+          if (candidate && typeof candidate.preload === 'function') {
+            candidate.preload()
+            preloaded.add(pathKey)
+          }
+        })
+        .catch((e) => {
+          console.warn('Component preload error:', e)
+        })
+    } catch (e) {
+      console.warn('Component preload error:', e)
+    }
+  }
 
   // 提取放在redux中, tab 切换时改成 false
   const [isOpenChange, setIsOpenChange] = useState(false)
@@ -66,7 +132,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         const rawRoutes = Array.isArray(userPermissions?.routes) ? userPermissions.routes : []
         const routes = Array.from(new Set(['/'].concat(rawRoutes)))
         console.log('用户可访问路由:', routes)
-        setAccessibleRoutes(routes)
 
         // 生成动态菜单
         const dynamicMenus = generateMenuItems(routes)
@@ -84,6 +149,13 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   // 递归查找与当前路径最匹配的菜单项父级链
   const findPathChain = (items, targetPath) => {
     let bestChain = null
+
+    const matchesDynamicPath = (patternPath, pathToMatch) => {
+      if (typeof patternPath !== 'string' || !patternPath.includes(':')) return false
+      const pattern = patternPath.replace(/:[^/]+/g, '[^/]+')
+      return new RegExp(`^${pattern}$`).test(pathToMatch)
+    }
+
     const dfs = (nodes, chain) => {
       for (const node of nodes) {
         const nextChain = [...chain, node.key]
@@ -92,13 +164,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         const isExact = targetPath === nodePath
         const isPrefix = targetPath.startsWith(nodePath + '/')
         // 动态参数匹配（如 /coupons/edit/123 与 /coupons/edit）
-        const dynParamMatch =
-          nodePath &&
-          nodePath.includes(':') &&
-          (() => {
-            const pattern = nodePath.replace(/:[^/]+/g, '[^/]+')
-            return new RegExp(`^${pattern}$`).test(targetPath)
-          })()
+        const dynParamMatch = matchesDynamicPath(nodePath, targetPath)
         if (isExact || isPrefix || dynParamMatch) {
           // 选择更长 path 的链作为最佳链（更具体）
           if (!bestChain || nodePath.length > (bestChain[bestChain.length - 1] || '').length) {
@@ -121,11 +187,12 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         const key = r.path || r.key
         if (!key) return
         // element 可能是 React element，element.type 为组件函数/对象
-        const comp = r.element && r.element.type ? r.element.type : null
+        const comp = r.element?.type ?? null
         map.set(key, comp)
       })
       return map
     } catch (e) {
+      console.warn('Failed to build route component map:', e)
       return new Map()
     }
   }, [])
@@ -152,6 +219,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
   const onOpenChange = (keys) => {
     setIsOpenChange(true)
+    const nextKeys = Array.isArray(keys) ? keys : []
     // 简单互斥：同层级仅保留一个展开；通过比较链长度实现
     // 计算所有当前 key 的父链深度（根据 menuItems）
     const depthMap = {}
@@ -163,63 +231,28 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     }
     buildDepth(menuItems, 0)
     // 按层分组，取最后一个操作的 key 所在层，仅保留该层的最后一个
-    const latestKey = keys.find((k) => !openKeys.includes(k)) || keys[keys.length - 1]
+    const latestKey = nextKeys.find((k) => !safeOpenKeys.includes(k)) || nextKeys[nextKeys.length - 1]
     const layer = depthMap[latestKey]
-    const filtered = keys.filter((k) => depthMap[k] !== layer || k === latestKey)
+    const filtered = nextKeys.filter((k) => depthMap[k] !== layer || k === latestKey)
     setOpenKeys(filtered)
   }
 
   const onSelect = async ({ key }) => {
+    const selected = findMenuItemByKey(menuItems, key)
+    const selectedPath = selected?.path || selected?.key || key
+
     try {
-      // key 是菜单项的 key（标识），但实际跳转/权限检查应以 path 为准。
-      const selected = (function findByKey(items, k) {
-        for (const it of items) {
-          if (it.key === k) return it
-          if (it.children) {
-            const res = findByKey(it.children, k)
-            if (res) return res
-          }
-        }
-        return null
-      })(menuItems, key)
-
-      const selectedPath = (selected && (selected.path || selected.key)) || key
-
-      // 先做权限检查，阻止无权限导航（使用 resolved path）
       const ok = await permissionService.canAccessRoute(selectedPath, false)
       if (!ok) {
-        // 避免短时间内重复提示同一个 key/path
-        if (lastDeniedRef.current !== selectedPath) {
-          lastDeniedRef.current = selectedPath
-          try {
-            messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
-          } catch (e) {
-            try {
-              message.error('您没有权限访问该页面')
-            } catch (err) {}
-          }
-        }
+        showDeniedOnce(selectedPath)
         return
       }
-      // 有权限再导航
       redirectTo(selectedPath)
       setIsOpenChange(false)
-      if (onMenuClick) {
-        onMenuClick()
-      }
+      onMenuClick?.()
     } catch (error) {
       console.error('菜单权限检查失败:', error)
-      // 失败时保守不导航，并显示提示
-      if (lastDeniedRef.current !== key) {
-        lastDeniedRef.current = key
-        try {
-          messageApi.open({ type: 'error', content: '您没有权限访问该页面' })
-        } catch (e) {
-          try {
-            message.error('您没有权限访问该页面')
-          } catch (err) {}
-        }
-      }
+      showDeniedOnce(selectedPath)
     }
   }
 
@@ -240,66 +273,69 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       })
     }
 
-    // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
-    const allMenuItems = mainLayoutMenu.map((item) => {
-      const translateItem = (i) => {
-        const { i18nKey, children, ...rest } = i
-        const path = i.path || i.key
-        const labelText = i18nKey ? t(i.i18nKey) : i.label
-
-        // 包装 label，增加 hover 预加载行为（若找到对应路由组件且组件支持 preload）
-        const Label = (
-          <span
-            onMouseEnter={() => {
-              try {
-                // 确保每个 path 只预加载一次
-                if (!ProSecNav._preloaded) ProSecNav._preloaded = new Set()
-                if (ProSecNav._preloaded.has(path)) return
-                const comp = routeComponentMap.get(path)
-                loadLazyComponents()
-                  .then((lazy) => {
-                    if (!lazy || ProSecNav._preloaded.has(path)) return
-                    const name = (path || '')
-                      .replace(/^\//, '')
-                      .split('/')
-                      .map((s) => (s && s[0] ? s[0].toUpperCase() + s.slice(1) : ''))
-                      .join('')
-                    const candidate = lazy[name]
-                    if (candidate && typeof candidate.preload === 'function') {
-                      candidate.preload()
-                      ProSecNav._preloaded.add(path)
-                    }
-                  })
-                  .catch(() => {})
-                if (comp && typeof comp.preload === 'function') {
-                  comp.preload()
-                  ProSecNav._preloaded.add(path)
-                }
-              } catch (e) {
-                // 忽略预加载错误
-              }
-            }}
-          >
-            {labelText}
-          </span>
-        )
-
-        const base = {
-          ...rest,
-          path,
-          label: Label,
+    const createLabel = (path, labelText) => {
+      const onPreload = () => preloadRouteComponent(path)
+      const onKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onPreload()
         }
-        return children ? { ...base, children: children.map(translateItem) } : base
       }
-      return translateItem(item)
-    })
+
+      return (
+        <button
+          type="button"
+          onMouseEnter={onPreload}
+          onFocus={onPreload}
+          onClick={onPreload}
+          onKeyDown={onKeyDown}
+          style={{ background: 'transparent', border: 0, padding: 0, margin: 0 }}
+        >
+          {labelText}
+        </button>
+      )
+    }
+
+    const translateItem = (i) => {
+      const { i18nKey, children, ...rest } = i
+      const path = i.path || i.key
+      const labelText = i18nKey ? t(i.i18nKey) : i.label
+      const Label = createLabel(path, labelText)
+
+      const base = {
+        ...rest,
+        path,
+        label: Label,
+      }
+      return children ? { ...base, children: children.map(translateItem) } : base
+    }
+
+    // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
+    const allMenuItems = mainLayoutMenu.map(translateItem)
 
     // 递归过滤菜单：仅保留用户可访问的节点或其子节点
+    const hasAccessSafely = (p) => {
+      try {
+        return hasAccess(p)
+      } catch (e) {
+        console.warn('菜单访问判断异常', p, e)
+        return false
+      }
+    }
+
+    const matchesDynamicParam = (p) => {
+      if (typeof p !== 'string' || !p.includes(':')) return false
+      const pattern = p.replace(/:[^/]+/g, '[^/]+')
+      const regex = new RegExp(`^${pattern}$`)
+      return routes.some((r) => regex.test(r))
+    }
+
     const filterItems = (items) => {
       const result = []
       for (const item of items) {
-        // 处理 children
-        if (item.children && Array.isArray(item.children)) {
+        const rawKey = item.path || item.key
+
+        if (Array.isArray(item.children) && item.children.length > 0) {
           const children = filterItems(item.children)
           if (children.length > 0) {
             result.push({ ...item, children })
@@ -307,27 +343,13 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
           }
         }
 
-        // 直接路径可访问则保留
-        try {
-          if (hasAccess(item.path || item.key)) {
-            result.push(item)
-            continue
-          }
-        } catch (e) {
-          // 忽略匹配错误，继续后续逻辑
-          console.warn('菜单访问判断异常', item.key || item.path, e)
+        if (hasAccessSafely(rawKey)) {
+          result.push(item)
+          continue
         }
 
-        // 处理动态参数形式的 menu key/path（如 /coupons/edit/:id）
-        const checkKeyForParam = typeof item.path === 'string' ? item.path : item.key
-        if (typeof checkKeyForParam === 'string' && checkKeyForParam.includes(':')) {
-          const pattern = checkKeyForParam.replace(/:[^/]+/g, '[^/]+')
-          const regex = new RegExp(`^${pattern}$`)
-          // 如果用户的 routes 中有任一路由能匹配该 pattern，则保留
-          if (routes.some((r) => regex.test(r))) {
-            result.push(item)
-            continue
-          }
+        if (matchesDynamicParam(rawKey)) {
+          result.push(item)
         }
       }
       return result
@@ -336,85 +358,16 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     return filterItems(allMenuItems)
   }
 
-  // 异步版生成菜单：基于 permissionMap 做逐项权限检查
-  const generateMenuItemsAsync = async (routes, permissionMap) => {
-    const hasAccessFallback = (path) => {
-      return routes.some((route) => {
-        if (route === path) return true
-        if (path.startsWith(route + '/')) return true
-        if (route.includes('*')) {
-          const pattern = route.replace('*', '.*')
-          return new RegExp(`^${pattern}$`).test(path)
-        }
-        return false
-      })
-    }
-
-    // 递归异步过滤
-    const filterAsync = async (items) => {
-      const results = await Promise.all(
-        items.map(async (item) => {
-          if (item.children) {
-            const children = await filterAsync(item.children)
-            if (children.length > 0) return { ...item, children }
-            return null
-          }
-
-          // 先看是否有 meta.permission
-          const perm = permissionMap.get(item.key) || permissionMap.get(item.path)
-          if (perm) {
-            try {
-              // 支持数组或单个 permission
-              if (Array.isArray(perm)) {
-                // 使用任一权限通过即可
-                const any = await permissionService.hasAnyPermission(perm)
-                if (any.hasPermission) return item
-                return null
-              }
-              const ok = await permissionService.hasPermission(perm)
-              if (ok) return item
-              return null
-            } catch (e) {
-              return null
-            }
-          }
-
-          // 降级：使用 routes 列表匹配（使用 path 优先）
-          if (hasAccessFallback(item.path || item.key)) return item
-          return null
-        })
-      )
-
-      return results.filter(Boolean)
-    }
-
-    // 使用配置文件的菜单；同时规范化 path 字段
-    const allMenuItems = mainLayoutMenu.map((item) => {
-      const translateItem = (i) => {
-        const { i18nKey, children, ...rest } = i
-        const base = {
-          ...rest,
-          path: i.path || i.key,
-          label: i18nKey ? t(i18nKey) : i.label,
-        }
-        return children ? { ...base, children: children.map(translateItem) } : base
-      }
-      return translateItem(item)
-    })
-
-    return filterAsync(allMenuItems)
-  }
-
   return (
     <>
       {contextHolder}
       <Menu
         inlineIndent={10}
         mode={mode}
-        defaultSelectedKeys={selectedKeys}
-        defaultOpenKeys={openKeys}
-        selectedKeys={selectedKeys}
-        openKeys={openKeys}
+        defaultSelectedKeys={safeSelectedKeys}
+        defaultOpenKeys={safeOpenKeys}
+        selectedKeys={safeSelectedKeys}
+        openKeys={safeOpenKeys}
         theme={theme}
         className={mode === 'horizontal' ? styles.topMenu : styles.menu}
         items={menuItems}
@@ -423,6 +376,12 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       />
     </>
   )
+}
+
+ProSecNav.propTypes = {
+  mode: PropTypes.string,
+  theme: PropTypes.string,
+  onMenuClick: PropTypes.func,
 }
 
 export default ProSecNav

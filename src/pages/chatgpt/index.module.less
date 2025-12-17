@@ -46,18 +46,18 @@
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid rgb(0 0 0 / 6%);
+  background: rgb(255 255 255 / 86%);
   backdrop-filter: blur(6px);
 }
 
 .previewFullscreenDark .previewFullscreenHeader {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
-  background: rgba(30, 30, 30, 0.86);
+  border-bottom-color: rgb(255 255 255 / 12%);
+  background: rgb(30 30 30 / 86%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown) {
-  color: rgba(255, 255, 255, 0.88);
+  color: rgb(255 255 255 / 88%);
   background: transparent;
 }
 
@@ -67,36 +67,36 @@
 .previewFullscreenDark :global(.wmde-markdown h4),
 .previewFullscreenDark :global(.wmde-markdown h5),
 .previewFullscreenDark :global(.wmde-markdown h6) {
-  color: rgba(255, 255, 255, 0.92);
+  color: rgb(255 255 255 / 92%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown hr) {
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgb(255 255 255 / 12%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown blockquote) {
-  color: rgba(255, 255, 255, 0.75);
-  border-left-color: rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.04);
+  color: rgb(255 255 255 / 75%);
+  border-left-color: rgb(255 255 255 / 20%);
+  background: rgb(255 255 255 / 4%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown pre),
 .previewFullscreenDark :global(.wmde-markdown code) {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgb(255 255 255 / 6%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown pre) {
-  color: rgba(255, 255, 255, 0.88);
+  color: rgb(255 255 255 / 88%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown table),
 .previewFullscreenDark :global(.wmde-markdown th),
 .previewFullscreenDark :global(.wmde-markdown td) {
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgb(255 255 255 / 14%);
 }
 
 .previewFullscreenDark :global(.wmde-markdown thead th) {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgb(255 255 255 / 6%);
 }
 
 .previewFullscreenBody {
@@ -116,14 +116,14 @@
   text-align: center;
   padding: 24px 0;
   font-size: 14px;
-  color: var(--mm-text, rgba(0, 0, 0, 0.88));
+  color: var(--mm-text, rgb(0 0 0 / 88%));
 }
 
 .mermaidEmpty {
   text-align: center;
   padding: 16px 0;
   font-size: 14px;
-  color: var(--mm-text2, rgba(0, 0, 0, 0.45));
+  color: var(--mm-text2, rgb(0 0 0 / 45%));
 }
 
 .mermaidError {
@@ -139,7 +139,7 @@
   line-height: 1.6;
   border: 1px solid var(--mm-border, #d9d9d9);
   background: var(--mm-bg2, #fafafa);
-  color: var(--mm-text, rgba(0, 0, 0, 0.88));
+  color: var(--mm-text, rgb(0 0 0 / 88%));
 }
 
 .mermaidCard {
@@ -181,7 +181,6 @@
   overflow: auto;
   touch-action: none;
   cursor: grab;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -200,8 +199,6 @@
 .mermaidCanvas svg {
   display: block;
 }
-
-
 
 :global {
   /* Ensure copy button stays clickable/visible in code blocks */

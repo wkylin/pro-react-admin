@@ -11,8 +11,16 @@
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(1200px 820px at 22% 12%, color-mix(in srgb, var(--legal-primary) 16%, transparent), transparent 62%),
-    radial-gradient(980px 760px at 82% 18%, color-mix(in srgb, var(--legal-primary-2) 16%, transparent), transparent 64%),
+    radial-gradient(
+      1200px 820px at 22% 12%,
+      color-mix(in srgb, var(--legal-primary) 16%, transparent),
+      transparent 62%
+    ),
+    radial-gradient(
+      980px 760px at 82% 18%,
+      color-mix(in srgb, var(--legal-primary-2) 16%, transparent),
+      transparent 64%
+    ),
     linear-gradient(180deg, color-mix(in srgb, var(--legal-panel-2) 22%, transparent), transparent 56%);
   filter: saturate(1.15);
 }
@@ -59,10 +67,11 @@
   padding: 4px 10px;
   border-radius: 999px;
   border: 1px solid color-mix(in srgb, var(--legal-border) 70%, transparent);
-  background:
-    linear-gradient(90deg,
-      color-mix(in srgb, var(--legal-primary) 14%, transparent),
-      color-mix(in srgb, var(--legal-primary-2) 18%, transparent));
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--legal-primary) 14%, transparent),
+    color-mix(in srgb, var(--legal-primary-2) 18%, transparent)
+  );
 }
 
 .dot {
@@ -92,7 +101,7 @@
   margin-bottom: 18px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .card {
     height: auto;
     min-height: 72vh;
@@ -108,6 +117,7 @@
   .bg {
     filter: none;
   }
+
   .header {
     backdrop-filter: none;
   }

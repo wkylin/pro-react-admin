@@ -351,10 +351,7 @@ select:-webkit-autofill:active {
 /* Fill mode for FixTabPanel - overrides flex centering */
 .layout-container .layout-tabpanel .fix-tab-panel-fill {
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
+  inset: 0 !important;
   display: block !important;
   justify-content: initial !important;
   align-items: initial !important;

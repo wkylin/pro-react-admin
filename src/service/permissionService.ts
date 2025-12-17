@@ -28,57 +28,83 @@ class PermissionService {
     this.loadFromStorage()
   }
 
+  private normalizeUserPermissions(input: UserPermission): UserPermission {
+    const safe = input && typeof input === 'object' ? input : ({} as any)
+    const roles = Array.isArray(safe.roles) ? safe.roles.filter(Boolean) : []
+    const permissions = Array.isArray(safe.permissions) ? safe.permissions.filter(Boolean) : []
+    const routes = Array.isArray(safe.routes) ? safe.routes.filter(Boolean) : []
+    return {
+      userId: typeof safe.userId === 'string' ? safe.userId : '',
+      username: typeof safe.username === 'string' ? safe.username : '',
+      roles,
+      permissions,
+      routes,
+    }
+  }
+
   /**
    * 当前登录身份指纹（用于避免“切换账号/登出后仍复用旧权限缓存”）
    * - 测试账号：localStorage.token = { token: email }
    * - GitHub OAuth：github_user / github_token
    * - 开发覆盖：user_role（会影响 mock 权限计算）
    */
+  private safeReadStorage(key: string): string {
+    try {
+      return localStorage.getItem(key) || ''
+    } catch {
+      return ''
+    }
+  }
+
+  private roleSuffix(roleOverride: string): string {
+    return roleOverride ? `|role:${roleOverride}` : ''
+  }
+
+  private parseGithubIdentifier(githubUserRaw: string): string {
+    try {
+      const obj = JSON.parse(githubUserRaw)
+      const email = obj?.email || ''
+      const login = obj?.login || ''
+      const id = obj?.id || ''
+      return email || login || id || githubUserRaw
+    } catch {
+      return githubUserRaw
+    }
+  }
+
+  private parseTokenIdentifier(tokenRaw: string): string {
+    try {
+      const obj = JSON.parse(tokenRaw)
+      return obj?.token || tokenRaw
+    } catch {
+      return tokenRaw
+    }
+  }
+
   private getCurrentAuthKey(): string {
-    const safeRead = (key: string) => {
-      try {
-        return localStorage.getItem(key) || ''
-      } catch {
-        return ''
-      }
+    const roleOverride = this.safeReadStorage(this.STORAGE_KEYS.ROLE_OVERRIDE)
+    const suffix = this.roleSuffix(roleOverride)
+
+    const githubUserRaw = this.safeReadStorage('github_user')
+    if (githubUserRaw) {
+      const identifier = this.parseGithubIdentifier(githubUserRaw)
+      return `github:${identifier}${suffix}`
     }
 
-    const roleOverride = safeRead(this.STORAGE_KEYS.ROLE_OVERRIDE)
-
-    const githubUser = safeRead('github_user')
-    const githubToken = safeRead('github_token')
-    if (githubUser) {
-      try {
-        const obj = JSON.parse(githubUser)
-        const email = obj?.email || ''
-        const login = obj?.login || ''
-        const id = obj?.id || ''
-        return `github:${email || login || id}${roleOverride ? `|role:${roleOverride}` : ''}`
-      } catch {
-        return `github:${githubUser}${roleOverride ? `|role:${roleOverride}` : ''}`
-      }
-    }
+    const githubToken = this.safeReadStorage('github_token')
     if (githubToken) {
-      return `githubToken:${githubToken}${roleOverride ? `|role:${roleOverride}` : ''}`
+      return `githubToken:${githubToken}${suffix}`
     }
 
     // 测试账号 token
-    const rawToken = safeRead('token')
+    const rawToken = this.safeReadStorage('token')
     if (rawToken) {
-      try {
-        const obj = JSON.parse(rawToken)
-        const token = obj?.token || rawToken
-        return `token:${token}${roleOverride ? `|role:${roleOverride}` : ''}`
-      } catch {
-        return `token:${rawToken}${roleOverride ? `|role:${roleOverride}` : ''}`
-      }
+      const identifier = this.parseTokenIdentifier(rawToken)
+      return `token:${identifier}${suffix}`
     }
 
     // 未登录但存在 roleOverride 的情况（演示页）
-    if (roleOverride) {
-      return `anonymous|role:${roleOverride}`
-    }
-
+    if (roleOverride) return `anonymous${suffix}`
     return 'anonymous'
   }
 
@@ -112,7 +138,7 @@ class PermissionService {
       }
 
       if (stored && lastFetch) {
-        this.userPermissions = JSON.parse(stored)
+        this.userPermissions = this.normalizeUserPermissions(JSON.parse(stored))
         this.lastFetchTime = parseInt(lastFetch, 10)
 
         // 检查缓存是否过期
@@ -132,10 +158,11 @@ class PermissionService {
    */
   private saveToStorage(permissions: UserPermission): void {
     try {
-      localStorage.setItem(this.STORAGE_KEYS.PERMISSIONS, JSON.stringify(permissions))
+      const normalized = this.normalizeUserPermissions(permissions)
+      localStorage.setItem(this.STORAGE_KEYS.PERMISSIONS, JSON.stringify(normalized))
       localStorage.setItem(this.STORAGE_KEYS.FETCH_TIME, Date.now().toString())
       localStorage.setItem(this.STORAGE_KEYS.AUTH_KEY, this.getCurrentAuthKey())
-      this.userPermissions = permissions
+      this.userPermissions = normalized
       this.lastFetchTime = Date.now()
     } catch (error) {
       console.error('保存权限信息失败:', error)
@@ -221,7 +248,7 @@ class PermissionService {
       })
 
       try {
-        const permissions = await this.loadingPromise
+        const permissions = this.normalizeUserPermissions(await this.loadingPromise)
         this.saveToStorage(permissions)
         return permissions
       } catch (error) {
@@ -244,7 +271,7 @@ class PermissionService {
     }
 
     // 返回缓存的权限信息
-    return this.userPermissions!
+    return this.userPermissions
   }
 
   /**

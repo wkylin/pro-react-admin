@@ -11,8 +11,7 @@
   position: relative;
   height: 100vh;
   height: 100dvh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
   -webkit-overflow-scrolling: touch;
   background: var(--signin-bg);
 }
@@ -33,13 +32,12 @@
   content: '';
   position: absolute;
   inset: -2px;
-  background:
-    linear-gradient(
-      120deg,
-      color-mix(in srgb, var(--signin-primary) 18%, transparent),
-      transparent 40%,
-      color-mix(in srgb, var(--signin-primary-2) 16%, transparent)
-    );
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--signin-primary) 18%, transparent),
+    transparent 40%,
+    color-mix(in srgb, var(--signin-primary-2) 16%, transparent)
+  );
   animation: flow 10s linear infinite;
   opacity: 0.8;
 }
@@ -79,12 +77,11 @@
   padding: 28px;
   border: 1px solid color-mix(in srgb, var(--signin-border) 70%, transparent);
   border-radius: 16px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--signin-panel) 72%, transparent),
-      color-mix(in srgb, var(--signin-panel-2) 80%, transparent)
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--signin-panel) 72%, transparent),
+    color-mix(in srgb, var(--signin-panel-2) 80%, transparent)
+  );
   box-shadow: var(--signin-shadow);
   overflow: hidden;
 }
@@ -115,13 +112,13 @@
 }
 
 .heroTitle {
-  margin: 0 0 12px 0 !important;
+  margin: 0 0 12px !important;
   color: var(--signin-text) !important;
   letter-spacing: 0.2px;
 }
 
 .heroDesc {
-  margin: 0 0 18px 0 !important;
+  margin: 0 0 18px !important;
   color: var(--signin-text-2) !important;
 }
 
@@ -196,7 +193,9 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease;
+  transition:
+    transform 120ms ease,
+    border-color 120ms ease;
 }
 
 .quickItem:hover {
@@ -250,7 +249,7 @@
   font-weight: 500;
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
   .grid {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -262,9 +261,11 @@
   0% {
     transform: translate3d(-6%, -2%, 0) rotate(0deg);
   }
+
   50% {
     transform: translate3d(6%, 2%, 0) rotate(10deg);
   }
+
   100% {
     transform: translate3d(-6%, -2%, 0) rotate(0deg);
   }
@@ -273,17 +274,20 @@
 @keyframes scan {
   0% {
     transform: translateX(-10%) skewX(-18deg);
-    opacity: 0.0;
+    opacity: 0;
   }
+
   20% {
     opacity: 0.75;
   }
+
   50% {
     transform: translateX(140%) skewX(-18deg);
     opacity: 0.25;
   }
+
   100% {
     transform: translateX(140%) skewX(-18deg);
-    opacity: 0.0;
+    opacity: 0;
   }
 }

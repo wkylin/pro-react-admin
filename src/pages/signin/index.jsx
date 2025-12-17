@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
-import { Form, Input, Button, Typography, Layout, Card, theme, App, Space, Tag, Grid } from 'antd'
-import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
-import AlignCenter from '@stateless/AlignCenter'
+import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Grid } from 'antd'
+import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { setLocalStorage } from '@utils/publicFn'
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
@@ -32,10 +31,11 @@ const SignIn = () => {
         let target = '/'
         if (Array.isArray(routes) && routes.length > 0) {
           // 优先跳转到根路由，其次第一个有权限的路由
-          target = routes.includes('/') ? '/' : routes[0]
+          target = (routes || []).includes('/') ? '/' : routes[0]
         }
         redirectTo(target, { replace: true })
       } catch (e) {
+        console.warn('Redirect after login failed:', e)
         redirectTo('/', { replace: true })
       }
     }
@@ -65,10 +65,6 @@ const SignIn = () => {
     // 重置表单，确保输入框为空
     form.resetFields()
   }, [form])
-
-  const handleLogin = () => {
-    authService.login()
-  }
 
   const onFinish = async (values) => {
     const { email, password } = values
@@ -102,7 +98,8 @@ const SignIn = () => {
       message.success(`登录成功！欢迎 ${testAccounts[email].name}`)
 
       if (routes && routes.length > 0) {
-        const targetRoute = routes.includes('/') ? '/' : routes[0]
+        const safeRoutes = Array.isArray(routes) ? routes : []
+        const targetRoute = safeRoutes.includes('/') ? '/' : safeRoutes[0]
         redirectTo(targetRoute)
       } else {
         redirectTo('/403')

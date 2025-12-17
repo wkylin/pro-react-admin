@@ -3,7 +3,7 @@
   top: 0;
   right: 0;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgb(0 0 0 / 20%);
   background-image: radial-gradient(transparent 1px, #bbb 1px);
   background-size: 4px 4px;
   backdrop-filter: blur(1px);
@@ -11,7 +11,7 @@
 }
 
 .dark .nav {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgb(0 0 0 / 40%);
   background-image: radial-gradient(transparent 1px, #666 1px);
 }
 
@@ -22,7 +22,7 @@
   gap: 1rem;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .nav ul {
     gap: 2rem;
     padding: 1.5rem 2rem;
@@ -44,11 +44,11 @@
 
 .navItem:hover {
   color: #333;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255 255 255 / 10%);
   transform: translateY(-2px);
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .navItem {
     font-size: 1.05rem;
     padding: 8px 25px;
@@ -61,13 +61,13 @@
 
 .dark .navItem:hover {
   color: #f0f0f0;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgb(255 255 255 / 20%);
 }
 
 .navItem .activeIndicator {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgb(0 0 0 / 30%);
   border-radius: 15px;
   z-index: -1;
   opacity: 0;
@@ -78,29 +78,29 @@
 .navItem.active .activeIndicator {
   opacity: 1;
   transform: scale(1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
 .dark .navItem .activeIndicator {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgb(255 255 255 / 20%);
 }
 
 .dark .navItem.active .activeIndicator {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
 }
 
 .navItem.scroll-highlight {
   color: #333;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: rgb(255 255 255 / 15%);
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  border: 1px solid rgb(255 255 255 / 20%);
 }
 
 .dark .navItem.scroll-highlight {
   color: #f0f0f0;
-  background-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  background-color: rgb(255 255 255 / 25%);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
 }
 
 .navItem .scrollIndicator {
@@ -115,24 +115,25 @@
   opacity: 0;
   transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 1;
-  box-shadow: 0 2px 8px rgba(8, 148, 255, 0.4);
+  box-shadow: 0 2px 8px rgb(8 148 255 / 40%);
 }
 
 .navItem.scroll-highlight .scrollIndicator {
   opacity: 1;
   transform: translateX(-50%) scaleX(1);
-  animation: pulseGlow 2s ease-in-out infinite;
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-@keyframes pulseGlow {
+@keyframes pulse-glow {
   0%,
   100% {
     opacity: 0.8;
-    box-shadow: 0 2px 8px rgba(8, 148, 255, 0.4);
+    box-shadow: 0 2px 8px rgb(8 148 255 / 40%);
   }
+
   50% {
     opacity: 1;
-    box-shadow: 0 4px 16px rgba(8, 148, 255, 0.6);
+    box-shadow: 0 4px 16px rgb(8 148 255 / 60%);
   }
 }
 
@@ -151,7 +152,6 @@
   margin-bottom: 2rem;
   text-align: center;
   background: linear-gradient(135deg, #0894ff 0%, #ff2e54 50%, #ff9004 100%);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
@@ -169,7 +169,7 @@
   border-radius: 2px;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .section .title {
     font-size: 3.5rem;
     margin-bottom: 3rem;
@@ -190,7 +190,7 @@
   font-weight: 400;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .section .content {
     font-size: 1.25rem;
     line-height: 1.8;
@@ -208,11 +208,11 @@
 
 .custom-nav-ul {
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 10%);
   padding: 1rem;
   margin: 1rem 0;
 }
@@ -226,28 +226,27 @@
 }
 
 .custom-nav-li:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgb(255 255 255 / 20%);
+  border-color: rgb(255 255 255 / 40%);
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
 }
 
 .custom-nav-li.active {
   background: linear-gradient(135deg, #0894ff, #ff2e54);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(8, 148, 255, 0.4);
+  box-shadow: 0 12px 30px rgb(8 148 255 / 40%);
 }
 
 .custom-title {
   font-family:
-    'Inter',
+    Inter,
     -apple-system,
     BlinkMacSystemFont,
     sans-serif;
   font-weight: 800;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
@@ -259,7 +258,7 @@
 
 .custom-content {
   font-family:
-    'Inter',
+    Inter,
     -apple-system,
     BlinkMacSystemFont,
     sans-serif;
@@ -279,12 +278,12 @@
   border: 2px solid transparent;
   border-radius: 20px;
   padding: 2.5rem;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
   backdrop-filter: blur(20px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 10%);
 }
 
 .dark .custom-component {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 10%));
+  box-shadow: 0 20px 40px rgb(0 0 0 / 30%);
 }

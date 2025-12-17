@@ -40,9 +40,10 @@ export const AuthCallback: React.FC = () => {
         // 获取用户可访问的第一个路由
         try {
           const routes = await permissionService.getAccessibleRoutes(true)
-          if (routes && routes.length > 0) {
+          const safeRoutes = Array.isArray(routes) ? routes : []
+          if (safeRoutes.length > 0) {
             // 跳转到第一个有权限的路由（优先首页）
-            const targetRoute = routes.includes('/') ? '/' : routes[0]
+            const targetRoute = safeRoutes.includes('/') ? '/' : safeRoutes[0]
             redirectTo(targetRoute)
           } else {
             // 如果没有权限，跳转到403

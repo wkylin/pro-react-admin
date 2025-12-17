@@ -232,7 +232,7 @@ class AuthService {
       localStorage.removeItem('github_token')
       localStorage.removeItem('github_user')
     } catch (e) {
-      // ignore
+      console.warn('移除本地存储键失败:', e)
     }
 
     this.notifyListeners()

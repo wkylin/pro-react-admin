@@ -66,6 +66,7 @@ const AESPanel = () => {
       setDecryptedText('') // 清空之前的解密结果
       message.success('加密成功')
     } catch (error) {
+      console.warn('Encryption failed:', error)
       message.error('加密失败')
     }
   }
@@ -79,6 +80,7 @@ const AESPanel = () => {
       setDecryptedText(decrypted)
       message.success('解密成功')
     } catch (error) {
+      console.warn('Decryption failed:', error)
       setDecryptedText('')
       message.error('解密失败，请检查密钥是否正确')
     }
@@ -188,6 +190,7 @@ const RSAPanel = () => {
       setDecryptedText('')
       message.success('使用公钥加密成功')
     } catch (error) {
+      console.warn('RSA encryption failed:', error)
       message.error('加密失败，可能是文本过长')
     }
   }
@@ -202,6 +205,7 @@ const RSAPanel = () => {
       setDecryptedText(decrypted)
       message.success('使用私钥解密成功')
     } catch (error) {
+      console.warn('RSA decryption failed:', error)
       message.error('解密失败')
     }
   }
@@ -326,7 +330,7 @@ const MyCrypto = () => {
         <Title level={3}>加密算法实验室</Title>
         <Paragraph type="secondary">提供常用的对称加密 (AES) 和非对称加密 (RSA) 在线测试工具。</Paragraph>
         <Divider />
-        <Tabs defaultActiveKey="aes" items={items} type="card" />
+        <Tabs defaultActiveKey="aes" items={items} type="card" animated={{ inkBar: true, tabPane: false }} />
       </Card>
     </FixTabPanel>
   )

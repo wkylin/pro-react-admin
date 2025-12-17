@@ -11,6 +11,43 @@ import WatermarkProvider from '@/components/WatermarkProvider'
 import * as Sentry from '@sentry/react'
 import i18n from './i18n/i18n'
 
+const patchDefinePropertyDescriptor = () => {
+  try {
+    const originalDefineProperty = Object.defineProperty
+    const originalDefineProperties = Object.defineProperties
+
+    const toDescriptor = (desc: unknown): PropertyDescriptor => {
+      if (desc && typeof desc === 'object') return desc as PropertyDescriptor
+      return {
+        value: desc,
+        writable: true,
+        configurable: true,
+        enumerable: true,
+      }
+    }
+
+    Object.defineProperty = function (obj: any, prop: PropertyKey, descriptor: any) {
+      return originalDefineProperty(obj, prop, toDescriptor(descriptor))
+    }
+
+    Object.defineProperties = function (obj: any, props: any) {
+      if (!props || typeof props !== 'object') {
+        // 保持原语义：让原实现抛错
+        return originalDefineProperties(obj, props)
+      }
+      const normalized: Record<PropertyKey, PropertyDescriptor> = {}
+      for (const key of Reflect.ownKeys(props)) {
+        normalized[key] = toDescriptor(props[key])
+      }
+      return originalDefineProperties(obj, normalized)
+    }
+  } catch {
+    // ignore
+  }
+}
+
+patchDefinePropertyDescriptor()
+
 Sentry.init({
   dsn: 'https://3d8db323c44ddb1f24ba4ba3f60e01c6@o64827.ingest.us.sentry.io/4510499314860032',
   // Setting this option to true will send default PII data to Sentry.

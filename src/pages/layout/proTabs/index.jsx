@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense, useTransition } from 'react'
+import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Tabs, Dropdown, Space, theme, Button } from 'antd'
@@ -14,7 +15,7 @@ import KeepAlive from '@src/components/KeepAlive'
 const ProTabs = (props) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext()
   const [isReload, setIsReload] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const pathRef = useRef('')
 
   const { redirectTo } = useSafeNavigate()
@@ -134,6 +135,7 @@ const ProTabs = (props) => {
     <Tabs
       hideAdd
       type="editable-card"
+      animated={{ inkBar: true, tabPane: false }}
       onChange={onChange}
       onTabClick={onTabClick}
       onTabScroll={onTabScroll}
@@ -206,6 +208,12 @@ const ProTabs = (props) => {
       }))}
     />
   )
+}
+
+ProTabs.propTypes = {
+  panesItem: PropTypes.object,
+  tabActiveKey: PropTypes.string,
+  style: PropTypes.object,
 }
 
 export default ProTabs

@@ -126,7 +126,7 @@ class HttpClient {
     if (body) {
       options.body = body
     } else if (payload) {
-      if (headers['Content-Type'] && headers['Content-Type'].includes('application/json')) {
+      if (headers['Content-Type']?.includes('application/json')) {
         options.body = JSON.stringify(payload)
       } else {
         options.body = payload
@@ -158,7 +158,13 @@ class HttpClient {
       // 业务状态码检查 (参考原 fetch.js 逻辑)
       if (data.code !== undefined && data.code !== 0 && data.code !== 200) {
         if (data.code === 41002) {
-          window.location.href = '/signin'
+          // 项目使用 createHashRouter，必须使用 hash 跳转
+          try {
+            window.location.hash = '#/signin'
+          } catch (e) {
+            console.warn('跳转登录页失败，尝试使用 location.href:', e)
+            window.location.href = '#/signin'
+          }
         }
         throw new Error(data.message || `Error Code: ${data.code}`)
       }
@@ -222,7 +228,7 @@ class HttpClient {
   }
 
   // 文件下载 (支持进度)
-  async download(url, params = {}, fileName, config = {}) {
+  async download(url, fileName, params = {}, config = {}) {
     const fullUrl = this._buildUrl({ url, baseURL: this.config.BASE_URL, params })
     const response = await fetch(fullUrl, {
       method: 'GET',
@@ -345,10 +351,8 @@ export const useRequest = (url, options = {}) => {
           setError(err)
         }
       } finally {
-        if (abortControllerRef.current === controller) {
-          setLoading(false)
-          abortControllerRef.current = null
-        }
+        setLoading(false)
+        abortControllerRef.current = null
       }
     },
     [url]

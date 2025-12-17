@@ -105,7 +105,7 @@ class RequestUtils {
 
   // 延迟函数
   static delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms))
+    return new Promise((resolve) => globalThis.setTimeout(resolve, ms))
   }
 
   // 判断是否为 FormData
@@ -142,7 +142,7 @@ class RequestUtils {
     const contentDisposition = response.headers['content-disposition']
     if (contentDisposition) {
       const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
-      if (match && match[1]) {
+      if (match?.[1]) {
         return decodeURIComponent(match[1].replace(/['"]/g, ''))
       }
     }
@@ -193,68 +193,81 @@ export function setTimeout(timeout) {
   logger.info('请求超时时间已更新:', timeout)
 }
 
+const ensureHeaders = (config) => {
+  if (!config.headers) config.headers = {}
+}
+
+const applyDedup = (config) => {
+  if (config.cancelDuplicate !== false) {
+    const { requestKey, controller } = requestManager.cancelDuplicateRequest(config)
+    config.signal = controller.signal
+    config._requestKey = requestKey
+  }
+}
+
+const applyTimestampSuffix = (config) => {
+  const method = config.method?.toUpperCase()
+  const shouldAdd = (method === 'GET' || method === 'DELETE') && config.addTimestamp !== false
+  if (shouldAdd) {
+    config.params = RequestUtils.addTimestampSuffix(config.params)
+    logger.log('已添加时间戳参数')
+  }
+}
+
+const readGithubToken = () => {
+  try {
+    const tokenData = localStorage.getItem('github_token')
+    if (!tokenData) return null
+    return JSON.parse(tokenData).token || null
+  } catch (e) {
+    logger.warn('读取 token 失败', e)
+    return null
+  }
+}
+
+const applyAuthorization = (config) => {
+  if (config.headers.Authorization || config.needToken === false) return
+  const token = readGithubToken()
+  if (!token) return
+  config.headers.Authorization = `Bearer ${token}`
+  logger.log('已添加 Authorization:', `Bearer ${token.substring(0, 20)}...`)
+}
+
+const applyDataFormat = (config) => {
+  const contentType = config.headers['Content-Type'] || config.headers['content-type']
+
+  if (RequestUtils.isFormData(config.data)) {
+    delete config.headers['Content-Type']
+    logger.log('检测到 FormData，已删除 Content-Type')
+    return
+  }
+
+  if (contentType === 'application/x-www-form-urlencoded' && config.data && typeof config.data === 'object') {
+    config.data = qs.stringify(config.data, { arrayFormat: 'brackets' })
+    logger.log('表单数据已序列化')
+  }
+}
+
+const applyRequestMetadata = (config) => {
+  config.metadata = { startTime: Date.now() }
+}
+
+const applyRequestId = (config) => {
+  if (config.requestId) {
+    config.headers['X-Request-ID'] = config.requestId
+  }
+}
+
 // ==================== 9. 请求拦截器 ====================
 axiosInstance.interceptors.request.use(
   (config) => {
-    // 确保 headers 存在
-    if (!config.headers) config.headers = {}
-
-    // 1. 请求去重处理
-    if (config.cancelDuplicate !== false) {
-      const { requestKey, controller } = requestManager.cancelDuplicateRequest(config)
-      config.signal = controller.signal
-      config._requestKey = requestKey
-    }
-
-    // 2. 为 GET/DELETE 请求添加时间戳防止缓存
-    if (
-      (config.method?.toUpperCase() === 'GET' || config.method?.toUpperCase() === 'DELETE') &&
-      config.addTimestamp !== false
-    ) {
-      config.params = RequestUtils.addTimestampSuffix(config.params)
-      logger.log('已添加时间戳参数')
-    }
-
-    // 3. Authorization 处理
-    if (!config.headers.Authorization && config.needToken !== false) {
-      // 直接从 localStorage 获取 token，避免循环依赖
-      let token = null
-      try {
-        const tokenData = localStorage.getItem('github_token')
-        if (tokenData) {
-          token = JSON.parse(tokenData).token
-        }
-      } catch (e) {
-        logger.warn('读取 token 失败', e)
-      }
-
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`
-        logger.log('已添加 Authorization:', `Bearer ${token.substring(0, 20)}...`)
-      }
-    }
-
-    // 4. 处理请求数据格式
-    const contentType = config.headers['Content-Type'] || config.headers['content-type']
-
-    // FormData: 删除 Content-Type 让浏览器自动设置
-    if (RequestUtils.isFormData(config.data)) {
-      delete config.headers['Content-Type']
-      logger.log('检测到 FormData，已删除 Content-Type')
-    }
-    // application/x-www-form-urlencoded: 序列化对象
-    else if (contentType === 'application/x-www-form-urlencoded' && config.data && typeof config.data === 'object') {
-      config.data = qs.stringify(config.data, { arrayFormat: 'brackets' })
-      logger.log('表单数据已序列化')
-    }
-
-    // 5. 添加请求时间戳（用于性能监控）
-    config.metadata = { startTime: Date.now() }
-
-    // 6. 添加自定义标识
-    if (config.requestId) {
-      config.headers['X-Request-ID'] = config.requestId
-    }
+    ensureHeaders(config)
+    applyDedup(config)
+    applyTimestampSuffix(config)
+    applyAuthorization(config)
+    applyDataFormat(config)
+    applyRequestMetadata(config)
+    applyRequestId(config)
 
     logger.log(`发起请求: ${config.method?.toUpperCase()} ${config.url}`, {
       params: config.params,
@@ -281,21 +294,63 @@ function handleUnauthorized(message) {
     localStorage.removeItem('user_role')
     localStorage.removeItem('force_demo_switch')
   } catch (e) {
-    // ignore
+    console.warn('清理权限缓存失败:', e)
   }
 
   localStorage.removeItem('token')
   localStorage.removeItem('github_token')
   localStorage.removeItem('github_user')
 
+  const isAtSignIn = () => {
+    const hash = String(window?.location?.hash || '')
+    return hash === '#/signin' || hash.startsWith('#/signin?') || hash.startsWith('#/signin/')
+  }
+
   // 延迟跳转，确保消息显示
-  setTimeout(() => {
-    if (window.location.pathname !== '/signin') {
-      window.location.href = '/signin'
-    }
+  globalThis.setTimeout(() => {
+    // 项目使用 createHashRouter，必须使用 hash 跳转；否则静态部署下 /signin 会导致页面空白
+    if (!isAtSignIn()) window.location.hash = '#/signin'
   }, 500)
 
   logger.warn('用户未授权，已清除登录信息')
+}
+
+const isHttpOk = (status) => status >= 200 && status < 300
+
+const isBusinessEnvelope = (data) => {
+  return !!(data && typeof data === 'object' && 'code' in data)
+}
+
+const resolveResponseData = (response) => {
+  const config = response.config
+
+  if (config.responseType === 'blob') return response
+
+  const { data, status } = response
+  if (!isHttpOk(status)) {
+    const errorMsg = RequestUtils.getHttpErrorMessage(status)
+    RequestUtils.handleShowError(errorMsg, config.showError !== false)
+    throw new Error(errorMsg)
+  }
+
+  if (!isBusinessEnvelope(data)) {
+    return config.returnFullResponse ? response : data
+  }
+
+  if (data.code === 0 || data.code === 200) {
+    return config.returnFullResponse ? response : data
+  }
+
+  const errorMsg = data.message || data.msg || '请求失败'
+  if (data.code === 401 || data.code === 403) {
+    handleUnauthorized(errorMsg)
+  }
+
+  RequestUtils.handleShowError(errorMsg, config.showError !== false)
+  const error = new Error(errorMsg)
+  error.code = data.code
+  error.response = response
+  throw error
 }
 
 // ==================== 10. 响应拦截器 ====================
@@ -314,47 +369,11 @@ axiosInstance.interceptors.response.use(
       logger.log(`请求完成: ${config.method?.toUpperCase()} ${config.url} [${duration}ms]`)
     }
 
-    // 3. 处理 Blob 类型响应（文件下载）
-    if (config.responseType === 'blob') {
-      return response
+    try {
+      return resolveResponseData(response)
+    } catch (e) {
+      return Promise.reject(e)
     }
-
-    // 4. 统一响应格式处理
-    const { data, status } = response
-
-    // HTTP 状态码检查
-    if (status >= 200 && status < 300) {
-      // 后端使用统一格式 { code, data, message }
-      if (data && typeof data === 'object' && 'code' in data) {
-        // 业务成功
-        if (data.code === 0 || data.code === 200) {
-          return config.returnFullResponse ? response : data
-        }
-
-        // 业务失败
-        const errorMsg = data.message || data.msg || '请求失败'
-
-        // 特殊业务码处理
-        if (data.code === 401 || data.code === 403) {
-          handleUnauthorized(errorMsg)
-        }
-
-        RequestUtils.handleShowError(errorMsg, config.showError !== false)
-
-        const error = new Error(errorMsg)
-        error.code = data.code
-        error.response = response
-        return Promise.reject(error)
-      }
-
-      // 返回原始数据
-      return config.returnFullResponse ? response : data
-    }
-
-    // HTTP 状态码异常
-    const errorMsg = RequestUtils.getHttpErrorMessage(status)
-    RequestUtils.handleShowError(errorMsg, config.showError !== false)
-    return Promise.reject(new Error(errorMsg))
   },
   (error) => {
     // 1. 移除失败的请求
@@ -479,7 +498,10 @@ class RequestEnhancer {
 
   // 超时控制
   static withTimeout(promise, timeout = CONFIG.TIMEOUT) {
-    return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('请求超时')), timeout))])
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => globalThis.setTimeout(() => reject(new Error('请求超时')), timeout)),
+    ])
   }
 }
 
@@ -646,13 +668,15 @@ const request = {
    * @param {object} config - axios 配置
    * @param {function} config.onProgress - 下载进度回调
    */
-  async download(url, params = {}, fileName, config = {}) {
-    const onDownloadProgress = config.onProgress || config.onDownloadProgress
+  async download(url, params, fileName, config) {
+    const safeConfig = config ?? {}
+    const safeParams = params ?? {}
+    const onDownloadProgress = safeConfig.onProgress || safeConfig.onDownloadProgress
 
     const response = await axiosInstance.request({
       method: 'GET',
       url,
-      params,
+      params: safeParams,
       responseType: 'blob',
       returnFullResponse: true, // 需要完整响应以获取 headers
       onDownloadProgress: (progressEvent) => {
@@ -665,7 +689,7 @@ const request = {
           })
         }
       },
-      ...config,
+      ...safeConfig,
     })
 
     return DownloadHandler.handleDownload(response, fileName)

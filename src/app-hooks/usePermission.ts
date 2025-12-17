@@ -23,9 +23,9 @@ export const usePermission = () => {
     try {
       setLoading(true)
       const userPermissions = await permissionService.getPermissions()
-      setPermissions(userPermissions.permissions)
-      setRoles(userPermissions.roles.map((role) => role.code))
-      setRoutes(userPermissions.routes)
+      setPermissions(Array.isArray(userPermissions.permissions) ? userPermissions.permissions : [])
+      setRoles(Array.isArray(userPermissions.roles) ? userPermissions.roles.map((role) => role.code) : [])
+      setRoutes(Array.isArray(userPermissions.routes) ? userPermissions.routes : [])
     } catch (error) {
       console.error('加载权限失败:', error)
     } finally {

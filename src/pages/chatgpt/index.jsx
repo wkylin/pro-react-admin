@@ -1,4 +1,3 @@
-/* eslint-disable react/no-children-prop */
 import React, { useRef, useCallback, useState, useEffect } from 'react'
 import MarkmapHooks from '@stateful/markmap'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -43,33 +42,106 @@ import initSSE from './fixSse'
 import removeMd from 'remove-markdown'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
+import PropTypes from 'prop-types'
 import '@uiw/react-md-editor/markdown-editor.css'
 import '@uiw/react-markdown-preview/markdown.css'
 import 'katex/dist/katex.min.css'
-import mermaid from 'mermaid'
 import styles from './index.module.less'
+
+let mermaidPromise
+const loadMermaid = () => {
+  if (!mermaidPromise) {
+    mermaidPromise = import('mermaid').then((m) => m?.default ?? m)
+  }
+  return mermaidPromise
+}
+
+const toErrorText = (err) => String(err?.message || err)
+
+const createOffscreenMermaidHost = () => {
+  const host = document.createElement('div')
+  host.setAttribute('aria-hidden', 'true')
+  host.style.cssText =
+    'position:fixed;left:-10000px;top:0;width:2000px;height:2000px;overflow:hidden;opacity:0;pointer-events:none;'
+  document.body.appendChild(host)
+  return host
+}
+
+const renderMermaidIntoCharts = async ({ mermaid, blocks, i, charts, setCharts, signal }) => {
+  const code = blocks[i]
+  const id = `mermaid-${Date.now()}-${i}`
+  const title = `图表 ${i + 1}`
+  let host
+  try {
+    if (signal.aborted) return
+    // Mermaid v11 渲染依赖“挂到 DOM 上的容器”进行测量，否则可能全量失败
+    // 这里使用 offscreen host：不会出现在页面内容里，且渲染完成/失败都会移除
+    host = createOffscreenMermaidHost()
+    const { svg } = await mermaid.render(id, code, host)
+    if (signal.aborted) return
+    charts[i] = { title, svg }
+    setCharts(charts.slice())
+  } catch (err) {
+    if (signal.aborted) return
+    charts[i] = { title, error: toErrorText(err), code }
+    setCharts(charts.slice())
+  } finally {
+    try {
+      if (host) host.remove()
+    } catch {
+      // ignore
+    }
+  }
+}
+
+const runMermaidBlocks = async ({ blocks, setCharts, setProgress, signal }) => {
+  const total = Array.isArray(blocks) ? blocks.length : 0
+  if (signal.aborted) return
+
+  const charts = Array.from({ length: total }, (_, i) => ({ title: `图表 ${i + 1}`, pending: true }))
+  setProgress({ total, finished: 0 })
+  setCharts(charts)
+  if (total === 0) return
+
+  let mermaid
+  try {
+    mermaid = await loadMermaid()
+  } catch (err) {
+    if (!signal.aborted) {
+      setCharts([{ title: 'Mermaid', error: toErrorText(err) }])
+      setProgress({ total: 1, finished: 1 })
+    }
+    return
+  }
+  if (signal.aborted) return
+
+  const concurrency = 3
+  let active = 0
+  let idx = 0
+  let finished = 0
+
+  function onSettled() {
+    active -= 1
+    finished += 1
+    if (!signal.aborted) setProgress({ total, finished })
+    pump()
+  }
+
+  function pump() {
+    if (signal.aborted) return
+    while (!signal.aborted && active < concurrency && idx < total) {
+      const i = idx
+      idx += 1
+      active += 1
+      renderMermaidIntoCharts({ mermaid, blocks, i, charts, setCharts, signal }).finally(onSettled)
+    }
+  }
+
+  pump()
+}
 
 const { Title, Text, Paragraph } = Typography
 const { TextArea } = Input
-
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'default',
-  themeVariables: {
-    primaryColor: '#1890ff',
-    primaryTextColor: '#262626',
-    primaryBorderColor: '#d9d9d9',
-    lineColor: '#52c41a',
-    secondaryColor: '#f6ffed',
-    tertiaryColor: '#f0f9ff',
-  },
-  flowchart: {
-    useMaxWidth: true,
-    htmlLabels: true,
-    curve: 'basis',
-  },
-  securityLevel: 'loose',
-})
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
 
@@ -78,7 +150,7 @@ const hexToRgb = (hex) => {
   const s = hex.trim()
 
   // rgb()/rgba()
-  const rgbMatch = s.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/i)
+  const rgbMatch = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/i.exec(s)
   if (rgbMatch) {
     return {
       r: clamp(Number(rgbMatch[1]), 0, 255),
@@ -131,19 +203,80 @@ const normalizeMermaidCode = (code) => {
   maybeStrip(/^\s*[-*+]\s+/) // unordered list
   maybeStrip(/^\s*\d+\.\s+/) // ordered list
 
-  const firstMeaningful = lines.map((l) => l.trim()).find((t) => t && !t.startsWith('%%') && !t.startsWith('%%{'))
-  const head = (firstMeaningful || '').toLowerCase()
-  // const isSequence = head.startsWith('sequencediagram')
-  // const isFlowOrGraph = head.startsWith('flowchart') || head.startsWith('graph')
-
   return lines.join('\n').trim()
 }
 
-const syncMermaidThemeFromToken = (token, mode) => {
+const CustomComponents = {
+  table: ({ children, ...props }) => (
+    <div style={{ overflowX: 'auto', margin: '16px 0', width: '100%' }}>
+      <table
+        {...props}
+        style={{
+          width: 'max-content',
+          minWidth: '100%',
+          tableLayout: 'auto',
+          borderCollapse: 'collapse',
+          border: '1px solid #d9d9d9',
+          borderRadius: '6px',
+          overflow: 'hidden',
+        }}
+      >
+        {children}
+      </table>
+    </div>
+  ),
+
+  thead: ({ children, ...props }) => (
+    <thead
+      {...props}
+      style={{
+        backgroundColor: '#fafafa',
+        borderBottom: '2px solid #d9d9d9',
+      }}
+    >
+      {children}
+    </thead>
+  ),
+
+  th: ({ children, ...props }) => (
+    <th
+      {...props}
+      style={{
+        padding: '12px 16px',
+        textAlign: 'left',
+        fontWeight: 600,
+        color: '#262626',
+        borderRight: '1px solid #d9d9d9',
+        whiteSpace: 'normal',
+      }}
+    >
+      {children}
+    </th>
+  ),
+
+  td: ({ children, ...props }) => (
+    <td
+      {...props}
+      style={{
+        padding: '12px 16px',
+        borderBottom: '1px solid #f0f0f0',
+        borderRight: '1px solid #f0f0f0',
+        verticalAlign: 'top',
+        whiteSpace: 'normal',
+        wordBreak: 'break-word',
+      }}
+    >
+      {children}
+    </td>
+  ),
+}
+
+const syncMermaidThemeFromToken = async (token, mode) => {
   if (!token) return
   const bg = token.colorBgContainer || '#ffffff'
   const isDark = mode ? mode === 'dark' : isDarkColor(bg)
   try {
+    const mermaid = await loadMermaid()
     mermaid.initialize({
       startOnLoad: false,
       theme: isDark ? 'dark' : 'default',
@@ -163,9 +296,66 @@ const syncMermaidThemeFromToken = (token, mode) => {
       },
       securityLevel: 'loose',
     })
-  } catch {
-    // ignore
+  } catch (e) {
+    console.warn('Mermaid 初始化失败:', e)
   }
+}
+
+const formatMindmapContent = (content) => {
+  if (!content) return content
+  let formatted = String(content).replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\t/g, '  ')
+
+  formatted = formatted.replace(/\n\s*\n\s*\n/g, '\n\n')
+
+  const lines = formatted.split('\n').filter((line) => line.trim())
+  if (lines.length > 0 && !lines[0].startsWith('- ')) {
+    lines[0] = '- ' + lines[0].replace(/^ -\s*|^-\s*/, '')
+  }
+
+  return lines.join('\n').trim()
+}
+
+const escapeHtml = (s) =>
+  String(s)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+
+const getExportPayload = (format, apiResult) => {
+  const safeText = removeMd(apiResult)
+  if (format === 'markdown') {
+    return { ext: 'md', mime: 'text/markdown;charset=utf-8', content: apiResult }
+  }
+  if (format === 'mdx') {
+    return { ext: 'mdx', mime: 'text/plain;charset=utf-8', content: apiResult }
+  }
+  if (format === 'doc') {
+    const html = `<!doctype html><html><head><meta charset="utf-8" /></head><body><pre style="white-space:pre-wrap;font-family:${escapeHtml(
+      'Calibri,Arial,Microsoft YaHei'
+    )};font-size:12pt;line-height:1.6;">${escapeHtml(safeText)}</pre></body></html>`
+    return { ext: 'doc', mime: 'application/msword', content: html }
+  }
+  return { ext: 'txt', mime: 'text/plain;charset=utf-8', content: safeText }
+}
+
+const exportDocument = (format, apiResult) => {
+  if (!apiResult) {
+    message.warning('没有可导出的内容')
+    return
+  }
+
+  const safeName = 'PRD文档'
+  const { ext, mime, content } = getExportPayload(format, apiResult)
+  const blob = new Blob([content], { type: mime })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `${safeName}.${ext}`
+  link.click()
+  URL.revokeObjectURL(url)
+  message.success(`成功导出 ${ext.toUpperCase()} 格式`)
 }
 
 const PROJECT_TEMPLATES = {
@@ -506,6 +696,7 @@ const PROJECT_TEMPLATES = {
 }
 
 // 修复后的 MermaidRenderer - 只在文档完成时渲染一次
+// NOSONAR
 const MermaidChartViewer = ({ svg, title, themeMode }) => {
   const { token } = theme.useToken()
   const wrapRef = useRef(null)
@@ -699,6 +890,13 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
   )
 }
 
+MermaidChartViewer.propTypes = {
+  svg: PropTypes.string,
+  title: PropTypes.string,
+  themeMode: PropTypes.string,
+}
+
+// NOSONAR
 const MermaidRenderer = ({ content, readyState, themeMode }) => {
   const { token } = theme.useToken()
   const [progress, setProgress] = useState({ total: 0, finished: 0 })
@@ -706,13 +904,17 @@ const MermaidRenderer = ({ content, readyState, themeMode }) => {
   const isDarkMode = themeMode === 'dark'
 
   useEffect(() => {
-    let cancelled = false
+    const abortController = new AbortController()
+    const { signal } = abortController
     if (readyState !== 2 || !content) {
       setCharts([])
       setProgress({ total: 0, finished: 0 })
-      return
+      return () => {
+        abortController.abort()
+      }
     }
 
+    // Fire-and-forget: theme sync should never block rendering.
     syncMermaidThemeFromToken(token, themeMode)
 
     const regex = /```\s*mermaid\s*\n?([\s\S]*?)```/gi
@@ -723,81 +925,9 @@ const MermaidRenderer = ({ content, readyState, themeMode }) => {
       if (code) blocks.push(code)
     }
 
-    const total = blocks.length
-    setProgress({ total, finished: 0 })
-    setCharts(Array.from({ length: total }, (_, i) => ({ title: `图表 ${i + 1}`, pending: true })))
-    if (total === 0) return
-
-    const run = async () => {
-      const concurrency = 3
-      let active = 0
-      let idx = 0
-
-      const enqueue = async () => {
-        while (idx < total && !cancelled) {
-          if (active >= concurrency) {
-            await new Promise((r) => setTimeout(r, 60))
-            continue
-          }
-          active++
-          const i = idx++
-          const code = blocks[i]
-          const id = `mermaid-${Date.now()}-${i}`
-          const title = `图表 ${i + 1}`
-          ;(async () => {
-            let host
-            try {
-              // Mermaid v11 渲染依赖“挂到 DOM 上的容器”进行测量，否则可能全量失败
-              // 这里使用 offscreen host：不会出现在页面内容里，且渲染完成/失败都会移除
-              host = document.createElement('div')
-              host.setAttribute('aria-hidden', 'true')
-              host.style.cssText =
-                'position:fixed;left:-10000px;top:0;width:2000px;height:2000px;overflow:hidden;opacity:0;pointer-events:none;'
-              document.body.appendChild(host)
-
-              const { svg } = await mermaid.render(id, code, host)
-              host.remove()
-              host = null
-
-              if (!cancelled) {
-                setCharts((prev) => {
-                  const next = prev.slice()
-                  next[i] = { title, svg }
-                  return next
-                })
-              }
-            } catch (err) {
-              try {
-                if (host) host.remove()
-              } catch {
-                // ignore
-              }
-              if (!cancelled) {
-                setCharts((prev) => {
-                  const next = prev.slice()
-                  next[i] = { title, error: String(err?.message || err), code }
-                  return next
-                })
-              }
-            } finally {
-              try {
-                if (host) host.remove()
-              } catch {
-                // ignore
-              }
-              if (!cancelled) setProgress((p) => ({ ...p, finished: p.finished + 1 }))
-              active--
-            }
-          })()
-        }
-      }
-
-      for (let i = 0; i < concurrency; i++) enqueue()
-    }
-
-    run()
+    void runMermaidBlocks({ blocks, setCharts, setProgress, signal })
     return () => {
-      cancelled = true
+      abortController.abort()
     }
   }, [content, readyState, token, themeMode])
 
@@ -863,6 +993,12 @@ const MermaidRenderer = ({ content, readyState, themeMode }) => {
   )
 }
 
+MermaidRenderer.propTypes = {
+  content: PropTypes.string,
+  readyState: PropTypes.number,
+  themeMode: PropTypes.string,
+}
+
 const ChatGpt = () => {
   const [form] = Form.useForm()
 
@@ -876,9 +1012,15 @@ const ChatGpt = () => {
   const [apiKey, setApiKey] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('supplyChain')
 
+  const apiResultFlushRafRef = useRef(0)
+  const apiResultDirtyRef = useRef(false)
+
   const [structureResult, setStructureResult] = useState('')
   const [structureReadyState, setStructureReadyState] = useState(-1)
-  const structureResultRef = useRef()
+  const structureResultRef = useRef('')
+
+  const structureResultFlushRafRef = useRef(0)
+  const structureResultDirtyRef = useRef(false)
 
   const [progress, setProgress] = useState(0)
 
@@ -893,6 +1035,41 @@ const ChatGpt = () => {
     return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
   }, [])
 
+  useEffect(() => {
+    return () => {
+      if (apiResultFlushRafRef.current) {
+        cancelAnimationFrame(apiResultFlushRafRef.current)
+        apiResultFlushRafRef.current = 0
+      }
+      if (structureResultFlushRafRef.current) {
+        cancelAnimationFrame(structureResultFlushRafRef.current)
+        structureResultFlushRafRef.current = 0
+      }
+    }
+  }, [])
+
+  const scheduleApiResultFlush = useCallback(() => {
+    apiResultDirtyRef.current = true
+    if (apiResultFlushRafRef.current) return
+    apiResultFlushRafRef.current = requestAnimationFrame(() => {
+      apiResultFlushRafRef.current = 0
+      if (!apiResultDirtyRef.current) return
+      apiResultDirtyRef.current = false
+      setApiResult(apiResultRef.current)
+    })
+  }, [])
+
+  const scheduleStructureResultFlush = useCallback(() => {
+    structureResultDirtyRef.current = true
+    if (structureResultFlushRafRef.current) return
+    structureResultFlushRafRef.current = requestAnimationFrame(() => {
+      structureResultFlushRafRef.current = 0
+      if (!structureResultDirtyRef.current) return
+      structureResultDirtyRef.current = false
+      setStructureResult(structureResultRef.current)
+    })
+  }, [])
+
   const openPreviewFullscreen = useCallback(async () => {
     const el = previewFullscreenRef.current
     if (!el) return
@@ -905,6 +1082,7 @@ const ChatGpt = () => {
     try {
       await el.requestFullscreen()
     } catch (e) {
+      console.warn('进入全屏失败:', e)
       message.error('进入全屏失败，请重试')
     }
   }, [])
@@ -914,6 +1092,7 @@ const ChatGpt = () => {
     try {
       await document.exitFullscreen()
     } catch (e) {
+      console.warn('退出全屏失败:', e)
       message.error('退出全屏失败，请重试')
     }
   }, [])
@@ -992,8 +1171,8 @@ const ChatGpt = () => {
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           apiResultRef.current += content
-          setApiResult(apiResultRef.current)
-          setReadyState(1)
+          scheduleApiResultFlush()
+          setReadyState((prev) => (prev === 1 ? prev : 1))
         }
       } else {
         setReadyState(2)
@@ -1045,6 +1224,7 @@ const ChatGpt = () => {
       copyTextToClipboard(content)
       message.success('复制成功！')
     } catch (err) {
+      console.warn('复制失败:', err)
       message.error('复制失败，请重试')
     }
   }
@@ -1115,8 +1295,8 @@ PRD文档内容：
         } = payload?.choices[0] || { delta: { content: '' } }
         if (content) {
           structureResultRef.current += content
-          setStructureResult(structureResultRef.current)
-          setStructureReadyState(1)
+          scheduleStructureResultFlush()
+          setStructureReadyState((prev) => (prev === 1 ? prev : 1))
         }
       } else {
         setStructureReadyState(2)
@@ -1182,152 +1362,9 @@ PRD文档内容：
   const bottomRef = useRef(null)
   const markmapRef = useRef(null)
 
-  const formatMindmapContent = (content) => {
-    if (!content) return content
-
-    let formatted = content.replace(/^#+\s*/gm, '')
-
-    formatted = formatted.replace(/^\d+\.\s*/gm, '- ')
-    formatted = formatted.replace(/^\*\s*/gm, '- ')
-
-    formatted = formatted.replace(/\t/g, '  ')
-
-    formatted = formatted.replace(/\n\s*\n\s*\n/g, '\n\n')
-
-    const lines = formatted.split('\n').filter((line) => line.trim())
-    if (lines.length > 0 && !lines[0].startsWith('- ')) {
-      lines[0] = '- ' + lines[0].replace(/^-\s*/, '')
-    }
-
-    return lines.join('\n').trim()
-  }
-
-  const exportDocument = (format) => {
-    if (!apiResult) {
-      message.warning('没有可导出的内容')
-      return
-    }
-
-    const safeText = removeMd(apiResult)
-    const safeName = `PRD文档`
-
-    const escapeHtml = (s) =>
-      String(s)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;')
-
-    const getExport = () => {
-      if (format === 'markdown') {
-        return { ext: 'md', mime: 'text/markdown;charset=utf-8', content: apiResult }
-      }
-      if (format === 'mdx') {
-        return { ext: 'mdx', mime: 'text/plain;charset=utf-8', content: apiResult }
-      }
-      if (format === 'doc') {
-        const html = `<!doctype html><html><head><meta charset="utf-8" /></head><body><pre style="white-space:pre-wrap;font-family:${escapeHtml(
-          'Calibri,Arial,Microsoft YaHei'
-        )};font-size:12pt;line-height:1.6;">${escapeHtml(safeText)}</pre></body></html>`
-        return { ext: 'doc', mime: 'application/msword', content: html }
-      }
-      return { ext: 'txt', mime: 'text/plain;charset=utf-8', content: safeText }
-    }
-
-    const { ext, mime, content } = getExport()
-    const blob = new Blob([content], { type: mime })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `${safeName}.${ext}`
-    link.click()
-    URL.revokeObjectURL(url)
-    message.success(`成功导出 ${ext.toUpperCase()} 格式`)
-  }
-
-  const CustomComponents = {
-    table: ({ children, ...props }) => (
-      <div style={{ overflowX: 'auto', margin: '16px 0', width: '100%' }}>
-        <table
-          {...props}
-          style={{
-            width: 'max-content',
-            minWidth: '100%',
-            tableLayout: 'auto',
-            borderCollapse: 'collapse',
-            border: '1px solid #d9d9d9',
-            borderRadius: '6px',
-            overflow: 'hidden',
-          }}
-        >
-          {children}
-        </table>
-      </div>
-    ),
-
-    thead: ({ children, ...props }) => (
-      <thead
-        {...props}
-        style={{
-          backgroundColor: '#fafafa',
-          borderBottom: '2px solid #d9d9d9',
-        }}
-      >
-        {children}
-      </thead>
-    ),
-
-    th: ({ children, ...props }) => (
-      <th
-        {...props}
-        style={{
-          padding: '12px 16px',
-          textAlign: 'left',
-          fontWeight: 600,
-          color: '#262626',
-          borderRight: '1px solid #d9d9d9',
-          whiteSpace: 'normal',
-        }}
-      >
-        {children}
-      </th>
-    ),
-
-    td: ({ children, ...props }) => (
-      <td
-        {...props}
-        style={{
-          padding: '12px 16px',
-          borderBottom: '1px solid #f0f0f0',
-          borderRight: '1px solid #f0f0f0',
-          verticalAlign: 'top',
-          whiteSpace: 'normal',
-          wordBreak: 'break-word',
-        }}
-      >
-        {children}
-      </td>
-    ),
-  }
-
-  const previewStyle = {
-    backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
-    color: theme === 'light' ? '#24292e' : '#c9d1d9',
-    padding: '20px',
-  }
-
   return (
     <FixTabPanel>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: 30 }}>
-          <Title level={2}>
-            <ThunderboltOutlined style={{ color: '#1890ff', marginRight: 10 }} />
-            AI驱动的PRD智能生成平台
-          </Title>
-          <Paragraph type="secondary">基于大语言模型，一键生成专业产品需求文档和架构思维导图</Paragraph>
-        </div>
-
+      <div>
         <Card
           title={
             <Space>
@@ -1460,13 +1497,13 @@ PRD文档内容：
                               } else if (key === '2') {
                                 copyToClipboard('2')
                               } else if (key === '3') {
-                                exportDocument('markdown')
+                                exportDocument('markdown', apiResult)
                               } else if (key === '4') {
-                                exportDocument('text')
+                                exportDocument('text', apiResult)
                               } else if (key === '5') {
-                                exportDocument('mdx')
+                                exportDocument('mdx', apiResult)
                               } else if (key === '6') {
-                                exportDocument('doc')
+                                exportDocument('doc', apiResult)
                               }
                             },
                             items: [

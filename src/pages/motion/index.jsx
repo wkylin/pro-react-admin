@@ -5,7 +5,7 @@ import ScrollableSections from '@stateless/ScrollableSections'
 import AboutSection from '@stateless/AboutSection'
 import ContactSection from '@stateless/ContactSection'
 
-const ParallaxVert = ({ props }) => {
+const ParallaxVert = () => {
   const controller = useAnimationControls()
   const constraintsRef = useRef(null)
   const scrollContainerRef = useRef(null)

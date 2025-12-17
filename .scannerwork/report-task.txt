@@ -2,5 +2,5 @@ projectKey=pro-react-admin
 serverUrl=http://localhost:9000
 serverVersion=25.2.0.102705
 dashboardUrl=http://localhost:9000/dashboard?id=pro-react-admin
-ceTaskId=8c530982-2933-4350-80bf-097fa898a0a1
-ceTaskUrl=http://localhost:9000/api/ce/task?id=8c530982-2933-4350-80bf-097fa898a0a1
+ceTaskId=4907c80c-0a94-4652-948b-7cc4af87fae9
+ceTaskUrl=http://localhost:9000/api/ce/task?id=4907c80c-0a94-4652-948b-7cc4af87fae9

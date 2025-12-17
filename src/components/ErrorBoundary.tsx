@@ -18,7 +18,7 @@ type State = {
 }
 
 export default class ErrorBoundary extends React.Component<Props, State> {
-  static defaultProps = {
+  static readonly defaultProps = {
     showDetails: true,
   }
   state: State = { hasError: false }

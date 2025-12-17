@@ -11,8 +11,7 @@
   position: relative;
   height: 100vh;
   height: 100dvh;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
   -webkit-overflow-scrolling: touch;
   background: var(--signup-bg);
 }
@@ -56,7 +55,7 @@
     color-mix(in srgb, var(--signup-primary-2) 18%, transparent),
     transparent
   );
-  animation: bgFlow 9s linear infinite;
+  animation: bg-flow 9s linear infinite;
   opacity: 0.75;
 }
 
@@ -83,12 +82,11 @@
   padding: 34px;
   border-radius: 18px;
   border: 1px solid color-mix(in srgb, var(--signup-border) 70%, transparent);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--signup-panel) 70%, transparent),
-      color-mix(in srgb, var(--signup-panel-2) 82%, transparent)
-    );
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--signup-panel) 70%, transparent),
+    color-mix(in srgb, var(--signup-panel-2) 82%, transparent)
+  );
   box-shadow: var(--signup-shadow);
   overflow: hidden;
 }
@@ -98,8 +96,16 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(400px 400px at 30% 30%, color-mix(in srgb, var(--signup-primary) 14%, transparent), transparent 65%),
-    radial-gradient(420px 420px at 80% 40%, color-mix(in srgb, var(--signup-primary-2) 12%, transparent), transparent 70%);
+    radial-gradient(
+      400px 400px at 30% 30%,
+      color-mix(in srgb, var(--signup-primary) 14%, transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      420px 420px at 80% 40%,
+      color-mix(in srgb, var(--signup-primary-2) 12%, transparent),
+      transparent 70%
+    );
   opacity: 0.9;
 }
 
@@ -118,7 +124,7 @@
 
 .heroTitle {
   position: relative;
-  margin: 0 0 12px 0 !important;
+  margin: 0 0 12px !important;
   color: var(--signup-text) !important;
   letter-spacing: 0.2px;
 }
@@ -241,7 +247,7 @@
   opacity: 0.55;
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
   .grid {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -249,13 +255,15 @@
   }
 }
 
-@keyframes bgFlow {
+@keyframes bg-flow {
   0% {
     transform: translate3d(-6%, -2%, 0) rotate(0deg);
   }
+
   50% {
     transform: translate3d(6%, 2%, 0) rotate(10deg);
   }
+
   100% {
     transform: translate3d(-6%, -2%, 0) rotate(0deg);
   }
@@ -265,6 +273,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -275,13 +284,16 @@
     transform: translateX(-10%) skewX(-18deg);
     opacity: 0;
   }
+
   20% {
     opacity: 0.6;
   }
+
   55% {
     transform: translateX(240%) skewX(-18deg);
     opacity: 0.2;
   }
+
   100% {
     transform: translateX(240%) skewX(-18deg);
     opacity: 0;

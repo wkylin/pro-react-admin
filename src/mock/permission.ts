@@ -210,6 +210,57 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '*': '*:*',
 }
 
+const resolveRoutePermission = (route: string): PermissionCode | undefined => {
+  const direct = routePermissionMap[route]
+  if (direct) return direct
+
+  let temp = route
+  while (temp && temp !== '/') {
+    const paramCandidate = routePermissionMap[`${temp}/:id`]
+    if (paramCandidate) return paramCandidate
+
+    const idx = temp.lastIndexOf('/')
+    if (idx <= 0) break
+
+    temp = temp.substring(0, idx)
+    const parent = routePermissionMap[temp]
+    if (parent) return parent
+  }
+
+  return routePermissionMap['*']
+}
+
+const collectPermissionsFromRoutes = (routes: string[], perms: Set<string>) => {
+  routes.forEach((r) => {
+    const permission = resolveRoutePermission(r)
+    if (permission) perms.add(permission)
+  })
+}
+
+const makeUserPermission = ({
+  userId,
+  username,
+  role,
+  basePermissions,
+  routes,
+}: {
+  userId: string
+  username: string
+  role: Role
+  basePermissions: string[]
+  routes: string[]
+}): UserPermission => {
+  const perms = new Set<string>(basePermissions)
+  collectPermissionsFromRoutes(routes, perms)
+  return {
+    userId,
+    username,
+    roles: [role],
+    permissions: Array.from(perms) as PermissionCode[],
+    routes,
+  }
+}
+
 /**
  * 用户权限配置（按账号映射）
  */
@@ -221,116 +272,80 @@ export const mockUserPermissions: Record<string, UserPermission> = {
     permissions: ['*:*'],
     routes: adminRoutes,
   },
-  admin: ((): UserPermission => {
-    // 为管理员根据 routes 自动收集 permissions
-    const base = ['home:read', 'user:read', 'user:create', 'user:update', 'dashboard:read']
-    const perms = new Set<string>(base)
-    const collect = (routes: string[]) => {
-      routes.forEach((r) => {
-        let p = routePermissionMap[r]
-        if (!p) {
-          // 尝试向上匹配父路径或带参数的模式
-          let temp = r
-          while (temp && temp !== '/') {
-            const candidateParam = `${temp}/:id`
-            if (routePermissionMap[candidateParam]) {
-              p = routePermissionMap[candidateParam]
-              break
-            }
-            const idx = temp.lastIndexOf('/')
-            if (idx <= 0) break
-            temp = temp.substring(0, idx)
-            if (routePermissionMap[temp]) {
-              p = routePermissionMap[temp]
-              break
-            }
-          }
-        }
-        if (!p && routePermissionMap['*']) p = routePermissionMap['*']
-        if (p) perms.add(p)
-      })
-    }
-    collect(managerRoutes)
-    return {
-      userId: '2',
-      username: '管理员',
-      roles: [mockRoles[1]],
-      permissions: Array.from(perms) as PermissionCode[],
-      routes: managerRoutes,
-    }
-  })(),
-  business_user: ((): UserPermission => {
-    const base = ['home:read', 'business:*', 'coupons:read', 'coupons:create', 'dashboard:read']
-    const perms = new Set<string>(base)
-    const collect = (routes: string[]) => {
-      routes.forEach((r) => {
-        let p = routePermissionMap[r]
-        if (!p) {
-          let temp = r
-          while (temp && temp !== '/') {
-            const candidateParam = `${temp}/:id`
-            if (routePermissionMap[candidateParam]) {
-              p = routePermissionMap[candidateParam]
-              break
-            }
-            const idx = temp.lastIndexOf('/')
-            if (idx <= 0) break
-            temp = temp.substring(0, idx)
-            if (routePermissionMap[temp]) {
-              p = routePermissionMap[temp]
-              break
-            }
-          }
-        }
-        if (!p && routePermissionMap['*']) p = routePermissionMap['*']
-        if (p) perms.add(p)
-      })
-    }
-    collect(businessRoutes)
-    return {
-      userId: '3',
-      username: '业务员',
-      roles: [mockRoles[2]],
-      permissions: Array.from(perms) as PermissionCode[],
-      routes: businessRoutes,
-    }
-  })(),
-  user: ((): UserPermission => {
-    const base = ['home:read', 'dashboard:read']
-    const perms = new Set<string>(base)
-    const collect = (routes: string[]) => {
-      routes.forEach((r) => {
-        let p = routePermissionMap[r]
-        if (!p) {
-          let temp = r
-          while (temp && temp !== '/') {
-            const candidateParam = `${temp}/:id`
-            if (routePermissionMap[candidateParam]) {
-              p = routePermissionMap[candidateParam]
-              break
-            }
-            const idx = temp.lastIndexOf('/')
-            if (idx <= 0) break
-            temp = temp.substring(0, idx)
-            if (routePermissionMap[temp]) {
-              p = routePermissionMap[temp]
-              break
-            }
-          }
-        }
-        if (!p && routePermissionMap['*']) p = routePermissionMap['*']
-        if (p) perms.add(p)
-      })
-    }
-    collect(userRoutes)
-    return {
-      userId: '4',
-      username: '普通用户',
-      roles: [mockRoles[3]],
-      permissions: Array.from(perms) as PermissionCode[],
-      routes: userRoutes,
-    }
-  })(),
+  admin: makeUserPermission({
+    userId: '2',
+    username: '管理员',
+    role: mockRoles[1],
+    basePermissions: ['home:read', 'user:read', 'user:create', 'user:update', 'dashboard:read'],
+    routes: managerRoutes,
+  }),
+  business_user: makeUserPermission({
+    userId: '3',
+    username: '业务员',
+    role: mockRoles[2],
+    basePermissions: ['home:read', 'business:*', 'coupons:read', 'coupons:create', 'dashboard:read'],
+    routes: businessRoutes,
+  }),
+  user: makeUserPermission({
+    userId: '4',
+    username: '普通用户',
+    role: mockRoles[3],
+    basePermissions: ['home:read', 'dashboard:read'],
+    routes: userRoutes,
+  }),
+}
+
+const safeJsonParse = <T>(text: string | null): T | null => {
+  if (!text) return null
+  try {
+    return JSON.parse(text) as T
+  } catch {
+    return null
+  }
+}
+
+const tryGetManualRolePermission = (): UserPermission | null => {
+  const storedRoleCode = localStorage.getItem('user_role')
+  console.log('📝 手动设置的角色:', storedRoleCode)
+  if (storedRoleCode && mockUserPermissions[storedRoleCode]) {
+    console.log('✅ 使用手动设置的角色:', storedRoleCode)
+    return { ...mockUserPermissions[storedRoleCode] }
+  }
+  return null
+}
+
+const tryGetGithubUserPermission = (): UserPermission | null => {
+  const githubUser = localStorage.getItem('github_user')
+  const user = safeJsonParse<{ email?: string }>(githubUser)
+  if (!user) return null
+
+  console.log('🔍 检测到 GitHub 用户:', user)
+  if (user.email === 'wkylin.w@gmail.com' || user.email) {
+    console.log('✅ GitHub 用户登录，授予超级管理员权限')
+    return { ...mockUserPermissions['super_admin'] }
+  }
+  return null
+}
+
+const tryGetTokenRolePermission = (): UserPermission | null => {
+  const tokenData = localStorage.getItem('token')
+  console.log('🎫 Token 数据:', tokenData)
+  if (!tokenData) return null
+
+  const tokenObj = safeJsonParse<{ token?: string }>(tokenData)
+  const email = tokenObj?.token ?? tokenData
+  console.log('📧 解析出的邮箱:', email)
+  console.log('🔎 查找账号:', email, '在', Object.keys(testAccounts))
+
+  const account = testAccounts[email]
+  if (!account) {
+    console.log('❌ 未找到匹配的测试账号')
+    return null
+  }
+
+  console.log('✅ 找到账号，角色:', account.role)
+  console.log('📋 返回权限数据:', mockUserPermissions[account.role])
+  return { ...mockUserPermissions[account.role] }
 }
 
 /**
@@ -342,61 +357,18 @@ export const mockGetUserPermissions = async (_userId?: string, _roleCode?: strin
   console.log('🔍 开始获取用户权限...')
 
   // 1. 优先使用手动设置的角色（用于测试切换）
-  const storedRoleCode = localStorage.getItem('user_role')
-  console.log('📝 手动设置的角色:', storedRoleCode)
-  if (storedRoleCode && mockUserPermissions[storedRoleCode]) {
-    console.log('✅ 使用手动设置的角色:', storedRoleCode)
-    return { ...mockUserPermissions[storedRoleCode] }
-  }
+  const manual = tryGetManualRolePermission()
+  if (manual) return manual
 
-  // 2. 根据 token 中的邮箱获取角色
-  try {
-    const tokenData = localStorage.getItem('token') || localStorage.getItem('github_token')
-    console.log('🎫 Token 数据:', tokenData)
+  // 2. GitHub 登录用户检查（优先级最高，因为 GitHub 用户总是超级管理员）
+  const github = tryGetGithubUserPermission()
+  if (github) return github
 
-    if (tokenData) {
-      let email = ''
-      try {
-        const tokenObj = JSON.parse(tokenData)
-        email = tokenObj.token || tokenData
-        console.log('📧 解析出的邮箱:', email)
-      } catch {
-        email = tokenData
-        console.log('📧 直接使用的邮箱:', email)
-      }
+  // 3. 根据测试账号 token 中的邮箱获取角色
+  const token = tryGetTokenRolePermission()
+  if (token) return token
 
-      // 根据邮箱匹配账号
-      console.log('🔎 查找账号:', email, '在', Object.keys(testAccounts))
-      if (testAccounts[email]) {
-        const account = testAccounts[email]
-        console.log('✅ 找到账号，角色:', account.role)
-        console.log('📋 返回权限数据:', mockUserPermissions[account.role])
-        return { ...mockUserPermissions[account.role] }
-      } else {
-        console.log('❌ 未找到匹配的测试账号')
-      }
-
-      // GitHub 登录特殊处理
-      if (email === 'wkylin.w@gmail.com') {
-        console.log('✅ GitHub 超级管理员登录')
-        return { ...mockUserPermissions['super_admin'] }
-      }
-    }
-
-    // GitHub 用户信息
-    const githubUser = localStorage.getItem('github_user')
-    if (githubUser) {
-      const user = JSON.parse(githubUser)
-      if (user.email === 'wkylin.w@gmail.com') {
-        console.log('✅ GitHub 用户登录')
-        return { ...mockUserPermissions['super_admin'] }
-      }
-    }
-  } catch (error) {
-    console.error('❌ 解析用户信息失败:', error)
-  }
-
-  // 3. 默认返回普通用户权限
+  // 4. 默认返回普通用户权限
   console.log('⚠️ 使用默认权限（普通用户）')
   return { ...mockUserPermissions['user'] }
 }

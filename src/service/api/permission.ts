@@ -17,23 +17,34 @@ export type Permission = {
 const BASE_URL = getEnv('APP_BASE_URL', '')
 const USE_MOCK = getEnvBool('REACT_APP_USE_MOCK', false) || !BASE_URL
 
+const normalizeUserPermissions = (input: any): UserPermission => {
+  const safe = input && typeof input === 'object' ? input : {}
+  return {
+    userId: typeof safe.userId === 'string' ? safe.userId : '',
+    username: typeof safe.username === 'string' ? safe.username : '',
+    roles: Array.isArray(safe.roles) ? safe.roles.filter(Boolean) : [],
+    permissions: Array.isArray(safe.permissions) ? safe.permissions.filter(Boolean) : [],
+    routes: Array.isArray(safe.routes) ? safe.routes.filter(Boolean) : [],
+  }
+}
+
 /**
  * 获取当前用户权限信息
  */
 export const getUserPermissions = async (userId?: string): Promise<UserPermission> => {
   if (USE_MOCK) {
-    return mockGetUserPermissions(userId)
+    return normalizeUserPermissions(await mockGetUserPermissions(userId))
   }
 
   try {
     const response = (await request.get('/api/permissions/current')) as any
     if (response && typeof response === 'object' && 'data' in response && 'code' in response) {
-      return response.data as UserPermission
+      return normalizeUserPermissions(response.data)
     }
-    return response as UserPermission
+    return normalizeUserPermissions(response)
   } catch (error) {
     console.error('获取用户权限失败，回退到 Mock:', error)
-    return mockGetUserPermissions(userId)
+    return normalizeUserPermissions(await mockGetUserPermissions(userId))
   }
 }
 
@@ -71,7 +82,7 @@ export const checkAllPermissions = async (permissions: PermissionCode[], userId?
 
 export const checkAnyPermission = async (permissions: PermissionCode[], userId?: string): Promise<boolean> => {
   const userPermissions = await getUserPermissions(userId)
-  return userPermissions.permissions.some((p) => permissions.includes(p as PermissionCode))
+  return userPermissions.permissions.some((p) => permissions.includes(p))
 }
 
 export const getUserRoutes = async (userId?: string): Promise<string[]> => {

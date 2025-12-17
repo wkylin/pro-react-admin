@@ -157,16 +157,22 @@ const initialEdges = [
 ]
 
 function Flow() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [nodes, , onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
+
+  const safeNodes = Array.isArray(nodes) ? nodes.filter((n) => n && typeof n === 'object' && n.id) : []
+
+  const safeEdges = Array.isArray(edges)
+    ? edges.filter((e) => e && typeof e === 'object' && e.id && e.source && e.target)
+    : []
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges])
 
   return (
     <FixTabPanel fill={true}>
       <ReactFlow
-        nodes={nodes}
-        edges={edges}
+        nodes={safeNodes}
+        edges={safeEdges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
