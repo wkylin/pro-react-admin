@@ -1,0 +1,211 @@
+.previewScroll {
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  overflow: auto;
+  max-height: 600px;
+}
+
+.previewFullscreenHost {
+  /* Keep element present for requestFullscreen() while not impacting layout */
+  position: fixed;
+  left: -100000px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.previewFullscreenHostActive {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.previewFullscreenContent {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.previewFullscreenLight {
+  color-scheme: light;
+}
+
+.previewFullscreenDark {
+  color-scheme: dark;
+}
+
+.previewFullscreenHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(6px);
+}
+
+.previewFullscreenDark .previewFullscreenHeader {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+  background: rgba(30, 30, 30, 0.86);
+}
+
+.previewFullscreenDark :global(.wmde-markdown) {
+  color: rgba(255, 255, 255, 0.88);
+  background: transparent;
+}
+
+.previewFullscreenDark :global(.wmde-markdown h1),
+.previewFullscreenDark :global(.wmde-markdown h2),
+.previewFullscreenDark :global(.wmde-markdown h3),
+.previewFullscreenDark :global(.wmde-markdown h4),
+.previewFullscreenDark :global(.wmde-markdown h5),
+.previewFullscreenDark :global(.wmde-markdown h6) {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.previewFullscreenDark :global(.wmde-markdown hr) {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.previewFullscreenDark :global(.wmde-markdown blockquote) {
+  color: rgba(255, 255, 255, 0.75);
+  border-left-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.previewFullscreenDark :global(.wmde-markdown pre),
+.previewFullscreenDark :global(.wmde-markdown code) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.previewFullscreenDark :global(.wmde-markdown pre) {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.previewFullscreenDark :global(.wmde-markdown table),
+.previewFullscreenDark :global(.wmde-markdown th),
+.previewFullscreenDark :global(.wmde-markdown td) {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.previewFullscreenDark :global(.wmde-markdown thead th) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.previewFullscreenBody {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+
+.previewScroll :global {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+}
+
+.mermaidProgress {
+  text-align: center;
+  padding: 24px 0;
+  font-size: 14px;
+  color: var(--mm-text, rgba(0, 0, 0, 0.88));
+}
+
+.mermaidEmpty {
+  text-align: center;
+  padding: 16px 0;
+  font-size: 14px;
+  color: var(--mm-text2, rgba(0, 0, 0, 0.45));
+}
+
+.mermaidError {
+  margin-top: 16px;
+}
+
+.mermaidCode {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.6;
+  border: 1px solid var(--mm-border, #d9d9d9);
+  background: var(--mm-bg2, #fafafa);
+  color: var(--mm-text, rgba(0, 0, 0, 0.88));
+}
+
+.mermaidCard {
+  margin: 18px 0;
+  border-radius: 14px;
+  border: 1px solid var(--mm-border);
+  background: var(--mm-bg);
+  box-shadow: var(--mm-shadow);
+  overflow: hidden;
+}
+
+.mermaidHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--mm-border);
+  background: var(--mm-bg2);
+}
+
+.mermaidTitle {
+  font-weight: 600;
+  color: var(--mm-text);
+}
+
+.mermaidTools {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mermaidWrap {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  background: var(--mm-bg2);
+  position: relative;
+  overflow: auto;
+  touch-action: none;
+  cursor: grab;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 16px 0 20px;
+}
+
+.mermaidWrap:active {
+  cursor: grabbing;
+}
+
+.mermaidCanvas {
+  position: relative;
+  transform-origin: center;
+}
+
+.mermaidCanvas svg {
+  display: block;
+}
+
+
+
+:global {
+  /* Ensure copy button stays clickable/visible in code blocks */
+  .wmde-markdown pre .copied {
+    z-index: 3;
+  }
+}

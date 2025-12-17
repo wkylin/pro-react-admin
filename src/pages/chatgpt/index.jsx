@@ -17,10 +17,10 @@ import {
   Alert,
   Tooltip,
   Badge,
-  Drawer,
   Switch,
   Tag,
   Spin,
+  theme,
 } from 'antd'
 import {
   DownloadOutlined,
@@ -41,9 +41,13 @@ import {
 import { copyTextToClipboard } from '@utils/aidFn'
 import initSSE from './fixSse'
 import removeMd from 'remove-markdown'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
 import '@uiw/react-md-editor/markdown-editor.css'
 import '@uiw/react-markdown-preview/markdown.css'
+import 'katex/dist/katex.min.css'
 import mermaid from 'mermaid'
+import styles from './index.module.less'
 
 const { Title, Text, Paragraph } = Typography
 const { TextArea } = Input
@@ -66,6 +70,103 @@ mermaid.initialize({
   },
   securityLevel: 'loose',
 })
+
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
+
+const hexToRgb = (hex) => {
+  if (typeof hex !== 'string') return null
+  const s = hex.trim()
+
+  // rgb()/rgba()
+  const rgbMatch = s.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\s*\)$/i)
+  if (rgbMatch) {
+    return {
+      r: clamp(Number(rgbMatch[1]), 0, 255),
+      g: clamp(Number(rgbMatch[2]), 0, 255),
+      b: clamp(Number(rgbMatch[3]), 0, 255),
+    }
+  }
+
+  // #rgb/#rrggbb
+  const h = s.replace('#', '')
+  if (![3, 6].includes(h.length)) return null
+  const full =
+    h.length === 3
+      ? h
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : h
+  const n = Number.parseInt(full, 16)
+  if (Number.isNaN(n)) return null
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 }
+}
+
+const isDarkColor = (hex) => {
+  const rgb = hexToRgb(hex)
+  if (!rgb) return false
+  // perceived luminance
+  const l = (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255
+  return l < 0.45
+}
+
+const normalizeMermaidCode = (code) => {
+  if (!code) return code
+  const raw = String(code).replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+  let lines = raw.split('\n')
+
+  const nonEmpty = lines.filter((l) => l.trim()).length
+  if (nonEmpty === 0) return ''
+
+  const countPrefix = (re) => lines.filter((l) => l.trim() && re.test(l)).length
+  const maybeStrip = (re) => {
+    const hit = countPrefix(re)
+    if (hit / nonEmpty >= 0.6) {
+      lines = lines.map((l) => (re.test(l) ? l.replace(re, '') : l))
+    }
+  }
+
+  // 常见：LLM 把 Mermaid 代码块放在列表/引用里，导致每行带 `- ` 或 `> `
+  maybeStrip(/^\s*>\s?/) // blockquote
+  maybeStrip(/^\s*[-*+]\s+/) // unordered list
+  maybeStrip(/^\s*\d+\.\s+/) // ordered list
+
+  const firstMeaningful = lines.map((l) => l.trim()).find((t) => t && !t.startsWith('%%') && !t.startsWith('%%{'))
+  const head = (firstMeaningful || '').toLowerCase()
+  // const isSequence = head.startsWith('sequencediagram')
+  // const isFlowOrGraph = head.startsWith('flowchart') || head.startsWith('graph')
+
+  return lines.join('\n').trim()
+}
+
+const syncMermaidThemeFromToken = (token, mode) => {
+  if (!token) return
+  const bg = token.colorBgContainer || '#ffffff'
+  const isDark = mode ? mode === 'dark' : isDarkColor(bg)
+  try {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      themeVariables: {
+        primaryColor: token.colorPrimary,
+        primaryTextColor: isDark ? 'rgba(255, 255, 255, 0.88)' : token.colorText,
+        primaryBorderColor: isDark ? 'rgba(255, 255, 255, 0.16)' : token.colorBorder,
+        lineColor: token.colorPrimary,
+        secondaryColor: isDark ? '#141414' : token.colorBgLayout,
+        tertiaryColor: isDark ? '#0f0f0f' : token.colorFillQuaternary || token.colorBgLayout,
+        fontFamily: token.fontFamily,
+      },
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis',
+      },
+      securityLevel: 'loose',
+    })
+  } catch {
+    // ignore
+  }
+}
 
 const PROJECT_TEMPLATES = {
   supplyChain: {
@@ -154,7 +255,7 @@ const PROJECT_TEMPLATES = {
 - 技术路线图（使用 Mermaid timeline）
 - 架构演进策略（使用 Mermaid graph LR）
 ### 9.2 功能扩展
-- 功能扩展路线图（使用 Mermaid roadmap）
+- 功能扩展路线图（使用 Mermaid timeline）
 - 插件化架构设计（使用 Mermaid graph TD）
 ## 10. 成本分析
 ### 10.1 开发成本
@@ -164,7 +265,7 @@ const PROJECT_TEMPLATES = {
 - 投资回报率计算：ROI = (V_gain - C_total) / C_total × 100%
 - 效益分析（使用表格）
 请确保生成的文档：
-1. 包含至少 8 种不同类型的 Mermaid 图表
+1. 包含至少 8 种不同类型的 Mermaid 图表，规则要符合 Mermaid 语法标准
 2. 包含至少 5 个标准表格
 3. 包含至少 6 个代码块示例
 4. 包含至少 5 个数学公式
@@ -273,7 +374,7 @@ const PROJECT_TEMPLATES = {
 - 插件化架构设计（使用 Mermaid graph TB）
 - API 生态建设（使用 Mermaid graph LR）
 请确保生成的文档：
-1. 包含至少 10 种不同类型的 Mermaid 图表
+1. 包含至少 10 种不同类型的 Mermaid 图表，规则要符合 Mermaid 语法标准
 2. 包含至少 6 个标准表格
 3. 包含至少 8 个代码块示例
 4. 包含至少 6 个数学公式
@@ -395,7 +496,7 @@ const PROJECT_TEMPLATES = {
 - 生态合作模式（使用 Mermaid graph TB）
 - 商业模式创新（使用 Mermaid mindmap）
 请确保生成的文档：
-1. 包含至少 12 种不同类型的 Mermaid 图表
+1. 包含至少 12 种不同类型的 Mermaid 图表，规则要符合 Mermaid 语法标准
 2. 包含至少 8 个标准表格
 3. 包含至少 10 个代码块示例
 4. 包含至少 6 个数学公式
@@ -405,115 +506,369 @@ const PROJECT_TEMPLATES = {
 }
 
 // 修复后的 MermaidRenderer - 只在文档完成时渲染一次
-const MermaidRenderer = ({ content, readyState }) => {
-  const containerRef = useRef(null)
-  const [progress, setProgress] = useState({ total: 0, finished: 0 })
+const MermaidChartViewer = ({ svg, title, themeMode }) => {
+  const { token } = theme.useToken()
+  const wrapRef = useRef(null)
+  const canvasRef = useRef(null)
+
+  const isDarkMode = themeMode === 'dark'
+
+  const [scale, setScale] = useState(1)
+  const [translate, setTranslate] = useState({ x: 0, y: 0 })
+  const dragRef = useRef({ active: false, startX: 0, startY: 0, baseX: 0, baseY: 0 })
+
+  const clampScale = (v) => clamp(v, 0.2, 3.5)
+
+  const fit = useCallback(() => {
+    const wrap = wrapRef.current
+    const canvas = canvasRef.current
+    if (!wrap || !canvas) return
+
+    const svgEl = canvas.querySelector('svg')
+    if (!svgEl) return
+
+    // 清理 width/height，避免影响缩放计算
+    try {
+      svgEl.removeAttribute('width')
+      svgEl.removeAttribute('height')
+      svgEl.style.maxWidth = 'none'
+      svgEl.style.height = 'auto'
+    } catch {
+      // ignore
+    }
+
+    let wrapRect
+    let svgRect
+    try {
+      wrapRect = wrap.getBoundingClientRect()
+      svgRect = svgEl.getBoundingClientRect()
+    } catch {
+      return
+    }
+
+    const padding = 24
+    const availableW = Math.max(1, wrapRect.width - padding)
+    const availableH = Math.max(1, wrapRect.height - padding)
+    // 允许放大：图表较小时默认也能适配到可读尺寸
+    const s = clampScale(Math.min(availableW / Math.max(1, svgRect.width), availableH / Math.max(1, svgRect.height)))
+    setScale(s)
+    setTranslate({ x: 0, y: 0 })
+  }, [])
 
   useEffect(() => {
-    // 关键修复：只有当文档完全生成完毕时才渲染
-    if (readyState !== 2 || !content || !containerRef.current) return
-    console.log('MermaidRenderer received content length:', content?.length)
-    const render = async () => {
-      containerRef.current.innerHTML = ''
-      // 超级鲁棒正则，支持各种格式的代码块
-      const regex = /```mermaid\s*\n?([\s\S]*?)```/gi
-      const matches = []
-      let match
-      while ((match = regex.exec(content)) !== null) {
-        const code = match[1].trim()
-        if (code) matches.push(code)
+    // 默认视图使用“重置后大小”（scale=1），不自动进入“适配”模式
+    setScale(1)
+    setTranslate({ x: 0, y: 0 })
+
+    // 同时清理 svg 的 width/height，避免固定尺寸影响缩放/清晰度
+    const raf = requestAnimationFrame(() => {
+      const svgEl = canvasRef.current?.querySelector?.('svg')
+      if (!svgEl) return
+      try {
+        svgEl.removeAttribute('width')
+        svgEl.removeAttribute('height')
+        svgEl.style.maxWidth = 'none'
+        svgEl.style.height = 'auto'
+      } catch {
+        // ignore
       }
+    })
 
-      const total = matches.length
-      setProgress({ total, finished: 0 })
+    return () => cancelAnimationFrame(raf)
+  }, [svg])
 
-      if (total === 0) return
+  const onPointerDown = (e) => {
+    if (e.button !== 0) return
+    dragRef.current = {
+      active: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      baseX: translate.x,
+      baseY: translate.y,
+    }
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId)
+    } catch {
+      // ignore
+    }
+  }
 
-      const concurrency = 5
+  const onPointerMove = (e) => {
+    if (!dragRef.current.active) return
+    const dx = e.clientX - dragRef.current.startX
+    const dy = e.clientY - dragRef.current.startY
+    setTranslate({ x: dragRef.current.baseX + dx, y: dragRef.current.baseY + dy })
+  }
+
+  const onPointerUp = (e) => {
+    dragRef.current.active = false
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId)
+    } catch {
+      // ignore
+    }
+  }
+
+  const zoomBy = (delta) => {
+    setScale((s) => clampScale(s + delta))
+  }
+
+  const reset = () => {
+    setScale(1)
+    setTranslate({ x: 0, y: 0 })
+  }
+
+  const exportPng = async () => {
+    if (!wrapRef.current) return
+    try {
+      const dataUrl = await toPng(wrapRef.current, {
+        cacheBust: true,
+        backgroundColor: isDarkMode ? '#1e1e1e' : token.colorBgContainer,
+        pixelRatio: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
+      })
+      const link = document.createElement('a')
+      link.download = `${title || 'mermaid'}.png`
+      link.href = dataUrl
+      link.click()
+      message.success('已导出 PNG')
+    } catch (err) {
+      message.error(`导出失败: ${err.message || err}`)
+    }
+  }
+
+  return (
+    <div
+      className={styles.mermaidCard}
+      style={{
+        '--mm-border': isDarkMode ? 'rgba(255, 255, 255, 0.14)' : token.colorBorderSecondary,
+        '--mm-bg': isDarkMode ? '#141414' : token.colorBgContainer,
+        '--mm-bg2': isDarkMode ? '#0f0f0f' : token.colorBgLayout,
+        '--mm-text': isDarkMode ? 'rgba(255, 255, 255, 0.88)' : token.colorText,
+        '--mm-text2': isDarkMode ? 'rgba(255, 255, 255, 0.65)' : token.colorTextSecondary,
+        '--mm-shadow': isDarkMode ? 'none' : token.boxShadowSecondary,
+        '--mm-primary': token.colorPrimary,
+      }}
+    >
+      <div className={styles.mermaidHeader}>
+        <div className={styles.mermaidTitle}>{title}</div>
+        <div className={styles.mermaidTools}>
+          <Tooltip title="缩小">
+            <Button size="small" onClick={() => zoomBy(-0.15)}>
+              -
+            </Button>
+          </Tooltip>
+          <Tooltip title="放大">
+            <Button size="small" onClick={() => zoomBy(0.15)}>
+              +
+            </Button>
+          </Tooltip>
+          <Tooltip title="适配画布">
+            <Button size="small" onClick={fit}>
+              适配
+            </Button>
+          </Tooltip>
+          <Tooltip title="重置">
+            <Button size="small" onClick={reset}>
+              重置
+            </Button>
+          </Tooltip>
+          <Tooltip title="导出 PNG">
+            <Button size="small" icon={<DownloadOutlined />} onClick={exportPng} />
+          </Tooltip>
+        </div>
+      </div>
+
+      <div
+        ref={wrapRef}
+        className={styles.mermaidWrap}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
+        <div
+          className={styles.mermaidCanvas}
+          style={{
+            transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})`,
+          }}
+        >
+          <div ref={canvasRef} dangerouslySetInnerHTML={{ __html: svg }} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const MermaidRenderer = ({ content, readyState, themeMode }) => {
+  const { token } = theme.useToken()
+  const [progress, setProgress] = useState({ total: 0, finished: 0 })
+  const [charts, setCharts] = useState([])
+  const isDarkMode = themeMode === 'dark'
+
+  useEffect(() => {
+    let cancelled = false
+    if (readyState !== 2 || !content) {
+      setCharts([])
+      setProgress({ total: 0, finished: 0 })
+      return
+    }
+
+    syncMermaidThemeFromToken(token, themeMode)
+
+    const regex = /```\s*mermaid\s*\n?([\s\S]*?)```/gi
+    const blocks = []
+    let match
+    while ((match = regex.exec(content)) !== null) {
+      const code = normalizeMermaidCode(match[1])
+      if (code) blocks.push(code)
+    }
+
+    const total = blocks.length
+    setProgress({ total, finished: 0 })
+    setCharts(Array.from({ length: total }, (_, i) => ({ title: `图表 ${i + 1}`, pending: true })))
+    if (total === 0) return
+
+    const run = async () => {
+      const concurrency = 3
       let active = 0
       let idx = 0
 
-      const process = async () => {
-        while (idx < total) {
-          if (active >= concurrency) await new Promise((r) => setTimeout(r, 100))
-          active++
-
-          const i = idx++
-          const code = matches[i]
-          const title = `图表 ${i + 1}`
-          const id = `mermaid-${Date.now()}-${i}`
-          console.log('Matched mermaid blocks:', matches.length)
-          try {
-            const { svg } = await mermaid.render(id, code)
-            console.log('Rendering chart', i + 1)
-            const card = document.createElement('div')
-            card.style.cssText =
-              'margin:40px 0;padding:32px;background:#ffffff;border-radius:12px;border:1px solid #e0e0e0;box-shadow:0 8px 24px rgba(0,0,0,0.08);'
-
-            const titleEl = document.createElement('div')
-            titleEl.textContent = title
-            titleEl.style.cssText = 'font-size:20px;font-weight:600;margin-bottom:24px;text-align:center;color:#262626;'
-            card.appendChild(titleEl)
-
-            const wrapper = document.createElement('div')
-            wrapper.style.cssText =
-              'display:flex;justify-content:center;overflow:auto;background:#f8f9fa;border-radius:8px;padding:20px;'
-            wrapper.innerHTML = svg
-
-            const svgEl = wrapper.querySelector('svg')
-            if (svgEl) {
-              svgEl.style.maxWidth = '100%'
-              svgEl.style.height = 'auto'
-            }
-
-            card.appendChild(wrapper)
-            containerRef.current.appendChild(card)
-          } catch (err) {
-            console.log('Error:', err)
-            const errorCard = document.createElement('div')
-            errorCard.style.cssText =
-              'margin:40px 0;padding:32px;background:#fff1f0;border-radius:12px;border:1px solid #ff4d4f;'
-            errorCard.innerHTML = `
-              <div style="font-size:18px;font-weight:600;color:#ff4d4f;margin-bottom:16px;text-align:center;">${title} 渲染失败</div>
-              <div style="color:#a8071a;margin-bottom:16px;text-align:center;">${err.message}</div>
-              <details style="margin-top:16px;">
-                <summary style="cursor:pointer;color:#1890ff;">查看原始代码</summary>
-                <pre style="margin-top:12px;padding:16px;background:#f5f5f5;border-radius:8px;overflow:auto;font-size:13px;">${code}</pre>
-              </details>
-            `
-            containerRef.current.appendChild(errorCard)
+      const enqueue = async () => {
+        while (idx < total && !cancelled) {
+          if (active >= concurrency) {
+            await new Promise((r) => setTimeout(r, 60))
+            continue
           }
+          active++
+          const i = idx++
+          const code = blocks[i]
+          const id = `mermaid-${Date.now()}-${i}`
+          const title = `图表 ${i + 1}`
+          ;(async () => {
+            let host
+            try {
+              // Mermaid v11 渲染依赖“挂到 DOM 上的容器”进行测量，否则可能全量失败
+              // 这里使用 offscreen host：不会出现在页面内容里，且渲染完成/失败都会移除
+              host = document.createElement('div')
+              host.setAttribute('aria-hidden', 'true')
+              host.style.cssText =
+                'position:fixed;left:-10000px;top:0;width:2000px;height:2000px;overflow:hidden;opacity:0;pointer-events:none;'
+              document.body.appendChild(host)
 
-          setProgress((p) => ({ ...p, finished: p.finished + 1 }))
-          active--
+              const { svg } = await mermaid.render(id, code, host)
+              host.remove()
+              host = null
+
+              if (!cancelled) {
+                setCharts((prev) => {
+                  const next = prev.slice()
+                  next[i] = { title, svg }
+                  return next
+                })
+              }
+            } catch (err) {
+              try {
+                if (host) host.remove()
+              } catch {
+                // ignore
+              }
+              if (!cancelled) {
+                setCharts((prev) => {
+                  const next = prev.slice()
+                  next[i] = { title, error: String(err?.message || err), code }
+                  return next
+                })
+              }
+            } finally {
+              try {
+                if (host) host.remove()
+              } catch {
+                // ignore
+              }
+              if (!cancelled) setProgress((p) => ({ ...p, finished: p.finished + 1 }))
+              active--
+            }
+          })()
         }
       }
 
-      // 启动并发渲染
-      for (let i = 0; i < concurrency; i++) process()
+      for (let i = 0; i < concurrency; i++) enqueue()
     }
 
-    render()
-  }, [content, readyState]) // 依赖 readyState，确保只在完成时渲染一次
+    run()
+    return () => {
+      cancelled = true
+    }
+  }, [content, readyState, token, themeMode])
+
+  if (readyState !== 2) return null
 
   const { total, finished } = progress
-  if (total === 0 || readyState !== 2) return null
 
   return (
-    <div>
-      <div style={{ textAlign: 'center', padding: '30px 0', color: '#666', fontSize: '16px' }}>
-        <Text strong>
-          正在渲染 {total} 个图表，已完成 {finished}/{total}
-        </Text>
-        {finished < total && <Spin size="large" style={{ marginLeft: 16 }} />}
-      </div>
-      <div ref={containerRef} />
+    <div
+      style={{
+        '--mm-text': isDarkMode ? 'rgba(255, 255, 255, 0.88)' : token.colorText,
+        '--mm-text2': isDarkMode ? 'rgba(255, 255, 255, 0.65)' : token.colorTextSecondary,
+        '--mm-border': isDarkMode ? 'rgba(255, 255, 255, 0.14)' : token.colorBorderSecondary,
+        '--mm-bg': isDarkMode ? '#141414' : token.colorBgContainer,
+        '--mm-bg2': isDarkMode ? '#0f0f0f' : token.colorBgLayout,
+        '--mm-shadow': isDarkMode ? 'none' : token.boxShadowSecondary,
+        '--mm-primary': token.colorPrimary,
+      }}
+    >
+      {total > 0 ? (
+        <div className={styles.mermaidProgress}>
+          <Text strong>
+            正在渲染 {total} 个图表，已完成 {finished}/{total}
+          </Text>
+          {finished < total && <Spin size="large" style={{ marginLeft: 16 }} />}
+        </div>
+      ) : (
+        <div className={styles.mermaidEmpty}>
+          <Text type="secondary" style={{ color: 'var(--mm-text2)' }}>
+            未检测到 Mermaid 代码块
+          </Text>
+        </div>
+      )}
+
+      {charts.map((c) => {
+        if (c?.pending) return null
+        return (
+          <div key={c.title}>
+            {c.svg ? (
+              <MermaidChartViewer title={c.title} svg={c.svg} themeMode={themeMode} />
+            ) : (
+              <div className={styles.mermaidError}>
+                <Alert
+                  type="error"
+                  showIcon
+                  title={`${c.title} 渲染失败`}
+                  description={
+                    <details>
+                      <summary style={{ cursor: 'pointer' }}>查看错误与原始代码</summary>
+                      <div style={{ marginTop: 8 }}>
+                        <Text type="secondary">{c.error}</Text>
+                      </div>
+                      <pre className={styles.mermaidCode}>{c.code}</pre>
+                    </details>
+                  }
+                />
+              </div>
+            )}
+          </div>
+        )
+      })}
     </div>
   )
 }
 
 const ChatGpt = () => {
   const [form] = Form.useForm()
+
+  const previewScrollRef = useRef(null)
+  const previewStickToBottomRef = useRef(true)
+  const previewFullscreenRef = useRef(null)
 
   const apiResultRef = useRef('')
   const [apiResult, setApiResult] = useState('')
@@ -527,16 +882,68 @@ const ChatGpt = () => {
 
   const [progress, setProgress] = useState(0)
 
-  const [previewVisible, setPreviewVisible] = useState(false)
+  const [isPreviewFullscreen, setIsPreviewFullscreen] = useState(false)
   const [theme, setTheme] = useState('light')
+
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      setIsPreviewFullscreen(document.fullscreenElement === previewFullscreenRef.current)
+    }
+    document.addEventListener('fullscreenchange', onFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', onFullscreenChange)
+  }, [])
+
+  const openPreviewFullscreen = useCallback(async () => {
+    const el = previewFullscreenRef.current
+    if (!el) return
+
+    if (typeof el.requestFullscreen !== 'function') {
+      message.warning('当前浏览器不支持全屏预览')
+      return
+    }
+
+    try {
+      await el.requestFullscreen()
+    } catch (e) {
+      message.error('进入全屏失败，请重试')
+    }
+  }, [])
+
+  const exitPreviewFullscreen = useCallback(async () => {
+    if (!document.fullscreenElement) return
+    try {
+      await document.exitFullscreen()
+    } catch (e) {
+      message.error('退出全屏失败，请重试')
+    }
+  }, [])
 
   useEffect(() => {
     structureResultRef.current = structureResult
   }, [structureResult])
 
+  // 外层页面滚动：仅在生成完成时滚动到底（避免流式输出时抖动）
   useEffect(() => {
+    if (readyState !== 2 && structureReadyState !== 2) return
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [apiResult, structureResult])
+  }, [readyState, structureReadyState])
+
+  // 预览区滚动：流式输出时自动滚动到底部（除非用户手动上滑离开底部）
+  const onPreviewScroll = useCallback(() => {
+    const el = previewScrollRef.current
+    if (!el) return
+    const distanceToBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+    previewStickToBottomRef.current = distanceToBottom < 120
+  }, [])
+
+  useEffect(() => {
+    if (readyState !== 1) return
+    const el = previewScrollRef.current
+    if (!el || !previewStickToBottomRef.current) return
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight
+    })
+  }, [apiResult, readyState])
 
   useEffect(() => {
     let interval
@@ -590,6 +997,7 @@ const ChatGpt = () => {
         }
       } else {
         setReadyState(2)
+        console.log('setApiResult', apiResultRef.current)
         source.close()
       }
     })
@@ -649,51 +1057,51 @@ const ChatGpt = () => {
     const enhancedPrompt = `请基于以下PRD文档内容，生成一个严格符合Markdown列表格式的思维导图。
 
 PRD文档内容：
- ${apiResult}
+  ${apiResult}
 
 请按照以下要求生成思维导图：
 
 1. **严格使用Markdown无序列表格式**：
-   - 使用 - 或 * 作为列表标记
-   - 每个层级使用2个空格缩进
-   - 不要使用有序列表（1. 2. 3.）
-   - 不要使用Tab字符，只使用空格
+    - 使用 - 或 * 作为列表标记
+    - 每个层级使用2个空格缩进
+    - 不要使用有序列表（1. 2. 3.）
+    - 不要使用Tab字符，只使用空格
 
 2. **必须包含系统标题**：
-   - 第一行必须是系统名称（从PRD中提取）
-   - 例如：- 智能供应链管理系统
+    - 第一行必须是系统名称（从PRD中提取）
+    - 例如：- 智能供应链管理系统
 
 3. **结构示例**：
-   - 系统名称
-     - 核心模块
-       - 供应商管理
-         - 资质审核
-         - 绩效评估
-       - 采购管理
-         - 订单管理
-         - 招投标
-     - 技术架构
-       - 前端技术
-         - React
-         - TypeScript
-       - 后端技术
-         - Spring Boot
-         - MySQL
+    - 系统名称
+      - 核心模块
+        - 供应商管理
+          - 资质审核
+          - 绩效评估
+        - 采购管理
+          - 订单管理
+          - 招投标
+      - 技术架构
+        - 前端技术
+          - React
+          - TypeScript
+        - 后端技术
+          - Spring Boot
+          - MySQL
 
 4. **内容要求**：
-   - 从PRD中提取系统名称作为根节点
-   - 提取核心模块和功能
-   - 包含技术架构信息
-   - 层级不超过4级
-   - 每行只包含一个节点内容
+    - 从PRD中提取系统名称作为根节点
+    - 提取核心模块和功能
+    - 包含技术架构信息
+    - 层级不超过4级
+    - 每行只包含一个节点内容
 
 5. **格式要求**：
-   - 不要包含任何标题（# ## ###）
-   - 不要包含任何解释文字
-   - 不要包含代码块
-   - 不要包含表格
-   - 纯粹的Markdown列表格式
-   - 必须以系统名称开头
+    - 不要包含任何标题（# ## ###）
+    - 不要包含任何解释文字
+    - 不要包含代码块
+    - 不要包含表格
+    - 纯粹的Markdown列表格式
+    - 必须以系统名称开头
 
 请直接输出符合上述要求的Markdown列表内容，确保第一行是系统名称：`
 
@@ -800,26 +1208,53 @@ PRD文档内容：
       return
     }
 
-    const content = format === 'markdown' ? apiResult : removeMd(apiResult)
-    const blob = new Blob([content], {
-      type: format === 'markdown' ? 'text/markdown' : 'text/plain',
-    })
+    const safeText = removeMd(apiResult)
+    const safeName = `PRD文档`
+
+    const escapeHtml = (s) =>
+      String(s)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;')
+
+    const getExport = () => {
+      if (format === 'markdown') {
+        return { ext: 'md', mime: 'text/markdown;charset=utf-8', content: apiResult }
+      }
+      if (format === 'mdx') {
+        return { ext: 'mdx', mime: 'text/plain;charset=utf-8', content: apiResult }
+      }
+      if (format === 'doc') {
+        const html = `<!doctype html><html><head><meta charset="utf-8" /></head><body><pre style="white-space:pre-wrap;font-family:${escapeHtml(
+          'Calibri,Arial,Microsoft YaHei'
+        )};font-size:12pt;line-height:1.6;">${escapeHtml(safeText)}</pre></body></html>`
+        return { ext: 'doc', mime: 'application/msword', content: html }
+      }
+      return { ext: 'txt', mime: 'text/plain;charset=utf-8', content: safeText }
+    }
+
+    const { ext, mime, content } = getExport()
+    const blob = new Blob([content], { type: mime })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `PRD文档.${format === 'markdown' ? 'md' : 'txt'}`
+    link.download = `${safeName}.${ext}`
     link.click()
     URL.revokeObjectURL(url)
-    message.success(`成功导出${format === 'markdown' ? 'Markdown' : '纯文本'}格式`)
+    message.success(`成功导出 ${ext.toUpperCase()} 格式`)
   }
 
   const CustomComponents = {
     table: ({ children, ...props }) => (
-      <div style={{ overflowX: 'auto', margin: '16px 0' }}>
+      <div style={{ overflowX: 'auto', margin: '16px 0', width: '100%' }}>
         <table
           {...props}
           style={{
-            width: '100%',
+            width: 'max-content',
+            minWidth: '100%',
+            tableLayout: 'auto',
             borderCollapse: 'collapse',
             border: '1px solid #d9d9d9',
             borderRadius: '6px',
@@ -852,6 +1287,7 @@ PRD文档内容：
           fontWeight: 600,
           color: '#262626',
           borderRight: '1px solid #d9d9d9',
+          whiteSpace: 'normal',
         }}
       >
         {children}
@@ -865,198 +1301,13 @@ PRD文档内容：
           padding: '12px 16px',
           borderBottom: '1px solid #f0f0f0',
           borderRight: '1px solid #f0f0f0',
+          verticalAlign: 'top',
+          whiteSpace: 'normal',
+          wordBreak: 'break-word',
         }}
       >
         {children}
       </td>
-    ),
-
-    code: ({ inline, children, className, ...props }) => {
-      const match = /language-(\w+)/.exec(className || '')
-      const language = match ? match[1] : ''
-
-      if (!inline && language === 'mermaid') {
-        return (
-          <div
-            style={{
-              margin: '16px 0',
-              padding: '16px',
-              backgroundColor: '#f6f8fa',
-              borderRadius: '6px',
-              border: '1px solid #d9d9d9',
-            }}
-          >
-            <pre
-              style={{
-                margin: 0,
-                padding: 0,
-                backgroundColor: 'transparent',
-                fontSize: '14px',
-                lineHeight: '1.5',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-              }}
-            >
-              {children}
-            </pre>
-          </div>
-        )
-      }
-
-      if (inline) {
-        return (
-          <code
-            {...props}
-            className={className}
-            style={{
-              backgroundColor: '#f5f5f5',
-              padding: '2px 6px',
-              borderRadius: '4px',
-              fontSize: '0.9em',
-              color: '#d73a49',
-            }}
-          >
-            {children}
-          </code>
-        )
-      }
-      return (
-        <code
-          {...props}
-          className={className}
-          style={{
-            display: 'block',
-            backgroundColor: '#f6f8fa',
-            padding: '16px',
-            borderRadius: '6px',
-            overflowX: 'auto',
-            fontSize: '0.9em',
-            lineHeight: '1.5',
-          }}
-        >
-          {children}
-        </code>
-      )
-    },
-
-    pre: ({ children, ...props }) => {
-      const isMermaid = React.Children.toArray(children).some(
-        (child) => React.isValidElement(child) && child.props.className?.includes('language-mermaid')
-      )
-
-      if (isMermaid) {
-        return <div style={{ margin: '16px 0' }}>{children}</div>
-      }
-
-      return (
-        <pre
-          {...props}
-          style={{
-            backgroundColor: '#f6f8fa',
-            padding: '16px',
-            borderRadius: '6px',
-            overflowX: 'auto',
-            margin: '16px 0',
-          }}
-        >
-          {children}
-        </pre>
-      )
-    },
-
-    h1: ({ children, ...props }) => (
-      <h1
-        {...props}
-        style={{
-          fontSize: '2em',
-          fontWeight: 600,
-          marginTop: '24px',
-          marginBottom: '16px',
-          borderBottom: '1px solid #eaecef',
-          paddingBottom: '8px',
-        }}
-      >
-        {children}
-      </h1>
-    ),
-
-    h2: ({ children, ...props }) => (
-      <h2
-        {...props}
-        style={{
-          fontSize: '1.5em',
-          fontWeight: 600,
-          marginTop: '24px',
-          marginBottom: '16px',
-        }}
-      >
-        {children}
-      </h2>
-    ),
-
-    h3: ({ children, ...props }) => (
-      <h3
-        {...props}
-        style={{
-          fontSize: '1.25em',
-          fontWeight: 600,
-          marginTop: '20px',
-          marginBottom: '12px',
-        }}
-      >
-        {children}
-      </h3>
-    ),
-
-    ul: ({ children, ...props }) => (
-      <ul
-        {...props}
-        style={{
-          paddingLeft: '24px',
-          margin: '12px 0',
-        }}
-      >
-        {children}
-      </ul>
-    ),
-
-    ol: ({ children, ...props }) => (
-      <ol
-        {...props}
-        style={{
-          paddingLeft: '24px',
-          margin: '12px 0',
-        }}
-      >
-        {children}
-      </ol>
-    ),
-
-    li: ({ children, ...props }) => (
-      <li
-        {...props}
-        style={{
-          marginBottom: '8px',
-          lineHeight: '1.6',
-        }}
-      >
-        {children}
-      </li>
-    ),
-
-    blockquote: ({ children, ...props }) => (
-      <blockquote
-        {...props}
-        style={{
-          borderLeft: '4px solid #dfe2e5',
-          paddingLeft: '16px',
-          margin: '16px 0',
-          color: '#6a737d',
-          fontStyle: 'italic',
-        }}
-      >
-        {children}
-      </blockquote>
     ),
   }
 
@@ -1199,7 +1450,7 @@ PRD文档内容：
                     {readyState === 2 && (
                       <>
                         <Tooltip title="全屏预览">
-                          <Button icon={<FullscreenOutlined />} onClick={() => setPreviewVisible(true)} />
+                          <Button icon={<FullscreenOutlined />} onClick={openPreviewFullscreen} />
                         </Tooltip>
                         <Dropdown
                           menu={{
@@ -1212,6 +1463,10 @@ PRD文档内容：
                                 exportDocument('markdown')
                               } else if (key === '4') {
                                 exportDocument('text')
+                              } else if (key === '5') {
+                                exportDocument('mdx')
+                              } else if (key === '6') {
+                                exportDocument('doc')
                               }
                             },
                             items: [
@@ -1238,6 +1493,16 @@ PRD文档内容：
                                 label: '导出纯文本',
                                 icon: <DownloadOutlined />,
                               },
+                              {
+                                key: '5',
+                                label: '导出MDX',
+                                icon: <DownloadOutlined />,
+                              },
+                              {
+                                key: '6',
+                                label: '导出DOC(Word)',
+                                icon: <DownloadOutlined />,
+                              },
                             ],
                           }}
                         >
@@ -1249,26 +1514,24 @@ PRD文档内容：
                 </div>
                 <div
                   style={{
-                    border: '1px solid #d9d9d9',
                     borderRadius: 6,
-                    overflow: 'hidden',
-                    maxHeight: 600,
                   }}
                 >
-                  <MDEditor.Markdown
-                    source={apiResult}
-                    style={{
-                      backgroundColor: previewStyle.backgroundColor,
-                      minHeight: 400,
-                      maxHeight: 600,
-                      overflow: 'auto',
-                      padding: previewStyle.padding,
-                    }}
-                    data-color-mode={theme}
-                    skipHtml={false}
-                    rehypePlugins={[]}
-                    components={CustomComponents}
-                  />
+                  <div ref={previewScrollRef} className={styles.previewScroll} onScroll={onPreviewScroll}>
+                    <MDEditor.Markdown
+                      source={apiResult}
+                      style={{
+                        backgroundColor: previewStyle.backgroundColor,
+                        minHeight: 400,
+                        padding: previewStyle.padding,
+                      }}
+                      data-color-mode={theme}
+                      skipHtml={false}
+                      remarkPlugins={[remarkMath]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={CustomComponents}
+                    />
+                  </div>
                 </div>
 
                 <div
@@ -1279,7 +1542,7 @@ PRD文档内容：
                   }}
                 >
                   <Text strong>Mermaid 图表展示</Text>
-                  <MermaidRenderer content={apiResult} readyState={readyState} />
+                  <MermaidRenderer content={apiResult} readyState={readyState} themeMode={theme} />
                 </div>
               </div>
             )}
@@ -1368,59 +1631,64 @@ PRD文档内容：
           </Card>
         )}
 
-        <Drawer
-          title={
-            <Space>
-              <EyeOutlined />
-              <span>文档全屏预览</span>
-            </Space>
-          }
-          placement="right"
-          onClose={() => setPreviewVisible(false)}
-          open={previewVisible}
-          extra={
-            <Space>
-              <Switch
-                checkedChildren="亮色"
-                unCheckedChildren="暗色"
-                checked={theme === 'light'}
-                onChange={(checked) => setTheme(checked ? 'light' : 'dark')}
-              />
-            </Space>
-          }
+        <div
+          ref={previewFullscreenRef}
+          className={`${styles.previewFullscreenHost} ${isPreviewFullscreen ? styles.previewFullscreenHostActive : ''}`}
         >
-          <div
-            style={{
-              padding: 20,
-              backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
-              color: theme === 'light' ? '#24292e' : '#c9d1d9',
-              minHeight: '100%',
-            }}
-          >
-            <MDEditor.Markdown
-              source={apiResult}
-              style={{
-                backgroundColor: 'transparent',
-                minHeight: '100%',
-              }}
-              data-color-mode={theme}
-              skipHtml={false}
-              rehypePlugins={[]}
-              components={CustomComponents}
-            />
-
+          {apiResult && (
             <div
+              className={`${styles.previewFullscreenContent} ${
+                theme === 'light' ? styles.previewFullscreenLight : styles.previewFullscreenDark
+              }`}
               style={{
-                marginTop: 20,
-                borderTop: '1px solid #f0f0f0',
-                paddingTop: 20,
+                backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
+                color: theme === 'light' ? '#24292e' : '#c9d1d9',
               }}
             >
-              <Text strong>Mermaid 图表展示</Text>
-              <MermaidRenderer content={apiResult} readyState={readyState} />
+              <div className={styles.previewFullscreenHeader}>
+                <Space>
+                  <EyeOutlined />
+                  <span>文档全屏预览</span>
+                </Space>
+                <Space>
+                  <Switch
+                    checkedChildren="亮色"
+                    unCheckedChildren="暗色"
+                    checked={theme === 'light'}
+                    onChange={(checked) => setTheme(checked ? 'light' : 'dark')}
+                  />
+                  <Button onClick={exitPreviewFullscreen}>退出全屏</Button>
+                </Space>
+              </div>
+
+              <div className={styles.previewFullscreenBody}>
+                <MDEditor.Markdown
+                  source={apiResult}
+                  style={{
+                    backgroundColor: 'transparent',
+                    minHeight: '100%',
+                  }}
+                  data-color-mode={theme}
+                  skipHtml={false}
+                  remarkPlugins={[remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                  components={CustomComponents}
+                />
+
+                <div
+                  style={{
+                    marginTop: 20,
+                    borderTop: '1px solid #f0f0f0',
+                    paddingTop: 20,
+                  }}
+                >
+                  <Text strong>Mermaid 图表展示</Text>
+                  <MermaidRenderer content={apiResult} readyState={readyState} themeMode={theme} />
+                </div>
+              </div>
             </div>
-          </div>
-        </Drawer>
+          )}
+        </div>
 
         <div ref={bottomRef} style={{ height: 20 }} />
       </div>

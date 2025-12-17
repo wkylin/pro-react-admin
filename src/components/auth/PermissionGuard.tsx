@@ -69,7 +69,8 @@ const PermissionGuard: React.FC<PermissionGuardProps> = ({
     const checkPermission = async () => {
       try {
         setIsLoading(true)
-        let result = false
+        // 默认通过：按需叠加权限/角色限制
+        let result = true
 
         // 检查权限
         if (permission) {
@@ -84,7 +85,7 @@ const PermissionGuard: React.FC<PermissionGuardProps> = ({
           }
         }
 
-        // 检查角色（如果权限检查通过，才检查角色）
+        // 检查角色（若已有权限限制则需先通过权限；若无权限限制则直接检查角色）
         if (result && role) {
           result = await permissionService.hasRole(role)
         } else if (result && roles && roles.length > 0) {

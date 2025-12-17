@@ -290,8 +290,11 @@ const PermissionExample = () => {
               <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
                 <strong>角色检查：</strong>
                 <br />
-                <PermissionGuard role="admin" fallback={<span style={{ color: 'red' }}>非管理员</span>}>
-                  <span style={{ color: 'green' }}>您是管理员</span>
+                <PermissionGuard
+                  roles={['admin', 'super_admin']}
+                  fallback={<span style={{ color: 'red' }}>非管理员</span>}
+                >
+                  <span style={{ color: 'green' }}>您是管理员（含超级管理员）</span>
                 </PermissionGuard>
               </div>
             </Col>
@@ -378,12 +381,12 @@ const PermissionExample = () => {
             <Col xs={24} sm={12} md={6}>
               <Button
                 onClick={async () => {
-                  const hasRoleAdmin = await hasRole('admin')
-                  message.info(hasRoleAdmin ? '是 admin 角色' : '不是 admin 角色')
+                  const isAdmin = (await hasRole('admin')) || (await hasRole('super_admin'))
+                  message.info(isAdmin ? '是管理员（admin / super_admin）' : '不是管理员')
                 }}
                 block
               >
-                检查角色 (admin)
+                检查角色 (admin/super_admin)
               </Button>
             </Col>
           </Row>
