@@ -16,7 +16,7 @@ import {
   Divider,
   Tooltip,
   Grid,
-  FloatButton,
+  FloatButton
 } from 'antd'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import {
@@ -31,7 +31,7 @@ import {
   ToolOutlined,
   ArrowLeftOutlined,
   XOutlined,
-  MenuOutlined,
+  MenuOutlined
 } from '@ant-design/icons'
 import avatarPng from '@assets/images/w.png'
 
@@ -54,7 +54,7 @@ const Section = ({ id, children, className = '' }) => {
 Section.propTypes = {
   id: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  className: PropTypes.string,
+  className: PropTypes.string
 }
 
 const AnimatedCard = ({ children, delay = 0 }) => (
@@ -71,7 +71,7 @@ const AnimatedCard = ({ children, delay = 0 }) => (
 
 AnimatedCard.propTypes = {
   children: PropTypes.node.isRequired,
-  delay: PropTypes.number,
+  delay: PropTypes.number
 }
 
 const MyPortfilo = () => {
@@ -84,7 +84,7 @@ const MyPortfilo = () => {
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
-    restDelta: 0.001,
+    restDelta: 0.001
   })
 
   const [targetOffset, setTargetOffset] = useState(80)
@@ -100,7 +100,7 @@ const MyPortfilo = () => {
     { key: 'skills', href: '#skills', title: <span style={{ fontSize: 12 }}>Skills</span> },
     { key: 'projects', href: '#projects', title: <span style={{ fontSize: 12 }}>Work</span> },
     { key: 'experience', href: '#experience', title: <span style={{ fontSize: 12 }}>Exp</span> },
-    { key: 'contact', href: '#contact', title: <span style={{ fontSize: 12 }}>Contact</span> },
+    { key: 'contact', href: '#contact', title: <span style={{ fontSize: 12 }}>Contact</span> }
   ]
 
   const handleAnchorClick = (e, link) => {
@@ -123,7 +123,7 @@ const MyPortfilo = () => {
     { name: 'Tailwind CSS', color: '#38B2AC' },
     { name: 'Next.js', color: '#000000' },
     { name: 'GraphQL', color: '#E10098' },
-    { name: 'Docker', color: '#2496ED' },
+    { name: 'Docker', color: '#2496ED' }
   ]
 
   const projects = [
@@ -131,20 +131,20 @@ const MyPortfilo = () => {
       title: 'Pro React Admin',
       desc: 'A comprehensive enterprise-level admin dashboard template based on React, Ant Design, and Vite.',
       tags: ['React', 'Ant Design', 'Vite'],
-      icon: <LaptopOutlined />,
+      icon: <LaptopOutlined />
     },
     {
       title: 'E-Commerce Platform',
       desc: 'A full-stack e-commerce solution with real-time inventory management and payment integration.',
       tags: ['Next.js', 'Node.js', 'Stripe'],
-      icon: <RocketOutlined />,
+      icon: <RocketOutlined />
     },
     {
       title: 'Data Visualization Dashboard',
       desc: 'Interactive dashboard for visualizing complex datasets using D3.js and ECharts.',
       tags: ['Vue', 'D3.js', 'ECharts'],
-      icon: <CodeOutlined />,
-    },
+      icon: <CodeOutlined />
+    }
   ]
 
   const experiences = [
@@ -152,25 +152,25 @@ const MyPortfilo = () => {
       year: '2023 - Present',
       title: 'Senior Frontend Engineer',
       company: 'Tech Corp',
-      desc: 'Leading the frontend team, architecting scalable solutions, and mentoring junior developers.',
+      desc: 'Leading the frontend team, architecting scalable solutions, and mentoring junior developers.'
     },
     {
       year: '2021 - 2023',
       title: 'Full Stack Developer',
       company: 'StartUp Inc',
-      desc: 'Developed and maintained multiple web applications using React and Node.js.',
+      desc: 'Developed and maintained multiple web applications using React and Node.js.'
     },
     {
       year: '2019 - 2021',
       title: 'Frontend Developer',
       company: 'Web Solutions',
-      desc: 'Collaborated with designers to implement responsive and accessible user interfaces.',
-    },
+      desc: 'Collaborated with designers to implement responsive and accessible user interfaces.'
+    }
   ]
 
   return (
     <div
-      id="portfolio-container"
+      id='portfolio-container'
       ref={containerRef}
       style={{
         backgroundColor: token.colorBgContainer,
@@ -185,7 +185,7 @@ const MyPortfilo = () => {
             ? `radial-gradient(circle at 50% 50%, ${token.colorPrimaryBg} 0%, transparent 50%), radial-gradient(circle at 0% 0%, ${token.colorFill} 0%, transparent 30%), radial-gradient(circle at 100% 100%, ${token.colorFill} 0%, transparent 30%)`
             : `radial-gradient(circle at 50% 50%, ${token.colorPrimaryBg} 0%, transparent 60%), radial-gradient(circle at 100% 0%, ${token.colorFill} 0%, transparent 40%)`,
         backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
+        backgroundSize: 'cover'
       }}
     >
       {/* Floating Shapes Background */}
@@ -198,19 +198,19 @@ const MyPortfilo = () => {
           height: '100%',
           overflow: 'hidden',
           pointerEvents: 'none',
-          zIndex: 0,
+          zIndex: 0
         }}
       >
         <motion.div
           animate={{
             x: [0, 100, 0],
             y: [0, 50, 0],
-            rotate: [0, 180, 360],
+            rotate: [0, 180, 360]
           }}
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: 'linear',
+            ease: 'linear'
           }}
           style={{
             position: 'absolute',
@@ -221,19 +221,19 @@ const MyPortfilo = () => {
             borderRadius: '50%',
             background: token.colorPrimary,
             filter: 'blur(100px)',
-            opacity: 0.1,
+            opacity: 0.1
           }}
         />
         <motion.div
           animate={{
             x: [0, -100, 0],
             y: [0, -50, 0],
-            rotate: [0, -180, -360],
+            rotate: [0, -180, -360]
           }}
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: 'linear',
+            ease: 'linear'
           }}
           style={{
             position: 'absolute',
@@ -244,7 +244,7 @@ const MyPortfilo = () => {
             borderRadius: '50%',
             background: token.colorSuccess,
             filter: 'blur(120px)',
-            opacity: 0.08,
+            opacity: 0.08
           }}
         />
       </div>
@@ -259,7 +259,7 @@ const MyPortfilo = () => {
           height: 4,
           background: token.colorPrimary,
           transformOrigin: '0%',
-          zIndex: 1000,
+          zIndex: 1000
         }}
       />
 
@@ -272,13 +272,13 @@ const MyPortfilo = () => {
           position: 'fixed',
           top: 24,
           left: 24,
-          zIndex: 100,
+          zIndex: 100
         }}
       >
-        <Tooltip title="Back to Home">
+        <Tooltip title='Back to Home'>
           <Button
-            shape="circle"
-            size="large"
+            shape='circle'
+            size='large'
             icon={<ArrowLeftOutlined />}
             onClick={() => navigate('/')}
             style={{
@@ -289,83 +289,85 @@ const MyPortfilo = () => {
               boxShadow: token.boxShadowSecondary,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           />
         </Tooltip>
       </motion.div>
 
       {/* Navigation */}
-      {!screens.md ? (
-        <FloatButton.Group
-          trigger="click"
-          type="primary"
-          icon={<MenuOutlined />}
-          open={mobileMenuOpen}
-          onOpenChange={(open) => setMobileMenuOpen(open)}
-          style={{ right: 24, bottom: 24 }}
-        >
-          <FloatButton
-            icon={<RocketOutlined />}
-            tooltip="Home"
-            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#home' })}
-          />
-          <FloatButton
-            icon={<UserOutlined />}
-            tooltip="About"
-            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#about' })}
-          />
-          <FloatButton
-            icon={<ToolOutlined />}
-            tooltip="Skills"
-            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#skills' })}
-          />
-          <FloatButton
-            icon={<ProjectOutlined />}
-            tooltip="Work"
-            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#projects' })}
-          />
-          <FloatButton
-            icon={<CheckCircleOutlined />}
-            tooltip="Exp"
-            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#experience' })}
-          />
-          <FloatButton
-            icon={<MailOutlined />}
-            tooltip="Contact"
-            onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#contact' })}
-          />
-        </FloatButton.Group>
-      ) : (
-        <div
-          style={{
-            position: 'fixed',
-            top: '50%',
-            right: 24,
-            transform: 'translateY(-50%)',
-            zIndex: 100,
-            backgroundColor: token.colorBgElevated,
-            borderRadius: token.borderRadiusLG,
-            padding: '16px 12px',
-            boxShadow: token.boxShadowSecondary,
-            backdropFilter: 'blur(10px)',
-            border: `1px solid ${token.colorBorderSecondary}`,
-          }}
-        >
-          <Anchor
-            targetOffset={targetOffset}
-            getContainer={() => containerRef.current || document.getElementById('portfolio-container')}
-            direction="vertical"
-            onClick={handleAnchorClick}
-            items={navItems}
-            style={{ backgroundColor: 'transparent' }}
-          />
-        </div>
-      )}
+      {!screens.md
+        ? (
+          <FloatButton.Group
+            trigger='click'
+            type='primary'
+            icon={<MenuOutlined />}
+            open={mobileMenuOpen}
+            onOpenChange={(open) => setMobileMenuOpen(open)}
+            style={{ right: 24, bottom: 24 }}
+          >
+            <FloatButton
+              icon={<RocketOutlined />}
+              tooltip='Home'
+              onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#home' })}
+            />
+            <FloatButton
+              icon={<UserOutlined />}
+              tooltip='About'
+              onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#about' })}
+            />
+            <FloatButton
+              icon={<ToolOutlined />}
+              tooltip='Skills'
+              onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#skills' })}
+            />
+            <FloatButton
+              icon={<ProjectOutlined />}
+              tooltip='Work'
+              onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#projects' })}
+            />
+            <FloatButton
+              icon={<CheckCircleOutlined />}
+              tooltip='Exp'
+              onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#experience' })}
+            />
+            <FloatButton
+              icon={<MailOutlined />}
+              tooltip='Contact'
+              onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#contact' })}
+            />
+          </FloatButton.Group>
+          )
+        : (
+          <div
+            style={{
+              position: 'fixed',
+              top: '50%',
+              right: 24,
+              transform: 'translateY(-50%)',
+              zIndex: 100,
+              backgroundColor: token.colorBgElevated,
+              borderRadius: token.borderRadiusLG,
+              padding: '16px 12px',
+              boxShadow: token.boxShadowSecondary,
+              backdropFilter: 'blur(10px)',
+              border: `1px solid ${token.colorBorderSecondary}`
+            }}
+          >
+            <Anchor
+              targetOffset={targetOffset}
+              getContainer={() => containerRef.current || document.getElementById('portfolio-container')}
+              direction='vertical'
+              onClick={handleAnchorClick}
+              items={navItems}
+              style={{ backgroundColor: 'transparent' }}
+            />
+          </div>
+          )}
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
         {/* Home Section */}
-        <Section id="home" className="flex flex-col items-center justify-center text-center">
+        <Section id='home' className='flex flex-col items-center justify-center text-center'>
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -381,22 +383,22 @@ const MyPortfilo = () => {
             <Title level={1} style={{ fontSize: '4rem', marginBottom: 16 }}>
               Hi, I'm <span style={{ color: token.colorPrimary }}>Wkylin</span>
             </Title>
-            <Title level={3} type="secondary" style={{ fontWeight: 300 }}>
+            <Title level={3} type='secondary' style={{ fontWeight: 300 }}>
               Building Digital Experiences with Passion & Code
             </Title>
-            <Space size="large" style={{ marginTop: 32 }}>
+            <Space size='large' style={{ marginTop: 32 }}>
               <Button
-                type="primary"
-                size="large"
-                shape="round"
+                type='primary'
+                size='large'
+                shape='round'
                 icon={<RocketOutlined />}
                 onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 View Work
               </Button>
               <Button
-                size="large"
-                shape="round"
+                size='large'
+                shape='round'
                 icon={<UserOutlined />}
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
@@ -407,11 +409,11 @@ const MyPortfilo = () => {
         </Section>
 
         {/* About Section */}
-        <Section id="about">
-          <Divider titlePlacement="left">
+        <Section id='about'>
+          <Divider titlePlacement='left'>
             <Title level={2}>About Me</Title>
           </Divider>
-          <Row gutter={[48, 48]} align="middle">
+          <Row gutter={[48, 48]} align='middle'>
             <Col xs={24} md={12}>
               <AnimatedCard>
                 <Paragraph style={{ fontSize: 18, lineHeight: 1.8 }}>
@@ -432,16 +434,16 @@ const MyPortfilo = () => {
                   { title: 'Fast Learner', icon: <RocketOutlined /> },
                   { title: 'Team Player', icon: <UserOutlined /> },
                   { title: 'Problem Solver', icon: <ToolOutlined /> },
-                  { title: 'Detail Oriented', icon: <CheckCircleOutlined /> },
+                  { title: 'Detail Oriented', icon: <CheckCircleOutlined /> }
                 ].map((item, index) => (
                   <Col span={12} key={item.title}>
                     <AnimatedCard delay={index * 0.1}>
                       <Card
-                        variant="borderless"
+                        variant='borderless'
                         style={{
                           textAlign: 'center',
                           background: token.colorFillAlter,
-                          borderRadius: token.borderRadiusLG,
+                          borderRadius: token.borderRadiusLG
                         }}
                       >
                         <div style={{ fontSize: 32, color: token.colorPrimary, marginBottom: 8 }}>{item.icon}</div>
@@ -456,8 +458,8 @@ const MyPortfilo = () => {
         </Section>
 
         {/* Skills Section */}
-        <Section id="skills">
-          <Divider titlePlacement="left">
+        <Section id='skills'>
+          <Divider titlePlacement='left'>
             <Title level={2}>Tech Stack</Title>
           </Divider>
           <Row gutter={[16, 16]}>
@@ -471,7 +473,7 @@ const MyPortfilo = () => {
                       fontSize: 16,
                       borderRadius: 20,
                       border: 'none',
-                      marginBottom: 8,
+                      marginBottom: 8
                     }}
                   >
                     {skill.name}
@@ -485,7 +487,7 @@ const MyPortfilo = () => {
             <Row gutter={[24, 24]}>
               <Col xs={24} md={8}>
                 <AnimatedCard>
-                  <Card title="Frontend Development" variant="borderless" className="shadow-sm">
+                  <Card title='Frontend Development' variant='borderless' className='shadow-sm'>
                     <Paragraph>
                       Expertise in building responsive, interactive, and accessible user interfaces using React, Vue,
                       and modern CSS frameworks.
@@ -495,7 +497,7 @@ const MyPortfilo = () => {
               </Col>
               <Col xs={24} md={8}>
                 <AnimatedCard delay={0.2}>
-                  <Card title="Backend Development" variant="borderless" className="shadow-sm">
+                  <Card title='Backend Development' variant='borderless' className='shadow-sm'>
                     <Paragraph>
                       Experience in designing and implementing RESTful APIs, microservices, and database schemas using
                       Node.js and Python.
@@ -505,7 +507,7 @@ const MyPortfilo = () => {
               </Col>
               <Col xs={24} md={8}>
                 <AnimatedCard delay={0.4}>
-                  <Card title="DevOps & Tools" variant="borderless" className="shadow-sm">
+                  <Card title='DevOps & Tools' variant='borderless' className='shadow-sm'>
                     <Paragraph>
                       Proficient in using Git, Docker, CI/CD pipelines, and cloud platforms to ensure smooth deployment
                       and operation.
@@ -518,8 +520,8 @@ const MyPortfilo = () => {
         </Section>
 
         {/* Projects Section */}
-        <Section id="projects">
-          <Divider titlePlacement="left">
+        <Section id='projects'>
+          <Divider titlePlacement='left'>
             <Title level={2}>Featured Projects</Title>
           </Divider>
           <Row gutter={[24, 24]}>
@@ -538,16 +540,16 @@ const MyPortfilo = () => {
                           alignItems: 'center',
                           justifyContent: 'center',
                           fontSize: 64,
-                          color: token.colorPrimary,
+                          color: token.colorPrimary
                         }}
                       >
                         {project.icon}
                       </div>
                     }
                     actions={[
-                      <GithubOutlined key="github" />,
-                      <RocketOutlined key="demo" />,
-                      <ProjectOutlined key="detail" />,
+                      <GithubOutlined key='github' />,
+                      <RocketOutlined key='demo' />,
+                      <ProjectOutlined key='detail' />
                     ]}
                   >
                     <Card.Meta
@@ -571,38 +573,38 @@ const MyPortfilo = () => {
         </Section>
 
         {/* Experience Section */}
-        <Section id="experience">
-          <Divider titlePlacement="left">
+        <Section id='experience'>
+          <Divider titlePlacement='left'>
             <Title level={2}>Experience</Title>
           </Divider>
           <div style={{ maxWidth: 800, margin: '0 auto' }}>
             <Timeline
-              mode="alternate"
+              mode='alternate'
               items={experiences.map((exp, index) => ({
                 title: (
                   <div style={{ marginTop: 8 }}>
-                    <Tag color="blue">{exp.year}</Tag>
+                    <Tag color='blue'>{exp.year}</Tag>
                   </div>
                 ),
                 content: (
                   <AnimatedCard delay={index * 0.2}>
-                    <Card variant="borderless" style={{ background: token.colorFillAlter }}>
+                    <Card variant='borderless' style={{ background: token.colorFillAlter }}>
                       <Title level={5} style={{ margin: 0 }}>
                         {exp.title}
                       </Title>
-                      <Text type="secondary">{exp.company}</Text>
+                      <Text type='secondary'>{exp.company}</Text>
                       <Paragraph style={{ marginTop: 16 }}>{exp.desc}</Paragraph>
                     </Card>
                   </AnimatedCard>
                 ),
-                color: token.colorPrimary,
+                color: token.colorPrimary
               }))}
             />
           </div>
         </Section>
 
         {/* Contact Section */}
-        <Section id="contact" className="flex flex-col items-center justify-center">
+        <Section id='contact' className='flex flex-col items-center justify-center'>
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
@@ -614,14 +616,14 @@ const MyPortfilo = () => {
               I'm currently open to new opportunities and collaborations. Whether you have a question or just want to
               say hi, feel free to reach out!
             </Paragraph>
-            <Space size="large">
-              <Button type="primary" size="large" icon={<MailOutlined />} onClick={() => navigate('/contact')}>
+            <Space size='large'>
+              <Button type='primary' size='large' icon={<MailOutlined />} onClick={() => navigate('/contact')}>
                 Email Me
               </Button>
-              <Button size="large" icon={<GithubOutlined />} href="https://github.com/wkylin" target="_blank">
+              <Button size='large' icon={<GithubOutlined />} href='https://github.com/wkylin' target='_blank'>
                 GitHub
               </Button>
-              <Button size="large" icon={<XOutlined />} href="https://x.com/home" target="_blank">
+              <Button size='large' icon={<XOutlined />} href='https://x.com/home' target='_blank'>
                 X
               </Button>
             </Space>

@@ -16,7 +16,7 @@ import {
   GitBranch,
   Activity,
   Clock,
-  FileCode,
+  FileCode
 } from 'lucide-react'
 import { Button, Tooltip, message, Space, Card, Segmented, theme } from 'antd'
 
@@ -62,7 +62,7 @@ const SAMPLES = {
     2003 : Facebook
     2004 : Google
     2005 : Youtube
-    2006 : Twitter`,
+    2006 : Twitter`
 }
 
 const MermaidDemo = () => {
@@ -104,8 +104,8 @@ const MermaidDemo = () => {
       const blob = await (await fetch(dataUrl)).blob()
       await navigator.clipboard.write([
         new ClipboardItem({
-          [blob.type]: blob,
-        }),
+          [blob.type]: blob
+        })
       ])
       message.success('Image copied to clipboard')
     } catch (err) {
@@ -122,54 +122,60 @@ const MermaidDemo = () => {
 
   return (
     <FixTabPanel>
-      <PageContainer title="Mermaid Live Editor" footer={null}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <PageContainer title='Mermaid Live Editor' footer={null}>
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
           {/* Editor Section */}
-          <div className="flex flex-col gap-4">
+          <div className='flex flex-col gap-4'>
             <Card
               title={
-                <div className="flex items-center gap-2">
+                <div className='flex items-center gap-2'>
                   <Code2 size={18} />
                   <span>Editor</span>
                 </div>
               }
-              className="flex-1 shadow-sm"
+              className='flex-1 shadow-sm'
               styles={{ body: { padding: 0, height: 'calc(100% - 57px)', display: 'flex', flexDirection: 'column' } }}
             >
-              <div className="relative flex-1" style={{ backgroundColor: token.colorBgLayout }}>
+              <div className='relative flex-1' style={{ backgroundColor: token.colorBgLayout }}>
                 <textarea
-                  className="h-full w-full resize-none bg-transparent p-4 font-mono text-sm leading-relaxed outline-none"
+                  className='h-full w-full resize-none bg-transparent p-4 font-mono text-sm leading-relaxed outline-none'
                   style={{ color: token.colorText }}
                   onChange={(e) => setChart(e.target.value)}
                   value={chart}
                   spellCheck={false}
-                  placeholder="Enter Mermaid code here..."
+                  placeholder='Enter Mermaid code here...'
                 />
               </div>
               <div
-                className="border-t p-3"
+                className='border-t p-3'
                 style={{ borderColor: token.colorBorderSecondary, backgroundColor: token.colorBgContainer }}
               >
-                <p className="mb-2 text-xs font-medium" style={{ color: token.colorTextSecondary }}>
+                <p className='mb-2 text-xs font-medium' style={{ color: token.colorTextSecondary }}>
                   Sample Diagrams:
                 </p>
-                <div className="flex flex-wrap gap-2">
+                <div className='flex flex-wrap gap-2'>
                   {Object.keys(SAMPLES).map((type) => (
                     <Button
                       key={type}
-                      size="small"
+                      size='small'
                       type={activeType === type ? 'primary' : 'default'}
                       onClick={() => handleSampleChange(type)}
                       icon={
-                        type === 'Git' ? (
-                          <GitBranch size={14} />
-                        ) : type === 'Timeline' ? (
-                          <Clock size={14} />
-                        ) : type === 'State' ? (
-                          <Activity size={14} />
-                        ) : (
-                          <FileCode size={14} />
-                        )
+                        type === 'Git'
+                          ? (
+                            <GitBranch size={14} />
+                            )
+                          : type === 'Timeline'
+                            ? (
+                              <Clock size={14} />
+                              )
+                            : type === 'State'
+                              ? (
+                                <Activity size={14} />
+                                )
+                              : (
+                                <FileCode size={14} />
+                                )
                       }
                     >
                       {type}
@@ -181,52 +187,52 @@ const MermaidDemo = () => {
           </div>
 
           {/* Preview Section */}
-          <div className="flex flex-col gap-4">
+          <div className='flex flex-col gap-4'>
             <Card
               title={
-                <div className="flex items-center gap-2">
+                <div className='flex items-center gap-2'>
                   <ImageIcon size={18} />
                   <span>Preview</span>
                 </div>
               }
               extra={
                 <Space>
-                  <Tooltip title="Copy Image">
+                  <Tooltip title='Copy Image'>
                     <Button icon={<Copy size={16} />} onClick={handleCopyImage} />
                   </Tooltip>
-                  <Tooltip title="Download PNG">
+                  <Tooltip title='Download PNG'>
                     <Button icon={<Download size={16} />} onClick={() => handleDownload('png')}>
                       PNG
                     </Button>
                   </Tooltip>
-                  <Tooltip title="Download SVG">
+                  <Tooltip title='Download SVG'>
                     <Button icon={<Download size={16} />} onClick={() => handleDownload('svg')}>
                       SVG
                     </Button>
                   </Tooltip>
                 </Space>
               }
-              className="flex-1 shadow-sm"
+              className='flex-1 shadow-sm'
               styles={{ body: { padding: 0, height: 'calc(100% - 57px)', position: 'relative', overflow: 'hidden' } }}
             >
               <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit wheel={{ step: 0.1 }}>
                 {({ zoomIn, zoomOut, resetTransform }) => (
                   <>
                     <div
-                      className="absolute top-4 right-4 z-10 flex flex-col gap-2 rounded-lg p-1 shadow-md backdrop-blur-sm"
+                      className='absolute top-4 right-4 z-10 flex flex-col gap-2 rounded-lg p-1 shadow-md backdrop-blur-sm'
                       style={{ backgroundColor: token.colorBgContainer }}
                     >
-                      <Tooltip title="Zoom In" placement="left">
-                        <Button type="text" icon={<ZoomIn size={18} />} onClick={() => zoomIn()} />
+                      <Tooltip title='Zoom In' placement='left'>
+                        <Button type='text' icon={<ZoomIn size={18} />} onClick={() => zoomIn()} />
                       </Tooltip>
-                      <Tooltip title="Zoom Out" placement="left">
-                        <Button type="text" icon={<ZoomOut size={18} />} onClick={() => zoomOut()} />
+                      <Tooltip title='Zoom Out' placement='left'>
+                        <Button type='text' icon={<ZoomOut size={18} />} onClick={() => zoomOut()} />
                       </Tooltip>
-                      <Tooltip title="Reset" placement="left">
-                        <Button type="text" icon={<RotateCcw size={18} />} onClick={() => resetTransform()} />
+                      <Tooltip title='Reset' placement='left'>
+                        <Button type='text' icon={<RotateCcw size={18} />} onClick={() => resetTransform()} />
                       </Tooltip>
                     </div>
-                    <div className="h-full w-full cursor-move" style={{ backgroundColor: token.colorBgLayout }}>
+                    <div className='h-full w-full cursor-move' style={{ backgroundColor: token.colorBgLayout }}>
                       <TransformComponent
                         wrapperStyle={{ width: '100%', height: '100%' }}
                         contentStyle={{
@@ -234,10 +240,10 @@ const MermaidDemo = () => {
                           height: '100%',
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center',
+                          justifyContent: 'center'
                         }}
                       >
-                        <div ref={previewRef} className="p-8">
+                        <div ref={previewRef} className='p-8'>
                           <MermaidHooks chart={chart} />
                         </div>
                       </TransformComponent>
