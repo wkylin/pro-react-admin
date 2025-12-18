@@ -179,6 +179,7 @@
     "@typescript-eslint/parser": "^8.48.0",
     "@vitejs/plugin-react": "^5.1.1",
     "antd-dayjs-webpack-plugin": "^1.0.6",
+    "archiver": "^5.3.1",
     "babel-jest": "^30.2.0",
     "babel-loader": "^10.0.0",
     "babel-plugin-react-compiler": "latest",
@@ -212,6 +213,7 @@
     "eslint-plugin-storybook": "^10.1.7",
     "eslint-plugin-unicorn": "^62.0.0",
     "eslint-webpack-plugin": "^5.0.2",
+    "filemanager-webpack-plugin": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "gh-pages": "^6.3.0",
     "glob": "^13.0.0",
@@ -282,9 +284,7 @@
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
     "webpack-merge": "^6.0.1",
-    "webpackbar": "^7.0.0",
-    "filemanager-webpack-plugin": "^6.0.0",
-    "archiver": "^5.3.1"
+    "webpackbar": "^7.0.0"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^2.0.1",

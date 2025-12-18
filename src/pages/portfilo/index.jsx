@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -79,7 +79,8 @@ const MyPortfilo = () => {
   const { token, theme: antdTheme } = useToken()
   const screens = useBreakpoint()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { scrollYProgress } = useScroll()
+  const containerRef = useRef(null)
+  const { scrollYProgress } = useScroll({ container: containerRef })
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -170,12 +171,14 @@ const MyPortfilo = () => {
   return (
     <div
       id="portfolio-container"
+      ref={containerRef}
       style={{
         backgroundColor: token.colorBgContainer,
         color: token.colorText,
         position: 'relative',
         height: '100vh',
         overflowY: 'auto',
+        overflowX: 'hidden',
         scrollBehavior: 'smooth',
         backgroundImage:
           antdTheme.id === 1 // Dark mode check approximation or use token
@@ -351,7 +354,7 @@ const MyPortfilo = () => {
         >
           <Anchor
             targetOffset={targetOffset}
-            getContainer={() => document.getElementById('portfolio-container')}
+            getContainer={() => containerRef.current || document.getElementById('portfolio-container')}
             direction="vertical"
             onClick={handleAnchorClick}
             items={navItems}

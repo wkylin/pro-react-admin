@@ -16,7 +16,6 @@ import {
   GitBranch,
   Activity,
   Clock,
-  Move,
   FileCode,
 } from 'lucide-react'
 import { Button, Tooltip, message, Space, Card, Segmented, theme } from 'antd'

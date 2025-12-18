@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { theme } from 'antd'
 import Footer from '@stateless/Footer'
 
@@ -37,32 +38,24 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
           style={{
             flex: 1,
             overflow: 'auto',
-            padding: '24px',
             position: 'relative',
+            padding: '24px',
           }}
         >
           {children}
         </div>
-        <style>{`
-          .page-container-content::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-          }
-          .page-container-content::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          .page-container-content::-webkit-scrollbar-thumb {
-            background-color: ${token.colorFillSecondary};
-            border-radius: 3px;
-          }
-          .page-container-content::-webkit-scrollbar-thumb:hover {
-            background-color: ${token.colorFill};
-          }
-        `}</style>
       </section>
       {footer}
     </>
   )
+}
+
+PageContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+  title: PropTypes.node,
+  footer: PropTypes.node,
+  className: PropTypes.string,
+  style: PropTypes.object,
 }
 
 export default PageContainer

@@ -76,6 +76,10 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
 
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
+
+    // Expose theme mode to global CSS (e.g. scrollbar styles)
+    html.dataset.theme = themeSettings.themeMode
+
     if (themeSettings.grayMode) {
       html.style.filter = 'grayscale(1)'
     } else if (themeSettings.colorWeak) {

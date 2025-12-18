@@ -103,12 +103,10 @@ const MusicPlayer = () => {
     if (isReady.current) {
       if (isPlaying) {
         const playPromise = audio.play()
-        if (playPromise !== undefined) {
-          playPromise.catch((error) => {
-            // 捕获 "The play() request was interrupted" 错误，静默处理
-            console.log('Playback prevented/interrupted (harmless):', error)
-          })
-        }
+        Promise.resolve(playPromise).catch((error) => {
+          // 捕获 "The play() request was interrupted" 错误，静默处理
+          console.log('Playback prevented/interrupted (harmless):', error)
+        })
       }
     } else {
       // 第一次加载组件时不自动播放
@@ -121,9 +119,7 @@ const MusicPlayer = () => {
     const audio = audioRef.current
     if (isPlaying) {
       const playPromise = audio.play()
-      if (playPromise !== undefined) {
-        playPromise.catch((e) => console.log('Play interaction error:', e))
-      }
+      Promise.resolve(playPromise).catch((e) => console.log('Play interaction error:', e))
     } else {
       audio.pause()
     }
@@ -250,10 +246,12 @@ const MusicPlayer = () => {
           {TRACKS.map((track, index) => {
             const isCurrent = index === currentTrackIndex
             return (
-              <div
+              <button
                 key={track.id}
                 onClick={() => playTrack(index)}
-                className={`group mb-1 flex cursor-pointer items-center rounded-xl p-3 transition-all duration-200 ${isCurrent ? 'bg-gray-800/80' : 'text-gray-400 hover:bg-gray-800/40'} `}
+                type="button"
+                aria-label={`Play ${track.title} by ${track.artist}`}
+                className={`group mb-1 flex w-full items-center rounded-xl p-3 text-left transition-all duration-200 ${isCurrent ? 'bg-gray-800/80' : 'text-gray-400 hover:bg-gray-800/40'} `}
               >
                 {/* 序号 / 动态图标 */}
                 <div className="mr-2 flex w-10 items-center justify-center">
@@ -284,19 +282,11 @@ const MusicPlayer = () => {
                 {isCurrent && (
                   <span className="px-2 text-xs font-medium text-green-500/80">{isPlaying ? 'Playing' : 'Paused'}</span>
                 )}
-              </div>
+              </button>
             )
           })}
         </div>
       </div>
-
-      {/* 全局样式 (用于滚动条和旋转) */}
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #4b5563; }
-      `}</style>
     </div>
   )
 }

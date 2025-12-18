@@ -34,7 +34,10 @@ const ThemeIndex: React.FC = () => {
     try {
       keepAliveManager.setOptions({ deactivateDelay: 500, keepInactiveCount: 0, limit: 5 })
     } catch (e) {
-      // 忽略在未加载 KeepAlive 时的异常
+      if (process.env.NODE_ENV !== 'production') {
+        // eslint-disable-next-line no-console
+        console.warn('keepAliveManager.setOptions failed:', e)
+      }
     }
   }, [message])
 

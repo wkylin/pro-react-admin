@@ -172,8 +172,26 @@
   --foreground: #171717;
   --duration: 0.5;
   --color-gray-200: #e5e7eb;
-  --color-red-pers: #f35626;
-  --color-yellow-saff: #feab3a;
+  --color-red-pers: #4b5563;
+  --color-yellow-saff: #9ca3af;
+
+  /* Global scrollbar (theme-adaptive via data-theme) */
+
+  /* Prefer a slim modern scrollbar */
+  --wui-scrollbar-size: 6px;
+  --wui-scrollbar-radius: 999px;
+  --wui-scrollbar-track: transparent;
+
+  /* Accent scrollbar colors (no gray). Use widely-supported rgb/alpha (no color-mix). */
+  --wui-scrollbar-thumb-start: rgb(75 85 99 / 6%);
+  --wui-scrollbar-thumb-end: rgb(156 163 175 / 6%);
+  --wui-scrollbar-thumb-hover-start: rgb(75 85 99 / 18%);
+  --wui-scrollbar-thumb-hover-end: rgb(156 163 175 / 18%);
+  --wui-scrollbar-thumb-active-start: rgb(75 85 99 / 28%);
+  --wui-scrollbar-thumb-active-end: rgb(156 163 175 / 28%);
+
+  /* Solid thumb color (for Firefox). */
+  --wui-scrollbar-thumb-solid: rgb(203 213 225);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -183,6 +201,44 @@
   }
 }
 
+:root[data-theme='dark'] {
+  /* Stronger accent on dark backgrounds */
+  --color-red-pers: #e5e7eb;
+  --color-yellow-saff: #9ca3af;
+  --wui-scrollbar-thumb-start: rgb(229 231 235 / 4%);
+  --wui-scrollbar-thumb-end: rgb(156 163 175 / 4%);
+  --wui-scrollbar-thumb-hover-start: rgb(229 231 235 / 12%);
+  --wui-scrollbar-thumb-hover-end: rgb(156 163 175 / 12%);
+  --wui-scrollbar-thumb-active-start: rgb(229 231 235 / 20%);
+  --wui-scrollbar-thumb-active-end: rgb(156 163 175 / 20%);
+  --wui-scrollbar-thumb-solid: rgb(55 65 81);
+}
+
+/* Legacy fallback for older Chromium that doesn't support space-separated rgb()/alpha. */
+/* stylelint-disable color-function-notation, color-function-alias-notation, alpha-value-notation */
+@supports not (color: rgb(0 0 0)) {
+  :root {
+    --wui-scrollbar-thumb-start: rgba(75, 85, 99, 0.06);
+    --wui-scrollbar-thumb-end: rgba(156, 163, 175, 0.06);
+    --wui-scrollbar-thumb-hover-start: rgba(75, 85, 99, 0.18);
+    --wui-scrollbar-thumb-hover-end: rgba(156, 163, 175, 0.18);
+    --wui-scrollbar-thumb-active-start: rgba(75, 85, 99, 0.28);
+    --wui-scrollbar-thumb-active-end: rgba(156, 163, 175, 0.28);
+    --wui-scrollbar-thumb-solid: rgb(203, 213, 225);
+  }
+
+  :root[data-theme='dark'] {
+    --wui-scrollbar-thumb-start: rgba(229, 231, 235, 0.04);
+    --wui-scrollbar-thumb-end: rgba(156, 163, 175, 0.04);
+    --wui-scrollbar-thumb-hover-start: rgba(229, 231, 235, 0.12);
+    --wui-scrollbar-thumb-hover-end: rgba(156, 163, 175, 0.12);
+    --wui-scrollbar-thumb-active-start: rgba(229, 231, 235, 0.2);
+    --wui-scrollbar-thumb-active-end: rgba(156, 163, 175, 0.2);
+    --wui-scrollbar-thumb-solid: rgb(55, 65, 81);
+  }
+}
+/* stylelint-enable color-function-notation, color-function-alias-notation, alpha-value-notation */
+
 html,
 body {
   height: 100%;
@@ -190,7 +246,14 @@ body {
   text-size-adjust: 100%;
   box-sizing: border-box;
   scrollbar-width: thin;
+  scrollbar-color: var(--wui-scrollbar-thumb-solid) var(--wui-scrollbar-track);
   scroll-behavior: smooth;
+}
+
+/* Firefox: apply to all actual scroll containers (not only html/body). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--wui-scrollbar-thumb-solid) var(--wui-scrollbar-track);
 }
 
 *,
@@ -200,13 +263,83 @@ body {
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: var(--wui-scrollbar-size);
+  height: var(--wui-scrollbar-size);
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--wui-scrollbar-track);
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #7e7e7e;
-  border-radius: 3px;
+  background-color: var(--wui-scrollbar-thumb-solid);
+  background-image: linear-gradient(180deg, var(--wui-scrollbar-thumb-start), var(--wui-scrollbar-thumb-end));
+  border-radius: var(--wui-scrollbar-radius);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--wui-scrollbar-thumb-solid);
+  background-image: linear-gradient(
+    180deg,
+    var(--wui-scrollbar-thumb-hover-start),
+    var(--wui-scrollbar-thumb-hover-end)
+  );
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: var(--wui-scrollbar-thumb-solid);
+  background-image: linear-gradient(
+    180deg,
+    var(--wui-scrollbar-thumb-active-start),
+    var(--wui-scrollbar-thumb-active-end)
+  );
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Remove up/down (and left/right) arrow buttons in WebKit scrollbars */
+*::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0;
+}
+
+*::-webkit-scrollbar-button:single-button,
+*::-webkit-scrollbar-button:increment,
+*::-webkit-scrollbar-button:decrement,
+*::-webkit-scrollbar-button:vertical:increment,
+*::-webkit-scrollbar-button:vertical:decrement,
+*::-webkit-scrollbar-button:horizontal:increment,
+*::-webkit-scrollbar-button:horizontal:decrement {
+  width: 0;
+  height: 0;
+  display: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  border: 0;
+}
+
+*::-webkit-scrollbar-button:vertical:start:decrement,
+*::-webkit-scrollbar-button:vertical:end:increment,
+*::-webkit-scrollbar-button:horizontal:start:decrement,
+*::-webkit-scrollbar-button:horizontal:end:increment {
+  display: none !important;
+  width: 0;
+  height: 0;
+  background: transparent !important;
+  border: 0;
+}
+
+/* Some classic scrollbars paint arrow areas as track pieces; keep them transparent. */
+*::-webkit-scrollbar-track-piece:start,
+*::-webkit-scrollbar-track-piece:end {
+  background: transparent;
 }
 
 input:-webkit-autofill,
