@@ -7,6 +7,8 @@ tsconfig.tsbuildinfo
 compilation-stats.json
 .yarn/cache
 /packagehash.txt
+src/assets-optimized/
+public-optimized/
 public/bit
 api/node_modules
 webpack/profiling

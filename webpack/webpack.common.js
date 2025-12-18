@@ -13,6 +13,7 @@ const { codeInspectorPlugin } = require('code-inspector-plugin')
 const paths = require('./paths')
 
 const isDev = process.env.NODE_ENV === 'development'
+const isAnalyze = Boolean(Number(process.env.USE_ANALYZE || 0))
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
@@ -53,6 +54,8 @@ const config = {
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '...'],
     alias: {
+      '@assets/audio': path.resolve('./src/assets/audio'),
+      '@assets/video': path.resolve('./src/assets/video'),
       '@': path.resolve('./src'),
       '@src': path.resolve('./src'),
       '@stateless': path.resolve('./src/components/stateless'),
@@ -196,7 +199,7 @@ const config = {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env', '@babel/preset-react'],
+              presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
               plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime'],
             },
           },
@@ -233,12 +236,30 @@ const config = {
     ],
   },
   stats: {
-    all: false,
-    errors: true,
-    warnings: true,
-    errorDetails: true,
-    moduleTrace: true, // 打印模块追踪信息，与--trace - warnings类似
-    excludeAssets: /node_modules/,
+    ...(isAnalyze
+      ? {
+          preset: 'verbose',
+          assets: true,
+          chunks: true,
+          chunkModules: true,
+          chunkOrigins: true,
+          chunkRelations: true,
+          entrypoints: true,
+          modules: true,
+          nestedModules: true,
+          dependentModules: true,
+          reasons: true,
+          ids: true,
+          errorDetails: true,
+        }
+      : {
+          all: false,
+          errors: true,
+          warnings: true,
+          errorDetails: true,
+          moduleTrace: true,
+          excludeAssets: /node_modules/,
+        }),
   },
   // 性能提示
   performance: {

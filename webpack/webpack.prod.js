@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 const { merge } = require('webpack-merge')
 
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -14,6 +15,7 @@ const FileManagerPlugin = require('filemanager-webpack-plugin')
 
 const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
 const { EsbuildPlugin } = require('esbuild-loader')
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
 
 const packageJson = require('../package.json')
 const common = require('./webpack.common.js')
@@ -26,8 +28,22 @@ const regVendor = /[\\/]node_modules[\\/](axios|classnames|lodash)[\\/]/
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
+const optimizedAudioDir = path.resolve(__dirname, '../src/assets-optimized/audio')
+const optimizedVideoDir = path.resolve(__dirname, '../src/assets-optimized/video')
+const hasOptimizedAudio = fs.existsSync(optimizedAudioDir)
+const hasOptimizedVideo = fs.existsSync(optimizedVideoDir)
+
 const prodWebpackConfig = merge(common, {
   mode: 'production',
+  resolve:
+    hasOptimizedAudio || hasOptimizedVideo
+      ? {
+          alias: {
+            ...(hasOptimizedAudio ? { '@assets/audio': optimizedAudioDir } : {}),
+            ...(hasOptimizedVideo ? { '@assets/video': optimizedVideoDir } : {}),
+          },
+        }
+      : undefined,
   // 使用文件缓存
   cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
   // devtool: 'source-map',
@@ -54,10 +70,15 @@ const prodWebpackConfig = merge(common, {
     new CopyWebpackPlugin({
       patterns: [
         {
+          from: path.resolve(__dirname, '../public-optimized/audio'),
+          to: path.resolve(__dirname, '../dist/audio'),
+          noErrorOnMissing: true,
+        },
+        {
           from: path.resolve(__dirname, '../public'),
           to: path.resolve(__dirname, '../dist'),
           globOptions: {
-            ignore: ['**/index.html'],
+            ignore: ['**/index.html', '**/audio/**'],
           },
         },
       ],
@@ -71,6 +92,22 @@ const prodWebpackConfig = merge(common, {
         target: 'es2015',
       }),
       new HtmlMinimizerPlugin(),
+      new ImageMinimizerPlugin({
+        loader: false,
+        test: /\.(png|jpe?g|gif|webp|avif)$/i,
+        minimizer: {
+          implementation: ImageMinimizerPlugin.sharpMinify,
+          options: {
+            encodeOptions: {
+              // Safe defaults; tune per your quality/size preference.
+              jpeg: { quality: 78, mozjpeg: true },
+              png: { compressionLevel: 9, palette: true },
+              webp: { quality: 80 },
+              avif: { quality: 50 },
+            },
+          },
+        },
+      }),
     ],
     splitChunks: {
       chunks: 'all',
