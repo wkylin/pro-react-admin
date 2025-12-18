@@ -20,16 +20,18 @@ const ProSider = ({ children, theme = 'light', collapsed, onCollapse, isMobile }
       {children}
       {!isMobile && (
         <button
-          type="button"
+          type='button'
           className={styles.proLink}
           aria-label={collapsed ? '展开侧边栏' : '收起侧边栏'}
           onClick={() => onCollapse(!collapsed)}
         >
-          {collapsed ? (
-            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
-          ) : (
-            <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
-          )}
+          {collapsed
+            ? (
+              <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+              )
+            : (
+              <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+              )}
         </button>
       )}
     </Layout.Sider>
@@ -41,7 +43,7 @@ ProSider.propTypes = {
   theme: PropTypes.string,
   collapsed: PropTypes.bool,
   onCollapse: PropTypes.func,
-  isMobile: PropTypes.bool,
+  isMobile: PropTypes.bool
 }
 
 export default ProSider
