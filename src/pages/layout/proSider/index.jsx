@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Layout } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 
@@ -18,16 +19,29 @@ const ProSider = ({ children, theme = 'light', collapsed, onCollapse, isMobile }
     >
       {children}
       {!isMobile && (
-        <div className={styles.proLink} onClick={() => onCollapse(!collapsed)} role="button">
+        <button
+          type="button"
+          className={styles.proLink}
+          aria-label={collapsed ? '展开侧边栏' : '收起侧边栏'}
+          onClick={() => onCollapse(!collapsed)}
+        >
           {collapsed ? (
             <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
           ) : (
             <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
           )}
-        </div>
+        </button>
       )}
     </Layout.Sider>
   )
+}
+
+ProSider.propTypes = {
+  children: PropTypes.node,
+  theme: PropTypes.string,
+  collapsed: PropTypes.bool,
+  onCollapse: PropTypes.func,
+  isMobile: PropTypes.bool,
 }
 
 export default ProSider

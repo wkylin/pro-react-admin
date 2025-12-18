@@ -128,24 +128,20 @@ export const mockRoles: Role[] = [
 /**
  * 固定的测试账号（四个角色对应四个账号）
  */
-export const testAccounts: Record<string, { password: string; role: string; name: string }> = {
+export const testAccounts: Record<string, { role: string; name: string }> = {
   'admin@test.com': {
-    password: '123456',
     role: 'super_admin',
     name: '超级管理员',
   },
   'manager@test.com': {
-    password: '123456',
     role: 'admin',
     name: '管理员',
   },
   'business@test.com': {
-    password: '123456',
     role: 'business_user',
     name: '业务员',
   },
   'user@test.com': {
-    password: '123456',
     role: 'user',
     name: '普通用户',
   },
@@ -304,47 +300,45 @@ const safeJsonParse = <T>(text: string | null): T | null => {
   }
 }
 
+const safeGetStorageItem = (key: string): string | null => {
+  try {
+    return globalThis?.localStorage?.getItem(key) ?? null
+  } catch {
+    return null
+  }
+}
+
 const tryGetManualRolePermission = (): UserPermission | null => {
-  const storedRoleCode = localStorage.getItem('user_role')
-  console.log('📝 手动设置的角色:', storedRoleCode)
+  const storedRoleCode = safeGetStorageItem('user_role')
   if (storedRoleCode && mockUserPermissions[storedRoleCode]) {
-    console.log('✅ 使用手动设置的角色:', storedRoleCode)
     return { ...mockUserPermissions[storedRoleCode] }
   }
   return null
 }
 
 const tryGetGithubUserPermission = (): UserPermission | null => {
-  const githubUser = localStorage.getItem('github_user')
+  const githubUser = safeGetStorageItem('github_user')
   const user = safeJsonParse<{ email?: string }>(githubUser)
   if (!user) return null
 
-  console.log('🔍 检测到 GitHub 用户:', user)
-  if (user.email === 'wkylin.w@gmail.com' || user.email) {
-    console.log('✅ GitHub 用户登录，授予超级管理员权限')
+  if (user.email) {
     return { ...mockUserPermissions['super_admin'] }
   }
   return null
 }
 
 const tryGetTokenRolePermission = (): UserPermission | null => {
-  const tokenData = localStorage.getItem('token')
-  console.log('🎫 Token 数据:', tokenData)
+  const tokenData = safeGetStorageItem('token')
   if (!tokenData) return null
 
   const tokenObj = safeJsonParse<{ token?: string }>(tokenData)
   const email = tokenObj?.token ?? tokenData
-  console.log('📧 解析出的邮箱:', email)
-  console.log('🔎 查找账号:', email, '在', Object.keys(testAccounts))
 
   const account = testAccounts[email]
   if (!account) {
-    console.log('❌ 未找到匹配的测试账号')
     return null
   }
 
-  console.log('✅ 找到账号，角色:', account.role)
-  console.log('📋 返回权限数据:', mockUserPermissions[account.role])
   return { ...mockUserPermissions[account.role] }
 }
 
@@ -353,8 +347,6 @@ const tryGetTokenRolePermission = (): UserPermission | null => {
  */
 export const mockGetUserPermissions = async (_userId?: string, _roleCode?: string): Promise<UserPermission> => {
   await new Promise((resolve) => setTimeout(resolve, 100))
-
-  console.log('🔍 开始获取用户权限...')
 
   // 1. 优先使用手动设置的角色（用于测试切换）
   const manual = tryGetManualRolePermission()
@@ -369,7 +361,6 @@ export const mockGetUserPermissions = async (_userId?: string, _roleCode?: strin
   if (token) return token
 
   // 4. 默认返回普通用户权限
-  console.log('⚠️ 使用默认权限（普通用户）')
   return { ...mockUserPermissions['user'] }
 }
 

@@ -2,6 +2,12 @@
 /* stylelint-disable-next-line import-notation */
 @import 'tailwindcss';
 
+/*
+-------------------------------------------------------------------------------
+Theme / animations
+-------------------------------------------------------------------------------
+*/
+
 @theme {
   --animate-wiggle: wiggle 1s ease-in-out infinite;
   --animate-hue-rotate: hue-rotate 5s infinite linear;
@@ -139,6 +145,12 @@
   }
 }
 
+/*
+-------------------------------------------------------------------------------
+Utilities
+-------------------------------------------------------------------------------
+*/
+
 .hue-clip {
   color: var(--color-red-pers);
   background-image: linear-gradient(92deg, var(--color-red-pers), var(--color-yellow-saff));
@@ -148,6 +160,26 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+.text-nowrap {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.text-more-line-nowrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/*
+-------------------------------------------------------------------------------
+Tailwind v4 compatibility
+-------------------------------------------------------------------------------
+*/
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -166,6 +198,12 @@
     border-color: var(--color-gray-200, currentColor);
   }
 }
+
+/*
+-------------------------------------------------------------------------------
+CSS variables + theme overrides
+-------------------------------------------------------------------------------
+*/
 
 :root {
   --background: #fff;
@@ -239,14 +277,18 @@
 }
 /* stylelint-enable color-function-notation, color-function-alias-notation, alpha-value-notation */
 
+/*
+-------------------------------------------------------------------------------
+Global reset / box sizing
+-------------------------------------------------------------------------------
+*/
+
 html,
 body {
   height: 100%;
   overflow: hidden;
   text-size-adjust: 100%;
   box-sizing: border-box;
-  scrollbar-width: thin;
-  scrollbar-color: var(--wui-scrollbar-thumb-solid) var(--wui-scrollbar-track);
   scroll-behavior: smooth;
 }
 
@@ -261,6 +303,12 @@ body {
 *::after {
   box-sizing: inherit;
 }
+
+/*
+-------------------------------------------------------------------------------
+Global scrollbar styling
+-------------------------------------------------------------------------------
+*/
 
 *::-webkit-scrollbar {
   width: var(--wui-scrollbar-size);
@@ -342,6 +390,12 @@ body {
   background: transparent;
 }
 
+/*
+-------------------------------------------------------------------------------
+Autofill
+-------------------------------------------------------------------------------
+*/
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -359,19 +413,11 @@ select:-webkit-autofill:active {
     color 600000s ease-in-out 0s;
 }
 
-.text-nowrap {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.text-more-line-nowrap {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
+/*
+-------------------------------------------------------------------------------
+App root / layout scaffolding
+-------------------------------------------------------------------------------
+*/
 
 #root {
   width: 100%;
@@ -387,6 +433,12 @@ select:-webkit-autofill:active {
   width: 100%;
   height: 100%;
 }
+
+/*
+-------------------------------------------------------------------------------
+Loader
+-------------------------------------------------------------------------------
+*/
 
 .loader:empty {
   position: absolute;
@@ -410,6 +462,12 @@ select:-webkit-autofill:active {
     transform: rotate(360deg);
   }
 }
+
+/*
+-------------------------------------------------------------------------------
+Layout / component styles
+-------------------------------------------------------------------------------
+*/
 
 .layout-footer {
   text-align: center;
@@ -511,8 +569,4 @@ select:-webkit-autofill:active {
     conic-gradient(#000 0 0) padding-box;
   background: #e1e1e1 border-box;
   width: fit-content;
-}
-
-div[className*='cursor-pointer'] {
-  transition: all 0.2s ease-in-out;
 }

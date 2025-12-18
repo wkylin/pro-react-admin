@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Button, Space } from 'antd'
 import { DashboardOutlined, ProjectOutlined, HomeOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
@@ -8,6 +9,38 @@ export const usePrimaryNavItems = () => {
   const { redirectTo } = useSafeNavigate()
   const { routes } = usePermission()
 
+  const matchWildcard = (text, pattern) => {
+    if (pattern === '*') return true
+    if (!pattern.includes('*')) return text === pattern
+
+    const parts = pattern.split('*').filter((p) => p.length > 0)
+    if (parts.length === 0) return true
+
+    let pos = 0
+    const startsWithWildcard = pattern.startsWith('*')
+    const endsWithWildcard = pattern.endsWith('*')
+
+    if (!startsWithWildcard) {
+      const first = parts[0]
+      if (!text.startsWith(first)) return false
+      pos = first.length
+    }
+
+    for (let i = startsWithWildcard ? 0 : 1; i < parts.length; i += 1) {
+      const part = parts[i]
+      const idx = text.indexOf(part, pos)
+      if (idx === -1) return false
+      pos = idx + part.length
+    }
+
+    if (!endsWithWildcard) {
+      const last = parts[parts.length - 1]
+      return text.endsWith(last)
+    }
+
+    return true
+  }
+
   const hasAccess = (path) => {
     if (!routes || routes.length === 0) return false
     if (path === '/') return true
@@ -15,8 +48,7 @@ export const usePrimaryNavItems = () => {
       if (route === path) return true
       if (path.startsWith(route + '/')) return true
       if (route.includes('*')) {
-        const pattern = route.replace('*', '.*')
-        return new RegExp(`^${pattern}$`).test(path)
+        return matchWildcard(path, route)
       }
       return false
     })
@@ -61,6 +93,10 @@ const PrimaryNav = ({ layout = '' }) => {
       ))}
     </Space>
   )
+}
+
+PrimaryNav.propTypes = {
+  layout: PropTypes.string,
 }
 
 export default PrimaryNav

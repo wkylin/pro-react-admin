@@ -402,18 +402,40 @@ class PermissionService {
         return true
       }
 
+      const escapeRegexPart = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+      const makeRouteRegexFromPattern = (patternKey: string): RegExp | null => {
+        if (!patternKey) return null
+        if (patternKey === '*') return /^.*$/
+
+        const parts = patternKey.split('/').map((part) => {
+          if (part === '*') return '.*'
+          if (part.startsWith(':')) return '[^/]+'
+          return escapeRegexPart(part)
+        })
+
+        try {
+          return new RegExp(`^${parts.join('/')}$`)
+        } catch {
+          return null
+        }
+      }
+
       // 优先基于 route -> permission 映射进行检查（permission-code 为主）
       const findPermissionForRoute = (path: string): PermissionCode | null => {
         if (!routePermissionMap) return null
         // 直接精确匹配
         if (routePermissionMap[path]) return routePermissionMap[path]
         // 否则尝试使用 pattern 匹配（支持 :param 风格）
-        for (const key of Object.keys(routePermissionMap)) {
-          const pattern = key.replace(/:[^/]+/g, '[^/]+')
-          const regex = new RegExp(`^${pattern}$`)
-          if (regex.test(path)) return routePermissionMap[key]
+        const keys = Object.keys(routePermissionMap)
+        for (const key of keys) {
+          if (key === '*') continue
+          const regex = makeRouteRegexFromPattern(key)
+          if (regex?.test(path)) return routePermissionMap[key]
         }
-        return null
+
+        // 兜底规则（如 '*'）
+        return routePermissionMap['*'] ?? null
       }
 
       const mappedPerm = findPermissionForRoute(routePath)
@@ -432,10 +454,14 @@ class PermissionService {
             return true
           }
 
+          // 通配符：允许 routes 列表中存在 '*' 作为全量
+          if (route === '*') {
+            return true
+          }
+
           // 通配符匹配（如 /coupons/edit/:id）
-          const routePattern = route.replace(/:[^/]+/g, '[^/]+')
-          const regex = new RegExp(`^${routePattern}$`)
-          return regex.test(routePath)
+          const regex = makeRouteRegexFromPattern(route)
+          return !!regex?.test(routePath)
         })
       }
 

@@ -35,6 +35,8 @@ const { Option } = Select
 const { Content } = Layout
 const { useBreakpoint } = Grid
 
+const passwordIconRender = (visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)
+
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
   const { token } = theme.useToken()
@@ -226,7 +228,7 @@ const SignUp = () => {
                   <Input.Password
                     prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
                     placeholder="请输入密码"
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    iconRender={passwordIconRender}
                     style={{ height: 44 }}
                   />
                 </Form.Item>
@@ -252,7 +254,7 @@ const SignUp = () => {
                   <Input.Password
                     prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
                     placeholder="请再次输入密码"
-                    iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                    iconRender={passwordIconRender}
                     style={{ height: 44 }}
                   />
                 </Form.Item>

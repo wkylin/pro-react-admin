@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Grid } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
@@ -13,6 +13,8 @@ const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
 const { useBreakpoint } = Grid
 
+const TEST_ACCOUNT_EMAILS = Object.keys(testAccounts)
+
 const SignIn = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
@@ -21,6 +23,74 @@ const SignIn = () => {
   const [form] = Form.useForm()
   const screens = useBreakpoint()
   const isMobile = !screens.md
+  const [accountPasswords, setAccountPasswords] = useState({})
+
+  const isLikelyEmail = (value) => {
+    if (typeof value !== 'string') return false
+    if (value.length > 320) return false
+    if (value.includes(' ')) return false
+
+    const at = value.indexOf('@')
+    if (at <= 0 || at !== value.lastIndexOf('@')) return false
+
+    const dot = value.indexOf('.', at + 2)
+    if (dot === -1 || dot >= value.length - 1) return false
+
+    return true
+  }
+
+  const getErrorMessage = (error) => (error instanceof Error && error.message ? error.message : '未知错误')
+
+  const generatePassword = () => {
+    try {
+      const arr = new Uint32Array(1)
+      globalThis.crypto?.getRandomValues?.(arr)
+      const value = (arr[0] ?? 0) % 1000000
+      return String(value).padStart(6, '0')
+    } catch {
+      return String(Date.now()).slice(-6).padStart(6, '0')
+    }
+  }
+
+  const loadOrInitPasswords = () => {
+    try {
+      const raw = localStorage.getItem('test_account_passwords')
+      const parsed = raw ? JSON.parse(raw) : {}
+      const next = typeof parsed === 'object' && parsed ? { ...parsed } : {}
+
+      let changed = false
+      TEST_ACCOUNT_EMAILS.forEach((email) => {
+        if (typeof next[email] !== 'string' || next[email].length === 0) {
+          next[email] = generatePassword()
+          changed = true
+        }
+      })
+
+      if (changed) {
+        localStorage.setItem('test_account_passwords', JSON.stringify(next))
+      }
+
+      return next
+    } catch {
+      const fallback = {}
+      TEST_ACCOUNT_EMAILS.forEach((email) => {
+        fallback[email] = generatePassword()
+      })
+      return fallback
+    }
+  }
+
+  const getExpectedPassword = (email) => {
+    if (accountPasswords?.[email]) return accountPasswords[email]
+
+    const next = loadOrInitPasswords()
+    setAccountPasswords(next)
+    return next[email] || ''
+  }
+
+  useEffect(() => {
+    setAccountPasswords(loadOrInitPasswords())
+  }, [])
 
   useEffect(() => {
     const redirectIfLoggedIn = async () => {
@@ -34,13 +104,12 @@ const SignIn = () => {
           target = (routes || []).includes('/') ? '/' : routes[0]
         }
         redirectTo(target, { replace: true })
-      } catch (e) {
-        console.warn('Redirect after login failed:', e)
+      } catch {
         redirectTo('/', { replace: true })
       }
     }
     redirectIfLoggedIn()
-  }, [isAuthenticated])
+  }, [isAuthenticated, redirectTo])
 
   // 挂载时清理可能的无效 token 并重置表单，避免出现 "请输入有效的邮箱格式" 残留提示
   useEffect(() => {
@@ -54,14 +123,11 @@ const SignIn = () => {
         } catch {
           email = raw
         }
-        // 如果不是有效邮箱格式，移除 token
-        if (!/^\S+@\S+\.\S+$/.test(email)) {
+        if (!isLikelyEmail(email)) {
           localStorage.removeItem('token')
         }
       }
-    } catch (e) {
-      console.warn('清理无效 token 失败:', e)
-    }
+    } catch {}
     // 重置表单，确保输入框为空
     form.resetFields()
   }, [form])
@@ -75,7 +141,7 @@ const SignIn = () => {
       return
     }
 
-    if (testAccounts[email].password !== password) {
+    if (getExpectedPassword(email) !== password) {
       message.error('密码错误')
       return
     }
@@ -86,9 +152,7 @@ const SignIn = () => {
     // 清除可能的手动设置角色，确保使用正确的账号角色
     try {
       localStorage.removeItem('user_role')
-    } catch (e) {
-      console.warn('清除手动设置角色失败:', e)
-    }
+    } catch {}
 
     // 纳入统一登录态（测试账号也算已登录），并同步权限
     try {
@@ -105,20 +169,18 @@ const SignIn = () => {
         redirectTo('/403')
       }
     } catch (error) {
-      console.error('权限同步失败:', error)
+      message.error(`权限同步失败：${getErrorMessage(error)}`)
       redirectTo('/')
     }
   }
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('登录失败:', errorInfo)
-  }
+  const onFinishFailed = () => {}
 
   // 快速填充测试账号
   const fillAccount = (email) => {
     form.setFieldsValue({
       email,
-      password: testAccounts[email].password,
+      password: getExpectedPassword(email),
     })
   }
 
@@ -189,7 +251,7 @@ const SignIn = () => {
                         <span className={styles.quickTag}>{account.name}</span>
                         <span className={styles.quickMeta}>{email}</span>
                       </div>
-                      <span className={styles.quickPwd}>{account.password}</span>
+                      <span className={styles.quickPwd}>{accountPasswords[email] || ''}</span>
                     </button>
                   ))}
                 </div>

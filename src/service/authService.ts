@@ -19,7 +19,6 @@ export interface AuthState {
   isLoading: boolean
 }
 
-// ✅ 修复 1: 定义 GitHub API 响应类型
 interface GitHubTokenResponse {
   access_token?: string
   error?: string
@@ -34,7 +33,17 @@ interface GitHubEmailResponse {
 }
 
 function isLikelyEmail(value: string): boolean {
-  return /^\S+@\S+\.\S+$/.test(value)
+  if (typeof value !== 'string') return false
+  if (value.length > 320) return false
+  if (value.includes(' ')) return false
+
+  const at = value.indexOf('@')
+  if (at <= 0 || at !== value.lastIndexOf('@')) return false
+
+  const dot = value.indexOf('.', at + 2)
+  if (dot === -1 || dot >= value.length - 1) return false
+
+  return true
 }
 
 function buildTestAccountUser(email: string): GitHubUser {
@@ -50,7 +59,6 @@ function buildTestAccountUser(email: string): GitHubUser {
   }
 }
 
-// ✅ 修复 2: parseGitHubUser - 正确的类型守卫
 function parseGitHubUser(jsonLike: unknown): GitHubUser | null {
   if (typeof jsonLike !== 'string') return null
   try {
@@ -92,7 +100,6 @@ function parseToken(jsonLike: unknown): string | null {
   }
 }
 
-// ✅ 修复 4: 安全的类型提取辅助函数
 function extractResponseData<T>(response: unknown): T {
   // 处理 axios 风格的响应：{ data: T }
   if (response && typeof response === 'object' && 'data' in response) {
@@ -159,7 +166,6 @@ class AuthService {
 
   private saveToStorage() {
     if (this.authState.token && this.authState.user) {
-      // 存储为对象格式，方便后续扩展
       localStorage.setItem('github_token', JSON.stringify({ token: this.authState.token }))
       localStorage.setItem('github_user', JSON.stringify(this.authState.user))
     } else {
@@ -265,7 +271,6 @@ class AuthService {
     window.location.href = `${authUrl}?${authParams.toString()}`
   }
 
-  // ✅ 修复 5: 正确处理 request 响应，避免类型错误
   async handleCallback(code: string): Promise<void> {
     this.authState.isLoading = true
     this.notifyListeners()

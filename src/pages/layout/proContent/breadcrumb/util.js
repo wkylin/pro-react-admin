@@ -46,8 +46,8 @@ export const findRouteChain = (routes, pathname) => {
       if (route.key === pathToCheck || route.path === pathToCheck) return true
 
       // 动态路由匹配
-      if (route.key && route.key.includes(':')) {
-        const pattern = route.key.replace(/:[^/]+/g, '[^/]+')
+      if (route?.key?.includes(':')) {
+        const pattern = route?.key.replace(/:[^/]+/g, '[^/]+')
         const regex = new RegExp(`^${pattern}$`)
         return regex.test(pathToCheck)
       }

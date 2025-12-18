@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Table } from 'antd'
+import React from 'react'
 import { Smartphone, Monitor, Rocket } from 'lucide-react'
 import PageContainer from '@stateless/PageContainer'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -28,7 +27,6 @@ import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
 import OneTimePasscode from '@stateless/OneTimePasscode'
-import styles from './index.module.less'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
 
@@ -85,54 +83,6 @@ const fixTabsData = [
   },
 ]
 
-const tabs = [
-  {
-    title: 'Product',
-    value: 'product',
-    content: (
-      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
-        <p>Product Tab</p>
-      </div>
-    ),
-  },
-  {
-    title: 'Services',
-    value: 'services',
-    content: (
-      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
-        <p>Services tab</p>
-      </div>
-    ),
-  },
-  {
-    title: 'Playground',
-    value: 'playground',
-    content: (
-      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
-        <p>Playground tab</p>
-      </div>
-    ),
-  },
-  {
-    title: 'Content',
-    value: 'content',
-    content: (
-      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
-        <p>Content tab</p>
-      </div>
-    ),
-  },
-  {
-    title: 'Random',
-    value: 'random',
-    content: (
-      <div className="relative h-full w-full overflow-hidden rounded-2xl bg-linear-to-br from-purple-700 to-violet-900 p-10 text-xl font-bold text-white md:text-4xl">
-        <p>Random tab</p>
-      </div>
-    ),
-  },
-]
-
 const customCommandMap = {
   npm: 'npm run shadcn add button',
   yarn: 'yarn shadcn add button',
@@ -140,13 +90,13 @@ const customCommandMap = {
   bun: 'bun x shadcn@latest add button',
 }
 
-const dateDifference = (date1, date2) => {
-  const d1 = new Date(date1)
-  const d2 = new Date(date2)
-  const diffTime = Math.abs(d2 - d1)
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  return diffDays
-}
+const animatedListItems = Array.from({ length: 10 }, (_, index) => ({
+  id: `animated-${index + 1}`,
+}))
+
+const stickyCardItems = Array.from({ length: 4 }, (_, index) => ({
+  id: `sticky-${index + 1}`,
+}))
 
 const tagCardList = [
   {
@@ -315,7 +265,7 @@ const ProDemo = () => {
   return (
     <FixTabPanel>
       <PageContainer>
-        <OneTimePasscode length={6} variant="compact" onComplete={(code) => console.log('OTP Code:', code)} />
+        <OneTimePasscode length={6} variant="compact" onComplete={() => {}} />
         <MusicPlayer />
         <TransferHistory />
         <FixCarousel />
@@ -338,17 +288,13 @@ const ProDemo = () => {
         <LogoSlider companies={companies} />
         <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
           <AnimatedList>
-            {Array.from({ length: 10 }, () => ({
-              id: Math.random(),
-            }))
-              .flat()
-              .map((item, index) => (
-                <div key={item?.id} className="flex flex-col items-center justify-center gap-4">
-                  <div className="flex items-center justify-center gap-4">
-                    <div className="h-16 w-100 rounded-full bg-gradient-to-br from-purple-500 to-blue-500" />
-                  </div>
+            {animatedListItems.map((item) => (
+              <div key={item.id} className="flex flex-col items-center justify-center gap-4">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-16 w-100 rounded-full bg-gradient-to-br from-purple-500 to-blue-500" />
                 </div>
-              ))}
+              </div>
+            ))}
           </AnimatedList>
         </section>
 
@@ -374,7 +320,7 @@ const ProDemo = () => {
           ]}
           className="my-4 rounded-xl"
         />
-        <StickyCard cards={[...Array.from({ length: 4 }, () => ({ id: Math.random() }))]} />
+        <StickyCard cards={stickyCardItems} />
         <section style={{ marginBottom: '15px' }}>
           <OrgChart />
         </section>

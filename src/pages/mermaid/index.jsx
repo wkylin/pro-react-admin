@@ -18,7 +18,7 @@ import {
   Clock,
   FileCode,
 } from 'lucide-react'
-import { Button, Tooltip, message, Space, Card, Segmented, theme } from 'antd'
+import { Button, Tooltip, message, Space, Card, theme } from 'antd'
 
 const SAMPLES = {
   Flowchart: `graph TD
@@ -71,6 +71,13 @@ const MermaidDemo = () => {
   const [activeType, setActiveType] = useState('Flowchart')
   const previewRef = useRef(null)
 
+  const getSampleIcon = (type) => {
+    if (type === 'Git') return <GitBranch size={14} />
+    if (type === 'Timeline') return <Clock size={14} />
+    if (type === 'State') return <Activity size={14} />
+    return <FileCode size={14} />
+  }
+
   const handleSampleChange = (type) => {
     setActiveType(type)
     setChart(SAMPLES[type])
@@ -90,15 +97,35 @@ const MermaidDemo = () => {
         link.click()
         message.success(`Downloaded as ${format.toUpperCase()}`)
       } catch (err) {
-        console.error(err)
-        message.error('Download failed')
+        message.error('Download failed: ' + err.message)
       }
     },
     [previewRef, token.colorBgLayout]
   )
 
+  const copyCodeFallback = useCallback(() => {
+    const ok = copy(chart)
+    if (ok) {
+      message.info('Copied code instead')
+      return
+    }
+    message.error('Copy failed')
+  }, [chart])
+
   const handleCopyImage = useCallback(async () => {
     if (!previewRef.current) return
+
+    const canCopyImage =
+      typeof navigator !== 'undefined' &&
+      navigator.clipboard &&
+      typeof navigator.clipboard.write === 'function' &&
+      typeof ClipboardItem !== 'undefined'
+
+    if (!canCopyImage) {
+      copyCodeFallback()
+      return
+    }
+
     try {
       const dataUrl = await toPng(previewRef.current, { backgroundColor: token.colorBgLayout })
       const blob = await (await fetch(dataUrl)).blob()
@@ -109,16 +136,10 @@ const MermaidDemo = () => {
       ])
       message.success('Image copied to clipboard')
     } catch (err) {
-      console.error(err)
-      // Fallback for browsers that don't support ClipboardItem or if it fails
-      try {
-        copy(chart)
-        message.info('Copied code instead (Image copy failed)')
-      } catch (e) {
-        message.error('Copy failed')
-      }
+      message.error('Copy image failed: ' + err.message)
+      copyCodeFallback()
     }
-  }, [previewRef, chart, token.colorBgLayout])
+  }, [previewRef, token.colorBgLayout, copyCodeFallback])
 
   return (
     <FixTabPanel>
@@ -160,17 +181,7 @@ const MermaidDemo = () => {
                       size="small"
                       type={activeType === type ? 'primary' : 'default'}
                       onClick={() => handleSampleChange(type)}
-                      icon={
-                        type === 'Git' ? (
-                          <GitBranch size={14} />
-                        ) : type === 'Timeline' ? (
-                          <Clock size={14} />
-                        ) : type === 'State' ? (
-                          <Activity size={14} />
-                        ) : (
-                          <FileCode size={14} />
-                        )
-                      }
+                      icon={getSampleIcon(type)}
                     >
                       {type}
                     </Button>
