@@ -295,7 +295,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
       return (
         <button
-          type="button"
+          type='button'
           onMouseEnter={onPreload}
           onFocus={onPreload}
           onClick={onPreload}
@@ -323,7 +323,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       const base = {
         ...rest,
         path,
-        label: Label,
+        label: Label
       }
       if (children && Array.isArray(children)) {
         // 过滤掉空值的子项
@@ -411,7 +411,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 ProSecNav.propTypes = {
   mode: PropTypes.string,
   theme: PropTypes.string,
-  onMenuClick: PropTypes.func,
+  onMenuClick: PropTypes.func
 }
 
 export default ProSecNav
