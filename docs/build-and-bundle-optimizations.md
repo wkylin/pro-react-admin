@@ -84,22 +84,26 @@
 ### A) CI 默认跳过音视频压缩（推荐）
 
 动机：GitHub Actions/Vercel 的构建通常更希望“快且可重复”，而压缩属于离线资产加工，更适合：
+
 - 本地开发/专门的 asset pipeline 运行
 - 或者只在需要更新素材时才运行（通过手动触发/环境变量强制）
 
 建议策略：
+
 - CI 环境检测到 `CI=true` / `GITHUB_ACTIONS=true` / `VERCEL=1` 时，跳过 `optimize:media`
 - 通过 `OPTIMIZE_MEDIA=1` 强制开启
 
 ### B) 首包（app chunk）大依赖拆分
 
 常见大头：
+
 - `antd` / `@ant-design/icons`（barrel import 容易把聚合入口带进首包）
 - `lucide-react`（从包入口导入多个图标时，容易把图标集合带进首包）
 - `html2canvas`（截图/PDF 导出这类能力不应进入首屏）
 - `react-markdown` + `remark/rehype` + `katex/highlight`（仅 markdown 页面需要）
 
 建议手段：
+
 - 图标改为“单文件导入”或“按图标模块导入”
 - 将 `html2canvas`、markdown/katex runtime 改为动态 import（按页面或按功能触发加载）
 - 收敛路由 preload（避免重页面被预取进首包）
@@ -109,4 +113,3 @@
 - 资源体积：对比 `dist/` 目录中图片/音视频体积（尤其是 `dist/static/js` 与 `dist/images`、`dist/audio`）。
 - Webpack performance：观察生产构建输出的 performance hints。
 - 包体归因：使用 `npm run analyze:build` / `npm run analyze:stats` 生成 stats，再按 entrypoint/app chunk 追踪主要模块来源。
-
