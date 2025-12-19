@@ -12,7 +12,6 @@ import styles from './index.module.less'
 
 import { mainLayoutMenu } from '@src/config/menu.config'
 
-// Defer lazyComponents import to avoid layout/lazyLoad circular reference during module evaluation
 let lazyComponentsCache = null
 let lazyComponentsPromise = null
 const loadLazyComponents = () => {
@@ -157,7 +156,10 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     }
 
     const dfs = (nodes, chain) => {
+      if (!Array.isArray(nodes)) return
       for (const node of nodes) {
+        // 添加空值检查
+        if (!node || typeof node !== 'object' || !node.key) continue
         const nextChain = [...chain, node.key]
         const nodePath = node.path || node.key
         // 匹配规则：精确匹配 或 前缀匹配（允许 /a/b 命中 /a）
@@ -171,7 +173,9 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
             bestChain = nextChain
           }
         }
-        if (node.children) dfs(node.children, nextChain)
+        if (node.children && Array.isArray(node.children)) {
+          dfs(node.children, nextChain)
+        }
       }
     }
     dfs(items, [])
@@ -224,9 +228,16 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     // 计算所有当前 key 的父链深度（根据 menuItems）
     const depthMap = {}
     const buildDepth = (items, depth) => {
+      if (!Array.isArray(items)) return
       for (const item of items) {
-        depthMap[item.key] = depth
-        if (item.children) buildDepth(item.children, depth + 1)
+        // 添加空值检查，避免 "Cannot convert undefined or null to object" 错误
+        if (!item || typeof item !== 'object') continue
+        if (item.key) {
+          depthMap[item.key] = depth
+        }
+        if (item.children && Array.isArray(item.children)) {
+          buildDepth(item.children, depth + 1)
+        }
       }
     }
     buildDepth(menuItems, 0)
@@ -297,8 +308,15 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     }
 
     const translateItem = (i) => {
+      // 添加空值检查
+      if (!i || typeof i !== 'object') return null
+
       const { i18nKey, children, ...rest } = i
       const path = i.path || i.key
+
+      // 如果没有 key，返回 null（不合法的菜单项）
+      if (!path) return null
+
       const labelText = i18nKey ? t(i.i18nKey) : i.label
       const Label = createLabel(path, labelText)
 
@@ -307,11 +325,17 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         path,
         label: Label,
       }
-      return children ? { ...base, children: children.map(translateItem) } : base
+      if (children && Array.isArray(children)) {
+        // 过滤掉空值的子项
+        const validChildren = children.map(translateItem).filter(Boolean)
+        return validChildren.length > 0 ? { ...base, children: validChildren } : base
+      }
+      return base
     }
 
     // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
-    const allMenuItems = mainLayoutMenu.map(translateItem)
+    // 过滤掉可能的空值
+    const allMenuItems = (Array.isArray(mainLayoutMenu) ? mainLayoutMenu : []).map(translateItem).filter(Boolean)
 
     // 递归过滤菜单：仅保留用户可访问的节点或其子节点
     const hasAccessSafely = (p) => {
@@ -331,9 +355,15 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     }
 
     const filterItems = (items) => {
+      if (!Array.isArray(items)) return []
       const result = []
       for (const item of items) {
+        // 添加空值检查，防止处理空值菜单项
+        if (!item || typeof item !== 'object') continue
+
         const rawKey = item.path || item.key
+        // 如果菜单项没有 key，跳过（不合法的菜单项）
+        if (!rawKey) continue
 
         if (Array.isArray(item.children) && item.children.length > 0) {
           const children = filterItems(item.children)
