@@ -4,35 +4,33 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [3.0.0](https://github.com/wkylin/pro-react-admin/compare/v2.2.0...v3.0.0) (2025-12-19)
 
-
 ### Features
 
-* 构建lib瘦身 ([0020efa](https://github.com/wkylin/pro-react-admin/commits/0020efaa8866af931b191a081fbcda4c4fb6d36a))
-* 权限集中 ([1c98b23](https://github.com/wkylin/pro-react-admin/commits/1c98b238e992fb3b484466662d26a37ecba207c3))
-* 权限示例 ([615d78e](https://github.com/wkylin/pro-react-admin/commits/615d78e0c9ee4a1af8b5fb3f85c358ceae8ce6fa))
-* error boundary error tip ([0e19ca3](https://github.com/wkylin/pro-react-admin/commits/0e19ca3b4a2e5d7c9537aad5c10330571651e0a5))
-* fix panel scroll ([0986434](https://github.com/wkylin/pro-react-admin/commits/098643425955bd73e18324b3a161d04a49e401cc))
-* gpt mermaid ([500a5b7](https://github.com/wkylin/pro-react-admin/commits/500a5b7aac856ac98e071892ce716368527880d9))
-* gpt mermaid markmap ([4eaf2dc](https://github.com/wkylin/pro-react-admin/commits/4eaf2dccf37238e345450b02491d8598000739d0))
-* motion ([d5366db](https://github.com/wkylin/pro-react-admin/commits/d5366dbc0c8ba15a04861259f8da576c3df5e9f8))
-* motion ([f45b5d4](https://github.com/wkylin/pro-react-admin/commits/f45b5d407bfa16e3b071eda4eddfb33b5cf39164))
-* motion scrollbar ([7caf879](https://github.com/wkylin/pro-react-admin/commits/7caf879922b00eb82eb20528346092bb6c256afa))
-* one time passcode ([4a14586](https://github.com/wkylin/pro-react-admin/commits/4a14586b04fb22c27eb5c98b027f4e23505d391a))
-* perf sonarqube ([0f210df](https://github.com/wkylin/pro-react-admin/commits/0f210df5819abce917c9581f03a815d233e6936e))
-* permission ([8990e94](https://github.com/wkylin/pro-react-admin/commits/8990e949c0b2dfdc6fd426a54cb57edaf13b6abd))
-* sentry ([f24e277](https://github.com/wkylin/pro-react-admin/commits/f24e27736eedfe431a9c2160947eed0f5a171069))
-* topology ([429c10e](https://github.com/wkylin/pro-react-admin/commits/429c10e0f252670407e4476368374049fc12ee26))
-* topology dashed flowing ([c8c8b96](https://github.com/wkylin/pro-react-admin/commits/c8c8b9675a2d4652e2fcc70e3ecd8078797530a8))
-* ui perf ([69d7fc9](https://github.com/wkylin/pro-react-admin/commits/69d7fc9d0cc91ddd080484c7709c4a6a51986c7b))
-
+- 构建lib瘦身 ([0020efa](https://github.com/wkylin/pro-react-admin/commits/0020efaa8866af931b191a081fbcda4c4fb6d36a))
+- 权限集中 ([1c98b23](https://github.com/wkylin/pro-react-admin/commits/1c98b238e992fb3b484466662d26a37ecba207c3))
+- 权限示例 ([615d78e](https://github.com/wkylin/pro-react-admin/commits/615d78e0c9ee4a1af8b5fb3f85c358ceae8ce6fa))
+- error boundary error tip ([0e19ca3](https://github.com/wkylin/pro-react-admin/commits/0e19ca3b4a2e5d7c9537aad5c10330571651e0a5))
+- fix panel scroll ([0986434](https://github.com/wkylin/pro-react-admin/commits/098643425955bd73e18324b3a161d04a49e401cc))
+- gpt mermaid ([500a5b7](https://github.com/wkylin/pro-react-admin/commits/500a5b7aac856ac98e071892ce716368527880d9))
+- gpt mermaid markmap ([4eaf2dc](https://github.com/wkylin/pro-react-admin/commits/4eaf2dccf37238e345450b02491d8598000739d0))
+- motion ([d5366db](https://github.com/wkylin/pro-react-admin/commits/d5366dbc0c8ba15a04861259f8da576c3df5e9f8))
+- motion ([f45b5d4](https://github.com/wkylin/pro-react-admin/commits/f45b5d407bfa16e3b071eda4eddfb33b5cf39164))
+- motion scrollbar ([7caf879](https://github.com/wkylin/pro-react-admin/commits/7caf879922b00eb82eb20528346092bb6c256afa))
+- one time passcode ([4a14586](https://github.com/wkylin/pro-react-admin/commits/4a14586b04fb22c27eb5c98b027f4e23505d391a))
+- perf sonarqube ([0f210df](https://github.com/wkylin/pro-react-admin/commits/0f210df5819abce917c9581f03a815d233e6936e))
+- permission ([8990e94](https://github.com/wkylin/pro-react-admin/commits/8990e949c0b2dfdc6fd426a54cb57edaf13b6abd))
+- sentry ([f24e277](https://github.com/wkylin/pro-react-admin/commits/f24e27736eedfe431a9c2160947eed0f5a171069))
+- topology ([429c10e](https://github.com/wkylin/pro-react-admin/commits/429c10e0f252670407e4476368374049fc12ee26))
+- topology dashed flowing ([c8c8b96](https://github.com/wkylin/pro-react-admin/commits/c8c8b9675a2d4652e2fcc70e3ecd8078797530a8))
+- ui perf ([69d7fc9](https://github.com/wkylin/pro-react-admin/commits/69d7fc9d0cc91ddd080484c7709c4a6a51986c7b))
 
 ### Bug Fixes
 
-* bug fix ([f3f5e09](https://github.com/wkylin/pro-react-admin/commits/f3f5e09e819b7376f01118b7662ba3ea9a259af9))
-* Cannot convert undefined or null to object ([796a3a0](https://github.com/wkylin/pro-react-admin/commits/796a3a05118e453e4452e045fc125ab842eae718))
-* fix dependencier ([61449b4](https://github.com/wkylin/pro-react-admin/commits/61449b429647c3e4d5854ce347899fe556cf8870))
-* fix sonaqube ([d5de247](https://github.com/wkylin/pro-react-admin/commits/d5de24760acf8991bee92e2966d68f697fced8b1))
-* fix sonarqube ([303b683](https://github.com/wkylin/pro-react-admin/commits/303b6837da3cee2453ba4c197afec274a41879e3))
+- bug fix ([f3f5e09](https://github.com/wkylin/pro-react-admin/commits/f3f5e09e819b7376f01118b7662ba3ea9a259af9))
+- Cannot convert undefined or null to object ([796a3a0](https://github.com/wkylin/pro-react-admin/commits/796a3a05118e453e4452e045fc125ab842eae718))
+- fix dependencier ([61449b4](https://github.com/wkylin/pro-react-admin/commits/61449b429647c3e4d5854ce347899fe556cf8870))
+- fix sonaqube ([d5de247](https://github.com/wkylin/pro-react-admin/commits/d5de24760acf8991bee92e2966d68f697fced8b1))
+- fix sonarqube ([303b683](https://github.com/wkylin/pro-react-admin/commits/303b6837da3cee2453ba4c197afec274a41879e3))
 
 # [2.2.0](https://github.com/wkylin/pro-react-admin/compare/v2.1.1...v2.2.0) (2025-12-05)
 
