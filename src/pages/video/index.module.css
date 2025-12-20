@@ -1,5 +1,5 @@
 .page {
-  padding: 24px;
+  padding: 16px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -8,10 +8,8 @@
 
 .card {
   width: 100%;
-  max-width: 40vw;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  max-width: 960px;
   border-radius: 16px;
-  background: #fff;
   overflow: hidden;
 }
 
@@ -43,6 +41,25 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 0;
+  }
+
+  .card {
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .header {
+    padding: 12px 12px 10px;
+  }
+
+  .subTitle {
+    max-width: 70vw;
+  }
 }
 
 .actions {

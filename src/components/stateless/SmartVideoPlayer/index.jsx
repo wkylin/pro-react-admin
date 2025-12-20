@@ -142,6 +142,16 @@ const SmartVideoPlayer = ({
 
         const name = typeof err?.name === 'string' ? err.name : 'PlayError'
         const message = typeof err?.message === 'string' ? err.message : ''
+
+        // Common & harmless: play() interrupted by pause() (e.g. IO lazy-play or rapid user toggles)
+        if (
+          name === 'AbortError' ||
+          /interrupted by a call to pause\(\)/i.test(message) ||
+          /The play\(\) request was interrupted/i.test(message)
+        ) {
+          return
+        }
+
         setPlayError(message ? `无法播放：${name} - ${message}` : `无法播放：${name}`)
       })
   }, [])
