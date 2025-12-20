@@ -1,0 +1,436 @@
+.videoAnchor {
+  position: relative;
+}
+
+.miniRestore {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1000;
+}
+
+.miniRestore .tooltip {
+  bottom: 54px;
+}
+
+.videoWrap {
+  background: #0b0b0c;
+  position: relative;
+  overflow: hidden;
+}
+
+.controlsPinnedWrap .videoControls {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.videoControls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  gap: 8px;
+  padding: 8px 8px;
+  background: rgba(0, 0, 0, 0.52);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  transform: translateY(56%);
+  pointer-events: none;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.playError {
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.88);
+  padding: 6px 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.videoWrap:hover .videoControls,
+.videoWrap:focus-within .videoControls {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.controlsTop {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.controlsBottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.spacer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.time {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.videoControls .range {
+  accent-color: rgba(255, 255, 255, 0.86);
+  min-width: 0;
+}
+
+.progressRange {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.volumeRange {
+  width: clamp(56px, 10vw, 96px);
+}
+
+.settingsWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.settingsPanel {
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  width: 240px;
+  height: 160px;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  overflow: visible;
+}
+
+.settingsScroll {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  gap: 10px;
+}
+
+.settingsPanelPortal {
+  position: fixed !important;
+  left: var(--svp-settings-left, 8px) !important;
+  top: var(--svp-settings-top, 8px) !important;
+  z-index: 2000;
+  box-sizing: border-box;
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.settingsPanelPortal,
+.settingsPanelPortal *,
+.settingsPanelPortal *::before,
+.settingsPanelPortal *::after {
+  box-sizing: border-box;
+}
+
+.settingsPanelPortal label {
+  margin: 0;
+}
+
+.settingsPanelPortal button {
+  font: inherit;
+  letter-spacing: normal;
+}
+
+.settingsPanelPortal input {
+  font: inherit;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.settingItemSplit {
+  width: 100%;
+}
+
+.settingItemSplit .settingLabel {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.speedDropdown {
+  position: relative;
+  margin-left: auto;
+}
+
+.settingItemSplit .speedDropdown {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 0;
+}
+
+.speedTrigger {
+  height: 26px;
+  min-width: 64px;
+  padding: 0 26px 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  line-height: 26px;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+}
+
+.settingItemSplit .speedTrigger {
+  width: 100%;
+  min-width: 0;
+}
+
+.speedTrigger::after {
+  content: '▾';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.75;
+}
+
+.speedTrigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.speedTrigger:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 2px;
+}
+
+.speedMenu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  width: auto;
+  min-width: 160px;
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 5;
+}
+
+.speedItem {
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  line-height: 28px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.speedItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.speedItemActive {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.settingCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: rgba(255, 255, 255, 0.86);
+}
+
+.settingLabel {
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    transform 0.08s ease;
+}
+
+.iconButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.iconButton:disabled:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: none;
+}
+
+.iconButton:disabled .tooltip {
+  opacity: 0;
+}
+
+.iconButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.iconButton:active {
+  transform: translateY(0);
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.tooltip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  bottom: 38px;
+  background: rgba(0, 0, 0, 0.58);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.iconButton:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.sep {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 8px;
+}
+
+.miniPlaceholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0b0b0c;
+}
+
+.mini {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 360px;
+  max-width: calc(100vw - 36px);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 999;
+}
+
+.mini .videoControls {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.mini .iconButton {
+  width: 26px;
+  height: 26px;
+}
+
+.mini .volumeRange {
+  width: 96px;
+}
+
+@media (max-width: 540px) {
+  .videoControls {
+    padding: 6px 6px;
+  }
+
+  .iconButton {
+    width: 26px;
+    height: 26px;
+    border-radius: 9px;
+  }
+
+  .volumeRange {
+    width: 64px;
+  }
+
+  .settingsPanel {
+    width: 210px;
+  }
+}
+
+.settingSelect {
+  flex: 0 0 auto;
+  min-width: 72px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.28);
+  color: rgba(255, 255, 255, 0.92);
+  padding: 0 10px;
+  font-size: 12px;
+  line-height: 28px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color-scheme: dark;
+}
+
+.settingSelect:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 2px;
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+}

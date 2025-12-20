@@ -111,10 +111,21 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
   )
 
   const handleTimeControl = useCallback((e: Event) => {
+    const target = e.target as HTMLVideoElement
+    const nextTime = target.currentTime
+    // Throttle frequent timeupdate to reduce re-render pressure
+    // (especially noticeable in fullscreen with heavy UI around the video)
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now()
+    ;(handleTimeControl as any)._lastTs = (handleTimeControl as any)._lastTs || 0
+    const lastTs = (handleTimeControl as any)._lastTs as number
+    if (now - lastTs < 120) return
+    ;(handleTimeControl as any)._lastTs = now
+
     setVideoState((prev) => {
+      if (Math.abs(prev.currentTime - nextTime) < 0.05) return prev
       return {
         ...prev,
-        currentTime: (e.target as HTMLVideoElement).currentTime,
+        currentTime: nextTime,
       }
     })
   }, [])
@@ -190,18 +201,58 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
     }
   }, [handlePlayPauseControl, handleTimeControl, handleVolumeControl, ref])
 
+  const increaseVolume = useCallback(
+    (increase = 5) => {
+      handleVolume(increase)
+    },
+    [handleVolume]
+  )
+
+  const decreaseVolume = useCallback(
+    (decrease = 5) => {
+      handleVolume(decrease * -1)
+    },
+    [handleVolume]
+  )
+
+  const mute = useCallback(() => {
+    handleMute(true)
+  }, [handleMute])
+
+  const unmute = useCallback(() => {
+    handleMute(false)
+  }, [handleMute])
+
+  const toggleMute = useCallback(() => {
+    handleMute(!ref.current?.muted)
+  }, [handleMute, ref])
+
+  const forward = useCallback(
+    (increase = 5) => {
+      handleTime(increase)
+    },
+    [handleTime]
+  )
+
+  const back = useCallback(
+    (decrease = 5) => {
+      handleTime(decrease * -1)
+    },
+    [handleTime]
+  )
+
   return {
     ...videoState,
     play,
     pause,
     togglePause,
-    increaseVolume: (increase = 5) => handleVolume(increase),
-    decreaseVolume: (decrease = 5) => handleVolume(decrease * -1),
-    mute: () => handleMute(true),
-    unmute: () => handleMute(false),
-    toggleMute: () => handleMute(!ref.current?.muted),
-    forward: (increase = 5) => handleTime(increase),
-    back: (decrease = 5) => handleTime(decrease * -1),
+    increaseVolume,
+    decreaseVolume,
+    mute,
+    unmute,
+    toggleMute,
+    forward,
+    back,
     toggleFullscreen,
   }
 }
