@@ -16,12 +16,12 @@ import {
   Settings,
   PictureInPicture,
   X,
-  Minimize2,
+  Minimize2
 } from 'lucide-react'
 
-const IconButton = React.memo(function IconButton({ Icon, label, onClick, disabled = false }) {
+const IconButton = React.memo(function IconButton ({ Icon, label, onClick, disabled = false }) {
   return (
-    <button className={styles.iconButton} type="button" onClick={onClick} aria-label={label} disabled={disabled}>
+    <button className={styles.iconButton} type='button' onClick={onClick} aria-label={label} disabled={disabled}>
       <Icon size={15} />
       <span className={styles.tooltip} aria-hidden>
         {label}
@@ -30,12 +30,12 @@ const IconButton = React.memo(function IconButton({ Icon, label, onClick, disabl
   )
 })
 
-const SettingToggle = React.memo(function SettingToggle({ checked, label, onChange }) {
+const SettingToggle = React.memo(function SettingToggle ({ checked, label, onChange }) {
   return (
     <label className={styles.settingItem}>
       <input
         className={styles.settingCheckbox}
-        type="checkbox"
+        type='checkbox'
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
@@ -44,7 +44,7 @@ const SettingToggle = React.memo(function SettingToggle({ checked, label, onChan
   )
 })
 
-function getScrollParent(node) {
+function getScrollParent (node) {
   let current = node?.parentElement
   while (current && current !== document.body && current !== document.documentElement) {
     const style = window.getComputedStyle(current)
@@ -67,8 +67,8 @@ const SmartVideoPlayer = ({
     miniPlayer: true,
     autoPlay: true,
     autoMute: true,
-    playbackRate: 1,
-  },
+    playbackRate: 1
+  }
 }) => {
   const useVideoRef = useRef(null)
   const videoAnchorRef = useRef(null)
@@ -420,7 +420,7 @@ const SmartVideoPlayer = ({
       },
       {
         threshold: [0, 0.25, 0.75, 1],
-        root: observerRoot,
+        root: observerRoot
       }
     )
 
@@ -607,11 +607,13 @@ const SmartVideoPlayer = ({
 
   return (
     <>
-      {!isMini && config.miniPlayer && fullyOut && !isPiP && miniDismissed ? (
-        <div className={styles.miniRestore}>
-          <IconButton Icon={Minimize2} label="恢复小窗" onClick={handleRestoreMini} />
-        </div>
-      ) : null}
+      {!isMini && config.miniPlayer && fullyOut && !isPiP && miniDismissed
+        ? (
+          <div className={styles.miniRestore}>
+            <IconButton Icon={Minimize2} label='恢复小窗' onClick={handleRestoreMini} />
+          </div>
+          )
+        : null}
 
       <div ref={videoAnchorRef} className={styles.videoAnchor}>
         {isMini ? <div className={styles.miniPlaceholder} aria-hidden /> : null}
@@ -624,20 +626,20 @@ const SmartVideoPlayer = ({
             className={styles.video}
             muted={config.autoMute}
             controls={false}
-            preload="metadata"
-            controlsList="nodownload"
+            preload='metadata'
+            controlsList='nodownload'
             playsInline
             onClick={handleTogglePause}
             onDoubleClick={toggleFullscreen}
           >
-            <source src={src} type="video/mp4" />
-            {computedTrackSrc ? <track kind="captions" srcLang={trackLang} src={computedTrackSrc} /> : null}
+            <source src={src} type='video/mp4' />
+            {computedTrackSrc ? <track kind='captions' srcLang={trackLang} src={computedTrackSrc} /> : null}
             Your browser does not support the video tag.
           </video>
 
-          <div className={styles.videoControls} aria-label="视频控制条">
-            <div className={styles.controlsTop} role="group" aria-label="播放与工具">
-              {!isMini ? <IconButton Icon={SkipBack} label="后退 10 秒" onClick={() => back(10)} /> : null}
+          <div className={styles.videoControls} aria-label='视频控制条'>
+            <div className={styles.controlsTop} role='group' aria-label='播放与工具'>
+              {!isMini ? <IconButton Icon={SkipBack} label='后退 10 秒' onClick={() => back(10)} /> : null}
 
               <IconButton
                 Icon={isPaused ? Play : Pause}
@@ -645,9 +647,9 @@ const SmartVideoPlayer = ({
                 onClick={handleTogglePause}
               />
 
-              {!isMini ? <IconButton Icon={SkipForward} label="前进 10 秒" onClick={() => forward(10)} /> : null}
+              {!isMini ? <IconButton Icon={SkipForward} label='前进 10 秒' onClick={() => forward(10)} /> : null}
 
-              {isMini ? <IconButton Icon={X} label="关闭小窗" onClick={handleCloseMini} /> : null}
+              {isMini ? <IconButton Icon={X} label='关闭小窗' onClick={handleCloseMini} /> : null}
 
               <div className={styles.spacer} />
 
@@ -657,141 +659,155 @@ const SmartVideoPlayer = ({
                 onClick={handleToggleMuteSmart}
               />
 
-              {!isMini ? (
-                <input
-                  className={`${styles.range} ${styles.volumeRange}`}
-                  type="range"
-                  min={0}
-                  max={100}
-                  step={1}
-                  value={displayVolumePercent}
-                  onChange={(e) => handleVolumeChangeSmart(Number(e.target.value))}
-                  aria-label="音量"
-                />
-              ) : null}
+              {!isMini
+                ? (
+                  <input
+                    className={`${styles.range} ${styles.volumeRange}`}
+                    type='range'
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={displayVolumePercent}
+                    onChange={(e) => handleVolumeChangeSmart(Number(e.target.value))}
+                    aria-label='音量'
+                  />
+                  )
+                : null}
 
-              {!isMini ? (
-                <IconButton
-                  Icon={Minus}
-                  label="音量 -5%"
-                  onClick={() => handleBumpVolume(-5)}
-                  disabled={!canDecrease}
-                />
-              ) : null}
+              {!isMini
+                ? (
+                  <IconButton
+                    Icon={Minus}
+                    label='音量 -5%'
+                    onClick={() => handleBumpVolume(-5)}
+                    disabled={!canDecrease}
+                  />
+                  )
+                : null}
 
-              {!isMini ? (
-                <IconButton Icon={Plus} label="音量 +5%" onClick={() => handleBumpVolume(5)} disabled={!canIncrease} />
-              ) : null}
+              {!isMini
+                ? (
+                  <IconButton Icon={Plus} label='音量 +5%' onClick={() => handleBumpVolume(5)} disabled={!canIncrease} />
+                  )
+                : null}
 
               {!isMini ? <div className={styles.sep} /> : null}
 
-              {!isMini ? (
-                <div ref={settingsRef} className={styles.settingsWrap}>
-                  <IconButton Icon={Settings} label="设置" onClick={() => setSettingsOpen((v) => !v)} />
-                </div>
-              ) : null}
+              {!isMini
+                ? (
+                  <div ref={settingsRef} className={styles.settingsWrap}>
+                    <IconButton Icon={Settings} label='设置' onClick={() => setSettingsOpen((v) => !v)} />
+                  </div>
+                  )
+                : null}
 
               {!isMini && settingsOpen
                 ? createPortal(
-                    <div
-                      ref={settingsPanelRef}
-                      className={`${styles.settingsPanel} ${styles.settingsPanelPortal}`}
-                      role="group"
-                      aria-label="播放设置"
-                      onPointerDownCapture={handleSettingsPanelPointerDownCapture}
-                    >
-                      <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label="播放速度">
-                        <span className={styles.settingLabel}>播放速度</span>
-                        <div className={styles.speedDropdown} data-speed-dropdown="true">
-                          <button
-                            type="button"
-                            className={styles.speedTrigger}
-                            aria-haspopup="listbox"
-                            aria-expanded={speedOpen}
-                            onClick={() => setSpeedOpen((v) => !v)}
-                          >
-                            {`${Number(config.playbackRate ?? 1)}x`}
-                          </button>
+                  <div
+                    ref={settingsPanelRef}
+                    className={`${styles.settingsPanel} ${styles.settingsPanelPortal}`}
+                    role='group'
+                    aria-label='播放设置'
+                    onPointerDownCapture={handleSettingsPanelPointerDownCapture}
+                  >
+                    <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label='播放速度'>
+                      <span className={styles.settingLabel}>播放速度</span>
+                      <div className={styles.speedDropdown} data-speed-dropdown='true'>
+                        <button
+                          type='button'
+                          className={styles.speedTrigger}
+                          aria-haspopup='listbox'
+                          aria-expanded={speedOpen}
+                          onClick={() => setSpeedOpen((v) => !v)}
+                        >
+                          {`${Number(config.playbackRate ?? 1)}x`}
+                        </button>
 
-                          {speedOpen ? (
-                            <div className={styles.speedMenu} role="listbox" aria-label="播放速度选项">
+                        {speedOpen
+                          ? (
+                            <div className={styles.speedMenu} role='listbox' aria-label='播放速度选项'>
                               {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => {
                                 const active = Number(config.playbackRate ?? 1) === rate
                                 return (
                                   <button
                                     key={rate}
-                                    type="button"
+                                    type='button'
                                     className={`${styles.speedItem} ${active ? styles.speedItemActive : ''}`}
-                                    role="option"
+                                    role='option'
                                     aria-selected={active}
                                     onClick={() => {
-                                      setConfigItem('playbackRate', rate)
-                                      setSpeedOpen(false)
-                                    }}
+                                        setConfigItem('playbackRate', rate)
+                                        setSpeedOpen(false)
+                                      }}
                                   >
                                     {rate === 1 ? '1x（默认）' : `${rate}x`}
                                   </button>
                                 )
                               })}
                             </div>
-                          ) : null}
-                        </div>
+                            )
+                          : null}
                       </div>
+                    </div>
 
-                      <div className={styles.settingsScroll} aria-label="其它设置">
-                        <SettingToggle
-                          checked={config.lazyPlay}
-                          label="懒播放（滚出视口自动暂停）"
-                          onChange={(v) => setConfigItem('lazyPlay', v)}
-                        />
-                        <SettingToggle
-                          checked={config.miniPlayer}
-                          label="小窗播放器（滚出视口右下角）"
-                          onChange={(v) => setConfigItem('miniPlayer', v)}
-                        />
-                        <SettingToggle
-                          checked={config.autoPlay}
-                          label="自动播放"
-                          onChange={(v) => setConfigItem('autoPlay', v)}
-                        />
-                        <SettingToggle
-                          checked={config.autoMute}
-                          label="自动静音（便于自动播放）"
-                          onChange={(v) => setConfigItem('autoMute', v)}
-                        />
-                      </div>
-                    </div>,
-                    document.body
+                    <div className={styles.settingsScroll} aria-label='其它设置'>
+                      <SettingToggle
+                        checked={config.lazyPlay}
+                        label='懒播放（滚出视口自动暂停）'
+                        onChange={(v) => setConfigItem('lazyPlay', v)}
+                      />
+                      <SettingToggle
+                        checked={config.miniPlayer}
+                        label='小窗播放器（滚出视口右下角）'
+                        onChange={(v) => setConfigItem('miniPlayer', v)}
+                      />
+                      <SettingToggle
+                        checked={config.autoPlay}
+                        label='自动播放'
+                        onChange={(v) => setConfigItem('autoPlay', v)}
+                      />
+                      <SettingToggle
+                        checked={config.autoMute}
+                        label='自动静音（便于自动播放）'
+                        onChange={(v) => setConfigItem('autoMute', v)}
+                      />
+                    </div>
+                  </div>,
+                  document.body
+                )
+                : null}
+
+              {!isMini
+                ? (
+                  <IconButton Icon={PictureInPicture} label={isPiP ? '退出画中画' : '画中画'} onClick={handleTogglePiP} />
                   )
                 : null}
 
-              {!isMini ? (
-                <IconButton Icon={PictureInPicture} label={isPiP ? '退出画中画' : '画中画'} onClick={handleTogglePiP} />
-              ) : null}
-
-              {!isMini ? <IconButton Icon={Maximize2} label="全屏" onClick={toggleFullscreen} /> : null}
+              {!isMini ? <IconButton Icon={Maximize2} label='全屏' onClick={toggleFullscreen} /> : null}
             </div>
 
-            <div className={styles.controlsBottom} role="group" aria-label="进度">
+            <div className={styles.controlsBottom} role='group' aria-label='进度'>
               <span className={styles.time}>{formatTime(currentTime)}</span>
               <input
                 className={`${styles.range} ${styles.progressRange}`}
-                type="range"
+                type='range'
                 min={0}
                 max={duration || 0}
                 step={0.1}
                 value={Math.min(Math.max(0, Number(currentTime) || 0), duration || 0)}
                 onChange={(e) => seekTo(Number(e.target.value))}
-                aria-label="播放进度"
+                aria-label='播放进度'
               />
               <span className={styles.time}>{formatTime(duration)}</span>
             </div>
 
-            {playError ? (
-              <div className={styles.playError} role="status">
-                {playError}
-              </div>
-            ) : null}
+            {playError
+              ? (
+                <div className={styles.playError} role='status'>
+                  {playError}
+                </div>
+                )
+              : null}
           </div>
         </div>
       </div>
