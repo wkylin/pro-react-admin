@@ -1,0 +1,432 @@
+.page {
+  padding: 24px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  height: 300vh;
+}
+
+.card {
+  width: 100%;
+  height: 100vh;
+  max-width: 980px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.header {
+  padding: 16px 16px 12px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  color: rgba(0, 0, 0, 0.88);
+}
+
+.subTitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.button {
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.button:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.button:active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.button:focus-visible {
+  outline: 2px solid rgba(22, 119, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.primary {
+  border-color: rgba(22, 119, 255, 0.35);
+}
+
+.videoAnchor {
+  position: relative;
+}
+
+.miniRestore {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1000;
+}
+
+.miniRestore .tooltip {
+  bottom: 54px;
+}
+
+.videoWrap {
+  background: #0b0b0c;
+  position: relative;
+}
+
+.videoControls {
+  display: grid;
+  gap: 10px;
+  padding: 10px 10px;
+  background: rgba(0, 0, 0, 0.62);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  opacity: 0.15;
+  transition: opacity 0.18s ease;
+}
+
+.videoWrap:hover .videoControls,
+.videoWrap:focus-within .videoControls {
+  opacity: 1;
+}
+
+.controlsTop {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.controlsBottom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.spacer {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.time {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.videoControls .range {
+  accent-color: rgba(255, 255, 255, 0.86);
+  min-width: 0;
+}
+
+.progressRange {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.volumeRange {
+  width: clamp(72px, 14vw, 120px);
+}
+
+.settingsWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.settingsPanel {
+  position: absolute;
+  right: 0;
+  bottom: 54px;
+  width: 240px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+}
+
+.settingItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+}
+
+.settingCheckbox {
+  width: 16px;
+  height: 16px;
+  accent-color: rgba(255, 255, 255, 0.86);
+}
+
+.settingLabel {
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  transition:
+    background-color 0.12s ease,
+    transform 0.08s ease;
+}
+
+.iconButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.iconButton:disabled:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: none;
+}
+
+.iconButton:disabled .tooltip {
+  opacity: 0;
+}
+
+.iconButton:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.iconButton:active {
+  transform: translateY(0);
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.55);
+  outline-offset: 2px;
+}
+
+.tooltip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  bottom: -34px;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.iconButton:hover .tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.sep {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 8px;
+}
+
+.miniPlaceholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0b0b0c;
+}
+
+.mini {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 360px;
+  max-width: calc(100vw - 36px);
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 999;
+}
+
+.mini .videoControls {
+  opacity: 1;
+}
+
+.mini .iconButton {
+  width: 38px;
+  height: 38px;
+}
+
+.mini .volumeRange {
+  width: 96px;
+}
+
+@media (max-width: 540px) {
+  .volumeRange {
+    display: none;
+  }
+
+  .settingsPanel {
+    width: 210px;
+  }
+}
+
+.video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.panel {
+  padding: 14px 16px 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: grid;
+  gap: 8px;
+}
+
+.rowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.label {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.value {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+.range {
+  width: 100%;
+  accent-color: #1677ff;
+}
+
+.volumeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.volumeButtons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.smallButton {
+  appearance: none;
+  width: 36px;
+  height: 32px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  border-radius: 10px;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.smallButton:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.smallButton:focus-visible {
+  outline: 2px solid rgba(22, 119, 255, 0.55);
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: #111214;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .header {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .title {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .subTitle,
+  .label,
+  .value {
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .button,
+  .smallButton {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .button:hover,
+  .smallButton:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
