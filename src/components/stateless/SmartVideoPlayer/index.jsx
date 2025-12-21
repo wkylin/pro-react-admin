@@ -42,11 +42,42 @@ function isSameConfig(a, b) {
   )
 }
 
-const IconButton = React.memo(function IconButton({ Icon, label, onClick, disabled = false }) {
+const IconButton = React.memo(function IconButton({
+  Icon,
+  label,
+  onClick,
+  disabled = false,
+  buttonRef,
+  tooltipPlacement = 'top',
+}) {
+  const tooltipPlacementClass =
+    tooltipPlacement === 'topLeft'
+      ? styles.tooltipTopLeft
+      : tooltipPlacement === 'topRight'
+        ? styles.tooltipTopRight
+        : tooltipPlacement === 'right'
+          ? styles.tooltipRight
+          : tooltipPlacement === 'left'
+            ? styles.tooltipLeft
+            : tooltipPlacement === 'bottom'
+              ? styles.tooltipBottom
+              : tooltipPlacement === 'bottomLeft'
+                ? styles.tooltipBottomLeft
+                : tooltipPlacement === 'bottomRight'
+                  ? styles.tooltipBottomRight
+                  : ''
+
   return (
-    <button className={styles.iconButton} type="button" onClick={onClick} aria-label={label} disabled={disabled}>
+    <button
+      ref={buttonRef}
+      className={styles.iconButton}
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      disabled={disabled}
+    >
       <Icon size={15} />
-      <span className={styles.tooltip} aria-hidden>
+      <span className={`${styles.tooltip} ${tooltipPlacementClass}`} aria-hidden>
         {label}
       </span>
     </button>
@@ -96,13 +127,18 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     config: controlledConfig,
     onConfigChange,
     initialConfig,
+    onError,
+    onEvent,
   },
   ref
 ) {
   const useVideoRef = useRef(null)
   const videoAnchorRef = useRef(null)
+  const playerWrapRef = useRef(null)
   const settingsRef = useRef(null)
   const settingsPanelRef = useRef(null)
+  const settingsButtonRef = useRef(null)
+  const prevSettingsOpenRef = useRef(false)
   const userPausedRef = useRef(false)
   const autoPausedRef = useRef(false)
   const isPiPRef = useRef(false)
@@ -112,20 +148,51 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const miniDismissedRef = useRef(false)
   const autoPlayAttemptedRef = useRef(false)
   const configRef = useRef(null)
+  const autoStartFeedbackRef = useRef(false)
+
+  const onErrorRef = useRef(onError)
+  const onEventRef = useRef(onEvent)
+  const ctxRef = useRef({ provider, src, youtubeId, embedUrl })
+  const embedTimerRef = useRef(0)
+
+  useEffect(() => {
+    onErrorRef.current = onError
+  }, [onError])
+
+  useEffect(() => {
+    onEventRef.current = onEvent
+  }, [onEvent])
+
+  useEffect(() => {
+    ctxRef.current = { provider, src, youtubeId, embedUrl }
+  }, [provider, src, youtubeId, embedUrl])
 
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [speedOpen, setSpeedOpen] = useState(false)
+  const [captionsOpen, setCaptionsOpen] = useState(false)
+
+  const emitEvent = useCallback((name, detail) => {
+    const fn = onEventRef.current
+    if (typeof fn !== 'function') return
+    try {
+      fn(name, detail)
+    } catch (_) {
+      // ignore
+    }
+  }, [])
 
   const handleSettingsPanelPointerDownCapture = useCallback(
     (e) => {
-      if (!speedOpen) return
+      if (!speedOpen && !captionsOpen) return
       const target = e.target
       if (!(target instanceof Element)) return
 
       if (target.closest('[data-speed-dropdown="true"]')) return
+      if (target.closest('[data-captions-dropdown="true"]')) return
       setSpeedOpen(false)
+      setCaptionsOpen(false)
     },
-    [speedOpen]
+    [captionsOpen, speedOpen]
   )
   const [inView, setInView] = useState(true)
   const [fullyOut, setFullyOut] = useState(false)
@@ -144,6 +211,39 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   // Keep refs in sync immediately (before effects), so event handlers read the latest config.
   configRef.current = config
   const [playError, setPlayError] = useState('')
+
+  const reportError = useCallback(
+    (message, extra) => {
+      const safeMessage = typeof message === 'string' ? message : '未知错误'
+      setPlayError(safeMessage)
+
+      const fn = onErrorRef.current
+      const ctx = ctxRef.current
+      if (typeof fn === 'function') {
+        try {
+          fn({
+            message: safeMessage,
+            provider: ctx.provider,
+            src: ctx.src,
+            youtubeId: ctx.youtubeId,
+            embedUrl: ctx.embedUrl,
+            ...extra,
+          })
+        } catch (_) {
+          // ignore
+        }
+      }
+
+      emitEvent('error', { message: safeMessage, ...extra })
+    },
+    [emitEvent]
+  )
+
+  const [bufferedEnd, setBufferedEnd] = useState(0)
+  const [hoverPreview, setHoverPreview] = useState(null)
+
+  const [embedLoaded, setEmbedLoaded] = useState(true)
+  const [embedTimeout, setEmbedTimeout] = useState(false)
 
   const setConfigState = useCallback(
     (updater) => {
@@ -167,6 +267,21 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const isEmbed = provider === 'embed' || isYouTube
   const isMini = !isEmbed && config.miniPlayer && fullyOut && !isPiP && !miniDismissed
 
+  const isHlsSrc = useMemo(() => {
+    if (isEmbed) return false
+    if (typeof src !== 'string') return false
+    return /\.m3u8($|\?)/i.test(src)
+  }, [isEmbed, src])
+
+  const hlsRef = useRef(null)
+
+  const [mediaLoading, setMediaLoading] = useState(false)
+  const [mediaLoadingText, setMediaLoadingText] = useState('加载中…')
+
+  const [captionsEnabled, setCaptionsEnabled] = useState(false)
+  const [captionTracks, setCaptionTracks] = useState([])
+  const [captionTrackIndex, setCaptionTrackIndex] = useState(0)
+
   const { isPaused, isMuted, currentVolume, currentTime, pause, mute, unmute, forward, back, toggleFullscreen } =
     useVideo(useVideoRef, { enabled: !isEmbed })
 
@@ -185,46 +300,76 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
   const [duration, setDuration] = useState(0)
 
-  const safePlay = useCallback((withFeedback = false) => {
+  const safePlay = useCallback(
+    (withFeedback = false) => {
+      const videoEl = useVideoRef.current
+      if (!videoEl) return
+
+      // Autoplay: 大多数浏览器要求 muted 才允许自动播放；这里做同步兜底，避免 effect 时序导致首次 play 被拦
+      if (configRef.current?.autoMute && !videoEl.muted) {
+        videoEl.muted = true
+      }
+
+      if (!isHlsSrc && videoEl.readyState === 0) {
+        try {
+          videoEl.load()
+        } catch (_) {
+          // ignore
+        }
+      }
+
+      const playPromise = videoEl.play()
+      Promise.resolve(playPromise)
+        .then(() => {
+          if (withFeedback) setPlayError('')
+          emitEvent('play', { provider: ctxRef.current?.provider })
+        })
+        .catch((err) => {
+          const isAutoStartAttempt = autoStartFeedbackRef.current
+          if (isAutoStartAttempt) autoStartFeedbackRef.current = false
+
+          if (!withFeedback) return
+
+          const name = typeof err?.name === 'string' ? err.name : 'PlayError'
+          const message = typeof err?.message === 'string' ? err.message : ''
+
+          // Autoplay may be blocked by browser policy/user settings.
+          // For auto-start attempts, don't surface this as a sticky UI error.
+          if (isAutoStartAttempt && name === 'NotAllowedError') {
+            emitEvent('autoplayBlocked', { name, message })
+            return
+          }
+
+          // Common & harmless: play() interrupted by pause() (e.g. IO lazy-play or rapid user toggles)
+          if (
+            name === 'AbortError' ||
+            /interrupted by a call to pause\(\)/i.test(message) ||
+            /The play\(\) request was interrupted/i.test(message)
+          ) {
+            return
+          }
+
+          reportError(message ? `无法播放：${name} - ${message}` : `无法播放：${name}`, { name })
+        })
+    },
+    [emitEvent, isHlsSrc, reportError]
+  )
+
+  const kickAutoPlayNow = useCallback(() => {
+    const cfg = configRef.current
+    if (!cfg?.autoPlay) return
+    if (!inViewRef.current) return
+    if (userPausedRef.current) return
+    if (autoPlayAttemptedRef.current) return
+
     const videoEl = useVideoRef.current
     if (!videoEl) return
+    if (!videoEl.paused) return
 
-    // Autoplay: 大多数浏览器要求 muted 才允许自动播放；这里做同步兜底，避免 effect 时序导致首次 play 被拦
-    if (configRef.current?.autoMute && !videoEl.muted) {
-      videoEl.muted = true
-    }
-
-    if (videoEl.readyState === 0) {
-      try {
-        videoEl.load()
-      } catch (_) {
-        // ignore
-      }
-    }
-
-    const playPromise = videoEl.play()
-    Promise.resolve(playPromise)
-      .then(() => {
-        if (withFeedback) setPlayError('')
-      })
-      .catch((err) => {
-        if (!withFeedback) return
-
-        const name = typeof err?.name === 'string' ? err.name : 'PlayError'
-        const message = typeof err?.message === 'string' ? err.message : ''
-
-        // Common & harmless: play() interrupted by pause() (e.g. IO lazy-play or rapid user toggles)
-        if (
-          name === 'AbortError' ||
-          /interrupted by a call to pause\(\)/i.test(message) ||
-          /The play\(\) request was interrupted/i.test(message)
-        ) {
-          return
-        }
-
-        setPlayError(message ? `无法播放：${name} - ${message}` : `无法播放：${name}`)
-      })
-  }, [])
+    autoPlayAttemptedRef.current = true
+    autoStartFeedbackRef.current = true
+    safePlay(true)
+  }, [safePlay])
 
   const safePlayFromUserGesture = useCallback(
     (withFeedback = true) => {
@@ -236,7 +381,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       // When using <source>, changing src doesn't automatically reload media.
       // Ensure the new source is actually loaded before play() within the click gesture.
       const videoEl = useVideoRef.current
-      if (videoEl) {
+      if (videoEl && !isHlsSrc) {
         try {
           videoEl.load()
         } catch (_) {
@@ -245,11 +390,11 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       }
       safePlay(withFeedback)
     },
-    [safePlay]
+    [isHlsSrc, safePlay]
   )
 
   useEffect(() => {
-    if (isEmbed) return
+    if (isEmbed || isHlsSrc) return
     // <source src> updates require an explicit load() to take effect.
     const videoEl = useVideoRef.current
     if (!videoEl) return
@@ -258,7 +403,215 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     } catch (_) {
       // ignore
     }
-  }, [isEmbed, src, trackSrc, trackLang])
+  }, [isEmbed, isHlsSrc, src, trackSrc, trackLang])
+
+  useEffect(() => {
+    if (isEmbed) return
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+
+    let cancelled = false
+
+    const destroyHls = () => {
+      const hls = hlsRef.current
+      if (!hls) return
+      try {
+        hls.destroy()
+      } catch (_) {
+        // ignore
+      }
+      hlsRef.current = null
+    }
+
+    if (!isHlsSrc) {
+      // Leaving HLS mode: HLS paths set videoEl.src (native) or attach a blob URL (hls.js).
+      // If we don't clear it, <source src=...> updates won't take effect and switching back to mp4 can fail.
+      destroyHls()
+      try {
+        if (videoEl.getAttribute('src')) videoEl.removeAttribute('src')
+        // Also clear the property for good measure.
+        if (videoEl.src) videoEl.src = ''
+      } catch (_) {
+        // ignore
+      }
+      try {
+        videoEl.load()
+      } catch (_) {
+        // ignore
+      }
+      return
+    }
+
+    // Ensure we start from a clean slate.
+    destroyHls()
+
+    const canPlayNative = Boolean(
+      videoEl.canPlayType?.('application/vnd.apple.mpegurl') || videoEl.canPlayType?.('application/x-mpegURL')
+    )
+
+    if (canPlayNative) {
+      try {
+        videoEl.src = src
+        videoEl.load()
+        emitEvent('hlsNative', {})
+        kickAutoPlayNow()
+      } catch (err) {
+        reportError('HLS（原生）加载失败', { type: 'hls', name: err?.name, reason: err?.message })
+      }
+      return
+    }
+
+    ;(async () => {
+      try {
+        const mod = await import('hls.js')
+        const Hls = mod?.default
+        if (!Hls || typeof Hls.isSupported !== 'function' || !Hls.isSupported()) {
+          reportError('浏览器不支持 HLS 播放', { type: 'hls', reason: 'not_supported' })
+          return
+        }
+
+        if (cancelled) return
+
+        const hls = new Hls({
+          // keep defaults; avoid aggressive low-latency tuning here
+          enableWorker: true,
+        })
+        hlsRef.current = hls
+
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          if (!data) return
+          emitEvent('hlsError', { details: data })
+
+          if (!data.fatal) return
+
+          reportError('HLS 播放错误', {
+            type: 'hls',
+            fatal: true,
+            details: {
+              type: data.type,
+              details: data.details,
+              reason: data.reason,
+              response: data.response,
+            },
+          })
+
+          // Best-effort: destroy to stop retry loops
+          try {
+            hls.destroy()
+          } catch (_) {
+            // ignore
+          }
+          if (hlsRef.current === hls) hlsRef.current = null
+        })
+
+        hls.attachMedia(videoEl)
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+          if (cancelled) return
+          try {
+            hls.loadSource(src)
+            emitEvent('hlsAttach', {})
+            kickAutoPlayNow()
+          } catch (err) {
+            reportError('HLS 加载失败', { type: 'hls', name: err?.name, reason: err?.message })
+          }
+        })
+      } catch (err) {
+        reportError('HLS 初始化失败', { type: 'hls', name: err?.name, reason: err?.message })
+      }
+    })()
+
+    return () => {
+      cancelled = true
+      destroyHls()
+    }
+  }, [emitEvent, isEmbed, isHlsSrc, kickAutoPlayNow, reportError, src])
+
+  useEffect(() => {
+    if (isEmbed) return
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+
+    // When switching sources, show a simple overlay to avoid a "blank" feel.
+    // We rely on media events to clear it as soon as playback is ready.
+    const onLoadStart = () => {
+      setMediaLoadingText(isHlsSrc ? '加载 HLS…' : '加载中…')
+      setMediaLoading(true)
+    }
+    const onCanPlay = () => setMediaLoading(false)
+    const onPlaying = () => setMediaLoading(false)
+    const onError = () => setMediaLoading(false)
+
+    videoEl.addEventListener('loadstart', onLoadStart)
+    videoEl.addEventListener('canplay', onCanPlay)
+    videoEl.addEventListener('playing', onPlaying)
+    videoEl.addEventListener('error', onError)
+
+    return () => {
+      videoEl.removeEventListener('loadstart', onLoadStart)
+      videoEl.removeEventListener('canplay', onCanPlay)
+      videoEl.removeEventListener('playing', onPlaying)
+      videoEl.removeEventListener('error', onError)
+    }
+  }, [isEmbed, isHlsSrc, src])
+
+  useEffect(() => {
+    if (isEmbed) return
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+
+    const syncTracks = () => {
+      const list = videoEl.textTracks
+      const next = []
+      if (list && typeof list.length === 'number') {
+        for (let i = 0; i < list.length; i += 1) {
+          const t = list[i]
+          if (!t) continue
+          next.push({
+            index: i,
+            label: t.label || t.language || `字幕 ${i + 1}`,
+            language: t.language || '',
+          })
+        }
+      }
+
+      setCaptionTracks(next)
+      if (next.length <= 0) {
+        setCaptionsEnabled(false)
+        setCaptionTrackIndex(0)
+      } else if (captionTrackIndex >= next.length) {
+        setCaptionTrackIndex(0)
+      }
+    }
+
+    const onMeta = () => {
+      // textTracks sometimes populate after metadata; defer a tick
+      window.setTimeout(syncTracks, 0)
+    }
+
+    videoEl.addEventListener('loadedmetadata', onMeta)
+    onMeta()
+    return () => {
+      videoEl.removeEventListener('loadedmetadata', onMeta)
+    }
+  }, [captionTrackIndex, isEmbed, src, trackLang, trackSrc])
+
+  useEffect(() => {
+    if (isEmbed) return
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+    const list = videoEl.textTracks
+    if (!list || typeof list.length !== 'number') return
+
+    for (let i = 0; i < list.length; i += 1) {
+      const t = list[i]
+      if (!t) continue
+      t.mode = 'disabled'
+    }
+
+    if (!captionsEnabled) return
+    const active = list[captionTrackIndex]
+    if (active) active.mode = 'showing'
+  }, [captionsEnabled, captionTrackIndex, isEmbed])
 
   useImperativeHandle(
     ref,
@@ -287,7 +640,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               : code === 4
                 ? '视频源不可用（404/跨域/类型不支持）'
                 : '视频加载失败'
-      setPlayError(msg)
+      reportError(msg, { code })
     }
 
     videoEl.addEventListener('playing', onPlaying)
@@ -295,6 +648,46 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     return () => {
       videoEl.removeEventListener('playing', onPlaying)
       videoEl.removeEventListener('error', onError)
+    }
+  }, [isEmbed, reportError, src])
+
+  useEffect(() => {
+    if (isEmbed) return
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+
+    let rafId = 0
+    const updateBuffered = () => {
+      rafId = 0
+      const d = Number.isFinite(videoEl.duration) ? videoEl.duration : 0
+      if (!d || !videoEl.buffered || videoEl.buffered.length <= 0) {
+        setBufferedEnd(0)
+        return
+      }
+
+      let end = 0
+      for (let i = 0; i < videoEl.buffered.length; i += 1) {
+        const nextEnd = Number(videoEl.buffered.end(i))
+        if (Number.isFinite(nextEnd)) end = Math.max(end, nextEnd)
+      }
+      setBufferedEnd(Math.min(end, d))
+    }
+
+    const onProgress = () => {
+      if (rafId) return
+      rafId = requestAnimationFrame(updateBuffered)
+    }
+
+    videoEl.addEventListener('progress', onProgress)
+    videoEl.addEventListener('loadedmetadata', onProgress)
+    videoEl.addEventListener('durationchange', onProgress)
+    onProgress()
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      videoEl.removeEventListener('progress', onProgress)
+      videoEl.removeEventListener('loadedmetadata', onProgress)
+      videoEl.removeEventListener('durationchange', onProgress)
     }
   }, [isEmbed, src])
 
@@ -351,6 +744,18 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     if (isEmbed) return
     autoPlayAttemptedRef.current = false
   }, [src])
+
+  useEffect(() => {
+    if (isEmbed) return
+    // For HLS, wait until native src / hls.js is attached.
+    if (isHlsSrc) return
+
+    // Non-HLS: try to start loading/play ASAP after the new <source> is committed.
+    const id = window.requestAnimationFrame(() => {
+      kickAutoPlayNow()
+    })
+    return () => window.cancelAnimationFrame(id)
+  }, [isEmbed, isHlsSrc, kickAutoPlayNow, src])
 
   useEffect(() => {
     if (isEmbed) return
@@ -465,11 +870,19 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
     const raf = requestAnimationFrame(updateSettingsPanelPosition)
 
+    const focusTimer = window.setTimeout(() => {
+      const panelEl = settingsPanelRef.current
+      if (!panelEl) return
+      const first = panelEl.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+      if (first instanceof HTMLElement) first.focus()
+    }, 0)
+
     window.addEventListener('resize', updateSettingsPanelPosition)
     window.addEventListener('scroll', updateSettingsPanelPosition, true)
     document.addEventListener('pointerdown', onPointerDown)
 
     return () => {
+      window.clearTimeout(focusTimer)
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', updateSettingsPanelPosition)
       window.removeEventListener('scroll', updateSettingsPanelPosition, true)
@@ -478,8 +891,26 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   }, [settingsOpen, updateSettingsPanelPosition])
 
   useEffect(() => {
+    const wasOpen = prevSettingsOpenRef.current
+    prevSettingsOpenRef.current = settingsOpen
+
+    // Only restore focus when the panel is closed (open -> closed).
+    if (!wasOpen || settingsOpen) return
+
+    const btn = settingsButtonRef.current
+    if (btn && btn instanceof HTMLElement) {
+      try {
+        btn.focus()
+      } catch (_) {
+        // ignore
+      }
+    }
+  }, [settingsOpen])
+
+  useEffect(() => {
     if (settingsOpen) return
     setSpeedOpen(false)
+    setCaptionsOpen(false)
   }, [settingsOpen])
 
   useEffect(() => {
@@ -496,10 +927,12 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     const onEnter = () => {
       isPiPRef.current = true
       setIsPiP(true)
+      emitEvent('pipEnter', {})
     }
     const onLeave = () => {
       isPiPRef.current = false
       setIsPiP(false)
+      emitEvent('pipLeave', {})
     }
 
     videoEl.addEventListener('enterpictureinpicture', onEnter)
@@ -509,7 +942,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       videoEl.removeEventListener('enterpictureinpicture', onEnter)
       videoEl.removeEventListener('leavepictureinpicture', onLeave)
     }
-  }, [])
+  }, [emitEvent])
 
   useEffect(() => {
     if (isEmbed) return
@@ -641,7 +1074,8 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
     userPausedRef.current = true
     videoEl.pause()
-  }, [safePlay])
+    emitEvent('pause', { provider: ctxRef.current?.provider })
+  }, [emitEvent, safePlay])
 
   const computedEmbedSrc = useMemo(() => {
     if (!isEmbed) return ''
@@ -685,10 +1119,40 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     if (!externalOpenUrl) return
     try {
       window.open(externalOpenUrl, '_blank', 'noopener,noreferrer')
+      emitEvent('openExternal', { url: externalOpenUrl })
     } catch (_) {
       // ignore
     }
-  }, [externalOpenUrl])
+  }, [emitEvent, externalOpenUrl])
+
+  useEffect(() => {
+    if (!isEmbed) return
+    if (!computedEmbedSrc) return
+
+    setEmbedLoaded(false)
+    setEmbedTimeout(false)
+
+    const t = window.setTimeout(() => {
+      setEmbedTimeout(true)
+      emitEvent('embedTimeout', { src: computedEmbedSrc })
+    }, 2200)
+
+    embedTimerRef.current = t
+
+    return () => {
+      window.clearTimeout(t)
+      if (embedTimerRef.current === t) embedTimerRef.current = 0
+    }
+  }, [computedEmbedSrc, emitEvent, isEmbed])
+
+  const handleEmbedLoad = useCallback(() => {
+    const t = embedTimerRef.current
+    if (t) window.clearTimeout(t)
+    embedTimerRef.current = 0
+    setEmbedLoaded(true)
+    setEmbedTimeout(false)
+    emitEvent('embedLoad', {})
+  }, [emitEvent])
 
   const handleTogglePiP = useCallback(async () => {
     const videoEl = useVideoRef.current
@@ -701,10 +1165,11 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       } else {
         await videoEl.requestPictureInPicture()
       }
+      emitEvent('pipToggle', {})
     } catch (_) {
       // ignore
     }
-  }, [])
+  }, [emitEvent])
 
   const handleCloseMini = useCallback(() => {
     setMiniDismissed(true)
@@ -756,8 +1221,9 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       if (!videoEl) return
       const safe = Math.min(Math.max(0, nextTime), duration || 0)
       videoEl.currentTime = safe
+      emitEvent('seek', { time: safe })
     },
-    [duration]
+    [duration, emitEvent]
   )
 
   const setVolume = useCallback((nextVolumePercent) => {
@@ -774,6 +1240,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       if (safe <= 0) {
         mute()
         setVolume(0)
+        emitEvent('volume', { volume: 0 })
         return
       }
 
@@ -785,8 +1252,9 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
       lastUserVolumeRef.current = safe
       setVolume(safe)
+      emitEvent('volume', { volume: safe })
     },
-    [config.autoMute, mute, setConfigItem, setVolume, unmute]
+    [config.autoMute, emitEvent, mute, setConfigItem, setVolume, unmute]
   )
 
   const handleToggleMuteSmart = useCallback(() => {
@@ -797,12 +1265,24 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
       unmute()
       setVolume(getRestoreVolume())
+      emitEvent('mute', { muted: false })
       return
     }
 
     if (volumePercent > 0) lastUserVolumeRef.current = Math.max(1, Math.min(100, volumePercent))
     mute()
-  }, [config.autoMute, getRestoreVolume, isEffectivelyMuted, mute, setConfigItem, setVolume, unmute, volumePercent])
+    emitEvent('mute', { muted: true })
+  }, [
+    config.autoMute,
+    emitEvent,
+    getRestoreVolume,
+    isEffectivelyMuted,
+    mute,
+    setConfigItem,
+    setVolume,
+    unmute,
+    volumePercent,
+  ])
 
   const handleBumpVolume = useCallback(
     (delta) => {
@@ -823,6 +1303,128 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const canIncrease = displayVolumePercent < 100
 
   const computedTrackSrc = trackSrc || (typeof src === 'string' ? src.replace(/\.mp4$/, '.vtt') : undefined)
+
+  const bufferedPercent = useMemo(() => {
+    const d = Number(duration) || 0
+    if (!d) return 0
+    const end = Number(bufferedEnd) || 0
+    return Math.max(0, Math.min(100, (end / d) * 100))
+  }, [bufferedEnd, duration])
+
+  const updateHoverPreviewFromClientX = useCallback(
+    (clientX, el) => {
+      const rect = el.getBoundingClientRect()
+      const x = Math.min(Math.max(0, clientX - rect.left), rect.width)
+      const ratio = rect.width > 0 ? x / rect.width : 0
+      const t = ratio * (duration || 0)
+      setHoverPreview({ ratio, time: t })
+    },
+    [duration]
+  )
+
+  const handleProgressPointerMove = useCallback(
+    (e) => {
+      updateHoverPreviewFromClientX(e.clientX, e.currentTarget)
+    },
+    [updateHoverPreviewFromClientX]
+  )
+
+  const handleProgressPointerLeave = useCallback(() => {
+    setHoverPreview(null)
+  }, [])
+
+  const handlePlayerKeyDown = useCallback(
+    (e) => {
+      const target = e.target
+      if (target instanceof HTMLElement) {
+        const tag = target.tagName
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+        if (target.isContentEditable) return
+      }
+
+      if (e.key === 'Escape' && settingsOpen) {
+        e.preventDefault()
+        setSettingsOpen(false)
+        return
+      }
+
+      if (isEmbed) {
+        if ((e.key === 'o' || e.key === 'O') && externalOpenUrl) {
+          e.preventDefault()
+          handleOpenExternal()
+        }
+        if ((e.key === 's' || e.key === 'S') && !isMini) {
+          e.preventDefault()
+          setSettingsOpen((v) => !v)
+        }
+        return
+      }
+
+      if (e.key === ' ' || e.key === 'k' || e.key === 'K') {
+        e.preventDefault()
+        handleTogglePause()
+        return
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        back(5)
+        emitEvent('seekRelative', { delta: -5 })
+        return
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        forward(5)
+        emitEvent('seekRelative', { delta: 5 })
+        return
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        handleBumpVolume(5)
+        return
+      }
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        handleBumpVolume(-5)
+        return
+      }
+      if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault()
+        handleToggleMuteSmart()
+        return
+      }
+      if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault()
+        toggleFullscreen()
+        emitEvent('fullscreen', {})
+        return
+      }
+      if (e.key === 'p' || e.key === 'P') {
+        e.preventDefault()
+        handleTogglePiP()
+        return
+      }
+      if (e.key === 's' || e.key === 'S') {
+        if (isMini) return
+        e.preventDefault()
+        setSettingsOpen((v) => !v)
+      }
+    },
+    [
+      back,
+      emitEvent,
+      externalOpenUrl,
+      forward,
+      handleBumpVolume,
+      handleOpenExternal,
+      handleToggleMuteSmart,
+      handleTogglePause,
+      handleTogglePiP,
+      isEmbed,
+      isMini,
+      settingsOpen,
+      toggleFullscreen,
+    ]
+  )
 
   const settingsPortal =
     !isMini && settingsOpen
@@ -865,6 +1467,65 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                             }}
                           >
                             {rate === 1 ? '1x（默认）' : `${rate}x`}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            {!isEmbed && captionTracks.length > 0 ? (
+              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label="字幕">
+                <span className={styles.settingLabel}>字幕</span>
+                <div className={styles.speedDropdown} data-captions-dropdown="true">
+                  <button
+                    type="button"
+                    className={styles.speedTrigger}
+                    aria-haspopup="listbox"
+                    aria-expanded={captionsOpen}
+                    onClick={() => {
+                      setCaptionsOpen((v) => !v)
+                      setSpeedOpen(false)
+                    }}
+                  >
+                    {captionsEnabled ? captionTracks[captionTrackIndex]?.label || '字幕' : '关闭'}
+                  </button>
+
+                  {captionsOpen ? (
+                    <div className={styles.speedMenu} role="listbox" aria-label="字幕选项">
+                      <button
+                        type="button"
+                        className={`${styles.speedItem} ${!captionsEnabled ? styles.speedItemActive : ''}`}
+                        role="option"
+                        aria-selected={!captionsEnabled}
+                        onClick={() => {
+                          setCaptionsEnabled(false)
+                          setCaptionsOpen(false)
+                          emitEvent('captions', { enabled: false })
+                        }}
+                      >
+                        关闭
+                      </button>
+
+                      {captionTracks.map((t) => {
+                        const active = captionsEnabled && captionTrackIndex === t.index
+                        return (
+                          <button
+                            key={`${t.index}-${t.language || ''}-${t.label || ''}`}
+                            type="button"
+                            className={`${styles.speedItem} ${active ? styles.speedItemActive : ''}`}
+                            role="option"
+                            aria-selected={active}
+                            onClick={() => {
+                              setCaptionTrackIndex(t.index)
+                              setCaptionsEnabled(true)
+                              setCaptionsOpen(false)
+                              emitEvent('captions', { enabled: true, trackIndex: t.index })
+                            }}
+                          >
+                            {t.label}
                           </button>
                         )
                       })}
@@ -923,7 +1584,12 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
         {isMini ? <div className={styles.miniPlaceholder} aria-hidden /> : null}
 
         <div
+          ref={playerWrapRef}
           className={`${styles.videoWrap} ${isMini ? styles.mini : ''} ${settingsOpen ? styles.controlsPinnedWrap : ''}`}
+          tabIndex={0}
+          onKeyDown={handlePlayerKeyDown}
+          role="region"
+          aria-label="播放器"
         >
           {isEmbed ? (
             computedEmbedSrc ? (
@@ -935,7 +1601,19 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                   title={title || 'Embed'}
                   allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
                   referrerPolicy="strict-origin-when-cross-origin"
+                  onLoad={handleEmbedLoad}
                 />
+
+                {embedTimeout && !embedLoaded ? (
+                  <div className={styles.embedHint} role="status" aria-live="polite">
+                    <div className={styles.embedHintTitle}>嵌入可能被网站禁止</div>
+                    {externalOpenUrl ? (
+                      <button type="button" className={styles.embedHintAction} onClick={handleOpenExternal}>
+                        新窗口打开
+                      </button>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div className={styles.embedFallback}>
@@ -957,11 +1635,24 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               onClick={handleTogglePause}
               onDoubleClick={toggleFullscreen}
             >
-              <source src={src} type="video/mp4" />
-              {computedTrackSrc ? <track kind="captions" srcLang={trackLang} src={computedTrackSrc} /> : null}
+              {!isHlsSrc ? <source src={src} type="video/mp4" /> : null}
+              {computedTrackSrc ? (
+                <track
+                  kind="captions"
+                  srcLang={trackLang}
+                  label={trackLang?.toUpperCase?.() || 'CC'}
+                  src={computedTrackSrc}
+                />
+              ) : null}
               Your browser does not support the video tag.
             </video>
           )}
+
+          {!isEmbed && mediaLoading ? (
+            <div className={styles.loadingOverlay} role="status" aria-live="polite">
+              <div className={styles.loadingOverlayText}>{mediaLoadingText}</div>
+            </div>
+          ) : null}
 
           {!isEmbed ? (
             <div className={`${styles.centerToggle} ${isPaused ? styles.centerToggleVisible : ''}`} aria-hidden={false}>
@@ -986,7 +1677,12 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               ) : null}
 
               <div ref={settingsRef} className={styles.settingsWrap}>
-                <IconButton Icon={Settings} label="设置" onClick={() => setSettingsOpen((v) => !v)} />
+                <IconButton
+                  Icon={Settings}
+                  label="设置"
+                  onClick={() => setSettingsOpen((v) => !v)}
+                  buttonRef={settingsButtonRef}
+                />
               </div>
             </div>
           ) : null}
@@ -995,7 +1691,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
             <div className={styles.videoControls} aria-label="视频控制条">
               <div className={styles.controlsTop} role="group" aria-label="播放与工具">
                 {!isEmbed && !isMini ? (
-                  <IconButton Icon={SkipBack} label="后退 10 秒" onClick={() => back(10)} />
+                  <IconButton Icon={SkipBack} label="后退 10 秒" onClick={() => back(10)} tooltipPlacement="topLeft" />
                 ) : null}
 
                 {!isEmbed ? (
@@ -1057,7 +1753,12 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
                 {!isMini ? (
                   <div ref={settingsRef} className={styles.settingsWrap}>
-                    <IconButton Icon={Settings} label="设置" onClick={() => setSettingsOpen((v) => !v)} />
+                    <IconButton
+                      Icon={Settings}
+                      label="设置"
+                      onClick={() => setSettingsOpen((v) => !v)}
+                      buttonRef={settingsButtonRef}
+                    />
                   </div>
                 ) : null}
 
@@ -1075,16 +1776,35 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               {!isEmbed ? (
                 <div className={styles.controlsBottom} role="group" aria-label="进度">
                   <span className={styles.time}>{formatTime(currentTime)}</span>
-                  <input
-                    className={`${styles.range} ${styles.progressRange}`}
-                    type="range"
-                    min={0}
-                    max={duration || 0}
-                    step={0.1}
-                    value={Math.min(Math.max(0, Number(currentTime) || 0), duration || 0)}
-                    onChange={(e) => seekTo(Number(e.target.value))}
-                    aria-label="播放进度"
-                  />
+                  <div
+                    className={styles.progressWrap}
+                    onPointerMove={handleProgressPointerMove}
+                    onPointerLeave={handleProgressPointerLeave}
+                    aria-label="播放进度条"
+                  >
+                    <div className={styles.bufferBar} style={{ width: `${bufferedPercent}%` }} aria-hidden />
+
+                    {hoverPreview ? (
+                      <div
+                        className={styles.previewTooltip}
+                        style={{ left: `${Math.round((hoverPreview.ratio || 0) * 100)}%` }}
+                        aria-hidden
+                      >
+                        {formatTime(hoverPreview.time)}
+                      </div>
+                    ) : null}
+
+                    <input
+                      className={`${styles.range} ${styles.progressRange} ${styles.progressRangeOverlay}`}
+                      type="range"
+                      min={0}
+                      max={duration || 0}
+                      step={0.1}
+                      value={Math.min(Math.max(0, Number(currentTime) || 0), duration || 0)}
+                      onChange={(e) => seekTo(Number(e.target.value))}
+                      aria-label="播放进度"
+                    />
+                  </div>
                   <span className={styles.time}>{formatTime(duration)}</span>
                 </div>
               ) : null}

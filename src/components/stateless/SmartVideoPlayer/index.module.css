@@ -21,16 +21,29 @@
 
 .embedToolbar {
   position: absolute;
-  top: 8px;
+  top: 50%;
   right: 8px;
   z-index: 6;
   display: flex;
   align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  gap: 8px;
   pointer-events: none;
+  opacity: 0;
+  transform: translateY(-50%) translateX(6px);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
 }
 
 .embedToolbar > * {
+  pointer-events: auto;
+}
+
+.videoWrap:hover .embedToolbar,
+.videoWrap:focus-within .embedToolbar {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
   pointer-events: auto;
 }
 .embedRatio {
@@ -46,6 +59,45 @@
   height: 100%;
   border: 0;
   display: block;
+}
+
+.embedHint {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 7;
+  max-width: min(320px, calc(100% - 20px));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  pointer-events: none;
+}
+
+.embedHintTitle {
+  font-size: 12px;
+  line-height: 1.2;
+}
+
+.embedHintAction {
+  pointer-events: auto;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.embedHintAction:hover {
+  background: rgba(255, 255, 255, 0.16);
 }
 .embedFallback {
   width: 100%;
@@ -74,6 +126,26 @@
   align-items: center;
   justify-content: center;
   pointer-events: none;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-content: center;
+  background: rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+}
+
+.loadingOverlayText {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 .centerToggleButton {
@@ -186,6 +258,48 @@
   flex: 1 1 auto;
   width: auto;
   min-width: 0;
+}
+
+.progressWrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 22px;
+  display: flex;
+  align-items: center;
+}
+
+.progressRangeOverlay {
+  position: relative;
+  z-index: 2;
+}
+
+.bufferBar {
+  position: absolute;
+  left: 0;
+  right: auto;
+  width: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  z-index: 1;
+  transform: translateY(0);
+}
+
+.previewTooltip {
+  position: absolute;
+  top: -28px;
+  transform: translateX(-50%);
+  padding: 4px 6px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  white-space: nowrap;
+  z-index: 3;
+  pointer-events: none;
 }
 
 .volumeRange {
@@ -316,8 +430,8 @@
 }
 
 .speedTrigger:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.45);
-  outline-offset: 2px;
+  outline: 0;
+  outline-offset: 0;
 }
 
 .speedMenu {
@@ -387,6 +501,13 @@
     transform 0.08s ease;
 }
 
+.iconButton > svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+  flex: 0 0 auto;
+}
+
 .iconButton:disabled {
   opacity: 0.45;
   cursor: not-allowed;
@@ -411,8 +532,8 @@
 }
 
 .iconButton:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.55);
-  outline-offset: 2px;
+  outline: 0;
+  outline-offset: 0;
 }
 
 .tooltip {
@@ -426,8 +547,12 @@
   border-radius: 6px;
   font-size: 12px;
   white-space: nowrap;
+  max-width: min(260px, calc(100vw - 24px));
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0;
   pointer-events: none;
+  z-index: 20;
   transition:
     opacity 0.12s ease,
     transform 0.12s ease;
@@ -436,6 +561,93 @@
 .iconButton:hover .tooltip {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.tooltipTopLeft {
+  left: 0;
+  transform: translateY(6px);
+}
+
+.iconButton:hover .tooltipTopLeft {
+  transform: translateY(0);
+}
+
+.tooltipTopRight {
+  left: auto;
+  right: 0;
+  transform: translateY(6px);
+}
+
+.iconButton:hover .tooltipTopRight {
+  transform: translateY(0);
+}
+
+.tooltipRight {
+  left: calc(100% + 10px);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+}
+
+.iconButton:hover .tooltipRight {
+  transform: translateY(-50%) translateX(0);
+}
+
+.tooltipLeft {
+  left: auto;
+  right: calc(100% + 10px);
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
+}
+
+.iconButton:hover .tooltipLeft {
+  transform: translateY(-50%) translateX(0);
+}
+
+.tooltipBottom {
+  bottom: auto;
+  top: calc(100% + 10px);
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.iconButton:hover .tooltipBottom {
+  transform: translateX(-50%) translateY(0);
+}
+
+.tooltipBottomLeft {
+  left: 0;
+  bottom: auto;
+  top: calc(100% + 10px);
+  transform: translateY(-6px);
+}
+
+.iconButton:hover .tooltipBottomLeft {
+  transform: translateY(0);
+}
+
+.tooltipBottomRight {
+  left: auto;
+  right: 0;
+  bottom: auto;
+  top: calc(100% + 10px);
+  transform: translateY(-6px);
+}
+
+.iconButton:hover .tooltipBottomRight {
+  transform: translateY(0);
+}
+
+/* In the embed toolbar (right side), show tooltips to the left to avoid running off-screen */
+.embedToolbar .tooltip {
+  left: auto;
+  right: calc(100% + 10px);
+  bottom: 50%;
+  transform: translateY(50%) translateX(6px);
+}
+
+.embedToolbar .iconButton:hover .tooltip {
+  transform: translateY(50%) translateX(0);
 }
 
 .sep {
@@ -461,6 +673,11 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   z-index: 999;
+}
+
+/* Mini window must clip to rounded corners; avoid partially clipped tooltips */
+.mini .tooltip {
+  display: none;
 }
 
 .mini .videoControls {
@@ -516,13 +733,15 @@
 }
 
 .settingSelect:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.45);
-  outline-offset: 2px;
+  outline: 0;
+  outline-offset: 0;
 }
 
 .video {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
   background: transparent;
 }

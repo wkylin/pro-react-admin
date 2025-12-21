@@ -23,6 +23,15 @@ const MyVideo = () => {
         src: trailerSource,
       },
       {
+        id: 'm0-hls',
+        title: 'HLS 演示（.m3u8）',
+        year: 'HLS',
+        duration: '公开测试流',
+        desc: '用于验证 HTML5 模式下的 HLS（优先原生 HLS，否则走 hls.js）；若源未配置 CORS，浏览器会拦截',
+        provider: 'html5',
+        src: 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8',
+      },
+      {
         id: 'm1',
         title: '科幻预告片 1（YouTube）',
         year: 'YouTube',
