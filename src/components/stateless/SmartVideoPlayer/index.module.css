@@ -14,9 +14,57 @@
 }
 
 .videoWrap {
-  background: #0b0b0c;
+  background: transparent;
   position: relative;
   overflow: hidden;
+}
+
+.embedToolbar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.embedToolbar > * {
+  pointer-events: auto;
+}
+.embedRatio {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: transparent;
+}
+.embedFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.embedFallback {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  display: grid;
+  place-content: center;
+  padding: 16px;
+  text-align: center;
+}
+.embedFallbackTitle {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.embedFallbackMeta {
+  font-size: 12px;
+  opacity: 0.9;
+  line-height: 1.4;
 }
 
 .centerToggle {
@@ -155,9 +203,8 @@
   right: 0;
   bottom: 54px;
   width: 240px;
-  height: 160px;
-  display: grid;
-  grid-template-rows: min-content 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   padding: 12px;
   background: rgba(0, 0, 0, 0.8);
@@ -167,6 +214,7 @@
 }
 
 .settingsScroll {
+  flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
   overscroll-behavior: contain;
@@ -178,6 +226,8 @@
   position: fixed !important;
   left: var(--svp-settings-left, 8px) !important;
   top: var(--svp-settings-top, 8px) !important;
+  right: auto !important;
+  bottom: auto !important;
   z-index: 2000;
   box-sizing: border-box;
   font-size: 12px;
@@ -398,7 +448,7 @@
 .miniPlaceholder {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: #0b0b0c;
+  background: transparent;
 }
 
 .mini {
@@ -474,4 +524,5 @@
   display: block;
   width: 100%;
   height: auto;
+  background: transparent;
 }

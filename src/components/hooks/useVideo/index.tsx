@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useState, useRef, type RefObject } from 'react'
 import { useActivate, useUnactivate } from '@src/components/KeepAlive'
 
-const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
+type UseVideoOptions = {
+  enabled?: boolean
+}
+
+const useVideo = (ref: RefObject<HTMLVideoElement | null>, options: UseVideoOptions = {}) => {
+  const { enabled = true } = options
   const [videoState, setVideoState] = useState({
     isPaused: true,
     isMuted: false,
@@ -11,6 +16,7 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
 
   // 首次挂载后，同步一次真实 video 初始值（ref.current 在 effect 阶段已可用）
   useEffect(() => {
+    if (!enabled) return
     const video = ref.current
     if (!video) return
     setVideoState((prev) => ({
@@ -20,7 +26,7 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
       currentVolume: video.volume * 100,
       currentTime: video.currentTime,
     }))
-  }, [ref])
+  }, [enabled, ref])
 
   const play = useCallback(() => {
     const video = ref.current
@@ -159,12 +165,14 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
   })
 
   useEffect(() => {
+    if (!enabled) return
     return () => {
       pause()
     }
-  }, [pause])
+  }, [enabled, pause])
 
   useEffect(() => {
+    if (!enabled) return
     let disposed = false
     let attachedTo: HTMLVideoElement | null = null
 
@@ -199,7 +207,7 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>) => {
       attachedTo.removeEventListener('pause', handlePlayPauseControl)
       attachedTo.removeEventListener('timeupdate', handleTimeControl)
     }
-  }, [handlePlayPauseControl, handleTimeControl, handleVolumeControl, ref])
+  }, [enabled, handlePlayPauseControl, handleTimeControl, handleVolumeControl, ref])
 
   const increaseVolume = useCallback(
     (increase = 5) => {

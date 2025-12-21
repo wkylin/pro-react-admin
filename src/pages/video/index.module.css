@@ -1,26 +1,22 @@
 .page {
   padding: 16px;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
 }
 
 .layout {
-  width: 100%;
-  max-width: 1280px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 12px;
   align-items: start;
 }
 
 .card {
-  width: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-  background: #fff;
+  max-width: 100%;
+  min-width: 0;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.01);
+  overflow: hidden;
 }
 
 .mainCard {
@@ -28,28 +24,14 @@
 }
 
 .sidebarCard {
-  width: 360px;
+  width: 460px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 980px) {
   .page {
     padding: 0;
   }
 
-  .layout {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .card {
-    max-width: 100%;
-    border-radius: 0;
-    border-left: 0;
-    border-right: 0;
-  }
-}
-
-@media (max-width: 980px) {
   .layout {
     grid-template-columns: 1fr;
   }
@@ -57,10 +39,16 @@
   .sidebarCard {
     width: 100%;
   }
+
+  .card {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
 }
 
 .playerSection {
-  background: #000;
+  background: transparent;
 }
 
 .comments {

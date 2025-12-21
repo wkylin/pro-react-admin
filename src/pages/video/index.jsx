@@ -6,10 +6,6 @@ import styles from './index.module.css'
 import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
 
 import trailerSource from '@assets/video/trailer.mp4'
-import flowerSource from '@assets/video/mdn-flower.mp4'
-import joyridesSource from '@assets/video/for-bigger-joyrides.mp4'
-import escapesSource from '@assets/video/for-bigger-escapes.mp4'
-import meltdownsSource from '@assets/video/for-bigger-meltdowns.mp4'
 
 const MyVideo = () => {
   const playerRef = useRef(null)
@@ -22,40 +18,55 @@ const MyVideo = () => {
         title: '预告片',
         year: '2025',
         duration: '本地资源',
-        desc: '当前 trailer.mp4',
+        desc: '本地播放器（SmartVideoPlayer）',
+        provider: 'html5',
         src: trailerSource,
       },
       {
         id: 'm1',
-        title: 'Flower (CC0)',
-        year: 'MDN',
-        duration: '≈1.1MB',
-        desc: '来源：interactive-examples.mdn.mozilla.net',
-        src: flowerSource,
+        title: '科幻预告片 1（YouTube）',
+        year: 'YouTube',
+        duration: 'Trailer',
+        desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
+        provider: 'youtube',
+        youtubeId: 'xJyWbjATtIE',
       },
       {
         id: 'm2',
-        title: 'For Bigger Joyrides',
-        year: 'Google Sample',
-        duration: '≈2.3MB',
-        desc: '来源：gtv-videos-bucket/sample',
-        src: joyridesSource,
+        title: '科幻预告片 2（YouTube）',
+        year: 'YouTube',
+        duration: 'Trailer',
+        desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
+        provider: 'youtube',
+        youtubeId: 'SAcVNQYY8v4',
       },
       {
         id: 'm3',
-        title: 'For Bigger Escapes',
-        year: 'Google Sample',
-        duration: '≈2.2MB',
-        desc: '来源：gtv-videos-bucket/sample',
-        src: escapesSource,
+        title: '科幻预告片 3（YouTube）',
+        year: 'YouTube',
+        duration: 'Trailer',
+        desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
+        provider: 'youtube',
+        youtubeId: 'afJIa41CiKY',
       },
       {
         id: 'm4',
-        title: 'For Bigger Meltdowns',
-        year: 'Google Sample',
-        duration: '≈2.2MB',
-        desc: '来源：gtv-videos-bucket/sample',
-        src: meltdownsSource,
+        title: '科幻预告片 4（YouTube）',
+        year: 'YouTube',
+        duration: 'Trailer',
+        desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
+        provider: 'youtube',
+        youtubeId: 'Gz4ze8oTYEw',
+      },
+      {
+        id: 'm5',
+        title: 'Embed 示例（sourceUrl 打开源站）',
+        year: 'Embed',
+        duration: 'iframe',
+        desc: '演示 sourceUrl：embed 模式下“新窗口打开”会优先打开 sourceUrl（未传 externalUrl 时）',
+        provider: 'embed',
+        embedUrl: 'https://player.vimeo.com/video/76979800?autoplay=1&muted=1',
+        sourceUrl: 'https://vimeo.com/76979800',
       },
     ],
     []
@@ -79,7 +90,11 @@ const MyVideo = () => {
   const handleSelectMovie = useCallback((id) => {
     // Ensure DOM commits the new src within this click gesture.
     flushSync(() => setCurrentMovieId(id))
-    playerRef.current?.playFromUserGesture?.(true)
+
+    const next = movies.find((m) => m.id === id)
+    if (next?.provider === 'html5') {
+      playerRef.current?.playFromUserGesture?.(true)
+    }
   }, [])
 
   const reviews = [
@@ -112,7 +127,16 @@ const MyVideo = () => {
         <div className={styles.layout}>
           <div className={`${styles.card} ${styles.mainCard}`}>
             <div className={styles.playerSection}>
-              <SmartVideoPlayer ref={playerRef} src={currentMovie?.src} />
+              <SmartVideoPlayer
+                ref={playerRef}
+                provider={currentMovie?.provider}
+                src={currentMovie?.src}
+                youtubeId={currentMovie?.youtubeId}
+                embedUrl={currentMovie?.embedUrl}
+                externalUrl={currentMovie?.externalUrl}
+                sourceUrl={currentMovie?.sourceUrl}
+                title={currentMovie?.title}
+              />
             </div>
 
             <section className={styles.comments} aria-label="电影评论讨论区">
