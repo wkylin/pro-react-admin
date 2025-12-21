@@ -76,6 +76,7 @@ const SmartVideoPlayer = ({
   const settingsPanelRef = useRef(null)
   const userPausedRef = useRef(false)
   const autoPausedRef = useRef(false)
+  const isPiPRef = useRef(false)
   const inViewRef = useRef(true)
   const fullyOutRef = useRef(false)
   const miniDismissedRef = useRef(false)
@@ -187,6 +188,33 @@ const SmartVideoPlayer = ({
   useEffect(() => {
     configRef.current = config
   }, [config])
+
+  useEffect(() => {
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+
+    const onPause = () => {
+      // Ignore pauses we triggered for lazy-play
+      if (autoPausedRef.current) return
+      // Ignore natural end
+      if (videoEl.ended) return
+      // Treat any other pause (e.g. PiP native controls / media keys) as user intent
+      userPausedRef.current = true
+    }
+
+    const onPlay = () => {
+      // When playback resumes (including PiP native controls), clear both flags.
+      userPausedRef.current = false
+      autoPausedRef.current = false
+    }
+
+    videoEl.addEventListener('pause', onPause)
+    videoEl.addEventListener('play', onPlay)
+    return () => {
+      videoEl.removeEventListener('pause', onPause)
+      videoEl.removeEventListener('play', onPlay)
+    }
+  }, [src])
 
   useEffect(() => {
     const videoEl = useVideoRef.current
@@ -328,8 +356,14 @@ const SmartVideoPlayer = ({
     if (!videoEl) return
     if (!('requestPictureInPicture' in videoEl)) return
 
-    const onEnter = () => setIsPiP(true)
-    const onLeave = () => setIsPiP(false)
+    const onEnter = () => {
+      isPiPRef.current = true
+      setIsPiP(true)
+    }
+    const onLeave = () => {
+      isPiPRef.current = false
+      setIsPiP(false)
+    }
 
     videoEl.addEventListener('enterpictureinpicture', onEnter)
     videoEl.addEventListener('leavepictureinpicture', onLeave)
@@ -393,6 +427,10 @@ const SmartVideoPlayer = ({
           setInView(nextInView)
         }
 
+        // In PiP, user expects playback to be independent from viewport visibility.
+        // Avoid IO-driven pause/play fighting with PiP native controls.
+        if (isPiPRef.current) return
+
         const shouldMini = Boolean(config.miniPlayer && nextFullyOut && !isPiP && !miniDismissedRef.current)
 
         if (!nextInView) {
@@ -436,11 +474,15 @@ const SmartVideoPlayer = ({
 
   useEffect(() => {
     if (!config.autoPlay) return
+    // Keep current playback state when entering PiP; avoid any autoPlay race.
+    if (isPiPRef.current) return
     if (!inView) return
     if (userPausedRef.current) return
     if (!isPaused) return
+    const videoEl = useVideoRef.current
+    if (videoEl?.ended) return
     safePlay()
-  }, [config.autoPlay, inView, isPaused, safePlay])
+  }, [config.autoPlay, inView, isPaused, isPiP, safePlay])
 
   const handleTogglePause = useCallback(() => {
     const videoEl = useVideoRef.current
@@ -634,6 +676,20 @@ const SmartVideoPlayer = ({
             {computedTrackSrc ? <track kind="captions" srcLang={trackLang} src={computedTrackSrc} /> : null}
             Your browser does not support the video tag.
           </video>
+
+          <div className={`${styles.centerToggle} ${isPaused ? styles.centerToggleVisible : ''}`} aria-hidden={false}>
+            <button
+              type="button"
+              className={styles.centerToggleButton}
+              aria-label={isPaused ? '播放' : '暂停'}
+              onClick={(e) => {
+                e.stopPropagation()
+                handleTogglePause()
+              }}
+            >
+              {isPaused ? <Play size={34} /> : <Pause size={34} />}
+            </button>
+          </div>
 
           <div className={styles.videoControls} aria-label="视频控制条">
             <div className={styles.controlsTop} role="group" aria-label="播放与工具">
