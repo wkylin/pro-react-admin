@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useVideo from '@hooks/useVideo'
 import styles from './index.module.css'
@@ -58,18 +58,21 @@ function getScrollParent(node) {
   return null
 }
 
-const SmartVideoPlayer = ({
-  src,
-  trackSrc,
-  trackLang = 'en',
-  initialConfig = {
-    lazyPlay: true,
-    miniPlayer: true,
-    autoPlay: true,
-    autoMute: true,
-    playbackRate: 1,
+const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
+  {
+    src,
+    trackSrc,
+    trackLang = 'en',
+    initialConfig = {
+      lazyPlay: true,
+      miniPlayer: true,
+      autoPlay: true,
+      autoMute: true,
+      playbackRate: 1,
+    },
   },
-}) => {
+  ref
+) {
   const useVideoRef = useRef(null)
   const videoAnchorRef = useRef(null)
   const settingsRef = useRef(null)
@@ -79,6 +82,7 @@ const SmartVideoPlayer = ({
   const isPiPRef = useRef(false)
   const inViewRef = useRef(true)
   const fullyOutRef = useRef(false)
+  const userPlayOverrideUntilRef = useRef(0)
   const miniDismissedRef = useRef(false)
   const autoPlayAttemptedRef = useRef(false)
   const configRef = useRef(initialConfig)
@@ -156,6 +160,48 @@ const SmartVideoPlayer = ({
         setPlayError(message ? `无法播放：${name} - ${message}` : `无法播放：${name}`)
       })
   }, [])
+
+  const safePlayFromUserGesture = useCallback(
+    (withFeedback = true) => {
+      // Treat as explicit user intent: clear pause flags and briefly ignore IO-driven auto pause.
+      userPausedRef.current = false
+      autoPausedRef.current = false
+      userPlayOverrideUntilRef.current = Date.now() + 1200
+
+      // When using <source>, changing src doesn't automatically reload media.
+      // Ensure the new source is actually loaded before play() within the click gesture.
+      const videoEl = useVideoRef.current
+      if (videoEl) {
+        try {
+          videoEl.load()
+        } catch (_) {
+          // ignore
+        }
+      }
+      safePlay(withFeedback)
+    },
+    [safePlay]
+  )
+
+  useEffect(() => {
+    // <source src> updates require an explicit load() to take effect.
+    const videoEl = useVideoRef.current
+    if (!videoEl) return
+    try {
+      videoEl.load()
+    } catch (_) {
+      // ignore
+    }
+  }, [src, trackSrc, trackLang])
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      play: (withFeedback = false) => safePlay(withFeedback),
+      playFromUserGesture: (withFeedback = true) => safePlayFromUserGesture(withFeedback),
+    }),
+    [safePlay, safePlayFromUserGesture]
+  )
 
   useEffect(() => {
     const videoEl = useVideoRef.current
@@ -436,6 +482,9 @@ const SmartVideoPlayer = ({
         if (!nextInView) {
           if (shouldMini) return
           if (!config.lazyPlay) return
+
+          // If user explicitly started playback (e.g. via playlist click), don't instantly pause due to IO hysteresis.
+          if (Date.now() < userPlayOverrideUntilRef.current) return
 
           if (!isPaused) {
             autoPausedRef.current = true
@@ -853,6 +902,6 @@ const SmartVideoPlayer = ({
       </div>
     </>
   )
-}
+})
 
 export default React.memo(SmartVideoPlayer)
