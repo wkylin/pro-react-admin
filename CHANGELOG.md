@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/wkylin/pro-react-admin/compare/v3.2.0...v3.3.0) (2025-12-22)
+
+
+### Features
+
+* i18n key ([3d6e6be](https://github.com/wkylin/pro-react-admin/commits/3d6e6bed827881ca52e8f133b3cba49519704eba))
+
 ## [3.2.0](https://github.com/wkylin/pro-react-admin/compare/v3.1.0...v3.2.0) (2025-12-22)
 
 ## [3.1.0](https://github.com/wkylin/pro-react-admin/compare/v3.0.0...v3.1.0) (2025-12-22)
