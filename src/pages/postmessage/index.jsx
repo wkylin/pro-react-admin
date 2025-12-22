@@ -36,17 +36,17 @@ const PostMessage = () => {
         style={{
           display: 'block',
           border: 'none',
-          width: '100%',
+          width: '100%'
         }}
         src={childOrigin}
         ref={ref}
-        width="800px"
-        height="600px"
-        title="my-iframe"
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-        referrerPolicy="no-referrer-when-downgrade"
-        sandbox="allow-scripts allow-same-origin"
+        width='800px'
+        height='600px'
+        title='my-iframe'
+        loading='lazy'
+        allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen'
+        referrerPolicy='no-referrer-when-downgrade'
+        sandbox='allow-scripts allow-same-origin'
       />
 
       {/* <iframe

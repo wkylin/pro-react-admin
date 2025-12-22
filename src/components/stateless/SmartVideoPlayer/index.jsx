@@ -17,7 +17,7 @@ import {
   PictureInPicture,
   ExternalLink,
   X,
-  Minimize2,
+  Minimize2
 } from 'lucide-react'
 
 const DEFAULT_INITIAL_CONFIG = {
@@ -26,10 +26,10 @@ const DEFAULT_INITIAL_CONFIG = {
   autoPlay: true,
   autoMute: true,
   playbackRate: 1,
-  ytControls: true,
+  ytControls: true
 }
 
-function isSameConfig(a, b) {
+function isSameConfig (a, b) {
   if (a === b) return true
   if (!a || !b) return false
   return (
@@ -42,13 +42,13 @@ function isSameConfig(a, b) {
   )
 }
 
-const IconButton = React.memo(function IconButton({
+const IconButton = React.memo(function IconButton ({
   Icon,
   label,
   onClick,
   disabled = false,
   buttonRef,
-  tooltipPlacement = 'top',
+  tooltipPlacement = 'top'
 }) {
   const tooltipPlacementClass =
     tooltipPlacement === 'topLeft'
@@ -71,7 +71,7 @@ const IconButton = React.memo(function IconButton({
     <button
       ref={buttonRef}
       className={styles.iconButton}
-      type="button"
+      type='button'
       onClick={onClick}
       aria-label={label}
       disabled={disabled}
@@ -84,12 +84,12 @@ const IconButton = React.memo(function IconButton({
   )
 })
 
-const SettingToggle = React.memo(function SettingToggle({ checked, label, onChange }) {
+const SettingToggle = React.memo(function SettingToggle ({ checked, label, onChange }) {
   return (
     <label className={styles.settingItem}>
       <input
         className={styles.settingCheckbox}
-        type="checkbox"
+        type='checkbox'
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}
       />
@@ -98,7 +98,7 @@ const SettingToggle = React.memo(function SettingToggle({ checked, label, onChan
   )
 })
 
-function getScrollParent(node) {
+function getScrollParent (node) {
   let current = node?.parentElement
   while (current && current !== document.body && current !== document.documentElement) {
     const style = window.getComputedStyle(current)
@@ -112,7 +112,7 @@ function getScrollParent(node) {
   return null
 }
 
-const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
+const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer (
   {
     src,
     provider = 'html5',
@@ -128,7 +128,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     onConfigChange,
     initialConfig,
     onError,
-    onEvent,
+    onEvent
   },
   ref
 ) {
@@ -201,7 +201,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const mergedInitialConfig = useMemo(() => {
     return {
       ...DEFAULT_INITIAL_CONFIG,
-      ...(initialConfig || {}),
+      ...(initialConfig || {})
     }
   }, [initialConfig])
 
@@ -227,7 +227,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
             src: ctx.src,
             youtubeId: ctx.youtubeId,
             embedUrl: ctx.embedUrl,
-            ...extra,
+            ...extra
           })
         } catch (_) {
           // ignore
@@ -474,7 +474,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
         const hls = new Hls({
           // keep defaults; avoid aggressive low-latency tuning here
-          enableWorker: true,
+          enableWorker: true
         })
         hlsRef.current = hls
 
@@ -491,8 +491,8 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               type: data.type,
               details: data.details,
               reason: data.reason,
-              response: data.response,
-            },
+              response: data.response
+            }
           })
 
           // Best-effort: destroy to stop retry loops
@@ -569,7 +569,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
           next.push({
             index: i,
             label: t.label || t.language || `字幕 ${i + 1}`,
-            language: t.language || '',
+            language: t.language || ''
           })
         }
       }
@@ -617,7 +617,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     ref,
     () => ({
       play: (withFeedback = false) => safePlay(withFeedback),
-      playFromUserGesture: (withFeedback = true) => safePlayFromUserGesture(withFeedback),
+      playFromUserGesture: (withFeedback = true) => safePlayFromUserGesture(withFeedback)
     }),
     [safePlay, safePlayFromUserGesture]
   )
@@ -1032,7 +1032,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       },
       {
         threshold: [0, 0.25, 0.75, 1],
-        root: observerRoot,
+        root: observerRoot
       }
     )
 
@@ -1096,7 +1096,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       mute: config.autoMute ? '1' : '0',
       controls: config.ytControls ? '1' : '0',
       playsinline: '1',
-      rel: '0',
+      rel: '0'
     })
     return `https://www.youtube.com/embed/${encodeURIComponent(youtubeId)}?${params.toString()}`
   }, [isEmbed, getEmbedUrl, config, provider, embedUrl, youtubeId])
@@ -1281,7 +1281,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     setConfigItem,
     setVolume,
     unmute,
-    volumePercent,
+    volumePercent
   ])
 
   const handleBumpVolume = useCallback(
@@ -1422,68 +1422,73 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       isEmbed,
       isMini,
       settingsOpen,
-      toggleFullscreen,
+      toggleFullscreen
     ]
   )
 
   const settingsPortal =
     !isMini && settingsOpen
       ? createPortal(
-          <div
-            ref={settingsPanelRef}
-            className={`${styles.settingsPanel} ${styles.settingsPanelPortal}`}
-            role="group"
-            aria-label="播放设置"
-            onPointerDownCapture={handleSettingsPanelPointerDownCapture}
-          >
-            {!isEmbed ? (
-              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label="播放速度">
+        <div
+          ref={settingsPanelRef}
+          className={`${styles.settingsPanel} ${styles.settingsPanelPortal}`}
+          role='group'
+          aria-label='播放设置'
+          onPointerDownCapture={handleSettingsPanelPointerDownCapture}
+        >
+          {!isEmbed
+            ? (
+              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label='播放速度'>
                 <span className={styles.settingLabel}>播放速度</span>
-                <div className={styles.speedDropdown} data-speed-dropdown="true">
+                <div className={styles.speedDropdown} data-speed-dropdown='true'>
                   <button
-                    type="button"
+                    type='button'
                     className={styles.speedTrigger}
-                    aria-haspopup="listbox"
+                    aria-haspopup='listbox'
                     aria-expanded={speedOpen}
                     onClick={() => setSpeedOpen((v) => !v)}
                   >
                     {`${Number(config.playbackRate ?? 1)}x`}
                   </button>
 
-                  {speedOpen ? (
-                    <div className={styles.speedMenu} role="listbox" aria-label="播放速度选项">
-                      {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => {
-                        const active = Number(config.playbackRate ?? 1) === rate
-                        return (
-                          <button
-                            key={rate}
-                            type="button"
-                            className={`${styles.speedItem} ${active ? styles.speedItemActive : ''}`}
-                            role="option"
-                            aria-selected={active}
-                            onClick={() => {
-                              setConfigItem('playbackRate', rate)
-                              setSpeedOpen(false)
-                            }}
-                          >
-                            {rate === 1 ? '1x（默认）' : `${rate}x`}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  ) : null}
+                  {speedOpen
+                    ? (
+                      <div className={styles.speedMenu} role='listbox' aria-label='播放速度选项'>
+                        {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => {
+                          const active = Number(config.playbackRate ?? 1) === rate
+                          return (
+                              <button
+                  key={rate}
+                  type='button'
+                  className={`${styles.speedItem} ${active ? styles.speedItemActive : ''}`}
+                  role='option'
+                  aria-selected={active}
+                  onClick={() => {
+                                setConfigItem('playbackRate', rate)
+                                setSpeedOpen(false)
+                              }}
+                >
+                  {rate === 1 ? '1x（默认）' : `${rate}x`}
+                </button>
+                          )
+                        })}
+                      </div>
+                      )
+                    : null}
                 </div>
               </div>
-            ) : null}
+              )
+            : null}
 
-            {!isEmbed && captionTracks.length > 0 ? (
-              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label="字幕">
+          {!isEmbed && captionTracks.length > 0
+            ? (
+              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label='字幕'>
                 <span className={styles.settingLabel}>字幕</span>
-                <div className={styles.speedDropdown} data-captions-dropdown="true">
+                <div className={styles.speedDropdown} data-captions-dropdown='true'>
                   <button
-                    type="button"
+                    type='button'
                     className={styles.speedTrigger}
-                    aria-haspopup="listbox"
+                    aria-haspopup='listbox'
                     aria-expanded={captionsOpen}
                     onClick={() => {
                       setCaptionsOpen((v) => !v)
@@ -1493,92 +1498,101 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                     {captionsEnabled ? captionTracks[captionTrackIndex]?.label || '字幕' : '关闭'}
                   </button>
 
-                  {captionsOpen ? (
-                    <div className={styles.speedMenu} role="listbox" aria-label="字幕选项">
-                      <button
-                        type="button"
-                        className={`${styles.speedItem} ${!captionsEnabled ? styles.speedItemActive : ''}`}
-                        role="option"
-                        aria-selected={!captionsEnabled}
-                        onClick={() => {
-                          setCaptionsEnabled(false)
-                          setCaptionsOpen(false)
-                          emitEvent('captions', { enabled: false })
-                        }}
-                      >
-                        关闭
-                      </button>
-
-                      {captionTracks.map((t) => {
-                        const active = captionsEnabled && captionTrackIndex === t.index
-                        return (
-                          <button
-                            key={`${t.index}-${t.language || ''}-${t.label || ''}`}
-                            type="button"
-                            className={`${styles.speedItem} ${active ? styles.speedItemActive : ''}`}
-                            role="option"
-                            aria-selected={active}
-                            onClick={() => {
-                              setCaptionTrackIndex(t.index)
-                              setCaptionsEnabled(true)
+                  {captionsOpen
+                    ? (
+                      <div className={styles.speedMenu} role='listbox' aria-label='字幕选项'>
+                        <button
+                          type='button'
+                          className={`${styles.speedItem} ${!captionsEnabled ? styles.speedItemActive : ''}`}
+                          role='option'
+                          aria-selected={!captionsEnabled}
+                          onClick={() => {
+                              setCaptionsEnabled(false)
                               setCaptionsOpen(false)
-                              emitEvent('captions', { enabled: true, trackIndex: t.index })
+                              emitEvent('captions', { enabled: false })
                             }}
-                          >
-                            {t.label}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  ) : null}
+                        >
+                          关闭
+                        </button>
+
+                        {captionTracks.map((t) => {
+                          const active = captionsEnabled && captionTrackIndex === t.index
+                          return (
+                              <button
+                  key={`${t.index}-${t.language || ''}-${t.label || ''}`}
+                  type='button'
+                  className={`${styles.speedItem} ${active ? styles.speedItemActive : ''}`}
+                  role='option'
+                  aria-selected={active}
+                  onClick={() => {
+                                setCaptionTrackIndex(t.index)
+                                setCaptionsEnabled(true)
+                                setCaptionsOpen(false)
+                                emitEvent('captions', { enabled: true, trackIndex: t.index })
+                              }}
+                >
+                  {t.label}
+                </button>
+                          )
+                        })}
+                      </div>
+                      )
+                    : null}
                 </div>
               </div>
-            ) : null}
+              )
+            : null}
 
-            <div className={styles.settingsScroll} aria-label="其它设置">
-              {!isEmbed ? (
+          <div className={styles.settingsScroll} aria-label='其它设置'>
+            {!isEmbed
+              ? (
                 <>
                   <SettingToggle
                     checked={config.lazyPlay}
-                    label="懒播放（滚出视口自动暂停）"
+                    label='懒播放（滚出视口自动暂停）'
                     onChange={(v) => setConfigItem('lazyPlay', v)}
                   />
                   <SettingToggle
                     checked={config.miniPlayer}
-                    label="小窗播放器（滚出视口右下角）"
+                    label='小窗播放器（滚出视口右下角）'
                     onChange={(v) => setConfigItem('miniPlayer', v)}
                   />
                 </>
-              ) : isYouTube ? (
-                <SettingToggle
-                  checked={Boolean(config.ytControls)}
-                  label="YouTube 控制条"
-                  onChange={(v) => setConfigItem('ytControls', v)}
-                />
-              ) : null}
-              <SettingToggle
-                checked={config.autoPlay}
-                label="自动播放"
-                onChange={(v) => setConfigItem('autoPlay', v)}
-              />
-              <SettingToggle
-                checked={config.autoMute}
-                label="自动静音（便于自动播放）"
-                onChange={(v) => setConfigItem('autoMute', v)}
-              />
-            </div>
-          </div>,
-          document.body
-        )
+                )
+              : isYouTube
+                ? (
+                  <SettingToggle
+                    checked={Boolean(config.ytControls)}
+                    label='YouTube 控制条'
+                    onChange={(v) => setConfigItem('ytControls', v)}
+                  />
+                  )
+                : null}
+            <SettingToggle
+              checked={config.autoPlay}
+              label='自动播放'
+              onChange={(v) => setConfigItem('autoPlay', v)}
+            />
+            <SettingToggle
+              checked={config.autoMute}
+              label='自动静音（便于自动播放）'
+              onChange={(v) => setConfigItem('autoMute', v)}
+            />
+          </div>
+        </div>,
+        document.body
+      )
       : null
 
   return (
     <>
-      {!isMini && config.miniPlayer && fullyOut && !isPiP && miniDismissed ? (
-        <div className={styles.miniRestore}>
-          <IconButton Icon={Minimize2} label="恢复小窗" onClick={handleRestoreMini} />
-        </div>
-      ) : null}
+      {!isMini && config.miniPlayer && fullyOut && !isPiP && miniDismissed
+        ? (
+          <div className={styles.miniRestore}>
+            <IconButton Icon={Minimize2} label='恢复小窗' onClick={handleRestoreMini} />
+          </div>
+          )
+        : null}
 
       <div ref={videoAnchorRef} className={styles.videoAnchor}>
         {isMini ? <div className={styles.miniPlaceholder} aria-hidden /> : null}
@@ -1588,234 +1602,278 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
           className={`${styles.videoWrap} ${isMini ? styles.mini : ''} ${settingsOpen ? styles.controlsPinnedWrap : ''}`}
           tabIndex={0}
           onKeyDown={handlePlayerKeyDown}
-          role="region"
-          aria-label="播放器"
+          role='region'
+          aria-label='播放器'
         >
-          {isEmbed ? (
-            computedEmbedSrc ? (
-              <div className={styles.embedRatio}>
-                <iframe
-                  key={computedEmbedSrc}
-                  className={styles.embedFrame}
-                  src={computedEmbedSrc}
-                  title={title || 'Embed'}
-                  allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  onLoad={handleEmbedLoad}
-                />
+          {isEmbed
+            ? (
+                computedEmbedSrc
+                  ? (
+                    <div className={styles.embedRatio}>
+                      <iframe
+                        key={computedEmbedSrc}
+                        className={styles.embedFrame}
+                        src={computedEmbedSrc}
+                        title={title || 'Embed'}
+                        allow='autoplay; encrypted-media; picture-in-picture; fullscreen'
+                        referrerPolicy='strict-origin-when-cross-origin'
+                        onLoad={handleEmbedLoad}
+                      />
 
-                {embedTimeout && !embedLoaded ? (
-                  <div className={styles.embedHint} role="status" aria-live="polite">
-                    <div className={styles.embedHintTitle}>嵌入可能被网站禁止</div>
-                    {externalOpenUrl ? (
-                      <button type="button" className={styles.embedHintAction} onClick={handleOpenExternal}>
-                        新窗口打开
-                      </button>
-                    ) : null}
-                  </div>
-                ) : null}
-              </div>
-            ) : (
-              <div className={styles.embedFallback}>
-                <div className={styles.embedFallbackTitle}>{title || '嵌入地址未配置'}</div>
-                <div className={styles.embedFallbackMeta}>
-                  请传入 embedUrl 或 getEmbedUrl(config) 来生成 iframe 地址。
-                </div>
-              </div>
-            )
-          ) : (
-            <video
-              ref={useVideoRef}
-              className={styles.video}
-              muted={config.autoMute}
-              controls={false}
-              preload="metadata"
-              controlsList="nodownload"
-              playsInline
-              onClick={handleTogglePause}
-              onDoubleClick={toggleFullscreen}
-            >
-              {!isHlsSrc ? <source src={src} type="video/mp4" /> : null}
-              {computedTrackSrc ? (
-                <track
-                  kind="captions"
-                  srcLang={trackLang}
-                  label={trackLang?.toUpperCase?.() || 'CC'}
-                  src={computedTrackSrc}
-                />
-              ) : null}
-              Your browser does not support the video tag.
-            </video>
-          )}
-
-          {!isEmbed && mediaLoading ? (
-            <div className={styles.loadingOverlay} role="status" aria-live="polite">
-              <div className={styles.loadingOverlayText}>{mediaLoadingText}</div>
-            </div>
-          ) : null}
-
-          {!isEmbed ? (
-            <div className={`${styles.centerToggle} ${isPaused ? styles.centerToggleVisible : ''}`} aria-hidden={false}>
-              <button
-                type="button"
-                className={styles.centerToggleButton}
-                aria-label={isPaused ? '播放' : '暂停'}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleTogglePause()
-                }}
-              >
-                {isPaused ? <Play size={34} /> : <Pause size={34} />}
-              </button>
-            </div>
-          ) : null}
-
-          {isEmbed ? (
-            <div className={styles.embedToolbar} aria-label="嵌入工具条">
-              {externalOpenUrl ? (
-                <IconButton Icon={ExternalLink} label="新窗口打开" onClick={handleOpenExternal} />
-              ) : null}
-
-              <div ref={settingsRef} className={styles.settingsWrap}>
-                <IconButton
-                  Icon={Settings}
-                  label="设置"
-                  onClick={() => setSettingsOpen((v) => !v)}
-                  buttonRef={settingsButtonRef}
-                />
-              </div>
-            </div>
-          ) : null}
-
-          {!isEmbed ? (
-            <div className={styles.videoControls} aria-label="视频控制条">
-              <div className={styles.controlsTop} role="group" aria-label="播放与工具">
-                {!isEmbed && !isMini ? (
-                  <IconButton Icon={SkipBack} label="后退 10 秒" onClick={() => back(10)} tooltipPlacement="topLeft" />
-                ) : null}
-
-                {!isEmbed ? (
-                  <IconButton
-                    Icon={isPaused ? Play : Pause}
-                    label={isPaused ? '播放' : '暂停'}
-                    onClick={handleTogglePause}
-                  />
-                ) : null}
-
-                {!isEmbed && !isMini ? (
-                  <IconButton Icon={SkipForward} label="前进 10 秒" onClick={() => forward(10)} />
-                ) : null}
-
-                {isMini ? <IconButton Icon={X} label="关闭小窗" onClick={handleCloseMini} /> : null}
-
-                <div className={styles.spacer} />
-
-                {!isEmbed ? (
-                  <IconButton
-                    Icon={isEffectivelyMuted ? VolumeX : Volume2}
-                    label={isEffectivelyMuted ? '取消静音' : '静音'}
-                    onClick={handleToggleMuteSmart}
-                  />
-                ) : null}
-
-                {!isEmbed && !isMini ? (
-                  <input
-                    className={`${styles.range} ${styles.volumeRange}`}
-                    type="range"
-                    min={0}
-                    max={100}
-                    step={1}
-                    value={displayVolumePercent}
-                    onChange={(e) => handleVolumeChangeSmart(Number(e.target.value))}
-                    aria-label="音量"
-                  />
-                ) : null}
-
-                {!isEmbed && !isMini ? (
-                  <IconButton
-                    Icon={Minus}
-                    label="音量 -5%"
-                    onClick={() => handleBumpVolume(-5)}
-                    disabled={!canDecrease}
-                  />
-                ) : null}
-
-                {!isEmbed && !isMini ? (
-                  <IconButton
-                    Icon={Plus}
-                    label="音量 +5%"
-                    onClick={() => handleBumpVolume(5)}
-                    disabled={!canIncrease}
-                  />
-                ) : null}
-
-                {!isEmbed && !isMini ? <div className={styles.sep} /> : null}
-
-                {!isMini ? (
-                  <div ref={settingsRef} className={styles.settingsWrap}>
-                    <IconButton
-                      Icon={Settings}
-                      label="设置"
-                      onClick={() => setSettingsOpen((v) => !v)}
-                      buttonRef={settingsButtonRef}
-                    />
-                  </div>
-                ) : null}
-
-                {!isEmbed && !isMini ? (
-                  <IconButton
-                    Icon={PictureInPicture}
-                    label={isPiP ? '退出画中画' : '画中画'}
-                    onClick={handleTogglePiP}
-                  />
-                ) : null}
-
-                {!isEmbed && !isMini ? <IconButton Icon={Maximize2} label="全屏" onClick={toggleFullscreen} /> : null}
-              </div>
-
-              {!isEmbed ? (
-                <div className={styles.controlsBottom} role="group" aria-label="进度">
-                  <span className={styles.time}>{formatTime(currentTime)}</span>
-                  <div
-                    className={styles.progressWrap}
-                    onPointerMove={handleProgressPointerMove}
-                    onPointerLeave={handleProgressPointerLeave}
-                    aria-label="播放进度条"
-                  >
-                    <div className={styles.bufferBar} style={{ width: `${bufferedPercent}%` }} aria-hidden />
-
-                    {hoverPreview ? (
-                      <div
-                        className={styles.previewTooltip}
-                        style={{ left: `${Math.round((hoverPreview.ratio || 0) * 100)}%` }}
-                        aria-hidden
-                      >
-                        {formatTime(hoverPreview.time)}
+                      {embedTimeout && !embedLoaded
+                        ? (
+                          <div className={styles.embedHint} role='status' aria-live='polite'>
+                            <div className={styles.embedHintTitle}>嵌入可能被网站禁止</div>
+                            {externalOpenUrl
+                              ? (
+                                <button type='button' className={styles.embedHintAction} onClick={handleOpenExternal}>
+                                  新窗口打开
+                          </button>
+                                )
+                              : null}
+                          </div>
+                          )
+                        : null}
+                    </div>
+                    )
+                  : (
+                    <div className={styles.embedFallback}>
+                      <div className={styles.embedFallbackTitle}>{title || '嵌入地址未配置'}</div>
+                      <div className={styles.embedFallbackMeta}>
+                        请传入 embedUrl 或 getEmbedUrl(config) 来生成 iframe 地址。
                       </div>
-                    ) : null}
-
-                    <input
-                      className={`${styles.range} ${styles.progressRange} ${styles.progressRangeOverlay}`}
-                      type="range"
-                      min={0}
-                      max={duration || 0}
-                      step={0.1}
-                      value={Math.min(Math.max(0, Number(currentTime) || 0), duration || 0)}
-                      onChange={(e) => seekTo(Number(e.target.value))}
-                      aria-label="播放进度"
+                    </div>
+                    )
+              )
+            : (
+              <video
+                ref={useVideoRef}
+                className={styles.video}
+                muted={config.autoMute}
+                controls={false}
+                preload='metadata'
+                controlsList='nodownload'
+                playsInline
+                onClick={handleTogglePause}
+                onDoubleClick={toggleFullscreen}
+              >
+                {!isHlsSrc ? <source src={src} type='video/mp4' /> : null}
+                {computedTrackSrc
+                  ? (
+                    <track
+                      kind='captions'
+                      srcLang={trackLang}
+                      label={trackLang?.toUpperCase?.() || 'CC'}
+                      src={computedTrackSrc}
                     />
-                  </div>
-                  <span className={styles.time}>{formatTime(duration)}</span>
-                </div>
-              ) : null}
+                    )
+                  : null}
+                Your browser does not support the video tag.
+              </video>
+              )}
 
-              {playError ? (
-                <div className={styles.playError} role="status">
-                  {playError}
+          {!isEmbed && mediaLoading
+            ? (
+              <div className={styles.loadingOverlay} role='status' aria-live='polite'>
+                <div className={styles.loadingOverlayText}>{mediaLoadingText}</div>
+              </div>
+              )
+            : null}
+
+          {!isEmbed
+            ? (
+              <div className={`${styles.centerToggle} ${isPaused ? styles.centerToggleVisible : ''}`} aria-hidden={false}>
+                <button
+                  type='button'
+                  className={styles.centerToggleButton}
+                  aria-label={isPaused ? '播放' : '暂停'}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    handleTogglePause()
+                  }}
+                >
+                  {isPaused ? <Play size={34} /> : <Pause size={34} />}
+                </button>
+              </div>
+              )
+            : null}
+
+          {isEmbed
+            ? (
+              <div className={styles.embedToolbar} aria-label='嵌入工具条'>
+                {externalOpenUrl
+                  ? (
+                    <IconButton Icon={ExternalLink} label='新窗口打开' onClick={handleOpenExternal} />
+                    )
+                  : null}
+
+                <div ref={settingsRef} className={styles.settingsWrap}>
+                  <IconButton
+                    Icon={Settings}
+                    label='设置'
+                    onClick={() => setSettingsOpen((v) => !v)}
+                    buttonRef={settingsButtonRef}
+                  />
                 </div>
-              ) : null}
-            </div>
-          ) : null}
+              </div>
+              )
+            : null}
+
+          {!isEmbed
+            ? (
+              <div className={styles.videoControls} aria-label='视频控制条'>
+                <div className={styles.controlsTop} role='group' aria-label='播放与工具'>
+                  {!isEmbed && !isMini
+                    ? (
+                      <IconButton Icon={SkipBack} label='后退 10 秒' onClick={() => back(10)} tooltipPlacement='topLeft' />
+                      )
+                    : null}
+
+                  {!isEmbed
+                    ? (
+                      <IconButton
+                        Icon={isPaused ? Play : Pause}
+                        label={isPaused ? '播放' : '暂停'}
+                        onClick={handleTogglePause}
+                      />
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini
+                    ? (
+                      <IconButton Icon={SkipForward} label='前进 10 秒' onClick={() => forward(10)} />
+                      )
+                    : null}
+
+                  {isMini ? <IconButton Icon={X} label='关闭小窗' onClick={handleCloseMini} /> : null}
+
+                  <div className={styles.spacer} />
+
+                  {!isEmbed
+                    ? (
+                      <IconButton
+                        Icon={isEffectivelyMuted ? VolumeX : Volume2}
+                        label={isEffectivelyMuted ? '取消静音' : '静音'}
+                        onClick={handleToggleMuteSmart}
+                      />
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini
+                    ? (
+                      <input
+                        className={`${styles.range} ${styles.volumeRange}`}
+                        type='range'
+                        min={0}
+                        max={100}
+                        step={1}
+                        value={displayVolumePercent}
+                        onChange={(e) => handleVolumeChangeSmart(Number(e.target.value))}
+                        aria-label='音量'
+                      />
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini
+                    ? (
+                      <IconButton
+                        Icon={Minus}
+                        label='音量 -5%'
+                        onClick={() => handleBumpVolume(-5)}
+                        disabled={!canDecrease}
+                      />
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini
+                    ? (
+                      <IconButton
+                        Icon={Plus}
+                        label='音量 +5%'
+                        onClick={() => handleBumpVolume(5)}
+                        disabled={!canIncrease}
+                      />
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini ? <div className={styles.sep} /> : null}
+
+                  {!isMini
+                    ? (
+                      <div ref={settingsRef} className={styles.settingsWrap}>
+                        <IconButton
+                          Icon={Settings}
+                          label='设置'
+                          onClick={() => setSettingsOpen((v) => !v)}
+                          buttonRef={settingsButtonRef}
+                        />
+                      </div>
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini
+                    ? (
+                      <IconButton
+                        Icon={PictureInPicture}
+                        label={isPiP ? '退出画中画' : '画中画'}
+                        onClick={handleTogglePiP}
+                      />
+                      )
+                    : null}
+
+                  {!isEmbed && !isMini ? <IconButton Icon={Maximize2} label='全屏' onClick={toggleFullscreen} /> : null}
+                </div>
+
+                {!isEmbed
+                  ? (
+                    <div className={styles.controlsBottom} role='group' aria-label='进度'>
+                      <span className={styles.time}>{formatTime(currentTime)}</span>
+                      <div
+                        className={styles.progressWrap}
+                        onPointerMove={handleProgressPointerMove}
+                        onPointerLeave={handleProgressPointerLeave}
+                        aria-label='播放进度条'
+                      >
+                        <div className={styles.bufferBar} style={{ width: `${bufferedPercent}%` }} aria-hidden />
+
+                        {hoverPreview
+                          ? (
+                            <div
+                  className={styles.previewTooltip}
+                  style={{ left: `${Math.round((hoverPreview.ratio || 0) * 100)}%` }}
+                  aria-hidden
+                >
+                  {formatTime(hoverPreview.time)}
+                </div>
+                            )
+                          : null}
+
+                        <input
+                          className={`${styles.range} ${styles.progressRange} ${styles.progressRangeOverlay}`}
+                          type='range'
+                          min={0}
+                          max={duration || 0}
+                          step={0.1}
+                          value={Math.min(Math.max(0, Number(currentTime) || 0), duration || 0)}
+                          onChange={(e) => seekTo(Number(e.target.value))}
+                          aria-label='播放进度'
+                        />
+                      </div>
+                      <span className={styles.time}>{formatTime(duration)}</span>
+                    </div>
+                    )
+                  : null}
+
+                {playError
+                  ? (
+                    <div className={styles.playError} role='status'>
+                      {playError}
+                    </div>
+                    )
+                  : null}
+              </div>
+              )
+            : null}
 
           {settingsPortal}
         </div>

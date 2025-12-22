@@ -1,6 +1,7 @@
 # SmartVideoPlayer 开发与使用指南
 
 本文档面向项目内的 `SmartVideoPlayer`（视频页播放器组件），用于说明：
+
 - 组件能力与整体架构
 - HTML5 / YouTube / 通用 Embed 三种模式的差异
 - 配置项（受控/非受控）与对接方式
@@ -101,6 +102,7 @@
 - `onConfigChange?: (nextConfig: Config) => void`：受控模式的变更回调。
 
 配置项（当前）：
+
 - `lazyPlay: boolean`：懒播放（滚出视口自动暂停）
 - `miniPlayer: boolean`：滚出视口右下角 mini 小窗
 - `autoPlay: boolean`：自动播放
@@ -114,6 +116,7 @@
 - `onError?: (payload: { message: string; provider: string; src?: string; youtubeId?: string; embedUrl?: string; ... }) => void`
 
 `onEvent` 事件名（目前实现）：
+
 - `play` / `pause`
 - `seek`（绝对定位） / `seekRelative`（相对跳转）
 - `volume` / `mute`
@@ -146,11 +149,7 @@
 ### 5.1 HTML5 模式
 
 ```jsx
-<SmartVideoPlayer
-  provider="html5"
-  src={trailerSource}
-  title="预告片"
-/>
+<SmartVideoPlayer provider="html5" src={trailerSource} title="预告片" />
 ```
 
 ### 5.2 YouTube 模式
@@ -221,11 +220,11 @@ const [playerConfig, setPlayerConfig] = useState({
 
 ### 6.1 需求拆分
 
-1) UI 风格：参考 YouTube（按钮图标、tooltip、布局、hover 行为）
-2) 行为增强：IntersectionObserver 懒播放、mini、小窗恢复/关闭
-3) 兼容性：autoplay 策略（muted 兜底）、play() Promise 错误处理
-4) 设置面板：Portal 避免父容器裁切；定位与最大高度策略
-5) provider 抽象：统一到 SmartVideoPlayer 内部，支持 youtube + 通用 embed
+1. UI 风格：参考 YouTube（按钮图标、tooltip、布局、hover 行为）
+2. 行为增强：IntersectionObserver 懒播放、mini、小窗恢复/关闭
+3. 兼容性：autoplay 策略（muted 兜底）、play() Promise 错误处理
+4. 设置面板：Portal 避免父容器裁切；定位与最大高度策略
+5. provider 抽象：统一到 SmartVideoPlayer 内部，支持 youtube + 通用 embed
 
 ### 6.2 关键问题与处理方式
 
