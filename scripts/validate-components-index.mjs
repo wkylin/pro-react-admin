@@ -6,7 +6,7 @@ const indexTs = path.join(projectRoot, 'src', 'components', 'index.ts')
 
 const DEFAULT_EXTS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']
 
-function fileExists(filePath) {
+function fileExists (filePath) {
   try {
     return fs.statSync(filePath).isFile()
   } catch {
@@ -14,7 +14,7 @@ function fileExists(filePath) {
   }
 }
 
-function dirExists(dirPath) {
+function dirExists (dirPath) {
   try {
     return fs.statSync(dirPath).isDirectory()
   } catch {
@@ -22,11 +22,11 @@ function dirExists(dirPath) {
   }
 }
 
-function readText(filePath) {
+function readText (filePath) {
   return fs.readFileSync(filePath, 'utf8')
 }
 
-function stripCommentsLoosely(code) {
+function stripCommentsLoosely (code) {
   // Good-enough for our purpose (barrel files). We:
   // 1) remove block comments
   // 2) drop lines that start with // after trimming
@@ -38,7 +38,7 @@ function stripCommentsLoosely(code) {
     .join('\n')
 }
 
-function extractExportSpecifiers(code) {
+function extractExportSpecifiers (code) {
   const specifiers = []
 
   // Matches:
@@ -55,7 +55,7 @@ function extractExportSpecifiers(code) {
   return specifiers
 }
 
-function resolveCandidateTargets(fromPath) {
+function resolveCandidateTargets (fromPath) {
   const hasExt = path.extname(fromPath).length > 0
   if (hasExt) {
     return [fromPath]
@@ -74,7 +74,7 @@ function resolveCandidateTargets(fromPath) {
   return candidates
 }
 
-function findExistingTarget(absBasePath) {
+function findExistingTarget (absBasePath) {
   const candidates = resolveCandidateTargets(absBasePath)
   for (const candidate of candidates) {
     if (fileExists(candidate)) return candidate
@@ -89,7 +89,7 @@ function findExistingTarget(absBasePath) {
   return null
 }
 
-function main() {
+function main () {
   if (!fileExists(indexTs)) {
     console.error(`[components-index] Not found: ${indexTs}`)
     process.exit(2)

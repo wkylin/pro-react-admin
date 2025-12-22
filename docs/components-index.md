@@ -45,9 +45,9 @@
 
 1. `src/components/index.ts` 已新增 export
 2. `npm run check:components-index` 通过（避免漏加/写错导出路径）
-2. `npm run build:lib` 成功（产物 + d.ts）
-3. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
-4. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
+3. `npm run build:lib` 成功（产物 + d.ts）
+4. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
+5. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
 
 ## 常见问题
 

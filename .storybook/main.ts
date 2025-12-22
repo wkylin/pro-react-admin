@@ -7,9 +7,9 @@ const rootDir = process.cwd()
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
-    '@storybook/addon-links',         // 推荐加上：支持故事间跳转
-    '@storybook/addon-a11y',          // 保持
-    '@storybook/addon-docs',          // 如果你用了 MDX3，可以去掉（essentials 已包含）
+    '@storybook/addon-links', // 推荐加上：支持故事间跳转
+    '@storybook/addon-a11y', // 保持
+    '@storybook/addon-docs', // 如果你用了 MDX3，可以去掉（essentials 已包含）
   ],
   docs: {},
   framework: {
@@ -51,7 +51,7 @@ const config: StorybookConfig = {
       build: {
         chunkSizeWarningLimit: 2000,
       },
-  }),
+    }),
 }
 
 export default config

@@ -1,10 +1,10 @@
 // .storybook/preview.tsx
-import React, { Suspense } from 'react';
-import type { Preview } from '@storybook/react'; // 注意：Vite 版本用 @storybook/react
-import { MemoryRouter } from 'react-router-dom';
-import { I18nextProvider } from 'react-i18next';
+import React, { Suspense } from 'react'
+import type { Preview } from '@storybook/react' // 注意：Vite 版本用 @storybook/react
+import { MemoryRouter } from 'react-router-dom'
+import { I18nextProvider } from 'react-i18next'
 
-import i18n from '../src/i18n/i18n';
+import i18n from '../src/i18n/i18n'
 
 const preview: Preview = {
   decorators: [
@@ -39,6 +39,6 @@ const preview: Preview = {
       },
     },
   },
-};
+}
 
-export default preview;
+export default preview
