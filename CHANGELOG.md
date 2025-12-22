@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/wkylin/pro-react-admin/compare/v3.0.0...v3.1.0) (2025-12-22)
+
+
+### Features
+
+* storybook stories ([cb31b5c](https://github.com/wkylin/pro-react-admin/commits/cb31b5c491b1db671989c868f3584875d18c06a7))
+* storybook update ([f1cfa0f](https://github.com/wkylin/pro-react-admin/commits/f1cfa0f3a188d9bcda9cf562a05576bc942d5b2d))
+* video ([baeb1e4](https://github.com/wkylin/pro-react-admin/commits/baeb1e4e31b31cf8de0f2d29d76a1d931b89d07e))
+* video layout ([3aee6e5](https://github.com/wkylin/pro-react-admin/commits/3aee6e5a0c328187954b3596c8848eabc7a0dbee))
+* video list ([f984183](https://github.com/wkylin/pro-react-admin/commits/f984183432054cfece06bf4b0e1155a221af383a))
+* video update ([b0e5d86](https://github.com/wkylin/pro-react-admin/commits/b0e5d865f5359cd28d12803ac7588d96fbf7cc8d))
+* video update ([e044e8c](https://github.com/wkylin/pro-react-admin/commits/e044e8cb23dbc1c90e7f47449df4fbd6947fe2c7))
+* video update ([40757b4](https://github.com/wkylin/pro-react-admin/commits/40757b47bd97215a38ac207a11ab18002f926283))
+* video update ([e414aaa](https://github.com/wkylin/pro-react-admin/commits/e414aaa37cd5fbdbf75720d84ed26d10e3016840))
+
+
+### Bug Fixes
+
+* fix video error ([dcb60d7](https://github.com/wkylin/pro-react-admin/commits/dcb60d751d6f05ea9025ea8977bf4c39f2ffee49))
+
 ## [3.0.0](https://github.com/wkylin/pro-react-admin/compare/v2.2.0...v3.0.0) (2025-12-19)
 
 
