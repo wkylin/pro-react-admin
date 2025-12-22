@@ -1,6 +1,7 @@
 import React from 'react'
 import routes from '@src/routers/index'
 import Exception404 from '@src/components/stateless/Exception/exception404'
+import { getMenuI18nKeyByPath } from '@src/i18n/menuI18nKey'
 
 export const flattenRoutes = (arr = []) =>
   arr.reduce((prev, item) => {
@@ -54,6 +55,9 @@ export const getKeyName = (pathName = '/404') => {
 
   tabKey = normalizeTabKey(tabKey)
 
+  const i18nLookupKey = route.meta?.routePath || route.path || route.key || candidate || normalizedActualPath
+  const resolvedI18nKey = i18nKey || getMenuI18nKeyByPath(i18nLookupKey)
+
   return {
     index: index ?? false,
     path: route.meta?.routePath || route.path,
@@ -61,7 +65,7 @@ export const getKeyName = (pathName = '/404') => {
     title: name || route.meta?.title || 'Unknown Route',
     tabKey,
     element: element || <Exception404 />,
-    i18nKey,
+    i18nKey: resolvedI18nKey,
   }
 }
 

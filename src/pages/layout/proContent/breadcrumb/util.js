@@ -3,6 +3,8 @@
  * @param {Array} routes
  * @returns {Array}
  */
+import { getMenuI18nKeyByPath } from '@src/i18n/menuI18nKey'
+
 const flattenRoutes = (routes) => {
   let flat = []
   routes.forEach((route) => {
@@ -57,7 +59,11 @@ export const findRouteChain = (routes, pathname) => {
     if (matched) {
       // 去重：避免重复添加（例如根路径可能被匹配多次）
       if (!chain.some((item) => item.key === matched.key)) {
-        chain.push(matched)
+        const resolvedKey = matched.path || matched.key || pathToCheck
+        chain.push({
+          ...matched,
+          i18nKey: matched.i18nKey || getMenuI18nKeyByPath(resolvedKey),
+        })
       }
     }
   })

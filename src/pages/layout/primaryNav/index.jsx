@@ -4,6 +4,7 @@ import { Button, Space } from 'antd'
 import { DashboardOutlined, ProjectOutlined, HomeOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { usePermission } from '@src/app-hooks/usePermission'
+import { useTranslation } from 'react-i18next'
 
 export const usePrimaryNavItems = () => {
   const { redirectTo } = useSafeNavigate()
@@ -58,6 +59,7 @@ export const usePrimaryNavItems = () => {
     {
       key: 'home',
       label: '首页',
+      i18nKey: 'nav.home',
       icon: <HomeOutlined style={{ fontSize: 16 }} />,
       onClick: () => redirectTo('/'),
       show: true,
@@ -65,6 +67,7 @@ export const usePrimaryNavItems = () => {
     {
       key: 'dashboard',
       label: '多路由设置',
+      i18nKey: 'nav.dashboard',
       icon: <DashboardOutlined style={{ fontSize: 16 }} />,
       onClick: () => redirectTo('dashboard'),
       show: hasAccess('/dashboard'),
@@ -72,6 +75,7 @@ export const usePrimaryNavItems = () => {
     {
       key: 'portfilo',
       label: 'My Portfilo',
+      i18nKey: 'nav.portfolio',
       icon: <ProjectOutlined style={{ fontSize: 16 }} />,
       onClick: () => redirectTo('portfilo'),
       show: hasAccess('/portfilo'),
@@ -82,13 +86,14 @@ export const usePrimaryNavItems = () => {
 }
 
 const PrimaryNav = ({ layout = '' }) => {
+  const { t } = useTranslation()
   const items = usePrimaryNavItems()
   const filterItems = layout === 'top' ? items.filter((item) => item.key !== 'home') : items
   return (
     <Space style={{ marginRight: 16 }}>
       {filterItems.map((item) => (
         <Button key={item.key} type="link" icon={item.icon} onClick={item.onClick}>
-          {item.label}
+          {item.i18nKey ? t(item.i18nKey) : item.label}
         </Button>
       ))}
     </Space>

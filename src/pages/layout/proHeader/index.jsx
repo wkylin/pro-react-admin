@@ -19,6 +19,7 @@ import {
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { removeLocalStorage, getLocalStorage } from '@utils/publicFn'
+import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
 
@@ -58,7 +59,7 @@ const safeNotifyDeniedOnce = async ({ path, lastDeniedRef, messageApi }) => {
   }
 }
 
-const buildUserMenuItems = ({ tokenValue, isAuthenticated, user, redirectTo }) => [
+const buildUserMenuItems = ({ t, tokenValue, isAuthenticated, user, redirectTo }) => [
   {
     key: 'token',
     label: <>{tokenValue}</>,
@@ -67,7 +68,7 @@ const buildUserMenuItems = ({ tokenValue, isAuthenticated, user, redirectTo }) =
   { type: 'divider' },
   {
     key: '1',
-    label: <Space>个人中心</Space>,
+    label: <Space>{t('header.userCenter')}</Space>,
     icon: <UserOutlined />,
     onClick: () => {
       redirectTo('/profile')
@@ -75,7 +76,7 @@ const buildUserMenuItems = ({ tokenValue, isAuthenticated, user, redirectTo }) =
   },
   {
     key: '2',
-    label: <Space>个人设置</Space>,
+    label: <Space>{t('header.userSettings')}</Space>,
     icon: <SmileOutlined />,
     onClick: () => {
       redirectTo('/setting')
@@ -83,7 +84,7 @@ const buildUserMenuItems = ({ tokenValue, isAuthenticated, user, redirectTo }) =
   },
   {
     key: '3',
-    label: <Space>联 系 我</Space>,
+    label: <Space>{t('header.contactMe')}</Space>,
     icon: <SmileOutlined />,
     onClick: () => {
       redirectTo('/contact')
@@ -91,7 +92,7 @@ const buildUserMenuItems = ({ tokenValue, isAuthenticated, user, redirectTo }) =
   },
   {
     key: '4',
-    label: <Space>退出登录</Space>,
+    label: <Space>{t('header.logout')}</Space>,
     icon: <LogoutOutlined />,
     onClick: () => {
       if (isAuthenticated && user) {
@@ -106,8 +107,18 @@ const buildUserMenuItems = ({ tokenValue, isAuthenticated, user, redirectTo }) =
   },
 ]
 
-const buildMobileMoreItems = ({ primaryNavItems, onSettingClick, redirectGithub, redirectWiki, redirectWrapped }) => [
-  ...primaryNavItems,
+const buildMobileMoreItems = ({
+  t,
+  primaryNavItems,
+  onSettingClick,
+  redirectGithub,
+  redirectWiki,
+  redirectWrapped,
+}) => [
+  ...(Array.isArray(primaryNavItems) ? primaryNavItems : []).map((it) => ({
+    ...it,
+    label: it?.i18nKey ? t(it.i18nKey) : it?.label,
+  })),
   { type: 'divider' },
   {
     key: 'notification',
@@ -117,25 +128,25 @@ const buildMobileMoreItems = ({ primaryNavItems, onSettingClick, redirectGithub,
   },
   {
     key: 'github',
-    label: 'Github',
+    label: t('header.github'),
     icon: <GithubOutlined style={{ fontSize: 16 }} />,
     onClick: redirectGithub,
   },
   {
     key: 'wiki',
-    label: 'Wiki',
+    label: t('header.wiki'),
     icon: <BookOutlined style={{ fontSize: 16 }} />,
     onClick: redirectWiki,
   },
   {
     key: 'wrapped',
-    label: 'Wrapped',
+    label: t('header.wrapped'),
     icon: <RocketOutlined style={{ fontSize: 16 }} />,
     onClick: redirectWrapped,
   },
   {
     key: 'setting',
-    label: '偏好设置',
+    label: t('header.preferences'),
     icon: <SettingOutlined style={{ fontSize: 16 }} />,
     onClick: onSettingClick,
   },
@@ -207,6 +218,7 @@ const renderDesktopNav = (isMobile, layout, children) => {
 }
 
 const renderDesktopActions = ({
+  t,
   iconButtonStyle,
   isDark,
   handleThemeToggle,
@@ -218,12 +230,12 @@ const renderDesktopActions = ({
 }) => (
   <Space orientation="horizontal" style={{ paddingRight: 8 }}>
     <SoundBar buttonStyle={{ border: 'none' }} />
-    <Tooltip title="全局菜单搜索 (Ctrl+K)" placement="bottom">
+    <Tooltip title={t('header.searchTooltip')} placement="bottom">
       <Button icon={<SearchOutlined />} size="small" style={iconButtonStyle} onClick={() => setSearchOpen(true)} />
     </Tooltip>
 
     <NotificationDrawer variant="button" buttonStyle={iconButtonStyle} />
-    <Tooltip title="GitHub" placement="bottom">
+    <Tooltip title={t('header.github')} placement="bottom">
       <Button
         icon={<GithubOutlined style={{ fontSize: 16 }} />}
         size="small"
@@ -233,7 +245,7 @@ const renderDesktopActions = ({
       />
     </Tooltip>
     <Fullscreen buttonStyle={iconButtonStyle} />
-    <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
+    <Tooltip title={isDark ? t('header.themeLight') : t('header.themeDark')} placement="bottom">
       <Button
         onClick={handleThemeToggle}
         size="small"
@@ -247,10 +259,10 @@ const renderDesktopActions = ({
         }
       />
     </Tooltip>
-    <Tooltip title="偏好设置" placement="bottom">
+    <Tooltip title={t('header.preferences')} placement="bottom">
       <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={iconButtonStyle} />
     </Tooltip>
-    <Tooltip title="GitHub Wrapped" placement="bottom">
+    <Tooltip title={t('header.wrappedTooltip')} placement="bottom">
       <Button
         icon={<RocketOutlined style={{ fontSize: 16 }} />}
         size="small"
@@ -258,7 +270,7 @@ const renderDesktopActions = ({
         style={iconButtonStyle}
       />
     </Tooltip>
-    <Tooltip title="DeepWiki" placement="bottom">
+    <Tooltip title={t('header.wiki')} placement="bottom">
       <Button
         icon={<BookOutlined style={{ fontSize: 16 }} />}
         size="small"
@@ -270,9 +282,9 @@ const renderDesktopActions = ({
   </Space>
 )
 
-const renderMobileActions = ({ isTopDarkHeader, isDark, handleThemeToggle, mobileMoreItems, setSearchOpen }) => (
+const renderMobileActions = ({ t, isTopDarkHeader, isDark, handleThemeToggle, mobileMoreItems, setSearchOpen }) => (
   <Space>
-    <Tooltip title="菜单搜索">
+    <Tooltip title={t('header.search')}>
       <Button
         icon={<SearchOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />}
         size="small"
@@ -280,7 +292,7 @@ const renderMobileActions = ({ isTopDarkHeader, isDark, handleThemeToggle, mobil
         onClick={() => setSearchOpen(true)}
       />
     </Tooltip>
-    <Tooltip title={isDark ? '明亮模式' : '暗黑模式'} placement="bottom">
+    <Tooltip title={isDark ? t('header.themeLight') : t('header.themeDark')} placement="bottom">
       <Button
         onClick={handleThemeToggle}
         size="small"
@@ -310,6 +322,7 @@ const renderUserTrigger = (isAuthenticated, user, iconButtonStyle) =>
   )
 
 const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuClick }) => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
   const lastDeniedRef = React.useRef(null)
@@ -335,20 +348,21 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
 
   const tokenValue = getLocalStorage('token')?.token || 'wkylin.w'
   const items = React.useMemo(
-    () => buildUserMenuItems({ tokenValue, isAuthenticated, user, redirectTo }),
-    [tokenValue, isAuthenticated, user, redirectTo]
+    () => buildUserMenuItems({ t, tokenValue, isAuthenticated, user, redirectTo }),
+    [t, tokenValue, isAuthenticated, user, redirectTo]
   )
 
   const mobileMoreItems = React.useMemo(
     () =>
       buildMobileMoreItems({
+        t,
         primaryNavItems,
         onSettingClick,
         redirectGithub,
         redirectWiki,
         redirectWrapped,
       }),
-    [primaryNavItems, onSettingClick]
+    [t, primaryNavItems, onSettingClick]
   )
 
   const {
@@ -407,6 +421,7 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
         <div className={styles.headerRight} style={isMobile ? { flex: 1 } : {}}>
           {renderHeaderActions(isMobile, {
             iconButtonStyle,
+            t,
             isTopDarkHeader,
             isDark,
             handleThemeToggle,

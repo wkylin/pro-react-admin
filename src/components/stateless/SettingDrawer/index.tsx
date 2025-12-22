@@ -2,6 +2,7 @@ import React from 'react'
 import { Drawer, Switch, Divider, Tooltip, theme, ColorPicker } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import { useProThemeContext, ThemeSettings } from '@/theme/hooks'
+import { useTranslation } from 'react-i18next'
 
 const { useToken } = theme
 
@@ -85,6 +86,7 @@ const ThemeColor = ({
 
 const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
   const { themeSettings, updateSettings } = useProThemeContext()
+  const { t } = useTranslation()
 
   const changeSetting = <K extends keyof ThemeSettings>(key: K, value: ThemeSettings[K]) => {
     updateSettings({ [key]: value } as Partial<ThemeSettings>)
@@ -92,7 +94,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
 
   return (
     <Drawer
-      title="偏好设置"
+      title={t('settingDrawer.title')}
       placement="right"
       onClose={onClose}
       open={open}
@@ -100,19 +102,19 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       styles={{ body: { padding: '20px 24px' } }}
     >
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold">整体风格设置</h3>
+        <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.overallStyle')}</h3>
         <div className="flex gap-4">
           <BlockCheckbox
             list={
               [
                 {
                   key: 'light',
-                  title: '亮色菜单风格',
+                  title: t('settingDrawer.navTheme.light'),
                   url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjBGMkY1Ii8+CiAgICA8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iNDgiIGZpbGw9IiNGRkYiLz4KICAgIDxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0ZGRiIvPgogIDwvZz4KPC9zdmc+',
                 },
                 {
                   key: 'dark',
-                  title: '暗色菜单风格',
+                  title: t('settingDrawer.navTheme.dark'),
                   url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjBGMkY1Ii8+CiAgICA8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iNDgiIGZpbGw9IiMwMDE1MjkiLz4KICAgIDxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0ZGRiIvPgogIDwvZz4KPC9zdmc+',
                 },
               ] as const
@@ -122,7 +124,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
           />
         </div>
         <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm">开启暗黑模式</span>
+          <span className="text-sm">{t('settingDrawer.enableDarkMode')}</span>
           <Switch
             checked={themeSettings.themeMode === 'dark'}
             onChange={(checked) => changeSetting('themeMode', checked ? 'dark' : 'light')}
@@ -131,23 +133,23 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       </div>
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold">主题色</h3>
+        <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.themeColor')}</h3>
         <ThemeColor
           colors={[
-            { key: '拂晓蓝 (默认)', color: '#1677ff' },
-            { key: '薄暮', color: '#F5222D' },
-            { key: '火山', color: '#FA541C' },
-            { key: '日暮', color: '#FAAD14' },
-            { key: '明青', color: '#13C2C2' },
-            { key: '极光绿', color: '#52C41A' },
-            { key: 'Geek Blue', color: '#2F54EB' },
-            { key: '酱紫', color: '#722ED1' },
+            { key: t('settingDrawer.colors.dawnBlueDefault'), color: '#1677ff' },
+            { key: t('settingDrawer.colors.dustRed'), color: '#F5222D' },
+            { key: t('settingDrawer.colors.volcano'), color: '#FA541C' },
+            { key: t('settingDrawer.colors.sunset'), color: '#FAAD14' },
+            { key: t('settingDrawer.colors.cyan'), color: '#13C2C2' },
+            { key: t('settingDrawer.colors.auroraGreen'), color: '#52C41A' },
+            { key: t('settingDrawer.colors.geekBlue'), color: '#2F54EB' },
+            { key: t('settingDrawer.colors.purple'), color: '#722ED1' },
           ]}
           value={themeSettings.colorPrimary}
           onChange={(val) => changeSetting('colorPrimary', val)}
         />
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
-          <span className="mr-2 text-sm">自定义颜色:</span>
+          <span className="mr-2 text-sm">{t('settingDrawer.customColor')}:</span>
           <ColorPicker
             value={themeSettings.colorPrimary}
             onChange={(color) => changeSetting('colorPrimary', color.toHexString())}
@@ -159,23 +161,23 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       <Divider />
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold">导航模式</h3>
+        <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.navigationMode')}</h3>
         <BlockCheckbox
           list={
             [
               {
                 key: 'side',
-                title: '侧边菜单布局',
+                title: t('settingDrawer.layout.side'),
                 url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjBGMkY1Ii8+CiAgICA8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iNDgiIGZpbGw9IiMwMDE1MjkiLz4KICAgIDxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSIxMiIgZmlsbD0iI0ZGRiIvPgogIDwvZz4KPC9zdmc+',
               },
               {
                 key: 'top',
-                title: '顶部菜单布局',
+                title: t('settingDrawer.layout.top'),
                 url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjBGMkY1Ii8+CiAgICA8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iMTIiIGZpbGw9IiMwMDE1MjkiLz4KICA8L2c+Cjwvc3ZnPg==',
               },
               {
                 key: 'mix',
-                title: '混合菜单布局',
+                title: t('settingDrawer.layout.mix'),
                 url: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3Qgd2lkdGg9IjQ4IiBoZWlnaHQ9IjQ4IiBmaWxsPSIjRjBGMkY1Ii8+CiAgICA8cmVjdCB3aWR0aD0iNDgiIGhlaWdodD0iMTIiIGZpbGw9IiMwMDE1MjkiLz4KICAgIDxyZWN0IHg9IjAiIHk9IjEyIiB3aWR0aD0iMTYiIGhlaWdodD0iMzYiIGZpbGw9IiNGRkYiLz4KICA8L2c+Cjwvc3ZnPg==',
               },
             ] as const
@@ -186,12 +188,12 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       </div>
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold">内容区域宽度</h3>
+        <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.contentWidth')}</h3>
         <div className="flex justify-between">
-          <span>内容区域宽度</span>
+          <span>{t('settingDrawer.contentWidth')}</span>
           <Switch
-            checkedChildren="Fixed"
-            unCheckedChildren="Fluid"
+            checkedChildren={t('settingDrawer.contentWidthFixed')}
+            unCheckedChildren={t('settingDrawer.contentWidthFluid')}
             checked={themeSettings.contentWidth === 'Fixed'}
             onChange={(checked) => changeSetting('contentWidth', checked ? 'Fixed' : 'Fluid')}
             disabled={themeSettings.layout === 'side'}
@@ -202,42 +204,42 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
       <Divider />
 
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold">其他设置</h3>
+        <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.other')}</h3>
 
         <div className="mb-3 flex justify-between">
-          <span>色弱模式</span>
+          <span>{t('settingDrawer.other.colorWeak')}</span>
           <Switch checked={themeSettings.colorWeak} onChange={(checked) => changeSetting('colorWeak', checked)} />
         </div>
         <div className="mb-3 flex justify-between">
-          <span>灰色模式</span>
+          <span>{t('settingDrawer.other.grayMode')}</span>
           <Switch checked={themeSettings.grayMode} onChange={(checked) => changeSetting('grayMode', checked)} />
         </div>
         <div className="mb-3 flex justify-between">
-          <span>紧凑模式</span>
+          <span>{t('settingDrawer.other.compactMode')}</span>
           <Switch
             checked={themeSettings.compactAlgorithm}
             onChange={(checked) => changeSetting('compactAlgorithm', checked)}
           />
         </div>
         <div className="mb-3 flex justify-between">
-          <span>固定 Header</span>
+          <span>{t('settingDrawer.other.fixedHeader')}</span>
           <Switch checked={themeSettings.fixedHeader} onChange={(checked) => changeSetting('fixedHeader', checked)} />
         </div>
         <div className="mb-3 flex justify-between">
-          <span>固定侧边菜单</span>
+          <span>{t('settingDrawer.other.fixedSider')}</span>
           <Switch checked={themeSettings.fixSiderbar} onChange={(checked) => changeSetting('fixSiderbar', checked)} />
         </div>
       </div>
 
       <Divider />
       <div className="mb-6">
-        <h3 className="mb-4 text-sm font-bold">视觉特效</h3>
+        <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.visualEffects')}</h3>
         <div className="mb-3 flex justify-between">
-          <span>指针跟随</span>
+          <span>{t('settingDrawer.effects.pointerFollow')}</span>
           <Switch checked={themeSettings.pointerMove} onChange={(checked) => changeSetting('pointerMove', checked)} />
         </div>
         <div className="mb-3 flex justify-between">
-          <span>指针轨迹</span>
+          <span>{t('settingDrawer.effects.pointerTrail')}</span>
           <Switch checked={themeSettings.magicTrail} onChange={(checked) => changeSetting('magicTrail', checked)} />
         </div>
       </div>

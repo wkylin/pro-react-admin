@@ -34,11 +34,12 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const { pathname } = useLocation()
   const { redirectTo } = useSafeNavigate()
 
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [messageApi, contextHolder] = message.useMessage()
   const lastDeniedRef = useRef(null)
   const [selectedKeys, setSelectedKeys] = useState(['home'])
   const [menuItems, setMenuItems] = useState([])
+  const [allowedRoutes, setAllowedRoutes] = useState(null)
 
   // 当前路由对应的 sub menu key
   const [openKeys, setOpenKeys] = useState([])
@@ -132,18 +133,29 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         const routes = Array.from(new Set(['/'].concat(rawRoutes)))
         console.log('用户可访问路由:', routes)
 
-        // 生成动态菜单
-        const dynamicMenus = generateMenuItems(routes)
-        console.log('生成的菜单:', dynamicMenus)
-        setMenuItems(dynamicMenus)
+        // 仅存储一次“可访问路由”，避免语言切换时重复请求
+        setAllowedRoutes(routes)
       } catch (error) {
         console.error('获取用户权限失败:', error)
-        // 降级：显示基础菜单
-        setMenuItems([{ label: t('home'), key: '/', icon: <HomeOutlined /> }])
+        // 降级：仅保留首页
+        setAllowedRoutes(['/'])
       }
     }
     initMenus()
   }, [])
+
+  // 当语言切换时，重新生成菜单（但不重复拉权限）
+  useEffect(() => {
+    if (!Array.isArray(allowedRoutes) || allowedRoutes.length === 0) return
+    try {
+      const dynamicMenus = generateMenuItems(allowedRoutes)
+      console.log('生成的菜单:', dynamicMenus)
+      setMenuItems(dynamicMenus)
+    } catch (e) {
+      console.error('生成菜单失败:', e)
+      setMenuItems([{ label: t('home'), key: '/', icon: <HomeOutlined /> }])
+    }
+  }, [allowedRoutes, i18n.language])
 
   // 递归查找与当前路径最匹配的菜单项父级链
   const findPathChain = (items, targetPath) => {
