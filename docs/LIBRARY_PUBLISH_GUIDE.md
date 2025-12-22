@@ -6,13 +6,15 @@
 
 当前组件库对外发布有 **两套构建配置 / 两套入口形态**：
 
-1) **主包（单入口）**：适合“向后兼容 + 传统 `import { X } from '@w.ui/wui-react'`”。
+1. **主包（单入口）**：适合“向后兼容 + 传统 `import { X } from '@w.ui/wui-react'`”。
+
 - 配置文件：`vite.config.lib.ts`
 - 构建命令：`npm run build:lib`
 - 入口文件：`src/lib/index.ts`
 - 产物：`dist-lib/pro-react-components.es.js` + `dist-lib/pro-react-components.umd.js` + `dist-lib/index.d.ts` + `dist-lib/style.css`
 
-2) **子路径（多入口）**：适合“更工程化的按需导入/更细粒度 tree-shaking”。
+2. **子路径（多入口）**：适合“更工程化的按需导入/更细粒度 tree-shaking”。
+
 - 配置文件：`vite.config.lib.entries.ts`
 - 构建命令：`npm run build:lib:entries`
 - 入口文件：`src/lib/core.ts` / `src/lib/stateful.ts` / `src/lib/stateless.ts`
@@ -101,13 +103,13 @@
 
 > 你可以把它理解为：**写入口文件** → 通过 Vite 配置生成 **产物文件** → `package.json#exports` 决定消费者 `import` 时具体会命中哪个文件。
 
-| 源入口（源码） | 使用方 import 路径 | `exports` 键 | 由哪个构建生成 | 对应产物文件（发布后实际存在） |
-|---|---|---|---|---|
-| `src/lib/index.ts` | `@w.ui/wui-react` | `.` | `npm run build:lib`（`vite.config.lib.ts`） | `dist-lib/pro-react-components.es.js`（import）<br/>`dist-lib/pro-react-components.umd.js`（require）<br/>`dist-lib/index.d.ts`（types） |
-| `src/lib/core.ts` | `@w.ui/wui-react/core` | `./core` | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/core.es.js`（import）<br/>`dist-lib/entries/core.cjs.js`（require）<br/>`dist-lib/entries/core.d.ts`（types） |
-| `src/lib/stateful.ts` | `@w.ui/wui-react/stateful` | `./stateful` | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/stateful.es.js`（import）<br/>`dist-lib/entries/stateful.cjs.js`（require）<br/>`dist-lib/entries/stateful.d.ts`（types） |
+| 源入口（源码）         | 使用方 import 路径          | `exports` 键  | 由哪个构建生成                                              | 对应产物文件（发布后实际存在）                                                                                                                 |
+| ---------------------- | --------------------------- | ------------- | ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/lib/index.ts`     | `@w.ui/wui-react`           | `.`           | `npm run build:lib`（`vite.config.lib.ts`）                 | `dist-lib/pro-react-components.es.js`（import）<br/>`dist-lib/pro-react-components.umd.js`（require）<br/>`dist-lib/index.d.ts`（types）       |
+| `src/lib/core.ts`      | `@w.ui/wui-react/core`      | `./core`      | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/core.es.js`（import）<br/>`dist-lib/entries/core.cjs.js`（require）<br/>`dist-lib/entries/core.d.ts`（types）                |
+| `src/lib/stateful.ts`  | `@w.ui/wui-react/stateful`  | `./stateful`  | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/stateful.es.js`（import）<br/>`dist-lib/entries/stateful.cjs.js`（require）<br/>`dist-lib/entries/stateful.d.ts`（types）    |
 | `src/lib/stateless.ts` | `@w.ui/wui-react/stateless` | `./stateless` | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/stateless.es.js`（import）<br/>`dist-lib/entries/stateless.cjs.js`（require）<br/>`dist-lib/entries/stateless.d.ts`（types） |
-|（无源码入口）| `@w.ui/wui-react/style.css` | `./style.css` | `npm run build:lib`（`vite.config.lib.ts`） | `dist-lib/style.css` |
+| （无源码入口）         | `@w.ui/wui-react/style.css` | `./style.css` | `npm run build:lib`（`vite.config.lib.ts`）                 | `dist-lib/style.css`                                                                                                                           |
 
 ## 2. 开发规范
 
@@ -165,6 +167,7 @@ npm run build:lib:entries
 ### A) 传统用法（主包单入口）
 
 适用于：
+
 - 希望维持过去的导入方式不变
 - 业务侧不关心更细粒度的拆分
 
@@ -176,6 +179,7 @@ import '@w.ui/wui-react/style.css'
 ### B) 按需导入（子路径多入口）
 
 适用于：
+
 - 业务侧希望更细粒度 tree-shaking（按类别入口）
 - 大型项目希望减少“全量入口”带来的聚合导出影响
 

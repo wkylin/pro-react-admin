@@ -53,13 +53,13 @@ export default App
 - **主包单入口**：`@w.ui/wui-react`（向后兼容，导出聚合）
 - **子路径多入口**：`@w.ui/wui-react/core | /stateful | /stateless`（更细粒度 tree-shaking）
 
-| 源入口（源码） | 使用方 import 路径 | 对应产物（发布后） |
-|---|---|---|
-| `src/lib/index.ts` | `@w.ui/wui-react` | `pro-react-components.es.js` / `pro-react-components.umd.js` / `index.d.ts` |
-| `src/lib/core.ts` | `@w.ui/wui-react/core` | `entries/core.es.js` / `entries/core.cjs.js` / `entries/core.d.ts` |
-| `src/lib/stateful.ts` | `@w.ui/wui-react/stateful` | `entries/stateful.es.js` / `entries/stateful.cjs.js` / `entries/stateful.d.ts` |
+| 源入口（源码）         | 使用方 import 路径          | 对应产物（发布后）                                                                |
+| ---------------------- | --------------------------- | --------------------------------------------------------------------------------- |
+| `src/lib/index.ts`     | `@w.ui/wui-react`           | `pro-react-components.es.js` / `pro-react-components.umd.js` / `index.d.ts`       |
+| `src/lib/core.ts`      | `@w.ui/wui-react/core`      | `entries/core.es.js` / `entries/core.cjs.js` / `entries/core.d.ts`                |
+| `src/lib/stateful.ts`  | `@w.ui/wui-react/stateful`  | `entries/stateful.es.js` / `entries/stateful.cjs.js` / `entries/stateful.d.ts`    |
 | `src/lib/stateless.ts` | `@w.ui/wui-react/stateless` | `entries/stateless.es.js` / `entries/stateless.cjs.js` / `entries/stateless.d.ts` |
-|（样式）| `@w.ui/wui-react/style.css` | `style.css` |
+| （样式）               | `@w.ui/wui-react/style.css` | `style.css`                                                                       |
 
 ### 子路径按需导入示例
 
