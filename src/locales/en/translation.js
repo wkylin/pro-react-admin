@@ -79,8 +79,8 @@ const en = {
     videoNetworkError: 'Network error: failed to load video',
     videoDecodeError: 'Decode error (unsupported format/codec)',
     videoSourceNotSupported: 'Video source unavailable (404/CORS/type unsupported)',
-    videoLoadFailed: 'Failed to load video',
-  },
+    videoLoadFailed: 'Failed to load video'
+  }
 }
 
 export default en
