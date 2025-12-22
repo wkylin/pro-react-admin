@@ -105,11 +105,9 @@
   padding: 16px;
 }
 
-.previewScroll :global {
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+.previewScroll table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .mermaidProgress {
@@ -200,9 +198,7 @@
   display: block;
 }
 
-:global {
-  /* Ensure copy button stays clickable/visible in code blocks */
-  .wmde-markdown pre .copied {
-    z-index: 3;
-  }
+/* Ensure copy button stays clickable/visible in code blocks */
+:global(.wmde-markdown pre .copied) {
+  z-index: 3;
 }

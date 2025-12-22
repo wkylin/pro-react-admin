@@ -15,6 +15,21 @@
       "import": "./dist-lib/pro-react-components.es.js",
       "require": "./dist-lib/pro-react-components.umd.js"
     },
+    "./core": {
+      "types": "./dist-lib/entries/core.d.ts",
+      "import": "./dist-lib/entries/core.es.js",
+      "require": "./dist-lib/entries/core.cjs.js"
+    },
+    "./stateful": {
+      "types": "./dist-lib/entries/stateful.d.ts",
+      "import": "./dist-lib/entries/stateful.es.js",
+      "require": "./dist-lib/entries/stateful.cjs.js"
+    },
+    "./stateless": {
+      "types": "./dist-lib/entries/stateless.d.ts",
+      "import": "./dist-lib/entries/stateless.es.js",
+      "require": "./dist-lib/entries/stateless.cjs.js"
+    },
     "./style.css": "./dist-lib/style.css"
   },
   "keywords": [
@@ -113,10 +128,11 @@
     "build-storybook": "storybook build -o storybook-static",
     "postbuild-storybook": "node ./scripts/add-storybook-base.js",
     "build:lib": "vite build -c vite.config.lib.ts",
+    "build:lib:entries": "vite build -c vite.config.lib.entries.ts",
     "build:lib:analyze": "cross-env USE_ANALYZE=1 vite build -c vite.config.lib.ts",
     "analyze:lib": "cross-env USE_ANALYZE=1 vite build -c vite.config.lib.ts",
     "check:components-index": "node scripts/validate-components-index.mjs",
-    "prepublishOnly": "npm run build:lib",
+    "prepublishOnly": "npm run build:lib && npm run build:lib:entries",
     "pub": "npm publish --access public",
     "pub:beta": "npm publish --tag beta --access public",
     "scanner": "npm run test && sonar-scanner -Dsonar.token=sqp_",

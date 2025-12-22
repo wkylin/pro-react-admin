@@ -7,6 +7,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const useAnalyze = Boolean(process.env.USE_ANALYZE)
+const libDebugCss = process.env.LIB_DEBUG_CSS === '1'
 
 const analyzePlugin =
   useAnalyze &&
@@ -24,8 +25,9 @@ export default defineConfig({
     dts({
       insertTypesEntry: true,
       tsconfigPath: './tsconfig.json',
-      // 需要覆盖 .module.less 声明（位于 src/vite-env.d.ts），因此包含整个 src
-      include: ['src'],
+      // 只生成对外 lib 入口可达的类型，避免把未导出的页面/组件也卷进来。
+      // 同时显式包含全局声明（例如 *.module.less）
+      include: ['src/lib', 'src/vite-env.d.ts'],
     }),
     // 仅在 USE_ANALYZE=1 时生成体积分布报告
     analyzePlugin,
@@ -49,7 +51,7 @@ export default defineConfig({
   build: {
     outDir: 'dist-lib',
     lib: {
-      entry: path.resolve(__dirname, 'src/components/index.ts'),
+      entry: path.resolve(__dirname, 'src/lib/index.ts'),
       name: 'ProReactComponents',
       fileName: (format) => `pro-react-components.${format}.js`,
     },
@@ -62,9 +64,17 @@ export default defineConfig({
           antd: 'antd',
           'react-router-dom': 'ReactRouterDOM',
         },
+        assetFileNames: (assetInfo) => {
+          // Keep a stable css entry for consumers: `@w.ui/wui-react/style.css`
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) return 'style.css'
+          return assetInfo.name ?? 'assets/[name]-[hash][extname]'
+        },
       },
     },
     minify: 'esbuild',
+    // Some upstream CSS can be non-standard and confuse esbuild's CSS minifier.
+    // Run `LIB_DEBUG_CSS=1 npm run build:lib` to output non-minified CSS for debugging.
+    cssMinify: libDebugCss ? false : 'esbuild',
   },
   css: {
     preprocessorOptions: {

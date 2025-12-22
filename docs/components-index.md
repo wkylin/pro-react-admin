@@ -1,18 +1,33 @@
-# components/index.ts 维护说明（组件库入口）
+# components/index.ts 维护说明（内部 barrel）
 
-本项目的组件库构建入口是 `src/components/index.ts`。
+本项目存在两个“入口”概念：
 
-- `vite.config.lib.ts` 的 `build.lib.entry` 指向它
+- **对外发布（build:lib）入口**：`src/lib/index.ts`（只包含可复用组件，避免把路由/页面代码打进 lib）
+- **项目内部 barrel**：`src/components/index.ts`（应用内部使用，包含更全的导出，可能会引用路由/页面相关组件）
+
+另外，对外发布目前还有一套“子路径多入口”的入口体系（用于更细粒度按需导入）：
+
+- **对外发布（build:lib:entries）入口**：
+	- `src/lib/core.ts`
+	- `src/lib/stateful.ts`
+	- `src/lib/stateless.ts`
+
+- `vite.config.lib.ts` 的 `build.lib.entry` 指向 `src/lib/index.ts`
 - `npm run build:lib` 会基于它生成 `dist-lib/*`（包含 JS bundle 与 d.ts）
 
-因此：**只有在 `src/components/index.ts` 里导出的组件/工具，才会成为对外可用的库 API**。
+- `vite.config.lib.entries.ts` 会基于 `core/stateful/stateless` 三入口生成 `dist-lib/entries/*`
+- `npm run build:lib:entries` 会生成可被 `package.json#exports` 子路径引用的 js + d.ts
+
+因此：**只有在 `src/lib/index.ts` 里导出的组件/工具，才会成为对外可用的库 API**。
+
+并且：**如果你希望消费者能通过 `@w.ui/wui-react/core|stateful|stateless` 按子路径导入，则还必须在对应的 `src/lib/*.ts` 入口里导出**。
 
 ## 什么时候需要改这个文件
 
 当你新增了一个要对外发布的组件（或对外发布的 hooks / utils / types），需要：
 
 1. 确保组件本体在 `src/components/stateless/*` 或 `src/components/stateful/*` 或 `src/components/*`（核心组件）下有可导入的入口文件（通常是 `index.tsx` / `index.ts` / `index.jsx`）
-2. 在 `src/components/index.ts` 增加对应的 `export`
+2. 在 `src/lib/index.ts` 增加对应的 `export`
 3. 运行一次 `npm run build:lib` 验证能生成类型与产物
 
 > 注意：Storybook 的 `*.stories.*` / `*.mdx` **不应** 被导出，它们只是文档/演示。
@@ -43,8 +58,8 @@
 
 ## 修改 checklist（建议每次都跑）
 
-1. `src/components/index.ts` 已新增 export
-2. `npm run check:components-index` 通过（避免漏加/写错导出路径）
+1. `src/lib/index.ts` 已新增 export（对外发布 API）
+2. （可选）若你同时维护了 `src/components/index.ts`：`npm run check:components-index` 通过（避免漏加/写错导出路径）
 2. `npm run build:lib` 成功（产物 + d.ts）
 3. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
 4. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
@@ -53,7 +68,7 @@
 
 ### Q1: 为什么我新增了组件但打出来的 lib 里没有？
 
-因为 `vite.config.lib.ts` 的入口是 `src/components/index.ts`：
+因为 `vite.config.lib.ts` 的入口是 `src/lib/index.ts`：
 
 - 你没在这里 export → Rollup 不会把它当作库 API 打包
 - dts 插件也不会把它作为入口类型导出到 `dist-lib/index.d.ts`

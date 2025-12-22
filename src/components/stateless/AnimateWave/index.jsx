@@ -1,5 +1,4 @@
 import React from 'react'
-// import Wave from 'react-wavify'
 import styles from './index.module.less'
 
 const AnimateWave = ({ children }) => {
@@ -27,15 +26,6 @@ const AnimateWave = ({ children }) => {
           <div>Remix!</div>
         </div>
       </section>
-      {/* <Wave className="wave" fill='#8a2be2'
-        paused={false}
-        options={{
-          height: 90,
-          amplitude: 25,
-          speed: 0.3,
-          points: 5
-        }}
-      /> */}
     </>
   )
 }

@@ -1,5 +1,5 @@
-import { motion, MotionValue, useScroll, useTransform } from 'motion/react'
-import React, { ReactNode, useRef, forwardRef } from 'react'
+import { motion, useScroll, useTransform } from 'motion/react'
+import { useRef, forwardRef } from 'react'
 
 import clsx from 'clsx'
 

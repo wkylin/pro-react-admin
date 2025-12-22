@@ -13,6 +13,14 @@
 npm run build:lib
 ```
 
+- 多入口子路径构建（用于 `exports` 子路径按需导入的基线产物）：
+
+```bash
+npm run build:lib:entries
+```
+
+输出：`dist-lib/entries/*`（包含 `core/stateful/stateless` 的 `*.es.js`、`*.cjs.js` 与对应 `*.d.ts`）。
+
 - 生成 bundle 体积分布报告（treemap，含 gzip/brotli）：
 
 ```bash
