@@ -1,6 +1,34 @@
 .page {
   padding: 16px;
   width: 100%;
+  background: var(--background);
+  color: var(--foreground);
+
+  --vp-border: rgba(0, 0, 0, 0.06);
+  --vp-border-strong: rgba(0, 0, 0, 0.12);
+  --vp-border-stronger: rgba(0, 0, 0, 0.18);
+  --vp-surface: rgba(0, 0, 0, 0.01);
+  --vp-surface-hover: rgba(0, 0, 0, 0.02);
+  --vp-surface-active: rgba(0, 0, 0, 0.03);
+  --vp-text-strong: rgba(0, 0, 0, 0.88);
+  --vp-text: rgba(0, 0, 0, 0.72);
+  --vp-text-soft: rgba(0, 0, 0, 0.62);
+  --vp-text-muted: rgba(0, 0, 0, 0.55);
+  --vp-text-faint: rgba(0, 0, 0, 0.45);
+}
+
+:global(:root[data-theme='dark']) .page {
+  --vp-border: rgba(255, 255, 255, 0.08);
+  --vp-border-strong: rgba(255, 255, 255, 0.14);
+  --vp-border-stronger: rgba(255, 255, 255, 0.18);
+  --vp-surface: rgba(255, 255, 255, 0.04);
+  --vp-surface-hover: rgba(255, 255, 255, 0.06);
+  --vp-surface-active: rgba(255, 255, 255, 0.08);
+  --vp-text-strong: rgba(255, 255, 255, 0.92);
+  --vp-text: rgba(255, 255, 255, 0.78);
+  --vp-text-soft: rgba(255, 255, 255, 0.68);
+  --vp-text-muted: rgba(255, 255, 255, 0.58);
+  --vp-text-faint: rgba(255, 255, 255, 0.5);
 }
 
 .layout {
@@ -14,8 +42,8 @@
   max-width: 100%;
   min-width: 0;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(0, 0, 0, 0.01);
+  border: 1px solid var(--vp-border);
+  background: var(--vp-surface);
   overflow: hidden;
 }
 
@@ -53,7 +81,7 @@
 
 .comments {
   padding: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid var(--vp-border);
 }
 
 .sectionHeader {
@@ -68,12 +96,12 @@
   margin: 0;
   font-size: 14px;
   font-weight: 650;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--vp-text-strong);
 }
 
 .sectionMeta {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--vp-text-faint);
 }
 
 .reviewList {
@@ -84,8 +112,8 @@
 .reviewItem {
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(0, 0, 0, 0.01);
+  border: 1px solid var(--vp-border);
+  background: var(--vp-surface);
 }
 
 .reviewTop {
@@ -98,25 +126,25 @@
 .reviewUser {
   font-size: 12px;
   font-weight: 650;
-  color: rgba(0, 0, 0, 0.78);
+  color: var(--vp-text);
 }
 
 .reviewDate {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--vp-text-faint);
 }
 
 .reviewTitle {
   font-size: 13px;
   font-weight: 650;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--vp-text-strong);
   margin-bottom: 6px;
 }
 
 .reviewContent {
   font-size: 12px;
   line-height: 1.55;
-  color: rgba(0, 0, 0, 0.72);
+  color: var(--vp-text);
 }
 
 .sidebarHeader {
@@ -125,19 +153,19 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--vp-border);
 }
 
 .sidebarTitle {
   margin: 0;
   font-size: 14px;
   font-weight: 650;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--vp-text-strong);
 }
 
 .sidebarMeta {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--vp-text-faint);
 }
 
 .movieList {
@@ -149,8 +177,8 @@
 .movieItem {
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(0, 0, 0, 0.01);
+  border: 1px solid var(--vp-border);
+  background: var(--vp-surface);
   cursor: pointer;
   transition:
     background-color 0.15s ease,
@@ -158,8 +186,8 @@
 }
 
 .movieItem:hover {
-  background: rgba(0, 0, 0, 0.02);
-  border-color: rgba(0, 0, 0, 0.12);
+  background: var(--vp-surface-hover);
+  border-color: var(--vp-border-strong);
 }
 
 .movieItem:focus-visible {
@@ -168,8 +196,8 @@
 }
 
 .movieItemActive {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.18);
+  background: var(--vp-surface-active);
+  border-color: var(--vp-border-stronger);
 }
 
 .movieTitleRow {
@@ -183,22 +211,41 @@
 .movieTitle {
   font-size: 13px;
   font-weight: 650;
-  color: rgba(0, 0, 0, 0.88);
+  color: var(--vp-text-strong);
 }
 
 .movieYear {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.45);
+  color: var(--vp-text-faint);
 }
 
 .movieMeta {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.55);
+  color: var(--vp-text-muted);
   margin-bottom: 4px;
 }
 
 .movieDesc {
   font-size: 12px;
   line-height: 1.45;
-  color: rgba(0, 0, 0, 0.62);
+  color: var(--vp-text-soft);
+}
+
+@media (max-width: 540px) {
+  .comments {
+    padding: 12px;
+  }
+
+  .sidebarHeader {
+    padding: 12px;
+  }
+
+  .movieList {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .movieItem {
+    padding: 10px;
+  }
 }

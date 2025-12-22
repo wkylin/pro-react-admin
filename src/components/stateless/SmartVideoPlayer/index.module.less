@@ -680,6 +680,16 @@
   display: none;
 }
 
+@media (hover: none) {
+  .tooltip {
+    display: none;
+  }
+
+  .iconButton:hover .tooltip {
+    opacity: 0;
+  }
+}
+
 .mini .videoControls {
   opacity: 1;
   transform: none;
@@ -700,10 +710,27 @@
     padding: 6px 6px;
   }
 
+  .controlsTop {
+    gap: 4px;
+  }
+
+  .controlsBottom {
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .progressWrap {
+    height: 28px;
+  }
+
   .iconButton {
-    width: 26px;
-    height: 26px;
+    width: 34px;
+    height: 34px;
     border-radius: 9px;
+  }
+
+  .sep {
+    display: none;
   }
 
   .volumeRange {

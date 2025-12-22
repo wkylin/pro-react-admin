@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useVideo from '@hooks/useVideo'
+import { I18nextProvider, useTranslation } from 'react-i18next'
+import appI18n from '@/i18n/i18n'
 import {
   Play,
   Pause,
@@ -18,7 +20,41 @@ import {
   Minimize2,
 } from 'lucide-react'
 
-import styles from './index.module.css'
+import * as stylesModule from './index.module.less'
+import { createSvpI18n, setStoredSvpUiLanguage } from './svpI18n'
+
+function unwrapCssModule(mod) {
+  if (!mod) return null
+
+  const candidates = []
+
+  if (typeof mod === 'object') {
+    if (mod.default) candidates.push(mod.default)
+    if (mod.Ay) candidates.push(mod.Ay)
+  }
+
+  candidates.push(mod)
+
+  for (const base of candidates) {
+    if (!base || typeof base !== 'object') continue
+
+    // style-loader + css-loader often exports an array/object with `.locals`.
+    if (base.locals && typeof base.locals === 'object') return base.locals
+
+    // Vite/other pipelines may export the mapping object directly.
+    if (!Array.isArray(base)) return base
+  }
+
+  return null
+}
+
+const stylesRaw = unwrapCssModule(stylesModule) || {}
+const styles = new Proxy(stylesRaw, {
+  get(target, prop) {
+    if (typeof prop !== 'string') return target[prop]
+    return target[prop] || prop
+  },
+})
 
 const DEFAULT_INITIAL_CONFIG = {
   lazyPlay: true,
@@ -112,7 +148,7 @@ function getScrollParent(node) {
   return null
 }
 
-const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
+const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
   {
     src,
     provider = 'html5',
@@ -155,6 +191,8 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const ctxRef = useRef({ provider, src, youtubeId, embedUrl })
   const embedTimerRef = useRef(0)
 
+  const { t, i18n } = useTranslation()
+
   useEffect(() => {
     onErrorRef.current = onError
   }, [onError])
@@ -170,6 +208,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [speedOpen, setSpeedOpen] = useState(false)
   const [captionsOpen, setCaptionsOpen] = useState(false)
+  const [uiLangOpen, setUiLangOpen] = useState(false)
 
   const emitEvent = useCallback((name, detail) => {
     const fn = onEventRef.current
@@ -183,16 +222,18 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
   const handleSettingsPanelPointerDownCapture = useCallback(
     (e) => {
-      if (!speedOpen && !captionsOpen) return
+      if (!speedOpen && !captionsOpen && !uiLangOpen) return
       const target = e.target
       if (!(target instanceof Element)) return
 
       if (target.closest('[data-speed-dropdown="true"]')) return
       if (target.closest('[data-captions-dropdown="true"]')) return
+      if (target.closest('[data-ui-lang-dropdown="true"]')) return
       setSpeedOpen(false)
       setCaptionsOpen(false)
+      setUiLangOpen(false)
     },
-    [captionsOpen, speedOpen]
+    [captionsOpen, speedOpen, uiLangOpen]
   )
   const [inView, setInView] = useState(true)
   const [fullyOut, setFullyOut] = useState(false)
@@ -214,7 +255,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
   const reportError = useCallback(
     (message, extra) => {
-      const safeMessage = typeof message === 'string' ? message : '未知错误'
+      const safeMessage = typeof message === 'string' ? message : t('svp.errorUnknown')
       setPlayError(safeMessage)
 
       const fn = onErrorRef.current
@@ -276,7 +317,12 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
   const hlsRef = useRef(null)
 
   const [mediaLoading, setMediaLoading] = useState(false)
-  const [mediaLoadingText, setMediaLoadingText] = useState('加载中…')
+  const [mediaLoadingText, setMediaLoadingText] = useState(t('svp.loading'))
+
+  useEffect(() => {
+    if (!mediaLoading) return
+    setMediaLoadingText(isHlsSrc ? t('svp.loadingHls') : t('svp.loading'))
+  }, [isHlsSrc, mediaLoading, t, i18n.language, i18n.resolvedLanguage])
 
   const [captionsEnabled, setCaptionsEnabled] = useState(false)
   const [captionTracks, setCaptionTracks] = useState([])
@@ -349,10 +395,13 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
             return
           }
 
-          reportError(message ? `无法播放：${name} - ${message}` : `无法播放：${name}`, { name })
+          reportError(message ? t('svp.unableToPlayWithMessage', { name, message }) : t('svp.unableToPlay', { name }), {
+            name,
+            message,
+          })
         })
     },
-    [emitEvent, isHlsSrc, reportError]
+    [emitEvent, isHlsSrc, reportError, t]
   )
 
   const kickAutoPlayNow = useCallback(() => {
@@ -456,7 +505,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
         emitEvent('hlsNative', {})
         kickAutoPlayNow()
       } catch (err) {
-        reportError('HLS（原生）加载失败', { type: 'hls', name: err?.name, reason: err?.message })
+        reportError(t('svp.hlsNativeLoadFailed'), { type: 'hls', name: err?.name, reason: err?.message })
       }
       return
     }
@@ -466,7 +515,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
         const mod = await import('hls.js')
         const Hls = mod?.default
         if (!Hls || typeof Hls.isSupported !== 'function' || !Hls.isSupported()) {
-          reportError('浏览器不支持 HLS 播放', { type: 'hls', reason: 'not_supported' })
+          reportError(t('svp.hlsNotSupported'), { type: 'hls', reason: 'not_supported' })
           return
         }
 
@@ -484,7 +533,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
           if (!data.fatal) return
 
-          reportError('HLS 播放错误', {
+          reportError(t('svp.hlsPlaybackError'), {
             type: 'hls',
             fatal: true,
             details: {
@@ -512,11 +561,11 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
             emitEvent('hlsAttach', {})
             kickAutoPlayNow()
           } catch (err) {
-            reportError('HLS 加载失败', { type: 'hls', name: err?.name, reason: err?.message })
+            reportError(t('svp.hlsLoadFailed'), { type: 'hls', name: err?.name, reason: err?.message })
           }
         })
       } catch (err) {
-        reportError('HLS 初始化失败', { type: 'hls', name: err?.name, reason: err?.message })
+        reportError(t('svp.hlsInitFailed'), { type: 'hls', name: err?.name, reason: err?.message })
       }
     })()
 
@@ -534,7 +583,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     // When switching sources, show a simple overlay to avoid a "blank" feel.
     // We rely on media events to clear it as soon as playback is ready.
     const onLoadStart = () => {
-      setMediaLoadingText(isHlsSrc ? '加载 HLS…' : '加载中…')
+      setMediaLoadingText(isHlsSrc ? t('svp.loadingHls') : t('svp.loading'))
       setMediaLoading(true)
     }
     const onCanPlay = () => setMediaLoading(false)
@@ -568,7 +617,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
           if (!t) continue
           next.push({
             index: i,
-            label: t.label || t.language || `字幕 ${i + 1}`,
+            label: t.label || t.language || t('svp.captionN', { n: i + 1 }),
             language: t.language || '',
           })
         }
@@ -632,14 +681,14 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       const code = videoEl.error?.code
       const msg =
         code === 1
-          ? '视频加载被中止'
+          ? t('svp.videoLoadAborted')
           : code === 2
-            ? '网络错误导致视频加载失败'
+            ? t('svp.videoNetworkError')
             : code === 3
-              ? '视频解码失败（格式/编码不兼容）'
+              ? t('svp.videoDecodeError')
               : code === 4
-                ? '视频源不可用（404/跨域/类型不支持）'
-                : '视频加载失败'
+                ? t('svp.videoSourceNotSupported')
+                : t('svp.videoLoadFailed')
       reportError(msg, { code })
     }
 
@@ -649,7 +698,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
       videoEl.removeEventListener('playing', onPlaying)
       videoEl.removeEventListener('error', onError)
     }
-  }, [isEmbed, reportError, src])
+  }, [isEmbed, reportError, src, t])
 
   useEffect(() => {
     if (isEmbed) return
@@ -1210,9 +1259,10 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     const h = Math.floor(s / 3600)
     const m = Math.floor((s % 3600) / 60)
     const sec = s % 60
+    const hh = String(h).padStart(2, '0')
     const mm = String(m).padStart(2, '0')
     const ss = String(sec).padStart(2, '0')
-    return h > 0 ? `${h}:${mm}:${ss}` : `${m}:${ss.padStart(2, '0')}`
+    return `${hh}:${mm}:${ss}`
   }
 
   const seekTo = useCallback(
@@ -1433,12 +1483,15 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
             ref={settingsPanelRef}
             className={`${styles.settingsPanel} ${styles.settingsPanelPortal}`}
             role="group"
-            aria-label="播放设置"
+            aria-label={t('svp.ariaPlaybackSettings')}
             onPointerDownCapture={handleSettingsPanelPointerDownCapture}
           >
             {!isEmbed ? (
-              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label="播放速度">
-                <span className={styles.settingLabel}>播放速度</span>
+              <div
+                className={`${styles.settingItem} ${styles.settingItemSplit}`}
+                aria-label={t('svp.ariaPlaybackSpeed')}
+              >
+                <span className={styles.settingLabel}>{t('svp.playbackSpeed')}</span>
                 <div className={styles.speedDropdown} data-speed-dropdown="true">
                   <button
                     type="button"
@@ -1451,7 +1504,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                   </button>
 
                   {speedOpen ? (
-                    <div className={styles.speedMenu} role="listbox" aria-label="播放速度选项">
+                    <div className={styles.speedMenu} role="listbox" aria-label={t('svp.ariaPlaybackSpeedOptions')}>
                       {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => {
                         const active = Number(config.playbackRate ?? 1) === rate
                         return (
@@ -1466,7 +1519,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                               setSpeedOpen(false)
                             }}
                           >
-                            {rate === 1 ? '1x（默认）' : `${rate}x`}
+                            {rate === 1 ? t('svp.speedDefault') : `${rate}x`}
                           </button>
                         )
                       })}
@@ -1477,8 +1530,8 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
             ) : null}
 
             {!isEmbed && captionTracks.length > 0 ? (
-              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label="字幕">
-                <span className={styles.settingLabel}>字幕</span>
+              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label={t('svp.ariaCaptions')}>
+                <span className={styles.settingLabel}>{t('svp.captions')}</span>
                 <div className={styles.speedDropdown} data-captions-dropdown="true">
                   <button
                     type="button"
@@ -1488,13 +1541,16 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                     onClick={() => {
                       setCaptionsOpen((v) => !v)
                       setSpeedOpen(false)
+                      setUiLangOpen(false)
                     }}
                   >
-                    {captionsEnabled ? captionTracks[captionTrackIndex]?.label || '字幕' : '关闭'}
+                    {captionsEnabled
+                      ? captionTracks[captionTrackIndex]?.label || t('svp.captionsFallbackLabel')
+                      : t('svp.captionsOff')}
                   </button>
 
                   {captionsOpen ? (
-                    <div className={styles.speedMenu} role="listbox" aria-label="字幕选项">
+                    <div className={styles.speedMenu} role="listbox" aria-label={t('svp.ariaCaptionsOptions')}>
                       <button
                         type="button"
                         className={`${styles.speedItem} ${!captionsEnabled ? styles.speedItemActive : ''}`}
@@ -1506,7 +1562,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                           emitEvent('captions', { enabled: false })
                         }}
                       >
-                        关闭
+                        {t('svp.captionsOff')}
                       </button>
 
                       {captionTracks.map((t) => {
@@ -1535,35 +1591,90 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               </div>
             ) : null}
 
-            <div className={styles.settingsScroll} aria-label="其它设置">
+            <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label={t('svp.ariaUiLanguage')}>
+              <span className={styles.settingLabel}>{t('svp.uiLanguage')}</span>
+              <div className={styles.speedDropdown} data-ui-lang-dropdown="true">
+                <button
+                  type="button"
+                  className={styles.speedTrigger}
+                  aria-haspopup="listbox"
+                  aria-expanded={uiLangOpen}
+                  onClick={() => {
+                    setUiLangOpen((v) => !v)
+                    setSpeedOpen(false)
+                    setCaptionsOpen(false)
+                  }}
+                >
+                  {(i18n.resolvedLanguage || i18n.language || '').toLowerCase().startsWith('zh')
+                    ? t('svp.langZh')
+                    : t('svp.langEn')}
+                </button>
+
+                {uiLangOpen ? (
+                  <div className={styles.speedMenu} role="listbox" aria-label={t('svp.ariaUiLanguageOptions')}>
+                    <button
+                      type="button"
+                      className={`${styles.speedItem} ${(i18n.resolvedLanguage || i18n.language || '').toLowerCase().startsWith('zh') ? styles.speedItemActive : ''}`}
+                      role="option"
+                      aria-selected={(i18n.resolvedLanguage || i18n.language || '').toLowerCase().startsWith('zh')}
+                      onClick={() => {
+                        i18n.changeLanguage('zh')
+                        setStoredSvpUiLanguage('zh')
+                        setUiLangOpen(false)
+                        emitEvent('uiLanguage', { language: 'zh' })
+                      }}
+                    >
+                      {t('svp.langZh')}
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`${styles.speedItem} ${!(i18n.resolvedLanguage || i18n.language || '').toLowerCase().startsWith('zh') ? styles.speedItemActive : ''}`}
+                      role="option"
+                      aria-selected={!(i18n.resolvedLanguage || i18n.language || '').toLowerCase().startsWith('zh')}
+                      onClick={() => {
+                        i18n.changeLanguage('en')
+                        setStoredSvpUiLanguage('en')
+                        setUiLangOpen(false)
+                        emitEvent('uiLanguage', { language: 'en' })
+                      }}
+                    >
+                      {t('svp.langEn')}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+            <div className={styles.settingsScroll} aria-label={t('svp.ariaOtherSettings')}>
               {!isEmbed ? (
                 <>
                   <SettingToggle
                     checked={config.lazyPlay}
-                    label="懒播放（滚出视口自动暂停）"
+                    label={t('svp.lazyPlay')}
                     onChange={(v) => setConfigItem('lazyPlay', v)}
                   />
                   <SettingToggle
                     checked={config.miniPlayer}
-                    label="小窗播放器（滚出视口右下角）"
+                    label={t('svp.miniPlayer')}
                     onChange={(v) => setConfigItem('miniPlayer', v)}
                   />
                 </>
               ) : isYouTube ? (
                 <SettingToggle
                   checked={Boolean(config.ytControls)}
-                  label="YouTube 控制条"
+                  label={t('svp.youtubeControls')}
                   onChange={(v) => setConfigItem('ytControls', v)}
                 />
               ) : null}
               <SettingToggle
                 checked={config.autoPlay}
-                label="自动播放"
+                label={t('svp.autoPlay')}
                 onChange={(v) => setConfigItem('autoPlay', v)}
               />
               <SettingToggle
                 checked={config.autoMute}
-                label="自动静音（便于自动播放）"
+                label={t('svp.autoMute')}
                 onChange={(v) => setConfigItem('autoMute', v)}
               />
             </div>
@@ -1576,7 +1687,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
     <>
       {!isMini && config.miniPlayer && fullyOut && !isPiP && miniDismissed ? (
         <div className={styles.miniRestore}>
-          <IconButton Icon={Minimize2} label="恢复小窗" onClick={handleRestoreMini} />
+          <IconButton Icon={Minimize2} label={t('svp.restoreMini')} onClick={handleRestoreMini} />
         </div>
       ) : null}
 
@@ -1589,7 +1700,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
           tabIndex={0}
           onKeyDown={handlePlayerKeyDown}
           role="region"
-          aria-label="播放器"
+          aria-label={t('svp.ariaPlayer')}
         >
           {isEmbed ? (
             computedEmbedSrc ? (
@@ -1606,10 +1717,10 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
 
                 {embedTimeout && !embedLoaded ? (
                   <div className={styles.embedHint} role="status" aria-live="polite">
-                    <div className={styles.embedHintTitle}>嵌入可能被网站禁止</div>
+                    <div className={styles.embedHintTitle}>{t('svp.embedMayBeBlocked')}</div>
                     {externalOpenUrl ? (
                       <button type="button" className={styles.embedHintAction} onClick={handleOpenExternal}>
-                        新窗口打开
+                        {t('svp.openInNewWindow')}
                       </button>
                     ) : null}
                   </div>
@@ -1617,10 +1728,8 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               </div>
             ) : (
               <div className={styles.embedFallback}>
-                <div className={styles.embedFallbackTitle}>{title || '嵌入地址未配置'}</div>
-                <div className={styles.embedFallbackMeta}>
-                  请传入 embedUrl 或 getEmbedUrl(config) 来生成 iframe 地址。
-                </div>
+                <div className={styles.embedFallbackTitle}>{title || t('svp.embedNotConfigured')}</div>
+                <div className={styles.embedFallbackMeta}>{t('svp.embedFallbackHint')}</div>
               </div>
             )
           ) : (
@@ -1644,7 +1753,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                   src={computedTrackSrc}
                 />
               ) : null}
-              Your browser does not support the video tag.
+              {t('svp.videoTagUnsupported')}
             </video>
           )}
 
@@ -1659,7 +1768,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
               <button
                 type="button"
                 className={styles.centerToggleButton}
-                aria-label={isPaused ? '播放' : '暂停'}
+                aria-label={isPaused ? t('svp.play') : t('svp.pause')}
                 onClick={(e) => {
                   e.stopPropagation()
                   handleTogglePause()
@@ -1671,15 +1780,15 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
           ) : null}
 
           {isEmbed ? (
-            <div className={styles.embedToolbar} aria-label="嵌入工具条">
+            <div className={styles.embedToolbar} aria-label={t('svp.ariaEmbedToolbar')}>
               {externalOpenUrl ? (
-                <IconButton Icon={ExternalLink} label="新窗口打开" onClick={handleOpenExternal} />
+                <IconButton Icon={ExternalLink} label={t('svp.openInNewWindow')} onClick={handleOpenExternal} />
               ) : null}
 
               <div ref={settingsRef} className={styles.settingsWrap}>
                 <IconButton
                   Icon={Settings}
-                  label="设置"
+                  label={t('svp.settings')}
                   onClick={() => setSettingsOpen((v) => !v)}
                   buttonRef={settingsButtonRef}
                 />
@@ -1688,32 +1797,37 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
           ) : null}
 
           {!isEmbed ? (
-            <div className={styles.videoControls} aria-label="视频控制条">
-              <div className={styles.controlsTop} role="group" aria-label="播放与工具">
+            <div className={styles.videoControls} aria-label={t('svp.ariaVideoControls')}>
+              <div className={styles.controlsTop} role="group" aria-label={t('svp.ariaPlaybackTools')}>
                 {!isEmbed && !isMini ? (
-                  <IconButton Icon={SkipBack} label="后退 10 秒" onClick={() => back(10)} tooltipPlacement="topLeft" />
+                  <IconButton
+                    Icon={SkipBack}
+                    label={t('svp.back10')}
+                    onClick={() => back(10)}
+                    tooltipPlacement="topLeft"
+                  />
                 ) : null}
 
                 {!isEmbed ? (
                   <IconButton
                     Icon={isPaused ? Play : Pause}
-                    label={isPaused ? '播放' : '暂停'}
+                    label={isPaused ? t('svp.play') : t('svp.pause')}
                     onClick={handleTogglePause}
                   />
                 ) : null}
 
                 {!isEmbed && !isMini ? (
-                  <IconButton Icon={SkipForward} label="前进 10 秒" onClick={() => forward(10)} />
+                  <IconButton Icon={SkipForward} label={t('svp.forward10')} onClick={() => forward(10)} />
                 ) : null}
 
-                {isMini ? <IconButton Icon={X} label="关闭小窗" onClick={handleCloseMini} /> : null}
+                {isMini ? <IconButton Icon={X} label={t('svp.closeMini')} onClick={handleCloseMini} /> : null}
 
                 <div className={styles.spacer} />
 
                 {!isEmbed ? (
                   <IconButton
                     Icon={isEffectivelyMuted ? VolumeX : Volume2}
-                    label={isEffectivelyMuted ? '取消静音' : '静音'}
+                    label={isEffectivelyMuted ? t('svp.unmute') : t('svp.mute')}
                     onClick={handleToggleMuteSmart}
                   />
                 ) : null}
@@ -1727,14 +1841,14 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                     step={1}
                     value={displayVolumePercent}
                     onChange={(e) => handleVolumeChangeSmart(Number(e.target.value))}
-                    aria-label="音量"
+                    aria-label={t('svp.volume')}
                   />
                 ) : null}
 
                 {!isEmbed && !isMini ? (
                   <IconButton
                     Icon={Minus}
-                    label="音量 -5%"
+                    label={t('svp.volumeMinus')}
                     onClick={() => handleBumpVolume(-5)}
                     disabled={!canDecrease}
                   />
@@ -1743,7 +1857,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                 {!isEmbed && !isMini ? (
                   <IconButton
                     Icon={Plus}
-                    label="音量 +5%"
+                    label={t('svp.volumePlus')}
                     onClick={() => handleBumpVolume(5)}
                     disabled={!canIncrease}
                   />
@@ -1755,7 +1869,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                   <div ref={settingsRef} className={styles.settingsWrap}>
                     <IconButton
                       Icon={Settings}
-                      label="设置"
+                      label={t('svp.settings')}
                       onClick={() => setSettingsOpen((v) => !v)}
                       buttonRef={settingsButtonRef}
                     />
@@ -1765,22 +1879,29 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                 {!isEmbed && !isMini ? (
                   <IconButton
                     Icon={PictureInPicture}
-                    label={isPiP ? '退出画中画' : '画中画'}
+                    label={isPiP ? t('svp.exitPip') : t('svp.pip')}
                     onClick={handleTogglePiP}
                   />
                 ) : null}
 
-                {!isEmbed && !isMini ? <IconButton Icon={Maximize2} label="全屏" onClick={toggleFullscreen} /> : null}
+                {!isEmbed && !isMini ? (
+                  <IconButton
+                    Icon={Maximize2}
+                    tooltipPlacement="topRight"
+                    label={t('svp.fullscreen')}
+                    onClick={toggleFullscreen}
+                  />
+                ) : null}
               </div>
 
               {!isEmbed ? (
-                <div className={styles.controlsBottom} role="group" aria-label="进度">
+                <div className={styles.controlsBottom} role="group" aria-label={t('svp.ariaProgress')}>
                   <span className={styles.time}>{formatTime(currentTime)}</span>
                   <div
                     className={styles.progressWrap}
                     onPointerMove={handleProgressPointerMove}
                     onPointerLeave={handleProgressPointerLeave}
-                    aria-label="播放进度条"
+                    aria-label={t('svp.ariaProgressBar')}
                   >
                     <div className={styles.bufferBar} style={{ width: `${bufferedPercent}%` }} aria-hidden />
 
@@ -1802,7 +1923,7 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
                       step={0.1}
                       value={Math.min(Math.max(0, Number(currentTime) || 0), duration || 0)}
                       onChange={(e) => seekTo(Number(e.target.value))}
-                      aria-label="播放进度"
+                      aria-label={t('svp.progress')}
                     />
                   </div>
                   <span className={styles.time}>{formatTime(duration)}</span>
@@ -1821,6 +1942,20 @@ const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(
         </div>
       </div>
     </>
+  )
+})
+
+const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(props, ref) {
+  const svpI18nRef = useRef(null)
+  if (!svpI18nRef.current) {
+    const initialLang = (appI18n?.resolvedLanguage || appI18n?.language || 'zh').toString()
+    svpI18nRef.current = createSvpI18n(initialLang)
+  }
+
+  return (
+    <I18nextProvider i18n={svpI18nRef.current}>
+      <SmartVideoPlayerInner {...props} ref={ref} />
+    </I18nextProvider>
   )
 })
 

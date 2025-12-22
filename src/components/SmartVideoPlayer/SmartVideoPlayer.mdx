@@ -1,0 +1,38 @@
+---
+title: SmartVideoPlayer
+---
+
+# SmartVideoPlayer
+
+统一的播放器封装（HTML5 / YouTube / Embed），内置设置面板、字幕/倍速、HLS（原生优先 + hls.js 动态加载）等能力。
+
+- “界面语言”只影响 SmartVideoPlayer 自身（不影响全站 i18n）
+- 语言通过 `localStorage: svpUiLanguage` 持久化（刷新后仍生效）
+
+## 基本使用
+
+### HTML5（MP4）
+
+```tsx
+import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
+
+export default function Example() {
+  return (
+    <SmartVideoPlayer
+      provider="html5"
+      title="HTML5 MP4"
+      src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+    />
+  )
+}
+```
+
+### YouTube
+
+```tsx
+import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
+
+export default function Example() {
+  return <SmartVideoPlayer provider="youtube" title="YouTube" youtubeId="dQw4w9WgXcQ" />
+}
+```

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import FixTabPanel from '@stateless/FixTabPanel'
-import styles from './index.module.css'
+import styles from './index.module.less'
 
 import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
 

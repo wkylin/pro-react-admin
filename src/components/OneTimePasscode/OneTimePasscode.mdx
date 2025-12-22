@@ -1,0 +1,51 @@
+---
+title: OneTimePasscode
+---
+
+# OneTimePasscode
+
+用于输入一次性验证码（OTP / PIN）的轻量输入组件，支持：
+
+- 受控/非受控
+- IME 合成输入
+- 粘贴一串字符自动分配
+- 三种视觉变体（`modern` / `compact` / `classic`）
+
+组件样式使用 CSS Modules（`index.module.less`）。
+
+## 基本使用
+
+### 受控用法
+
+```tsx
+import React, { useState } from 'react'
+import OneTimePasscode from '@stateless/OneTimePasscode'
+
+export default function Example() {
+  const [code, setCode] = useState('')
+  return <OneTimePasscode length={6} value={code} onChange={setCode} autoFocus variant="modern" />
+}
+```
+
+### 非受控用法
+
+```tsx
+import OneTimePasscode from '@stateless/OneTimePasscode'
+
+export default function Example() {
+  return <OneTimePasscode length={4} onChange={(v) => console.log('value', v)} />
+}
+```
+
+## 常用属性
+
+- `length`: 验证码长度（默认 6）
+- `value` / `onChange`: 传入 `value` 即为受控
+- `variant`: `modern | compact | classic`
+- `validateChar`: 自定义字符校验（例如只允许数字）
+
+示例：只允许数字
+
+```tsx
+<OneTimePasscode length={6} validateChar={(ch) => ch === '' || /\d/.test(ch)} />
+```

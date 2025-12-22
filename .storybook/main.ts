@@ -36,6 +36,59 @@ const config: StorybookConfig = {
 
     // add Less and Less Module support for project styles
     config.module = config.module || { rules: [] }
+
+    const excludeProjectStyleFromDefaultRules = (rules: any[]) => {
+      const visit = (rule: any) => {
+        if (!rule) return
+        if (Array.isArray(rule.oneOf)) rule.oneOf.forEach(visit)
+        if (Array.isArray(rule.rules)) rule.rules.forEach(visit)
+
+        const test = rule.test
+        const testStr = typeof test?.toString === 'function' ? test.toString() : ''
+
+        // Storybook may have implicit style loaders. Exclude project-handled patterns
+        // to prevent double-processing (which can break CSS Modules output).
+        if (testStr.includes('\\.css')) {
+          const moduleCss = /\.module\.css$/
+          if (!rule.exclude) {
+            rule.exclude = moduleCss
+          } else if (Array.isArray(rule.exclude)) {
+            rule.exclude = [...rule.exclude, moduleCss]
+          } else {
+            rule.exclude = [rule.exclude, moduleCss]
+          }
+        }
+
+        if (testStr.includes('\\.less')) {
+          const allLess = /\.less$/
+          if (!rule.exclude) {
+            rule.exclude = allLess
+          } else if (Array.isArray(rule.exclude)) {
+            rule.exclude = [...rule.exclude, allLess]
+          } else {
+            rule.exclude = [rule.exclude, allLess]
+          }
+        }
+      }
+
+      rules.forEach(visit)
+    }
+
+    const cssModuleRule = {
+      test: /\.module\.css$/,
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: { localIdentName: '[local]__[hash:base64:5]' },
+            importLoaders: 1,
+          },
+        },
+        'postcss-loader',
+      ],
+    }
+
     const lessModuleRule = {
       test: /\.module\.less$/,
       use: [
@@ -56,7 +109,8 @@ const config: StorybookConfig = {
     }
 
     const lessRule = {
-      test: /(?<!\.module)\.less$/,
+      test: /\.less$/,
+      exclude: /\.module\.less$/,
       use: [
         'style-loader',
         'css-loader',
@@ -68,8 +122,14 @@ const config: StorybookConfig = {
       ],
     }
 
+    // Prevent Storybook's default style rules from also processing project-handled patterns.
+    // IMPORTANT: only apply these excludes to the existing/default rules, not the custom rules
+    // we prepend below.
+    const baseRules = config.module.rules || []
+    excludeProjectStyleFromDefaultRules(baseRules)
+
     // prepend to ensure project rules take precedence
-    config.module.rules = [lessModuleRule, lessRule, ...(config.module.rules || [])]
+    config.module.rules = [cssModuleRule, lessModuleRule, lessRule, ...baseRules]
 
     return config
   },
