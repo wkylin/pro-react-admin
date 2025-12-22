@@ -2,6 +2,11 @@
 title: Responsive Table
 ---
 
+import { Meta, Canvas, Story } from '@storybook/addon-docs/blocks'
+import * as ResponsiveTableStories from './ResponsiveTable.stories'
+
+<Meta of={ResponsiveTableStories} />
+
 # Responsive Table
 
 > 高级可配置表格组件（基于 antd Table 封装）。本页为组件示例与使用范本 —— 包含常见用法、受控/服务端分页示例、行选择、操作列与工具栏搜索。
@@ -9,10 +14,18 @@ title: Responsive Table
 ResponsiveTable 用于构建管理后台列表/表格：
 
 - 自动计算表体 scroll（基于 ResizeObserver），在容器变化时自动调整高度与宽度
+- 自动计算表体 scroll（基于 ResizeObserver），在容器变化时自动调整高度与宽度
 - 支持本地分页与服务端分页（fetchData / fetchUrl），并能通过 request/response mapping 支持不同后端字段
 - 可配置列显示/隐藏、序号列、操作列（actions）与权限控制
 - 支持工具栏查询表单（inline / popover / drawer），可和地址栏 query 合并
 - 支持行选择（single/multiple）与虚拟列表（virtualized）
+- 支持行选择（single/multiple）与虚拟列表（virtualized）
+
+## 组件预览
+
+<Canvas>
+  <Story of={ResponsiveTableStories.Index} />
+</Canvas>
 
 ## 基本使用
 

@@ -2,6 +2,11 @@
 title: OneTimePasscode
 ---
 
+import { Meta, Canvas, Story, ArgTypes, Controls } from '@storybook/addon-docs/blocks'
+import * as OneTimePasscodeStories from './OneTimePasscode.stories'
+
+<Meta of={OneTimePasscodeStories} />
+
 # OneTimePasscode
 
 用于输入一次性验证码（OTP / PIN）的轻量输入组件，支持：
@@ -12,6 +17,18 @@ title: OneTimePasscode
 - 三种视觉变体（`modern` / `compact` / `classic`）
 
 组件样式使用 CSS Modules（`index.module.less`）。
+
+## 组件预览
+
+<Canvas>
+  <Story of={OneTimePasscodeStories.Modern} />
+</Canvas>
+
+## Props（可调参数）
+
+<ArgTypes />
+
+<Controls />
 
 ## 基本使用
 
