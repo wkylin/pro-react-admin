@@ -32,7 +32,7 @@ import {
   ProjectOutlined,
   FileTextOutlined,
   ThunderboltOutlined,
-  ToolOutlined,
+  ToolOutlined
 } from '@ant-design/icons'
 
 // 静态菜单配置
@@ -84,21 +84,21 @@ const rawMainLayoutMenu = [
                 label: 'Vue3 API',
                 i18nKey: 'menu.vue3Api',
                 key: '/tech/frontend/plugins/vue3',
-                icon: <FileTextOutlined />,
+                icon: <FileTextOutlined />
               },
               {
                 label: '性能优化',
                 i18nKey: 'menu.performanceOptimization',
                 key: '/tech/frontend/plugins/perf',
-                icon: <ThunderboltOutlined />,
-              },
-            ],
-          },
-        ],
+                icon: <ThunderboltOutlined />
+              }
+            ]
+          }
+        ]
       },
       { label: 'Angular', i18nKey: 'menu.angular', key: '/tech/frontend/angular', icon: <Html5Outlined /> },
-      { label: 'Node', i18nKey: 'menu.node', key: '/tech/frontend/node', icon: <CloudServerOutlined /> },
-    ],
+      { label: 'Node', i18nKey: 'menu.node', key: '/tech/frontend/node', icon: <CloudServerOutlined /> }
+    ]
   },
   {
     label: '后端技术栈',
@@ -108,8 +108,8 @@ const rawMainLayoutMenu = [
     children: [
       { label: 'Node', i18nKey: 'menu.node', key: '/tech/backend/node', icon: <CodeOutlined /> },
       { label: 'Java', i18nKey: 'menu.java', key: '/tech/backend/java', icon: <CodeOutlined /> },
-      { label: 'Go', i18nKey: 'menu.go', key: '/tech/backend/go', icon: <CodeOutlined /> },
-    ],
+      { label: 'Go', i18nKey: 'menu.go', key: '/tech/backend/go', icon: <CodeOutlined /> }
+    ]
   },
   {
     label: '构建工具',
@@ -118,8 +118,8 @@ const rawMainLayoutMenu = [
     icon: <ApartmentOutlined />,
     children: [
       { label: 'Webpack', i18nKey: 'menu.webpack', key: '/build/webpack', icon: <ToolOutlined /> },
-      { label: 'Vite', i18nKey: 'menu.vite', key: '/build/vite', icon: <ThunderboltOutlined /> },
-    ],
+      { label: 'Vite', i18nKey: 'menu.vite', key: '/build/vite', icon: <ThunderboltOutlined /> }
+    ]
   },
 
   {
@@ -127,12 +127,12 @@ const rawMainLayoutMenu = [
     i18nKey: 'menu.error',
     key: '/sub-error',
     icon: <QuestionCircleOutlined />,
-    children: [{ label: 'ErrorBoundary', i18nKey: 'menu.errorBoundary', key: '/error' }],
-  },
+    children: [{ label: 'ErrorBoundary', i18nKey: 'menu.errorBoundary', key: '/error' }]
+  }
 ]
 
 // 规范化菜单：为每个项保证存在 `path` 字段（优先使用已有 path，否则复制 key）。
-function normalizeMenu(items) {
+function normalizeMenu (items) {
   return items.map((it) => {
     const { children, ...rest } = it
     const normalized = { ...rest, path: (it && it.path) || it.key }

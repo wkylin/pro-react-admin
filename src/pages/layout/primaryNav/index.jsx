@@ -62,7 +62,7 @@ export const usePrimaryNavItems = () => {
       i18nKey: 'nav.home',
       icon: <HomeOutlined style={{ fontSize: 16 }} />,
       onClick: () => redirectTo('/'),
-      show: true,
+      show: true
     },
     {
       key: 'dashboard',
@@ -70,7 +70,7 @@ export const usePrimaryNavItems = () => {
       i18nKey: 'nav.dashboard',
       icon: <DashboardOutlined style={{ fontSize: 16 }} />,
       onClick: () => redirectTo('dashboard'),
-      show: hasAccess('/dashboard'),
+      show: hasAccess('/dashboard')
     },
     {
       key: 'portfilo',
@@ -78,8 +78,8 @@ export const usePrimaryNavItems = () => {
       i18nKey: 'nav.portfolio',
       icon: <ProjectOutlined style={{ fontSize: 16 }} />,
       onClick: () => redirectTo('portfilo'),
-      show: hasAccess('/portfilo'),
-    },
+      show: hasAccess('/portfilo')
+    }
   ]
 
   return items.filter((item) => item.show).map(({ show, ...rest }) => rest)
@@ -92,7 +92,7 @@ const PrimaryNav = ({ layout = '' }) => {
   return (
     <Space style={{ marginRight: 16 }}>
       {filterItems.map((item) => (
-        <Button key={item.key} type="link" icon={item.icon} onClick={item.onClick}>
+        <Button key={item.key} type='link' icon={item.icon} onClick={item.onClick}>
           {item.i18nKey ? t(item.i18nKey) : item.label}
         </Button>
       ))}
@@ -101,7 +101,7 @@ const PrimaryNav = ({ layout = '' }) => {
 }
 
 PrimaryNav.propTypes = {
-  layout: PropTypes.string,
+  layout: PropTypes.string
 }
 
 export default PrimaryNav

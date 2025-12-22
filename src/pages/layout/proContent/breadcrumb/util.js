@@ -62,7 +62,7 @@ export const findRouteChain = (routes, pathname) => {
         const resolvedKey = matched.path || matched.key || pathToCheck
         chain.push({
           ...matched,
-          i18nKey: matched.i18nKey || getMenuI18nKeyByPath(resolvedKey),
+          i18nKey: matched.i18nKey || getMenuI18nKeyByPath(resolvedKey)
         })
       }
     }
@@ -87,7 +87,7 @@ export const getRouteList = (result, arrList, queryItem) => {
       path: item.path,
       key: item.key,
       name: item.name,
-      i18nKey: item.i18nKey,
+      i18nKey: item.i18nKey
     })
   })
   return result
