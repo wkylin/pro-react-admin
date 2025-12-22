@@ -54,7 +54,7 @@
 ```json
 {
   "name": "@w.ui/wui-react",
-  "version": "3.1.0",
+  "version": "3.x.x",
   "files": ["dist-lib"],
   "main": "./dist-lib/pro-react-components.umd.js",
   "module": "./dist-lib/pro-react-components.es.js",
@@ -96,6 +96,18 @@
   }
 }
 ```
+
+## 1.4 “入口 → exports → 产物文件”一对一对照表
+
+> 你可以把它理解为：**写入口文件** → 通过 Vite 配置生成 **产物文件** → `package.json#exports` 决定消费者 `import` 时具体会命中哪个文件。
+
+| 源入口（源码） | 使用方 import 路径 | `exports` 键 | 由哪个构建生成 | 对应产物文件（发布后实际存在） |
+|---|---|---|---|---|
+| `src/lib/index.ts` | `@w.ui/wui-react` | `.` | `npm run build:lib`（`vite.config.lib.ts`） | `dist-lib/pro-react-components.es.js`（import）<br/>`dist-lib/pro-react-components.umd.js`（require）<br/>`dist-lib/index.d.ts`（types） |
+| `src/lib/core.ts` | `@w.ui/wui-react/core` | `./core` | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/core.es.js`（import）<br/>`dist-lib/entries/core.cjs.js`（require）<br/>`dist-lib/entries/core.d.ts`（types） |
+| `src/lib/stateful.ts` | `@w.ui/wui-react/stateful` | `./stateful` | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/stateful.es.js`（import）<br/>`dist-lib/entries/stateful.cjs.js`（require）<br/>`dist-lib/entries/stateful.d.ts`（types） |
+| `src/lib/stateless.ts` | `@w.ui/wui-react/stateless` | `./stateless` | `npm run build:lib:entries`（`vite.config.lib.entries.ts`） | `dist-lib/entries/stateless.es.js`（import）<br/>`dist-lib/entries/stateless.cjs.js`（require）<br/>`dist-lib/entries/stateless.d.ts`（types） |
+|（无源码入口）| `@w.ui/wui-react/style.css` | `./style.css` | `npm run build:lib`（`vite.config.lib.ts`） | `dist-lib/style.css` |
 
 ## 2. 开发规范
 
@@ -211,14 +223,22 @@ npm run pub:beta
 
 ### 4.4 目前“发布到 npm 官网”到底走哪套逻辑？
 
-发布脚本本质上调用的是 `npm publish`，npm 会在发布前自动执行 `prepublishOnly`。
+发布推荐使用 `npm run pub`（脚本内部会执行 `npm publish dist-lib`）。
+
+这样做的好处是：
+
+- **发布包使用专用 README**：`dist-lib/README.md`（由仓库根目录的 `NPM_README.md` 自动生成）
+- 不影响仓库根目录 `README.md`（它可以继续作为项目介绍）
+
+发布前仍然会先执行构建：
 
 当前 `prepublishOnly` 配置为：
 
 - 先跑 `npm run build:lib`（生成主包单入口产物）
 - 再跑 `npm run build:lib:entries`（生成子路径多入口产物）
+- 最后跑 `npm run prepare:lib:publish`（生成 `dist-lib/package.json` + `dist-lib/README.md`，用于发布）
 
-因此：**发布到 npm 时两套都会构建，并且都会一起被发布（因为 `files` 仅包含 `dist-lib`，而 `entries` 在其子目录下）**。
+因此：**发布到 npm 时两套都会构建，并且都会一起被发布（发布目录为 `dist-lib/`，而 `entries` 在其子目录下）**。
 
 消费者具体用到哪套，取决于它的导入方式：
 

@@ -1,6 +1,6 @@
 # @w.ui/wui-react
 
-基于 React 19 和 Ant Design 6 的高质量组件库，提供 300+ 可复用的业务组件。
+基于 React 19 和 Ant Design 6 的高质量组件库，提供 100+ 可复用的业务组件。
 
 ## ✨ 特性
 
@@ -46,6 +46,30 @@ const App = () => {
 export default App
 ```
 
+## 入口与按需导入（推荐理解）
+
+本包同时支持两种导入方式：
+
+- **主包单入口**：`@w.ui/wui-react`（向后兼容，导出聚合）
+- **子路径多入口**：`@w.ui/wui-react/core | /stateful | /stateless`（更细粒度 tree-shaking）
+
+| 源入口（源码） | 使用方 import 路径 | 对应产物（发布后） |
+|---|---|---|
+| `src/lib/index.ts` | `@w.ui/wui-react` | `pro-react-components.es.js` / `pro-react-components.umd.js` / `index.d.ts` |
+| `src/lib/core.ts` | `@w.ui/wui-react/core` | `entries/core.es.js` / `entries/core.cjs.js` / `entries/core.d.ts` |
+| `src/lib/stateful.ts` | `@w.ui/wui-react/stateful` | `entries/stateful.es.js` / `entries/stateful.cjs.js` / `entries/stateful.d.ts` |
+| `src/lib/stateless.ts` | `@w.ui/wui-react/stateless` | `entries/stateless.es.js` / `entries/stateless.cjs.js` / `entries/stateless.d.ts` |
+|（样式）| `@w.ui/wui-react/style.css` | `style.css` |
+
+### 子路径按需导入示例
+
+```tsx
+import { KeepAlive } from '@w.ui/wui-react/core'
+import { TreeList } from '@w.ui/wui-react/stateful'
+import { SmartVideoPlayer } from '@w.ui/wui-react/stateless'
+import '@w.ui/wui-react/style.css'
+```
+
 ## 📚 组件列表
 
 本库包含 100+ 组件，包括但不限于：
@@ -57,6 +81,30 @@ export default App
 - KeepAlive - 页面缓存
 - ResponsiveTable - 响应式表格
 - GlobalSearch - 全局搜索
+
+### 有状态组件（stateful）
+
+- CheckableTags - 可勾选标签组
+- MarkmapHooks - Markmap 思维导图 Hooks
+- MermaidHooks - Mermaid 渲染 Hooks
+- TreeList - 树形列表
+
+### 无状态组件（stateless）
+
+stateless 组件较多（动画/展示/输入/媒体等）。下面列出部分常用组件名（按导出名）：
+
+- AutoScrollSection
+- DescBox
+- RadioInput
+- CodeHighlighter
+- ReMarkdown
+- PDFExport
+- SmartVideoPlayer
+- FixMusicPlayer
+- Loading
+- OneTimePasscode
+
+完整清单建议查看仓库：`src/lib/stateless.ts`（导出即组件清单），或访问 Storybook。
 
 ### UI 组件
 
