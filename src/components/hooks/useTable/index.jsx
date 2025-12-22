@@ -26,7 +26,7 @@ const useTable = (props) => {
     }
     dataInterface({
       ...(isPagination ? { pageNum: page, pageSize } : {}),
-      ...other,
+      ...other
     }).then((resp) => {
       if (resp && resp.status === 1) {
         setPage(page)
@@ -73,7 +73,7 @@ const useTable = (props) => {
     setCachePayload({ ...safePayload })
     getTableList(dataInterface || props.dataInterface, {
       ...cachePayload,
-      ...safePayload,
+      ...safePayload
     })
   }
 
@@ -101,16 +101,16 @@ const useTable = (props) => {
             showQuickJumper: true,
             showSizeChanger: true,
             hideOnSinglePage: false,
-            showTotal: (total) => <span>{`共计 ${total} 条记录 第${page}/${Math.ceil(total / pageSize)}页`}</span>,
+            showTotal: (total) => <span>{`共计 ${total} 条记录 第${page}/${Math.ceil(total / pageSize)}页`}</span>
           }
         : false,
-      scroll: dataSource.length ? { scrollToFirstRowOnChange: true, x: 'max-content' } : false,
+      scroll: dataSource.length ? { scrollToFirstRowOnChange: true, x: 'max-content' } : false
     },
     page,
     pageSize,
     rawData,
     updateTable,
-    resetTable,
+    resetTable
   }
 }
 export default useTable
