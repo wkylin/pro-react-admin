@@ -2,12 +2,38 @@
 title: SmartVideoPlayer
 ---
 
+import { Meta, Canvas, Story, ArgTypes, Controls } from '@storybook/addon-docs/blocks'
+import * as SmartVideoPlayerStories from './SmartVideoPlayer.stories'
+
+<Meta of={SmartVideoPlayerStories} />
+
 # SmartVideoPlayer
 
 统一的播放器封装（HTML5 / YouTube / Embed），内置设置面板、字幕/倍速、HLS（原生优先 + hls.js 动态加载）等能力。
 
 - “界面语言”只影响 SmartVideoPlayer 自身（不影响全站 i18n）
 - 语言通过 `localStorage: svpUiLanguage` 持久化（刷新后仍生效）
+
+## 组件预览
+
+<Canvas>
+  <Story of={SmartVideoPlayerStories.Html5Mp4} />
+</Canvas>
+
+<Canvas>
+  <Story of={SmartVideoPlayerStories.YouTube} />
+</Canvas>
+
+## Props（可调参数）
+
+<ArgTypes />
+
+<Controls />
+
+## 说明
+
+- “界面语言”只影响 SmartVideoPlayer 自身（不影响全站 i18n）
+- 语言通过 localStorage 的 svpUiLanguage 持久化（刷新后仍生效）
 
 ## 基本使用
 
