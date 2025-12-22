@@ -1,5 +1,4 @@
-// @ts-ignore: storybook types resolution can be environment-specific in CI/TS config
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import React, { useState } from 'react'
 
 import OneTimePasscode from '@stateless/OneTimePasscode'

@@ -1,9 +1,10 @@
-import React, { Suspense } from 'react'
-import type { Preview } from '@storybook/react-webpack5'
-import { MemoryRouter } from 'react-router-dom'
-import { I18nextProvider } from 'react-i18next'
+// .storybook/preview.tsx
+import React, { Suspense } from 'react';
+import type { Preview } from '@storybook/react'; // 注意：Vite 版本用 @storybook/react
+import { MemoryRouter } from 'react-router-dom';
+import { I18nextProvider } from 'react-i18next';
 
-import i18n from '../src/i18n/i18n'
+import i18n from '../src/i18n/i18n';
 
 const preview: Preview = {
   decorators: [
@@ -17,6 +18,7 @@ const preview: Preview = {
       </I18nextProvider>
     ),
   ],
+
   parameters: {
     controls: {
       matchers: {
@@ -24,7 +26,19 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    // 推荐：加一些常用参数，提升体验
+    options: {
+      storySort: {
+        order: ['Introduction', 'Components'], // 自定义故事排序
+      },
+    },
+    // 如果用 addon-docs，推荐加
+    docs: {
+      canvas: {
+        sourceState: 'shown', // 默认显示代码
+      },
+    },
   },
-}
+};
 
-export default preview
+export default preview;

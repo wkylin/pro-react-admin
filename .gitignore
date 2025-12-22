@@ -24,6 +24,7 @@ coverage
 
 *storybook.log
 storybook-static
+.vite-cache
 /dist-lib
 /dist-vite
 /dist-vite-zip
