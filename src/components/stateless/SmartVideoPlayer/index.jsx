@@ -1,8 +1,6 @@
 import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import useVideo from '@hooks/useVideo'
-import styles from './index.module.css'
-
 import {
   Play,
   Pause,
@@ -19,6 +17,8 @@ import {
   X,
   Minimize2,
 } from 'lucide-react'
+
+import styles from './index.module.css'
 
 const DEFAULT_INITIAL_CONFIG = {
   lazyPlay: true,

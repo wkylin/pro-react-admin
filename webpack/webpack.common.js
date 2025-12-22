@@ -137,7 +137,31 @@ const config = {
         },
       },
       {
+        test: /\.module\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+              modules: {
+                mode: 'local',
+                auto: true,
+                exportGlobals: true,
+                localIdentName: isDev ? '[path][name]__[local]--[hash:base64:5]' : '[local]--[hash:base64:5]',
+                localIdentContext: paths.src,
+                namedExport: false,
+                exportLocalsConvention: 'camelCase',
+              },
+              importLoaders: 1,
+            },
+          },
+          'postcss-loader',
+        ],
+      },
+      {
         test: /\.css$/,
+        exclude: /\.module\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {

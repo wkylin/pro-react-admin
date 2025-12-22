@@ -65,14 +65,15 @@ const useTable = (props) => {
   }
 
   const updateTable = (params) => {
-    const { dataInterface, payload = {} } = params || {}
+    const { dataInterface, payload } = params || {}
+    const safePayload = payload && typeof payload === 'object' ? payload : {}
 
-    setPage(payload.page || 1)
-    setPageSize(payload.pageSize || 10)
-    setCachePayload({ ...payload })
+    setPage(safePayload.page || 1)
+    setPageSize(safePayload.pageSize || 10)
+    setCachePayload({ ...safePayload })
     getTableList(dataInterface || props.dataInterface, {
       ...cachePayload,
-      ...payload,
+      ...safePayload,
     })
   }
 
