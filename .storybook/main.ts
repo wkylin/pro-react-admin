@@ -16,8 +16,18 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
-  viteFinal: async (viteConfig) =>
-    mergeConfig(viteConfig, {
+  viteFinal: async (viteConfig) => {
+    // Storybook 会合并项目的 Vite 配置；如果把应用的 HTML input 带进来，
+    // 可能导致 storybook-static/index.html 变成主应用模板（从而 manager 资源加载失败）。
+    const cfg: any = viteConfig
+    if (cfg?.build?.rollupOptions?.input) {
+      delete cfg.build.rollupOptions.input
+    }
+    if (cfg?.build?.outDir) {
+      delete cfg.build.outDir
+    }
+
+    return mergeConfig(viteConfig, {
       resolve: {
         alias: {
           '@': path.resolve(rootDir, 'src'),
@@ -51,7 +61,8 @@ const config: StorybookConfig = {
       build: {
         chunkSizeWarningLimit: 2000,
       },
-  }),
+    })
+  },
 }
 
 export default config
