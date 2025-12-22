@@ -2,7 +2,7 @@ import React from 'react'
 import AutoScrollSection from '@stateless/AutoScrollSection'
 
 // 使用示例
-export default function Demo() {
+export default function Demo () {
   const [messages, setMessages] = React.useState(['Hello', 'World'])
 
   // 模拟新消息

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 
-export default function AutoScrollSection({ messages, height = 200, style, renderItem }) {
+export default function AutoScrollSection ({ messages, height = 200, style, renderItem }) {
   const sectionRef = useRef(null)
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function AutoScrollSection({ messages, height = 200, style, rende
         overflowY: 'auto',
         border: '1px solid #ccc',
         padding: 8,
-        ...style,
+        ...style
       }}
     >
       {messages?.map((msg, idx) => (
