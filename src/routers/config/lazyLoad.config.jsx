@@ -36,6 +36,7 @@ export const lazyComponents = {
   Home, // 首页改为同步加载，避免首屏白屏闪烁
   Demo: lazyLoad(() => import('@pages/demo'), { preload: true }),
   Business: lazyLoad(() => import('@pages/business')),
+  ZustandDemo: lazyLoad(() => import('@pages/zustand'), { preload: true }),
 
   // UI 组件页面
   Motion: lazyLoad(() => import('@pages/motion')),

@@ -2,17 +2,21 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Layout } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { useStore } from '@/store'
 
 import styles from './index.module.less'
 
-const ProSider = ({ children, theme = 'light', collapsed, onCollapse, isMobile }) => {
+const ProSider = ({ children, theme = 'light', isMobile }) => {
+  const isSidebarOpen = useStore((s) => s.isSidebarOpen)
+  const toggleSidebar = useStore((s) => s.toggleSidebar)
+
   return (
     <Layout.Sider
       width={208}
       collapsedWidth={80}
       theme={theme}
       collapsible
-      collapsed={collapsed}
+      collapsed={!isSidebarOpen}
       trigger={null}
       className={styles.sider}
       style={isMobile ? { height: '100%' } : undefined}
@@ -22,13 +26,13 @@ const ProSider = ({ children, theme = 'light', collapsed, onCollapse, isMobile }
         <button
           type="button"
           className={styles.proLink}
-          aria-label={collapsed ? '展开侧边栏' : '收起侧边栏'}
-          onClick={() => onCollapse(!collapsed)}
+          aria-label={isSidebarOpen ? '收起侧边栏' : '展开侧边栏'}
+          onClick={() => toggleSidebar()}
         >
-          {collapsed ? (
-            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
-          ) : (
+          {isSidebarOpen ? (
             <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+          ) : (
+            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
           )}
         </button>
       )}
@@ -39,9 +43,8 @@ const ProSider = ({ children, theme = 'light', collapsed, onCollapse, isMobile }
 ProSider.propTypes = {
   children: PropTypes.node,
   theme: PropTypes.string,
-  collapsed: PropTypes.bool,
-  onCollapse: PropTypes.func,
   isMobile: PropTypes.bool,
+  // 侧边栏折叠状态由全局 Zustand `isSidebarOpen` 管理
 }
 
 export default ProSider

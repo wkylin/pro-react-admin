@@ -76,6 +76,7 @@ const en = {
     permissionExample: 'Permission',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',
+    zustand: 'Zustand',
     reactTilt: 'React Tilt',
     music: 'Music',
     crypto: 'Crypto',

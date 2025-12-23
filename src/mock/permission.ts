@@ -39,6 +39,7 @@ const allRoutes = [
   '/portfilo',
   '/permission',
   '/topology',
+  '/zustand',
 ]
 
 /**
@@ -68,22 +69,10 @@ const managerRoutes = [
 ]
 
 // 业务员：业务相关功能
-const businessRoutes = [
-  '/',
-  '/business',
-  '/tech/frontend/vue',
-  '/tech/frontend/angular',
-  '/build/webpack',
-  '/tech/backend',
-  '/dashboard',
-  '/demo',
-  '/echarts',
-  '/profile',
-  '/topology',
-]
+const businessRoutes = ['/', '/business', '/dashboard', '/demo', '/echarts', '/profile', '/topology']
 
 // 普通用户：基础查看功能
-const userRoutes = ['/', '/demo', '/dashboard', '/profile', '/echarts', '/motion', '/crypto']
+const userRoutes = ['/', '/demo', '/dashboard', '/motion', '/crypto']
 
 /**
  * 预定义角色
@@ -102,7 +91,15 @@ export const mockRoles: Role[] = [
     name: '管理员',
     code: 'admin',
     description: '拥有大部分权限',
-    permissions: ['home:read', 'user:read', 'user:create', 'user:update', 'dashboard:read', 'topology:read'],
+    permissions: [
+      'home:read',
+      'user:read',
+      'user:create',
+      'user:update',
+      'dashboard:read',
+      'topology:read',
+      'zustand:read',
+    ],
     isDefault: false,
   },
   {
@@ -200,6 +197,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/build': 'build:read',
   '/permission': 'permission:read',
   '/topology': 'topology:read',
+  '/zustand': 'zustand:read',
   '*': '*:*',
 }
 

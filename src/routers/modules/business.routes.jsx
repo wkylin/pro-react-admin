@@ -14,6 +14,13 @@ export const businessRoutes = [
     element: <lazyComponents.Demo />,
   },
   {
+    path: 'zustand',
+    name: 'Zustand演示',
+    i18nKey: 'zustand',
+    key: '/zustand',
+    element: <lazyComponents.ZustandDemo />,
+  },
+  {
     path: 'motion',
     name: 'Motion',
     key: '/motion',

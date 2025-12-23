@@ -41,6 +41,12 @@ const rawMainLayoutMenu = [
   { label: 'home', i18nKey: 'home', key: '/', icon: <HomeOutlined /> },
   { label: 'demo', i18nKey: 'demo', key: '/demo', icon: <GlobalOutlined /> },
   {
+    label: 'Zustand演示',
+    i18nKey: 'menu.zustand',
+    key: '/zustand',
+    icon: <ThunderboltOutlined />,
+  },
+  {
     label: 'Motion',
     i18nKey: 'menu.motion',
     key: '/motion',

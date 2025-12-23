@@ -77,6 +77,7 @@ const zh = {
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',
     reactTilt: 'React Tilt',
+    zustand: 'Zustand',
     music: '音乐',
     crypto: '加密',
     video: '视频',

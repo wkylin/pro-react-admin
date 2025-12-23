@@ -45,6 +45,7 @@ export type Resource =
   | 'print'
   | 'permission'
   | 'topology'
+  | 'zustand'
 
 /**
  * 权限点定义

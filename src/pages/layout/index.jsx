@@ -59,13 +59,13 @@ const ProLayout = () => {
               styles={{ body: { padding: 0 } }}
               closable={false}
             >
-              <ProSider theme={effectiveNavTheme} isMobile={true} collapsed={false}>
+              <ProSider theme={effectiveNavTheme} isMobile={true}>
                 <ProSecNav mode="inline" theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
               </ProSider>
             </Drawer>
           ) : (
             layout !== 'top' && (
-              <ProSider theme={effectiveNavTheme} collapsed={collapsed} onCollapse={setCollapsed}>
+              <ProSider theme={effectiveNavTheme}>
                 <ProSecNav mode="inline" theme={effectiveNavTheme} />
               </ProSider>
             )
