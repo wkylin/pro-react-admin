@@ -114,7 +114,7 @@
     "release:minor": "standard-version --release-as minor",
     "release:patch": "standard-version --release-as patch",
     "release:major": "standard-version --release-as major",
-    "push:tags": "git push --follow-tags origin pre-gh-pages",
+    "push:tags": "git push --follow-tags origin main && npm publish",
     "process": "node webpack/process",
     "predeploy": "npm run build:production",
     "deploy": "node scripts/deploy-gh.js",
