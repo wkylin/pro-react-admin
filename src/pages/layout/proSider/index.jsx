@@ -24,16 +24,18 @@ const ProSider = ({ children, theme = 'light', isMobile }) => {
       {children}
       {!isMobile && (
         <button
-          type="button"
+          type='button'
           className={styles.proLink}
           aria-label={isSidebarOpen ? '收起侧边栏' : '展开侧边栏'}
           onClick={() => toggleSidebar()}
         >
-          {isSidebarOpen ? (
-            <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
-          ) : (
-            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
-          )}
+          {isSidebarOpen
+            ? (
+              <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+              )
+            : (
+              <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+              )}
         </button>
       )}
     </Layout.Sider>
@@ -43,7 +45,7 @@ const ProSider = ({ children, theme = 'light', isMobile }) => {
 ProSider.propTypes = {
   children: PropTypes.node,
   theme: PropTypes.string,
-  isMobile: PropTypes.bool,
+  isMobile: PropTypes.bool
   // 侧边栏折叠状态由全局 Zustand `isSidebarOpen` 管理
 }
 

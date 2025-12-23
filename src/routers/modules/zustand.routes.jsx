@@ -10,7 +10,7 @@ export const zustandRoutes = [
     element: <lazyComponents.ZustandDemo />, // 下面会注册
     meta: {
       permission: ['admin', 'dev', 'user'], // 示例权限
-      keepAlive: true,
-    },
-  },
+      keepAlive: true
+    }
+  }
 ]
