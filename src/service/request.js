@@ -183,7 +183,10 @@ export function setBaseURL(url) {
 }
 
 export function setDefaultHeaders(headers) {
-  axiosInstance.defaults.headers = { ...axiosInstance.defaults.headers, ...headers }
+  axiosInstance.defaults.headers = {
+    ...axiosInstance.defaults.headers,
+    ...headers,
+  }
   logger.info('默认请求头已更新:', headers)
 }
 

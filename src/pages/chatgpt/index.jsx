@@ -98,7 +98,10 @@ const runMermaidBlocks = async ({ blocks, setCharts, setProgress, signal }) => {
   const total = Array.isArray(blocks) ? blocks.length : 0
   if (signal.aborted) return
 
-  const charts = Array.from({ length: total }, (_, i) => ({ title: `图表 ${i + 1}`, pending: true }))
+  const charts = Array.from({ length: total }, (_, i) => ({
+    title: `图表 ${i + 1}`,
+    pending: true,
+  }))
   setProgress({ total, finished: 0 })
   setCharts(charts)
   if (total === 0) return
@@ -133,7 +136,14 @@ const runMermaidBlocks = async ({ blocks, setCharts, setProgress, signal }) => {
       const i = idx
       idx += 1
       active += 1
-      renderMermaidIntoCharts({ mermaid, blocks, i, charts, setCharts, signal }).finally(onSettled)
+      renderMermaidIntoCharts({
+        mermaid,
+        blocks,
+        i,
+        charts,
+        setCharts,
+        signal,
+      }).finally(onSettled)
     }
   }
 
@@ -326,7 +336,11 @@ const escapeHtml = (s) =>
 const getExportPayload = (format, apiResult) => {
   const safeText = removeMd(apiResult)
   if (format === 'markdown') {
-    return { ext: 'md', mime: 'text/markdown;charset=utf-8', content: apiResult }
+    return {
+      ext: 'md',
+      mime: 'text/markdown;charset=utf-8',
+      content: apiResult,
+    }
   }
   if (format === 'mdx') {
     return { ext: 'mdx', mime: 'text/plain;charset=utf-8', content: apiResult }
@@ -706,7 +720,13 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
 
   const [scale, setScale] = useState(1)
   const [translate, setTranslate] = useState({ x: 0, y: 0 })
-  const dragRef = useRef({ active: false, startX: 0, startY: 0, baseX: 0, baseY: 0 })
+  const dragRef = useRef({
+    active: false,
+    startX: 0,
+    startY: 0,
+    baseX: 0,
+    baseY: 0,
+  })
 
   const clampScale = (v) => clamp(v, 0.2, 3.5)
 
@@ -788,7 +808,10 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
     if (!dragRef.current.active) return
     const dx = e.clientX - dragRef.current.startX
     const dy = e.clientY - dragRef.current.startY
-    setTranslate({ x: dragRef.current.baseX + dx, y: dragRef.current.baseY + dy })
+    setTranslate({
+      x: dragRef.current.baseX + dx,
+      y: dragRef.current.baseY + dy,
+    })
   }
 
   const onPointerUp = (e) => {
@@ -1466,7 +1489,12 @@ PRD文档内容：
             {apiResult && (
               <div style={{ marginTop: 15 }}>
                 <div
-                  style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginBottom: 10,
+                  }}
                 >
                   <Space>
                     <Text strong>文档内容预览</Text>

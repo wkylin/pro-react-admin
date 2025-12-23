@@ -5,7 +5,11 @@ type CopiedValue = string | null
 
 type CopyFn = (text: string) => Promise<boolean>
 
-const useCopy = ({ isCopiedDelay = 2000 }: { isCopiedDelay?: number } = {}): [CopiedValue, CopyFn, boolean] => {
+const useCopy = ({
+  isCopiedDelay = 2000,
+}: {
+  isCopiedDelay?: number
+} = {}): [CopiedValue, CopyFn, boolean] => {
   const [copiedText, setCopiedText] = useState<CopiedValue>(null)
   const [isCopied, setIsCopied] = useState(false)
 

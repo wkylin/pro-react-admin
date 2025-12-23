@@ -142,7 +142,11 @@ const AESPanel = () => {
                   value={cipherText}
                   onChange={(e) => setCipherText(e.target.value)}
                   placeholder="加密后的内容将显示在这里..."
-                  style={{ marginTop: 8, backgroundColor: token.colorFillAlter, color: token.colorText }}
+                  style={{
+                    marginTop: 8,
+                    backgroundColor: token.colorFillAlter,
+                    color: token.colorText,
+                  }}
                 />
               </div>
 
@@ -275,7 +279,10 @@ const RSAPanel = () => {
                 value={cipherText}
                 onChange={(e) => setCipherText(e.target.value)}
                 placeholder="加密后的密文..."
-                style={{ backgroundColor: token.colorFillAlter, color: token.colorText }}
+                style={{
+                  backgroundColor: token.colorFillAlter,
+                  color: token.colorText,
+                }}
               />{' '}
               <Button icon={<UnlockOutlined />} onClick={handleDecrypt} block disabled={!cipherText}>
                 使用私钥解密

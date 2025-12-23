@@ -44,7 +44,10 @@ export type UseTableReturn<T = any> = {
   setPagination: (
     p:
       | { current: number; pageSize: number }
-      | ((prev: { current: number; pageSize: number }) => { current: number; pageSize: number })
+      | ((prev: { current: number; pageSize: number }) => {
+          current: number
+          pageSize: number
+        })
   ) => void
   tableScroll: { x: number; y: number }
   pagedData: T[]
@@ -113,7 +116,10 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
     })
     // run once on mount
   }, [])
-  const [tableScroll, setTableScroll] = useState({ x: Math.max(minWidth, 800), y: 280 })
+  const [tableScroll, setTableScroll] = useState({
+    x: Math.max(minWidth, 800),
+    y: 280,
+  })
 
   // 同步 URL（可选）
   useEffect(() => {
@@ -215,7 +221,10 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
       if (availableBodyH <= 0) bodyH = hardMin
       else if (availableBodyH < minBodyHeight) bodyH = Math.max(hardMin, availableBodyH)
 
-      setTableScroll({ x: Math.max(width, minWidth), y: Math.max(bodyH, hardMin) })
+      setTableScroll({
+        x: Math.max(width, minWidth),
+        y: Math.max(bodyH, hardMin),
+      })
     }
 
     calc()

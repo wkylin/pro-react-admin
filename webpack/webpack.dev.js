@@ -20,6 +20,7 @@ const devWebpackConfig = merge(common, {
       overlay: {
         errors: true,
         warnings: false,
+        runtimeErrors: false,
       },
     },
     static: {

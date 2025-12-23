@@ -4,31 +4,31 @@
   background: var(--background);
   color: var(--foreground);
 
-  --vp-border: rgba(0, 0, 0, 0.06);
-  --vp-border-strong: rgba(0, 0, 0, 0.12);
-  --vp-border-stronger: rgba(0, 0, 0, 0.18);
-  --vp-surface: rgba(0, 0, 0, 0.01);
-  --vp-surface-hover: rgba(0, 0, 0, 0.02);
-  --vp-surface-active: rgba(0, 0, 0, 0.03);
-  --vp-text-strong: rgba(0, 0, 0, 0.88);
-  --vp-text: rgba(0, 0, 0, 0.72);
-  --vp-text-soft: rgba(0, 0, 0, 0.62);
-  --vp-text-muted: rgba(0, 0, 0, 0.55);
-  --vp-text-faint: rgba(0, 0, 0, 0.45);
+  --vp-border: rgb(0 0 0 / 6%);
+  --vp-border-strong: rgb(0 0 0 / 12%);
+  --vp-border-stronger: rgb(0 0 0 / 18%);
+  --vp-surface: rgb(0 0 0 / 1%);
+  --vp-surface-hover: rgb(0 0 0 / 2%);
+  --vp-surface-active: rgb(0 0 0 / 3%);
+  --vp-text-strong: rgb(0 0 0 / 88%);
+  --vp-text: rgb(0 0 0 / 72%);
+  --vp-text-soft: rgb(0 0 0 / 62%);
+  --vp-text-muted: rgb(0 0 0 / 55%);
+  --vp-text-faint: rgb(0 0 0 / 45%);
 }
 
 :global(:root[data-theme='dark']) .page {
-  --vp-border: rgba(255, 255, 255, 0.08);
-  --vp-border-strong: rgba(255, 255, 255, 0.14);
-  --vp-border-stronger: rgba(255, 255, 255, 0.18);
-  --vp-surface: rgba(255, 255, 255, 0.04);
-  --vp-surface-hover: rgba(255, 255, 255, 0.06);
-  --vp-surface-active: rgba(255, 255, 255, 0.08);
-  --vp-text-strong: rgba(255, 255, 255, 0.92);
-  --vp-text: rgba(255, 255, 255, 0.78);
-  --vp-text-soft: rgba(255, 255, 255, 0.68);
-  --vp-text-muted: rgba(255, 255, 255, 0.58);
-  --vp-text-faint: rgba(255, 255, 255, 0.5);
+  --vp-border: rgb(255 255 255 / 8%);
+  --vp-border-strong: rgb(255 255 255 / 14%);
+  --vp-border-stronger: rgb(255 255 255 / 18%);
+  --vp-surface: rgb(255 255 255 / 4%);
+  --vp-surface-hover: rgb(255 255 255 / 6%);
+  --vp-surface-active: rgb(255 255 255 / 8%);
+  --vp-text-strong: rgb(255 255 255 / 92%);
+  --vp-text: rgb(255 255 255 / 78%);
+  --vp-text-soft: rgb(255 255 255 / 68%);
+  --vp-text-muted: rgb(255 255 255 / 58%);
+  --vp-text-faint: rgb(255 255 255 / 50%);
 }
 
 .layout {
@@ -55,7 +55,7 @@
   width: 460px;
 }
 
-@media (max-width: 980px) {
+@media (width <= 980px) {
   .page {
     padding: 0;
   }
@@ -191,7 +191,7 @@
 }
 
 .movieItem:focus-visible {
-  outline: 2px solid rgba(22, 119, 255, 0.55);
+  outline: 2px solid rgb(22 119 255 / 55%);
   outline-offset: 2px;
 }
 
@@ -231,7 +231,7 @@
   color: var(--vp-text-soft);
 }
 
-@media (max-width: 540px) {
+@media (width <= 540px) {
   .comments {
     padding: 12px;
   }

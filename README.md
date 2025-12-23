@@ -45,7 +45,7 @@
 - 📚 **组件文档库**：集成 Storybook，提供 120+ 组件的交互式文档与预览，支持 Props 动态调试与独立测试。
 - 📡 **健壮请求层**：封装统一请求库，支持并发控制、自动重试、取消重复请求、全局错误处理与消息去重。
 - 👤 **登录/注册流程**：完整的登录鉴权流程，支持一键测试账号切换，实时同步权限状态。
-- 📊 **数据可视化**：集成 ECharts、D3.js、Recharts 等多种图表库，支持大数据量展示。
+- 📊 **数据可视化**：集成 ECharts、Recharts 等多种图表库，支持大数据量展示。
 - 📝 **富文本与文档**：支持 Markdown 实时渲染与编辑、代码高亮、数学公式解析。
 - 🎬 **多媒体支持**：内置音频/视频播放器，支持 Tab 切换自动暂停/恢复播放，优化资源占用。
 - 🌍 **主题与国际化**：内置明亮/暗黑模式一键切换，支持多语言（i18n）动态切换。
@@ -108,6 +108,8 @@ cd pro-react-admin
 npm install
 npm run dev
 ```
+
+提示：运行 `npm run lighthouse` 前请先启动 dev server（例如先执行 `npm run dev`/`npm run start`）。
 
 更多用法详见 [详细文档](./docs/README_PERMISSION.md) 与 [用户角色权限说明](./docs/USER_ROLE_PERMISSION.md)。
 

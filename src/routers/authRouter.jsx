@@ -43,7 +43,13 @@ const AuthRouter = (props) => {
         const pattern = candidate.startsWith('/') ? candidate : `/${candidate}`
         return Boolean(
           matchPath({ path: pattern, end: true }, normalized) ||
-          matchPath({ path: pattern.endsWith('/*') ? pattern : `${pattern}/*`, end: false }, normalized)
+          matchPath(
+            {
+              path: pattern.endsWith('/*') ? pattern : `${pattern}/*`,
+              end: false,
+            },
+            normalized
+          )
         )
       })
     }

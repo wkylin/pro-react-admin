@@ -34,9 +34,24 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           id: '1-1',
           level: 2,
           children: [
-            { name: '科技股份有限公司第一公司', value: '2022年8月8号', id: '1-1-1', level: 3 },
-            { name: '科技股份有限公司第二公司', value: '2023年6月6号', id: '1-1-2', level: 3 },
-            { name: '科技股份有限公司第三公司', value: '2024年9月9号', id: '1-1-3', level: 3 },
+            {
+              name: '科技股份有限公司第一公司',
+              value: '2022年8月8号',
+              id: '1-1-1',
+              level: 3,
+            },
+            {
+              name: '科技股份有限公司第二公司',
+              value: '2023年6月6号',
+              id: '1-1-2',
+              level: 3,
+            },
+            {
+              name: '科技股份有限公司第三公司',
+              value: '2024年9月9号',
+              id: '1-1-3',
+              level: 3,
+            },
           ],
           ratio: '85%',
         },
@@ -44,7 +59,14 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           name: '广东发展有限公司',
           id: '1-2',
           level: 2,
-          children: [{ name: '广东发展有限公司分公司', value: '2024年5月1号', id: '1-2-1', level: 3 }],
+          children: [
+            {
+              name: '广东发展有限公司分公司',
+              value: '2024年5月1号',
+              id: '1-2-1',
+              level: 3,
+            },
+          ],
           ratio: '55%',
         },
         {
@@ -52,8 +74,18 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           id: '1-3',
           level: 2,
           children: [
-            { name: '科技股份有限公司一', value: '2022年7月31号', id: '1-3-1', level: 3 },
-            { name: '科技股份有限公司二', value: '2023年8月1号', id: '1-3-2', level: 3 },
+            {
+              name: '科技股份有限公司一',
+              value: '2022年7月31号',
+              id: '1-3-1',
+              level: 3,
+            },
+            {
+              name: '科技股份有限公司二',
+              value: '2023年8月1号',
+              id: '1-3-2',
+              level: 3,
+            },
           ],
           ratio: '35%',
         },
@@ -61,14 +93,28 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           name: '第四家公司',
           id: '1-4',
           level: 2,
-          children: [{ name: '受让方第四分公司', value: '2021年8月20号', id: '1-4-1', level: 3 }],
+          children: [
+            {
+              name: '受让方第四分公司',
+              value: '2021年8月20号',
+              id: '1-4-1',
+              level: 3,
+            },
+          ],
           ratio: '25%',
         },
         {
           name: '第五家公司',
           id: '1-5',
           level: 2,
-          children: [{ name: '受让方第五分公司', value: '2020年6月6号', id: '1-5-1', level: 3 }],
+          children: [
+            {
+              name: '受让方第五分公司',
+              value: '2020年6月6号',
+              id: '1-5-1',
+              level: 3,
+            },
+          ],
           ratio: '15%',
         },
       ],
@@ -210,7 +256,9 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                         }}
                                       >
                                         <div>
-                                          转让<span style={{ color: '#EF4A10' }}>20%</span>股权
+                                          转让
+                                          <span style={{ color: '#EF4A10' }}>20%</span>
+                                          股权
                                         </div>
                                         <div>受让方：{tItem.name}</div>
                                       </div>

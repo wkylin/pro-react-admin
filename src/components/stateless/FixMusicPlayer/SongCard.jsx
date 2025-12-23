@@ -21,7 +21,9 @@ const SongCard = ({ song, isPlaying, isActive, onClick, themeMode, textColor, se
         />
         <div
           className="bg-opacity-30 absolute inset-0 flex items-center justify-center rounded-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ backgroundColor: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)' }}
+          style={{
+            backgroundColor: isDark ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)',
+          }}
         >
           {isCurrentSong ? (
             <Pause size={48} style={{ color: textColor }} />

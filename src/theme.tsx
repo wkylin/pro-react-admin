@@ -32,7 +32,11 @@ const ThemeIndex: React.FC = () => {
     // - 减少 keepInactiveCount 以避免保留过多隐藏 DOM 节点
     // - 降低缓存上限 limit 以减小内存占用
     try {
-      keepAliveManager.setOptions({ deactivateDelay: 500, keepInactiveCount: 0, limit: 5 })
+      keepAliveManager.setOptions({
+        deactivateDelay: 500,
+        keepInactiveCount: 0,
+        limit: 5,
+      })
     } catch (e) {
       if (process.env.NODE_ENV !== 'production') {
         // eslint-disable-next-line no-console

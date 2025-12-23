@@ -19,7 +19,9 @@ export const useRemoveGlobalLoader = () => {
               }
             }
 
-            loader.addEventListener('transitionend', handleTransitionEnd, { once: true })
+            loader.addEventListener('transitionend', handleTransitionEnd, {
+              once: true,
+            })
 
             // 兜底：如果动画没触发（例如页面不可见），强制移除
             setTimeout(handleTransitionEnd, 500)

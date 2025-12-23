@@ -5,7 +5,13 @@ import PropTypes from 'prop-types'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 const { useBreakpoint } = Grid
 const initialNotifications = [
-  { id: 1, title: '欢迎使用 Pro React Admin', description: '感谢您的体验与支持！', read: false, time: '1分钟前' },
+  {
+    id: 1,
+    title: '欢迎使用 Pro React Admin',
+    description: '感谢您的体验与支持！',
+    read: false,
+    time: '1分钟前',
+  },
   {
     id: 2,
     title: '新功能上线',
@@ -20,8 +26,20 @@ const initialNotifications = [
     read: false,
     time: '10分钟前',
   },
-  { id: 4, title: '新功能上线', description: '权限系统与主题切换已支持。', read: false, time: '15分钟前' },
-  { id: 5, title: '文档更新', description: 'README.md 已优化，欢迎查阅。', read: true, time: '1天前' },
+  {
+    id: 4,
+    title: '新功能上线',
+    description: '权限系统与主题切换已支持。',
+    read: false,
+    time: '15分钟前',
+  },
+  {
+    id: 5,
+    title: '文档更新',
+    description: 'README.md 已优化，欢迎查阅。',
+    read: true,
+    time: '1天前',
+  },
 ]
 
 const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghost = false }) => {
@@ -74,7 +92,15 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
     >
       <div style={{ flex: 1, overflowY: 'auto', padding: 12 }}>
         {notifications.length === 0 ? (
-          <div style={{ color: colorTextTertiary, textAlign: 'center', padding: '32px 0' }}>暂无通知</div>
+          <div
+            style={{
+              color: colorTextTertiary,
+              textAlign: 'center',
+              padding: '32px 0',
+            }}
+          >
+            暂无通知
+          </div>
         ) : (
           notifications.slice(0, MAX_ITEMS).map((item) => (
             <button
@@ -101,8 +127,23 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
                 {!item.read ? <Badge status="processing" /> : <Badge status="default" />}
                 <Typography.Text strong>{item.title}</Typography.Text>
               </div>
-              <div style={{ fontSize: 13, color: colorTextSecondary, marginTop: 6 }}>{item.description}</div>
-              <div style={{ fontSize: 12, color: colorTextTertiary, marginTop: 4, textAlign: 'right' }}>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: colorTextSecondary,
+                  marginTop: 6,
+                }}
+              >
+                {item.description}
+              </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  color: colorTextTertiary,
+                  marginTop: 4,
+                  textAlign: 'right',
+                }}
+              >
                 {item.time}
               </div>
             </button>

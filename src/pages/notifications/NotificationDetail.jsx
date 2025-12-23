@@ -24,7 +24,11 @@ const NotificationDetail = () => {
         // 这里使用模拟数据以避免依赖后端
         await new Promise((r) => setTimeout(r, 300))
         if (!mounted) return
-        setData({ id, title: `通知 ${id}`, body: `这是通知 ${id} 的详情。query: ${search}` })
+        setData({
+          id,
+          title: `通知 ${id}`,
+          body: `这是通知 ${id} 的详情。query: ${search}`,
+        })
       } catch (e) {
         console.error('fetch notification detail error', e)
       } finally {
@@ -46,7 +50,12 @@ const NotificationDetail = () => {
   return (
     <Card
       title={data ? data.title : `通知 ${id}`}
-      style={{ width: '100%', backgroundColor: bgColor, boxShadow, border: `1px solid ${borderColor}` }}
+      style={{
+        width: '100%',
+        backgroundColor: bgColor,
+        boxShadow,
+        border: `1px solid ${borderColor}`,
+      }}
     >
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>

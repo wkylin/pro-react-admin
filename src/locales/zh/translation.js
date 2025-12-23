@@ -87,7 +87,6 @@ const zh = {
     prismRender: 'Prism 渲染',
     postMessage: '跨窗通信',
     geoChart: '地理图表',
-    d3Chart: 'D3 图表',
     print: '打印',
     profile: '个人资料',
     contact: '联系人',

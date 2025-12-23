@@ -89,8 +89,12 @@ const MermaidDemo = () => {
       try {
         const dataUrl =
           format === 'png'
-            ? await toPng(previewRef.current, { backgroundColor: token.colorBgLayout })
-            : await toSvg(previewRef.current, { backgroundColor: token.colorBgLayout })
+            ? await toPng(previewRef.current, {
+                backgroundColor: token.colorBgLayout,
+              })
+            : await toSvg(previewRef.current, {
+                backgroundColor: token.colorBgLayout,
+              })
         const link = document.createElement('a')
         link.download = `mermaid-chart.${format}`
         link.href = dataUrl
@@ -127,7 +131,9 @@ const MermaidDemo = () => {
     }
 
     try {
-      const dataUrl = await toPng(previewRef.current, { backgroundColor: token.colorBgLayout })
+      const dataUrl = await toPng(previewRef.current, {
+        backgroundColor: token.colorBgLayout,
+      })
       const blob = await (await fetch(dataUrl)).blob()
       await navigator.clipboard.write([
         new ClipboardItem({
@@ -155,7 +161,14 @@ const MermaidDemo = () => {
                 </div>
               }
               className="flex-1 shadow-sm"
-              styles={{ body: { padding: 0, height: 'calc(100% - 57px)', display: 'flex', flexDirection: 'column' } }}
+              styles={{
+                body: {
+                  padding: 0,
+                  height: 'calc(100% - 57px)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                },
+              }}
             >
               <div className="relative flex-1" style={{ backgroundColor: token.colorBgLayout }}>
                 <textarea
@@ -169,7 +182,10 @@ const MermaidDemo = () => {
               </div>
               <div
                 className="border-t p-3"
-                style={{ borderColor: token.colorBorderSecondary, backgroundColor: token.colorBgContainer }}
+                style={{
+                  borderColor: token.colorBorderSecondary,
+                  backgroundColor: token.colorBgContainer,
+                }}
               >
                 <p className="mb-2 text-xs font-medium" style={{ color: token.colorTextSecondary }}>
                   Sample Diagrams:
@@ -218,7 +234,14 @@ const MermaidDemo = () => {
                 </Space>
               }
               className="flex-1 shadow-sm"
-              styles={{ body: { padding: 0, height: 'calc(100% - 57px)', position: 'relative', overflow: 'hidden' } }}
+              styles={{
+                body: {
+                  padding: 0,
+                  height: 'calc(100% - 57px)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                },
+              }}
             >
               <TransformWrapper initialScale={1} minScale={0.5} maxScale={4} centerOnInit wheel={{ step: 0.1 }}>
                 {({ zoomIn, zoomOut, resetTransform }) => (

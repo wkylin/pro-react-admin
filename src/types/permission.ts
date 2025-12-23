@@ -42,7 +42,6 @@ export type Resource =
   | 'markmap'
   | 'postmessage'
   | 'geo'
-  | 'd3chart'
   | 'print'
   | 'permission'
   | 'topology'

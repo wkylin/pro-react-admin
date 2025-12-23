@@ -33,7 +33,15 @@ export const ExampleCustomProgress = () => {
       <div style={{ padding: '20px' }}>
         <h3>自定义进度条样式</h3>
         {Array.from({ length: 30 }, (_, i) => (
-          <div key={i} style={{ margin: '15px 0', padding: '10px', background: '#f5f5f5', borderRadius: '4px' }}>
+          <div
+            key={i}
+            style={{
+              margin: '15px 0',
+              padding: '10px',
+              background: '#f5f5f5',
+              borderRadius: '4px',
+            }}
+          >
             内容块 {i + 1}
           </div>
         ))}

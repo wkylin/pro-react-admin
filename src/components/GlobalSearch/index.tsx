@@ -22,7 +22,13 @@ interface GlobalSearchProps {
 
 const RECENT_KEY = 'global_search_recent_v1'
 
-type StoredRecent = { key: string; label?: string; path?: string; i18nKey?: string; pinyin?: string }
+type StoredRecent = {
+  key: string
+  label?: string
+  path?: string
+  i18nKey?: string
+  pinyin?: string
+}
 
 const isDev = () => {
   try {
@@ -90,13 +96,25 @@ const renderEntryContent = (entry: MenuSearchResult, isDark: boolean) => {
   if (!labelMatch) {
     if (i18nMatch) {
       subEl = (
-        <div style={{ color: isDark ? '#888' : '#999', fontSize: 12, marginTop: 4 }}>
+        <div
+          style={{
+            color: isDark ? '#888' : '#999',
+            fontSize: 12,
+            marginTop: 4,
+          }}
+        >
           {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, isDark)}
         </div>
       )
     } else if (pinyinMatch) {
       subEl = (
-        <div style={{ color: isDark ? '#888' : '#999', fontSize: 12, marginTop: 4 }}>
+        <div
+          style={{
+            color: isDark ? '#888' : '#999',
+            fontSize: 12,
+            marginTop: 4,
+          }}
+        >
           {highlightWithIndices(pinyinMatch.value || item.pinyin || '', pinyinMatch.indices, isDark)}
         </div>
       )
@@ -229,7 +247,15 @@ const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, isDark, tok
         />
       )}
       <div style={{ flex: 1 }}>{renderEntryContent(entry, isDark)}</div>
-      <span style={{ color: isDark ? '#555' : '#ccc', marginLeft: 12, fontSize: 12 }}>{item.key}</span>
+      <span
+        style={{
+          color: isDark ? '#555' : '#ccc',
+          marginLeft: 12,
+          fontSize: 12,
+        }}
+      >
+        {item.key}
+      </span>
       {isActive && <EnterOutlined style={{ color: isDark ? '#666' : '#999', marginLeft: 12 }} />}
     </button>
   )
@@ -566,7 +592,15 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
         }}
       >
         {listToRender.length === 0 ? (
-          <div style={{ padding: '32px 0', textAlign: 'center', color: palette.listEmptyText }}>无匹配菜单</div>
+          <div
+            style={{
+              padding: '32px 0',
+              textAlign: 'center',
+              color: palette.listEmptyText,
+            }}
+          >
+            无匹配菜单
+          </div>
         ) : (
           listToRender.map((entry, idx) => (
             <SearchRow

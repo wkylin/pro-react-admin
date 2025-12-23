@@ -47,7 +47,6 @@ export const lazyComponents = {
   // 图表相关
   Echarts: lazyLoad(() => import('@pages/echarts'), { preload: true }),
   GeoChart: lazyLoad(() => import('@pages/geoChart'), { preload: true }),
-  D3Chart: lazyLoad(() => import('@pages/d3Chart'), { preload: true }),
   BigScreen: lazyLoad(() => import('@pages/bigScreen'), { preload: true }),
   Topology: lazyLoad(() => import('@pages/topology'), { preload: true }),
 
@@ -57,15 +56,21 @@ export const lazyComponents = {
   ChatGpt: lazyLoad(() => import('@pages/chatgpt'), { preload: true }),
   Mermaid: lazyLoad(() => import('@pages/mermaid'), { preload: true }),
   PostMessage: lazyLoad(() => import('@pages/postmessage'), { preload: true }),
-  MyIframe: lazyLoad(() => import('@pages/postmessage/myIframe'), { preload: true }),
+  MyIframe: lazyLoad(() => import('@pages/postmessage/myIframe'), {
+    preload: true,
+  }),
   Print: lazyLoad(() => import('@pages/print'), { preload: true }),
   // 通知页面
-  Notifications: lazyLoad(() => import('@pages/notifications'), { preload: true }),
+  Notifications: lazyLoad(() => import('@pages/notifications'), {
+    preload: true,
+  }),
   NotificationDetail: lazyLoad(() => import('@pages/notifications/NotificationDetail'), { preload: true }),
   PHBar: lazyLoad(() => import('@pages/phbar'), { preload: true }),
 
   // 权限示例页面
-  PermissionExample: lazyLoad(() => import('@pages/permission'), { preload: true }),
+  PermissionExample: lazyLoad(() => import('@pages/permission'), {
+    preload: true,
+  }),
 
   // 示例：如果新增一个按需加载的路由组件，请在此处注册（示例）
   // 例如：新增 pages/alerts/AlertDetail.jsx
@@ -78,24 +83,46 @@ export const lazyComponents = {
   Contact: lazyLoad(() => import('@pages/contact')),
 
   // 嵌套路由
-  BackendStack: lazyLoad(() => import('@pages/tech/backend'), { preload: true }),
-  FrontendStack: lazyLoad(() => import('@pages/tech/frontend'), { preload: true }),
-  ReactDemo: lazyLoad(() => import('@pages/tech/demos/react'), { preload: true }),
+  BackendStack: lazyLoad(() => import('@pages/tech/backend'), {
+    preload: true,
+  }),
+  FrontendStack: lazyLoad(() => import('@pages/tech/frontend'), {
+    preload: true,
+  }),
+  ReactDemo: lazyLoad(() => import('@pages/tech/demos/react'), {
+    preload: true,
+  }),
   VueDemo: lazyLoad(() => import('@pages/tech/demos/vue'), { preload: true }),
-  AngularDemo: lazyLoad(() => import('@pages/tech/demos/angular'), { preload: true }),
+  AngularDemo: lazyLoad(() => import('@pages/tech/demos/angular'), {
+    preload: true,
+  }),
   NodeDemo: lazyLoad(() => import('@pages/tech/demos/node'), { preload: true }),
-  VuePlugins: lazyLoad(() => import('@pages/tech/demos/vue/plugins'), { preload: true }),
-  Vue3Plugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/vue3'), { preload: true }),
-  VuePerfPlugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/perf'), { preload: true }),
-  WebpackList: lazyLoad(() => import('@pages/tech/demos/webpack'), { preload: true }),
+  VuePlugins: lazyLoad(() => import('@pages/tech/demos/vue/plugins'), {
+    preload: true,
+  }),
+  Vue3Plugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/vue3'), {
+    preload: true,
+  }),
+  VuePerfPlugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/perf'), {
+    preload: true,
+  }),
+  WebpackList: lazyLoad(() => import('@pages/tech/demos/webpack'), {
+    preload: true,
+  }),
   ViteList: lazyLoad(() => import('@pages/order/list'), { preload: true }),
 
   // 异常页面
   ErrorPage: lazyLoad(() => import('@pages/error'), { preload: true }),
-  Exception403: lazyLoad(() => import('@stateless/Exception/exception403'), { preload: true }),
-  Exception404: lazyLoad(() => import('@stateless/Exception/exception404'), { preload: true }),
+  Exception403: lazyLoad(() => import('@stateless/Exception/exception403'), {
+    preload: true,
+  }),
+  Exception404: lazyLoad(() => import('@stateless/Exception/exception404'), {
+    preload: true,
+  }),
   NoMatch: lazyLoad(() => import('@stateless/NoMatch'), { preload: true }),
-  SectionNotFound: lazyLoad(() => import('@stateless/SectionNotFound'), { preload: true }),
+  SectionNotFound: lazyLoad(() => import('@stateless/SectionNotFound'), {
+    preload: true,
+  }),
 }
 
 // 兼容性导出（保持原有导入方式）

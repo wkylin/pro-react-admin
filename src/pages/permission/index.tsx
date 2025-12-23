@@ -77,19 +77,45 @@ const PermissionExample = () => {
       <div style={{ padding: screens.xs ? 16 : 24 }}>
         <Row gutter={[16, 16]}>
           <Col xs={24} lg={18}>
-            <h1 style={{ fontSize: screens.xs ? '20px' : '24px', marginBottom: '8px' }}>权限系统示例</h1>
+            <h1
+              style={{
+                fontSize: screens.xs ? '20px' : '24px',
+                marginBottom: '8px',
+              }}
+            >
+              权限系统示例
+            </h1>
             <p style={{ color: 'rgba(0, 0, 0, 0.65)', marginBottom: '16px' }}>
               系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。
             </p>
           </Col>
           <Col xs={24} lg={6}>
             <Card title="主题设置" size="small">
-              <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  width: '100%',
+                  gap: '16px',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <span>暗色主题</span>
                   <Switch checked={themeSettings.themeMode === 'dark'} onChange={handleThemeModeChange} />
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
                   <span>紧凑模式</span>
                   <Switch checked={themeSettings.compactAlgorithm} onChange={handleCompactModeChange} />
                 </div>
@@ -135,7 +161,14 @@ const PermissionExample = () => {
 
         {/* 开发强制开关，仅在非生产或 localhost 显示 */}
         {(process.env.NODE_ENV !== 'production' || window.location.hostname.includes('localhost')) && (
-          <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div
+            style={{
+              marginBottom: 16,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+            }}
+          >
             <Switch checked={forceDemoSwitch} onChange={toggleForceDemoSwitch} />
             <span style={{ color: 'rgba(0,0,0,0.65)' }}>开发：强制启用示例切换（仅页面级别）</span>
           </div>
@@ -145,28 +178,52 @@ const PermissionExample = () => {
         <Card title="权限说明" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
           <Row gutter={[16, 8]}>
             <Col xs={24} sm={12} lg={6}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>超级管理员</strong>
                 <br />
                 <small>拥有所有路由访问权限（100%）</small>
               </div>
             </Col>
             <Col xs={24} sm={12} lg={6}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>管理员</strong>
                 <br />
                 <small>随机分配约 75% 的路由</small>
               </div>
             </Col>
             <Col xs={24} sm={12} lg={6}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>业务员</strong>
                 <br />
                 <small>随机分配约 50% 的路由</small>
               </div>
             </Col>
             <Col xs={24} sm={12} lg={6}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>普通用户</strong>
                 <br />
                 <small>随机分配约 25% 的路由</small>
@@ -213,10 +270,30 @@ const PermissionExample = () => {
         <Card title="角色列表" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
           <Row gutter={[16, 16]}>
             {[
-              { code: 'super_admin', name: '超级管理员', desc: '拥有所有权限', routes: 29 },
-              { code: 'admin', name: '管理员', desc: '拥有大部分权限', routes: 16 },
-              { code: 'business_user', name: '业务员', desc: '拥有业务相关权限', routes: 10 },
-              { code: 'user', name: '普通用户', desc: '仅拥有基本权限', routes: 7 },
+              {
+                code: 'super_admin',
+                name: '超级管理员',
+                desc: '拥有所有权限',
+                routes: 29,
+              },
+              {
+                code: 'admin',
+                name: '管理员',
+                desc: '拥有大部分权限',
+                routes: 16,
+              },
+              {
+                code: 'business_user',
+                name: '业务员',
+                desc: '拥有业务相关权限',
+                routes: 10,
+              },
+              {
+                code: 'user',
+                name: '普通用户',
+                desc: '仅拥有基本权限',
+                routes: 7,
+              },
             ].map((role) => (
               <Col xs={24} sm={12} key={role.code}>
                 <div
@@ -266,7 +343,13 @@ const PermissionExample = () => {
         <Card title="PermissionGuard 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={8}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>单个权限检查：</strong>
                 <br />
                 <PermissionGuard permission="user:read" fallback={<span style={{ color: 'red' }}>无权限查看</span>}>
@@ -275,7 +358,13 @@ const PermissionExample = () => {
               </div>
             </Col>
             <Col xs={24} sm={24} md={8}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>多个权限检查（任一即可）：</strong>
                 <br />
                 <PermissionGuard
@@ -287,7 +376,13 @@ const PermissionExample = () => {
               </div>
             </Col>
             <Col xs={24} sm={24} md={8}>
-              <div style={{ padding: '8px', border: '1px solid #f0f0f0', borderRadius: '4px' }}>
+              <div
+                style={{
+                  padding: '8px',
+                  border: '1px solid #f0f0f0',
+                  borderRadius: '4px',
+                }}
+              >
                 <strong>角色检查：</strong>
                 <br />
                 <PermissionGuard

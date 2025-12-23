@@ -95,12 +95,36 @@ const MyPortfilo = () => {
   }, [])
 
   const navItems = [
-    { key: 'home', href: '#home', title: <span style={{ fontSize: 12 }}>Home</span> },
-    { key: 'about', href: '#about', title: <span style={{ fontSize: 12 }}>About</span> },
-    { key: 'skills', href: '#skills', title: <span style={{ fontSize: 12 }}>Skills</span> },
-    { key: 'projects', href: '#projects', title: <span style={{ fontSize: 12 }}>Work</span> },
-    { key: 'experience', href: '#experience', title: <span style={{ fontSize: 12 }}>Exp</span> },
-    { key: 'contact', href: '#contact', title: <span style={{ fontSize: 12 }}>Contact</span> },
+    {
+      key: 'home',
+      href: '#home',
+      title: <span style={{ fontSize: 12 }}>Home</span>,
+    },
+    {
+      key: 'about',
+      href: '#about',
+      title: <span style={{ fontSize: 12 }}>About</span>,
+    },
+    {
+      key: 'skills',
+      href: '#skills',
+      title: <span style={{ fontSize: 12 }}>Skills</span>,
+    },
+    {
+      key: 'projects',
+      href: '#projects',
+      title: <span style={{ fontSize: 12 }}>Work</span>,
+    },
+    {
+      key: 'experience',
+      href: '#experience',
+      title: <span style={{ fontSize: 12 }}>Exp</span>,
+    },
+    {
+      key: 'contact',
+      href: '#contact',
+      title: <span style={{ fontSize: 12 }}>Contact</span>,
+    },
   ]
 
   const handleAnchorClick = (e, link) => {
@@ -141,8 +165,8 @@ const MyPortfilo = () => {
     },
     {
       title: 'Data Visualization Dashboard',
-      desc: 'Interactive dashboard for visualizing complex datasets using D3.js and ECharts.',
-      tags: ['Vue', 'D3.js', 'ECharts'],
+      desc: 'Interactive dashboard for visualizing complex datasets using and ECharts.',
+      tags: ['Vue', 'ECharts'],
       icon: <CodeOutlined />,
     },
   ]
@@ -363,7 +387,15 @@ const MyPortfilo = () => {
         </div>
       )}
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: '0 24px',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* Home Section */}
         <Section id="home" className="flex flex-col items-center justify-center text-center">
           <motion.div
@@ -374,7 +406,10 @@ const MyPortfilo = () => {
             <Avatar
               size={160}
               src={avatarPng}
-              style={{ border: `4px solid ${token.colorPrimary}`, marginBottom: 32 }}
+              style={{
+                border: `4px solid ${token.colorPrimary}`,
+                marginBottom: 32,
+              }}
             />
           </motion.div>
           <motion.div initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
@@ -444,7 +479,15 @@ const MyPortfilo = () => {
                           borderRadius: token.borderRadiusLG,
                         }}
                       >
-                        <div style={{ fontSize: 32, color: token.colorPrimary, marginBottom: 8 }}>{item.icon}</div>
+                        <div
+                          style={{
+                            fontSize: 32,
+                            color: token.colorPrimary,
+                            marginBottom: 8,
+                          }}
+                        >
+                          {item.icon}
+                        </div>
                         <Text strong>{item.title}</Text>
                       </Card>
                     </AnimatedCard>

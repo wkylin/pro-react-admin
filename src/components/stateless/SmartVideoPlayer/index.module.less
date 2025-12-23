@@ -9,12 +9,8 @@
   z-index: 1000;
 }
 
-.miniRestore .tooltip {
-  bottom: 54px;
-}
-
 .videoWrap {
-  background: rgba(0, 0, 0, 0.92);
+  background: rgb(0 0 0 / 92%);
   position: relative;
   overflow: hidden;
 }
@@ -46,12 +42,14 @@
   transform: translateY(-50%) translateX(0);
   pointer-events: auto;
 }
+
 .embedRatio {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   background: transparent;
 }
+
 .embedFrame {
   position: absolute;
   inset: 0;
@@ -73,9 +71,9 @@
   gap: 10px;
   padding: 8px 10px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgb(0 0 0 / 55%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  color: rgb(255 255 255 / 90%);
   pointer-events: none;
 }
 
@@ -86,9 +84,9 @@
 
 .embedHintAction {
   pointer-events: auto;
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgb(255 255 255 / 12%);
+  color: rgb(255 255 255 / 92%);
+  border: 1px solid rgb(255 255 255 / 18%);
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 12px;
@@ -97,22 +95,25 @@
 }
 
 .embedHintAction:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgb(255 255 255 / 16%);
 }
+
 .embedFallback {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: rgba(0, 0, 0, 0.92);
-  color: rgba(255, 255, 255, 0.85);
+  background: rgb(0 0 0 / 92%);
+  color: rgb(255 255 255 / 85%);
   display: grid;
   place-content: center;
   padding: 16px;
   text-align: center;
 }
+
 .embedFallbackTitle {
   font-weight: 600;
   margin-bottom: 6px;
 }
+
 .embedFallbackMeta {
   font-size: 12px;
   opacity: 0.9;
@@ -134,16 +135,16 @@
   z-index: 5;
   display: grid;
   place-content: center;
-  background: rgba(0, 0, 0, 0.28);
+  background: rgb(0 0 0 / 28%);
   pointer-events: none;
 }
 
 .loadingOverlayText {
   padding: 10px 12px;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgb(0 0 0 / 55%);
+  border: 1px solid rgb(255 255 255 / 12%);
+  color: rgb(255 255 255 / 90%);
   font-size: 12px;
   line-height: 1.2;
 }
@@ -153,9 +154,9 @@
   width: 64px;
   height: 64px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(0, 0, 0, 0.42);
-  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgb(255 255 255 / 16%);
+  background: rgb(0 0 0 / 42%);
+  color: rgb(255 255 255 / 92%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -180,12 +181,6 @@
   height: 54px;
 }
 
-.controlsPinnedWrap .videoControls {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
 .videoControls {
   position: absolute;
   left: 0;
@@ -193,9 +188,9 @@
   bottom: 0;
   display: grid;
   gap: 8px;
-  padding: 8px 8px;
-  background: rgba(0, 0, 0, 0.72);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px;
+  background: rgb(0 0 0 / 72%);
+  border-top: 1px solid rgb(255 255 255 / 8%);
   opacity: 0;
   transform: translateY(56%);
   pointer-events: none;
@@ -204,14 +199,26 @@
     transform 0.18s ease;
 }
 
+.mini .videoControls {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.controlsPinnedWrap .videoControls {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
 .playError {
   font-size: 12px;
   line-height: 1.2;
-  color: rgba(255, 255, 255, 0.88);
+  color: rgb(255 255 255 / 88%);
   padding: 6px 8px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgb(0 0 0 / 50%);
+  border: 1px solid rgb(255 255 255 / 12%);
 }
 
 .videoWrap:hover .videoControls,
@@ -243,14 +250,14 @@
 
 .time {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgb(255 255 255 / 92%);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   flex: 0 0 auto;
 }
 
 .videoControls .range {
-  accent-color: rgba(255, 255, 255, 0.86);
+  accent-color: rgb(255 255 255 / 86%);
   min-width: 0;
 }
 
@@ -281,7 +288,7 @@
   width: 0;
   height: 3px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgb(255 255 255 / 18%);
   z-index: 1;
   transform: translateY(0);
 }
@@ -294,9 +301,9 @@
   border-radius: 8px;
   font-size: 12px;
   line-height: 1;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(0, 0, 0, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgb(255 255 255 / 92%);
+  background: rgb(0 0 0 / 60%);
+  border: 1px solid rgb(255 255 255 / 12%);
   white-space: nowrap;
   z-index: 3;
   pointer-events: none;
@@ -321,8 +328,8 @@
   flex-direction: column;
   gap: 10px;
   padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgb(0 0 0 / 80%);
+  border: 1px solid rgb(255 255 255 / 12%);
   border-radius: 12px;
   overflow: visible;
 }
@@ -338,10 +345,7 @@
 
 .settingsPanelPortal {
   position: fixed !important;
-  left: var(--svp-settings-left, 8px) !important;
-  top: var(--svp-settings-top, 8px) !important;
-  right: auto !important;
-  bottom: auto !important;
+  inset: var(--svp-settings-top, 8px) auto auto var(--svp-settings-left, 8px) !important;
   z-index: 2000;
   box-sizing: border-box;
   font-size: 12px;
@@ -379,6 +383,12 @@
   width: 100%;
 }
 
+.settingLabel {
+  font-size: 12px;
+  line-height: 1.2;
+  color: rgb(255 255 255 / 82%);
+}
+
 .settingItemSplit .settingLabel {
   flex: 1 1 0;
   min-width: 0;
@@ -401,9 +411,9 @@
   min-width: 64px;
   padding: 0 26px 0 10px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgb(255 255 255 / 12%);
+  background: rgb(255 255 255 / 4%);
+  color: rgb(255 255 255 / 90%);
   font-size: 12px;
   line-height: 26px;
   cursor: pointer;
@@ -426,7 +436,7 @@
 }
 
 .speedTrigger:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(255 255 255 / 8%);
 }
 
 .speedTrigger:focus-visible {
@@ -445,8 +455,8 @@
   gap: 4px;
   padding: 8px;
   border-radius: 10px;
-  background: rgba(0, 0, 0, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgb(0 0 0 / 86%);
+  border: 1px solid rgb(255 255 255 / 12%);
   z-index: 5;
 }
 
@@ -454,9 +464,9 @@
   height: 28px;
   padding: 0 10px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgb(255 255 255 / 8%);
+  background: rgb(255 255 255 / 4%);
+  color: rgb(255 255 255 / 90%);
   font-size: 12px;
   line-height: 28px;
   cursor: pointer;
@@ -464,23 +474,17 @@
 }
 
 .speedItem:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(255 255 255 / 8%);
 }
 
 .speedItemActive {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgb(255 255 255 / 12%);
 }
 
 .settingCheckbox {
   width: 16px;
   height: 16px;
-  accent-color: rgba(255, 255, 255, 0.86);
-}
-
-.settingLabel {
-  font-size: 12px;
-  line-height: 1.2;
-  color: rgba(255, 255, 255, 0.82);
+  accent-color: rgb(255 255 255 / 86%);
 }
 
 .iconButton {
@@ -492,9 +496,9 @@
   height: 28px;
   flex: 0 0 auto;
   border-radius: 9px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.92);
+  background: rgb(255 255 255 / 4%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  color: rgb(255 255 255 / 92%);
   cursor: pointer;
   transition:
     background-color 0.12s ease,
@@ -508,22 +512,13 @@
   flex: 0 0 auto;
 }
 
-.iconButton:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.iconButton:disabled:hover {
-  background: rgba(255, 255, 255, 0.06);
-  transform: none;
-}
-
-.iconButton:disabled .tooltip {
-  opacity: 0;
+.mini .iconButton {
+  width: 26px;
+  height: 26px;
 }
 
 .iconButton:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(255 255 255 / 8%);
   transform: translateY(-2px);
 }
 
@@ -536,12 +531,22 @@
   outline-offset: 0;
 }
 
+.iconButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.iconButton:disabled:hover {
+  background: rgb(255 255 255 / 6%);
+  transform: none;
+}
+
 .tooltip {
   position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(6px);
   bottom: 38px;
-  background: rgba(0, 0, 0, 0.58);
+  background: rgb(0 0 0 / 58%);
   color: #fff;
   padding: 6px 8px;
   border-radius: 6px;
@@ -556,6 +561,23 @@
   transition:
     opacity 0.12s ease,
     transform 0.12s ease;
+}
+
+.miniRestore .tooltip {
+  bottom: 54px;
+}
+
+/* Mini window must clip to rounded corners; avoid partially clipped tooltips */
+.mini .tooltip {
+  display: none;
+}
+
+/* In the embed toolbar (right side), show tooltips to the left to avoid running off-screen */
+.embedToolbar .tooltip {
+  left: auto;
+  right: calc(100% + 10px);
+  bottom: 50%;
+  transform: translateY(50%) translateX(6px);
 }
 
 .iconButton:hover .tooltip {
@@ -594,10 +616,7 @@
 }
 
 .tooltipLeft {
-  left: auto;
-  right: calc(100% + 10px);
-  bottom: auto;
-  top: 50%;
+  inset: 50% calc(100% + 10px) auto auto;
   transform: translateY(-50%) translateX(-6px);
 }
 
@@ -627,10 +646,7 @@
 }
 
 .tooltipBottomRight {
-  left: auto;
-  right: 0;
-  bottom: auto;
-  top: calc(100% + 10px);
+  inset: calc(100% + 10px) 0 auto auto;
   transform: translateY(-6px);
 }
 
@@ -638,12 +654,8 @@
   transform: translateY(0);
 }
 
-/* In the embed toolbar (right side), show tooltips to the left to avoid running off-screen */
-.embedToolbar .tooltip {
-  left: auto;
-  right: calc(100% + 10px);
-  bottom: 50%;
-  transform: translateY(50%) translateX(6px);
+.iconButton:disabled .tooltip {
+  opacity: 0;
 }
 
 .embedToolbar .iconButton:hover .tooltip {
@@ -653,14 +665,14 @@
 .sep {
   width: 1px;
   height: 28px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgb(255 255 255 / 12%);
   margin: 0 8px;
 }
 
 .miniPlaceholder {
   width: 100%;
   aspect-ratio: 16 / 9;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgb(0 0 0 / 92%);
 }
 
 .mini {
@@ -671,13 +683,8 @@
   max-width: calc(100vw - 36px);
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgb(255 255 255 / 12%);
   z-index: 999;
-}
-
-/* Mini window must clip to rounded corners; avoid partially clipped tooltips */
-.mini .tooltip {
-  display: none;
 }
 
 @media (hover: none) {
@@ -690,24 +697,13 @@
   }
 }
 
-.mini .videoControls {
-  opacity: 1;
-  transform: none;
-  pointer-events: auto;
-}
-
-.mini .iconButton {
-  width: 26px;
-  height: 26px;
-}
-
 .mini .volumeRange {
   width: 96px;
 }
 
-@media (max-width: 540px) {
+@media (width <= 540px) {
   .videoControls {
-    padding: 6px 6px;
+    padding: 6px;
   }
 
   .controlsTop {
@@ -747,15 +743,13 @@
   min-width: 72px;
   height: 28px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(0, 0, 0, 0.28);
-  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgb(255 255 255 / 12%);
+  background: rgb(0 0 0 / 28%);
+  color: rgb(255 255 255 / 92%);
   padding: 0 10px;
   font-size: 12px;
   line-height: 28px;
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
   color-scheme: dark;
 }
 
@@ -770,5 +764,5 @@
   height: auto;
   aspect-ratio: 16 / 9;
   object-fit: contain;
-  background: rgba(0, 0, 0, 0.92);
+  background: rgb(0 0 0 / 92%);
 }

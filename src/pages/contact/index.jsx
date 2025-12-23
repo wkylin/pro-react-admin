@@ -102,7 +102,11 @@ const Contact = () => {
     <FixTabPanel>
       <div
         className="code-window relative flex h-full items-center justify-center"
-        style={{ minHeight: '100vh', padding: '24px 8px', backgroundColor: colorBgContainer }}
+        style={{
+          minHeight: '100vh',
+          padding: '24px 8px',
+          backgroundColor: colorBgContainer,
+        }}
       >
         <div
           className="w-full"

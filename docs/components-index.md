@@ -8,9 +8,9 @@
 另外，对外发布目前还有一套“子路径多入口”的入口体系（用于更细粒度按需导入）：
 
 - **对外发布（build:lib:entries）入口**：
-	- `src/lib/core.ts`
-	- `src/lib/stateful.ts`
-	- `src/lib/stateless.ts`
+  - `src/lib/core.ts`
+  - `src/lib/stateful.ts`
+  - `src/lib/stateless.ts`
 
 - `vite.config.lib.ts` 的 `build.lib.entry` 指向 `src/lib/index.ts`
 - `npm run build:lib` 会基于它生成 `dist-lib/*`（包含 JS bundle 与 d.ts）
@@ -60,9 +60,9 @@
 
 1. `src/lib/index.ts` 已新增 export（对外发布 API）
 2. （可选）若你同时维护了 `src/components/index.ts`：`npm run check:components-index` 通过（避免漏加/写错导出路径）
-2. `npm run build:lib` 成功（产物 + d.ts）
-3. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
-4. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
+3. `npm run build:lib` 成功（产物 + d.ts）
+4. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
+5. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
 
 ## 常见问题
 

@@ -174,14 +174,8 @@ async function main() {
   let scannedCount = 0
   let savedBytes = 0
 
-  console.log(
-    '[optimize:media] scanning:',
-    targets.map((t) => path.relative(projectRoot, t.inputDir)).join(', ')
-  )
-  console.log(
-    '[optimize:media] output:',
-    targets.map((t) => path.relative(projectRoot, t.outputDir)).join(', ')
-  )
+  console.log('[optimize:media] scanning:', targets.map((t) => path.relative(projectRoot, t.inputDir)).join(', '))
+  console.log('[optimize:media] output:', targets.map((t) => path.relative(projectRoot, t.outputDir)).join(', '))
   console.log(
     `[optimize:media] settings: MP3_BITRATE=${MP3_BITRATE}, MP4_CRF=${MP4_CRF}, MP4_PRESET=${MP4_PRESET}, MIN_SAVINGS_PCT=${MIN_SAVINGS_PCT}%, SKIP_SMALL_KB=${SKIP_SMALL_KB}KB`
   )

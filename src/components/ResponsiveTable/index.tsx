@@ -65,7 +65,12 @@ export type ResponsiveTableProps<T = any> = {
   fetchData?: ((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise<any>) | null
   autoLoad?: boolean
   fetchUrl?: string | null
-  requestParamMap?: { pageField: string; pageSizeField: string; sortField: string; orderField: string }
+  requestParamMap?: {
+    pageField: string
+    pageSizeField: string
+    sortField: string
+    orderField: string
+  }
   responseFieldMap?: { listField: string; totalField: string }
   serverSort?: boolean
   defaultSort?: any
@@ -111,7 +116,12 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
     fetchData = null,
     autoLoad = false,
     fetchUrl = null,
-    requestParamMap = { pageField: 'page', pageSizeField: 'pageSize', sortField: 'sort', orderField: 'order' },
+    requestParamMap = {
+      pageField: 'page',
+      pageSizeField: 'pageSize',
+      sortField: 'sort',
+      orderField: 'order',
+    },
     responseFieldMap = { listField: 'data', totalField: 'total' },
     serverSort = false,
     defaultSort = null,
@@ -313,7 +323,12 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
       const finalPayload = includeSearch ? { ...parseLocationSearch(), ...(payload || {}) } : payload
       if (typeof queryConfig?.onSearch === 'function') {
-        await queryConfig.onSearch(finalPayload, { fetchPage, form, setPagination, pagination })
+        await queryConfig.onSearch(finalPayload, {
+          fetchPage,
+          form,
+          setPagination,
+          pagination,
+        })
       } else {
         await fetchPage(1, pagination.pageSize, sortState, finalPayload)
       }
@@ -422,7 +437,13 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
 
   const opColumn = {
     title: (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <span>操作</span>
         {showColumnSettings && (
           <Popover content={popContent} title="列设置">
@@ -498,7 +519,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           type: rowSelection === 'single' ? 'radio' : 'checkbox',
           selectedRowKeys,
           onChange: (keys: any, rows: any) => handleSelectionChange(keys, rows),
-          getCheckboxProps: (record: any) => ({ disabled: !isRowSelectable(record) }),
+          getCheckboxProps: (record: any) => ({
+            disabled: !isRowSelectable(record),
+          }),
         }
       : undefined
 
@@ -518,7 +541,15 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
   }
 
   return (
-    <div ref={containerRef as any} style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div
+      ref={containerRef as any}
+      style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {showUrlAppliedTag && hasMergedInitialSearch?.() && (
         <Tag color="blue" style={{ marginRight: 8 }}>
           已应用地址栏初始筛选
@@ -527,7 +558,12 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       {(showToolbarLeft || showToolbarRight) && (
         <div
           className="responsive-table-toolbar"
-          style={{ padding: '8px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+          style={{
+            padding: '8px 0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
           <div>
             {showToolbarLeft && (
@@ -656,12 +692,30 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                           onOpenChange={(open) => setPopoverVisible(open)}
                           getPopupContainer={() => document.body}
                           content={
-                            <div style={{ minWidth: 320, maxWidth: 420, display: 'flex', flexDirection: 'column' }}>
-                              <div style={{ padding: '12px 16px', borderBottom: `1px solid ${token.colorBorder}` }}>
+                            <div
+                              style={{
+                                minWidth: 320,
+                                maxWidth: 420,
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  padding: '12px 16px',
+                                  borderBottom: `1px solid ${token.colorBorder}`,
+                                }}
+                              >
                                 高级筛选
                               </div>
 
-                              <div style={{ maxHeight: 360, overflowY: 'auto', padding: 16 }}>
+                              <div
+                                style={{
+                                  maxHeight: 360,
+                                  overflowY: 'auto',
+                                  padding: 16,
+                                }}
+                              >
                                 <Form form={form} layout="vertical">
                                   {advFields.map((f: any) => (
                                     <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
@@ -672,7 +726,11 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                               </div>
 
                               <div
-                                style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}
+                                style={{
+                                  borderTop: `1px solid ${token.colorBorder}`,
+                                  padding: 12,
+                                  textAlign: 'right',
+                                }}
                               >
                                 <Space>
                                   <Button onClick={handleReset}>
@@ -730,8 +788,20 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                             size={420}
                             styles={{ body: { padding: 0 } }}
                           >
-                            <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                              <div style={{ flex: 1, overflowY: 'auto', padding: 16 }}>
+                            <div
+                              style={{
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  flex: 1,
+                                  overflowY: 'auto',
+                                  padding: 16,
+                                }}
+                              >
                                 <Form form={form} layout="vertical">
                                   {advFields.map((f: any) => (
                                     <Form.Item key={f.name} name={f.name} label={f.label} rules={f.rules || []}>
@@ -742,7 +812,11 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                               </div>
 
                               <div
-                                style={{ borderTop: `1px solid ${token.colorBorder}`, padding: 12, textAlign: 'right' }}
+                                style={{
+                                  borderTop: `1px solid ${token.colorBorder}`,
+                                  padding: 12,
+                                  textAlign: 'right',
+                                }}
                               >
                                 <Space>
                                   <Button onClick={handleReset}>
@@ -814,6 +888,47 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           const restTableProps: any = { ...tableProps }
           if (restTableProps && restTableProps.scroll) delete restTableProps.scroll
 
+          // AntD/rc-table sometimes renders a scrollbar placeholder header cell:
+          // <th class="ant-table-cell ant-table-cell-scrollbar" />
+          // This can trigger a11y rules like "th-has-data-cells".
+          // Convert it to a presentational <td> to keep semantics valid.
+          const componentsFromProps = restTableProps?.components
+          if (restTableProps && restTableProps.components) delete restTableProps.components
+
+          const mergedComponents = (() => {
+            if (!componentsFromProps) {
+              return {
+                header: {
+                  cell: (cellProps: any) => {
+                    const className = cellProps?.className ?? ''
+                    if (typeof className === 'string' && className.includes('ant-table-cell-scrollbar')) {
+                      const { children, ...rest } = cellProps ?? {}
+                      return <td {...rest} aria-hidden="true" role="presentation" tabIndex={-1} />
+                    }
+                    return <th {...cellProps} />
+                  },
+                },
+              }
+            }
+
+            const OriginalHeaderCell = componentsFromProps?.header?.cell
+
+            return {
+              ...componentsFromProps,
+              header: {
+                ...(componentsFromProps?.header || {}),
+                cell: (cellProps: any) => {
+                  const className = cellProps?.className ?? ''
+                  if (typeof className === 'string' && className.includes('ant-table-cell-scrollbar')) {
+                    const { children, ...rest } = cellProps ?? {}
+                    return <td {...rest} aria-hidden="true" role="presentation" tabIndex={-1} />
+                  }
+                  return OriginalHeaderCell ? <OriginalHeaderCell {...cellProps} /> : <th {...cellProps} />
+                },
+              },
+            }
+          })()
+
           return (
             <Table
               rowKey={rowKey}
@@ -823,6 +938,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
               pagination={false}
               scroll={finalScroll}
               virtual={typeof tableProps.virtual !== 'undefined' ? tableProps.virtual : virtualized}
+              components={mergedComponents}
               style={{ width: '100%' }}
               onChange={onTableChange}
               {...restTableProps}
@@ -830,7 +946,15 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           )
         })()}
       </div>
-      <div style={{ flex: '0 0 auto', padding: 8, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+      <div
+        style={{
+          flex: '0 0 auto',
+          padding: 8,
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+      >
         <Pagination
           current={pagination.current}
           pageSize={pagination.pageSize}

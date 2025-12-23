@@ -88,7 +88,6 @@ import { fireConfetti } from '@utils/confetti'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
-import { image } from 'd3'
 
 // const boxList = Array.apply(null, Array(10))
 

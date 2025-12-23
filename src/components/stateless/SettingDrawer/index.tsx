@@ -136,7 +136,10 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
         <h3 className="mb-4 text-sm font-bold">{t('settingDrawer.sections.themeColor')}</h3>
         <ThemeColor
           colors={[
-            { key: t('settingDrawer.colors.dawnBlueDefault'), color: '#1677ff' },
+            {
+              key: t('settingDrawer.colors.dawnBlueDefault'),
+              color: '#1677ff',
+            },
             { key: t('settingDrawer.colors.dustRed'), color: '#F5222D' },
             { key: t('settingDrawer.colors.volcano'), color: '#FA541C' },
             { key: t('settingDrawer.colors.sunset'), color: '#FAAD14' },

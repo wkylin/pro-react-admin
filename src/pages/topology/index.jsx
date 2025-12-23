@@ -7,12 +7,32 @@ import '@xyflow/react/dist/style.css'
 
 // 定义节点样式，方便区分不同类型的组件
 const nodeStyles = {
-  frontend: { background: '#e6f7ff', border: '1px solid #91d5ff', color: '#1890ff' },
-  gateway: { background: '#fff7e6', border: '1px solid #ffd591', color: '#d46b08' },
-  service: { background: '#f6ffed', border: '1px solid #b7eb8f', color: '#52c41a' },
-  data: { background: '#f9f0ff', border: '1px solid #d3adf7', color: '#722ed1' },
+  frontend: {
+    background: '#e6f7ff',
+    border: '1px solid #91d5ff',
+    color: '#1890ff',
+  },
+  gateway: {
+    background: '#fff7e6',
+    border: '1px solid #ffd591',
+    color: '#d46b08',
+  },
+  service: {
+    background: '#f6ffed',
+    border: '1px solid #b7eb8f',
+    color: '#52c41a',
+  },
+  data: {
+    background: '#f9f0ff',
+    border: '1px solid #d3adf7',
+    color: '#722ed1',
+  },
   // 修复：移除了 CSS 属性值中不必要的内部引号
-  infra: { background: '#fff1f0', border: '1px solid #ffccc7', color: '#f5222d' },
+  infra: {
+    background: '#fff1f0',
+    border: '1px solid #ffccc7',
+    color: '#f5222d',
+  },
 }
 
 const initialNodes = [
@@ -135,7 +155,13 @@ const initialEdges = [
   { id: 'e6-5', source: '6', target: '5', label: '检查库存' },
   { id: 'e6-7', source: '6', target: '7', label: '请求支付' },
   { id: 'e5-9', source: '5', target: '9', label: '同步数据' },
-  { id: 'e4-15', source: '4', target: '15', type: 'smoothstep', label: 'Session' },
+  {
+    id: 'e4-15',
+    source: '4',
+    target: '15',
+    type: 'smoothstep',
+    label: 'Session',
+  },
 
   // 异步通信
   { id: 'e6-10', source: '6', target: '10', animated: true, label: '订单事件' },
@@ -149,12 +175,48 @@ const initialEdges = [
   { id: 'e7-14', source: '7', target: '14', type: 'smoothstep' }, // 支付服务可能也需要读写订单状态
 
   // 监控系统连接到所有核心服务（虚线表示）
-  { id: 'e4-11', source: '4', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
-  { id: 'e5-11', source: '5', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
-  { id: 'e6-11', source: '6', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
-  { id: 'e7-11', source: '7', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
-  { id: 'e8-11', source: '8', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
-  { id: 'e3-11', source: '3', target: '11', type: 'smoothstep', style: { strokeDasharray: '5 5' } },
+  {
+    id: 'e4-11',
+    source: '4',
+    target: '11',
+    type: 'smoothstep',
+    style: { strokeDasharray: '5 5' },
+  },
+  {
+    id: 'e5-11',
+    source: '5',
+    target: '11',
+    type: 'smoothstep',
+    style: { strokeDasharray: '5 5' },
+  },
+  {
+    id: 'e6-11',
+    source: '6',
+    target: '11',
+    type: 'smoothstep',
+    style: { strokeDasharray: '5 5' },
+  },
+  {
+    id: 'e7-11',
+    source: '7',
+    target: '11',
+    type: 'smoothstep',
+    style: { strokeDasharray: '5 5' },
+  },
+  {
+    id: 'e8-11',
+    source: '8',
+    target: '11',
+    type: 'smoothstep',
+    style: { strokeDasharray: '5 5' },
+  },
+  {
+    id: 'e3-11',
+    source: '3',
+    target: '11',
+    type: 'smoothstep',
+    style: { strokeDasharray: '5 5' },
+  },
 ]
 
 function Flow() {

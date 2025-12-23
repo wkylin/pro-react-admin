@@ -76,11 +76,7 @@ async function main() {
   if (await fileExists(npmReadmePath)) {
     await fs.copyFile(npmReadmePath, distReadmePath)
   } else {
-    await fs.writeFile(
-      distReadmePath,
-      `# ${rootPkg.name}\n\nThis package is built from pro-react-admin.\n`,
-      'utf8',
-    )
+    await fs.writeFile(distReadmePath, `# ${rootPkg.name}\n\nThis package is built from pro-react-admin.\n`, 'utf8')
   }
 
   // LICENSE：npm 展示会优先识别包根目录的 LICENSE

@@ -177,7 +177,14 @@ const PDFExportDemo: React.FC = () => {
           {isExporting ? '正在导出...' : '导出PDF'}
         </Button>
       </div>
-      <div ref={contentRef} style={{ padding: '32px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+      <div
+        ref={contentRef}
+        style={{
+          padding: '32px',
+          borderRadius: '8px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        }}
+      >
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <Title level={2} style={{ marginBottom: '16px' }}>
             数据分析报告
@@ -288,7 +295,14 @@ const PDFExportDemo: React.FC = () => {
             </Col>
           </Row>
         </Card>
-        <div style={{ marginTop: '32px', textAlign: 'center', fontSize: '12px', color: '#999' }}>
+        <div
+          style={{
+            marginTop: '32px',
+            textAlign: 'center',
+            fontSize: '12px',
+            color: '#999',
+          }}
+        >
           <Paragraph>本报告由React 19 + ECharts 6 + Ant Design 5技术栈生成</Paragraph>
         </div>
       </div>

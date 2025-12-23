@@ -213,8 +213,17 @@ const NotificationsPage = () => {
           // toolbar 示例：左侧新增/导出，右侧查询表单
           toolbar={{
             actions: [
-              { key: 'add', label: '新增', type: 'primary', onClick: () => handleAdd() },
-              { key: 'export', label: '导出', onClick: ({ selectedRowKeys } = {}) => exportRows(selectedRowKeys) },
+              {
+                key: 'add',
+                label: '新增',
+                type: 'primary',
+                onClick: () => handleAdd(),
+              },
+              {
+                key: 'export',
+                label: '导出',
+                onClick: ({ selectedRowKeys } = {}) => exportRows(selectedRowKeys),
+              },
               // 示例：通过 action 的 onClick 回调使用 api（action 会接收到 toolbarApi）
               {
                 key: 'set-from-ref',
@@ -291,7 +300,9 @@ const NotificationsPage = () => {
             try {
               if (api && api.form) {
                 // 在表单就绪时设置初始标题（示例）
-                api.form.setFieldsValue({ title: '来自 onToolbarReady 的初始标题' })
+                api.form.setFieldsValue({
+                  title: '来自 onToolbarReady 的初始标题',
+                })
                 // 如果需要立即触发一次基于表单当前值的查询，可取消下面注释：
                 // api.fetchPage(1, api.pagination.pageSize, null, api.form.getFieldsValue())
               }
@@ -307,7 +318,10 @@ const NotificationsPage = () => {
           mergeSearchToFetchOnce={false}
           showUrlAppliedTag={true}
           requestParamMap={{ pageField: 'page', pageSizeField: 'pageSize' }}
-          responseFieldMap={{ listField: 'data.items', totalField: 'data.total' }}
+          responseFieldMap={{
+            listField: 'data.items',
+            totalField: 'data.total',
+          }}
           serverSort={false}
           showIndex={true}
           indexMode={'global'}

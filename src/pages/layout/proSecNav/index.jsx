@@ -312,7 +312,12 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
           onFocus={onPreload}
           onClick={onPreload}
           onKeyDown={onKeyDown}
-          style={{ background: 'transparent', border: 0, padding: 0, margin: 0 }}
+          style={{
+            background: 'transparent',
+            border: 0,
+            padding: 0,
+            margin: 0,
+          }}
         >
           {labelText}
         </button>

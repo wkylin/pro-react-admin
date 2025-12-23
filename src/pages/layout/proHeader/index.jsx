@@ -307,7 +307,13 @@ const renderMobileActions = ({ t, isTopDarkHeader, isDark, handleThemeToggle, mo
       />
     </Tooltip>
     <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
-      <MoreOutlined style={{ fontSize: 20, cursor: 'pointer', color: isTopDarkHeader ? '#fff' : undefined }} />
+      <MoreOutlined
+        style={{
+          fontSize: 20,
+          cursor: 'pointer',
+          color: isTopDarkHeader ? '#fff' : undefined,
+        }}
+      />
     </Dropdown>
   </Space>
 )

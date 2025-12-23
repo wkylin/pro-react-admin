@@ -31,3 +31,14 @@ storybook-static
 /dist-zip
 /playwright-report
 /test-results
+
+# 一次性报告输出（避免误提交）
+/npm-audit*.json
+/depcheck-full.json
+
+# 本地浏览器报告（非项目产物）
+/chromewebdata_*.report.html
+
+# 路由权限扫描报告（脚本生成产物）
+/scripts/route-permission-report.json
+/scripts/route-permission-suggested.json

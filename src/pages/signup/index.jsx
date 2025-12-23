@@ -291,7 +291,13 @@ const SignUp = () => {
                     htmlType="submit"
                     block
                     className={styles.submitBtn}
-                    style={{ height: 44, border: 'none', borderRadius: 12, fontSize: 16, fontWeight: 600 }}
+                    style={{
+                      height: 44,
+                      border: 'none',
+                      borderRadius: 12,
+                      fontSize: 16,
+                      fontWeight: 600,
+                    }}
                   >
                     立即注册
                   </Button>

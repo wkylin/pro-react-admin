@@ -229,7 +229,11 @@ class HttpClient {
 
   // 文件下载 (支持进度)
   async download(url, fileName, params = {}, config = {}) {
-    const fullUrl = this._buildUrl({ url, baseURL: this.config.BASE_URL, params })
+    const fullUrl = this._buildUrl({
+      url,
+      baseURL: this.config.BASE_URL,
+      params,
+    })
     const response = await fetch(fullUrl, {
       method: 'GET',
       headers: { ...this.config.HEADERS, ...config.headers },

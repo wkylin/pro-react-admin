@@ -565,7 +565,7 @@ Layout / component styles
   border-inline: var(--r) solid #0000;
   border-radius: calc(2 * var(--r)) calc(2 * var(--r)) 0 0 / var(--r);
   mask:
-    radial-gradient(var(--r) at var(--r) 0, #0000 98%, #000 101%) calc(-1 * var(--r)) 100%/100% var(--r) repeat-x,
+    radial-gradient(var(--r) at var(--r) 0, #0000 98%, #000 101%) calc(-1 * var(--r)) 100% / 100% var(--r) repeat-x,
     conic-gradient(#000 0 0) padding-box;
   background: #e1e1e1 border-box;
   width: fit-content;

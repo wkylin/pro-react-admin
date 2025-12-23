@@ -1,5 +1,6 @@
 module.exports = {
   testEnvironment: 'jsdom',
+  collectCoverage: true,
   transform: {
     '^.+\\.(t|j)sx?$': 'babel-jest',
   },

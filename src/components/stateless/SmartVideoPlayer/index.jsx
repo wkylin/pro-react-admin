@@ -505,7 +505,11 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
         emitEvent('hlsNative', {})
         kickAutoPlayNow()
       } catch (err) {
-        reportError(t('svp.hlsNativeLoadFailed'), { type: 'hls', name: err?.name, reason: err?.message })
+        reportError(t('svp.hlsNativeLoadFailed'), {
+          type: 'hls',
+          name: err?.name,
+          reason: err?.message,
+        })
       }
       return
     }
@@ -515,7 +519,10 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
         const mod = await import('hls.js')
         const Hls = mod?.default
         if (!Hls || typeof Hls.isSupported !== 'function' || !Hls.isSupported()) {
-          reportError(t('svp.hlsNotSupported'), { type: 'hls', reason: 'not_supported' })
+          reportError(t('svp.hlsNotSupported'), {
+            type: 'hls',
+            reason: 'not_supported',
+          })
           return
         }
 
@@ -561,11 +568,19 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
             emitEvent('hlsAttach', {})
             kickAutoPlayNow()
           } catch (err) {
-            reportError(t('svp.hlsLoadFailed'), { type: 'hls', name: err?.name, reason: err?.message })
+            reportError(t('svp.hlsLoadFailed'), {
+              type: 'hls',
+              name: err?.name,
+              reason: err?.message,
+            })
           }
         })
       } catch (err) {
-        reportError(t('svp.hlsInitFailed'), { type: 'hls', name: err?.name, reason: err?.message })
+        reportError(t('svp.hlsInitFailed'), {
+          type: 'hls',
+          name: err?.name,
+          reason: err?.message,
+        })
       }
     })()
 
@@ -1583,7 +1598,10 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
                               setCaptionTrackIndex(t.index)
                               setCaptionsEnabled(true)
                               setCaptionsOpen(false)
-                              emitEvent('captions', { enabled: true, trackIndex: t.index })
+                              emitEvent('captions', {
+                                enabled: true,
+                                trackIndex: t.index,
+                              })
                             }}
                           >
                             {t.label}
@@ -1918,7 +1936,9 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
                     {hoverPreview ? (
                       <div
                         className={styles.previewTooltip}
-                        style={{ left: `${Math.round((hoverPreview.ratio || 0) * 100)}%` }}
+                        style={{
+                          left: `${Math.round((hoverPreview.ratio || 0) * 100)}%`,
+                        }}
                         aria-hidden
                       >
                         {formatTime(hoverPreview.time)}

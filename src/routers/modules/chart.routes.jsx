@@ -25,12 +25,6 @@ export const chartRoutes = [
     element: <lazyComponents.BigScreen />,
   },
   {
-    path: 'd3-chart',
-    name: 'D3 Chart',
-    key: '/d3-chart',
-    element: <lazyComponents.D3Chart />,
-  },
-  {
     path: 'markmap',
     name: 'ChatGPT',
     key: '/markmap',

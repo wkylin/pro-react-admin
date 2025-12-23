@@ -35,7 +35,14 @@ const Terms = () => {
           <Card
             className={styles.card}
             variant="borderless"
-            styles={{ body: { padding: 0, height: '100%', display: 'flex', flexDirection: 'column' } }}
+            styles={{
+              body: {
+                padding: 0,
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+              },
+            }}
           >
             <div className={styles.header}>
               <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/signup')}>

@@ -94,7 +94,10 @@ const createKeepAliveManager = () => {
     },
     register: (id, opts) => {
       // opts: { setShouldRender, persistOnUnmount }
-      instances.set(id, { setShouldRender: opts.setShouldRender, persistOnUnmount: !!opts.persistOnUnmount })
+      instances.set(id, {
+        setShouldRender: opts.setShouldRender,
+        persistOnUnmount: !!opts.persistOnUnmount,
+      })
     },
     unregister: (id) => {
       if (timeouts.has(id)) {
@@ -234,7 +237,10 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       // 防止 Manager 在超时后销毁组件，从而避免状态丢失（如视频重播）。
       // Activity 模式下，隐藏的开销很小，适合保留状态。
       const effectivePersist = ActivityComponent ? true : persistOnUnmount
-      keepAliveManager.register(id, { setShouldRender, persistOnUnmount: effectivePersist })
+      keepAliveManager.register(id, {
+        setShouldRender,
+        persistOnUnmount: effectivePersist,
+      })
     }
     return () => {
       if (id) {
@@ -307,7 +313,10 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     }
 
     // Capture scroll events to record positions
-    container.addEventListener('scroll', onScroll, { capture: true, passive: true })
+    container.addEventListener('scroll', onScroll, {
+      capture: true,
+      passive: true,
+    })
 
     return () => {
       container.removeEventListener('scroll', onScroll, { capture: true })

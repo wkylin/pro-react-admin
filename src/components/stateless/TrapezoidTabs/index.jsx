@@ -34,7 +34,9 @@ const TrapezoidTabs = ({ tabs = [{ name: 'tab', code: 'tab' }], onTabChange, def
           <div
             key={tab.code}
             className={`${styles.tabItem} ${activeTab === tab.code ? styles.active : ''}`}
-            style={{ zIndex: activeTab === tab.code ? 100 : tabs.length - index }}
+            style={{
+              zIndex: activeTab === tab.code ? 100 : tabs.length - index,
+            }}
             onClick={() => handleTabClick(tab.code)}
           >
             <span data-text={tab.name} className={styles.tabContent}>

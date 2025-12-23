@@ -31,9 +31,18 @@ const defaultItems: TabItem[] = [
   {
     label: '服务',
     children: [
-      { label: '概览', content: <div className={styles.mockContent}>服务概览内容</div> },
-      { label: '技术支持', content: <div className={styles.mockContent}>技术支持内容</div> },
-      { label: '售后', content: <div className={styles.mockContent}>售后服务内容</div> },
+      {
+        label: '概览',
+        content: <div className={styles.mockContent}>服务概览内容</div>,
+      },
+      {
+        label: '技术支持',
+        content: <div className={styles.mockContent}>技术支持内容</div>,
+      },
+      {
+        label: '售后',
+        content: <div className={styles.mockContent}>售后服务内容</div>,
+      },
     ],
   },
   {

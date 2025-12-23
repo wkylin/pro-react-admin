@@ -88,7 +88,12 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
               formatter: '{b|{b}}\n{c}}\n{d}%',
               rich: {
                 a: { color: '#fff', fontSize: 12, lineHeight: 22 },
-                b: { color: '#fff', fontSize: 14, fontWeight: 'bold', lineHeight: 33 },
+                b: {
+                  color: '#fff',
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  lineHeight: 33,
+                },
               },
               ...item?.label,
             },

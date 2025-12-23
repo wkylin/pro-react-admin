@@ -87,7 +87,6 @@ const en = {
     prismRender: 'Prism Render',
     postMessage: 'Post Message',
     geoChart: 'Geo Chart',
-    d3Chart: 'D3 Chart',
     print: 'Print',
     profile: 'Profile',
     contact: 'Contact',
