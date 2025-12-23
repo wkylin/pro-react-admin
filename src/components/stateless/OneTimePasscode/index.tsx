@@ -149,10 +149,19 @@ export const OneTimePasscode: React.FC<OneTimePasscodeProps> = ({
       ['--otp-primary-rgb' as any]: hexToRgb(primary),
       ['--otp-bg' as any]: themeMode === 'dark' ? '#0b1220' : '#fff',
       ['--otp-fg' as any]: themeMode === 'dark' ? '#e6eef8' : '#0f1720',
+      ['--otp-bg-1' as any]: themeMode === 'dark' ? 'rgba(11, 18, 32, 0.92)' : 'rgba(255, 255, 255, 0.92)',
+      ['--otp-bg-2' as any]: themeMode === 'dark' ? 'rgba(9, 14, 24, 0.92)' : 'rgba(245, 247, 250, 0.92)',
     }
   } catch (e) {
     // if context not available, fall back to defaults
-    themeStyle = { ['--otp-primary' as any]: '#1677ff', ['--otp-primary-rgb' as any]: '22, 119, 255' }
+    themeStyle = {
+      ['--otp-primary' as any]: '#1677ff',
+      ['--otp-primary-rgb' as any]: '22, 119, 255',
+      ['--otp-bg' as any]: '#fff',
+      ['--otp-fg' as any]: '#0f1720',
+      ['--otp-bg-1' as any]: 'rgba(255, 255, 255, 0.92)',
+      ['--otp-bg-2' as any]: 'rgba(245, 247, 250, 0.92)',
+    }
   }
 
   const wrapperClass = [css.wrapper, (css as any)[variant] ?? '', className ?? ''].filter(Boolean).join(' ')
@@ -164,8 +173,8 @@ export const OneTimePasscode: React.FC<OneTimePasscodeProps> = ({
         width: '3.25rem',
         height: '3.25rem',
         borderRadius: '0.75rem',
-        border: '1px solid rgba(15,23,32,0.06)',
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.85), rgba(250,250,252,0.85))',
+        border: '1px solid rgba(15,23,32,0.12)',
+        background: 'var(--otp-bg, #fff)',
         color: 'var(--otp-fg, #0f1720)',
         fontFamily: "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace",
         fontSize: '1.125rem',

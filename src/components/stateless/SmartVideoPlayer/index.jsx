@@ -1489,6 +1489,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
             {!isEmbed ? (
               <div
                 className={`${styles.settingItem} ${styles.settingItemSplit}`}
+                role="group"
                 aria-label={t('svp.ariaPlaybackSpeed')}
               >
                 <span className={styles.settingLabel}>{t('svp.playbackSpeed')}</span>
@@ -1530,7 +1531,11 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
             ) : null}
 
             {!isEmbed && captionTracks.length > 0 ? (
-              <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label={t('svp.ariaCaptions')}>
+              <div
+                className={`${styles.settingItem} ${styles.settingItemSplit}`}
+                role="group"
+                aria-label={t('svp.ariaCaptions')}
+              >
                 <span className={styles.settingLabel}>{t('svp.captions')}</span>
                 <div className={styles.speedDropdown} data-captions-dropdown="true">
                   <button
@@ -1591,7 +1596,11 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
               </div>
             ) : null}
 
-            <div className={`${styles.settingItem} ${styles.settingItemSplit}`} aria-label={t('svp.ariaUiLanguage')}>
+            <div
+              className={`${styles.settingItem} ${styles.settingItemSplit}`}
+              role="group"
+              aria-label={t('svp.ariaUiLanguage')}
+            >
               <span className={styles.settingLabel}>{t('svp.uiLanguage')}</span>
               <div className={styles.speedDropdown} data-ui-lang-dropdown="true">
                 <button
@@ -1646,7 +1655,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
               </div>
             </div>
 
-            <div className={styles.settingsScroll} aria-label={t('svp.ariaOtherSettings')}>
+            <div className={styles.settingsScroll} role="group" aria-label={t('svp.ariaOtherSettings')}>
               {!isEmbed ? (
                 <>
                   <SettingToggle
@@ -1780,7 +1789,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
           ) : null}
 
           {isEmbed ? (
-            <div className={styles.embedToolbar} aria-label={t('svp.ariaEmbedToolbar')}>
+            <div className={styles.embedToolbar} role="toolbar" aria-label={t('svp.ariaEmbedToolbar')}>
               {externalOpenUrl ? (
                 <IconButton Icon={ExternalLink} label={t('svp.openInNewWindow')} onClick={handleOpenExternal} />
               ) : null}
@@ -1797,7 +1806,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
           ) : null}
 
           {!isEmbed ? (
-            <div className={styles.videoControls} aria-label={t('svp.ariaVideoControls')}>
+            <div className={styles.videoControls} role="group" aria-label={t('svp.ariaVideoControls')}>
               <div className={styles.controlsTop} role="group" aria-label={t('svp.ariaPlaybackTools')}>
                 {!isEmbed && !isMini ? (
                   <IconButton
@@ -1899,6 +1908,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
                   <span className={styles.time}>{formatTime(currentTime)}</span>
                   <div
                     className={styles.progressWrap}
+                    role="group"
                     onPointerMove={handleProgressPointerMove}
                     onPointerLeave={handleProgressPointerLeave}
                     aria-label={t('svp.ariaProgressBar')}

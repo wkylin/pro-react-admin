@@ -3,6 +3,8 @@
   --otp-primary-rgb: 22, 119, 255;
   --otp-bg: #fff;
   --otp-fg: #0f1720;
+  --otp-bg-1: rgb(255 255 255 / 92%);
+  --otp-bg-2: rgb(245 247 250 / 92%);
 }
 
 .wrapper {
@@ -18,7 +20,7 @@
   height: 3.25rem;
   border-radius: 0.75rem;
   border: 1px solid rgb(15 23 32 / 6%);
-  background: linear-gradient(180deg, rgb(255 255 255 / 85%), rgb(250 250 252 / 85%));
+  background: var(--otp-bg);
   color: var(--otp-fg);
   font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
   font-size: 1.125rem;
@@ -42,7 +44,6 @@
   border-radius: 0.9rem;
   font-size: 1.125rem;
   box-shadow: 0 10px 28px rgb(2 6 23 / 8%);
-  background: linear-gradient(180deg, rgb(255 255 255 / 92%), rgb(245 247 250 / 92%));
 }
 
 /* explicit variant classes to ensure CSS module exports these keys */
@@ -67,7 +68,7 @@
   height: 3rem;
   border-radius: 0.35rem;
   border: 1px solid rgb(15 23 32 / 12%);
-  background: linear-gradient(180deg, #fff, #f7fafc);
+  background: var(--otp-bg);
   box-shadow: inset 0 -2px 6px rgb(0 0 0 / 2%);
 }
 

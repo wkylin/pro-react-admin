@@ -426,7 +426,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         <span>操作</span>
         {showColumnSettings && (
           <Popover content={popContent} title="列设置">
-            <Button icon={<SettingOutlined />} size="small" />
+            <Button icon={<SettingOutlined />} size="small" aria-label="列设置" title="列设置" />
           </Popover>
         )}
       </div>
