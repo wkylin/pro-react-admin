@@ -280,6 +280,7 @@
     "vite": "^7.2.6",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-dts": "^4.5.4",
+    "vite-plugin-static-copy": "^3.1.4",
     "vite-plugin-svgr": "^4.2.0",
     "web-streams-polyfill": "^4.2.0",
     "webpack": "^5.103.0",

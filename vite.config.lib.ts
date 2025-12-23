@@ -4,6 +4,7 @@ import dts from 'vite-plugin-dts'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { visualizer } from 'rollup-plugin-visualizer'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const useAnalyze = Boolean(process.env.USE_ANALYZE)
@@ -28,6 +29,15 @@ export default defineConfig({
       // 只生成对外 lib 入口可达的类型，避免把未导出的页面/组件也卷进来。
       // 同时显式包含全局声明（例如 *.module.less）
       include: ['src/lib', 'src/vite-env.d.ts'],
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'NPM_README.md',
+          dest: '.', // 这里 '.' 代表相对于 build.outDir (即 dist-lib) 的根目录
+          rename: 'README.md',
+        },
+      ],
     }),
     // 仅在 USE_ANALYZE=1 时生成体积分布报告
     analyzePlugin,
