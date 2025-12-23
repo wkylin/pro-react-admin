@@ -5,7 +5,7 @@ const en = {
   nav: {
     home: 'Home',
     dashboard: 'Dashboard',
-    portfolio: 'My Portfolio',
+    portfolio: 'My Portfolio'
   },
   header: {
     search: 'Menu search',
@@ -21,7 +21,7 @@ const en = {
     userCenter: 'Profile',
     userSettings: 'Settings',
     contactMe: 'Contact',
-    logout: 'Log out',
+    logout: 'Log out'
   },
   settingDrawer: {
     title: 'Preferences',
@@ -31,11 +31,11 @@ const en = {
       navigationMode: 'Navigation mode',
       contentWidth: 'Content width',
       other: 'Other settings',
-      visualEffects: 'Visual effects',
+      visualEffects: 'Visual effects'
     },
     navTheme: {
       light: 'Light menu style',
-      dark: 'Dark menu style',
+      dark: 'Dark menu style'
     },
     enableDarkMode: 'Enable dark mode',
     colors: {
@@ -46,13 +46,13 @@ const en = {
       cyan: 'Cyan',
       auroraGreen: 'Aurora Green',
       geekBlue: 'Geek Blue',
-      purple: 'Purple',
+      purple: 'Purple'
     },
     customColor: 'Custom color',
     layout: {
       side: 'Side menu layout',
       top: 'Top menu layout',
-      mix: 'Mixed menu layout',
+      mix: 'Mixed menu layout'
     },
     contentWidth: 'Content width',
     contentWidthFixed: 'Fixed',
@@ -62,12 +62,12 @@ const en = {
       grayMode: 'Grayscale mode',
       compactMode: 'Compact mode',
       fixedHeader: 'Fixed header',
-      fixedSider: 'Fixed sidebar',
+      fixedSider: 'Fixed sidebar'
     },
     effects: {
       pointerFollow: 'Pointer follow',
-      pointerTrail: 'Pointer trail',
-    },
+      pointerTrail: 'Pointer trail'
+    }
   },
   menu: {
     motion: 'Motion',
@@ -109,7 +109,7 @@ const en = {
     vite: 'Vite',
 
     error: 'Error',
-    errorBoundary: 'ErrorBoundary',
+    errorBoundary: 'ErrorBoundary'
   },
   svp: {
     ariaPlaybackSettings: 'Playback settings',
@@ -188,8 +188,8 @@ const en = {
     videoNetworkError: 'Network error: failed to load video',
     videoDecodeError: 'Decode error (unsupported format/codec)',
     videoSourceNotSupported: 'Video source unavailable (404/CORS/type unsupported)',
-    videoLoadFailed: 'Failed to load video',
-  },
+    videoLoadFailed: 'Failed to load video'
+  }
 }
 
 export default en

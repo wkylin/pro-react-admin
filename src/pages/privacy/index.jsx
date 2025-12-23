@@ -23,29 +23,29 @@ const Privacy = () => {
     '--legal-text-2': token.colorTextSecondary,
     '--legal-primary': token.colorPrimary,
     '--legal-primary-2': token.colorInfo,
-    '--legal-shadow': token.boxShadowSecondary,
+    '--legal-shadow': token.boxShadowSecondary
   }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Content className={styles.root} style={cssVars}>
-        <div className={styles.bg} aria-hidden="true" />
+        <div className={styles.bg} aria-hidden='true' />
 
         <div className={styles.container} style={{ padding: isMobile ? 16 : 24 }}>
           <Card
             className={styles.card}
-            variant="borderless"
+            variant='borderless'
             styles={{
               body: {
                 padding: 0,
                 height: '100%',
                 display: 'flex',
-                flexDirection: 'column',
-              },
+                flexDirection: 'column'
+              }
             }}
           >
             <div className={styles.header}>
-              <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/signup')}>
+              <Button type='text' icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/signup')}>
                 返回
               </Button>
               <div className={styles.headerMeta}>
@@ -60,7 +60,7 @@ const Privacy = () => {
                 隐私政策
               </Title>
               <Paragraph className={styles.subTitle}>
-                <Text type="secondary">最后更新日期：2025年11月25日</Text>
+                <Text type='secondary'>最后更新日期：2025年11月25日</Text>
               </Paragraph>
 
               <Title level={4}>1. 信息收集</Title>

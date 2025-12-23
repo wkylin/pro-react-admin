@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-async function fileExists(filePath) {
+async function fileExists (filePath) {
   try {
     await fs.access(filePath)
     return true
@@ -10,11 +10,11 @@ async function fileExists(filePath) {
   }
 }
 
-function pickDefined(obj) {
+function pickDefined (obj) {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined))
 }
 
-async function main() {
+async function main () {
   const repoRoot = process.cwd()
   const rootPkgPath = path.join(repoRoot, 'package.json')
   const distDir = path.join(repoRoot, 'dist-lib')
@@ -46,25 +46,25 @@ async function main() {
       '.': {
         types: './index.d.ts',
         import: './pro-react-components.es.js',
-        require: './pro-react-components.umd.js',
+        require: './pro-react-components.umd.js'
       },
       './core': {
         types: './entries/core.d.ts',
         import: './entries/core.es.js',
-        require: './entries/core.cjs.js',
+        require: './entries/core.cjs.js'
       },
       './stateful': {
         types: './entries/stateful.d.ts',
         import: './entries/stateful.es.js',
-        require: './entries/stateful.cjs.js',
+        require: './entries/stateful.cjs.js'
       },
       './stateless': {
         types: './entries/stateless.d.ts',
         import: './entries/stateless.es.js',
-        require: './entries/stateless.cjs.js',
+        require: './entries/stateless.cjs.js'
       },
-      './style.css': './style.css',
-    },
+      './style.css': './style.css'
+    }
   }
 
   const distPkgPath = path.join(distDir, 'package.json')

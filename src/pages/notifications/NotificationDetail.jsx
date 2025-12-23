@@ -27,7 +27,7 @@ const NotificationDetail = () => {
         setData({
           id,
           title: `通知 ${id}`,
-          body: `这是通知 ${id} 的详情。query: ${search}`,
+          body: `这是通知 ${id} 的详情。query: ${search}`
         })
       } catch (e) {
         console.error('fetch notification detail error', e)
@@ -54,21 +54,23 @@ const NotificationDetail = () => {
         width: '100%',
         backgroundColor: bgColor,
         boxShadow,
-        border: `1px solid ${borderColor}`,
+        border: `1px solid ${borderColor}`
       }}
     >
-      {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
-          <Spin />
-        </div>
-      ) : (
-        <>
-          <p style={{ color }}>{data ? data.body : '暂无数据'}</p>
-          <div style={{ marginTop: 12 }}>
-            <Button onClick={() => redirectTo('/notifications' + (search || ''))}>返回通知中心</Button>
+      {loading
+        ? (
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 24 }}>
+            <Spin />
           </div>
-        </>
-      )}
+          )
+        : (
+          <>
+            <p style={{ color }}>{data ? data.body : '暂无数据'}</p>
+            <div style={{ marginTop: 12 }}>
+              <Button onClick={() => redirectTo('/notifications' + (search || ''))}>返回通知中心</Button>
+            </div>
+          </>
+          )}
     </Card>
   )
 }

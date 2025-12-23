@@ -59,7 +59,7 @@ const buildScriptDeps = () => {
   const depNames = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.devDependencies || {}),
-    ...Object.keys(pkg.optionalDependencies || {}),
+    ...Object.keys(pkg.optionalDependencies || {})
   ]
 
   for (const name of depNames) {
@@ -112,7 +112,7 @@ const buildConfigDeps = () => {
   const depNames = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.devDependencies || {}),
-    ...Object.keys(pkg.optionalDependencies || {}),
+    ...Object.keys(pkg.optionalDependencies || {})
   ]
 
   const files = []
@@ -192,7 +192,7 @@ const report = await new Promise((resolve, reject) => {
         'storybook-static',
         'coverage',
         'playwright-report',
-        'test-results',
+        'test-results'
       ],
       // Avoid the ttypescript special (it reads tsconfig.json as strict JSON and can fail on JSONC).
       specials: [
@@ -203,8 +203,8 @@ const report = await new Promise((resolve, reject) => {
         depcheck.special.webpack,
         depcheck.special.husky,
         depcheck.special.prettier,
-        depcheck.special.commitizen,
-      ],
+        depcheck.special.commitizen
+      ]
     },
     (unused) => resolve(unused)
   )
@@ -221,7 +221,7 @@ const ignoreMissingPrefixes = [
   '@assets/',
   '@app-hooks/',
   '@container/',
-  '@theme/',
+  '@theme/'
 ]
 
 const pickArray = (key) => {

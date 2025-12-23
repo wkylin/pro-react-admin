@@ -10,13 +10,13 @@ const Contact = () => {
     name: '',
     email: '',
     subject: '',
-    message: '',
+    message: ''
   })
 
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState(null)
   const validateForm = () => {
-    let tempErrors = {}
+    const tempErrors = {}
     let isValid = true
 
     if (!formData.name.trim()) {
@@ -65,7 +65,7 @@ const Contact = () => {
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
-        body: form,
+        body: form
       })
 
       const result = await response.json()
@@ -76,7 +76,7 @@ const Contact = () => {
           name: '',
           email: '',
           subject: '',
-          message: '',
+          message: ''
         })
         setErrors({})
       } else {
@@ -91,25 +91,25 @@ const Contact = () => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }))
   }
   const {
-    token: { colorBgContainer, colorBorder, colorText },
+    token: { colorBgContainer, colorBorder, colorText }
   } = theme.useToken()
 
   return (
     <FixTabPanel>
       <div
-        className="code-window relative flex h-full items-center justify-center"
+        className='code-window relative flex h-full items-center justify-center'
         style={{
           minHeight: '100vh',
           padding: '24px 8px',
-          backgroundColor: colorBgContainer,
+          backgroundColor: colorBgContainer
         }}
       >
         <div
-          className="w-full"
+          className='w-full'
           style={{
             maxWidth: 420,
             width: '100%',
@@ -120,77 +120,77 @@ const Contact = () => {
             padding: '32px 20px',
             margin: '0 auto',
             backdropFilter: 'blur(4px)',
-            color: colorText,
+            color: colorText
           }}
         >
-          <h2 className="mb-4 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-center text-3xl font-bold text-transparent md:text-5xl">
+          <h2 className='mb-4 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-center text-3xl font-bold text-transparent md:text-5xl'>
             Get in Touch
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 gap-6">
+          <form onSubmit={handleSubmit} className='space-y-6'>
+            <div className='grid grid-cols-1 gap-6'>
               <div>
                 <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
+                  type='text'
+                  name='name'
+                  placeholder='Your Name'
                   className={`w-full rounded-xl border px-4 py-3 ${
                     errors.name ? 'border-red-500' : 'border-gray-300/50 bg-white/30'
                   } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
                   value={formData.name}
                   onChange={handleInputChange}
                 />
-                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+                {errors.name && <p className='mt-1 text-sm text-red-500'>{errors.name}</p>}
               </div>
 
               <div>
                 <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
+                  type='email'
+                  name='email'
+                  placeholder='Your Email'
                   className={`w-full rounded-xl border px-4 py-3 ${
                     errors.email ? 'border-red-500' : 'border-gray-300/50 bg-white/30 text-gray-800'
                   } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
                   value={formData.email}
                   onChange={handleInputChange}
                 />
-                {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+                {errors.email && <p className='mt-1 text-sm text-red-500'>{errors.email}</p>}
               </div>
 
               <div>
                 <input
-                  type="text"
-                  name="subject"
-                  placeholder="Subject"
+                  type='text'
+                  name='subject'
+                  placeholder='Subject'
                   className={`w-full rounded-xl border px-4 py-3 ${
                     errors.subject ? 'border-red-500' : 'border-gray-300/50 bg-white/30 text-gray-800'
                   } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
                   value={formData.subject}
                   onChange={handleInputChange}
                 />
-                {errors.subject && <p className="mt-1 text-sm text-red-500">{errors.subject}</p>}
+                {errors.subject && <p className='mt-1 text-sm text-red-500'>{errors.subject}</p>}
               </div>
 
               <div>
                 <textarea
-                  name="message"
-                  placeholder="Your Message"
+                  name='message'
+                  placeholder='Your Message'
                   rows={4}
                   className={`w-full resize-none rounded-xl border px-4 py-3 ${
                     errors.message ? 'border-red-500' : 'border-gray-300/50 bg-white/30 text-gray-800'
                   } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
                   value={formData.message}
                   onChange={handleInputChange}
-                ></textarea>
-                {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message}</p>}
+                />
+                {errors.message && <p className='mt-1 text-sm text-red-500'>{errors.message}</p>}
               </div>
             </div>
 
             <button
-              type="submit"
-              className="flex w-full items-center justify-center space-x-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg"
+              type='submit'
+              className='flex w-full items-center justify-center space-x-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg'
             >
               <span>Send Message</span>
-              <Send className="h-4 w-4" />
+              <Send className='h-4 w-4' />
             </button>
           </form>
           {status && (
@@ -201,7 +201,7 @@ const Contact = () => {
                   : 'border border-red-500/20 bg-red-500/10 text-red-400'
               }`}
             >
-              <p className="text-center">{status}</p>
+              <p className='text-center'>{status}</p>
             </div>
           )}
         </div>

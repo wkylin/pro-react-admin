@@ -17,24 +17,24 @@ const __dirname = path.dirname(__filename)
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
+  allConfig: js.configs.all
 })
 // npx @eslint/migrate-config .eslintrc.json
 export default [
   {
-    ignores: ['node_modules/**/*', '**/CHANGELOG.md', '**/package-lock.json', 'dist/**/*', 'build/**/*', '**/coverage'],
+    ignores: ['node_modules/**/*', '**/CHANGELOG.md', '**/package-lock.json', 'dist/**/*', 'build/**/*', '**/coverage']
   },
   ...compat.extends('plugin:react/recommended', 'prettier'),
   {
     plugins: {
       react,
       '@typescript-eslint': typescriptEslint,
-      'react-hooks': fixupPluginRules(reactHooks),
+      'react-hooks': fixupPluginRules(reactHooks)
     },
 
     languageOptions: {
       globals: {
-        ...globals.browser,
+        ...globals.browser
       },
 
       parser: tsParser,
@@ -43,15 +43,15 @@ export default [
 
       parserOptions: {
         ecmaFeatures: {
-          jsx: true,
-        },
-      },
+          jsx: true
+        }
+      }
     },
 
     settings: {
       react: {
-        version: 'detect',
-      },
+        version: 'detect'
+      }
     },
 
     rules: {
@@ -87,8 +87,8 @@ export default [
       'no-inner-declarations': 'off',
       'no-unused-expressions': 'off',
       'no-unused-vars': 'off',
-      'no-plusplus': 'off',
-    },
+      'no-plusplus': 'off'
+    }
   },
-  ...storybook.configs['flat/recommended'],
+  ...storybook.configs['flat/recommended']
 ]
