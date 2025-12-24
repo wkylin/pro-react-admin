@@ -17,6 +17,10 @@
   --vp-text-faint: rgb(0 0 0 / 45%);
 }
 
+:global(.is-mobile) .page {
+  padding: 0;
+}
+
 :global(:root[data-theme='dark']) .page {
   --vp-border: rgb(255 255 255 / 8%);
   --vp-border-strong: rgb(255 255 255 / 14%);
@@ -53,26 +57,6 @@
 
 .sidebarCard {
   width: 460px;
-}
-
-@media (width <= 980px) {
-  .page {
-    padding: 0;
-  }
-
-  .layout {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebarCard {
-    width: 100%;
-  }
-
-  .card {
-    border-radius: 0;
-    border-left: 0;
-    border-right: 0;
-  }
 }
 
 .playerSection {
@@ -231,21 +215,41 @@
   color: var(--vp-text-soft);
 }
 
-@media (width <= 540px) {
-  .comments {
-    padding: 12px;
-  }
+/* Narrow mobile styles applied via root class `.is-mobile` */
+:global(.is-mobile) .comments {
+  padding: 16px;
+  border-top: 1px solid var(--vp-border);
+}
 
-  .sidebarHeader {
-    padding: 12px;
-  }
+:global(.is-mobile) .sidebarHeader {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 
-  .movieList {
-    padding: 10px;
-    gap: 8px;
-  }
+:global(.is-mobile) .movieList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
 
-  .movieItem {
-    padding: 10px;
-  }
+:global(.is-mobile) .movieItem {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+:global(.is-mobile) .layout {
+  grid-template-columns: 1fr;
+}
+
+:global(.is-mobile) .sidebarCard {
+  width: 100%;
+}
+
+:global(.is-mobile) .card {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
 }

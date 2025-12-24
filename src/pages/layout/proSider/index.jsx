@@ -6,9 +6,10 @@ import { useStore } from '@/store'
 
 import styles from './index.module.less'
 
-const ProSider = ({ children, theme = 'light', isMobile }) => {
+const ProSider = ({ children, theme = 'light' }) => {
   const isSidebarOpen = useStore((s) => s.isSidebarOpen)
   const toggleSidebar = useStore((s) => s.toggleSidebar)
+  const isMobile = useStore((s) => s.isMobile)
 
   return (
     <Layout.Sider
@@ -43,7 +44,7 @@ const ProSider = ({ children, theme = 'light', isMobile }) => {
 ProSider.propTypes = {
   children: PropTypes.node,
   theme: PropTypes.string,
-  isMobile: PropTypes.bool,
+  // `isMobile` 由全局 Zustand 管理，组件直接读取，不再通过 props 传入
   // 侧边栏折叠状态由全局 Zustand `isSidebarOpen` 管理
 }
 

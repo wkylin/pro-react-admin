@@ -81,34 +81,24 @@
   font-size: 14px;
 }
 
-@media (width <= 1200px) {
-  .tagCardItem {
-    width: calc(50% - 10px);
-    flex: 1 1 calc(50% - 10px);
-  }
+/* Mobile styles applied via root class `.is-mobile` */
+:global(.is-mobile) .tagCardItem {
+  width: 100%;
+  flex: 1 1 100%;
 }
 
-@media (width <= 992px) {
-  .tagCardItem {
-    width: 100%;
-    flex: 1 1 100%;
-  }
+:global(.is-mobile) .tagCard {
+  padding: 0 4px;
 }
 
-@media (width <= 768px) {
-  .tagCard {
-    padding: 0 4px;
-  }
+:global(.is-mobile) .tagCardExtra {
+  justify-content: flex-end;
+}
 
-  .tagCardExtra {
-    justify-content: flex-end;
-  }
+:global(.is-mobile) .tagCardList {
+  gap: 12px;
+}
 
-  .tagCardList {
-    gap: 12px;
-  }
-
-  .cardBody {
-    max-height: none;
-  }
+:global(.is-mobile) .cardBody {
+  max-height: none;
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Badge, Button, Space, Typography, theme, Drawer, Grid } from 'antd'
+import { Badge, Button, Space, Typography, theme, Drawer } from 'antd'
+import { useStore } from '@/store'
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
-const { useBreakpoint } = Grid
 const initialNotifications = [
   {
     id: 1,
@@ -47,8 +47,7 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
   const unreadCount = notifications.filter((n) => !n.read).length
   const { redirectTo } = useSafeNavigate()
   const MAX_ITEMS = 50
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
 
   const [popVisible, setPopVisible] = useState(false)
 

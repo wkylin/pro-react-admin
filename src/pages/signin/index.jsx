@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
-import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Grid } from 'antd'
+import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag } from 'antd'
+import { useStore } from '@/store'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { setLocalStorage } from '@utils/publicFn'
 import { useAuth } from '@src/service/useAuth'
@@ -11,7 +12,6 @@ import styles from './index.module.less'
 
 const { Title, Text, Paragraph } = Typography
 const { Content } = Layout
-const { useBreakpoint } = Grid
 
 const TEST_ACCOUNT_EMAILS = Object.keys(testAccounts)
 
@@ -21,8 +21,7 @@ const SignIn = () => {
   const { token } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm()
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
   const [accountPasswords, setAccountPasswords] = useState({})
 
   const isLikelyEmail = (value) => {

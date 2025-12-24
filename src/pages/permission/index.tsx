@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Card, Button, Space, Tag, message, Divider, Row, Col, Grid, Switch, Select, Alert } from 'antd'
+import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Select, Alert } from 'antd'
+import { useStore } from '@/store'
 import { usePermission } from '@app-hooks/usePermission'
 import PermissionGuard from '@/components/auth/PermissionGuard'
 import AuthButton from '@/components/auth/AuthButton'
@@ -7,7 +8,7 @@ import { permissionService } from '@src/service/permissionService'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { useProThemeContext } from '@/theme/hooks'
 const PermissionExample = () => {
-  const screens = Grid.useBreakpoint()
+  const screens = useStore((s) => s.screens)
   const { themeSettings, updateSettings } = useProThemeContext()
   const {
     permissions,

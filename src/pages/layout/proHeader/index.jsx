@@ -33,6 +33,7 @@ import { permissionService } from '@src/service/permissionService'
 import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
+import { useStore } from '@/store'
 
 const DENIED_TIP = '您没有权限访问该页面'
 
@@ -327,7 +328,7 @@ const renderUserTrigger = (isAuthenticated, user, iconButtonStyle) =>
     <Button icon={<UserOutlined style={{ fontSize: 16 }} />} type="default" shape="round" style={iconButtonStyle} />
   )
 
-const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuClick }) => {
+const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [messageApi, contextHolder] = message.useMessage()
@@ -402,6 +403,8 @@ const ProHeader = ({ layout, onSettingClick, children, isMobile, onMobileMenuCli
 
   const iconButtonStyle = React.useMemo(() => ({ fontSize: 16 }), [])
 
+  const isMobile = useStore((s) => s.isMobile)
+
   return (
     <Layout.Header
       className={styles.header}
@@ -454,7 +457,7 @@ ProHeader.propTypes = {
   layout: PropTypes.string,
   onSettingClick: PropTypes.func,
   children: PropTypes.node,
-  isMobile: PropTypes.bool,
+  // `isMobile` 由全局 Zustand 管理，组件直接读取，不再通过 props 传入
   onMobileMenuClick: PropTypes.func,
 }
 

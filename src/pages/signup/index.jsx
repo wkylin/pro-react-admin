@@ -1,21 +1,7 @@
 import React from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
-import {
-  Form,
-  Input,
-  Button,
-  Card,
-  Divider,
-  Checkbox,
-  Typography,
-  Row,
-  Col,
-  Select,
-  Layout,
-  theme,
-  Space,
-  Grid,
-} from 'antd'
+import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
+import { useStore } from '@/store'
 import {
   UserOutlined,
   LockOutlined,
@@ -33,15 +19,14 @@ import styles from './index.module.less'
 const { Title, Text, Link } = Typography
 const { Option } = Select
 const { Content } = Layout
-const { useBreakpoint } = Grid
+// responsive handled by global Zustand `isMobile`
 
 const passwordIconRender = (visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)
 
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
   const { token } = theme.useToken()
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
 
   const [form] = Form.useForm()
 

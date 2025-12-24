@@ -247,12 +247,11 @@
   opacity: 0.55;
 }
 
-@media (width <= 767px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-    align-items: start;
-  }
+/* Mobile styles applied via root class `.is-mobile` */
+:global(.is-mobile) .grid {
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: start;
 }
 
 @keyframes bg-flow {

@@ -185,8 +185,8 @@
   align-items: flex-start;
   position: relative;
   width: max-content;
-  margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 4px;
+  min-width: 80px;
 }
 
 .childWrapper {
@@ -245,30 +245,28 @@
   }
 }
 
-/* 响应式调整 */
-@media (width <= 768px) {
-  .current-box,
-  .child-box {
-    padding: 0 8px;
-    font-size: 12px;
-    height: 24px;
-    line-height: 24px;
-  }
+/* Mobile styles applied via root class `.is-mobile` */
+:global(.is-mobile) .current-box,
+:global(.is-mobile) .child-box {
+  padding: 0 8px;
+  font-size: 12px;
+  height: 24px;
+  line-height: 24px;
+}
 
-  .rootBox {
-    height: 28px;
-    line-height: 28px;
-    font-size: 14px;
-  }
+:global(.is-mobile) .rootBox {
+  height: 28px;
+  line-height: 28px;
+  font-size: 14px;
+}
 
-  .childWrapper {
-    padding: 0 4px;
-    min-width: 80px;
-  }
+:global(.is-mobile) .childWrapper {
+  padding: 0 4px;
+  min-width: 80px;
+}
 
-  .expandIcon {
-    width: 14px;
-    height: 14px;
-    font-size: 8px;
-  }
+:global(.is-mobile) .expandIcon {
+  width: 14px;
+  height: 14px;
+  font-size: 8px;
 }

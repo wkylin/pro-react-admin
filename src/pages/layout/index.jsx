@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
-import { Layout, Grid, Drawer } from 'antd'
+import { Layout, Drawer } from 'antd'
+import { useStore } from '@/store'
 import { ProTabProvider } from '@app-hooks/proTabsContext'
 import PointerMove from '@stateless/PointerMove'
 import MagicTrail from '@stateless/MagicTrail'
@@ -11,15 +12,12 @@ import ProSecNav from './proSecNav'
 import styles from './index.module.less'
 import { useProThemeContext } from '@theme/hooks'
 
-const { useBreakpoint } = Grid
-
 const ProLayout = () => {
   const layoutRef = useRef(null)
   const [settingOpen, setSettingOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
 
   const { themeSettings } = useProThemeContext()
   const { layout, themeMode, navTheme } = themeSettings

@@ -101,16 +101,15 @@
   margin-bottom: 18px;
 }
 
-@media (width <= 768px) {
-  .card {
-    height: auto;
-    min-height: 72vh;
-    border-radius: 14px;
-  }
+/* Mobile styles applied via root class `.is-mobile` */
+:global(.is-mobile) .card {
+  height: auto;
+  min-height: 72vh;
+  border-radius: 14px;
+}
 
-  .body {
-    padding: 14px 16px 18px;
-  }
+:global(.is-mobile) .body {
+  padding: 14px 16px 18px;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -18,6 +18,7 @@ import {
   Grid,
   FloatButton,
 } from 'antd'
+import { useStore } from '@/store'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import {
   GithubOutlined,
@@ -37,7 +38,6 @@ import avatarPng from '@assets/images/w.png'
 
 const { Title, Paragraph, Text } = Typography
 const { useToken } = theme
-const { useBreakpoint } = Grid
 
 const Section = ({ id, children, className = '' }) => {
   return (
@@ -77,7 +77,7 @@ AnimatedCard.propTypes = {
 const MyPortfilo = () => {
   const navigate = useNavigate()
   const { token, theme: antdTheme } = useToken()
-  const screens = useBreakpoint()
+  const isMobile = useStore((s) => s.isMobile)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const containerRef = useRef(null)
   const { scrollYProgress } = useScroll({ container: containerRef })
@@ -320,7 +320,7 @@ const MyPortfilo = () => {
       </motion.div>
 
       {/* Navigation */}
-      {!screens.md ? (
+      {!isMobile ? (
         <FloatButton.Group
           trigger="click"
           type="primary"

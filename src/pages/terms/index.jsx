@@ -1,18 +1,17 @@
 import React from 'react'
-import { Layout, Typography, Card, Button, theme, Grid } from 'antd'
+import { Layout, Typography, Card, Button, theme } from 'antd'
+import { useStore } from '@/store'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import styles from './index.module.less'
 
 const { Title, Paragraph, Text } = Typography
 const { Content } = Layout
-const { useBreakpoint } = Grid
 
 const Terms = () => {
   const { redirectTo } = useSafeNavigate()
   const { token } = theme.useToken()
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
 
   const cssVars = {
     '--legal-bg': token.colorBgBase,

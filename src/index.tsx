@@ -10,6 +10,7 @@ import ErrorBoundary from '@/components/ErrorBoundary'
 import WatermarkProvider from '@/components/WatermarkProvider'
 import * as Sentry from '@sentry/react'
 import i18n from './i18n/i18n'
+import GlobalBreakpointListener from '@/components/GlobalBreakpointListener'
 
 const patchDefinePropertyDescriptor = () => {
   try {
@@ -84,6 +85,7 @@ root.render(
   <StrictMode>
     <AntdApp>
       <I18nextProvider i18n={i18n}>
+        <GlobalBreakpointListener />
         <ErrorBoundary>
           <Suspense fallback={<div>Loading...</div>}>
             <ProThemeProvider>

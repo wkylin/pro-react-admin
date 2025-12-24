@@ -71,15 +71,14 @@
   }
 }
 
-@media (width <= 640px) {
-  .statisticCard {
-    grid-template-columns: 1fr;
-    padding: 0.5rem;
-  }
+/* Mobile styles applied via root class `.is-mobile` */
+:global(.is-mobile) .statisticCard {
+  grid-template-columns: 1fr;
+  padding: 0.5rem;
+}
 
-  .statisticCardItem {
-    padding: 1.25rem;
-  }
+:global(.is-mobile) .statisticCardItem {
+  padding: 1.25rem;
 }
 
 .statisticCard.dark {

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Button, Card, Typography, Grid, Row, Col } from 'antd'
+import { Button, Card, Typography, Row, Col } from 'antd'
+import { useStore } from '@/store'
 import FixTabPanel from '@stateless/FixTabPanel'
 
 const { Title, Paragraph, Text } = Typography
 
 const MyError = () => {
   const [shouldThrow, setShouldThrow] = useState(false)
-  const screens = Grid.useBreakpoint()
+  const screens = useStore((s) => s.screens)
 
   if (shouldThrow) {
     // 模拟一个渲染错误

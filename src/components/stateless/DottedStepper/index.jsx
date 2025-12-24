@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { CheckCircle, Circle } from 'lucide-react'
-import { Button, Card, Grid, theme } from 'antd'
+import { Button, Card, theme } from 'antd'
+import { useStore } from '@/store'
 import { useProThemeContext } from '@/theme/hooks'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
 
 const { useToken } = theme
-const { useBreakpoint } = Grid
 
 const defaultSteps = [
   { label: 'Introduction' },
@@ -31,8 +31,7 @@ const defaultSteps = [
 
 const StepIndicator = ({ currentStep, steps }) => {
   const { themeSettings } = useProThemeContext()
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
   const isDark = themeSettings.themeMode === 'dark'
 
   // 增强蓝色对比度
@@ -203,8 +202,7 @@ StepContent.propTypes = {
 const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) => {
   const { themeSettings } = useProThemeContext()
   const { token } = useToken()
-  const screens = useBreakpoint()
-  const isMobile = !screens.md
+  const isMobile = useStore((s) => s.isMobile)
   const isDark = themeSettings.themeMode === 'dark'
 
   const primaryColor = isDark ? '#40a9ff' : '#0958d9'

@@ -13,4 +13,14 @@ export interface AppSlice {
   setSidebarOpen: (isOpen: boolean) => void
 }
 
-export type StoreState = CounterSlice & AppSlice
+export type Screens = Record<string, boolean>
+
+export interface AppResponsive {
+  // responsive
+  isMobile: boolean
+  screens: Screens
+  setScreens: (screens: Screens) => void
+  setIsMobile: (isMobile: boolean) => void
+}
+
+export type StoreState = CounterSlice & AppSlice & AppResponsive
