@@ -28,16 +28,18 @@ const ProLayout = () => {
   return (
     <Layout className={styles.layout} ref={layoutRef}>
       {themeSettings.pointerMove ? <PointerMove /> : null}
-      {themeSettings.magicTrail ? (
-        <MagicTrail
-          containerRef={layoutRef}
-          colors={['#f59e0b', '#ec4899', '#8b5cf6', '#38bdf8', '#4ade80']}
-          trailLength={35}
-          particleCount={75}
-          decay={0.03}
-          smoothing={0.65}
-        />
-      ) : null}
+      {themeSettings.magicTrail
+        ? (
+          <MagicTrail
+            containerRef={layoutRef}
+            colors={['#f59e0b', '#ec4899', '#8b5cf6', '#38bdf8', '#4ade80']}
+            trailLength={35}
+            particleCount={75}
+            decay={0.03}
+            smoothing={0.65}
+          />
+          )
+        : null}
       <ProTabProvider>
         <ProHeader
           layout={layout}
@@ -45,29 +47,31 @@ const ProLayout = () => {
           isMobile={isMobile}
           onMobileMenuClick={() => setMobileOpen(true)}
         >
-          {layout === 'top' && !isMobile ? <ProSecNav mode="horizontal" theme={effectiveNavTheme} /> : null}
+          {layout === 'top' && !isMobile ? <ProSecNav mode='horizontal' theme={effectiveNavTheme} /> : null}
         </ProHeader>
         <Layout className={styles.layout}>
-          {isMobile ? (
-            <Drawer
-              placement="left"
-              onClose={() => setMobileOpen(false)}
-              open={mobileOpen}
-              size={208}
-              styles={{ body: { padding: 0 } }}
-              closable={false}
-            >
-              <ProSider theme={effectiveNavTheme} isMobile={true}>
-                <ProSecNav mode="inline" theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
-              </ProSider>
-            </Drawer>
-          ) : (
-            layout !== 'top' && (
-              <ProSider theme={effectiveNavTheme}>
-                <ProSecNav mode="inline" theme={effectiveNavTheme} />
-              </ProSider>
-            )
-          )}
+          {isMobile
+            ? (
+              <Drawer
+                placement='left'
+                onClose={() => setMobileOpen(false)}
+                open={mobileOpen}
+                size={208}
+                styles={{ body: { padding: 0 } }}
+                closable={false}
+              >
+                <ProSider theme={effectiveNavTheme} isMobile>
+                  <ProSecNav mode='inline' theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
+                </ProSider>
+              </Drawer>
+              )
+            : (
+                layout !== 'top' && (
+                  <ProSider theme={effectiveNavTheme}>
+                    <ProSecNav mode='inline' theme={effectiveNavTheme} />
+                  </ProSider>
+                )
+              )}
           <ProContent />
         </Layout>
       </ProTabProvider>
