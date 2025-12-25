@@ -19,6 +19,7 @@ import GradientStats from '@stateless/GradientStats'
 import WaveBackground from '@stateless/WaveBackground'
 import MarketingHero from '@stateless/MarketingHero'
 import ScriptView from '@stateless/ScriptView'
+import ScrollLayout from '@stateless/ScrollLayout'
 import AnimatedList from '@stateless/AnimatedList'
 // import AnimationTabs from '@stateless/AnimationTabs'
 import StickyCard from '@stateless/StickyCard'
@@ -266,6 +267,34 @@ const ProDemo = () => {
     <FixTabPanel>
       <PageContainer>
         <OneTimePasscode length={6} variant="compact" onComplete={() => {}} />
+        <div style={{ height: '400px' }}>
+          <ScrollLayout
+            headerHeight={60}
+            footerHeight={60}
+            header={
+              <div className="flex h-full items-center justify-between px-6">
+                <h1 className="text-xl font-bold">ScrollLayout 组件示例</h1>
+              </div>
+            }
+            footer={
+              <div className="flex h-full items-center justify-center text-sm">
+                <p>© 2025 ScrollLayout - 支持自定义样式</p>
+              </div>
+            }
+          >
+            <div className="space-y-4 p-6">
+              <h2 className="text-lg font-semibold">中间内容区域（可滚动）</h2>
+              {Array.from({ length: 30 }, (_, i) => (
+                <div key={i} className="rounded-lg p-4 shadow-sm">
+                  <h3 className="font-medium">内容块 {i + 1}</h3>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    这是一个灵活的布局组件，支持可选的 header/footer，自定义高度和样式
+                  </p>
+                </div>
+              ))}
+            </div>
+          </ScrollLayout>
+        </div>
         <MusicPlayer />
         <TransferHistory />
         <FixCarousel />
