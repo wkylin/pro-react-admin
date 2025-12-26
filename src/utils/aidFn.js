@@ -200,7 +200,7 @@ export const formatRomanNumeral = (num) => {
   return result
 }
 
-export const formatScientific = (num, decimalPlaces = 2) => toExponential(decimalPlaces)
+// export const formatScientific = (num, decimalPlaces = 2) => toExponential(decimalPlaces)
 
 export const capitalizeWords = (str) => str.replace(/\b\w/g, (match) => match.toUpperCase())
 
@@ -281,11 +281,11 @@ export const promiseWithTimeout = (promise, timeout) => {
 
 export const shuffleArr = (arr) => arr.sort(() => 0.5 - Math.random())
 export const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
-const handleNotification = async (message) => {
-  setShowNotification(true)
-  await sleep(3000)
-  setShowNotification(false)
-}
+// const handleNotification = async (message) => {
+//   setShowNotification(true)
+//   await sleep(3000)
+//   setShowNotification(false)
+// }
 export const ThousandNum = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 export const RandomId = (len) => Math.random().toString(36).substring(3, len)
 export const RoundNum = (num, decimal) => Math.round(num * 10 ** decimal) / 10 ** decimal

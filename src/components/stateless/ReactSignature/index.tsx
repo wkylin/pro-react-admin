@@ -2,7 +2,7 @@
 import clsx from 'clsx'
 import Signature, { type SignatureRef } from '@uiw/react-signature'
 import { CheckIcon, CopyIcon, DownloadIcon, Eraser, RefreshCcwIcon } from 'lucide-react'
-import React, { type ComponentProps, useRef, useState } from 'react'
+import { type ComponentProps, useRef, useState } from 'react'
 import { useCopy } from '@hooks/useCopyToClipboard'
 
 export function ReactSignature({ className, ...props }: ComponentProps<typeof Signature>) {

@@ -38,27 +38,35 @@ const copyTextToClipboard = async (copyText) => {
 
 const PreCode = (props) => {
   const ref = useRef(null)
-  const refText = ref.current?.innerText
-  const langRef = useRef('')
+  const [refText, setRefText] = React.useState('')
+  const [lang, setLang] = React.useState('')
   const renderMermaid = useDebouncedCallback(() => {
-    if (!ref.current) return
-    const { className } = ref.current.querySelector('code')
-    const match = /language-(\w+)/.exec(className || '')
+    const el = ref.current
+    if (!el) return
+    const codeEl = el.querySelector && el.querySelector('code')
+    const className = codeEl?.className || ''
+    const match = /language-(\w+)/.exec(className)
     if (match) {
-      const [, lang] = match
-      langRef.current = lang
+      const [, found] = match
+      setLang(found)
     }
   }, 800)
 
   useEffect(() => {
-    setTimeout(renderMermaid, 1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refText])
+    // read DOM after mount/update, avoid reading ref during render
+    const txt = ref.current?.innerText ?? ''
+    const s = setTimeout(() => setRefText(txt), 0)
+    const t = setTimeout(() => renderMermaid(), 1)
+    return () => {
+      clearTimeout(t)
+      clearTimeout(s)
+    }
+  }, [props.children])
 
   return (
     <section>
       <section className={styles.copySection}>
-        <span className={styles.lang}>{langRef.current}</span>
+        <span className={styles.lang}>{lang}</span>
         <span
           className={styles.copySpan}
           role="button"

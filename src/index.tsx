@@ -1,4 +1,4 @@
-import React, { StrictMode, Suspense } from 'react'
+import { StrictMode, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { Analytics } from '@vercel/analytics/react'

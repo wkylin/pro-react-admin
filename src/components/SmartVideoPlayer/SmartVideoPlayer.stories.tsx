@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import React from 'react'
 import type { ComponentType } from 'react'
 
 import SmartVideoPlayer from '@stateless/SmartVideoPlayer'

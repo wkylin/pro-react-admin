@@ -27,4 +27,4 @@ const VueDemo = () => {
   )
 }
 
-export default AddCoupons
+export default VueDemo

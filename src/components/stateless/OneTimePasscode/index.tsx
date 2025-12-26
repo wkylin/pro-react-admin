@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styles from './index.module.less'
-import { useProThemeContext } from '@/theme/hooks'
+import { useOptionalProThemeContext } from '@/theme/hooks'
+import { theme as antdTheme } from 'antd'
 
 export interface OneTimePasscodeProps {
   length?: number
@@ -122,46 +123,46 @@ export const OneTimePasscode: React.FC<OneTimePasscodeProps> = ({
   // defensive: allow missing CSS modules (e.g. in some test/story setups)
   const css = styles ?? ({} as Record<string, string>)
 
-  // read theme color from context for focus ring / accent
+  // read theme color from optional context for focus ring / accent
+  const optionalTheme = useOptionalProThemeContext()
   let themeStyle: React.CSSProperties = {}
+
+  // try read antd theme tokens (Antd v5)
+  let antdToken: Record<string, any> = {}
   try {
-    const { themeSettings } = useProThemeContext()
-    const primary = themeSettings?.colorPrimary ?? '#1677ff'
-    const themeMode = themeSettings?.themeMode ?? 'light'
-    const hexToRgb = (hex: string) => {
-      const h = hex.replace('#', '')
-      const bigint = parseInt(
-        h.length === 3
-          ? h
-              .split('')
-              .map((c) => c + c)
-              .join('')
-          : h,
-        16
-      )
-      const r = (bigint >> 16) & 255
-      const g = (bigint >> 8) & 255
-      const b = bigint & 255
-      return `${r}, ${g}, ${b}`
-    }
-    themeStyle = {
-      ['--otp-primary' as any]: primary,
-      ['--otp-primary-rgb' as any]: hexToRgb(primary),
-      ['--otp-bg' as any]: themeMode === 'dark' ? '#0b1220' : '#fff',
-      ['--otp-fg' as any]: themeMode === 'dark' ? '#e6eef8' : '#0f1720',
-      ['--otp-bg-1' as any]: themeMode === 'dark' ? 'rgba(11, 18, 32, 0.92)' : 'rgba(255, 255, 255, 0.92)',
-      ['--otp-bg-2' as any]: themeMode === 'dark' ? 'rgba(9, 14, 24, 0.92)' : 'rgba(245, 247, 250, 0.92)',
-    }
-  } catch (e) {
-    // if context not available, fall back to defaults
-    themeStyle = {
-      ['--otp-primary' as any]: '#1677ff',
-      ['--otp-primary-rgb' as any]: '22, 119, 255',
-      ['--otp-bg' as any]: '#fff',
-      ['--otp-fg' as any]: '#0f1720',
-      ['--otp-bg-1' as any]: 'rgba(255, 255, 255, 0.92)',
-      ['--otp-bg-2' as any]: 'rgba(245, 247, 250, 0.92)',
-    }
+    const maybe = antdTheme?.useToken?.()
+    antdToken = maybe?.token ?? {}
+  } catch (err) {
+    antdToken = {}
+  }
+
+  const themeSettings = optionalTheme?.themeSettings
+  const primary = themeSettings?.colorPrimary ?? antdToken.colorPrimary ?? '#1677ff'
+  const themeMode = themeSettings?.themeMode ?? 'light'
+  const hexToRgb = (hex: string) => {
+    const h = hex.replace('#', '')
+    const bigint = parseInt(
+      h.length === 3
+        ? h
+            .split('')
+            .map((c) => c + c)
+            .join('')
+        : h,
+      16
+    )
+    const r = (bigint >> 16) & 255
+    const g = (bigint >> 8) & 255
+    const b = bigint & 255
+    return `${r}, ${g}, ${b}`
+  }
+
+  themeStyle = {
+    ['--otp-primary' as any]: primary,
+    ['--otp-primary-rgb' as any]: hexToRgb(primary),
+    ['--otp-bg' as any]: antdToken.colorBgContainer ?? (themeMode === 'dark' ? '#0b1220' : '#fff'),
+    ['--otp-fg' as any]: antdToken.colorText ?? (themeMode === 'dark' ? '#e6eef8' : '#0f1720'),
+    ['--otp-bg-1' as any]: themeMode === 'dark' ? 'rgba(11, 18, 32, 0.92)' : 'rgba(255, 255, 255, 0.92)',
+    ['--otp-bg-2' as any]: themeMode === 'dark' ? 'rgba(9, 14, 24, 0.92)' : 'rgba(245, 247, 250, 0.92)',
   }
 
   const wrapperClass = [css.wrapper, (css as any)[variant] ?? '', className ?? ''].filter(Boolean).join(' ')

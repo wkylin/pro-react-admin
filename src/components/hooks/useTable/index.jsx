@@ -33,7 +33,7 @@ const useTable = (props) => {
         setPageSize(pageSize)
         try {
           let data = JSON.parse(JSON.stringify(resp))
-          // eslint-disable-next-line no-underscore-dangle
+
           let _path = [...paths]
           while (_path.length) {
             data = data[_path[0]]
@@ -83,7 +83,6 @@ const useTable = (props) => {
       setCachePayload({ ...payload })
       getTableList(dataInterface, { ...payload })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(payload), dataInterface, implemented])
 
   return {

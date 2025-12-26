@@ -262,7 +262,6 @@ const Home = () => {
 
                   const dataList = message.split('data: ')
 
-                  // eslint-disable-next-line no-restricted-syntax
                   for (const index in dataList) {
                     if (dataList[index] !== '' && dataList[index] !== '[DONE]') {
                       try {

@@ -1,4 +1,3 @@
-import React from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { Button, Card, Statistic, Switch, Space } from 'antd'
 import { useStore } from '@/store'

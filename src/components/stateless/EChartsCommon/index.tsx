@@ -1,5 +1,5 @@
 import { debounce } from 'lodash'
-import React, { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
 import { EChartsType } from 'echarts'
 import { RendererType } from 'echarts/types/src/util/types.js'

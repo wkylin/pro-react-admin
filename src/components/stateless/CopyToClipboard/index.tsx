@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { CheckIcon, CopyIcon } from 'lucide-react'
 
 const CopyToClipboard = ({ code }: Readonly<{ code: string }>) => {

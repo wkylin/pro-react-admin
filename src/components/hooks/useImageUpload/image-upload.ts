@@ -22,9 +22,9 @@ const useUploadImage = () => {
     }: {
       file: File
       uploadURL: string
-      // eslint-disable-next-line no-unused-vars
+       
       onUploadComplete: (response: any) => void
-      // eslint-disable-next-line no-unused-vars
+       
       onUploadError?: (error: any) => void
     }) => {
       const formData = new FormData()

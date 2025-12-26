@@ -22,7 +22,6 @@ export const useActivate = (callback) => {
       callback()
     }
     mountedRef.current = true
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 }
 
@@ -39,7 +38,6 @@ export const useUnactivate = (callback) => {
       callback()
     }
     mountedRef.current = true
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active])
 }
 
@@ -75,7 +73,6 @@ const createKeepAliveManager = () => {
     } catch (err) {
       // 仅在开发环境输出，避免生产环境噪音；同时满足 Sonar 对异常处理的要求
       if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
         console.warn(`[KeepAlive] ${label} failed`, err)
       }
     }
@@ -263,28 +260,44 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
 
   useEffect(() => {
     if (!ActivityComponent) return
+    let showTimer = null
     if (active) {
-      setIsActivityVisible(true)
-      return
+      // schedule state update asynchronously to avoid cascading render warnings
+      showTimer = setTimeout(() => setIsActivityVisible(true), 0)
+      return () => clearTimeout(showTimer)
     }
 
     const timer = setTimeout(() => {
       setIsActivityVisible(false)
     }, 16)
 
-    return () => clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
+      if (showTimer) clearTimeout(showTimer)
+    }
   }, [active])
 
-  // Initialize container once
-  if (!containerRef.current && typeof document !== 'undefined') {
-    // 优化：支持 HMR (热更新)
-    // 在开发环境下，尝试复用已存在的 DOM 节点，防止 HMR 导致 DOM 丢失或重复创建
+  // Initialize container once (move DOM mutations into effect to satisfy hooks rules)
+  const [containerNode, setContainerNode] = useState(null)
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    if (containerRef.current) {
+      setContainerNode(containerRef.current)
+      return
+    }
+
+    // 优化：支持 HMR (热更新) —— 在开发环境下尝试复用已存在的 DOM 节点
     let existing = null
-    if (process.env.NODE_ENV === 'development' && id) {
-      const hidden = document.getElementById('__keepalive_hidden_root')
-      if (hidden) {
-        existing = hidden.querySelector(`[data-keepalive-id="${id}"]`)
+    try {
+      if (process.env.NODE_ENV === 'development' && id) {
+        const hidden = document.getElementById('__keepalive_hidden_root')
+        if (hidden) {
+          existing = hidden.querySelector(`[data-keepalive-id="${id}"]`)
+        }
       }
+    } catch (err) {
+      existing = null
     }
 
     if (existing) {
@@ -297,7 +310,10 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       div.style.width = '100%'
       containerRef.current = div
     }
-  }
+
+    setContainerNode(containerRef.current)
+    // no cleanup here; mount/unmount handled elsewhere
+  }, [id])
 
   // Scroll restoration logic
   useEffect(() => {
@@ -345,7 +361,6 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [persistOnUnmount])
 
   // Toggle visibility logic
@@ -410,7 +425,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       <KeepAliveContext.Provider value={active}>
         <ActivityComponent mode={isActivityVisible ? 'visible' : 'hidden'}>
           <div ref={placeholderRef} style={{ width: '100%', height: '100%' }} />
-          {containerRef.current && createPortal(children, containerRef.current)}
+          {containerNode && createPortal(children, containerNode)}
         </ActivityComponent>
       </KeepAliveContext.Provider>
     )
@@ -419,7 +434,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
   return (
     <KeepAliveContext.Provider value={active}>
       <div ref={placeholderRef} style={{ width: '100%', height: '100%' }} />
-      {containerRef.current && createPortal(children, containerRef.current)}
+      {containerNode && createPortal(children, containerNode)}
     </KeepAliveContext.Provider>
   )
 }

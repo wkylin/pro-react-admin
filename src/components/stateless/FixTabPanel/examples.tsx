@@ -1,5 +1,3 @@
-// FixTabPanel 使用示例
-import React from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 
 // 示例1：基本使用（必须设置高度）

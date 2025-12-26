@@ -16,10 +16,9 @@ export const VideoJS = (props) => {
       videoElement.classList.add('vjs-big-play-centered')
       videoRef.current.appendChild(videoElement)
 
-      // eslint-disable-next-line no-multi-assign
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log('player is ready')
-        // eslint-disable-next-line no-unused-expressions
+         
         onReady && onReady(player)
       }))
 
@@ -31,7 +30,6 @@ export const VideoJS = (props) => {
       player.autoplay(options.autoplay)
       player.src(options.sources)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [options, videoRef])
 
   // Dispose the Video.js player when the functional component unmounts

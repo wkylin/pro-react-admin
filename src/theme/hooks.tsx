@@ -102,3 +102,8 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
 }
 
 export { ProThemeProvider, useProThemeContext }
+
+// 可选的主题 Hook：当未被 Provider 包裹时返回 null（不会抛错）
+export const useOptionalProThemeContext = (): ProThemeContextValue | null => {
+  return useContext(ProThemeContext)
+}

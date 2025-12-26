@@ -52,7 +52,7 @@ const ProTabProvider = ({ children }) => {
       }
       callbackFun()
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
     [activeKey, panes]
   )
 

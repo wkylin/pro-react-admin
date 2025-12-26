@@ -37,7 +37,7 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
       <link
         // This tests that we properly ignore disabled nodes
         // Learn more: https://github.com/MatthewHerbst/react-to-print/pull/537
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         disabled
         rel="stylesheet"

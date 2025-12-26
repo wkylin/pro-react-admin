@@ -323,19 +323,19 @@ export const chunkArray = (arr, size) => {
   return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size))
 }
 
-export const partitionArray = (arr, fn) => {
-  return arr.reduce(
-    ([pass, fail], elem) => {
-      if (callback(elem)) {
-        pass.push(elem)
-      } else {
-        fail.push(elem)
-      }
-      return [pass, fail]
-    },
-    [[], []]
-  )
-}
+// export const partitionArray = (arr, fn) => {
+//   return arr.reduce(
+//     ([pass, fail], elem) => {
+//       if (callback(elem)) {
+//         pass.push(elem)
+//       } else {
+//         fail.push(elem)
+//       }
+//       return [pass, fail]
+//     },
+//     [[], []]
+//   )
+// }
 
 export const shuffleArr = (arr) => {
   for (let i = arr.length - 1; i > 0; i--) {

@@ -143,16 +143,17 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
   // location/search parser must be defined before passing initialSearch into useTable
   const location = useLocation()
 
+  const locationSearch = location?.search
   const parseLocationSearch = React.useCallback(() => {
     try {
-      const params = new URLSearchParams(location?.search || '')
+      const params = new URLSearchParams(locationSearch || '')
       const obj: Record<string, any> = {}
       for (const [k, v] of params.entries()) obj[k] = v
       return obj
-    } catch (e) {
+    } catch {
       return {}
     }
-  }, [location && (location as any).search])
+  }, [locationSearch])
 
   // derive toolbar/query config early so initial form values can be merged into initialSearch
   const toolbarConfig = toolbar || {}
@@ -172,11 +173,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       payload = queryConfig.transformValues(payload) || payload
     }
     return payload
-  }, [
-    queryConfig && queryConfig.initialValues,
-    queryConfig && queryConfig.fields,
-    queryConfig && queryConfig.transformValues,
-  ])
+  }, [queryConfig])
 
   const {
     containerRef,
@@ -302,7 +299,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
     if (queryConfig && queryConfig.initialValues) {
       form.setFieldsValue(queryConfig.initialValues)
     }
-  }, [queryConfig && queryConfig.initialValues])
+  }, [queryConfig, form])
 
   const handleSearch = async () => {
     try {
@@ -332,7 +329,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       } else {
         await fetchPage(1, pagination.pageSize, sortState, finalPayload)
       }
-    } catch (e) {
+    } catch {
       // validation error will be shown by Form
     }
   }
@@ -378,7 +375,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         ((_text: any, _record: any, rowIndex: number) => (indexMode === 'page' ? rowIndex + 1 : calcIndex(rowIndex))),
     }
     return col
-  }, [columns, indexMode, calcIndex])
+  }, [columns, indexMode, calcIndex, indexFixed, indexWidth])
 
   const effectiveColumns = React.useMemo(() => {
     if (!indexColumnFromColumns) return currentColumns
@@ -534,7 +531,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
       if (typeof setSortState === 'function') setSortState(sort)
       try {
         await fetchPage(current, pageSize, sort)
-      } catch (e) {}
+      } catch (err) {
+        console.warn('fetchPage error', err)
+      }
     }
 
     if (typeof onChange === 'function') onChange(pg, filters, sorter, extra)
@@ -971,7 +970,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                   (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
                 const extra = includeSearch ? parseLocationSearch() : undefined
                 await fetchPage(current, pageSize, sortState, extra)
-              } catch (e) {}
+              } catch (err) {
+                console.warn('pagination fetchPage error', err)
+              }
             }
           }}
           onShowSizeChange={async (current, size) => {
@@ -983,7 +984,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                   (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
                 const extra = includeSearch ? parseLocationSearch() : undefined
                 await fetchPage(current, size, sortState, extra)
-              } catch (e) {}
+              } catch (err) {
+                console.warn('pagination fetchPage error', err)
+              }
             }
           }}
         />

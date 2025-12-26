@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useRef } from 'react'
 import { FloatButton } from 'antd'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'

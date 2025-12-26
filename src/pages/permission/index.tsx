@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Select, Alert } from 'antd'
 import { useStore } from '@/store'
 import { usePermission } from '@app-hooks/usePermission'

@@ -14,7 +14,6 @@ const GeoChart = () => {
 
   useEffect(() => {
     initMap(name, geoJson)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [region])
 
   const initMap = (geoName, geoJSON) => {

@@ -64,8 +64,6 @@ const ProTabs = (props) => {
     }
 
     setPanes([...panes, panesItem])
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname, tabActiveKey])
 
   const onChange = (key) => {

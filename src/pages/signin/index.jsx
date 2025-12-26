@@ -15,6 +15,45 @@ const { Content } = Layout
 
 const TEST_ACCOUNT_EMAILS = Object.keys(testAccounts)
 
+const generatePassword = () => {
+  try {
+    const arr = new Uint32Array(1)
+    globalThis.crypto?.getRandomValues?.(arr)
+    const value = (arr[0] ?? 0) % 1000000
+    return String(value).padStart(6, '0')
+  } catch {
+    return String(Date.now()).slice(-6).padStart(6, '0')
+  }
+}
+
+const loadOrInitPasswords = () => {
+  try {
+    const raw = localStorage.getItem('test_account_passwords')
+    const parsed = raw ? JSON.parse(raw) : {}
+    const next = typeof parsed === 'object' && parsed ? { ...parsed } : {}
+
+    let changed = false
+    TEST_ACCOUNT_EMAILS.forEach((email) => {
+      if (typeof next[email] !== 'string' || next[email].length === 0) {
+        next[email] = generatePassword()
+        changed = true
+      }
+    })
+
+    if (changed) {
+      localStorage.setItem('test_account_passwords', JSON.stringify(next))
+    }
+
+    return next
+  } catch {
+    const fallback = {}
+    TEST_ACCOUNT_EMAILS.forEach((email) => {
+      fallback[email] = generatePassword()
+    })
+    return fallback
+  }
+}
+
 const SignIn = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
@@ -40,44 +79,7 @@ const SignIn = () => {
 
   const getErrorMessage = (error) => (error instanceof Error && error.message ? error.message : '未知错误')
 
-  const generatePassword = () => {
-    try {
-      const arr = new Uint32Array(1)
-      globalThis.crypto?.getRandomValues?.(arr)
-      const value = (arr[0] ?? 0) % 1000000
-      return String(value).padStart(6, '0')
-    } catch {
-      return String(Date.now()).slice(-6).padStart(6, '0')
-    }
-  }
 
-  const loadOrInitPasswords = () => {
-    try {
-      const raw = localStorage.getItem('test_account_passwords')
-      const parsed = raw ? JSON.parse(raw) : {}
-      const next = typeof parsed === 'object' && parsed ? { ...parsed } : {}
-
-      let changed = false
-      TEST_ACCOUNT_EMAILS.forEach((email) => {
-        if (typeof next[email] !== 'string' || next[email].length === 0) {
-          next[email] = generatePassword()
-          changed = true
-        }
-      })
-
-      if (changed) {
-        localStorage.setItem('test_account_passwords', JSON.stringify(next))
-      }
-
-      return next
-    } catch {
-      const fallback = {}
-      TEST_ACCOUNT_EMAILS.forEach((email) => {
-        fallback[email] = generatePassword()
-      })
-      return fallback
-    }
-  }
 
   const getExpectedPassword = (email) => {
     if (accountPasswords?.[email]) return accountPasswords[email]
@@ -88,7 +90,14 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    setAccountPasswords(loadOrInitPasswords())
+    let active = true
+    Promise.resolve().then(() => {
+      if (!active) return
+      setAccountPasswords(loadOrInitPasswords())
+    })
+    return () => {
+      active = false
+    }
   }, [])
 
   useEffect(() => {

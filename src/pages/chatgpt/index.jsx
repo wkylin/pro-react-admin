@@ -150,7 +150,7 @@ const runMermaidBlocks = async ({ blocks, setCharts, setProgress, signal }) => {
   pump()
 }
 
-const { Title, Text, Paragraph } = Typography
+const { Text } = Typography
 const { TextArea } = Input
 
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v))
@@ -768,8 +768,12 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
 
   useEffect(() => {
     // 默认视图使用“重置后大小”（scale=1），不自动进入“适配”模式
-    setScale(1)
-    setTranslate({ x: 0, y: 0 })
+    let active = true
+    Promise.resolve().then(() => {
+      if (!active) return
+      setScale(1)
+      setTranslate({ x: 0, y: 0 })
+    })
 
     // 同时清理 svg 的 width/height，避免固定尺寸影响缩放/清晰度
     const raf = requestAnimationFrame(() => {
@@ -785,7 +789,10 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
       }
     })
 
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      active = false
+      cancelAnimationFrame(raf)
+    }
   }, [svg])
 
   const onPointerDown = (e) => {
@@ -930,8 +937,10 @@ const MermaidRenderer = ({ content, readyState, themeMode }) => {
     const abortController = new AbortController()
     const { signal } = abortController
     if (readyState !== 2 || !content) {
-      setCharts([])
-      setProgress({ total: 0, finished: 0 })
+      Promise.resolve().then(() => {
+        setCharts([])
+        setProgress({ total: 0, finished: 0 })
+      })
       return () => {
         abortController.abort()
       }
@@ -1048,7 +1057,13 @@ const ChatGpt = () => {
   const [progress, setProgress] = useState(0)
 
   const [isPreviewFullscreen, setIsPreviewFullscreen] = useState(false)
-  const [theme, setTheme] = useState('light')
+  const [previewTheme, setPreviewTheme] = useState('light')
+
+  const { token } = theme.useToken()
+  const previewStyle = {
+    backgroundColor: previewTheme === 'light' ? token.colorBgContainer : token.colorBgLayout,
+    padding: 16,
+  }
 
   useEffect(() => {
     const onFullscreenChange = () => {
@@ -1150,7 +1165,7 @@ const ChatGpt = () => {
   useEffect(() => {
     let interval
     if (readyState === 1 || structureReadyState === 1) {
-      setProgress(0)
+      Promise.resolve().then(() => setProgress(0))
       interval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 90) return prev
@@ -1158,7 +1173,7 @@ const ChatGpt = () => {
         })
       }, 500)
     } else if (readyState === 2 || structureReadyState === 2) {
-      setProgress(100)
+      Promise.resolve().then(() => setProgress(100))
       clearInterval(interval)
     }
     return () => clearInterval(interval)
@@ -1590,7 +1605,7 @@ PRD文档内容：
                         minHeight: 400,
                         padding: previewStyle.padding,
                       }}
-                      data-color-mode={theme}
+                      data-color-mode={previewTheme}
                       skipHtml={false}
                       remarkPlugins={[remarkMath]}
                       rehypePlugins={[rehypeKatex]}
@@ -1607,7 +1622,7 @@ PRD文档内容：
                   }}
                 >
                   <Text strong>Mermaid 图表展示</Text>
-                  <MermaidRenderer content={apiResult} readyState={readyState} themeMode={theme} />
+                  <MermaidRenderer content={apiResult} readyState={readyState} themeMode={previewTheme} />
                 </div>
               </div>
             )}
@@ -1702,12 +1717,12 @@ PRD文档内容：
         >
           {apiResult && (
             <div
-              className={`${styles.previewFullscreenContent} ${
-                theme === 'light' ? styles.previewFullscreenLight : styles.previewFullscreenDark
+                className={`${styles.previewFullscreenContent} ${
+                previewTheme === 'light' ? styles.previewFullscreenLight : styles.previewFullscreenDark
               }`}
               style={{
-                backgroundColor: theme === 'light' ? '#ffffff' : '#1e1e1e',
-                color: theme === 'light' ? '#24292e' : '#c9d1d9',
+                backgroundColor: previewTheme === 'light' ? '#ffffff' : '#1e1e1e',
+                color: previewTheme === 'light' ? '#24292e' : '#c9d1d9',
               }}
             >
               <div className={styles.previewFullscreenHeader}>
@@ -1719,8 +1734,8 @@ PRD文档内容：
                   <Switch
                     checkedChildren="亮色"
                     unCheckedChildren="暗色"
-                    checked={theme === 'light'}
-                    onChange={(checked) => setTheme(checked ? 'light' : 'dark')}
+                    checked={previewTheme === 'light'}
+                    onChange={(checked) => setPreviewTheme(checked ? 'light' : 'dark')}
                   />
                   <Button onClick={exitPreviewFullscreen}>退出全屏</Button>
                 </Space>
@@ -1733,7 +1748,7 @@ PRD文档内容：
                     backgroundColor: 'transparent',
                     minHeight: '100%',
                   }}
-                  data-color-mode={theme}
+                      data-color-mode={previewTheme}
                   skipHtml={false}
                   remarkPlugins={[remarkMath]}
                   rehypePlugins={[rehypeKatex]}
@@ -1748,7 +1763,7 @@ PRD文档内容：
                   }}
                 >
                   <Text strong>Mermaid 图表展示</Text>
-                  <MermaidRenderer content={apiResult} readyState={readyState} themeMode={theme} />
+                  <MermaidRenderer content={apiResult} readyState={readyState} themeMode={previewTheme} />
                 </div>
               </div>
             </div>

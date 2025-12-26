@@ -46,14 +46,12 @@ const safeNotifyDeniedOnce = async ({ path, lastDeniedRef, messageApi }) => {
     await Promise.resolve(messageApi.open({ type: 'error', content: DENIED_TIP }))
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
       console.warn('[ProHeader] messageApi.open failed', err)
     }
     try {
       await Promise.resolve(message.error(DENIED_TIP))
     } catch (err2) {
       if (process.env.NODE_ENV === 'development') {
-        // eslint-disable-next-line no-console
         console.warn('[ProHeader] notify denied failed', err2)
       }
     }
@@ -159,7 +157,6 @@ const safeLogoutCleanup = () => {
     permissionService.logoutCleanup()
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
       console.warn('[ProHeader] logoutCleanup failed', err)
     }
   }
@@ -181,7 +178,7 @@ const redirectToWithPermission = async ({ path, navigate, messageApi, lastDenied
     navigate(path)
   } catch (error) {
     // 出错时保守处理为不跳转并显示提示
-    // eslint-disable-next-line no-console
+
     console.error('redirect permission check failed', error)
     await safeNotifyDeniedOnce({ path, lastDeniedRef, messageApi })
   }

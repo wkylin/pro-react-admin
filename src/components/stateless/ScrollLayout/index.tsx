@@ -1,5 +1,4 @@
 'use client'
-
 import type { ReactNode, CSSProperties } from 'react'
 import styles from './index.module.less'
 

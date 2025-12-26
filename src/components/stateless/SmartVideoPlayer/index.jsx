@@ -1976,14 +1976,11 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
 })
 
 const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(props, ref) {
-  const svpI18nRef = useRef(null)
-  if (!svpI18nRef.current) {
-    const initialLang = (appI18n?.resolvedLanguage || appI18n?.language || 'zh').toString()
-    svpI18nRef.current = createSvpI18n(initialLang)
-  }
+  const initialLang = (appI18n?.resolvedLanguage || appI18n?.language || 'zh').toString()
+  const svpI18n = useMemo(() => createSvpI18n(initialLang), [initialLang])
 
   return (
-    <I18nextProvider i18n={svpI18nRef.current}>
+    <I18nextProvider i18n={svpI18n}>
       <SmartVideoPlayerInner {...props} ref={ref} />
     </I18nextProvider>
   )
