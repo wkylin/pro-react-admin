@@ -69,7 +69,7 @@ const PreCode = (props) => {
         <span className={styles.lang}>{lang}</span>
         <span
           className={styles.copySpan}
-          role="button"
+          role='button'
           onClick={() => {
             if (ref.current) {
               const code = ref.current.innerText
@@ -102,19 +102,19 @@ const ReMarkdown = ({ markdownText = '', isLoading = false }) => (
             RehypeHighlight,
             {
               detect: false,
-              ignoreMissing: true,
-            },
-          ],
+              ignoreMissing: true
+            }
+          ]
         ]}
         components={{
           pre: PreCode,
-          p: (pProps) => <p {...pProps} dir="auto" />,
+          p: (pProps) => <p {...pProps} dir='auto' />,
           a: (aProps) => {
             const href = aProps.href || ''
             const isInternal = /^\/#/i.test(href)
             const target = isInternal ? '_self' : (aProps.target ?? '_blank')
             return <a {...aProps} target={target} />
-          },
+          }
         }}
       >
         {markdownText}

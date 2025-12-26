@@ -85,15 +85,16 @@ const createKeepAliveManager = () => {
     // set global options: { deactivateDelay, keepInactiveCount, limit }
     setOptions: (opts = {}) => {
       if (typeof opts.deactivateDelay === 'number') deactivateDelay = opts.deactivateDelay
-      if (typeof opts.keepInactiveCount === 'number')
+      if (typeof opts.keepInactiveCount === 'number') {
         keepInactiveCount = Math.max(0, Math.floor(opts.keepInactiveCount))
+      }
       if (typeof opts.limit === 'number') limit = Math.max(0, Math.floor(opts.limit))
     },
     register: (id, opts) => {
       // opts: { setShouldRender, persistOnUnmount }
       instances.set(id, {
         setShouldRender: opts.setShouldRender,
-        persistOnUnmount: !!opts.persistOnUnmount,
+        persistOnUnmount: !!opts.persistOnUnmount
       })
     },
     unregister: (id) => {
@@ -193,7 +194,7 @@ const createKeepAliveManager = () => {
       instances.delete(id)
       activeMap.delete(id)
       keys = keys.filter((k) => k !== id)
-    },
+    }
   }
 }
 
@@ -236,7 +237,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       const effectivePersist = ActivityComponent ? true : persistOnUnmount
       keepAliveManager.register(id, {
         setShouldRender,
-        persistOnUnmount: effectivePersist,
+        persistOnUnmount: effectivePersist
       })
     }
     return () => {
@@ -324,14 +325,14 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       if (!active) return
       scrollPos.current.set(e.target, {
         left: e.target.scrollLeft,
-        top: e.target.scrollTop,
+        top: e.target.scrollTop
       })
     }
 
     // Capture scroll events to record positions
     container.addEventListener('scroll', onScroll, {
       capture: true,
-      passive: true,
+      passive: true
     })
 
     return () => {
@@ -374,7 +375,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     if (container.parentNode !== placeholder) {
       // 在移动DOM之前，发送自定义事件通知子组件
       const event = new CustomEvent('keepalive-dom-move', {
-        detail: { from: container.parentNode, to: placeholder },
+        detail: { from: container.parentNode, to: placeholder }
       })
       container.dispatchEvent(event)
 
@@ -444,7 +445,7 @@ KeepAlive.propTypes = {
   active: PropTypes.bool,
   children: PropTypes.node,
   persistOnUnmount: PropTypes.bool,
-  cacheLimit: PropTypes.number,
+  cacheLimit: PropTypes.number
 }
 
 export default KeepAlive

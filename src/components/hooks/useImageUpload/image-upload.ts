@@ -22,9 +22,9 @@ const useUploadImage = () => {
     }: {
       file: File
       uploadURL: string
-       
+
       onUploadComplete: (response: any) => void
-       
+
       onUploadError?: (error: any) => void
     }) => {
       const formData = new FormData()

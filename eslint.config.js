@@ -2,16 +2,16 @@
 // 2025 年最佳实践：Flat Config
 // 适合 React 19 + TypeScript 5 + Vite + Storybook 的组件库项目
 
-import js from '@eslint/js';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import typescriptParser from '@typescript-eslint/parser';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
-import importPlugin from 'eslint-plugin-import';
-import unicorn from 'eslint-plugin-unicorn';
-import storybook from 'eslint-plugin-storybook';
-import prettierConfig from 'eslint-config-prettier/flat'; // <--- 关键：使用 /flat 入口
-import globals from 'globals';
+import js from '@eslint/js'
+import typescriptEslint from '@typescript-eslint/eslint-plugin'
+import typescriptParser from '@typescript-eslint/parser'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import importPlugin from 'eslint-plugin-import'
+import unicorn from 'eslint-plugin-unicorn'
+import storybook from 'eslint-plugin-storybook'
+import prettierConfig from 'eslint-config-prettier/flat' // <--- 关键：使用 /flat 入口
+import globals from 'globals'
 
 export default [
   // 忽略文件/目录
@@ -24,8 +24,8 @@ export default [
       'coverage/',
       '**/*.d.ts',
       'CHANGELOG.md',
-      'package-lock.json',
-    ],
+      'package-lock.json'
+    ]
   },
 
   // 基础推荐规则
@@ -40,29 +40,29 @@ export default [
     plugins: {
       'react-hooks': reactHooks,
       import: importPlugin,
-      unicorn: unicorn,
-      react: react,
-      '@typescript-eslint': typescriptEslint,
+      unicorn,
+      react,
+      '@typescript-eslint': typescriptEslint
     },
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
         ...globals.es2021,
-        React: 'readonly',
+        React: 'readonly'
       },
       parser: typescriptParser,
       ecmaVersion: 'latest',
-      sourceType: 'module',
+      sourceType: 'module'
     },
     settings: {
       react: {
-        version: 'detect',
+        version: 'detect'
       },
       'import/resolver': {
         typescript: true,
-        node: true,
-      },
+        node: true
+      }
     },
     rules: {
       // React Hooks 严格检查
@@ -79,25 +79,25 @@ export default [
       'import/no-unresolved': 'off',
 
       // 未使用变量仅警告
-        // disable base rule in favor of the TS version
-        'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      // disable base rule in favor of the TS version
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 
-        // avoid hard failure on empty blocks
-        'no-empty': 'warn',
-    },
+      // avoid hard failure on empty blocks
+      'no-empty': 'warn'
+    }
   },
 
-    // Jest globals for test files
-    {
-      files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
-      languageOptions: {
-        globals: {
-          ...globals.jest,
-        },
-      },
-    },
+  // Jest globals for test files
+  {
+    files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      globals: {
+        ...globals.jest
+      }
+    }
+  },
 
   // Prettier 放在最后（Flat 兼容入口）
-  prettierConfig,
-];
+  prettierConfig
+]
