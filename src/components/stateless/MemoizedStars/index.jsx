@@ -5,7 +5,7 @@ const Stars = () => {
   const rand = (seed) => Math.abs(Math.sin(seed) * 10000) % 1
 
   return (
-    <div className="absolute inset-0">
+    <div className='absolute inset-0'>
       {[...Array(80)].map((_, i) => {
         const top = rand(i + 1) * 100
         const left = rand(i + 2) * 100
@@ -21,24 +21,24 @@ const Stars = () => {
               top: `calc(${top}% + ${moveY}px)`,
               left: `calc(${left}% + ${moveX}px)`,
               opacity,
-              scale: [1, 1.2, 0],
+              scale: [1, 1.2, 0]
             }}
             transition={{
               duration,
               repeat: Infinity,
-              ease: 'linear',
+              ease: 'linear'
             }}
             style={{
               position: 'absolute',
               top: `${top}%`,
               left: `${left}%`,
-              width: `2px`,
-              height: `2px`,
+              width: '2px',
+              height: '2px',
               backgroundColor: 'white',
               borderRadius: '50%',
-              zIndex: 1,
+              zIndex: 1
             }}
-            className="inline-block"
+            className='inline-block'
           />
         )
       })}

@@ -10,9 +10,9 @@ const handler = (ctx) => {
         'shopId|+1': 1,
         shopImage: Random.image('200x100', '#894FC4', '#FFF', 'png', '!'),
         shopMobile: '@mobile',
-        shopName: '@shops',
-      },
-    ],
+        shopName: '@shops'
+      }
+    ]
   })
   // ctx.status = 502
   ctx.body = mockData.shopList

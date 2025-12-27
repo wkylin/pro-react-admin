@@ -4,14 +4,14 @@ export default [
     target: 'https://my-json-server.typicode.com',
     // pathRewrite: { '^/wkylin': '/wkylin' },
     secure: false,
-    changeOrigin: true,
+    changeOrigin: true
   },
   {
     context: ['/v2'],
     target: 'https://www.mocky.io',
     // pathRewrite: { '^/wkylin': '/wkylin' },
     secure: false,
-    changeOrigin: true,
+    changeOrigin: true
   },
   {
     context: ['/faker'],
@@ -19,7 +19,7 @@ export default [
     pathRewrite: { '^/faker': '' },
     secure: false,
     changeOrigin: true,
-    cookieDomainRewrite: 'localhost',
+    cookieDomainRewrite: 'localhost'
   },
   {
     context: ['/api/github-token'],
@@ -34,7 +34,7 @@ export default [
     },
     onProxyRes: (proxyRes, req, res) => {
       proxyRes.headers['Access-Control-Allow-Origin'] = '*'
-    },
+    }
   },
   {
     context: ['/api/github-user'],
@@ -49,7 +49,7 @@ export default [
     },
     onProxyRes: (proxyRes, req, res) => {
       proxyRes.headers['Access-Control-Allow-Origin'] = '*'
-    },
+    }
   },
   {
     context: ['/api/github-email'],
@@ -64,6 +64,6 @@ export default [
     },
     onProxyRes: (proxyRes, req, res) => {
       proxyRes.headers['Access-Control-Allow-Origin'] = '*'
-    },
-  },
+    }
+  }
 ]

@@ -1,4 +1,4 @@
-import path from 'path'
+import path, { dirname } from 'path'
 import webpack from 'webpack'
 import { merge } from 'webpack-merge'
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
@@ -6,7 +6,6 @@ import portfinder from 'portfinder'
 import common from './webpack.common.js'
 import devProxy from './dev.proxy.js'
 import { fileURLToPath } from 'url'
-import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -24,16 +23,16 @@ const devWebpackConfig = merge(common, {
       overlay: {
         errors: true,
         warnings: false,
-        runtimeErrors: false,
-      },
+        runtimeErrors: false
+      }
     },
     static: {
-      directory: path.join(__dirname, '../public'),
+      directory: path.join(__dirname, '../public')
     },
     compress: true,
     // open: true,
     hot: true,
-    proxy: devProxy,
+    proxy: devProxy
   },
   // watch: true,
   // watchOptions: {
@@ -51,17 +50,17 @@ const devWebpackConfig = merge(common, {
             loader: 'babel-loader',
             options: {
               presets: [['@babel/preset-env', { modules: false }]],
-              plugins: ['react-refresh/babel'].filter(Boolean),
-            },
-          },
-        ],
-      },
-    ],
+              plugins: ['react-refresh/babel'].filter(Boolean)
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new ReactRefreshWebpackPlugin({
-      overlay: false,
-    }),
+      overlay: false
+    })
     // new webpack.debug.ProfilingPlugin({
     //   outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
     // }),
@@ -76,21 +75,21 @@ const devWebpackConfig = merge(common, {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
           chunks: 'all',
-          priority: 10,
-        },
-      },
+          priority: 10
+        }
+      }
     },
     minimize: false,
     concatenateModules: false,
-    usedExports: false,
-  },
+    usedExports: false
+  }
 })
 
 export default new Promise((resolve, reject) => {
   portfinder.getPort(
     {
       port: 8080, // 默认8080端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
-      stopPort: 65535, // maximum port
+      stopPort: 65535 // maximum port
     },
     (err, port) => {
       if (err) {

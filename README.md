@@ -369,13 +369,14 @@ Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨�
 
 - 目的：在需要时将 release/source maps 上传到 Sentry；在本地或未配置 token 时跳过上传，避免泄露凭证或出现不必要警告。
 - 关键环境变量：
-   - `SENTRY_AUTH_TOKEN` — Sentry API token（CI secrets），用于 `sentry-webpack-plugin` 上传 artifacts。
-   - `SENTRY_ORG` — Sentry 组织 slug。
-   - `SENTRY_PROJECT` — Sentry 项目 slug。
-   - `SENTRY_DSN` — 前端运行时使用的 DSN（可在部署时注入至运行时代码）。
-   - `SENTRY_TRACES_SAMPLE_RATE` — 可选，transactions 采样率（例如 `0.2`）。
+  - `SENTRY_AUTH_TOKEN` — Sentry API token（CI secrets），用于 `sentry-webpack-plugin` 上传 artifacts。
+  - `SENTRY_ORG` — Sentry 组织 slug。
+  - `SENTRY_PROJECT` — Sentry 项目 slug。
+  - `SENTRY_DSN` — 前端运行时使用的 DSN（可在部署时注入至运行时代码）。
+  - `SENTRY_TRACES_SAMPLE_RATE` — 可选，transactions 采样率（例如 `0.2`）。
 
 为什么会出现警告
+
 - `sentry-webpack-plugin` 在没有 `authToken` 时会打印警告并跳过上传；本仓库的 `webpack/webpack.prod.js` 已修改为：仅当 `SENTRY_AUTH_TOKEN` 存在时才注册该插件，否则构建继续并输出简短提示。
 
 GitHub Actions 示例
@@ -405,17 +406,20 @@ jobs:
 ```
 
 Vercel / Netlify
+
 - 在项目的 Environment Variables / Build settings 中添加 `SENTRY_AUTH_TOKEN`、`SENTRY_ORG`、`SENTRY_PROJECT` 和 `SENTRY_DSN`，部署时这些变量会注入到构建与运行时环境。
 
 本地开发
+
 - 不要在本地把 `SENTRY_AUTH_TOKEN` 写入源码或提交到仓库。可在本地 `.env` 或 CI 的 secrets 中临时添加 `SENTRY_DSN` 用于运行时错误上报测试，但将 `SENTRY_AUTH_TOKEN` 保持为空以跳过上传步骤。
 
 如何创建 `SENTRY_AUTH_TOKEN`
+
 - 前往 https://sentry.io/settings/<ORG>/api/，创建一个具有 `project:releases` 与 `org:read` 权限的 token，并把它存入 CI 的 secrets。
 
 注意
-- `SENTRY_DSN`（运行时）与 `SENTRY_AUTH_TOKEN`（CI 上传）用途不同，请勿混淆；本项目的运行时代码会优先使用 `process.env.SENTRY_DSN`，构建时的插件仅在 `SENTRY_AUTH_TOKEN` 存在时运行。
 
+- `SENTRY_DSN`（运行时）与 `SENTRY_AUTH_TOKEN`（CI 上传）用途不同，请勿混淆；本项目的运行时代码会优先使用 `process.env.SENTRY_DSN`，构建时的插件仅在 `SENTRY_AUTH_TOKEN` 存在时运行。
 
 <!-- Give a ⭐️ if this project helped you! -->
 
