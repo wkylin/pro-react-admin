@@ -312,13 +312,19 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     }
 
     setContainerNode(containerRef.current)
+    if (process.env.NODE_ENV === 'development') {
+      try {
+         
+        console.debug('[KeepAlive] setContainerNode', id, containerRef.current)
+      } catch (e) {}
+    }
     // no cleanup here; mount/unmount handled elsewhere
   }, [id])
 
   // Scroll restoration logic
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+    const target = ActivityComponent ? placeholderRef.current : containerRef.current
+    if (!target) return
 
     const onScroll = (e) => {
       if (!active) return
@@ -329,13 +335,13 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     }
 
     // Capture scroll events to record positions
-    container.addEventListener('scroll', onScroll, {
+    target.addEventListener('scroll', onScroll, {
       capture: true,
       passive: true,
     })
 
     return () => {
-      container.removeEventListener('scroll', onScroll, { capture: true })
+      target.removeEventListener('scroll', onScroll, { capture: true })
     }
   }, [active])
 
@@ -370,40 +376,161 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
 
     if (!container || !placeholder) return
 
-    // 如果 container 还在隐藏容器里（比如从缓存恢复），把它移到当前占位符下
-    if (container.parentNode !== placeholder) {
-      // 在移动DOM之前，发送自定义事件通知子组件
-      const event = new CustomEvent('keepalive-dom-move', {
-        detail: { from: container.parentNode, to: placeholder },
-      })
-      container.dispatchEvent(event)
-
-      // 短暂延迟确保子组件有机会处理事件
-      setTimeout(() => {
-        if (container.parentNode !== placeholder) {
-          placeholder.appendChild(container)
-        }
-      }, 0)
-    }
-
-    // 如果使用 Activity，我们让 Activity 控制可见性，但我们需要确保 container 本身是 block
-    // 并且我们仍然需要手动恢复滚动位置，因为 container 是我们手动管理的 DOM
+    // If React Activity API is available, avoid moving DOM to prevent forced reflows.
+    // Render children inline into the placeholder and point container refs to placeholder.
     if (ActivityComponent) {
-      container.style.display = 'block'
-      if (active && shouldRender) {
-        scrollPos.current.forEach((pos, node) => {
-          if (node.isConnected) {
-            node.scrollLeft = pos.left
-            node.scrollTop = pos.top
-          }
-        })
-      }
+      try {
+        containerRef.current = placeholder
+        setContainerNode(placeholder)
+      } catch (e) {}
       return
     }
 
-    if (active && shouldRender) {
-      // 使用 CSS 切换可见性，性能远高于 appendChild
-      container.style.display = 'block'
+    // 如果 container 还在隐藏容器里（比如从缓存恢复），把它移到当前占位符下
+    if (container.parentNode !== placeholder) {
+      // 在移动 DOM 之前，发送自定义事件通知子组件，然后同步移动到占位符下。
+      // 之前使用短延迟的异步移动会导致渲染滞后和大量定时器/帧回调，移到同步移动以提升响应性。
+      const event = new CustomEvent('keepalive-dom-move', {
+        detail: { from: container.parentNode, to: placeholder },
+      })
+
+      let dispatchError = null
+      try {
+        container.dispatchEvent(event)
+      } catch (e) {
+        dispatchError = String(e && e.message)
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        try {
+           
+          console.debug('[KeepAlive] appending container to placeholder', id, {
+            from: container.parentNode,
+            to: placeholder,
+            dispatchError,
+          })
+        } catch (e) {}
+      }
+
+      let appended = false
+      try {
+        if (container.parentNode !== placeholder) {
+          container.dataset.keepaliveAttached = String(Date.now())
+          placeholder.appendChild(container)
+          appended = true
+
+          // Watchdog: if children not mounted soon after append, record and mark on body
+          try {
+            setTimeout(() => {
+              try {
+                if (container.childElementCount === 0) {
+                  if (typeof window !== 'undefined') {
+                    window.__keepalive_debug_details = window.__keepalive_debug_details || []
+                    window.__keepalive_debug_details.push({
+                      id,
+                      note: 'no-children-after-append',
+                      childElementCount: container.childElementCount,
+                      time: Date.now(),
+                    })
+                    try {
+                      document.body.dataset.keepaliveIssue = 'no-children'
+                    } catch (e) {}
+                  }
+                }
+              } catch (e) {}
+            }, 50)
+          } catch (e) {}
+        }
+      } catch (e) {
+        // swallow; we'll record below
+      }
+
+      // 记录附加信息，包含父节点信息与子元素计数，便于生产环境排查
+      try {
+        if (typeof window !== 'undefined') {
+          window.__keepalive_debug_details = window.__keepalive_debug_details || []
+          window.__keepalive_debug_details.push({
+            id,
+            parentTag: container.parentNode ? container.parentNode.tagName : null,
+            parentClass: container.parentNode ? container.parentNode.className : null,
+            childElementCount: container.childElementCount,
+            appended,
+            dispatchError,
+            time: Date.now(),
+          })
+        }
+      } catch (e) {}
+
+      // If we just appended and this instance is active, clear any stray inline "display: none" styles
+      if (appended && active && shouldRender) {
+        try {
+          // run in next frame to let other sync updates finish
+          requestAnimationFrame(() => {
+            try {
+              const cleared = []
+              // Limit to direct descendants first for safety
+              const nodes = Array.from(container.querySelectorAll('*'))
+              nodes.forEach((el) => {
+                try {
+                  if (el && el.style && el.style.display === 'none') {
+                    el.style.removeProperty('display')
+                    cleared.push(el.tagName)
+                  }
+                } catch (e) {}
+              })
+
+              // Ensure the root keepalive node is visible (force with !important)
+              try {
+                const root = container.querySelector(`[data-keepalive-id="${id}"]`)
+                if (root && root.style) {
+                  root.style.setProperty('display', 'block', 'important')
+                }
+              } catch (e) {}
+
+              if (typeof window !== 'undefined') {
+                window.__keepalive_debug_details = window.__keepalive_debug_details || []
+                window.__keepalive_debug_details.push({
+                  id,
+                  note: 'cleared-inline-display-none',
+                  clearedCount: cleared.length,
+                  clearedTagsSample: cleared.slice(0, 5),
+                  time: Date.now(),
+                })
+              }
+            } catch (e) {}
+          })
+        } catch (e) {}
+      }
+
+      // Ensure root visible when active (force with !important) — covers cases where append didn't run
+      if (active && shouldRender) {
+        try {
+          const root = container.querySelector(`[data-keepalive-id="${id}"]`)
+          if (root && root.style) {
+            root.style.setProperty('display', 'block', 'important')
+            // also remove any stray inline display:none on descendants
+            try {
+              const nodes = Array.from(container.querySelectorAll('*'))
+              nodes.forEach((el) => {
+                try {
+                  if (el && el.style && el.style.display === 'none') {
+                    el.style.removeProperty('display')
+                  }
+                } catch (e) {}
+              })
+            } catch (e) {}
+
+            if (typeof window !== 'undefined') {
+              window.__keepalive_debug_details = window.__keepalive_debug_details || []
+              window.__keepalive_debug_details.push({
+                id,
+                note: 'force-visible-root',
+                time: Date.now(),
+              })
+            }
+          }
+        } catch (e) {}
+      }
 
       // Restore scroll positions
       scrollPos.current.forEach((pos, node) => {
@@ -418,14 +545,58 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     }
   }, [active, shouldRender])
 
+  // Record lightweight runtime debug info in an effect (avoid doing impure work during render)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!shouldRender) return
+    try {
+      window.__keepalive_debug = window.__keepalive_debug || []
+      window.__keepalive_debug.push({
+        id,
+        active,
+        shouldRender,
+        containerNode: !!containerNode,
+        childrenType: typeof children,
+        time: Date.now(),
+      })
+    } catch (e) {}
+  }, [shouldRender, active, containerNode, id, children])
+
+  // Activity mode: render children inline and avoid DOM moving to reduce reflows
+  useEffect(() => {
+    if (!ActivityComponent) return
+    if (!active || !shouldRender) return
+    try {
+      requestAnimationFrame(() => {
+        try {
+          const p = placeholderRef.current
+          if (!p) return
+          const nodes = Array.from(p.querySelectorAll('*'))
+          nodes.forEach((el) => {
+            try {
+              if (el && el.style && el.style.display === 'none') {
+                el.style.removeProperty('display')
+              }
+            } catch (e) {}
+          })
+          if (typeof window !== 'undefined') {
+            window.__keepalive_debug_details = window.__keepalive_debug_details || []
+            window.__keepalive_debug_details.push({ id, note: 'activity-mode-cleaned-display', time: Date.now() })
+          }
+        } catch (e) {}
+      })
+    } catch (e) {}
+  }, [ActivityComponent, active, isActivityVisible, shouldRender])
+
   if (!shouldRender) return null
 
   if (ActivityComponent) {
     return (
       <KeepAliveContext.Provider value={active}>
         <ActivityComponent mode={isActivityVisible ? 'visible' : 'hidden'}>
-          <div ref={placeholderRef} style={{ width: '100%', height: '100%' }} />
-          {containerNode && createPortal(children, containerNode)}
+          <div ref={placeholderRef} style={{ width: '100%', height: '100%' }}>
+            {children}
+          </div>
         </ActivityComponent>
       </KeepAliveContext.Provider>
     )
