@@ -1,5 +1,5 @@
-const Router = require('koa-router')
-const { Mock, Random } = require('../utils/index')
+import Router from 'koa-router'
+import { Mock, Random } from '../utils/index.js'
 
 const shops = new Router()
 
@@ -28,4 +28,4 @@ const handler = (ctx) => {
 shops.get('/', handler)
 shops.post('/', handler)
 
-module.exports = shops
+export default shops

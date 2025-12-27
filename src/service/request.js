@@ -316,6 +316,7 @@ function handleUnauthorized(message) {
   }, 500)
 
   logger.warn('用户未授权，已清除登录信息')
+  logger.warn(message)
 }
 
 const isHttpOk = (status) => status >= 200 && status < 300

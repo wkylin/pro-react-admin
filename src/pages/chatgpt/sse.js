@@ -123,7 +123,7 @@ var SSE = function (url, options) {
     e.source = this
 
     const onHandler = 'on' + e.type
-    if (this.hasOwnProperty(onHandler)) {
+    if (Object.prototype.hasOwnProperty.call(this, onHandler)) {
       this[onHandler].call(this, e)
       if (e.defaultPrevented) {
         return false

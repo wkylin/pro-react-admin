@@ -1,8 +1,4 @@
-const delay = require('./delay')
-const { Mock, Random } = require('./mock')
+import delay from './delay.js'
+import { Mock, Random } from './mock.js'
 
-module.exports = {
-  Mock,
-  Random,
-  delay,
-}
+export { Mock, Random, delay }

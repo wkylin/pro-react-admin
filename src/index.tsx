@@ -50,7 +50,7 @@ const patchDefinePropertyDescriptor = () => {
 patchDefinePropertyDescriptor()
 
 Sentry.init({
-  dsn: 'https://3d8db323c44ddb1f24ba4ba3f60e01c6@o64827.ingest.us.sentry.io/4510499314860032',
+  dsn: process.env.SENTRY_DSN,
   // Setting this option to true will send default PII data to Sentry.
   // For example, automatic IP address collection on events
   sendDefaultPii: true,

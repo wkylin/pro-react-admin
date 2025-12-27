@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {
     context: ['/wkylin'],
     target: 'https://my-json-server.typicode.com',

@@ -87,35 +87,42 @@ const BackgroundBeams = React.memo(({ className }) => {
           ></motion.path>
         ))}
         <defs>
-          {paths.map((path, index) => (
-            <motion.linearGradient
-              id={`linearGradient-${index}`}
-              key={`gradient-${index}`}
-              initial={{
-                x1: '0%',
-                x2: '0%',
-                y1: '0%',
-                y2: '0%',
-              }}
-              animate={{
-                x1: ['0%', '100%'],
-                x2: ['0%', '95%'],
-                y1: ['0%', '100%'],
-                y2: ['0%', `${93 + Math.random() * 8}%`],
-              }}
-              transition={{
-                duration: Math.random() * 10 + 10,
-                ease: 'easeInOut',
-                repeat: Infinity,
-                delay: Math.random() * 10,
-              }}
-            >
-              <stop stopColor="#18CCFC" stopOpacity="0"></stop>
-              <stop stopColor="#18CCFC"></stop>
-              <stop offset="32.5%" stopColor="#6344F5"></stop>
-              <stop offset="100%" stopColor="#AE48FF" stopOpacity="0"></stop>
-            </motion.linearGradient>
-          ))}
+          {paths.map((path, index) => {
+            const rand = (seed) => Math.abs(Math.sin(seed) * 10000) % 1
+            const randVal1 = 93 + rand(index + 1) * 8
+            const randDuration = rand(index + 2) * 10 + 10
+            const randDelay = rand(index + 3) * 10
+
+            return (
+              <motion.linearGradient
+                id={`linearGradient-${index}`}
+                key={`gradient-${index}`}
+                initial={{
+                  x1: '0%',
+                  x2: '0%',
+                  y1: '0%',
+                  y2: '0%',
+                }}
+                animate={{
+                  x1: ['0%', '100%'],
+                  x2: ['0%', '95%'],
+                  y1: ['0%', '100%'],
+                  y2: ['0%', `${randVal1}%`],
+                }}
+                transition={{
+                  duration: randDuration,
+                  ease: 'easeInOut',
+                  repeat: Infinity,
+                  delay: randDelay,
+                }}
+              >
+                <stop stopColor="#18CCFC" stopOpacity="0"></stop>
+                <stop stopColor="#18CCFC"></stop>
+                <stop offset="32.5%" stopColor="#6344F5"></stop>
+                <stop offset="100%" stopColor="#AE48FF" stopOpacity="0"></stop>
+              </motion.linearGradient>
+            )
+          })}
 
           <radialGradient
             id="paint0_radial_242_278"

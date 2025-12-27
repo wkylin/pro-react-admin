@@ -23,10 +23,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   // Token 检查（保持原有逻辑）
   const { token } = getLocalStorage('token') || getLocalStorage('github_token') || { token: null }
 
-  if (!token) {
-    return <Navigate to="/signin" replace />
-  }
-
   // 如果没有传入权限/角色要求，直接渲染（保持向下兼容）
   const needCheck = !!permission || (roles && roles.length > 0)
   const [allowed, setAllowed] = useState<boolean>(!needCheck)
@@ -87,6 +83,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       alive = false
     }
   }, [permission, roles, requireAll, needCheck])
+
+  // 登录态检查：在保证 hooks 顺序不变的前提下，若无 token 则跳转登录
+  if (!token) {
+    return <Navigate to="/signin" replace />
+  }
 
   // 权限检查中，显示空白或加载状态
   if (checking) {

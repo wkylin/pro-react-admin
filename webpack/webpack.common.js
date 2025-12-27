@@ -1,16 +1,21 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin')
-const Dotenv = require('dotenv-webpack')
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-// const CircularDependencyPlugin = require('circular-dependency-plugin')
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const WebpackBar = require('webpackbar')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const ESLintWebpackPlugin = require('eslint-webpack-plugin')
-const { codeInspectorPlugin } = require('code-inspector-plugin')
-const paths = require('./paths')
+import path from 'path'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import AntdDayjsWebpackPlugin from 'antd-dayjs-webpack-plugin'
+import Dotenv from 'dotenv-webpack'
+import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
+// import CircularDependencyPlugin from 'circular-dependency-plugin'
+import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
+import WebpackBar from 'webpackbar'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+import ESLintWebpackPlugin from 'eslint-webpack-plugin'
+import { codeInspectorPlugin } from 'code-inspector-plugin'
+import paths from './paths.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const isDev = process.env.NODE_ENV === 'development'
 const isAnalyze = Boolean(Number(process.env.USE_ANALYZE || 0))
@@ -185,7 +190,7 @@ const config = {
             },
           },
           {
-            loader: require.resolve('postcss-loader'),
+            loader: 'postcss-loader',
             options: {
               postcssOptions: {
                 ident: 'postcss',
@@ -297,4 +302,4 @@ if (USE_ANALYZE) {
   config.plugins.push(new BundleAnalyzerPlugin())
 }
 
-module.exports = config
+export default config

@@ -42,8 +42,8 @@ export function ReactSignature({ className, ...props }: ComponentProps<typeof Si
         <ValidateButton onClick={handleValidate} readonly={readonly} />
         {readonly && (
           <>
-            <DownloadButton svgElement={$svg.current?.svg} />
-            <CopySvgButton svgElement={$svg.current?.svg} />
+            <DownloadButton getSvg={() => $svg.current?.svg} />
+            <CopySvgButton getSvg={() => $svg.current?.svg} />
           </>
         )}
         {!readonly && <ClearButton onClick={handleClear} />}
@@ -92,11 +92,12 @@ function ValidateButton({
 }
 
 function DownloadButton({
-  svgElement,
+  getSvg,
 }: Readonly<{
-  svgElement: SVGSVGElement | undefined | null
+  getSvg: () => SVGSVGElement | undefined | null
 }>) {
   const handleDownloadImage = () => {
+    const svgElement = getSvg()
     if (!svgElement) {
       return
     }
@@ -132,13 +133,14 @@ function DownloadButton({
 }
 
 function CopySvgButton({
-  svgElement,
+  getSvg,
 }: Readonly<{
-  svgElement: SVGSVGElement | undefined | null
+  getSvg: () => SVGSVGElement | undefined | null
 }>) {
-  const [_, copyText, isCopied] = useCopy()
+  const [, copyText, isCopied] = useCopy()
 
   const handleCopySvg = () => {
+    const svgElement = getSvg()
     if (!svgElement) {
       return
     }

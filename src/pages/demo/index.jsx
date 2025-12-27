@@ -16,7 +16,6 @@ import OrgChart from '@stateless/OrgChart'
 import TrapezoidTabs from '@stateless/TrapezoidTabs'
 import MusicPlayer from '@stateless/MusicPlayer'
 import GradientStats from '@stateless/GradientStats'
-import WaveBackground from '@stateless/WaveBackground'
 import MarketingHero from '@stateless/MarketingHero'
 import ScriptView from '@stateless/ScriptView'
 import ScrollLayout from '@stateless/ScrollLayout'
@@ -330,25 +329,6 @@ const ProDemo = () => {
         <GradientStats items={['200+', '400+', '1200+', '2000+']} />
         <DescBox />
         <TagCard tagCardList={tagCardList} showMax={6} />
-        <WaveBackground
-          height={300}
-          backgroundColor="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-          waves={[
-            {
-              fill: 'rgba(255, 255, 255, 0.1)',
-              options: { height: 20, amplitude: 20, speed: 0.15, points: 3 },
-            },
-            {
-              fill: 'rgba(255, 255, 255, 0.3)',
-              options: { height: 15, amplitude: 30, speed: 0.2, points: 4 },
-            },
-            {
-              fill: 'rgba(255, 255, 255, 0.5)',
-              options: { height: 10, amplitude: 40, speed: 0.25, points: 5 },
-            },
-          ]}
-          className="my-4 rounded-xl"
-        />
         <StickyCard cards={stickyCardItems} />
         <section style={{ marginBottom: '15px' }}>
           <OrgChart />

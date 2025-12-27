@@ -1,11 +1,15 @@
-const path = require('path')
+import path from 'path'
+import webpack from 'webpack'
+import { merge } from 'webpack-merge'
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
+import portfinder from 'portfinder'
+import common from './webpack.common.js'
+import devProxy from './dev.proxy.js'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
-const webpack = require('webpack')
-const { merge } = require('webpack-merge')
-const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
-const portfinder = require('portfinder')
-const common = require('./webpack.common.js')
-const devProxy = require('./dev.proxy')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 const devWebpackConfig = merge(common, {
   mode: 'development',
@@ -47,7 +51,7 @@ const devWebpackConfig = merge(common, {
             loader: 'babel-loader',
             options: {
               presets: [['@babel/preset-env', { modules: false }]],
-              plugins: [require.resolve('react-refresh/babel')].filter(Boolean),
+              plugins: ['react-refresh/babel'].filter(Boolean),
             },
           },
         ],
@@ -81,7 +85,8 @@ const devWebpackConfig = merge(common, {
     usedExports: false,
   },
 })
-module.exports = new Promise((resolve, reject) => {
+
+export default new Promise((resolve, reject) => {
   portfinder.getPort(
     {
       port: 8080, // 默认8080端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止

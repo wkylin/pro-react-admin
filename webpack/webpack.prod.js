@@ -1,27 +1,30 @@
-const path = require('path')
-const fs = require('fs')
-const { merge } = require('webpack-merge')
+import path from 'path'
+import fs from 'fs'
+import { merge } from 'webpack-merge'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import webpack from 'webpack'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin'
+import * as glob from 'glob'
+import { PurgeCSSPlugin } from 'purgecss-webpack-plugin'
+import CompressionWebpackPlugin from 'compression-webpack-plugin'
+import { sentryWebpackPlugin } from '@sentry/webpack-plugin'
+import FileManagerPlugin from 'filemanager-webpack-plugin'
+import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin'
+import { EsbuildPlugin } from 'esbuild-loader'
+import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin'
+import common from './webpack.common.js'
+import dotenv from 'dotenv'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-const glob = require('glob')
-const { PurgeCSSPlugin } = require('purgecss-webpack-plugin')
-
-const CompressionWebpackPlugin = require('compression-webpack-plugin')
-const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
-const FileManagerPlugin = require('filemanager-webpack-plugin')
-
-const HtmlMinimizerPlugin = require('html-minimizer-webpack-plugin')
-const { EsbuildPlugin } = require('esbuild-loader')
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin')
-
-const packageJson = require('../package.json')
-const common = require('./webpack.common.js')
+const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf8'))
 
 // Load environment variables
-require('dotenv').config({ path: path.resolve(__dirname, '../.env.production') })
+dotenv.config({ path: path.resolve(__dirname, '../.env.production') })
 
 // 第三方库正则匹配（用于代码分割）
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|lodash)[\\/]/
@@ -49,6 +52,9 @@ const prodWebpackConfig = merge(common, {
   // devtool: 'source-map',
   devtool: false,
   plugins: [
+    new webpack.ProvidePlugin({
+      React: 'react',
+    }),
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
       chunkFilename: 'static/css/[name].[contenthash].css',
@@ -154,17 +160,26 @@ const prodWebpackConfig = merge(common, {
 })
 
 if (useSentryMap) {
-  prodWebpackConfig.plugins.push(
-    sentryWebpackPlugin({
-      release: packageJson.version,
-      include: path.join(__dirname, '../dist/static/js'),
-      urlPrefix: '~/static/js',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      telemetry: false,
-    })
-  )
+  const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN
+  if (sentryAuthToken) {
+    prodWebpackConfig.plugins.push(
+      sentryWebpackPlugin({
+        release: packageJson.version,
+        include: path.join(__dirname, '../dist/static/js'),
+        urlPrefix: '~/static/js',
+        authToken: sentryAuthToken,
+        org: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        telemetry: false,
+      })
+    )
+  } else {
+    // Avoid noisy plugin warning when token is not provided (common in local dev)
+    // CI/production should set SENTRY_AUTH_TOKEN to enable releases & source map upload.
+    // See https://docs.sentry.io/api/auth/ for token creation.
+    // eslint-disable-next-line no-console
+    console.warn('[sentry-webpack-plugin] SENTRY_AUTH_TOKEN not set — skipping Sentry release/source map upload.')
+  }
 }
 
 // 如果设置了 DIST_ZIP 环境变量，则在构建完成后把 dist 压缩到 dist-zip/pro-react-admin.zip
@@ -186,4 +201,4 @@ if (process.env.DIST_ZIP === '1' || process.env.DIST_ZIP === 'true') {
   )
 }
 
-module.exports = prodWebpackConfig
+export default prodWebpackConfig

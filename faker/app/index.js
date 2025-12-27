@@ -1,5 +1,5 @@
-const Router = require('koa-router')
-const { delay } = require('../utils/index')
+import Router from 'koa-router'
+import { delay } from '../utils/index.js'
 
 const user = new Router()
 
@@ -12,4 +12,4 @@ user.get('/api/user/list', async (ctx) => {
   ctx.body = [{ name: 'wkylin', sex: 'man', age: 18 }]
 })
 
-module.exports = user
+export default user

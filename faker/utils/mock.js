@@ -2,8 +2,9 @@
 // https://www.npmjs.com/package/faker
 // https://www.npmjs.com/package/better-mock
 
+import { createRequire } from 'module'
+const require = createRequire(import.meta.url)
 const Mock = require('better-mock')
-
 const { Random } = Mock
 Random.extend({
   mobile() {
@@ -16,7 +17,4 @@ Random.extend({
   },
 })
 
-module.exports = {
-  Mock,
-  Random,
-}
+export { Mock, Random }

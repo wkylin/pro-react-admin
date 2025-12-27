@@ -1,20 +1,25 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion } from 'motion/react'
 
 const Meteors = ({ starCount = 50, primaryColor = '#ffffff', className = '' }) => {
-  const stars = Array.from({ length: starCount }, (_, i) => {
-    const starTailLength = Math.random() * 2.5 + 5
-    const topOffset = Math.random() * 100
-    const fallDuration = Math.random() * 6 + 6
-    const fallDelay = Math.random() * 10
+  const stars = useMemo(() => {
+    const rand = (seed) => Math.abs(Math.sin(seed) * 10000) % 1
 
-    return {
-      id: i,
-      topOffset,
-      fallDuration,
-      fallDelay,
-    }
-  })
+    return Array.from({ length: starCount }, (_, i) => {
+      const tailLength = rand(i + 1) * 2.5 + 5
+      const topOffset = rand(i + 2) * 100
+      const fallDuration = rand(i + 3) * 6 + 6
+      const fallDelay = rand(i + 4) * 10
+
+      return {
+        id: i,
+        tailLength,
+        topOffset,
+        fallDuration,
+        fallDelay,
+      }
+    })
+  }, [starCount])
 
   return (
     <div

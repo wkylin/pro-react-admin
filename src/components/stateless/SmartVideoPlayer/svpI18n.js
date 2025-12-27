@@ -16,7 +16,8 @@ export function getStoredSvpUiLanguage() {
     if (typeof window === 'undefined') return null
     const raw = window.localStorage?.getItem?.(SVP_UI_LANGUAGE_STORAGE_KEY)
     return normalizeLang(raw)
-  } catch (_) {
+  } catch (error) {
+    console.log('error', error)
     return null
   }
 }
@@ -27,8 +28,8 @@ export function setStoredSvpUiLanguage(lang) {
   try {
     if (typeof window === 'undefined') return
     window.localStorage?.setItem?.(SVP_UI_LANGUAGE_STORAGE_KEY, normalized)
-  } catch (_) {
-    // ignore
+  } catch (error) {
+    console.log('error', error)
   }
 }
 

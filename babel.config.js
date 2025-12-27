@@ -2,12 +2,11 @@ const plugins = [
   ['@babel/plugin-syntax-dynamic-import'],
   ['@babel/plugin-proposal-decorators', { legacy: true }],
   ['@babel/plugin-transform-runtime'],
-  ['@babel/plugin-transform-modules-commonjs'],
   ['@babel/plugin-transform-object-rest-spread'],
   ['babel-plugin-react-compiler'],
 ]
 
-module.exports = {
+export default {
   presets: [
     [
       '@babel/preset-env',

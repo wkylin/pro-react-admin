@@ -1,6 +1,7 @@
 {
   "name": "@w.ui/wui-react",
   "version": "3.5.1",
+  "type": "module",
   "readme": "NPM_README.md",
   "description": "pro-react-admin components library",
   "private": false,
@@ -300,6 +301,7 @@
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
     "@sentry/react": "^10.32.1",
+    "@sentry/tracing": "^7.56.0",
     "@smakss/react-scroll-direction": "^4.2.0",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/react": "^3.0.0",
@@ -363,7 +365,6 @@
     "react-sticky-box": "^2.0.5",
     "react-syntax-highlighter": "^16.1.0",
     "react-to-print": "^3.2.0",
-    "react-wavify": "^1.11.1",
     "react-zoom-pan-pinch": "^3.7.0",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",

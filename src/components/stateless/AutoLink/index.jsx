@@ -2,8 +2,7 @@ import React from 'react'
 import styles from './index.module.less'
 
 const AutoLink = ({ text }) => {
-  const delimiter =
-    /((?:https?:\/\/)?(?:(?:[a-z0-9]?(?:[a-z0-9\-]{1,61}[a-z0-9])?\.[^\.|\s])+[a-z\.]*[a-z]+|(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(?::\d{1,5})*[a-z0-9.,_\/~#&=;%+?\-\\(\\)]*)/gi
+  const delimiter = /((?:https?:\/\/)?[^\s/$.?#][^\s]*)/gi
 
   return (
     <>
@@ -13,9 +12,10 @@ const AutoLink = ({ text }) => {
           const url = match[0]
           return (
             <a
-              key={index}
+              key={`${index}-${url}`}
               className={styles.squiggle}
               target="_blank"
+              rel="noopener noreferrer"
               href={url.startsWith('http') ? url : `http://${url}`}
             >
               {url}
