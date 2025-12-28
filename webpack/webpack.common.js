@@ -1,4 +1,4 @@
-import path from 'path'
+import path, { dirname } from 'path'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import AntdDayjsWebpackPlugin from 'antd-dayjs-webpack-plugin'
@@ -12,7 +12,6 @@ import ESLintWebpackPlugin from 'eslint-webpack-plugin'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 import paths from './paths.js'
 import { fileURLToPath } from 'url'
-import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

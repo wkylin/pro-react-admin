@@ -1,4 +1,4 @@
-import path from 'path'
+import path, { dirname } from 'path'
 import fs from 'fs'
 import { merge } from 'webpack-merge'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
@@ -16,7 +16,6 @@ import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin'
 import common from './webpack.common.js'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
-import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -49,8 +48,9 @@ const prodWebpackConfig = merge(common, {
       : undefined,
   // 使用文件缓存
   cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
-  // devtool: 'source-map',
-  devtool: false,
+  // 生产调试开关：设置环境变量 DEBUG_PROD=1 可在 production 构建中输出 source-map 并关闭压缩，便于定位仅在构建后出现的问题。
+  // 默认保持原有生产行为（无 source-map，开启压缩）。
+  devtool: process.env.DEBUG_PROD === '1' ? 'source-map' : false,
   plugins: [
     new webpack.ProvidePlugin({
       React: 'react',
@@ -91,8 +91,8 @@ const prodWebpackConfig = merge(common, {
     }),
   ],
   optimization: {
-    minimize: true,
-    minimizer: [
+    minimize: process.env.DEBUG_PROD !== '1',
+    minimizer: process.env.DEBUG_PROD === '1' ? [] : [
       new CssMinimizerPlugin(),
       new EsbuildPlugin({
         target: 'es2015',

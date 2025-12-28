@@ -1608,7 +1608,7 @@ PRD文档内容：
                       data-color-mode={previewTheme}
                       skipHtml={false}
                       remarkPlugins={[remarkMath]}
-                      rehypePlugins={[rehypeKatex]}
+                      rehypePlugins={[[rehypeKatex, { strict: 'ignore' }]]}
                       components={CustomComponents}
                     />
                   </div>
@@ -1751,7 +1751,7 @@ PRD文档内容：
                   data-color-mode={previewTheme}
                   skipHtml={false}
                   remarkPlugins={[remarkMath]}
-                  rehypePlugins={[rehypeKatex]}
+                  rehypePlugins={[[rehypeKatex, { strict: 'ignore' }]]}
                   components={CustomComponents}
                 />
 
