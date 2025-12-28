@@ -6,40 +6,47 @@ const FloatingIcon = ({ children, initialX }) => {
   const controls = useAnimation()
   const isMounted = useRef(true) // 添加ref来跟踪组件挂载状态
 
-  const startFloating = async () => {
-    if (isClient && isMounted.current) {
-      // 检查组件是否仍挂载
-      await controls.start({
-        x: initialX + Math.random() * 30 - 15,
-        y: Math.random() * 30 - 15,
-        transition: {
-          duration: 3,
-          ease: 'easeInOut',
-        },
-      })
-
-      // 递归调用前再次检查组件是否挂载
-      if (isMounted.current) {
-        startFloating()
-      }
-    }
-  }
-
   useEffect(() => {
-    setIsClient(true)
+    const id = setTimeout(() => setIsClient(true), 0)
 
     // 添加清理函数，组件卸载时设置isMounted为false
     return () => {
+      clearTimeout(id)
       isMounted.current = false
       controls.stop() // 停止所有动画
     }
   }, [])
 
   useEffect(() => {
-    if (isClient) {
-      startFloating()
+    if (!isClient) return
+
+    let cancelled = false
+
+    const run = async () => {
+      if (!isMounted.current || cancelled) return
+      const x = initialX + Math.random() * 30 - 15
+      const y = Math.random() * 30 - 15
+
+      await controls.start({
+        x,
+        y,
+        transition: {
+          duration: 3,
+          ease: 'easeInOut',
+        },
+      })
+
+      if (isMounted.current && !cancelled) {
+        run()
+      }
     }
-  }, [isClient])
+
+    run()
+
+    return () => {
+      cancelled = true
+    }
+  }, [isClient, initialX, controls])
 
   return (
     <motion.div initial={{ x: initialX, y: 0 }} animate={controls}>

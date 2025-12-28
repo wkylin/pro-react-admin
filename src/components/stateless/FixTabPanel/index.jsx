@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { FloatButton } from 'antd'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
 import ScrollProgressBar from '@stateless/ScrollProgressBar'
@@ -6,9 +6,11 @@ import ScrollProgressBar from '@stateless/ScrollProgressBar'
 const FixTabPanel = React.forwardRef(
   ({ style, children, className, showScrollProgress = true, scrollProgressProps = {}, fill = true, ...rest }, ref) => {
     const wrapperRef = useRef(null)
+    const [containerNode, setContainerNode] = useState(null)
 
     const setRef = (node) => {
       wrapperRef.current = node
+      setContainerNode(node)
       if (typeof ref === 'function') {
         ref(node)
       } else if (ref) {
@@ -30,9 +32,9 @@ const FixTabPanel = React.forwardRef(
           ...style,
         }}
       >
-        {showScrollProgress && (
+        {showScrollProgress && containerNode && (
           <ScrollProgressBar
-            container={wrapperRef.current}
+            container={containerNode}
             position="fixed" // sticky
             {...scrollProgressProps}
           />
@@ -53,7 +55,7 @@ const FixTabPanel = React.forwardRef(
           {children}
         </div>
 
-        <FloatButton.BackTop target={() => wrapperRef.current} style={{ right: 6, bottom: 2 }}>
+        <FloatButton.BackTop target={() => containerNode} style={{ right: 6, bottom: 2 }}>
           <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
         </FloatButton.BackTop>
       </div>

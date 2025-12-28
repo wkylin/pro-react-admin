@@ -116,16 +116,17 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>, options: UseVideoOpti
     [ref]
   )
 
+  const lastTsRef = useRef<number>(0)
+
   const handleTimeControl = useCallback((e: Event) => {
     const target = e.target as HTMLVideoElement
     const nextTime = target.currentTime
     // Throttle frequent timeupdate to reduce re-render pressure
     // (especially noticeable in fullscreen with heavy UI around the video)
     const now = typeof performance !== 'undefined' ? performance.now() : Date.now()
-    ;(handleTimeControl as any)._lastTs = (handleTimeControl as any)._lastTs || 0
-    const lastTs = (handleTimeControl as any)._lastTs as number
+    const lastTs = lastTsRef.current || 0
     if (now - lastTs < 120) return
-    ;(handleTimeControl as any)._lastTs = now
+    lastTsRef.current = now
 
     setVideoState((prev) => {
       if (Math.abs(prev.currentTime - nextTime) < 0.05) return prev
@@ -176,8 +177,11 @@ const useVideo = (ref: RefObject<HTMLVideoElement | null>, options: UseVideoOpti
     let disposed = false
     let attachedTo: HTMLVideoElement | null = null
 
-    const schedule = (cb: FrameRequestCallback) => {
-      if (typeof requestAnimationFrame === 'function') return requestAnimationFrame(cb)
+    const schedule = (cb: (time: number) => void) => {
+      if (typeof requestAnimationFrame === 'function') {
+        const id = requestAnimationFrame(cb as (time: number) => void)
+        return id
+      }
       return setTimeout(() => cb(performance.now()), 0) as unknown as number
     }
 

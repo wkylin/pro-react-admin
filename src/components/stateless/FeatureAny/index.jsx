@@ -31,23 +31,16 @@ const defaultData = [
 
 const FeatureAny = ({ data = defaultData, autoPlay = true, intervalDuration = 5000 }) => {
   const [featureOpen, setFeatureOpen] = useState(0)
-  const [timer, setTimer] = useState(0)
 
   useEffect(() => {
     if (!autoPlay) return
 
-    const interval = setInterval(() => {
-      setTimer((prev) => prev + 10)
-    }, 10)
-    return () => clearInterval(interval)
-  }, [autoPlay])
-
-  useEffect(() => {
-    if (timer > intervalDuration) {
+    const id = setInterval(() => {
       setFeatureOpen((prev) => (prev + 1) % data.length)
-      setTimer(0)
-    }
-  }, [timer, data.length, intervalDuration])
+    }, intervalDuration)
+
+    return () => clearInterval(id)
+  }, [autoPlay, intervalDuration, data.length])
 
   return (
     <div className="grid grid-cols-1 gap-4 rounded-sm border border-neutral-500/10 p-4 md:grid-cols-2 dark:border-neutral-500/15">
@@ -58,14 +51,13 @@ const FeatureAny = ({ data = defaultData, autoPlay = true, intervalDuration = 50
             key={item.title}
             onClick={() => {
               setFeatureOpen(index)
-              setTimer(0)
             }}
             type="button"
           >
             <TextComponent
               content={item.content}
               isOpen={featureOpen === index}
-              loadingWidthPercent={featureOpen === index ? (timer / intervalDuration) * 100 : 0}
+              loadingWidthPercent={0}
               number={index + 1}
               title={item.title}
             />

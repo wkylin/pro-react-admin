@@ -14,14 +14,6 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
     }
   }, [])
 
-  // 初始化图表
-  const initChart = useCallback(() => {
-    if (!chartRef.current) return
-
-    myChartRef.current = echarts.init(chartRef.current)
-    updateChart()
-  }, [])
-
   // 更新图表配置
   const updateChart = useCallback(() => {
     if (!myChartRef.current) return
@@ -130,6 +122,14 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
 
     myChartRef.current.setOption(defaultOption)
   }, [eOptions, innerColors, outerColors])
+
+  // 初始化图表
+  const initChart = useCallback(() => {
+    if (!chartRef.current) return
+
+    myChartRef.current = echarts.init(chartRef.current)
+    updateChart()
+  }, [updateChart])
 
   // 重新初始化图表
   const reinitChart = useCallback(() => {

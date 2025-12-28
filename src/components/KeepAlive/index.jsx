@@ -314,7 +314,6 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     setContainerNode(containerRef.current)
     if (process.env.NODE_ENV === 'development') {
       try {
-         
         console.debug('[KeepAlive] setContainerNode', id, containerRef.current)
       } catch (e) {}
     }
@@ -403,7 +402,6 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
 
       if (process.env.NODE_ENV === 'development') {
         try {
-           
           console.debug('[KeepAlive] appending container to placeholder', id, {
             from: container.parentNode,
             to: placeholder,

@@ -27,15 +27,31 @@ const ProContent = () => {
     const full = search ? pathname + search : pathname
     const { tabKey, title, element, i18nKey } = getKeyName(full)
 
-    setPanesItem({
-      title,
-      content: element,
-      key: tabKey,
-      closable: tabKey !== '/',
-      path: full,
-      i18nKey,
-    })
-    setTabActiveKey(tabKey)
+    if (typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(() => {
+        setPanesItem({
+          title,
+          content: element,
+          key: tabKey,
+          closable: tabKey !== '/',
+          path: full,
+          i18nKey,
+        })
+        setTabActiveKey(tabKey)
+      })
+    } else {
+      setTimeout(() => {
+        setPanesItem({
+          title,
+          content: element,
+          key: tabKey,
+          closable: tabKey !== '/',
+          path: full,
+          i18nKey,
+        })
+        setTabActiveKey(tabKey)
+      }, 0)
+    }
   }, [pathname, search])
 
   return (

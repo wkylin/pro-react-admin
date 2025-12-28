@@ -68,25 +68,29 @@ const EChartsCommon = (props: {
     resizeObserverRef.current.observe(drawDomRef.current)
   }, [])
 
+  // 解构常用 props，避免在依赖数组使用整个 props 对象
+  const { renderer = 'canvas', notMerge = false, lazyUpdate = false, option, instanceHandle } = props
+
   // 安全地设置图表配置
+  const initChartRef = useRef<(dom: HTMLDivElement | null) => void | null>(null)
+
   const setOption = useCallback(
-    (option: OptionType) => {
+    (opt: OptionType) => {
       if (!chartRef.current) {
         console.warn('ECharts instance is not available')
         return
       }
 
       try {
-        const { notMerge = false, lazyUpdate = false } = props
-        chartRef.current.setOption(option, notMerge, lazyUpdate)
+        chartRef.current.setOption(opt, notMerge, lazyUpdate)
       } catch (error) {
         console.error('ECharts setOption error:', error)
-        // 尝试重新初始化图表
+        // 尝试重新初始化图表（通过 ref 调用，避免在声明前访问 initChart）
         dispose()
-        initChart(drawDomRef.current)
+        initChartRef.current?.(drawDomRef.current)
       }
     },
-    [props.notMerge, props.lazyUpdate, dispose]
+    [notMerge, lazyUpdate, dispose]
   )
 
   // 初始化图表
@@ -101,7 +105,6 @@ const EChartsCommon = (props: {
           return
         }
 
-        const renderer = props.renderer || 'canvas'
         chartRef.current = echarts.init(dom, null, {
           renderer,
           width: 'auto',
@@ -111,12 +114,12 @@ const EChartsCommon = (props: {
         isInitializedRef.current = true
 
         // 执行初始化回调
-        if (props.instanceHandle) {
-          props.instanceHandle(chartRef.current)
+        if (instanceHandle) {
+          instanceHandle(chartRef.current)
         }
 
         // 设置初始配置
-        setOption(props.option)
+        setOption(option)
 
         // 设置尺寸观察
         setupResizeObserver()
@@ -126,8 +129,16 @@ const EChartsCommon = (props: {
         isInitializedRef.current = false
       }
     },
-    [props, setOption, setupResizeObserver]
+    [renderer, instanceHandle, setOption, setupResizeObserver, option]
   )
+
+  // 将 initChart 绑定到 ref，供 setOption 中安全调用
+  useEffect(() => {
+    initChartRef.current = initChart
+    return () => {
+      initChartRef.current = null
+    }
+  }, [initChart])
 
   // 处理图表初始化或更新
   const initHandle = useCallback(() => {

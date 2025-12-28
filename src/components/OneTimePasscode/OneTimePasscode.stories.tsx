@@ -55,15 +55,17 @@ export const Classic: Story = {
   ),
 }
 
+const ControlledExample = (args: any) => {
+  const [val, setVal] = useState('')
+  return (
+    <Shell>
+      <OneTimePasscode {...args} value={val} onChange={(v) => setVal(v)} />
+    </Shell>
+  )
+}
+
 export const Controlled: Story = {
-  render: (args) => {
-    const [val, setVal] = useState('')
-    return (
-      <Shell>
-        <OneTimePasscode {...args} value={val} onChange={(v) => setVal(v)} />
-      </Shell>
-    )
-  },
+  render: (args) => <ControlledExample {...args} />,
 }
 
 export const Uncontrolled: Story = {

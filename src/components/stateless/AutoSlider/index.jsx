@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { ArrowRight, ArrowLeft, Quote } from 'lucide-react'
 import styles from './index.module.less'
 
@@ -45,27 +45,30 @@ const AutoSlider = () => {
   useEffect(() => {
     const lastIndex = people.length - 1
     if (index < 0) {
-      setIndex(lastIndex)
+      const id = setTimeout(() => setIndex(lastIndex), 0)
+      return () => clearTimeout(id)
     }
     if (index > lastIndex) {
-      setIndex(0)
+      const id = setTimeout(() => setIndex(0), 0)
+      return () => clearTimeout(id)
     }
+    return undefined
   }, [index, people])
 
-  let slider = null
+  const sliderRef = useRef(null)
   useEffect(() => {
-    slider = setInterval(() => {
+    sliderRef.current = setInterval(() => {
       setIndex(index + 1)
     }, 5000)
     return () => {
-      clearInterval(slider)
+      clearInterval(sliderRef.current)
     }
   }, [index])
 
   const handleIndexChange = (newIndex) => {
-    clearInterval(slider)
+    clearInterval(sliderRef.current)
     setIndex(newIndex)
-    slider = setInterval(() => {
+    sliderRef.current = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % people.length)
     }, 5000)
   }

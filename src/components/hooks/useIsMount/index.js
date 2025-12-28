@@ -1,11 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 const useIsMount = () => {
-  const isMountRef = useRef(true)
+  const [isMount, setIsMount] = useState(true)
   useEffect(() => {
-    isMountRef.current = false
+    const id = setTimeout(() => setIsMount(false), 0)
+    return () => clearTimeout(id)
   }, [])
-  return isMountRef.current
+  return isMount
 }
 
 export default useIsMount

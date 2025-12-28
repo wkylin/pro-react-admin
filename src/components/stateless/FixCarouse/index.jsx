@@ -10,7 +10,6 @@ const mockData = Array.from({ length: 30 }, (_, i) => ({
 const FixCarousel = ({ tradeList = [] }) => {
   const [data, setData] = useState([...tradeList, ...mockData])
   const [selectedFilter, setSelectedFilter] = useState('all')
-  const [filteredData, setFilteredData] = useState([...tradeList, ...mockData])
   const [currentPage, setCurrentPage] = useState(0)
   const filters = [
     { label: '全部', value: 'all' },
@@ -19,18 +18,13 @@ const FixCarousel = ({ tradeList = [] }) => {
     { label: '分类 C', value: 'C' },
   ]
 
-  const filterData = () => {
-    if (selectedFilter === 'all') {
-      setFilteredData([...data])
-    } else {
-      setFilteredData(data.filter((item) => selectedFilter.includes(item.category)))
-    }
-    setCurrentPage(0)
-  }
+  const filteredData = React.useMemo(() => {
+    if (selectedFilter === 'all') return [...data]
+    return data.filter((item) => selectedFilter.includes(item.category))
+  }, [data, selectedFilter])
 
   const handleClear = () => {
     setSelectedFilter('all')
-    filterData()
   }
 
   const itemsPerPage = 6
@@ -49,7 +43,9 @@ const FixCarousel = ({ tradeList = [] }) => {
   const goToPage = (index) => setCurrentPage(index)
 
   useEffect(() => {
-    filterData()
+    // 当过滤条件或数据变更时，延迟将页码重置为 0，避免在 effect 中同步 setState
+    const id = setTimeout(() => setCurrentPage(0), 0)
+    return () => clearTimeout(id)
   }, [selectedFilter, data])
 
   return (

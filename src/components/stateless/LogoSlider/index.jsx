@@ -4,6 +4,14 @@ import { motion, AnimatePresence } from 'framer-motion'
 const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', radius = 180 }) => {
   const [activeIndex, setActiveIndex] = useState(0)
 
+  const slide = React.useCallback(
+    (dir) => {
+      const step = dir === 'right' ? 1 : -1
+      setActiveIndex((prevIndex) => (prevIndex + step + companies.length) % companies.length)
+    },
+    [companies]
+  )
+
   useEffect(() => {
     if (!companies || companies.length === 0) return
 
@@ -12,20 +20,18 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
     }, autorotateTiming)
 
     return () => clearInterval(interval)
-  }, [companies, autorotateTiming, direction])
+  }, [companies, autorotateTiming, direction, slide])
 
-  const slide = (dir) => {
-    const step = dir === 'right' ? 1 : -1
-    setActiveIndex((prevIndex) => (prevIndex + step + companies.length) % companies.length)
-  }
-
-  const calculatePosition = (offset) => {
-    const angle = offset * (Math.PI / 3)
-    return {
-      x: Math.sin(angle) * radius,
-      y: -Math.cos(angle) * radius + radius / 2,
-    }
-  }
+  const calculatePosition = React.useCallback(
+    (offset) => {
+      const angle = offset * (Math.PI / 3)
+      return {
+        x: Math.sin(angle) * radius,
+        y: -Math.cos(angle) * radius + radius / 2,
+      }
+    },
+    [radius]
+  )
 
   const logoVariants = useMemo(
     () => ({
@@ -54,7 +60,7 @@ const LogoSlider = ({ companies, autorotateTiming = 3000, direction = 'right', r
         }
       },
     }),
-    [direction, radius]
+    [direction, radius, calculatePosition]
   )
 
   const visibleLogos = useMemo(() => {

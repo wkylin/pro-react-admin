@@ -43,7 +43,12 @@ const PermissionExample = () => {
   // 本地控制：开发时可强制启用示例切换（仅页面级别）
   const [forceDemoSwitch, setForceDemoSwitch] = useState<boolean>(false)
   useEffect(() => {
-    setForceDemoSwitch(localStorage.getItem('force_demo_switch') === '1')
+    // 延迟设置 state 以避免在 effect 中同步 setState
+    if (typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(() => setForceDemoSwitch(localStorage.getItem('force_demo_switch') === '1'))
+    } else {
+      setTimeout(() => setForceDemoSwitch(localStorage.getItem('force_demo_switch') === '1'), 0)
+    }
   }, [])
 
   const toggleForceDemoSwitch = (checked: boolean) => {

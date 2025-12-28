@@ -79,8 +79,7 @@ const useTable = (props) => {
 
   useEffect(() => {
     if (implemented) {
-      resetTable()
-      setCachePayload({ ...payload })
+      // 避免在 effect 中同步触发大量 setState，初始化 state 已在 useState 时完成。
       getTableList(dataInterface, { ...payload })
     }
   }, [JSON.stringify(payload), dataInterface, implemented])

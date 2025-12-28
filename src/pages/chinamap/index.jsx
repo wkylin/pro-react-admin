@@ -217,7 +217,6 @@ const DemoChoroplethMap = () => {
         stroke: '#fff',
         strokeWidth: 1.5,
         textAllowOverlap: false,
-        padding: [5, 5],
       },
     },
     state: {
@@ -226,9 +225,8 @@ const DemoChoroplethMap = () => {
         lineWidth: 1,
       },
     },
-    tooltip: {
-      items: ['name', 'adcode', 'value'],
-    },
+    // tooltip removed due to runtime issues in some environment
+    tooltip: undefined,
     zoom: {
       position: 'bottomright',
     },

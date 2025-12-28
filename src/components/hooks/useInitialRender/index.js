@@ -1,12 +1,12 @@
-import { useEffect, useRef } from 'react'
-// https://github.com/kentcdodds/use-deep-compare-effect
+import { useEffect, useState } from 'react'
 
 const useInitialRender = () => {
-  const ref = useRef()
+  const [isInitial, setIsInitial] = useState(true)
   useEffect(() => {
-    ref.current = true
+    const id = setTimeout(() => setIsInitial(false), 0)
+    return () => clearTimeout(id)
   }, [])
-  return ref.current
+  return isInitial
 }
 
 export default useInitialRender

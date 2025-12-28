@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
 import FixTabPanel from '@stateless/FixTabPanel'
 import fengxianGeo from './geo/fengxian.json'
 
 const GeoChart = () => {
-  let myChart = null
+  const myChartRef = useRef(null)
 
   const [geoJson, setGeoJson] = useState(fengxianGeo)
   const [name, setName] = useState('奉贤')
@@ -12,13 +12,9 @@ const GeoChart = () => {
 
   useEffect(() => {}, [])
 
-  useEffect(() => {
-    initMap(name, geoJson)
-  }, [region])
-
   const initMap = (geoName, geoJSON) => {
     const chartDom = document.getElementById('geoChart')
-    myChart = echarts.init(chartDom)
+    myChartRef.current = echarts.init(chartDom)
     echarts.registerMap(geoName, geoJSON)
 
     const option = {
@@ -97,9 +93,9 @@ const GeoChart = () => {
       ],
     }
 
-    myChart.clear()
-    myChart.off('click')
-    myChart.on('click', (params) => {
+    myChartRef.current?.clear()
+    myChartRef.current?.off('click')
+    myChartRef.current?.on('click', (params) => {
       if (params.componentType === 'series') {
         console.log('params', params)
       }
@@ -115,7 +111,7 @@ const GeoChart = () => {
         setRegion(features[0].id)
       }
     })
-    myChart.getZr().on('click', (event) => {
+    myChartRef.current?.getZr().on('click', (event) => {
       // 没有 target 意味着鼠标/指针不在任何一个图形元素上，它是从“空白处”触发的。
       if (!event.target) {
         // 点击在了空白处，做些什么。
@@ -124,8 +120,12 @@ const GeoChart = () => {
         setRegion('310120')
       }
     })
-    myChart.setOption(option)
+    myChartRef.current?.setOption(option)
   }
+
+  useEffect(() => {
+    initMap(name, geoJson)
+  }, [region])
 
   return (
     <>

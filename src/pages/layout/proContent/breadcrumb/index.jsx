@@ -20,7 +20,7 @@ const ProBreadcrumb = () => {
 
     if (chain.length === 0) {
       // 没找到路由，显示 404 状态
-      setBreadcrumbList([
+      const list = [
         {
           path: '/',
           name: '首页',
@@ -33,7 +33,12 @@ const ProBreadcrumb = () => {
           key: '/404',
           i18nKey: 'Not Found',
         },
-      ])
+      ]
+      if (typeof requestAnimationFrame !== 'undefined') {
+        requestAnimationFrame(() => setBreadcrumbList(list))
+      } else {
+        setTimeout(() => setBreadcrumbList(list), 0)
+      }
     } else {
       // 格式化路由链
       const formattedList = chain.map((item) => ({
@@ -55,7 +60,11 @@ const ProBreadcrumb = () => {
         })
       }
 
-      setBreadcrumbList(formattedList)
+      if (typeof requestAnimationFrame !== 'undefined') {
+        requestAnimationFrame(() => setBreadcrumbList(formattedList))
+      } else {
+        setTimeout(() => setBreadcrumbList(formattedList), 0)
+      }
     }
   }, [pathname])
 

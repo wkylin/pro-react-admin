@@ -1,8 +1,11 @@
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 
 const useRefVariable = (value) => {
-  const ref = useRef()
-  ref.current = value
+  const ref = useRef(value)
+  // keep current updated after render
+  React.useEffect(() => {
+    ref.current = value
+  }, [value])
   return ref
 }
 

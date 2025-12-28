@@ -34,7 +34,8 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
   useEffect(() => {
     const audio = audioRef.current
     if (audio && activeSong?.audioUrl) {
-      setIsLoading(true)
+      // 延迟设置加载状态，避免在 effect 同步调用 setState
+      const id = setTimeout(() => setIsLoading(true), 0)
       audio.load()
 
       const handleLoadedData = () => {
@@ -44,9 +45,12 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       audio.addEventListener('loadeddata', handleLoadedData)
 
       return () => {
+        clearTimeout(id)
         audio.removeEventListener('loadeddata', handleLoadedData)
       }
     }
+
+    return undefined
   }, [activeSong?.audioUrl])
 
   return (

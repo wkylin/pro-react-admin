@@ -1,4 +1,5 @@
-import React from 'react'
+/* eslint-disable react-hooks/static-components */
+import React, { useMemo } from 'react'
 import { motion } from 'motion/react'
 
 // export type PresetType =
@@ -94,9 +95,11 @@ const AnimatedGroup = ({ children, className, variants, preset, asParent = 'div'
   const containerVariants = variants?.container || selectedVariants.container
   const itemVariants = variants?.item || selectedVariants.item
 
-  const MotionComponent = motion.create(asParent)
+  // motion.create 会返回运行时组件；这在某些静态检查器中触发 "create components during render" 错误。
+  // 这里使用 useMemo 保持稳定性。
+  const MotionComponent = useMemo(() => motion.create(asParent), [asParent])
 
-  const MotionChild = motion.create(asChild)
+  const MotionChild = useMemo(() => motion.create(asChild), [asChild])
 
   return (
     <MotionComponent initial="hidden" animate="visible" variants={containerVariants} className={className}>

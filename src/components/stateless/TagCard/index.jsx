@@ -42,11 +42,12 @@ const DARK_PALETTE = {
 }
 
 const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
-  const [showCardList, setShowCardList] = useState([])
   const [isExpanded, setIsExpanded] = useState(false)
   const { themeSettings } = useProThemeContext()
   const { token } = theme.useToken()
   const isDarkMode = themeSettings.themeMode === 'dark'
+
+  const visibleCardList = React.useMemo(() => tagCardList.slice(0, showMax), [tagCardList, showMax])
 
   const cardConfig = useMemo(
     () => ({
@@ -56,23 +57,10 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
     [isDarkMode]
   )
 
-  const resetVisiblePortion = () => {
-    setShowCardList(tagCardList.filter((_, index) => index < showMax))
-    setIsExpanded(false)
-  }
+  const showAll = () => setIsExpanded(true)
+  const showPortion = () => setIsExpanded(false)
 
-  useEffect(() => {
-    resetVisiblePortion()
-  }, [tagCardList, showMax])
-
-  const showAll = () => {
-    setShowCardList(tagCardList)
-    setIsExpanded(true)
-  }
-
-  const showPortion = () => {
-    resetVisiblePortion()
-  }
+  const displayList = isExpanded ? tagCardList : visibleCardList
 
   return (
     <div className={styles.tagCard}>
@@ -92,7 +80,7 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
         )}
       </div>
       <div className={styles.tagCardList}>
-        {showCardList.map((card, index) => (
+        {displayList.map((card, index) => (
           <div
             key={index}
             className={styles.tagCardItem}

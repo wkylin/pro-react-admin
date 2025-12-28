@@ -18,7 +18,7 @@ export const VideoJS = (props) => {
 
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log('player is ready')
-         
+
         onReady && onReady(player)
       }))
 

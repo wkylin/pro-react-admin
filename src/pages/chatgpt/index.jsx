@@ -1717,7 +1717,7 @@ PRD文档内容：
         >
           {apiResult && (
             <div
-                className={`${styles.previewFullscreenContent} ${
+              className={`${styles.previewFullscreenContent} ${
                 previewTheme === 'light' ? styles.previewFullscreenLight : styles.previewFullscreenDark
               }`}
               style={{
@@ -1748,7 +1748,7 @@ PRD文档内容：
                     backgroundColor: 'transparent',
                     minHeight: '100%',
                   }}
-                      data-color-mode={previewTheme}
+                  data-color-mode={previewTheme}
                   skipHtml={false}
                   remarkPlugins={[remarkMath]}
                   rehypePlugins={[rehypeKatex]}

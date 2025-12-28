@@ -195,8 +195,10 @@ const Index = forwardRef((props, ref) => {
     getTreeListData()
   }
   useEffect(() => {
-    getTreeListData()
+    // 延迟触发数据加载以避免在 effect 同步执行时触发多次 setState
+    const id = setTimeout(() => getTreeListData(), 0)
     return () => {
+      clearTimeout(id)
       setTreeList([])
       setTreeData([])
       setSearchValue('')

@@ -746,7 +746,7 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
         onStart={onStart}
       />
     ),
-    [isFullscreen, bounds, onStart]
+    [isFullscreen, bounds, onStart, dragRef]
   )
 
   return (

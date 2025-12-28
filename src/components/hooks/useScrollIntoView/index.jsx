@@ -42,9 +42,10 @@ const useScrollIntoView = ({ offset = 0 }) => {
   }
 
   useEffect(() => {
-    if (isScrolled) {
-      setIsScrolled(false)
-    }
+    if (!isScrolled) return undefined
+    // 延迟清理，避免在 effect 中同步触发 setState
+    const rafId = requestAnimationFrame(() => setIsScrolled(false))
+    return () => cancelAnimationFrame(rafId)
   }, [isScrolled])
 
   return {

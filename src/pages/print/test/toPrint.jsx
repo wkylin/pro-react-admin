@@ -1,6 +1,8 @@
 import * as React from 'react'
 
 import imagePng from './px4T-test_image.png'
+import './as-style.css'
+import './disabled.css'
 
 const ComponentToPrint = React.forwardRef((props, ref) => {
   const { text } = props
@@ -34,19 +36,9 @@ const ComponentToPrint = React.forwardRef((props, ref) => {
 
   return (
     <div className="relativeCSS" ref={ref}>
-      <link
-        // This tests that we properly ignore disabled nodes
-        // Learn more: https://github.com/MatthewHerbst/react-to-print/pull/537
-
-        // @ts-ignore
-        disabled
-        rel="stylesheet"
-        href="./disabled.css"
-      />
       <style type="text/css" media="print">
         {'@page { size: landscape; }'}
       </style>
-      <link href="./as-style.css" rel="stylesheet" />
       <div className="flash" />
       <table className="testClass">
         <thead>

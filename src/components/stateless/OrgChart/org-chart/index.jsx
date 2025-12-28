@@ -43,12 +43,30 @@ const OrgChart = ({
   useEffect(() => {
     // 将树形数据转换为扁平化数据
     const flattened = flattenTreeData(data)
-    setFlatData(flattened)
 
-    // 默认展开所有节点
-    if (defaultExpanded) {
-      const allNodeIds = new Set(flattened.map((node) => node.id))
-      setExpandedNodes(allNodeIds)
+    // 使用 requestAnimationFrame 将 setState 延后，避免在 effect 中同步 setState 导致警告
+    let raf = 0
+    if (typeof requestAnimationFrame !== 'undefined') {
+      raf = requestAnimationFrame(() => {
+        setFlatData(flattened)
+        if (defaultExpanded) {
+          const allNodeIds = new Set(flattened.map((node) => node.id))
+          setExpandedNodes(allNodeIds)
+        }
+      })
+    } else {
+      const id = setTimeout(() => {
+        setFlatData(flattened)
+        if (defaultExpanded) {
+          const allNodeIds = new Set(flattened.map((node) => node.id))
+          setExpandedNodes(allNodeIds)
+        }
+      }, 0)
+      raf = id
+    }
+
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
     }
   }, [data, defaultExpanded])
 

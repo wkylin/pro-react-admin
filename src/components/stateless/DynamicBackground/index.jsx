@@ -28,18 +28,18 @@ const setThresholds = (size, x, y) => {
 
 const DynamicBackground = () => {
   const [hasMounted, setHasMounted] = useState(false)
+  const [positions, setPositions] = useState([])
   const heroRef = useRef()
   const iconsRef = useRef([])
   const iconCount = icons?.length
-  const { offsetWidth: width, offsetHeight: height } = heroRef?.current ?? {}
 
   const onHover = ({ clientX, clientY }) => {
-    iconsRef.current.forEach((item) => {
+    iconsRef.current.forEach((item, idx) => {
       const { xPos, yPos } = item?.initialPositions ?? {}
       const size = item.size
       const { hoverX, hoverY } = setThresholds(size, clientX, clientY)
 
-      if (item.refItem) {
+      if (item?.refItem) {
         item.refItem.style.transform = `translate(${xPos + hoverX}px, ${yPos + hoverY}px)`
       }
     })
@@ -47,41 +47,59 @@ const DynamicBackground = () => {
   const onHoverDebounced = useDebouncedCallback(onHover, 10)
 
   useEffect(() => {
-    setHasMounted(true)
+    const id = setTimeout(() => setHasMounted(true), 0)
     const refVal = heroRef?.current
-    if (!refVal) return
+
+    if (!refVal) return () => clearTimeout(id)
+
+    // 计算初始位置（只在挂载时进行一次），避免在 render 中使用 Math.random
+    const width = refVal.offsetWidth || refVal.getBoundingClientRect().width || 0
+    const height = refVal.offsetHeight || refVal.getBoundingClientRect().height || 0
+
+    const rows = Math.ceil(Math.sqrt(iconCount))
+    const cols = Math.ceil(iconCount / rows)
+    const cellWidth = width / cols
+    const cellHeight = height / rows
+
+    const computed = []
+    for (let i = 0; i < iconCount; i++) {
+      const row = Math.floor(i / cols)
+      const col = i % cols
+      const xOffset = Math.random() * Math.max(0, cellWidth - 75)
+      const yOffset = Math.random() * Math.max(0, cellHeight - 75)
+      const baseX = col * cellWidth
+      const baseY = row * cellHeight
+      const xPos = baseX + xOffset
+      const yPos = baseY + yOffset
+      computed.push({ xPos, yPos })
+    }
+
+    // 延迟设置 state（使用 requestAnimationFrame）以避免在 effect 中同步 setState
+    let rafId = 0
+    if (typeof requestAnimationFrame !== 'undefined') {
+      rafId = requestAnimationFrame(() => setPositions(computed))
+    } else {
+      setTimeout(() => setPositions(computed), 0)
+    }
+
     refVal.addEventListener('mousemove', onHoverDebounced)
     refVal.addEventListener('resize', onHoverDebounced)
 
     return () => {
+      clearTimeout(id)
+      if (rafId) cancelAnimationFrame(rafId)
       if (!refVal) return
       refVal.removeEventListener('mousemove', onHoverDebounced)
       refVal.removeEventListener('resize', onHoverDebounced)
     }
-  }, [])
+  }, [iconCount, onHoverDebounced])
 
   return (
     <div className={styles.hero} ref={heroRef}>
-      {hasMounted && (
+      {hasMounted && positions.length > 0 && (
         <div className={styles.iconLayer}>
           {icons.map(({ size, type, icon }, i) => {
-            const rows = Math.ceil(Math.sqrt(iconCount))
-            const cols = Math.ceil(iconCount / rows)
-
-            const cellWidth = width / cols
-            const cellHeight = height / rows
-
-            const row = Math.floor(i / cols)
-            const col = i % cols
-
-            const xOffset = Math.random() * (cellWidth - 75)
-            const yOffset = Math.random() * (cellHeight - 75)
-
-            const baseX = col * cellWidth
-            const baseY = row * cellHeight
-
-            const xPos = baseX + xOffset
-            const yPos = baseY + yOffset
+            const { xPos = 0, yPos = 0 } = positions[i] || {}
 
             return (
               <span

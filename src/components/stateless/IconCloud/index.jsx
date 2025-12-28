@@ -7,7 +7,6 @@ function easeOutCubic(t) {
 
 const IconCloud = ({ icons, images }) => {
   const canvasRef = useRef(null)
-  const [iconPositions, setIconPositions] = useState([])
   const [rotation, setRotation] = useState({ x: 0, y: 0 })
   const [isDragging, setIsDragging] = useState(false)
   const [lastMousePos, setLastMousePos] = useState({ x: 0, y: 0 })
@@ -18,6 +17,44 @@ const IconCloud = ({ icons, images }) => {
   const iconCanvasesRef = useRef([])
   const imagesLoadedRef = useRef([])
   const rafIdRef = useRef(0)
+
+  // 计算初始位置（纯计算，不会产生副作用）
+  const computedInitialPositions = React.useMemo(() => {
+    const items = icons || images || []
+    const newIcons = []
+    const numIcons = items.length || 20
+
+    // Fibonacci sphere parameters
+    const offset = 2 / numIcons
+    const increment = Math.PI * (3 - Math.sqrt(5))
+
+    for (let i = 0; i < numIcons; i++) {
+      const y = i * offset - 1 + offset / 2
+      const r = Math.sqrt(1 - y * y)
+      const phi = i * increment
+
+      const x = Math.cos(phi) * r
+      const z = Math.sin(phi) * r
+
+      newIcons.push({
+        x: x * 100,
+        y: y * 100,
+        z: z * 100,
+        scale: 1,
+        opacity: 1,
+        id: i,
+      })
+    }
+    return newIcons
+  }, [icons, images])
+
+  const [iconPositions, setIconPositions] = useState(computedInitialPositions)
+
+  useEffect(() => {
+    // defer to avoid synchronous setState inside effect
+    const id = setTimeout(() => setIconPositions(computedInitialPositions), 0)
+    return () => clearTimeout(id)
+  }, [computedInitialPositions])
 
   useEffect(() => {
     if (!icons && !images) return
@@ -68,36 +105,6 @@ const IconCloud = ({ icons, images }) => {
     })
 
     iconCanvasesRef.current = newIconCanvases
-  }, [icons, images])
-
-  // Generate initial icon positions on a sphere
-  useEffect(() => {
-    const items = icons || images || []
-    const newIcons = []
-    const numIcons = items.length || 20
-
-    // Fibonacci sphere parameters
-    const offset = 2 / numIcons
-    const increment = Math.PI * (3 - Math.sqrt(5))
-
-    for (let i = 0; i < numIcons; i++) {
-      const y = i * offset - 1 + offset / 2
-      const r = Math.sqrt(1 - y * y)
-      const phi = i * increment
-
-      const x = Math.cos(phi) * r
-      const z = Math.sin(phi) * r
-
-      newIcons.push({
-        x: x * 100,
-        y: y * 100,
-        z: z * 100,
-        scale: 1,
-        opacity: 1,
-        id: i,
-      })
-    }
-    setIconPositions(newIcons)
   }, [icons, images])
 
   // Handle mouse events

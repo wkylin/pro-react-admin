@@ -15,7 +15,6 @@ import {
   Anchor,
   Divider,
   Tooltip,
-  Grid,
   FloatButton,
 } from 'antd'
 import { useStore } from '@/store'
@@ -87,11 +86,26 @@ const MyPortfilo = () => {
     restDelta: 0.001,
   })
 
-  const [targetOffset, setTargetOffset] = useState(80)
+  // `targetOffset` 会根据窗口高度变化，因此使用 state + resize 监听以动态更新。
+  const [targetOffset, setTargetOffset] = useState(() =>
+    typeof window === 'undefined' ? 80 : Math.round(window.innerHeight * 0.1)
+  )
 
   useEffect(() => {
-    // 动态计算偏移量，保持在视口顶部附近但留有呼吸空间
-    setTargetOffset(window.innerHeight * 0.1)
+    if (typeof window === 'undefined') return undefined
+    let rafId = null
+    const onResize = () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        setTargetOffset(Math.round(window.innerHeight * 0.1))
+        rafId = null
+      })
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+      if (rafId) cancelAnimationFrame(rafId)
+    }
   }, [])
 
   const navItems = [

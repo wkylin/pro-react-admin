@@ -6,14 +6,14 @@ const useInViewport = (triggerOnce = false, threshold = 0, rootMargin = '0px') =
   const observer = useRef(null)
 
   useEffect(() => {
-    const targetElement = elementRef.current
+    const targetElement = inViewRef.current
     if (!targetElement) return
     observer.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && entry.intersectionRatio >= threshold) {
             setInViewport(true)
-            if (triggerOnce) {
+            if (triggerOnce && observer.current) {
               observer.current.disconnect()
             }
           } else {
@@ -24,13 +24,11 @@ const useInViewport = (triggerOnce = false, threshold = 0, rootMargin = '0px') =
       { threshold, rootMargin }
     )
 
-    if (inViewRef.current) {
-      observer.current.observe(inViewRef.current)
-    }
+    observer.current.observe(targetElement)
 
     return () => {
-      if (inViewRef.current) {
-        observer.current.unobserve(inViewRef.current)
+      if (observer.current && targetElement) {
+        observer.current.unobserve(targetElement)
       }
     }
   }, [threshold, triggerOnce, rootMargin])

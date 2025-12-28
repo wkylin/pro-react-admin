@@ -137,13 +137,14 @@ const ScrollableSections = ({
     return () => clearTimeout(timer)
   }, [sections])
 
-  // 动态计算各 section 的位置信息
-  const sectionPositions = React.useMemo(() => {
-    const container = scrollContainerRef?.current
-    if (!container) return []
+  // 动态计算各 section 的位置信息并存入 state，避免在渲染时读取 ref.current
+  const [sectionPositions, setSectionPositions] = useState([])
 
-    // 按照sections的顺序返回位置信息
-    return sections.map((section) => {
+  useEffect(() => {
+    const container = scrollContainerRef?.current
+    if (!container) return
+
+    const positions = sections.map((section) => {
       const sectionId = `${section.title.toLowerCase().replace(/\s+/g, '-')}-section`
       const sectionElement = sectionRefs.current[sectionId]
       if (sectionElement) {
@@ -153,6 +154,8 @@ const ScrollableSections = ({
       }
       return 0
     })
+
+    setSectionPositions(positions)
   }, [activeScrollY, scrollContainerRef, sections])
 
   // 动态计算section高度（基于容器高度的100%）

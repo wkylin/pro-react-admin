@@ -25,51 +25,6 @@ const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete,
     }
   }, [])
 
-  useEffect(() => {
-    const handleDocumentMouseMove = (event) => {
-      if (!isScratching) return
-      scratch(event.clientX, event.clientY)
-    }
-
-    const handleDocumentTouchMove = (event) => {
-      if (!isScratching) return
-      const touch = event.touches[0]
-      scratch(touch.clientX, touch.clientY)
-    }
-
-    const handleDocumentMouseUp = () => {
-      setIsScratching(false)
-      checkCompletion()
-    }
-
-    const handleDocumentTouchEnd = () => {
-      setIsScratching(false)
-      checkCompletion()
-    }
-
-    document.addEventListener('mousedown', handleDocumentMouseMove)
-    document.addEventListener('mousemove', handleDocumentMouseMove)
-    document.addEventListener('touchstart', handleDocumentTouchMove)
-    document.addEventListener('touchmove', handleDocumentTouchMove)
-    document.addEventListener('mouseup', handleDocumentMouseUp)
-    document.addEventListener('touchend', handleDocumentTouchEnd)
-    document.addEventListener('touchcancel', handleDocumentTouchEnd)
-
-    return () => {
-      document.removeEventListener('mousedown', handleDocumentMouseMove)
-      document.removeEventListener('mousemove', handleDocumentMouseMove)
-      document.removeEventListener('touchstart', handleDocumentTouchMove)
-      document.removeEventListener('touchmove', handleDocumentTouchMove)
-      document.removeEventListener('mouseup', handleDocumentMouseUp)
-      document.removeEventListener('touchend', handleDocumentTouchEnd)
-      document.removeEventListener('touchcancel', handleDocumentTouchEnd)
-    }
-  }, [isScratching])
-
-  const handleMouseDown = () => setIsScratching(true)
-
-  const handleTouchStart = () => setIsScratching(true)
-
   const scratch = (clientX, clientY) => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
@@ -118,6 +73,60 @@ const ScratchToReveal = ({ width, height, minScratchPercentage = 50, onComplete,
       rotate: [0, 10, -10, 10, -10, 0],
       transition: { duration: 0.5 },
     })
+  }
+
+  useEffect(() => {
+    const handleDocumentMouseMove = (event) => {
+      if (!isScratching) return
+      scratch(event.clientX, event.clientY)
+    }
+
+    const handleDocumentTouchMove = (event) => {
+      if (!isScratching) return
+      const touch = event.touches[0]
+      scratch(touch.clientX, touch.clientY)
+    }
+
+    const handleDocumentMouseUp = () => {
+      setIsScratching(false)
+      checkCompletion()
+    }
+
+    const handleDocumentTouchEnd = () => {
+      setIsScratching(false)
+      checkCompletion()
+    }
+
+    document.addEventListener('mousedown', handleDocumentMouseMove)
+    document.addEventListener('mousemove', handleDocumentMouseMove)
+    document.addEventListener('touchstart', handleDocumentTouchMove)
+    document.addEventListener('touchmove', handleDocumentTouchMove)
+    document.addEventListener('mouseup', handleDocumentMouseUp)
+    document.addEventListener('touchend', handleDocumentTouchEnd)
+    document.addEventListener('touchcancel', handleDocumentTouchEnd)
+
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentMouseMove)
+      document.removeEventListener('mousemove', handleDocumentMouseMove)
+      document.removeEventListener('touchstart', handleDocumentTouchMove)
+      document.removeEventListener('touchmove', handleDocumentTouchMove)
+      document.removeEventListener('mouseup', handleDocumentMouseUp)
+      document.removeEventListener('touchend', handleDocumentTouchEnd)
+      document.removeEventListener('touchcancel', handleDocumentTouchEnd)
+    }
+  }, [isScratching])
+
+  // 鼠标 / 触摸按下处理器：开始 scratch 并立即进行一次擦除
+  const handleMouseDown = (event) => {
+    setIsScratching(true)
+    scratch(event.clientX, event.clientY)
+  }
+
+  const handleTouchStart = (event) => {
+    const touch = event.touches && event.touches[0]
+    if (!touch) return
+    setIsScratching(true)
+    scratch(touch.clientX, touch.clientY)
   }
 
   return (

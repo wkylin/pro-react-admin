@@ -4,13 +4,7 @@ import styles from './index.module.less'
 
 const TrapezoidTabs = ({ tabs = [{ name: 'tab', code: 'tab' }], onTabChange, defaultActiveTab, className, style }) => {
   const { token } = theme.useToken()
-  const [activeTab, setActiveTab] = useState('')
-
-  useEffect(() => {
-    // 如果有默认激活标签，使用它；否则使用第一个标签
-    const initialTab = defaultActiveTab || (tabs.length > 0 ? tabs[0].code : '')
-    setActiveTab(initialTab)
-  }, [tabs, defaultActiveTab])
+  const [activeTab, setActiveTab] = useState(() => defaultActiveTab || (tabs.length > 0 ? tabs[0].code : ''))
 
   const handleTabClick = (code) => {
     setActiveTab(code)

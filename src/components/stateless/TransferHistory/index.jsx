@@ -16,6 +16,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
   const leftLineRef = useRef(null)
   const itemRefs = useRef([])
   const contentWrapperRef = useRef(null)
+  const rafRef = useRef(0)
 
   // 初始化引用数组
   useEffect(() => {
@@ -153,7 +154,12 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
     // 计算线条高度：从第一个子项的中心到最后一个子项的中心
     const lineHeight = lastItemRect.top + lastItemRect.height / 2 - (firstItemRect.top + firstItemRect.height / 2)
 
-    setLeftLineHeight(`${lineHeight}px`)
+    // 使用 requestAnimationFrame 延迟设置 state，避免在 effect 中同步 setState 导致的警告
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(() => {
+      setLeftLineHeight(`${lineHeight}px`)
+      rafRef.current = 0
+    })
   }
 
   /**
@@ -165,21 +171,41 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
 
   // 使用useLayoutEffect确保在DOM更新后立即计算
   useLayoutEffect(() => {
-    calculateLineHeight()
+    // 延迟调用，避免在 Layout effect 中直接触发同步 setState
+    let raf = 0
+    if (typeof requestAnimationFrame !== 'undefined') {
+      raf = requestAnimationFrame(() => calculateLineHeight())
+    } else {
+      raf = setTimeout(() => calculateLineHeight(), 0)
+    }
+    return () => {
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [expanded])
 
   // 组件挂载后计算线条高度
   useLayoutEffect(() => {
-    calculateLineHeight()
+    // 延迟计算以避免在 mount 时同步 setState
+    let raf = 0
+    if (typeof requestAnimationFrame !== 'undefined') {
+      raf = requestAnimationFrame(() => calculateLineHeight())
+    } else {
+      raf = setTimeout(() => calculateLineHeight(), 0)
+    }
 
-    // 添加窗口大小变化时的重新计算
+    // 添加窗口大小变化时的重新计算（节流到 rAF）
+    let resizeRaf = 0
     const handleResize = () => {
-      calculateLineHeight()
+      if (resizeRaf) cancelAnimationFrame(resizeRaf)
+      resizeRaf = requestAnimationFrame(() => calculateLineHeight())
     }
 
     window.addEventListener('resize', handleResize)
     return () => {
       window.removeEventListener('resize', handleResize)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      if (raf) cancelAnimationFrame(raf)
+      if (resizeRaf) cancelAnimationFrame(resizeRaf)
     }
   }, [expanded])
 

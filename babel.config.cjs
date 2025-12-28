@@ -6,7 +6,7 @@ const plugins = [
   ['babel-plugin-react-compiler'],
 ]
 
-export default {
+module.exports = {
   presets: [
     [
       '@babel/preset-env',
@@ -29,10 +29,7 @@ export default {
   ],
   compact: true,
   comments: true,
-  plugins:
-    process.env.NODE_ENV === 'production'
-      ? [...plugins, 'transform-remove-console', 'transform-remove-debugger']
-      : plugins,
+  plugins: process.env.NODE_ENV === 'production' ? [...plugins, 'transform-remove-console', 'transform-remove-debugger'] : plugins,
   env: {
     development: {
       plugins: ['react-refresh/babel'],

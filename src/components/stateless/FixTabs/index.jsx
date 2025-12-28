@@ -10,12 +10,6 @@ const FixTabs = ({ tabs = [], defaultActiveId }) => {
 
   const [activeTab, setActiveTab] = useState(defaultActiveId || (tabs[0] && tabs[0].id))
 
-  useEffect(() => {
-    if (!activeTab && tabs.length > 0) {
-      setActiveTab(tabs[0].id)
-    }
-  }, [tabs, activeTab])
-
   const handleTabClick = (tabId) => {
     setActiveTab(tabId)
   }

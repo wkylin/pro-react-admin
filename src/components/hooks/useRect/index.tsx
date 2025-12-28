@@ -18,8 +18,8 @@ const getRect = (element: HTMLElement | null): RectResult | null => {
 
 const useRect = (): [RectResult, React.RefObject<HTMLDivElement | null>] => {
   const ref = useRef<HTMLDivElement | null>(null)
-  const current = ref.current || null
-  const [rect, setRect] = useState(getRect(current))
+  // 初始不在渲染期间访问 ref.current，使用 lazy 初始化保底值
+  const [rect, setRect] = useState<RectResult>(() => getRect(null))
 
   const handleResize = useCallback(() => {
     if (!ref.current) return

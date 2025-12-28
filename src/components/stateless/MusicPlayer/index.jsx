@@ -51,6 +51,11 @@ const MusicPlayer = () => {
 
   // --- 核心逻辑 ---
 
+  // 使用 useCallback 避免依赖闭包问题
+  const handleNext = useCallback(() => {
+    setCurrentTrackIndex((prev) => (prev === TRACKS.length - 1 ? 0 : prev + 1))
+  }, [])
+
   // 1. 初始化事件监听 (只运行一次)
   useEffect(() => {
     const audio = audioRef.current
@@ -84,7 +89,7 @@ const MusicPlayer = () => {
       audio.removeEventListener('timeupdate', setAudioTime)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, []) // 空依赖数组，确保只绑定一次
+  }, [handleNext]) // 空依赖数组，确保只绑定一次
 
   // 2. 监听 歌曲切换 (currentTrackIndex 变化)
   useEffect(() => {
@@ -97,7 +102,12 @@ const MusicPlayer = () => {
     audio.src = TRACKS[currentTrackIndex].src
     audio.load() // 重新加载资源
 
-    setCurrentTime(0)
+    // 延迟设置 currentTime 以避免在 effect 中同步 setState 导致警告
+    if (typeof requestAnimationFrame !== 'undefined') {
+      requestAnimationFrame(() => setCurrentTime(0))
+    } else {
+      setTimeout(() => setCurrentTime(0), 0)
+    }
 
     // 如果当前是播放状态，或者是用户刚刚点击了列表切歌（isReady为true表示组件已挂载）
     if (isReady.current) {
@@ -112,7 +122,7 @@ const MusicPlayer = () => {
       // 第一次加载组件时不自动播放
       isReady.current = true
     }
-  }, [currentTrackIndex])
+  }, [currentTrackIndex, isPlaying])
 
   // 3. 监听 播放/暂停 状态变化
   useEffect(() => {
@@ -137,11 +147,6 @@ const MusicPlayer = () => {
   const handlePrev = () => {
     setCurrentTrackIndex((prev) => (prev === 0 ? TRACKS.length - 1 : prev - 1))
   }
-
-  // 使用 useCallback 避免依赖闭包问题
-  const handleNext = useCallback(() => {
-    setCurrentTrackIndex((prev) => (prev === TRACKS.length - 1 ? 0 : prev + 1))
-  }, [])
 
   const handleSeek = (e) => {
     const newTime = Number(e.target.value)

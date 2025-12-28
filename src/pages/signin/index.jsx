@@ -79,8 +79,6 @@ const SignIn = () => {
 
   const getErrorMessage = (error) => (error instanceof Error && error.message ? error.message : '未知错误')
 
-
-
   const getExpectedPassword = (email) => {
     if (accountPasswords?.[email]) return accountPasswords[email]
 

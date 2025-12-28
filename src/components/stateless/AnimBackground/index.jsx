@@ -3,7 +3,8 @@ import React, { Children, cloneElement, useEffect, useState, useId } from 'react
 import clsx from 'clsx'
 
 const AnimatedBackground = ({ children, defaultValue, onValueChange, className, transition, enableHover = false }) => {
-  const [activeId, setActiveId] = useState(null)
+  // 初始化时使用 defaultValue，避免在 effect 中同步 setState 导致多次渲染
+  const [activeId, setActiveId] = useState(() => (defaultValue !== undefined ? defaultValue : null))
   const uniqueId = useId()
 
   const handleSetActiveId = (id) => {
@@ -13,12 +14,6 @@ const AnimatedBackground = ({ children, defaultValue, onValueChange, className, 
       onValueChange(id)
     }
   }
-
-  useEffect(() => {
-    if (defaultValue !== undefined) {
-      setActiveId(defaultValue)
-    }
-  }, [defaultValue])
 
   return Children.map(children, (child, index) => {
     const id = child.props['data-id']

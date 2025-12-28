@@ -53,7 +53,7 @@ const ProTabProvider = ({ children }) => {
       callbackFun()
     },
 
-    [activeKey, panes]
+    [activeKey, panes, redirectTo]
   )
 
   const providerValue = useMemo(

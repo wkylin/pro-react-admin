@@ -1,26 +1,39 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'motion/react'
 import clsx from 'clsx'
 
+const COLORS = [
+  'rgb(125 211 252)',
+  'rgb(249 168 212)',
+  'rgb(134 239 172)',
+  'rgb(253 224 71)',
+  'rgb(252 165 165)',
+  'rgb(216 180 254)',
+  'rgb(147 197 253)',
+  'rgb(165 180 252)',
+  'rgb(196 181 253)',
+]
+
 export const BoxesCore = ({ className, ...rest }) => {
-  const rows = new Array(50).fill(1)
-  const cols = new Array(30).fill(1)
+  const rowsCount = 50
+  const colsCount = 30
 
-  const colors = [
-    'rgb(125 211 252)',
-    'rgb(249 168 212)',
-    'rgb(134 239 172)',
-    'rgb(253 224 71)',
-    'rgb(252 165 165)',
-    'rgb(216 180 254)',
-    'rgb(147 197 253)',
-    'rgb(165 180 252)',
-    'rgb(196 181 253)',
-  ]
+  // 随机颜色矩阵：在挂载后生成以避免在 render 中调用 Math.random（保持纯净）
+  const [randomColors, setRandomColors] = React.useState(() => [])
 
-  const getRandomColor = () => {
-    return colors[Math.floor(Math.random() * colors.length)]
-  }
+  React.useEffect(() => {
+    const matrix = []
+    for (let i = 0; i < rowsCount; i++) {
+      const row = []
+      for (let j = 0; j < colsCount; j++) {
+        row.push(COLORS[Math.floor(Math.random() * COLORS.length)])
+      }
+      matrix.push(row)
+    }
+    // defer to next frame to avoid layout thrash
+    const id = requestAnimationFrame(() => setRandomColors(matrix))
+    return () => cancelAnimationFrame(id)
+  }, [])
 
   return (
     <div
@@ -33,12 +46,12 @@ export const BoxesCore = ({ className, ...rest }) => {
       )}
       {...rest}
     >
-      {rows.map((_, i) => (
+      {Array.from({ length: rowsCount }).map((_, i) => (
         <motion.div key={`row` + i} className="relative h-8 w-16 border-l border-slate-700">
-          {cols.map((_, j) => (
+          {Array.from({ length: colsCount }).map((_, j) => (
             <motion.div
               whileHover={{
-                backgroundColor: getRandomColor(),
+                backgroundColor: randomColors?.[i]?.[j] || COLORS[(i + j) % COLORS.length] || 'transparent',
                 transition: { duration: 0 },
               }}
               animate={{

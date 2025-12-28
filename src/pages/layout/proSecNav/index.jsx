@@ -144,6 +144,116 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     initMenus()
   }, [])
 
+  // 生成动态菜单函数提前声明用于后续使用
+  const generateMenuItems = (routes) => {
+    const createLabel = (path, labelText) => {
+      const onPreload = async () => {
+        try {
+          // 预加载页面资源
+          await import(`@/pages${path}`)
+        } catch (e) {
+          // ignore preload errors
+        }
+      }
+
+      // Ant Design `Menu` expects `label` to be a ReactNode.
+      // Return a React element so we don't pass a plain object as a child.
+      return (
+        <span onMouseEnter={onPreload} role="menuitem">
+          {labelText || path}
+        </span>
+      )
+    }
+
+    const translateItem = (i) => {
+      // 添加空值检查
+      if (!i || typeof i !== 'object') return null
+
+      const { i18nKey, children, ...rest } = i
+      const path = i.path || i.key
+
+      // 如果没有 key，返回 null（不合法的菜单项）
+      if (!path) return null
+
+      const labelText = i18nKey ? t(i.i18nKey) : i.label
+      const Label = createLabel(path, labelText)
+
+      const base = {
+        ...rest,
+        path,
+        label: Label,
+      }
+      if (children && Array.isArray(children)) {
+        // 过滤掉空值的子项
+        const validChildren = children.map(translateItem).filter(Boolean)
+        return validChildren.length > 0 ? { ...base, children: validChildren } : base
+      }
+      return base
+    }
+
+    // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
+    // 过滤掉可能的空值
+    const allMenuItems = (Array.isArray(mainLayoutMenu) ? mainLayoutMenu : []).map(translateItem).filter(Boolean)
+
+    // 递归过滤菜单：仅保留用户可访问的节点或其子节点
+    const hasAccessSafely = (p) => {
+      try {
+        return routes.some((route) => {
+          if (route === p) return true
+          if (p.startsWith(route + '/')) return true
+          if (route.includes('*')) {
+            const pattern = route.replace('*', '.*')
+            return new RegExp(`^${pattern}$`).test(p)
+          }
+          return false
+        })
+      } catch (e) {
+        console.warn('菜单访问判断异常', p, e)
+        return false
+      }
+    }
+
+    const matchesDynamicParam = (p) => {
+      if (typeof p !== 'string' || !p.includes(':')) return false
+      const pattern = p.replace(/:[^/]+/g, '[^/]+')
+      const regex = new RegExp(`^${pattern}$`)
+      return routes.some((r) => regex.test(r))
+    }
+
+    const filterItems = (items) => {
+      if (!Array.isArray(items)) return []
+      const result = []
+      for (const item of items) {
+        // 添加空值检查，防止处理空值菜单项
+        if (!item || typeof item !== 'object') continue
+
+        const rawKey = item.path || item.key
+        // 如果菜单项没有 key，跳过（不合法的菜单项）
+        if (!rawKey) continue
+
+        if (Array.isArray(item.children) && item.children.length > 0) {
+          const children = filterItems(item.children)
+          if (children.length > 0) {
+            result.push({ ...item, children })
+            continue
+          }
+        }
+
+        if (hasAccessSafely(rawKey)) {
+          result.push(item)
+          continue
+        }
+
+        if (matchesDynamicParam(rawKey)) {
+          result.push(item)
+        }
+      }
+      return result
+    }
+
+    return filterItems(allMenuItems)
+  }
+
   // 当语言切换时，重新生成菜单（但不重复拉权限）
   useEffect(() => {
     if (!Array.isArray(allowedRoutes) || allowedRoutes.length === 0) return
@@ -277,132 +387,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       console.error('菜单权限检查失败:', error)
       showDeniedOnce(selectedPath)
     }
-  }
-
-  /**
-   * 生成动态菜单项（根据用户可访问路由过滤）
-   */
-  const generateMenuItems = (routes) => {
-    // 保留兼容函数（用于当没有 meta.permission 时的回退）
-    const hasAccess = (path) => {
-      return routes.some((route) => {
-        if (route === path) return true
-        if (path.startsWith(route + '/')) return true
-        if (route.includes('*')) {
-          const pattern = route.replace('*', '.*')
-          return new RegExp(`^${pattern}$`).test(path)
-        }
-        return false
-      })
-    }
-
-    const createLabel = (path, labelText) => {
-      const onPreload = () => preloadRouteComponent(path)
-      const onKeyDown = (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          onPreload()
-        }
-      }
-
-      return (
-        <button
-          type="button"
-          onMouseEnter={onPreload}
-          onFocus={onPreload}
-          onClick={onPreload}
-          onKeyDown={onKeyDown}
-          style={{
-            background: 'transparent',
-            border: 0,
-            padding: 0,
-            margin: 0,
-          }}
-        >
-          {labelText}
-        </button>
-      )
-    }
-
-    const translateItem = (i) => {
-      // 添加空值检查
-      if (!i || typeof i !== 'object') return null
-
-      const { i18nKey, children, ...rest } = i
-      const path = i.path || i.key
-
-      // 如果没有 key，返回 null（不合法的菜单项）
-      if (!path) return null
-
-      const labelText = i18nKey ? t(i.i18nKey) : i.label
-      const Label = createLabel(path, labelText)
-
-      const base = {
-        ...rest,
-        path,
-        label: Label,
-      }
-      if (children && Array.isArray(children)) {
-        // 过滤掉空值的子项
-        const validChildren = children.map(translateItem).filter(Boolean)
-        return validChildren.length > 0 ? { ...base, children: validChildren } : base
-      }
-      return base
-    }
-
-    // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
-    // 过滤掉可能的空值
-    const allMenuItems = (Array.isArray(mainLayoutMenu) ? mainLayoutMenu : []).map(translateItem).filter(Boolean)
-
-    // 递归过滤菜单：仅保留用户可访问的节点或其子节点
-    const hasAccessSafely = (p) => {
-      try {
-        return hasAccess(p)
-      } catch (e) {
-        console.warn('菜单访问判断异常', p, e)
-        return false
-      }
-    }
-
-    const matchesDynamicParam = (p) => {
-      if (typeof p !== 'string' || !p.includes(':')) return false
-      const pattern = p.replace(/:[^/]+/g, '[^/]+')
-      const regex = new RegExp(`^${pattern}$`)
-      return routes.some((r) => regex.test(r))
-    }
-
-    const filterItems = (items) => {
-      if (!Array.isArray(items)) return []
-      const result = []
-      for (const item of items) {
-        // 添加空值检查，防止处理空值菜单项
-        if (!item || typeof item !== 'object') continue
-
-        const rawKey = item.path || item.key
-        // 如果菜单项没有 key，跳过（不合法的菜单项）
-        if (!rawKey) continue
-
-        if (Array.isArray(item.children) && item.children.length > 0) {
-          const children = filterItems(item.children)
-          if (children.length > 0) {
-            result.push({ ...item, children })
-            continue
-          }
-        }
-
-        if (hasAccessSafely(rawKey)) {
-          result.push(item)
-          continue
-        }
-
-        if (matchesDynamicParam(rawKey)) {
-          result.push(item)
-        }
-      }
-      return result
-    }
-
-    return filterItems(allMenuItems)
   }
 
   return (

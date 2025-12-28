@@ -18,8 +18,8 @@ const EChart = (props, ref) => {
       })
   }
 
-  // 自适应防抖优化
-  const debounceResize = debounce(resize, 500)
+  // 自适应防抖优化：避免在 render 中创建带有闭包的 debounce 函数，使用 ref 存储
+  const debounceResizeRef = useRef(null)
 
   useEffect(() => {
     if (cDom.current) {
@@ -51,18 +51,20 @@ const EChart = (props, ref) => {
     resize()
   }, [style.width, style.height])
 
-  // 监听窗口大小
+  // 监听窗口大小，创建 debounce 仅一次
   useEffect(() => {
-    window.addEventListener('resize', debounceResize)
+    debounceResizeRef.current = debounce(resize, 500)
+    window.addEventListener('resize', debounceResizeRef.current)
 
     return () => {
-      window.removeEventListener('resize', debounceResize)
+      window.removeEventListener('resize', debounceResizeRef.current)
+      // @ts-ignore
+      debounceResizeRef.current?.cancel?.()
     }
   }, [options])
 
   // 展示 loading 动画
   useEffect(() => {
-     
     loading ? cInstance.current.showLoading() : cInstance.current.hideLoading()
   }, [loading])
 

@@ -125,10 +125,15 @@ interface ScrollAreaProps extends Omit<ScrollProgressBarProps, 'container'> {
 
 export const ScrollArea: React.FC<ScrollAreaProps> = ({ children, className, style, ...progressBarProps }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [containerNode, setContainerNode] = React.useState<HTMLElement | null>(null)
+
+  React.useEffect(() => {
+    setContainerNode(scrollRef.current)
+  }, [])
 
   return (
     <div ref={scrollRef} className={clsx('relative overflow-auto', className)} style={style}>
-      <ScrollProgressBar container={scrollRef.current} position="relative" {...progressBarProps} />
+      {containerNode && <ScrollProgressBar container={containerNode} position="relative" {...progressBarProps} />}
       {children}
     </div>
   )
