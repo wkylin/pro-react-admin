@@ -7,21 +7,21 @@ const setThresholds = (size, x, y) => {
   if (size === 'sm') {
     return {
       hoverX: x * 0.03,
-      hoverY: y * 0.03,
+      hoverY: y * 0.03
     }
   }
 
   if (size === 'md') {
     return {
       hoverX: x * 0.06,
-      hoverY: y * 0.06,
+      hoverY: y * 0.06
     }
   }
 
   if (size === 'lg') {
     return {
       hoverX: x * 0.1,
-      hoverY: y * 0.1,
+      hoverY: y * 0.1
     }
   }
 }
@@ -109,14 +109,13 @@ const DynamicBackground = () => {
                     refItem,
                     initialPositions: {
                       xPos,
-                      yPos,
+                      yPos
                     },
-                    size,
-                  })
-                }
+                    size
+                  })}
                 className={`${styles.icon} ${styles[type]} ${styles[size]}`}
                 style={{
-                  transform: `translateX(${xPos}px) translateY(${yPos}px)`,
+                  transform: `translateX(${xPos}px) translateY(${yPos}px)`
                 }}
               >
                 {icon && icon}

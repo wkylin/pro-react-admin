@@ -8,22 +8,22 @@ const TRACKS = [
     title: 'Cyberpunk City',
     artist: 'MokkaMusic',
     cover: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=200&h=200&fit=crop',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
   },
   {
     id: 2,
     title: 'Dreamy Vibes',
     artist: 'Panda Beats',
     cover: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=200&h=200&fit=crop',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
   },
   {
     id: 3,
     title: 'Deep Ocean',
     artist: 'Blue Wave',
     cover: 'https://images.unsplash.com/photo-1459749411177-287ce1465453?w=200&h=200&fit=crop',
-    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
-  },
+    src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+  }
 ]
 
 const MusicPlayer = () => {
@@ -168,42 +168,42 @@ const MusicPlayer = () => {
   const remainingTime = duration - currentTime
 
   return (
-    <div className="mx-auto flex h-[700px] max-w-md flex-col overflow-hidden rounded-2xl bg-gray-900 font-sans text-white shadow-2xl">
+    <div className='mx-auto flex h-[700px] max-w-md flex-col overflow-hidden rounded-2xl bg-gray-900 font-sans text-white shadow-2xl'>
       {/* === 上半部分：播放器控制 === */}
-      <div className="z-10 flex flex-col items-center bg-gradient-to-br from-gray-800 to-gray-900 p-6 shadow-lg">
+      <div className='z-10 flex flex-col items-center bg-gradient-to-br from-gray-800 to-gray-900 p-6 shadow-lg'>
         {/* 封面 & 旋转动画 */}
         <div
           className={`relative mb-6 h-56 w-56 overflow-hidden rounded-full border-8 border-gray-800 shadow-2xl ${isPlaying ? 'animate-[spin_12s_linear_infinite]' : ''}`}
         >
-          <img src={currentTrack.cover} alt="cover" className="h-full w-full object-cover" />
+          <img src={currentTrack.cover} alt='cover' className='h-full w-full object-cover' />
           {/* 中间的小圆点，模拟黑胶唱片 */}
-          <div className="absolute top-1/2 left-1/2 z-10 h-8 w-8 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-gray-800"></div>
+          <div className='absolute top-1/2 left-1/2 z-10 h-8 w-8 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-gray-800' />
         </div>
 
         {/* 歌曲信息 */}
-        <div className="mb-6 w-full text-center">
-          <h2 className="truncate text-xl font-bold text-white">{currentTrack.title}</h2>
-          <p className="mt-1 text-sm text-gray-400">{currentTrack.artist}</p>
+        <div className='mb-6 w-full text-center'>
+          <h2 className='truncate text-xl font-bold text-white'>{currentTrack.title}</h2>
+          <p className='mt-1 text-sm text-gray-400'>{currentTrack.artist}</p>
         </div>
 
         {/* 进度条 & 时间 */}
-        <div className="mb-6 w-full space-y-2">
+        <div className='mb-6 w-full space-y-2'>
           <input
-            type="range"
-            min="0"
+            type='range'
+            min='0'
             max={duration || 0}
             value={currentTime}
             onChange={handleSeek}
-            className="h-1 w-full cursor-pointer appearance-none rounded-lg bg-gray-700 accent-green-500 transition-all hover:h-2"
+            className='h-1 w-full cursor-pointer appearance-none rounded-lg bg-gray-700 accent-green-500 transition-all hover:h-2'
           />
-          <div className="flex justify-between font-mono text-xs text-gray-400">
+          <div className='flex justify-between font-mono text-xs text-gray-400'>
             <span>{formatTime(currentTime)}</span>
             <span>-{formatTime(remainingTime)}</span>
           </div>
         </div>
 
         {/* 按钮组 */}
-        <div className="flex w-full items-center justify-between px-4">
+        <div className='flex w-full items-center justify-between px-4'>
           {/* 循环切换 */}
           <button
             onClick={() => setIsLooping(!isLooping)}
@@ -213,79 +213,83 @@ const MusicPlayer = () => {
             {isLooping ? <Repeat size={20} /> : <RefreshCw size={20} />}
           </button>
 
-          <button onClick={handlePrev} className="p-2 text-gray-300 transition hover:scale-110 hover:text-white">
+          <button onClick={handlePrev} className='p-2 text-gray-300 transition hover:scale-110 hover:text-white'>
             <SkipBack size={28} />
           </button>
 
           {/* 播放/暂停大按钮 */}
           <button
             onClick={togglePlay}
-            className="rounded-full bg-green-500 p-4 text-black shadow-lg shadow-green-500/30 transition hover:scale-105 hover:bg-green-400 active:scale-95"
+            className='rounded-full bg-green-500 p-4 text-black shadow-lg shadow-green-500/30 transition hover:scale-105 hover:bg-green-400 active:scale-95'
           >
-            {isPlaying ? (
-              <Pause size={32} fill="currentColor" />
-            ) : (
-              <Play size={32} fill="currentColor" className="ml-1" />
-            )}
+            {isPlaying
+              ? (
+                <Pause size={32} fill='currentColor' />
+                )
+              : (
+                <Play size={32} fill='currentColor' className='ml-1' />
+                )}
           </button>
 
-          <button onClick={handleNext} className="p-2 text-gray-300 transition hover:scale-110 hover:text-white">
+          <button onClick={handleNext} className='p-2 text-gray-300 transition hover:scale-110 hover:text-white'>
             <SkipForward size={28} />
           </button>
 
           {/* 占位/菜单按钮 */}
-          <button className="p-2 text-gray-400 hover:text-white">
+          <button className='p-2 text-gray-400 hover:text-white'>
             <Clock size={20} />
           </button>
         </div>
       </div>
 
       {/* === 下半部分：播放列表 (固定高度，内部滚动) === */}
-      <div className="flex flex-1 flex-col overflow-hidden bg-black/20 backdrop-blur-sm">
-        <div className="flex items-center gap-2 bg-gray-900/50 px-6 py-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
+      <div className='flex flex-1 flex-col overflow-hidden bg-black/20 backdrop-blur-sm'>
+        <div className='flex items-center gap-2 bg-gray-900/50 px-6 py-3 text-xs font-bold tracking-wider text-gray-500 uppercase'>
           <ListMusic size={14} />
           <span>Playlist ({TRACKS.length})</span>
         </div>
 
-        <div className="custom-scrollbar flex-1 overflow-y-auto p-2">
+        <div className='custom-scrollbar flex-1 overflow-y-auto p-2'>
           {TRACKS.map((track, index) => {
             const isCurrent = index === currentTrackIndex
             return (
               <button
                 key={track.id}
                 onClick={() => playTrack(index)}
-                type="button"
+                type='button'
                 aria-label={`Play ${track.title} by ${track.artist}`}
                 className={`group mb-1 flex w-full items-center rounded-xl p-3 text-left transition-all duration-200 ${isCurrent ? 'bg-gray-800/80' : 'text-gray-400 hover:bg-gray-800/40'} `}
               >
                 {/* 序号 / 动态图标 */}
-                <div className="mr-2 flex w-10 items-center justify-center">
-                  {isCurrent && isPlaying ? (
-                    <div className="flex h-3 items-end gap-1">
-                      <span className="h-full w-0.5 animate-[bounce_1s_infinite] bg-green-500"></span>
-                      <span className="h-2/3 w-0.5 animate-[bounce_1.2s_infinite] bg-green-500"></span>
-                      <span className="h-1/2 w-0.5 animate-[bounce_0.8s_infinite] bg-green-500"></span>
-                    </div>
-                  ) : (
-                    <span className={`font-mono text-sm ${isCurrent ? 'text-green-500' : 'text-gray-600'}`}>
-                      {index + 1}
-                    </span>
-                  )}
+                <div className='mr-2 flex w-10 items-center justify-center'>
+                  {isCurrent && isPlaying
+                    ? (
+                      <div className='flex h-3 items-end gap-1'>
+                        <span className='h-full w-0.5 animate-[bounce_1s_infinite] bg-green-500' />
+                        <span className='h-2/3 w-0.5 animate-[bounce_1.2s_infinite] bg-green-500' />
+                        <span className='h-1/2 w-0.5 animate-[bounce_0.8s_infinite] bg-green-500' />
+                      </div>
+                      )
+                    : (
+                      <span className={`font-mono text-sm ${isCurrent ? 'text-green-500' : 'text-gray-600'}`}>
+                        {index + 1}
+                      </span>
+                      )}
                 </div>
 
                 {/* 标题信息 */}
-                <div className="min-w-0 flex-1">
+                <div className='min-w-0 flex-1'>
                   <div
                     className={`truncate font-medium ${isCurrent ? 'text-green-400' : 'text-gray-200 group-hover:text-white'}`}
                   >
                     {track.title}
                   </div>
-                  <div className="truncate text-xs text-gray-500">{track.artist}</div>
+                  <div className='truncate text-xs text-gray-500'>{track.artist}</div>
                 </div>
 
                 {/* 播放状态文字 */}
                 {isCurrent && (
-                  <span className="px-2 text-xs font-medium text-green-500/80">{isPlaying ? 'Playing' : 'Paused'}</span>
+                  <span className='px-2 text-xs font-medium text-green-500/80'>{isPlaying ? 'Playing' : 'Paused'}</span>
                 )}
               </button>
             )

@@ -29,13 +29,13 @@ const FixTabPanel = React.forwardRef(
           position: 'relative',
           overflowY: 'auto',
           overflowX: 'hidden',
-          ...style,
+          ...style
         }}
       >
         {showScrollProgress && containerNode && (
           <ScrollProgressBar
             container={containerNode}
-            position="fixed" // sticky
+            position='fixed' // sticky
             {...scrollProgressProps}
           />
         )}
@@ -49,7 +49,7 @@ const FixTabPanel = React.forwardRef(
             minWidth: 0,
             height: fill ? '100%' : 'auto',
             padding: '5px',
-            boxSizing: 'border-box',
+            boxSizing: 'border-box'
           }}
         >
           {children}

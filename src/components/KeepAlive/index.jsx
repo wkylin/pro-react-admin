@@ -85,15 +85,16 @@ const createKeepAliveManager = () => {
     // set global options: { deactivateDelay, keepInactiveCount, limit }
     setOptions: (opts = {}) => {
       if (typeof opts.deactivateDelay === 'number') deactivateDelay = opts.deactivateDelay
-      if (typeof opts.keepInactiveCount === 'number')
+      if (typeof opts.keepInactiveCount === 'number') {
         keepInactiveCount = Math.max(0, Math.floor(opts.keepInactiveCount))
+      }
       if (typeof opts.limit === 'number') limit = Math.max(0, Math.floor(opts.limit))
     },
     register: (id, opts) => {
       // opts: { setShouldRender, persistOnUnmount }
       instances.set(id, {
         setShouldRender: opts.setShouldRender,
-        persistOnUnmount: !!opts.persistOnUnmount,
+        persistOnUnmount: !!opts.persistOnUnmount
       })
     },
     unregister: (id) => {
@@ -193,7 +194,7 @@ const createKeepAliveManager = () => {
       instances.delete(id)
       activeMap.delete(id)
       keys = keys.filter((k) => k !== id)
-    },
+    }
   }
 }
 
@@ -236,7 +237,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       const effectivePersist = ActivityComponent ? true : persistOnUnmount
       keepAliveManager.register(id, {
         setShouldRender,
-        persistOnUnmount: effectivePersist,
+        persistOnUnmount: effectivePersist
       })
     }
     return () => {
@@ -329,14 +330,14 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       if (!active) return
       scrollPos.current.set(e.target, {
         left: e.target.scrollLeft,
-        top: e.target.scrollTop,
+        top: e.target.scrollTop
       })
     }
 
     // Capture scroll events to record positions
     target.addEventListener('scroll', onScroll, {
       capture: true,
-      passive: true,
+      passive: true
     })
 
     return () => {
@@ -390,7 +391,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       // 在移动 DOM 之前，发送自定义事件通知子组件，然后同步移动到占位符下。
       // 之前使用短延迟的异步移动会导致渲染滞后和大量定时器/帧回调，移到同步移动以提升响应性。
       const event = new CustomEvent('keepalive-dom-move', {
-        detail: { from: container.parentNode, to: placeholder },
+        detail: { from: container.parentNode, to: placeholder }
       })
 
       let dispatchError = null
@@ -405,7 +406,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
           console.debug('[KeepAlive] appending container to placeholder', id, {
             from: container.parentNode,
             to: placeholder,
-            dispatchError,
+            dispatchError
           })
         } catch (e) {}
       }
@@ -428,7 +429,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                       id,
                       note: 'no-children-after-append',
                       childElementCount: container.childElementCount,
-                      time: Date.now(),
+                      time: Date.now()
                     })
                     try {
                       document.body.dataset.keepaliveIssue = 'no-children'
@@ -454,7 +455,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
             childElementCount: container.childElementCount,
             appended,
             dispatchError,
-            time: Date.now(),
+            time: Date.now()
           })
         }
       } catch (e) {}
@@ -492,7 +493,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                   note: 'cleared-inline-display-none',
                   clearedCount: cleared.length,
                   clearedTagsSample: cleared.slice(0, 5),
-                  time: Date.now(),
+                  time: Date.now()
                 })
               }
             } catch (e) {}
@@ -523,7 +524,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
               window.__keepalive_debug_details.push({
                 id,
                 note: 'force-visible-root',
-                time: Date.now(),
+                time: Date.now()
               })
             }
           }
@@ -555,7 +556,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
         shouldRender,
         containerNode: !!containerNode,
         childrenType: typeof children,
-        time: Date.now(),
+        time: Date.now()
       })
     } catch (e) {}
   }, [shouldRender, active, containerNode, id, children])
@@ -613,7 +614,7 @@ KeepAlive.propTypes = {
   active: PropTypes.bool,
   children: PropTypes.node,
   persistOnUnmount: PropTypes.bool,
-  cacheLimit: PropTypes.number,
+  cacheLimit: PropTypes.number
 }
 
 export default KeepAlive

@@ -186,7 +186,7 @@ const SignIn = () => {
   const fillAccount = (email) => {
     form.setFieldsValue({
       email,
-      password: getExpectedPassword(email),
+      password: getExpectedPassword(email)
     })
   }
 
@@ -199,13 +199,13 @@ const SignIn = () => {
     '--signin-text-2': token.colorTextSecondary,
     '--signin-primary': token.colorPrimary,
     '--signin-primary-2': token.colorInfo,
-    '--signin-shadow': token.boxShadowSecondary,
+    '--signin-shadow': token.boxShadowSecondary
   }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Content className={styles.root} style={cssVars}>
-        <div className={styles.bg} aria-hidden="true" />
+        <div className={styles.bg} aria-hidden='true' />
 
         <div className={styles.grid} style={{ padding: isMobile ? 16 : 24 }}>
           {/* Left: Brand / Tech hero */}
@@ -213,10 +213,10 @@ const SignIn = () => {
             <section className={styles.hero}>
               <div className={styles.heroInner}>
                 <div className={styles.badgeRow}>
-                  <Tag variant="filled" color="processing">
+                  <Tag variant='filled' color='processing'>
                     AI-ready Console
                   </Tag>
-                  <Tag variant="filled">Pro React Admin</Tag>
+                  <Tag variant='filled'>Pro React Admin</Tag>
                 </div>
                 <Title level={1} className={styles.heroTitle}>
                   面向 AI 时代的
@@ -236,23 +236,23 @@ const SignIn = () => {
 
           {/* Right: Auth card */}
           <section className={styles.panel}>
-            <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 24 } }}>
+            <Card className={styles.card} variant='borderless' styles={{ body: { padding: isMobile ? 16 : 24 } }}>
               <div className={styles.titleBox}>
                 <Title level={2} className={styles.title}>
                   登录
                 </Title>
-                <Text type="secondary">选择测试账号快速填充，或输入凭据登录</Text>
+                <Text type='secondary'>选择测试账号快速填充，或输入凭据登录</Text>
               </div>
 
               {/* 测试账号快捷选择 */}
               <div className={styles.quickBox}>
                 <div className={styles.quickHeader}>
                   <Text strong>测试账号</Text>
-                  <Text type="secondary">（点击填充）</Text>
+                  <Text type='secondary'>（点击填充）</Text>
                 </div>
                 <div className={styles.quickList}>
                   {Object.entries(testAccounts).map(([email, account]) => (
-                    <button key={email} type="button" className={styles.quickItem} onClick={() => fillAccount(email)}>
+                    <button key={email} type='button' className={styles.quickItem} onClick={() => fillAccount(email)}>
                       <div className={styles.quickLeft}>
                         <span className={styles.quickTag}>{account.name}</span>
                         <span className={styles.quickMeta}>{email}</span>
@@ -265,37 +265,37 @@ const SignIn = () => {
 
               <Form
                 form={form}
-                name="signin"
+                name='signin'
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
-                autoComplete="off"
-                layout="vertical"
-                size="large"
+                autoComplete='off'
+                layout='vertical'
+                size='large'
               >
                 <Form.Item
-                  name="email"
+                  name='email'
                   rules={[
                     { required: true, message: '请输入邮箱!' },
-                    { type: 'email', message: '请输入有效的邮箱格式!' },
+                    { type: 'email', message: '请输入有效的邮箱格式!' }
                   ]}
                 >
-                  <Input prefix={<UserOutlined />} placeholder="邮箱" />
+                  <Input prefix={<UserOutlined />} placeholder='邮箱' />
                 </Form.Item>
 
-                <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
-                  <Input.Password prefix={<LockOutlined />} placeholder="密码" />
+                <Form.Item name='password' rules={[{ required: true, message: '请输入密码!' }]}>
+                  <Input.Password prefix={<LockOutlined />} placeholder='密码' />
                 </Form.Item>
 
                 <Form.Item style={{ marginBottom: 8 }}>
-                  <Button type="primary" htmlType="submit" block>
+                  <Button type='primary' htmlType='submit' block>
                     登录
                   </Button>
                 </Form.Item>
               </Form>
 
               <div className={styles.footerRow}>
-                <Text type="secondary">还没有账号？</Text>
-                <Button type="link" className={styles.registerBtn} onClick={() => redirectTo('/signup')}>
+                <Text type='secondary'>还没有账号？</Text>
+                <Button type='link' className={styles.registerBtn} onClick={() => redirectTo('/signup')}>
                   去注册
                 </Button>
               </div>

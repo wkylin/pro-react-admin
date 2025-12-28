@@ -35,7 +35,7 @@ const useInViewport = (triggerOnce = false, threshold = 0, rootMargin = '0px') =
 
   return {
     inViewRef,
-    inViewport,
+    inViewport
   }
 }
 

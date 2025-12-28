@@ -61,7 +61,7 @@ const Player = ({ activeSong, isPlaying, volume, seekTime, onEnded, onTimeUpdate
       onEnded={onEnded}
       onTimeUpdate={onTimeUpdate}
       onLoadedData={onLoadedData}
-      preload="metadata"
+      preload='metadata'
     />
   )
 }

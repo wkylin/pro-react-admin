@@ -7,7 +7,7 @@ const flattenTreeData = (node, parentId = null, level = 0) => {
     ...node,
     parentId,
     level,
-    childrenIds: node.children ? node.children.map((child) => child.id) : [],
+    childrenIds: node.children ? node.children.map((child) => child.id) : []
   }
 
   let result = [flatNode]
@@ -33,7 +33,7 @@ const OrgChart = ({
   expandIcon = '▼',
   collapseIcon = '▲',
   showExpandIcon = true,
-  customStyles = {},
+  customStyles = {}
 }) => {
   const [flatData, setFlatData] = useState([])
   const [hoveredNodeId, setHoveredNodeId] = useState(null)
@@ -148,7 +148,7 @@ const OrgChart = ({
               )}
             </div>
           </div>
-          {hasChildren && isExpanded && <div className={`${styles.line} ${styles.downWithLine}`}></div>}
+          {hasChildren && isExpanded && <div className={`${styles.line} ${styles.downWithLine}`} />}
         </div>
 
         {/* 子节点容器 */}
@@ -158,7 +158,7 @@ const OrgChart = ({
               <div className={styles.childrenWrapper}>
                 {node.childrenIds.map((childId, index) => (
                   <div key={childId} className={styles.childWrapper}>
-                    <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`}></div>
+                    <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`} />
                     <div
                       className={` ${styles.childBox} ${isNodeHighlighted(childId) ? styles.highlightedChild : ''} ${animated ? styles.animated : ''} `}
                       style={customStyles.childBox}

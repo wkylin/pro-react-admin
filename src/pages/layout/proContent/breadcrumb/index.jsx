@@ -25,14 +25,14 @@ const ProBreadcrumb = () => {
           path: '/',
           name: '首页',
           key: '/',
-          i18nKey: 'home',
+          i18nKey: 'home'
         },
         {
           path: '404',
           name: 'Not Found',
           key: '/404',
-          i18nKey: 'Not Found',
-        },
+          i18nKey: 'Not Found'
+        }
       ]
       if (typeof requestAnimationFrame !== 'undefined') {
         requestAnimationFrame(() => setBreadcrumbList(list))
@@ -47,7 +47,7 @@ const ProBreadcrumb = () => {
         name: item.name,
         // 移除 isSubMenu 的自动推断，或者仅用于样式区分，不影响点击
         // isSubMenu: item.isSubMenu || (item.children && item.children.length > 0),
-        i18nKey: item.i18nKey,
+        i18nKey: item.i18nKey
       }))
 
       // 确保首页存在
@@ -56,7 +56,7 @@ const ProBreadcrumb = () => {
           path: '/',
           name: '首页',
           key: '/',
-          i18nKey: 'home',
+          i18nKey: 'home'
         })
       }
 
@@ -79,13 +79,15 @@ const ProBreadcrumb = () => {
       // 除非显式配置了 clickable: false (预留扩展)
       const canClick = !isLast
 
-      const content = !canClick ? (
-        <span>{item.i18nKey ? t(item.i18nKey) : item.name}</span>
-      ) : (
-        <Button type="link" style={{ padding: 0, height: 'auto' }} onClick={() => linkTo(item.path || item.key)}>
-          {item.i18nKey ? t(item.i18nKey) : item.name}
-        </Button>
-      )
+      const content = !canClick
+        ? (
+          <span>{item.i18nKey ? t(item.i18nKey) : item.name}</span>
+          )
+        : (
+          <Button type='link' style={{ padding: 0, height: 'auto' }} onClick={() => linkTo(item.path || item.key)}>
+            {item.i18nKey ? t(item.i18nKey) : item.name}
+          </Button>
+          )
 
       return {
         title: (
@@ -93,11 +95,11 @@ const ProBreadcrumb = () => {
             {content}
           </span>
         ),
-        key: item.key || item.path,
+        key: item.key || item.path
       }
     })
 
-  return <Breadcrumb separator=">" items={breadcrumbItem()} />
+  return <Breadcrumb separator='>' items={breadcrumbItem()} />
 }
 
 export default ProBreadcrumb

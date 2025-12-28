@@ -159,7 +159,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       // Ant Design `Menu` expects `label` to be a ReactNode.
       // Return a React element so we don't pass a plain object as a child.
       return (
-        <span onMouseEnter={onPreload} role="menuitem">
+        <span onMouseEnter={onPreload} role='menuitem'>
           {labelText || path}
         </span>
       )
@@ -181,7 +181,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       const base = {
         ...rest,
         path,
-        label: Label,
+        label: Label
       }
       if (children && Array.isArray(children)) {
         // 过滤掉空值的子项
@@ -412,7 +412,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 ProSecNav.propTypes = {
   mode: PropTypes.string,
   theme: PropTypes.string,
-  onMenuClick: PropTypes.func,
+  onMenuClick: PropTypes.func
 }
 
 export default ProSecNav

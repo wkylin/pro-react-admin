@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { renderToString } from 'react-dom/server'
 
-function easeOutCubic(t) {
+function easeOutCubic (t) {
   return 1 - Math.pow(1 - t, 3)
 }
 
@@ -42,7 +42,7 @@ const IconCloud = ({ icons, images }) => {
         z: z * 100,
         scale: 1,
         opacity: 1,
-        id: i,
+        id: i
       })
     }
     return newIcons
@@ -153,9 +153,8 @@ const IconCloud = ({ icons, images }) => {
           startY: currentY,
           distance,
           startTime: performance.now(),
-          duration,
+          duration
         })
-        return
       }
     })
 
@@ -177,7 +176,7 @@ const IconCloud = ({ icons, images }) => {
 
       rotationRef.current = {
         x: rotationRef.current.x + deltaY * 0.002,
-        y: rotationRef.current.y + deltaX * 0.002,
+        y: rotationRef.current.y + deltaX * 0.002
       }
 
       setLastMousePos({ x: e.clientX, y: e.clientY })
@@ -212,7 +211,7 @@ const IconCloud = ({ icons, images }) => {
 
         rotationRef.current = {
           x: targetRotation.startX + (targetRotation.x - targetRotation.startX) * easedProgress,
-          y: targetRotation.startY + (targetRotation.y - targetRotation.startY) * easedProgress,
+          y: targetRotation.startY + (targetRotation.y - targetRotation.startY) * easedProgress
         }
 
         if (progress >= 1) {
@@ -221,7 +220,7 @@ const IconCloud = ({ icons, images }) => {
       } else if (!isDragging) {
         rotationRef.current = {
           x: rotationRef.current.x + (dy / canvas.height) * speed,
-          y: rotationRef.current.y + (dx / canvas.width) * speed,
+          y: rotationRef.current.y + (dx / canvas.width) * speed
         }
       }
 
