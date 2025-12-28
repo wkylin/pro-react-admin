@@ -127,7 +127,7 @@
     "js-analyzer": "js-analyzer --root ./",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
-    "postbuild-storybook": "node ./scripts/add-storybook-base.js",
+    "postbuild-storybook": "node ./scripts/add-storybook-base.cjs",
     "build:lib": "vite build -c vite.config.lib.ts",
     "build:lib:entries": "vite build -c vite.config.lib.entries.ts",
     "prepare:lib:publish": "node scripts/prepare-lib-publish.mjs",
