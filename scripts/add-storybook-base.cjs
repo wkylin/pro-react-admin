@@ -23,7 +23,7 @@ if (!fs.existsSync(indexPath)) {
   process.exit(1)
 }
 
-let html = fs.readFileSync(indexPath, 'utf8')
+const html = fs.readFileSync(indexPath, 'utf8')
 
 if (html.includes(`<base href="${baseHref}">`)) {
   console.log('Base href already inserted.')
