@@ -19,9 +19,9 @@ export const BoxesCore = ({ className, ...rest }) => {
   const colsCount = 30
 
   // 随机颜色矩阵：在挂载后生成以避免在 render 中调用 Math.random（保持纯净）
-  const [randomColors, setRandomColors] = React.useState(() => [])
+  const [randomColors, setRandomColors] = useState(() => [])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const matrix = []
     for (let i = 0; i < rowsCount; i++) {
       const row = []

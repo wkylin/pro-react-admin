@@ -34,7 +34,6 @@ const useProTabContext = () => {
 const ProTabProvider = ({ children }) => {
   const [activeKey, setActiveKey] = useState('')
   const [panes, setPanes] = useState(initialPanes)
-  const navigate = useNavigate()
   const { redirectTo } = useSafeNavigate()
 
   const removeTab = useCallback(
