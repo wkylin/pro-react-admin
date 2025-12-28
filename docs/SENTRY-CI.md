@@ -50,6 +50,3 @@ jobs:
 注意
 - `SENTRY_DSN` 是前端运行时用来发送事件的 DSN；`SENTRY_AUTH_TOKEN` 是 CI 用来上传 artifacts（source maps / releases）的私密 token，两者用途不同，不要混淆。
 - 我们的 `src/utils/sentry/index.js` 会优先使用 `process.env.SENTRY_DSN`，并允许在运行时代码中通过环境变量或构建时间注入替换。
-
-如需我：
-- 可以把这段内容合并到 `README.md` 的“部署”或“CI”节；或创建更详细的 `docs/` 页面并添加示例 workflow（我可以代为修改）。

@@ -63,31 +63,3 @@
 3. `npm run build:lib` 成功（产物 + d.ts）
 4. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
 5. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
-
-## 常见问题
-
-### Q1: 为什么我新增了组件但打出来的 lib 里没有？
-
-因为 `vite.config.lib.ts` 的入口是 `src/lib/index.ts`：
-
-- 你没在这里 export → Rollup 不会把它当作库 API 打包
-- dts 插件也不会把它作为入口类型导出到 `dist-lib/index.d.ts`
-
-### Q2: 新增组件放在 `src/components/OneTimePasscode/` 里，为何还要从 `stateless/OneTimePasscode` export？
-
-`src/components/OneTimePasscode/` 这种目录在当前项目里主要是 **Storybook 文档/演示（mdx/stories）**。
-真正组件实现位于 `src/components/stateless/OneTimePasscode/`，所以库入口应该导出实现目录，而不是导出 docs。
-
-### Q3: 以后这个文件会越来越大，怎么维护更舒服？
-
-建议遵循两条简单规则：
-
-1. **只导出“要发布的公共 API”**（组件/类型/hooks），避免把 demo、页面级组件、内部路由壳导出。
-2. **新增组件就顺手加一行 export + 跑 build:lib**，用构建作为“验收”。
-
-如果后续你希望进一步自动化，可以新增一个脚本（可选）：
-
-- 扫描 `src/components/stateless/*` 和 `src/components/stateful/*`
-- 生成（或校验）`src/components/index.ts`
-
-但因为当前存在少量特殊导出（例如非 default 导出、注释掉的 export），完全自动生成需要先统一约定；否则更推荐“半自动校验”而不是强制重写文件。

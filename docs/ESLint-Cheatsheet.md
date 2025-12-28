@@ -202,14 +202,3 @@ npx eslint --cache "path/to/file.jsx" || true
 - 如果需要把所有文件问题导出并在本地用编辑器跳转，优先使用 JSON 输出并在 VS Code 中安装 ESLint 扩展加载 `eslint-report.json`。
 
 ---
-
-## 我在本次修复会话中记录的部分示例结果
-（仅为会话快照，具体数字会随代码修改波动）
-
-- `src/components/KeepAlive/index.jsx` — 11 problems（曾为最高）
-- `src/components/stateless/ReMarkdown/index.jsx` — 5 problems
-- `src/pages/chatgpt/index.jsx` — 最初 5 problems，已在会话中修复多数
-
----
-
-如需我把当前仓库的完整按文件问题统计（`eslint-by-file.txt`）生成并提交到仓库根目录，回复“是”，我会立刻运行并把文件写入。
