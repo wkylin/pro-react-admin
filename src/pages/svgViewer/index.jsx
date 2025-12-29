@@ -8,13 +8,13 @@ const { Title, Paragraph, Text } = Typography
 
 const SvgViewer = () => {
   return (
-    <FixTabPanel fill={true}>
+    <FixTabPanel fill>
       <div
         style={{
           padding: 24,
           minHeight: '100%',
           background: 'linear-gradient(180deg,#0f1724 0%, rgba(15,23,36,0.6) 60%)',
-          color: '#fff',
+          color: '#fff'
         }}
       >
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -24,7 +24,7 @@ const SvgViewer = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               gap: 16,
-              marginBottom: 18,
+              marginBottom: 18
             }}
           >
             <div>
@@ -45,7 +45,7 @@ const SvgViewer = () => {
                   borderRadius: 12,
                   boxShadow: '0 8px 30px rgba(2,6,23,0.6)',
                   background: 'rgba(255,255,255,0.03)',
-                  color: '#fff',
+                  color: '#fff'
                 }}
               >
                 <Title level={4} style={{ color: '#fff' }}>
@@ -111,36 +111,36 @@ const SvgViewer = () => {
             <Col xs={24} lg={16}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
                 <Card
-                  title="技术架构图"
+                  title='技术架构图'
                   extra={
                     <Space>
-                      <Text type="secondary">提示：可以使用鼠标拖拽和方向键移动视图</Text>
+                      <Text type='secondary'>提示：可以使用鼠标拖拽和方向键移动视图</Text>
                     </Space>
                   }
                   styles={{
-                    body: { padding: 0, flex: 1, overflow: 'hidden', display: 'flex', position: 'relative' },
+                    body: { padding: 0, flex: 1, overflow: 'hidden', display: 'flex', position: 'relative' }
                   }}
                 >
                   <div style={{ flex: 1, position: 'relative', height: '300px' }}>
-                    <SvgPreview SvgComponent={DiagramSvg} downloadName="architecture-diagram.svg" />
+                    <SvgPreview SvgComponent={DiagramSvg} downloadName='architecture-diagram.svg' />
                     {/* <SvgPreview svgSource={SVG_SOURCE} downloadName="architecture-diagram.svg" /> */}
                     {/* 如果需要直接作为组件渲染，可改为 <DiagramSvg/> */}
                   </div>
                 </Card>
 
                 <Card
-                  title="路由/权限架构图"
+                  title='路由/权限架构图'
                   extra={
                     <Space>
-                      <Text type="secondary">提示：可以使用鼠标拖拽和方向键移动视图</Text>
+                      <Text type='secondary'>提示：可以使用鼠标拖拽和方向键移动视图</Text>
                     </Space>
                   }
                   styles={{
-                    body: { padding: 0, flex: 1, overflow: 'hidden', display: 'flex', position: 'relative' },
+                    body: { padding: 0, flex: 1, overflow: 'hidden', display: 'flex', position: 'relative' }
                   }}
                 >
                   <div style={{ flex: 1, position: 'relative', height: '300px' }}>
-                    <SvgPreview SvgComponent={DiagramSvgRbac} downloadName="architecture-diagram-rbac.svg" />
+                    <SvgPreview SvgComponent={DiagramSvgRbac} downloadName='architecture-diagram-rbac.svg' />
                   </div>
                 </Card>
               </div>
