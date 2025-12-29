@@ -2,7 +2,7 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import SvgPreview from '@stateless/SvgPreview'
 import DiagramSvgRbac from '@assets/svg/architecture-diagram-rbac.svg'
 import DiagramSvg from '@assets/svg/architecture-diagram.svg'
-import { Card, Space, Typography, Row, Col, Divider } from 'antd'
+import { Card, Space, Typography, Row, Col } from 'antd'
 
 const { Title, Paragraph, Text } = Typography
 

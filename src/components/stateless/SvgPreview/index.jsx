@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Button, message } from 'antd'
-import { ZoomInOutlined, ZoomOutOutlined, SyncOutlined, DownloadOutlined } from '@ant-design/icons'
+import {
+  ZoomInOutlined,
+  ZoomOutOutlined,
+  SyncOutlined,
+  DownloadOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
+} from '@ant-design/icons'
 
 const defaultBg = '#1e1e1e'
 
@@ -249,6 +256,98 @@ function SvgPreview({
     }
   }
 
+  // fullscreen handling
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  useEffect(() => {
+    const onFsChange = () => {
+      try {
+        const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement)
+        // temporarily disable transform transitions to avoid layout/paint thrash when entering/exiting fullscreen
+        try {
+          const el = innerRef.current
+          if (el) {
+            const prev = el.style.transition
+            el.style.transition = 'none'
+            requestAnimationFrame(() => {
+              // restore after frame to allow browser to finish fullscreen layout
+              el.style.transition = prev || ''
+            })
+          }
+        } catch (e) {
+          console.log('error', e.message)
+        }
+        setIsFullscreen(isFs)
+      } catch (e) {
+        console.log('error', e.message)
+      }
+    }
+    document.addEventListener('fullscreenchange', onFsChange)
+    document.addEventListener('webkitfullscreenchange', onFsChange)
+    document.addEventListener('mozfullscreenchange', onFsChange)
+    document.addEventListener('MSFullscreenChange', onFsChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', onFsChange)
+      document.removeEventListener('webkitfullscreenchange', onFsChange)
+      document.removeEventListener('mozfullscreenchange', onFsChange)
+      document.removeEventListener('MSFullscreenChange', onFsChange)
+    }
+  }, [])
+
+  const enterFullscreen = async (el) => {
+    if (!el) return
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen
+    if (req) {
+      try {
+        await req.call(el)
+      } catch (e) {
+        console.log('error', e.message)
+      }
+    }
+  }
+
+  const exitFullscreen = async () => {
+    const exit =
+      document.exitFullscreen ||
+      document.webkitExitFullscreen ||
+      document.mozCancelFullScreen ||
+      document.msExitFullscreen
+    if (exit) {
+      try {
+        await exit.call(document)
+      } catch (e) {
+        console.log('error', e.message)
+      }
+    }
+  }
+
+  const toggleFullscreen = async () => {
+    try {
+      const el = innerRef.current
+      if (el) {
+        const prev = el.style.transition
+        el.style.transition = 'none'
+        if (!isFullscreen) {
+          await enterFullscreen(containerRef.current || document.documentElement)
+        } else {
+          await exitFullscreen()
+        }
+        requestAnimationFrame(() => {
+          el.style.transition = prev || ''
+        })
+        return
+      }
+    } catch (e) {
+      console.log('error', e.message)
+    }
+
+    if (!isFullscreen) {
+      await enterFullscreen(containerRef.current || document.documentElement)
+    } else {
+      await exitFullscreen()
+    }
+  }
+
   return (
     <div style={{ height: '100%', position: 'relative' }}>
       <div
@@ -304,6 +403,12 @@ function SvgPreview({
         </div>
         <Button icon={<ZoomInOutlined />} onClick={handleZoomIn} type="text" style={{ color: '#fff' }} />
         <Button icon={<SyncOutlined />} onClick={handleReset} type="text" style={{ color: '#fff' }} />
+        <Button
+          icon={isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+          onClick={toggleFullscreen}
+          type="text"
+          style={{ color: '#fff' }}
+        />
         <Button icon={<DownloadOutlined />} onClick={handleDownload} type="primary" size="small">
           下载
         </Button>
