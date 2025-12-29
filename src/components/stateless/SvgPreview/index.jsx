@@ -4,12 +4,12 @@ import { ZoomInOutlined, ZoomOutOutlined, SyncOutlined, DownloadOutlined } from 
 
 const defaultBg = '#1e1e1e'
 
-function SvgPreview({
+function SvgPreview ({
   svgSource = '',
   svgUrl = '',
   SvgComponent = null,
   downloadName = 'diagram.svg',
-  background = defaultBg,
+  background = defaultBg
 }) {
   const containerRef = useRef(null)
   const innerRef = useRef(null)
@@ -253,15 +253,15 @@ function SvgPreview({
     <div style={{ height: '100%', position: 'relative' }}>
       <div
         ref={containerRef}
-        role="application"
-        aria-label="SVG viewer"
+        role='application'
+        aria-label='SVG viewer'
         style={{
           width: '100%',
           height: '100%',
           backgroundColor: background,
           overflow: 'hidden',
           cursor: isDragging ? 'grabbing' : 'grab',
-          position: 'relative',
+          position: 'relative'
         }}
       >
         <div
@@ -270,14 +270,16 @@ function SvgPreview({
             transformOrigin: '0 0',
             transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
             transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-            willChange: 'transform',
+            willChange: 'transform'
           }}
         >
-          {SvgComponent ? (
-            <SvgComponent style={{ width: '100%', height: '100%' }} />
-          ) : (
-            <div dangerouslySetInnerHTML={{ __html: content ? content.replace(/<br>/g, '<br/>') : '' }} />
-          )}
+          {SvgComponent
+            ? (
+              <SvgComponent style={{ width: '100%', height: '100%' }} />
+              )
+            : (
+              <div dangerouslySetInnerHTML={{ __html: content ? content.replace(/<br>/g, '<br/>') : '' }} />
+              )}
         </div>
       </div>
 
@@ -295,16 +297,16 @@ function SvgPreview({
           display: 'flex',
           alignItems: 'center',
           gap: 8,
-          boxShadow: '0 6px 18px rgba(0,0,0,0.35)',
+          boxShadow: '0 6px 18px rgba(0,0,0,0.35)'
         }}
       >
-        <Button icon={<ZoomOutOutlined />} onClick={handleZoomOut} type="text" style={{ color: '#fff' }} />
+        <Button icon={<ZoomOutOutlined />} onClick={handleZoomOut} type='text' style={{ color: '#fff' }} />
         <div style={{ color: '#fff', minWidth: 56, textAlign: 'center', fontWeight: 500 }}>
           {Math.round(scale * 100)}%
         </div>
-        <Button icon={<ZoomInOutlined />} onClick={handleZoomIn} type="text" style={{ color: '#fff' }} />
-        <Button icon={<SyncOutlined />} onClick={handleReset} type="text" style={{ color: '#fff' }} />
-        <Button icon={<DownloadOutlined />} onClick={handleDownload} type="primary" size="small">
+        <Button icon={<ZoomInOutlined />} onClick={handleZoomIn} type='text' style={{ color: '#fff' }} />
+        <Button icon={<SyncOutlined />} onClick={handleReset} type='text' style={{ color: '#fff' }} />
+        <Button icon={<DownloadOutlined />} onClick={handleDownload} type='primary' size='small'>
           下载
         </Button>
       </div>
