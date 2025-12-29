@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Layout } from 'antd'
+import { Layout, Button } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { useStore } from '@/store'
 
@@ -17,13 +17,13 @@ const ProSider = ({ children, theme = 'light' }) => {
       collapsedWidth={80}
       theme={theme}
       collapsible
-      collapsed={!isSidebarOpen}
+      collapsed={!isMobile && !isSidebarOpen}
       trigger={null}
       className={styles.sider}
       style={isMobile ? { height: '100%' } : undefined}
     >
       {children}
-      {!isMobile && (
+      {!isMobile ? (
         <button
           type="button"
           className={styles.proLink}
@@ -36,6 +36,8 @@ const ProSider = ({ children, theme = 'light' }) => {
             <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
           )}
         </button>
+      ) : (
+        <Button type="link">Pro React Admin</Button>
       )}
     </Layout.Sider>
   )

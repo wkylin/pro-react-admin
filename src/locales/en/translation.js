@@ -73,7 +73,7 @@ const en = {
     motion: 'Motion',
     mermaid: 'Mermaid',
     topology: 'Topology',
-    svgViewer: 'SVG Viewer',
+    svgViewer: 'Arc Preview',
     permissionExample: 'Permission',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',
