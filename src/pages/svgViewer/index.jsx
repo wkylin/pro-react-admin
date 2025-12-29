@@ -72,7 +72,7 @@ const SvgViewer = () => {
     } catch (e) {
       // 记录异常以便排查，避免忽略异常导致 SonarQube S2486
       // 这不会中断渲染，仅用于诊断环境差异
-       
+
       console.warn('SvgViewer: failed to apply svg rendering hints', e)
     }
   }, [])
@@ -83,7 +83,7 @@ const SvgViewer = () => {
       if (!isDraggingRef.current) return
       setPosition({
         x: e.clientX - startPosRef.current.x,
-        y: e.clientY - startPosRef.current.y,
+        y: e.clientY - startPosRef.current.y
       })
     }
 
@@ -223,7 +223,6 @@ const SvgViewer = () => {
         setPosition((prev) => ({ ...prev, x: prev.x + step }))
         break
       default:
-        return
     }
   }
 
@@ -271,12 +270,12 @@ const SvgViewer = () => {
   }
 
   return (
-    <FixTabPanel fill={true}>
+    <FixTabPanel fill>
       <Card
-        title="架构图预览"
+        title='架构图预览'
         extra={
           <Space>
-            <Text type="secondary">提示：可以使用鼠标拖拽和方向键移动视图</Text>
+            <Text type='secondary'>提示：可以使用鼠标拖拽和方向键移动视图</Text>
           </Space>
         }
         style={{ flex: 1, display: 'flex', height: '100%', flexDirection: 'column' }}
@@ -285,8 +284,8 @@ const SvgViewer = () => {
         {/* 可视区域容器 */}
         <div
           ref={containerRef}
-          role="application"
-          aria-label="SVG viewer: drag to pan, use buttons or arrow keys to move, touch to drag"
+          role='application'
+          aria-label='SVG viewer: drag to pan, use buttons or arrow keys to move, touch to drag'
           style={{
             width: '100%',
             height: '100%',
@@ -295,7 +294,7 @@ const SvgViewer = () => {
             backgroundSize: '20px 20px', // 网格背景
             overflow: 'hidden',
             cursor: isDragging ? 'grabbing' : 'grab',
-            position: 'relative',
+            position: 'relative'
           }}
         >
           {/* SVG 变换层 */}
@@ -305,13 +304,13 @@ const SvgViewer = () => {
               transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
               transition: isDragging ? 'none' : 'transform 0.1s ease-out',
               willChange: 'transform',
-              display: 'block',
+              display: 'block'
               // width: 'max-content',
             }}
             ref={innerRef}
             // 渲染时也使用修复过的 SVG（将 <br> 替换为 <br/> ）以保证 XML/解析器兼容性
             dangerouslySetInnerHTML={{ __html: SVG_SOURCE.replace(/<br>/g, '<br/>') }}
-          ></div>
+          />
         </div>
 
         {/* 悬浮工具栏 */}
@@ -330,22 +329,22 @@ const SvgViewer = () => {
             alignItems: 'center',
             gap: 8,
             boxShadow: '0 6px 18px rgba(0,0,0,0.35)',
-            minWidth: 160,
+            minWidth: 160
           }}
         >
           <Button
             icon={<ZoomOutOutlined />}
             onClick={handleZoomOut}
-            type="text"
+            type='text'
             style={{
               color: '#fff',
               padding: 6,
               height: 32,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
-            aria-label="缩小"
+            aria-label='缩小'
           />
           <div style={{ color: '#fff', minWidth: 64, textAlign: 'center', fontWeight: 500 }}>
             {Math.round(scale * 100)}%
@@ -353,33 +352,33 @@ const SvgViewer = () => {
           <Button
             icon={<ZoomInOutlined />}
             onClick={handleZoomIn}
-            type="text"
+            type='text'
             style={{
               color: '#fff',
               padding: 6,
               height: 32,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
-            aria-label="放大"
+            aria-label='放大'
           />
           <Button
             icon={<SyncOutlined />}
             onClick={handleReset}
-            type="text"
-            title="重置视图"
+            type='text'
+            title='重置视图'
             style={{
               color: '#fff',
               padding: 6,
               height: 32,
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
-            aria-label="重置"
+            aria-label='重置'
           />
-          <Button icon={<DownloadOutlined />} onClick={handleDownload} type="primary" size="small">
+          <Button icon={<DownloadOutlined />} onClick={handleDownload} type='primary' size='small'>
             下载
           </Button>
         </div>
