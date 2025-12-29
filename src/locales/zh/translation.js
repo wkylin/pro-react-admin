@@ -73,6 +73,7 @@ const zh = {
     motion: '动效',
     mermaid: 'Mermaid',
     topology: '拓扑图',
+    svgViewer: 'SVG 查看器',
     permissionExample: '权限示例',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',

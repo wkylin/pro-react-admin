@@ -25,6 +25,12 @@ export const chartRoutes = [
     element: <lazyComponents.BigScreen />,
   },
   {
+    path: 'svg-viewer',
+    name: 'SVG Viewer',
+    key: '/svg-viewer',
+    element: <lazyComponents.SvgViewer />,
+  },
+  {
     path: 'markmap',
     name: 'ChatGPT',
     key: '/markmap',

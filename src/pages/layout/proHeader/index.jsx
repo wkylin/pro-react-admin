@@ -58,7 +58,7 @@ const safeNotifyDeniedOnce = async ({ path, lastDeniedRef, messageApi }) => {
   }
 }
 
-const buildUserMenuItems = ({ t, tokenValue, isAuthenticated, user, redirectTo }) => [
+const buildUserMenuItems = ({ t, tokenValue, isAuthenticated, user }) => [
   {
     key: 'token',
     label: <>{tokenValue}</>,
@@ -69,40 +69,21 @@ const buildUserMenuItems = ({ t, tokenValue, isAuthenticated, user, redirectTo }
     key: '1',
     label: <Space>{t('header.userCenter')}</Space>,
     icon: <UserOutlined />,
-    onClick: () => {
-      redirectTo('/profile')
-    },
   },
   {
     key: '2',
     label: <Space>{t('header.userSettings')}</Space>,
     icon: <SmileOutlined />,
-    onClick: () => {
-      redirectTo('/setting')
-    },
   },
   {
     key: '3',
     label: <Space>{t('header.contactMe')}</Space>,
     icon: <SmileOutlined />,
-    onClick: () => {
-      redirectTo('/contact')
-    },
   },
   {
     key: '4',
     label: <Space>{t('header.logout')}</Space>,
     icon: <LogoutOutlined />,
-    onClick: () => {
-      if (isAuthenticated && user) {
-        authService.logout()
-        return
-      }
-
-      safeLogoutCleanup()
-      removeLocalStorage('token')
-      redirectTo('/signin')
-    },
   },
 ]
 
@@ -352,8 +333,8 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {
 
   const tokenValue = getLocalStorage('token')?.token || 'wkylin.w'
   const items = React.useMemo(
-    () => buildUserMenuItems({ t, tokenValue, isAuthenticated, user, redirectTo }),
-    [t, tokenValue, isAuthenticated, user, redirectTo]
+    () => buildUserMenuItems({ t, tokenValue, isAuthenticated, user }),
+    [t, tokenValue, isAuthenticated, user]
   )
 
   const mobileMoreItems = React.useMemo(
@@ -366,7 +347,35 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {
         redirectWiki,
         redirectWrapped,
       }),
-    [t, primaryNavItems, onSettingClick]
+    [t, primaryNavItems, onSettingClick, redirectGithub, redirectWiki, redirectWrapped]
+  )
+
+  const handleUserMenuClick = React.useCallback(
+    ({ key }) => {
+      if (key === '1') {
+        redirectTo('/profile')
+        return
+      }
+      if (key === '2') {
+        redirectTo('/setting')
+        return
+      }
+      if (key === '3') {
+        redirectTo('/contact')
+        return
+      }
+      if (key === '4') {
+        if (isAuthenticated && user) {
+          authService.logout()
+          return
+        }
+
+        safeLogoutCleanup()
+        removeLocalStorage('token')
+        redirectTo('/signin')
+      }
+    },
+    [redirectTo, isAuthenticated, user]
   )
 
   const {
@@ -438,7 +447,7 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {
             mobileMoreItems,
             setSearchOpen,
           })}
-          <Dropdown arrow menu={{ items }} trigger={['click']}>
+          <Dropdown arrow menu={{ items, onClick: handleUserMenuClick }} trigger={['click']}>
             {renderUserTrigger(isAuthenticated, user, iconButtonStyle)}
           </Dropdown>
           {/* 全局搜索弹窗 */}

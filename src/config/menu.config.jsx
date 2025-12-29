@@ -5,7 +5,6 @@ import {
   HeatMapOutlined,
   ApartmentOutlined,
   QuestionCircleOutlined,
-  FireOutlined,
   GlobalOutlined,
   QrcodeOutlined,
   RocketOutlined,
@@ -21,7 +20,6 @@ import {
   RobotOutlined,
   SendOutlined,
   EnvironmentOutlined,
-  DotChartOutlined,
   PrinterOutlined,
   UserOutlined,
   ContactsOutlined,
@@ -40,6 +38,12 @@ import {
 const rawMainLayoutMenu = [
   { label: 'home', i18nKey: 'home', key: '/', icon: <HomeOutlined /> },
   { label: 'demo', i18nKey: 'demo', key: '/demo', icon: <GlobalOutlined /> },
+  {
+    label: 'SVG Viewer',
+    i18nKey: 'menu.svgViewer',
+    key: '/svg-viewer',
+    icon: <HeatMapOutlined />,
+  },
   {
     label: 'Zustand演示',
     i18nKey: 'menu.zustand',
@@ -280,7 +284,7 @@ const rawMainLayoutMenu = [
 function normalizeMenu(items) {
   return items.map((it) => {
     const { children, ...rest } = it
-    const normalized = { ...rest, path: (it && it.path) || it.key }
+    const normalized = { ...rest, path: it?.path || it.key }
     if (children && Array.isArray(children)) {
       normalized.children = normalizeMenu(children)
     }

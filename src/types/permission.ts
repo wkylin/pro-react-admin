@@ -46,6 +46,7 @@ export type Resource =
   | 'permission'
   | 'topology'
   | 'zustand'
+  | 'svg-viewer'
 
 /**
  * 权限点定义

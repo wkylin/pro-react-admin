@@ -40,6 +40,7 @@ const allRoutes = [
   '/permission',
   '/topology',
   '/zustand',
+  '/svg-viewer',
 ]
 
 /**
@@ -66,13 +67,14 @@ const managerRoutes = [
   '/markmap',
   '/postmessage',
   '/topology',
+  '/svg-viewer',
 ]
 
 // 业务员：业务相关功能
-const businessRoutes = ['/', '/business', '/dashboard', '/demo', '/echarts', '/profile', '/topology']
+const businessRoutes = ['/', '/business', '/dashboard', '/demo', '/echarts', '/profile', '/topology', '/svg-viewer']
 
 // 普通用户：基础查看功能
-const userRoutes = ['/', '/demo', '/dashboard', '/motion', '/crypto']
+const userRoutes = ['/', '/demo', '/dashboard', '/motion', '/crypto', '/profile', '/svg-viewer']
 
 /**
  * 预定义角色
@@ -198,6 +200,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/permission': 'permission:read',
   '/topology': 'topology:read',
   '/zustand': 'zustand:read',
+  '/svg-viewer': 'svg-viewer:read',
   '*': '*:*',
 }
 
