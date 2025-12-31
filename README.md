@@ -12,13 +12,13 @@
   <a href="https://deepwiki.com/wkylin/pro-react-admin"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki" /></a>
 </div>
 
-## 🚀 Pro React Admin
+## <span role="img" aria-label="rocket">🚀</span> Pro React Admin
 
 **Pro React Admin** 是一款基于 **React v19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。具备双重架构设计，既是完整的企业级应用，也是可发布的组件库 @w.ui/wui-react。
 
 ---
 
-## 🌐 在线预览
+## <span role="img" aria-label="globe">🌐</span> 在线预览
 
 - **主应用 (Main App)**: [https://wkylin.github.io/pro-react-admin/](https://wkylin.github.io/pro-react-admin/)
 - **主应用 (Vercel App)**: [https://pro-react-admin.vercel.app/](https://pro-react-admin.vercel.app/)
@@ -27,46 +27,46 @@
 
 ---
 
-## 🏆 项目亮点
+## <span role="img" aria-label="trophy">🏆</span> 项目亮点
 
-- **🚀 极致性能体验**：基于 **React 19** 构建，重构 `KeepAlive` 缓存机制（采用 CSS 显隐策略替代 DOM 移动，大幅减少重排），配合 `useTransition` 实现丝滑的 Tab 切换与交互响应。
-- **🧩 丰富组件生态**：沉淀 **120+** 高质量业务组件，支持 **独立打包发布 (@w.ui/wui-react)**。集成 **Storybook** 实现组件可视化开发与文档管理，显著提升复用效率。
-- **🛡️ 企业级权限体系**：完善的 **RBAC** 模型，支持路由、菜单、按钮级细粒度权限控制。内置路由自动过滤、`useSafeNavigate` 防越权跳转，保障系统安全。
-- **⚡️ 前沿技术栈**：采用 **TypeScript v5** + **Ant Design v6** + **Vite v7/Webpack v5** 双构建模式，紧跟社区最新标准，提供最佳开发体验。
-- **🤖 AI 智能化集成**：内置 ChatGPT 演示（支持 SSE 流式响应）、Markmap 思维导图生成、Mermaid 流程图渲染，探索 AI 在后台管理中的应用场景。
-- **🧪 全链路质量保障**：集成 **Playwright** E2E 自动化测试，配合 Mock Service Worker (MSW) 实现真实的网络模拟与多角色权限切换测试。
-- **📱 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
+- **<span role="img" aria-label="rocket">🚀</span> 极致性能体验**：基于 **React 19** 构建，重构 `KeepAlive` 缓存机制（采用 CSS 显隐策略替代 DOM 移动，大幅减少重排），配合 `useTransition` 实现丝滑的 Tab 切换与交互响应。
+- **<span role="img" aria-label="puzzle">🧩</span> 丰富组件生态**：沉淀 **120+** 高质量业务组件，支持 **独立打包发布 (@w.ui/wui-react)**。集成 **Storybook** 实现组件可视化开发与文档管理，显著提升复用效率。
+- **<span role="img" aria-label="shield">🛡️</span> 企业级权限体系**：完善的 **RBAC** 模型，支持路由、菜单、按钮级细粒度权限控制。内置路由自动过滤、`useSafeNavigate` 防越权跳转，保障系统安全。
+- **<span role="img" aria-label="zap">⚡️</span> 前沿技术栈**：采用 **TypeScript v5** + **Ant Design v6** + **Vite v7/Webpack v5** 双构建模式，紧跟社区最新标准，提供最佳开发体验。
+- **<span role="img" aria-label="robot">🤖</span> AI 智能化集成**：内置 ChatGPT 演示（支持 SSE 流式响应）、Markmap 思维导图生成、Mermaid 流程图渲染，探索 AI 在后台管理中的应用场景。
+- **<span role="img" aria-label="test-tube">🧪</span> 全链路质量保障**：集成 **Playwright** E2E 自动化测试，配合 Mock Service Worker (MSW) 实现真实的网络模拟与多角色权限切换测试。
+- **<span role="img" aria-label="mobile">📱</span> 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
 
-- **📦 CI/CD 集成** ：GitHub Actions：自动构建部署到 GitHub Pages. Sentry 集成：可选的错误监控与源码上传
+- **<span role="img" aria-label="gear">⚙️</span> CI/CD 集成** ：GitHub Actions：自动构建部署到 GitHub Pages. Sentry 集成：可选的错误监控与源码上传
 ---
 
-## 🔑 核心功能
+## <span role="img" aria-label="key">🔑</span> 核心功能
 
-- 🔐 **动态权限引擎**：登录后根据角色（Admin/Manager/Business/User）自动生成路由表，非权限路由自动拦截（403/404）。
-- 📑 **高性能多标签页**：支持 `ProTabs` 多页签切换，状态持久化保持，支持右键菜单（关闭其他/关闭所有/刷新）。
-- 📚 **组件文档库**：集成 Storybook，提供 120+ 组件的交互式文档与预览，支持 Props 动态调试与独立测试。
-- 📡 **健壮请求层**：封装统一请求库，支持并发控制、自动重试、取消重复请求、全局错误处理与消息去重。
-- 👤 **登录/注册流程**：完整的登录鉴权流程，支持一键测试账号切换，实时同步权限状态。
-- 📊 **数据可视化**：集成 ECharts、Recharts 等多种图表库，支持大数据量展示。
-- 📝 **富文本与文档**：支持 Markdown 实时渲染与编辑、代码高亮、数学公式解析。
-- 🎬 **多媒体支持**：内置音频/视频播放器，支持 Tab 切换自动暂停/恢复播放，优化资源占用。
-- 🌍 **主题与国际化**：内置明亮/暗黑模式一键切换，支持多语言（i18n）动态切换。
-- 🎭 **Mock 数据模拟**：基于 Faker.js 和 MSW 的纯前端 Mock 方案，脱离后端独立开发。
-- 📦 **组件库发布**：支持将 `src/components` 独立打包为 NPM 库 (`@w.ui/wui-react`)，提供 ESM/UMD 格式，支持按需加载与类型提示。
+- <span role="img" aria-label="locked">🔐</span> **动态权限引擎**：登录后根据角色（Admin/Manager/Business/User）自动生成路由表，非权限路由自动拦截（403/404）。
+- <span role="img" aria-label="bookmark-tabs">📑</span> **高性能多标签页**：支持 `ProTabs` 多页签切换，状态持久化保持，支持右键菜单（关闭其他/关闭所有/刷新）。
+- <span role="img" aria-label="books">📚</span> **组件文档库**：集成 Storybook，提供 120+ 组件的交互式文档与预览，支持 Props 动态调试与独立测试。
+- <span role="img" aria-label="satellite">📡</span> **健壮请求层**：封装统一请求库，支持并发控制、自动重试、取消重复请求、全局错误处理与消息去重。
+- <span role="img" aria-label="bust-in-silhouette">👤</span> **登录/注册流程**：完整的登录鉴权流程，支持一键测试账号切换，实时同步权限状态。
+- <span role="img" aria-label="bar-chart">📊</span> **数据可视化**：集成 ECharts、Recharts 等多种图表库，支持大数据量展示。
+- <span role="img" aria-label="memo">📝</span> **富文本与文档**：支持 Markdown 实时渲染与编辑、代码高亮、数学公式解析。
+- <span role="img" aria-label="clapper-board">🎬</span> **多媒体支持**：内置音频/视频播放器，支持 Tab 切换自动暂停/恢复播放，优化资源占用。
+- <span role="img" aria-label="earth">🌍</span> **主题与国际化**：内置明亮/暗黑模式一键切换，支持多语言（i18n）动态切换。
+- <span role="img" aria-label="test-tube">🧪</span> **Mock 数据模拟**：基于 Faker.js 和 MSW 的纯前端 Mock 方案，脱离后端独立开发。
+- <span role="img" aria-label="package">📦</span> **组件库发布**：支持将 `src/components` 独立打包为 NPM 库 (`@w.ui/wui-react`)，提供 ESM/UMD 格式，支持按需加载与类型提示。
 
 ---
 
-## 📦 技术栈
+## <span role="img" aria-label="toolbox">🧰</span> 技术栈
 
-- ⚛️ **Core**: React v19 / TypeScript v5
-- 🎨 **UI**: Ant Design v6
-- 🛣️ **Router**: React Router v7
-- ⚡ **Build**: Vite v7 / Webpack v5
-- 🧪 **Test**: Playwright / Jest / Testing Library
-- 🎭 **Mock**: Mock Server（Faker/MSW）
-- 📏 **Lint**: ESLint / Prettier / Husky / Commitizen
-- 🔍 **Quality**: Sentry / SonarQube / DeepScan
-- 🐳 **Deploy**: Docker / Nginx / Github Actions
+- <span role="img" aria-label="atom">⚛️</span> **Core**: React v19 / TypeScript v5
+- <span role="img" aria-label="art">🎨</span> **UI**: Ant Design v6
+- <span role="img" aria-label="compass">🧭</span> **Router**: React Router v7
+- <span role="img" aria-label="zap">⚡</span> **Build**: Vite v7 / Webpack v5
+- <span role="img" aria-label="test-tube">🧪</span> **Test**: Playwright / Jest / Testing Library
+- <span role="img" aria-label="test-tube">🧪</span> **Mock**: Mock Server（Faker/MSW）
+- <span role="img" aria-label="straight-ruler">📏</span> **Lint**: ESLint / Prettier / Husky / Commitizen
+- <span role="img" aria-label="magnifying-glass">🔍</span> **Quality**: Sentry / SonarQube / DeepScan
+- <span role="img" aria-label="whale">🐳</span> **Deploy**: Docker / Nginx / Github Actions
 
 ---
 
@@ -139,7 +139,7 @@ npm run dev
 ---
 
 
-## 🛡️ 技术架构
+## 🏗️ 技术架构
 
 <img width="1903" height="387" alt="Snipaste_2025-12-31_09-14-38" src="https://github.com/user-attachments/assets/915ba91a-8852-4dc0-8a14-091e781d9f04" />
 
@@ -153,7 +153,7 @@ npm run dev
 
 Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨在帮助开发者快速搭建基于 React、Vue 等现代框架的标准化项目结构。
 
-- 🚀 快速启动：秒级生成项目模板，开箱即用。
+  - <span role="img" aria-label="rocket">🚀</span> 快速启动：秒级生成项目模板，开箱即用。
 - 🛠 规范集成：内置 ESLint、Prettier 等代码规范配置。
 - 🎨 交互友好：优雅的命令行交互体验。
 - 🌏 线上地址：[Baize](https://www.npmjs.com/package/baize-cli)
@@ -179,7 +179,7 @@ Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨�
 
 ---
 
-## 🤝 贡献指南
+## 📖 贡献指南
 
 欢迎 PR、Issue 与 Star！
 
@@ -197,20 +197,12 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 🧩 约定式提交
+## 📝 约定式提交
 
 1. [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
 2. [语义化版本 2.0.0](https://semver.org/lang/zh-CN/)
 
 ---
-
-
-## 🤝 Show your support
-
-If you like the project, give it a star ⭐️, it will be a great encouragement to me.
-
----
-
 
 ## ⭐️ Star History
 
