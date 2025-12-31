@@ -38,6 +38,7 @@
 - **📱 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
 
 - **📦 CI/CD 集成** ：GitHub Actions：自动构建部署到 GitHub Pages. Sentry 集成：可选的错误监控与源码上传
+
 ---
 
 ## 🔑 核心功能
@@ -138,7 +139,6 @@ npm run dev
 
 ---
 
-
 ## 🛡️ 技术架构
 
 <img width="1903" height="387" alt="Snipaste_2025-12-31_09-14-38" src="https://github.com/user-attachments/assets/915ba91a-8852-4dc0-8a14-091e781d9f04" />
@@ -204,13 +204,11 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-
 ## 🤝 Show your support
 
 If you like the project, give it a star ⭐️, it will be a great encouragement to me.
 
 ---
-
 
 ## ⭐️ Star History
 
