@@ -161,9 +161,9 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📄 架构
+## 📄 技术架构
 
-![whiteboard_exported_image](https://github.com/wkylin/pro-react-admin/assets/1208330/c28852c2-7efe-407f-80f8-41d741ef3108)
+<img width="1903" height="387" alt="Snipaste_2025-12-31_09-14-38" src="https://github.com/user-attachments/assets/915ba91a-8852-4dc0-8a14-091e781d9f04" />
 
 ---
 
