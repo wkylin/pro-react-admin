@@ -14,13 +14,14 @@
 
 ## 🚀 Pro React Admin
 
-**Pro React Admin** 是一款基于 **React v19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。
+**Pro React Admin** 是一款基于 **React v19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。具备双重架构设计，既是完整的企业级应用，也是可发布的组件库 @w.ui/wui-react。
 
 ---
 
 ## 🌐 在线预览
 
 - **主应用 (Main App)**: [https://wkylin.github.io/pro-react-admin/](https://wkylin.github.io/pro-react-admin/)
+- **主应用 (Vercel App)**: [https://pro-react-admin.vercel.app/](https://pro-react-admin.vercel.app/)
 - **组件文档 (Storybook)**: [https://wkylin.github.io/pro-react-admin/storybook/](https://wkylin.github.io/pro-react-admin/storybook/)
 - **导航页 (Portal)**: [https://wkylin.github.io/pro-react-admin/portal.html](https://wkylin.github.io/pro-react-admin/portal.html)
 
@@ -36,6 +37,7 @@
 - **🧪 全链路质量保障**：集成 **Playwright** E2E 自动化测试，配合 Mock Service Worker (MSW) 实现真实的网络模拟与多角色权限切换测试。
 - **📱 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
 
+- **📦 CI/CD 集成** ：GitHub Actions：自动构建部署到 GitHub Pages. Sentry 集成：可选的错误监控与源码上传
 ---
 
 ## 🔑 核心功能
@@ -136,32 +138,8 @@ npm run dev
 
 ---
 
-## 🤝 贡献指南
 
-欢迎 PR、Issue 与 Star！
-
-1. Fork 本仓库
-2. 新建分支：`git checkout -b feature/xxx`
-3. 提交更改：`git commit -m 'feat: 新增 xxx 功能'`
-4. 推送分支：`git push origin feature/xxx`
-5. 新建 Pull Request
-
----
-
-## 📄 License
-
-Apache-2.0 © [wkylin](https://github.com/wkylin)
-
----
-
-## 🌐 约定式提交
-
-1. [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
-2. [语义化版本 2.0.0](https://semver.org/lang/zh-CN/)
-
----
-
-## 📄 技术架构
+## 🛡️ 技术架构
 
 <img width="1903" height="387" alt="Snipaste_2025-12-31_09-14-38" src="https://github.com/user-attachments/assets/915ba91a-8852-4dc0-8a14-091e781d9f04" />
 
@@ -193,7 +171,7 @@ Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨�
 
 ---
 
-## 🐳 Mac 本地部署 SonarQube
+## 🐳 本地部署 SonarQube
 
 1. [SonarQube for Mac](https://juejin.cn/post/7210005376652886077)
 2. [Gitlab for Mac](https://juejin.cn/post/7210746685802397755)
@@ -201,225 +179,38 @@ Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨�
 
 ---
 
-## 🌏 Nginx 配置指南
+## 🤝 贡献指南
 
-1. [Mac Nginx](https://newbedev.com/how-to-restart-nginx-on-mac-os-x)
+欢迎 PR、Issue 与 Star！
 
-   ```bash
-    brew install nginx
-    brew reinstall nginx
-
-    /usr/local/var/www
-    /usr/local/etc/nginx/nginx.conf
-    /usr/local/etc/nginx/servers/
-
-    brew services list
-    brew services start nginx
-    brew services stop nginx
-    brew services restart nginx
-   ```
-
-2. Nginx.conf
-
-   ```bash
-   server {
-    listen       8081;
-    #server_name  localhost;
-    server_name  www.pro.react.admin.com;
-    # 静态资源
-    location / {
-        root   /usr/local/var/www/pro-react-admin;
-        index  index.html index.htm;
-        try_files  $uri $uri/ /index.html @rewrites;
-        expires -1;
-        add_header Cache-Control no-cache;
-        # proxy_pass http://localhost:3000;
-    }
-    # API代理
-    location /api/ {
-        proxy_pass https://api.example.com/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        # 允许跨域配置
-        add_header Access-Control-Allow-Origin $http_origin;
-        add_header Access-Control-Allow-Methods 'GET, POST, PUT, DELETE, OPTIONS';
-        add_header Access-Control-Allow-Headers 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization';
-        add_header Access-Control-Allow-Credentials 'true';
-        if ($request_method = 'OPTIONS') {
-            add_header Access-Control-Max-Age 86400;
-            add_header Content-Length 0;
-            add_header Content-Type text/plain;
-            return 204;
-        }
-    }
-    location @rewrites {
-      rewrite ^(.+)$ /index.html break;
-    }
-    # 不缓存
-    location ~ .*(htm|html|json)?$ {
-      expires -1;
-    }
-    # 或者全部重定向
-    # return 301 https://$server_name$request_uri;
-   }
-
-    # SwitchHosts!
-    192.168.1.101 www.pro.react.admin.com
-
-    # 第一个目录的配置
-    # C:\nginx-1.27.5\html\var\www\html\
-    # location /html/ {
-    #     root   /var/www;
-    #     index  index.html index.htm;
-    # }
-
-    # 第二个目录的配置
-    # C:\nginx-1.27.5\html\var\www\static\
-    # location /static/ {
-    #    root   /var/www;
-    #    index  index.html index.htm;
-    #}
-
-   ```
-
-3. Nginx for Windows
-
-   ```bash
-      1. start nginx
-      2. nginx -s stop
-      3. nginx -s quit
-      4. nginx -s reload
-      5. nginx -s reopen
-   ```
+1. Fork 本仓库
+2. 新建分支：`git checkout -b feature/xxx`
+3. 提交更改：`git commit -m 'feat: 新增 xxx 功能'`
+4. 推送分支：`git push origin feature/xxx`
+5. 新建 Pull Request
 
 ---
 
-## 🌳 Tree Node Cli
+## 📄 License
 
-1. npm install -g tree-node-cli
-2. Mac: tree -L 2 -I "node_modules" -r -F
-3. Win: treee -L 2 -I "node_modules" -r -F
+Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ---
 
-## 📦 Webpack Analyse
+## 🧩 约定式提交
 
-1. [Webpack 官方分析工具](https://webpack.github.io/analyse/)
-
-   ```bash
-      npm run analyze:build
-   ```
-
-2. 依赖分析
-
-   ```bash
-     1. npm run js-analyzer
-     2. "standard": "standard src/\*_/_",
-     3. "standard:fix": "standard --fix src/\*_/_",
-     4. rm -rf package-lock.json
-   ```
+1. [约定式提交](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+2. [语义化版本 2.0.0](https://semver.org/lang/zh-CN/)
 
 ---
 
-## 🚀 GitHub Proxy
-
-1. 首先确认自己 git 拉取代码的方式
-
-   ```bash
-     git remote -v
-   ```
-
-2. 设置代理
-
-   ```bash
-     git config --global https.proxy 127.0.0.1:10808
-     git config --global http.proxy 127.0.0.1:10808
-     git config --global http.proxy 'socks5://127.0.0.1:10808'
-     git config --global https.proxy 'socks5://127.0.0.1:10808'
-   ```
-
-3. 查看代理是否成功
-
-   ```bash
-     git config --get --global http.proxy
-   ```
-
-4. 查看 git 配置
-
-   ```bash
-     git config --global --list
-   ```
-
-5. 取消代理
-
-   ```bash
-     git config --global --unset http.proxy
-     git config --global --unset https.proxy
-   ```
 
 ## 🤝 Show your support
 
+If you like the project, give it a star ⭐️, it will be a great encouragement to me.
+
 ---
 
-## ⚙️ CI / 部署
-
-本项目在 CI/部署 环境中支持可选的 Sentry 集成（用于上传 release 与 source maps），且在未配置上传凭证时会自动跳过以避免构建警告。
-
-- 目的：在需要时将 release/source maps 上传到 Sentry；在本地或未配置 token 时跳过上传，避免泄露凭证或出现不必要警告。
-- 关键环境变量：
-   - `SENTRY_AUTH_TOKEN` — Sentry API token（CI secrets），用于 `sentry-webpack-plugin` 上传 artifacts。
-   - `SENTRY_ORG` — Sentry 组织 slug。
-   - `SENTRY_PROJECT` — Sentry 项目 slug。
-   - `SENTRY_DSN` — 前端运行时使用的 DSN（可在部署时注入至运行时代码）。
-   - `SENTRY_TRACES_SAMPLE_RATE` — 可选，transactions 采样率（例如 `0.2`）。
-
-为什么会出现警告
-- `sentry-webpack-plugin` 在没有 `authToken` 时会打印警告并跳过上传；本仓库的 `webpack/webpack.prod.js` 已修改为：仅当 `SENTRY_AUTH_TOKEN` 存在时才注册该插件，否则构建继续并输出简短提示。
-
-GitHub Actions 示例
-
-```yaml
-name: Build
-on: [push]
-jobs:
-   build:
-      runs-on: ubuntu-latest
-      steps:
-         - uses: actions/checkout@v4
-         - name: Use Node.js
-            uses: actions/setup-node@v4
-            with:
-               node-version: '18'
-         - name: Install
-            run: npm ci
-         - name: Build (production)
-            env:
-               SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-               SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-               SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-               SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-               SENTRY_TRACES_SAMPLE_RATE: 0.2
-            run: npm run build:production
-```
-
-Vercel / Netlify
-- 在项目的 Environment Variables / Build settings 中添加 `SENTRY_AUTH_TOKEN`、`SENTRY_ORG`、`SENTRY_PROJECT` 和 `SENTRY_DSN`，部署时这些变量会注入到构建与运行时环境。
-
-本地开发
-- 不要在本地把 `SENTRY_AUTH_TOKEN` 写入源码或提交到仓库。可在本地 `.env` 或 CI 的 secrets 中临时添加 `SENTRY_DSN` 用于运行时错误上报测试，但将 `SENTRY_AUTH_TOKEN` 保持为空以跳过上传步骤。
-
-如何创建 `SENTRY_AUTH_TOKEN`
-- 前往 https://sentry.io/settings/<ORG>/api/，创建一个具有 `project:releases` 与 `org:read` 权限的 token，并把它存入 CI 的 secrets。
-
-注意
-- `SENTRY_DSN`（运行时）与 `SENTRY_AUTH_TOKEN`（CI 上传）用途不同，请勿混淆；本项目的运行时代码会优先使用 `process.env.SENTRY_DSN`，构建时的插件仅在 `SENTRY_AUTH_TOKEN` 存在时运行。
-
-
-<!-- Give a ⭐️ if this project helped you! -->
-
-If you like the project, give it a star ⭐️, it will be a great encouragement to me.
 
 ## ⭐️ Star History
 
