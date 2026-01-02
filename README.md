@@ -14,7 +14,7 @@
 
 ## <span role="img" aria-label="rocket">🚀</span> Pro React Admin
 
-**Pro React Admin** 是一款基于 **React v19** 的高性能、企业级中后台前端解决方案。深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。具备双重架构设计，既是完整的企业级应用，也是可发布的组件库 @w.ui/wui-react。
+**Pro React Admin** 是一款基于 **React v19** 的高性能、企业级中后台前端解决方案。具备双重架构设计，既是完整的企业级应用，也是可发布的组件库 @w.ui/wui-react。 深度整合 **RBAC 动态权限**、**KeepAlive 缓存**、**多标签页**与 **AI 智能助手**。提供开箱即用的国际化、暗黑模式、Mock 数据与 E2E 测试体系，助力开发者快速构建稳健、安全的 SaaS 平台与数据可视化系统。
 
 ---
 
