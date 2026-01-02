@@ -8,7 +8,7 @@ const flattenTreeData = (node, parentId = null, level = 0) => {
     ...node,
     parentId,
     level,
-    childrenIds: node.children ? node.children.map((child) => child.id) : [],
+    childrenIds: node.children ? node.children.map((child) => child.id) : []
   }
 
   let result = [flatNode]
@@ -34,7 +34,7 @@ const OrgChart = ({
   expandIcon = '▼',
   collapseIcon = '▲',
   showExpandIcon = true,
-  customStyles = {},
+  customStyles = {}
 }) => {
   const [flatData, setFlatData] = useState([])
   const [hoveredNodeId, setHoveredNodeId] = useState(null)
@@ -157,7 +157,7 @@ const OrgChart = ({
         {/* 当前节点 */}
         <div className={styles.currentContainer}>
           <button
-            type="button"
+            type='button'
             className={` ${styles.currentBox} ${node.level === 0 ? styles.rootBox : ''} ${isHighlighted ? styles.highlightedParent : ''} ${nodeClassName || ''} ${node.level === 0 ? rootNodeClassName || '' : ''} ${animated ? styles.animated : ''} ${hasChildren ? styles.hasChildren : ''} `}
             style={customStyles.currentBox}
             aria-expanded={hasChildren ? isExpanded : undefined}
@@ -174,7 +174,7 @@ const OrgChart = ({
               )}
             </div>
           </button>
-          {hasChildren && isExpanded && <div className={`${styles.line} ${styles.downWithLine}`}></div>}
+          {hasChildren && isExpanded && <div className={`${styles.line} ${styles.downWithLine}`} />}
         </div>
 
         {/* 子节点容器 */}
@@ -184,9 +184,9 @@ const OrgChart = ({
               <div className={styles.childrenWrapper}>
                 {node.childrenIds.map((childId) => (
                   <div key={childId} className={styles.childWrapper}>
-                    <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`}></div>
+                    <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`} />
                     <button
-                      type="button"
+                      type='button'
                       className={` ${styles.childBox} ${isNodeHighlighted(childId) ? styles.highlightedChild : ''} ${animated ? styles.animated : ''} `}
                       style={customStyles.childBox}
                       onMouseEnter={() => highlightOnHover && setHoveredNodeId(childId)}
@@ -231,5 +231,5 @@ OrgChart.propTypes = {
   expandIcon: PropTypes.node,
   collapseIcon: PropTypes.node,
   showExpandIcon: PropTypes.bool,
-  customStyles: PropTypes.object,
+  customStyles: PropTypes.object
 }

@@ -55,17 +55,17 @@ export const VideoJS = (props) => {
 VideoJS.propTypes = {
   options: PropTypes.shape({
     autoplay: PropTypes.bool,
-    sources: PropTypes.array,
+    sources: PropTypes.array
   }),
-  onReady: PropTypes.func,
+  onReady: PropTypes.func
 }
 
 VideoJS.defaultProps = {
   options: {
     autoplay: false,
-    sources: [],
+    sources: []
   },
-  onReady: undefined,
+  onReady: undefined
 }
 
 export default VideoJS

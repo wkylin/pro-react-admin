@@ -27,12 +27,12 @@ const MyPrint = () => {
     documentTitle: 'AwesomeFileName',
     onAfterPrint: handleAfterPrint,
     onBeforePrint: handleBeforePrint,
-    onPrintError: handlePrintError,
+    onPrintError: handlePrintError
   })
   return (
     <FixTabPanel>
       <ComponentToPrint ref={componentRef} />
-      <Button type="primary" onClick={printFn} loading={loading}>
+      <Button type='primary' onClick={printFn} loading={loading}>
         Print
       </Button>
     </FixTabPanel>

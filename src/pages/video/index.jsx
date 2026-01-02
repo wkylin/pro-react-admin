@@ -20,7 +20,7 @@ const MyVideo = () => {
         duration: '本地资源',
         desc: '本地播放器（SmartVideoPlayer）',
         provider: 'html5',
-        src: trailerSource,
+        src: trailerSource
       },
       {
         id: 'm0-hls',
@@ -29,7 +29,7 @@ const MyVideo = () => {
         duration: '公开测试流',
         desc: '用于验证 HTML5 模式下的 HLS（优先原生 HLS，否则走 hls.js）；若源未配置 CORS，浏览器会拦截',
         provider: 'html5',
-        src: 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8',
+        src: 'https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
       },
       {
         id: 'm1',
@@ -38,7 +38,7 @@ const MyVideo = () => {
         duration: 'Trailer',
         desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
         provider: 'youtube',
-        youtubeId: 'xJyWbjATtIE',
+        youtubeId: 'xJyWbjATtIE'
       },
       {
         id: 'm2',
@@ -47,7 +47,7 @@ const MyVideo = () => {
         duration: 'Trailer',
         desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
         provider: 'youtube',
-        youtubeId: 'SAcVNQYY8v4',
+        youtubeId: 'SAcVNQYY8v4'
       },
       {
         id: 'm3',
@@ -56,7 +56,7 @@ const MyVideo = () => {
         duration: 'Trailer',
         desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
         provider: 'youtube',
-        youtubeId: 'afJIa41CiKY',
+        youtubeId: 'afJIa41CiKY'
       },
       {
         id: 'm4',
@@ -65,7 +65,7 @@ const MyVideo = () => {
         duration: 'Trailer',
         desc: '把官方预告片的 YouTube 视频 ID 填到 youtubeId',
         provider: 'youtube',
-        youtubeId: 'Gz4ze8oTYEw',
+        youtubeId: 'Gz4ze8oTYEw'
       },
       {
         id: 'm5',
@@ -75,8 +75,8 @@ const MyVideo = () => {
         desc: '演示 sourceUrl：embed 模式下“新窗口打开”会优先打开 sourceUrl（未传 externalUrl 时）',
         provider: 'embed',
         embedUrl: 'https://player.vimeo.com/video/76979800?autoplay=1&muted=1',
-        sourceUrl: 'https://vimeo.com/76979800',
-      },
+        sourceUrl: 'https://vimeo.com/76979800'
+      }
     ],
     []
   )
@@ -112,22 +112,22 @@ const MyVideo = () => {
       user: '影迷A',
       date: '2025-12-20',
       title: '节奏很舒服，氛围拉满',
-      content: '摄影和配乐非常加分，几段长镜头很有沉浸感。剧情不复杂但情绪很到位。',
+      content: '摄影和配乐非常加分，几段长镜头很有沉浸感。剧情不复杂但情绪很到位。'
     },
     {
       id: 'r2',
       user: '影迷B',
       date: '2025-12-19',
       title: '中段略拖，但结尾不错',
-      content: '人物动机交代得更细会更好，不过最后的收束很干净，整体观感在线。',
+      content: '人物动机交代得更细会更好，不过最后的收束很干净，整体观感在线。'
     },
     {
       id: 'r3',
       user: '影迷C',
       date: '2025-12-18',
       title: '适合周末放松看',
-      content: '不靠大起大落取胜，细节挺耐看。推荐开小音量慢慢看。',
-    },
+      content: '不靠大起大落取胜，细节挺耐看。推荐开小音量慢慢看。'
+    }
   ]
 
   return (
@@ -148,7 +148,7 @@ const MyVideo = () => {
               />
             </div>
 
-            <section className={styles.comments} aria-label="电影评论讨论区">
+            <section className={styles.comments} aria-label='电影评论讨论区'>
               <div className={styles.sectionHeader}>
                 <h3 className={styles.sectionTitle}>评论 · 讨论</h3>
                 <span className={styles.sectionMeta}>{reviews.length} 条</span>
@@ -169,7 +169,7 @@ const MyVideo = () => {
             </section>
           </div>
 
-          <aside className={`${styles.card} ${styles.sidebarCard}`} aria-label="电影列表">
+          <aside className={`${styles.card} ${styles.sidebarCard}`} aria-label='电影列表'>
             <header className={styles.sidebarHeader}>
               <h3 className={styles.sidebarTitle}>电影列表</h3>
               <span className={styles.sidebarMeta}>{movies.length} 部</span>

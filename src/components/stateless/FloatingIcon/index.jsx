@@ -33,8 +33,8 @@ const FloatingIcon = ({ children, initialX }) => {
         y,
         transition: {
           duration: 3,
-          ease: 'easeInOut',
-        },
+          ease: 'easeInOut'
+        }
       })
 
       if (isMounted.current && !cancelled) {
@@ -58,18 +58,18 @@ const FloatingIcon = ({ children, initialX }) => {
 
 FloatingIcon.propTypes = {
   children: PropTypes.node,
-  initialX: PropTypes.number,
+  initialX: PropTypes.number
 }
 
 export const SocialIcon = ({ icon: Icon, color, ...props }) => (
   <div className={`rounded-full p-3 ${color} shadow-lg transition-shadow hover:shadow-xl`}>
-    <Icon className="h-6 w-6 text-white" />
+    <Icon className='h-6 w-6 text-white' />
   </div>
 )
 
 SocialIcon.propTypes = {
   icon: PropTypes.elementType.isRequired,
-  color: PropTypes.string,
+  color: PropTypes.string
 }
 
 export default FloatingIcon

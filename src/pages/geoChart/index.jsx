@@ -23,14 +23,14 @@ const GeoChart = () => {
         map: geoName,
         label: {
           show: true,
-          color: '#fff',
+          color: '#fff'
         },
         layoutCenter: ['30%', '30%'],
         roam: true,
         zoom: 1,
         scaleLimit: {
           min: 1,
-          max: 5,
+          max: 5
         },
         tooltip: {
           show: true, // 是否显示提示框组件，包括提示框浮层和 axisPointer。
@@ -42,7 +42,7 @@ const GeoChart = () => {
           showDelay: 0, // 浮层显示的延迟，单位为 ms，默认没有延迟，也不建议设置。在 triggerOn 为 'mousemove' 时有效。
           textStyle: {
             color: '#000',
-            fontSize: 14,
+            fontSize: 14
           },
           padding: [8, 8],
           hideDelay: 10, // 浮层隐藏的延迟
@@ -50,7 +50,7 @@ const GeoChart = () => {
           borderColor: 'green', // 图形的描边颜色
           borderWidth: 2,
           alwaysShowContent: true,
-          transitionDuration: 1, // 提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
+          transitionDuration: 1 // 提示框浮层的移动动画过渡时间，单位是 s，设置为 0 的时候会紧跟着鼠标移动。
         },
         // regions: [{
         //   name: '上海市奉贤区海湾旅游区',
@@ -64,33 +64,33 @@ const GeoChart = () => {
           borderColor: 'rgba(6, 93, 255, .5)',
           borderWidth: 1,
           shadowColor: 'rgba(6, 93, 255, .5)',
-          shadowBlur: 20,
+          shadowBlur: 20
         },
         emphasis: {
           disabled: false, // 是否关闭高亮状态
           label: {
             fontWeight: 'bold',
             fontSize: '14px',
-            color: '#fff',
+            color: '#fff'
           },
           itemStyle: {
-            areaColor: 'rgba(58, 172, 226, .5)',
-          },
+            areaColor: 'rgba(58, 172, 226, .5)'
+          }
         },
         select: {
           itemStyle: {
-            areaColor: 'rgba(58, 172, 226, .5)',
-          },
-        },
+            areaColor: 'rgba(58, 172, 226, .5)'
+          }
+        }
       },
       series: [
         {
           name: geoName,
           type: 'scatter',
           coordinateSystem: 'geo',
-          data: [],
-        },
-      ],
+          data: []
+        }
+      ]
     }
 
     myChartRef.current?.clear()
@@ -104,7 +104,7 @@ const GeoChart = () => {
         const features = fengxianGeo.features.filter((item) => item.properties.name === newName)
         const newGeoJSON = {
           type: 'FeatureCollection',
-          features,
+          features
         }
         setName(newName)
         setGeoJson(newGeoJSON)
@@ -129,7 +129,7 @@ const GeoChart = () => {
 
   return (
     <FixTabPanel style={{ backgroundColor: 'rgba(0, 0, 0, .8)' }}>
-      <div id="geoChart" style={{ height: '500px', width: '100%', margin: '0 auto' }} />
+      <div id='geoChart' style={{ height: '500px', width: '100%', margin: '0 auto' }} />
     </FixTabPanel>
   )
 }

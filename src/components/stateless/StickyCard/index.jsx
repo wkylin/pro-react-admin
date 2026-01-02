@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const StickyCard = ({ cards, children }) => {
   return (
-    <section className="flex flex-col gap-4 pt-[30px] pb-[20px]">
+    <section className='flex flex-col gap-4 pt-[30px] pb-[20px]'>
       {cards.map((card, index) => {
         const animateSlide = index % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right'
         return (
@@ -15,8 +15,8 @@ const StickyCard = ({ cards, children }) => {
               animateSlide
             )}
           >
-            <div className="animate-wiggle h-[30vh]">
-              <p className="animate-hue-rotate hue-clip text-gradient text-2xl">Card Item</p>
+            <div className='animate-wiggle h-[30vh]'>
+              <p className='animate-hue-rotate hue-clip text-gradient text-2xl'>Card Item</p>
             </div>
           </div>
         )
@@ -27,7 +27,7 @@ const StickyCard = ({ cards, children }) => {
 
 StickyCard.propTypes = {
   cards: PropTypes.array.isRequired,
-  children: PropTypes.node,
+  children: PropTypes.node
 }
 
 export default StickyCard

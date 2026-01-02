@@ -29,7 +29,7 @@ const MermaidHooks = ({ chart, config }) => {
           theme: 'default',
           securityLevel: 'loose',
           fontFamily: 'monospace',
-          ...config,
+          ...config
         })
 
         // Attempt to render
@@ -59,19 +59,21 @@ const MermaidHooks = ({ chart, config }) => {
   }, [chart, config, mermaidId])
 
   return (
-    <div className="mermaid-wrapper" style={{ minHeight: 100, position: 'relative' }}>
+    <div className='mermaid-wrapper' style={{ minHeight: 100, position: 'relative' }}>
       {loading && !svg && (
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400">Loading...</div>
+        <div className='absolute inset-0 flex items-center justify-center text-gray-400'>Loading...</div>
       )}
 
-      {error ? (
-        <div className="rounded border border-red-200 bg-red-50 p-4 text-red-500">
-          <p className="font-bold">Syntax Error:</p>
-          <pre className="mt-2 overflow-auto text-xs">{error}</pre>
-        </div>
-      ) : (
-        <div className="mermaid-output" dangerouslySetInnerHTML={{ __html: svg }} />
-      )}
+      {error
+        ? (
+          <div className='rounded border border-red-200 bg-red-50 p-4 text-red-500'>
+            <p className='font-bold'>Syntax Error:</p>
+            <pre className='mt-2 overflow-auto text-xs'>{error}</pre>
+          </div>
+          )
+        : (
+          <div className='mermaid-output' dangerouslySetInnerHTML={{ __html: svg }} />
+          )}
     </div>
   )
 }

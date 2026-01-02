@@ -8,7 +8,7 @@ const defaultValue = {
   setActiveKey: () => {},
   panes: [],
   setPanes: () => {},
-  removeTab: () => {},
+  removeTab: () => {}
 }
 
 const initialPanes = [
@@ -18,8 +18,8 @@ const initialPanes = [
     key: '/',
     content: <Home />,
     closable: false,
-    path: '/',
-  },
+    path: '/'
+  }
 ]
 
 const ProTabContext = createContext(defaultValue)
@@ -61,7 +61,7 @@ const ProTabProvider = ({ children }) => {
       setActiveKey,
       panes,
       setPanes,
-      removeTab,
+      removeTab
     }),
     [activeKey, setActiveKey, panes, setPanes, removeTab]
   )
@@ -70,7 +70,7 @@ const ProTabProvider = ({ children }) => {
 }
 
 ProTabProvider.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.node
 }
 
 export { ProTabProvider, useProTabContext }

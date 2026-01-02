@@ -12,11 +12,11 @@ const CONFIG = {
   WITH_CREDENTIALS: true,
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 500,
-  DEFAULT_CONCURRENCY: 5,
+  DEFAULT_CONCURRENCY: 5
 }
 
 const DEFAULT_HEADERS = {
-  'Content-Type': 'application/json;charset=utf-8',
+  'Content-Type': 'application/json;charset=utf-8'
 }
 
 // ==================== 2. HTTP 状态码错误消息映射 ====================
@@ -31,7 +31,7 @@ const HTTP_ERROR_MESSAGES = {
   502: '网关错误',
   503: '服务不可用',
   504: '网关超时',
-  default: (status) => `请求失败 (${status})`,
+  default: (status) => `请求失败 (${status})`
 }
 
 const NETWORK_ERROR_MESSAGES = {
@@ -39,23 +39,23 @@ const NETWORK_ERROR_MESSAGES = {
   ETIMEDOUT: '连接超时',
   ENOTFOUND: '域名解析失败',
   ECONNREFUSED: '连接被拒绝',
-  default: '网络连接异常',
+  default: '网络连接异常'
 }
 
 // ==================== 3. 请求管理 ====================
 class RequestManager {
-  constructor() {
+  constructor () {
     this.pendingRequests = new Map()
   }
 
   // 4. 生成唯一请求标识
-  generateRequestKey(config) {
+  generateRequestKey (config) {
     const { method, url, params, data } = config
     return [method?.toUpperCase(), url, JSON.stringify(params || {}), JSON.stringify(data || {})].join('&')
   }
 
   // 5. 取消相同的进行中请求
-  cancelDuplicateRequest(config) {
+  cancelDuplicateRequest (config) {
     const requestKey = this.generateRequestKey(config)
 
     if (this.pendingRequests.has(requestKey)) {
@@ -71,14 +71,14 @@ class RequestManager {
   }
 
   // 6. 移除请求
-  removeRequest(requestKey) {
+  removeRequest (requestKey) {
     if (this.pendingRequests.has(requestKey)) {
       this.pendingRequests.delete(requestKey)
     }
   }
 
   // 7. 清空所有请求
-  clearAllRequests() {
+  clearAllRequests () {
     this.pendingRequests.forEach((controller) => {
       controller.abort()
     })
@@ -86,7 +86,7 @@ class RequestManager {
     logger.info('已清空所有待处理请求')
   }
 
-  getActiveCount() {
+  getActiveCount () {
     return this.pendingRequests.size
   }
 }
@@ -96,39 +96,39 @@ const requestManager = new RequestManager()
 // ==================== 7. 工具函数 ====================
 class RequestUtils {
   // 添加时间戳后缀（防缓存）
-  static addTimestampSuffix(params = {}) {
+  static addTimestampSuffix (params = {}) {
     return {
       ...params,
-      _: Date.now(),
+      _: Date.now()
     }
   }
 
   // 延迟函数
-  static delay(ms) {
+  static delay (ms) {
     return new Promise((resolve) => globalThis.setTimeout(resolve, ms))
   }
 
   // 判断是否为 FormData
-  static isFormData(data) {
+  static isFormData (data) {
     return typeof FormData !== 'undefined' && data instanceof FormData
   }
 
   // 判断是否为 Blob
-  static isBlob(data) {
+  static isBlob (data) {
     return typeof Blob !== 'undefined' && data instanceof Blob
   }
 
   // 获取错误消息
-  static getHttpErrorMessage(status) {
+  static getHttpErrorMessage (status) {
     return HTTP_ERROR_MESSAGES[status] || HTTP_ERROR_MESSAGES.default(status)
   }
 
-  static getNetworkErrorMessage(code) {
+  static getNetworkErrorMessage (code) {
     return NETWORK_ERROR_MESSAGES[code] || NETWORK_ERROR_MESSAGES.default
   }
 
   // 处理错误显示
-  static handleShowError(message, showError = true) {
+  static handleShowError (message, showError = true) {
     if (!showError) return
     try {
       showMessage.error(message)
@@ -138,7 +138,7 @@ class RequestUtils {
   }
 
   // 从响应头获取文件名
-  static getFileNameFromResponse(response) {
+  static getFileNameFromResponse (response) {
     const contentDisposition = response.headers['content-disposition']
     if (contentDisposition) {
       const match = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
@@ -150,7 +150,7 @@ class RequestUtils {
   }
 
   // 触发文件下载
-  static triggerDownload(blob, fileName) {
+  static triggerDownload (blob, fileName) {
     const link = document.createElement('a')
     const url = window.URL.createObjectURL(blob)
     link.href = url
@@ -167,30 +167,30 @@ let axiosInstance = axios.create({
   baseURL: CONFIG.BASE_URL,
   timeout: CONFIG.TIMEOUT,
   withCredentials: CONFIG.WITH_CREDENTIALS,
-  headers: { ...DEFAULT_HEADERS },
+  headers: { ...DEFAULT_HEADERS }
 })
 
 // 导出配置方法
-export function setAxiosInstance(instance) {
+export function setAxiosInstance (instance) {
   axiosInstance = instance
   logger.info('Axios 实例已更新')
 }
 
-export function setBaseURL(url) {
+export function setBaseURL (url) {
   CONFIG.BASE_URL = url
   axiosInstance.defaults.baseURL = url
   logger.info('BaseURL 已更新:', url)
 }
 
-export function setDefaultHeaders(headers) {
+export function setDefaultHeaders (headers) {
   axiosInstance.defaults.headers = {
     ...axiosInstance.defaults.headers,
-    ...headers,
+    ...headers
   }
   logger.info('默认请求头已更新:', headers)
 }
 
-export function setTimeout(timeout) {
+export function setTimeout (timeout) {
   CONFIG.TIMEOUT = timeout
   axiosInstance.defaults.timeout = timeout
   logger.info('请求超时时间已更新:', timeout)
@@ -274,7 +274,7 @@ axiosInstance.interceptors.request.use(
 
     logger.log(`发起请求: ${config.method?.toUpperCase()} ${config.url}`, {
       params: config.params,
-      data: RequestUtils.isFormData(config.data) ? '[FormData]' : config.data,
+      data: RequestUtils.isFormData(config.data) ? '[FormData]' : config.data
     })
 
     return config
@@ -287,7 +287,7 @@ axiosInstance.interceptors.request.use(
 )
 
 // 处理未授权
-function handleUnauthorized(message) {
+function handleUnauthorized (message) {
   // authService.logout() // 移除以避免循环依赖
   // 清理权限缓存与开发覆盖，避免跳转登录后仍沿用旧权限
   try {
@@ -430,7 +430,7 @@ axiosInstance.interceptors.response.use(
 
 // ==================== 11. 文件下载处理 ====================
 class DownloadHandler {
-  static async handleDownload(response, fileName) {
+  static async handleDownload (response, fileName) {
     try {
       const blob = response.data
 
@@ -457,7 +457,7 @@ class DownloadHandler {
 // ==================== 高级功能：并发控制与重试 ====================
 class RequestEnhancer {
   // 并发控制
-  static async runWithConcurrency(tasks, concurrency = CONFIG.DEFAULT_CONCURRENCY) {
+  static async runWithConcurrency (tasks, concurrency = CONFIG.DEFAULT_CONCURRENCY) {
     const results = []
     const executing = []
 
@@ -479,7 +479,7 @@ class RequestEnhancer {
   }
 
   // 重试机制
-  static async retry(fn, attempts = CONFIG.RETRY_ATTEMPTS, delay = CONFIG.RETRY_DELAY) {
+  static async retry (fn, attempts = CONFIG.RETRY_ATTEMPTS, delay = CONFIG.RETRY_DELAY) {
     let lastError
 
     for (let i = 0; i < attempts; i++) {
@@ -501,10 +501,10 @@ class RequestEnhancer {
   }
 
   // 超时控制
-  static withTimeout(promise, timeout = CONFIG.TIMEOUT) {
+  static withTimeout (promise, timeout = CONFIG.TIMEOUT) {
     return Promise.race([
       promise,
-      new Promise((_, reject) => globalThis.setTimeout(() => reject(new Error('请求超时')), timeout)),
+      new Promise((_, reject) => globalThis.setTimeout(() => reject(new Error('请求超时')), timeout))
     ])
   }
 }
@@ -532,12 +532,12 @@ const request = {
    * @param {object} params - 查询参数
    * @param {object} config - axios 配置
    */
-  get(url, params = {}, config = {}) {
+  get (url, params = {}, config = {}) {
     return axiosInstance.request({
       method: 'GET',
       url,
       params,
-      ...config,
+      ...config
     })
   },
 
@@ -547,12 +547,12 @@ const request = {
    * @param {object} data - 请求体数据
    * @param {object} config - axios 配置
    */
-  post(url, data = {}, config = {}) {
+  post (url, data = {}, config = {}) {
     return axiosInstance.request({
       method: 'POST',
       url,
       data,
-      ...config,
+      ...config
     })
   },
 
@@ -562,12 +562,12 @@ const request = {
    * @param {object} data - 请求体数据
    * @param {object} config - axios 配置
    */
-  put(url, data = {}, config = {}) {
+  put (url, data = {}, config = {}) {
     return axiosInstance.request({
       method: 'PUT',
       url,
       data,
-      ...config,
+      ...config
     })
   },
 
@@ -577,12 +577,12 @@ const request = {
    * @param {object} params - 查询参数
    * @param {object} config - axios 配置
    */
-  delete(url, params = {}, config = {}) {
+  delete (url, params = {}, config = {}) {
     return axiosInstance.request({
       method: 'DELETE',
       url,
       params,
-      ...config,
+      ...config
     })
   },
 
@@ -592,12 +592,12 @@ const request = {
    * @param {object} data - 请求体数据
    * @param {object} config - axios 配置
    */
-  patch(url, data = {}, config = {}) {
+  patch (url, data = {}, config = {}) {
     return axiosInstance.request({
       method: 'PATCH',
       url,
       data,
-      ...config,
+      ...config
     })
   },
 
@@ -609,16 +609,16 @@ const request = {
    * @param {object} data - 表单数据
    * @param {object} config - axios 配置
    */
-  form(url, data = {}, config = {}) {
+  form (url, data = {}, config = {}) {
     return axiosInstance.request({
       method: 'POST',
       url,
       data,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        ...(config.headers || {}),
+        ...(config.headers || {})
       },
-      ...config,
+      ...config
     })
   },
 
@@ -629,7 +629,7 @@ const request = {
    * @param {object} config - axios 配置
    * @param {function} config.onProgress - 上传进度回调
    */
-  upload(url, data, config = {}) {
+  upload (url, data, config = {}) {
     let formData = data
 
     // 如果传入的不是 FormData，则转换
@@ -648,7 +648,7 @@ const request = {
       data: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
-        ...(config.headers || {}),
+        ...(config.headers || {})
       },
       onUploadProgress: (progressEvent) => {
         if (onUploadProgress && progressEvent.total) {
@@ -656,11 +656,11 @@ const request = {
           onUploadProgress({
             percent,
             loaded: progressEvent.loaded,
-            total: progressEvent.total,
+            total: progressEvent.total
           })
         }
       },
-      ...config,
+      ...config
     })
   },
 
@@ -672,7 +672,7 @@ const request = {
    * @param {object} config - axios 配置
    * @param {function} config.onProgress - 下载进度回调
    */
-  async download(url, params, fileName, config) {
+  async download (url, params, fileName, config) {
     const safeConfig = config ?? {}
     const safeParams = params ?? {}
     const onDownloadProgress = safeConfig.onProgress || safeConfig.onDownloadProgress
@@ -689,11 +689,11 @@ const request = {
           onDownloadProgress({
             percent,
             loaded: progressEvent.loaded,
-            total: progressEvent.total,
+            total: progressEvent.total
           })
         }
       },
-      ...safeConfig,
+      ...safeConfig
     })
 
     return DownloadHandler.handleDownload(response, fileName)
@@ -707,13 +707,13 @@ const request = {
    * @param {object} params - 查询参数
    * @param {object} config - axios 配置
    */
-  custom(method, url, data = {}, params = {}, config = {}) {
+  custom (method, url, data = {}, params = {}, config = {}) {
     return axiosInstance.request({
       method: method.toUpperCase(),
       url,
       data,
       params,
-      ...config,
+      ...config
     })
   },
 
@@ -721,7 +721,7 @@ const request = {
    * 通用请求方法
    * @param {object} config - axios 配置
    */
-  request(config) {
+  request (config) {
     return axiosInstance.request(config)
   },
 
@@ -732,7 +732,7 @@ const request = {
    * @param {Array} requests - 请求数组（可以是函数、配置对象或参数数组）
    * @param {number} concurrency - 并发数
    */
-  parallel(requests = [], concurrency = CONFIG.DEFAULT_CONCURRENCY) {
+  parallel (requests = [], concurrency = CONFIG.DEFAULT_CONCURRENCY) {
     const tasks = requests.map((req) => {
       if (typeof req === 'function') {
         return req
@@ -754,7 +754,7 @@ const request = {
    * 串行请求
    * @param {Array} requests - 请求数组
    */
-  async series(requests = []) {
+  async series (requests = []) {
     const results = []
 
     for (const req of requests) {
@@ -788,14 +788,14 @@ const request = {
    * @param {number} attempts - 重试次数
    * @param {number} delay - 重试延迟（毫秒）
    */
-  retry(fn, attempts = CONFIG.RETRY_ATTEMPTS, delay = CONFIG.RETRY_DELAY) {
+  retry (fn, attempts = CONFIG.RETRY_ATTEMPTS, delay = CONFIG.RETRY_DELAY) {
     return RequestEnhancer.retry(fn, attempts, delay)
   },
 
   /**
    * 获取底层 axios 实例（用于高级定制）
    */
-  axios: () => axiosInstance,
+  axios: () => axiosInstance
 }
 
 // ==================== 导出 ====================

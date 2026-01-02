@@ -39,22 +39,22 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
               name: '科技股份有限公司第一公司',
               value: '2022年8月8号',
               id: '1-1-1',
-              level: 3,
+              level: 3
             },
             {
               name: '科技股份有限公司第二公司',
               value: '2023年6月6号',
               id: '1-1-2',
-              level: 3,
+              level: 3
             },
             {
               name: '科技股份有限公司第三公司',
               value: '2024年9月9号',
               id: '1-1-3',
-              level: 3,
-            },
+              level: 3
+            }
           ],
-          ratio: '85%',
+          ratio: '85%'
         },
         {
           name: '广东发展有限公司',
@@ -65,10 +65,10 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
               name: '广东发展有限公司分公司',
               value: '2024年5月1号',
               id: '1-2-1',
-              level: 3,
-            },
+              level: 3
+            }
           ],
-          ratio: '55%',
+          ratio: '55%'
         },
         {
           name: '科技发展股份有限公司',
@@ -79,16 +79,16 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
               name: '科技股份有限公司一',
               value: '2022年7月31号',
               id: '1-3-1',
-              level: 3,
+              level: 3
             },
             {
               name: '科技股份有限公司二',
               value: '2023年8月1号',
               id: '1-3-2',
-              level: 3,
-            },
+              level: 3
+            }
           ],
-          ratio: '35%',
+          ratio: '35%'
         },
         {
           name: '第四家公司',
@@ -99,10 +99,10 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
               name: '受让方第四分公司',
               value: '2021年8月20号',
               id: '1-4-1',
-              level: 3,
-            },
+              level: 3
+            }
           ],
-          ratio: '25%',
+          ratio: '25%'
         },
         {
           name: '第五家公司',
@@ -113,13 +113,13 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
               name: '受让方第五分公司',
               value: '2020年6月6号',
               id: '1-5-1',
-              level: 3,
-            },
+              level: 3
+            }
           ],
-          ratio: '15%',
-        },
-      ],
-    },
+          ratio: '15%'
+        }
+      ]
+    }
   ]
 
   /**
@@ -229,7 +229,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
           <div className={styles.contentWrapper} ref={contentWrapperRef} style={{ minWidth: 800 }}>
             <div className={styles.leftContent}>
               <div className={styles.levelTwo}>
-                <div className={styles.verticalConnector} style={{ height: leftLineHeight }}></div>
+                <div className={styles.verticalConnector} style={{ height: leftLineHeight }} />
                 <div className={styles.leftLine} ref={leftLineRef}>
                   {item.children && item.children.length > 0 && (
                     <>
@@ -249,7 +249,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                             style={{
                               background: mainBg,
                               border: `1px solid ${mainBorder}`,
-                              color: mainText,
+                              color: mainText
                             }}
                           >
                             {cItem.name}
@@ -274,7 +274,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                         style={{
                                           background: cardBg,
                                           color: cardText,
-                                          border: isDark ? '1px solid #444' : '1px solid #d2d2d2',
+                                          border: isDark ? '1px solid #444' : '1px solid #d2d2d2'
                                         }}
                                       >
                                         <div>
@@ -284,14 +284,14 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                         </div>
                                         <div>受让方：{tItem.name}</div>
                                       </div>
-                                      <div className={styles.infoConnector}></div>
+                                      <div className={styles.infoConnector} />
                                       <div
                                         className={
                                           cItem.children.length - 2 === tIndex
                                             ? styles.horizontalConnector
                                             : `${styles.horizontalConnector} ${styles.lastConnector}`
                                         }
-                                      ></div>
+                                      />
                                       <div className={styles.transferYear} style={{ color: cardText }}>
                                         {tItem.value}
                                       </div>
@@ -304,7 +304,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
                                 style={{
                                   background: mainBg,
                                   border: `1px solid ${mainBorder}`,
-                                  color: mainText,
+                                  color: mainText
                                 }}
                               >
                                 <div>现持有股权：</div>
@@ -321,9 +321,9 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
 
               {item.children && item.children.length > defaultDisplayCount && (
                 <div className={styles.expandButtonContainer}>
-                  <Button type="link" onClick={toggleExpand} className={styles.expandButton}>
+                  <Button type='link' onClick={toggleExpand} className={styles.expandButton}>
                     {expanded ? '收起部分公司' : '展开全部公司'}
-                    <i className={expanded ? 'anticon anticon-up' : 'anticon anticon-down'}></i>
+                    <i className={expanded ? 'anticon anticon-up' : 'anticon anticon-down'} />
                   </Button>
                 </div>
               )}

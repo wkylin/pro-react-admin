@@ -16,8 +16,8 @@ const orgData = {
             { id: 11, name: 'React 小组' },
             { id: 12, name: 'Vue 小组' },
             { id: 15, name: 'Angular 小组' },
-            { id: 16, name: '移动端小组' },
-          ],
+            { id: 16, name: '移动端小组' }
+          ]
         },
         {
           id: 6,
@@ -26,10 +26,10 @@ const orgData = {
             { id: 13, name: 'Java 小组' },
             { id: 14, name: 'Python 小组' },
             { id: 17, name: 'Go 小组' },
-            { id: 18, name: 'Node.js 小组' },
-          ],
-        },
-      ],
+            { id: 18, name: 'Node.js 小组' }
+          ]
+        }
+      ]
     },
     {
       id: 3,
@@ -38,8 +38,8 @@ const orgData = {
         { id: 7, name: '推广组' },
         { id: 8, name: '销售组' },
         { id: 25, name: '品牌组' },
-        { id: 26, name: '公关组' },
-      ],
+        { id: 26, name: '公关组' }
+      ]
     },
     {
       id: 4,
@@ -48,13 +48,13 @@ const orgData = {
         { id: 9, name: '招聘组' },
         { id: 10, name: '培训组' },
         { id: 27, name: '薪酬组' },
-        { id: 28, name: '员工关系组' },
-      ],
-    },
-  ],
+        { id: 28, name: '员工关系组' }
+      ]
+    }
+  ]
 }
 
-function OrgChartDemo() {
+function OrgChartDemo () {
   // 自定义样式
   const customStyles = {
     currentBox: {
@@ -62,20 +62,20 @@ function OrgChartDemo() {
     },
     childBox: {
       // 可以在这里覆盖默认样式
-    },
+    }
   }
 
   return (
-    <div className="chart-container">
+    <div className='chart-container'>
       <OrgChart
         data={orgData}
-        defaultExpanded={true}
-        highlightOnHover={true}
-        animated={true}
-        rootNodeClassName="custom-root-node"
-        expandIcon="▶"
-        collapseIcon="▼"
-        showExpandIcon={true}
+        defaultExpanded
+        highlightOnHover
+        animated
+        rootNodeClassName='custom-root-node'
+        expandIcon='▶'
+        collapseIcon='▼'
+        showExpandIcon
         customStyles={customStyles}
       />
     </div>

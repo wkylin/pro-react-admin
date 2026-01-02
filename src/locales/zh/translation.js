@@ -5,7 +5,7 @@ const zh = {
   nav: {
     home: '首页',
     dashboard: '多路由设置',
-    portfolio: '我的作品集',
+    portfolio: '我的作品集'
   },
   header: {
     search: '菜单搜索',
@@ -21,7 +21,7 @@ const zh = {
     userCenter: '个人中心',
     userSettings: '个人设置',
     contactMe: '联 系 我',
-    logout: '退出登录',
+    logout: '退出登录'
   },
   settingDrawer: {
     title: '偏好设置',
@@ -31,17 +31,17 @@ const zh = {
       navigationMode: '导航模式',
       contentWidth: '内容区域宽度',
       other: '其他设置',
-      visualEffects: '视觉特效',
+      visualEffects: '视觉特效'
     },
     navTheme: {
       light: '亮色菜单风格',
-      dark: '暗色菜单风格',
+      dark: '暗色菜单风格'
     },
     enableDarkMode: '开启暗黑模式',
     theme: {
       light: '浅色',
       dark: '深色',
-      system: '跟随系统',
+      system: '跟随系统'
     },
     colors: {
       dawnBlueDefault: '拂晓蓝（默认）',
@@ -51,13 +51,13 @@ const zh = {
       cyan: '明青',
       auroraGreen: '极光绿',
       geekBlue: 'Geek Blue',
-      purple: '酱紫',
+      purple: '酱紫'
     },
     customColor: '自定义颜色',
     layout: {
       side: '侧边菜单布局',
       top: '顶部菜单布局',
-      mix: '混合菜单布局',
+      mix: '混合菜单布局'
     },
     contentWidth: '内容区域宽度',
     contentWidthFixed: '固定',
@@ -67,12 +67,12 @@ const zh = {
       grayMode: '灰色模式',
       compactMode: '紧凑模式',
       fixedHeader: '固定 Header',
-      fixedSider: '固定侧边菜单',
+      fixedSider: '固定侧边菜单'
     },
     effects: {
       pointerFollow: '指针跟随',
-      pointerTrail: '指针轨迹',
-    },
+      pointerTrail: '指针轨迹'
+    }
   },
   menu: {
     motion: '动效',
@@ -116,7 +116,7 @@ const zh = {
     vite: 'Vite',
 
     error: '错误',
-    errorBoundary: '错误边界',
+    errorBoundary: '错误边界'
   },
   svp: {
     ariaPlaybackSettings: '播放设置',
@@ -195,8 +195,8 @@ const zh = {
     videoNetworkError: '网络错误导致视频加载失败',
     videoDecodeError: '视频解码失败（格式/编码不兼容）',
     videoSourceNotSupported: '视频源不可用（404/跨域/类型不支持）',
-    videoLoadFailed: '视频加载失败',
-  },
+    videoLoadFailed: '视频加载失败'
+  }
 }
 
 export default zh

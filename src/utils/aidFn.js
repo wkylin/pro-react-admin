@@ -62,7 +62,7 @@ export const getImgsUrl = (html) => {
 export const customizeTimer = {
   intervalTimer: null,
   timeoutTimer: null,
-  setTimeout(cb, interval) {
+  setTimeout (cb, interval) {
     const { now } = Date
     const stime = now()
     let etime = stime
@@ -77,10 +77,10 @@ export const customizeTimer = {
     this.timeoutTimer = requestAnimationFrame(loop)
     return this.timeoutTimer
   },
-  clearTimeout() {
+  clearTimeout () {
     cancelAnimationFrame(this.timeoutTimer)
   },
-  setInterval(cb, interval) {
+  setInterval (cb, interval) {
     const { now } = Date
     let stime = now()
     let etime = stime
@@ -96,9 +96,9 @@ export const customizeTimer = {
     this.intervalTimer = requestAnimationFrame(loop)
     return this.intervalTimer
   },
-  clearInterval() {
+  clearInterval () {
     cancelAnimationFrame(this.intervalTimer)
-  },
+  }
 }
 
 export const isDecimal = (value) => {
@@ -187,7 +187,7 @@ export const formatRomanNumeral = (num) => {
     { value: 9, numeral: 'IX' },
     { value: 5, numeral: 'V' },
     { value: 4, numeral: 'IV' },
-    { value: 1, numeral: 'I' },
+    { value: 1, numeral: 'I' }
   ]
   let result = ''
   for (const { value, numeral } of romanMap) {
@@ -327,13 +327,13 @@ export const oneApiChat = (chatList, token, signal) =>
     signal,
     headers: {
       Authorization: token,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       model: 'gpt-4.1',
       messages: chatList,
-      stream: true,
-    }),
+      stream: true
+    })
   })
 
 export const oneApiImage = (chatList, token, signal) =>
@@ -342,15 +342,15 @@ export const oneApiImage = (chatList, token, signal) =>
     signal,
     headers: {
       Authorization: token,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       model: 'dall-e-3',
       prompt: chatList[0].content,
       n: 1,
       size: '1792x1024',
-      response_format: 'url',
-    }),
+      response_format: 'url'
+    })
   })
 export const getCurrentDate = () => {
   const date = new Date()
@@ -377,7 +377,7 @@ export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
   try {
     const ele = eleHtml ?? document.getElementById('image-wrapper')
     const canvas = await html2canvas(ele, {
-      useCORS: true,
+      useCORS: true
     })
     const imgUrl = canvas.toDataURL('image/png')
     const tempLink = document.createElement('a')
@@ -539,13 +539,13 @@ export const clearGeneratedSet = () => {
  * @param {boolean|AddEventListenerOptions} [options]
  * @returns {() => void} off
  */
-export function on(target, type, listener, options) {
+export function on (target, type, listener, options) {
   target.addEventListener(type, listener, options)
   return () => target.removeEventListener(type, listener, options)
 }
 
 // 可选：批量绑定
-export function onMany(items) {
+export function onMany (items) {
   const offs = items.map(({ target, type, listener, options }) => {
     target.addEventListener(type, listener, options)
     return () => target.removeEventListener(type, listener, options)

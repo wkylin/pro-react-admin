@@ -6,7 +6,7 @@ import en from '@/locales/en/translation.js'
 
 export const SVP_UI_LANGUAGE_STORAGE_KEY = 'svpUiLanguage'
 
-function normalizeLang(lang) {
+function normalizeLang (lang) {
   const v = (lang || '').toString().toLowerCase()
   let result = null
   if (v.startsWith('zh')) {
@@ -17,7 +17,7 @@ function normalizeLang(lang) {
   return result
 }
 
-export function getStoredSvpUiLanguage() {
+export function getStoredSvpUiLanguage () {
   try {
     if (typeof window === 'undefined') return null
     const raw = window.localStorage?.getItem?.(SVP_UI_LANGUAGE_STORAGE_KEY)
@@ -28,7 +28,7 @@ export function getStoredSvpUiLanguage() {
   }
 }
 
-export function setStoredSvpUiLanguage(lang) {
+export function setStoredSvpUiLanguage (lang) {
   const normalized = normalizeLang(lang)
   if (!normalized) return
   try {
@@ -39,7 +39,7 @@ export function setStoredSvpUiLanguage(lang) {
   }
 }
 
-export function createSvpI18n(initialLanguage = 'zh') {
+export function createSvpI18n (initialLanguage = 'zh') {
   const instance = createInstance()
 
   instance.use(initReactI18next).init({
@@ -48,11 +48,11 @@ export function createSvpI18n(initialLanguage = 'zh') {
     supportedLngs: ['zh', 'en'],
     resources: {
       zh: { translation: { svp: zh?.svp || {} } },
-      en: { translation: { svp: en?.svp || {} } },
+      en: { translation: { svp: en?.svp || {} } }
     },
     interpolation: { escapeValue: false },
     react: { useSuspense: false },
-    initImmediate: false,
+    initImmediate: false
   })
 
   return instance

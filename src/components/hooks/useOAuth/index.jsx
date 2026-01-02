@@ -1,7 +1,7 @@
 // OAuth Hook
 import { message } from 'antd'
 
-export function useOAuth() {
+export function useOAuth () {
   const loginWithGitHub = () => {
     try {
       window.location.href = '/api/auth/github'
@@ -20,6 +20,6 @@ export function useOAuth() {
 
   return {
     loginWithGitHub,
-    loginWithGoogle,
+    loginWithGoogle
   }
 }

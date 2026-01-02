@@ -21,10 +21,10 @@ const AnimatedBackground = ({ children, defaultValue, onValueChange, className, 
     const interactionProps = enableHover
       ? {
           onMouseEnter: () => handleSetActiveId(id),
-          onMouseLeave: () => handleSetActiveId(null),
+          onMouseLeave: () => handleSetActiveId(null)
         }
       : {
-          onClick: () => handleSetActiveId(id),
+          onClick: () => handleSetActiveId(id)
         }
 
     return cloneElement(
@@ -33,7 +33,7 @@ const AnimatedBackground = ({ children, defaultValue, onValueChange, className, 
         key: index,
         className: clsx('relative inline-flex', child.props.className),
         'data-checked': activeId === id ? 'true' : 'false',
-        ...interactionProps,
+        ...interactionProps
       },
       <>
         <AnimatePresence initial={false}>
@@ -44,15 +44,15 @@ const AnimatedBackground = ({ children, defaultValue, onValueChange, className, 
               transition={transition}
               initial={{ opacity: defaultValue ? 1 : 0 }}
               animate={{
-                opacity: 1,
+                opacity: 1
               }}
               exit={{
-                opacity: 0,
+                opacity: 0
               }}
             />
           )}
         </AnimatePresence>
-        <div className="z-10">{child.props.children}</div>
+        <div className='z-10'>{child.props.children}</div>
       </>
     )
   })

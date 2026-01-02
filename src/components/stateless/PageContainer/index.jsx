@@ -16,7 +16,7 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
           backgroundColor: token.colorBgContainer,
           display: 'flex',
           flexDirection: 'column',
-          ...style,
+          ...style
         }}
       >
         {title && (
@@ -27,18 +27,18 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
               fontSize: '16px',
               fontWeight: 600,
               color: token.colorTextHeading,
-              flexShrink: 0,
+              flexShrink: 0
             }}
           >
             {title}
           </div>
         )}
         <div
-          className="page-container-content"
+          className='page-container-content'
           style={{
             flex: 1,
             position: 'relative',
-            padding: '24px',
+            padding: '24px'
           }}
         >
           {children}
@@ -54,7 +54,7 @@ PageContainer.propTypes = {
   title: PropTypes.node,
   footer: PropTypes.node,
   className: PropTypes.string,
-  style: PropTypes.object,
+  style: PropTypes.object
 }
 
 export default PageContainer

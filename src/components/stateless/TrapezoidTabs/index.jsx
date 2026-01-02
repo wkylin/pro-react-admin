@@ -18,7 +18,7 @@ const TrapezoidTabs = ({ tabs = [{ name: 'tab', code: 'tab' }], onTabChange, def
     '--trapezoid-active-text': token.colorTextLightSolid,
     '--trapezoid-hover-bg': token.colorFillTertiary,
     '--trapezoid-line-color': token.colorSplit,
-    '--trapezoid-shadow-color': token.colorTextTertiary,
+    '--trapezoid-shadow-color': token.colorTextTertiary
   }
 
   return (
@@ -29,7 +29,7 @@ const TrapezoidTabs = ({ tabs = [{ name: 'tab', code: 'tab' }], onTabChange, def
             key={tab.code}
             className={`${styles.tabItem} ${activeTab === tab.code ? styles.active : ''}`}
             style={{
-              zIndex: activeTab === tab.code ? 100 : tabs.length - index,
+              zIndex: activeTab === tab.code ? 100 : tabs.length - index
             }}
             onClick={() => handleTabClick(tab.code)}
           >
