@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Select, Alert, Radio } from 'antd'
+import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Alert } from 'antd'
 import { useStore } from '@/store'
 import { usePermission } from '@app-hooks/usePermission'
 import PermissionGuard from '@/components/auth/PermissionGuard'
 import AuthButton from '@/components/auth/AuthButton'
 import { permissionService } from '@src/service/permissionService'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { useProThemeContext } from '@/theme/hooks'
+
 const PermissionExample = () => {
   const screens = useStore((s) => s.screens)
-  const { themeSettings, updateSettings } = useProThemeContext()
   const {
     permissions,
     roles,
@@ -58,16 +57,6 @@ const PermissionExample = () => {
     message.info(`开发强制切换已${checked ? '启用' : '禁用'}`)
   }
 
-  const handleCompactModeChange = (checked: boolean) => {
-    updateSettings({ compactAlgorithm: checked })
-    message.success(`${checked ? '开启' : '关闭'}紧凑模式`)
-  }
-
-  const handlePrimaryColorChange = (color: string) => {
-    updateSettings({ colorPrimary: color })
-    message.success('主题色已更新')
-  }
-
   if (loading) {
     return <div>加载权限中...</div>
   }
@@ -85,69 +74,10 @@ const PermissionExample = () => {
             >
               权限系统示例
             </h1>
-            <p style={{ color: 'rgba(0, 0, 0, 0.65)', marginBottom: '16px' }}>
-              系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。
-            </p>
-          </Col>
-          <Col xs={24} lg={6}>
-            <Card title="主题设置" size="small">
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '100%',
-                  gap: '16px',
-                }}
-              >
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{ marginBottom: 4 }}>主题模式</div>
-                  <Radio.Group
-                    value={themeSettings.themeMode}
-                    onChange={(e) => {
-                      const val = e.target.value as 'light' | 'dark' | 'system'
-                      updateSettings({ themeMode: val })
-                      message.success(`已切换到${val === 'dark' ? '暗色' : val === 'light' ? '亮色' : '跟随系统'}主题`)
-                    }}
-                    optionType="button"
-                    buttonStyle="solid"
-                  >
-                    <Radio.Button value="light">亮色</Radio.Button>
-                    <Radio.Button value="system">跟随系统</Radio.Button>
-                    <Radio.Button value="dark">暗色</Radio.Button>
-                  </Radio.Group>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span>紧凑模式</span>
-                  <Switch checked={themeSettings.compactAlgorithm} onChange={handleCompactModeChange} />
-                </div>
-                <div>
-                  <span style={{ marginRight: '8px' }}>主题色</span>
-                  <Select
-                    value={themeSettings.colorPrimary}
-                    onChange={handlePrimaryColorChange}
-                    style={{ width: '120px' }}
-                    size="small"
-                  >
-                    <Select.Option value="#1677ff">蓝色</Select.Option>
-                    <Select.Option value="#52c41a">绿色</Select.Option>
-                    <Select.Option value="#faad14">橙色</Select.Option>
-                    <Select.Option value="#f5222d">红色</Select.Option>
-                    <Select.Option value="#722ed1">紫色</Select.Option>
-                  </Select>
-                </div>
-              </div>
-            </Card>
+            <p style={{ marginBottom: '16px' }}>系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。</p>
           </Col>
         </Row>
-
         <Divider />
-
         {/* 登录时提示：已使用登录账户权限，示例切换已禁用 */}
         {(localStorage.getItem('token') ||
           localStorage.getItem('github_token') ||
