@@ -1,25 +1,15 @@
-import React, { useEffect, useRef, useCallback } from 'react'
-import * as echarts from 'echarts'
-import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import React, { useMemo, useRef } from 'react'
+import EChart from '@stateless/EChart'
 import PropTypes from 'prop-types'
+import useBigScreenChartsReinit from '@/components/hooks/useBigScreenChartsReinit'
 
 const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
-  const chartRef = useRef(null)
-  const myChartRef = useRef(null)
   const innerColors = ['#3B70FD', '#0EC374', '#F57A43']
   const outerColors = ['#6A93FF', '#98B5FF', '#2CCD97', '#2BE79E', '#95FBB1', '#FF9440', '#FFB860']
 
-  // 处理窗口大小变化
-  const handleResize = useCallback(() => {
-    if (myChartRef.current) {
-      myChartRef.current.resize()
-    }
-  }, [])
+  const chartHandleRef = useRef(null)
 
-  // 更新图表配置
-  const updateChart = useCallback(() => {
-    if (!myChartRef.current) return
-
+  const option = useMemo(() => {
     const defaultOption = {
       tooltip: {
         show: false,
@@ -121,53 +111,12 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
         }
       }),
     }
-
-    normalizeEChartsOption(defaultOption)
-    myChartRef.current.setOption(defaultOption)
+    return defaultOption
   }, [eOptions, innerColors, outerColors])
 
-  // 初始化图表
-  const initChart = useCallback(() => {
-    if (!chartRef.current) return
+  useBigScreenChartsReinit(chartHandleRef)
 
-    myChartRef.current = echarts.init(chartRef.current)
-    updateChart()
-  }, [updateChart])
-
-  // 重新初始化图表
-  const reinitChart = useCallback(() => {
-    if (myChartRef.current) {
-      myChartRef.current.dispose()
-    }
-    initChart()
-  }, [initChart])
-
-  // 初始化和事件监听
-  useEffect(() => {
-    window.addEventListener('resize', handleResize)
-    initChart()
-
-    // 监听 BigScreen 页面重新初始化事件
-    const handleReinit = () => {
-      reinitChart()
-    }
-    window.addEventListener('bigscreen-charts-reinit', handleReinit)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('bigscreen-charts-reinit', handleReinit)
-      if (myChartRef.current) {
-        myChartRef.current.dispose()
-      }
-    }
-  }, [handleResize, initChart, reinitChart])
-
-  // 监听 eOptions 变化
-  useEffect(() => {
-    reinitChart()
-  }, [eOptions, reinitChart])
-
-  return <div ref={chartRef} style={{ height, width: '100%' }} />
+  return <EChart ref={chartHandleRef} option={option} notMerge style={{ height, width: '100%' }} />
 }
 
 PieNestChart.propTypes = {

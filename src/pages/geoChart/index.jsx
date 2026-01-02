@@ -1,24 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef, useCallback, useMemo } from 'react'
 import * as echarts from 'echarts'
 import FixTabPanel from '@stateless/FixTabPanel'
+import EChart from '@stateless/EChart'
 import fengxianGeo from './geo/fengxian.json'
-import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
 
 const GeoChart = () => {
-  const myChartRef = useRef(null)
+  const chartInstanceRef = useRef(null)
+  const zrClickHandlerRef = useRef(null)
 
   const [geoJson, setGeoJson] = useState(fengxianGeo)
   const [name, setName] = useState('奉贤')
   const [region, setRegion] = useState('310120')
 
-  useEffect(() => {}, [])
-
-  const initMap = (geoName, geoJSON) => {
-    const chartDom = document.getElementById('geoChart')
-    myChartRef.current = echarts.init(chartDom)
-    echarts.registerMap(geoName, geoJSON)
-
-    const option = {
+  const buildOption = useCallback((geoName) => {
+    const next = {
       tooltip: {},
       geo: {
         map: geoName,
@@ -93,45 +88,62 @@ const GeoChart = () => {
         },
       ],
     }
+    return next
+  }, [])
 
-    myChartRef.current?.clear()
-    myChartRef.current?.off('click')
-    myChartRef.current?.on('click', (params) => {
-      if (params.componentType === 'series') {
-        console.log('params', params)
-      }
-      if (params.componentType === 'geo') {
-        const newName = params.name
-        const features = fengxianGeo.features.filter((item) => item.properties.name === newName)
-        const newGeoJSON = {
-          type: 'FeatureCollection',
-          features,
-        }
-        setName(newName)
-        setGeoJson(newGeoJSON)
-        setRegion(features[0].id)
-      }
-    })
-    myChartRef.current?.getZr().on('click', (event) => {
-      // 没有 target 意味着鼠标/指针不在任何一个图形元素上，它是从“空白处”触发的。
-      if (!event.target) {
-        // 点击在了空白处，做些什么。
+  const handleChartInit = useCallback((chart) => {
+    chartInstanceRef.current = chart
+
+    const zr = chart.getZr?.()
+    if (!zr) return
+
+    if (zrClickHandlerRef.current) {
+      zr.off('click', zrClickHandlerRef.current)
+    }
+
+    const handler = (event) => {
+      if (!event?.target) {
         setName('奉贤')
         setGeoJson(fengxianGeo)
         setRegion('310120')
       }
-    })
-    normalizeEChartsOption(option)
-    myChartRef.current?.setOption(option)
-  }
+    }
+    zrClickHandlerRef.current = handler
+    zr.on('click', handler)
+  }, [])
 
-  useEffect(() => {
-    initMap(name, geoJson)
-  }, [region])
+  const handleChartClick = useCallback((params) => {
+    if (params?.componentType === 'series') {
+      console.log('params', params)
+    }
+    if (params?.componentType === 'geo') {
+      const newName = params.name
+      const features = fengxianGeo.features.filter((item) => item.properties.name === newName)
+      if (!features?.length) return
+      const newGeoJSON = {
+        type: 'FeatureCollection',
+        features,
+      }
+      setName(newName)
+      setGeoJson(newGeoJSON)
+      setRegion(features[0].id)
+    }
+  }, [])
+
+  const option = useMemo(() => {
+    echarts.registerMap(name, geoJson)
+    return buildOption(name)
+  }, [name, geoJson, buildOption, region])
 
   return (
     <FixTabPanel style={{ backgroundColor: 'rgba(0, 0, 0, .8)' }}>
-      <div id="geoChart" style={{ height: '500px', width: '100%', margin: '0 auto' }} />
+      <EChart
+        option={option}
+        onInit={handleChartInit}
+        onEvents={{ click: handleChartClick }}
+        notMerge
+        style={{ height: '500px', width: '100%', margin: '0 auto' }}
+      />
     </FixTabPanel>
   )
 }

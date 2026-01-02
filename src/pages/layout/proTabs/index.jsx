@@ -22,7 +22,6 @@ const ProTabs = (props) => {
   const { t } = useTranslation()
   const { panesItem, tabActiveKey } = props
   const { pathname, search } = useLocation()
-  const fullPath = pathname + search
 
   const {
     token: { colorBgContainer },
@@ -179,7 +178,7 @@ const ProTabs = (props) => {
       items={panes.map((pane) => ({
         label: (
           <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-            {pane.key === fullPath && pane.key !== '/404' && (
+            {pane.key === activeKey && pane.key !== '/404' && (
               <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
             )}
             {pane.i18nKey ? t(pane.i18nKey) : pane.title}
@@ -191,9 +190,9 @@ const ProTabs = (props) => {
         children: (
           <ErrorBoundary onReset={fixError} navigate={redirectTo}>
             <div className="layout-tabpanel">
-              <KeepAlive id={pane.key} active={pane.key === fullPath} persistOnUnmount={pane.key === '/'}>
+              <KeepAlive id={pane.key} active={pane.key === activeKey} persistOnUnmount={pane.key === '/'}>
                 <Suspense fallback={<Loading />}>
-                  {isReload && pane.key === fullPath && pane.key !== '/404' ? (
+                  {isReload && pane.key === activeKey && pane.key !== '/404' ? (
                     <Loading tip="刷新中..." />
                   ) : (
                     <>{pane.content}</>

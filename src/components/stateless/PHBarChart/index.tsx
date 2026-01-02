@@ -1,13 +1,12 @@
 'use client'
 
-import React, { useRef, useEffect, useCallback } from 'react'
-import * as echarts from 'echarts'
+import React, { useRef, useEffect, useCallback, useMemo } from 'react'
+import type { EChartsOption } from 'echarts'
 import { Card, Row, Col, Typography, Space } from 'antd'
-import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import EChart, { type EChartHandle } from '@stateless/EChart'
 const { Title, Text } = Typography
 const PHBarChart: React.FC = () => {
-  const chartRef = useRef<HTMLDivElement>(null)
-  const chartInstance = useRef<echarts.ECharts | null>(null)
+  const chartHandleRef = useRef<EChartHandle>(null)
   // 颜色计算函数 - 增强NaN保护
   const getPHColor = useCallback((ph: number | string): string => {
     // 确保ph是数字类型
@@ -47,31 +46,18 @@ const PHBarChart: React.FC = () => {
     if (phValue < 11) return '弱碱性'
     return '强碱性'
   }, [])
-  // 初始化图表
-  useEffect(() => {
-    if (!chartRef.current) return
-    // 销毁已存在的图表实例
-    if (chartInstance.current) {
-      chartInstance.current.dispose()
-    }
-    chartInstance.current = echarts.init(chartRef.current)
-    // 创建系列数据
+  const option = useMemo<EChartsOption>(() => {
     const series: any[] = []
     const categories = ['pH范围1', 'pH范围2', 'pH范围3']
-    // 每个色块的高度，使总高度为14
-    const blockHeight = 14 / 15 // 15个色块（pH0-14），总高度为14
+    const blockHeight = 14 / 15
 
-    // 为每个pH值创建三个系列（每个范围一个）
     for (let ph = 0; ph <= 14; ph++) {
-      // 为pH范围1创建系列
       series.push({
         name: `pH ${ph}-范围1`,
         type: 'bar',
         stack: '范围1',
         data: [blockHeight, 0, 0],
-        itemStyle: {
-          color: getPHColor(ph),
-        },
+        itemStyle: { color: getPHColor(ph) },
         label: {
           show: true,
           position: 'inside',
@@ -87,15 +73,12 @@ const PHBarChart: React.FC = () => {
           },
         },
       })
-      // 为pH范围2创建系列
       series.push({
         name: `pH ${ph}-范围2`,
         type: 'bar',
         stack: '范围2',
         data: [0, blockHeight, 0],
-        itemStyle: {
-          color: getPHColor(ph),
-        },
+        itemStyle: { color: getPHColor(ph) },
         label: {
           show: true,
           position: 'inside',
@@ -111,15 +94,12 @@ const PHBarChart: React.FC = () => {
           },
         },
       })
-      // 为pH范围3创建系列
       series.push({
         name: `pH ${ph}-范围3`,
         type: 'bar',
         stack: '范围3',
         data: [0, 0, blockHeight],
-        itemStyle: {
-          color: getPHColor(ph),
-        },
+        itemStyle: { color: getPHColor(ph) },
         label: {
           show: true,
           position: 'inside',
@@ -136,8 +116,7 @@ const PHBarChart: React.FC = () => {
         },
       })
     }
-    // 添加水平指示线系列
-    // 中性点指示线 (pH=7)
+
     series.push({
       name: '中性点指示线',
       type: 'line',
@@ -164,7 +143,7 @@ const PHBarChart: React.FC = () => {
       },
       data: [0, 0, 0],
     })
-    // 弱酸性指示线 (pH=3.5)
+
     series.push({
       name: '弱酸性指示线',
       type: 'line',
@@ -191,7 +170,7 @@ const PHBarChart: React.FC = () => {
       },
       data: [0, 0, 0],
     })
-    // 弱碱性指示线 (pH=10.5)
+
     series.push({
       name: '弱碱性指示线',
       type: 'line',
@@ -218,8 +197,8 @@ const PHBarChart: React.FC = () => {
       },
       data: [0, 0, 0],
     })
-    // 配置图表选项
-    const option: echarts.EChartsOption = {
+
+    const option: EChartsOption = {
       title: {
         text: '三pH范围堆叠柱状图（带水平指示线）',
         left: 'center',
@@ -328,38 +307,26 @@ const PHBarChart: React.FC = () => {
       },
       series: series,
     }
-    // 应用配置
-    normalizeEChartsOption(option)
-    chartInstance.current.setOption(option)
-    // 响应式调整
-    const handleResize = () => {
-      if (chartInstance.current) {
-        chartInstance.current.resize()
-      }
-    }
+
+    return option
+  }, [getPHColor, getPHType])
+
+  useEffect(() => {
+    const handleResize = () => chartHandleRef.current?.resize()
     window.addEventListener('resize', handleResize)
 
-    // 监听页面激活事件
     const handleActivate = () => {
-      if (chartInstance.current) {
-        // 延迟执行，确保DOM已经完全渲染
-        setTimeout(() => {
-          chartInstance.current?.resize()
-        }, 100)
-      }
+      setTimeout(() => {
+        chartHandleRef.current?.resize()
+      }, 100)
     }
     window.addEventListener('phbar-activate', handleActivate)
 
-    // 清理函数
     return () => {
       window.removeEventListener('resize', handleResize)
       window.removeEventListener('phbar-activate', handleActivate)
-      if (chartInstance.current) {
-        chartInstance.current.dispose()
-        chartInstance.current = null
-      }
     }
-  }, [getPHColor, getPHType])
+  }, [])
   // 创建颜色参考条
   const renderColorScale = useCallback(() => {
     const blocks = []
@@ -389,13 +356,11 @@ const PHBarChart: React.FC = () => {
   return (
     <Card title="pH值堆叠柱状图（0-14）">
       {/* 图表容器 */}
-      <div
-        ref={chartRef}
-        style={{
-          width: '100%',
-          height: '600px',
-          marginBottom: '20px',
-        }}
+      <EChart
+        ref={chartHandleRef}
+        option={option}
+        notMerge
+        style={{ width: '100%', height: '600px', marginBottom: '20px' }}
       />
       {/* pH范围图例 */}
       <Row justify="center" style={{ marginBottom: '20px' }}>

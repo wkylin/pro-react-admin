@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useCallback } from 'react'
-import * as echarts from 'echarts'
-import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import React, { useMemo, useRef, useCallback } from 'react'
+import EChart from '@stateless/EChart'
 import PropTypes from 'prop-types'
+import useBigScreenChartsReinit from '@/components/hooks/useBigScreenChartsReinit'
 
 const DonutChart = ({ height = '100%', eOptions }) => {
-  const chartRef = useRef(null)
   const chartInstance = useRef(null)
+  const chartHandleRef = useRef(null)
 
   const colors = [
     ['#2878FF', '#73B9FF'],
@@ -33,25 +33,11 @@ const DonutChart = ({ height = '100%', eOptions }) => {
     ['#F8C106', '#FFEAA4'],
   ]
 
-  // 处理窗口大小变化
-  const handleResize = () => {
-    if (chartInstance.current) {
-      chartInstance.current.resize()
-    }
-  }
+  const handleChartInit = useCallback((chart) => {
+    chartInstance.current = chart
+  }, [])
 
-  // 初始化图表
-  const initChart = () => {
-    if (!chartRef.current) return
-
-    // 销毁旧实例
-    if (chartInstance.current) {
-      chartInstance.current.dispose()
-    }
-
-    // 创建新实例
-    chartInstance.current = echarts.init(chartRef.current)
-
+  const option = useMemo(() => {
     const data = eOptions?.data?.map((item, index) => ({
       ...item,
       tooltip: {
@@ -152,8 +138,12 @@ const DonutChart = ({ height = '100%', eOptions }) => {
         },
       },
       labelLayout: (params) => {
-        const isLeft = params.labelRect.x < chartInstance.current.getWidth() / 2
+        const width = chartInstance.current?.getWidth?.() ?? 0
+        const isLeft = width ? params.labelRect.x < width / 2 : params.labelRect.x < 0
         const points = params.labelLinePoints
+        if (!points?.[2]) {
+          return { hideOverlap: true }
+        }
         points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width
         return {
           labelLinePoints: points,
@@ -161,7 +151,7 @@ const DonutChart = ({ height = '100%', eOptions }) => {
         }
       },
       animationEasing: 'elasticOut',
-      animationDelay: () => Math.random() * 200,
+      animationDelay: (idx) => idx * 10,
     }
 
     // 配置项
@@ -190,47 +180,14 @@ const DonutChart = ({ height = '100%', eOptions }) => {
             }))
           : [optionSerie],
     }
+    return defaultOption
+  }, [colors, eOptions])
 
-    normalizeEChartsOption(defaultOption)
-    chartInstance.current.setOption(defaultOption)
-  }
+  useBigScreenChartsReinit(chartHandleRef)
 
-  // 重新初始化图表
-  const reinitChart = useCallback(() => {
-    if (chartInstance.current) {
-      chartInstance.current.dispose()
-    }
-    initChart()
-  }, [initChart])
-
-  // 组件挂载和卸载时的处理
-  useEffect(() => {
-    initChart()
-    window.addEventListener('resize', handleResize)
-
-    // 监听 BigScreen 页面重新初始化事件
-    const handleReinit = () => {
-      reinitChart()
-    }
-    window.addEventListener('bigscreen-charts-reinit', handleReinit)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('bigscreen-charts-reinit', handleReinit)
-      if (chartInstance.current) {
-        chartInstance.current.dispose()
-      }
-    }
-  }, [reinitChart])
-
-  // 当props变化时重新初始化图表
-  useEffect(() => {
-    if (eOptions) {
-      initChart()
-    }
-  }, [eOptions])
-
-  return <div ref={chartRef} style={{ height, width: '100%' }} />
+  return (
+    <EChart ref={chartHandleRef} option={option} onInit={handleChartInit} notMerge style={{ height, width: '100%' }} />
+  )
 }
 
 DonutChart.propTypes = {

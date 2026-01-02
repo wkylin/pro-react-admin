@@ -105,11 +105,9 @@ export const FeedbackOptions = (params: any) => ({
             show: false,
           },
           labelLine: {
-            normal: {
-              smooth: true,
-              lineStyle: {
-                width: 0,
-              },
+            smooth: true,
+            lineStyle: {
+              width: 0,
             },
           },
           hoverAnimation: false,
@@ -119,11 +117,9 @@ export const FeedbackOptions = (params: any) => ({
             show: false,
           },
           labelLine: {
-            normal: {
-              smooth: true,
-              lineStyle: {
-                width: 0,
-              },
+            smooth: true,
+            lineStyle: {
+              width: 0,
             },
           },
           value: 100 - params.number,

@@ -1,11 +1,11 @@
 'use client'
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react'
+import React, { useRef, useState, useCallback, useMemo } from 'react'
 import * as echarts from 'echarts'
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { Button, Card, Typography, message, Row, Col, Statistic } from 'antd'
 import { DownloadOutlined, FileTextOutlined, BarChartOutlined } from '@ant-design/icons'
-import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import EChart from '@stateless/EChart'
 const { Title, Paragraph } = Typography
 
 interface ChartData {
@@ -32,7 +32,6 @@ const initialPieData: ChartData[] = [
 ]
 
 const PDFExportDemo: React.FC = () => {
-  const chartRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const chartInstanceRef = useRef<echarts.ECharts | null>(null) // 使用ref代替state存储图表实例
   const [isExporting, setIsExporting] = useState(false)
@@ -42,17 +41,8 @@ const PDFExportDemo: React.FC = () => {
   const salesData = useMemo(() => initialSalesData, [])
   const pieData = useMemo(() => initialPieData, [])
 
-  const initCharts = useCallback(() => {
-    if (!chartRef.current) return
-
-    // 如果已存在图表实例，先销毁
-    if (chartInstanceRef.current) {
-      chartInstanceRef.current.dispose()
-    }
-
-    const chart = echarts.init(chartRef.current)
-    chartInstanceRef.current = chart // 保存到ref中
-    const option = {
+  const chartOption = useMemo(() => {
+    const option: echarts.EChartsOption = {
       title: {
         text: '销售数据统计',
         left: 'center',
@@ -88,24 +78,12 @@ const PDFExportDemo: React.FC = () => {
         },
       ],
     }
-    normalizeEChartsOption(option)
-    chart.setOption(option)
+    return option
+  }, [salesData])
 
-    const handleResize = () => {
-      chart.resize()
-    }
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      chart.dispose()
-    }
-  }, [salesData]) // 依赖项现在是稳定的
-
-  useEffect(() => {
-    const cleanup = initCharts()
-    return cleanup
-  }, [initCharts])
+  const handleChartInit = useCallback((chart: echarts.ECharts) => {
+    chartInstanceRef.current = chart
+  }, [])
 
   const waitForChartsRender = (): Promise<void> => {
     return new Promise((resolve) => {
@@ -248,7 +226,7 @@ const PDFExportDemo: React.FC = () => {
               销售趋势图表
             </Title>
           </div>
-          <div ref={chartRef} style={{ width: '100%', height: '400px' }} />
+          <EChart option={chartOption} onInit={handleChartInit} notMerge style={{ width: '100%', height: '400px' }} />
         </Card>
         <Card>
           <Title level={3} style={{ marginBottom: '16px' }}>
