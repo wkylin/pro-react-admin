@@ -22,11 +22,11 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
 
     const defaultOption = {
       tooltip: {
-        show: false,
+        show: false
       },
       legend: {
         show: false,
-        ...eOptions?.options?.legend,
+        ...eOptions?.options?.legend
       },
       series: eOptions?.options?.series?.map((item, index) => {
         if (index === 0) {
@@ -37,8 +37,8 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
             radius: [0, '24%'],
             emphasis: {
               label: {
-                show: true,
-              },
+                show: true
+              }
             },
             label: {
               show: true,
@@ -46,27 +46,27 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
               fontSize: 14,
               formatter: '{a|{b}}',
               rich: {
-                a: { color: '#fff', fontSize: 12 },
+                a: { color: '#fff', fontSize: 12 }
               },
-              ...item.label,
+              ...item.label
             },
             labelLine: {
-              show: false,
+              show: false
             },
             itemStyle: {
               borderColor: '#fff',
-              borderWidth: 2,
+              borderWidth: 2
             },
             data: item?.data?.map((temp, idx) => ({
               ...temp,
-              itemStyle: { color: innerColors[idx % innerColors.length] },
+              itemStyle: { color: innerColors[idx % innerColors.length] }
             })),
             tooltip: {
               show: false,
               trigger: 'item',
               formatter: (params) => `${params.name}: ${params.value}(${params.percent}%)`,
-              ...item?.tooltip,
-            },
+              ...item?.tooltip
+            }
           }
         } else {
           return {
@@ -75,7 +75,7 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
             radius: ['24%', '40%'],
             labelLine: {
               length: 30,
-              length2: 60,
+              length2: 60
             },
             label: {
               show: false,
@@ -86,40 +86,40 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
                   color: '#fff',
                   fontSize: 14,
                   fontWeight: 'bold',
-                  lineHeight: 33,
-                },
+                  lineHeight: 33
+                }
               },
-              ...item?.label,
+              ...item?.label
             },
             labelLayout: (params) => {
               return {
                 hideOverlap: true,
-                moveOverlap: true,
+                moveOverlap: true
               }
             },
             emphasis: {
               label: {
-                show: true,
-              },
+                show: true
+              }
             },
             itemStyle: {
               opacity: 0.8,
               borderColor: '#fff',
-              borderWidth: 2,
+              borderWidth: 2
             },
             data: item?.data?.map((temp, idx) => ({
               ...temp,
-              itemStyle: { color: outerColors[idx % outerColors.length] },
+              itemStyle: { color: outerColors[idx % outerColors.length] }
             })),
             tooltip: {
               show: false,
               trigger: 'item',
               formatter: (params) => `${params.name}: ${params.value}(${params.percent}%)`,
-              ...item?.tooltip,
-            },
+              ...item?.tooltip
+            }
           }
         }
-      }),
+      })
     }
 
     normalizeEChartsOption(defaultOption)
@@ -173,7 +173,7 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
 PieNestChart.propTypes = {
   data: PropTypes.array,
   height: PropTypes.string,
-  eOptions: PropTypes.object,
+  eOptions: PropTypes.object
 }
 
 export default PieNestChart
