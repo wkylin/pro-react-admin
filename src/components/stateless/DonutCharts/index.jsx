@@ -30,7 +30,7 @@ const DonutChart = ({ height = '100%', eOptions }) => {
     ['#98E4FB', '#23C1F0'],
     ['#FFE0D6', '#E57450'],
     ['#B465FF', '#E8D0FF'],
-    ['#F8C106', '#FFEAA4'],
+    ['#F8C106', '#FFEAA4']
   ]
 
   const handleChartInit = useCallback((chart) => {
@@ -42,19 +42,19 @@ const DonutChart = ({ height = '100%', eOptions }) => {
       ...item,
       tooltip: {
         trigger: 'item',
-        ...eOptions?.options?.tooltip,
+        ...eOptions?.options?.tooltip
       },
       emphasis: {
         label: {
-          show: true,
-        },
+          show: true
+        }
       },
       labelLine: {
         // show: index === 0, // 显示第一个
         show: true,
         length: 15,
         length2: 10,
-        ...eOptions?.options?.labelLine,
+        ...eOptions?.options?.labelLine
       },
       label: {
         trigger: 'item',
@@ -67,49 +67,49 @@ const DonutChart = ({ height = '100%', eOptions }) => {
           a: {
             color: '#fff',
             fontWeight: 'bold',
-            fontSize: 14,
+            fontSize: 14
           },
           b: {
             color: '#fff',
             fontSize: 12,
-            padding: [8, 0, 0, 0],
+            padding: [8, 0, 0, 0]
           },
           c: {
             color: '#fff',
             fontSize: 16,
-            padding: [8, 0, 0, 15],
+            padding: [8, 0, 0, 15]
           },
           d: {
             padding: [28, 0, 0, 0],
             color: '#fff',
-            fontWeight: 'bold',
+            fontWeight: 'bold'
           },
           e: {
             color: '#EF4A10',
             fontSize: 12,
-            padding: [8, 0, 0, 0],
+            padding: [8, 0, 0, 0]
           },
           f: {
             color: '#EF4A10',
             fontSize: 16,
-            padding: [8, 0, 0, 15],
+            padding: [8, 0, 0, 15]
           },
           g: {
             color: '#2878FF',
             fontSize: 16,
-            padding: [8, 0, 0, 15],
-          },
+            padding: [8, 0, 0, 15]
+          }
         },
-        ...eOptions?.options?.label,
+        ...eOptions?.options?.label
       },
       itemStyle: {
         color: {
           colorStops: [
             { offset: 0, color: colors[index % colors.length][0] },
-            { offset: 1, color: colors[index % colors.length][1] },
-          ],
-        },
-      },
+            { offset: 1, color: colors[index % colors.length][1] }
+          ]
+        }
+      }
     }))
 
     const optionSerie = {
@@ -125,7 +125,7 @@ const DonutChart = ({ height = '100%', eOptions }) => {
       label: {
         position: 'outside',
         distance: 0,
-        alignTo: 'labelLine',
+        alignTo: 'labelLine'
       },
       itemStyle: {
         borderRadius: 0,
@@ -134,8 +134,8 @@ const DonutChart = ({ height = '100%', eOptions }) => {
           x: 0,
           y: 0,
           x2: 1,
-          y2: 0,
-        },
+          y2: 0
+        }
       },
       labelLayout: (params) => {
         const width = chartInstance.current?.getWidth?.() ?? 0
@@ -147,11 +147,11 @@ const DonutChart = ({ height = '100%', eOptions }) => {
         points[2][0] = isLeft ? params.labelRect.x : params.labelRect.x + params.labelRect.width
         return {
           labelLinePoints: points,
-          hideOverlap: true,
+          hideOverlap: true
         }
       },
       animationEasing: 'elasticOut',
-      animationDelay: (idx) => idx * 10,
+      animationDelay: (idx) => idx * 10
     }
 
     // 配置项
@@ -160,25 +160,25 @@ const DonutChart = ({ height = '100%', eOptions }) => {
         text: '',
         subtext: '',
         left: 'center',
-        ...eOptions?.options?.title,
+        ...eOptions?.options?.title
       },
       tooltip: {
         trigger: 'item',
-        ...eOptions?.options?.tooltip,
+        ...eOptions?.options?.tooltip
       },
       legend: {
         show: true,
         orient: 'vertical',
         right: 20,
-        ...eOptions?.options?.legend,
+        ...eOptions?.options?.legend
       },
       series:
         eOptions?.options?.series?.length > 0
           ? eOptions?.options?.series.map((item) => ({
-              ...optionSerie,
-              ...item,
-            }))
-          : [optionSerie],
+            ...optionSerie,
+            ...item
+          }))
+          : [optionSerie]
     }
     return defaultOption
   }, [colors, eOptions])
@@ -192,7 +192,7 @@ const DonutChart = ({ height = '100%', eOptions }) => {
 
 DonutChart.propTypes = {
   height: PropTypes.string,
-  eOptions: PropTypes.object,
+  eOptions: PropTypes.object
 }
 
 export default DonutChart

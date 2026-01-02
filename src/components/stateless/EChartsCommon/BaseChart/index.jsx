@@ -11,13 +11,13 @@ const EChart = (props, ref) => {
     return {
       click: (event) => {
         if (event && onClick) onClick(event)
-      },
+      }
     }
   }, [onClick])
 
   // 对父组件暴露获取ECharts实例的方法，可直接通过实例调用原生函数
   useImperativeHandle(ref, () => ({
-    getInstance: () => innerRef.current?.getInstance?.(),
+    getInstance: () => innerRef.current?.getInstance?.()
   }))
 
   return (
@@ -26,7 +26,7 @@ const EChart = (props, ref) => {
       option={options}
       loading={loading}
       onEvents={onEvents}
-      renderer="svg"
+      renderer='svg'
       notMerge
       style={{ width: '100%', height: '100%', ...style }}
     />
@@ -37,7 +37,7 @@ EChart.propTypes = {
   options: PropTypes.object,
   loading: PropTypes.bool,
   onClick: PropTypes.func,
-  style: PropTypes.object,
+  style: PropTypes.object
 }
 
 export default React.memo(React.forwardRef(EChart))

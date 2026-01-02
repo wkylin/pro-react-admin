@@ -52,7 +52,7 @@ const BigScreen = () => {
     }
   }, [pathname])
   return (
-    <FixTabPanel fill={true}>
+    <FixTabPanel fill>
       <section ref={scaleDom} style={{ height: '100%', width: '100%', transformOrigin: 'top left' }}>
         <ChinaMap />
       </section>
