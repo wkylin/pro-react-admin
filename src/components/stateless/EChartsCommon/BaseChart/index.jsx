@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useLayoutEffect, useImperativeHandle } from 'react'
 import debounce from 'lodash-es/debounce'
 import echarts from './echarts.config'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import PropTypes from 'prop-types'
 
 const EChart = (props, ref) => {
   const { options, loading = false, onClick, style = {} } = props
@@ -12,10 +14,9 @@ const EChart = (props, ref) => {
 
   // 窗口自适应并开启过渡动画
   const resize = () => {
-    cInstance.current &&
-      cInstance.current.resize({
-        animation: { duration: 300 },
-      })
+    cInstance.current?.resize({
+      animation: { duration: 300 },
+    })
   }
 
   // 自适应防抖优化：避免在 render 中创建带有闭包的 debounce 函数，使用 ref 存储
@@ -38,7 +39,10 @@ const EChart = (props, ref) => {
         if (event && onClick) onClick(event)
       })
 
-      options && cInstance.current.setOption(options)
+      if (options) {
+        normalizeEChartsOption(options)
+        cInstance.current.setOption(options)
+      }
     }
 
     return () => {
@@ -72,6 +76,13 @@ const EChart = (props, ref) => {
   useImperativeHandle(ref, () => ({ getInstance }))
 
   return <div id="myEChart" ref={cDom} style={{ width: '100%', height: '100%', ...style }} />
+}
+
+EChart.propTypes = {
+  options: PropTypes.object,
+  loading: PropTypes.bool,
+  onClick: PropTypes.func,
+  style: PropTypes.object,
 }
 
 export default React.memo(React.forwardRef(EChart))

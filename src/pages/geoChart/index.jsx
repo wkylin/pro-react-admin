@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
 import FixTabPanel from '@stateless/FixTabPanel'
 import fengxianGeo from './geo/fengxian.json'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
 
 const GeoChart = () => {
   const myChartRef = useRef(null)
@@ -120,6 +121,7 @@ const GeoChart = () => {
         setRegion('310120')
       }
     })
+    normalizeEChartsOption(option)
     myChartRef.current?.setOption(option)
   }
 

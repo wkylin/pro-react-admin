@@ -12,6 +12,7 @@ import ESLintWebpackPlugin from 'eslint-webpack-plugin'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 import paths from './paths.js'
 import { fileURLToPath } from 'url'
+import dotenv from 'dotenv'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -40,13 +41,51 @@ switch (process.env.BUILD_GOAL) {
     dotEnv = '.env.development'
 }
 
+// Ensure PUBLIC_URL (and other env vars) are available to this webpack config file.
+// Note: dotenv-webpack injects env vars into the bundle, but it doesn't affect the
+// Node.js process.env used while generating the webpack configuration.
+dotenv.config({ path: path.resolve(__dirname, '..', dotEnv) })
+
+// GitHub Pages typically serves the site under "/<repo>/".
+// When building in GitHub Actions and PUBLIC_URL isn't explicitly provided,
+// infer it from GITHUB_REPOSITORY to avoid broken asset paths.
+const inferredGhPagesPublicUrl = (() => {
+  try {
+    const repo = process.env.GITHUB_REPOSITORY
+    if (!repo) return ''
+    const parts = repo.split('/')
+    const repoName = parts[1]
+    return repoName ? `/${repoName}/` : ''
+  } catch {
+    return ''
+  }
+})()
+
+const normalizePublicPath = (value) => {
+  const raw = (value ?? '').toString().trim()
+  if (!raw) return '/'
+  if (raw === '.') return '/'
+  if (raw === './') return './'
+  if (raw.startsWith('http://') || raw.startsWith('https://')) {
+    return raw.endsWith('/') ? raw : `${raw}/`
+  }
+  // Prefer absolute paths so chunks load correctly on deep-link routes.
+  const withLeading = raw.startsWith('/') ? raw : `/${raw}`
+  return withLeading.endsWith('/') ? withLeading : `${withLeading}/`
+}
+
+const rawPublicUrl = process.env.PUBLIC_URL
+const prodPublicPath = normalizePublicPath(
+  rawPublicUrl || ((process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_ACTIONS === '1') ? inferredGhPagesPublicUrl : '')
+)
+
 const config = {
   entry: {
     app: `${paths.src}/index.tsx`,
   },
   output: {
     path: paths.build,
-    publicPath: isDev ? '/' : './',
+    publicPath: isDev ? '/' : prodPublicPath,
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     // library: '',

@@ -1,9 +1,9 @@
 'use client'
 
-import React from 'react'
-import { useRef, useEffect, useCallback } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import * as echarts from 'echarts'
 import { Card, Row, Col, Typography, Space } from 'antd'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
 const { Title, Text } = Typography
 const PHBarChart: React.FC = () => {
   const chartRef = useRef<HTMLDivElement>(null)
@@ -233,7 +233,7 @@ const PHBarChart: React.FC = () => {
         trigger: 'item',
         formatter: (params: any) => {
           // 如果是指示线，不显示提示
-          if (params.seriesName && params.seriesName.includes('指示线')) {
+          if (params.seriesName?.includes('指示线')) {
             return ''
           }
           try {
@@ -329,6 +329,7 @@ const PHBarChart: React.FC = () => {
       series: series,
     }
     // 应用配置
+    normalizeEChartsOption(option)
     chartInstance.current.setOption(option)
     // 响应式调整
     const handleResize = () => {
@@ -386,181 +387,179 @@ const PHBarChart: React.FC = () => {
     return blocks
   }, [getPHColor])
   return (
-    <>
-      <Card title="pH值堆叠柱状图（0-14）">
-        {/* 图表容器 */}
-        <div
-          ref={chartRef}
-          style={{
-            width: '100%',
-            height: '600px',
-            marginBottom: '20px',
-          }}
-        />
-        {/* pH范围图例 */}
-        <Row justify="center" style={{ marginBottom: '20px' }}>
-          <Space size="large">
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '8px 15px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-              }}
-            >
-              <div
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  backgroundColor: '#3498db',
-                  marginRight: '8px',
-                  borderRadius: '3px',
-                }}
-              ></div>
-              <span>pH范围1</span>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '8px 15px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-              }}
-            >
-              <div
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  backgroundColor: '#e74c3c',
-                  marginRight: '8px',
-                  borderRadius: '3px',
-                }}
-              ></div>
-              <span>pH范围2</span>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '8px 15px',
-                backgroundColor: '#f8f9fa',
-                borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-              }}
-            >
-              <div
-                style={{
-                  width: '16px',
-                  height: '16px',
-                  backgroundColor: '#2ecc71',
-                  marginRight: '8px',
-                  borderRadius: '3px',
-                }}
-              ></div>
-              <span>pH范围3</span>
-            </div>
-          </Space>
-        </Row>
-        {/* 指示线图例 */}
-        <Row justify="center" style={{ marginBottom: '20px' }}>
-          <Space size="middle">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '30px',
-                  height: '3px',
-                  backgroundColor: '#ff0000',
-                  marginRight: '8px',
-                }}
-              ></div>
-              <Text>中性点 (pH=7)</Text>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '30px',
-                  height: '3px',
-                  backgroundColor: '#ff9900',
-                  marginRight: '8px',
-                }}
-              ></div>
-              <Text>弱酸性 (pH=3.5)</Text>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div
-                style={{
-                  width: '30px',
-                  height: '3px',
-                  backgroundColor: '#0066ff',
-                  marginRight: '8px',
-                }}
-              ></div>
-              <Text>弱碱性 (pH=10.5)</Text>
-            </div>
-          </Space>
-        </Row>
-        {/* 颜色参考条 */}
-        <div>
-          <Title level={4}>pH值颜色渐变参考</Title>
+    <Card title="pH值堆叠柱状图（0-14）">
+      {/* 图表容器 */}
+      <div
+        ref={chartRef}
+        style={{
+          width: '100%',
+          height: '600px',
+          marginBottom: '20px',
+        }}
+      />
+      {/* pH范围图例 */}
+      <Row justify="center" style={{ marginBottom: '20px' }}>
+        <Space size="large">
           <div
             style={{
               display: 'flex',
-              height: '30px',
+              alignItems: 'center',
+              padding: '8px 15px',
+              backgroundColor: '#f8f9fa',
               borderRadius: '4px',
-              overflow: 'hidden',
-              margin: '20px 0',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             }}
           >
-            {renderColorScale()}
+            <div
+              style={{
+                width: '16px',
+                height: '16px',
+                backgroundColor: '#3498db',
+                marginRight: '8px',
+                borderRadius: '3px',
+              }}
+            ></div>
+            <span>pH范围1</span>
           </div>
-          <Row justify="space-between" style={{ padding: '0 5px' }}>
-            <Col style={{ textAlign: 'center', width: '40px' }}>
-              <Text type="secondary">
-                0<br />
-                强酸
-              </Text>
-            </Col>
-            <Col style={{ textAlign: 'center', width: '40px' }}>
-              <Text type="secondary">
-                7<br />
-                中性
-              </Text>
-            </Col>
-            <Col style={{ textAlign: 'center', width: '40px' }}>
-              <Text type="secondary">
-                14 <br />
-                强碱
-              </Text>
-            </Col>
-          </Row>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '8px 15px',
+              backgroundColor: '#f8f9fa',
+              borderRadius: '4px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            }}
+          >
+            <div
+              style={{
+                width: '16px',
+                height: '16px',
+                backgroundColor: '#e74c3c',
+                marginRight: '8px',
+                borderRadius: '3px',
+              }}
+            ></div>
+            <span>pH范围2</span>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '8px 15px',
+              backgroundColor: '#f8f9fa',
+              borderRadius: '4px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            }}
+          >
+            <div
+              style={{
+                width: '16px',
+                height: '16px',
+                backgroundColor: '#2ecc71',
+                marginRight: '8px',
+                borderRadius: '3px',
+              }}
+            ></div>
+            <span>pH范围3</span>
+          </div>
+        </Space>
+      </Row>
+      {/* 指示线图例 */}
+      <Row justify="center" style={{ marginBottom: '20px' }}>
+        <Space size="middle">
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                width: '30px',
+                height: '3px',
+                backgroundColor: '#ff0000',
+                marginRight: '8px',
+              }}
+            ></div>
+            <Text>中性点 (pH=7)</Text>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                width: '30px',
+                height: '3px',
+                backgroundColor: '#ff9900',
+                marginRight: '8px',
+              }}
+            ></div>
+            <Text>弱酸性 (pH=3.5)</Text>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                width: '30px',
+                height: '3px',
+                backgroundColor: '#0066ff',
+                marginRight: '8px',
+              }}
+            ></div>
+            <Text>弱碱性 (pH=10.5)</Text>
+          </div>
+        </Space>
+      </Row>
+      {/* 颜色参考条 */}
+      <div>
+        <Title level={4}>pH值颜色渐变参考</Title>
+        <div
+          style={{
+            display: 'flex',
+            height: '30px',
+            borderRadius: '4px',
+            overflow: 'hidden',
+            margin: '20px 0',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          }}
+        >
+          {renderColorScale()}
         </div>
-        {/* 说明信息 */}
-        <Card>
-          <Title level={3}>图表说明</Title>
-          <p>
-            此图表展示了三个独立的pH范围堆叠柱状图，每个柱子都包含pH值0-14的完整渐变效果。从左到右分别是"pH范围1"、"pH范围2"和"pH范围3"。
-          </p>
-          <p>
-            每个柱子被分为15个等高的色块（pH0到pH14），从底部的强酸性（红色）平滑过渡到顶部的强碱性（蓝色），中间的中性点（pH=7）显示为绿色。
-          </p>
-          <div>
-            <strong>水平指示线</strong>
-            ：图表中添加了三条水平指示线，分别标记了重要的pH值位置：
-            <ul>
-              <li>红色实线：中性点 (pH=7)</li>
-              <li>橙色实线：弱酸性分界线 (pH=3.5)</li>
-              <li>蓝色实线：弱碱性分界线 (pH=10.5)</li>
-            </ul>
-            这些指示线贯穿三个柱子，便于快速比较不同范围在关键pH值位置的情况。
-          </div>
-        </Card>
+        <Row justify="space-between" style={{ padding: '0 5px' }}>
+          <Col style={{ textAlign: 'center', width: '40px' }}>
+            <Text type="secondary">
+              0<br />
+              强酸
+            </Text>
+          </Col>
+          <Col style={{ textAlign: 'center', width: '40px' }}>
+            <Text type="secondary">
+              7<br />
+              中性
+            </Text>
+          </Col>
+          <Col style={{ textAlign: 'center', width: '40px' }}>
+            <Text type="secondary">
+              14 <br />
+              强碱
+            </Text>
+          </Col>
+        </Row>
+      </div>
+      {/* 说明信息 */}
+      <Card>
+        <Title level={3}>图表说明</Title>
+        <p>
+          此图表展示了三个独立的pH范围堆叠柱状图，每个柱子都包含pH值0-14的完整渐变效果。从左到右分别是"pH范围1"、"pH范围2"和"pH范围3"。
+        </p>
+        <p>
+          每个柱子被分为15个等高的色块（pH0到pH14），从底部的强酸性（红色）平滑过渡到顶部的强碱性（蓝色），中间的中性点（pH=7）显示为绿色。
+        </p>
+        <div>
+          <strong>水平指示线</strong>
+          ：图表中添加了三条水平指示线，分别标记了重要的pH值位置：
+          <ul>
+            <li>红色实线：中性点 (pH=7)</li>
+            <li>橙色实线：弱酸性分界线 (pH=3.5)</li>
+            <li>蓝色实线：弱碱性分界线 (pH=10.5)</li>
+          </ul>
+          这些指示线贯穿三个柱子，便于快速比较不同范围在关键pH值位置的情况。
+        </div>
       </Card>
-    </>
+    </Card>
   )
 }
 export default PHBarChart

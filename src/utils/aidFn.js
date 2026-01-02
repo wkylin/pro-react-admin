@@ -1,6 +1,81 @@
 import { parse, stringify } from 'qs'
 import html2canvas from 'html2canvas'
 
+const getCrypto = () => {
+  try {
+    return typeof globalThis !== 'undefined' &&
+      globalThis.crypto &&
+      typeof globalThis.crypto.getRandomValues === 'function'
+      ? globalThis.crypto
+      : null
+  } catch {
+    return null
+  }
+}
+
+// Non-cryptographic fallback RNG (only used when Web Crypto is unavailable).
+// Sonar hotspot S2245 is addressed by avoiding Math.random().
+let fallbackSeed = (() => {
+  try {
+    const perfNow = typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : 0
+    return (Date.now() ^ Math.floor(perfNow * 1000)) >>> 0
+  } catch {
+    return Date.now() >>> 0
+  }
+})()
+
+const fallbackUint32 = () => {
+  // xorshift32
+  let x = fallbackSeed >>> 0
+  x ^= (x << 13) >>> 0
+  x ^= (x >>> 17) >>> 0
+  x ^= (x << 5) >>> 0
+  fallbackSeed = x >>> 0
+  return fallbackSeed
+}
+
+const randomUint32 = () => {
+  const cryptoObj = getCrypto()
+  if (!cryptoObj) return fallbackUint32()
+  const buf = new Uint32Array(1)
+  cryptoObj.getRandomValues(buf)
+  return buf[0]
+}
+
+const randomFloat01 = () => {
+  return randomUint32() / 0x100000000
+}
+
+const randomIntInclusive = (min, max) => {
+  const lo = Math.ceil(min)
+  const hi = Math.floor(max)
+  if (hi < lo) return lo
+  const range = hi - lo + 1
+  return lo + Math.floor(randomFloat01() * range)
+}
+
+const randomHexBytes = (byteLength) => {
+  const cryptoObj = getCrypto()
+  const bytes = new Uint8Array(byteLength)
+  if (cryptoObj) cryptoObj.getRandomValues(bytes)
+  else {
+    for (let i = 0; i < bytes.length; i++) bytes[i] = randomIntInclusive(0, 255)
+  }
+
+  let hex = ''
+  for (const b of bytes) hex += b.toString(16).padStart(2, '0')
+  return hex
+}
+
+const randomBase36 = (length) => {
+  const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'
+  let out = ''
+  for (let i = 0; i < length; i++) {
+    out += alphabet[randomIntInclusive(0, alphabet.length - 1)]
+  }
+  return out
+}
+
 export const getEnv = () => {
   let env
   if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
@@ -34,8 +109,17 @@ export const reqStringify = (val) => stringify(val, { arrayFormat: 'repeat', str
 
 export const getType = (obj) => {
   const typeString = Object.prototype.toString.call(obj)
-  const match = /\[object (.*?)\]/.exec(typeString)
-  return match ? match[1] : null
+  const prefix = '[object '
+  const suffix = ']'
+  if (typeString.startsWith(prefix) && typeString.endsWith(suffix)) {
+    return typeString.slice(prefix.length, -suffix.length)
+  }
+  const start = typeString.indexOf(prefix)
+  const end = typeString.lastIndexOf(suffix)
+  if (start !== -1 && end !== -1 && end > start + prefix.length) {
+    return typeString.slice(start + prefix.length, end)
+  }
+  return null
 }
 
 export const hidePhone = (phone) => phone?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
@@ -49,14 +133,17 @@ export const asyncAction = (action) => {
 }
 
 export const getImgsUrl = (html) => {
-  const imgReg = /<img.*?(?:>|\/>)/gi
-  const srcReg = /src=['"]?([^'"]*)['"]?/i
-  const arr = html.match(imgReg)
-  if (!arr) return null
-  return arr.reduce((prev, next) => {
-    const src = next.match(srcReg)
-    return src[1] ? [...prev, src[1]] : prev
-  }, [])
+  if (!html) return null
+  if (typeof DOMParser === 'undefined') return null
+
+  try {
+    const doc = new DOMParser().parseFromString(String(html), 'text/html')
+    const imgs = Array.from(doc.querySelectorAll('img'))
+    const srcs = imgs.map((img) => img.getAttribute('src')).filter(Boolean)
+    return srcs.length ? srcs : null
+  } catch {
+    return null
+  }
 }
 
 export const customizeTimer = {
@@ -106,7 +193,17 @@ export const isDecimal = (value) => {
   return reg.test(value)
 }
 
-export const limitDecimal = (val) => val.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
+export const limitDecimal = (val) => {
+  const s = String(val)
+  const sign = s.startsWith('-') ? '-' : ''
+  const unsigned = sign ? s.slice(1) : s
+  const dot = unsigned.indexOf('.')
+  if (dot === -1) return s
+  const intPart = unsigned.slice(0, dot)
+  const fracPart = unsigned.slice(dot + 1)
+  const limited = fracPart.slice(0, 2)
+  return `${sign}${intPart}.${limited}`
+}
 
 export const passwordStrength = (pass) => {
   const reg = /^(?=.*[A-Z])(?=.*\d)(?=.*[a-z]).{8,}$/
@@ -137,10 +234,7 @@ export const checkIsLocalPage = () => {
 }
 
 // Generate Random Hex
-export const randomHex = () =>
-  `#${Math.floor(Math.random() * 0xffffff)
-    .toString(16)
-    .padEnd(6, '0')}`
+export const randomHex = () => `#${randomHexBytes(3)}`
 
 export const rgbToHex = (r, g, b) => `#${((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1)}`
 
@@ -207,14 +301,89 @@ export const isPalindrome = (str) => {
   return normalized === normalized.split('').reverse().join('')
 }
 
-export const toCamelCase = (str) => str.replace(/\W+(.)/g, (match, chr) => chr.toUpperCase())
+export const toCamelCase = (str) => {
+  const s = String(str)
+  let out = ''
+  let upperNext = false
+
+  for (const ch of s) {
+    const code = ch.charCodeAt(0)
+    const isWord =
+      (code >= 48 && code <= 57) || // 0-9
+      (code >= 65 && code <= 90) || // A-Z
+      (code >= 97 && code <= 122) || // a-z
+      ch === '_'
+
+    if (!isWord) {
+      upperNext = true
+      continue
+    }
+
+    if (upperNext) {
+      out += ch.toUpperCase()
+      upperNext = false
+    } else {
+      out += ch
+    }
+  }
+
+  return out
+}
 
 export const toKebabCase = (str) => {
-  return str
-    .replace(/(^[^A-Za-z0-9]*)|([^A-Za-z0-9]*$)/g, '')
-    .replace(/([a-z])([A-Z])/g, (m, a, b) => `${a}_${b.toLowerCase()}`)
-    .replace(/[^A-Za-z0-9]+|_+/g, '-')
-    .toLowerCase()
+  const s = String(str ?? '')
+  const isAlnum = (ch) => {
+    const code = ch.charCodeAt(0)
+    return (
+      (code >= 48 && code <= 57) || // 0-9
+      (code >= 65 && code <= 90) || // A-Z
+      (code >= 97 && code <= 122) // a-z
+    )
+  }
+  const isLower = (ch) => {
+    const code = ch.charCodeAt(0)
+    return code >= 97 && code <= 122
+  }
+  const isUpper = (ch) => {
+    const code = ch.charCodeAt(0)
+    return code >= 65 && code <= 90
+  }
+
+  // Trim leading/trailing non-alphanumerics (same effect as the first replace())
+  let start = 0
+  while (start < s.length && !isAlnum(s[start])) start++
+  let end = s.length
+  while (end > start && !isAlnum(s[end - 1])) end--
+  if (start >= end) return ''
+
+  let out = ''
+  let prevWasSep = false
+  let prevWasLower = false
+
+  for (let i = start; i < end; i++) {
+    const ch = s[i]
+
+    if (ch === '_' || !isAlnum(ch)) {
+      // Normalize any separator run to a single '-'
+      if (!prevWasSep && out) {
+        out += '-'
+        prevWasSep = true
+      }
+      prevWasLower = false
+      continue
+    }
+
+    // camelCase boundary: [a-z][A-Z] => insert separator before upper
+    if (prevWasLower && isUpper(ch) && out && !out.endsWith('-')) {
+      out += '-'
+    }
+
+    out += ch.toLowerCase()
+    prevWasSep = false
+    prevWasLower = isLower(ch)
+  }
+
+  return out
 }
 
 export const truncate = (str, num) => (str.length > num ? str.slice(0, num) + '...' : str)
@@ -224,12 +393,16 @@ export const delay = (ms) => {
 }
 
 // Clear All Cookies
-export const clearCookies = document.cookie
-  .split(';')
-  .forEach(
-    (cookie) =>
-      (document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
-  )
+export const clearCookies = () => {
+  if (typeof document === 'undefined') return
+
+  document.cookie.split(';').forEach((cookie) => {
+    const trimmed = cookie.trimStart()
+    const eq = trimmed.indexOf('=')
+    const name = eq === -1 ? trimmed : trimmed.slice(0, eq)
+    document.cookie = `${name}=;expires=${new Date(0).toUTCString()};path=/`
+  })
+}
 
 // Find the number of days between two days
 export const dayDif = (date1, date2) => Math.ceil(Math.abs(date1.getTime() - date2.getTime()) / 86400000)
@@ -241,7 +414,10 @@ export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1)
 export const isNotEmpty = (arr) => Array.isArray(arr) && arr.length > 0
 
 // Detect Dark Mode
-export const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+export const isDarkMode =
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches
 
 export const fetchSomething = () =>
   new Promise((resolve) => {
@@ -277,21 +453,65 @@ export const promiseWithTimeout = (promise, timeout) => {
   return Promise.race([timeoutPromise, promise])
 }
 
-export const shuffleArr = (arr) => arr.sort(() => 0.5 - Math.random())
+export const shuffleArr = (arr) => {
+  const a = Array.isArray(arr) ? [...arr] : []
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = randomIntInclusive(0, i)
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
 export const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
-export const ThousandNum = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-export const RandomId = (len) => Math.random().toString(36).substring(3, len)
+export const ThousandNum = (num) => {
+  const raw = String(num)
+
+  // Fast path for real numbers
+  const asNumber = typeof num === 'number' ? num : Number(raw)
+  if (Number.isFinite(asNumber)) {
+    // Force comma grouping regardless of user locale.
+    return asNumber.toLocaleString('en-US')
+  }
+
+  // String-safe path (keeps original decimals if present)
+  const sign = raw.startsWith('-') ? '-' : ''
+  const unsigned = sign ? raw.slice(1) : raw
+  const dotIndex = unsigned.indexOf('.')
+  const intPart = dotIndex === -1 ? unsigned : unsigned.slice(0, dotIndex)
+  const fracPart = dotIndex === -1 ? '' : unsigned.slice(dotIndex) // includes '.'
+
+  const digits = intPart.replaceAll(',', '')
+  if (!digits) return raw
+
+  let out = ''
+  let groupCount = 0
+  for (let i = digits.length - 1; i >= 0; i--) {
+    const ch = digits[i]
+    if (ch < '0' || ch > '9') return raw
+    out = ch + out
+    groupCount++
+    if (groupCount === 3 && i !== 0) {
+      out = ',' + out
+      groupCount = 0
+    }
+  }
+
+  return `${sign}${out}${fracPart}`
+}
+export const RandomId = (len) => randomBase36(Math.max(0, Number(len) || 0))
 export const RoundNum = (num, decimal) => Math.round(num * 10 ** decimal) / 10 ** decimal
-export const randomNum = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
+export const randomNum = (min, max) => randomIntInclusive(min, max)
 
 export const isEmptyArray = (arr) => Array.isArray(arr) && !arr.length
-export const randomItem = (arr) => arr[Math.floor(Math.random() * arr.length)]
+export const randomItem = (arr) => {
+  if (!Array.isArray(arr) || arr.length === 0) return undefined
+  return arr[randomIntInclusive(0, arr.length - 1)]
+}
 export const asyncTo = (promise) => promise.then((data) => [null, data]).catch((err) => [err])
 export const hasFocus = (element) => element === document.activeElement
 export const isEqual = (a, b) => JSON.stringify(a) === JSON.stringify(b)
-export const randomString = () => Math.random().toString(36).slice(2)
-export const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-export const randomColor = () => `#${Math.random().toString(16).slice(2, 8).padEnd(6, '0')}`
+export const randomString = () => randomBase36(16)
+export const random = (min, max) => randomIntInclusive(min, max)
+export const randomColor = () => `#${randomHexBytes(3)}`
 export const pause = (millions) => new Promise((resolve) => setTimeout(resolve, millions))
 export const camelizeCamelCase = (str) =>
   str
@@ -309,11 +529,10 @@ export const copyTextToClipboard = async (textToCopy) => {
 }
 
 export const getRandomId = () => {
-  let text = ''
   const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
+  let text = ''
   for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
+    text += possible.charAt(randomIntInclusive(0, possible.length - 1))
   }
   return text
 }
@@ -397,7 +616,13 @@ export const saveHtmlToPng = async (eleHtml, successFun, errorFun) => {
   }
 }
 
-export const trimTopic = (topic) => topic.replace(/[，。！？”“"、,.!?]*$/, '')
+export const trimTopic = (topic) => {
+  const s = String(topic ?? '')
+  const punct = new Set(['，', '。', '！', '？', '”', '“', '"', '、', ',', '.', '!', '?'])
+  let end = s.length
+  while (end > 0 && punct.has(s[end - 1])) end--
+  return s.slice(0, end)
+}
 
 // onClick={() => importFromFile()}
 // readFromFile().then((content) => { JSON.parse(content)})
@@ -520,7 +745,7 @@ const generatedSet = new Set()
 export const generateUniqueHex32 = () => {
   let hex
   do {
-    hex = Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join('')
+    hex = randomHexBytes(16)
   } while (generatedSet.has(hex))
 
   generatedSet.add(hex)

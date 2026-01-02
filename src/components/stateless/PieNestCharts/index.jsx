@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import * as echarts from 'echarts'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import PropTypes from 'prop-types'
 
 const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
   const chartRef = useRef(null)
@@ -120,6 +122,7 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
       }),
     }
 
+    normalizeEChartsOption(defaultOption)
     myChartRef.current.setOption(defaultOption)
   }, [eOptions, innerColors, outerColors])
 
@@ -165,6 +168,12 @@ const PieNestChart = ({ data = [], height = '100%', eOptions = {} }) => {
   }, [eOptions, reinitChart])
 
   return <div ref={chartRef} style={{ height, width: '100%' }} />
+}
+
+PieNestChart.propTypes = {
+  data: PropTypes.array,
+  height: PropTypes.string,
+  eOptions: PropTypes.object,
 }
 
 export default PieNestChart

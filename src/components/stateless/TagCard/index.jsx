@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import PropTypes from 'prop-types'
 import { Button, theme } from 'antd'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import BlueIcon from './icons/blue.png'
@@ -62,6 +63,18 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
 
   const displayList = isExpanded ? tagCardList : visibleCardList
 
+  const getCardKey = (card) => {
+    if (card && (card.id != null || card.key != null)) return String(card.id ?? card.key)
+    if (card && typeof card.name === 'string' && card.name) return card.name
+    return JSON.stringify(card)
+  }
+
+  const getTagKey = (tag) => {
+    if (tag && (tag.id != null || tag.key != null)) return String(tag.id ?? tag.key)
+    if (tag && typeof tag.name === 'string' && tag.name) return tag.name
+    return JSON.stringify(tag)
+  }
+
   return (
     <div className={styles.tagCard}>
       <div className={styles.tagCardExtra}>
@@ -82,7 +95,7 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
       <div className={styles.tagCardList}>
         {displayList.map((card, index) => (
           <div
-            key={index}
+            key={getCardKey(card)}
             className={styles.tagCardItem}
             style={{
               borderColor: cardConfig.borderColor[index % cardConfig.borderColor.length],
@@ -103,9 +116,9 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
                 <span style={{ color: token.colorTextHeading }}>{card.name}</span>
               </div>
               <div className={styles.cardBody}>
-                {card.tags.map((tag, _index) => (
+                {card.tags.map((tag) => (
                   <div
-                    key={_index}
+                    key={getTagKey(tag)}
                     className={styles.tagItem}
                     style={{
                       backgroundColor: cardConfig.tagBackgroundColor[index % cardConfig.tagBackgroundColor.length],
@@ -133,6 +146,24 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
       </div>
     </div>
   )
+}
+
+TagCard.propTypes = {
+  tagCardList: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      name: PropTypes.string,
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+          key: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+          name: PropTypes.string,
+        })
+      ),
+    })
+  ),
+  showMax: PropTypes.number,
 }
 
 export default TagCard

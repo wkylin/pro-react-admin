@@ -137,7 +137,7 @@
     "prepublishOnly": "npm run build:lib && npm run build:lib:entries && npm run prepare:lib:publish",
     "pub": "npm run prepublishOnly && npm publish dist-lib --access public",
     "pub:beta": "npm run prepublishOnly && npm publish dist-lib --tag beta --access public",
-    "scanner": "npm run test && sonar-scanner -Dsonar.token=sqp_",
+    "scanner": "npm run test && node scripts/run-sonar-scanner.cjs",
     "depcheck": "node scripts/depcheck.mjs",
     "clean": "npm prune && rimraf node_modules/.cache",
     "fresh": "npm run clean && rimraf node_modules package-lock.json && npm install",

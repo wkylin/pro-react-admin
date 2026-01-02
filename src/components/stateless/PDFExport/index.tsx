@@ -5,6 +5,7 @@ import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 import { Button, Card, Typography, message, Row, Col, Statistic } from 'antd'
 import { DownloadOutlined, FileTextOutlined, BarChartOutlined } from '@ant-design/icons'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
 const { Title, Paragraph } = Typography
 
 interface ChartData {
@@ -87,6 +88,7 @@ const PDFExportDemo: React.FC = () => {
         },
       ],
     }
+    normalizeEChartsOption(option)
     chart.setOption(option)
 
     const handleResize = () => {
@@ -256,9 +258,9 @@ const PDFExportDemo: React.FC = () => {
             <Col xs={24} md={12}>
               <Title level={4}>月度销售数据</Title>
               <div>
-                {salesData.map((item, index) => (
+                {salesData.map((item) => (
                   <div
-                    key={index}
+                    key={item.name}
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -276,9 +278,9 @@ const PDFExportDemo: React.FC = () => {
             <Col xs={24} md={12}>
               <Title level={4}>产品销售占比</Title>
               <div>
-                {pieData.map((item, index) => (
+                {pieData.map((item) => (
                   <div
-                    key={index}
+                    key={item.name}
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',

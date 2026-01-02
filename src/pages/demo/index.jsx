@@ -120,9 +120,6 @@ const tagCardList = [
         name: '建设工程中重点客户',
       },
       {
-        name: '交易频次高',
-      },
-      {
         name: '业务数量多',
       },
       {
@@ -130,12 +127,6 @@ const tagCardList = [
       },
       {
         name: '交易频次高',
-      },
-      {
-        name: '业务数量多',
-      },
-      {
-        name: '复合型客户',
       },
     ],
   },

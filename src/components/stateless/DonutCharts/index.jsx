@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import * as echarts from 'echarts'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
+import PropTypes from 'prop-types'
 
 const DonutChart = ({ height = '100%', eOptions }) => {
   const chartRef = useRef(null)
@@ -189,6 +191,7 @@ const DonutChart = ({ height = '100%', eOptions }) => {
           : [optionSerie],
     }
 
+    normalizeEChartsOption(defaultOption)
     chartInstance.current.setOption(defaultOption)
   }
 
@@ -228,6 +231,11 @@ const DonutChart = ({ height = '100%', eOptions }) => {
   }, [eOptions])
 
   return <div ref={chartRef} style={{ height, width: '100%' }} />
+}
+
+DonutChart.propTypes = {
+  height: PropTypes.string,
+  eOptions: PropTypes.object,
 }
 
 export default DonutChart

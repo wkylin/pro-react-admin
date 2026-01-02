@@ -5,6 +5,7 @@ import { EChartsType } from 'echarts'
 import { RendererType } from 'echarts/types/src/util/types.js'
 import china from '@assets/map/china.json'
 import { GeoJSONCompressed } from 'echarts/types/src/coord/geo/geoTypes.js'
+import { normalizeEChartsOption } from '@utils/echarts/normalizeOption'
 
 type OptionType = {
   [T: string]: unknown
@@ -82,6 +83,7 @@ const EChartsCommon = (props: {
       }
 
       try {
+        normalizeEChartsOption(opt)
         chartRef.current.setOption(opt, notMerge, lazyUpdate)
       } catch (error) {
         console.error('ECharts setOption error:', error)

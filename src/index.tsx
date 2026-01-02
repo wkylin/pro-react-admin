@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from 'react'
+import { StrictMode, Suspense, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { I18nextProvider } from 'react-i18next'
 import { Analytics } from '@vercel/analytics/react'
@@ -81,6 +81,50 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivEleme
   identifierPrefix: 'wui',
 })
 
+const isLikelyJavaScriptResponse = (contentType: string | null) => {
+  if (!contentType) return false
+  const ct = contentType.toLowerCase()
+  if (ct.includes('text/html')) return false
+  return ct.includes('javascript') || ct.includes('ecmascript')
+}
+
+const canUseVercelInsights = async () => {
+  try {
+    const res = await fetch('/_vercel/insights/script.js', {
+      method: 'GET',
+      cache: 'no-store',
+    })
+    if (!res.ok) return false
+    return isLikelyJavaScriptResponse(res.headers.get('content-type'))
+  } catch {
+    return false
+  }
+}
+
+const VercelInsights = () => {
+  const [enabled, setEnabled] = useState(false)
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') return
+    let cancelled = false
+    void (async () => {
+      const ok = await canUseVercelInsights()
+      if (!cancelled) setEnabled(ok)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (!enabled) return null
+  return (
+    <>
+      <Analytics />
+      <SpeedInsights />
+    </>
+  )
+}
+
 root.render(
   <StrictMode>
     <AntdApp>
@@ -91,14 +135,7 @@ root.render(
             <ProThemeProvider>
               <WatermarkProvider content="Pro React Admin">
                 <ThemeIndex />
-                {process.env.NODE_ENV === 'production' &&
-                  !window.location.hostname.includes('localhost') &&
-                  !window.location.hostname.includes('127.0.0.1') && (
-                    <>
-                      <Analytics />
-                      <SpeedInsights />
-                    </>
-                  )}
+                <VercelInsights />
               </WatermarkProvider>
             </ProThemeProvider>
           </Suspense>
