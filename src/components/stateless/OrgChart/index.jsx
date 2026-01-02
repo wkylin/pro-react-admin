@@ -1,5 +1,3 @@
-// App.jsx
-import React, { useState } from 'react'
 import OrgChart from './org-chart'
 
 // 示例组织数据
@@ -57,15 +55,6 @@ const orgData = {
 }
 
 function OrgChartDemo() {
-  const [selectedNode, setSelectedNode] = useState(null)
-  const [expandedInfo, setExpandedInfo] = useState('')
-
-  // 处理节点点击
-  const handleNodeClick = (node, event) => {
-    console.log('点击节点:', node)
-    setSelectedNode(node)
-  }
-
   // 自定义样式
   const customStyles = {
     currentBox: {
@@ -80,7 +69,6 @@ function OrgChartDemo() {
     <div className="chart-container">
       <OrgChart
         data={orgData}
-        onNodeClick={handleNodeClick}
         defaultExpanded={true}
         highlightOnHover={true}
         animated={true}

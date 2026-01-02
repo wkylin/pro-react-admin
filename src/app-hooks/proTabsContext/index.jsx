@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useMemo, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import Home from '@src/pages/home'
 
@@ -67,6 +67,10 @@ const ProTabProvider = ({ children }) => {
   )
 
   return <ProTabContext.Provider value={providerValue}>{children}</ProTabContext.Provider>
+}
+
+ProTabProvider.propTypes = {
+  children: PropTypes.node,
 }
 
 export { ProTabProvider, useProTabContext }

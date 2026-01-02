@@ -109,7 +109,7 @@ export const isDecimal = (value) => {
 export const limitDecimal = (val) => val.replace(/^(-)*(\d+)\.(\d\d).*$/, '$1$2.$3')
 
 export const passwordStrength = (pass) => {
-  const reg = /^(?=.*[A-Z])(?=.*[\d])(?=.*[a-z]).{8,}$/
+  const reg = /^(?=.*[A-Z])(?=.*\d)(?=.*[a-z]).{8,}$/
   return reg.test(pass)
 }
 
@@ -200,8 +200,6 @@ export const formatRomanNumeral = (num) => {
   return result
 }
 
-// export const formatScientific = (num, decimalPlaces = 2) => toExponential(decimalPlaces)
-
 export const capitalizeWords = (str) => str.replace(/\b\w/g, (match) => match.toUpperCase())
 
 export const isPalindrome = (str) => {
@@ -213,7 +211,7 @@ export const toCamelCase = (str) => str.replace(/\W+(.)/g, (match, chr) => chr.t
 
 export const toKebabCase = (str) => {
   return str
-    .replace(/^[^A-Za-z0-9]*|[^A-Za-z0-9]*$/g, '')
+    .replace(/(^[^A-Za-z0-9]*)|([^A-Za-z0-9]*$)/g, '')
     .replace(/([a-z])([A-Z])/g, (m, a, b) => `${a}_${b.toLowerCase()}`)
     .replace(/[^A-Za-z0-9]+|_+/g, '-')
     .toLowerCase()
@@ -230,7 +228,7 @@ export const clearCookies = document.cookie
   .split(';')
   .forEach(
     (cookie) =>
-      (document.cookie = cookie.replace(/^ +/, '').replace(/[=].*/, `=;expires=${new Date(0).toUTCString()};path=/`))
+      (document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`))
   )
 
 // Find the number of days between two days
@@ -281,11 +279,6 @@ export const promiseWithTimeout = (promise, timeout) => {
 
 export const shuffleArr = (arr) => arr.sort(() => 0.5 - Math.random())
 export const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time))
-// const handleNotification = async (message) => {
-//   setShowNotification(true)
-//   await sleep(3000)
-//   setShowNotification(false)
-// }
 export const ThousandNum = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 export const RandomId = (len) => Math.random().toString(36).substring(3, len)
 export const RoundNum = (num, decimal) => Math.round(num * 10 ** decimal) / 10 ** decimal
@@ -309,7 +302,6 @@ export const copyTextToClipboard = async (textToCopy) => {
   try {
     if (navigator?.clipboard?.writeText) {
       await navigator.clipboard.writeText(textToCopy)
-      console.log('已成功复制到剪贴板')
     }
   } catch (err) {
     console.error(`复制到剪贴板失败:${err.message}`)
@@ -483,8 +475,7 @@ export const getFileType = (data, fileName) => {
         try {
           JSON.parse(data)
           return 'application/json'
-        } catch (event) {
-          console.log('event', event)
+        } catch {
           return 'text/plain'
         }
       } else if (data instanceof Uint8Array || data instanceof ArrayBuffer) {

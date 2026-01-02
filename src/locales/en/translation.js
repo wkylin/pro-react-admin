@@ -38,6 +38,11 @@ const en = {
       dark: 'Dark menu style',
     },
     enableDarkMode: 'Enable dark mode',
+    theme: {
+      light: 'Light',
+      dark: 'Dark',
+      system: 'System',
+    },
     colors: {
       dawnBlueDefault: 'Daybreak Blue (default)',
       dustRed: 'Dust Red',

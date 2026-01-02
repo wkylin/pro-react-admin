@@ -36,6 +36,4 @@ const useRandomInterval = (callback, minDelay, maxDelay) => {
   return cancel
 }
 
-// const [value, setValue] = React.useState([400, 1000]);
-// const [key, setKey] = React.useState(null);
-// useRandomInterval(() => setKey(Math.random()), ...value);
+export default useRandomInterval

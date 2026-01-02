@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react'
+import PropTypes from 'prop-types'
 import { motion, useAnimation } from 'framer-motion'
 
 const FloatingIcon = ({ children, initialX }) => {
@@ -55,10 +56,20 @@ const FloatingIcon = ({ children, initialX }) => {
   )
 }
 
+FloatingIcon.propTypes = {
+  children: PropTypes.node,
+  initialX: PropTypes.number,
+}
+
 export const SocialIcon = ({ icon: Icon, color, ...props }) => (
   <div className={`rounded-full p-3 ${color} shadow-lg transition-shadow hover:shadow-xl`}>
     <Icon className="h-6 w-6 text-white" />
   </div>
 )
+
+SocialIcon.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  color: PropTypes.string,
+}
 
 export default FloatingIcon

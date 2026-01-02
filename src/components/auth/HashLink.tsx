@@ -3,7 +3,7 @@ import { LinkProps } from 'react-router-dom'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { HashRouterUtils } from '@src/utils/hashRouter'
 
-export const HashLink = forwardRef<HTMLAnchorElement, LinkProps>(({ to, replace = false, children, ...props }, ref) => {
+export const HashLink = forwardRef<HTMLAnchorElement, LinkProps>(({ to, children, ...props }, ref) => {
   const { redirectTo } = useSafeNavigate()
 
   const handleClick = (e: React.MouseEvent) => {

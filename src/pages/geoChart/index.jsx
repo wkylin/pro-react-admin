@@ -128,11 +128,9 @@ const GeoChart = () => {
   }, [region])
 
   return (
-    <>
-      <FixTabPanel style={{ backgroundColor: 'rgba(0, 0, 0, .8)' }}>
-        <div id="geoChart" style={{ height: '500px', width: '100%', margin: '0 auto' }} />
-      </FixTabPanel>
-    </>
+    <FixTabPanel style={{ backgroundColor: 'rgba(0, 0, 0, .8)' }}>
+      <div id="geoChart" style={{ height: '500px', width: '100%', margin: '0 auto' }} />
+    </FixTabPanel>
   )
 }
 

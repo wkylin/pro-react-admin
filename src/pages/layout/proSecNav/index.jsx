@@ -10,6 +10,60 @@ import { annotatedRootRouter, flattenRoutes } from '@src/routers'
 
 import styles from './index.module.less'
 
+const PAGE_EXTENSIONS = ['.jsx', '.tsx', '.js', '.ts']
+const PAGE_CANDIDATE_TEMPLATES = [
+  (path, ext) => `/src/pages${path}${ext}`,
+  (path, ext) => `/src/pages${path}/index${ext}`,
+]
+
+const pageModules = import.meta?.glob?.('/src/pages/**/*.{js,jsx,ts,tsx}') ?? {}
+
+const resolvePageModuleKey = (() => {
+  const cache = new Map()
+
+  const makeCandidates = (pathKey) => {
+    const candidates = []
+    for (const ext of PAGE_EXTENSIONS) {
+      for (const tmpl of PAGE_CANDIDATE_TEMPLATES) {
+        candidates.push(tmpl(pathKey, ext))
+      }
+    }
+    return candidates
+  }
+
+  const paramify = (p) => p.replace(/:([^/]+)/g, '[$1]')
+
+  return (p) => {
+    if (!p) return null
+
+    let pathKey = String(p).trim()
+    if (!pathKey.startsWith('/')) pathKey = `/${pathKey}`
+    pathKey = pathKey.replace(/\/+$/g, '')
+
+    if (cache.has(pathKey)) return cache.get(pathKey)
+
+    for (const c of makeCandidates(pathKey)) {
+      if (Object.hasOwn(pageModules, c)) {
+        cache.set(pathKey, c)
+        return c
+      }
+    }
+
+    if (pathKey.includes(':')) {
+      const paramPath = paramify(pathKey)
+      for (const c of makeCandidates(paramPath)) {
+        if (Object.hasOwn(pageModules, c)) {
+          cache.set(pathKey, c)
+          return c
+        }
+      }
+    }
+
+    cache.set(pathKey, null)
+    return null
+  }
+})()
+
 import { mainLayoutMenu } from '@src/config/menu.config'
 
 let lazyComponentsCache = null
@@ -34,17 +88,14 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   const { pathname } = useLocation()
   const { redirectTo } = useSafeNavigate()
 
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [messageApi, contextHolder] = message.useMessage()
   const lastDeniedRef = useRef(null)
-  const [selectedKeys, setSelectedKeys] = useState(['home'])
-  const [menuItems, setMenuItems] = useState([])
   const [allowedRoutes, setAllowedRoutes] = useState(null)
+  const preloadedRef = useRef(new Set())
 
   // 当前路由对应的 sub menu key
   const [openKeys, setOpenKeys] = useState([])
-
-  const safeSelectedKeys = Array.isArray(selectedKeys) ? selectedKeys : []
   const safeOpenKeys = Array.isArray(openKeys) ? openKeys : []
 
   const showDeniedOnce = (denyKey) => {
@@ -75,11 +126,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     return null
   }
 
-  const ensurePreloadedSet = () => {
-    if (!ProSecNav._preloaded) ProSecNav._preloaded = new Set()
-    return ProSecNav._preloaded
-  }
-
   const getLazyNameFromPath = (p) => {
     return String(p || '')
       .replace(/^\//, '')
@@ -92,7 +138,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     try {
       const pathKey = String(p || '')
       if (!pathKey) return
-      const preloaded = ensurePreloadedSet()
+      const preloaded = preloadedRef.current
       if (preloaded.has(pathKey)) return
 
       const comp = routeComponentMap.get(pathKey)
@@ -123,21 +169,17 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   // 提取放在redux中, tab 切换时改成 false
   const [isOpenChange, setIsOpenChange] = useState(false)
 
-  // 初始化：获取用户可访问路由
   useEffect(() => {
     const initMenus = async () => {
       try {
         const userPermissions = await permissionService.getPermissions()
-        // 确保根路径 '/' 总是包含（首页对所有账号可见）
         const rawRoutes = Array.isArray(userPermissions?.routes) ? userPermissions.routes : []
         const routes = Array.from(new Set(['/'].concat(rawRoutes)))
         console.log('用户可访问路由:', routes)
 
-        // 仅存储一次“可访问路由”，避免语言切换时重复请求
         setAllowedRoutes(routes)
       } catch (error) {
         console.error('获取用户权限失败:', error)
-        // 降级：仅保留首页
         setAllowedRoutes(['/'])
       }
     }
@@ -149,30 +191,33 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     const createLabel = (path, labelText) => {
       const onPreload = async () => {
         try {
-          // 预加载页面资源
-          await import(`@/pages${path}`)
+          preloadRouteComponent(path)
+
+          const key = resolvePageModuleKey(path)
+          if (key) {
+            const loader = pageModules[key]
+            if (typeof loader === 'function') {
+              await loader()
+            }
+          }
         } catch (e) {
-          // ignore preload errors
+          console.warn('菜单预加载失败:', e)
         }
       }
 
-      // Ant Design `Menu` expects `label` to be a ReactNode.
-      // Return a React element so we don't pass a plain object as a child.
       return (
-        <span onMouseEnter={onPreload} role="menuitem">
+        <span onMouseEnter={onPreload} role="menuitem" tabIndex={0}>
           {labelText || path}
         </span>
       )
     }
 
     const translateItem = (i) => {
-      // 添加空值检查
       if (!i || typeof i !== 'object') return null
 
       const { i18nKey, children, ...rest } = i
       const path = i.path || i.key
 
-      // 如果没有 key，返回 null（不合法的菜单项）
       if (!path) return null
 
       const labelText = i18nKey ? t(i.i18nKey) : i.label
@@ -184,7 +229,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
         label: Label,
       }
       if (children && Array.isArray(children)) {
-        // 过滤掉空值的子项
         const validChildren = children.map(translateItem).filter(Boolean)
         return validChildren.length > 0 ? { ...base, children: validChildren } : base
       }
@@ -192,10 +236,8 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     }
 
     // 使用配置文件的菜单，并进行翻译；同时规范化每项的 path 字段
-    // 过滤掉可能的空值
     const allMenuItems = (Array.isArray(mainLayoutMenu) ? mainLayoutMenu : []).map(translateItem).filter(Boolean)
 
-    // 递归过滤菜单：仅保留用户可访问的节点或其子节点
     const hasAccessSafely = (p) => {
       try {
         return routes.some((route) => {
@@ -222,50 +264,47 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
     const filterItems = (items) => {
       if (!Array.isArray(items)) return []
+
       const result = []
+      const pushWithChildren = (item, children) => {
+        result.push(children?.length ? { ...item, children } : item)
+      }
+
       for (const item of items) {
-        // 添加空值检查，防止处理空值菜单项
         if (!item || typeof item !== 'object') continue
 
         const rawKey = item.path || item.key
-        // 如果菜单项没有 key，跳过（不合法的菜单项）
         if (!rawKey) continue
 
-        if (Array.isArray(item.children) && item.children.length > 0) {
-          const children = filterItems(item.children)
-          if (children.length > 0) {
-            result.push({ ...item, children })
-            continue
-          }
-        }
-
-        if (hasAccessSafely(rawKey)) {
-          result.push(item)
+        const children = Array.isArray(item.children) ? filterItems(item.children) : null
+        if (children?.length) {
+          pushWithChildren(item, children)
           continue
         }
 
-        if (matchesDynamicParam(rawKey)) {
-          result.push(item)
+        const hasAccess = hasAccessSafely(rawKey) || matchesDynamicParam(rawKey)
+        if (hasAccess) {
+          pushWithChildren(item, null)
         }
       }
+
       return result
     }
 
     return filterItems(allMenuItems)
   }
 
-  // 当语言切换时，重新生成菜单（但不重复拉权限）
-  useEffect(() => {
-    if (!Array.isArray(allowedRoutes) || allowedRoutes.length === 0) return
+  const menuItems = (() => {
+    if (!Array.isArray(allowedRoutes) || allowedRoutes.length === 0) return []
     try {
       const dynamicMenus = generateMenuItems(allowedRoutes)
       console.log('生成的菜单:', dynamicMenus)
-      setMenuItems(dynamicMenus)
+      return dynamicMenus
     } catch (e) {
       console.error('生成菜单失败:', e)
-      setMenuItems([{ label: t('home'), key: '/', icon: <HomeOutlined /> }])
+      return [{ label: t('home'), key: '/', icon: <HomeOutlined /> }]
     }
-  }, [allowedRoutes, i18n.language])
+  })()
 
   // 递归查找与当前路径最匹配的菜单项父级链
   const findPathChain = (items, targetPath) => {
@@ -280,17 +319,13 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
     const dfs = (nodes, chain) => {
       if (!Array.isArray(nodes)) return
       for (const node of nodes) {
-        // 添加空值检查
         if (!node || typeof node !== 'object' || !node.key) continue
         const nextChain = [...chain, node.key]
         const nodePath = node.path || node.key
-        // 匹配规则：精确匹配 或 前缀匹配（允许 /a/b 命中 /a）
         const isExact = targetPath === nodePath
         const isPrefix = targetPath.startsWith(nodePath + '/')
-        // 动态参数匹配（如 /coupons/edit/123 与 /coupons/edit）
         const dynParamMatch = matchesDynamicPath(nodePath, targetPath)
         if (isExact || isPrefix || dynParamMatch) {
-          // 选择更长 path 的链作为最佳链（更具体）
           if (!bestChain || nodePath.length > (bestChain[bestChain.length - 1] || '').length) {
             bestChain = nextChain
           }
@@ -305,14 +340,13 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
   }
 
   // 构建路由 path -> element.type 映射以支持菜单 hover 预加载
-  const routeComponentMap = React.useMemo(() => {
+  const routeComponentMap = (() => {
     try {
       const flat = flattenRoutes(annotatedRootRouter)
       const map = new Map()
       flat.forEach((r) => {
         const key = r.path || r.key
         if (!key) return
-        // element 可能是 React element，element.type 为组件函数/对象
         const comp = r.element?.type ?? null
         map.set(key, comp)
       })
@@ -321,38 +355,26 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       console.warn('Failed to build route component map:', e)
       return new Map()
     }
-  }, [])
+  })()
 
-  // 路由变化时自动计算选中与展开（除非用户刚手动操作）
-  useEffect(() => {
-    if (!Array.isArray(menuItems) || menuItems.length === 0) return
-    const chain = findPathChain(menuItems, pathname)
-    if (chain && chain.length > 0) {
-      const leaf = chain[chain.length - 1]
-      setSelectedKeys([leaf])
-      if (!isOpenChange) {
-        // 父级链（不包含当前叶子）作为展开 keys
-        setOpenKeys(chain.slice(0, -1))
-      }
-    } else {
-      // 找不到匹配链，仍然设置选中（可能是无菜单对应的裸路由）
-      setSelectedKeys([pathname])
-      if (!isOpenChange) {
-        setOpenKeys([])
-      }
-    }
-  }, [pathname, menuItems, isOpenChange])
+  const chain = (() => {
+    if (!Array.isArray(menuItems) || menuItems.length === 0) return null
+    return findPathChain(menuItems, pathname)
+  })()
+
+  const derivedSelectedKeys = chain?.length ? [chain[chain.length - 1]] : [pathname]
+  const derivedOpenKeys = chain?.length ? chain.slice(0, -1) : []
+
+  const safeSelectedKeys = Array.isArray(derivedSelectedKeys) ? derivedSelectedKeys : []
+  const effectiveOpenKeys = isOpenChange ? safeOpenKeys : derivedOpenKeys
 
   const onOpenChange = (keys) => {
     setIsOpenChange(true)
     const nextKeys = Array.isArray(keys) ? keys : []
-    // 简单互斥：同层级仅保留一个展开；通过比较链长度实现
-    // 计算所有当前 key 的父链深度（根据 menuItems）
     const depthMap = {}
     const buildDepth = (items, depth) => {
       if (!Array.isArray(items)) return
       for (const item of items) {
-        // 添加空值检查，避免 "Cannot convert undefined or null to object" 错误
         if (!item || typeof item !== 'object') continue
         if (item.key) {
           depthMap[item.key] = depth
@@ -363,7 +385,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       }
     }
     buildDepth(menuItems, 0)
-    // 按层分组，取最后一个操作的 key 所在层，仅保留该层的最后一个
     const latestKey = nextKeys.find((k) => !safeOpenKeys.includes(k)) || nextKeys[nextKeys.length - 1]
     const layer = depthMap[latestKey]
     const filtered = nextKeys.filter((k) => depthMap[k] !== layer || k === latestKey)
@@ -395,10 +416,8 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       <Menu
         inlineIndent={10}
         mode={mode}
-        defaultSelectedKeys={safeSelectedKeys}
-        defaultOpenKeys={safeOpenKeys}
         selectedKeys={safeSelectedKeys}
-        openKeys={safeOpenKeys}
+        openKeys={effectiveOpenKeys}
         theme={theme}
         className={mode === 'horizontal' ? styles.topMenu : styles.menu}
         items={menuItems}

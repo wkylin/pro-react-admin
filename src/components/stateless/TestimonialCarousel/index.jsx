@@ -33,7 +33,7 @@ const TestimonialCarousel = () => {
     }
   }, [])
 
-  const { text, author, image } = testimonials[currentTestimonial]
+  const { text, author } = testimonials[currentTestimonial]
 
   const variants = {
     initial: { opacity: 0, y: '100%', scale: 0.1 },

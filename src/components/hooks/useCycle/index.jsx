@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const useCycle = (options = [], defaultValue = '') => {
   const [index, setIndex] = useState(defaultValue ? undefined : 0)

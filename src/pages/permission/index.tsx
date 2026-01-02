@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Select, Alert } from 'antd'
+import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Select, Alert, Radio } from 'antd'
 import { useStore } from '@/store'
 import { usePermission } from '@app-hooks/usePermission'
 import PermissionGuard from '@/components/auth/PermissionGuard'
@@ -58,12 +58,6 @@ const PermissionExample = () => {
     message.info(`开发强制切换已${checked ? '启用' : '禁用'}`)
   }
 
-  // 主题设置切换
-  const handleThemeModeChange = (checked: boolean) => {
-    updateSettings({ themeMode: checked ? 'dark' : 'light' })
-    message.success(`已切换到${checked ? '暗色' : '亮色'}主题`)
-  }
-
   const handleCompactModeChange = (checked: boolean) => {
     updateSettings({ compactAlgorithm: checked })
     message.success(`${checked ? '开启' : '关闭'}紧凑模式`)
@@ -105,15 +99,22 @@ const PermissionExample = () => {
                   gap: '16px',
                 }}
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                >
-                  <span>暗色主题</span>
-                  <Switch checked={themeSettings.themeMode === 'dark'} onChange={handleThemeModeChange} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ marginBottom: 4 }}>主题模式</div>
+                  <Radio.Group
+                    value={themeSettings.themeMode}
+                    onChange={(e) => {
+                      const val = e.target.value as 'light' | 'dark' | 'system'
+                      updateSettings({ themeMode: val })
+                      message.success(`已切换到${val === 'dark' ? '暗色' : val === 'light' ? '亮色' : '跟随系统'}主题`)
+                    }}
+                    optionType="button"
+                    buttonStyle="solid"
+                  >
+                    <Radio.Button value="light">亮色</Radio.Button>
+                    <Radio.Button value="system">跟随系统</Radio.Button>
+                    <Radio.Button value="dark">暗色</Radio.Button>
+                  </Radio.Group>
                 </div>
                 <div
                   style={{

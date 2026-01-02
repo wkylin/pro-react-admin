@@ -382,7 +382,9 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {
     token: { colorBgContainer, colorBorder },
   } = theme.useToken()
   const { themeSettings, updateSettings } = useProThemeContext()
-  const isDark = themeSettings.themeMode === 'dark'
+  const prefersDark =
+    typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const isDark = themeSettings.themeMode === 'dark' || (themeSettings.themeMode === 'system' && prefersDark)
   const effectiveNavTheme = isDark ? 'dark' : themeSettings.navTheme
 
   const isTopDarkHeader = layout === 'top' && effectiveNavTheme === 'dark'

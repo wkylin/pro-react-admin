@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import videojs from 'video.js'
 import 'video.js/dist/video-js.css'
 
@@ -19,7 +20,7 @@ export const VideoJS = (props) => {
       const player = (playerRef.current = videojs(videoElement, options, () => {
         videojs.log('player is ready')
 
-        onReady && onReady(player)
+        onReady?.(player)
       }))
 
       // You could update an existing player in the `else` block here
@@ -49,6 +50,22 @@ export const VideoJS = (props) => {
       <div ref={videoRef} />
     </div>
   )
+}
+
+VideoJS.propTypes = {
+  options: PropTypes.shape({
+    autoplay: PropTypes.bool,
+    sources: PropTypes.array,
+  }),
+  onReady: PropTypes.func,
+}
+
+VideoJS.defaultProps = {
+  options: {
+    autoplay: false,
+    sources: [],
+  },
+  onReady: undefined,
 }
 
 export default VideoJS

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useId } from 'react'
+import React, { useEffect, useState, useId } from 'react'
 
 const MermaidHooks = ({ chart, config }) => {
   const [svg, setSvg] = useState('')

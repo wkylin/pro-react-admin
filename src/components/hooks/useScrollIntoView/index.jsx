@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const useScrollIntoView = ({ offset = 0 }) => {
   const targetRef = useRef(null)
@@ -55,14 +55,3 @@ const useScrollIntoView = ({ offset = 0 }) => {
 }
 
 export default useScrollIntoView
-
-// const { scrollIntoView, targetRef } = useScrollIntoView({
-//   offset: 60
-// });
-
-// return (
-//   <div>
-//       <div ref={targetRef}>这是要滚动到的目标元素</div>
-//       <button onClick={scrollIntoView}>滚动到目标元素</button>
-//   </div>
-// );

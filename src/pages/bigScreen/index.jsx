@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import previewFitScale from '@utils/previewScale'
 import { useActivate } from '@/components/KeepAlive'

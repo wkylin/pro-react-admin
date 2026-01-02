@@ -7,7 +7,7 @@ const CopyToClipboard = ({ code }: Readonly<{ code: string }>) => {
     try {
       await navigator.clipboard.writeText(code)
       setIsCopied(true)
-    } catch (_error) {
+    } catch {
       setIsCopied(false)
     } finally {
       setTimeout(() => {

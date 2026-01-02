@@ -91,8 +91,8 @@ const MyVideo = () => {
     if (!activeMovieElRef.current) return
     try {
       activeMovieElRef.current.scrollIntoView({ block: 'nearest' })
-    } catch (_) {
-      // ignore
+    } catch (error) {
+      console.log('scrollIntoView error:', error)
     }
   }, [currentMovieId])
 
@@ -177,22 +177,14 @@ const MyVideo = () => {
 
             <div className={styles.movieList}>
               {movies.map((m) => (
-                <div
+                <button
                   key={m.id}
                   ref={(node) => {
                     if (m.id === currentMovieId) activeMovieElRef.current = node
                   }}
                   className={`${styles.movieItem} ${m.id === currentMovieId ? styles.movieItemActive : ''}`}
-                  role="button"
-                  tabIndex={0}
                   aria-current={m.id === currentMovieId ? 'true' : undefined}
                   onClick={() => handleSelectMovie(m.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleSelectMovie(m.id)
-                    }
-                  }}
                 >
                   <div className={styles.movieTitleRow}>
                     <span className={styles.movieTitle}>{m.title}</span>
@@ -200,7 +192,7 @@ const MyVideo = () => {
                   </div>
                   <div className={styles.movieMeta}>{m.duration}</div>
                   <div className={styles.movieDesc}>{m.desc}</div>
-                </div>
+                </button>
               ))}
             </div>
           </aside>

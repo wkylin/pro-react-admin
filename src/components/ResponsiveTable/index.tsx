@@ -26,6 +26,19 @@ import { useLocation } from 'react-router-dom'
 import { SettingOutlined } from '@ant-design/icons'
 import useTable from './useTable'
 
+const ScrollbarHeaderCell = (cellProps: any) => {
+  const className = cellProps?.className ?? ''
+  if (typeof className === 'string' && className.includes('ant-table-cell-scrollbar')) {
+    const { children, ...rest } = cellProps ?? {}
+    return (
+      <td {...rest} aria-hidden tabIndex={-1}>
+        {children}
+      </td>
+    )
+  }
+  return <th {...cellProps} />
+}
+
 export type ActionConfig<T> = {
   key: string
   label?: ReactNode
@@ -894,39 +907,19 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           const componentsFromProps = restTableProps?.components
           if (restTableProps && restTableProps.components) delete restTableProps.components
 
-          const mergedComponents = (() => {
-            if (!componentsFromProps) {
-              return {
+          const mergedComponents = componentsFromProps
+            ? {
+                ...componentsFromProps,
                 header: {
-                  cell: (cellProps: any) => {
-                    const className = cellProps?.className ?? ''
-                    if (typeof className === 'string' && className.includes('ant-table-cell-scrollbar')) {
-                      const { children, ...rest } = cellProps ?? {}
-                      return <td {...rest} aria-hidden="true" role="presentation" tabIndex={-1} />
-                    }
-                    return <th {...cellProps} />
-                  },
+                  ...(componentsFromProps?.header || {}),
+                  cell: componentsFromProps?.header?.cell || ScrollbarHeaderCell,
                 },
               }
-            }
-
-            const OriginalHeaderCell = componentsFromProps?.header?.cell
-
-            return {
-              ...componentsFromProps,
-              header: {
-                ...(componentsFromProps?.header || {}),
-                cell: (cellProps: any) => {
-                  const className = cellProps?.className ?? ''
-                  if (typeof className === 'string' && className.includes('ant-table-cell-scrollbar')) {
-                    const { children, ...rest } = cellProps ?? {}
-                    return <td {...rest} aria-hidden="true" role="presentation" tabIndex={-1} />
-                  }
-                  return OriginalHeaderCell ? <OriginalHeaderCell {...cellProps} /> : <th {...cellProps} />
+            : {
+                header: {
+                  cell: ScrollbarHeaderCell,
                 },
-              },
-            }
-          })()
+              }
 
           return (
             <Table
@@ -965,9 +958,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
             setPagination({ current, pageSize })
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
               try {
-                const includeSearch =
-                  mergeSearchToFetch &&
-                  (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
+                const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch?.())
                 const extra = includeSearch ? parseLocationSearch() : undefined
                 await fetchPage(current, pageSize, sortState, extra)
               } catch (err) {
@@ -979,9 +970,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
             setPagination({ current, pageSize: size })
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
               try {
-                const includeSearch =
-                  mergeSearchToFetch &&
-                  (!mergeSearchToFetchOnce || !hasMergedInitialSearch || !hasMergedInitialSearch())
+                const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch?.())
                 const extra = includeSearch ? parseLocationSearch() : undefined
                 await fetchPage(current, size, sortState, extra)
               } catch (err) {

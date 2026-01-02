@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { useReactToPrint } from 'react-to-print'

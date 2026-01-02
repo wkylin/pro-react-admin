@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import clsx from 'clsx'
 import { MapPin, Globe, Network, Loader2, RefreshCw } from 'lucide-react'
 
 const UserIP = () => {

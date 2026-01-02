@@ -1,11 +1,9 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { theme } from 'antd'
-import { useProThemeContext } from '@src/theme/hooks'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { Send, MapPin, Mail } from 'lucide-react'
+import { Send } from 'lucide-react'
 
 const Contact = () => {
-  const scrollRef = useRef(null)
   const [formData, setFormData] = useState({
     name: '',
     email: '',

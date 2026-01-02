@@ -29,7 +29,7 @@ export class HashRouterUtils {
    */
   static getQueryParams(): Record<string, string> {
     const currentPath = this.getCurrentPath()
-    const [_path, queryString] = currentPath.split('?')
+    const [, queryString] = currentPath.split('?')
 
     if (!queryString) return {}
 

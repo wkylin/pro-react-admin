@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useMemo, PropsWithChildren, useEffect } from 'react'
 
-export type ThemeMode = 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
 export type LayoutMode = 'side' | 'top' | 'mix'
 export type ContentWidth = 'Fluid' | 'Fixed'
@@ -77,8 +77,14 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
 
+    // Determine effective theme for CSS when 'system' mode is selected
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)')
+    let effectiveTheme = themeSettings.themeMode
+    if (themeSettings.themeMode === 'system') {
+      effectiveTheme = prefersDark?.matches ? 'dark' : 'light'
+    }
     // Expose theme mode to global CSS (e.g. scrollbar styles)
-    html.dataset.theme = themeSettings.themeMode
+    html.dataset.theme = effectiveTheme
 
     if (themeSettings.grayMode) {
       html.style.filter = 'grayscale(1)'
@@ -88,6 +94,23 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
       html.style.filter = ''
     }
   }, [themeSettings])
+
+  // Listen to system preference changes when user selects 'system' mode
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    const mql = window.matchMedia('(prefers-color-scheme: dark)')
+    const handler = (e: MediaQueryListEvent) => {
+      if (themeSettings.themeMode === 'system') {
+        document.documentElement.dataset.theme = e.matches ? 'dark' : 'light'
+      }
+    }
+    if (mql.addEventListener) mql.addEventListener('change', handler)
+    else if ((mql as any).addListener) (mql as any).addListener(handler)
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener('change', handler)
+      else if ((mql as any).removeListener) (mql as any).removeListener(handler)
+    }
+  }, [themeSettings.themeMode])
 
   const updateSettings = (settings: Partial<ThemeSettings>) => {
     setThemeSettings((prev) => ({ ...prev, ...settings }))

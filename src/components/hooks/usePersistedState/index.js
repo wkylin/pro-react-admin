@@ -6,7 +6,7 @@ const usePersistedState = (defaultValue, localStorageKey) => {
     if (localStorageItem === null) return defaultValue
     try {
       return JSON.parse(localStorageItem)
-    } catch (err) {
+    } catch {
       return defaultValue
     }
   })

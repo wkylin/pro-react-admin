@@ -19,14 +19,14 @@
   min-width: max-content;
 }
 
-.current-container {
+.currentContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.current-box,
-.child-box {
+.currentBox,
+.childBox {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -44,7 +44,7 @@
   cursor: pointer;
 }
 
-.current-box {
+.currentBox {
   background: rgb(40 120 255 / 80%);
   box-shadow: 0 2px 8px rgb(40 120 255 / 30%);
 }
@@ -79,8 +79,8 @@
   z-index: 10;
 }
 
-.current-title,
-.child-title {
+.currentTitle,
+.childTitle {
   font-size: 14px;
   color: #333;
   white-space: nowrap;
@@ -89,7 +89,7 @@
   gap: 6px;
 }
 
-.current-title {
+.currentTitle {
   color: #fff;
 }
 
@@ -246,8 +246,8 @@
 }
 
 /* Mobile styles applied via root class `.is-mobile` */
-:global(.is-mobile) .current-box,
-:global(.is-mobile) .child-box {
+:global(.is-mobile) .currentBox,
+:global(.is-mobile) .childBox {
   padding: 0 8px;
   font-size: 12px;
   height: 24px;

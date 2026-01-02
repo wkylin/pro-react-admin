@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
+import PropTypes from 'prop-types'
 import styles from './index.module.less'
 
 // 将树形数据转换为扁平化数据，并建立父子关系
@@ -38,16 +39,16 @@ const OrgChart = ({
   const [flatData, setFlatData] = useState([])
   const [hoveredNodeId, setHoveredNodeId] = useState(null)
   const [expandedNodes, setExpandedNodes] = useState(new Set())
-  const containerRefs = useRef({})
 
   useEffect(() => {
     // 将树形数据转换为扁平化数据
     const flattened = flattenTreeData(data)
 
     // 使用 requestAnimationFrame 将 setState 延后，避免在 effect 中同步 setState 导致警告
-    let raf = 0
+    let rafId = 0
+    let timeoutId = 0
     if (typeof requestAnimationFrame !== 'undefined') {
-      raf = requestAnimationFrame(() => {
+      rafId = requestAnimationFrame(() => {
         setFlatData(flattened)
         if (defaultExpanded) {
           const allNodeIds = new Set(flattened.map((node) => node.id))
@@ -55,25 +56,25 @@ const OrgChart = ({
         }
       })
     } else {
-      const id = setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         setFlatData(flattened)
         if (defaultExpanded) {
           const allNodeIds = new Set(flattened.map((node) => node.id))
           setExpandedNodes(allNodeIds)
         }
       }, 0)
-      raf = id
     }
 
     return () => {
-      if (raf) cancelAnimationFrame(raf)
+      if (rafId) cancelAnimationFrame(rafId)
+      if (timeoutId) window.clearTimeout(timeoutId)
     }
   }, [data, defaultExpanded])
 
   // 获取节点的所有父节点ID
   const getParentIds = (nodeId) => {
     const node = flatData.find((n) => n.id === nodeId)
-    if (!node || !node.parentId) return []
+    if (!node?.parentId) return []
     return [node.parentId, ...getParentIds(node.parentId)]
   }
 
@@ -118,13 +119,36 @@ const OrgChart = ({
     }
   }
 
+  const nodeMap = useMemo(() => {
+    const map = new Map()
+    flatData.forEach((n) => map.set(n.id, n))
+    return map
+  }, [flatData])
+
+  const handleChildClick = (childId, event) => {
+    event.stopPropagation()
+
+    const childNode = nodeMap.get(childId)
+    if (!childNode) return
+
+    if (childNode.childrenIds.length > 0) {
+      toggleNodeExpansion(childId)
+
+      if (onNodeExpand) {
+        const isExpanded = expandedNodes.has(childId)
+        onNodeExpand(childNode, !isExpanded)
+      }
+    }
+
+    if (onNodeClick) onNodeClick(childNode, event)
+  }
+
   // 渲染单个节点及其子树
   const renderNodeTree = (nodeId) => {
-    const node = flatData.find((n) => n.id === nodeId)
+    const node = nodeMap.get(nodeId)
     if (!node) return null
 
     const isHighlighted = isNodeHighlighted(nodeId)
-    const isHovered = hoveredNodeId === nodeId
     const isExpanded = expandedNodes.has(nodeId)
     const hasChildren = node.childrenIds.length > 0
 
@@ -132,9 +156,11 @@ const OrgChart = ({
       <div key={nodeId} className={styles.orgChart}>
         {/* 当前节点 */}
         <div className={styles.currentContainer}>
-          <div
+          <button
+            type="button"
             className={` ${styles.currentBox} ${node.level === 0 ? styles.rootBox : ''} ${isHighlighted ? styles.highlightedParent : ''} ${nodeClassName || ''} ${node.level === 0 ? rootNodeClassName || '' : ''} ${animated ? styles.animated : ''} ${hasChildren ? styles.hasChildren : ''} `}
             style={customStyles.currentBox}
+            aria-expanded={hasChildren ? isExpanded : undefined}
             onMouseEnter={() => highlightOnHover && setHoveredNodeId(nodeId)}
             onMouseLeave={() => highlightOnHover && setHoveredNodeId(null)}
             onClick={(e) => handleNodeClick(node, e)}
@@ -147,7 +173,7 @@ const OrgChart = ({
                 </span>
               )}
             </div>
-          </div>
+          </button>
           {hasChildren && isExpanded && <div className={`${styles.line} ${styles.downWithLine}`}></div>}
         </div>
 
@@ -156,21 +182,19 @@ const OrgChart = ({
           <div className={styles.childrenContainer}>
             <div className={styles.childrenScroll}>
               <div className={styles.childrenWrapper}>
-                {node.childrenIds.map((childId, index) => (
+                {node.childrenIds.map((childId) => (
                   <div key={childId} className={styles.childWrapper}>
                     <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`}></div>
-                    <div
+                    <button
+                      type="button"
                       className={` ${styles.childBox} ${isNodeHighlighted(childId) ? styles.highlightedChild : ''} ${animated ? styles.animated : ''} `}
                       style={customStyles.childBox}
                       onMouseEnter={() => highlightOnHover && setHoveredNodeId(childId)}
                       onMouseLeave={() => highlightOnHover && setHoveredNodeId(null)}
-                      onClick={(e) => {
-                        const childNode = flatData.find((n) => n.id === childId)
-                        if (childNode) handleNodeClick(childNode, e)
-                      }}
+                      onClick={(e) => handleChildClick(childId, e)}
                     >
-                      <div className={styles.childTitle}>{flatData.find((n) => n.id === childId)?.name}</div>
-                    </div>
+                      <div className={styles.childTitle}>{nodeMap.get(childId)?.name}</div>
+                    </button>
                     {/* 递归渲染子节点 */}
                     {renderNodeTree(childId)}
                   </div>
@@ -194,3 +218,18 @@ const OrgChart = ({
 }
 
 export default OrgChart
+
+OrgChart.propTypes = {
+  data: PropTypes.object,
+  onNodeClick: PropTypes.func,
+  onNodeExpand: PropTypes.func,
+  defaultExpanded: PropTypes.bool,
+  highlightOnHover: PropTypes.bool,
+  nodeClassName: PropTypes.string,
+  rootNodeClassName: PropTypes.string,
+  animated: PropTypes.bool,
+  expandIcon: PropTypes.node,
+  collapseIcon: PropTypes.node,
+  showExpandIcon: PropTypes.bool,
+  customStyles: PropTypes.object,
+}

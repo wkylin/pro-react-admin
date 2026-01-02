@@ -1,5 +1,5 @@
 import React from 'react'
-import { Drawer, Switch, Divider, Tooltip, theme, ColorPicker } from 'antd'
+import { Drawer, Switch, Divider, Tooltip, theme, ColorPicker, Radio } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
 import { useProThemeContext, ThemeSettings } from '@/theme/hooks'
 import { useTranslation } from 'react-i18next'
@@ -123,12 +123,18 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
             onChange={(key) => changeSetting('navTheme', key)}
           />
         </div>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-sm">{t('settingDrawer.enableDarkMode')}</span>
-          <Switch
-            checked={themeSettings.themeMode === 'dark'}
-            onChange={(checked) => changeSetting('themeMode', checked ? 'dark' : 'light')}
-          />
+        <div className="mt-4">
+          <div className="mb-2 text-sm">{t('settingDrawer.enableDarkMode')}</div>
+          <Radio.Group
+            value={themeSettings.themeMode}
+            onChange={(e) => changeSetting('themeMode', e.target.value)}
+            optionType="button"
+            buttonStyle="solid"
+          >
+            <Radio.Button value="light">{t('settingDrawer.theme.light') || '浅色'}</Radio.Button>
+            <Radio.Button value="system">{t('settingDrawer.theme.system') || '跟随系统'}</Radio.Button>
+            <Radio.Button value="dark">{t('settingDrawer.theme.dark') || '深色'}</Radio.Button>
+          </Radio.Group>
         </div>
       </div>
 

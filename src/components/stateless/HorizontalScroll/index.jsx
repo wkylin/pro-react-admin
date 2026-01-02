@@ -1,5 +1,4 @@
-import React, { useRef } from 'react'
-import { motion, useTransform, useScroll } from 'motion/react'
+import PropTypes from 'prop-types'
 
 const cards = [
   {
@@ -56,6 +55,14 @@ const Card = ({ card }) => {
       </div>
     </div>
   )
+}
+
+Card.propTypes = {
+  card: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    url: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default HorizontalScrollParallax

@@ -142,10 +142,6 @@ const TransferHistory = ({ defaultDisplayCount = 3 }) => {
       return
     }
 
-    // 获取第一个和最后一个子项的高度
-    const firstItemHeight = itemRefs.current[0].offsetHeight
-    const lastItemHeight = itemRefs.current[lastIndex].offsetHeight
-
     // 计算实际内容高度（仅包含子项容器，不包含按钮）
     // 使用getBoundingClientRect获取精确高度
     const firstItemRect = itemRefs.current[0].getBoundingClientRect()

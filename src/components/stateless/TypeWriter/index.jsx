@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { motion } from 'motion/react'
 import clsx from 'clsx'
 
@@ -46,25 +47,23 @@ const TypeWriter = ({
           if (currentTextIndex === texts.length - 1 && !loop) {
             return
           }
-          setCurrentTextIndex((prev) => (prev + 1) % texts.length)
+          setCurrentTextIndex((currentTextIndex + 1) % texts.length)
           setCurrentIndex(0)
           timeout = setTimeout(() => {}, waitTime)
         } else {
           timeout = setTimeout(() => {
-            setDisplayText((prev) => prev.slice(0, -1))
+            setDisplayText(displayText.slice(0, -1))
           }, deleteSpeed)
         }
-      } else {
-        if (currentIndex < currentText.length) {
-          timeout = setTimeout(() => {
-            setDisplayText((prev) => prev + currentText[currentIndex])
-            setCurrentIndex((prev) => prev + 1)
-          }, speed)
-        } else if (texts.length > 1) {
-          timeout = setTimeout(() => {
-            setIsDeleting(true)
-          }, waitTime)
-        }
+      } else if (currentIndex < currentText.length) {
+        timeout = setTimeout(() => {
+          setDisplayText(currentText.slice(0, currentIndex + 1))
+          setCurrentIndex(currentIndex + 1)
+        }, speed)
+      } else if (texts.length > 1) {
+        timeout = setTimeout(() => {
+          setIsDeleting(true)
+        }, waitTime)
       }
     }
 
@@ -95,6 +94,21 @@ const TypeWriter = ({
       )}
     </div>
   )
+}
+
+TypeWriter.propTypes = {
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]).isRequired,
+  speed: PropTypes.number,
+  initialDelay: PropTypes.number,
+  waitTime: PropTypes.number,
+  deleteSpeed: PropTypes.number,
+  loop: PropTypes.bool,
+  className: PropTypes.string,
+  showCursor: PropTypes.bool,
+  hideCursorOnType: PropTypes.bool,
+  cursorChar: PropTypes.string,
+  cursorClassName: PropTypes.string,
+  cursorAnimationVariants: PropTypes.object,
 }
 
 export default TypeWriter

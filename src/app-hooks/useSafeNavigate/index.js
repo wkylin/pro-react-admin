@@ -43,7 +43,7 @@ export default function useSafeNavigate() {
     try {
       ok = await permissionService.canAccessRoute(path, false)
     } catch (err) {
-      console.error('safe navigate error', err)
+      console.error('permission check failed:', err)
       ok = false
     }
 

@@ -38,6 +38,11 @@ const zh = {
       dark: '暗色菜单风格',
     },
     enableDarkMode: '开启暗黑模式',
+    theme: {
+      light: '浅色',
+      dark: '深色',
+      system: '跟随系统',
+    },
     colors: {
       dawnBlueDefault: '拂晓蓝（默认）',
       dustRed: '薄暮',

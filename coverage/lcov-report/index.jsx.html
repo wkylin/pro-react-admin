@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>32/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">77.27% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>17/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>8/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>29/29</span>
             </div>
         
             
@@ -93,63 +93,72 @@
 <a name='L28'></a><a href='#L28'>28</a>
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
-<a name='L31'></a><a href='#L31'>31</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-yes">29x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useId } from 'react'
-import clsx from 'clsx'
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span></td><td class="text"><pre class="prettyprint lang-js">import clsx from 'clsx'
+import PropTypes from 'prop-types'
 &nbsp;
 const StickyCard = ({ cards, children }) =&gt; {
   return (
-    &lt;&gt;
-      &lt;section className="flex flex-col gap-4 pt-30 pb-20"&gt;
-        {cards.map((card, index) =&gt; {
-          const animateSlide = index % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right'
-          return (
-            &lt;div
-              key={card?.id}
-              style={{ top: `calc(50px + ${(index + 1) * 30}px)` }}
-              className={clsx(
-                'sticky z-0 m-auto flex w-[50vw] justify-center overflow-hidden rounded-2xl bg-[#0a192f] px-8 pt-4 after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-2xl after:outline after:-outline-offset-2 after:outline-white/20',
-                animateSlide
-              )}
-            &gt;
-              &lt;div className="animate-wiggle h-[30vh]"&gt;
-                &lt;p className="animate-hue-rotate hue-clip text-gradient text-2xl"&gt;Card Item&lt;/p&gt;
-              &lt;/div&gt;
+    &lt;section className="flex flex-col gap-4 pt-[30px] pb-[20px]"&gt;
+      {cards.map((card, index) =&gt; {
+        const animateSlide = index % 2 === 0 ? 'animate-slide-in-left' : 'animate-slide-in-right'
+        return (
+          &lt;div
+            key={card?.id}
+  <span class="missing-if-branch" title="else path not taken" >E</span>          style={{ position: 'sticky', top: `calc(50px + ${(index + 1) * 30}px)` }}
+            className={clsx(
+      <span class="missing-if-branch" title="else path not taken" >E</span>        'sticky z-10 m-auto flex w-[50vw] justify-center overflow-hidden rounded-2xl bg-[#0a192f] px-8 pt-4 after:pointer-events-none after:absolute after:inset-0 after:z-10 after:rounded-2xl after:outline after:-outline-offset-2 after:outline-white/20',
+              animateSlide
+            )}
+          &gt;
+            &lt;div className="animate-wiggle h-[30vh]"&gt;
+              &lt;p className="animate-hue-rotate hue-clip text-gradient text-2xl"&gt;Card Item&lt;/p&gt;<span class="branch-1 cbranch-no" title="branch not covered" ></span>
             &lt;/div&gt;
-          )
-        })}
-      &lt;/section&gt;
-    &lt;/&gt;
+          &lt;/div&gt;
+        )
+      })}
+    &lt;/section&gt;<span class="branch-1 cbranch-no" title="branch not covered" ></span>
   )
+}
+&nbsp;
+StickyCard.propTypes = {
+  cards: PropTypes.array.isRequired,
+  children: PropTypes.node
 }
 &nbsp;
 export default StickyCard
@@ -160,7 +169,7 @@ export default StickyCard
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-12T07:00:17.261Z
+                at 2026-01-02T05:32:56.204Z
             </div>
         <script src="prettify.js"></script>
         <script>

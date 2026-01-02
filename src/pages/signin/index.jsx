@@ -133,7 +133,9 @@ const SignIn = () => {
           localStorage.removeItem('token')
         }
       }
-    } catch {}
+    } catch {
+      // 无操作
+    }
     // 重置表单，确保输入框为空
     form.resetFields()
   }, [form])
@@ -158,7 +160,9 @@ const SignIn = () => {
     // 清除可能的手动设置角色，确保使用正确的账号角色
     try {
       localStorage.removeItem('user_role')
-    } catch {}
+    } catch {
+      // 无操作
+    }
 
     // 纳入统一登录态（测试账号也算已登录），并同步权限
     try {

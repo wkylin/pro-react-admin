@@ -46,7 +46,10 @@ const ThemeIndex: React.FC = () => {
 
   const getAlgorithm = () => {
     const algorithms = []
-    if (themeSettings.themeMode === 'dark') {
+    const prefersDark =
+      typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isDarkMode = themeSettings.themeMode === 'dark' || (themeSettings.themeMode === 'system' && prefersDark)
+    if (isDarkMode) {
       algorithms.push(theme.darkAlgorithm)
     } else {
       algorithms.push(theme.defaultAlgorithm)

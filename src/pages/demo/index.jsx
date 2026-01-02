@@ -326,7 +326,7 @@ const ProDemo = () => {
           </AnimatedList>
         </section>
 
-        <GradientStats items={['200+', '400+', '1200+', '2000+']} />
+        <GradientStats items={['200+', '400+', '120+', '300+']} />
         <DescBox />
         <TagCard tagCardList={tagCardList} showMax={6} />
         <StickyCard cards={stickyCardItems} />

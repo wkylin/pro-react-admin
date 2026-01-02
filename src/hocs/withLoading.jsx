@@ -1,5 +1,3 @@
-import React, { useState } from 'react'
-
 function withLoading(Component) {
   return function WithLoading({ isLoading, ...props }) {
     if (isLoading) {

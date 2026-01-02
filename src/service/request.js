@@ -133,7 +133,7 @@ class RequestUtils {
     try {
       showMessage.error(message)
     } catch (e) {
-      console.error('消息提示失败:', e, message)
+      showMessage.error(e.message)
     }
   }
 

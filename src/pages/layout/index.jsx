@@ -15,7 +15,6 @@ import { useProThemeContext } from '@theme/hooks'
 const ProLayout = () => {
   const layoutRef = useRef(null)
   const [settingOpen, setSettingOpen] = useState(false)
-  const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const isMobile = useStore((s) => s.isMobile)
 

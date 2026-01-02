@@ -3,7 +3,6 @@ import FixTabPanel from '@stateless/FixTabPanel'
 import Tilt from 'react-parallax-tilt'
 import ThreeDCard from '@stateless/ThreeDCard'
 
-import wkylinPng from '@assets/images/wkylin.png'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'

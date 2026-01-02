@@ -37,7 +37,6 @@ const PageContainer = ({ children, title, footer = <Footer />, className, style 
           className="page-container-content"
           style={{
             flex: 1,
-            overflow: 'auto',
             position: 'relative',
             padding: '24px',
           }}

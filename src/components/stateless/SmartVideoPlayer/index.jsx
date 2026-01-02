@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
 import useVideo from '@hooks/useVideo'
 import { I18nextProvider, useTranslation } from 'react-i18next'
@@ -86,22 +87,24 @@ const IconButton = React.memo(function IconButton({
   buttonRef,
   tooltipPlacement = 'top',
 }) {
-  const tooltipPlacementClass =
-    tooltipPlacement === 'topLeft'
-      ? styles.tooltipTopLeft
-      : tooltipPlacement === 'topRight'
-        ? styles.tooltipTopRight
-        : tooltipPlacement === 'right'
-          ? styles.tooltipRight
-          : tooltipPlacement === 'left'
-            ? styles.tooltipLeft
-            : tooltipPlacement === 'bottom'
-              ? styles.tooltipBottom
-              : tooltipPlacement === 'bottomLeft'
-                ? styles.tooltipBottomLeft
-                : tooltipPlacement === 'bottomRight'
-                  ? styles.tooltipBottomRight
-                  : ''
+  let tooltipPlacementClass = ''
+  if (tooltipPlacement === 'topLeft') {
+    tooltipPlacementClass = styles.tooltipTopLeft
+  } else if (tooltipPlacement === 'topRight') {
+    tooltipPlacementClass = styles.tooltipTopRight
+  } else if (tooltipPlacement === 'right') {
+    tooltipPlacementClass = styles.tooltipRight
+  } else if (tooltipPlacement === 'left') {
+    tooltipPlacementClass = styles.tooltipLeft
+  } else if (tooltipPlacement === 'bottom') {
+    tooltipPlacementClass = styles.tooltipBottom
+  } else if (tooltipPlacement === 'bottomLeft') {
+    tooltipPlacementClass = styles.tooltipBottomLeft
+  } else if (tooltipPlacement === 'bottomRight') {
+    tooltipPlacementClass = styles.tooltipBottomRight
+  } else {
+    tooltipPlacementClass = ''
+  }
 
   return (
     <button
@@ -1974,6 +1977,10 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
     </>
   )
 })
+
+SmartVideoPlayerInner.propTypes = {
+  embedUrl: PropTypes.string,
+}
 
 const SmartVideoPlayer = React.forwardRef(function SmartVideoPlayer(props, ref) {
   const initialLang = (appI18n?.resolvedLanguage || appI18n?.language || 'zh').toString()

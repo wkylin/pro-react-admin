@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Button, theme } from 'antd'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 import BlueIcon from './icons/blue.png'

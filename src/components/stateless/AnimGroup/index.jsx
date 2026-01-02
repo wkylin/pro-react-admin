@@ -1,18 +1,8 @@
-/* eslint-disable react-hooks/static-components */
-import React, { useMemo } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { motion } from 'motion/react'
 
-// export type PresetType =
-//   | 'fade'
-//   | 'slide'
-//   | 'scale'
-//   | 'blur'
-//   | 'blur-slide'
-//   | 'zoom'
-//   | 'flip'
-//   | 'bounce'
-//   | 'rotate'
-//   | 'swing';
+// Preset types: 'fade' | 'slide' | 'scale' | 'blur' | 'blur-slide' | 'zoom' | 'flip' | 'bounce' | 'rotate' | 'swing'
 
 const defaultContainerVariants = {
   visible: {
@@ -95,21 +85,33 @@ const AnimatedGroup = ({ children, className, variants, preset, asParent = 'div'
   const containerVariants = variants?.container || selectedVariants.container
   const itemVariants = variants?.item || selectedVariants.item
 
-  // motion.create 会返回运行时组件；这在某些静态检查器中触发 "create components during render" 错误。
-  // 这里使用 useMemo 保持稳定性。
-  const MotionComponent = useMemo(() => motion.create(asParent), [asParent])
-
-  const MotionChild = useMemo(() => motion.create(asChild), [asChild])
+  // Use built-in motion element lookup (e.g. motion.div) instead of motion.create.
+  // This avoids creating components during render which breaks some static checks.
+  const MotionComponent = motion[asParent] || motion.div
+  const MotionChild = motion[asChild] || motion.div
 
   return (
     <MotionComponent initial="hidden" animate="visible" variants={containerVariants} className={className}>
-      {React.Children.map(children, (child, index) => (
-        <MotionChild key={index} variants={itemVariants}>
-          {child}
-        </MotionChild>
-      ))}
+      {React.Children.map(children, (child) => {
+        // Prefer original child key when present; avoid explicitly using array index as key.
+        const childKey = child?.key
+        return (
+          <MotionChild key={childKey} variants={itemVariants}>
+            {child}
+          </MotionChild>
+        )
+      })}
     </MotionComponent>
   )
+}
+
+AnimatedGroup.propTypes = {
+  children: PropTypes.node,
+  className: PropTypes.string,
+  variants: PropTypes.object,
+  preset: PropTypes.string,
+  asParent: PropTypes.string,
+  asChild: PropTypes.string,
 }
 
 export default AnimatedGroup

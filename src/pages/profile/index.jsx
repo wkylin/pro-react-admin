@@ -1,4 +1,3 @@
-import React, { useRef } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
@@ -25,7 +24,6 @@ const codeString = `const profile = {
   yearsOfExperience: 12,
 };`
 const Profile = () => {
-  const scrollRef = useRef(null)
   return (
     <FixTabPanel>
       <div className="code-window relative h-full w-full bg-gray-900 shadow-black">

@@ -1,5 +1,4 @@
-// https://github.com/rahuulmiishra/trendyAwait/blob/main/runPromise.js
-
+// Async variant of tryCatch(): wraps a promise-returning function.
 const runPromise = async (fn) => {
   try {
     const d = await fn()
@@ -9,34 +8,4 @@ const runPromise = async (fn) => {
   }
 }
 
-const promise = () =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res('promise')
-    }, 3000)
-  })
-
-async function test() {
-  const [res] = await runPromise(promise)
-}
-
-test()
-
-// Demonstration of using params.
-const fetchDataFromServer = (params) => () =>
-  new Promise((res) => {
-    setTimeout(() => {
-      res(`Received Data' ${params}`)
-    }, 3000)
-  })
-
-async function main() {
-  const [res1, error1] = await runPromise(fetchDataFromServer('123'))
-  const [res2, error2] = await runPromise(fetchDataFromServer())
-  console.log('res1', res1)
-  console.log('error1', error1)
-  console.log('res2', res2)
-  console.log('error2', error2)
-}
-
-main()
+export default runPromise

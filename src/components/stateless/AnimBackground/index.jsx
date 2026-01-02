@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'motion/react'
-import React, { Children, cloneElement, useEffect, useState, useId } from 'react'
+import { Children, cloneElement, useState, useId } from 'react'
 import clsx from 'clsx'
 
 const AnimatedBackground = ({ children, defaultValue, onValueChange, className, transition, enableHover = false }) => {

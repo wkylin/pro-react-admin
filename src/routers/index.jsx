@@ -10,7 +10,6 @@
  * 4. 错误路由：404、403 等异常页面
  */
 
-import React from 'react'
 import { mainLayoutRoute, layoutRoutes } from './modules/layout.routes'
 import { authRoutes } from './modules/auth.routes'
 import { businessRoutes } from './modules/business.routes'

@@ -296,7 +296,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
           existing = hidden.querySelector(`[data-keepalive-id="${id}"]`)
         }
       }
-    } catch (err) {
+    } catch {
       existing = null
     }
 
@@ -315,7 +315,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
     if (process.env.NODE_ENV === 'development') {
       try {
         console.debug('[KeepAlive] setContainerNode', id, containerRef.current)
-      } catch (e) {}
+      } catch {}
     }
     // no cleanup here; mount/unmount handled elsewhere
   }, [id])
@@ -381,7 +381,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
       try {
         containerRef.current = placeholder
         setContainerNode(placeholder)
-      } catch (e) {}
+      } catch {}
       return
     }
 
@@ -407,7 +407,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
             to: placeholder,
             dispatchError,
           })
-        } catch (e) {}
+        } catch {}
       }
 
       let appended = false
@@ -432,14 +432,14 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                     })
                     try {
                       document.body.dataset.keepaliveIssue = 'no-children'
-                    } catch (e) {}
+                    } catch {}
                   }
                 }
-              } catch (e) {}
+              } catch {}
             }, 50)
-          } catch (e) {}
+          } catch {}
         }
-      } catch (e) {
+      } catch {
         // swallow; we'll record below
       }
 
@@ -457,7 +457,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
             time: Date.now(),
           })
         }
-      } catch (e) {}
+      } catch {}
 
       // If we just appended and this instance is active, clear any stray inline "display: none" styles
       if (appended && active && shouldRender) {
@@ -474,7 +474,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                     el.style.removeProperty('display')
                     cleared.push(el.tagName)
                   }
-                } catch (e) {}
+                } catch {}
               })
 
               // Ensure the root keepalive node is visible (force with !important)
@@ -483,7 +483,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                 if (root && root.style) {
                   root.style.setProperty('display', 'block', 'important')
                 }
-              } catch (e) {}
+              } catch {}
 
               if (typeof window !== 'undefined') {
                 window.__keepalive_debug_details = window.__keepalive_debug_details || []
@@ -495,9 +495,9 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                   time: Date.now(),
                 })
               }
-            } catch (e) {}
+            } catch {}
           })
-        } catch (e) {}
+        } catch {}
       }
 
       // Ensure root visible when active (force with !important) — covers cases where append didn't run
@@ -514,9 +514,9 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
                   if (el && el.style && el.style.display === 'none') {
                     el.style.removeProperty('display')
                   }
-                } catch (e) {}
+                } catch {}
               })
-            } catch (e) {}
+            } catch {}
 
             if (typeof window !== 'undefined') {
               window.__keepalive_debug_details = window.__keepalive_debug_details || []
@@ -527,7 +527,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
               })
             }
           }
-        } catch (e) {}
+        } catch {}
       }
 
       // Restore scroll positions
@@ -557,7 +557,7 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
         childrenType: typeof children,
         time: Date.now(),
       })
-    } catch (e) {}
+    } catch {}
   }, [shouldRender, active, containerNode, id, children])
 
   // Activity mode: render children inline and avoid DOM moving to reduce reflows
@@ -575,15 +575,15 @@ const KeepAlive = ({ id, active = false, children, persistOnUnmount = false, cac
               if (el && el.style && el.style.display === 'none') {
                 el.style.removeProperty('display')
               }
-            } catch (e) {}
+            } catch {}
           })
           if (typeof window !== 'undefined') {
             window.__keepalive_debug_details = window.__keepalive_debug_details || []
             window.__keepalive_debug_details.push({ id, note: 'activity-mode-cleaned-display', time: Date.now() })
           }
-        } catch (e) {}
+        } catch {}
       })
-    } catch (e) {}
+    } catch {}
   }, [ActivityComponent, active, isActivityVisible, shouldRender])
 
   if (!shouldRender) return null

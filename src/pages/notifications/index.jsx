@@ -6,7 +6,6 @@ import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
 import FixTabPanel from '@stateless/FixTabPanel'
 import { usePermission } from '@/app-hooks/usePermission'
-// import request from '@/service/request'
 
 const NotificationsPage = () => {
   const { themeSettings } = useProThemeContext()
@@ -26,7 +25,7 @@ const NotificationsPage = () => {
     []
   )
 
-  const [items, setItems] = useState(initialMock)
+  const [items] = useState(initialMock)
   const { permissions = [] } = usePermission()
   // 用于演示从父组件/外部控制 toolbar 表单的 apiRef
   const tableApiRef = useRef(null)
@@ -43,7 +42,7 @@ const NotificationsPage = () => {
   }
 
   const exportRows = (selectedRowKeys = []) => {
-    const rows = selectedRowKeys && selectedRowKeys.length ? items.filter((i) => selectedRowKeys.includes(i.id)) : items
+    const rows = selectedRowKeys?.length ? items.filter((i) => selectedRowKeys.includes(i.id)) : items
     if (!rows || rows.length === 0) {
       message.info('没有数据可导出')
       return

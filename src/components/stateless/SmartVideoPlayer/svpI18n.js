@@ -8,7 +8,13 @@ export const SVP_UI_LANGUAGE_STORAGE_KEY = 'svpUiLanguage'
 
 function normalizeLang(lang) {
   const v = (lang || '').toString().toLowerCase()
-  return v.startsWith('zh') ? 'zh' : v.startsWith('en') ? 'en' : null
+  let result = null
+  if (v.startsWith('zh')) {
+    result = 'zh'
+  } else if (v.startsWith('en')) {
+    result = 'en'
+  }
+  return result
 }
 
 export function getStoredSvpUiLanguage() {

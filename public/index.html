@@ -144,7 +144,11 @@
             const mode = settings.themeMode || 'light'
             const primary = settings.colorPrimary || '#1677ff'
 
-            if (mode === 'dark') {
+            // If user explicitly chose dark, or chose system and system prefers dark
+            if (
+              mode === 'dark' ||
+              (mode === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            ) {
               root.style.setProperty('--loader-bg', '#141414')
               root.style.setProperty('--loader-text', '#ffffff')
               root.style.setProperty('--loader-secondary', 'rgba(255,255,255,0.2)')

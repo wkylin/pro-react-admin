@@ -164,6 +164,7 @@ export const getLocalStorage = (key) => {
   try {
     return JSON.parse(value)
   } catch (error) {
+    console.log('getLocalStorage parse error:', error, value)
     return value
   }
 }
@@ -250,7 +251,15 @@ export const getTableNumber = (page, pageSize, index) => {
 export const shuffleArray = (arr) =>
   [...Array(arr.length)]
     .map((_, i) => Math.floor(Math.random() * (i + 1)))
-    .reduce((shuffled, r, i) => shuffled.map((num, j) => (j === i ? shuffled[r] : j === r ? shuffled[i] : num)), arr)
+    .reduce(
+      (shuffled, r, i) =>
+        shuffled.map((num, j) => {
+          if (j === i) return shuffled[r]
+          if (j === r) return shuffled[i]
+          return num
+        }),
+      arr
+    )
 
 // 根据特定对象属性对数组进行分组
 export const groupBy = (arr, groupFn) =>
@@ -261,33 +270,6 @@ export const groupBy = (arr, groupFn) =>
     }),
     {}
   )
-
-// const fruits = [
-//   {
-//     name: 'apple', color: 'yellow'
-//   },
-//   {
-//     name: 'banana', color: 'red'
-//   },
-//   {
-//     name: 'pine', color: 'yellow'
-//   },
-//   {
-//     name: 'berry', color: 'red'
-//   },
-// ]
-
-// const groupedByName = groupBy(fruits, (fruit) => fruit.color)
-
-// const people = [
-//   { name: 'Alice', role: 'admin' },
-//   { name: 'Bob', role: 'user' },
-//   { name: 'Charlie', role: 'admin' },
-// ];
-// const grouped = people.reduce((acc, person) => {
-//   (acc[person.role] = acc[person.role] || []).push(person);
-//   return acc;
-// }, {});
 
 export const areEqual = (arr1, arr2) => JSON.stringify(arr1.sort()) === JSON.stringify(arr2.sort())
 export const areEqual2 = (arr1, arr2) => arr1.sort().join(',') === arr2.sort().join(',')
@@ -322,20 +304,6 @@ export const isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || year
 export const chunkArray = (arr, size) => {
   return Array.from({ length: Math.ceil(arr.length / size) }, (v, i) => arr.slice(i * size, i * size + size))
 }
-
-// export const partitionArray = (arr, fn) => {
-//   return arr.reduce(
-//     ([pass, fail], elem) => {
-//       if (callback(elem)) {
-//         pass.push(elem)
-//       } else {
-//         fail.push(elem)
-//       }
-//       return [pass, fail]
-//     },
-//     [[], []]
-//   )
-// }
 
 export const shuffleArr = (arr) => {
   for (let i = arr.length - 1; i > 0; i--) {

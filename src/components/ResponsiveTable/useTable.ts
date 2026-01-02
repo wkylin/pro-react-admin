@@ -250,7 +250,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
         const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !initialMergedRef.current)
         const extra = includeSearch ? initialSearch || {} : undefined
         await fetchPage(prev, pageSize, undefined, extra)
-      } catch (e) {
+      } catch {
         // ignore - caller can handle
       }
     } else {
@@ -259,7 +259,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
         const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !initialMergedRef.current)
         const extra = includeSearch ? initialSearch || {} : undefined
         await fetchPage(current, pageSize, undefined, extra)
-      } catch (e) {
+      } catch {
         // ignore
       }
     }
@@ -324,7 +324,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
                   window.history.replaceState({}, '', newUrl)
                 }
               }
-            } catch (e) {
+            } catch {
               // ignore URL modification errors
             }
           }
@@ -361,7 +361,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
       let list: any = undefined
       try {
         list = getByPath(res, responseFieldMap.listField)
-      } catch (err) {
+      } catch {
         // ignore
       }
 

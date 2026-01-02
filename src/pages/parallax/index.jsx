@@ -1,6 +1,5 @@
 import React from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
-import Toggle from './toggle'
 
 const ParallaxVert = () => (
   <FixTabPanel>

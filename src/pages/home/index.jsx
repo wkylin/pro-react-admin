@@ -89,17 +89,6 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
 
-// const boxList = Array.apply(null, Array(10))
-
-const code = {
-  fileName: './explanations.ts',
-  code: `export const = explanations = {
-main : "This component needs more than the default code block to be displayed"
-detailed : "For now, if you want the exact same behaviour, please check the github"
-}`,
-  lang: 'typescript',
-}
-
 const preCode = `
   const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
     return (
@@ -360,8 +349,6 @@ const Home = () => {
     }
   }, [scrollRef])
 
-  const [isVisible, setIsVisible] = useState(false)
-
   const [barRect, barRef] = useRect()
 
   const images = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`)
@@ -389,7 +376,6 @@ const Home = () => {
 
   return (
     <FixTabPanel ref={scrollRef}>
-      {/* <button onClick={saveSvgAsFile}>保存 SVG</button> */}
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
@@ -593,8 +579,14 @@ const Home = () => {
       >
         <MemoizedStars />
       </section>
-      <section
+      <button
+        type="button"
         onMouseEnter={handleMouseEnter}
+        onTouchStart={(e) => handleMouseEnter(e)}
+        onFocus={() => {
+          // provide some visible/default state when focused
+          setEnterDirection((prev) => prev || 'left')
+        }}
         ref={mouseEnterRef}
         style={{
           marginBottom: 15,
@@ -605,10 +597,12 @@ const Home = () => {
           alignItems: 'center',
           justifyContent: 'center',
           color: '#fff',
+          border: 'none',
+          padding: 0,
         }}
       >
         Direction: {enterDirection}
-      </section>
+      </button>
       <section style={{ margin: '20px 0' }}>
         <CompareAll
           firstImage={firstImage}
@@ -635,7 +629,7 @@ const Home = () => {
           hoverFillColor="#222"
         />
       </section>
-      {/* <section
+      <section
         style={{
           margin: '20px 0',
           width: 360,
@@ -643,16 +637,9 @@ const Home = () => {
       >
         <section className="relative p-4">
           <div className={styles.itemCircle} />
+          <button onClick={saveSvgAsFile}>保存 SVG</button>
           <svg ref={svgRef} style={{ height: '10px', width: '100%' }}>
-            <path
-              d="M 0 0 L 5000 0"
-              stroke-miterlimit="10"
-              fill="none"
-              stroke="#595959"
-              stroke-width="5"
-              stroke-dasharray="10"
-              stroke-dashoffset="5000"
-            >
+            <path d="M 0 0 L 5000 0" fill="none" stroke="#595959">
               <animate
                 attributeName="stroke-dashoffset"
                 values="100;0"
@@ -664,7 +651,7 @@ const Home = () => {
           </svg>
           <div className={styles.itemCircleTail} />
         </section>
-      </section> */}
+      </section>
       <section className={styles.line} />
       <section className={styles.linear} />
 
@@ -924,11 +911,7 @@ const Home = () => {
           wordClassName="text-blue-500 font-bold"
         />
         <span className="block sm:inline">websites and apps.</span>
-        {/* <AnimateWave /> */}
       </section>
-      {/* <section style={{ margin: 20 }}>
-        <AdvancedCodeBlock code={code.code} fileName={code.fileName} lang={code.lang} />
-      </section> */}
       <section style={{ margin: 20 }}>
         <ReactSignature />
       </section>

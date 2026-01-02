@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Grid } from 'antd'
 import { useStore } from '@/store'
 
@@ -26,7 +26,7 @@ const GlobalBreakpointListener = () => {
           root.classList.remove('is-mobile')
         }
       }
-    } catch (err) {
+    } catch {
       // ignore in non-browser environments
     }
   }, [screens, setScreens, setIsMobile])
