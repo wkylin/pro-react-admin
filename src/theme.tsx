@@ -22,15 +22,10 @@ const ThemeIndex: React.FC = () => {
   useRemoveGlobalLoader()
   const { themeSettings } = useProThemeContext()
 
-  // 拿到 Antd App 实例（message、notification 等）
   const { message } = AntdApp.useApp()
 
   useEffect(() => {
     setMessageInstance(message)
-    // 调整 KeepAlive 全局策略以提升路由切换响应性：
-    // - 减少 deactivateDelay（ms）以更快地回收不活跃实例
-    // - 减少 keepInactiveCount 以避免保留过多隐藏 DOM 节点
-    // - 降低缓存上限 limit 以减小内存占用
     try {
       keepAliveManager.setOptions({
         deactivateDelay: 500,

@@ -1,5 +1,14 @@
 import { App } from 'antd'
 
+type MessageKey = string | number
+type MessageType = 'success' | 'error' | 'warning' | 'info' | 'loading'
+type OpenConfig = {
+  type: MessageType
+  content: string
+  key?: MessageKey
+  duration?: number
+}
+
 // 声明一个变量来保存消息实例
 let messageInstance: ReturnType<typeof App.useApp>['message'] | null = null
 
@@ -40,5 +49,19 @@ export const showMessage = {
   info: (content: string) => {
     if (!shouldShow(content)) return
     if (messageInstance) messageInstance.info(content)
+  },
+  open: ({ type, content, key, duration }: OpenConfig) => {
+    if (!messageInstance) return
+    // key 存在时通常用于“同一条消息更新”，不做去重
+    if (!key && type !== 'loading' && !shouldShow(content)) return
+    messageInstance.open({ type, content, key, duration })
+  },
+  loading: (content: string, key?: MessageKey) => {
+    if (!messageInstance) return
+    messageInstance.open({ type: 'loading', content, key, duration: 0 })
+  },
+  destroy: (key?: MessageKey) => {
+    if (!messageInstance) return
+    messageInstance.destroy(key)
   },
 }
