@@ -11,6 +11,11 @@ const ZustandDemo = () => {
   const isSidebarOpen = useStore((state) => state.isSidebarOpen)
   const toggleSidebar = useStore((state) => state.toggleSidebar)
 
+  const immerItems = useStore((state) => state.immerItems)
+  const pushImmerItem = useStore((state) => state.pushImmerItem)
+  const popImmerItem = useStore((state) => state.popImmerItem)
+  const clearImmerItems = useStore((state) => state.clearImmerItems)
+
   return (
     <FixTabPanel>
       <div className="flex flex-col gap-6 p-6">
@@ -40,6 +45,33 @@ const ZustandDemo = () => {
             </Space>
           </div>
           <div className="mt-4 text-gray-500">* 此状态已配置持久化，刷新页面后状态会保持。</div>
+        </Card>
+
+        <Card title="Zustand + Immer 示例">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-6">
+              <Statistic title="Immer 列表长度" value={immerItems.length} />
+              <Space>
+                <Button onClick={pushImmerItem}>Push Item (immer)</Button>
+                <Button onClick={popImmerItem}>Pop Item</Button>
+                <Button onClick={clearImmerItems}>Clear</Button>
+              </Space>
+            </div>
+
+            <div className="mt-2">
+              <div className="text-sm text-gray-500">Items:</div>
+              <div className="mt-2 max-h-40 overflow-auto">
+                {immerItems.map((it) => (
+                  <div key={it.id} className="border-b py-1">
+                    {it.value}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="mt-2 text-gray-500">
+              * 这里用的是 Zustand 的 `immer` middleware：`set(draft =&gt; draft.xxx = ...)`。
+            </div>
+          </div>
         </Card>
       </div>
     </FixTabPanel>

@@ -2,7 +2,9 @@
 import { StateCreator } from 'zustand'
 import { StoreState, AppSlice, AppResponsive, Screens } from '../types'
 
-export const createAppSlice: StateCreator<StoreState, [], [], AppSlice & AppResponsive> = (set) => ({
+export const createAppSlice: StateCreator<StoreState, [['zustand/immer', never]], [], AppSlice & AppResponsive> = (
+  set
+) => ({
   isSidebarOpen: true,
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setSidebarOpen: (isOpen: boolean) => set({ isSidebarOpen: isOpen }),

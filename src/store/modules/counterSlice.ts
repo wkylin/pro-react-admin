@@ -2,7 +2,10 @@
 import { StateCreator } from 'zustand'
 import { StoreState, CounterSlice } from '../types'
 
-export const createCounterSlice: StateCreator<StoreState, [], [], CounterSlice> = (set, get) => ({
+export const createCounterSlice: StateCreator<StoreState, [['zustand/immer', never]], [], CounterSlice> = (
+  set,
+  get
+) => ({
   count: 0,
   increment: () => set((state) => ({ count: state.count + 1 })),
   decrement: () => set((state) => ({ count: state.count - 1 })),

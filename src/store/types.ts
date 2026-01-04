@@ -23,4 +23,16 @@ export interface AppResponsive {
   setIsMobile: (isMobile: boolean) => void
 }
 
-export type StoreState = CounterSlice & AppSlice & AppResponsive
+export interface ImmerItem {
+  id: number
+  value: string
+}
+
+export interface ImmerDemoSlice {
+  immerItems: ImmerItem[]
+  pushImmerItem: () => void
+  popImmerItem: () => void
+  clearImmerItems: () => void
+}
+
+export type StoreState = CounterSlice & AppSlice & AppResponsive & ImmerDemoSlice
