@@ -18,7 +18,7 @@ export const createRoute = (config) => {
   const route = {
     path,
     element,
-    ...rest,
+    ...rest
   }
 
   if (index) {
@@ -36,7 +36,7 @@ export const createRoute = (config) => {
       i18nKey,
       key: key || path,
       auth,
-      ...safeMeta,
+      ...safeMeta
     }
   }
 
@@ -69,7 +69,7 @@ export const flattenRoutes = (routes) => {
         result.push({
           ...(route.meta && typeof route.meta === 'object' ? route.meta : {}),
           path: fullPath,
-          element: route.element,
+          element: route.element
         })
       }
 
