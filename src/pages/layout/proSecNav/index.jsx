@@ -10,10 +10,12 @@ import { annotatedRootRouter, flattenRoutes } from '@src/routers'
 
 import styles from './index.module.less'
 
+import { mainLayoutMenu } from '@src/config/menu.config'
+
 const PAGE_EXTENSIONS = ['.jsx', '.tsx', '.js', '.ts']
 const PAGE_CANDIDATE_TEMPLATES = [
   (path, ext) => `/src/pages${path}${ext}`,
-  (path, ext) => `/src/pages${path}/index${ext}`,
+  (path, ext) => `/src/pages${path}/index${ext}`
 ]
 
 const pageModules = import.meta?.glob?.('/src/pages/**/*.{js,jsx,ts,tsx}') ?? {}
@@ -65,8 +67,6 @@ const resolvePageModuleKey = (() => {
     return null
   }
 })()
-
-import { mainLayoutMenu } from '@src/config/menu.config'
 
 let lazyComponentsCache = null
 let lazyComponentsPromise = null
@@ -208,7 +208,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       }
 
       return (
-        <span onMouseEnter={onPreload} role="menuitem" tabIndex={0}>
+        <span onMouseEnter={onPreload} role='menuitem' tabIndex={0}>
           {labelText || path}
         </span>
       )
@@ -228,7 +228,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       const base = {
         ...rest,
         path,
-        label: Label,
+        label: Label
       }
       if (children && Array.isArray(children)) {
         const validChildren = children.map(translateItem).filter(Boolean)
@@ -433,7 +433,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 ProSecNav.propTypes = {
   mode: PropTypes.string,
   theme: PropTypes.string,
-  onMenuClick: PropTypes.func,
+  onMenuClick: PropTypes.func
 }
 
 export default ProSecNav
