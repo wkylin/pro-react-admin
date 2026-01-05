@@ -13,6 +13,8 @@ import { routePermissionMap } from '@src/mock/permission'
 export const createRoute = (config) => {
   const { path, element, index = false, children, name, i18nKey, key, auth = false, meta = {}, ...rest } = config
 
+  const safeMeta = meta && typeof meta === 'object' ? meta : {}
+
   const route = {
     path,
     element,
@@ -28,13 +30,13 @@ export const createRoute = (config) => {
   }
 
   // 添加路由元数据（用于菜单、权限控制等）
-  if (name || i18nKey || key !== undefined || auth || Object.keys(meta).length > 0) {
+  if (name || i18nKey || key !== undefined || auth || Object.keys(safeMeta).length > 0) {
     route.meta = {
       name,
       i18nKey,
       key: key || path,
       auth,
-      ...meta,
+      ...safeMeta,
     }
   }
 
@@ -65,7 +67,7 @@ export const flattenRoutes = (routes) => {
 
       if (route.meta) {
         result.push({
-          ...route.meta,
+          ...(route.meta && typeof route.meta === 'object' ? route.meta : {}),
           path: fullPath,
           element: route.element,
         })
