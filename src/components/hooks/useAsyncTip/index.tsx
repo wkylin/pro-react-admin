@@ -11,18 +11,22 @@ type UseAsyncTipOptions = {
   onError?: TipHandler
 }
 
+const hasOwn = (obj: any, prop: PropertyKey) => {
+  return obj != null && Object.hasOwn(obj, prop)
+}
+
 const isBusinessEnvelope = (val: any) => {
-  return !!(val && typeof val === 'object' && Object.hasOwn(val, 'code'))
+  return !!(val && typeof val === 'object' && hasOwn(val, 'code'))
 }
 
 const isOk = (res: any) => {
   if (!res || typeof res !== 'object') return !!res
   // 兼容 { success: true/false }
-  if (Object.hasOwn(res, 'success')) return !!res.success
+  if (hasOwn(res, 'success')) return !!res.success
   // 兼容 { code: 0/200 }
   if (isBusinessEnvelope(res)) return res.code === 0 || res.code === 200
   // 兼容 axios error 分支可能返回 { status: 4xx/5xx, data: {...} }
-  if (Object.hasOwn(res, 'status')) return res.status >= 200 && res.status < 300
+  if (hasOwn(res, 'status')) return res.status >= 200 && res.status < 300
   return true
 }
 

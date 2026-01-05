@@ -18,6 +18,8 @@ const PAGE_CANDIDATE_TEMPLATES = [
 
 const pageModules = import.meta?.glob?.('/src/pages/**/*.{js,jsx,ts,tsx}') ?? {}
 
+const hasOwn = (obj, key) => obj != null && Object.hasOwn(obj, key)
+
 const resolvePageModuleKey = (() => {
   const cache = new Map()
 
@@ -43,7 +45,7 @@ const resolvePageModuleKey = (() => {
     if (cache.has(pathKey)) return cache.get(pathKey)
 
     for (const c of makeCandidates(pathKey)) {
-      if (Object.hasOwn(pageModules, c)) {
+      if (hasOwn(pageModules, c)) {
         cache.set(pathKey, c)
         return c
       }
@@ -52,7 +54,7 @@ const resolvePageModuleKey = (() => {
     if (pathKey.includes(':')) {
       const paramPath = paramify(pathKey)
       for (const c of makeCandidates(paramPath)) {
-        if (Object.hasOwn(pageModules, c)) {
+        if (hasOwn(pageModules, c)) {
           cache.set(pathKey, c)
           return c
         }
