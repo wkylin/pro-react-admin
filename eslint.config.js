@@ -24,8 +24,8 @@ export default [
       'coverage/',
       '**/*.d.ts',
       'CHANGELOG.md',
-      'package-lock.json',
-    ],
+      'package-lock.json'
+    ]
   },
 
   // 基础推荐规则
@@ -40,29 +40,29 @@ export default [
     plugins: {
       'react-hooks': reactHooks,
       import: importPlugin,
-      unicorn: unicorn,
-      react: react,
-      '@typescript-eslint': typescriptEslint,
+      unicorn,
+      react,
+      '@typescript-eslint': typescriptEslint
     },
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.node,
         ...globals.es2021,
-        React: 'readonly',
+        React: 'readonly'
       },
       parser: typescriptParser,
       ecmaVersion: 'latest',
-      sourceType: 'module',
+      sourceType: 'module'
     },
     settings: {
       react: {
-        version: 'detect',
+        version: 'detect'
       },
       'import/resolver': {
         typescript: true,
-        node: true,
-      },
+        node: true
+      }
     },
     rules: {
       // React Hooks 严格检查
@@ -84,8 +84,8 @@ export default [
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 
       // avoid hard failure on empty blocks
-      'no-empty': 'warn',
-    },
+      'no-empty': 'warn'
+    }
   },
 
   // Jest globals for test files
@@ -93,11 +93,11 @@ export default [
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],
     languageOptions: {
       globals: {
-        ...globals.jest,
-      },
-    },
+        ...globals.jest
+      }
+    }
   },
 
   // Prettier 放在最后（Flat 兼容入口）
-  prettierConfig,
+  prettierConfig
 ]

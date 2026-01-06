@@ -16,7 +16,7 @@ const safeShowDenied = () => {
     })
 }
 
-export default function useSafeNavigate() {
+export default function useSafeNavigate () {
   const navigate = useNavigate()
   const lastDeniedRef = useRef(null)
 

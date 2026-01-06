@@ -4,7 +4,7 @@ const { spawnSync } = require('node:child_process')
 const path = require('node:path')
 const fs = require('node:fs')
 
-function main() {
+function main () {
   const token = process.env.SONAR_TOKEN
 
   if (!token) {
@@ -41,7 +41,7 @@ function main() {
   const result = spawnSync(localScanner, args, {
     stdio: 'inherit',
     shell: false,
-    windowsHide: true,
+    windowsHide: true
   })
 
   process.exit(result.status ?? 1)

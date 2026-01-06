@@ -42,8 +42,8 @@ const prodWebpackConfig = merge(common, {
       ? {
           alias: {
             ...(hasOptimizedAudio ? { '@assets/audio': optimizedAudioDir } : {}),
-            ...(hasOptimizedVideo ? { '@assets/video': optimizedVideoDir } : {}),
-          },
+            ...(hasOptimizedVideo ? { '@assets/video': optimizedVideoDir } : {})
+          }
         }
       : undefined,
   // 使用文件缓存
@@ -53,42 +53,42 @@ const prodWebpackConfig = merge(common, {
   devtool: process.env.DEBUG_PROD === '1' ? 'source-map' : false,
   plugins: [
     new webpack.ProvidePlugin({
-      React: 'react',
+      React: 'react'
     }),
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
       chunkFilename: 'static/css/[name].[contenthash].css',
-      ignoreOrder: true,
+      ignoreOrder: true
     }),
     new PurgeCSSPlugin({
       paths: glob.sync(`${path.join(__dirname, '../src')}/**/*`, { nodir: true }),
       only: ['bundle', 'vendor', 'dist'],
       safelist: {
-        standard: [/^ant-/],
-      },
+        standard: [/^ant-/]
+      }
     }),
     new CompressionWebpackPlugin({
       algorithm: 'gzip',
       test: /\.(js|css|html|svg)$/,
       threshold: 8192,
-      minRatio: 0.8,
+      minRatio: 0.8
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
           from: path.resolve(__dirname, '../public-optimized/audio'),
           to: path.resolve(__dirname, '../dist/audio'),
-          noErrorOnMissing: true,
+          noErrorOnMissing: true
         },
         {
           from: path.resolve(__dirname, '../public'),
           to: path.resolve(__dirname, '../dist'),
           globOptions: {
-            ignore: ['**/index.html', '**/audio/**'],
-          },
-        },
-      ],
-    }),
+            ignore: ['**/index.html', '**/audio/**']
+          }
+        }
+      ]
+    })
   ],
   optimization: {
     minimize: process.env.DEBUG_PROD !== '1',
@@ -98,7 +98,7 @@ const prodWebpackConfig = merge(common, {
         : [
             new CssMinimizerPlugin(),
             new EsbuildPlugin({
-              target: 'es2015',
+              target: 'es2015'
             }),
             new HtmlMinimizerPlugin(),
             new ImageMinimizerPlugin({
@@ -112,11 +112,11 @@ const prodWebpackConfig = merge(common, {
                     jpeg: { quality: 78, mozjpeg: true },
                     png: { compressionLevel: 9, palette: true },
                     webp: { quality: 80 },
-                    avif: { quality: 50 },
-                  },
-                },
-              },
-            }),
+                    avif: { quality: 50 }
+                  }
+                }
+              }
+            })
           ],
     splitChunks: {
       chunks: 'all',
@@ -131,35 +131,35 @@ const prodWebpackConfig = merge(common, {
           minChunks: 1,
           priority: 10,
           enforce: true,
-          chunks: 'all',
+          chunks: 'all'
         },
         react: {
-          test(module) {
+          test (module) {
             return module.resource && module.resource.includes('node_modules/react')
           },
           chunks: 'initial',
           filename: 'react.[contenthash].js',
           priority: 1,
           maxInitialRequests: 2,
-          minChunks: 1,
-        },
+          minChunks: 1
+        }
         // commons: {
         //   name: 'commons',
         //   minChunks: 2,
         //   chunks: 'all',
         //   priority: 5,
         // },
-      },
+      }
     },
     runtimeChunk: {
-      name: 'runtime',
-    },
+      name: 'runtime'
+    }
   },
   performance: {
     hints: 'warning',
     maxEntrypointSize: 800000,
-    maxAssetSize: 400000,
-  },
+    maxAssetSize: 400000
+  }
 })
 
 if (useSentryMap) {
@@ -173,7 +173,7 @@ if (useSentryMap) {
         authToken: sentryAuthToken,
         org: process.env.SENTRY_ORG,
         project: process.env.SENTRY_PROJECT,
-        telemetry: false,
+        telemetry: false
       })
     )
   } else {
@@ -195,11 +195,11 @@ if (process.env.DIST_ZIP === '1' || process.env.DIST_ZIP === 'true') {
           archive: [
             {
               source: path.resolve(__dirname, '../dist'),
-              destination: path.resolve(__dirname, '../dist-zip/pro-react-admin.zip'),
-            },
-          ],
-        },
-      },
+              destination: path.resolve(__dirname, '../dist-zip/pro-react-admin.zip')
+            }
+          ]
+        }
+      }
     })
   )
 }
