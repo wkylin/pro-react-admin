@@ -2,12 +2,12 @@
 const fs = require('fs')
 const path = require('path')
 
-function resolveTargetFile(provided) {
+function resolveTargetFile (provided) {
   if (provided) return path.resolve(provided)
   return path.join(__dirname, '..', 'src', 'pages', 'svgViewer', 'index.jsx')
 }
 
-function readFile(fp) {
+function readFile (fp) {
   try {
     return fs.readFileSync(fp, 'utf8')
   } catch (e) {
@@ -16,16 +16,16 @@ function readFile(fp) {
   }
 }
 
-function writeFile(fp, content) {
+function writeFile (fp, content) {
   fs.writeFileSync(fp, content, 'utf8')
 }
 
-function findSvgSource(content) {
+function findSvgSource (content) {
   const m = content.match(/const\s+SVG_SOURCE\s*=\s*`([\s\S]*?)`;/m)
   return m ? { fullMatch: m[0], svg: m[1], index: m.index } : null
 }
 
-function showContext(svg, idx, label) {
+function showContext (svg, idx, label) {
   if (idx < 0) {
     console.log(`${label}: not found`)
     return
@@ -35,7 +35,7 @@ function showContext(svg, idx, label) {
   console.log(`\n${label} context (around index ${idx}):\n---START---\n${svg.slice(start, end)}\n---END---`)
 }
 
-function cmd_check(fp) {
+function cmd_check (fp) {
   const content = readFile(fp)
   const found = findSvgSource(content)
   if (!found) {
@@ -43,7 +43,7 @@ function cmd_check(fp) {
     process.exit(2)
   }
   const svg = found.svg
-  function countTag(tag) {
+  function countTag (tag) {
     const openRe = new RegExp('<' + tag + '[\\s>]', 'gi')
     const closeRe = new RegExp('</' + tag + '>', 'gi')
     const opens = (svg.match(openRe) || []).length
@@ -70,7 +70,7 @@ function cmd_check(fp) {
 
   // stack-based scan for unclosed <g>
   const tagRegex = /<\/?g[\s>]/gi
-  let stack = []
+  const stack = []
   let m
   while ((m = tagRegex.exec(svg)) !== null) {
     if (m[0].startsWith('</')) {
@@ -94,7 +94,7 @@ function cmd_check(fp) {
   }
 }
 
-function cmd_replace_br(fp) {
+function cmd_replace_br (fp) {
   const content = readFile(fp)
   const found = findSvgSource(content)
   if (!found) {
@@ -107,19 +107,19 @@ function cmd_replace_br(fp) {
     console.log('No <br> occurrences found to replace')
     process.exit(0)
   }
-  const newContent = content.replace(found.fullMatch, `const SVG_SOURCE = ` + '`' + replaced + '`;')
+  const newContent = content.replace(found.fullMatch, 'const SVG_SOURCE = ' + '`' + replaced + '`;')
   writeFile(fp, newContent)
   console.log('Replaced <br> with <br/> in SVG_SOURCE')
 }
 
-function cmd_fix_unclosed_g(fp) {
+function cmd_fix_unclosed_g (fp) {
   const content = readFile(fp)
   const found = findSvgSource(content)
   if (!found) {
     console.error('Cannot find SVG_SOURCE')
     process.exit(2)
   }
-  let svg = found.svg
+  const svg = found.svg
   const openCount = (svg.match(/<g[\s>]/gi) || []).length
   const closeCount = (svg.match(/<\/g>/gi) || []).length
   const missing = openCount - closeCount
@@ -135,12 +135,12 @@ function cmd_fix_unclosed_g(fp) {
   }
   const inserts = '</g>'.repeat(missing)
   const newSvg = svg.slice(0, lastCloseSvgIdx) + inserts + svg.slice(lastCloseSvgIdx)
-  const newContent = content.replace(found.fullMatch, `const SVG_SOURCE = ` + '`' + newSvg + '`;')
+  const newContent = content.replace(found.fullMatch, 'const SVG_SOURCE = ' + '`' + newSvg + '`;')
   writeFile(fp, newContent)
   console.log(`Inserted ${missing} </g> before closing </svg>`)
 }
 
-function usage() {
+function usage () {
   console.log('Usage: node scripts/svg_tools.cjs <command> [--file=path]')
   console.log('Commands:')
   console.log('  check           : analyze tag counts and find unclosed <g>')
@@ -150,10 +150,10 @@ function usage() {
   console.log('  --file=PATH     : specify target file (defaults to src/pages/svgViewer/index.jsx)')
 }
 
-function main() {
+function main () {
   const rawArgs = process.argv.slice(2)
   if (rawArgs.length === 0) return usage()
-  let cmd = rawArgs[0]
+  const cmd = rawArgs[0]
   let fileArg = null
   for (let i = 1; i < rawArgs.length; i++) {
     const a = rawArgs[i]

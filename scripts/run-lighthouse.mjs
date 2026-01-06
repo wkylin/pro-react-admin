@@ -51,8 +51,8 @@ const fetchOk = async (url) => {
       signal: controller.signal,
       headers: {
         // Some dev servers behave differently for default fetch UA.
-        'User-Agent': 'wui-react-lighthouse-probe',
-      },
+        'User-Agent': 'wui-react-lighthouse-probe'
+      }
     })
     if (!res.ok) return false
     const text = await res.text()
@@ -107,7 +107,7 @@ const runLighthouse = (url) => {
   const args = ['--view', url, '--preset=desktop']
   const result = spawnSync('lighthouse', args, {
     stdio: 'inherit',
-    shell: process.platform === 'win32',
+    shell: process.platform === 'win32'
   })
 
   process.exit(result.status ?? 1)

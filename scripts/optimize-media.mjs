@@ -26,14 +26,14 @@ const MP4_AUDIO_BITRATE = process.env.MP4_AUDIO_BITRATE || '128k'
 const MIN_SAVINGS_PCT = Number(process.env.MEDIA_MIN_SAVINGS_PCT || '5')
 const SKIP_SMALL_KB = Number(process.env.MEDIA_SKIP_SMALL_KB || '256')
 
-function bytesToMiB(bytes) {
+function bytesToMiB (bytes) {
   return (bytes / 1024 / 1024).toFixed(2)
 }
 
-function runFfmpeg(args) {
+function runFfmpeg (args) {
   const result = spawnSync('ffmpeg', args, {
     stdio: 'inherit',
-    windowsHide: true,
+    windowsHide: true
   })
   if (result.error) {
     throw result.error
@@ -43,7 +43,7 @@ function runFfmpeg(args) {
   }
 }
 
-function isFileExists(filePath) {
+function isFileExists (filePath) {
   try {
     fsSync.accessSync(filePath)
     return true
@@ -52,29 +52,29 @@ function isFileExists(filePath) {
   }
 }
 
-async function ensureDir(dirPath) {
+async function ensureDir (dirPath) {
   await fs.mkdir(dirPath, { recursive: true })
 }
 
-async function cleanDir(dirPath) {
+async function cleanDir (dirPath) {
   await fs.rm(dirPath, { recursive: true, force: true })
   await ensureDir(dirPath)
 }
 
-async function* walkFiles(dirPath) {
+async function * walkFiles (dirPath) {
   if (!isFileExists(dirPath)) return
   const entries = await fs.readdir(dirPath, { withFileTypes: true })
   for (const entry of entries) {
     const fullPath = path.join(dirPath, entry.name)
     if (entry.isDirectory()) {
-      yield* walkFiles(fullPath)
+      yield * walkFiles(fullPath)
     } else if (entry.isFile()) {
       yield fullPath
     }
   }
 }
 
-async function copyAll({ fromDir, toDir }) {
+async function copyAll ({ fromDir, toDir }) {
   if (!isFileExists(fromDir)) return { scanned: 0, copied: 0 }
   await ensureDir(toDir)
   let scanned = 0
@@ -90,7 +90,7 @@ async function copyAll({ fromDir, toDir }) {
   return { scanned, copied }
 }
 
-async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
+async function optimizeOne ({ inputPath, inputBaseDir, outputBaseDir }) {
   const relPath = path.relative(inputBaseDir, inputPath)
   const outputPath = path.join(outputBaseDir, relPath)
 
@@ -132,7 +132,7 @@ async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
       MP3_BITRATE,
       '-id3v2_version',
       '3',
-      tmpPath,
+      tmpPath
     ])
   } else {
     // Re-encode MP4 (H.264 + AAC) and enable faststart
@@ -154,7 +154,7 @@ async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
       MP4_AUDIO_BITRATE,
       '-movflags',
       '+faststart',
-      tmpPath,
+      tmpPath
     ])
   }
 
@@ -188,12 +188,12 @@ if (SKIP_OPTIMIZE_MEDIA) {
   process.exit(0)
 }
 
-function checkFfmpegAvailable() {
+function checkFfmpegAvailable () {
   const result = spawnSync('ffmpeg', ['-version'], { stdio: 'ignore', windowsHide: true })
   return result.status === 0
 }
 
-async function main() {
+async function main () {
   if (!checkFfmpegAvailable()) {
     console.error('[optimize:media] ffmpeg not found in PATH.')
     console.error('Install ffmpeg and ensure `ffmpeg` is available in your terminal, then re-run.')
@@ -204,7 +204,7 @@ async function main() {
   const targets = [
     { inputDir: SRC_AUDIO_DIR, outputDir: OUT_AUDIO_DIR },
     { inputDir: SRC_VIDEO_DIR, outputDir: OUT_VIDEO_DIR },
-    { inputDir: SRC_PUBLIC_AUDIO_DIR, outputDir: OUT_PUBLIC_AUDIO_DIR },
+    { inputDir: SRC_PUBLIC_AUDIO_DIR, outputDir: OUT_PUBLIC_AUDIO_DIR }
   ]
 
   let changedCount = 0
@@ -225,7 +225,7 @@ async function main() {
         const result = await optimizeOne({
           inputPath,
           inputBaseDir: target.inputDir,
-          outputBaseDir: target.outputDir,
+          outputBaseDir: target.outputDir
         })
         if (result.changed) {
           changedCount += 1
