@@ -395,7 +395,17 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
 
   const onSelect = async ({ key }) => {
     const selected = findMenuItemByKey(menuItems, key)
-    const selectedPath = selected?.path || selected?.key || key
+    let selectedPath = selected?.path || selected?.key || key
+
+    if (typeof selectedPath !== 'string') {
+      messageApi.error('菜单配置错误：路径格式不正确')
+      return
+    }
+
+    selectedPath = selectedPath.trim()
+    if (!selectedPath) {
+      return
+    }
 
     try {
       const ok = await permissionService.canAccessRoute(selectedPath, false)
@@ -407,7 +417,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       setIsOpenChange(false)
       onMenuClick?.()
     } catch (error) {
-      console.error('菜单权限检查失败:', error)
       showDeniedOnce(selectedPath)
     }
   }

@@ -31,12 +31,6 @@ export const chartRoutes = [
     element: <lazyComponents.SvgViewer />,
   },
   {
-    path: 'markmap',
-    name: 'ChatGPT',
-    key: '/markmap',
-    element: <lazyComponents.ChatGpt />,
-  },
-  {
     path: 'topology',
     name: 'Topology',
     key: '/topology',

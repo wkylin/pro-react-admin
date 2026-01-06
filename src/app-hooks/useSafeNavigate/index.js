@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { message } from 'antd'
 import { permissionService } from '@src/service/permissionService'
+import { HashRouterUtils } from '@src/utils/hashRouter'
 
 const PUBLIC_PATHS = new Set(['/', '/signin', '/signup'])
 
@@ -33,26 +34,33 @@ export default function useSafeNavigate() {
   const redirectTo = async (path, options = {}) => {
     if (!path) return
 
+    // 支持 react-router 的 To 对象（{ pathname, search }），统一转成字符串
+    const normalizedPath = HashRouterUtils.toPathString(path).trim()
+    if (!normalizedPath) {
+      console.error('redirectTo: path 不能为空字符串')
+      return
+    }
+
     // allow common public pages
-    if (isPublicPath(path)) {
-      navigateTo(path, !!options.replace)
+    if (isPublicPath(normalizedPath)) {
+      navigateTo(normalizedPath, !!options.replace)
       return
     }
 
     let ok = false
     try {
-      ok = await permissionService.canAccessRoute(path, false)
+      ok = await permissionService.canAccessRoute(normalizedPath, false)
     } catch (err) {
       console.error('permission check failed:', err)
       ok = false
     }
 
     if (!ok) {
-      denyOnce(path)
+      denyOnce(normalizedPath)
       return
     }
 
-    navigateTo(path, !!options.replace)
+    navigateTo(normalizedPath, !!options.replace)
   }
 
   const goBack = () => {

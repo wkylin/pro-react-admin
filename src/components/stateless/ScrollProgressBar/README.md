@@ -48,7 +48,6 @@ useEffect(() => {
 
 ```jsx
 import { ScrollArea } from '@stateless/ScrollProgressBar'
-
 ;<ScrollArea className="h-screen overflow-auto">
   <div className="content">{/* 你的内容 */}</div>
 </ScrollArea>

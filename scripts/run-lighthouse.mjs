@@ -9,7 +9,10 @@ const buildPortList = () => {
   const raw = process.env.LH_PORTS
   if (raw && raw.trim()) {
     // supports: "8080,8081,8090" or "8080-8090"
-    const parts = raw.split(',').map((s) => s.trim()).filter(Boolean)
+    const parts = raw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
     const ports = []
     for (const part of parts) {
       const range = part.split('-').map((s) => s.trim())

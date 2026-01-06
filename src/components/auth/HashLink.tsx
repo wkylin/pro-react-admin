@@ -9,10 +9,10 @@ export const HashLink = forwardRef<HTMLAnchorElement, LinkProps>(({ to, children
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
     // delegate to safe navigate
-    redirectTo(to as any)
+    redirectTo(HashRouterUtils.toPathString(to))
   }
 
-  const href = HashRouterUtils.buildHashUrl(to as any)
+  const href = HashRouterUtils.buildHashUrl(to)
 
   return (
     <a ref={ref} href={href} onClick={handleClick} {...props}>

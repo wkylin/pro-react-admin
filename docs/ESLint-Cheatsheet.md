@@ -5,12 +5,14 @@
 ---
 
 ## 环境说明
+
 - 项目为 ESM（package.json 中 `type":"module"`），ESLint 使用 flat config（注意插件/extends 的加载）。
 - Node / npx 可用；以下命令在 Windows (Git Bash / WSL) 或类 Unix 环境下均可运行。
 
 ---
 
 ## 常用命令（快速参考）
+
 - 单文件检查（显示所有问题）：
 
 ```
@@ -56,6 +58,7 @@ npm run lint:errors
 ---
 
 ## 生成按文件排序的问题统计（推荐 JSON 方法）
+
 以下步骤产生一个按问题数降序的文本文件 `eslint-by-file.txt`：
 
 1. 生成 JSON 报告：
@@ -71,10 +74,11 @@ node -e "const r=require('./eslint-report.json'); const m={}; r.forEach(f=>{cons
 ```
 
 结果文件 `eslint-by-file.txt` 格式为：
+
 ```
 11	C:/.../src/components/KeepAlive/index.jsx
 5	C:/.../src/components/stateless/ReMarkdown/index.jsx
-... 
+...
 ```
 
 此法最精确（区分 errors/warnings 可在脚本中改进），也方便后续自动化处理。
@@ -82,6 +86,7 @@ node -e "const r=require('./eslint-report.json'); const m={}; r.forEach(f=>{cons
 ---
 
 ## 快速文本解析方法（替代）
+
 如果不想生成 JSON，可以将完整文本输出并用 grep/awk/sed 统计（适合临时检查）：
 
 ```
@@ -95,14 +100,17 @@ grep -E "^\s+\d+:\d+\s+" eslint-report.txt | sed -E 's/^[ \t]*([0-9]+):([0-9]+)[
 ---
 
 ## 常见错误类型与修复思路
+
 下面列出会反复出现的问题类型与对应的快速修复策略。
 
-1) react-hooks/purity（impure 在 render 中调用，例如 `Date.now()`）
+1. react-hooks/purity（impure 在 render 中调用，例如 `Date.now()`）
+
 - 原因：组件或变量在渲染期调用了非纯函数（Date.now、Math.random、DOM 读取等）。
 - 修复：将不稳定的值移到模块顶层或使用 `useMemo` / `useRef` / `useState` 初始化一次。
   - 例如：不要在组件顶层的渲染直接 `return String(Date.now()).slice(-6)`，改为 `const idRef = useRef(Date.now())` 或把 helper 提升到模块顶层。
 
-2) react-hooks/set-state-in-effect（在 effect 中同步调用 setState）
+2. react-hooks/set-state-in-effect（在 effect 中同步调用 setState）
+
 - 原因：在 effect 的主体直接同步调用 setState，可能导致级联渲染。
 - 修复：将 setState 推迟到微任务或回调中，例如：
 
@@ -125,21 +133,25 @@ useEffect(() => {
 
 或把逻辑重写为条件渲染以避免不必要的 setState。
 
-3) refs 在 render 中读写（impure / 不安全）
+3. refs 在 render 中读写（impure / 不安全）
+
 - 原因：在渲染期访问 DOM（例如 `ref.current.innerText`）或创建 DOM 节点。
 - 修复：把 DOM 访问/初始化放到 `useEffect` 中，用 state 将结果暴露给渲染。
 
-4) hooks 条件调用（rules-of-hooks）
+4. hooks 条件调用（rules-of-hooks）
+
 - 原因：基于条件或 try/catch 在不同分支调用 Hook。
 - 修复：始终在组件顶层调用 Hook。若需要可选上下文，提供 `useOptionalXxx` 返回 null/默认值，而不要在条件内调用 Hook。
 
-5) no-undef / 未声明变量
+5. no-undef / 未声明变量
+
 - 原因：变量拼写错误或重命名后未同步更新。
-- 修复：按 ESLint 报错定位（文件+行），补充 `import` 或把变量名修正；不要滥用 /* global */，除非确实需要。
+- 修复：按 ESLint 报错定位（文件+行），补充 `import` 或把变量名修正；不要滥用 /_ global _/，除非确实需要。
 
 ---
 
 ## 捕获和保存诊断输出
+
 - 建议把全量输出保存为文本：
 
 ```
@@ -155,12 +167,14 @@ npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
 ---
 
 ## auto-fix 与限制
+
 - 自动修复：`npx eslint --fix <file>` 能修复样式和部分简单问题（如 semi、quotes、no-unused-vars 的部分情况）。
 - 注意：逻辑错误、Hook 使用错误、refs/purity 等通常需要手动修改代码。
 
 ---
 
 ## 建议加入的 package.json 脚本
+
 在 `package.json` 中加入以下脚本便于复用：
 
 ```json
@@ -176,6 +190,7 @@ npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
 ---
 
 ## 调试 flat config / 插件加载问题
+
 - 如果 ESLint 报错提示 plugin 配置无法加载或 `extends` 无效，先使用 debug 模式查看加载过程：
 
 ```
@@ -187,6 +202,7 @@ npm run eslint -- --debug "src/**/*.{js,jsx,ts,tsx}"
 ---
 
 ## 故障排查小贴士
+
 - 当 ESLint 报错但你确认代码已改：先清掉缓存重新运行：
 
 ```

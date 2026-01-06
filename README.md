@@ -38,6 +38,7 @@
 - **<span role="img" aria-label="mobile">📱</span> 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
 
 - **<span role="img" aria-label="gear">⚙️</span> CI/CD 集成** ：GitHub Actions：自动构建部署到 GitHub Pages. Sentry 集成：可选的错误监控与源码上传
+
 ---
 
 ## <span role="img" aria-label="key">🔑</span> 核心功能
@@ -138,7 +139,6 @@ npm run dev
 
 ---
 
-
 ## 🏗️ 技术架构
 
 <img width="1903" height="387" alt="Snipaste_2025-12-31_09-14-38" src="https://github.com/user-attachments/assets/915ba91a-8852-4dc0-8a14-091e781d9f04" />
@@ -153,7 +153,7 @@ npm run dev
 
 Baize CLI 是一个轻量、规范且高效的前端项目脚手架工具，旨在帮助开发者快速搭建基于 React、Vue 等现代框架的标准化项目结构。
 
-  - <span role="img" aria-label="rocket">🚀</span> 快速启动：秒级生成项目模板，开箱即用。
+- <span role="img" aria-label="rocket">🚀</span> 快速启动：秒级生成项目模板，开箱即用。
 - 🛠 规范集成：内置 ESLint、Prettier 等代码规范配置。
 - 🎨 交互友好：优雅的命令行交互体验。
 - 🌏 线上地址：[Baize](https://www.npmjs.com/package/baize-cli)

@@ -30,6 +30,7 @@ import NotificationDrawer from '@stateless/NotificationDrawer'
 import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
+import { HashRouterUtils } from '@src/utils/hashRouter'
 import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
@@ -145,23 +146,23 @@ const safeLogoutCleanup = () => {
 
 const redirectToWithPermission = async ({ path, navigate, messageApi, lastDeniedRef }) => {
   // 公共页面直接跳转
-  if (!path || path === '/signin' || path === '/signup' || path === '/') {
-    navigate(path)
+  const normalizedPath = HashRouterUtils.toPathString(path)
+  if (!normalizedPath || normalizedPath === '/signin' || normalizedPath === '/signup' || normalizedPath === '/') {
+    navigate(normalizedPath || '/')
     return
   }
 
   try {
-    const ok = await permissionService.canAccessRoute(path, false)
+    const ok = await permissionService.canAccessRoute(normalizedPath, false)
     if (!ok) {
-      await safeNotifyDeniedOnce({ path, lastDeniedRef, messageApi })
+      await safeNotifyDeniedOnce({ path: normalizedPath, lastDeniedRef, messageApi })
       return
     }
-    navigate(path)
+    navigate(normalizedPath)
   } catch (error) {
     // 出错时保守处理为不跳转并显示提示
 
-    console.error('redirect permission check failed', error)
-    await safeNotifyDeniedOnce({ path, lastDeniedRef, messageApi })
+    await safeNotifyDeniedOnce({ path: normalizedPath, lastDeniedRef, messageApi })
   }
 }
 

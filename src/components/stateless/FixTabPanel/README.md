@@ -7,7 +7,6 @@ FixTabPanel 是一个增强的可滚动面板组件，集成了滚动进度条�
 
 ```jsx
 import FixTabPanel from '@stateless/FixTabPanel'
-
 ;<FixTabPanel style={{ height: '400px' }}>
   <div>可滚动的内容</div>
 </FixTabPanel>

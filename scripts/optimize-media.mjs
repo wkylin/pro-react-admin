@@ -3,6 +3,11 @@ import fsSync from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 
+const SKIP_OPTIMIZE_MEDIA =
+  process.env.SKIP_OPTIMIZE_MEDIA === '1' ||
+  process.env.SKIP_OPTIMIZE_MEDIA === 'true' ||
+  process.env.SKIP_OPTIMIZE_MEDIA === 'TRUE'
+
 const projectRoot = process.cwd()
 
 const SRC_AUDIO_DIR = path.join(projectRoot, 'src', 'assets', 'audio')
@@ -67,6 +72,22 @@ async function* walkFiles(dirPath) {
       yield fullPath
     }
   }
+}
+
+async function copyAll({ fromDir, toDir }) {
+  if (!isFileExists(fromDir)) return { scanned: 0, copied: 0 }
+  await ensureDir(toDir)
+  let scanned = 0
+  let copied = 0
+  for await (const inputPath of walkFiles(fromDir)) {
+    scanned += 1
+    const relPath = path.relative(fromDir, inputPath)
+    const outputPath = path.join(toDir, relPath)
+    await ensureDir(path.dirname(outputPath))
+    await fs.copyFile(inputPath, outputPath)
+    copied += 1
+  }
+  return { scanned, copied }
 }
 
 async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
@@ -149,6 +170,22 @@ async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
 
   await fs.rename(tmpPath, outputPath)
   return { changed: true, reason: 'optimized', before: stat.size, after: outStat.size, outputPath }
+}
+
+if (SKIP_OPTIMIZE_MEDIA) {
+  console.log('[optimize:media] SKIP_OPTIMIZE_MEDIA=1, copying originals to *-optimized outputs...')
+  await cleanDir(OUT_AUDIO_DIR)
+  await cleanDir(OUT_VIDEO_DIR)
+  await cleanDir(OUT_PUBLIC_AUDIO_DIR)
+
+  const r1 = await copyAll({ fromDir: SRC_AUDIO_DIR, toDir: OUT_AUDIO_DIR })
+  const r2 = await copyAll({ fromDir: SRC_VIDEO_DIR, toDir: OUT_VIDEO_DIR })
+  const r3 = await copyAll({ fromDir: SRC_PUBLIC_AUDIO_DIR, toDir: OUT_PUBLIC_AUDIO_DIR })
+
+  console.log(
+    `[optimize:media] copied. src-audio=${r1.copied}/${r1.scanned}, src-video=${r2.copied}/${r2.scanned}, public-audio=${r3.copied}/${r3.scanned}`
+  )
+  process.exit(0)
 }
 
 function checkFfmpegAvailable() {

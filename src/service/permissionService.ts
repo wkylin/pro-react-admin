@@ -394,6 +394,15 @@ class PermissionService {
    */
   async canAccessRoute(routePath: string, forceRefresh: boolean = false): Promise<boolean> {
     try {
+      const normalizedRoutePath = typeof routePath === 'string' ? routePath : ''
+      if (!normalizedRoutePath) {
+        // 运行时兜底：避免非字符串 routePath 导致 split/match 崩溃
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[permissionService.canAccessRoute] invalid routePath (non-string):', routePath)
+        }
+        return false
+      }
+
       // 优先使用缓存，避免重复请求
       const permissions = await this.getPermissions(forceRefresh)
 
@@ -438,7 +447,7 @@ class PermissionService {
         return routePermissionMap['*'] ?? null
       }
 
-      const mappedPerm = findPermissionForRoute(routePath)
+      const mappedPerm = findPermissionForRoute(normalizedRoutePath)
       if (mappedPerm) {
         // 若存在映射，则以 permission-code 为准（优先）。若 forceRefresh 为 true，传递到 hasPermission
         const ok = await this.hasPermission(mappedPerm, forceRefresh)
@@ -450,7 +459,7 @@ class PermissionService {
         if (!routes || !Array.isArray(routes)) return false
         return routes.some((route) => {
           // 精确匹配
-          if (route === routePath) {
+          if (route === normalizedRoutePath) {
             return true
           }
 
@@ -461,7 +470,7 @@ class PermissionService {
 
           // 通配符匹配（如 /coupons/edit/:id）
           const regex = makeRouteRegexFromPattern(route)
-          return !!regex?.test(routePath)
+          return !!regex?.test(normalizedRoutePath)
         })
       }
 

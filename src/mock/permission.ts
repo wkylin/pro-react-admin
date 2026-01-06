@@ -1,8 +1,3 @@
-/**
- * 权限系统 Mock 数据（重构版）
- * 简化权限模型，按角色随机分配路由
- */
-
 import { Role, UserPermission, PermissionCode } from '../types/permission'
 
 /**
@@ -43,9 +38,6 @@ const allRoutes = [
   '/svg-viewer',
 ]
 
-/**
- * 固定的角色路由分配（按业务逻辑划分）
- */
 // 超级管理员：所有路由
 const adminRoutes = [...allRoutes]
 
@@ -145,7 +137,7 @@ export const testAccounts: Record<string, { role: string; name: string }> = {
 }
 
 /**
- * 路由权限映射（简化版）
+ * 路由权限映射
  */
 export const routePermissionMap: Record<string, PermissionCode> = {
   '/': 'home:read',

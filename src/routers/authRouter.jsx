@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Navigate, useLocation, matchPath } from 'react-router-dom'
 import { getLocalStorage } from '@utils/publicFn'
 import { permissionService } from '@src/service/permissionService'
+import { HashRouterUtils } from '@src/utils/hashRouter'
 import { isPublicRoute, isRouteConfigPublic } from './config/publicRoutes'
 import { annotatedRootRouter, flattenRoutes } from './index'
 import { message } from 'antd'
@@ -26,7 +27,11 @@ const showDeniedMessage = (messageApi) => {
  */
 const AuthRouter = (props) => {
   const location = useLocation()
-  const pathname = location.pathname
+  const rawPathname = location?.pathname
+  const pathname = typeof rawPathname === 'string' ? rawPathname : '/'
+  if (rawPathname != null && typeof rawPathname !== 'string') {
+    HashRouterUtils.debugNavToOnce('AuthRouter.useLocation().pathname', rawPathname)
+  }
   const [canAccess, setCanAccess] = useState(null)
   // navigate 不再直接使用；权限提示通过 message 实现
   const lastDeniedPathRef = useRef('')

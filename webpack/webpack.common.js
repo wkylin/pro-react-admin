@@ -76,7 +76,8 @@ const normalizePublicPath = (value) => {
 
 const rawPublicUrl = process.env.PUBLIC_URL
 const prodPublicPath = normalizePublicPath(
-  rawPublicUrl || ((process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_ACTIONS === '1') ? inferredGhPagesPublicUrl : '')
+  rawPublicUrl ||
+    (process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_ACTIONS === '1' ? inferredGhPagesPublicUrl : '')
 )
 
 const config = {

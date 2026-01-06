@@ -49,24 +49,40 @@ const patchDefinePropertyDescriptor = () => {
 
 patchDefinePropertyDescriptor()
 
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  // Setting this option to true will send default PII data to Sentry.
-  // For example, automatic IP address collection on events
-  sendDefaultPii: true,
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-  // Tracing
-  tracesSampleRate: 1.0, //  Capture 100% of the transactions
-  // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
-  tracePropagationTargets: ['localhost', /^https:\/\/wkylin\.sentry\.io\/api/],
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-  replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.,
-  // Enable logs to be sent to Sentry
-  enableLogs: true,
-})
-// 发送测试消息
-Sentry.captureMessage('Test message from pro-react-admin')
+const isLocalhostRuntime = () => {
+  try {
+    const host = window.location.hostname
+    return host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0'
+  } catch {
+    return false
+  }
+}
+
+const sentryDsn = process.env.SENTRY_DSN
+const shouldEnableSentry =
+  process.env.NODE_ENV === 'production' &&
+  !!sentryDsn &&
+  !isLocalhostRuntime() &&
+  localStorage.getItem('SENTRY_DISABLE') !== '1'
+
+if (shouldEnableSentry) {
+  Sentry.init({
+    dsn: sentryDsn,
+    // Setting this option to true will send default PII data to Sentry.
+    // For example, automatic IP address collection on events
+    sendDefaultPii: true,
+    integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+    // Tracing
+    tracesSampleRate: 1.0, //  Capture 100% of the transactions
+    // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
+    tracePropagationTargets: [/^https:\/\/wkylin\.sentry\.io\/api/],
+    // Session Replay
+    replaysSessionSampleRate: 0.1,
+    replaysOnErrorSampleRate: 1.0,
+    // Enable logs to be sent to Sentry
+    enableLogs: true,
+  })
+}
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLDivElement, {
   onCaughtError: (error) => {

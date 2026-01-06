@@ -92,29 +92,32 @@ const prodWebpackConfig = merge(common, {
   ],
   optimization: {
     minimize: process.env.DEBUG_PROD !== '1',
-    minimizer: process.env.DEBUG_PROD === '1' ? [] : [
-      new CssMinimizerPlugin(),
-      new EsbuildPlugin({
-        target: 'es2015',
-      }),
-      new HtmlMinimizerPlugin(),
-      new ImageMinimizerPlugin({
-        loader: false,
-        test: /\.(png|jpe?g|gif|webp|avif)$/i,
-        minimizer: {
-          implementation: ImageMinimizerPlugin.sharpMinify,
-          options: {
-            encodeOptions: {
-              // Safe defaults; tune per your quality/size preference.
-              jpeg: { quality: 78, mozjpeg: true },
-              png: { compressionLevel: 9, palette: true },
-              webp: { quality: 80 },
-              avif: { quality: 50 },
-            },
-          },
-        },
-      }),
-    ],
+    minimizer:
+      process.env.DEBUG_PROD === '1'
+        ? []
+        : [
+            new CssMinimizerPlugin(),
+            new EsbuildPlugin({
+              target: 'es2015',
+            }),
+            new HtmlMinimizerPlugin(),
+            new ImageMinimizerPlugin({
+              loader: false,
+              test: /\.(png|jpe?g|gif|webp|avif)$/i,
+              minimizer: {
+                implementation: ImageMinimizerPlugin.sharpMinify,
+                options: {
+                  encodeOptions: {
+                    // Safe defaults; tune per your quality/size preference.
+                    jpeg: { quality: 78, mozjpeg: true },
+                    png: { compressionLevel: 9, palette: true },
+                    webp: { quality: 80 },
+                    avif: { quality: 50 },
+                  },
+                },
+              },
+            }),
+          ],
     splitChunks: {
       chunks: 'all',
       minChunks: 3,
