@@ -91,6 +91,5 @@
   - **问题**：在生产模式下，动态导入的插件可能被包装为 Module Namespace 对象（`{ default: fn, ... }`），直接作为函数调用会导致崩溃。
   - **解决方案**：在使用前进行兼容性解包：
     ```javascript
-    const plugin = importedPlugin?.default || importedPlugin;
+    const plugin = importedPlugin?.default || importedPlugin
     ```
-

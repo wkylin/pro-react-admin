@@ -23,13 +23,13 @@ export class HashRouterUtils {
       g[key] += 1
 
       // 尽量输出可读信息，同时给出调用栈
-       
+
       console.groupCollapsed(`[DEBUG_NAV_TO] non-string to/path from ${source}`)
-       
+
       console.log('value:', value)
-       
+
       console.trace('stack')
-       
+
       console.groupEnd()
     } catch {
       // ignore

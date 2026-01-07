@@ -84,7 +84,7 @@ export default [
 
       // avoid hard failure on empty blocks
       'no-empty': 'warn',
-      'no-unused-disable-directive': 'off'
+      'no-unused-disable-directive': 'off',
     },
   },
 
