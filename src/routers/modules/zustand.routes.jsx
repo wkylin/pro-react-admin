@@ -6,9 +6,9 @@ export const zustandRoutes = [
     path: 'zustand',
     name: 'Zustand演示',
     i18nKey: 'zustand',
-    element: <lazyComponents.ZustandDemo />, // 下面会注册
+    element: <lazyComponents.ZustandDemo />,
     meta: {
-      permission: ['admin', 'dev', 'user'], // 示例权限
+      permission: ['admin', 'dev', 'user'],
       keepAlive: true,
     },
   },

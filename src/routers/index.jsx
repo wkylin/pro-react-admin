@@ -19,6 +19,7 @@ import { nestedRoutes } from './modules/nested.routes'
 import { errorRoutes } from './modules/error.routes'
 import { notificationRoutes } from './modules/notification.routes'
 import { techRoutes } from './modules/tech.routes'
+import { zustandRoutes } from './modules/zustand.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
 import { permissionService } from '@src/service/permissionService'
 
@@ -31,6 +32,7 @@ mainLayoutRoute.children = [
   ...nestedRoutes,
   ...notificationRoutes,
   ...techRoutes,
+  ...zustandRoutes,
 ]
 
 // 构建完整路由配置（原始数据）
@@ -45,62 +47,51 @@ const rawRootRouter = [
   ...errorRoutes.filter((route) => route.path !== '*'),
   // 全局 404（必须放在最后）
   ...errorRoutes.filter((route) => route.path === '*'),
-]
+].filter(Boolean)
 
-// 统一 path/key，补齐缺失信息，输出标准化路由树
 const rootRouter = normalizeRouteTree(rawRootRouter)
 
-// ✅ 注入 meta.permission（不改变现有结构，仅增强）
 const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
 
-// 1. 定义构建全路径的辅助函数
 function buildFullPath(parentPath, routePath) {
   const prefix = parentPath === '/' ? '' : parentPath
   const current = routePath?.startsWith('/') ? routePath : `/${routePath || ''}`
-  // 处理 index 路由或空路径的情况
   return `${prefix}${current}`.replace(/\/+/g, '/').replace(/\/$/, '') || '/'
 }
 
-// 2. 核心标准化函数：递归生成 path 和 key
 function normalizeRouteTree(routes, parentFullPath = '') {
   if (!Array.isArray(routes)) return []
 
-  return routes.map((route) => {
-    // 自动计算绝对路径
-    let fullPath = parentFullPath
+  return routes
+    .filter((route) => !!route)
+    .map((route) => {
+      let fullPath = parentFullPath
 
-    if (!route.index) {
-      // 如果不是 index 路由，拼接当前 path
-      // 如果当前 path 为空字符串（layout wrapper），则保持父路径
-      if (route.path) {
-        fullPath = buildFullPath(parentFullPath, route.path)
+      if (!route.index) {
+        if (route.path) {
+          fullPath = buildFullPath(parentFullPath, route.path)
+        }
       }
-    }
+      const normalizedKey = fullPath
 
-    // 强制统一规则：key 必须等于绝对路径
-    // 即使配置文件里写了 key，也优先使用计算出的 fullPath (也可保留原逻辑作为 legacyKey)
-    const normalizedKey = fullPath
+      const next = {
+        ...route,
+        key: normalizedKey,
+        meta: {
+          ...(route.meta || {}),
+          routePath: fullPath,
+          routeKey: normalizedKey,
+          ...(route.key && route.key !== normalizedKey ? { legacyKey: route.key } : {}),
+        },
+      }
 
-    const next = {
-      ...route,
-      key: normalizedKey, // 🔥 核心修复：Key 强制对齐绝对路径
-      meta: {
-        ...(route.meta || {}),
-        routePath: fullPath,
-        routeKey: normalizedKey,
-        // 如果原配置有 key 且不一致，记录下来以备查（可选）
-        ...(route.key && route.key !== normalizedKey ? { legacyKey: route.key } : {}),
-      },
-    }
+      if (Array.isArray(route.children) && route.children.length > 0) {
+        next.children = normalizeRouteTree(route.children, fullPath)
+      }
 
-    if (Array.isArray(route.children) && route.children.length > 0) {
-      next.children = normalizeRouteTree(route.children, fullPath)
-    }
-
-    return next
-  })
+      return next
+    })
 }
-// ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
 export function flattenRoutes(routes) {
   if (!Array.isArray(routes)) {
     console.error('flattenRoutes: expected array, got:', typeof routes, routes)
@@ -124,7 +115,6 @@ export function flattenRoutes(routes) {
   }, [])
 }
 
-// ✅ 新增：根据路径获取路由 key
 export function getKeyName(path = '/') {
   try {
     const flatRoutes = flattenRoutes(annotatedRootRouter)
@@ -134,7 +124,6 @@ export function getKeyName(path = '/') {
       return path
     }
 
-    // normalize incoming path (remove leading slash and query)
     const normalized = String(path || '')
       .split('?')[0]
       .replace(/^\//, '')
