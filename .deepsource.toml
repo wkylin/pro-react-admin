@@ -1,5 +1,22 @@
 version = 1
 
+exclude_patterns = [
+  "node_modules/**",
+  "dist/**",
+  "build/**",
+  "**/*.min.js",
+  "coverage/**"
+]
+
+test_patterns = [
+  "tests/**",
+  "__tests__/**",
+  "**/*.test.js",
+  "**/*.spec.js",
+  "**/*.test.jsx",
+  "**/*.spec.jsx"
+]
+
 [[analyzers]]
 name = "shell"
 enabled = true
@@ -7,14 +24,10 @@ enabled = true
 [[analyzers]]
 name = "javascript"
 enabled = true
-
   [analyzers.meta]
   plugins = ["react"]
+  module_system = "es-modules"  # 现代 React 项目常用；如果用 CommonJS，可改为 "commonjs"
 
 [[transformers]]
 name = "prettier"
-enabled = true
-
-[[transformers]]
-name = "standardjs"
 enabled = true

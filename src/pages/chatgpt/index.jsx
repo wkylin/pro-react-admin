@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react'
+import { useRef, useCallback, useState, useEffect } from 'react'
 import MarkmapHooks from '@stateful/markmap'
 import FixTabPanel from '@stateless/FixTabPanel'
 import MDEditor from '@uiw/react-md-editor'
@@ -51,7 +51,8 @@ import styles from './index.module.less'
 let mermaidPromise
 const loadMermaid = () => {
   if (!mermaidPromise) {
-    mermaidPromise = import('mermaid').then((m) => m?.default ?? m)
+    // 修复生产环境 dynamic import 异常：显式引用 dist 版本，避免 import.meta 报错
+    mermaidPromise = import('mermaid/dist/mermaid.min.js').then((m) => m?.default ?? m)
   }
   return mermaidPromise
 }
@@ -1065,6 +1066,10 @@ const ChatGpt = () => {
     padding: 16,
   }
 
+  // 修复生产环境插件导入可能是对象而非函数的问题（ESM interop）
+  const remarkMathPlugin = remarkMath?.default || remarkMath
+  const rehypeKatexPlugin = rehypeKatex?.default || rehypeKatex
+
   useEffect(() => {
     const onFullscreenChange = () => {
       setIsPreviewFullscreen(document.fullscreenElement === previewFullscreenRef.current)
@@ -1607,8 +1612,8 @@ PRD文档内容：
                       }}
                       data-color-mode={previewTheme}
                       skipHtml={false}
-                      remarkPlugins={[remarkMath]}
-                      rehypePlugins={[[rehypeKatex, { strict: 'ignore' }]]}
+                      remarkPlugins={[remarkMathPlugin]}
+                      rehypePlugins={[[rehypeKatexPlugin, { strict: 'ignore' }]]}
                       components={CustomComponents}
                     />
                   </div>

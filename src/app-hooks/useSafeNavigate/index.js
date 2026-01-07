@@ -37,7 +37,7 @@ export default function useSafeNavigate() {
     // 支持 react-router 的 To 对象（{ pathname, search }），统一转成字符串
     const normalizedPath = HashRouterUtils.toPathString(path).trim()
     if (!normalizedPath) {
-      console.error('redirectTo: path 不能为空字符串')
+      // console.error('redirectTo: path 不能为空字符串')
       return
     }
 

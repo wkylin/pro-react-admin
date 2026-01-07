@@ -6,16 +6,7 @@
  * 3. 删除公开页面：从数组中移除路径，或去掉路由的 `auth:false`
  * 4. 支持前缀匹配：如 `/auth/callback`，当存在多层子路径可使用 startsWith 逻辑处理
  */
-export const publicRoutes: string[] = [
-  '/signin',
-  '/signup',
-  '/auth/callback',
-  '/terms',
-  '/privacy',
-  '/404',
-  '/403',
-  '/500',
-]
+export const publicRoutes: string[] = ['/signin', '/signup', '/terms', '/privacy', '/404', '/403', '/500']
 
 /**
  * 判断是否为公开路由（路径级别）

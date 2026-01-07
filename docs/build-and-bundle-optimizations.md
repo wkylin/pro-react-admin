@@ -76,3 +76,21 @@
 - 受影响点：
   - 如果 Vercel 使用 Webpack 构建，需要确保它执行的是 `npm run build:production`
   - 若 Vercel 构建阶段运行音视频压缩：会增加构建耗时；并且 Vercel 的缓存策略可能导致压缩收益不稳定
+
+### 5) 生产构建兼容性修复 (ESM/Webpack)
+
+部分现代化库（如 `mermaid`, `remark-math`）默认提供 ESM 产物，但在 Webpack 生产构建流程中可能因 `import.meta` 或模块互操作性（Interop）问题导致报错。
+
+- **Mermaid**:
+  - **问题**：直接 `import('mermaid')` 会引入依赖 `import.meta.url` 的源码，导致 Webpack 构建警告或运行时错误。
+  - **解决方案**：强制引入预编译的 UMD/Minified 版本：
+    ```javascript
+    import('mermaid/dist/mermaid.min.js')
+    ```
+- **Remark/Rehype 插件**:
+  - **问题**：在生产模式下，动态导入的插件可能被包装为 Module Namespace 对象（`{ default: fn, ... }`），直接作为函数调用会导致崩溃。
+  - **解决方案**：在使用前进行兼容性解包：
+    ```javascript
+    const plugin = importedPlugin?.default || importedPlugin;
+    ```
+

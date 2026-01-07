@@ -1,5 +1,5 @@
 {
-  "extends": ["@commitlint/config-conventional"],
+  "extends": ["@commitlint/config-conventional", "@commitlint/config-angular"],
   "rules": {
     "header-max-length": [0, "always", 72]
   }

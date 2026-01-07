@@ -24,7 +24,7 @@
  * @param {SSEOptions} options
  * @return {SSE}
  */
-var SSE = function (url, options) {
+const SSE = function (url, options) {
   if (!(this instanceof SSE)) {
     return new SSE(url, options)
   }
@@ -60,7 +60,7 @@ var SSE = function (url, options) {
   /** @type {string} */
   this.FIELD_SEPARATOR = ':'
 
-  /** @type { {[key: string]: [EventListener]} } */
+  /** @type {{ [key: string]: Function[] | undefined }} */
   this.listeners = {}
 
   /** @type {XMLHttpRequest} */
@@ -78,12 +78,10 @@ var SSE = function (url, options) {
    * @type AddEventListener
    */
   this.addEventListener = function (type, listener) {
-    if (this.listeners[type] === undefined) {
-      this.listeners[type] = []
-    }
+    const listeners = this.listeners[type] || (this.listeners[type] = [])
 
-    if (this.listeners[type].indexOf(listener) === -1) {
-      this.listeners[type].push(listener)
+    if (listeners.indexOf(listener) === -1) {
+      listeners.push(listener)
     }
   }
 
@@ -91,12 +89,13 @@ var SSE = function (url, options) {
    * @type RemoveEventListener
    */
   this.removeEventListener = function (type, listener) {
-    if (this.listeners[type] === undefined) {
+    const listeners = this.listeners[type]
+    if (!listeners) {
       return
     }
 
     const filtered = []
-    this.listeners[type].forEach(function (element) {
+    listeners.forEach(function (element) {
       if (element !== listener) {
         filtered.push(element)
       }
@@ -123,8 +122,8 @@ var SSE = function (url, options) {
     e.source = this
 
     const onHandler = 'on' + e.type
-    if (Object.prototype.hasOwnProperty.call(this, onHandler)) {
-      this[onHandler].call(this, e)
+    if (Object.hasOwn(this, onHandler) && typeof this[onHandler] === 'function') {
+      this[onHandler](e)
       if (e.defaultPrevented) {
         return false
       }
@@ -498,7 +497,7 @@ export { SSE }
  * @property {number|null} maxRetries - maximum number of reconnect attempts
  * @property {boolean} useLastEventId - flag, if Last-Event-ID header should be sent
  * @property {string} FIELD_SEPARATOR
- * @property {Record<string, Function[]>} listeners
+ * @property {{ [key: string]: Function[] | undefined }} listeners
  * @property {XMLHttpRequest | null} xhr
  * @property {number} readyState
  * @property {number} progress

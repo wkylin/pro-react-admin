@@ -162,12 +162,10 @@ const config = {
       async: true,
     }),
     new ESLintWebpackPlugin({
-      // 指定检查文件的根目录
       context: path.resolve(__dirname, '../src'),
       exclude: 'node_modules', // 默认值
-      cache: true, // 开启缓存
-      // 缓存目录
-      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'),
+      cache: false, // 禁用/开启缓存
+      cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'), // 缓存目录
     }),
   ],
   module: {

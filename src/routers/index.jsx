@@ -100,40 +100,6 @@ function normalizeRouteTree(routes, parentFullPath = '') {
     return next
   })
 }
-
-function normalizePattern(value = '/') {
-  if (!value) return '/'
-
-  const hasWildcard = value.endsWith('/*')
-  const trimmed = hasWildcard ? value.slice(0, -2) : value
-  let normalized = trimmed.replace(/\/+/g, '/')
-  if (!normalized.startsWith('/')) {
-    normalized = `/${normalized}`
-  }
-  if (normalized.length > 1 && normalized.endsWith('/')) {
-    normalized = normalized.slice(0, -1)
-  }
-  if (hasWildcard) {
-    return normalized === '/' ? '/*' : `${normalized}/*`
-  }
-  return normalized
-}
-
-function normalizeKeyValue(value = '/') {
-  if (!value) return '/'
-  if (value === '*') return '/*'
-  if (value.startsWith('/')) return value
-  return `/${value}`
-}
-
-function stripWildcardSuffix(path = '') {
-  if (!path) return ''
-  if (path.endsWith('/*')) {
-    return path.slice(0, -2) || '/'
-  }
-  return path
-}
-
 // ✅ 新增：扁平化路由工具函数（authRouter.jsx 需要）
 export function flattenRoutes(routes) {
   if (!Array.isArray(routes)) {

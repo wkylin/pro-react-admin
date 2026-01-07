@@ -79,12 +79,12 @@ export default [
       'import/no-unresolved': 'off',
 
       // 未使用变量仅警告
-      // disable base rule in favor of the TS version
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
 
       // avoid hard failure on empty blocks
       'no-empty': 'warn',
+      'no-unused-disable-directive': 'off'
     },
   },
 
