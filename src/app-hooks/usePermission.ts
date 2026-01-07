@@ -24,10 +24,26 @@ export const usePermission = () => {
       setLoading(true)
       const userPermissions = await permissionService.getPermissions()
       setPermissions(Array.isArray(userPermissions.permissions) ? userPermissions.permissions : [])
-      setRoles(Array.isArray(userPermissions.roles) ? userPermissions.roles.map((role) => role.code) : [])
+
+      // 确保 roles 始终是数组
+      let rolesArray: string[] = []
+      if (Array.isArray(userPermissions.roles)) {
+        rolesArray = userPermissions.roles
+          .map((role) => {
+            // 处理 role 可能是字符串或对象的情况
+            return typeof role === 'string' ? role : role?.code || ''
+          })
+          .filter(Boolean)
+      }
+      setRoles(rolesArray)
+
       setRoutes(Array.isArray(userPermissions.routes) ? userPermissions.routes : [])
     } catch (error) {
       console.error('加载权限失败:', error)
+      // 确保错误时也设置空数组
+      setPermissions([])
+      setRoles([])
+      setRoutes([])
     } finally {
       setLoading(false)
     }

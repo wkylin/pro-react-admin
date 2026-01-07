@@ -378,7 +378,8 @@
     "resize-observer-polyfill": "^1.5.1",
     "screenfull": "^6.0.2",
     "three": "^0.182.0",
-    "use-debounce": "^10.0.6"
+    "use-debounce": "^10.0.6",
+    "zustand": "^5.0.9"
   },
   "overrides": {
     "tmp": "0.2.5"
