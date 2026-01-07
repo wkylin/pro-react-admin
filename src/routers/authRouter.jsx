@@ -47,14 +47,23 @@ const AuthRouter = (props) => {
         if (!candidate) return false
         const pattern = candidate.startsWith('/') ? candidate : `/${candidate}`
         return Boolean(
-          matchPath({ path: pattern, end: true }, normalized) ||
-          matchPath(
-            {
-              path: pattern.endsWith('/*') ? pattern : `${pattern}/*`,
-              end: false,
-            },
-            normalized
-          )
+          (() => {
+            try {
+              return (
+                matchPath({ path: pattern, end: true }, normalized) ||
+                matchPath(
+                  {
+                    path: pattern.endsWith('/*') ? pattern : `${pattern}/*`,
+                    end: false,
+                  },
+                  normalized
+                )
+              )
+            } catch (err) {
+              console.warn('AuthRouter matchPath error', pattern, normalized, err)
+              return false
+            }
+          })()
         )
       })
     }

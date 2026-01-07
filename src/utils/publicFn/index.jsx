@@ -1,7 +1,7 @@
 import React from 'react'
+import { matchPath } from 'react-router-dom'
 import routes from '@src/routers/index'
 import Exception404 from '@src/components/stateless/Exception/exception404'
-import { getMenuI18nKeyByPath } from '@src/i18n/menuI18nKey'
 
 export const flattenRoutes = (arr = []) =>
   arr.reduce((prev, item) => {
@@ -13,151 +13,73 @@ export const flattenRoutes = (arr = []) =>
     return prev
   }, [])
 
-export const getKeyName = (pathName = '/404') => {
-  const fullPath = String(pathName || '/')
-  const normalizedPath = normalizeMatchTarget(fullPath)
+/**
+ * 根据当前 pathname 获取路由配置详情（支持动态路由匹配）
+ */
+export const getKeyName = (pathname = location.pathname) => {
+  // 1. 移除参数，标准化路径
+  const purePath = pathname.split('?')[0]
 
-  const flat = flattenRoutes(routes).filter((item) => item && !item.index)
+  // 2. 获取扁平化路由表 (缓存起来性能更好，这里演示逻辑)
+  const allRoutes = flattenRoutes(routes)
 
-  const matched = flat
-    .map((route) => buildMatchEntry(route, normalizedPath))
-    .filter(Boolean)
-    .sort((a, b) => b.score - a.score)
-    .at(0)
+  // 3. 查找匹配的路由
+  // 优先精确匹配 key
+  let route = allRoutes.find((r) => r.key === purePath)
 
-  if (!matched) {
+  // 如果没找到，尝试 pattern 匹配 (处理 /user/:id 这种情况)
+  if (!route) {
+    route = allRoutes.find((r) => {
+      // 忽略 layout 路由或无 path 路由
+      if (!r.path && !r.key) return false
+
+      // 确保 key 是字符串，避免 matchPath 报错
+      if (typeof r.key !== 'string') return false
+
+      try {
+        // 使用 react-router 的 matchPath 算法
+        return matchPath({ path: r.key, end: true, caseSensitive: false }, purePath)
+      } catch (error) {
+        console.warn('matchPath error for key:', r.key, error)
+        return false
+      }
+    })
+  }
+
+  // 4. 兜底处理 (404)
+  if (!route) {
     return {
       title: 'Not Found',
       tabKey: '/404',
       element: <Exception404 />,
-      i18nKey: 'Not Found',
+      i18nKey: 'route.404',
+      path: purePath,
+      auth: false,
     }
   }
 
-  const { route, candidate } = matched
-  const { name, element, index, auth, i18nKey } = route
-
-  const keepQuery = route.meta?.keepQueryTabs === true
-  const routePattern = String(route.meta?.routeKey || route.key || route.path || candidate || '')
-  const isParamRoute = routePattern.includes(':')
-  const matchedByWildcard = routePattern.includes('*') || (candidate && String(candidate).includes('*'))
-  const normalizedActualPath = normalizeTabKey(`/${normalizedPath}`)
-  const baseTabKey = normalizeTabKey(route.meta?.routeKey || route.key || candidate || normalizedActualPath)
-
-  let tabKey
-  if (fullPath.includes('?')) {
-    tabKey = fullPath
-  } else if (isParamRoute || matchedByWildcard) {
-    tabKey = keepQuery ? fullPath : normalizedActualPath
-  } else {
-    tabKey = keepQuery ? fullPath : baseTabKey
-  }
-
-  tabKey = normalizeTabKey(tabKey)
-
-  const i18nLookupKey = route.meta?.routePath || route.path || route.key || candidate || normalizedActualPath
-  const resolvedI18nKey = i18nKey || getMenuI18nKeyByPath(i18nLookupKey)
+  // 5. 返回统一结构供 ProTabs/KeepAlive 使用
+  // 🔥 关键修正：动态路由处理
+  // 如果是静态路由，使用标准化的 route.key (保证 /qrcode 和 qrcode 命中同一个)
+  // 如果是动态路由 (含 : 或 *)，使用当前真实路径 purePath (保证 /detail/1 和 /detail/2 是两个 Tab)
+  const isDynamic = route.key?.includes(':') || route.key?.includes('*')
+  const finalTabKey = isDynamic ? purePath : route.key
 
   return {
-    index: index ?? false,
-    path: route.meta?.routePath || route.path,
-    auth,
-    title: name || route.meta?.title || 'Unknown Route',
-    tabKey,
-    element: element || <Exception404 />,
-    i18nKey: resolvedI18nKey,
+    title: route.meta?.title || route.name || 'New Tab',
+    tabKey: finalTabKey,
+    element: route.element,
+    i18nKey: route.i18nKey || route.meta?.i18nKey,
+    auth: route.auth,
+    path: purePath, // 真实访问的路径 (带参数)
+    closable: route.key !== '/', // 首页不可关闭
+    // 传递 meta 用于后续判断
+    meta: route.meta,
   }
 }
 
-const buildMatchEntry = (route, normalizedPath) => {
-  const candidates = collectRouteIdentifiers(route)
-  let bestCandidate = null
-  let bestScore = -1
-
-  candidates.forEach((candidate) => {
-    if (!doesPathMatch(normalizedPath, candidate)) return
-    const score = calcMatchScore(candidate)
-    if (score > bestScore) {
-      bestScore = score
-      bestCandidate = candidate
-    }
-  })
-
-  if (!bestCandidate) return null
-
-  return {
-    route,
-    candidate: bestCandidate,
-    score: bestScore,
-  }
-}
-
-const collectRouteIdentifiers = (route = {}) => {
-  const identifiers = []
-  const add = (value) => {
-    if (value === undefined || value === null) return
-    const val = String(value).trim()
-    if (val === '') return
-    identifiers.push(val)
-  }
-
-  add(route.meta?.routePath)
-  add(route.meta?.routeKey)
-  add(route.meta?.legacyKey)
-  add(route.key)
-  add(route.path)
-
-  return Array.from(new Set(identifiers))
-}
-
-const normalizeMatchTarget = (fullPath) =>
-  String(fullPath || '/')
-    .split('?')[0]
-    .replace(/^\//, '')
-
-const doesPathMatch = (normalizedPath, candidate) => {
-  if (candidate === undefined || candidate === null) return false
-  const value = String(candidate).trim()
-  const candidatePath = value.replace(/^\//, '')
-
-  if (!candidatePath) {
-    return normalizedPath === ''
-  }
-
-  if (candidatePath === normalizedPath) {
-    return true
-  }
-
-  if (candidatePath.includes(':')) {
-    const pattern = '^' + candidatePath.replace(/:[^/]+/g, '[^/]+') + '$'
-    try {
-      return new RegExp(pattern).test(normalizedPath)
-    } catch (error) {
-      console.warn('getKeyName: invalid route pattern', candidatePath, error)
-      return false
-    }
-  }
-
-  if (candidatePath.endsWith('*')) {
-    const base = candidatePath.replace(/\*$/, '')
-    if (!base) return false
-    const normalizedBase = base.replace(/\/$/, '')
-    return normalizedPath.startsWith(normalizedBase)
-  }
-
-  return false
-}
-
-const calcMatchScore = (candidate) => {
-  if (!candidate) return 0
-  return String(candidate).replace(/^\//, '').replace(/\*/g, '').length
-}
-
-const normalizeTabKey = (value) => {
-  if (!value) return '/'
-  const str = String(value)
-  return str.startsWith('/') ? str : `/${str}`
-}
+// 移除不再使用的废弃函数 (buildMatchEntry, collectRouteIdentifiers, doesPathMatch, calcMatchScore, normalizeMatchTarget, normalizeTabKey)
+// 这些函数已在上述 getKeyName 重构中被标准 React Router 逻辑替代
 
 export const getLocalStorage = (key) => {
   const value = window.localStorage.getItem(key)

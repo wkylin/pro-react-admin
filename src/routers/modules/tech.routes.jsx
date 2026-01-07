@@ -6,7 +6,6 @@ const VitePage = lazy(() => import('@src/pages/build/vite'))
 export const techRoutes = [
   {
     path: '/build/webpack',
-    key: '/build/webpack',
     element: <WebpackPage />,
     meta: {
       title: 'Webpack',
@@ -15,7 +14,6 @@ export const techRoutes = [
   },
   {
     path: '/build/vite',
-    key: '/build/vite',
     element: <VitePage />,
     meta: {
       title: 'Vite',

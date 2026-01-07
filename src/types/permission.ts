@@ -39,7 +39,7 @@ export type Resource =
   | 'portfilo'
   | 'motion'
   | 'echarts'
-  | 'markmap'
+  | 'chatgpt'
   | 'postmessage'
   | 'geo'
   | 'print'

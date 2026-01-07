@@ -16,63 +16,53 @@ export const nestedRoutes = [
   {
     path: 'tech/frontend',
     name: '前端技术栈',
-    key: '/tech/frontend',
     element: <Outlet />,
     errorElement: <RouterErrorElement />,
     children: [
       {
         index: true,
         name: '前端技术栈首页',
-        key: '/tech/frontend',
         element: <lazyComponents.FrontendStack />,
       },
       {
         path: 'react',
         name: 'React',
-        key: '/tech/frontend/react',
         element: <lazyComponents.ReactDemo />,
       },
       {
         path: 'vue',
         name: 'Vue',
-        key: '/tech/frontend/vue',
         element: <lazyComponents.VueDemo />,
       },
       {
         path: 'angular',
         name: 'Angular',
-        key: '/tech/frontend/angular',
         element: <lazyComponents.AngularDemo />,
       },
       {
         path: 'plugins',
         name: 'Vue 插件',
-        key: '/tech/frontend/plugins',
         element: <Outlet />,
         errorElement: <RouterErrorElement />,
         children: [
           {
             index: true,
             name: '插件总览',
-            key: '/tech/frontend/plugins',
             element: <lazyComponents.VuePlugins />,
           },
           {
             path: 'vue3',
             name: 'Vue3 插件开发',
-            key: '/tech/frontend/plugins/vue3',
             element: <lazyComponents.Vue3Plugin />,
           },
           {
             path: 'perf',
             name: '性能优化插件',
-            key: '/tech/frontend/plugins/perf',
             element: <lazyComponents.VuePerfPlugin />,
           },
           {
             path: '*',
             name: '插件页面未找到',
-            key: '/tech/frontend/plugins/*',
             element: <lazyComponents.SectionNotFound />,
           },
         ],
@@ -82,7 +72,6 @@ export const nestedRoutes = [
       {
         path: '*',
         name: '前端页面未找到',
-        key: '/tech/frontend/*',
         element: <lazyComponents.SectionNotFound />,
       },
     ],
@@ -92,32 +81,27 @@ export const nestedRoutes = [
   {
     path: 'tech/backend',
     name: '后端技术栈',
-    key: '/tech/backend',
     element: <Outlet />,
     errorElement: <RouterErrorElement />,
     children: [
       {
         index: true,
         name: '后端技术栈首页',
-        key: '/tech/backend',
         element: <lazyComponents.BackendStack />,
       },
       {
         path: 'node',
         name: 'Node.js',
-        key: '/tech/backend/node',
         element: <lazyComponents.NodeDemo />,
       },
       {
         path: 'java',
         name: 'Java',
-        key: '/tech/backend/java',
         element: <lazyComponents.NodeDemo />,
       },
       {
         path: 'go',
         name: 'Go',
-        key: '/tech/backend/go',
         element: <lazyComponents.NodeDemo />,
       },
 
@@ -125,7 +109,6 @@ export const nestedRoutes = [
       {
         path: '*',
         name: '后端页面未找到',
-        key: '/tech/backend/*',
         element: <lazyComponents.SectionNotFound />,
       },
     ],

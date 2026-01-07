@@ -12,7 +12,6 @@ export const layoutRoutes = [
   {
     path: 'dashboard/*',
     name: 'Dashboard',
-    key: '/dashboard',
     auth: true,
     element: <lazyComponents.Dashboard />,
   },
@@ -20,7 +19,6 @@ export const layoutRoutes = [
   {
     path: 'portfilo/*',
     name: 'My Portfilo',
-    key: '/portfilo',
     auth: true,
     element: <lazyComponents.MyPortfilo />,
   },
@@ -34,7 +32,6 @@ export const mainLayoutRoute = {
   path: '/',
   name: '首页',
   i18nKey: 'home',
-  key: '/',
   auth: true,
   element: (
     <ProtectedRoute>
@@ -46,7 +43,6 @@ export const mainLayoutRoute = {
     {
       index: true,
       name: '首页',
-      key: '/',
       i18nKey: 'home',
       element: <lazyComponents.Home />,
     },

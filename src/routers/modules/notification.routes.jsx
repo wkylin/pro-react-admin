@@ -6,7 +6,6 @@ export const notificationRoutes = [
   {
     path: 'notifications',
     name: '通知中心',
-    key: '/notifications',
     element: <lazyComponents.Notifications />,
     meta: {
       title: '通知中心',
@@ -18,7 +17,6 @@ export const notificationRoutes = [
   {
     path: 'notification/:id',
     name: '通知详情',
-    key: '/notification/:id',
     element: <lazyComponents.NotificationDetail />,
     meta: { title: '通知详情', permission: 'notification' },
   },

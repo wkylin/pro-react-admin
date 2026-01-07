@@ -34,176 +34,176 @@ import {
 } from '@ant-design/icons'
 
 // 静态菜单配置
-// 这里的 key 对应路由 path
+// 这里的 path 对应路由 path
 const rawMainLayoutMenu = [
-  { label: 'home', i18nKey: 'home', key: '/', icon: <HomeOutlined /> },
-  { label: 'demo', i18nKey: 'demo', key: '/demo', icon: <GlobalOutlined /> },
+  { label: 'home', i18nKey: 'home', path: '/', icon: <HomeOutlined /> },
+  { label: 'demo', i18nKey: 'demo', path: '/demo', icon: <GlobalOutlined /> },
   {
     label: 'SVG Viewer',
     i18nKey: 'menu.svgViewer',
-    key: '/svg-viewer',
+    path: '/svg-viewer',
     icon: <HeatMapOutlined />,
   },
   {
     label: 'Zustand演示',
     i18nKey: 'menu.zustand',
-    key: '/zustand',
+    path: '/zustand',
     icon: <ThunderboltOutlined />,
   },
   {
     label: 'Motion',
     i18nKey: 'menu.motion',
-    key: '/motion',
+    path: '/motion',
     icon: <RocketOutlined />,
   },
   {
     label: 'Mermaid',
     i18nKey: 'menu.mermaid',
-    key: '/mermaid',
+    path: '/mermaid',
     icon: <ProjectOutlined />,
   },
   {
     label: 'Topology',
     i18nKey: 'menu.topology',
-    key: '/topology',
+    path: '/topology',
     icon: <DeploymentUnitOutlined />,
   },
   {
     label: '权限示例',
     i18nKey: 'menu.permissionExample',
-    key: '/permission',
+    path: '/permission',
     icon: <LockOutlined />,
   },
   {
     label: 'PH Bar',
     i18nKey: 'menu.phBar',
-    key: '/ph-bar',
+    path: '/ph-bar',
     icon: <BarChartOutlined />,
   },
   {
     label: 'ChatGPT',
     i18nKey: 'menu.chatgpt',
-    key: '/markmap',
+    path: '/chatgpt',
     icon: <RobotOutlined />,
   },
   {
     label: 'React Tilt',
     i18nKey: 'menu.reactTilt',
-    key: '/tilt',
+    path: '/tilt',
     icon: <ExperimentOutlined />,
   },
   {
     label: 'Music',
     i18nKey: 'menu.music',
-    key: '/music',
+    path: '/music',
     icon: <SoundOutlined />,
   },
   {
     label: 'Crypto',
     i18nKey: 'menu.crypto',
-    key: '/crypto',
+    path: '/crypto',
     icon: <LockOutlined />,
   },
   {
     label: 'Video',
     i18nKey: 'menu.video',
-    key: '/video',
+    path: '/video',
     icon: <VideoCameraOutlined />,
   },
   {
     label: 'Big Screen',
     i18nKey: 'menu.bigScreen',
-    key: '/big-screen',
+    path: '/big-screen',
     icon: <FundProjectionScreenOutlined />,
   },
   {
     label: 'Echarts',
     i18nKey: 'menu.echarts',
-    key: '/echarts',
+    path: '/echarts',
     icon: <PieChartOutlined />,
   },
   {
     label: 'Qr Generate',
     i18nKey: 'menu.qrGenerate',
-    key: '/qrcode',
+    path: '/qrcode',
     icon: <QrcodeOutlined />,
   },
   {
     label: 'Business',
     i18nKey: 'menu.business',
-    key: '/business',
+    path: '/business',
     icon: <BankOutlined />,
   },
   {
     label: 'Prism Render',
     i18nKey: 'menu.prismRender',
-    key: '/prism',
+    path: '/prism',
     icon: <HighlightOutlined />,
   },
   {
     label: 'Post Message',
     i18nKey: 'menu.postMessage',
-    key: '/postmessage',
+    path: '/postmessage',
     icon: <SendOutlined />,
   },
   {
     label: 'Geo Chart',
     i18nKey: 'menu.geoChart',
-    key: '/geo',
+    path: '/geo',
     icon: <EnvironmentOutlined />,
   },
   {
     label: 'Print',
     i18nKey: 'menu.print',
-    key: '/print',
+    path: '/print',
     icon: <PrinterOutlined />,
   },
   {
     label: 'Profile',
     i18nKey: 'menu.profile',
-    key: '/profile',
+    path: '/profile',
     icon: <UserOutlined />,
   },
   {
     label: 'Contact',
     i18nKey: 'menu.contact',
-    key: '/contact',
+    path: '/contact',
     icon: <ContactsOutlined />,
   },
   {
     label: '前端技术栈',
     i18nKey: 'menu.frontendTechStack',
-    key: '/tech/frontend',
+    path: '/tech/frontend',
     icon: <DeploymentUnitOutlined />,
     children: [
       {
         label: 'React',
         i18nKey: 'menu.react',
-        key: '/tech/frontend/react',
+        path: '/tech/frontend/react',
         icon: <CodeOutlined />,
       },
       {
         label: 'Vue',
         i18nKey: 'menu.vue',
-        key: '/tech/frontend/vue',
+        path: '/tech/frontend/vue',
         icon: <CodeOutlined />,
         children: [
           {
             label: 'Vue 插件',
             i18nKey: 'menu.vuePlugins',
-            key: '/tech/frontend/plugins',
+            path: '/tech/frontend/plugins',
             icon: <AppstoreOutlined />,
             children: [
               {
                 label: 'Vue3 API',
                 i18nKey: 'menu.vue3Api',
-                key: '/tech/frontend/plugins/vue3',
+                path: '/tech/frontend/plugins/vue3',
                 icon: <FileTextOutlined />,
               },
               {
                 label: '性能优化',
                 i18nKey: 'menu.performanceOptimization',
-                key: '/tech/frontend/plugins/perf',
+                path: '/tech/frontend/plugins/perf',
                 icon: <ThunderboltOutlined />,
               },
             ],
@@ -213,13 +213,13 @@ const rawMainLayoutMenu = [
       {
         label: 'Angular',
         i18nKey: 'menu.angular',
-        key: '/tech/frontend/angular',
+        path: '/tech/frontend/angular',
         icon: <Html5Outlined />,
       },
       {
         label: 'Node',
         i18nKey: 'menu.node',
-        key: '/tech/frontend/node',
+        path: '/tech/frontend/node',
         icon: <CloudServerOutlined />,
       },
     ],
@@ -227,25 +227,25 @@ const rawMainLayoutMenu = [
   {
     label: '后端技术栈',
     i18nKey: 'menu.backendTechStack',
-    key: '/tech/backend',
+    path: '/tech/backend',
     icon: <CloudServerOutlined />,
     children: [
       {
         label: 'Node',
         i18nKey: 'menu.node',
-        key: '/tech/backend/node',
+        path: '/tech/backend/node',
         icon: <CodeOutlined />,
       },
       {
         label: 'Java',
         i18nKey: 'menu.java',
-        key: '/tech/backend/java',
+        path: '/tech/backend/java',
         icon: <CodeOutlined />,
       },
       {
         label: 'Go',
         i18nKey: 'menu.go',
-        key: '/tech/backend/go',
+        path: '/tech/backend/go',
         icon: <CodeOutlined />,
       },
     ],
@@ -253,19 +253,19 @@ const rawMainLayoutMenu = [
   {
     label: '构建工具',
     i18nKey: 'menu.buildTools',
-    key: '/build',
+    path: '/build',
     icon: <ApartmentOutlined />,
     children: [
       {
         label: 'Webpack',
         i18nKey: 'menu.webpack',
-        key: '/build/webpack',
+        path: '/build/webpack',
         icon: <ToolOutlined />,
       },
       {
         label: 'Vite',
         i18nKey: 'menu.vite',
-        key: '/build/vite',
+        path: '/build/vite',
         icon: <ThunderboltOutlined />,
       },
     ],
@@ -274,17 +274,19 @@ const rawMainLayoutMenu = [
   {
     label: 'Error',
     i18nKey: 'menu.error',
-    key: '/sub-error',
+    path: '/sub-error',
     icon: <QuestionCircleOutlined />,
-    children: [{ label: 'ErrorBoundary', i18nKey: 'menu.errorBoundary', key: '/error' }],
+    children: [{ label: 'ErrorBoundary', i18nKey: 'menu.errorBoundary', path: '/error' }],
   },
 ]
 
-// 规范化菜单：为每个项保证存在 `path` 字段（优先使用已有 path，否则复制 key）。
+// 规范化菜单：确保同时存在 path 和 key（两者值一致）
 function normalizeMenu(items) {
   return items.map((it) => {
     const { children, ...rest } = it
-    const normalized = { ...rest, path: it?.path || it.key }
+    const path = it.path || it.key
+    // Ant Design Menu 需要 key 属性
+    const normalized = { ...rest, path, key: it.key || path }
     if (children && Array.isArray(children)) {
       normalized.children = normalizeMenu(children)
     }

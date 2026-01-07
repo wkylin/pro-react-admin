@@ -53,25 +53,44 @@ const rootRouter = normalizeRouteTree(rawRootRouter)
 // ✅ 注入 meta.permission（不改变现有结构，仅增强）
 const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
 
+// 1. 定义构建全路径的辅助函数
+function buildFullPath(parentPath, routePath) {
+  const prefix = parentPath === '/' ? '' : parentPath
+  const current = routePath?.startsWith('/') ? routePath : `/${routePath || ''}`
+  // 处理 index 路由或空路径的情况
+  return `${prefix}${current}`.replace(/\/+/g, '/').replace(/\/$/, '') || '/'
+}
+
+// 2. 核心标准化函数：递归生成 path 和 key
 function normalizeRouteTree(routes, parentFullPath = '') {
   if (!Array.isArray(routes)) return []
 
   return routes.map((route) => {
-    const fullPath = buildFullPath(parentFullPath, route)
-    const normalizedKey = normalizeKeyValue(route.key || fullPath)
+    // 自动计算绝对路径
+    let fullPath = parentFullPath
+
+    if (!route.index) {
+      // 如果不是 index 路由，拼接当前 path
+      // 如果当前 path 为空字符串（layout wrapper），则保持父路径
+      if (route.path) {
+        fullPath = buildFullPath(parentFullPath, route.path)
+      }
+    }
+
+    // 强制统一规则：key 必须等于绝对路径
+    // 即使配置文件里写了 key，也优先使用计算出的 fullPath (也可保留原逻辑作为 legacyKey)
+    const normalizedKey = fullPath
+
     const next = {
       ...route,
-      key: normalizedKey,
+      key: normalizedKey, // 🔥 核心修复：Key 强制对齐绝对路径
       meta: {
         ...(route.meta || {}),
         routePath: fullPath,
-        routeKey: fullPath,
-        ...(route.key && normalizedKey !== route.key ? { legacyKey: route.key } : {}),
+        routeKey: normalizedKey,
+        // 如果原配置有 key 且不一致，记录下来以备查（可选）
+        ...(route.key && route.key !== normalizedKey ? { legacyKey: route.key } : {}),
       },
-    }
-
-    if (!next.path && !next.index && fullPath && fullPath !== '/') {
-      next.path = fullPath.startsWith('/') ? fullPath.slice(1) : fullPath
     }
 
     if (Array.isArray(route.children) && route.children.length > 0) {
@@ -80,27 +99,6 @@ function normalizeRouteTree(routes, parentFullPath = '') {
 
     return next
   })
-}
-
-function buildFullPath(parentFullPath = '', route = {}) {
-  const safeParent = stripWildcardSuffix(parentFullPath)
-  const base = !safeParent || safeParent === '/' ? '' : safeParent
-
-  if (route.index) {
-    return safeParent || '/'
-  }
-
-  const rawPath = route.path
-  if (!rawPath || rawPath === '/') {
-    return safeParent || '/'
-  }
-
-  if (rawPath === '*') {
-    return safeParent ? `${safeParent}/*` : '/*'
-  }
-
-  const candidate = rawPath.startsWith('/') ? rawPath : `${base}/${rawPath}`
-  return normalizePattern(candidate)
 }
 
 function normalizePattern(value = '/') {
