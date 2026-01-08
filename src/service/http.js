@@ -2,12 +2,206 @@ import qs from 'qs'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { showMessage } from '@src/utils/message'
 import { getEnv } from '@utils/env'
+import CryptoJS from 'crypto-js'
+import JSEncrypt from 'jsencrypt'
+import logger from '../utils/logger'
 
 // ==================== 工具函数 ====================
 const addTimestampSuffix = (params = {}) => ({
   ...params,
   _: Date.now(),
 })
+
+const isFormData = (data) => typeof FormData !== 'undefined' && data instanceof FormData
+const isBlob = (data) => typeof Blob !== 'undefined' && data instanceof Blob
+
+// ==================== 加密配置与处理 ====================
+export class EncryptionConfig {
+  constructor() {
+    this.enabled = false // 是否启用加密
+    this.mode = 'AES' // 加密模式: 'AES' | 'RSA' | 'HYBRID'
+    this.aesKey = '' // AES 密钥
+    this.rsaPublicKey = '' // RSA 公钥
+    this.rsaPrivateKey = '' // RSA 私钥
+    this.encryptRequest = true // 是否加密请求
+    this.encryptResponse = true // 是否加密响应
+    this.encryptionHeader = 'X-Encryption-Mode' // 加密模式标识头
+  }
+
+  configureAES(key) {
+    if (!key || (key.length !== 16 && key.length !== 24 && key.length !== 32)) {
+      throw new Error('AES 密钥长度必须是 16、24 或 32 字符')
+    }
+    this.mode = 'AES'
+    this.aesKey = key
+    this.enabled = true
+    logger.info('已配置 AES 加密模式')
+  }
+
+  configureRSA(publicKey, privateKey = '') {
+    if (!publicKey) throw new Error('RSA 公钥不能为空')
+    this.mode = 'RSA'
+    this.rsaPublicKey = publicKey
+    this.rsaPrivateKey = privateKey
+    this.enabled = true
+    logger.info('已配置 RSA 加密模式')
+  }
+
+  configureHybrid(rsaPublicKey, rsaPrivateKey = '') {
+    if (!rsaPublicKey) throw new Error('RSA 公钥不能为空')
+    this.mode = 'HYBRID'
+    this.rsaPublicKey = rsaPublicKey
+    this.rsaPrivateKey = rsaPrivateKey
+    this.enabled = true
+    this.aesKey = CryptoJS.lib.WordArray.random(16).toString()
+    logger.info('已配置混合加密模式')
+  }
+
+  disable() {
+    this.enabled = false
+    logger.info('已禁用加密功能')
+  }
+}
+
+export const encryptionConfig = new EncryptionConfig()
+
+export class EncryptionHandler {
+  static encryptAES(data, key) {
+    try {
+      const encrypted = CryptoJS.AES.encrypt(data, key).toString()
+      return encrypted
+    } catch (error) {
+      logger.error('AES 加密失败:', error)
+      throw new Error('AES 加密失败: ' + error.message)
+    }
+  }
+
+  static decryptAES(cipherText, key) {
+    try {
+      const decrypted = CryptoJS.AES.decrypt(cipherText, key).toString(CryptoJS.enc.Utf8)
+      if (!decrypted) throw new Error('解密失败，可能是密钥错误')
+      return decrypted
+    } catch (error) {
+      logger.error('AES 解密失败:', error)
+      throw new Error('AES 解密失败: ' + error.message)
+    }
+  }
+
+  static encryptRSA(data, publicKey) {
+    try {
+      const encrypt = new JSEncrypt()
+      encrypt.setPublicKey(publicKey)
+      const maxLength = 117
+      if (data.length <= maxLength) {
+        const encrypted = encrypt.encrypt(data)
+        if (!encrypted) throw new Error('RSA 加密失败')
+        return encrypted
+      }
+      const chunks = []
+      for (let i = 0; i < data.length; i += maxLength) {
+        const chunk = data.substring(i, i + maxLength)
+        const encrypted = encrypt.encrypt(chunk)
+        if (!encrypted) throw new Error('RSA 分段加密失败')
+        chunks.push(encrypted)
+      }
+      return JSON.stringify(chunks)
+    } catch (error) {
+      logger.error('RSA 加密失败:', error)
+      throw new Error('RSA 加密失败: ' + error.message)
+    }
+  }
+
+  static decryptRSA(cipherText, privateKey) {
+    try {
+      const decrypt = new JSEncrypt()
+      decrypt.setPrivateKey(privateKey)
+      let chunks
+      try {
+        chunks = JSON.parse(cipherText)
+      } catch {
+        const decrypted = decrypt.decrypt(cipherText)
+        if (!decrypted) throw new Error('RSA 解密失败')
+        return decrypted
+      }
+      if (!Array.isArray(chunks)) throw new Error('无效的分段加密数据')
+      const decryptedChunks = []
+      for (const chunk of chunks) {
+        const decrypted = decrypt.decrypt(chunk)
+        if (!decrypted) throw new Error('RSA 分段解密失败')
+        decryptedChunks.push(decrypted)
+      }
+      return decryptedChunks.join('')
+    } catch (error) {
+      logger.error('RSA 解密失败:', error)
+      throw new Error('RSA 解密失败: ' + error.message)
+    }
+  }
+
+  static encryptHybrid(data, aesKey, rsaPublicKey) {
+    const encryptedData = this.encryptAES(data, aesKey)
+    const encryptedKey = this.encryptRSA(aesKey, rsaPublicKey)
+    return { encryptedKey, encryptedData }
+  }
+
+  static decryptHybrid(encryptedData, encryptedKey, rsaPrivateKey) {
+    const aesKey = this.decryptRSA(encryptedKey, rsaPrivateKey)
+    return this.decryptAES(encryptedData, aesKey)
+  }
+
+  static encryptRequestData(data, config) {
+    if (!config.enabled || !config.encryptRequest || !data) return data
+    if (isFormData(data) || isBlob(data)) {
+      logger.warn('FormData/Blob 类型数据不进行加密')
+      return data
+    }
+    const jsonData = typeof data === 'string' ? data : JSON.stringify(data)
+    try {
+      switch (config.mode) {
+        case 'AES':
+          return { encrypted: this.encryptAES(jsonData, config.aesKey), mode: 'AES' }
+        case 'RSA':
+          return { encrypted: this.encryptRSA(jsonData, config.rsaPublicKey), mode: 'RSA' }
+        case 'HYBRID': {
+          const { encryptedKey, encryptedData } = this.encryptHybrid(jsonData, config.aesKey, config.rsaPublicKey)
+          return { encrypted: encryptedData, key: encryptedKey, mode: 'HYBRID' }
+        }
+        default:
+          return data
+      }
+    } catch (error) {
+      logger.error('加密请求数据失败:', error)
+      throw error
+    }
+  }
+
+  static decryptResponseData(data, config) {
+    if (!config.enabled || !config.encryptResponse || !data || !data.encrypted) return data
+    try {
+      let decrypted
+      switch (data.mode || config.mode) {
+        case 'AES':
+          decrypted = this.decryptAES(data.encrypted, config.aesKey)
+          break
+        case 'RSA':
+          decrypted = this.decryptRSA(data.encrypted, config.rsaPrivateKey)
+          break
+        case 'HYBRID':
+          decrypted = this.decryptHybrid(data.encrypted, data.key, config.rsaPrivateKey)
+          break
+        default:
+          return data
+      }
+      try {
+        return JSON.parse(decrypted)
+      } catch {
+        return decrypted
+      }
+    } catch (error) {
+      logger.error('解密响应数据失败:', error)
+      throw error
+    }
+  }
+}
 
 // ==================== 1. 配置常量 ====================
 const CONFIG = {
@@ -40,8 +234,28 @@ class HttpClient {
       response: [],
     }
 
-    // 添加默认请求拦截器：为 GET/DELETE 请求添加时间戳防止缓存
+    // 添加默认请求拦截器
     this.useRequestInterceptor((config) => {
+      // 1. 处理加密
+      if (encryptionConfig.enabled && config.encrypt !== false && (config.payload || config.body)) {
+        const dataToEncrypt = config.payload || config.body
+        try {
+          const encrypted = EncryptionHandler.encryptRequestData(dataToEncrypt, encryptionConfig)
+          if (encrypted && encrypted !== dataToEncrypt) {
+            config.payload = encrypted
+            // 确保 payload 生效，清除 body
+            if (config.body) config.body = undefined
+            config.headers = {
+              ...config.headers,
+              [encryptionConfig.encryptionHeader]: encryptionConfig.mode,
+            }
+          }
+        } catch (error) {
+          logger.error('请求加密失败:', error)
+        }
+      }
+
+      // 2. 为 GET/DELETE 请求添加时间戳防止缓存
       if (config.addTimestamp !== false && (config.method === 'GET' || config.method === 'DELETE')) {
         config.params = addTimestampSuffix(config.params || {})
       }
@@ -154,7 +368,20 @@ class HttpClient {
     }
 
     if (contentType.includes('application/json')) {
-      const data = await response.json()
+      let data = await response.json()
+
+      // 尝试解密响应数据
+      if (encryptionConfig.enabled && config.decrypt !== false) {
+        const isEncrypted = response.headers.get(encryptionConfig.encryptionHeader) || data.encrypted
+        if (isEncrypted) {
+          try {
+            data = EncryptionHandler.decryptResponseData(data, encryptionConfig)
+          } catch (error) {
+            logger.error('响应解密失败:', error)
+          }
+        }
+      }
+
       // 业务状态码检查 (参考原 fetch.js 逻辑)
       if (data.code !== undefined && data.code !== 0 && data.code !== 200) {
         if (data.code === 41002) {
@@ -227,7 +454,13 @@ class HttpClient {
     })
   }
 
-  // 文件下载 (支持进度)
+  /**
+   * 下载文件 (支持进度)
+   * @param {string} url - 下载地址
+   * @param {string} [fileName] - 文件名 (可选)
+   * @param {object} [params] - 查询参数
+   * @param {object} [config] - 其他 Fetch 配置
+   */
   async download(url, fileName, params = {}, config = {}) {
     const fullUrl = this._buildUrl({
       url,

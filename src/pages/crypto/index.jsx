@@ -2,11 +2,20 @@ import React, { useState } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import CryptoJS, { AES, enc } from 'crypto-js'
 import JSEncrypt from 'jsencrypt'
-import { Card, Tabs, Input, Button, Space, Typography, Row, Col, message, Divider, Alert, theme } from 'antd'
-import { LockOutlined, UnlockOutlined, KeyOutlined, ReloadOutlined } from '@ant-design/icons'
+import { Card, Tabs, Input, Button, Space, Typography, Row, Col, Divider, Alert, theme, Select, App } from 'antd'
+import {
+  LockOutlined,
+  UnlockOutlined,
+  KeyOutlined,
+  ReloadOutlined,
+  ApiOutlined,
+  CheckCircleOutlined,
+} from '@ant-design/icons'
+import request from '@src/service/request'
 
 const { TextArea } = Input
 const { Title, Text, Paragraph } = Typography
+const { Option } = Select
 
 // 预置的 RSA 密钥对 (仅作演示使用，实际生产环境请勿在前端硬编码私钥)
 const DEFAULT_PUBLIC_KEY = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0BDRgoeZCRRvH/QLbGhe
@@ -46,6 +55,7 @@ v4U73TKOI+a1xxr6ZMQ4vzwt`
 
 const AESPanel = () => {
   const { token } = theme.useToken()
+  const { message } = App.useApp()
   const [plainText, setPlainText] = useState('大型语言模型（LLM）是基于大量数据进行预训练的超大型深度学习模型。')
   const [secretKey, setSecretKey] = useState('')
   const [cipherText, setCipherText] = useState('')
@@ -179,6 +189,7 @@ const AESPanel = () => {
 
 const RSAPanel = () => {
   const { token } = theme.useToken()
+  const { message } = App.useApp()
   const [plainText, setPlainText] = useState('基于转换器的大型神经网络可以有数十亿个参数。')
   const [cipherText, setCipherText] = useState('')
   const [decryptedText, setDecryptedText] = useState('')
@@ -307,6 +318,276 @@ const RSAPanel = () => {
   )
 }
 
+// 接口加密测试面板
+const APIEncryptionPanel = () => {
+  const { token } = theme.useToken()
+  const { message } = App.useApp()
+  const [encryptMode, setEncryptMode] = useState('AES')
+  const [aesKey, setAesKey] = useState('test-key-1234567')
+  const [rsaPublicKey, setRsaPublicKey] = useState(DEFAULT_PUBLIC_KEY)
+  const [rsaPrivateKey, setRsaPrivateKey] = useState(DEFAULT_PRIVATE_KEY)
+  const [testData, setTestData] = useState(JSON.stringify({ username: 'admin', password: '123456' }, null, 2))
+  const [encryptionStatus, setEncryptionStatus] = useState(null)
+  const [testResult, setTestResult] = useState('')
+
+  const handleConfigureEncryption = () => {
+    try {
+      switch (encryptMode) {
+        case 'AES':
+          if (!aesKey || (aesKey.length !== 16 && aesKey.length !== 24 && aesKey.length !== 32)) {
+            return message.error('AES 密钥长度必须是 16、24 或 32 字符')
+          }
+          request.configureAES(aesKey)
+          break
+
+        case 'RSA':
+          if (!rsaPublicKey) {
+            return message.error('请输入 RSA 公钥')
+          }
+          request.configureRSA(rsaPublicKey, rsaPrivateKey)
+          break
+
+        case 'HYBRID':
+          if (!rsaPublicKey) {
+            return message.error('请输入 RSA 公钥')
+          }
+          request.configureHybrid(rsaPublicKey, rsaPrivateKey)
+          break
+
+        default:
+          return message.error('未知的加密模式')
+      }
+
+      const status = request.getEncryptionConfig()
+      setEncryptionStatus(status)
+      message.success(`${encryptMode} 加密已配置`)
+    } catch (error) {
+      message.error('配置失败: ' + error.message)
+    }
+  }
+
+  const handleDisableEncryption = () => {
+    request.disableEncryption()
+    setEncryptionStatus(request.getEncryptionConfig())
+    message.info('加密已禁用')
+  }
+
+  const handleTestEncryption = async () => {
+    if (!encryptionStatus?.enabled) {
+      return message.warning('请先配置加密')
+    }
+
+    try {
+      // 模拟加密请求（这里仅做本地测试，实际需要后端配合）
+      const data = JSON.parse(testData)
+
+      // 手动加密数据（模拟请求拦截器的行为）
+      let encryptedData
+      switch (encryptionStatus.mode) {
+        case 'AES':
+          encryptedData = CryptoJS.AES.encrypt(JSON.stringify(data), aesKey).toString()
+          break
+        case 'RSA': {
+          const encrypt = new JSEncrypt()
+          encrypt.setPublicKey(rsaPublicKey)
+          encryptedData = encrypt.encrypt(JSON.stringify(data))
+          break
+        }
+        case 'HYBRID': {
+          const randomKey = CryptoJS.lib.WordArray.random(16).toString()
+          const aesEncrypted = CryptoJS.AES.encrypt(JSON.stringify(data), randomKey).toString()
+          const rsaEncrypt = new JSEncrypt()
+          rsaEncrypt.setPublicKey(rsaPublicKey)
+          const encryptedKey = rsaEncrypt.encrypt(randomKey)
+          encryptedData = { data: aesEncrypted, key: encryptedKey }
+          break
+        }
+      }
+
+      setTestResult(
+        JSON.stringify(
+          {
+            mode: encryptionStatus.mode,
+            encrypted: typeof encryptedData === 'string' ? encryptedData.substring(0, 100) + '...' : encryptedData,
+            status: 'success',
+          },
+          null,
+          2
+        )
+      )
+      message.success('加密测试成功')
+    } catch (error) {
+      setTestResult(`错误: ${error.message}`)
+      message.error('测试失败: ' + error.message)
+    }
+  }
+
+  return (
+    <Space orientation="vertical" size="large" style={{ width: '100%' }}>
+      <Alert
+        title="Request.js 接口加密测试"
+        description="配置并测试 request.js 的自动加密功能。实际使用时，请在应用初始化时配置，之后所有请求会自动加密。"
+        type="success"
+        showIcon
+      />
+
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={12}>
+          <Card title="🔧 加密配置" variant="borderless" className="shadow-sm">
+            <Space orientation="vertical" style={{ width: '100%' }} size="middle">
+              <div>
+                <Text strong>1. 选择加密模式</Text>
+                <Select value={encryptMode} onChange={setEncryptMode} style={{ width: '100%', marginTop: 8 }}>
+                  <Option value="AES">AES 对称加密（高性能）</Option>
+                  <Option value="RSA">RSA 非对称加密（高安全）</Option>
+                  <Option value="HYBRID">混合加密（推荐）</Option>
+                </Select>
+              </div>
+
+              {(encryptMode === 'AES' || encryptMode === 'HYBRID') && (
+                <div>
+                  <Text strong>2. AES 密钥 (16/24/32字符)</Text>
+                  <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                    <Input value={aesKey} onChange={(e) => setAesKey(e.target.value)} placeholder="16/24/32字符密钥" />
+                    <Button
+                      icon={<ReloadOutlined />}
+                      onClick={() => setAesKey(CryptoJS.lib.WordArray.random(16).toString())}
+                    >
+                      随机
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {(encryptMode === 'RSA' || encryptMode === 'HYBRID') && (
+                <>
+                  <div>
+                    <Text strong>3. RSA 公钥</Text>
+                    <TextArea
+                      value={rsaPublicKey}
+                      onChange={(e) => setRsaPublicKey(e.target.value)}
+                      rows={3}
+                      placeholder="RSA 公钥"
+                      style={{ marginTop: 8, fontFamily: 'monospace', fontSize: 12 }}
+                    />
+                  </div>
+                  <div>
+                    <Text strong>4. RSA 私钥（可选，用于解密响应）</Text>
+                    <TextArea
+                      value={rsaPrivateKey}
+                      onChange={(e) => setRsaPrivateKey(e.target.value)}
+                      rows={3}
+                      placeholder="RSA 私钥"
+                      style={{ marginTop: 8, fontFamily: 'monospace', fontSize: 12 }}
+                    />
+                  </div>
+                </>
+              )}
+
+              <Space style={{ width: '100%' }}>
+                <Button type="primary" icon={<KeyOutlined />} onClick={handleConfigureEncryption}>
+                  应用配置
+                </Button>
+                <Button onClick={handleDisableEncryption}>禁用加密</Button>
+              </Space>
+
+              {encryptionStatus && (
+                <Alert
+                  title="当前状态"
+                  description={
+                    <div style={{ fontFamily: 'monospace', fontSize: 12 }}>
+                      <div>启用: {encryptionStatus.enabled ? '✅ 是' : '❌ 否'}</div>
+                      <div>模式: {encryptionStatus.mode}</div>
+                      <div>加密请求: {encryptionStatus.encryptRequest ? '✅' : '❌'}</div>
+                      <div>解密响应: {encryptionStatus.encryptResponse ? '✅' : '❌'}</div>
+                    </div>
+                  }
+                  type={encryptionStatus.enabled ? 'success' : 'warning'}
+                  showIcon
+                  icon={<CheckCircleOutlined />}
+                />
+              )}
+            </Space>
+          </Card>
+        </Col>
+
+        <Col xs={24} lg={12}>
+          <Card title="🧪 加密测试" variant="borderless" className="shadow-sm">
+            <Space orientation="vertical" style={{ width: '100%' }} size="middle">
+              <div>
+                <Text strong>测试数据 (JSON)</Text>
+                <TextArea
+                  value={testData}
+                  onChange={(e) => setTestData(e.target.value)}
+                  rows={6}
+                  placeholder="输入要加密的 JSON 数据"
+                  style={{ marginTop: 8, fontFamily: 'monospace' }}
+                />
+              </div>
+
+              <Button
+                type="primary"
+                icon={<ApiOutlined />}
+                onClick={handleTestEncryption}
+                block
+                disabled={!encryptionStatus?.enabled}
+              >
+                测试加密
+              </Button>
+
+              {testResult && (
+                <div>
+                  <Text strong>加密结果</Text>
+                  <div
+                    style={{
+                      marginTop: 8,
+                      padding: 12,
+                      background: token.colorFillAlter,
+                      border: `1px solid ${token.colorBorder}`,
+                      borderRadius: 6,
+                      maxHeight: 300,
+                      overflow: 'auto',
+                      fontFamily: 'monospace',
+                      fontSize: 12,
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-all',
+                    }}
+                  >
+                    {testResult}
+                  </div>
+                </div>
+              )}
+            </Space>
+          </Card>
+        </Col>
+      </Row>
+
+      <Card title="📖 使用说明" size="small" variant="borderless">
+        <Space orientation="vertical" style={{ width: '100%' }} size="small">
+          <Text>
+            <Text strong>1. 配置加密:</Text> 选择加密模式并填写密钥，点击"应用配置"
+          </Text>
+          <Text>
+            <Text strong>2. 全局生效:</Text> 配置后，所有通过 request 发起的请求都会自动加密
+          </Text>
+          <Text>
+            <Text strong>3. 单独控制:</Text> 可在请求配置中添加 <Text code>encrypt: false</Text> 禁用单个请求的加密
+          </Text>
+          <Text>
+            <Text strong>4. 代码示例:</Text>
+            <Text code style={{ display: 'block', marginTop: 4, padding: 8, background: token.colorFillAlter }}>
+              {`// 在应用入口配置\nimport request from '@src/service/request'\nrequest.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)\n\n// 之后所有请求自动加密\nconst data = await request.post('/api/login', credentials)`}
+            </Text>
+          </Text>
+          <Text type="secondary" style={{ fontSize: 12 }}>
+            💡 提示: 完整文档请查看 <Text code>docs/REQUEST_ENCRYPTION.md</Text>
+          </Text>
+        </Space>
+      </Card>
+    </Space>
+  )
+}
+
 const MyCrypto = () => {
   const items = [
     {
@@ -329,16 +610,30 @@ const MyCrypto = () => {
       ),
       children: <RSAPanel />,
     },
+    {
+      key: 'api',
+      label: (
+        <span>
+          <ApiOutlined />
+          接口加密测试
+        </span>
+      ),
+      children: <APIEncryptionPanel />,
+    },
   ]
 
   return (
     <FixTabPanel>
-      <Card variant="borderless" style={{ minHeight: '100%' }}>
-        <Title level={3}>加密算法实验室</Title>
-        <Paragraph type="secondary">提供常用的对称加密 (AES) 和非对称加密 (RSA) 在线测试工具。</Paragraph>
-        <Divider />
-        <Tabs defaultActiveKey="aes" items={items} type="card" animated={{ inkBar: true, tabPane: false }} />
-      </Card>
+      <App>
+        <Card variant="borderless" style={{ minHeight: '100%' }}>
+          <Title level={3}>加密算法实验室</Title>
+          <Paragraph type="secondary">
+            提供常用的对称加密 (AES)、非对称加密 (RSA) 在线测试工具，以及 Request.js 接口加密功能测试。
+          </Paragraph>
+          <Divider />
+          <Tabs defaultActiveKey="aes" items={items} type="card" animated={{ inkBar: true, tabPane: false }} />
+        </Card>
+      </App>
     </FixTabPanel>
   )
 }
