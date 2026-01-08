@@ -30,16 +30,18 @@ request.configureAES('1234567890123456')
 // 之后所有请求会自动加密
 const data = await request.post('/api/sensitive-data', {
   username: 'admin',
-  password: '123456'
+  password: '123456',
 })
 ```
 
 **优点**：
+
 - 加密速度快
 - 适合大数据量
 - CPU 占用低
 
 **缺点**：
+
 - 需要安全地传输密钥
 - 密钥泄露风险较高
 
@@ -66,16 +68,18 @@ request.configureRSA(PUBLIC_KEY, PRIVATE_KEY)
 // 之后所有请求会自动加密
 const data = await request.post('/api/payment', {
   amount: 10000,
-  cardNumber: '6222021234567890'
+  cardNumber: '6222021234567890',
 })
 ```
 
 **优点**：
+
 - 安全性极高
 - 公钥可以公开传输
 - 适合加密敏感信息
 
 **缺点**：
+
 - 加密速度慢
 - 数据长度有限制（自动分段处理）
 
@@ -84,6 +88,7 @@ const data = await request.post('/api/payment', {
 ### 3. 混合加密（⭐ 最佳实践）
 
 混合加密结合了 RSA 和 AES 的优点：
+
 - 使用 RSA 加密 AES 密钥（安全传输）
 - 使用 AES 加密实际数据（高性能）
 
@@ -101,15 +106,16 @@ const data = await request.post('/api/user/register', {
   username: 'newuser',
   password: 'SecurePass123!',
   email: 'user@example.com',
-  idCard: '110101199001011234'
+  idCard: '110101199001011234',
 })
 ```
 
 **数据传输格式**：
+
 ```json
 {
   "encrypted": "U2FsdGVkX1+...", // AES 加密的数据
-  "key": "aBcDeF123...",          // RSA 加密的 AES 密钥
+  "key": "aBcDeF123...", // RSA 加密的 AES 密钥
   "mode": "HYBRID"
 }
 ```
@@ -126,7 +132,7 @@ request.configureAES('my-secret-key')
 
 // 某个请求不需要加密
 const data = await request.post('/api/public-data', payload, {
-  encrypt: false  // 本次请求不加密
+  encrypt: false, // 本次请求不加密
 })
 ```
 
@@ -186,6 +192,7 @@ console.log(config)
 ### 请求数据格式
 
 #### AES 模式
+
 ```json
 {
   "encrypted": "U2FsdGVkX1+XXXXXXXX==",
@@ -194,6 +201,7 @@ console.log(config)
 ```
 
 #### RSA 模式
+
 ```json
 {
   "encrypted": "aBcDeFgHiJkLmNoPqRsTuVwXyZ123456==",
@@ -202,6 +210,7 @@ console.log(config)
 ```
 
 #### 混合模式
+
 ```json
 {
   "encrypted": "U2FsdGVkX1+XXXXXXXX==",
@@ -236,7 +245,7 @@ function decryptHybrid(encryptedData, encryptedKey, privateKey) {
   // 1. 使用 RSA 解密 AES 密钥
   const key = new NodeRSA(privateKey)
   const aesKey = key.decrypt(encryptedKey, 'utf8')
-  
+
   // 2. 使用 AES 密钥解密数据
   return decryptAES(encryptedData, aesKey)
 }
@@ -284,11 +293,15 @@ request.configureAES('1234567890123456')
 // ✅ 推荐：从环境变量或接口获取
 const initEncryption = async () => {
   // 方式 1: 从后端获取公钥
-  const { publicKey } = await request.get('/api/get-public-key', {}, {
-    encrypt: false  // 获取密钥的请求不能加密
-  })
+  const { publicKey } = await request.get(
+    '/api/get-public-key',
+    {},
+    {
+      encrypt: false, // 获取密钥的请求不能加密
+    }
+  )
   request.configureRSA(publicKey)
-  
+
   // 方式 2: 从环境变量读取
   const key = import.meta.env.VITE_AES_KEY
   request.configureAES(key)
@@ -310,26 +323,29 @@ request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
 
 ## 性能对比
 
-| 加密方式 | 加密速度 | 安全性 | 数据量限制 | 推荐场景 |
-|---------|---------|--------|-----------|---------|
-| **AES** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | 无限制 | 高频请求、大数据量 |
-| **RSA** | ⭐⭐ | ⭐⭐⭐⭐⭐ | 117字节/段 | 敏感信息、低频请求 |
-| **混合** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 无限制 | 综合场景（推荐） |
+| 加密方式 | 加密速度   | 安全性     | 数据量限制 | 推荐场景           |
+| -------- | ---------- | ---------- | ---------- | ------------------ |
+| **AES**  | ⭐⭐⭐⭐⭐ | ⭐⭐⭐     | 无限制     | 高频请求、大数据量 |
+| **RSA**  | ⭐⭐       | ⭐⭐⭐⭐⭐ | 117字节/段 | 敏感信息、低频请求 |
+| **混合** | ⭐⭐⭐⭐   | ⭐⭐⭐⭐⭐ | 无限制     | 综合场景（推荐）   |
 
 ---
 
 ## 常见问题
 
 ### Q1: 为什么加密后请求失败？
+
 - 检查后端是否支持解密
 - 确认密钥配置正确
 - 查看控制台错误日志
 
 ### Q2: FormData 可以加密吗？
+
 - 不可以，FormData 和 Blob 类型会自动跳过加密
 - 文件上传等场景建议使用其他安全措施
 
 ### Q3: 如何调试加密数据？
+
 ```javascript
 // 临时禁用加密查看原始数据
 request.disableEncryption()
@@ -341,6 +357,7 @@ console.log(request.getEncryptionConfig())
 ```
 
 ### Q4: 加密影响性能吗？
+
 - AES 加密性能开销 < 5%
 - RSA 加密对长文本有明显延迟
 - 混合加密综合性能最佳
@@ -375,7 +392,7 @@ MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDQENGCh5kJFG8f
 export const initEncryption = () => {
   // 使用混合加密（推荐）
   request.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
-  
+
   console.log('✅ 接口加密已启用')
   console.log('📊 加密配置:', request.getEncryptionConfig())
 }
@@ -386,10 +403,14 @@ export const initEncryption = () => {
 export const initEncryptionFromServer = async () => {
   try {
     // 从服务器获取公钥
-    const { publicKey } = await request.get('/api/crypto/public-key', {}, {
-      encrypt: false  // 获取密钥时不能加密
-    })
-    
+    const { publicKey } = await request.get(
+      '/api/crypto/public-key',
+      {},
+      {
+        encrypt: false, // 获取密钥时不能加密
+      }
+    )
+
     request.configureRSA(publicKey)
     console.log('✅ 接口加密已启用（服务器密钥）')
   } catch (error) {
@@ -411,6 +432,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 ## 更新日志
 
 ### v1.0.0 (2026-01-08)
+
 - ✅ 支持 AES/RSA/混合加密
 - ✅ 自动加密请求和响应
 - ✅ 支持单个请求独立控制
@@ -423,4 +445,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 - [crypto-js 文档](https://cryptojs.gitbook.io/docs/)
 - [jsencrypt 文档](https://github.com/travist/jsencrypt)
 - [AES 加密标准](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
-- [RSA 加密标准](https://en.wikipedia.org/wiki/RSA_(cryptosystem))
+- [RSA 加密标准](<https://en.wikipedia.org/wiki/RSA_(cryptosystem)>)

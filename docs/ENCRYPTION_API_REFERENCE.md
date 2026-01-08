@@ -19,9 +19,11 @@
 配置 AES 对称加密。
 
 **参数:**
+
 - `key` (string): AES 密钥，必须是 16/24/32 字符
 
 **示例:**
+
 ```javascript
 request.configureAES('1234567890123456')
 ```
@@ -35,10 +37,12 @@ request.configureAES('1234567890123456')
 配置 RSA 非对称加密。
 
 **参数:**
+
 - `publicKey` (string): RSA 公钥（必需）
 - `privateKey` (string): RSA 私钥（可选，用于解密响应）
 
 **示例:**
+
 ```javascript
 request.configureRSA(PUBLIC_KEY, PRIVATE_KEY)
 ```
@@ -52,15 +56,18 @@ request.configureRSA(PUBLIC_KEY, PRIVATE_KEY)
 配置混合加密（推荐）。
 
 **参数:**
+
 - `rsaPublicKey` (string): RSA 公钥（必需）
 - `rsaPrivateKey` (string): RSA 私钥（可选）
 
 **特性:**
+
 - 自动生成随机 AES 密钥
 - 使用 RSA 加密 AES 密钥
 - 使用 AES 加密实际数据
 
 **示例:**
+
 ```javascript
 request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
 ```
@@ -76,6 +83,7 @@ request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
 启用加密功能。
 
 **示例:**
+
 ```javascript
 request.enableEncryption()
 ```
@@ -89,6 +97,7 @@ request.enableEncryption()
 禁用加密功能。
 
 **示例:**
+
 ```javascript
 request.disableEncryption()
 ```
@@ -102,9 +111,11 @@ request.disableEncryption()
 设置是否加密请求。
 
 **参数:**
+
 - `enabled` (boolean): true = 加密，false = 不加密
 
 **示例:**
+
 ```javascript
 request.setEncryptRequest(true)
 ```
@@ -118,9 +129,11 @@ request.setEncryptRequest(true)
 设置是否解密响应。
 
 **参数:**
+
 - `enabled` (boolean): true = 解密，false = 不解密
 
 **示例:**
+
 ```javascript
 request.setEncryptResponse(false)
 ```
@@ -136,6 +149,7 @@ request.setEncryptResponse(false)
 获取当前加密配置。
 
 **返回:**
+
 ```typescript
 {
   enabled: boolean,        // 是否启用
@@ -146,6 +160,7 @@ request.setEncryptResponse(false)
 ```
 
 **示例:**
+
 ```javascript
 const config = request.getEncryptionConfig()
 console.log(config)
@@ -166,10 +181,11 @@ console.log(config)
 **默认:** `true`
 
 **示例:**
+
 ```javascript
 // 禁用本次请求的加密
 request.post('/api/public', data, {
-  encrypt: false
+  encrypt: false,
 })
 ```
 
@@ -183,9 +199,10 @@ request.post('/api/public', data, {
 **默认:** `true`
 
 **示例:**
+
 ```javascript
 request.post('/api/data', data, {
-  throwOnEncryptError: false  // 加密失败时不抛出错误
+  throwOnEncryptError: false, // 加密失败时不抛出错误
 })
 ```
 
@@ -199,10 +216,15 @@ request.post('/api/data', data, {
 **默认:** `true`
 
 **示例:**
+
 ```javascript
-request.get('/api/data', {}, {
-  throwOnDecryptError: false  // 解密失败时不抛出错误
-})
+request.get(
+  '/api/data',
+  {},
+  {
+    throwOnDecryptError: false, // 解密失败时不抛出错误
+  }
+)
 ```
 
 ---
@@ -212,6 +234,7 @@ request.get('/api/data', {}, {
 ### 请求数据格式
 
 #### AES 模式
+
 ```json
 {
   "encrypted": "U2FsdGVkX1+XXXXXXXX==",
@@ -220,6 +243,7 @@ request.get('/api/data', {}, {
 ```
 
 #### RSA 模式
+
 ```json
 {
   "encrypted": "aBcDeFgHiJkLmNoPqRs==",
@@ -228,6 +252,7 @@ request.get('/api/data', {}, {
 ```
 
 #### 混合模式
+
 ```json
 {
   "encrypted": "U2FsdGVkX1+XXXXXXXX==",
@@ -264,13 +289,17 @@ console.log(request.getEncryptionConfig())
 // 3. 发送加密请求（自动）
 const data = await request.post('/api/sensitive', {
   username: 'admin',
-  password: '123456'
+  password: '123456',
 })
 
 // 4. 单个请求禁用加密
-const publicData = await request.get('/api/public', {}, {
-  encrypt: false
-})
+const publicData = await request.get(
+  '/api/public',
+  {},
+  {
+    encrypt: false,
+  }
+)
 
 // 5. 临时禁用所有加密
 request.disableEncryption()
@@ -279,10 +308,7 @@ request.disableEncryption()
 request.enableEncryption()
 
 // 7. 链式调用
-request
-  .configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
-  .setEncryptRequest(true)
-  .setEncryptResponse(true)
+request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY).setEncryptRequest(true).setEncryptResponse(true)
 ```
 
 ---
@@ -307,30 +333,26 @@ const encrypted = EncryptionHandler.encryptRSA(data, publicKey)
 const decrypted = EncryptionHandler.decryptRSA(cipherText, privateKey)
 
 // 混合加密
-const { encryptedKey, encryptedData } = EncryptionHandler.encryptHybrid(
-  data, aesKey, rsaPublicKey
-)
+const { encryptedKey, encryptedData } = EncryptionHandler.encryptHybrid(data, aesKey, rsaPublicKey)
 
 // 混合解密
-const decrypted = EncryptionHandler.decryptHybrid(
-  encryptedData, encryptedKey, rsaPrivateKey
-)
+const decrypted = EncryptionHandler.decryptHybrid(encryptedData, encryptedKey, rsaPrivateKey)
 ```
 
 ---
 
 ## 快速参考表
 
-| 方法 | 用途 | 链式 |
-|------|------|------|
-| `configureAES(key)` | 配置 AES 加密 | ✅ |
-| `configureRSA(pub, pri)` | 配置 RSA 加密 | ✅ |
-| `configureHybrid(pub, pri)` | 配置混合加密 | ✅ |
-| `enableEncryption()` | 启用加密 | ✅ |
-| `disableEncryption()` | 禁用加密 | ✅ |
-| `setEncryptRequest(bool)` | 设置加密请求 | ✅ |
-| `setEncryptResponse(bool)` | 设置解密响应 | ✅ |
-| `getEncryptionConfig()` | 获取配置 | ❌ |
+| 方法                        | 用途          | 链式 |
+| --------------------------- | ------------- | ---- |
+| `configureAES(key)`         | 配置 AES 加密 | ✅   |
+| `configureRSA(pub, pri)`    | 配置 RSA 加密 | ✅   |
+| `configureHybrid(pub, pri)` | 配置混合加密  | ✅   |
+| `enableEncryption()`        | 启用加密      | ✅   |
+| `disableEncryption()`       | 禁用加密      | ✅   |
+| `setEncryptRequest(bool)`   | 设置加密请求  | ✅   |
+| `setEncryptResponse(bool)`  | 设置解密响应  | ✅   |
+| `getEncryptionConfig()`     | 获取配置      | ❌   |
 
 ---
 
@@ -346,9 +368,5 @@ const decrypted = EncryptionHandler.decryptHybrid(
 **提示:** 所有配置方法都支持链式调用！
 
 ```javascript
-request
-  .configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
-  .setEncryptRequest(true)
-  .setEncryptResponse(true)
-  .enableEncryption()
+request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY).setEncryptRequest(true).setEncryptResponse(true).enableEncryption()
 ```

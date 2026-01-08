@@ -5,6 +5,7 @@
 ### 步骤 1: 安装依赖（已完成）
 
 项目已包含必需的依赖：
+
 - ✅ `crypto-js` - AES 加密
 - ✅ `jsencrypt` - RSA 加密
 
@@ -53,10 +54,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 import request from '@src/service/request'
 
 // 混合加密（推荐）
-request.configureHybrid(
-  import.meta.env.VITE_RSA_PUBLIC_KEY,
-  import.meta.env.VITE_RSA_PRIVATE_KEY
-)
+request.configureHybrid(import.meta.env.VITE_RSA_PUBLIC_KEY, import.meta.env.VITE_RSA_PRIVATE_KEY)
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 ```
@@ -83,14 +81,22 @@ const updateProfile = async (profile) => {
 
 ```javascript
 // 某个公开接口不需要加密
-const publicData = await request.get('/api/public/data', {}, {
-  encrypt: false  // 禁用加密
-})
+const publicData = await request.get(
+  '/api/public/data',
+  {},
+  {
+    encrypt: false, // 禁用加密
+  }
+)
 
 // 获取加密密钥的请求不能加密
-const { publicKey } = await request.get('/api/crypto/public-key', {}, {
-  encrypt: false
-})
+const { publicKey } = await request.get(
+  '/api/crypto/public-key',
+  {},
+  {
+    encrypt: false,
+  }
+)
 ```
 
 ---
@@ -104,12 +110,13 @@ const { publicKey } = await request.get('/api/crypto/public-key', {}, {
 export const loginAPI = (username, password) => {
   return request.post('/api/auth/login', {
     username,
-    password
+    password,
   })
 }
 ```
 
 **请求体（加密前）:**
+
 ```json
 {
   "username": "admin",
@@ -118,6 +125,7 @@ export const loginAPI = (username, password) => {
 ```
 
 **请求体（加密后 - 混合模式）:**
+
 ```json
 {
   "encrypted": "U2FsdGVkX1+XXXXXXXX==",
@@ -134,7 +142,7 @@ export const createPayment = (paymentData) => {
   return request.post('/api/payment/create', {
     amount: paymentData.amount,
     cardNumber: paymentData.cardNumber,
-    cvv: paymentData.cvv
+    cvv: paymentData.cvv,
   })
 }
 ```
@@ -147,7 +155,7 @@ export const updateUserInfo = (userInfo) => {
   return request.put('/api/user/info', {
     name: userInfo.name,
     idCard: userInfo.idCard,
-    phone: userInfo.phone
+    phone: userInfo.phone,
   })
 }
 ```
@@ -159,6 +167,7 @@ export const updateUserInfo = (userInfo) => {
 ### 方式 1: 使用内置测试页面
 
 访问项目中的加密测试页面：
+
 1. 启动项目
 2. 访问 `/crypto` 路由
 3. 切换到"接口加密测试"标签
@@ -176,9 +185,10 @@ request.configureAES('1234567890123456')
 console.log(request.getEncryptionConfig())
 
 // 3. 测试请求（会自动加密）
-request.post('/api/test', { test: 'data' })
-  .then(res => console.log('成功:', res))
-  .catch(err => console.error('失败:', err))
+request
+  .post('/api/test', { test: 'data' })
+  .then((res) => console.log('成功:', res))
+  .catch((err) => console.error('失败:', err))
 
 // 4. 禁用加密
 request.disableEncryption()
@@ -231,7 +241,7 @@ app.use((req, res, next) => {
         // 混合解密：先解密密钥，再解密数据
         const hybridKey = new NodeRSA(PRIVATE_KEY)
         const aesKeyDecrypted = hybridKey.decrypt(req.body.key, 'utf8')
-        
+
         const hybridDecipher = crypto.createDecipher('aes-256-cbc', aesKeyDecrypted)
         let hybridDecrypted = hybridDecipher.update(req.body.encrypted, 'base64', 'utf8')
         hybridDecrypted += hybridDecipher.final('utf8')
@@ -246,7 +256,6 @@ app.use((req, res, next) => {
     req.body = decryptedData
     console.log('✅ 请求解密成功')
     next()
-
   } catch (error) {
     console.error('❌ 解密失败:', error)
     res.status(400).json({ error: '解密失败' })
@@ -261,7 +270,7 @@ app.use((req, res, next) => {
 app.get('/api/crypto/public-key', (req, res) => {
   res.json({
     publicKey: RSA_PUBLIC_KEY,
-    mode: 'RSA'
+    mode: 'RSA',
   })
 })
 
@@ -270,7 +279,7 @@ app.get('/api/crypto/config', (req, res) => {
   res.json({
     enabled: true,
     mode: 'HYBRID',
-    publicKey: RSA_PUBLIC_KEY
+    publicKey: RSA_PUBLIC_KEY,
     // 不要返回私钥或 AES 密钥！
   })
 })
@@ -283,30 +292,38 @@ app.get('/api/crypto/config', (req, res) => {
 ### ✅ 推荐做法
 
 1. **使用环境变量存储密钥**
+
    ```bash
    # 不要硬编码在代码中
    VITE_AES_KEY=your-secure-key
    ```
 
 2. **从后端获取公钥**
+
    ```javascript
-   const { publicKey } = await request.get('/api/crypto/public-key', {}, {
-     encrypt: false
-   })
+   const { publicKey } = await request.get(
+     '/api/crypto/public-key',
+     {},
+     {
+       encrypt: false,
+     }
+   )
    request.configureRSA(publicKey)
    ```
 
 3. **使用混合加密**
+
    ```javascript
    // 结合 RSA 和 AES 的优点
    request.configureHybrid(publicKey, privateKey)
    ```
 
 4. **私钥不要暴露给前端**
+
    ```javascript
    // ❌ 不要这样做
-   request.configureRSA(publicKey, privateKey)  // 前端不需要私钥！
-   
+   request.configureRSA(publicKey, privateKey) // 前端不需要私钥！
+
    // ✅ 只配置公钥
    request.configureRSA(publicKey)
    ```
@@ -333,6 +350,7 @@ app.get('/api/crypto/config', (req, res) => {
 ### 问题 1: 配置后请求失败
 
 **检查清单:**
+
 - [ ] 后端是否实现了解密逻辑？
 - [ ] 密钥是否正确？
 - [ ] 查看控制台日志
@@ -347,9 +365,13 @@ request.disableEncryption()
 
 ```javascript
 // 为特定请求禁用加密
-const publicData = await request.get('/api/public', {}, {
-  encrypt: false
-})
+const publicData = await request.get(
+  '/api/public',
+  {},
+  {
+    encrypt: false,
+  }
+)
 ```
 
 ### 问题 3: 查看加密状态
@@ -375,18 +397,18 @@ console.log(request.getActiveRequestCount())
 
 ## ✨ 特性总结
 
-| 特性 | 说明 | 状态 |
-|-----|------|------|
-| AES 加密 | 对称加密，高性能 | ✅ |
-| RSA 加密 | 非对称加密，高安全 | ✅ |
-| 混合加密 | RSA+AES，推荐 | ✅ |
-| 自动加密 | 请求自动加密 | ✅ |
-| 自动解密 | 响应自动解密 | ✅ |
-| 单独控制 | 单个请求控制 | ✅ |
-| 分段加密 | RSA 长文本支持 | ✅ |
-| 错误处理 | 完整错误处理 | ✅ |
-| 日志记录 | 详细日志 | ✅ |
-| TypeScript | 类型支持 | 🔄 |
+| 特性       | 说明               | 状态 |
+| ---------- | ------------------ | ---- |
+| AES 加密   | 对称加密，高性能   | ✅   |
+| RSA 加密   | 非对称加密，高安全 | ✅   |
+| 混合加密   | RSA+AES，推荐      | ✅   |
+| 自动加密   | 请求自动加密       | ✅   |
+| 自动解密   | 响应自动解密       | ✅   |
+| 单独控制   | 单个请求控制       | ✅   |
+| 分段加密   | RSA 长文本支持     | ✅   |
+| 错误处理   | 完整错误处理       | ✅   |
+| 日志记录   | 详细日志           | ✅   |
+| TypeScript | 类型支持           | 🔄   |
 
 ---
 

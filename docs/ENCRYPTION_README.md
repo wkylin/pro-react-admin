@@ -7,22 +7,26 @@
 ## ✨ 核心特性
 
 ### 1. 多种加密模式
+
 - **AES 对称加密**: 高性能，适合高频请求和大数据量
 - **RSA 非对称加密**: 高安全性，适合敏感信息加密
 - **混合加密模式**: RSA 加密密钥 + AES 加密数据（⭐ 推荐）
 
 ### 2. 自动化处理
+
 - ✅ 请求拦截器自动加密请求数据
 - ✅ 响应拦截器自动解密响应数据
 - ✅ 无需修改现有业务代码
 
 ### 3. 灵活配置
+
 - ✅ 全局配置，一次配置全局生效
 - ✅ 单个请求可独立控制是否加密
 - ✅ 支持动态切换加密模式
 - ✅ 支持从服务器获取加密配置
 
 ### 4. 企业级特性
+
 - ✅ RSA 分段加密支持（处理长文本限制）
 - ✅ 完整的错误处理机制
 - ✅ 详细的日志记录
@@ -60,13 +64,17 @@ request.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
 
 // 2. 业务代码无需改动
 export const loginAPI = (credentials) => {
-  return request.post('/api/login', credentials)  // 自动加密
+  return request.post('/api/login', credentials) // 自动加密
 }
 
 // 3. 单个请求控制（可选）
-const publicData = await request.get('/api/public', {}, {
-  encrypt: false  // 本次请求不加密
-})
+const publicData = await request.get(
+  '/api/public',
+  {},
+  {
+    encrypt: false, // 本次请求不加密
+  }
+)
 ```
 
 ## 📖 文档
@@ -78,18 +86,21 @@ const publicData = await request.get('/api/public', {}, {
 ## 🎯 使用场景
 
 ### 1. 登录接口
+
 ```javascript
 // 自动加密用户名和密码
 request.post('/api/login', { username, password })
 ```
 
 ### 2. 支付接口
+
 ```javascript
 // 自动加密卡号、金额等敏感信息
 request.post('/api/payment', { cardNumber, amount, cvv })
 ```
 
 ### 3. 个人信息
+
 ```javascript
 // 自动加密身份证号、手机号等
 request.put('/api/user/info', { idCard, phone, address })
@@ -123,8 +134,8 @@ request.enableEncryption()
 request.disableEncryption()
 
 // 配置请求/响应加密
-request.setEncryptRequest(true/false)
-request.setEncryptResponse(true/false)
+request.setEncryptRequest(true / false)
+request.setEncryptResponse(true / false)
 
 // 获取配置
 request.getEncryptionConfig()
@@ -135,18 +146,22 @@ request.getEncryptionConfig()
 ```javascript
 // 单个请求禁用加密
 request.post('/api/data', payload, {
-  encrypt: false
+  encrypt: false,
 })
 
 // 加密失败时抛出错误（默认 true）
 request.post('/api/data', payload, {
-  throwOnEncryptError: false
+  throwOnEncryptError: false,
 })
 
 // 解密失败时抛出错误（默认 true）
-request.get('/api/data', {}, {
-  throwOnDecryptError: false
-})
+request.get(
+  '/api/data',
+  {},
+  {
+    throwOnDecryptError: false,
+  }
+)
 ```
 
 ## 🔐 安全建议
@@ -154,19 +169,26 @@ request.get('/api/data', {}, {
 ### ✅ 推荐做法
 
 1. **使用环境变量存储密钥**
+
    ```bash
    VITE_AES_KEY=your-secure-key
    VITE_RSA_PUBLIC_KEY=...
    ```
 
 2. **从后端获取公钥**
+
    ```javascript
-   const { publicKey } = await request.get('/api/crypto/public-key', {}, {
-     encrypt: false
-   })
+   const { publicKey } = await request.get(
+     '/api/crypto/public-key',
+     {},
+     {
+       encrypt: false,
+     }
+   )
    ```
 
 3. **使用混合加密模式**
+
    ```javascript
    request.configureHybrid(publicKey, privateKey)
    ```
@@ -183,10 +205,12 @@ request.get('/api/data', {}, {
 ## 🛠️ 技术实现
 
 ### 核心依赖
+
 - **crypto-js**: AES 加密库（已安装）
 - **jsencrypt**: RSA 加密库（已安装）
 
 ### 架构设计
+
 ```
 ┌─────────────────────────────────────────────┐
 │          Application (业务代码)              │
@@ -226,12 +250,14 @@ request.get('/api/data', {}, {
 ### 数据流
 
 **请求流程:**
+
 ```
 原始数据 → 加密处理 → 添加元信息 → 发送请求
 { user: "admin" } → "U2FsdGVk..." → { encrypted: "...", mode: "AES" } → POST /api
 ```
 
 **响应流程:**
+
 ```
 接收响应 → 解密处理 → 返回数据
 ← { encrypted: "...", mode: "AES" } ← "U2FsdGVk..." ← { user: "admin" }
@@ -239,11 +265,11 @@ request.get('/api/data', {}, {
 
 ## 📈 性能影响
 
-| 加密方式 | 性能开销 | 适用场景 |
-|---------|---------|---------|
-| AES | < 5% | 高频请求、大数据 |
-| RSA | 10-30% | 低频请求、小数据 |
-| 混合 | 5-10% | 综合场景（推荐）|
+| 加密方式 | 性能开销 | 适用场景         |
+| -------- | -------- | ---------------- |
+| AES      | < 5%     | 高频请求、大数据 |
+| RSA      | 10-30%   | 低频请求、小数据 |
+| 混合     | 5-10%    | 综合场景（推荐） |
 
 ## 🔧 后端对接
 
@@ -283,6 +309,7 @@ app.use((req, res, next) => {
 ## 🎨 可视化测试
 
 内置的测试页面提供：
+
 - ✅ AES/RSA 加密算法演示
 - ✅ 接口加密配置和测试
 - ✅ 实时查看加密结果
@@ -295,6 +322,7 @@ app.use((req, res, next) => {
 ### v1.0.0 (2026-01-08)
 
 **新增功能:**
+
 - ✅ AES 对称加密支持
 - ✅ RSA 非对称加密支持
 - ✅ 混合加密模式
@@ -308,6 +336,7 @@ app.use((req, res, next) => {
 - ✅ 可视化测试工具
 
 **技术栈:**
+
 - crypto-js: ^4.x
 - jsencrypt: ^3.x
 - axios: ^1.x
@@ -325,7 +354,7 @@ app.use((req, res, next) => {
 - [crypto-js 文档](https://cryptojs.gitbook.io/docs/)
 - [jsencrypt 文档](https://github.com/travist/jsencrypt)
 - [AES 加密标准](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard)
-- [RSA 加密标准](https://en.wikipedia.org/wiki/RSA_(cryptosystem))
+- [RSA 加密标准](<https://en.wikipedia.org/wiki/RSA_(cryptosystem)>)
 
 ---
 

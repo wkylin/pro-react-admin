@@ -134,10 +134,14 @@ export const setupEncryptionFromEnv = () => {
 export const setupEncryptionFromServer = async () => {
   try {
     // 获取服务器的加密配置
-    const config = await request.get('/api/crypto/config', {}, {
-      encrypt: false,  // 获取配置时不能加密
-      showError: false
-    })
+    const config = await request.get(
+      '/api/crypto/config',
+      {},
+      {
+        encrypt: false, // 获取配置时不能加密
+        showError: false,
+      }
+    )
 
     if (!config || !config.enabled) {
       console.log('ℹ️ 服务器未启用加密')
@@ -180,7 +184,7 @@ export const loginAPI = async (username, password) => {
   // 使用 request (axios)
   return request.post('/api/auth/login', {
     username,
-    password
+    password,
   })
 
   // 或者使用 http (fetch)
@@ -198,7 +202,7 @@ export const registerAPI = async (userData) => {
     username: userData.username,
     password: userData.password,
     email: userData.email,
-    phone: userData.phone
+    phone: userData.phone,
   })
 }
 
@@ -210,7 +214,7 @@ export const updateProfileAPI = async (profile) => {
     name: profile.name,
     idCard: profile.idCard,
     phone: profile.phone,
-    address: profile.address
+    address: profile.address,
   })
 }
 
@@ -218,15 +222,19 @@ export const updateProfileAPI = async (profile) => {
  * 支付接口 - 卡号等敏感信息自动加密 (特定字段加密)
  */
 export const createPaymentAPI = async (paymentData) => {
-  return request.post('/api/payment/create', {
-    amount: paymentData.amount,
-    cardNumber: paymentData.cardNumber,
-    cvv: paymentData.cvv,
-    expiryDate: paymentData.expiryDate
-  }, {
-    // 仅加密敏感字段，amount 保持明文
-    encryptFields: ['cardNumber', 'cvv', 'expiryDate']
-  })
+  return request.post(
+    '/api/payment/create',
+    {
+      amount: paymentData.amount,
+      cardNumber: paymentData.cardNumber,
+      cvv: paymentData.cvv,
+      expiryDate: paymentData.expiryDate,
+    },
+    {
+      // 仅加密敏感字段，amount 保持明文
+      encryptFields: ['cardNumber', 'cvv', 'expiryDate'],
+    }
+  )
 }
 
 // ========================================
@@ -241,7 +249,7 @@ export const createPaymentAPI = async (paymentData) => {
 export const searchUserAPI = async (keyword) => {
   return request.get('/api/users/search', {
     q: keyword,
-    type: 'admin'
+    type: 'admin',
   })
 }
 
@@ -250,12 +258,16 @@ export const searchUserAPI = async (keyword) => {
  * URL 示例: /api/users/search?q=...&idCard=encrypted_string...
  */
 export const searchSensitiveUserAPI = async (name, idCard) => {
-  return request.get('/api/users/search', {
-    q: name,
-    idCard: idCard
-  }, {
-    encryptFields: ['idCard'] // 仅加密身份证号
-  })
+  return request.get(
+    '/api/users/search',
+    {
+      q: name,
+      idCard: idCard,
+    },
+    {
+      encryptFields: ['idCard'], // 仅加密身份证号
+    }
+  )
 }
 
 /**
@@ -263,23 +275,35 @@ export const searchSensitiveUserAPI = async (name, idCard) => {
  */
 export const getPublicDataAPI = async () => {
   // Request.js
-  request.get('/api/public/data', {}, {
-    encrypt: false  // 禁用加密
-  })
+  request.get(
+    '/api/public/data',
+    {},
+    {
+      encrypt: false, // 禁用加密
+    }
+  )
 
   // Http.js
-  http.get('/api/public/data', {}, {
-    encrypt: false
-  })
+  http.get(
+    '/api/public/data',
+    {},
+    {
+      encrypt: false,
+    }
+  )
 }
 
 /**
  * 获取加密密钥 - 不能加密
  */
 export const getPublicKeyAPI = async () => {
-  return request.get('/api/crypto/public-key', {}, {
-    encrypt: false  // 获取密钥时不能加密
-  })
+  return request.get(
+    '/api/crypto/public-key',
+    {},
+    {
+      encrypt: false, // 获取密钥时不能加密
+    }
+  )
 }
 
 /**
@@ -287,9 +311,13 @@ export const getPublicKeyAPI = async () => {
  */
 export const mixedAPI = async () => {
   // 获取公钥（不加密）
-  const { publicKey } = await request.get('/api/crypto/public-key', {}, {
-    encrypt: false
-  })
+  const { publicKey } = await request.get(
+    '/api/crypto/public-key',
+    {},
+    {
+      encrypt: false,
+    }
+  )
 
   // 配置加密
   request.configureRSA(publicKey)
@@ -297,7 +325,7 @@ export const mixedAPI = async () => {
 
   // 之后的请求自动加密
   const userData = await request.post('/api/user/data', {
-    sensitive: 'data'
+    sensitive: 'data',
   })
 
   return userData
@@ -346,7 +374,7 @@ export const encryptionWithErrorHandling = async () => {
 
     // 发送请求
     const data = await request.post('/api/sensitive', {
-      secret: 'data'
+      secret: 'data',
     })
 
     return data
