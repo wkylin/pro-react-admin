@@ -148,12 +148,36 @@ export class EncryptionHandler {
     return this.decryptAES(encryptedData, aesKey)
   }
 
-  static encryptRequestData(data, config) {
+  static encryptRequestData(data, config, encryptFields = []) {
     if (!config.enabled || !config.encryptRequest || !data) return data
     if (isFormData(data) || isBlob(data)) {
       logger.warn('FormData/Blob 类型数据不进行加密')
       return data
     }
+
+    // 1. 部分字段加密
+    if (Array.isArray(encryptFields) && encryptFields.length > 0 && typeof data === 'object') {
+      const newData = { ...data }
+      encryptFields.forEach((field) => {
+        if (Object.prototype.hasOwnProperty.call(newData, field)) {
+          const value = newData[field]
+          const jsonValue = typeof value === 'string' ? value : JSON.stringify(value)
+
+          if (config.mode === 'AES') {
+            newData[field] = this.encryptAES(jsonValue, config.aesKey)
+          } else if (config.mode === 'RSA') {
+            newData[field] = this.encryptRSA(jsonValue, config.rsaPublicKey)
+          } else if (config.mode === 'HYBRID') {
+            // 混合加密部分字段：返回对象结构 { encrypted: '...', key: '...' }
+            const { encryptedKey, encryptedData } = this.encryptHybrid(jsonValue, config.aesKey, config.rsaPublicKey)
+            newData[field] = { encrypted: encryptedData, key: encryptedKey }
+          }
+        }
+      })
+      return newData
+    }
+
+    // 2. 全量加密
     const jsonData = typeof data === 'string' ? data : JSON.stringify(data)
     try {
       switch (config.mode) {
@@ -237,21 +261,50 @@ class HttpClient {
     // 添加默认请求拦截器
     this.useRequestInterceptor((config) => {
       // 1. 处理加密
-      if (encryptionConfig.enabled && config.encrypt !== false && (config.payload || config.body)) {
-        const dataToEncrypt = config.payload || config.body
-        try {
-          const encrypted = EncryptionHandler.encryptRequestData(dataToEncrypt, encryptionConfig)
-          if (encrypted && encrypted !== dataToEncrypt) {
-            config.payload = encrypted
-            // 确保 payload 生效，清除 body
-            if (config.body) config.body = undefined
-            config.headers = {
-              ...config.headers,
-              [encryptionConfig.encryptionHeader]: encryptionConfig.mode,
+      if (encryptionConfig.enabled && config.encrypt !== false) {
+        // A. 处理 Body 加密 (POST/PUT/PATCH 等)
+        if (config.payload || config.body) {
+          const dataToEncrypt = config.payload || config.body
+          try {
+            const encrypted = EncryptionHandler.encryptRequestData(
+              dataToEncrypt,
+              encryptionConfig,
+              config.encryptFields
+            )
+            if (encrypted && encrypted !== dataToEncrypt) {
+              config.payload = encrypted
+              // 确保 payload 生效，清除 body
+              if (config.body) config.body = undefined
+
+              // 如果是全量加密（没有指定 partial fields），添加 header
+              if (!config.encryptFields || config.encryptFields.length === 0) {
+                config.headers = {
+                  ...config.headers,
+                  [encryptionConfig.encryptionHeader]: encryptionConfig.mode,
+                }
+              }
             }
+          } catch (error) {
+            logger.error('Body 加密失败:', error)
           }
-        } catch (error) {
-          logger.error('请求加密失败:', error)
+        }
+
+        // B. 处理 Params 加密 (GET/DELETE 等)
+        if (config.params && Object.keys(config.params).length > 0) {
+          try {
+            // 复用 encryptRequestData 逻辑（支持全量和部分）
+            const encryptedParams = EncryptionHandler.encryptRequestData(
+              config.params,
+              encryptionConfig,
+              config.encryptFields
+            )
+            if (encryptedParams && encryptedParams !== config.params) {
+              config.params = encryptedParams
+              // 注意：Fetch/Axios 处理 params 对象时，如果变成 { encrypted: '...' } 形式，会自动序列化为 ?encrypted=...
+            }
+          } catch (error) {
+            logger.error('Params 加密失败:', error)
+          }
         }
       }
 

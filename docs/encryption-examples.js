@@ -215,7 +215,7 @@ export const updateProfileAPI = async (profile) => {
 }
 
 /**
- * 支付接口 - 卡号等敏感信息自动加密
+ * 支付接口 - 卡号等敏感信息自动加密 (特定字段加密)
  */
 export const createPaymentAPI = async (paymentData) => {
   return request.post('/api/payment/create', {
@@ -223,12 +223,40 @@ export const createPaymentAPI = async (paymentData) => {
     cardNumber: paymentData.cardNumber,
     cvv: paymentData.cvv,
     expiryDate: paymentData.expiryDate
+  }, {
+    // 仅加密敏感字段，amount 保持明文
+    encryptFields: ['cardNumber', 'cvv', 'expiryDate']
   })
 }
 
 // ========================================
-// 示例 6: 单个请求控制加密
+// 示例 6: 单个请求控制加密与 GET 请求加密
 // ========================================
+
+/**
+ * GET 请求参数加密
+ * 如果启用了加密，params 参数会自动被加密传输
+ * URL 示例: /api/search?encrypted=...
+ */
+export const searchUserAPI = async (keyword) => {
+  return request.get('/api/users/search', {
+    q: keyword,
+    type: 'admin'
+  })
+}
+
+/**
+ * GET 请求部分字段加密
+ * URL 示例: /api/users/search?q=...&idCard=encrypted_string...
+ */
+export const searchSensitiveUserAPI = async (name, idCard) => {
+  return request.get('/api/users/search', {
+    q: name,
+    idCard: idCard
+  }, {
+    encryptFields: ['idCard'] // 仅加密身份证号
+  })
+}
 
 /**
  * 获取公开数据 - 不需要加密

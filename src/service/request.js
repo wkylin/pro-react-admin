@@ -303,7 +303,7 @@ class EncryptionHandler {
    * @param {EncryptionConfig} config - 加密配置
    * @returns {any} 加密后的数据
    */
-  static encryptRequestData(data, config) {
+  static encryptRequestData(data, config, encryptFields = []) {
     if (!config.enabled || !config.encryptRequest) {
       return data
     }
@@ -314,6 +314,28 @@ class EncryptionHandler {
       return data
     }
 
+    // 1. 部分字段加密
+    if (Array.isArray(encryptFields) && encryptFields.length > 0 && typeof data === 'object') {
+      const newData = { ...data }
+      encryptFields.forEach((field) => {
+        if (Object.prototype.hasOwnProperty.call(newData, field)) {
+          const value = newData[field]
+          const jsonValue = typeof value === 'string' ? value : JSON.stringify(value)
+
+          if (config.mode === 'AES') {
+            newData[field] = this.encryptAES(jsonValue, config.aesKey)
+          } else if (config.mode === 'RSA') {
+            newData[field] = this.encryptRSA(jsonValue, config.rsaPublicKey)
+          } else if (config.mode === 'HYBRID') {
+            const { encryptedKey, encryptedData } = this.encryptHybrid(jsonValue, config.aesKey, config.rsaPublicKey)
+            newData[field] = { encrypted: encryptedData, key: encryptedKey }
+          }
+        }
+      })
+      return newData
+    }
+
+    // 2. 全量加密
     // 转为 JSON 字符串
     const jsonData = typeof data === 'string' ? data : JSON.stringify(data)
 
@@ -622,10 +644,29 @@ const applyEncryption = (config) => {
   if (config.encrypt === false) return
 
   try {
-    config.data = EncryptionHandler.encryptRequestData(config.data, encryptionConfig)
+    // 1. 加密请求体 (Data)
+    if (config.data) {
+      // Support partial encryption or full encryption
+      const encryptedData = EncryptionHandler.encryptRequestData(config.data, encryptionConfig, config.encryptFields)
+      // If fields were encrypted, config.data is modified in place (new object)
+      // Or if full encryption, config.data is replaced with { encrypted: '...', mode: '...' }
+      config.data = encryptedData
+    }
 
-    // 添加加密标识头
-    if (encryptionConfig.enabled && encryptionConfig.encryptRequest) {
+    // 2. 加密请求参数 (Params) - 支持 GET 请求加密
+    if (config.params && Object.keys(config.params).length > 0) {
+      // 如果没有指定 partial fields，则整个 params 被加密为 { encrypted: '...' }
+      // 也就是 ?encrypted=...
+      // 如果指定 partial fields，则特定字段变密文 ?field=ciphertext
+      config.params = EncryptionHandler.encryptRequestData(config.params, encryptionConfig, config.encryptFields)
+    }
+
+    // 添加加密标识头 (如果启用了加密且没有使用部分加密)
+    // 注意：如果是部分加密，通常也会加头，但这里逻辑是 "mode" 标识整个 Payload 格式。
+    // 如果是部分加密，Payload 格式并不是标准的 { encrypted: ... }，所以加这个头可能误导后端（取决于后端实现）
+    // 但为了保持一致性，我们还是加上。如果使用了部分加密，config.data 结构不同，后端需识别
+    const isPartial = Array.isArray(config.encryptFields) && config.encryptFields.length > 0
+    if (encryptionConfig.enabled && encryptionConfig.encryptRequest && !isPartial) {
       config.headers[encryptionConfig.encryptionHeader] = encryptionConfig.mode
       logger.log('已添加加密标识头')
     }
