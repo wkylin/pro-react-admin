@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
-import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag } from 'antd'
+import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal } from 'antd'
 import { useStore } from '@/store'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { setLocalStorage } from '@utils/publicFn'
@@ -8,6 +8,8 @@ import { useAuth } from '@src/service/useAuth'
 import { authService } from '@src/service/authService'
 import { permissionService } from '@src/service/permissionService'
 import { testAccounts } from '@src/mock/permission'
+
+import SliderCaptcha from '@stateless/SliderCaptcha'
 import styles from './index.module.less'
 
 const { Title, Text, Paragraph } = Typography
@@ -62,6 +64,10 @@ const SignIn = () => {
   const [form] = Form.useForm()
   const isMobile = useStore((s) => s.isMobile)
   const [accountPasswords, setAccountPasswords] = useState({})
+  const [captchaOpen, setCaptchaOpen] = useState(false)
+  const [captchaKey, setCaptchaKey] = useState(() => Date.now())
+  const [submitting, setSubmitting] = useState(false)
+  const captchaVerifiedRef = useRef(false)
 
   const isLikelyEmail = (value) => {
     if (typeof value !== 'string') return false
@@ -81,10 +87,9 @@ const SignIn = () => {
 
   const getExpectedPassword = (email) => {
     if (accountPasswords?.[email]) return accountPasswords[email]
-
-    const next = loadOrInitPasswords()
-    setAccountPasswords(next)
-    return next[email] || ''
+    // 如果状态中没有，从 localStorage 读取（不触发 setState）
+    const stored = loadOrInitPasswords()
+    return stored[email] || ''
   }
 
   useEffect(() => {
@@ -102,11 +107,9 @@ const SignIn = () => {
     const redirectIfLoggedIn = async () => {
       if (!isAuthenticated) return
       try {
-        // 获取可访问路由列表
         const routes = await permissionService.getAccessibleRoutes()
         let target = '/'
         if (Array.isArray(routes) && routes.length > 0) {
-          // 优先跳转到根路由，其次第一个有权限的路由
           target = (routes || []).includes('/') ? '/' : routes[0]
         }
         redirectTo(target, { replace: true })
@@ -117,7 +120,6 @@ const SignIn = () => {
     redirectIfLoggedIn()
   }, [isAuthenticated, redirectTo])
 
-  // 挂载时清理可能的无效 token 并重置表单，避免出现 "请输入有效的邮箱格式" 残留提示
   useEffect(() => {
     try {
       const raw = localStorage.getItem('token')
@@ -136,40 +138,46 @@ const SignIn = () => {
     } catch {
       // 无操作
     }
-    // 重置表单，确保输入框为空
     form.resetFields()
   }, [form])
 
   const onFinish = async (values) => {
     const { email, password } = values
 
-    // 验证账号密码
-    if (!testAccounts[email]) {
-      message.error('账号不存在')
+    if (!captchaVerifiedRef.current) {
+      captchaVerifiedRef.current = false
+      setCaptchaKey(Date.now())
+      setCaptchaOpen(true)
+      message.info('请完成滑块验证')
       return
     }
 
-    if (getExpectedPassword(email) !== password) {
-      message.error('密码错误')
-      return
-    }
-
-    // 保存登录信息
-    setLocalStorage('token', { token: email })
-
-    // 清除可能的手动设置角色，确保使用正确的账号角色
+    let hideLoading
     try {
-      localStorage.removeItem('user_role')
-    } catch {
-      // 无操作
-    }
+      setSubmitting(true)
+      hideLoading = message.loading('正在登录...', 0)
 
-    // 纳入统一登录态（测试账号也算已登录），并同步权限
-    try {
+      if (!testAccounts[email]) {
+        message.error('账号不存在')
+        return
+      }
+      if (getExpectedPassword(email) !== password) {
+        message.error('密码错误')
+        return
+      }
+
+      setLocalStorage('token', { token: email })
+      try {
+        localStorage.removeItem('user_role')
+      } catch {}
+
       await authService.setTestAccountAuthenticated(email)
       const routes = await permissionService.getAccessibleRoutes(true)
 
       message.success(`登录成功！欢迎 ${testAccounts[email].name}`)
+
+      captchaVerifiedRef.current = false
+      setCaptchaKey(Date.now())
 
       if (routes && routes.length > 0) {
         const safeRoutes = Array.isArray(routes) ? routes : []
@@ -181,17 +189,34 @@ const SignIn = () => {
     } catch (error) {
       message.error(`权限同步失败：${getErrorMessage(error)}`)
       redirectTo('/')
+    } finally {
+      setSubmitting(false)
+      try {
+        if (typeof hideLoading === 'function') hideLoading()
+      } catch {}
     }
   }
 
   const onFinishFailed = () => {}
 
-  // 快速填充测试账号
   const fillAccount = (email) => {
     form.setFieldsValue({
       email,
       password: getExpectedPassword(email),
     })
+    captchaVerifiedRef.current = false
+    setCaptchaKey(Date.now())
+  }
+
+  const handleLoginClick = async () => {
+    try {
+      await form.validateFields()
+      captchaVerifiedRef.current = false
+      setCaptchaKey(Date.now())
+      setCaptchaOpen(true)
+    } catch {
+      // AntD会显示校验错误
+    }
   }
 
   const cssVars = {
@@ -212,7 +237,6 @@ const SignIn = () => {
         <div className={styles.bg} aria-hidden="true" />
 
         <div className={styles.grid} style={{ padding: isMobile ? 16 : 24 }}>
-          {/* Left: Brand / Tech hero */}
           {!isMobile && (
             <section className={styles.hero}>
               <div className={styles.heroInner}>
@@ -238,7 +262,6 @@ const SignIn = () => {
             </section>
           )}
 
-          {/* Right: Auth card */}
           <section className={styles.panel}>
             <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 24 } }}>
               <div className={styles.titleBox}>
@@ -248,7 +271,6 @@ const SignIn = () => {
                 <Text type="secondary">选择测试账号快速填充，或输入凭据登录</Text>
               </div>
 
-              {/* 测试账号快捷选择 */}
               <div className={styles.quickBox}>
                 <div className={styles.quickHeader}>
                   <Text strong>测试账号</Text>
@@ -266,7 +288,6 @@ const SignIn = () => {
                   ))}
                 </div>
               </div>
-
               <Form
                 form={form}
                 name="signin"
@@ -291,9 +312,78 @@ const SignIn = () => {
                 </Form.Item>
 
                 <Form.Item style={{ marginBottom: 8 }}>
-                  <Button type="primary" htmlType="submit" block>
-                    登录
-                  </Button>
+                  {isMobile ? (
+                    <>
+                      <Button type="primary" block onClick={handleLoginClick} disabled={captchaOpen || submitting}>
+                        登录
+                      </Button>
+                      <Modal
+                        centered
+                        open={captchaOpen}
+                        footer={null}
+                        maskClosable={false}
+                        onCancel={() => setCaptchaOpen(false)}
+                        afterClose={() => {
+                          setCaptchaKey(Date.now())
+                          captchaVerifiedRef.current = false
+                        }}
+                        width={'90vw'}
+                        style={{ maxWidth: 420 }}
+                        styles={{ body: { padding: 8 } }}
+                      >
+                        <SliderCaptcha
+                          key={captchaKey}
+                          onSuccess={() => {
+                            captchaVerifiedRef.current = true
+                            setCaptchaOpen(false)
+                            form.submit()
+                          }}
+                          onFail={() => {
+                            captchaVerifiedRef.current = false
+                          }}
+                          onRefresh={() => {
+                            captchaVerifiedRef.current = false
+                          }}
+                        />
+                      </Modal>
+                    </>
+                  ) : (
+                    <Popover
+                      open={captchaOpen}
+                      placement="top"
+                      trigger="click"
+                      arrow
+                      onOpenChange={(open) => {
+                        if (!open) {
+                          setCaptchaOpen(false)
+                          setCaptchaKey(Date.now())
+                          captchaVerifiedRef.current = false
+                        }
+                      }}
+                      content={
+                        <div style={{ padding: 4 }}>
+                          <SliderCaptcha
+                            key={captchaKey}
+                            onSuccess={() => {
+                              captchaVerifiedRef.current = true
+                              setCaptchaOpen(false)
+                              form.submit()
+                            }}
+                            onFail={() => {
+                              captchaVerifiedRef.current = false
+                            }}
+                            onRefresh={() => {
+                              captchaVerifiedRef.current = false
+                            }}
+                          />
+                        </div>
+                      }
+                    >
+                      <Button type="primary" block onClick={handleLoginClick} disabled={captchaOpen || submitting}>
+                        登录
+                      </Button>
+                    </Popover>
+                  )}
                 </Form.Item>
               </Form>
 
