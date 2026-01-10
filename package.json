@@ -78,6 +78,7 @@
     "build:vite:sentry": "cross-env SENTRY_DISABLE_TELEMETRY=1 SENTRY_SOURCE_MAP=map vite build --config vite.config.ts",
     "preview:vite": "vite preview --host --config vite.config.ts",
     "prod:serve": "cross-env SENTRY_SOURCE_MAP=no BUILD_SERVE=prod BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
+    "prod:serve:debug": "cross-env DEBUG_PROD=1 npm run prod:serve",
     "dev:serve": "cross-env SENTRY_SOURCE_MAP=no BUILD_SERVE=prod BUILD_GOAL=dev NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "test:serve": "cross-env SENTRY_SOURCE_MAP=no BUILD_SERVE=prod BUILD_GOAL=test NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details",
     "analyze:build": "cross-env SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production USE_ANALYZE=1 webpack --config ./webpack/webpack.prod.js --stats-error-details --profile --json=compilation-stats.json",
@@ -382,7 +383,14 @@
     "zustand": "^5.0.9"
   },
   "overrides": {
-    "tmp": "0.2.5"
+    "tmp": "0.2.5",
+    "zustand": "^5.0.9",
+    "tunnel-rat": {
+      "zustand": "^5.0.9"
+    },
+    "@xyflow/react": {
+      "zustand": "^5.0.9"
+    }
   },
   "engines": {
     "node": ">=20.12.1",

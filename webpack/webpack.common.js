@@ -112,6 +112,11 @@ const config = {
       '@routers': path.resolve('./src/routers'),
       '@utils': path.resolve('./src/utils'),
       '@theme': path.resolve('./src/theme'),
+      // 确保关键依赖只有一个实例，避免 zustand middleware 错误
+      'zustand': path.resolve('./node_modules/zustand'),
+      'immer': path.resolve('./node_modules/immer'),
+      'react': path.resolve('./node_modules/react'),
+      'react-dom': path.resolve('./node_modules/react-dom'),
     },
     symlinks: false,
   },

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useMemo } from 'react'
 import { Layout, Drawer } from 'antd'
 import { useStore } from '@/store'
 import { ProTabProvider } from '@app-hooks/proTabsContext'
@@ -12,11 +12,25 @@ import ProSecNav from './proSecNav'
 import styles from './index.module.less'
 import { useProThemeContext } from '@theme/hooks'
 
+/**
+ * 安全获取 store 状态的 hook
+ * 当 store 初始化失败时返回默认值
+ */
+const useSafeStore = (selector, defaultValue) => {
+  try {
+    return useStore(selector) ?? defaultValue
+  } catch (error) {
+    console.error('Store access error:', error)
+    return defaultValue
+  }
+}
+
 const ProLayout = () => {
   const layoutRef = useRef(null)
   const [settingOpen, setSettingOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const isMobile = useStore((s) => s.isMobile)
+  // 使用安全的 store 访问，当 middleware 加载失败时提供默认值
+  const isMobile = useSafeStore((s) => s.isMobile, false)
 
   const { themeSettings } = useProThemeContext()
   const { layout, themeMode, navTheme } = themeSettings

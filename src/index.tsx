@@ -12,43 +12,6 @@ import * as Sentry from '@sentry/react'
 import i18n from './i18n/i18n'
 import GlobalBreakpointListener from '@/components/GlobalBreakpointListener'
 
-const patchDefinePropertyDescriptor = () => {
-  try {
-    const originalDefineProperty = Object.defineProperty
-    const originalDefineProperties = Object.defineProperties
-
-    const toDescriptor = (desc: unknown): PropertyDescriptor => {
-      if (desc && typeof desc === 'object') return desc as PropertyDescriptor
-      return {
-        value: desc,
-        writable: true,
-        configurable: true,
-        enumerable: true,
-      }
-    }
-
-    Object.defineProperty = function (obj: any, prop: PropertyKey, descriptor: any) {
-      return originalDefineProperty(obj, prop, toDescriptor(descriptor))
-    }
-
-    Object.defineProperties = function (obj: any, props: any) {
-      if (!props || typeof props !== 'object') {
-        // 保持原语义：让原实现抛错
-        return originalDefineProperties(obj, props)
-      }
-      const normalized: Record<PropertyKey, PropertyDescriptor> = {}
-      for (const key of Reflect.ownKeys(props)) {
-        normalized[key] = toDescriptor(props[key])
-      }
-      return originalDefineProperties(obj, normalized)
-    }
-  } catch {
-    // ignore
-  }
-}
-
-patchDefinePropertyDescriptor()
-
 const isLocalhostRuntime = () => {
   try {
     const host = window.location.hostname

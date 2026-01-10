@@ -137,6 +137,8 @@ export default defineConfig(({ mode }) => {
         '@utils': path.resolve(__dirname, 'src/utils'),
         '@theme': path.resolve(__dirname, 'src/theme'),
       },
+      // 确保 zustand 及相关依赖只有一个实例，避免 middleware 错误
+      dedupe: ['zustand', 'immer', 'react', 'react-dom'],
     },
     server: {
       port: 5173,
@@ -152,6 +154,14 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 800,
       rollupOptions: {
         input: path.resolve(__dirname, 'index.html'),
+        output: {
+          // 确保 zustand 及其 middleware 打包到同一个 chunk 中，避免多实例问题
+          manualChunks: {
+            'vendor-zustand': ['zustand', 'zustand/middleware', 'zustand/middleware/immer', 'immer'],
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-antd': ['antd', '@ant-design/icons'],
+          },
+        },
       },
     },
   }

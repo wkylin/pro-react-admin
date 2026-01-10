@@ -36,6 +36,18 @@ import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
 import { useStore } from '@/store'
 
+/**
+ * 安全获取 store 状态
+ */
+const useSafeStore = (selector, defaultValue) => {
+  try {
+    return useStore(selector) ?? defaultValue
+  } catch (error) {
+    console.error('ProHeader store access error:', error)
+    return defaultValue
+  }
+}
+
 const DENIED_TIP = '您没有权限访问该页面'
 
 const safeNotifyDeniedOnce = async ({ path, lastDeniedRef, messageApi }) => {
@@ -412,7 +424,7 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {
 
   const iconButtonStyle = React.useMemo(() => ({ fontSize: 16 }), [])
 
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useSafeStore((s) => s.isMobile, false)
 
   return (
     <Layout.Header

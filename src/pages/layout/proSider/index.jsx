@@ -6,10 +6,25 @@ import { useStore } from '@/store'
 
 import styles from './index.module.less'
 
+/**
+ * 安全获取 store 状态
+ */
+const useSafeStore = (selector, defaultValue) => {
+  try {
+    return useStore(selector) ?? defaultValue
+  } catch (error) {
+    console.error('ProSider store access error:', error)
+    return defaultValue
+  }
+}
+
 const ProSider = ({ children, theme = 'light' }) => {
-  const isSidebarOpen = useStore((s) => s.isSidebarOpen)
-  const toggleSidebar = useStore((s) => s.toggleSidebar)
-  const isMobile = useStore((s) => s.isMobile)
+  const isSidebarOpen = useSafeStore((s) => s.isSidebarOpen, true)
+  const toggleSidebar = useSafeStore(
+    (s) => s.toggleSidebar,
+    () => {}
+  )
+  const isMobile = useSafeStore((s) => s.isMobile, false)
 
   return (
     <Layout.Sider

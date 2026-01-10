@@ -7,12 +7,47 @@ import Layout from '@pages/layout'
 import MyPortfilo from '@pages/portfilo'
 
 /**
+ * 懒加载失败时的备用组件
+ */
+const LoadError = ({ error, retry }) => (
+  <div style={{ padding: 24, textAlign: 'center' }}>
+    <p style={{ color: '#ff4d4f', marginBottom: 16 }}>组件加载失败: {error?.message || '未知错误'}</p>
+    <button
+      onClick={retry}
+      style={{
+        padding: '8px 16px',
+        cursor: 'pointer',
+        backgroundColor: '#1890ff',
+        color: '#fff',
+        border: 'none',
+        borderRadius: 4,
+      }}
+    >
+      重试
+    </button>
+  </div>
+)
+
+/**
  * 统一懒加载处理函数
  * @param {Function} importFunc - 动态导入函数
  * @param {Object} options - 加载选项
  * @returns {React.Component} 懒加载组件
  */
-const lazyLoad = (importFunc, options = {}) => loadable(importFunc, { fallback: <Loading />, ...options })
+const lazyLoad = (importFunc, options = {}) => {
+  // 包装 importFunc 以捕获并处理动态导入错误
+  const safeImportFunc = () =>
+    importFunc().catch((error) => {
+      console.error('[lazyLoad] 动态导入失败:', error)
+      // 重新抛出错误让 loadable 的 fallback 处理
+      throw error
+    })
+
+  return loadable(safeImportFunc, {
+    fallback: <Loading />,
+    ...options,
+  })
+}
 
 /**
  * 路由组件懒加载配置

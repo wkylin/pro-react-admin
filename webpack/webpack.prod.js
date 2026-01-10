@@ -98,7 +98,9 @@ const prodWebpackConfig = merge(common, {
         : [
             new CssMinimizerPlugin(),
             new EsbuildPlugin({
-              target: 'es2015',
+              target: 'es2018',
+              // 保留对象展开操作符，避免生成有问题的辅助函数
+              keepNames: true,
             }),
             new HtmlMinimizerPlugin(),
             new ImageMinimizerPlugin({
@@ -142,6 +144,14 @@ const prodWebpackConfig = merge(common, {
           priority: 1,
           maxInitialRequests: 2,
           minChunks: 1,
+        },
+        // 确保 zustand 及其 middleware 打包到同一个 chunk 中，避免多实例问题
+        zustand: {
+          test: /[\\/]node_modules[\\/](zustand|immer)[\\/]/,
+          name: 'vendor-zustand',
+          chunks: 'all',
+          priority: 20,
+          enforce: true,
         },
         // commons: {
         //   name: 'commons',
