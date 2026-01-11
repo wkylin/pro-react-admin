@@ -317,6 +317,29 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
     return /\.m3u8($|\?)/i.test(src)
   }, [isEmbed, src])
 
+  // 根据文件扩展名推断 MIME 类型
+  const videoMimeType = useMemo(() => {
+    if (isEmbed || !src || typeof src !== 'string') return ''
+    if (isHlsSrc) return 'application/x-mpegURL'
+    const lower = src.toLowerCase()
+    if (/\.webm($|\?)/i.test(lower)) return 'video/webm'
+    if (/\.ogg($|\?)/i.test(lower)) return 'video/ogg'
+    if (/\.ogv($|\?)/i.test(lower)) return 'video/ogg'
+    if (/\.mov($|\?)/i.test(lower)) return 'video/quicktime'
+    if (/\.avi($|\?)/i.test(lower)) return 'video/x-msvideo'
+    if (/\.wmv($|\?)/i.test(lower)) return 'video/x-ms-wmv'
+    if (/\.flv($|\?)/i.test(lower)) return 'video/x-flv'
+    if (/\.mkv($|\?)/i.test(lower)) return 'video/x-matroska'
+    // 默认 mp4
+    return 'video/mp4'
+  }, [isEmbed, isHlsSrc, src])
+
+  // 检查 src 是否有效
+  const hasValidSrc = useMemo(() => {
+    if (isEmbed) return true
+    return typeof src === 'string' && src.length > 0
+  }, [isEmbed, src])
+
   const hlsRef = useRef(null)
 
   const [mediaLoading, setMediaLoading] = useState(false)
@@ -353,6 +376,14 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
     (withFeedback = false) => {
       const videoEl = useVideoRef.current
       if (!videoEl) return
+
+      // 检查是否有有效的视频源
+      if (!hasValidSrc) {
+        if (withFeedback) {
+          reportError(t('svp.noVideoSource'))
+        }
+        return
+      }
 
       // Autoplay: 大多数浏览器要求 muted 才允许自动播放；这里做同步兜底，避免 effect 时序导致首次 play 被拦
       if (configRef.current?.autoMute && !videoEl.muted) {
@@ -404,7 +435,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
           })
         })
     },
-    [emitEvent, isHlsSrc, reportError, t]
+    [emitEvent, hasValidSrc, isHlsSrc, reportError, t]
   )
 
   const kickAutoPlayNow = useCallback(() => {
@@ -522,6 +553,15 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
         const mod = await import('hls.js')
         const Hls = mod?.default
         if (!Hls || typeof Hls.isSupported !== 'function' || !Hls.isSupported()) {
+          // hls.js 不可用，尝试直接设置 src 作为最后的回退
+          // 某些环境下浏览器可能仍能播放
+          try {
+            videoEl.src = src
+            videoEl.load()
+            emitEvent('hlsFallback', { reason: 'hls_not_supported' })
+          } catch (_) {
+            // ignore
+          }
           reportError(t('svp.hlsNotSupported'), {
             type: 'hls',
             reason: 'not_supported',
@@ -532,8 +572,14 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
         if (cancelled) return
 
         const hls = new Hls({
-          // keep defaults; avoid aggressive low-latency tuning here
-          enableWorker: true,
+          // 构建后 Worker 路径可能有问题，优先禁用 Worker 以确保兼容性
+          // 如果需要 Worker 性能，可以配置 workerPath
+          enableWorker: false,
+          // 低延迟模式下的优化配置
+          lowLatencyMode: false,
+          // 增加缓冲区以提高稳定性
+          maxBufferLength: 30,
+          maxMaxBufferLength: 60,
         })
         hlsRef.current = hls
 
@@ -579,6 +625,14 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
           }
         })
       } catch (err) {
+        // hls.js 导入或初始化失败，尝试直接设置 src 作为最后的回退
+        try {
+          videoEl.src = src
+          videoEl.load()
+          emitEvent('hlsFallback', { reason: 'hls_init_failed' })
+        } catch (_) {
+          // ignore
+        }
         reportError(t('svp.hlsInitFailed'), {
           type: 'hls',
           name: err?.name,
@@ -697,6 +751,9 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
     const onPlaying = () => setPlayError('')
     const onError = () => {
       const code = videoEl.error?.code
+      const nativeMessage = videoEl.error?.message || ''
+      // 获取更详细的错误信息
+      const currentSrc = videoEl.currentSrc || videoEl.src || src || ''
       const msg =
         code === 1
           ? t('svp.videoLoadAborted')
@@ -707,7 +764,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
               : code === 4
                 ? t('svp.videoSourceNotSupported')
                 : t('svp.videoLoadFailed')
-      reportError(msg, { code })
+      reportError(msg, { code, nativeMessage, currentSrc, providedSrc: src, isHlsSrc, hasValidSrc })
     }
 
     videoEl.addEventListener('playing', onPlaying)
@@ -716,7 +773,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
       videoEl.removeEventListener('playing', onPlaying)
       videoEl.removeEventListener('error', onError)
     }
-  }, [isEmbed, reportError, src, t])
+  }, [hasValidSrc, isEmbed, isHlsSrc, reportError, src, t])
 
   useEffect(() => {
     if (isEmbed) return
@@ -1774,7 +1831,7 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
               onClick={handleTogglePause}
               onDoubleClick={toggleFullscreen}
             >
-              {!isHlsSrc ? <source src={src} type="video/mp4" /> : null}
+              {!isHlsSrc && hasValidSrc ? <source src={src} type={videoMimeType || 'video/mp4'} /> : null}
               {computedTrackSrc ? (
                 <track
                   kind="captions"

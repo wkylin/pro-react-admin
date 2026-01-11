@@ -153,6 +153,14 @@ const prodWebpackConfig = merge(common, {
           priority: 20,
           enforce: true,
         },
+        // 确保 hls.js 被完整打包，避免构建后 HLS 播放问题
+        hls: {
+          test: /[\\/]node_modules[\\/]hls\.js[\\/]/,
+          name: 'vendor-hls',
+          chunks: 'all',
+          priority: 20,
+          enforce: true,
+        },
         // commons: {
         //   name: 'commons',
         //   minChunks: 2,

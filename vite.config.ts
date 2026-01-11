@@ -160,6 +160,7 @@ export default defineConfig(({ mode }) => {
             'vendor-zustand': ['zustand', 'zustand/middleware', 'zustand/middleware/immer', 'immer'],
             'vendor-react': ['react', 'react-dom', 'react-router-dom'],
             'vendor-antd': ['antd', '@ant-design/icons'],
+            'vendor-hls': ['hls.js'],
           },
         },
       },

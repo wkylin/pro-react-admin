@@ -196,6 +196,7 @@ const en = {
     videoDecodeError: 'Decode error (unsupported format/codec)',
     videoSourceNotSupported: 'Video source unavailable (404/CORS/type unsupported)',
     videoLoadFailed: 'Failed to load video',
+    noVideoSource: 'No valid video source provided',
   },
 }
 

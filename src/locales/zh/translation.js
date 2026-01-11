@@ -196,6 +196,7 @@ const zh = {
     videoDecodeError: '视频解码失败（格式/编码不兼容）',
     videoSourceNotSupported: '视频源不可用（404/跨域/类型不支持）',
     videoLoadFailed: '视频加载失败',
+    noVideoSource: '未提供有效的视频源',
   },
 }
 
