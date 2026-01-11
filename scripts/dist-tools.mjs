@@ -107,7 +107,8 @@ async function main() {
   }
 
   if (cmd === 'http') {
-    const bins = process.platform === 'win32' ? ['http-server.cmd', 'http-server', 'npx.cmd', 'npx'] : ['http-server', 'npx']
+    const bins =
+      process.platform === 'win32' ? ['http-server.cmd', 'http-server', 'npx.cmd', 'npx'] : ['http-server', 'npx']
 
     const r = tryRun(bins, (bin) => {
       if (bin.startsWith('npx')) {

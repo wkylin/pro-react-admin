@@ -165,11 +165,11 @@ src/projects/
 
 ### 🆕 如何新增一个新项目（推荐流程）
 
-1) 新建目录：`src/projects/<yourProject>/`
-2) 添加入口：`src/projects/<yourProject>/index.tsx`
-3) （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.jsx`
-4) 新增 pages/components 业务代码
-5) 复制一份脚本（参考 `projectA/projectB`）或直接使用 `cross-env PROJECT=<yourProject> ...` 启动/构建
+1. 新建目录：`src/projects/<yourProject>/`
+2. 添加入口：`src/projects/<yourProject>/index.tsx`
+3. （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.jsx`
+4. 新增 pages/components 业务代码
+5. 复制一份脚本（参考 `projectA/projectB`）或直接使用 `cross-env PROJECT=<yourProject> ...` 启动/构建
 
 更多用法详见 [详细文档](./docs/README_PERMISSION.md) 与 [用户角色权限说明](./docs/USER_ROLE_PERMISSION.md)。
 

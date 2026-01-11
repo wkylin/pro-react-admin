@@ -76,9 +76,9 @@ Webpack 构建产物目录：
 
 ## 新增一个项目（例如 projectC）
 
-1) 创建入口文件：`src/projects/projectC/index.tsx`
+1. 创建入口文件：`src/projects/projectC/index.tsx`
 
-2) （可选）创建路由目录：`src/projects/projectC/routers/`
+2. （可选）创建路由目录：`src/projects/projectC/routers/`
 
 - 如果你想先复用默认路由：
   - `routers/index.jsx` 里写：
@@ -87,9 +87,9 @@ Webpack 构建产物目录：
   - `routers/authRouter.jsx` 里写：
     - `export { default } from '@src/routers/authRouter'`
 
-3) （可选）创建静态资源目录：`src/projects/projectC/public/`
+3. （可选）创建静态资源目录：`src/projects/projectC/public/`
 
-4) 增加脚本（两种方式选一种）
+4. 增加脚本（两种方式选一种）
 
 - 推荐：直接照着 `projectA`/`projectB` 在根 `package.json` 里添加：
   - `cross-env PROJECT=projectC vite --host --config vite.config.ts`
