@@ -33,6 +33,7 @@
 - **<span role="img" aria-label="puzzle">🧩</span> 丰富组件生态**：沉淀 **120+** 高质量业务组件，支持 **独立打包发布 (@w.ui/wui-react)**。集成 **Storybook** 实现组件可视化开发与文档管理，显著提升复用效率。
 - **<span role="img" aria-label="shield">🛡️</span> 企业级权限体系**：完善的 **RBAC** 模型，支持路由、菜单、按钮级细粒度权限控制。内置路由自动过滤、`useSafeNavigate` 防越权跳转，保障系统安全。
 - **<span role="img" aria-label="zap">⚡️</span> 前沿技术栈**：采用 **TypeScript v5** + **Ant Design v6** + **Vite v7/Webpack v5** 双构建模式，紧跟社区最新标准，提供最佳开发体验。
+- **<span role="img" aria-label="layers">🧩</span> 多项目模式（共享依赖）**：通过 `PROJECT` 环境变量在同一仓库/同一套依赖（一个 `node_modules`）下承载多个业务项目；支持项目级入口与路由覆盖，按项目输出产物目录（`dist` / `dist-<project>`），新项目仅需新增 `src/projects/<project>` 业务代码。
 - **<span role="img" aria-label="robot">🤖</span> AI 智能化集成**：内置 ChatGPT 演示（支持 SSE 流式响应）、Markmap 思维导图生成、Mermaid 流程图渲染，探索 AI 在后台管理中的应用场景。
 - **<span role="img" aria-label="test-tube">🧪</span> 全链路质量保障**：集成 **Playwright** E2E 自动化测试，配合 Mock Service Worker (MSW) 实现真实的网络模拟与多角色权限切换测试。
 - **<span role="img" aria-label="mobile">📱</span> 极致移动端适配**：精心打磨的响应式布局，从 PC 到手机端提供一致的流畅体验。
@@ -54,6 +55,7 @@
 - <span role="img" aria-label="earth">🌍</span> **主题与国际化**：内置明亮/暗黑模式一键切换，支持多语言（i18n）动态切换。
 - <span role="img" aria-label="test-tube">🧪</span> **Mock 数据模拟**：基于 Faker.js 和 MSW 的纯前端 Mock 方案，脱离后端独立开发。
 - <span role="img" aria-label="package">📦</span> **组件库发布**：支持将 `src/components` 独立打包为 NPM 库 (`@w.ui/wui-react`)，提供 ESM/UMD 格式，支持按需加载与类型提示。
+- <span role="img" aria-label="layers">🧩</span> **多项目模式（共享依赖）**：一个仓库 + 一个 `node_modules` 承载多个业务项目；通过 `PROJECT` 选择入口与路由，Vite/Webpack 均可按项目构建与预览，避免重复 clone/重复安装依赖。
 
 ---
 
@@ -112,7 +114,62 @@ npm install
 npm run dev
 ```
 
+## 🧩 多项目模式（共享依赖）
+
+多项目模式的目标是：把“模板工程 + 基础设施 + 依赖”沉淀成一个仓库，后续新业务只需要在 `src/projects/<project>` 里新增业务代码。
+
+- 📘 详细文档： [多项目（Multi Project）模式](./docs/MULTI_PROJECT.md)
+
+### ✅ 快速上手
+
+项目通过环境变量 `PROJECT` 来选择当前项目（默认不传即主项目）。脚本已使用 `cross-env`，Windows/macOS/Linux 统一。
+
+- Webpack 启动 ProjectA：`npm run start:projectA`
+- Webpack 启动 ProjectB：`npm run start:projectB`
+- Webpack 构建 ProjectB：`npm run build:production:projectB`
+- Vite 启动 ProjectA：`npm run dev:vite:projectA`
+- Vite 启动 ProjectB：`npm run dev:vite:projectB`
+
+### 📁 目录约定
+
+```text
+src/projects/
+  <project>/
+    index.tsx            # 项目入口（可复用通用 renderApp）
+    routers/             # 项目路由（可选，存在则覆盖主路由）
+      index.jsx
+      authRouter.jsx
+    pages/               # 项目页面（可选）
+    components/          # 项目组件（可选）
+    public/              # 项目静态资源（可选，构建时叠加到 public）
+```
+
+### 🧭 路由覆盖与复用策略
+
+- 默认情况下：`@routers` 指向 `src/routers`（主项目路由）。
+- 若存在 `src/projects/<project>/routers/`：`@routers` 会指向项目路由，从而实现“同框架/同基础设施下的路由隔离”。
+- 示例：
+  - `projectA` 使用“转发主路由”的方式实现最大化复用。
+  - `projectB` 落地“独立路由 + 独立 pages/components”，并演示直接复用主项目组件（如 `@stateless/*`）。
+
+### 📦 产物目录与本地预览（dist 自动切换）
+
+多项目构建时输出目录采用约定：
+
+- 主项目：`dist/`
+- 项目构建：`dist-<project>/`（例如 `dist-projectB/`）
+
+同时，`serve/http/clean` 相关脚本已改为自动指向当前项目的产物目录，避免手动切换路径。
+
 提示：运行 `npm run lighthouse` 前请先启动 dev server（例如先执行 `npm run dev`/`npm run start`）。
+
+### 🆕 如何新增一个新项目（推荐流程）
+
+1) 新建目录：`src/projects/<yourProject>/`
+2) 添加入口：`src/projects/<yourProject>/index.tsx`
+3) （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.jsx`
+4) 新增 pages/components 业务代码
+5) 复制一份脚本（参考 `projectA/projectB`）或直接使用 `cross-env PROJECT=<yourProject> ...` 启动/构建
 
 更多用法详见 [详细文档](./docs/README_PERMISSION.md) 与 [用户角色权限说明](./docs/USER_ROLE_PERMISSION.md)。
 
@@ -137,11 +194,23 @@ npm run dev
 - **🎨 组件重构与优化**: 样式重构，适配移动端与暗黑模式。交互优化，支持自定义提示与自定义样式。规范化导出结构，修复模块解析问题。
 - **🛠️ 构建配置升级**: 完善 `vite.config.lib.ts`，配置路径别名 (`@assets`, `@hooks` 等) 与外部依赖，确保构建产物纯净。
 
+- **🧩 多项目模式（共享依赖）**：引入 `PROJECT` 环境变量，在同一仓库/同一套依赖（一个 `node_modules`）下承载多个业务项目；支持 **Vite / Webpack** 双构建链路按项目入口打包。
+- **🧭 项目级路由覆盖**：通过别名 `@routers` 支持项目覆盖主路由；示例 `projectB` 已落地独立 `routers/pages/components`，并演示复用主项目组件（`@stateless/*`）。
+- **🧰 dist 工具脚本**：`serve/http/clean` 相关脚本改为自动指向当前项目产物目录（`dist` / `dist-<project>`），减少多项目场景下的重复维护。
+- **✅ 构建验证**：`npm run build:production:projectB` 产物输出到 `dist-projectB/`。
+
 ---
 
 ## 🏗️ 技术架构
 
 <img width="1903" height="387" alt="Snipaste_2025-12-31_09-14-38" src="https://github.com/user-attachments/assets/915ba91a-8852-4dc0-8a14-091e781d9f04" />
+
+**多项目架构补充说明（Multi Project）**
+
+- **入口约定**：默认入口为 `src/index.tsx`；项目入口为 `src/projects/<project>/index.tsx`，通过 `PROJECT=<project>` 切换。
+- **构建与产物**：Vite/Webpack 均支持按项目构建，产物目录采用 `dist` / `dist-<project>` 的约定，便于部署与本地预览。
+- **路由隔离与复用**：`@routers` 指向 `src/routers` 或 `src/projects/<project>/routers`（存在即覆盖）；从而实现“同一套基础设施 + 项目级路由差异”。
+- **示例项目**：`projectA` 以“转发主路由”演示复用；`projectB` 以“独立路由 + 独立页面/组件”演示隔离与复用并存。
 
 ---
 

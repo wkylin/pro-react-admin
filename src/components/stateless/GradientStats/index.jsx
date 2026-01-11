@@ -1,5 +1,8 @@
 import React from 'react'
 
+/**
+ * @param {{ items?: string[] }} props
+ */
 const GradientStats = ({ items = [] }) => {
   return (
     <section className="m-10 flex flex-wrap items-center justify-center gap-5">

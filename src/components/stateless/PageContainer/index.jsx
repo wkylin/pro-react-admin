@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { theme } from 'antd'
 import Footer from '@stateless/Footer'
 
-const PageContainer = ({ children, title, footer = <Footer />, className, style }) => {
+const PageContainer = ({ children, title, footer = <Footer />, className = '', style = {} }) => {
   const { token } = theme.useToken()
 
   return (

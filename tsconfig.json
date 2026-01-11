@@ -26,6 +26,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@src/*": ["./src/*"],
+      "@app": ["./src"],
+      "@app/*": ["./src/*"],
       "@stateless/*": ["./src/components/stateless/*"],
       "@stateful/*": ["./src/components/stateful/*"],
       "@hooks/*": ["./src/components/hooks/*"],
@@ -33,6 +35,7 @@
       "@container/*": ["./src/components/container/*"],
       "@assets/*": ["./src/assets/*"],
       "@pages/*": ["./src/pages/*"],
+      "@routers": ["./src/routers/index"],
       "@routers/*": ["./src/routers/*"],
       "@utils/*": ["./src/utils/*"],
       "@theme/*": ["./src/theme/*"]

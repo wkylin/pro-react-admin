@@ -82,7 +82,7 @@ const prodPublicPath = normalizePublicPath(
 
 const config = {
   entry: {
-    app: `${paths.src}/index.tsx`,
+    app: paths.entry,
   },
   output: {
     path: paths.build,
@@ -102,6 +102,7 @@ const config = {
       '@assets/video': path.resolve('./src/assets/video'),
       '@': path.resolve('./src'),
       '@src': path.resolve('./src'),
+      '@app': paths.appDir,
       '@stateless': path.resolve('./src/components/stateless'),
       '@stateful': path.resolve('./src/components/stateful'),
       '@hooks': path.resolve('./src/components/hooks'),
@@ -109,7 +110,7 @@ const config = {
       '@container': path.resolve('./src/components/container'),
       '@assets': path.resolve('./src/assets'),
       '@pages': path.resolve('./src/pages'),
-      '@routers': path.resolve('./src/routers'),
+      '@routers': paths.routersDir,
       '@utils': path.resolve('./src/utils'),
       '@theme': path.resolve('./src/theme'),
       // 确保关键依赖只有一个实例，避免 zustand middleware 错误
@@ -128,9 +129,11 @@ const config = {
       bundler: 'webpack',
     }),
     new HtmlWebpackPlugin({
-      title: isDev ? 'Pro React Dev' : 'Pro React Admin',
-      template: `${paths.public}/index.html`,
-      favicon: `${paths.public}/favicon.ico`,
+      title:
+        (isDev ? 'Pro React Dev' : 'Pro React Admin') +
+        (paths.projectName && paths.projectName !== 'default' ? ` (${paths.projectName})` : ''),
+      template: paths.htmlTemplate,
+      favicon: paths.favicon,
       filename: 'index.html',
       inject: 'body',
       hash: true,

@@ -1,6 +1,8 @@
 .DS_Store
 /.idea
 /dist
+/dist-projectA
+/dist-projectB
 /node_modules
 /.eslintcache
 tsconfig.tsbuildinfo

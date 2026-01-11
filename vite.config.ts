@@ -14,8 +14,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
+  const project = (process.env.PROJECT || env.PROJECT || env.VITE_PROJECT || 'default').trim() || 'default'
+
+  const resolveProjectDir = (...segments: string[]) => path.resolve(__dirname, 'src', 'projects', project, ...segments)
+  const projectEntry = project === 'default' ? '/src/index.tsx' : `/src/projects/${project}/index.tsx`
+  const projectPublicDir = project === 'default' ? path.resolve(__dirname, 'public') : resolveProjectDir('public')
+  const hasProjectPublicDir = fs.existsSync(projectPublicDir) && fs.statSync(projectPublicDir).isDirectory()
+  const publicDir = hasProjectPublicDir ? projectPublicDir : path.resolve(__dirname, 'public')
+  const outDir = project === 'default' ? 'dist-vite' : `dist-vite-${project}`
+
   const clientEnv = {
     NODE_ENV: mode,
+    PROJECT: project,
     APP_BASE_URL: env.APP_BASE_URL,
     REACT_APP_USE_MOCK: env.REACT_APP_USE_MOCK,
     AUTH_USER: env.AUTH_USER,
@@ -40,10 +50,10 @@ export default defineConfig(({ mode }) => {
       const doZip = env.ZIP_DIST === '1' || env.ZIP_DIST === 'true'
       if (!doZip || !isProd) return
 
-      const outDir = path.resolve(__dirname, 'dist-vite')
+      const outDirAbs = path.resolve(__dirname, outDir)
       const zipDir = path.resolve(__dirname, 'dist-vite-zip')
       await fs.promises.mkdir(zipDir, { recursive: true })
-      const archivePath = path.join(zipDir, 'pro-react-admin.zip')
+      const archivePath = path.join(zipDir, project === 'default' ? 'pro-react-admin.zip' : `pro-react-admin-${project}.zip`)
 
       const output = fs.createWriteStream(archivePath)
       const archive = archiver('zip', { zlib: { level: 9 } })
@@ -52,9 +62,20 @@ export default defineConfig(({ mode }) => {
         output.on('close', () => resolve())
         archive.on('error', (err) => reject(err))
         archive.pipe(output)
-        archive.directory(outDir, false)
+        archive.directory(outDirAbs, false)
         archive.finalize()
       })
+    },
+  })
+
+  const multiProjectIndexHtml = () => ({
+    name: 'multi-project-index-html',
+    transformIndexHtml(html: string) {
+      // 替换默认入口脚本为当前项目入口
+      return html.replace(
+        /<script\s+type="module"\s+src="\/src\/index\.tsx"\s*><\/script>/,
+        `<script type="module" src="${projectEntry}"></script>`
+      )
     },
   })
 
@@ -84,9 +105,10 @@ export default defineConfig(({ mode }) => {
         },
       }),
       react(),
+      multiProjectIndexHtml(),
       // injectAppEntry,
       ...(useAnalyze
-        ? [visualizer({ filename: 'dist-vite/stats.html', gzipSize: true, brotliSize: true, open: false })]
+        ? [visualizer({ filename: `${outDir}/stats.html`, gzipSize: true, brotliSize: true, open: false })]
         : []),
       ...(isProd
         ? [
@@ -105,7 +127,7 @@ export default defineConfig(({ mode }) => {
                 name: packageJson.version,
               },
               sourcemaps: {
-                assets: './dist-vite/assets/**',
+                assets: `./${outDir}/assets/**`,
               },
               bundleSizeOptimizations: {
                 excludeDebugStatements: true,
@@ -122,10 +144,12 @@ export default defineConfig(({ mode }) => {
       'process.env': clientEnv,
     },
     envPrefix: ['VITE_', 'APP_', 'REACT_APP_', 'IFRAME_', 'AUTH_', 'DEPLOYED_'],
+    publicDir,
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),
         '@src': path.resolve(__dirname, 'src'),
+        '@app': project === 'default' ? path.resolve(__dirname, 'src') : resolveProjectDir(),
         '@stateless': path.resolve(__dirname, 'src/components/stateless'),
         '@stateful': path.resolve(__dirname, 'src/components/stateful'),
         '@hooks': path.resolve(__dirname, 'src/components/hooks'),
@@ -133,7 +157,7 @@ export default defineConfig(({ mode }) => {
         '@container': path.resolve(__dirname, 'src/components/container'),
         '@assets': path.resolve(__dirname, 'src/assets'),
         '@pages': path.resolve(__dirname, 'src/pages'),
-        '@routers': path.resolve(__dirname, 'src/routers'),
+        '@routers': fs.existsSync(resolveProjectDir('routers')) ? resolveProjectDir('routers') : path.resolve(__dirname, 'src/routers'),
         '@utils': path.resolve(__dirname, 'src/utils'),
         '@theme': path.resolve(__dirname, 'src/theme'),
       },
@@ -149,7 +173,7 @@ export default defineConfig(({ mode }) => {
       open: false,
     },
     build: {
-      outDir: 'dist-vite',
+      outDir,
       sourcemap: useSentry ? 'hidden' : false,
       chunkSizeWarningLimit: 800,
       rollupOptions: {

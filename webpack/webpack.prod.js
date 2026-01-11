@@ -14,6 +14,7 @@ import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin'
 import { EsbuildPlugin } from 'esbuild-loader'
 import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin'
 import common from './webpack.common.js'
+import paths from './paths.js'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 
@@ -77,16 +78,19 @@ const prodWebpackConfig = merge(common, {
       patterns: [
         {
           from: path.resolve(__dirname, '../public-optimized/audio'),
-          to: path.resolve(__dirname, '../dist/audio'),
+          to: path.resolve(paths.build, 'audio'),
           noErrorOnMissing: true,
         },
-        {
-          from: path.resolve(__dirname, '../public'),
-          to: path.resolve(__dirname, '../dist'),
-          globOptions: {
-            ignore: ['**/index.html', '**/audio/**'],
-          },
-        },
+        ...(Array.isArray(paths.copyPublicDirs)
+          ? paths.copyPublicDirs.map((fromDir) => ({
+              from: fromDir,
+              to: paths.build,
+              noErrorOnMissing: true,
+              globOptions: {
+                ignore: ['**/index.html', '**/audio/**'],
+              },
+            }))
+          : []),
       ],
     }),
   ],
@@ -186,7 +190,7 @@ if (useSentryMap) {
     prodWebpackConfig.plugins.push(
       sentryWebpackPlugin({
         release: packageJson.version,
-        include: path.join(__dirname, '../dist/static/js'),
+        include: path.join(paths.build, 'static/js'),
         urlPrefix: '~/static/js',
         authToken: sentryAuthToken,
         org: process.env.SENTRY_ORG,
@@ -212,8 +216,13 @@ if (process.env.DIST_ZIP === '1' || process.env.DIST_ZIP === 'true') {
           mkdir: [path.resolve(__dirname, '../dist-zip')],
           archive: [
             {
-              source: path.resolve(__dirname, '../dist'),
-              destination: path.resolve(__dirname, '../dist-zip/pro-react-admin.zip'),
+              source: paths.build,
+              destination: path.resolve(
+                __dirname,
+                paths.projectName && paths.projectName !== 'default'
+                  ? `../dist-zip/pro-react-admin-${paths.projectName}.zip`
+                  : '../dist-zip/pro-react-admin.zip'
+              ),
             },
           ],
         },

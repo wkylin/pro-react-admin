@@ -5,6 +5,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import portfinder from 'portfinder'
 import common from './webpack.common.js'
 import devProxy from './dev.proxy.js'
+import paths from './paths.js'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 
@@ -27,9 +28,7 @@ const devWebpackConfig = merge(common, {
         runtimeErrors: false,
       },
     },
-    static: {
-      directory: path.join(__dirname, '../public'),
-    },
+    static: (paths.devServerStatic || []).map((directory) => ({ directory })),
     compress: true,
     // open: true,
     hot: true,

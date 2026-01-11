@@ -10,7 +10,7 @@ import './styles/reset.css'
 
 import RootLayout from '@/components/RootLayout'
 import RouterErrorElement from '@/components/RouterErrorElement'
-import rootRouter from '@/routers'
+import rootRouter from '@routers'
 import { useProThemeContext } from './theme/hooks'
 import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 import { setMessageInstance } from '@utils/message'
