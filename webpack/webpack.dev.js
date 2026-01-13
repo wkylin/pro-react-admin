@@ -12,6 +12,9 @@ import { dirname } from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
+const isMfeEnabled = mfeRole === 'host' || mfeRole === 'remote'
+
 const devWebpackConfig = merge(common, {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
@@ -68,17 +71,20 @@ const devWebpackConfig = merge(common, {
   optimization: {
     removeAvailableModules: false,
     removeEmptyChunks: false,
-    splitChunks: {
-      chunks: 'async',
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-          priority: 10,
+    splitChunks: isMfeEnabled
+      ? false
+      : {
+          chunks: 'async',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+              priority: 10,
+            },
+          },
         },
-      },
-    },
+    runtimeChunk: isMfeEnabled ? false : undefined,
     minimize: false,
     concatenateModules: false,
     usedExports: false,
@@ -86,9 +92,15 @@ const devWebpackConfig = merge(common, {
 })
 
 export default new Promise((resolve, reject) => {
+  const basePort = (() => {
+    const raw = process.env.PORT
+    const parsed = Number(raw)
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 8080
+  })()
+
   portfinder.getPort(
     {
-      port: 8080, // 默认8080端口，若被占用，重复+1，直到找到可用端口或到stopPort才停止
+      port: basePort, // 默认8080端口；支持用 PORT 指定起始端口（适用于 MF 固定端口联调）
       stopPort: 65535, // maximum port
     },
     (err, port) => {

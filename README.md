@@ -175,6 +175,55 @@ src/projects/
 
 ---
 
+## 🧩 微前端（Webpack Module Federation）POC
+
+在“多项目模式”的基础上，仓库提供一个 **Webpack Module Federation** 的最小可运行 POC：
+
+- Shell(host) 统一承载与导航
+- projectA/projectB 以 remote 的形式被动态加载
+- 目标部署形态：**同域名不同 path**（例如 `/`、`/projectA/`、`/projectB/`）
+
+### ✅ 本地联调（3 个 devServer）
+
+1) 启动两个 remote：
+
+- `npm run start:mf:projectA`（默认 `http://localhost:8081/`，remoteEntry：`/remoteEntry.js`）
+- `npm run start:mf:projectB`（默认 `http://localhost:8082/`，remoteEntry：`/remoteEntry.js`）
+
+2) 启动 Shell(host)：
+
+- `npm run start:mf:shell`（默认 `http://localhost:8080/`）
+
+3) 访问：
+
+- `http://localhost:8080/#/portal`
+- `http://localhost:8080/#/projectA`
+- `http://localhost:8080/#/projectB`
+
+### 📦 生产构建与同域名不同 path 部署
+
+- Shell(host)：`npm run build:mf:shell` → 输出到 `dist-shell/`
+- projectA(remote)：`npm run build:mf:projectA` → 输出到 `dist-projectA/`
+- projectB(remote)：`npm run build:mf:projectB` → 输出到 `dist-projectB/`
+
+推荐的网关/Nginx 映射（示意）：
+
+- `/` → `dist-shell/`
+- `/projectA/` → `dist-projectA/`
+- `/projectB/` → `dist-projectB/`
+
+其中 remoteEntry 在生产默认按路径引用：
+
+- projectA：`/projectA/remoteEntry.js`
+- projectB：`/projectB/remoteEntry.js`
+
+说明：
+
+- 目前路由使用 Hash Router（`/#/...`），通常不依赖 history fallback。
+- 这是 POC：remote 暴露的是 `src/projects/<project>/mfe/App.tsx` 对应的 `./App` 模块；Shell 通过 `import('projectA/App')` / `import('projectB/App')` 动态加载。
+
+---
+
 ## 📝 近期主要更新
 
 - ⚡ **性能优化**：重构 `KeepAlive` 实现，支持 React 19 `<Activity>` (Offscreen) 原生冻结，降级模式采用 CSS 显隐替代 DOM 移动，大幅减少重排

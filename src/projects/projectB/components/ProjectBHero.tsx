@@ -5,7 +5,7 @@ const { Title, Paragraph, Text } = Typography
 export default function ProjectBHero() {
   return (
     <Card>
-      <Space direction="vertical" size={8} style={{ width: '100%' }}>
+      <Space orientation="vertical" size={8} style={{ width: '100%' }}>
         <Space wrap>
           <Tag color="blue">Project B</Tag>
           <Tag color="geekblue">独立路由</Tag>

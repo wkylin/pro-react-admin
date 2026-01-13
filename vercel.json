@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+
+    { "src": "/projectA(/.*)?$", "dest": "/projectA/index.html" },
+    { "src": "/projectB(/.*)?$", "dest": "/projectB/index.html" },
+
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

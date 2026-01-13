@@ -1,0 +1,97 @@
+/**
+ * Module Federation Remote Projects Configuration
+ *
+ * 在这里配置所有的远程项目，支持动态扩展
+ */
+
+/**
+ * @typedef {Object} RemoteProject
+ * @property {string} name - 项目名称，必须唯一
+ * @property {string} devUrl - 开发环境的远程入口地址
+ * @property {string} prodPath - 生产环境的相对路径（基于 PUBLIC_URL）
+ * @property {string} [envKey] - 可选的环境变量键名，用于覆盖 devUrl
+ */
+
+/**
+ * @type {RemoteProject[]}
+ */
+export const remoteProjects = [
+  {
+    name: 'projectA',
+    devUrl: 'http://localhost:8081/remoteEntry.js',
+    prodPath: '/projectA/remoteEntry.js',
+    envKey: 'MFE_PROJECTA_URL', // 允许通过 process.env.MFE_PROJECTA_URL 覆盖
+  },
+  {
+    name: 'projectB',
+    devUrl: 'http://localhost:8082/remoteEntry.js',
+    prodPath: '/projectB/remoteEntry.js',
+    envKey: 'MFE_PROJECTB_URL',
+  },
+  // 添加更多远程项目:
+  // {
+  //   name: 'projectC',
+  //   devUrl: 'http://localhost:8083/remoteEntry.js',
+  //   prodPath: '/projectC/remoteEntry.js',
+  //   envKey: 'MFE_PROJECTC_URL',
+  // },
+]
+
+/**
+ * 根据配置和当前环境生成 Module Federation 的 remotes 配置
+ * @param {boolean} isDev - 是否为开发环境
+ * @returns {Record<string, string>} remotes 配置对象
+ */
+export function generateRemotesConfig(isDev = false) {
+  const remotes = {}
+
+  remoteProjects.forEach((project) => {
+    // 开发环境：优先使用环境变量，否则使用配置的 devUrl
+    // 生产环境：使用 prodPath
+    let url = isDev ? project.devUrl : project.prodPath
+
+    if (isDev && project.envKey && process.env[project.envKey]) {
+      url = process.env[project.envKey].toString().trim()
+    }
+
+    // Module Federation 格式: name@url
+    remotes[project.name] = `${project.name}@${url}`
+  })
+
+  return remotes
+}
+
+/**
+ * 从环境变量中动态解析远程项目配置
+ * 支持格式: MFE_REMOTES=projectA@http://localhost:8081,projectB@http://localhost:8082
+ * @returns {RemoteProject[]} 解析后的项目配置
+ */
+export function parseRemotesFromEnv() {
+  const remotesEnv = process.env.MFE_REMOTES
+  if (!remotesEnv) return remoteProjects
+
+  try {
+    const parsed = remotesEnv.split(',').map((item) => {
+      const [name, url] = item.trim().split('@')
+      if (!name || !url) return null
+
+      return {
+        name: name.trim(),
+        devUrl: url.trim(),
+        prodPath: url.trim(),
+      }
+    }).filter(Boolean)
+
+    // 合并配置：环境变量优先
+    const envNames = new Set(parsed.map(p => p.name))
+    const result = [
+      ...parsed,
+      ...remoteProjects.filter(p => !envNames.has(p.name))
+    ]
+
+    return result
+  } catch (error) {
+    console.warn('[mfe.config] Failed to parse MFE_REMOTES:', error)
+    return remoteProjects
+  }
+}

@@ -3,6 +3,9 @@
 /dist
 /dist-projectA
 /dist-projectB
+/dist-projectC
+/dist-shell
+/dist-vercel
 /node_modules
 /.eslintcache
 tsconfig.tsbuildinfo

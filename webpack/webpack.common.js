@@ -10,15 +10,43 @@ import WebpackBar from 'webpackbar'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import ESLintWebpackPlugin from 'eslint-webpack-plugin'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
+import webpack from 'webpack'
 import paths from './paths.js'
+import { generateRemotesConfig, parseRemotesFromEnv } from './mfe.config.js'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
+import fs from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const isDev = process.env.NODE_ENV === 'development'
 const isAnalyze = Boolean(Number(process.env.USE_ANALYZE || 0))
+
+const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
+const isMfeHost = mfeRole === 'host'
+const isMfeRemote = mfeRole === 'remote'
+const isMfeEnabled = isMfeHost || isMfeRemote
+
+const toMfeName = (name) => {
+  const raw = (name || '').toString().trim() || 'app'
+  const safe = raw.replace(/[^a-zA-Z0-9_]/g, '_')
+  return /^[0-9]/.test(safe) ? `app_${safe}` : safe
+}
+
+const packageJson = (() => {
+  try {
+    const pkg = fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf8')
+    return JSON.parse(pkg)
+  } catch {
+    return { dependencies: {} }
+  }
+})()
+
+const deps = {
+  ...(packageJson.dependencies || {}),
+  ...(packageJson.peerDependencies || {}),
+}
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
@@ -86,7 +114,8 @@ const config = {
   },
   output: {
     path: paths.build,
-    publicPath: isDev ? '/' : prodPublicPath,
+    publicPath: isMfeEnabled ? 'auto' : isDev ? '/' : prodPublicPath,
+    uniqueName: isMfeEnabled ? toMfeName(paths.projectName) : undefined,
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     // library: '',
@@ -168,6 +197,13 @@ const config = {
     new WebpackBar(),
     new ForkTsCheckerWebpackPlugin({
       async: true,
+      typescript: {
+        memoryLimit: (() => {
+          const raw = process.env.TSC_MEMORY_LIMIT
+          const parsed = Number(raw)
+          return Number.isFinite(parsed) && parsed > 0 ? parsed : 4096
+        })(),
+      },
     }),
     new ESLintWebpackPlugin({
       context: path.resolve(__dirname, '../src'),
@@ -341,6 +377,49 @@ const config = {
     maxEntrypointSize: 512000,
     maxAssetSize: 512000,
   },
+}
+
+if (isMfeEnabled) {
+  const ModuleFederationPlugin = webpack.container.ModuleFederationPlugin
+  const mfeName = toMfeName(paths.projectName)
+
+  // 使用动态配置生成 remotes
+  const remotes = isMfeHost ? generateRemotesConfig(isDev) : {}
+  
+  // 输出配置信息（仅在开发环境）
+  if (isDev && isMfeHost) {
+    // eslint-disable-next-line no-console
+    console.log('[MFE] Remote projects configured:', Object.keys(remotes).join(', '))
+  }
+
+  const resolveExpose = () => {
+    if (!isMfeRemote) return {}
+    const project = (paths.projectName || 'default').toString()
+    const candidate = path.resolve(__dirname, `../src/projects/${project}/mfe/App.tsx`)
+    if (!fs.existsSync(candidate)) {
+      // eslint-disable-next-line no-console
+      console.warn(`[mfe] Missing expose file: ${candidate}`)
+    }
+    return { './App': candidate }
+  }
+
+  config.plugins.push(
+    new ModuleFederationPlugin({
+      name: mfeName,
+      filename: 'remoteEntry.js',
+      exposes: resolveExpose(),
+      remotes,
+      shared: {
+        react: { singleton: true, eager: true, requiredVersion: deps.react || false },
+        'react-dom': { singleton: true, eager: true, requiredVersion: deps['react-dom'] || false },
+        'react-router-dom': { singleton: true, eager: true, requiredVersion: deps['react-router-dom'] || false },
+        antd: { singleton: true, eager: true, requiredVersion: deps.antd || false },
+        dayjs: { singleton: true, eager: true, requiredVersion: deps.dayjs || false },
+        zustand: { singleton: true, eager: true, requiredVersion: deps.zustand || false },
+        immer: { singleton: true, eager: true, requiredVersion: deps.immer || false },
+      },
+    })
+  )
 }
 
 if (USE_ANALYZE) {
