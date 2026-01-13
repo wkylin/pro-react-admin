@@ -343,6 +343,123 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
 ```
 
+### 5. Vercel 部署（推荐方案：独立项目）
+
+#### 为什么推荐独立项目？
+
+将多个 MFE 放在同一 Vercel 项目 + 子路径下，使用 `publicPath: 'auto'` 经常出问题：
+- 刷新页面或深层路由时 `document.currentScript.src` 推断错误
+- Vercel rewrites 与 Module Federation chunk 加载互相干扰
+- 调试困难，排错成本高
+
+**推荐方案**：每个 MFE 独立 Vercel 项目，Host 用完整 URL 引用 Remote。
+
+#### 部署架构
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  独立 Vercel 项目                                                │
+├─────────────────────────────────────────────────────────────────┤
+│  pro-react-admin-shell.vercel.app     ← Host (主应用)           │
+│  pro-react-admin-projecta.vercel.app  ← Remote A               │
+│  pro-react-admin-projectb.vercel.app  ← Remote B               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+#### 步骤 1: 创建三个 Vercel 项目
+
+在 Vercel Dashboard 中创建三个独立项目，连接同一个 Git 仓库：
+
+| 项目名 | 配置文件 | 用途 |
+|--------|----------|------|
+| `pro-react-admin-shell` | `vercel.shell.json` | Host 主应用 |
+| `pro-react-admin-projecta` | `vercel.projectA.json` | Remote A |
+| `pro-react-admin-projectb` | `vercel.projectB.json` | Remote B |
+
+#### 步骤 2: 配置各项目
+
+**Shell (Host) 项目设置：**
+- Framework Preset: `Other`
+- Build Command: `npm run build:mf:shell`
+- Output Directory: `dist-shell`
+- 环境变量:
+  ```
+  MFE_PROJECTA_URL=https://pro-react-admin-projecta.vercel.app/remoteEntry.js
+  MFE_PROJECTB_URL=https://pro-react-admin-projectb.vercel.app/remoteEntry.js
+  ```
+
+**ProjectA (Remote) 项目设置：**
+- Framework Preset: `Other`
+- Build Command: `cross-env PROJECT=projectA MFE_ROLE=remote npm run build:mf`
+- Output Directory: `dist-projectA`
+
+**ProjectB (Remote) 项目设置：**
+- Framework Preset: `Other`
+- Build Command: `cross-env PROJECT=projectB MFE_ROLE=remote npm run build:mf`
+- Output Directory: `dist-projectB`
+
+#### 步骤 3: 使用 Vercel CLI 部署（可选）
+
+```bash
+# 部署 Shell
+vercel --prod --local-config vercel.shell.json
+
+# 部署 ProjectA
+vercel --prod --local-config vercel.projectA.json
+
+# 部署 ProjectB
+vercel --prod --local-config vercel.projectB.json
+```
+
+#### 步骤 4: 配置自定义域名（推荐）
+
+为了更好的用户体验和品牌一致性：
+
+```
+app.yourdomain.com           → Shell (Host)
+projecta.yourdomain.com      → ProjectA (Remote)
+projectb.yourdomain.com      → ProjectB (Remote)
+```
+
+然后更新 Shell 的环境变量：
+```
+MFE_PROJECTA_URL=https://projecta.yourdomain.com/remoteEntry.js
+MFE_PROJECTB_URL=https://projectb.yourdomain.com/remoteEntry.js
+```
+
+#### 配置文件说明
+
+项目根目录包含三个 Vercel 配置文件：
+
+- `vercel.shell.json` - Shell (Host) 配置
+- `vercel.projectA.json` - ProjectA (Remote) 配置
+- `vercel.projectB.json` - ProjectB (Remote) 配置
+
+每个配置文件都包含：
+- `buildCommand`: 构建命令
+- `outputDirectory`: 输出目录
+- `rewrites`: SPA 路由支持
+- `headers`: CORS 和缓存配置（Remote 需要跨域头）
+
+#### 单项目部署（备选方案）
+
+如果坚持使用单项目 + 子路径方案，参考 `vercel.json`：
+
+```json
+{
+  "version": 2,
+  "buildCommand": "npm run build:mf:vercel",
+  "outputDirectory": "dist-vercel",
+  "rewrites": [
+    { "source": "/projectA/((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectA/index.html" },
+    { "source": "/projectB/((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectB/index.html" },
+    { "source": "/((?!projectA|projectB)(?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
+  ]
+}
+```
+
+⚠️ **注意**：此方案需要精确配置 rewrites 正则表达式，且 `publicPath: 'auto'` 在某些边缘情况下可能失效。
+
 ## 环境变量配置
 
 ### .env.production 示例

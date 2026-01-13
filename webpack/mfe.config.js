@@ -41,17 +41,25 @@ export const remoteProjects = [
  * 根据配置和当前环境生成 Module Federation 的 remotes 配置
  * @param {boolean} isDev - 是否为开发环境
  * @returns {Record<string, string>} remotes 配置对象
+ *
+ * 生产环境支持两种模式：
+ * 1. 相对路径（同域部署）：prodPath = '/projectA/remoteEntry.js'
+ * 2. 完整 URL（独立部署）：通过 MFE_PROJECTA_URL 环境变量指定
+ *
+ * 推荐方案：独立 Vercel 项目 + 完整 URL，避免子路径 routing 问题
  */
 export function generateRemotesConfig(isDev = false) {
   const remotes = {}
 
   remoteProjects.forEach((project) => {
-    // 开发环境：优先使用环境变量，否则使用配置的 devUrl
-    // 生产环境：使用 prodPath
-    let url = isDev ? project.devUrl : project.prodPath
+    let url
 
-    if (isDev && project.envKey && process.env[project.envKey]) {
+    // 优先使用环境变量（支持开发和生产环境）
+    if (project.envKey && process.env[project.envKey]) {
       url = process.env[project.envKey].toString().trim()
+    } else {
+      // 回退到默认配置
+      url = isDev ? project.devUrl : project.prodPath
     }
 
     // Module Federation 格式: name@url
