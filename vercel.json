@@ -2,12 +2,9 @@
   "version": 2,
   "buildCommand": "npm run build:mf:vercel",
   "outputDirectory": "dist-vercel",
-  "routes": [
-    { "handle": "filesystem" },
-
-    { "src": "/projectA(/.*)?$", "dest": "/projectA/index.html" },
-    { "src": "/projectB(/.*)?$", "dest": "/projectB/index.html" },
-
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/projectA/:path((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectA/index.html" },
+    { "source": "/projectB/:path((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectB/index.html" },
+    { "source": "/:path((?!projectA|projectB)(?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
   ]
 }
