@@ -384,8 +384,10 @@ if (isMfeEnabled) {
   const mfeName = toMfeName(paths.projectName)
 
   // 使用动态配置生成 remotes
-  const remotes = isMfeHost ? generateRemotesConfig(isDev) : {}
-  
+  // 注意：即使当前构建目标是 remote，也可能会编译到 Host 的路由/页面文件。
+  // 为避免出现 "Can't resolve 'projectA/App'" 这类编译错误，这里统一注册 remotes。
+  const remotes = generateRemotesConfig(isDev)
+
   // 输出配置信息（仅在开发环境）
   if (isDev && isMfeHost) {
     // eslint-disable-next-line no-console
