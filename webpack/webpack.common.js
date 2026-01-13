@@ -109,12 +109,26 @@ const prodPublicPath = normalizePublicPath(
 )
 
 const config = {
+  // Module Federation 的 remote script loader 可能生成 async/await。
+  // 明确目标环境为现代浏览器（2026年 ES2022 已被所有主流浏览器完全支持）。
+  target: ['web', 'es2022'],
   entry: {
     app: paths.entry,
   },
+  ignoreWarnings: isMfeEnabled
+    ? [
+        {
+          message:
+            /The generated code contains 'async\/await' because this module is using "external script"\.[\s\S]*your target environment does not appear to support 'async\/await'\./,
+        },
+      ]
+    : [],
   output: {
     path: paths.build,
     publicPath: isMfeEnabled ? 'auto' : isDev ? '/' : prodPublicPath,
+    environment: {
+      asyncFunction: true,
+    },
     uniqueName: isMfeEnabled ? toMfeName(paths.projectName) : undefined,
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
@@ -303,7 +317,7 @@ const config = {
             loader: 'esbuild-loader',
             options: {
               // loader: 'tsx',
-              target: 'es2020',
+              target: 'es2022',
             },
           },
           {
