@@ -1,10 +1,23 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:mf:vercel",
-  "outputDirectory": "dist-vercel",
   "rewrites": [
-    { "source": "/projectA/:path((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectA/index.html" },
-    { "source": "/projectB/:path((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectB/index.html" },
-    { "source": "/:path((?!projectA|projectB)(?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
+    { "source": "/:path((?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/remoteEntry.js",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" },
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" }
+      ]
+    }
   ]
 }

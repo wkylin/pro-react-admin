@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "buildCommand": "cross-env PROJECT=projectB MFE_ROLE=remote npm run build:mf",
+  "buildCommand": "npm run build:mf:projectB:standalone",
   "outputDirectory": "dist-projectB",
   "rewrites": [
     { "source": "/((?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
@@ -11,13 +11,15 @@
       "source": "/remoteEntry.js",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" },
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
       ]
     },
     {
       "source": "/static/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" }
       ]
     }
   ]
