@@ -31,6 +31,9 @@ const regVendor = /[\\/]node_modules[\\/](axios|classnames|lodash)[\\/]/
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 
+const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
+const isMfeEnabled = mfeRole === 'host' || mfeRole === 'remote'
+
 const optimizedAudioDir = path.resolve(__dirname, '../src/assets-optimized/audio')
 const optimizedVideoDir = path.resolve(__dirname, '../src/assets-optimized/video')
 const hasOptimizedAudio = fs.existsSync(optimizedAudioDir)
@@ -173,9 +176,11 @@ const prodWebpackConfig = merge(common, {
         // },
       },
     },
-    runtimeChunk: {
-      name: 'runtime',
-    },
+    // IMPORTANT for Module Federation:
+    // When MFE is enabled (host/remote builds), keep runtime in the entry bundles.
+    // Otherwise remoteEntry.js becomes a pure chunk that depends on runtime.*.js,
+    // and hosts will fail with ScriptExternalLoadError ("Loading script failed").
+    runtimeChunk: isMfeEnabled ? false : { name: 'runtime' },
   },
   performance: {
     hints: 'warning',

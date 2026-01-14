@@ -13,6 +13,13 @@
       ]
     },
     {
+      "source": "/(.*)\\.js",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Cross-Origin-Resource-Policy", "value": "cross-origin" }
+      ]
+    },
+    {
       "source": "/static/(.*)",
       "headers": [
         { "key": "Access-Control-Allow-Origin", "value": "*" },
