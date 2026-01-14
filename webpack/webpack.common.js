@@ -28,13 +28,13 @@ const isMfeHost = mfeRole === 'host'
 const isMfeRemote = mfeRole === 'remote'
 const isMfeEnabled = isMfeHost || isMfeRemote
 
-const mfeName = isMfeEnabled ? toMfeName(paths.projectName) : undefined
-
 const toMfeName = (name) => {
   const raw = (name || '').toString().trim() || 'app'
   const safe = raw.replace(/[^a-zA-Z0-9_]/g, '_')
   return /^[0-9]/.test(safe) ? `app_${safe}` : safe
 }
+
+const mfeName = isMfeEnabled ? toMfeName(paths.projectName) : undefined
 
 const packageJson = (() => {
   try {
