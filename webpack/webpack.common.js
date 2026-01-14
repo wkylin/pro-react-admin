@@ -423,6 +423,9 @@ if (isMfeEnabled) {
     new ModuleFederationPlugin({
       name: mfeName,
       filename: 'remoteEntry.js',
+      // Use a string-keyed global to avoid minifier mangling the container name
+      // (e.g. `var projectA` -> `var A`), which breaks host loading.
+      library: { type: 'window', name: mfeName },
       exposes: resolveExpose(),
       remotes,
       shared: {
