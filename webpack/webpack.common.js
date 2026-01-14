@@ -28,6 +28,8 @@ const isMfeHost = mfeRole === 'host'
 const isMfeRemote = mfeRole === 'remote'
 const isMfeEnabled = isMfeHost || isMfeRemote
 
+const mfeName = isMfeEnabled ? toMfeName(paths.projectName) : undefined
+
 const toMfeName = (name) => {
   const raw = (name || '').toString().trim() || 'app'
   const safe = raw.replace(/[^a-zA-Z0-9_]/g, '_')
@@ -130,6 +132,9 @@ const config = {
       asyncFunction: true,
     },
     uniqueName: isMfeEnabled ? toMfeName(paths.projectName) : undefined,
+    // For MF remotes in production we must expose the container globally so the host can find it.
+    // Using a string-keyed window export avoids minifier renaming issues.
+    library: isMfeRemote && mfeName ? { type: 'window', name: mfeName } : undefined,
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     // library: '',
