@@ -51,40 +51,49 @@ export const remoteProjects = [
 export function generateRemotesConfig(isDev = false) {
   const remotes = {}
 
-  remoteProjects.forEach((project) => {
+  // 支持通过环境变量覆盖并添加/替换远程项目
+  const projects = parseRemotesFromEnv()
+
+  // helper: 与 webpack.common.js 中 toMfeName 行为保持一致
+  const toSafeName = (name) => {
+    const raw = (name || '').toString().trim() || 'app'
+    const safe = raw.replace(/[^a-zA-Z0-9_]/g, '_')
+    return /^[0-9]/.test(safe) ? `app_${safe}` : safe
+  }
+
+  projects.forEach((project) => {
     let url
 
-    // 优先使用环境变量（支持开发和生产环境）
     if (project.envKey && process.env[project.envKey]) {
       url = process.env[project.envKey].toString().trim()
     } else {
-      // 回退到默认配置
       url = isDev ? project.devUrl : project.prodPath
     }
 
-    // 使用 promise 语法动态加载脚本并从 window 对象获取容器
-    // 这是因为 remotes 使用了 library: { type: 'window' } 配置
+    const rawName = project.name
+    const safeName = toSafeName(rawName)
+
+    // 尝试多种 window 全局名（rawName / safeName），以兼容不同构建时的 container 名称
     const promiseCode = `promise new Promise((resolve, reject) => {
-      if (typeof window.${project.name} !== 'undefined') {
-        return resolve(window.${project.name});
-      }
-      const script = document.createElement('script');
-      script.src = '${url}';
-      script.async = true;
-      script.onload = () => {
-        if (typeof window.${project.name} !== 'undefined') {
-          resolve(window.${project.name});
-        } else {
-          reject(new Error('Container ${project.name} not found on window after loading script'));
+      try {
+        if (typeof window['${rawName}'] !== 'undefined') return resolve(window['${rawName}'])
+        if (typeof window['${safeName}'] !== 'undefined') return resolve(window['${safeName}'])
+        const script = document.createElement('script')
+        script.src = '${url}'
+        script.async = true
+        script.onload = () => {
+          if (typeof window['${rawName}'] !== 'undefined') return resolve(window['${rawName}'])
+          if (typeof window['${safeName}'] !== 'undefined') return resolve(window['${safeName}'])
+          reject(new Error('Container ${rawName} not found on window after loading script'))
         }
-      };
-      script.onerror = (error) => {
-        reject(new Error('Failed to load remote entry: ${url}'));
-      };
-      document.head.appendChild(script);
+        script.onerror = () => reject(new Error('Failed to load remote entry: ${url}'))
+        document.head.appendChild(script)
+      } catch (err) {
+        reject(err)
+      }
     })`
 
-    remotes[project.name] = promiseCode
+    remotes[rawName] = promiseCode
   })
 
   return remotes
