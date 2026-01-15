@@ -62,8 +62,29 @@ export function generateRemotesConfig(isDev = false) {
       url = isDev ? project.devUrl : project.prodPath
     }
 
-    // Module Federation 格式: name@url
-    remotes[project.name] = `${project.name}@${url}`
+    // 使用 promise 语法动态加载脚本并从 window 对象获取容器
+    // 这是因为 remotes 使用了 library: { type: 'window' } 配置
+    const promiseCode = `promise new Promise((resolve, reject) => {
+      if (typeof window.${project.name} !== 'undefined') {
+        return resolve(window.${project.name});
+      }
+      const script = document.createElement('script');
+      script.src = '${url}';
+      script.async = true;
+      script.onload = () => {
+        if (typeof window.${project.name} !== 'undefined') {
+          resolve(window.${project.name});
+        } else {
+          reject(new Error('Container ${project.name} not found on window after loading script'));
+        }
+      };
+      script.onerror = (error) => {
+        reject(new Error('Failed to load remote entry: ${url}'));
+      };
+      document.head.appendChild(script);
+    })`
+
+    remotes[project.name] = promiseCode
   })
 
   return remotes
