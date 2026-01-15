@@ -1,12 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "build": {
-    "env": {
-      "MFE_PROJECTA_URL": "https://pro-react-admin-ss8k.vercel.app/remoteEntry.js",
-      "MFE_PROJECTB_URL": "https://pro-react-admin-y9h4.vercel.app/remoteEntry.js"
-    }
-  },
   "buildCommand": "npm run build:mf:shell",
   "outputDirectory": "dist-shell",
   "rewrites": [
