@@ -17,13 +17,13 @@
  */
 export const remoteProjects = [
   {
-    name: 'ss8k',
+    name: 'projectA',
     devUrl: 'http://localhost:8081/remoteEntry.js',
     prodPath: '/projectA/remoteEntry.js',
     envKey: 'MFE_PROJECTA_URL', // 允许通过 process.env.MFE_PROJECTA_URL 覆盖
   },
   {
-    name: 'y9h4',
+    name: 'projectB',
     devUrl: 'http://localhost:8082/remoteEntry.js',
     prodPath: '/projectB/remoteEntry.js',
     envKey: 'MFE_PROJECTB_URL',
