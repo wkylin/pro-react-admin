@@ -165,11 +165,11 @@ src/projects/
 
 ### 🆕 如何新增一个新项目（推荐流程）
 
-1) 新建目录：`src/projects/<yourProject>/`
-2) 添加入口：`src/projects/<yourProject>/index.tsx`
-3) （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.jsx`
-4) 新增 pages/components 业务代码
-5) 复制一份脚本（参考 `projectA/projectB`）或直接使用 `cross-env PROJECT=<yourProject> ...` 启动/构建
+1. 新建目录：`src/projects/<yourProject>/`
+2. 添加入口：`src/projects/<yourProject>/index.tsx`
+3. （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.jsx`
+4. 新增 pages/components 业务代码
+5. 复制一份脚本（参考 `projectA/projectB`）或直接使用 `cross-env PROJECT=<yourProject> ...` 启动/构建
 
 更多用法详见 [详细文档](./docs/README_PERMISSION.md) 与 [用户角色权限说明](./docs/USER_ROLE_PERMISSION.md)。
 
@@ -185,16 +185,16 @@ src/projects/
 
 ### ✅ 本地联调（3 个 devServer）
 
-1) 启动两个 remote：
+1. 启动两个 remote：
 
 - `npm run start:mf:projectA`（默认 `http://localhost:8081/`，remoteEntry：`/remoteEntry.js`）
 - `npm run start:mf:projectB`（默认 `http://localhost:8082/`，remoteEntry：`/remoteEntry.js`）
 
-2) 启动 Shell(host)：
+2. 启动 Shell(host)：
 
 - `npm run start:mf:shell`（默认 `http://localhost:8080/`）
 
-3) 访问：
+3. 访问：
 
 - `http://localhost:8080/#/portal`
 - `http://localhost:8080/#/projectA`

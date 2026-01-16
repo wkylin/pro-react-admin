@@ -65,6 +65,7 @@ npx cross-env NODE_ENV=development MFE_ROLE=host webpack serve --config webpack/
 ### Remote 应用（远程项目）
 
 启动 projectA：
+
 ```bash
 # 推荐
 npm run start:mf:projectA
@@ -74,6 +75,7 @@ npx cross-env NODE_ENV=development MFE_ROLE=remote PROJECT=projectA webpack serv
 ```
 
 启动 projectB：
+
 ```bash
 # 推荐
 npm run start:mf:projectB
@@ -101,6 +103,7 @@ npx cross-env PROJECT=shell MFE_ROLE=host PUBLIC_URL=/ SENTRY_SOURCE_MAP=no BUIL
 #### 构建远程应用（Remote）
 
 构建 projectA：
+
 ```bash
 # 推荐
 npm run build:mf:projectA
@@ -112,6 +115,7 @@ npx cross-env PROJECT=projectA MFE_ROLE=remote PUBLIC_URL=/projectA/ SENTRY_SOUR
 输出目录：`dist-projectA/`
 
 构建 projectB：
+
 ```bash
 # 推荐
 npm run build:mf:projectB
@@ -254,7 +258,7 @@ services:
       args:
         MFE_ROLE: host
     ports:
-      - "80:80"
+      - '80:80'
     networks:
       - mfe-network
 
@@ -266,7 +270,7 @@ services:
         PROJECT_NAME: projectA
         MFE_ROLE: remote
     ports:
-      - "8081:80"
+      - '8081:80'
     networks:
       - mfe-network
 
@@ -278,7 +282,7 @@ services:
         PROJECT_NAME: projectB
         MFE_ROLE: remote
     ports:
-      - "8082:80"
+      - '8082:80'
     networks:
       - mfe-network
 
@@ -288,6 +292,7 @@ networks:
 ```
 
 启动所有服务：
+
 ```bash
 docker-compose up -d
 ```
@@ -348,6 +353,7 @@ jobs:
 #### 为什么推荐独立项目？
 
 将多个 MFE 放在同一 Vercel 项目 + 子路径下，使用 `publicPath: 'auto'` 经常出问题：
+
 - 刷新页面或深层路由时 `document.currentScript.src` 推断错误
 - Vercel rewrites 与 Module Federation chunk 加载互相干扰
 - 调试困难，排错成本高
@@ -370,15 +376,16 @@ jobs:
 
 在 Vercel Dashboard 中创建三个独立项目，连接同一个 Git 仓库：
 
-| 项目名 | 配置文件 | 用途 |
-|--------|----------|------|
-| `pro-react-admin-shell` | `vercel.shell.json` | Host 主应用 |
-| `pro-react-admin-projecta` | `vercel.projectA.json` | Remote A |
-| `pro-react-admin-projectb` | `vercel.projectB.json` | Remote B |
+| 项目名                     | 配置文件               | 用途        |
+| -------------------------- | ---------------------- | ----------- |
+| `pro-react-admin-shell`    | `vercel.shell.json`    | Host 主应用 |
+| `pro-react-admin-projecta` | `vercel.projectA.json` | Remote A    |
+| `pro-react-admin-projectb` | `vercel.projectB.json` | Remote B    |
 
 #### 步骤 2: 配置各项目
 
 **Shell (Host) 项目设置：**
+
 - Framework Preset: `Other`
 - Build Command: `npm run build:mf:shell`
 - Output Directory: `dist-shell`
@@ -389,11 +396,13 @@ jobs:
   ```
 
 **ProjectA (Remote) 项目设置：**
+
 - Framework Preset: `Other`
 - Build Command: `cross-env PROJECT=projectA MFE_ROLE=remote npm run build:mf`
 - Output Directory: `dist-projectA`
 
 **ProjectB (Remote) 项目设置：**
+
 - Framework Preset: `Other`
 - Build Command: `cross-env PROJECT=projectB MFE_ROLE=remote npm run build:mf`
 - Output Directory: `dist-projectB`
@@ -422,6 +431,7 @@ projectb.yourdomain.com      → ProjectB (Remote)
 ```
 
 然后更新 Shell 的环境变量：
+
 ```
 MFE_PROJECTA_URL=https://projecta.yourdomain.com/remoteEntry.js
 MFE_PROJECTB_URL=https://projectb.yourdomain.com/remoteEntry.js
@@ -436,6 +446,7 @@ MFE_PROJECTB_URL=https://projectb.yourdomain.com/remoteEntry.js
 - `vercel.projectB.json` - ProjectB (Remote) 配置
 
 每个配置文件都包含：
+
 - `buildCommand`: 构建命令
 - `outputDirectory`: 输出目录
 - `rewrites`: SPA 路由支持
@@ -489,6 +500,7 @@ VITE_API_BASE_URL=https://api.example.com
 ### 1. 检查文件结构
 
 确保所有 `remoteEntry.js` 文件可访问：
+
 - 主应用：`https://myapp.example.com/`
 - projectA：`https://myapp.example.com/projectA/remoteEntry.js`
 - projectB：`https://myapp.example.com/projectB/remoteEntry.js`
@@ -496,6 +508,7 @@ VITE_API_BASE_URL=https://api.example.com
 ### 2. 浏览器控制台检查
 
 打开主应用，查看控制台：
+
 ```javascript
 // 应该能看到类似输出
 [MFE] Remote projects configured: projectA, projectB
@@ -504,6 +517,7 @@ VITE_API_BASE_URL=https://api.example.com
 ### 3. 网络面板检查
 
 检查是否成功加载了远程入口文件：
+
 - `remoteEntry.js` 应该返回 200 状态
 - 动态加载的 chunk 文件也应该成功加载
 
@@ -514,6 +528,7 @@ VITE_API_BASE_URL=https://api.example.com
 **原因**: 路径配置不正确
 
 **解决**:
+
 - 检查 `webpack/mfe.config.js` 中的 `prodPath` 是否正确
 - 检查 Nginx 配置是否正确映射路径
 - 确认文件确实存在于目标目录
@@ -523,6 +538,7 @@ VITE_API_BASE_URL=https://api.example.com
 **原因**: 跨域配置问题
 
 **解决**:
+
 - 如果同域部署，使用相对路径
 - 如果跨域部署，配置正确的 CORS 头
 - 使用完整的 HTTPS URL
@@ -532,6 +548,7 @@ VITE_API_BASE_URL=https://api.example.com
 **原因**: 不同应用的依赖版本不一致
 
 **解决**:
+
 - 统一所有应用的 React、Antd 等关键依赖版本
 - 检查 `package.json` 确保版本一致
 - 使用 `npm list <package>` 检查实际安装版本
@@ -541,6 +558,7 @@ VITE_API_BASE_URL=https://api.example.com
 **原因**: SPA 路由与静态文件服务冲突
 
 **解决**:
+
 - 使用 `try_files $uri $uri/ /index.html` 配置
 - 确保 `publicPath` 设置正确（通常为 'auto' 或 '/'）
 
@@ -562,6 +580,7 @@ VITE_API_BASE_URL=https://api.example.com
 ## 监控与日志
 
 建议添加以下监控：
+
 - 远程模块加载成功率
 - 加载时间监控
 - 错误日志收集

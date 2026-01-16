@@ -109,23 +109,23 @@ export function parseRemotesFromEnv() {
   if (!remotesEnv) return remoteProjects
 
   try {
-    const parsed = remotesEnv.split(',').map((item) => {
-      const [name, url] = item.trim().split('@')
-      if (!name || !url) return null
+    const parsed = remotesEnv
+      .split(',')
+      .map((item) => {
+        const [name, url] = item.trim().split('@')
+        if (!name || !url) return null
 
-      return {
-        name: name.trim(),
-        devUrl: url.trim(),
-        prodPath: url.trim(),
-      }
-    }).filter(Boolean)
+        return {
+          name: name.trim(),
+          devUrl: url.trim(),
+          prodPath: url.trim(),
+        }
+      })
+      .filter(Boolean)
 
     // 合并配置：环境变量优先
-    const envNames = new Set(parsed.map(p => p.name))
-    const result = [
-      ...parsed,
-      ...remoteProjects.filter(p => !envNames.has(p.name))
-    ]
+    const envNames = new Set(parsed.map((p) => p.name))
+    const result = [...parsed, ...remoteProjects.filter((p) => !envNames.has(p.name))]
 
     return result
   } catch (error) {
