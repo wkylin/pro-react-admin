@@ -1,0 +1,40 @@
+// === MDX 全局变量 (加前缀以防冲突) ===
+:root {
+  --mdx-bg-body: #f8fafc;
+  --mdx-bg-surface: #ffffff;
+  --mdx-bg-toolbar: #ffffff;
+  --mdx-border: #e2e8f0;
+  --mdx-text-main: #0f172a;
+  --mdx-text-muted: #64748b;
+  --mdx-primary: #2563eb;
+  --mdx-primary-hover: #1d4ed8;
+  --mdx-code-bg: #1e293b;
+  --mdx-code-text: #e2e8f0;
+  --mdx-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --mdx-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+// 深色模式变量
+[data-mdx-theme="dark"] {
+  --mdx-bg-body: #0f172a;
+  --mdx-bg-surface: #1e293b;
+  --mdx-bg-toolbar: #1e293b;
+  --mdx-border: #334155;
+  --mdx-text-main: #f1f5f9;
+  --mdx-text-muted: #94a3b8;
+  --mdx-primary: #3b82f6;
+  --mdx-primary-hover: #60a5fa;
+  --mdx-code-bg: #020617;
+}
+
+// === 全局重置 ===
+* {
+  box-sizing: border-box;
+  outline: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}

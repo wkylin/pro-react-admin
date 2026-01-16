@@ -1,4 +1,5 @@
 import FixTabPanel from '@stateless/FixTabPanel'
+import ProMdxEditor from '@stateless/MdxEditor'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
@@ -26,6 +27,7 @@ const codeString = `const profile = {
 const Profile = () => {
   return (
     <FixTabPanel>
+      <ProMdxEditor />
       <div className="code-window relative h-full w-full bg-gray-900 shadow-black">
         <div className="relative z-10 flex items-center bg-gray-800 px-4 py-2">
           <div className="flex space-x-2">

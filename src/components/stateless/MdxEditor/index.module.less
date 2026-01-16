@@ -1,0 +1,60 @@
+@import './styles/global.less';
+
+.mdxApp {
+  font-family: inherit;
+  background: var(--mdx-bg-body);
+  color: var(--mdx-text-main);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+.mdxMainContent {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.mdxToast {
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  z-index: 1000;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--mdx-bg-surface);
+  border: 1px solid var(--mdx-border);
+  box-shadow: var(--mdx-shadow-md);
+  color: var(--mdx-text-main);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.mdxToast_success {
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.mdxToast_error {
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+// 布局模式 (依赖 global.less 变量)
+.viewSplit :global(.mdxEditorCol) {
+  width: 50%;
+  border-right: 1px solid var(--mdx-border);
+}
+.viewSplit :global(.mdxSourceCol) {
+  display: block;
+  width: 50%;
+}
+.viewCode :global(.mdxEditorCol) {
+  display: none;
+}
+.viewCode :global(.mdxSourceCol) {
+  display: block;
+  width: 100%;
+}

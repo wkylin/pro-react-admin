@@ -1,0 +1,99 @@
+@import '../../styles/global.less';
+
+.mdxToolbar {
+  background: var(--mdx-bg-toolbar);
+  border-bottom: 1px solid var(--mdx-border);
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.mdxToolbarLeft {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mdxToolbarRight {
+  margin-left: auto;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.mdxViewToggle {
+  background: var(--mdx-bg-body);
+  padding: 3px;
+  border-radius: 8px;
+  display: flex;
+  border: 1px solid var(--mdx-border);
+}
+
+.mdxViewOpt {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  color: var(--mdx-text-muted);
+  user-select: none;
+  line-height: 1;
+
+  &:hover {
+    background: rgba(0,0,0,0.05);
+  }
+
+  &.active {
+    background: var(--mdx-bg-surface);
+    color: var(--mdx-text-main);
+    box-shadow: var(--mdx-shadow-sm);
+    font-weight: 500;
+  }
+}
+
+.mdxSeparator {
+  width: 1px;
+  height: 24px;
+  background: var(--mdx-border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.mdxToolBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--mdx-text-muted);
+  min-width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.2s;
+  position: relative;
+
+  &:hover {
+    background: var(--mdx-bg-body);
+    color: var(--mdx-text-main);
+    border-color: var(--mdx-border);
+  }
+
+  &.active {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--mdx-primary);
+    border-color: rgba(37, 99, 235, 0.2);
+  }
+}
+
+.mdxFileInput {
+  display: none;
+}

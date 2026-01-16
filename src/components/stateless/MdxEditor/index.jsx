@@ -1,0 +1,150 @@
+import React, { useMemo, useRef, useState, useEffect, useCallback } from 'react'
+import Header from './components/Header/index'
+import Toolbar from './components/Toolbar/index'
+import EditorCore from './components/EditorCore/index'
+import SourceView from './components/SourceView/index'
+import Footer from './components/Footer/index'
+import { useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Placeholder from '@tiptap/extension-placeholder'
+import Image from '@tiptap/extension-image'
+import Link from '@tiptap/extension-link'
+import { Table, TableRow, TableCell, TableHeader } from '@tiptap/extension-table'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
+import TextAlign from '@tiptap/extension-text-align'
+import Underline from '@tiptap/extension-underline'
+import { htmlToMarkdown, markdownToHtml } from './utils/markdownHelper'
+import styles from './index.module.less'
+import './styles/global.less'
+
+const initialMarkdown = `# Pro MDX Editor
+
+欢迎使用 **React 19** + **Tiptap** 编辑器。
+
+试着点击下方空白区域，或切换视图查看源码。
+
+> 开始创作吧！
+`
+
+export default function ProMdxEditor() {
+  const [viewMode, setViewMode] = useState('normal')
+  const [markdown, setMarkdown] = useState(initialMarkdown)
+  const [stats, setStats] = useState({ cursorPos: '行 1, 列 1', stats: '0 字符 / 0 词' })
+  const [toast, setToast] = useState(null)
+  const appRef = useRef(null)
+  const lastMarkdownFromEditorRef = useRef(markdown)
+  const toastTimerRef = useRef(null)
+  const defaultTheme = 'light'
+
+  const extensions = useMemo(() => {
+    return [
+      StarterKit,
+      Placeholder.configure({ placeholder: '输入 "/" 开始创作...' }),
+      Image.configure({ inline: true, allowBase64: true }),
+      Link.configure({ openOnClick: false }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableHeader,
+      TableCell,
+      TaskList,
+      TaskItem.configure({ nested: true }),
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+      Underline,
+    ]
+  }, [])
+
+  const editor = useEditor({
+    extensions,
+    content: markdownToHtml(markdown),
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML()
+      const md = htmlToMarkdown(html)
+      lastMarkdownFromEditorRef.current = md
+      setMarkdown(md)
+    },
+  })
+
+  useEffect(() => {
+    if (!editor) return
+    const isExternalChange = markdown !== lastMarkdownFromEditorRef.current
+    if (!isExternalChange) return
+
+    const newHtml = markdownToHtml(markdown)
+    editor.commands.setContent(newHtml, false)
+  }, [markdown, editor])
+
+  const showToast = useCallback((message, type = 'info') => {
+    setToast({ message, type })
+    if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
+    toastTimerRef.current = window.setTimeout(() => setToast(null), 2000)
+  }, [])
+
+  const handleThemeChange = useCallback((nextTheme) => {
+    const el = appRef.current
+    if (!el) return
+    el.setAttribute('data-mdx-theme', nextTheme)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current)
+    }
+  }, [])
+
+  const handleMarkdownChange = (newMarkdown) => setMarkdown(newMarkdown)
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(markdown)
+      showToast('已复制到剪贴板', 'success')
+    } catch {
+      try {
+        const textarea = document.createElement('textarea')
+        textarea.value = markdown
+        textarea.setAttribute('readonly', '')
+        textarea.style.position = 'fixed'
+        textarea.style.left = '-9999px'
+        textarea.style.top = '0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        const ok = document.execCommand('copy')
+        document.body.removeChild(textarea)
+        if (ok) {
+          showToast('已复制到剪贴板', 'success')
+        } else {
+          showToast('复制失败，请手动复制', 'error')
+        }
+      } catch {
+        showToast('复制失败，请手动复制', 'error')
+      }
+    }
+  }, [markdown, showToast])
+  const handleDownload = () => {
+    const blob = new Blob([markdown], { type: 'text/markdown' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'document.mdx'
+    a.click()
+  }
+
+  const viewClass = viewMode === 'split' ? styles.viewSplit : viewMode === 'code' ? styles.viewCode : ''
+
+  return (
+    <div ref={appRef} className={`${styles.mdxApp} ${viewClass}`} data-mdx-theme={defaultTheme}>
+      <Header
+        defaultTheme={defaultTheme}
+        onThemeChange={handleThemeChange}
+        onCopy={handleCopy}
+        onDownload={handleDownload}
+      />
+      <Toolbar editor={editor} viewMode={viewMode} onChangeViewMode={setViewMode} />
+      <main className={styles.mdxMainContent}>
+        <EditorCore editor={editor} onStatsUpdate={setStats} />
+        {viewMode !== 'normal' && <SourceView markdown={markdown} onChange={handleMarkdownChange} />}
+      </main>
+      <Footer cursorPos={stats.cursorPos} stats={stats.stats} />
+      {toast && <div className={`${styles.mdxToast} ${styles[`mdxToast_${toast.type}`] || ''}`}>{toast.message}</div>}
+    </div>
+  )
+}
