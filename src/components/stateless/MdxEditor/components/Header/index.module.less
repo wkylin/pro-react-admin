@@ -50,13 +50,23 @@
     background: var(--mdx-bg-body);
     color: var(--mdx-text-main);
   }
+}
 
-  &.primary {
-    background: var(--mdx-primary);
-    color: white;
+.mdxCopyBtn {
+  background: var(--mdx-primary);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s;
 
-    &:hover {
-      background: var(--mdx-primary-hover);
-    }
+  &:hover {
+    background: var(--mdx-primary-hover);
   }
 }

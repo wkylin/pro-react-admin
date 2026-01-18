@@ -32,10 +32,10 @@ export default function ProMdxEditor() {
   const [markdown, setMarkdown] = useState(initialMarkdown)
   const [stats, setStats] = useState({ cursorPos: '行 1, 列 1', stats: '0 字符 / 0 词' })
   const [toast, setToast] = useState(null)
-  const appRef = useRef(null)
+  const [theme, setTheme] = useState('light')
+  const [editorKey, setEditorKey] = useState(0) // 用于强制刷新工具栏
   const lastMarkdownFromEditorRef = useRef(markdown)
   const toastTimerRef = useRef(null)
-  const defaultTheme = 'light'
 
   const extensions = useMemo(() => {
     return [
@@ -63,6 +63,14 @@ export default function ProMdxEditor() {
       lastMarkdownFromEditorRef.current = md
       setMarkdown(md)
     },
+    onSelectionUpdate: () => {
+      // 触发工具栏更新
+      setEditorKey((k) => k + 1)
+    },
+    onTransaction: () => {
+      // 触发工具栏更新
+      setEditorKey((k) => k + 1)
+    },
   })
 
   useEffect(() => {
@@ -80,10 +88,8 @@ export default function ProMdxEditor() {
     toastTimerRef.current = window.setTimeout(() => setToast(null), 2000)
   }, [])
 
-  const handleThemeChange = useCallback((nextTheme) => {
-    const el = appRef.current
-    if (!el) return
-    el.setAttribute('data-mdx-theme', nextTheme)
+  const handleThemeChange = useCallback(() => {
+    setTheme((t) => (t === 'light' ? 'dark' : 'light'))
   }, [])
 
   useEffect(() => {
@@ -120,6 +126,7 @@ export default function ProMdxEditor() {
       }
     }
   }, [markdown, showToast])
+
   const handleDownload = () => {
     const blob = new Blob([markdown], { type: 'text/markdown' })
     const a = document.createElement('a')
@@ -129,16 +136,12 @@ export default function ProMdxEditor() {
   }
 
   const viewClass = viewMode === 'split' ? styles.viewSplit : viewMode === 'code' ? styles.viewCode : ''
+  const themeClass = theme === 'dark' ? styles.themeDark : ''
 
   return (
-    <div ref={appRef} className={`${styles.mdxApp} ${viewClass}`} data-mdx-theme={defaultTheme}>
-      <Header
-        defaultTheme={defaultTheme}
-        onThemeChange={handleThemeChange}
-        onCopy={handleCopy}
-        onDownload={handleDownload}
-      />
-      <Toolbar editor={editor} viewMode={viewMode} onChangeViewMode={setViewMode} />
+    <div className={`${styles.mdxApp} ${viewClass} ${themeClass}`}>
+      <Header theme={theme} onThemeChange={handleThemeChange} onCopy={handleCopy} onDownload={handleDownload} />
+      <Toolbar editor={editor} viewMode={viewMode} onChangeViewMode={setViewMode} editorKey={editorKey} />
       <main className={styles.mdxMainContent}>
         <EditorCore editor={editor} onStatsUpdate={setStats} />
         {viewMode !== 'normal' && <SourceView markdown={markdown} onChange={handleMarkdownChange} />}

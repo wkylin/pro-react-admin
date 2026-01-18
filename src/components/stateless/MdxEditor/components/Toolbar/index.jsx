@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useReducer, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import {
   Undo2,
   Redo2,
@@ -25,23 +25,13 @@ import {
 } from 'lucide-react'
 import styles from './index.module.less'
 
-function Toolbar({ editor, viewMode, onChangeViewMode }) {
+// editorKey 参数用于触发重新渲染，确保工具栏高亮状态更新
+function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
   const fileInputRef = useRef(null)
   const iconSize = 18
-  const [, forceRerender] = useReducer((x) => x + 1, 0)
 
-  useEffect(() => {
-    if (!editor) return
-
-    const rerender = () => forceRerender()
-    editor.on('selectionUpdate', rerender)
-    editor.on('transaction', rerender)
-
-    return () => {
-      editor.off('selectionUpdate', rerender)
-      editor.off('transaction', rerender)
-    }
-  }, [editor])
+  // editorKey 变化时强制重新计算
+  void editorKey
 
   const handleAction = (cmd, opt) => {
     if (!editor) return
@@ -114,16 +104,26 @@ function Toolbar({ editor, viewMode, onChangeViewMode }) {
 
   if (!editor) return null
 
-  const isBtnActive = (cmd, opt) => {
-    if (cmd === 'heading') {
-      const level = parseInt(opt, 10)
-      if (!isNaN(level)) return editor.isActive('heading', { level })
+  // 检查按钮是否处于激活状态
+  const checkActive = (cmd, opt) => {
+    if (!editor || !editor.isActive) return false
+    try {
+      if (cmd === 'heading') {
+        const level = Number(opt)
+        // 必须严格检查当前是否是指定级别的 heading
+        return level >= 1 && level <= 6 && editor.isActive('heading', { level })
+      }
+      if (cmd === 'textAlign') {
+        return opt ? editor.isActive({ textAlign: opt }) : false
+      }
+      if (cmd === 'link') {
+        return editor.isActive('link')
+      }
+      // 对于其他命令，直接检查
+      return editor.isActive(cmd)
+    } catch {
+      return false
     }
-    if (cmd === 'textAlign') {
-      if (opt) return editor.isActive('textAlign', { textAlign: opt })
-    }
-    if (cmd === 'link') return editor.isActive('link')
-    return editor.isActive(cmd)
   }
 
   return (
@@ -151,7 +151,7 @@ function Toolbar({ editor, viewMode, onChangeViewMode }) {
           if (btn.type === 'separator') {
             return <div key={`sep-${idx}`} className={styles.mdxSeparator} />
           }
-          const isActive = isBtnActive(btn.cmd, btn.opt)
+          const isActive = checkActive(btn.cmd, btn.opt)
           return (
             <button
               key={`${btn.cmd}-${idx}`}
@@ -195,4 +195,4 @@ function Toolbar({ editor, viewMode, onChangeViewMode }) {
   )
 }
 
-export default memo(Toolbar)
+export default Toolbar

@@ -78,7 +78,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
   position: relative;
 
   &:hover {
@@ -86,12 +86,12 @@
     color: var(--mdx-text-main);
     border-color: var(--mdx-border);
   }
+}
 
-  &.active {
-    background: rgba(37, 99, 235, 0.1);
-    color: var(--mdx-primary);
-    border-color: rgba(37, 99, 235, 0.2);
-  }
+.mdxToolBtn.active {
+  background: var(--mdx-active-bg, rgba(37, 99, 235, 0.1));
+  color: var(--mdx-primary);
+  border-color: var(--mdx-active-border, rgba(37, 99, 235, 0.2));
 }
 
 .mdxFileInput {

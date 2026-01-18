@@ -21,7 +21,7 @@ turndownService.addRule('tasklist', {
 // 表格规则 (基础支持)
 turndownService.addRule('table', {
   filter: 'table',
-  replacement: function (content, node) {
+  replacement: function (content) {
     return content
   },
 })
