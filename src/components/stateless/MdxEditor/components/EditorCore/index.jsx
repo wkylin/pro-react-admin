@@ -2,7 +2,7 @@ import React, { memo, useEffect, useRef } from 'react'
 import { EditorContent } from '@tiptap/react'
 import styles from './index.module.less'
 
-function EditorCore({ editor, onStatsUpdate }) {
+function EditorCore({ editor, onStatsUpdate, onScroll, scrollRef }) {
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -57,7 +57,14 @@ function EditorCore({ editor, onStatsUpdate }) {
   }, [editor])
 
   return (
-    <div className={`${styles.mdxEditorCol} mdxEditorCol`} ref={containerRef}>
+    <div
+      className={`${styles.mdxEditorCol} mdxEditorCol`}
+      ref={(el) => {
+        containerRef.current = el
+        if (scrollRef) scrollRef.current = el
+      }}
+      onScroll={onScroll}
+    >
       <EditorContent editor={editor} />
     </div>
   )

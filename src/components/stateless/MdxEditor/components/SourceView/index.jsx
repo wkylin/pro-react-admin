@@ -1,9 +1,9 @@
 import React, { memo } from 'react'
 import styles from './index.module.less'
 
-function SourceView({ markdown, onChange }) {
+function SourceView({ markdown, onChange, onScroll, scrollRef }) {
   return (
-    <div className={`${styles.mdxSourceCol} mdxSourceCol`}>
+    <div className={`${styles.mdxSourceCol} mdxSourceCol`} ref={scrollRef} onScroll={onScroll}>
       <textarea
         className={styles.mdxSourceTextarea}
         value={markdown}

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import {
   Undo2,
   Redo2,
@@ -22,6 +22,7 @@ import {
   Image,
   Link2,
   Table,
+  X,
 } from 'lucide-react'
 import styles from './index.module.less'
 
@@ -29,9 +30,26 @@ import styles from './index.module.less'
 function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
   const fileInputRef = useRef(null)
   const iconSize = 18
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [linkUrl, setLinkUrl] = useState('https://')
+  const linkInputRef = useRef(null)
 
   // editorKey 变化时强制重新计算
   void editorKey
+
+  const handleLinkSubmit = () => {
+    if (linkUrl && linkUrl !== 'https://') {
+      editor?.chain().focus().setLink({ href: linkUrl }).run()
+    }
+    setShowLinkModal(false)
+    setLinkUrl('https://')
+  }
+
+  const handleLinkCancel = () => {
+    setShowLinkModal(false)
+    setLinkUrl('https://')
+    editor?.chain().focus().run()
+  }
 
   const handleAction = (cmd, opt) => {
     if (!editor) return
@@ -40,8 +58,8 @@ function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
       return
     }
     if (cmd === 'link') {
-      const url = prompt('输入链接地址:', 'https://')
-      if (url) editor.chain().focus().setLink({ href: url }).run()
+      setShowLinkModal(true)
+      setTimeout(() => linkInputRef.current?.select(), 100)
       return
     }
     if (cmd === 'table') {
@@ -191,6 +209,43 @@ function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
           </button>
         </div>
       </div>
+
+      {/* 链接输入弹窗 */}
+      {showLinkModal && (
+        <div className={styles.linkModalOverlay} onClick={handleLinkCancel}>
+          <div className={styles.linkModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.linkModalHeader}>
+              <span>插入链接</span>
+              <button type="button" className={styles.linkModalClose} onClick={handleLinkCancel}>
+                <X size={16} />
+              </button>
+            </div>
+            <div className={styles.linkModalBody}>
+              <input
+                ref={linkInputRef}
+                type="url"
+                className={styles.linkInput}
+                value={linkUrl}
+                onChange={(e) => setLinkUrl(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleLinkSubmit()
+                  if (e.key === 'Escape') handleLinkCancel()
+                }}
+                placeholder="https://example.com"
+                autoFocus
+              />
+            </div>
+            <div className={styles.linkModalFooter}>
+              <button type="button" className={styles.linkBtnCancel} onClick={handleLinkCancel}>
+                取消
+              </button>
+              <button type="button" className={styles.linkBtnConfirm} onClick={handleLinkSubmit}>
+                确定
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
