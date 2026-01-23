@@ -1,0 +1,47 @@
+.box {
+  position: relative;
+  width: 400px;
+  height: 40px;
+  background-color: #ddd;
+  border-radius: 20px;
+}
+
+.bgColor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 40px;
+  border-radius: 20px;
+  background: linear-gradient(to right, #68cd0f, #35cca1);
+  transition: width 0.5s linear;
+}
+
+.bgColorS {
+  background: linear-gradient(to right, #68cd0f, #66e92d);
+}
+
+.txt {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.slider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 40px;
+  background: linear-gradient(to right, #b8b6b5, #949393);
+  text-align: center;
+  border-radius: 20px;
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: left 0.5s linear;
+}

@@ -63,6 +63,7 @@ import GradualSpacing from '@stateless/GradualSpacing'
 import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
 import InViewBasicMultiple from '@stateless/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
+import MoveChecker from '@stateless/MoveChecker'
 import FlipWords from '@stateless/FlipWords'
 import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
@@ -374,6 +375,7 @@ const Home = () => {
     }
   }
 
+  const mcRef = useRef(null)
   return (
     <FixTabPanel ref={scrollRef}>
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
@@ -430,6 +432,22 @@ const Home = () => {
             </>
           )}
         </section>
+      </section>
+      <section style={{ margin: '10px 0', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <MoveChecker
+          ref={mcRef}
+          onResult={(r) => console.log('result', r)}
+          initialText="请按住滑块，拖动到最后"
+          successText="验证通过"
+          boxBg="#ddd"
+          bgColor="linear-gradient(to right,#68cd0f,#35cca1)"
+          bgColorS="linear-gradient(to right,#68cd0f,#66e92d)"
+          sliderBg="#fff"
+          sliderSuccessBg="#ddd"
+        />
+        <Button type="primary" style={{ margin: '10px' }} onClick={() => mcRef.current && mcRef.current.reset()}>
+          重置验证
+        </Button>
       </section>
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
@@ -662,6 +680,7 @@ const Home = () => {
         <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
       </section>
       <LineBordered text="A line bordered text." />
+
       <section
         style={{
           display: 'flex',
