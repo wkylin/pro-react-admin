@@ -76,7 +76,7 @@ const Sidebar = ({ config, setConfig, isDeploying, onStart, onReset, onCancel, e
   )
 }
 
-// 子组件：进度条管道（使用 AntD Steps）
+// 子组件：进度条管道
 const Pipeline = ({ activeStep }) => {
   const steps = [{ title: '拉取代码' }, { title: '安装依赖' }, { title: '构建项目' }, { title: 'Nginx 部署' }]
   const getStatus = (i) => {
@@ -98,13 +98,13 @@ const Pipeline = ({ activeStep }) => {
   )
 }
 
-// 子组件：终端日志（使用 AntD Card + pre）
+// 子组件：终端日志
 const Terminal = ({ logs }) => {
   const terminalEndRef = useRef(null)
 
-  useEffect(() => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [logs])
+  // useEffect(() => {
+  //   terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  // }, [logs])
 
   return (
     <Card size="small" className={styles.terminal} styles={{ body: { padding: 12 } }}>
@@ -200,9 +200,6 @@ export default function AutoDeploy() {
   const errors = useMemo(() => validateConfig(config), [config])
   const isConfigValid = useMemo(() => Object.keys(errors).length === 0, [errors])
 
-  // Log once when app loads (avoid setting state in effect)
-  // Session flag handled during logs initialization to avoid calling setState in an effect
-
   useEffect(() => {
     try {
       const toSave = { ...(config || {}) }
@@ -229,7 +226,7 @@ export default function AutoDeploy() {
     }
 
     try {
-      setIsDeploying(true) // 立即设置状态
+      setIsDeploying(true)
       setShowResult(false)
       setStatusText('正在部署...')
       setStatusType('warning')
