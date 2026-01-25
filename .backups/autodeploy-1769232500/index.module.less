@@ -1,0 +1,447 @@
+// 变量定义
+@bg-terminal: #020617;
+@text-main: #f8fafc;
+@text-muted: #94a3b8;
+@accent: #2563eb;
+@accent-hover: #1e40af;
+@success: #10b981;
+@warning: #f59e0b;
+@error: #ef4444;
+@border: rgba(255,255,255,0.06);
+@font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #071023 0%, #031026 100%);
+  color: @text-main;
+}
+
+/* Header */
+.header {
+  height: 60px;
+  border-bottom: 1px solid @border;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  justify-content: space-between;
+
+  .brand {
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &-icon {
+      width: 24px;
+      height: 24px;
+      background: @accent;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+    }
+  }
+
+  .statusBadge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    background: rgba(255,255,255,0.03);
+    color: @text-main;
+    box-shadow: 0 2px 8px rgba(2,6,23,0.6);
+    transition: all 0.18s ease;
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+}
+
+/* Main Layout */
+.main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+  border-right: 1px solid rgba(255,255,255,0.03);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  min-height: calc(100vh - 60px);
+
+  h2 {
+    font-size: 1rem;
+    color: @text-muted;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    label {
+      font-size: 0.9rem;
+      color: @text-main;
+      font-weight: 600;
+    }
+
+    input,
+    textarea {
+      border: 1px solid rgba(255,255,255,0.03);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-family: @font-mono;
+      font-size: 0.9rem;
+      transition: border-color 0.18s, box-shadow 0.12s;
+      background: rgba(0,0,0,0.06);
+      color: @text-main;
+      resize: vertical;
+
+      &:focus {
+        outline: none;
+        border-color: @accent;
+        box-shadow: 0 0 0 4px rgba(59,130,246,0.06);
+      }
+    }
+    .fieldError {
+      color: @error;
+      font-size: 0.82rem;
+      margin-top: 6px;
+    }
+  }
+
+  .btn {
+    background: @accent;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.18s, transform 0.08s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 8px 0;
+
+    &:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(59,130,246,0.12); }
+    &:hover { background: @accent-hover; }
+    &:active { transform: translateY(1px); }
+    &:disabled { background: rgba(255,255,255,0.02); cursor: not-allowed; opacity: 0.6; }
+
+    &.primary { background: linear-gradient(90deg, @accent, darken(@accent,6%)); }
+    &.secondary { background: transparent; border: 1px solid rgba(255,255,255,0.04); color: @text-main }
+
+    /* smaller buttons inside history panel */
+    .historyPanel & { padding: 6px 8px; font-size: 0.86rem }
+  }
+
+  .envInfo {
+    margin-top: auto;
+    font-size: 0.8rem;
+    color: @text-muted;
+    p { margin-bottom: 4px; }
+  }
+}
+
+/* Deployment Area */
+.deploymentArea {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+.splitArea {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+}
+.leftPane { flex: 1; }
+.historyPanel {
+  width: 320px;
+  border: 1px solid @border;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.02);
+  overflow-y: auto;
+}
+.historyPanel h3 { margin-top: 0; color: @text-muted; font-size: 0.95rem }
+historyItem { border-bottom: 1px dashed fade(@border, 8%); padding: 8px 0; display:flex; flex-direction:column; gap:6px }
+historyMeta { display:flex; justify-content:space-between; align-items:center }
+historyActions { display:flex; gap:8px }
+.small { font-size: 0.78rem; color: @text-muted }
+.hint { color: @text-muted; font-size: 0.9rem }
+
+/* Actions row used by sidebar buttons */
+.actionsRow { display: flex; gap: 10px; align-items: center; }
+.actionsRow .ant-btn { min-width: 96px; }
+
+/* Stronger selectors to override AntD disabled styles so text/icons remain visible */
+.actionsRow .ant-btn[disabled],
+.actionsRow .ant-btn.ant-btn-disabled,
+.actionsRow .ant-btn-primary.ant-btn-disabled,
+.actionsRow .ant-btn[disabled].ant-btn-primary {
+  color: #fff !important;
+  opacity: 1 !important;
+  background: linear-gradient(90deg, @accent, darken(@accent,6%)) !important;
+  border-color: transparent !important;
+}
+
+.actionsRow .ant-btn[disabled] > span,
+.actionsRow .ant-btn.ant-btn-disabled > span,
+.actionsRow .ant-btn[disabled] .anticon,
+.actionsRow .ant-btn.ant-btn-disabled .anticon {
+  color: #fff !important;
+  opacity: 1 !important;
+}
+
+/* History panel disabled button overrides */
+.historyActions .ant-btn[disabled],
+.historyActions .ant-btn.ant-btn-disabled,
+.historyPanel .ant-btn[disabled],
+.historyPanel .ant-btn.ant-btn-disabled {
+  color: #fff !important;
+  opacity: 1 !important;
+  background: linear-gradient(90deg, @accent, darken(@accent,6%)) !important;
+  border-color: transparent !important;
+}
+.historyActions .ant-btn[disabled] .anticon,
+.historyActions .ant-btn.ant-btn-disabled .anticon {
+  color: #fff !important;
+}
+
+/* Ensure focus/active visuals remain subtle but readable */
+.actionsRow .ant-btn[disabled]:focus,
+.actionsRow .ant-btn.ant-btn-disabled:focus {
+  box-shadow: none !important;
+}
+
+/* Pipeline active animation */
+.step.active .stepIcon {
+  animation: stepActive 1.2s infinite;
+}
+
+@keyframes stepActive {
+  0% { transform: scale(1) rotate(0deg); }
+  35% { transform: scale(1.08) rotate(6deg); }
+  70% { transform: scale(0.98) rotate(-4deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Pipeline Steps */
+.pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.step {
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 12px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  position: relative;
+  opacity: 0.9;
+  transition: all 0.25s ease, border-color 0.18s ease;
+
+  &.active {
+    opacity: 1;
+    border-color: @accent;
+    box-shadow: 0 8px 28px rgba(59, 130, 246, 0.16);
+    transform: translateY(-6px);
+
+    .stepIcon {
+      border-color: @accent;
+      color: @accent;
+      animation: pulse 1.2s infinite;
+    }
+  }
+
+  &.completed {
+    opacity: 1;
+    border-color: @success;
+
+    .stepIcon {
+      border-color: @success;
+      background: @success;
+      color: white;
+    }
+
+    &::after { background: @success; }
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    z-index: 0;
+    transform: translateY(-50%);
+    transition: background 0.18s ease;
+  }
+  &:last-child::after { display: none; }
+
+  .stepIcon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+    border: 2px solid rgba(255,255,255,0.04);
+    background: rgba(255,255,255,0.02);
+    color: @text-main;
+    font-weight: 700;
+  }
+
+  .stepLabel { font-size: 0.9rem; font-weight: 600; color: @text-main; }
+}
+
+/* Terminal */
+.terminal {
+  background: @bg-terminal;
+  border: 1px solid @border;
+  border-radius: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+  &-header {
+    padding: 10px 16px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    align-items: center;
+    background: linear-gradient(90deg, rgba(255,255,255,0.01), transparent);
+
+    .dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      &.red { background: #ef4444; }
+      &.yellow { background: #f59e0b; }
+      &.green { background: #10b981; }
+    }
+  }
+
+  &-body {
+    padding: 16px;
+    font-family: @font-mono;
+    font-size: 0.9rem;
+    overflow-y: auto;
+    color: #d4d4d4;
+    line-height: 1.6;
+    flex: 1;
+    /* nicer thin scrollbar */
+    &::-webkit-scrollbar { width: 10px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb { background: darken(@bg-terminal, 12%); border-radius: 8px; }
+  }
+}
+
+.logLine {
+  margin-bottom: 4px;
+  word-break: break-all;
+  display: flex;
+
+  .logTime {
+    color: @text-muted;
+    margin-right: 12px;
+    min-width: 80px;
+    user-select: none;
+  }
+
+  .logCmd { color: @accent; }
+  .logSuccess { color: @success; }
+  .logWarning { color: @warning; }
+  .logError { color: @error; }
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background: @text-muted;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+/* Responsive: collapse to single column on small viewports */
+@media (max-width: 900px) {
+  .main {
+    grid-template-columns: 1fr;
+  }
+  .sidebar { padding: 16px; }
+  .deploymentArea { padding: 16px; }
+  .pipeline { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Result Card */
+.resultCard {
+  display: none;
+  border: 1px solid rgba(16,185,129,0.12);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  animation: slideUp 0.3s ease-out;
+  background: linear-gradient(180deg, rgba(16,185,129,0.03), transparent);
+
+  &.show { display: block; }
+
+  .resultIcon { font-size: 3.6rem; color: @success; margin-bottom: 12px; }
+  h3 { margin-bottom: 8px; }
+  p { color: @text-muted; margin-bottom: 20px; }
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  border-left: 4px solid @accent;
+  padding: 16px 24px;
+  border-radius: 4px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  transform: translateY(100px);
+  transition: transform 0.3s ease;
+  z-index: 100;
+
+  &.show { transform: translateY(0); }
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

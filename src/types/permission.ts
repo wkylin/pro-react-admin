@@ -47,6 +47,7 @@ export type Resource =
   | 'topology'
   | 'zustand'
   | 'svg-viewer'
+  | 'auto-deploy'
 
 /**
  * 权限点定义

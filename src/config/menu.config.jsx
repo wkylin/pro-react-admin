@@ -31,6 +31,7 @@ import {
   FileTextOutlined,
   ThunderboltOutlined,
   ToolOutlined,
+  CloudUploadOutlined,
 } from '@ant-design/icons'
 
 // 静态菜单配置
@@ -43,6 +44,12 @@ const rawMainLayoutMenu = [
     i18nKey: 'menu.svgViewer',
     path: '/svg-viewer',
     icon: <HeatMapOutlined />,
+  },
+  {
+    label: 'AUTO DEPLOY',
+    i18nKey: 'menu.autoDeploy',
+    path: '/auto-deploy',
+    icon: <CloudUploadOutlined />,
   },
   {
     label: 'Zustand演示',

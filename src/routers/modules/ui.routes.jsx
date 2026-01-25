@@ -76,4 +76,9 @@ export const uiRoutes = [
     name: '权限示例',
     element: <lazyComponents.PermissionExample />,
   },
+  {
+    path: 'auto-deploy',
+    name: '自动部署',
+    element: <lazyComponents.AutoDeploy />,
+  },
 ]

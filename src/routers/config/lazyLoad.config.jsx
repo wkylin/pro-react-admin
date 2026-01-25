@@ -72,6 +72,7 @@ export const lazyComponents = {
   Demo: lazyLoad(() => import('@pages/demo'), { preload: true }),
   Business: lazyLoad(() => import('@pages/business')),
   ZustandDemo: lazyLoad(() => import('@pages/zustand'), { preload: true }),
+  AutoDeploy: lazyLoad(() => import('@pages/autoDeploy'), { preload: true }),
 
   // UI 组件页面
   Motion: lazyLoad(() => import('@pages/motion')),

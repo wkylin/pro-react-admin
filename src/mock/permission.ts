@@ -36,6 +36,7 @@ const allRoutes = [
   '/topology',
   '/zustand',
   '/svg-viewer',
+  '/auto-deploy',
 ]
 
 // 超级管理员：所有路由
@@ -60,6 +61,7 @@ const managerRoutes = [
   '/postmessage',
   '/topology',
   '/svg-viewer',
+  '/auto-deploy',
 ]
 
 // 业务员：业务相关功能
@@ -194,6 +196,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/topology': 'topology:read',
   '/zustand': 'zustand:read',
   '/svg-viewer': 'svg-viewer:read',
+  '/auto-deploy': 'auto-deploy:read',
   '*': '*:*',
 }
 

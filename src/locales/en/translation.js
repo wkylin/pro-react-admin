@@ -79,6 +79,7 @@ const en = {
     mermaid: 'Mermaid',
     topology: 'Topology',
     svgViewer: 'Arc Preview',
+    autoDeploy: 'Auto Deploy',
     permissionExample: 'Permission',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',
