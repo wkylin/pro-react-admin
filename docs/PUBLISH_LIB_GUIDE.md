@@ -3,10 +3,12 @@
 此文档说明如何在本地完整生成、验证 `@w.ui/wui-react` 包并安全发布到 npm。推荐先在本地完成所有验证步骤，确认无误后再执行 `npm publish`。
 
 ## 要点概述
+
 - 目标包名：`@w.ui/wui-react`
 - 本仓库构建产物位于 `dist-lib`，发布时我们将把 `dist-lib` 作为发布根目录（`npm publish ./dist-lib`）。
 
 ## 发布前准备（前提）
+
 - 确保已登录 npm：
 
 ```bash
@@ -66,6 +68,7 @@ npm run dev
 ```
 
 测试要点：
+
 - 导入 `@w.ui/wui-react` 与子路径（例如 `@w.ui/wui-react/stateless`）是否能被 Vite 解析。
 - 确认 `UserIP` 等导出可从包中直接导入。
 
@@ -107,11 +110,14 @@ npm i @w.ui/wui-react
 ```
 
 ## 回滚与注意事项
+
 - NPM 一旦 publish，不建议 unpublish（尤其是已被使用的版本）。若需要回退，请发布新版本并标注为弃用或使用 `npm deprecate`。
 
 ## 附加建议
+
 - 可以把发布过程自动化到 CI（仅在 CI 环境有正确 npm token 的前提下），避免人工错误。
 - 保留 `dist-lib` 构建日志和 `npm pack` 产物以便回溯问题。
 
 ---
+
 文档已生成：docs/PUBLISH_LIB_GUIDE.md
