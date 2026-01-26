@@ -74,6 +74,10 @@ export default defineConfig({
           antd: 'antd',
           'react-router-dom': 'ReactRouterDOM',
         },
+        // Produce stable, predictable chunk filenames for consumers (no hashes)
+        chunkFileNames: (chunkInfo) => {
+          return chunkInfo.name ? `chunk-${chunkInfo.name}.js` : 'chunk-[hash].js'
+        },
         assetFileNames: (assetInfo) => {
           // Keep a stable css entry for consumers: `@w.ui/wui-react/style.css`
           if (assetInfo.name && assetInfo.name.endsWith('.css')) return 'style.css'
