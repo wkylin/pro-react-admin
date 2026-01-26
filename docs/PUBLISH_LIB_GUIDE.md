@@ -16,6 +16,16 @@ npm whoami
 
 - 确保你有 `@w.ui` scope 的发布权限；若仓库启用 2FA，请准备好 OTP。
 
+- 组件运行时依赖：本组件库在运行时依赖 `antd` 和 `react-router-dom`（作为 peer/dependency）。
+  - 在消费端/项目中使用本库前，请先安装这两个依赖：
+
+```bash
+npm install antd react-router-dom
+# 或使用 yarn
+# yarn add antd react-router-dom
+```
+  - 建议安装与库 `package.json` 中声明的 peerDependencies 相兼容的版本，若不确定请先查看根目录 `package.json` 中的 `peerDependencies` 字段。
+
 ## 本地生成与验证步骤
 
 1. 更新版本（在 repo 根的 `package.json`）：
