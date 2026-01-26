@@ -25,7 +25,7 @@ pnpm add @w.ui/wui-react
 
 ```jsx
 import React from 'react'
-import { OneTimePasscode, ColorfulText  } from '@w.ui/wui-react'
+import { OneTimePasscode, ColorfulText } from '@w.ui/wui-react'
 import '@w.ui/wui-react/style.css'
 
 const App = () => {
