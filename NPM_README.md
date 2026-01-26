@@ -25,21 +25,15 @@ pnpm add @w.ui/wui-react
 
 ```jsx
 import React from 'react'
-import { DescBox, RadioInput, Exception } from '@w.ui/wui-react'
+import { OneTimePasscode, ColorfulText  } from '@w.ui/wui-react'
 import '@w.ui/wui-react/style.css'
 
 const App = () => {
   return (
-    <div>
-      <DescBox title="示例标题" description="这是一个描述框组件" />
-      <RadioInput
-        options={[
-          { label: '选项1', value: '1' },
-          { label: '选项2', value: '2' },
-        ]}
-        onChange={(value) => console.log(value)}
-      />
-    </div>
+    <>
+      <OneTimePasscode variant="compact" />
+      <ColorfulText text="Hello, colorful world!" />
+    </>
   )
 }
 
