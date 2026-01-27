@@ -95,6 +95,8 @@ const config: StorybookConfig = {
         outDir: path.resolve(rootDir, 'storybook-static'),
         // manager 会负责清理 outputDir；这里避免 vite 误删 manager 文件
         emptyOutDir: false,
+        publicDir: false,
+        copyPublicDir: false,
       },
     })
 
