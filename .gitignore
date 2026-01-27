@@ -47,3 +47,7 @@ storybook-static
 # 路由权限扫描报告（脚本生成产物）
 /scripts/route-permission-report.json
 /scripts/route-permission-suggested.json
+
+# 防止 Windows NUL 文件被误提交
+nul
+NUL
