@@ -22,6 +22,7 @@ import ScrollLayout from '@stateless/ScrollLayout'
 import AnimatedList from '@stateless/AnimatedList'
 // import AnimationTabs from '@stateless/AnimationTabs'
 import StickyCard from '@stateless/StickyCard'
+import SafeHtml from '@stateless/SafeHtml'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
@@ -285,6 +286,7 @@ const ProDemo = () => {
             </div>
           </ScrollLayout>
         </div>
+
         <MusicPlayer />
         <TransferHistory />
         <FixCarousel />
@@ -297,7 +299,28 @@ const ProDemo = () => {
           ]}
           defaultActiveTab="tab1"
         />
-
+        <div className="mt-10 mb-6 rounded-lg border p-4 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold">SafeHtml Demo</h3>
+          <SafeHtml
+            html={`<h2>SafeHtml 极其复杂示例</h2>
+              <p style="color: #333; font-size:14px;" aria-label="demo" data-role="main" data-info="allowed">This paragraph has <strong>bold</strong>, <em>italic</em>, <del>deleted</del>, and <span style="display:inline-block" data-count="3">inline span</span>.</p>
+              <p>Bad link: <a href="javascript:alert('x')" onclick="alert('x')">Click me</a> — Good link: <a href="https://example.com" target="_blank" rel="noopener noreferrer">Example</a></p>
+              <div style="background-image:url('javascript:alert(1)');" data-onclick="hack" data-onexec="evil">Styled div with potentially dangerous style and data attributes</div>
+              <svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="orange" onmouseover="alert(1)"/></svg>
+              <table><caption>Sample Table</caption><thead><tr><th>Col 1</th><th>Col 2</th></tr></thead><tbody><tr><td colspan="2">Merged</td></tr><tr><td>Cell</td><td>Cell</td></tr></tbody></table>
+              <pre><code>const x = 1; console.log(x);</code></pre>
+              <ul><li>Item 1</li><li>Item 2<ul><li>Sub 1</li><li>Sub 2</li></ul></li></ul>
+              <custom-widget data-info="widget" data-onclick="should-be-removed">Custom Element Content</custom-widget>
+              <iframe src="https://evil.com"></iframe>
+              <script>window.demoScript=true;</script>
+              <form action="/submit"><input name="n" value="v"/></form>
+              <p>End of demo — includes many attributes: aria-hidden="true", data-test="ok" <span aria-hidden="true">hidden span</span></p>`}
+            tag="article"
+            fallback={<div>加载中…</div>}
+            className="demo-safehtml"
+            config={{}}
+          />
+        </div>
         <OrbitingCircles items={orbitingItems} />
         <StarBack />
 
