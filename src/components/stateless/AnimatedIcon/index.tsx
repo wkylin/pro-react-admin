@@ -50,9 +50,9 @@ const AnimatedIcon: React.FC<Props> = ({ children, variant = 'spin', mode = 'hov
 
   if (childType && (childType === 'svg' || childType.render || childType.displayName)) {
     try {
-      const MotionIcon = motion(children.type as any)
+      const MotionIcon = motion.create(children.type as any)
       return React.createElement(MotionIcon, { ...(children.props as any), ...rest, ...motionProps })
-    } catch (_) {
+    } catch {
       return (
         <motion.span {...motionProps} {...rest}>
           {children}

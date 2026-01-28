@@ -1,5 +1,5 @@
 import React from 'react'
-import { Smartphone, Monitor, Rocket } from 'lucide-react'
+import { Smartphone, Monitor, Rocket, Music } from 'lucide-react'
 import PageContainer from '@stateless/PageContainer'
 import FixTabPanel from '@stateless/FixTabPanel'
 
@@ -336,6 +336,31 @@ const ProDemo = () => {
             config={{}}
           />
         </div>
+
+        <div className="mt-8 mb-6 rounded-lg border p-4 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold">AnimatedIcon Demo</h3>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <AnimatedIcon variant="spin" mode="hover">
+              <Smartphone className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="pulse" mode="hover">
+              <Monitor className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="bounce" mode="hover">
+              <Rocket className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="draw" mode="hover">
+              <Music className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="spin" mode="auto">
+              <Rocket className="h-6 w-6 text-red-500" />
+            </AnimatedIcon>
+          </div>
+          <p className="text-muted-foreground mt-2 text-sm">
+            Hover icons to see interaction animations; the rightmost uses <code>mode="auto"</code>.
+          </p>
+        </div>
+
         <OrbitingCircles items={orbitingItems} />
         <StarBack />
 
