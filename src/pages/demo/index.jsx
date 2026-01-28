@@ -23,6 +23,7 @@ import AnimatedList from '@stateless/AnimatedList'
 // import AnimationTabs from '@stateless/AnimationTabs'
 import StickyCard from '@stateless/StickyCard'
 import SafeHtml from '@stateless/SafeHtml'
+import SandpackBasic from '@stateless/SandpackBasic'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
@@ -299,6 +300,7 @@ const ProDemo = () => {
           ]}
           defaultActiveTab="tab1"
         />
+        <SandpackBasic />
         <div className="mt-10 mb-6 rounded-lg border p-4 shadow-sm">
           <h3 className="mb-2 text-lg font-semibold">SafeHtml Demo</h3>
           <SafeHtml
