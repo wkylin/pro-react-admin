@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { CheckCircle, Circle } from 'lucide-react'
@@ -60,7 +61,15 @@ const StepIndicator = ({ currentStep, steps }) => {
                   boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined,
                 }}
               >
-                {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill="currentColor" />}
+                {index < currentStep ? (
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <CheckCircle size={16} />
+                  </AnimatedIcon>
+                ) : (
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <Circle size={16} fill="currentColor" />
+                  </AnimatedIcon>
+                )}
               </motion.div>
               <div className="flex-1">
                 <div
@@ -102,7 +111,15 @@ const StepIndicator = ({ currentStep, steps }) => {
                     boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined,
                   }}
                 >
-                  {index < currentStep ? <CheckCircle size={16} /> : <Circle size={16} fill="currentColor" />}
+                  {index < currentStep ? (
+                    <AnimatedIcon variant="spin" mode="hover">
+                      <CheckCircle size={16} />
+                    </AnimatedIcon>
+                  ) : (
+                    <AnimatedIcon variant="spin" mode="hover">
+                      <Circle size={16} fill="currentColor" />
+                    </AnimatedIcon>
+                  )}
                 </motion.div>
                 <div
                   className={clsx(

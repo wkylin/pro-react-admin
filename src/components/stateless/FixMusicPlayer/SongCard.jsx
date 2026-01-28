@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { Play, Pause } from 'lucide-react'
 
@@ -26,9 +27,13 @@ const SongCard = ({ song, isPlaying, isActive, onClick, themeMode, textColor, se
           }}
         >
           {isCurrentSong ? (
-            <Pause size={48} style={{ color: textColor }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <Pause size={48} style={{ color: textColor }} />
+            </AnimatedIcon>
           ) : (
-            <Play size={48} style={{ color: textColor }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <Play size={48} style={{ color: textColor }} />
+            </AnimatedIcon>
           )}
         </div>
         {isCurrentSong && (
@@ -40,7 +45,6 @@ const SongCard = ({ song, isPlaying, isActive, onClick, themeMode, textColor, se
           </div>
         )}
       </div>
-
       <div className="mt-3 flex flex-col sm:mt-4">
         <p className="truncate text-sm font-semibold sm:text-lg" style={{ color: textColor }}>
           {song.title}

@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { Tooltip } from 'antd'
 import { BookOpen, Wallet, TrendingUp, HelpCircle } from 'lucide-react'
@@ -16,7 +17,11 @@ const StatisticCard = ({ items = [] }) => {
 
   const getIcon = (iconName) => {
     const Icon = iconMap[iconName] || BookOpen
-    return <Icon size={24} />
+    return (
+      <AnimatedIcon variant="spin" mode="hover">
+        <Icon size={24} />
+      </AnimatedIcon>
+    )
   }
 
   return (
@@ -29,7 +34,9 @@ const StatisticCard = ({ items = [] }) => {
               <span>{item.title}</span>
               {item.showTooltip && (
                 <Tooltip placement={item.tooltipPlacement || 'top'} title={item.tooltipContent}>
-                  <HelpCircle size={16} className={styles.helpIcon} />
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <HelpCircle size={16} className={styles.helpIcon} />
+                  </AnimatedIcon>
                 </Tooltip>
               )}
             </div>

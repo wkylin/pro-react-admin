@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { FastForward, Rewind } from 'lucide-react'
 
@@ -12,13 +13,15 @@ const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime, textColor, th
 
   return (
     <div className="hidden flex-row items-center sm:flex">
-      <Rewind
-        size={16}
-        color={textColor}
-        onClick={() => setSeekTime(Math.max(0, appTime - 5))}
-        className="hidden cursor-pointer lg:mr-1 lg:block"
-        title="快退5秒"
-      />
+      <AnimatedIcon variant="spin" mode="hover">
+        <Rewind
+          size={16}
+          color={textColor}
+          onClick={() => setSeekTime(Math.max(0, appTime - 5))}
+          className="hidden cursor-pointer lg:mr-1 lg:block"
+          title="快退5秒"
+        />
+      </AnimatedIcon>
       <span className="mr-1 text-xs sm:text-sm" style={{ color: textColor }}>
         {formatTime(value)}
       </span>
@@ -38,13 +41,15 @@ const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime, textColor, th
       <span className="mb-0 text-xs sm:text-sm" style={{ color: textColor }}>
         {formatTime(max)}
       </span>
-      <FastForward
-        size={16}
-        color={textColor}
-        onClick={() => setSeekTime(Math.min(max, appTime + 5))}
-        className="hidden cursor-pointer lg:ml-1 lg:block"
-        title="快进5秒"
-      />
+      <AnimatedIcon variant="spin" mode="hover">
+        <FastForward
+          size={16}
+          color={textColor}
+          onClick={() => setSeekTime(Math.min(max, appTime + 5))}
+          className="hidden cursor-pointer lg:ml-1 lg:block"
+          title="快进5秒"
+        />
+      </AnimatedIcon>
     </div>
   )
 }

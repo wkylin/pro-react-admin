@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useEffect } from 'react'
 import { MapPin, Globe, Network, Loader2, RefreshCw } from 'lucide-react'
 
@@ -54,7 +55,10 @@ const UserIP = () => {
           onClick={fetchIpInfo}
           className="flex items-center gap-2 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-red-200 dark:bg-red-900/40 dark:hover:bg-red-900/60"
         >
-          <RefreshCw size={16} /> 重试
+          <AnimatedIcon variant="spin" mode="hover">
+            <RefreshCw size={16} />
+          </AnimatedIcon>{' '}
+          重试
         </button>
       </div>
     )
@@ -64,14 +68,19 @@ const UserIP = () => {
     <div className="relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-neutral-900/50">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">当前网络信息</h2>
-        {loading && <Loader2 className="animate-spin text-neutral-400" size={20} />}
+        {loading && (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Loader2 className="animate-spin text-neutral-400" size={20} />
+          </AnimatedIcon>
+        )}
       </div>
-
       <div className="grid gap-6 md:grid-cols-3">
         {/* IP Address */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
-            <Globe size={16} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <Globe size={16} />
+            </AnimatedIcon>
             <span>IP 地址</span>
           </div>
           <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
@@ -86,7 +95,9 @@ const UserIP = () => {
         {/* Location */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
-            <MapPin size={16} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <MapPin size={16} />
+            </AnimatedIcon>
             <span>地理位置</span>
           </div>
           <div className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
@@ -103,7 +114,9 @@ const UserIP = () => {
         {/* ISP */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
-            <Network size={16} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <Network size={16} />
+            </AnimatedIcon>
             <span>网络服务商</span>
           </div>
           <div className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
@@ -115,7 +128,6 @@ const UserIP = () => {
           </div>
         </div>
       </div>
-
       {!loading && ipData && (
         <div className="mt-6 border-t border-neutral-100 pt-4 text-xs text-neutral-400 dark:border-neutral-800 dark:text-neutral-500">
           数据来源: {ipData.org}

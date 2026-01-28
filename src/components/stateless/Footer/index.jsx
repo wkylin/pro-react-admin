@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { motion } from 'motion/react'
 import { ArrowUpRight } from 'lucide-react'
@@ -25,7 +26,9 @@ const FixFooter = () => {
                 className="w-full rounded-full border-2 px-4 py-2 pr-12 text-sm transition-all duration-300 outline-none sm:text-base"
               />
               <button className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-2 transition-colors duration-300">
-                <ArrowUpRight className="h-4 w-4" />
+                <AnimatedIcon variant="spin" mode="hover">
+                  <ArrowUpRight className="h-4 w-4" />
+                </AnimatedIcon>
               </button>
             </div>
           </div>
@@ -63,7 +66,9 @@ const FixFooter = () => {
                     className="flex items-center text-sm text-black transition-colors duration-300 sm:text-base dark:text-white"
                   >
                     {item.name}
-                    <ArrowUpRight className="ml-1 h-4 w-4" />
+                    <AnimatedIcon variant="spin" mode="hover">
+                      <ArrowUpRight className="ml-1 h-4 w-4" />
+                    </AnimatedIcon>
                   </a>
                 </motion.li>
               ))}

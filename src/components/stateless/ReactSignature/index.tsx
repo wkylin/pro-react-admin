@@ -1,6 +1,7 @@
 'use client'
 import clsx from 'clsx'
 import Signature, { type SignatureRef } from '@uiw/react-signature'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import { CheckIcon, CopyIcon, DownloadIcon, Eraser, RefreshCcwIcon } from 'lucide-react'
 import { type ComponentProps, useRef, useState } from 'react'
 import { useCopy } from '@hooks/useCopyToClipboard'
@@ -78,12 +79,16 @@ function ValidateButton({
     >
       {readonly ? (
         <>
-          <RefreshCcwIcon className="size-5" />
+          <AnimatedIcon variant="spin" mode="hover">
+            <RefreshCcwIcon className="size-5" />
+          </AnimatedIcon>
           <span className="sr-only">Reset</span>
         </>
       ) : (
         <>
-          <CheckIcon className="size-5" />
+          <AnimatedIcon variant="pulse" mode="hover">
+            <CheckIcon className="size-5" />
+          </AnimatedIcon>
           <span className="sr-only">Validate</span>
         </>
       )}

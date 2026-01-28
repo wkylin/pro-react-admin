@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { Play, Pause, SkipBack, SkipForward, Repeat, ListMusic, Clock, RefreshCw } from 'lucide-react'
 
@@ -210,11 +211,21 @@ const MusicPlayer = () => {
             className={`rounded-full p-2 transition ${isLooping ? 'bg-gray-800 text-green-400' : 'text-gray-400 hover:text-white'}`}
             title={isLooping ? '单曲循环' : '列表循环'}
           >
-            {isLooping ? <Repeat size={20} /> : <RefreshCw size={20} />}
+            {isLooping ? (
+              <AnimatedIcon variant="spin" mode="hover">
+                <Repeat size={20} />
+              </AnimatedIcon>
+            ) : (
+              <AnimatedIcon variant="spin" mode="hover">
+                <RefreshCw size={20} />
+              </AnimatedIcon>
+            )}
           </button>
 
           <button onClick={handlePrev} className="p-2 text-gray-300 transition hover:scale-110 hover:text-white">
-            <SkipBack size={28} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <SkipBack size={28} />
+            </AnimatedIcon>
           </button>
 
           {/* 播放/暂停大按钮 */}
@@ -223,27 +234,36 @@ const MusicPlayer = () => {
             className="rounded-full bg-green-500 p-4 text-black shadow-lg shadow-green-500/30 transition hover:scale-105 hover:bg-green-400 active:scale-95"
           >
             {isPlaying ? (
-              <Pause size={32} fill="currentColor" />
+              <AnimatedIcon variant="spin" mode="hover">
+                <Pause size={32} fill="currentColor" />
+              </AnimatedIcon>
             ) : (
-              <Play size={32} fill="currentColor" className="ml-1" />
+              <AnimatedIcon variant="spin" mode="hover">
+                <Play size={32} fill="currentColor" className="ml-1" />
+              </AnimatedIcon>
             )}
           </button>
 
           <button onClick={handleNext} className="p-2 text-gray-300 transition hover:scale-110 hover:text-white">
-            <SkipForward size={28} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <SkipForward size={28} />
+            </AnimatedIcon>
           </button>
 
           {/* 占位/菜单按钮 */}
           <button className="p-2 text-gray-400 hover:text-white">
-            <Clock size={20} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <Clock size={20} />
+            </AnimatedIcon>
           </button>
         </div>
       </div>
-
       {/* === 下半部分：播放列表 (固定高度，内部滚动) === */}
       <div className="flex flex-1 flex-col overflow-hidden bg-black/20 backdrop-blur-sm">
         <div className="flex items-center gap-2 bg-gray-900/50 px-6 py-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
-          <ListMusic size={14} />
+          <AnimatedIcon variant="spin" mode="hover">
+            <ListMusic size={14} />
+          </AnimatedIcon>
           <span>Playlist ({TRACKS.length})</span>
         </div>
 

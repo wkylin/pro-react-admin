@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 
@@ -8,20 +9,32 @@ const VolumeBar = ({ value, min, max, onChange, setVolume, textColor, themeMode 
   const getVolumeIcon = () => {
     if (volumeValue === 0)
       return (
-        <VolumeX
-          size={25}
-          color={textColor}
-          onClick={() => setVolume(1)}
-          className="cursor-pointer"
-          title="点击恢复音量"
-        />
+        <AnimatedIcon variant="spin" mode="hover">
+          <VolumeX
+            size={25}
+            color={textColor}
+            onClick={() => setVolume(1)}
+            className="cursor-pointer"
+            title="点击恢复音量"
+          />
+        </AnimatedIcon>
       )
     if (volumeValue <= 0.5)
       return (
-        <Volume1 size={25} color={textColor} onClick={() => setVolume(0)} className="cursor-pointer" title="点击静音" />
+        <AnimatedIcon variant="spin" mode="hover">
+          <Volume1
+            size={25}
+            color={textColor}
+            onClick={() => setVolume(0)}
+            className="cursor-pointer"
+            title="点击静音"
+          />
+        </AnimatedIcon>
       )
     return (
-      <Volume2 size={25} color={textColor} onClick={() => setVolume(0)} className="cursor-pointer" title="点击静音" />
+      <AnimatedIcon variant="spin" mode="hover">
+        <Volume2 size={25} color={textColor} onClick={() => setVolume(0)} className="cursor-pointer" title="点击静音" />
+      </AnimatedIcon>
     )
   }
 

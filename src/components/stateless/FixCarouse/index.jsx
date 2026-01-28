@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useEffect } from 'react'
 import { Select, Button } from 'antd'
 import { ChevronRight, ChevronLeft } from 'lucide-react'
@@ -61,7 +62,9 @@ const FixCarousel = ({ tradeList = [] }) => {
       </div>
       <div className="relative flex items-center justify-between">
         <Button className="cursor-pointer rounded-full" onClick={prevPage} disabled={currentPage === 0} shape="circle">
-          <ChevronLeft />
+          <AnimatedIcon variant="spin" mode="hover">
+            <ChevronLeft />
+          </AnimatedIcon>
         </Button>
         <div className="relative mx-4 flex-grow overflow-hidden">
           <div
@@ -94,7 +97,9 @@ const FixCarousel = ({ tradeList = [] }) => {
           disabled={currentPage === totalPages - 1 || data.length === 0}
           shape="circle"
         >
-          <ChevronRight />
+          <AnimatedIcon variant="spin" mode="hover">
+            <ChevronRight />
+          </AnimatedIcon>
         </Button>
       </div>
       <div className="mt-4 flex justify-center gap-4 space-x-4">

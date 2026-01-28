@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
@@ -115,7 +116,9 @@ const IconButton = React.memo(function IconButton({
       aria-label={label}
       disabled={disabled}
     >
-      <Icon size={15} />
+      <AnimatedIcon variant="spin" mode="hover">
+        <Icon size={15} />
+      </AnimatedIcon>
       <span className={`${styles.tooltip} ${tooltipPlacementClass}`} aria-hidden>
         {label}
       </span>
@@ -1777,7 +1780,6 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
           <IconButton Icon={Minimize2} label={t('svp.restoreMini')} onClick={handleRestoreMini} />
         </div>
       ) : null}
-
       <div ref={videoAnchorRef} className={styles.videoAnchor}>
         {isMini ? <div className={styles.miniPlaceholder} aria-hidden /> : null}
 
@@ -1861,7 +1863,15 @@ const SmartVideoPlayerInner = React.forwardRef(function SmartVideoPlayerInner(
                   handleTogglePause()
                 }}
               >
-                {isPaused ? <Play size={34} /> : <Pause size={34} />}
+                {isPaused ? (
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <Play size={34} />
+                  </AnimatedIcon>
+                ) : (
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <Pause size={34} />
+                  </AnimatedIcon>
+                )}
               </button>
             </div>
           ) : null}

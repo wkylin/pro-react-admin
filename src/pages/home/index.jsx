@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { version, useEffect, useState, useRef } from 'react'
 import { Input, Flex, Button } from 'antd'
 import { SendOutlined } from '@ant-design/icons'
@@ -453,7 +454,6 @@ const Home = () => {
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
         <AlternatingText alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
       </section>
-
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         X岁的你，正处在一个特殊的位置：
         <TypeWriter
@@ -478,7 +478,6 @@ const Home = () => {
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <SparklesText text="千山过尽，万里星辰!" sparklesCount={5} />
       </section>
-
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
       </section>
@@ -672,7 +671,6 @@ const Home = () => {
       </section>
       <section className={styles.line} />
       <section className={styles.linear} />
-
       {/* <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
       </section> */}
@@ -680,7 +678,6 @@ const Home = () => {
         <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
       </section>
       <LineBordered text="A line bordered text." />
-
       <section
         style={{
           display: 'flex',
@@ -689,7 +686,18 @@ const Home = () => {
           marginBottom: 40,
         }}
       >
-        <Atom /> <Merge /> <GitMerge /> <GitPullRequestArrow />
+        <AnimatedIcon variant="spin" mode="hover">
+          <Atom />
+        </AnimatedIcon>{' '}
+        <AnimatedIcon variant="spin" mode="hover">
+          <Merge />
+        </AnimatedIcon>{' '}
+        <AnimatedIcon variant="spin" mode="hover">
+          <GitMerge />
+        </AnimatedIcon>{' '}
+        <AnimatedIcon variant="spin" mode="hover">
+          <GitPullRequestArrow />
+        </AnimatedIcon>
       </section>
       <section style={{ marginBottom: 40, fontSize: 16 }}>
         <h2>Scroll direction: {`${scrollDir}`}</h2>
@@ -723,17 +731,14 @@ const Home = () => {
       <section>
         <GradientTracking />
       </section>
-
       <section style={{ margin: 40 }}>
         <BreatheText />
       </section>
-
       <section style={{ margin: '60px 0 40px 40px' }}>
         <div className={styles['video-box']}>
           <div className={styles['video-btn']}>b</div>
         </div>
       </section>
-
       {/* <section style={{ marginBottom: 40 }}>
         <ShiftingCard />
       </section> */}
@@ -816,7 +821,6 @@ const Home = () => {
       <section style={{ margin: '20px 0', fontSize: 24 }}>
         <GradualSpacing text="2025 年，是充满希望的一年。让我们放下过去的包袱，轻装上阵。用积极的心态去面对生活，用坚定的信念去追逐梦想。相信自己，只要我们努力奋斗，就一定能创造出属于自己的精彩人生。让我们一起逐光前行，奔赴新程，书写属于我们的辉煌篇章！" />
       </section>
-
       <section style={{ margin: '20px 0' }}>
         <ContentPlaceholder />
       </section>
@@ -869,7 +873,6 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <AnimateRipple>Click Me</AnimateRipple>
       </section>
-
       <section style={{ margin: 20 }}>
         <section className={styles.effect}> Hello CSS</section>
       </section>
@@ -882,14 +885,12 @@ const Home = () => {
           <span className={styles['button-label']}>Click Me</span>
         </button>
       </section>
-
       {/* <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
         <div className={styles['circle-1']}></div>
         <div className={styles['circle-2']}></div>
         <div className={styles['circle-3']}></div>
         <div className={styles['circle-4']}></div>
       </section> */}
-
       <section style={{ margin: 20 }} className={styles.eHElAY}>
         Hi, React!
       </section>
@@ -911,7 +912,6 @@ const Home = () => {
           Button
         </SlideButton>
       </section>
-
       <section>
         <CubeSpinner />
       </section>
@@ -921,7 +921,6 @@ const Home = () => {
       <section style={{ margin: '20px 0', fontSize: 40 }}>
         <NumberFlowFix />
       </section>
-
       <section style={{ position: 'relative', fontSize: 36 }}>
         I build
         <FlipWords
@@ -934,7 +933,6 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <ReactSignature />
       </section>
-
       <section style={{ margin: 20 }}>
         {dataSteps.map((step, index) => (
           <StaticStepper.StaticStep

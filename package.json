@@ -371,7 +371,7 @@
     "dayjs": "^1.11.19",
     "echarts": "^6.0.0",
     "esbuild": "^0.27.2",
-    "framer-motion": "^12.26.1",
+    "framer-motion": "^12.29.2",
     "fuse.js": "^7.1.0",
     "highlight.js": "^11.11.1",
     "hls.js": "^1.6.15",

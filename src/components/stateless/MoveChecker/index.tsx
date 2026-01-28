@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import styles from './index.module.less'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
 type ColorObject = { type?: string; colors: string[] }
@@ -241,8 +242,16 @@ const MoveChecker = forwardRef<MoveCheckerHandle, MoveCheckerProps>(
           {txt}
         </div>
         <div ref={sliderRef} className={styles.slider} onPointerDown={handlePointerDown} style={sliderStyle}>
-          {!isSuccess && <ArrowRight size={20} color={sliderIconColor} aria-hidden />}
-          {isSuccess && <CheckCircle size={22} color={sliderIconColor} aria-hidden />}
+          {!isSuccess && (
+            <AnimatedIcon variant="spin" mode="hover">
+              <ArrowRight size={20} color={sliderIconColor} aria-hidden />
+            </AnimatedIcon>
+          )}
+          {isSuccess && (
+            <AnimatedIcon variant="spin" mode="hover">
+              <CheckCircle size={22} color={sliderIconColor} aria-hidden />
+            </AnimatedIcon>
+          )}
         </div>
       </div>
     )

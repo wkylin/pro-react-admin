@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { motion, useAnimation } from 'framer-motion'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 
 const FloatingIcon = ({ children, initialX }) => {
   const [isClient, setIsClient] = useState(false)
@@ -63,7 +64,9 @@ FloatingIcon.propTypes = {
 
 export const SocialIcon = ({ icon: Icon, color, ...props }) => (
   <div className={`rounded-full p-3 ${color} shadow-lg transition-shadow hover:shadow-xl`}>
-    <Icon className="h-6 w-6 text-white" />
+    <AnimatedIcon variant="spin" mode="hover">
+      <Icon className="h-6 w-6 text-white" {...props} />
+    </AnimatedIcon>
   </div>
 )
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import { RefreshCw, Zap } from 'lucide-react'
 import { CaptchaUtils, Difficulty } from './utils'
 
@@ -192,7 +193,9 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
         <div className="flex items-center gap-2">
           <span>Slider Captcha</span>
           <span className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
-            <Zap size={12} />
+            <AnimatedIcon variant="pulse" mode="hover">
+              <Zap size={12} />
+            </AnimatedIcon>
             {getDifficultyLabel()}
           </span>
         </div>
@@ -201,7 +204,13 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
           disabled={isRefreshing}
           className="p-1 text-lg text-blue-500 transition-transform hover:rotate-180 disabled:opacity-50"
         >
-          <RefreshCw className={isRefreshing ? 'animate-spin' : ''} size={18} />
+          <AnimatedIcon
+            variant="spin"
+            mode={isRefreshing ? 'auto' : 'idle'}
+            className={isRefreshing ? 'animate-spin' : ''}
+          >
+            <RefreshCw size={18} />
+          </AnimatedIcon>
         </button>
       </div>
 

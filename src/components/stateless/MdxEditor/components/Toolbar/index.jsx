@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useMemo, useRef, useState } from 'react'
 import {
   Undo2,
@@ -89,33 +90,215 @@ function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
 
   const buttons = useMemo(
     () => [
-      { icon: <Undo2 size={iconSize} />, cmd: 'undo', tooltip: '撤销' },
-      { icon: <Redo2 size={iconSize} />, cmd: 'redo', tooltip: '重做' },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Undo2 size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'undo',
+        tooltip: '撤销',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Redo2 size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'redo',
+        tooltip: '重做',
+      },
       { type: 'separator' },
-      { icon: <Heading1 size={iconSize} />, cmd: 'heading', opt: '1', tooltip: 'H1' },
-      { icon: <Heading2 size={iconSize} />, cmd: 'heading', opt: '2', tooltip: 'H2' },
-      { icon: <Heading3 size={iconSize} />, cmd: 'heading', opt: '3', tooltip: 'H3' },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Heading1 size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'heading',
+        opt: '1',
+        tooltip: 'H1',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Heading2 size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'heading',
+        opt: '2',
+        tooltip: 'H2',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Heading3 size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'heading',
+        opt: '3',
+        tooltip: 'H3',
+      },
       { type: 'separator' },
-      { icon: <Bold size={iconSize} />, cmd: 'bold', tooltip: '加粗' },
-      { icon: <Italic size={iconSize} />, cmd: 'italic', tooltip: '斜体' },
-      { icon: <Underline size={iconSize} />, cmd: 'underline', tooltip: '下划线' },
-      { icon: <Strikethrough size={iconSize} />, cmd: 'strike', tooltip: '删除线' },
-      { icon: <Code size={iconSize} />, cmd: 'code', tooltip: '行内代码' },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Bold size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'bold',
+        tooltip: '加粗',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Italic size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'italic',
+        tooltip: '斜体',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Underline size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'underline',
+        tooltip: '下划线',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Strikethrough size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'strike',
+        tooltip: '删除线',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Code size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'code',
+        tooltip: '行内代码',
+      },
       { type: 'separator' },
-      { icon: <AlignLeft size={iconSize} />, cmd: 'textAlign', opt: 'left', tooltip: '左对齐' },
-      { icon: <AlignCenter size={iconSize} />, cmd: 'textAlign', opt: 'center', tooltip: '居中' },
-      { icon: <AlignRight size={iconSize} />, cmd: 'textAlign', opt: 'right', tooltip: '右对齐' },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <AlignLeft size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'textAlign',
+        opt: 'left',
+        tooltip: '左对齐',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <AlignCenter size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'textAlign',
+        opt: 'center',
+        tooltip: '居中',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <AlignRight size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'textAlign',
+        opt: 'right',
+        tooltip: '右对齐',
+      },
       { type: 'separator' },
-      { icon: <List size={iconSize} />, cmd: 'bulletList', tooltip: '无序列表' },
-      { icon: <ListOrdered size={iconSize} />, cmd: 'orderedList', tooltip: '有序列表' },
-      { icon: <ListTodo size={iconSize} />, cmd: 'taskList', tooltip: '任务列表' },
-      { icon: <Quote size={iconSize} />, cmd: 'blockquote', tooltip: '引用' },
-      { icon: <Braces size={iconSize} />, cmd: 'codeBlock', tooltip: '代码块' },
-      { icon: <Minus size={iconSize} />, cmd: 'horizontalRule', tooltip: '分割线' },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <List size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'bulletList',
+        tooltip: '无序列表',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <ListOrdered size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'orderedList',
+        tooltip: '有序列表',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <ListTodo size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'taskList',
+        tooltip: '任务列表',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Quote size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'blockquote',
+        tooltip: '引用',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Braces size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'codeBlock',
+        tooltip: '代码块',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Minus size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'horizontalRule',
+        tooltip: '分割线',
+      },
       { type: 'separator' },
-      { icon: <Image size={iconSize} />, cmd: 'image', tooltip: '插入图片' },
-      { icon: <Link2 size={iconSize} />, cmd: 'link', tooltip: '插入链接' },
-      { icon: <Table size={iconSize} />, cmd: 'table', tooltip: '插入表格' },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Image size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'image',
+        tooltip: '插入图片',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Link2 size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'link',
+        tooltip: '插入链接',
+      },
+      {
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Table size={iconSize} />
+          </AnimatedIcon>
+        ),
+        cmd: 'table',
+        tooltip: '插入表格',
+      },
     ],
     [iconSize]
   )
@@ -183,7 +366,6 @@ function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
           )
         })}
       </div>
-
       <div className={styles.mdxToolbarRight}>
         <div className={styles.mdxViewToggle} role="tablist" aria-label="View mode">
           <button
@@ -209,7 +391,6 @@ function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
           </button>
         </div>
       </div>
-
       {/* 链接输入弹窗 */}
       {showLinkModal && (
         <div className={styles.linkModalOverlay} onClick={handleLinkCancel}>
@@ -217,7 +398,9 @@ function Toolbar({ editor, viewMode, onChangeViewMode, editorKey }) {
             <div className={styles.linkModalHeader}>
               <span>插入链接</span>
               <button type="button" className={styles.linkModalClose} onClick={handleLinkCancel}>
-                <X size={16} />
+                <AnimatedIcon variant="spin" mode="hover">
+                  <X size={16} />
+                </AnimatedIcon>
               </button>
             </div>
             <div className={styles.linkModalBody}>

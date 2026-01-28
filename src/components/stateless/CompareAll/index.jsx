@@ -1,4 +1,5 @@
 'use client'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react'
 import { GitMerge } from 'lucide-react'
@@ -164,7 +165,9 @@ const Compare = ({
           <div className="absolute top-1/2 -right-10 h-3/4 w-10 -translate-y-1/2 [mask-image:radial-gradient(100px_at_left,white,transparent)]"></div>
           {showHandlebar && (
             <div className="absolute top-1/2 -right-2.5 z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]">
-              <GitMerge className="h-4 w-4 text-black" />
+              <AnimatedIcon variant="spin" mode="hover">
+                <GitMerge className="h-4 w-4 text-black" />
+              </AnimatedIcon>
             </div>
           )}
         </motion.div>
@@ -192,7 +195,6 @@ const Compare = ({
           ) : null}
         </AnimatePresence>
       </div>
-
       <AnimatePresence initial={false}>
         {secondImage ? (
           <motion.img

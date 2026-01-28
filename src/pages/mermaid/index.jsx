@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useRef, useCallback } from 'react'
 import MermaidHooks from '@stateful/mermaidHooks'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -72,10 +73,29 @@ const MermaidDemo = () => {
   const previewRef = useRef(null)
 
   const getSampleIcon = (type) => {
-    if (type === 'Git') return <GitBranch size={14} />
-    if (type === 'Timeline') return <Clock size={14} />
-    if (type === 'State') return <Activity size={14} />
-    return <FileCode size={14} />
+    if (type === 'Git')
+      return (
+        <AnimatedIcon variant="spin" mode="hover">
+          <GitBranch size={14} />
+        </AnimatedIcon>
+      )
+    if (type === 'Timeline')
+      return (
+        <AnimatedIcon variant="spin" mode="hover">
+          <Clock size={14} />
+        </AnimatedIcon>
+      )
+    if (type === 'State')
+      return (
+        <AnimatedIcon variant="spin" mode="hover">
+          <Activity size={14} />
+        </AnimatedIcon>
+      )
+    return (
+      <AnimatedIcon variant="spin" mode="hover">
+        <FileCode size={14} />
+      </AnimatedIcon>
+    )
   }
 
   const handleSampleChange = (type) => {
@@ -156,7 +176,9 @@ const MermaidDemo = () => {
             <Card
               title={
                 <div className="flex items-center gap-2">
-                  <Code2 size={18} />
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <Code2 size={18} />
+                  </AnimatedIcon>
                   <span>Editor</span>
                 </div>
               }
@@ -212,22 +234,45 @@ const MermaidDemo = () => {
             <Card
               title={
                 <div className="flex items-center gap-2">
-                  <ImageIcon size={18} />
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <ImageIcon size={18} />
+                  </AnimatedIcon>
                   <span>Preview</span>
                 </div>
               }
               extra={
                 <Space>
                   <Tooltip title="Copy Image">
-                    <Button icon={<Copy size={16} />} onClick={handleCopyImage} />
+                    <Button
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <Copy size={16} />
+                        </AnimatedIcon>
+                      }
+                      onClick={handleCopyImage}
+                    />
                   </Tooltip>
                   <Tooltip title="Download PNG">
-                    <Button icon={<Download size={16} />} onClick={() => handleDownload('png')}>
+                    <Button
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <Download size={16} />
+                        </AnimatedIcon>
+                      }
+                      onClick={() => handleDownload('png')}
+                    >
                       PNG
                     </Button>
                   </Tooltip>
                   <Tooltip title="Download SVG">
-                    <Button icon={<Download size={16} />} onClick={() => handleDownload('svg')}>
+                    <Button
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <Download size={16} />
+                        </AnimatedIcon>
+                      }
+                      onClick={() => handleDownload('svg')}
+                    >
                       SVG
                     </Button>
                   </Tooltip>
@@ -251,13 +296,37 @@ const MermaidDemo = () => {
                       style={{ backgroundColor: token.colorBgContainer }}
                     >
                       <Tooltip title="Zoom In" placement="left">
-                        <Button type="text" icon={<ZoomIn size={18} />} onClick={() => zoomIn()} />
+                        <Button
+                          type="text"
+                          icon={
+                            <AnimatedIcon variant="spin" mode="hover">
+                              <ZoomIn size={18} />
+                            </AnimatedIcon>
+                          }
+                          onClick={() => zoomIn()}
+                        />
                       </Tooltip>
                       <Tooltip title="Zoom Out" placement="left">
-                        <Button type="text" icon={<ZoomOut size={18} />} onClick={() => zoomOut()} />
+                        <Button
+                          type="text"
+                          icon={
+                            <AnimatedIcon variant="spin" mode="hover">
+                              <ZoomOut size={18} />
+                            </AnimatedIcon>
+                          }
+                          onClick={() => zoomOut()}
+                        />
                       </Tooltip>
                       <Tooltip title="Reset" placement="left">
-                        <Button type="text" icon={<RotateCcw size={18} />} onClick={() => resetTransform()} />
+                        <Button
+                          type="text"
+                          icon={
+                            <AnimatedIcon variant="spin" mode="hover">
+                              <RotateCcw size={18} />
+                            </AnimatedIcon>
+                          }
+                          onClick={() => resetTransform()}
+                        />
                       </Tooltip>
                     </div>
                     <div className="h-full w-full cursor-move" style={{ backgroundColor: token.colorBgLayout }}>

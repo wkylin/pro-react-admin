@@ -1,5 +1,7 @@
 'use client'
 
+import AnimatedIcon from '@stateless/AnimatedIcon'
+
 import React, { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
 import { Highlight, themes } from 'prism-react-renderer'
@@ -67,7 +69,15 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage = 'bash', 
             </Highlight>
           </div>
           <button className={styles.copyButton} onClick={copyToClipboard} title="Copy command">
-            {copied ? <Check className={`${styles.icon} ${styles.checkIcon}`} /> : <Copy className={styles.icon} />}
+            {copied ? (
+              <AnimatedIcon variant="spin" mode="hover">
+                <Check className={`${styles.icon} ${styles.checkIcon}`} />
+              </AnimatedIcon>
+            ) : (
+              <AnimatedIcon variant="spin" mode="hover">
+                <Copy className={styles.icon} />
+              </AnimatedIcon>
+            )}
           </button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState } from 'react'
 import { theme } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -188,7 +189,9 @@ const Contact = () => {
               className="flex w-full items-center justify-center space-x-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg"
             >
               <span>Send Message</span>
-              <Send className="h-4 w-4" />
+              <AnimatedIcon variant="spin" mode="hover">
+                <Send className="h-4 w-4" />
+              </AnimatedIcon>
             </button>
           </form>
           {status && (

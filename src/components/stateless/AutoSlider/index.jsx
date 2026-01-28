@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useEffect, useRef } from 'react'
 import { ArrowRight, ArrowLeft, Quote } from 'lucide-react'
 import styles from './index.module.less'
@@ -93,15 +94,21 @@ const AutoSlider = () => {
               <h4>{name}</h4>
               <p className={styles['title']}>{title}</p>
               <p className={styles['text']}>{quote}</p>
-              <Quote className={styles['icon']} />
+              <AnimatedIcon variant="spin" mode="hover">
+                <Quote className={styles['icon']} />
+              </AnimatedIcon>
             </article>
           )
         })}
         <button className={styles['prev']} onClick={() => handleIndexChange(index - 1)}>
-          <ArrowLeft />
+          <AnimatedIcon variant="spin" mode="hover">
+            <ArrowLeft />
+          </AnimatedIcon>
         </button>
         <button className={styles['next']} onClick={() => handleIndexChange(index + 1)}>
-          <ArrowRight />
+          <AnimatedIcon variant="spin" mode="hover">
+            <ArrowRight />
+          </AnimatedIcon>
         </button>
       </div>
     </section>

@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState } from 'react'
 import clsx from 'clsx'
 import { Check, Copy } from 'lucide-react'
@@ -44,7 +45,15 @@ const CodeContainer = ({ children }) => {
         className="absolute top-2 right-2 rounded-md p-1 text-neutral-500 hover:bg-neutral-200 dark:text-neutral-400 dark:hover:bg-neutral-700"
         aria-label="Copy code"
       >
-        {copied ? <Check size={16} /> : <Copy size={16} />}
+        {copied ? (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Check size={16} />
+          </AnimatedIcon>
+        ) : (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Copy size={16} />
+          </AnimatedIcon>
+        )}
       </button>
     </div>
   )

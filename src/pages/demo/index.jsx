@@ -23,6 +23,7 @@ import AnimatedList from '@stateless/AnimatedList'
 // import AnimationTabs from '@stateless/AnimationTabs'
 import StickyCard from '@stateless/StickyCard'
 import SafeHtml from '@stateless/SafeHtml'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import SandpackBasic from '@stateless/SandpackBasic'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
@@ -215,20 +216,32 @@ const tagCardList = [
 
 const orbitingItems = [
   {
-    content: <Monitor className="h-6 w-6 text-purple-500" />,
+    content: (
+      <AnimatedIcon variant="pulse" mode="hover">
+        <Monitor className="h-6 w-6 text-purple-500" />
+      </AnimatedIcon>
+    ),
     radius: 80,
     duration: 20,
     reverse: true,
   },
   {
-    content: <Smartphone className="h-6 w-6 text-green-500" />,
+    content: (
+      <AnimatedIcon variant="bounce" mode="hover">
+        <Smartphone className="h-6 w-6 text-green-500" />
+      </AnimatedIcon>
+    ),
     radius: 140,
     duration: 30,
     delay: 15,
     reverse: true,
   },
   {
-    content: <Rocket className="h-6 w-6 text-red-500" />,
+    content: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <Rocket className="h-6 w-6 text-red-500" />
+      </AnimatedIcon>
+    ),
     radius: 200,
     duration: 40,
     reverse: false,
