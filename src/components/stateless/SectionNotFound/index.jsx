@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useMemo } from 'react'
 import { Result, Button, Typography, Space } from 'antd'
 import { useLocation } from 'react-router-dom'
@@ -42,10 +43,25 @@ const SectionNotFound = () => {
         }
         extra={
           <Space size="middle">
-            <Button icon={<ArrowLeftOutlined />} onClick={handleBackToSection}>
+            <Button
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <ArrowLeftOutlined />
+                </AnimatedIcon>
+              }
+              onClick={handleBackToSection}
+            >
               返回模块首页
             </Button>
-            <Button type="primary" icon={<HomeOutlined />} onClick={handleBackHome}>
+            <Button
+              type="primary"
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <HomeOutlined />
+                </AnimatedIcon>
+              }
+              onClick={handleBackHome}
+            >
               返回首页
             </Button>
           </Space>

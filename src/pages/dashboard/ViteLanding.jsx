@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Button, theme } from 'antd'
@@ -78,7 +79,6 @@ const ViteLanding = () => {
         <div className="absolute top-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-[#646cff] opacity-20 blur-[100px]" />
         <div className="absolute bottom-[-10%] left-[-10%] h-[600px] w-[600px] rounded-full bg-[#bd34fe] opacity-20 blur-[120px]" />
       </div>
-
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
         {/* Hero Section */}
         <div className="mb-24 text-center lg:flex lg:items-center lg:justify-between lg:text-left">
@@ -116,7 +116,11 @@ const ViteLanding = () => {
                 size="large"
                 shape="round"
                 className="h-12 border-none bg-[#646cff] px-8 text-lg font-medium hover:bg-[#747bff]"
-                icon={<RightOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <RightOutlined />
+                  </AnimatedIcon>
+                }
               >
                 Get Started
               </Button>
@@ -124,7 +128,11 @@ const ViteLanding = () => {
                 size="large"
                 shape="round"
                 className={`h-12 px-8 text-lg font-medium ${isDark ? 'border-[#444] bg-[#333] text-white hover:bg-[#444]' : 'border-gray-200 bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                icon={<GithubOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <GithubOutlined />
+                  </AnimatedIcon>
+                }
               >
                 View on GitHub
               </Button>
@@ -156,7 +164,9 @@ const ViteLanding = () => {
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
-                <ThunderboltOutlined style={{ fontSize: 160, color: 'white' }} />
+                <AnimatedIcon variant="spin" mode="hover">
+                  <ThunderboltOutlined style={{ fontSize: 160, color: 'white' }} />
+                </AnimatedIcon>
               </motion.div>
             </div>
           </motion.div>

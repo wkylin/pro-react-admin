@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useRef, useState } from 'react'
 import { FloatButton } from 'antd'
 import { VerticalAlignTopOutlined } from '@ant-design/icons'
@@ -39,7 +40,6 @@ const FixTabPanel = React.forwardRef(
             {...scrollProgressProps}
           />
         )}
-
         <div
           style={{
             position: 'relative',
@@ -54,9 +54,10 @@ const FixTabPanel = React.forwardRef(
         >
           {children}
         </div>
-
         <FloatButton.BackTop target={() => containerNode} style={{ right: 6, bottom: 2 }}>
-          <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
+          <AnimatedIcon variant="spin" mode="hover">
+            <VerticalAlignTopOutlined style={{ fontSize: 20 }} />
+          </AnimatedIcon>
         </FloatButton.BackTop>
       </div>
     )

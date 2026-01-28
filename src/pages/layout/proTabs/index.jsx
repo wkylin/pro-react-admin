@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useEffect, useRef, Suspense, useTransition } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
@@ -149,7 +150,9 @@ const ProTabs = (props) => {
       tabBarExtraContent={{
         left: (
           <Space align="center" size={30} style={{ margin: '0 10px' }}>
-            <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
+            </AnimatedIcon>
           </Space>
         ),
         right: (
@@ -168,7 +171,10 @@ const ProTabs = (props) => {
                 trigger={['hover']}
               >
                 <Button type="link">
-                  More <DownOutlined />
+                  More{' '}
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <DownOutlined />
+                  </AnimatedIcon>
                 </Button>
               </Dropdown>
             ) : null}
@@ -179,7 +185,9 @@ const ProTabs = (props) => {
         label: (
           <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
             {pane.key === activeKey && pane.key !== '/404' && (
-              <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+              <AnimatedIcon variant="spin" mode="hover">
+                <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
+              </AnimatedIcon>
             )}
             {pane.i18nKey ? t(pane.i18nKey) : pane.title}
           </span>

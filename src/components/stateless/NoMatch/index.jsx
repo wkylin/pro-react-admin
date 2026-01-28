@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { Button, Result, Flex, Typography, theme } from 'antd'
@@ -49,10 +50,25 @@ const NoMatch = () => {
         }
         extra={
           <Flex gap="middle" justify="center" style={{ marginTop: 24 }}>
-            <Button icon={<RollbackOutlined />} onClick={goBack}>
+            <Button
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <RollbackOutlined />
+                </AnimatedIcon>
+              }
+              onClick={goBack}
+            >
               返回上一页
             </Button>
-            <Button type="primary" icon={<HomeOutlined />} onClick={() => redirectTo('/')}>
+            <Button
+              type="primary"
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <HomeOutlined />
+                </AnimatedIcon>
+              }
+              onClick={() => redirectTo('/')}
+            >
               返回首页
             </Button>
           </Flex>

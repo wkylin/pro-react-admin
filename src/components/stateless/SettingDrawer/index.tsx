@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { Drawer, Switch, Divider, Tooltip, theme, ColorPicker, Radio } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
@@ -45,7 +46,9 @@ const BlockCheckbox = <K extends string>({ list, value, onChange }: BlockCheckbo
             <img src={item.url} alt={item.title} style={{ width: '100%', height: '100%' }} />
             {value === item.key && (
               <div className="absolute right-0 bottom-0 text-xs font-bold" style={{ color: token.colorPrimary }}>
-                <CheckOutlined />
+                <AnimatedIcon variant="spin" mode="hover">
+                  <CheckOutlined />
+                </AnimatedIcon>
               </div>
             )}
           </button>
@@ -76,7 +79,11 @@ const ThemeColor = ({
             style={{ backgroundColor: item.color, padding: 0, border: 'none' }}
             onClick={() => onChange(item.color)}
           >
-            {value === item.color && <CheckOutlined style={{ color: token.colorBgContainer }} />}
+            {value === item.color && (
+              <AnimatedIcon variant="spin" mode="hover">
+                <CheckOutlined style={{ color: token.colorBgContainer }} />
+              </AnimatedIcon>
+            )}
           </button>
         </Tooltip>
       ))}

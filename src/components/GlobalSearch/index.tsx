@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useRef, useEffect, KeyboardEvent } from 'react'
 import { Modal, Input, Avatar, InputRef, theme } from 'antd'
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable'
@@ -256,7 +257,11 @@ const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, isDark, tok
       >
         {item.key}
       </span>
-      {isActive && <EnterOutlined style={{ color: isDark ? '#666' : '#999', marginLeft: 12 }} />}
+      {isActive && (
+        <AnimatedIcon variant="spin" mode="hover">
+          <EnterOutlined style={{ color: isDark ? '#666' : '#999', marginLeft: 12 }} />
+        </AnimatedIcon>
+      )}
     </button>
   )
 }
@@ -536,7 +541,15 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
             }}
             title={isFullscreen ? '退出全屏' : '全屏'}
           >
-            {isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+            {isFullscreen ? (
+              <AnimatedIcon variant="spin" mode="hover">
+                <FullscreenExitOutlined />
+              </AnimatedIcon>
+            ) : (
+              <AnimatedIcon variant="spin" mode="hover">
+                <FullscreenOutlined />
+              </AnimatedIcon>
+            )}
           </button>
           <button
             type="button"
@@ -552,15 +565,20 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
             }}
             title="关闭"
           >
-            <CloseOutlined />
+            <AnimatedIcon variant="spin" mode="hover">
+              <CloseOutlined />
+            </AnimatedIcon>
           </button>
         </div>
       </div>
-
       <div style={{ padding: '16px 24px', flexShrink: 0 }}>
         <Input
           ref={inputRef}
-          prefix={<SearchOutlined style={{ color: palette.inputPrefixColor }} />}
+          prefix={
+            <AnimatedIcon variant="spin" mode="hover">
+              <SearchOutlined style={{ color: palette.inputPrefixColor }} />
+            </AnimatedIcon>
+          }
           placeholder="请输入...（支持中文、拼音及英文）"
           title="请输入...（支持中文、拼音及英文）"
           value={inputValue}
@@ -580,7 +598,6 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           }}
         />
       </div>
-
       <div
         ref={listRef}
         style={{
@@ -616,7 +633,6 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           ))
         )}
       </div>
-
       <div
         style={{
           padding: '12px 24px',
@@ -632,11 +648,19 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
         }}
       >
         <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <ArrowUpOutlined style={{ fontSize: 10 }} />
-          <ArrowDownOutlined style={{ fontSize: 10 }} /> 导航
+          <AnimatedIcon variant="spin" mode="hover">
+            <ArrowUpOutlined style={{ fontSize: 10 }} />
+          </AnimatedIcon>
+          <AnimatedIcon variant="spin" mode="hover">
+            <ArrowDownOutlined style={{ fontSize: 10 }} />
+          </AnimatedIcon>{' '}
+          导航
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-          <EnterOutlined style={{ fontSize: 10, color: palette.enterIcon }} /> 选择
+          <AnimatedIcon variant="spin" mode="hover">
+            <EnterOutlined style={{ fontSize: 10, color: palette.enterIcon }} />
+          </AnimatedIcon>{' '}
+          选择
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <span

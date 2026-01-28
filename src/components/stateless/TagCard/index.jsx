@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Button, theme } from 'antd'
@@ -81,11 +82,29 @@ const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
         {showMax < tagCardList.length && (
           <>
             {!isExpanded ? (
-              <Button type="primary" onClick={showAll} icon={<DownOutlined />} iconPlacement="end">
+              <Button
+                type="primary"
+                onClick={showAll}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <DownOutlined />
+                  </AnimatedIcon>
+                }
+                iconPlacement="end"
+              >
                 展开全部标签
               </Button>
             ) : (
-              <Button type="primary" onClick={showPortion} icon={<UpOutlined />} iconPlacement="end">
+              <Button
+                type="primary"
+                onClick={showPortion}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <UpOutlined />
+                  </AnimatedIcon>
+                }
+                iconPlacement="end"
+              >
                 折叠部分标签
               </Button>
             )}

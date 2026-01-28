@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Button } from 'antd'
@@ -13,7 +14,11 @@ const LandingPage = () => {
       <section className={styles.overlay} />
       <Button
         className={styles.rollback}
-        icon={<ArrowLeftOutlined style={{ fontSize: 18 }} />}
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <ArrowLeftOutlined style={{ fontSize: 18 }} />
+          </AnimatedIcon>
+        }
         type="text"
         size="large"
         onClick={() => redirectTo('/')}

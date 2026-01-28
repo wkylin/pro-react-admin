@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Layout, Button } from 'antd'
@@ -46,9 +47,13 @@ const ProSider = ({ children, theme = 'light' }) => {
           onClick={() => toggleSidebar()}
         >
           {isSidebarOpen ? (
-            <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+            </AnimatedIcon>
           ) : (
-            <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+            </AnimatedIcon>
           )}
         </button>
       ) : (

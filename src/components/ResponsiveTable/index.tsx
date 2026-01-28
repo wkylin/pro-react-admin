@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import type { ReactNode } from 'react'
 import type { TableProps } from 'antd'
@@ -457,7 +458,16 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         <span>操作</span>
         {showColumnSettings && (
           <Popover content={popContent} title="列设置">
-            <Button icon={<SettingOutlined />} size="small" aria-label="列设置" title="列设置" />
+            <Button
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <SettingOutlined />
+                </AnimatedIcon>
+              }
+              size="small"
+              aria-label="列设置"
+              title="列设置"
+            />
           </Popover>
         )}
       </div>

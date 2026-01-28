@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import { useRef, useCallback, useState, useEffect } from 'react'
 import MarkmapHooks from '@stateful/markmap'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -895,11 +896,18 @@ const MermaidChartViewer = ({ svg, title, themeMode }) => {
             </Button>
           </Tooltip>
           <Tooltip title="导出 PNG">
-            <Button size="small" icon={<DownloadOutlined />} onClick={exportPng} />
+            <Button
+              size="small"
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <DownloadOutlined />
+                </AnimatedIcon>
+              }
+              onClick={exportPng}
+            />
           </Tooltip>
         </div>
       </div>
-
       <div
         ref={wrapRef}
         className={styles.mermaidWrap}
@@ -1360,13 +1368,29 @@ PRD文档内容：
   const getStatusIcon = (state) => {
     switch (state) {
       case -1:
-        return <RobotOutlined />
+        return (
+          <AnimatedIcon variant="spin" mode="hover">
+            <RobotOutlined />
+          </AnimatedIcon>
+        )
       case 0:
-        return <LoadingOutlined spin />
+        return (
+          <AnimatedIcon variant="spin" mode="hover">
+            <LoadingOutlined spin />
+          </AnimatedIcon>
+        )
       case 1:
-        return <LoadingOutlined spin />
+        return (
+          <AnimatedIcon variant="spin" mode="hover">
+            <LoadingOutlined spin />
+          </AnimatedIcon>
+        )
       case 2:
-        return <CheckCircleOutlined style={{ color: '#52c41a' }} />
+        return (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CheckCircleOutlined style={{ color: '#52c41a' }} />
+          </AnimatedIcon>
+        )
       default:
         return null
     }
@@ -1411,7 +1435,9 @@ PRD文档内容：
         <Card
           title={
             <Space>
-              <RobotOutlined />
+              <AnimatedIcon variant="spin" mode="hover">
+                <RobotOutlined />
+              </AnimatedIcon>
               <span>智能配置</span>
             </Space>
           }
@@ -1468,7 +1494,11 @@ PRD文档内容：
                 size="large"
                 block
                 disabled={[0, 1].includes(readyState)}
-                icon={<ThunderboltOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <ThunderboltOutlined />
+                  </AnimatedIcon>
+                }
               >
                 {apiResult && readyState === 2 ? '重新生成PRD' : '生成PRD文档'}
               </Button>
@@ -1480,7 +1510,9 @@ PRD文档内容：
           <Card
             title={
               <Space>
-                <FileTextOutlined />
+                <AnimatedIcon variant="spin" mode="hover">
+                  <FileTextOutlined />
+                </AnimatedIcon>
                 <span>PRD文档生成</span>
                 <Badge status={readyState === 2 ? 'success' : 'processing'} />
               </Space>
@@ -1518,16 +1550,44 @@ PRD文档内容：
                 >
                   <Space>
                     <Text strong>文档内容预览</Text>
-                    <Tag color="blue" icon={<TableOutlined />}>
+                    <Tag
+                      color="blue"
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <TableOutlined />
+                        </AnimatedIcon>
+                      }
+                    >
                       支持表格
                     </Tag>
-                    <Tag color="green" icon={<CodeOutlined />}>
+                    <Tag
+                      color="green"
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <CodeOutlined />
+                        </AnimatedIcon>
+                      }
+                    >
                       代码高亮
                     </Tag>
-                    <Tag color="purple" icon={<PartitionOutlined />}>
+                    <Tag
+                      color="purple"
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <PartitionOutlined />
+                        </AnimatedIcon>
+                      }
+                    >
                       数学公式
                     </Tag>
-                    <Tag color="orange" icon={<NodeIndexOutlined />}>
+                    <Tag
+                      color="orange"
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <NodeIndexOutlined />
+                        </AnimatedIcon>
+                      }
+                    >
                       Mermaid图表
                     </Tag>
                   </Space>
@@ -1535,7 +1595,14 @@ PRD文档内容：
                     {readyState === 2 && (
                       <>
                         <Tooltip title="全屏预览">
-                          <Button icon={<FullscreenOutlined />} onClick={openPreviewFullscreen} />
+                          <Button
+                            icon={
+                              <AnimatedIcon variant="spin" mode="hover">
+                                <FullscreenOutlined />
+                              </AnimatedIcon>
+                            }
+                            onClick={openPreviewFullscreen}
+                          />
                         </Tooltip>
                         <Dropdown
                           menu={{
@@ -1558,12 +1625,20 @@ PRD文档内容：
                               {
                                 key: '1',
                                 label: '复制纯文本',
-                                icon: <CopyOutlined />,
+                                icon: (
+                                  <AnimatedIcon variant="spin" mode="hover">
+                                    <CopyOutlined />
+                                  </AnimatedIcon>
+                                ),
                               },
                               {
                                 key: '2',
                                 label: '复制Markdown',
-                                icon: <CopyOutlined />,
+                                icon: (
+                                  <AnimatedIcon variant="spin" mode="hover">
+                                    <CopyOutlined />
+                                  </AnimatedIcon>
+                                ),
                               },
                               {
                                 type: 'divider',
@@ -1571,27 +1646,51 @@ PRD文档内容：
                               {
                                 key: '3',
                                 label: '导出Markdown',
-                                icon: <DownloadOutlined />,
+                                icon: (
+                                  <AnimatedIcon variant="spin" mode="hover">
+                                    <DownloadOutlined />
+                                  </AnimatedIcon>
+                                ),
                               },
                               {
                                 key: '4',
                                 label: '导出纯文本',
-                                icon: <DownloadOutlined />,
+                                icon: (
+                                  <AnimatedIcon variant="spin" mode="hover">
+                                    <DownloadOutlined />
+                                  </AnimatedIcon>
+                                ),
                               },
                               {
                                 key: '5',
                                 label: '导出MDX',
-                                icon: <DownloadOutlined />,
+                                icon: (
+                                  <AnimatedIcon variant="spin" mode="hover">
+                                    <DownloadOutlined />
+                                  </AnimatedIcon>
+                                ),
                               },
                               {
                                 key: '6',
                                 label: '导出DOC(Word)',
-                                icon: <DownloadOutlined />,
+                                icon: (
+                                  <AnimatedIcon variant="spin" mode="hover">
+                                    <DownloadOutlined />
+                                  </AnimatedIcon>
+                                ),
                               },
                             ],
                           }}
                         >
-                          <Button icon={<DownloadOutlined />}>导出</Button>
+                          <Button
+                            icon={
+                              <AnimatedIcon variant="spin" mode="hover">
+                                <DownloadOutlined />
+                              </AnimatedIcon>
+                            }
+                          >
+                            导出
+                          </Button>
                         </Dropdown>
                       </>
                     )}
@@ -1638,7 +1737,9 @@ PRD文档内容：
           <Card
             title={
               <Space>
-                <ApartmentOutlined />
+                <AnimatedIcon variant="spin" mode="hover">
+                  <ApartmentOutlined />
+                </AnimatedIcon>
                 <span>架构思维导图</span>
                 {structureReadyState > -1 && <Badge status={structureReadyState === 2 ? 'success' : 'processing'} />}
               </Space>
@@ -1650,7 +1751,11 @@ PRD文档内容：
                 type="primary"
                 disabled={[0, 1].includes(structureReadyState)}
                 onClick={buildStructure}
-                icon={<ThunderboltOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <ThunderboltOutlined />
+                  </AnimatedIcon>
+                }
               >
                 {structureResult && structureReadyState === 2 ? '重新生成' : '生成思维导图'}
               </Button>
@@ -1663,17 +1768,33 @@ PRD文档内容：
                       {
                         key: '1',
                         label: '导出为PNG',
-                        icon: <DownloadOutlined />,
+                        icon: (
+                          <AnimatedIcon variant="spin" mode="hover">
+                            <DownloadOutlined />
+                          </AnimatedIcon>
+                        ),
                       },
                       {
                         key: '2',
                         label: '导出为SVG',
-                        icon: <DownloadOutlined />,
+                        icon: (
+                          <AnimatedIcon variant="spin" mode="hover">
+                            <DownloadOutlined />
+                          </AnimatedIcon>
+                        ),
                       },
                     ],
                   }}
                 >
-                  <Button icon={<DownloadOutlined />}>导出</Button>
+                  <Button
+                    icon={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <DownloadOutlined />
+                      </AnimatedIcon>
+                    }
+                  >
+                    导出
+                  </Button>
                 </Dropdown>
               )}
             </Space>
@@ -1732,7 +1853,9 @@ PRD文档内容：
             >
               <div className={styles.previewFullscreenHeader}>
                 <Space>
-                  <EyeOutlined />
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <EyeOutlined />
+                  </AnimatedIcon>
                   <span>文档全屏预览</span>
                 </Space>
                 <Space>

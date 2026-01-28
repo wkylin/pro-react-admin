@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useEffect, useState, useRef } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal } from 'antd'
@@ -304,11 +305,25 @@ const SignIn = () => {
                     { type: 'email', message: '请输入有效的邮箱格式!' },
                   ]}
                 >
-                  <Input prefix={<UserOutlined />} placeholder="邮箱" />
+                  <Input
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <UserOutlined />
+                      </AnimatedIcon>
+                    }
+                    placeholder="邮箱"
+                  />
                 </Form.Item>
 
                 <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
-                  <Input.Password prefix={<LockOutlined />} placeholder="密码" />
+                  <Input.Password
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <LockOutlined />
+                      </AnimatedIcon>
+                    }
+                    placeholder="密码"
+                  />
                 </Form.Item>
 
                 <Form.Item style={{ marginBottom: 8 }}>

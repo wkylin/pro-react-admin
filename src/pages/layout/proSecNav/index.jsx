@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { message, Menu } from 'antd'
@@ -318,7 +319,17 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }) => {
       return dynamicMenus
     } catch (e) {
       console.error('生成菜单失败:', e)
-      return [{ label: t('home'), key: '/', icon: <HomeOutlined /> }]
+      return [
+        {
+          label: t('home'),
+          key: '/',
+          icon: (
+            <AnimatedIcon variant="spin" mode="hover">
+              <HomeOutlined />
+            </AnimatedIcon>
+          ),
+        },
+      ]
     }
   })()
 

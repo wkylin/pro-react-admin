@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { Highlight, themes } from 'prism-react-renderer'
 import useCopyToClipboard from '@hooks/useCopyToClipboard'
@@ -27,9 +28,13 @@ const ShiCode = ({ preCode }) => {
       <div className="relative px-4 pb-4">
         <div className="absolute top-2 right-5 size-4 text-gray-400">
           {copyResult?.state === 'success' ? (
-            <CheckCircleTwoTone className="size-4 text-base" twoToneColor="#52c41a" />
+            <AnimatedIcon variant="spin" mode="hover">
+              <CheckCircleTwoTone className="size-4 text-base" twoToneColor="#52c41a" />
+            </AnimatedIcon>
           ) : (
-            <CopyOutlined className="size-4 text-base" onClick={handleClickCopy} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <CopyOutlined className="size-4 text-base" onClick={handleClickCopy} />
+            </AnimatedIcon>
           )}
         </div>
 

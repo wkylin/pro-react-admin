@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useEffect, useRef, useState } from 'react'
 import { Button, message } from 'antd'
 import {
@@ -379,7 +380,6 @@ function SvgPreview({
           )}
         </div>
       </div>
-
       <div
         aria-hidden
         style={{
@@ -397,19 +397,65 @@ function SvgPreview({
           boxShadow: '0 6px 18px rgba(0,0,0,0.35)',
         }}
       >
-        <Button icon={<ZoomOutOutlined />} onClick={handleZoomOut} type="text" style={{ color: '#fff' }} />
+        <Button
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <ZoomOutOutlined />
+            </AnimatedIcon>
+          }
+          onClick={handleZoomOut}
+          type="text"
+          style={{ color: '#fff' }}
+        />
         <div style={{ color: '#fff', minWidth: 56, textAlign: 'center', fontWeight: 500 }}>
           {Math.round(scale * 100)}%
         </div>
-        <Button icon={<ZoomInOutlined />} onClick={handleZoomIn} type="text" style={{ color: '#fff' }} />
-        <Button icon={<SyncOutlined />} onClick={handleReset} type="text" style={{ color: '#fff' }} />
         <Button
-          icon={isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <ZoomInOutlined />
+            </AnimatedIcon>
+          }
+          onClick={handleZoomIn}
+          type="text"
+          style={{ color: '#fff' }}
+        />
+        <Button
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <SyncOutlined />
+            </AnimatedIcon>
+          }
+          onClick={handleReset}
+          type="text"
+          style={{ color: '#fff' }}
+        />
+        <Button
+          icon={
+            isFullscreen ? (
+              <AnimatedIcon variant="spin" mode="hover">
+                <FullscreenExitOutlined />
+              </AnimatedIcon>
+            ) : (
+              <AnimatedIcon variant="spin" mode="hover">
+                <FullscreenOutlined />
+              </AnimatedIcon>
+            )
+          }
           onClick={toggleFullscreen}
           type="text"
           style={{ color: '#fff' }}
         />
-        <Button icon={<DownloadOutlined />} onClick={handleDownload} type="primary" size="small">
+        <Button
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <DownloadOutlined />
+            </AnimatedIcon>
+          }
+          onClick={handleDownload}
+          type="primary"
+          size="small"
+        >
           下载
         </Button>
       </div>

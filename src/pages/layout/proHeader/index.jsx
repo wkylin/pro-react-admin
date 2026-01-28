@@ -5,6 +5,7 @@ import DarkIcon from '@assets/svg/dark.svg'
 import { useProThemeContext } from '@src/theme/hooks'
 import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button } from 'antd'
 import GlobalSearch from '@src/components/GlobalSearch'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import {
   UserOutlined,
   LogoutOutlined,
@@ -81,22 +82,39 @@ const buildUserMenuItems = ({ t, tokenValue, isAuthenticated, user }) => [
   {
     key: '1',
     label: <Space>{t('header.userCenter')}</Space>,
-    icon: <UserOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <UserOutlined />
+      </AnimatedIcon>
+    ),
   },
+
   {
     key: '2',
     label: <Space>{t('header.userSettings')}</Space>,
-    icon: <SmileOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <SmileOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     key: '3',
     label: <Space>{t('header.contactMe')}</Space>,
-    icon: <SmileOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <SmileOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     key: '4',
     label: <Space>{t('header.logout')}</Space>,
-    icon: <LogoutOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <LogoutOutlined />
+      </AnimatedIcon>
+    ),
   },
 ]
 
@@ -122,25 +140,41 @@ const buildMobileMoreItems = ({
   {
     key: 'github',
     label: t('header.github'),
-    icon: <GithubOutlined style={{ fontSize: 16 }} />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <GithubOutlined style={{ fontSize: 16 }} />
+      </AnimatedIcon>
+    ),
     onClick: redirectGithub,
   },
   {
     key: 'wiki',
     label: t('header.wiki'),
-    icon: <BookOutlined style={{ fontSize: 16 }} />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <BookOutlined style={{ fontSize: 16 }} />
+      </AnimatedIcon>
+    ),
     onClick: redirectWiki,
   },
   {
     key: 'wrapped',
     label: t('header.wrapped'),
-    icon: <RocketOutlined style={{ fontSize: 16 }} />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <RocketOutlined style={{ fontSize: 16 }} />
+      </AnimatedIcon>
+    ),
     onClick: redirectWrapped,
   },
   {
     key: 'setting',
     label: t('header.preferences'),
-    icon: <SettingOutlined style={{ fontSize: 16 }} />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <SettingOutlined style={{ fontSize: 16 }} />
+      </AnimatedIcon>
+    ),
     onClick: onSettingClick,
   },
 ]
@@ -194,7 +228,9 @@ const renderMobileMenuTrigger = (isMobile, onMobileMenuClick) => {
         padding: 0,
       }}
     >
-      <MenuOutlined style={{ fontSize: 20 }} />
+      <AnimatedIcon variant="spin" mode="hover">
+        <MenuOutlined style={{ fontSize: 20 }} />
+      </AnimatedIcon>
     </button>
   )
 }
@@ -223,13 +259,26 @@ const renderDesktopActions = ({
   <Space orientation="horizontal" style={{ paddingRight: 8 }}>
     <SoundBar buttonStyle={{ border: 'none' }} />
     <Tooltip title={t('header.searchTooltip')} placement="bottom">
-      <Button icon={<SearchOutlined />} size="small" style={iconButtonStyle} onClick={() => setSearchOpen(true)} />
+      <Button
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <SearchOutlined />
+          </AnimatedIcon>
+        }
+        size="small"
+        style={iconButtonStyle}
+        onClick={() => setSearchOpen(true)}
+      />
     </Tooltip>
 
     <NotificationDrawer variant="button" buttonStyle={iconButtonStyle} />
     <Tooltip title={t('header.github')} placement="bottom">
       <Button
-        icon={<GithubOutlined style={{ fontSize: 16 }} />}
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <GithubOutlined style={{ fontSize: 16 }} />
+          </AnimatedIcon>
+        }
         size="small"
         type="default"
         onClick={redirectGithub}
@@ -252,11 +301,24 @@ const renderDesktopActions = ({
       />
     </Tooltip>
     <Tooltip title={t('header.preferences')} placement="bottom">
-      <Button icon={<SettingOutlined />} size="small" onClick={onSettingClick} style={iconButtonStyle} />
+      <Button
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <SettingOutlined />
+          </AnimatedIcon>
+        }
+        size="small"
+        onClick={onSettingClick}
+        style={iconButtonStyle}
+      />
     </Tooltip>
     <Tooltip title={t('header.wrappedTooltip')} placement="bottom">
       <Button
-        icon={<RocketOutlined style={{ fontSize: 16 }} />}
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <RocketOutlined style={{ fontSize: 16 }} />
+          </AnimatedIcon>
+        }
         size="small"
         onClick={redirectWrapped}
         style={iconButtonStyle}
@@ -264,7 +326,11 @@ const renderDesktopActions = ({
     </Tooltip>
     <Tooltip title={t('header.wiki')} placement="bottom">
       <Button
-        icon={<BookOutlined style={{ fontSize: 16 }} />}
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <BookOutlined style={{ fontSize: 16 }} />
+          </AnimatedIcon>
+        }
         size="small"
         onClick={redirectWiki}
         style={iconButtonStyle}
@@ -278,7 +344,11 @@ const renderMobileActions = ({ t, isTopDarkHeader, isDark, handleThemeToggle, mo
   <Space>
     <Tooltip title={t('header.search')}>
       <Button
-        icon={<SearchOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />}
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <SearchOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />
+          </AnimatedIcon>
+        }
         size="small"
         style={{ fontSize: 18 }}
         onClick={() => setSearchOpen(true)}
@@ -299,13 +369,15 @@ const renderMobileActions = ({ t, isTopDarkHeader, isDark, handleThemeToggle, mo
       />
     </Tooltip>
     <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
-      <MoreOutlined
-        style={{
-          fontSize: 20,
-          cursor: 'pointer',
-          color: isTopDarkHeader ? '#fff' : undefined,
-        }}
-      />
+      <AnimatedIcon variant="spin" mode="hover">
+        <MoreOutlined
+          style={{
+            fontSize: 20,
+            cursor: 'pointer',
+            color: isTopDarkHeader ? '#fff' : undefined,
+          }}
+        />
+      </AnimatedIcon>
     </Dropdown>
   </Space>
 )
@@ -314,9 +386,25 @@ const renderHeaderActions = (isMobile, props) => (isMobile ? renderMobileActions
 
 const renderUserTrigger = (isAuthenticated, user, iconButtonStyle) =>
   isAuthenticated && user ? (
-    <Avatar src={user.avatar_url || undefined} icon={<UserOutlined style={{ fontSize: 16 }} />} />
+    <Avatar
+      src={user.avatar_url || undefined}
+      icon={
+        <AnimatedIcon variant="spin" mode="hover">
+          <UserOutlined style={{ fontSize: 16 }} />
+        </AnimatedIcon>
+      }
+    />
   ) : (
-    <Button icon={<UserOutlined style={{ fontSize: 16 }} />} type="default" shape="round" style={iconButtonStyle} />
+    <Button
+      icon={
+        <AnimatedIcon variant="spin" mode="hover">
+          <UserOutlined style={{ fontSize: 16 }} />
+        </AnimatedIcon>
+      }
+      type="default"
+      shape="round"
+      style={iconButtonStyle}
+    />
   )
 
 const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }) => {

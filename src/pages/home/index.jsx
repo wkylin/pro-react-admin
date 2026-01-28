@@ -397,7 +397,11 @@ const Home = () => {
         </Flex>
         <Button
           style={{ margin: '10px' }}
-          icon={<SendOutlined rotate={-60} />}
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <SendOutlined rotate={-60} />
+            </AnimatedIcon>
+          }
           type="primary"
           disabled={isStream}
           onClick={onSubmit}
@@ -406,14 +410,27 @@ const Home = () => {
         </Button>
         <Button
           style={{ margin: '10px' }}
-          icon={<SendOutlined rotate={-60} />}
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <SendOutlined rotate={-60} />
+            </AnimatedIcon>
+          }
           type="primary"
           disabled={isStream}
           onClick={onSubmitImage}
         >
           生成图片
         </Button>
-        <Button icon={<SendOutlined rotate={-60} />} type="primary" disabled={!isStream} onClick={onStop}>
+        <Button
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <SendOutlined rotate={-60} />
+            </AnimatedIcon>
+          }
+          type="primary"
+          disabled={!isStream}
+          onClick={onStop}
+        >
           停止
         </Button>
       </section>

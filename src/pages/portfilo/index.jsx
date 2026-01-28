@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useRef, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
@@ -169,19 +170,31 @@ const MyPortfilo = () => {
       title: 'Pro React Admin',
       desc: 'A comprehensive enterprise-level admin dashboard template based on React, Ant Design, and Vite.',
       tags: ['React', 'Ant Design', 'Vite'],
-      icon: <LaptopOutlined />,
+      icon: (
+        <AnimatedIcon variant="spin" mode="hover">
+          <LaptopOutlined />
+        </AnimatedIcon>
+      ),
     },
     {
       title: 'E-Commerce Platform',
       desc: 'A full-stack e-commerce solution with real-time inventory management and payment integration.',
       tags: ['Next.js', 'Node.js', 'Stripe'],
-      icon: <RocketOutlined />,
+      icon: (
+        <AnimatedIcon variant="spin" mode="hover">
+          <RocketOutlined />
+        </AnimatedIcon>
+      ),
     },
     {
       title: 'Data Visualization Dashboard',
       desc: 'Interactive dashboard for visualizing complex datasets using and ECharts.',
       tags: ['Vue', 'ECharts'],
-      icon: <CodeOutlined />,
+      icon: (
+        <AnimatedIcon variant="spin" mode="hover">
+          <CodeOutlined />
+        </AnimatedIcon>
+      ),
     },
   ]
 
@@ -300,7 +313,6 @@ const MyPortfilo = () => {
           zIndex: 1000,
         }}
       />
-
       {/* Back Button */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -317,7 +329,11 @@ const MyPortfilo = () => {
           <Button
             shape="circle"
             size="large"
-            icon={<ArrowLeftOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <ArrowLeftOutlined />
+              </AnimatedIcon>
+            }
             onClick={() => navigate('/')}
             style={{
               color: token.colorText,
@@ -332,44 +348,71 @@ const MyPortfilo = () => {
           />
         </Tooltip>
       </motion.div>
-
       {/* Navigation */}
       {!isMobile ? (
         <FloatButton.Group
           trigger="click"
           type="primary"
-          icon={<MenuOutlined />}
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <MenuOutlined />
+            </AnimatedIcon>
+          }
           open={mobileMenuOpen}
           onOpenChange={(open) => setMobileMenuOpen(open)}
           style={{ right: 24, bottom: 24 }}
         >
           <FloatButton
-            icon={<RocketOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <RocketOutlined />
+              </AnimatedIcon>
+            }
             tooltip="Home"
             onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#home' })}
           />
           <FloatButton
-            icon={<UserOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <UserOutlined />
+              </AnimatedIcon>
+            }
             tooltip="About"
             onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#about' })}
           />
           <FloatButton
-            icon={<ToolOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <ToolOutlined />
+              </AnimatedIcon>
+            }
             tooltip="Skills"
             onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#skills' })}
           />
           <FloatButton
-            icon={<ProjectOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <ProjectOutlined />
+              </AnimatedIcon>
+            }
             tooltip="Work"
             onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#projects' })}
           />
           <FloatButton
-            icon={<CheckCircleOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <CheckCircleOutlined />
+              </AnimatedIcon>
+            }
             tooltip="Exp"
             onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#experience' })}
           />
           <FloatButton
-            icon={<MailOutlined />}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <MailOutlined />
+              </AnimatedIcon>
+            }
             tooltip="Contact"
             onClick={() => handleAnchorClick({ preventDefault: () => {} }, { href: '#contact' })}
           />
@@ -400,7 +443,6 @@ const MyPortfilo = () => {
           />
         </div>
       )}
-
       <div
         style={{
           maxWidth: 1200,
@@ -438,7 +480,11 @@ const MyPortfilo = () => {
                 type="primary"
                 size="large"
                 shape="round"
-                icon={<RocketOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <RocketOutlined />
+                  </AnimatedIcon>
+                }
                 onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 View Work
@@ -446,7 +492,11 @@ const MyPortfilo = () => {
               <Button
                 size="large"
                 shape="round"
-                icon={<UserOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <UserOutlined />
+                  </AnimatedIcon>
+                }
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               >
                 Contact Me
@@ -478,10 +528,38 @@ const MyPortfilo = () => {
             <Col xs={24} md={12}>
               <Row gutter={[16, 16]}>
                 {[
-                  { title: 'Fast Learner', icon: <RocketOutlined /> },
-                  { title: 'Team Player', icon: <UserOutlined /> },
-                  { title: 'Problem Solver', icon: <ToolOutlined /> },
-                  { title: 'Detail Oriented', icon: <CheckCircleOutlined /> },
+                  {
+                    title: 'Fast Learner',
+                    icon: (
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <RocketOutlined />
+                      </AnimatedIcon>
+                    ),
+                  },
+                  {
+                    title: 'Team Player',
+                    icon: (
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <UserOutlined />
+                      </AnimatedIcon>
+                    ),
+                  },
+                  {
+                    title: 'Problem Solver',
+                    icon: (
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <ToolOutlined />
+                      </AnimatedIcon>
+                    ),
+                  },
+                  {
+                    title: 'Detail Oriented',
+                    icon: (
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <CheckCircleOutlined />
+                      </AnimatedIcon>
+                    ),
+                  },
                 ].map((item, index) => (
                   <Col span={12} key={item.title}>
                     <AnimatedCard delay={index * 0.1}>
@@ -602,9 +680,15 @@ const MyPortfilo = () => {
                       </div>
                     }
                     actions={[
-                      <GithubOutlined key="github" />,
-                      <RocketOutlined key="demo" />,
-                      <ProjectOutlined key="detail" />,
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <GithubOutlined key="github" />
+                      </AnimatedIcon>,
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <RocketOutlined key="demo" />
+                      </AnimatedIcon>,
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <ProjectOutlined key="detail" />
+                      </AnimatedIcon>,
                     ]}
                   >
                     <Card.Meta
@@ -672,13 +756,40 @@ const MyPortfilo = () => {
               say hi, feel free to reach out!
             </Paragraph>
             <Space size="large">
-              <Button type="primary" size="large" icon={<MailOutlined />} onClick={() => navigate('/contact')}>
+              <Button
+                type="primary"
+                size="large"
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <MailOutlined />
+                  </AnimatedIcon>
+                }
+                onClick={() => navigate('/contact')}
+              >
                 Email Me
               </Button>
-              <Button size="large" icon={<GithubOutlined />} href="https://github.com/wkylin" target="_blank">
+              <Button
+                size="large"
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <GithubOutlined />
+                  </AnimatedIcon>
+                }
+                href="https://github.com/wkylin"
+                target="_blank"
+              >
                 GitHub
               </Button>
-              <Button size="large" icon={<XOutlined />} href="https://x.com/home" target="_blank">
+              <Button
+                size="large"
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <XOutlined />
+                  </AnimatedIcon>
+                }
+                href="https://x.com/home"
+                target="_blank"
+              >
                 X
               </Button>
             </Space>

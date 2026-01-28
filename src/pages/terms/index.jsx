@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import { Layout, Typography, Card, Button, theme } from 'antd'
 import { useStore } from '@/store'
@@ -44,7 +45,15 @@ const Terms = () => {
             }}
           >
             <div className={styles.header}>
-              <Button type="text" icon={<ArrowLeftOutlined />} onClick={() => redirectTo('/signup')}>
+              <Button
+                type="text"
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <ArrowLeftOutlined />
+                  </AnimatedIcon>
+                }
+                onClick={() => redirectTo('/signup')}
+              >
                 返回
               </Button>
               <div className={styles.headerMeta}>

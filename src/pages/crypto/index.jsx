@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState } from 'react'
 import FixTabPanel from '@stateless/FixTabPanel'
 import CryptoJS, { AES, enc } from 'crypto-js'
@@ -104,7 +105,6 @@ const AESPanel = () => {
         type="info"
         showIcon
       />
-
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
           <Card title="加密区 (Encryption)" variant="borderless" className="shadow-sm">
@@ -124,18 +124,38 @@ const AESPanel = () => {
                 <Text strong>2. 设置密钥</Text>
                 <div style={{ display: 'flex', marginTop: 8, gap: 8 }}>
                   <Input.Password
-                    prefix={<KeyOutlined />}
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <KeyOutlined />
+                      </AnimatedIcon>
+                    }
                     value={secretKey}
                     onChange={(e) => setSecretKey(e.target.value)}
                     placeholder="输入密钥"
                   />
-                  <Button icon={<ReloadOutlined />} onClick={generateKey}>
+                  <Button
+                    icon={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <ReloadOutlined />
+                      </AnimatedIcon>
+                    }
+                    onClick={generateKey}
+                  >
                     随机生成
                   </Button>
                 </div>
               </div>
 
-              <Button type="primary" icon={<LockOutlined />} onClick={handleEncrypt} block>
+              <Button
+                type="primary"
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <LockOutlined />
+                  </AnimatedIcon>
+                }
+                onClick={handleEncrypt}
+                block
+              >
                 执行加密
               </Button>
             </Space>
@@ -160,7 +180,16 @@ const AESPanel = () => {
                 />
               </div>
 
-              <Button icon={<UnlockOutlined />} onClick={handleDecrypt} block disabled={!cipherText}>
+              <Button
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <UnlockOutlined />
+                  </AnimatedIcon>
+                }
+                onClick={handleDecrypt}
+                block
+                disabled={!cipherText}
+              >
                 尝试解密 (使用左侧密钥)
               </Button>
 
@@ -233,7 +262,6 @@ const RSAPanel = () => {
         type="warning"
         showIcon
       />
-
       <Row gutter={[24, 24]}>
         <Col span={24}>
           <Card title="密钥对配置 (Key Pair)" size="small" variant="borderless">
@@ -262,7 +290,6 @@ const RSAPanel = () => {
           </Card>
         </Col>
       </Row>
-
       <Row gutter={[24, 24]}>
         <Col xs={24} md={12}>
           <Card title="公钥加密 (Public Key Encryption)" variant="borderless" className="shadow-sm">
@@ -274,7 +301,16 @@ const RSAPanel = () => {
                 onChange={(e) => setPlainText(e.target.value)}
                 placeholder="请输入要加密的文本..."
               />
-              <Button type="primary" icon={<LockOutlined />} onClick={handleEncrypt} block>
+              <Button
+                type="primary"
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <LockOutlined />
+                  </AnimatedIcon>
+                }
+                onClick={handleEncrypt}
+                block
+              >
                 使用公钥加密
               </Button>
             </Space>
@@ -295,7 +331,16 @@ const RSAPanel = () => {
                   color: token.colorText,
                 }}
               />{' '}
-              <Button icon={<UnlockOutlined />} onClick={handleDecrypt} block disabled={!cipherText}>
+              <Button
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <UnlockOutlined />
+                  </AnimatedIcon>
+                }
+                onClick={handleDecrypt}
+                block
+                disabled={!cipherText}
+              >
                 使用私钥解密
               </Button>
               <div
@@ -430,7 +475,6 @@ const APIEncryptionPanel = () => {
         type="success"
         showIcon
       />
-
       <Row gutter={[24, 24]}>
         <Col xs={24} lg={12}>
           <Card title="🔧 加密配置" variant="borderless" className="shadow-sm">
@@ -450,7 +494,11 @@ const APIEncryptionPanel = () => {
                   <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
                     <Input value={aesKey} onChange={(e) => setAesKey(e.target.value)} placeholder="16/24/32字符密钥" />
                     <Button
-                      icon={<ReloadOutlined />}
+                      icon={
+                        <AnimatedIcon variant="spin" mode="hover">
+                          <ReloadOutlined />
+                        </AnimatedIcon>
+                      }
                       onClick={() => setAesKey(CryptoJS.lib.WordArray.random(16).toString())}
                     >
                       随机
@@ -485,7 +533,15 @@ const APIEncryptionPanel = () => {
               )}
 
               <Space style={{ width: '100%' }}>
-                <Button type="primary" icon={<KeyOutlined />} onClick={handleConfigureEncryption}>
+                <Button
+                  type="primary"
+                  icon={
+                    <AnimatedIcon variant="spin" mode="hover">
+                      <KeyOutlined />
+                    </AnimatedIcon>
+                  }
+                  onClick={handleConfigureEncryption}
+                >
                   应用配置
                 </Button>
                 <Button onClick={handleDisableEncryption}>禁用加密</Button>
@@ -504,7 +560,11 @@ const APIEncryptionPanel = () => {
                   }
                   type={encryptionStatus.enabled ? 'success' : 'warning'}
                   showIcon
-                  icon={<CheckCircleOutlined />}
+                  icon={
+                    <AnimatedIcon variant="spin" mode="hover">
+                      <CheckCircleOutlined />
+                    </AnimatedIcon>
+                  }
                 />
               )}
             </Space>
@@ -527,7 +587,11 @@ const APIEncryptionPanel = () => {
 
               <Button
                 type="primary"
-                icon={<ApiOutlined />}
+                icon={
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <ApiOutlined />
+                  </AnimatedIcon>
+                }
                 onClick={handleTestEncryption}
                 block
                 disabled={!encryptionStatus?.enabled}
@@ -561,7 +625,6 @@ const APIEncryptionPanel = () => {
           </Card>
         </Col>
       </Row>
-
       <Card title="📖 使用说明" size="small" variant="borderless">
         <Space orientation="vertical" style={{ width: '100%' }} size="small">
           <Text>
@@ -594,7 +657,9 @@ const MyCrypto = () => {
       key: 'aes',
       label: (
         <span>
-          <LockOutlined />
+          <AnimatedIcon variant="spin" mode="hover">
+            <LockOutlined />
+          </AnimatedIcon>
           AES 加密
         </span>
       ),
@@ -604,7 +669,9 @@ const MyCrypto = () => {
       key: 'rsa',
       label: (
         <span>
-          <KeyOutlined />
+          <AnimatedIcon variant="spin" mode="hover">
+            <KeyOutlined />
+          </AnimatedIcon>
           RSA 加密
         </span>
       ),
@@ -614,7 +681,9 @@ const MyCrypto = () => {
       key: 'api',
       label: (
         <span>
-          <ApiOutlined />
+          <AnimatedIcon variant="spin" mode="hover">
+            <ApiOutlined />
+          </AnimatedIcon>
           接口加密测试
         </span>
       ),

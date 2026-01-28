@@ -1,4 +1,5 @@
 'use client'
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useRef, useState, useCallback, useMemo } from 'react'
 import * as echarts from 'echarts'
 import html2canvas from 'html2canvas'
@@ -140,7 +141,9 @@ const PDFExportDemo: React.FC = () => {
       {contextHolder}
       <div style={{ marginBottom: '24px', textAlign: 'center' }}>
         <Title level={1} style={{ marginBottom: '8px' }}>
-          <FileTextOutlined style={{ marginRight: '8px' }} />
+          <AnimatedIcon variant="spin" mode="hover">
+            <FileTextOutlined style={{ marginRight: '8px' }} />
+          </AnimatedIcon>
           React 19 + ECharts 6 + Ant Design 5
         </Title>
         <Paragraph style={{ fontSize: '16px', color: '#666' }}>演示如何将包含图表的页面导出为PDF文件</Paragraph>
@@ -149,7 +152,11 @@ const PDFExportDemo: React.FC = () => {
         <Button
           type="primary"
           size="large"
-          icon={<DownloadOutlined />}
+          icon={
+            <AnimatedIcon variant="spin" mode="hover">
+              <DownloadOutlined />
+            </AnimatedIcon>
+          }
           onClick={exportToPDF}
           loading={isExporting}
           style={{ padding: '0 32px' }}
@@ -222,7 +229,9 @@ const PDFExportDemo: React.FC = () => {
         <Card style={{ marginBottom: '24px' }}>
           <div style={{ textAlign: 'center', marginBottom: '16px' }}>
             <Title level={3}>
-              <BarChartOutlined style={{ marginRight: '8px' }} />
+              <AnimatedIcon variant="spin" mode="hover">
+                <BarChartOutlined style={{ marginRight: '8px' }} />
+              </AnimatedIcon>
               销售趋势图表
             </Title>
           </div>

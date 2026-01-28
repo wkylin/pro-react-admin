@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useState } from 'react'
 import { Badge, Button, Space, Typography, theme, Drawer } from 'antd'
 import { useStore } from '@/store'
@@ -159,10 +160,27 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
         }}
       >
         <Space>
-          <Button size="small" onClick={markAllRead} icon={<CheckCircleOutlined />}>
+          <Button
+            size="small"
+            onClick={markAllRead}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <CheckCircleOutlined />
+              </AnimatedIcon>
+            }
+          >
             全部已读
           </Button>
-          <Button size="small" onClick={clearAll} icon={<DeleteOutlined />} danger>
+          <Button
+            size="small"
+            onClick={clearAll}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <DeleteOutlined />
+              </AnimatedIcon>
+            }
+            danger
+          >
             清空
           </Button>
           <Button size="small" type="link" onClick={() => safeNavigate('/notifications')}>
@@ -177,7 +195,9 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
 
   const iconNode = (
     <Badge count={unreadCount} size="small" overflowCount={49}>
-      <BellOutlined style={{ fontSize: 16, color: iconColor }} />
+      <AnimatedIcon variant="spin" mode="hover">
+        <BellOutlined style={{ fontSize: 16, color: iconColor }} />
+      </AnimatedIcon>
     </Badge>
   )
 

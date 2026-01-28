@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import {
   HomeOutlined,
@@ -37,181 +38,315 @@ import {
 // 静态菜单配置
 // 这里的 path 对应路由 path
 const rawMainLayoutMenu = [
-  { label: 'home', i18nKey: 'home', path: '/', icon: <HomeOutlined /> },
-  { label: 'demo', i18nKey: 'demo', path: '/demo', icon: <GlobalOutlined /> },
+  {
+    label: 'home',
+    i18nKey: 'home',
+    path: '/',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <HomeOutlined />
+      </AnimatedIcon>
+    ),
+  },
+  {
+    label: 'demo',
+    i18nKey: 'demo',
+    path: '/demo',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <GlobalOutlined />
+      </AnimatedIcon>
+    ),
+  },
   {
     label: 'SVG Viewer',
     i18nKey: 'menu.svgViewer',
     path: '/svg-viewer',
-    icon: <HeatMapOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <HeatMapOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'AUTO DEPLOY',
     i18nKey: 'menu.autoDeploy',
     path: '/auto-deploy',
-    icon: <CloudUploadOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <CloudUploadOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Zustand演示',
     i18nKey: 'menu.zustand',
     path: '/zustand',
-    icon: <ThunderboltOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <ThunderboltOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Motion',
     i18nKey: 'menu.motion',
     path: '/motion',
-    icon: <RocketOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <RocketOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Mermaid',
     i18nKey: 'menu.mermaid',
     path: '/mermaid',
-    icon: <ProjectOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <ProjectOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Topology',
     i18nKey: 'menu.topology',
     path: '/topology',
-    icon: <DeploymentUnitOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <DeploymentUnitOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: '权限示例',
     i18nKey: 'menu.permissionExample',
     path: '/permission',
-    icon: <LockOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <LockOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'PH Bar',
     i18nKey: 'menu.phBar',
     path: '/ph-bar',
-    icon: <BarChartOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <BarChartOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'ChatGPT',
     i18nKey: 'menu.chatgpt',
     path: '/chatgpt',
-    icon: <RobotOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <RobotOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'React Tilt',
     i18nKey: 'menu.reactTilt',
     path: '/tilt',
-    icon: <ExperimentOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <ExperimentOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Music',
     i18nKey: 'menu.music',
     path: '/music',
-    icon: <SoundOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <SoundOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Crypto',
     i18nKey: 'menu.crypto',
     path: '/crypto',
-    icon: <LockOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <LockOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Video',
     i18nKey: 'menu.video',
     path: '/video',
-    icon: <VideoCameraOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <VideoCameraOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Big Screen',
     i18nKey: 'menu.bigScreen',
     path: '/big-screen',
-    icon: <FundProjectionScreenOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <FundProjectionScreenOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Echarts',
     i18nKey: 'menu.echarts',
     path: '/echarts',
-    icon: <PieChartOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <PieChartOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Qr Generate',
     i18nKey: 'menu.qrGenerate',
     path: '/qrcode',
-    icon: <QrcodeOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <QrcodeOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Business',
     i18nKey: 'menu.business',
     path: '/business',
-    icon: <BankOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <BankOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Prism Render',
     i18nKey: 'menu.prismRender',
     path: '/prism',
-    icon: <HighlightOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <HighlightOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Post Message',
     i18nKey: 'menu.postMessage',
     path: '/postmessage',
-    icon: <SendOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <SendOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Geo Chart',
     i18nKey: 'menu.geoChart',
     path: '/geo',
-    icon: <EnvironmentOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <EnvironmentOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Print',
     i18nKey: 'menu.print',
     path: '/print',
-    icon: <PrinterOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <PrinterOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Profile',
     i18nKey: 'menu.profile',
     path: '/profile',
-    icon: <UserOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <UserOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: 'Contact',
     i18nKey: 'menu.contact',
     path: '/contact',
-    icon: <ContactsOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <ContactsOutlined />
+      </AnimatedIcon>
+    ),
   },
   {
     label: '前端技术栈',
     i18nKey: 'menu.frontendTechStack',
     path: '/tech/frontend',
-    icon: <DeploymentUnitOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <DeploymentUnitOutlined />
+      </AnimatedIcon>
+    ),
     children: [
       {
         label: 'React',
         i18nKey: 'menu.react',
         path: '/tech/frontend/react',
-        icon: <CodeOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CodeOutlined />
+          </AnimatedIcon>
+        ),
       },
       {
         label: 'Vue',
         i18nKey: 'menu.vue',
         path: '/tech/frontend/vue',
-        icon: <CodeOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CodeOutlined />
+          </AnimatedIcon>
+        ),
         children: [
           {
             label: 'Vue 插件',
             i18nKey: 'menu.vuePlugins',
             path: '/tech/frontend/plugins',
-            icon: <AppstoreOutlined />,
+            icon: (
+              <AnimatedIcon variant="spin" mode="hover">
+                <AppstoreOutlined />
+              </AnimatedIcon>
+            ),
             children: [
               {
                 label: 'Vue3 API',
                 i18nKey: 'menu.vue3Api',
                 path: '/tech/frontend/plugins/vue3',
-                icon: <FileTextOutlined />,
+                icon: (
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <FileTextOutlined />
+                  </AnimatedIcon>
+                ),
               },
               {
                 label: '性能优化',
                 i18nKey: 'menu.performanceOptimization',
                 path: '/tech/frontend/plugins/perf',
-                icon: <ThunderboltOutlined />,
+                icon: (
+                  <AnimatedIcon variant="spin" mode="hover">
+                    <ThunderboltOutlined />
+                  </AnimatedIcon>
+                ),
               },
             ],
           },
@@ -221,13 +356,21 @@ const rawMainLayoutMenu = [
         label: 'Angular',
         i18nKey: 'menu.angular',
         path: '/tech/frontend/angular',
-        icon: <Html5Outlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Html5Outlined />
+          </AnimatedIcon>
+        ),
       },
       {
         label: 'Node',
         i18nKey: 'menu.node',
         path: '/tech/frontend/node',
-        icon: <CloudServerOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CloudServerOutlined />
+          </AnimatedIcon>
+        ),
       },
     ],
   },
@@ -235,25 +378,41 @@ const rawMainLayoutMenu = [
     label: '后端技术栈',
     i18nKey: 'menu.backendTechStack',
     path: '/tech/backend',
-    icon: <CloudServerOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <CloudServerOutlined />
+      </AnimatedIcon>
+    ),
     children: [
       {
         label: 'Node',
         i18nKey: 'menu.node',
         path: '/tech/backend/node',
-        icon: <CodeOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CodeOutlined />
+          </AnimatedIcon>
+        ),
       },
       {
         label: 'Java',
         i18nKey: 'menu.java',
         path: '/tech/backend/java',
-        icon: <CodeOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CodeOutlined />
+          </AnimatedIcon>
+        ),
       },
       {
         label: 'Go',
         i18nKey: 'menu.go',
         path: '/tech/backend/go',
-        icon: <CodeOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <CodeOutlined />
+          </AnimatedIcon>
+        ),
       },
     ],
   },
@@ -261,19 +420,31 @@ const rawMainLayoutMenu = [
     label: '构建工具',
     i18nKey: 'menu.buildTools',
     path: '/build',
-    icon: <ApartmentOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <ApartmentOutlined />
+      </AnimatedIcon>
+    ),
     children: [
       {
         label: 'Webpack',
         i18nKey: 'menu.webpack',
         path: '/build/webpack',
-        icon: <ToolOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <ToolOutlined />
+          </AnimatedIcon>
+        ),
       },
       {
         label: 'Vite',
         i18nKey: 'menu.vite',
         path: '/build/vite',
-        icon: <ThunderboltOutlined />,
+        icon: (
+          <AnimatedIcon variant="spin" mode="hover">
+            <ThunderboltOutlined />
+          </AnimatedIcon>
+        ),
       },
     ],
   },
@@ -282,7 +453,11 @@ const rawMainLayoutMenu = [
     label: 'Error',
     i18nKey: 'menu.error',
     path: '/sub-error',
-    icon: <QuestionCircleOutlined />,
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <QuestionCircleOutlined />
+      </AnimatedIcon>
+    ),
     children: [{ label: 'ErrorBoundary', i18nKey: 'menu.errorBoundary', path: '/error' }],
   },
 ]

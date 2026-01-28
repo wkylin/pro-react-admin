@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import screenfull from 'screenfull'
 import { message, Tooltip, Button } from 'antd'
@@ -107,9 +108,13 @@ const FullScreen: React.FC<FullScreenProps> = ({
         }}
         icon={
           isFullScreen ? (
-            <FullscreenExitOutlined style={{ fontSize: 16, color: iconColor }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <FullscreenExitOutlined style={{ fontSize: 16, color: iconColor }} />
+            </AnimatedIcon>
           ) : (
-            <FullscreenOutlined style={{ fontSize: 16, color: iconColor }} />
+            <AnimatedIcon variant="spin" mode="hover">
+              <FullscreenOutlined style={{ fontSize: 16, color: iconColor }} />
+            </AnimatedIcon>
           )
         }
       />

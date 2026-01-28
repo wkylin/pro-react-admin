@@ -1,3 +1,4 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
 import React from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
@@ -21,7 +22,16 @@ const { Option } = Select
 const { Content } = Layout
 // responsive handled by global Zustand `isMobile`
 
-const passwordIconRender = (visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)
+const passwordIconRender = (visible) =>
+  visible ? (
+    <AnimatedIcon variant="spin" mode="hover">
+      <EyeTwoTone />
+    </AnimatedIcon>
+  ) : (
+    <AnimatedIcon variant="spin" mode="hover">
+      <EyeInvisibleOutlined />
+    </AnimatedIcon>
+  )
 
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
@@ -91,12 +101,28 @@ const SignUp = () => {
 
               <Row gutter={12} className={styles.socialRow}>
                 <Col span={12}>
-                  <Button block icon={<GithubOutlined />} className={styles.socialBtn}>
+                  <Button
+                    block
+                    icon={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <GithubOutlined />
+                      </AnimatedIcon>
+                    }
+                    className={styles.socialBtn}
+                  >
                     GitHub
                   </Button>
                 </Col>
                 <Col span={12}>
-                  <Button block icon={<GoogleOutlined />} className={styles.socialBtn}>
+                  <Button
+                    block
+                    icon={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <GoogleOutlined />
+                      </AnimatedIcon>
+                    }
+                    className={styles.socialBtn}
+                  >
                     Google
                   </Button>
                 </Col>
@@ -143,7 +169,11 @@ const SignUp = () => {
                   ]}
                 >
                   <Input
-                    prefix={<UserOutlined style={{ color: token.colorTextTertiary }} />}
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <UserOutlined style={{ color: token.colorTextTertiary }} />
+                      </AnimatedIcon>
+                    }
                     placeholder="请输入用户名"
                     style={{ height: 44 }}
                   />
@@ -159,7 +189,11 @@ const SignUp = () => {
                   ]}
                 >
                   <Input
-                    prefix={<MailOutlined style={{ color: token.colorTextTertiary }} />}
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <MailOutlined style={{ color: token.colorTextTertiary }} />
+                      </AnimatedIcon>
+                    }
                     placeholder="请输入邮箱地址"
                     style={{ height: 44 }}
                   />
@@ -186,7 +220,11 @@ const SignUp = () => {
                       ]}
                     >
                       <Input
-                        prefix={<PhoneOutlined style={{ color: token.colorTextTertiary }} />}
+                        prefix={
+                          <AnimatedIcon variant="spin" mode="hover">
+                            <PhoneOutlined style={{ color: token.colorTextTertiary }} />
+                          </AnimatedIcon>
+                        }
                         placeholder="请输入手机号码"
                         style={{ height: 44, width: 'calc(100% - 90px)' }}
                       />
@@ -211,7 +249,11 @@ const SignUp = () => {
                   hasFeedback
                 >
                   <Input.Password
-                    prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <LockOutlined style={{ color: token.colorTextTertiary }} />
+                      </AnimatedIcon>
+                    }
                     placeholder="请输入密码"
                     iconRender={passwordIconRender}
                     style={{ height: 44 }}
@@ -237,7 +279,11 @@ const SignUp = () => {
                   ]}
                 >
                   <Input.Password
-                    prefix={<LockOutlined style={{ color: token.colorTextTertiary }} />}
+                    prefix={
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <LockOutlined style={{ color: token.colorTextTertiary }} />
+                      </AnimatedIcon>
+                    }
                     placeholder="请再次输入密码"
                     iconRender={passwordIconRender}
                     style={{ height: 44 }}
