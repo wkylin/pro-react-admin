@@ -1,0 +1,29 @@
+*** Begin Patch
+*** Add File: tools/patches/reexport-argstable.patch
++*** Update File: code/addons/docs/src/blocks.ts
++@@
++ /*
++  * Temporary compatibility re-export to ensure consumers importing
++  * `ArgsTable` from `@storybook/addon-docs/blocks` continue to work
++  * with bundlers that may rename or re-map internal exports (e.g.
++  * Vite pre-bundling producing `PureArgsTable`).
++  */
++
++// Re-export the internal implementation as a stable, named export.
++export { PureArgsTable as ArgsTable };
++
+*** Add File: code/addons/docs/src/__tests__/blocks.test.ts
++@@
++import * as blocks from '../blocks';
++
++describe('blocks module compatibility exports', () => {
++  test('exports ArgsTable', () => {
++    expect(blocks.ArgsTable).toBeDefined();
++  });
++
++  test('ArgsTable equals PureArgsTable', () => {
++    expect(blocks.ArgsTable).toBe(blocks.PureArgsTable);
++  });
++});
++
+*** End Patch
