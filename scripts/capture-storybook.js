@@ -1,18 +1,18 @@
 #!/usr/bin/env node
-// Simple Playwright-based script to capture a screenshot and record a short video of a Storybook page.
+// ESM-compatible Playwright-based script to capture a screenshot and record a short video of a Storybook page.
 // Usage: STORYBOOK_URL=http://localhost:6006 STORY_PATH='/?path=/story/your--story' OUT_DIR=docs/static/images node scripts/capture-storybook.js
 
-const { chromium } = require('playwright');
-const fs = require('fs');
+import { chromium } from 'playwright';
+import fs from 'fs';
 
-(async () => {
-  const url = process.env.STORYBOOK_URL || 'http://localhost:6006';
-  const path = process.env.STORY_PATH || '/';
-  const out = process.env.OUT_DIR || 'docs/static/images';
-  fs.mkdirSync(out, { recursive: true });
-  const videoDir = `${out}/video`;
-  fs.mkdirSync(videoDir, { recursive: true });
+const url = process.env.STORYBOOK_URL || 'http://localhost:6006';
+const path = process.env.STORY_PATH || '/';
+const out = process.env.OUT_DIR || 'docs/static/images';
+fs.mkdirSync(out, { recursive: true });
+const videoDir = `${out}/video`;
+fs.mkdirSync(videoDir, { recursive: true });
 
+try {
   const browser = await chromium.launch();
   const context = await browser.newContext({ recordVideo: { dir: videoDir, size: { width: 1280, height: 720 } } });
   const page = await context.newPage();
@@ -42,4 +42,7 @@ const fs = require('fs');
 
   console.log('Done. Convert the webm to gif using ffmpeg if you need GIFs.');
   process.exit(0);
-})().catch(e => { console.error(e); process.exit(1); });
+} catch (e) {
+  console.error(e);
+  process.exit(1);
+}
