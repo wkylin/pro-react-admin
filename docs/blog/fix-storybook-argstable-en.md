@@ -46,12 +46,12 @@ Minimal, non-breaking change to `code/addons/docs/src/blocks.ts`:
 Plus unit test at `code/addons/docs/src/__tests__/blocks.test.ts`:
 
 ```ts
-import * as blocks from '../blocks';
+import * as blocks from '../blocks'
 
 describe('blocks module compatibility exports', () => {
-  test('exports ArgsTable', () => expect(blocks.ArgsTable).toBeDefined());
-  test('ArgsTable equals PureArgsTable', () => expect(blocks.ArgsTable).toBe(blocks.PureArgsTable));
-});
+  test('exports ArgsTable', () => expect(blocks.ArgsTable).toBeDefined())
+  test('ArgsTable equals PureArgsTable', () => expect(blocks.ArgsTable).toBe(blocks.PureArgsTable))
+})
 ```
 
 ## How to verify locally

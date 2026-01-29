@@ -1,13 +1,13 @@
 ---
 title: 修复 Storybook MDX 中 “does not provide an export named 'ArgsTable'” 的实战
-description: "在 Storybook 的 blocks 打包入口显式重导出 ArgsTable，从而修复 Vite 预打包导致的 MDX 运行时导出缺失问题。"
+description: '在 Storybook 的 blocks 打包入口显式重导出 ArgsTable，从而修复 Vite 预打包导致的 MDX 运行时导出缺失问题。'
 tags: [Storybook, Vite, MDX, debugging, frontend]
 juejin_tags: [前端, Storybook, Vite, MDX, Debug]
 date: 2026-01-29
-author: "wkylin"
+author: 'wkylin'
 cover: /docs/static/images/storybook-argstable-cover.png
 og_image: /docs/static/images/storybook-argstable-cover.png
-canonical: "https://your-domain.example/blog/fix-storybook-argstable-cn"
+canonical: 'https://your-domain.example/blog/fix-storybook-argstable-cn'
 ---
 
 # 修复 Storybook MDX 中 “does not provide an export named 'ArgsTable'” 的实战 🐛➜✅
@@ -26,8 +26,8 @@ TL;DR: 在 Storybook 的 `blocks` 打包入口里显式重导出 `ArgsTable`（`
 
 ## 问题定位（快速说明）
 
-- 现象：MDX 导入 `ArgsTable` 报错，且只在开启 Vite 优化（optimizeDeps）或预打包后的环境中出现。  
-- 检查 `.vite-cache` 下预打包产物后，发现 `blocks` 模块导出里存在 `PureArgsTable`，但缺少命名导出 `ArgsTable`。  
+- 现象：MDX 导入 `ArgsTable` 报错，且只在开启 Vite 优化（optimizeDeps）或预打包后的环境中出现。
+- 检查 `.vite-cache` 下预打包产物后，发现 `blocks` 模块导出里存在 `PureArgsTable`，但缺少命名导出 `ArgsTable`。
 - 推断原因：构建/预打包步骤（或导出重命名）将内部实现以 `PureArgsTable` 暴露，导致依赖 `ArgsTable` 的代码在运行时找不到对应命名导出。
 
 > 小结：Vite pre-bundling 可能改变导出符号，导致 MDX 代码期待的命名导出不存在。
@@ -51,17 +51,17 @@ TL;DR: 在 Storybook 的 `blocks` 打包入口里显式重导出 `ArgsTable`（`
 
 ```ts
 // code/addons/docs/src/__tests__/blocks.test.ts
-import * as blocks from '../blocks';
+import * as blocks from '../blocks'
 
 describe('blocks module compatibility exports', () => {
   test('exports ArgsTable', () => {
-    expect(blocks.ArgsTable).toBeDefined();
-  });
+    expect(blocks.ArgsTable).toBeDefined()
+  })
 
   test('ArgsTable equals PureArgsTable', () => {
-    expect(blocks.ArgsTable).toBe(blocks.PureArgsTable);
-  });
-});
+    expect(blocks.ArgsTable).toBe(blocks.PureArgsTable)
+  })
+})
 ```
 
 这是一种最小改动（non-breaking）的补丁，便于快速 review 和回滚。
@@ -94,7 +94,7 @@ describe('blocks module compatibility exports', () => {
 
 ## 后记与建议 ✅
 
-- 这类问题表明：当你的开发环境（如 Vite）会进行依赖预打包或导出变换时，库的公共导出契约（named exports）很重要。保持显式导出可以减少消费端因编译器/打包器变化导致的问题。  
+- 这类问题表明：当你的开发环境（如 Vite）会进行依赖预打包或导出变换时，库的公共导出契约（named exports）很重要。保持显式导出可以减少消费端因编译器/打包器变化导致的问题。
 - 我建议：库方接纳这个最小兼容补丁以快速恢复用户体验；若维护者更倾向于调整 package exports 或 build pipeline，也可以用该方向做进一步改进。
 
 ---
@@ -116,6 +116,7 @@ describe('blocks module compatibility exports', () => {
    rm -rf .vite-cache/storybook
    ```
 2. 添加一个简单的 MDX 文档（示例）：
+
    ```md
    ---
    name: ArgsTable demo
@@ -127,14 +128,19 @@ describe('blocks module compatibility exports', () => {
 
    <ArgsTable of={SomeComponent} />
    ```
+
 3. 启动 Storybook 并观察控制台错误：
+
    ```bash
    npm run storybook
    ```
+
    你应当在浏览器控制台或终端中看到类似错误：
+
    > The requested module '.../blocks.js' does not provide an export named 'ArgsTable'
 
 4. 检查预打包产物以确认导出情况：
+
    ```bash
    # Unix like
    grep -n "PureArgsTable\|ArgsTable" .vite-cache/storybook/deps/* || true
@@ -148,6 +154,7 @@ describe('blocks module compatibility exports', () => {
 ## 如何自动截屏 / 生成 GIF（脚本说明） 🛠️
 
 仓库已包含一个辅助脚本：`scripts/capture-storybook.js`（基于 Playwright），会：
+
 - 启动浏览器并访问 Storybook 页面的指定 path；
 - 保存截图到 `docs/static/images/storybook-argstable-screenshot.png`；
 - 录制短视频（webm）到 `docs/static/images/video/`（可使用 ffmpeg 转换为 GIF）。
