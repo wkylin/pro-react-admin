@@ -1,2 +1,2 @@
-export const PureArgsTable = () => ({ kind: 'pure' });
-export const Other = 1;
+export const PureArgsTable = () => ({ kind: 'pure' })
+export const Other = 1
