@@ -9,15 +9,21 @@ const FixTabPanel = React.forwardRef(
     const wrapperRef = useRef(null)
     const [containerNode, setContainerNode] = useState(null)
 
-    const setRef = (node) => {
-      wrapperRef.current = node
-      setContainerNode(node)
-      if (typeof ref === 'function') {
-        ref(node)
-      } else if (ref) {
-        ref.current = node
-      }
-    }
+    const setRef = React.useCallback(
+      (node) => {
+        if (wrapperRef.current !== node) {
+          wrapperRef.current = node
+          setContainerNode(node)
+        }
+
+        if (typeof ref === 'function') {
+          ref(node)
+        } else if (ref) {
+          ref.current = node
+        }
+      },
+      [ref]
+    )
 
     return (
       <div
