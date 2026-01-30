@@ -87,6 +87,7 @@ import {
   oneApiImage,
 } from '@utils/aidFn'
 import { fireConfetti } from '@utils/confetti'
+import exportSvg from '@utils/svgExport'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
@@ -357,23 +358,9 @@ const Home = () => {
 
   // 使用 useRef 来引用 SVG 元素
   const svgRef = useRef(null)
+  const [svgFileName, setSvgFileName] = useState('mySvg.svg')
   const saveSvgAsFile = () => {
-    if (svgRef.current) {
-      // 获取 SVG 元素的 outerHTML
-      const svgContent = svgRef.current.outerHTML
-      // 创建 Blob 对象
-      const blob = new Blob([svgContent], { type: 'image/svg+xml' })
-      // 创建下载链接
-      const url = URL.createObjectURL(blob)
-      // 创建 <a> 元素
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'mySvg.svg'
-      // 模拟点击下载链接
-      a.click()
-      // 释放临时 URL
-      URL.revokeObjectURL(url)
-    }
+    exportSvg(svgRef.current, svgFileName)
   }
 
   const mcRef = useRef(null)
@@ -669,9 +656,14 @@ const Home = () => {
           width: 360,
         }}
       >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+          <Input value={svgFileName} onChange={(e) => setSvgFileName(e.target.value)} style={{ width: 180 }} />
+          <Button type="primary" onClick={saveSvgAsFile}>
+            保存 SVG
+          </Button>
+        </div>
         <section className="relative p-4">
           <div className={styles.itemCircle} />
-          <button onClick={saveSvgAsFile}>保存 SVG</button>
           <svg ref={svgRef} style={{ height: '10px', width: '100%' }}>
             <path d="M 0 0 L 5000 0" fill="none" stroke="#595959">
               <animate
