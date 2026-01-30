@@ -30,16 +30,29 @@ const defaultSteps = [
   { label: 'Review & Submit' },
 ]
 
-const StepIndicator = ({ currentStep, steps }) => {
+const StepIndicator = ({
+  currentStep,
+  steps,
+  activeColor: propActiveColor,
+  inactiveBgColor: propInactiveBgColor,
+  circleSize = 44,
+  gradientColors = ['#ff7a18', '#af002d', '#319197'],
+  showPercent = true,
+}) => {
   const { themeSettings } = useProThemeContext()
   const isMobile = useStore((s) => s.isMobile)
   const isDark = themeSettings.themeMode === 'dark'
 
-  // 增强蓝色对比度
-  const activeColor = isDark ? '#40a9ff' : '#0958d9' // 更深的蓝色
+  // 允许外部传入颜色；否则基于 theme 决定默认颜色
+  const activeColor = propActiveColor || (isDark ? '#40a9ff' : '#0958d9')
   const activeTextColor = '#ffffff'
-  const inactiveBgColor = isDark ? '#262626' : '#f5f5f5'
+  const inactiveBgColor = propInactiveBgColor || (isDark ? '#262626' : '#f5f5f5')
   const inactiveTextColor = isDark ? '#8c8c8c' : '#bfbfbf'
+
+  const desktopSize = circleSize
+  const mobileSize = Math.max(Math.round(circleSize * 0.82), 32)
+
+  const progressPercent = Math.round((currentStep / Math.max(1, steps.length - 1)) * 100)
 
   return (
     <div className="relative w-full">
@@ -50,11 +63,18 @@ const StepIndicator = ({ currentStep, steps }) => {
             <div key={step.label} className="flex items-center space-x-3">
               <motion.div
                 className={clsx(
-                  'flex size-8 items-center justify-center rounded-full border-2 transition-all duration-300',
+                  'flex items-center justify-center rounded-full border-2 transition-all duration-300',
                   index <= currentStep ? 'border-transparent shadow-lg' : 'border-gray-300 dark:border-gray-600'
                 )}
-                animate={{ scale: index === currentStep ? 1.1 : 1 }}
+                animate={{ scale: index === currentStep ? 1.06 : 1 }}
                 style={{
+                  width: mobileSize,
+                  height: mobileSize,
+                  minWidth: mobileSize,
+                  minHeight: mobileSize,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   backgroundColor: index <= currentStep ? activeColor : inactiveBgColor,
                   color: index <= currentStep ? activeTextColor : inactiveTextColor,
                   borderColor: index <= currentStep ? activeColor : undefined,
@@ -83,9 +103,9 @@ const StepIndicator = ({ currentStep, steps }) => {
                 >
                   {step.label}
                 </div>
-                {index === currentStep && (
-                  <div className="mt-1 text-xs" style={{ color: activeColor }}>
-                    当前步骤
+                {index === currentStep && showPercent && (
+                  <div className="mt-1 text-xs font-semibold" style={{ color: activeColor }}>
+                    {progressPercent}%
                   </div>
                 )}
               </div>
@@ -93,68 +113,99 @@ const StepIndicator = ({ currentStep, steps }) => {
           ))}
         </div>
       ) : (
-        // 桌面端水平布局
-        <div className="flex items-center justify-between">
-          {steps.map((step, index) => (
-            <React.Fragment key={step.label}>
-              <div className="flex flex-col items-center">
-                <motion.div
-                  className={clsx(
-                    'flex size-8 items-center justify-center rounded-full border-2 transition-all duration-300',
-                    index <= currentStep ? 'border-transparent shadow-lg' : 'border-gray-300 dark:border-gray-600'
-                  )}
-                  animate={{ scale: index === currentStep ? 1.1 : 1 }}
-                  style={{
-                    backgroundColor: index <= currentStep ? activeColor : inactiveBgColor,
-                    color: index <= currentStep ? activeTextColor : inactiveTextColor,
-                    borderColor: index <= currentStep ? activeColor : undefined,
-                    boxShadow: index <= currentStep ? `0 4px 12px ${activeColor}40` : undefined,
-                  }}
-                >
-                  {index < currentStep ? (
-                    <AnimatedIcon variant="spin" mode="hover">
-                      <CheckCircle size={16} />
-                    </AnimatedIcon>
-                  ) : (
-                    <AnimatedIcon variant="spin" mode="hover">
-                      <Circle size={16} fill="currentColor" />
-                    </AnimatedIcon>
-                  )}
-                </motion.div>
-                <div
-                  className={clsx(
-                    'mt-2 text-center text-xs font-medium transition-colors duration-300',
-                    index <= currentStep ? '' : 'text-gray-500 dark:text-gray-400'
-                  )}
-                  style={{
-                    color: index <= currentStep ? activeColor : undefined,
-                  }}
-                >
-                  {step.label}
-                </div>
-              </div>
-              {index < steps.length - 1 && (
-                <div className="relative mx-4 flex-grow">
-                  <div
-                    className="absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full"
-                    style={{ backgroundColor: inactiveBgColor }}
-                  />
+        // 桌面端水平布局（居中、限制标签宽度、优化连线）
+        <div className="flex w-full justify-center" style={{ marginBottom: 12 }}>
+          <div className="flex w-full max-w-3xl items-center">
+            {steps.map((step, index) => (
+              <React.Fragment key={step.label}>
+                <div className="flex flex-col items-center" style={{ flex: '0 0 140px', minWidth: 80 }}>
                   <motion.div
-                    className="absolute top-1/2 h-1 w-full -translate-y-1/2 rounded-full"
+                    className={clsx(
+                      'flex items-center justify-center rounded-full border-2 transition-all duration-300',
+                      index <= currentStep ? 'border-transparent shadow-lg' : 'border-gray-300 dark:border-gray-600'
+                    )}
+                    animate={{ scale: index === currentStep ? 1.06 : 1 }}
                     style={{
-                      backgroundColor: activeColor,
-                      boxShadow: `0 0 8px ${activeColor}60`,
+                      width: desktopSize,
+                      height: desktopSize,
+                      minWidth: desktopSize,
+                      minHeight: desktopSize,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: index <= currentStep ? activeColor : inactiveBgColor,
+                      color: index <= currentStep ? activeTextColor : inactiveTextColor,
+                      borderColor: index <= currentStep ? activeColor : undefined,
+                      boxShadow: index <= currentStep ? `0 6px 18px ${activeColor}30` : undefined,
+                      zIndex: 10,
                     }}
-                    initial={{ width: '0%' }}
-                    animate={{
-                      width: index < currentStep ? '100%' : '0%',
+                  >
+                    {index < currentStep ? (
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <CheckCircle size={18} />
+                      </AnimatedIcon>
+                    ) : (
+                      <AnimatedIcon variant="spin" mode="hover">
+                        <Circle size={18} fill="currentColor" />
+                      </AnimatedIcon>
+                    )}
+                  </motion.div>
+
+                  <div
+                    className={clsx(
+                      'mt-2 text-center text-xs font-medium transition-colors duration-300',
+                      index <= currentStep ? '' : 'text-gray-500 dark:text-gray-400'
+                    )}
+                    style={{
+                      color: index <= currentStep ? activeColor : undefined,
+                      maxWidth: 120,
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
+                      whiteSpace: 'nowrap',
                     }}
-                    transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  />
+                    title={step.label}
+                  >
+                    {step.label}
+                  </div>
+
+                  {index === currentStep && showPercent && (
+                    <div className="mt-1 text-xs font-semibold" style={{ color: activeColor }}>
+                      {progressPercent}%
+                    </div>
+                  )}
                 </div>
-              )}
-            </React.Fragment>
-          ))}
+
+                {index < steps.length - 1 && (
+                  <div className="relative flex-1 px-2" style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className="h-1 w-full rounded-full" style={{ backgroundColor: inactiveBgColor, zIndex: 0 }} />
+                    <motion.div
+                      className="absolute top-1/2 left-0 h-1 -translate-y-1/2 rounded-full"
+                      style={{
+                        backgroundImage: `linear-gradient(90deg, ${gradientColors.join(',')})`,
+                        backgroundSize: '200% 100%',
+                        boxShadow: `0 0 8px ${activeColor}60`,
+                        zIndex: 1,
+                      }}
+                      initial={{
+                        width: index < currentStep ? '100%' : index === currentStep ? '40%' : '0%',
+                        backgroundPosition: '0% 0%',
+                      }}
+                      animate={{
+                        width: index < currentStep ? '100%' : index === currentStep ? '40%' : '0%',
+                        backgroundPosition: index < currentStep ? ['0% 0%', '100% 0%'] : '0% 0%',
+                      }}
+                      transition={{
+                        duration: 0.5,
+                        ease: 'easeInOut',
+                        backgroundPosition:
+                          index < currentStep ? { repeat: Infinity, duration: 3, ease: 'linear' } : undefined,
+                      }}
+                    />
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -164,6 +215,11 @@ const StepIndicator = ({ currentStep, steps }) => {
 StepIndicator.propTypes = {
   currentStep: PropTypes.number.isRequired,
   steps: PropTypes.array.isRequired,
+  activeColor: PropTypes.string,
+  inactiveBgColor: PropTypes.string,
+  circleSize: PropTypes.number,
+  gradientColors: PropTypes.array,
+  showPercent: PropTypes.bool,
 }
 
 const StepContent = ({ step }) => {
@@ -216,25 +272,25 @@ StepContent.propTypes = {
   step: PropTypes.object.isRequired,
 }
 
-const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) => {
+const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext, primaryColor: primaryColorProp }) => {
   const { themeSettings } = useProThemeContext()
   const { token } = useToken()
   const isMobile = useStore((s) => s.isMobile)
   const isDark = themeSettings.themeMode === 'dark'
 
-  const primaryColor = isDark ? '#40a9ff' : '#0958d9'
+  const primaryColor = primaryColorProp || (isDark ? '#40a9ff' : '#0958d9')
   const secondaryBg = isDark ? token.colorBgContainer : '#f8f9fa'
   const secondaryBorder = isDark ? token.colorBorder : '#d9d9d9'
   const secondaryText = isDark ? token.colorTextSecondary : '#666666'
 
   return (
-    <div className={clsx('flex gap-3', isMobile ? 'flex-col' : 'justify-between')}>
+    <div className={clsx('flex gap-3', isMobile ? 'flex-col' : 'justify-between')} style={{ marginTop: 16 }}>
       <Button
         disabled={currentStep === 0}
         onClick={handlePrev}
         className="transition-all duration-200 hover:shadow-md"
         style={{
-          visibility: currentStep === 0 ? 'hidden' : 'visible',
+          display: currentStep === 0 ? 'none' : 'inline-flex',
           backgroundColor: secondaryBg,
           borderColor: secondaryBorder,
           color: secondaryText,
@@ -249,7 +305,7 @@ const NavigationButtons = ({ currentStep, totalSteps, handlePrev, handleNext }) 
         onClick={handleNext}
         className="font-medium transition-all duration-200 hover:shadow-lg"
         style={{
-          visibility: currentStep === totalSteps - 1 ? 'hidden' : 'visible',
+          display: currentStep === totalSteps - 1 ? 'none' : 'inline-flex',
           backgroundColor: primaryColor,
           borderColor: primaryColor,
           boxShadow: `0 2px 8px ${primaryColor}30`,
@@ -266,9 +322,18 @@ NavigationButtons.propTypes = {
   totalSteps: PropTypes.number.isRequired,
   handlePrev: PropTypes.func.isRequired,
   handleNext: PropTypes.func.isRequired,
+  primaryColor: PropTypes.string,
 }
 
-const DottedStepper = ({ steps = defaultSteps, className }) => {
+const DottedStepper = ({
+  steps = defaultSteps,
+  className,
+  activeColor,
+  inactiveBgColor,
+  circleSize = 44,
+  gradientColors = ['#ff7a18', '#af002d', '#319197'],
+  showPercent = true,
+}) => {
   const [currentStep, setCurrentStep] = useState(0)
   const { token } = useToken()
 
@@ -281,14 +346,26 @@ const DottedStepper = ({ steps = defaultSteps, className }) => {
   }
 
   return (
-    <div className={clsx('mx-auto w-full max-w-3xl p-4 md:p-6', className)} style={{ color: token.colorText }}>
-      <StepIndicator currentStep={currentStep} steps={steps} />
+    <div
+      className={clsx('mx-auto w-full max-w-2xl p-6 md:max-w-3xl md:p-8', className)}
+      style={{ color: token.colorText }}
+    >
+      <StepIndicator
+        currentStep={currentStep}
+        steps={steps}
+        activeColor={activeColor}
+        inactiveBgColor={inactiveBgColor}
+        circleSize={circleSize}
+        gradientColors={gradientColors}
+        showPercent={showPercent}
+      />
       <StepContent step={steps[currentStep]} />
       <NavigationButtons
         currentStep={currentStep}
         handleNext={handleNext}
         handlePrev={handlePrev}
         totalSteps={steps.length}
+        primaryColor={activeColor}
       />
     </div>
   )
@@ -299,4 +376,17 @@ export default DottedStepper
 DottedStepper.propTypes = {
   steps: PropTypes.array,
   className: PropTypes.string,
+  activeColor: PropTypes.string,
+  inactiveBgColor: PropTypes.string,
+  circleSize: PropTypes.number,
+  gradientColors: PropTypes.array,
+  showPercent: PropTypes.bool,
+}
+
+DottedStepper.defaultProps = {
+  activeColor: undefined,
+  inactiveBgColor: undefined,
+  circleSize: 44,
+  gradientColors: ['#ff7a18', '#af002d', '#319197'],
+  showPercent: true,
 }
