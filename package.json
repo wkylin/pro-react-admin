@@ -381,7 +381,7 @@
     "markmap-common": "^0.18.9",
     "markmap-lib": "^0.18.12",
     "markmap-view": "^0.18.12",
-    "mermaid": "^10.9.5",
+    "mermaid": "^11.10.0",
     "motion": "^12.29.2",
     "pinyin-pro": "^3.28.0",
     "popmotion": "^11.0.5",
