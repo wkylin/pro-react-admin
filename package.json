@@ -303,7 +303,7 @@
     "sharp": "^0.34.5",
     "shiki": "^3.21.0",
     "sonar-scanner": "^3.1.0",
-    "standard": "^5.4.1",
+    "standard": "^17.1.2",
     "standard-version": "^9.5.0",
     "storybook": "^10.2.1",
     "style-loader": "^4.0.0",
