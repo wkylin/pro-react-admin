@@ -1,0 +1,231 @@
+@import '../../styles/global.less';
+
+.mdxEditorCol {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  padding: 40px;
+  background: var(--mdx-bg-surface);
+  transition: background 0.3s;
+}
+
+.mdxEditorCol :global(.ProseMirror) {
+  outline: none;
+  min-height: 100%;
+  max-width: 840px;
+  margin: 0 auto;
+  color: var(--mdx-text-main);
+  line-height: 1.75;
+  font-size: 16px;
+  padding-bottom: 50vh;
+  cursor: text;
+
+  p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    color: var(--mdx-text-muted);
+    pointer-events: none;
+    float: left;
+    height: 0;
+    font-style: italic;
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  h1 {
+    font-size: 2.25em;
+    border-bottom: 1px solid var(--mdx-border);
+    padding-bottom: 0.3em;
+  }
+
+  h2 { font-size: 1.75em; }
+
+  ul, ol {
+    padding-left: 1.5em;
+    margin-bottom: 1em;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    margin: 0.25em 0;
+    display: list-item;
+  }
+
+  ul ul { list-style-type: circle; }
+  ul ul ul { list-style-type: square; }
+  ol ol { list-style-type: lower-alpha; }
+  ol ol ol { list-style-type: lower-roman; }
+
+  ul[data-type="taskList"] {
+    list-style: none;
+    padding: 0;
+    /* 支持多种 Tiptap 输出结构：
+       1. li > label > input + div
+       2. li > input + div
+       3. li > label (仅包裹 input)
+    */
+    /* 支持多种 Tiptap 输出：有的版本会生成 li[data-type="taskItem"], 有的生成 li[data-checked] */
+    li[data-type="taskItem"], li[data-checked] {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0;
+
+      /* 情况 A: label 在左侧，label 内包含 input */
+      > label {
+        flex: 0 0 auto;
+        margin: 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+      }
+
+      /* 情况 B: input 与内容为直接子节点（input + div） */
+      > input[type="checkbox"] {
+        flex: 0 0 auto;
+        margin: 0;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+      }
+
+      /* 文本内容无论位于 div（常见）还是位于 label 内的子节点，都应占据剩余空间并垂直居中 */
+      /* 文本内容：通常在 div > p，或者直接在 p，或作为 label 的子节点
+         需要同时清除内部 p 的默认 margin（如 margin-bottom）以保证垂直居中 */
+      > div,
+      > label > div,
+      > label > p,
+      > p {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* 额外确保 div 内的 p 元素没有默认 margin */
+      > div p,
+      > label > div p {
+        margin: 0;
+      }
+
+      /* 当 input 在 label 内时，确保 input 大小 */
+      label > input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin: 0;
+        cursor: pointer;
+      }
+    }
+  }
+
+  pre {
+    background: var(--mdx-code-bg);
+    color: var(--mdx-code-text);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  code {
+    background: rgba(0,0,0,0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.85em;
+    color: #ef4444;
+  }
+
+  pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+  }
+
+  blockquote {
+    border-left: 4px solid var(--mdx-primary);
+    padding-left: 1rem;
+    font-style: italic;
+    color: var(--mdx-text-muted);
+    margin: 1.5em 0;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    display: block;
+    box-shadow: var(--mdx-shadow-md);
+
+    &.ProseMirror-selectednode {
+      outline: 3px solid var(--mdx-primary);
+    }
+  }
+
+  a {
+    color: var(--mdx-primary);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    width: 100%;
+    margin: 1.5em 0;
+    overflow: hidden;
+  }
+
+  td, th {
+    min-width: 1em;
+    border: 1px solid var(--mdx-border);
+    padding: 6px 10px;
+    vertical-align: top;
+    box-sizing: border-box;
+    background-color: var(--mdx-bg-surface);
+  }
+
+  th {
+    font-weight: 700;
+    text-align: left;
+    background-color: var(--mdx-bg-body);
+  }
+
+  .selectedCell:after {
+    z-index: 2;
+    position: absolute;
+    content: "";
+    left: 0; right: 0; top: 0; bottom: 0;
+    background: rgba(200, 200, 255, 0.4);
+    pointer-events: none;
+  }
+
+  .column-resize-handle {
+    position: absolute;
+    right: -2px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    z-index: 20;
+    background-color: #adf;
+    pointer-events: none;
+  }
+}
