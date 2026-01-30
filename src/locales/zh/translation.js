@@ -80,6 +80,7 @@ const zh = {
     topology: '拓扑图',
     svgViewer: '架构预览',
     autoDeploy: '自动部署',
+    textEditor: '文本编辑器',
     permissionExample: '权限示例',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',

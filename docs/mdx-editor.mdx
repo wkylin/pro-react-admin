@@ -1,0 +1,36 @@
+---
+slug: /docs/mdx-editor
+title: MDX 编辑器（MdxEditor）
+---
+
+import { Meta } from '@storybook/addon-docs'
+
+# MDX 编辑器（MdxEditor）
+
+本页面为项目级文档，介绍 `MdxEditor` 的用途、配置与示例。
+
+## 组件位置
+
+- 源码：`src/components/stateless/MdxEditor`
+- Storybook 文档：`stateless/MdxEditor`（包含 `MdxEditor.mdx` 组件文档与示例）
+
+## 示例文件
+
+项目内已包含示例 MDX 文件：
+
+- `src/components/stateless/MdxEditor/examples/sample.mdx`（基础示例）
+- `src/components/stateless/MdxEditor/examples/sample-advanced.mdx`（高级示例，包含图片与 TypeScript 示例）
+
+## 使用建议
+
+- 若在外部系统（CMS/存储）中维护 MDX 文档，建议把文档以 `.mdx` 存储并通过 `initialMarkdown` 作为初始内容加载到 `MdxEditor`。
+- 使用 `onChange` 回调实现自动保存或草稿功能。
+
+## 快速开始
+
+1. 打开 Storybook：`npm run storybook`
+2. 访问 `stateless/MdxEditor`，切换到 `从文件加载（示例）` 查看演示
+
+---
+
+如需添加更多示例或受控属性（例如 `save` 回调、自动保存策略），请在 GitHub Issue 中提出或直接提交 PR。

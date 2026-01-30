@@ -5,6 +5,7 @@ import Loading from '@stateless/Loading'
 import Home from '@pages/home'
 import Layout from '@pages/layout'
 import MyPortfilo from '@pages/portfilo'
+import RichTextEditor from '@pages/richTextEditor'
 
 /**
  * 懒加载失败时的备用组件
@@ -73,6 +74,7 @@ export const lazyComponents = {
   Business: lazyLoad(() => import('@pages/business')),
   ZustandDemo: lazyLoad(() => import('@pages/zustand'), { preload: true }),
   AutoDeploy: lazyLoad(() => import('@pages/autoDeploy'), { preload: true }),
+  RichTextEditor: lazyLoad(() => import('@pages/richTextEditor'), { preload: true }),
 
   // UI 组件页面
   Motion: lazyLoad(() => import('@pages/motion')),

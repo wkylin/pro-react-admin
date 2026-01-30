@@ -74,11 +74,19 @@ export const uiRoutes = [
   {
     path: 'permission',
     name: '权限示例',
+    i18nKey: 'menu.permissionExample',
     element: <lazyComponents.PermissionExample />,
   },
   {
     path: 'auto-deploy',
     name: '自动部署',
+    i18nKey: 'menu.autoDeploy',
     element: <lazyComponents.AutoDeploy />,
+  },
+  {
+    path: 'text-editor',
+    name: '文本编辑器',
+    i18nKey: 'menu.textEditor',
+    element: <lazyComponents.RichTextEditor />,
   },
 ]

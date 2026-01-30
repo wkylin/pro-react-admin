@@ -20,11 +20,12 @@ import { htmlToMarkdown, markdownToHtml } from './utils/markdownHelper'
 import styles from './index.module.less'
 import './styles/global.less'
 import './styles/codeHighlight.less'
+import PropTypes from 'prop-types'
 
 // 创建 lowlight 实例，加载常用语言
 const lowlight = createLowlight(common)
 
-const initialMarkdown = `# Pro MDX Editor
+const defaultMarkdown = `# Pro MDX Editor
 
 欢迎使用 **React 19** + **Tiptap** 编辑器。
 
@@ -33,9 +34,9 @@ const initialMarkdown = `# Pro MDX Editor
 > 开始创作吧！
 `
 
-export default function ProMdxEditor() {
+export default function ProMdxEditor({ initialMarkdown: initialMarkdownProp, onChange, readOnly = false } = {}) {
   const [viewMode, setViewMode] = useState('normal')
-  const [markdown, setMarkdown] = useState(initialMarkdown)
+  const [markdown, setMarkdown] = useState(initialMarkdownProp ?? defaultMarkdown)
   const [stats, setStats] = useState({ cursorPos: '行 1, 列 1', stats: '0 字符 / 0 词' })
   const [toast, setToast] = useState(null)
   const [theme, setTheme] = useState('light')
@@ -72,11 +73,13 @@ export default function ProMdxEditor() {
   const editor = useEditor({
     extensions,
     content: markdownToHtml(markdown),
+    editable: !readOnly,
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       const md = htmlToMarkdown(html)
       lastMarkdownFromEditorRef.current = md
       setMarkdown(md)
+      if (typeof onChange === 'function') onChange(md)
     },
     onSelectionUpdate: () => {
       // 触发工具栏更新
@@ -113,7 +116,10 @@ export default function ProMdxEditor() {
     }
   }, [])
 
-  const handleMarkdownChange = (newMarkdown) => setMarkdown(newMarkdown)
+  const handleMarkdownChange = (newMarkdown) => {
+    setMarkdown(newMarkdown)
+    if (typeof onChange === 'function') onChange(newMarkdown)
+  }
 
   const handleEditorScroll = useCallback(
     (e) => {
@@ -211,4 +217,16 @@ export default function ProMdxEditor() {
       {toast && <div className={`${styles.mdxToast} ${styles[`mdxToast_${toast.type}`] || ''}`}>{toast.message}</div>}
     </div>
   )
+}
+
+ProMdxEditor.propTypes = {
+  initialMarkdown: PropTypes.string,
+  onChange: PropTypes.func,
+  readOnly: PropTypes.bool,
+}
+
+ProMdxEditor.defaultProps = {
+  initialMarkdown: undefined,
+  onChange: undefined,
+  readOnly: false,
 }

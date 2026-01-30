@@ -1,0 +1,67 @@
+import { Meta, Canvas, Story } from '@storybook/addon-docs/blocks'
+import ProMdxEditor from './index'
+import * as Stories from './MdxEditor.stories'
+import { ArgsTable } from '../../../storybook/ArgsTable'
+
+<Meta title="stateless/MdxEditor" of={Stories} />
+
+# MdxEditor
+
+> A rich MDX editor built on Tiptap with split/source views, copy/download, and syntax highlighting.
+
+## Overview
+
+`MdxEditor` provides a user-friendly editing surface for authoring MDX content. It supports:
+
+- WYSIWYG editing with syntax-highlighted code blocks
+- Split / source view to edit raw MDX
+- Copy to clipboard and download as `.mdx`
+- Theme toggle (light/dark)
+- Table, task lists, images and more (via Tiptap extensions)
+
+## Usage
+
+Import and render in your app:
+
+```jsx
+import ProMdxEditor from '@stateless/MdxEditor'
+
+export default function Page() {
+  return <ProMdxEditor />
+}
+```
+
+## Stories / Examples
+
+<Canvas>
+  <Story name="Default">
+    <ProMdxEditor />
+  </Story>
+</Canvas>
+
+## Configuration & Notes
+
+- The editor loads common languages for code highlighting via `lowlight` (see `components/stateless/MdxEditor/index.jsx`).
+- If you bundle Tiptap extensions separately, ensure peer deps like `@floating-ui/dom` and `lowlight` are installed.
+- The component accepts optional props for controlled usage:
+  - `initialMarkdown` (string) — 初始 MDX 内容，可用于从文件或接口加载文档。
+  - `onChange` (function) — 当文档内容变更时会被回调，接收新的 markdown 字符串。
+  - `readOnly` (boolean) — 可将编辑器设置为只读模式，默认 `false`。
+
+If you need more advanced integrations (saving drafts, autosave), pass `initialMarkdown` and handle `onChange` in the parent component or open an issue to add richer APIs.
+
+## Accessibility
+
+- The editor uses semantic elements and provides keyboard navigation via Tiptap's commands. Consider adding ARIA labels for any custom controls you add.
+
+## Props
+
+该组件支持以下可选 props（已在 `index.jsx` 中使用 `propTypes` 声明）：
+
+<ArgsTable
+  rows={[
+    { name: 'initialMarkdown', type: 'string', default: 'undefined', description: '初始 MDX 内容，可用于从文件或接口加载文档。' },
+    { name: 'onChange', type: '(markdown: string) => void', default: 'undefined', description: '当文档内容变更时会被回调，接收新的 markdown 字符串。' },
+    { name: 'readOnly', type: 'boolean', default: 'false', description: '将编辑器设置为只读模式。' },
+  ]}
+/>

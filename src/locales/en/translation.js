@@ -80,6 +80,7 @@ const en = {
     topology: 'Topology',
     svgViewer: 'Arc Preview',
     autoDeploy: 'Auto Deploy',
+    textEditor: 'Text Editor',
     permissionExample: 'Permission',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',

@@ -69,12 +69,22 @@ const rawMainLayoutMenu = [
     ),
   },
   {
-    label: 'AUTO DEPLOY',
+    label: '自动部署',
     i18nKey: 'menu.autoDeploy',
     path: '/auto-deploy',
     icon: (
       <AnimatedIcon variant="spin" mode="hover">
         <CloudUploadOutlined />
+      </AnimatedIcon>
+    ),
+  },
+  {
+    label: 'Text Editor',
+    i18nKey: 'menu.textEditor',
+    path: '/text-editor',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <FileTextOutlined />
       </AnimatedIcon>
     ),
   },

@@ -48,6 +48,7 @@ export type Resource =
   | 'zustand'
   | 'svg-viewer'
   | 'auto-deploy'
+  | 'text-editor'
 
 /**
  * 权限点定义
