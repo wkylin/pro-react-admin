@@ -4,6 +4,7 @@ import Phase03 from './phases/Phase03_Env'
 import Phase04 from './phases/Phase04_Strategy'
 import Phase05 from './phases/Phase05_Ops'
 import TimelineDot from './shared/TimelineDot'
+import KnowledgeSummary from './shared/KnowledgeSummary'
 import styles from './index.module.less'
 
 const phases = [
@@ -20,23 +21,26 @@ interface Props {
 
 const DeploymentFlow: React.FC<Props> = ({ scrollContainerRef }) => {
   return (
-    <div className={styles.container}>
-      <div className={styles.timelineLine}></div>
+    <>
+      <div className={styles.container}>
+        <div className={styles.timelineLine}></div>
 
-      {phases.map((phase, index) => {
-        const isLeft = index % 2 === 0
-        const PhaseComponent = phase.component
+        {phases.map((phase, index) => {
+          const isLeft = index % 2 === 0
+          const PhaseComponent = phase.component
 
-        return (
-          <div key={phase.id} className={`${styles.node} ${styles[phase.type]}`}>
-            <TimelineDot type={phase.type} />
-            <div className={`${styles.cardWrapper} ${isLeft ? styles.left : styles.right}`}>
-              <PhaseComponent isLeft={isLeft} scrollContainerRef={scrollContainerRef} />
+          return (
+            <div key={phase.id} className={`${styles.node} ${styles[phase.type]}`}>
+              <TimelineDot type={phase.type} />
+              <div className={`${styles.cardWrapper} ${isLeft ? styles.left : styles.right}`}>
+                <PhaseComponent isLeft={isLeft} scrollContainerRef={scrollContainerRef} />
+              </div>
             </div>
-          </div>
-        )
-      })}
-    </div>
+          )
+        })}
+      </div>
+      <KnowledgeSummary />
+    </>
   )
 }
 

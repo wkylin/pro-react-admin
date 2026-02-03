@@ -33,6 +33,10 @@ import {
   ThunderboltOutlined,
   ToolOutlined,
   CloudUploadOutlined,
+  DatabaseOutlined,
+  SafetyCertificateOutlined,
+  NodeIndexOutlined,
+  PlayCircleOutlined,
 } from '@ant-design/icons'
 
 // 静态菜单配置
@@ -94,7 +98,7 @@ const rawMainLayoutMenu = [
     path: '/zustand',
     icon: (
       <AnimatedIcon variant="spin" mode="hover">
-        <ThunderboltOutlined />
+        <DatabaseOutlined />
       </AnimatedIcon>
     ),
   },
@@ -104,7 +108,7 @@ const rawMainLayoutMenu = [
     path: '/deploy-flow',
     icon: (
       <AnimatedIcon variant="spin" mode="hover">
-        <ThunderboltOutlined />
+        <RocketOutlined />
       </AnimatedIcon>
     ),
   },
@@ -114,7 +118,7 @@ const rawMainLayoutMenu = [
     path: '/motion',
     icon: (
       <AnimatedIcon variant="spin" mode="hover">
-        <RocketOutlined />
+        <PlayCircleOutlined />
       </AnimatedIcon>
     ),
   },
@@ -194,7 +198,7 @@ const rawMainLayoutMenu = [
     path: '/crypto',
     icon: (
       <AnimatedIcon variant="spin" mode="hover">
-        <LockOutlined />
+        <SafetyCertificateOutlined />
       </AnimatedIcon>
     ),
   },
@@ -314,7 +318,7 @@ const rawMainLayoutMenu = [
     path: '/tech/frontend',
     icon: (
       <AnimatedIcon variant="spin" mode="hover">
-        <DeploymentUnitOutlined />
+        <NodeIndexOutlined />
       </AnimatedIcon>
     ),
     children: [
