@@ -53,7 +53,10 @@ export default defineConfig(({ mode }) => {
       const outDirAbs = path.resolve(__dirname, outDir)
       const zipDir = path.resolve(__dirname, 'dist-vite-zip')
       await fs.promises.mkdir(zipDir, { recursive: true })
-      const archivePath = path.join(zipDir, project === 'default' ? 'pro-react-admin.zip' : `pro-react-admin-${project}.zip`)
+      const archivePath = path.join(
+        zipDir,
+        project === 'default' ? 'pro-react-admin.zip' : `pro-react-admin-${project}.zip`
+      )
 
       const output = fs.createWriteStream(archivePath)
       const archive = archiver('zip', { zlib: { level: 9 } })
@@ -156,7 +159,9 @@ export default defineConfig(({ mode }) => {
         '@app-hooks': path.resolve(__dirname, 'src/app-hooks'),
         '@assets': path.resolve(__dirname, 'src/assets'),
         '@pages': path.resolve(__dirname, 'src/pages'),
-        '@routers': fs.existsSync(resolveProjectDir('routers')) ? resolveProjectDir('routers') : path.resolve(__dirname, 'src/routers'),
+        '@routers': fs.existsSync(resolveProjectDir('routers'))
+          ? resolveProjectDir('routers')
+          : path.resolve(__dirname, 'src/routers'),
         '@utils': path.resolve(__dirname, 'src/utils'),
         '@theme': path.resolve(__dirname, 'src/theme'),
       },
