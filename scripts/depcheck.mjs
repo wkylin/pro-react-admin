@@ -220,7 +220,6 @@ const ignoreMissingPrefixes = [
   '@utils/',
   '@assets/',
   '@app-hooks/',
-  '@container/',
   '@theme/',
 ]
 

@@ -32,7 +32,6 @@
       "@stateful/*": ["./src/components/stateful/*"],
       "@hooks/*": ["./src/components/hooks/*"],
       "@app-hooks/*": ["./src/app-hooks/*"],
-      "@container/*": ["./src/components/container/*"],
       "@assets/*": ["./src/assets/*"],
       "@pages/*": ["./src/pages/*"],
       "@routers": ["./src/routers/index"],

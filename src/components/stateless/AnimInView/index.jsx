@@ -18,12 +18,14 @@ const AnimationInView = ({
   once = false,
   amount = 0.2,
   margin,
+  scrollContainerRef,
 }) => {
   const ref = useRef(null)
   const isInView = useInView(ref, {
     once,
     amount,
     margin,
+    root: scrollContainerRef,
     ...viewOptions,
   })
 

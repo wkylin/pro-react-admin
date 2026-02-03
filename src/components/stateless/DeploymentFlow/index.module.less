@@ -1,0 +1,133 @@
+@color-git: #0277bd;
+@light-git: #e1f5fe;
+@color-ci: #ef6c00;
+@light-ci: #fff3e0;
+@color-cd: #2e7d32;
+@light-cd: #e8f5e9;
+@color-ops: #6a1b9a;
+@light-ops: #f3e5f5;
+@color-alert: #c62828;
+@light-alert: #ffebee;
+
+@card-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+
+.container {
+  max-width: 1100px;
+  margin: 50px auto;
+  position: relative;
+  padding: 20px;
+}
+
+/* 时间轴线条与流动动画 */
+.timelineLine {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #e0e0e0;
+  transform: translateX(-50%);
+  border-radius: 2px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.timelineLine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to bottom, transparent, rgba(33, 150, 243, 0.6), transparent);
+  animation: flowDown 2.5s linear infinite;
+}
+
+@keyframes flowDown {
+  0% { top: -50%; }
+  100% { top: 150%; }
+}
+
+/* 节点布局 */
+.node {
+  position: relative;
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  opacity: 1;
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cardWrapper {
+  width: 48%;
+  position: relative;
+  z-index: 1;
+
+  &.left {
+    margin-right: auto;
+    padding-right: 40px;
+    text-align: right;
+  }
+
+  &.right {
+    margin-left: auto;
+    padding-left: 40px;
+    text-align: left;
+  }
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .timelineLine { left: 20px; }
+  .cardWrapper {
+    width: 85% !important;
+    margin-left: 50px !important;
+    margin-right: 0 !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+}
+
+/* 圆点定位 - 修复版 */
+.dot {
+  position: absolute;
+  left: 50%;
+  top: 24px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 5px solid #fff;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+  border-radius: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  transition: transform 0.3s;
+}
+
+.node:hover .dot {
+  transform: translateX(-50%) scale(1.2);
+}
+
+/* 单独定义类名以便 CSS Modules 导出 */
+.dot.git { background-color: #0277bd; }
+.dot.ci { background-color: #ef6c00; }
+.dot.env { background-color: #2e7d32; }
+.dot.strategy { background-color: #6a1b9a; }
+.dot.ops { background-color: #c62828; }
+
+@media (max-width: 768px) {
+  .dot {
+    left: 20px;
+    transform: none;
+  }
+  .node:hover .dot {
+    transform: scale(1.2);
+  }
+}

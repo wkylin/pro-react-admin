@@ -99,6 +99,16 @@ const rawMainLayoutMenu = [
     ),
   },
   {
+    label: 'Deploy Flow',
+    i18nKey: 'menu.deployFlow',
+    path: '/deploy-flow',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <ThunderboltOutlined />
+      </AnimatedIcon>
+    ),
+  },
+  {
     label: 'Motion',
     i18nKey: 'menu.motion',
     path: '/motion',

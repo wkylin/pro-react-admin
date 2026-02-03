@@ -67,7 +67,6 @@ const config: StorybookConfig = {
           '@stateful/*': path.resolve(rootDir, 'src/components/stateful/*'),
           '@hooks/*': path.resolve(rootDir, 'src/components/hooks/*'),
           '@app-hooks/*': path.resolve(rootDir, 'src/app-hooks/*'),
-          '@container/*': path.resolve(rootDir, 'src/components/container/*'),
           '@assets/*': path.resolve(rootDir, 'src/assets/*'),
           '@pages/*': path.resolve(rootDir, 'src/pages/*'),
           '@routers/*': path.resolve(rootDir, 'src/routers/*'),

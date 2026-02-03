@@ -38,6 +38,7 @@ const allRoutes = [
   '/svg-viewer',
   '/auto-deploy',
   '/text-editor',
+  '/deploy-flow',
 ]
 
 // 超级管理员：所有路由
@@ -64,6 +65,7 @@ const managerRoutes = [
   '/svg-viewer',
   '/auto-deploy',
   '/text-editor',
+  '/deploy-flow',
 ]
 
 // 业务员：业务相关功能
@@ -200,6 +202,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/svg-viewer': 'svg-viewer:read',
   '/auto-deploy': 'auto-deploy:read',
   '/text-editor': 'text-editor:read',
+  '/deploy-flow': 'deploy-flow:read',
   '*': '*:*',
 }
 

@@ -89,4 +89,10 @@ export const uiRoutes = [
     i18nKey: 'menu.textEditor',
     element: <lazyComponents.RichTextEditor />,
   },
+  {
+    path: 'deploy-flow',
+    name: 'Deploy Flow',
+    i18nKey: 'menu.deployFlow',
+    element: <lazyComponents.DeployFlow />,
+  },
 ]

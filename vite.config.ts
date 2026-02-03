@@ -154,7 +154,6 @@ export default defineConfig(({ mode }) => {
         '@stateful': path.resolve(__dirname, 'src/components/stateful'),
         '@hooks': path.resolve(__dirname, 'src/components/hooks'),
         '@app-hooks': path.resolve(__dirname, 'src/app-hooks'),
-        '@container': path.resolve(__dirname, 'src/components/container'),
         '@assets': path.resolve(__dirname, 'src/assets'),
         '@pages': path.resolve(__dirname, 'src/pages'),
         '@routers': fs.existsSync(resolveProjectDir('routers')) ? resolveProjectDir('routers') : path.resolve(__dirname, 'src/routers'),

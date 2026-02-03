@@ -23,7 +23,7 @@
 
 ## 路径别名
 
-- 两端保持一致：`@`/`@src`/`@stateless`/`@stateful`/`@hooks`/`@app-hooks`/`@container`/`@assets`/`@pages`/`@routers`/`@utils`/`@theme`。
+- 两端保持一致：`@`/`@src`/`@stateless`/`@stateful`/`@hooks`/`@app-hooks`/`@assets`/`@pages`/`@routers`/`@utils`/`@theme`。
 
 ## 构建与输出
 

@@ -81,6 +81,7 @@ const en = {
     svgViewer: 'Arc Preview',
     autoDeploy: 'Auto Deploy',
     textEditor: 'Text Editor',
+    deployFlow: 'Deploy Flow',
     permissionExample: 'Permission',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',
