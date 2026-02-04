@@ -1,0 +1,131 @@
+.tooltipContainer {
+  position: absolute;
+  z-index: 1060;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.tooltipInner {
+  min-width: 30px;
+  min-height: 24px;
+  padding: 6px 8px;
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  word-wrap: break-word;
+  background-color: #404040;
+  border-radius: 4px;
+  box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  line-height: 1.5715;
+}
+
+.arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: transparent;
+  pointer-events: none;
+  z-index: 1061;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    position: static;
+    width: 8px;
+    height: 8px;
+    background-color: #404040;
+    content: '';
+    transform: rotate(45deg);
+    border-radius: 0 0 2px 0;
+  }
+}
+
+.placement-top {
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+
+  &::before {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-topLeft {
+  bottom: 0;
+  left: 16px;
+  transform: translateY(50%);
+
+  &::before {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-topRight {
+  bottom: 0;
+  right: 16px;
+  left: auto;
+  transform: translateY(50%);
+
+  &::before {
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-bottom {
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &::before {
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-bottomLeft {
+  top: 0;
+  left: 16px;
+  transform: translateY(-50%);
+
+  &::before {
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-bottomRight {
+  top: 0;
+  right: 16px;
+  left: auto;
+  transform: translateY(-50%);
+
+  &::before {
+    box-shadow: -2px -2px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-left {
+  right: 0;
+  top: 50%;
+  transform: translate(50%, -50%);
+
+  &::before {
+    box-shadow: 3px -3px 5px rgba(0, 0, 0, 0.07);
+  }
+}
+
+.placement-right {
+  left: 0;
+  top: 50%;
+  transform: translate(-50%, -50%);
+
+  &::before {
+    box-shadow: -3px 3px 5px rgba(0, 0, 0, 0.07);
+  }
+}

@@ -1,0 +1,36 @@
+import { Meta, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks';
+import * as Stories from './PortalTooltip.stories';
+
+<Meta of={Stories} />
+
+# PortalTooltip (门户提示框)
+
+一个轻量级的 Tooltip 组件，将内容渲染到 Portal (`document.body`) 中。这避免了在滚动容器或复杂布局中使用时出现的 z-index 或被裁剪的问题。
+
+## 参数属性 (Props)
+
+<ArgTypes />
+
+## 示例
+
+### 默认用法
+
+<Canvas>
+  <Story name="Default" />
+</Canvas>
+
+### 自定义宽度
+
+你可以通过 `overlayStyle` 自定义 Tooltip 的最大宽度。默认为 `300px`。
+
+<Canvas>
+  <Story name="Custom MaxWidth (500px)" />
+</Canvas>
+
+### 所有位置方向
+
+支持 `top`, `bottom`, `left`, `right` 以及各个角落的变体。
+
+<Canvas>
+  <Story name="Placements" />
+</Canvas>

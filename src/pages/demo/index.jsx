@@ -1,4 +1,3 @@
-import React from 'react'
 import { Smartphone, Monitor, Rocket, Music } from 'lucide-react'
 import PageContainer from '@stateless/PageContainer'
 import FixTabPanel from '@stateless/FixTabPanel'
@@ -22,6 +21,7 @@ import ScrollLayout from '@stateless/ScrollLayout'
 import AnimatedList from '@stateless/AnimatedList'
 // import AnimationTabs from '@stateless/AnimationTabs'
 import StickyCard from '@stateless/StickyCard'
+import OverflowText from '@stateless/OverflowText'
 import SafeHtml from '@stateless/SafeHtml'
 import AnimatedIcon from '@stateless/AnimatedIcon'
 import SandpackBasic from '@stateless/SandpackBasic'
@@ -313,6 +313,17 @@ const ProDemo = () => {
           ]}
           defaultActiveTab="tab1"
         />
+        <OverflowText
+          text="日有清欢，岁有余庆；月有小盈，年有大成。愿你过尽千帆仍有星辰可追，山海可赴。2026，我们更高处见。2026，打破常规，奔赴热爱，做不被定义的黑马！"
+          tooltipProps={{ placement: 'top' }}
+        />
+        <div style={{ maxWidth: 300, marginTop: 8 }}>
+          <OverflowText
+            text="这是一个很长的多行文本示例，用于展示多行 clamp 的行为。如果超出行数会显示省略并用 Tooltip 展示完整内容，支持中文和英文混合展示。"
+            lines={2}
+            tooltipProps={{ placement: 'top' }}
+          />
+        </div>
         <SandpackBasic />
         <div className="mt-10 mb-6 rounded-lg border p-4 shadow-sm">
           <h3 className="mb-2 text-lg font-semibold">SafeHtml Demo</h3>
