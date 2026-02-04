@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.6.2](https://github.com/wkylin/pro-react-admin/compare/v3.6.1...v3.6.2) (2026-02-04)
+
 ### [3.6.1](https://github.com/wkylin/pro-react-admin/compare/v3.5.1...v3.6.1) (2026-02-04)
 
 
