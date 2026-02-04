@@ -1,5 +1,5 @@
-import { Meta, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks';
-import * as Stories from './OverflowText.stories';
+import { Meta, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './OverflowText.stories'
 
 <Meta of={Stories} />
 
@@ -17,6 +17,7 @@ import * as Stories from './OverflowText.stories';
 ## 示例
 
 ### 单行截断
+
 默认行为。当文本超过容器宽度（由 `maxWidth` 控制）时，使用省略号截断。
 
 <Canvas>
@@ -24,6 +25,7 @@ import * as Stories from './OverflowText.stories';
 </Canvas>
 
 ### 多行截断
+
 使用 `lines` 属性指定在截断前显示多少行。
 
 <Canvas>
@@ -31,6 +33,7 @@ import * as Stories from './OverflowText.stories';
 </Canvas>
 
 ### 自定义 Tooltip 宽度
+
 你可以通过 `tooltipProps` 将属性传递给底层的 `PortalTooltip`。这对于通过 `overlayStyle` 自定义 Tooltip 悬浮层宽度非常有用。
 
 ```jsx
@@ -38,7 +41,7 @@ import * as Stories from './OverflowText.stories';
   text="..."
   maxWidth={200}
   tooltipProps={{
-    overlayStyle: { maxWidth: 500 }
+    overlayStyle: { maxWidth: 500 },
   }}
 />
 ```
@@ -48,6 +51,7 @@ import * as Stories from './OverflowText.stories';
 </Canvas>
 
 ### 始终显示
+
 强制显示 Tooltip，即本文本并未溢出（通常用于调试或特定的 UX 需求）。
 
 <Canvas>
