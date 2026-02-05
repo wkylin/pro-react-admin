@@ -351,6 +351,10 @@ const config = {
         use: [
           {
             loader: 'babel-loader',
+            options: {
+              presets: [['@babel/preset-env', { modules: false }], '@babel/preset-react'],
+              plugins: ['@babel/plugin-transform-object-rest-spread', '@babel/plugin-transform-runtime'],
+            },
           },
           {
             loader: '@svgr/webpack',

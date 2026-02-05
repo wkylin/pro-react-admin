@@ -49,7 +49,7 @@ const prodWebpackConfig = merge(common, {
             ...(hasOptimizedVideo ? { '@assets/video': optimizedVideoDir } : {}),
           },
         }
-      : undefined,
+      : {},
   // 使用文件缓存
   cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
   // 生产调试开关：设置环境变量 DEBUG_PROD=1 可在 production 构建中输出 source-map 并关闭压缩，便于定位仅在构建后出现的问题。
@@ -103,29 +103,34 @@ const prodWebpackConfig = merge(common, {
       process.env.DEBUG_PROD === '1'
         ? []
         : [
-            new CssMinimizerPlugin(),
+            new CssMinimizerPlugin({
+              minify: CssMinimizerPlugin.cssnanoMinify,
+            }),
             new EsbuildPlugin({
               target: 'es2018',
               // 保留对象展开操作符，避免生成有问题的辅助函数
               keepNames: true,
             }),
-            new HtmlMinimizerPlugin(),
-            new ImageMinimizerPlugin({
-              loader: false,
-              test: /\.(png|jpe?g|gif|webp|avif)$/i,
-              minimizer: {
-                implementation: ImageMinimizerPlugin.sharpMinify,
-                options: {
-                  encodeOptions: {
-                    // Safe defaults; tune per your quality/size preference.
-                    jpeg: { quality: 78, mozjpeg: true },
-                    png: { compressionLevel: 9, palette: true },
-                    webp: { quality: 80 },
-                    avif: { quality: 50 },
-                  },
-                },
-              },
+            new HtmlMinimizerPlugin({
+              minify: HtmlMinimizerPlugin.htmlMinifierTerserMinify,
             }),
+            // Temporarily disabled ImageMinimizerPlugin
+            // new ImageMinimizerPlugin({
+            //   loader: false,
+            //   test: /\.(png|jpe?g|gif|webp|avif)$/i,
+            //   minimizer: {
+            //     implementation: ImageMinimizerPlugin.sharpMinify,
+            //     options: {
+            //       encodeOptions: {
+            //         // Safe defaults; tune per your quality/size preference.
+            //         jpeg: { quality: 78, mozjpeg: true },
+            //         png: { compressionLevel: 9, palette: true },
+            //         webp: { quality: 80 },
+            //         avif: { quality: 50 },
+            //       },
+            //     },
+            //   },
+            // }),
           ],
     splitChunks: {
       chunks: 'all',
