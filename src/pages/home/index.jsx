@@ -564,6 +564,9 @@ const Home = () => {
   ]
   return (
     <FixTabPanel ref={scrollRef}>
+      <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
+        <ColorfulText text={`React version: ${version}`} />
+      </section>
       <InteractiveBook
         coverImage="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800"
         bookTitle="The Design of Everyday Things"
@@ -572,9 +575,6 @@ const Home = () => {
         width={350}
         height={500}
       />
-      <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
-        <ColorfulText text={`React version: ${version}`} />
-      </section>
       <section style={{ width: '320px', margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">

@@ -229,7 +229,12 @@ export default function InteractiveBook({
           })}
 
           {/* Back Cover (Static) */}
-          <div className={styles.backCover} style={{ transform: 'translateZ(-1px)', zIndex: -1 }}>
+          <div
+            className={styles.backCover}
+            style={{
+              zIndex: currentPageIndex === pages.length - 1 ? 50 : -1,
+            }}
+          >
             <div className={styles.backCover}>
               <p className={styles.endText}>The End</p>
               <motion.button
@@ -249,9 +254,9 @@ export default function InteractiveBook({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, transform: 'translateX(-50%)' }}
-            animate={{ opacity: 1, y: 0, transform: 'translateX(-50%)' }}
-            exit={{ opacity: 0, y: 20, transform: 'translateX(-50%)' }}
+            initial={{ opacity: 0, y: 20, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: 20, x: '-50%' }}
             transition={{ duration: 0.4, ease: 'easeOut' }}
             className={cn(styles.navigation)}
           >
