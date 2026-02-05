@@ -371,100 +371,123 @@ const Home = () => {
   const bookPages = [
     {
       pageNumber: 1,
-      title: 'Chapter 1: The Beginning',
+      title: '第一章：AI Agent 简介',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "The most important characteristics of good design are discoverability and understanding. Discoverability:
-            Is it possible to even figure out what actions are possible?"
-          </p>
-          <p>
-            "Understanding: What does it all mean? How is the product supposed to be used? What do all the different
-            controls and settings mean?"
-          </p>
-          <p>
-            "Good design is actually a lot harder to notice than poor design, in part because good designs fit our needs
-            so well that the design is invisible."
-          </p>
+          <p>"AI Agent 是人工智能领域的一个重要概念，它代表着能够自主执行任务的智能实体。"</p>
+          <p>"AI Agent 不仅仅是简单的程序，它们能够感知环境、做出决策并采取行动，就像人类一样。"</p>
+          <p>"在现代科技中，AI Agent 正在改变我们与技术交互的方式，从简单的聊天机器人到复杂的自动化系统。"</p>
+        </div>
+      ),
+      backContent: (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
+          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的工作原理</p>
         </div>
       ),
     },
     {
       pageNumber: 2,
-      title: 'Chapter 2: The Psychology',
+      title: '第二章：AI Agent 的工作原理',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "When people try to use something, they first form a goal, then they plan an action, then they execute the
-            action. Then they perceive what happened, interpret the result, and compare it with the goal."
-          </p>
-          <p>"This is the seven stages of action. It forms the core of human-computer interaction psychology."</p>
-          <p>
-            "The gulf of execution is the gap between the user's intentions and the allowable actions. The gulf of
-            evaluation is the gap between the system's representation and the user's expectations."
-          </p>
+          <p>"AI Agent 的核心是感知-决策-行动循环。它首先通过传感器或输入接口感知环境。"</p>
+          <p>"然后使用算法和模型分析信息，做出最佳决策。"</p>
+          <p>"最后，通过执行器或输出接口采取行动。这个循环不断重复，使 Agent 能够适应变化的环境。"</p>
+        </div>
+      ),
+      backContent: (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
+          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的类型</p>
         </div>
       ),
     },
     {
       pageNumber: 3,
-      title: 'Chapter 3: Knowledge',
+      title: '第三章：AI Agent 的类型',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "Knowledge is in the head and in the world. Precise behavior can emerge from imprecise knowledge for four
-            reasons:"
-          </p>
+          <p>"AI Agent 可以分为多种类型：反应型 Agent、 deliberation Agent、混合型 Agent 等。"</p>
           <ul
             style={{ listStyleType: 'disc', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}
           >
-            <li>Information is in the world</li>
-            <li>Great precision is not required</li>
-            <li>Natural constraints are present</li>
-            <li>Cultural constraints are present</li>
+            <li>反应型 Agent：基于当前感知做出反应</li>
+            <li>Deliberation Agent：具有规划和推理能力</li>
+            <li>学习型 Agent：能够从经验中学习和改进</li>
+            <li>多 Agent 系统：多个 Agent 协同工作</li>
           </ul>
-          <p>
-            "The principle of mapping: The relationship between controls and their effects should be clear and
-            consistent."
-          </p>
+          <p>"每种类型的 Agent 都有其独特的优势和应用场景。"</p>
+        </div>
+      ),
+      backContent: (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
+          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的应用领域</p>
         </div>
       ),
     },
     {
       pageNumber: 4,
-      title: 'Chapter 4: Constraints',
+      title: '第四章：AI Agent 的应用领域',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "Constraint: specific limits on possible actions. Constraints guide our behavior by limiting the possible
-            options."
-          </p>
-          <p>
-            "Physical constraints rely on the properties of the physical world for their operation. Semantic constraints
-            rely on the meaning of the situation."
-          </p>
-          <p>
-            "Cultural constraints are learned conventions that constrain our behavior. Logical constraints rely on the
-            reasoning that certain actions are possible."
-          </p>
+          <p>"AI Agent 在各个领域都有广泛应用，从日常生活到工业生产。"</p>
+          <p>"在医疗领域，AI Agent 可以帮助诊断疾病、制定治疗方案。在金融领域，它们可以进行风险评估和投资建议。"</p>
+          <p>"在交通领域，自动驾驶汽车就是一种复杂的 AI Agent。在娱乐领域，游戏中的 NPC 也越来越智能化。"</p>
+        </div>
+      ),
+      backContent: (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
+          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的挑战</p>
         </div>
       ),
     },
     {
       pageNumber: 5,
-      title: 'Chapter 5: Design Principles',
+      title: '第五章：AI Agent 的挑战',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "Visibility: The more visible functions are, the more likely users will be able to know what to do next."
-          </p>
-          <p>
-            "Feedback: Feedback must be immediate, informative, and clear. It should also be as obvious as possible."
-          </p>
-          <p>
-            "Affordance: The perceived and actual properties of the thing that determine how the thing could possibly be
-            used."
-          </p>
+          <p>"尽管 AI Agent 技术发展迅速，但仍面临诸多挑战。"</p>
+          <p>"安全性是首要问题，如何确保 Agent 的行为符合人类价值观？"</p>
+          <p>"可解释性：Agent 的决策过程往往像黑箱，如何让人类理解其推理过程？"</p>
         </div>
       ),
       backContent: (
@@ -479,43 +502,46 @@ const Home = () => {
           }}
         >
           <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '16px', color: '#6b7280' }}>
-            Design Principles
+            AI Agent 的挑战
           </h3>
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>Continued on next page</p>
+          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>继续阅读下一页</p>
         </div>
       ),
     },
     {
       pageNumber: 6,
-      title: 'Chapter 6: Error Prevention',
+      title: '第六章：AI Agent 的未来发展',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "Error prevention is the best way to deal with errors. If you can prevent errors from happening, you don't
-            need to worry about error messages."
-          </p>
-          <p>"Four types of errors: slips, mistakes, errors of omission, and errors of commission."</p>
-          <p>
-            "Slips are unconscious errors where the user intends to do one thing but does another. Mistakes are
-            conscious errors where the user has the wrong goal."
-          </p>
+          <p>"AI Agent 的未来充满无限可能。随着技术的进步，它们将变得更加智能和自主。"</p>
+          <p>"多模态 Agent 将能够处理文本、图像、声音等多种信息。"</p>
+          <p>"通用人工智能 Agent（AGI）可能会实现，能够在各种任务中表现出色。"</p>
+        </div>
+      ),
+      backContent: (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            textAlign: 'center',
+          }}
+        >
+          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
+          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的伦理考虑</p>
         </div>
       ),
     },
     {
       pageNumber: 7,
-      title: 'Chapter 7: Human-Centered Design',
+      title: '第七章：AI Agent 的伦理考虑',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>
-            "Human-centered design is an approach to problem-solving that starts with people and ends with innovative
-            solutions that are tailor-made to fit their needs."
-          </p>
-          <p>"The process involves three phases: inspiration, ideation, and implementation."</p>
-          <p>
-            "Empathy is at the heart of human-centered design. Understanding the people you're designing for is crucial
-            to creating meaningful solutions."
-          </p>
+          <p>"随着 AI Agent 的普及，伦理问题变得越来越重要。"</p>
+          <p>"我们需要确保 Agent 的行为符合道德标准，避免偏见和歧视。"</p>
+          <p>"隐私保护、透明度和问责制都是需要重点关注的领域。"</p>
         </div>
       ),
       backContent: (
@@ -529,21 +555,18 @@ const Home = () => {
             textAlign: 'center',
           }}
         >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>The journey of design excellence continues...</p>
+          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>AI 时代的伦理思考继续...</p>
         </div>
       ),
     },
     {
       pageNumber: 8,
-      title: 'Conclusion',
+      title: '结语：拥抱 AI Agent 的时代',
       content: (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"Design is not just what it looks like and feels like. Design is how it works."</p>
-          <p>
-            "The best designs are those that are invisible to the user. They work so well that the user doesn't notice
-            the design - they just notice that it works."
-          </p>
-          <p style={{ fontStyle: 'italic', textAlign: 'center', marginTop: '24px', color: '#6b7280' }}>— Steve Jobs</p>
+          <p>"AI Agent 不仅仅是技术工具，它们正在重塑我们的世界。"</p>
+          <p>"通过理解和正确应用 AI Agent，我们可以创造更美好的未来。"</p>
+          <p style={{ fontStyle: 'italic', textAlign: 'center', marginTop: '24px', color: '#6b7280' }}>— AI 专家</p>
         </div>
       ),
       backContent: (
@@ -557,7 +580,7 @@ const Home = () => {
             textAlign: 'center',
           }}
         >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>End of Book</p>
+          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>书籍结束</p>
         </div>
       ),
     },
@@ -567,14 +590,6 @@ const Home = () => {
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
-      <InteractiveBook
-        coverImage="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800"
-        bookTitle="The Design of Everyday Things"
-        bookAuthor="Don Norman"
-        pages={bookPages}
-        width={350}
-        height={500}
-      />
       <section style={{ width: '320px', margin: '30px 0' }}>
         <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
         <Flex align="center">
@@ -660,6 +675,14 @@ const Home = () => {
           重置验证
         </Button>
       </section>
+      <InteractiveBook
+        coverImage="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
+        bookTitle="AI Agent 完全指南"
+        bookAuthor="AI 专家"
+        pages={bookPages}
+        width={350}
+        height={500}
+      />
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
         <AlternatingText alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
