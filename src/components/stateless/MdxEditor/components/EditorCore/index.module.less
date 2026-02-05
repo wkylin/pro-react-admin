@@ -1,4 +1,4 @@
-@import '../../styles/global.less';
+@import url('../../styles/global.less');
 
 .mdxEditorCol {
   flex: 1;
@@ -29,7 +29,10 @@
     font-style: italic;
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-weight: 700;
     line-height: 1.3;
     margin-top: 1.5em;
@@ -42,9 +45,12 @@
     padding-bottom: 0.3em;
   }
 
-  h2 { font-size: 1.75em; }
+  h2 {
+    font-size: 1.75em;
+  }
 
-  ul, ol {
+  ul,
+  ol {
     padding-left: 1.5em;
     margin-bottom: 1em;
   }
@@ -62,21 +68,35 @@
     display: list-item;
   }
 
-  ul ul { list-style-type: circle; }
-  ul ul ul { list-style-type: square; }
-  ol ol { list-style-type: lower-alpha; }
-  ol ol ol { list-style-type: lower-roman; }
+  ul ul {
+    list-style-type: circle;
+  }
 
-  ul[data-type="taskList"] {
+  ul ul ul {
+    list-style-type: square;
+  }
+
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+
+  ul[data-type='taskList'] {
     list-style: none;
     padding: 0;
+
     /* 支持多种 Tiptap 输出结构：
        1. li > label > input + div
        2. li > input + div
        3. li > label (仅包裹 input)
     */
+
     /* 支持多种 Tiptap 输出：有的版本会生成 li[data-type="taskItem"], 有的生成 li[data-checked] */
-    li[data-type="taskItem"], li[data-checked] {
+    li[data-type='taskItem'],
+    li[data-checked] {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -95,7 +115,7 @@
       }
 
       /* 情况 B: input 与内容为直接子节点（input + div） */
-      > input[type="checkbox"] {
+      > input[type='checkbox'] {
         flex: 0 0 auto;
         margin: 0;
         width: 18px;
@@ -104,12 +124,15 @@
       }
 
       /* 文本内容无论位于 div（常见）还是位于 label 内的子节点，都应占据剩余空间并垂直居中 */
+
       /* 文本内容：通常在 div > p，或者直接在 p，或作为 label 的子节点
          需要同时清除内部 p 的默认 margin（如 margin-bottom）以保证垂直居中 */
       > div,
+      > p,
+      > div p,
       > label > div,
       > label > p,
-      > p {
+      > label > div p {
         flex: 1 1 auto;
         display: flex;
         align-items: center;
@@ -117,14 +140,8 @@
         margin: 0;
       }
 
-      /* 额外确保 div 内的 p 元素没有默认 margin */
-      > div p,
-      > label > div p {
-        margin: 0;
-      }
-
       /* 当 input 在 label 内时，确保 input 大小 */
-      label > input[type="checkbox"] {
+      label > input[type='checkbox'] {
         width: 18px;
         height: 18px;
         margin: 0;
@@ -145,7 +162,7 @@
   }
 
   code {
-    background: rgba(0,0,0,0.05);
+    background: rgb(0 0 0 / 5%);
     padding: 0.2em 0.4em;
     border-radius: 4px;
     font-family: monospace;
@@ -194,7 +211,8 @@
     overflow: hidden;
   }
 
-  td, th {
+  td,
+  th {
     min-width: 1em;
     border: 1px solid var(--mdx-border);
     padding: 6px 10px;
@@ -209,12 +227,12 @@
     background-color: var(--mdx-bg-body);
   }
 
-  .selectedCell:after {
+  .selectedCell::after {
     z-index: 2;
     position: absolute;
-    content: "";
-    left: 0; right: 0; top: 0; bottom: 0;
-    background: rgba(200, 200, 255, 0.4);
+    content: '';
+    inset: 0;
+    background: rgb(200 200 255 / 40%);
     pointer-events: none;
   }
 

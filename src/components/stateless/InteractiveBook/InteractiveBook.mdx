@@ -1,0 +1,145 @@
+---
+title: InteractiveBook
+---
+
+import { Meta, Canvas, Story, ArgTypes, Controls } from '@storybook/addon-docs/blocks'
+import * as InteractiveBookStories from './InteractiveBook.stories'
+
+<Meta of={InteractiveBookStories} />
+
+# InteractiveBook
+
+3D 交互式书籍组件，支持翻页动画、键盘导航和自定义内容。
+
+## 组件特性
+
+- 🎨 3D 翻页动画效果
+- ⌨️ 完整的键盘导航支持（箭头键、Escape、Home、End）
+- 📖 双面内容显示（正面内容 + 背面内容）
+- 🎯 空状态处理
+- 🔄 页面变化回调
+- 📱 响应式设计
+
+## 组件预览
+
+<Canvas>
+  <Story of={InteractiveBookStories.Default} />
+</Canvas>
+
+## Props（可调参数）
+
+<ArgTypes />
+
+<Controls />
+
+## 基本使用
+
+### 简单使用
+
+```tsx
+import InteractiveBook from '@stateless/InteractiveBook'
+
+const pages = [
+  {
+    pageNumber: 1,
+    title: '第一章：简介',
+    content: <div>这是第一页的内容</div>,
+    backContent: <div>这是第一页的背面内容</div>,
+  },
+  // ... 更多页面
+]
+
+function Example() {
+  return (
+    <InteractiveBook
+      coverImage="https://example.com/cover.jpg"
+      bookTitle="我的书籍"
+      bookAuthor="作者名"
+      pages={pages}
+      width={350}
+      height={500}
+    />
+  )
+}
+```
+
+### 带回调的使用
+
+```tsx
+import InteractiveBook from '@stateless/InteractiveBook'
+
+function Example() {
+  const handlePageChange = (pageIndex: number) => {
+    console.log('当前页面索引:', pageIndex)
+  }
+
+  return (
+    <InteractiveBook
+      coverImage="https://example.com/cover.jpg"
+      bookTitle="我的书籍"
+      bookAuthor="作者名"
+      pages={pages}
+      onPageChange={handlePageChange}
+      enableKeyboard={true}
+    />
+  )
+}
+```
+
+## 页面数据结构
+
+```tsx
+interface BookPage {
+  title?: string
+  content: React.ReactNode
+  backContent?: React.ReactNode
+  pageNumber: number
+}
+```
+
+## 键盘导航
+
+组件支持以下键盘操作：
+
+- `←` / `→`：前后翻页
+- `Escape`：关闭书籍
+- `Home`：回到封面
+- `End`：跳到最后一页
+
+## 高级用法
+
+### 自定义样式
+
+组件使用 CSS Modules，可以通过以下方式定制样式：
+
+```less
+// 自定义样式文件
+.my-book {
+  .container {
+    // 自定义容器样式
+  }
+
+  .emptyState {
+    // 自定义空状态样式
+  }
+}
+```
+
+### 响应式设计
+
+组件支持响应式尺寸设置：
+
+```tsx
+<InteractiveBook
+  width="100%"
+  height="auto"
+  // 其他属性...
+/>
+```
+
+## 注意事项
+
+- 确保 `pages` 数组中的每个页面都有唯一的 `pageNumber`
+- 封面图片建议使用合适的尺寸以获得最佳显示效果
+- 组件内部使用 Framer Motion 进行动画，性能已优化
+- 空页面数组会显示友好的空状态提示

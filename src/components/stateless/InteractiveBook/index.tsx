@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback, useDeferredValue } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, X, BookOpen } from 'lucide-react'
@@ -23,62 +23,128 @@ export interface InteractiveBookProps {
   className?: string
   width?: number | string
   height?: number | string
+  onPageChange?: (pageIndex: number) => void
+  enableKeyboard?: boolean
 }
 
 export default function InteractiveBook({
-  coverImage,
+  coverImage = '',
   bookTitle = 'Book Title',
   bookAuthor = 'Author Name',
-  pages,
+  pages = [],
   className,
   width = 350,
   height = 500,
+  onPageChange,
+  enableKeyboard = true,
 }: InteractiveBookProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentPageIndex, setCurrentPageIndex] = useState(-1)
   const [isHovering, setIsHovering] = useState(false)
 
-  const handleOpenBook = () => setIsOpen(true)
-  const handleCloseBook = (e: React.MouseEvent) => {
+  const deferredPageIndex = useDeferredValue(currentPageIndex)
+
+  const handleOpenBook = useCallback(() => {
+    setIsOpen(true)
+  }, [])
+  const handleCloseBook = useCallback((e: React.MouseEvent) => {
     e.stopPropagation()
     setIsOpen(false)
     setCurrentPageIndex(-1)
-  }
+  }, [])
 
-  const nextPage = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (currentPageIndex < pages.length - 1) {
-      setCurrentPageIndex((prev) => prev + 1)
+  const nextPage = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (currentPageIndex < pages.length - 1) {
+        const newIndex = currentPageIndex + 1
+        setCurrentPageIndex(newIndex)
+        onPageChange?.(newIndex)
+      }
+    },
+    [currentPageIndex, pages.length, onPageChange]
+  )
+
+  const prevPage = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      if (currentPageIndex >= 0) {
+        const newIndex = currentPageIndex - 1
+        setCurrentPageIndex(newIndex)
+        onPageChange?.(newIndex)
+      }
+    },
+    [currentPageIndex, onPageChange]
+  )
+
+  const restartBook = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation()
+      setCurrentPageIndex(-1)
+      onPageChange?.(-1)
+    },
+    [onPageChange]
+  )
+
+  // 键盘支持
+  useEffect(() => {
+    if (!enableKeyboard || !isOpen) return
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowLeft':
+          e.preventDefault()
+          prevPage(e as any)
+          break
+        case 'ArrowRight':
+          e.preventDefault()
+          nextPage(e as any)
+          break
+        case 'Escape':
+          e.preventDefault()
+          handleCloseBook(e as any)
+          break
+        case 'Home':
+          e.preventDefault()
+          setCurrentPageIndex(-1)
+          onPageChange?.(-1)
+          break
+        case 'End':
+          e.preventDefault()
+          setCurrentPageIndex(pages.length - 1)
+          onPageChange?.(pages.length - 1)
+          break
+      }
     }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [enableKeyboard, isOpen, nextPage, prevPage, handleCloseBook, pages.length, onPageChange])
+
+  if (!pages || pages.length === 0) {
+    return (
+      <div className={cn(styles.container, className)} style={{ width, height }}>
+        <div className={styles.emptyState}>
+          <p>暂无内容</p>
+        </div>
+      </div>
+    )
   }
 
-  const prevPage = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (currentPageIndex >= 0) {
-      setCurrentPageIndex((prev) => prev - 1)
-    }
-  }
-
-  const restartBook = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setCurrentPageIndex(-1)
-  }
-
-  // Cover Z-Index Variants
   const coverVariants = {
     closed: {
       rotateY: 0,
       zIndex: 100,
       transition: {
-        rotateY: { duration: 0.8, ease: [0.645, 0.045, 0.355, 1] as const },
-        zIndex: { delay: 0.8 },
+        rotateY: { duration: 0.6, ease: [0.645, 0.045, 0.355, 1] as const },
+        zIndex: { delay: 0.6 },
       },
     },
     hoverClosed: {
       rotateY: -15,
       zIndex: 100,
       transition: {
-        rotateY: { duration: 0.4, ease: 'easeOut' as const },
+        rotateY: { duration: 0.3, ease: 'easeOut' as const },
         zIndex: { delay: 0 },
       },
     },
@@ -86,8 +152,8 @@ export default function InteractiveBook({
       rotateY: -180,
       zIndex: 0,
       transition: {
-        rotateY: { duration: 0.8, ease: [0.645, 0.045, 0.355, 1] as const },
-        zIndex: { delay: 0.8 },
+        rotateY: { duration: 0.6, ease: [0.645, 0.045, 0.355, 1] as const },
+        zIndex: { delay: 0.6 },
       },
     },
   }
@@ -101,7 +167,6 @@ export default function InteractiveBook({
       }}
     >
       <div className={cn(styles.bookWrapper, isOpen && styles.open)} style={{ width, height }}>
-        {/* Front Cover */}
         <motion.div
           className={styles.cover}
           initial="closed"
@@ -112,26 +177,21 @@ export default function InteractiveBook({
           onHoverStart={() => !isOpen && setIsHovering(true)}
           onHoverEnd={() => setIsHovering(false)}
         >
-          {/* Front Face (Cover Image) */}
           <div className={styles.coverFace} style={{ transform: 'translateZ(0.5px)' }}>
             {/* Image Background */}
             <div className={styles.coverImage} style={{ backgroundImage: `url(${coverImage})` }} />
 
-            {/* Overlay Gradient */}
             <div className={styles.overlay} />
 
-            {/* Title & Author on Cover */}
             <div className={styles.title}>
               <h1 className={styles.bookTitle}>{bookTitle}</h1>
               <p className={styles.bookAuthor}>{bookAuthor}</p>
             </div>
 
-            {/* Spine Highlight */}
             <div className={styles.spine} />
             <div className={styles.spineLine} />
           </div>
 
-          {/* Back Face (Inner Left) */}
           <div className={styles.innerCover} style={{ transform: 'rotateY(180deg) translateZ(0.5px)' }}>
             <div className={styles.innerContent}>
               <h2 className={styles.innerTitle}>{bookTitle}</h2>
@@ -150,12 +210,12 @@ export default function InteractiveBook({
           </div>
         </motion.div>
 
-        {/* Pages Stack */}
         <div className={styles.pages} style={{ transformStyle: 'preserve-3d' }}>
           {pages.map((page, index) => {
-            const isFlipped = index <= currentPageIndex
-            const isBuriedLeft = index < currentPageIndex
+            const isFlipped = index <= deferredPageIndex
+            const isBuriedLeft = index < deferredPageIndex
 
+            // 计算动画 variants（不使用 useMemo，因为它在循环内部）
             const variants = {
               flipped: {
                 rotateY: -180,
@@ -164,7 +224,7 @@ export default function InteractiveBook({
                 transition: {
                   rotateY: { duration: 0.6, ease: [0.645, 0.045, 0.355, 1] as const },
                   zIndex: { delay: 0.6 },
-                  opacity: { delay: 0.5, duration: 0.4, ease: 'easeOut' as const },
+                  opacity: { delay: 0.2, duration: 0.3, ease: 'easeOut' as const },
                 },
               },
               unflipped: {
@@ -188,7 +248,6 @@ export default function InteractiveBook({
                 animate={isOpen && isFlipped ? 'flipped' : 'unflipped'}
                 variants={variants}
               >
-                {/* Front Face (Right Side) */}
                 <div className={styles.pageFront} style={{ transform: 'translateZ(0.5px)' }}>
                   <div className={styles.pageContent}>
                     <motion.div
@@ -206,7 +265,6 @@ export default function InteractiveBook({
                   <div className={styles.leftBorder} />
                 </div>
 
-                {/* Back Face (Left Side) */}
                 <div className={styles.pageBack} style={{ transform: 'rotateY(180deg) translateZ(0.5px)' }}>
                   <div className={styles.rightShadow} />
                   <div className={styles.rightBorder} />
@@ -228,11 +286,10 @@ export default function InteractiveBook({
             )
           })}
 
-          {/* Back Cover (Static) */}
           <div
             className={styles.backCover}
             style={{
-              zIndex: currentPageIndex === pages.length - 1 ? 50 : -1,
+              zIndex: deferredPageIndex === pages.length - 1 ? 50 : -1,
             }}
           >
             <div className={styles.backCover}>
@@ -250,7 +307,6 @@ export default function InteractiveBook({
         </div>
       </div>
 
-      {/* Bottom Navigation Bar */}
       <AnimatePresence>
         {isOpen && (
           <motion.div

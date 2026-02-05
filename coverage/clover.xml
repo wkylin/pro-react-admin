@@ -1,54 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1769650356976" clover="3.2.0">
-  <project timestamp="1769650356977" name="All files">
-    <metrics statements="42" coveredstatements="41" conditionals="24" coveredconditionals="19" methods="13" coveredmethods="11" elements="79" coveredelements="71" complexity="0" loc="42" ncloc="42" packages="1" files="2" classes="2"/>
-    <file name="blocks-original.ts" path="C:\wui\pro-react\pro-react-admin\tools\local-tests\storybook-blocks\blocks-original.ts">
-      <metrics statements="21" coveredstatements="20" conditionals="11" coveredconditionals="8" methods="7" coveredmethods="5"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="2" count="1" type="stmt"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="4" count="1" type="stmt"/>
-      <line num="5" count="1" type="stmt"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="7" count="2" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="1" type="cond" truecount="3" falsecount="2"/>
-      <line num="11" count="1" type="stmt"/>
-      <line num="12" count="2" type="cond" truecount="3" falsecount="1"/>
-      <line num="13" count="3" type="cond" truecount="2" falsecount="0"/>
-      <line num="15" count="1" type="stmt"/>
-      <line num="17" count="1" type="stmt"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="stmt"/>
-      <line num="20" count="0" type="stmt"/>
-      <line num="21" count="3" type="stmt"/>
-      <line num="23" count="1" type="stmt"/>
-      <line num="24" count="1" type="stmt"/>
-      <line num="25" count="1" type="stmt"/>
-    </file>
-    <file name="blocks-reexport.ts" path="C:\wui\pro-react\pro-react-admin\tools\local-tests\storybook-blocks\blocks-reexport.ts">
-      <metrics statements="21" coveredstatements="21" conditionals="13" coveredconditionals="11" methods="6" coveredmethods="6"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="2" count="1" type="stmt"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="4" count="1" type="stmt"/>
-      <line num="5" count="1" type="stmt"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="7" count="1" type="stmt"/>
-      <line num="9" count="1" type="stmt"/>
-      <line num="10" count="3" type="cond" truecount="3" falsecount="2"/>
-      <line num="11" count="3" type="stmt"/>
-      <line num="12" count="7" type="cond" truecount="4" falsecount="0"/>
-      <line num="13" count="6" type="cond" truecount="2" falsecount="0"/>
-      <line num="15" count="3" type="stmt"/>
-      <line num="17" count="1" type="cond" truecount="2" falsecount="0"/>
-      <line num="18" count="1" type="stmt"/>
-      <line num="19" count="1" type="stmt"/>
-      <line num="20" count="1" type="stmt"/>
-      <line num="21" count="2" type="stmt"/>
-      <line num="23" count="1" type="stmt"/>
-      <line num="24" count="1" type="stmt"/>
-      <line num="25" count="1" type="stmt"/>
-    </file>
+<coverage generated="1770260620207" clover="3.2.0">
+  <project timestamp="1770260620207" name="All files">
+    <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="0" files="0" classes="0"/>
   </project>
 </coverage>

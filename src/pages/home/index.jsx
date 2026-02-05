@@ -77,6 +77,7 @@ import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
+import AiCover from '@assets/images/ai-cover.webp'
 
 import {
   oneApiChat,
@@ -676,7 +677,7 @@ const Home = () => {
         </Button>
       </section>
       <InteractiveBook
-        coverImage="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
+        coverImage={AiCover}
         bookTitle="AI Agent 完全指南"
         bookAuthor="AI 专家"
         pages={bookPages}

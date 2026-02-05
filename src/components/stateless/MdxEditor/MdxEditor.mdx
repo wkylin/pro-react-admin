@@ -60,8 +60,18 @@ If you need more advanced integrations (saving drafts, autosave), pass `initialM
 
 <ArgsTable
   rows={[
-    { name: 'initialMarkdown', type: 'string', default: 'undefined', description: '初始 MDX 内容，可用于从文件或接口加载文档。' },
-    { name: 'onChange', type: '(markdown: string) => void', default: 'undefined', description: '当文档内容变更时会被回调，接收新的 markdown 字符串。' },
+    {
+      name: 'initialMarkdown',
+      type: 'string',
+      default: 'undefined',
+      description: '初始 MDX 内容，可用于从文件或接口加载文档。',
+    },
+    {
+      name: 'onChange',
+      type: '(markdown: string) => void',
+      default: 'undefined',
+      description: '当文档内容变更时会被回调，接收新的 markdown 字符串。',
+    },
     { name: 'readOnly', type: 'boolean', default: 'false', description: '将编辑器设置为只读模式。' },
   ]}
 />

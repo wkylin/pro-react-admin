@@ -7,7 +7,7 @@ import { Music, Heart, Play, Smartphone } from 'lucide-react'
 
 # AnimatedIcon
 
-A lightweight animated wrapper for icon components. Provides a small set of animation *variants* and *modes* and intentionally defaults to `mode="hover"` for performance. Animations respect the user's `prefers-reduced-motion` preference.
+A lightweight animated wrapper for icon components. Provides a small set of animation _variants_ and _modes_ and intentionally defaults to `mode="hover"` for performance. Animations respect the user's `prefers-reduced-motion` preference.
 
 import { ArgsTable } from '../../../storybook/ArgsTable'
 
@@ -15,10 +15,30 @@ import { ArgsTable } from '../../../storybook/ArgsTable'
 
 <ArgsTable
   rows={[
-    { name: 'variant', type: "'spin' | 'pulse' | 'bounce' | 'draw'", default: "'spin'", description: 'Animation variant to apply to the icon.' },
-    { name: 'mode', type: "'hover' | 'auto' | 'idle'", default: "'hover'", description: 'How the animation is triggered: hover interactions, always running, or idle.' },
-    { name: 'className', type: 'string', default: "''", description: 'Additional className forwarded to the motion wrapper.' },
-    { name: 'children', type: 'React.ReactElement', default: '—', description: 'Icon element (SVG or icon component).' },
+    {
+      name: 'variant',
+      type: "'spin' | 'pulse' | 'bounce' | 'draw'",
+      default: "'spin'",
+      description: 'Animation variant to apply to the icon.',
+    },
+    {
+      name: 'mode',
+      type: "'hover' | 'auto' | 'idle'",
+      default: "'hover'",
+      description: 'How the animation is triggered: hover interactions, always running, or idle.',
+    },
+    {
+      name: 'className',
+      type: 'string',
+      default: "''",
+      description: 'Additional className forwarded to the motion wrapper.',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactElement',
+      default: '—',
+      description: 'Icon element (SVG or icon component).',
+    },
   ]}
 />
 
@@ -31,10 +51,18 @@ import { ArgsTable } from '../../../storybook/ArgsTable'
 <Canvas>
   <Story name="Playground">
     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-      <AnimatedIcon variant="spin" mode="hover"><Music size={28} /></AnimatedIcon>
-      <AnimatedIcon variant="pulse" mode="hover"><Heart size={28} /></AnimatedIcon>
-      <AnimatedIcon variant="bounce" mode="hover"><Play size={28} /></AnimatedIcon>
-      <AnimatedIcon variant="draw" mode="hover"><Music size={28} /></AnimatedIcon>
+      <AnimatedIcon variant="spin" mode="hover">
+        <Music size={28} />
+      </AnimatedIcon>
+      <AnimatedIcon variant="pulse" mode="hover">
+        <Heart size={28} />
+      </AnimatedIcon>
+      <AnimatedIcon variant="bounce" mode="hover">
+        <Play size={28} />
+      </AnimatedIcon>
+      <AnimatedIcon variant="draw" mode="hover">
+        <Music size={28} />
+      </AnimatedIcon>
     </div>
   </Story>
 </Canvas>

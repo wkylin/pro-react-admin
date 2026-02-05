@@ -1,0 +1,25 @@
+/* Storybook 专用样式覆盖 */
+
+/* 修复滚动问题 - 允许页面滚动 */
+html,
+body {
+  overflow: auto !important;
+  height: auto !important;
+}
+
+#root {
+  overflow: auto !important;
+  height: auto !important;
+}
+
+/* 确保 Storybook 容器可以滚动 */
+#storybook-root {
+  height: auto !important;
+  overflow: auto !important;
+}
+
+/* 确保文档页面可以滚动 */
+#storybook-docs {
+  height: auto !important;
+  overflow: auto !important;
+}

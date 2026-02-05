@@ -9,7 +9,9 @@
 @color-alert: #c62828;
 @light-alert: #ffebee;
 
-@card-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05);
+@card-shadow:
+  0 4px 12px rgba(0, 0, 0, 0.08),
+  0 1px 3px rgba(0, 0, 0, 0.05);
 
 .container {
   max-width: 1100px;
@@ -39,13 +41,18 @@
   left: 0;
   width: 100%;
   height: 50%;
-  background: linear-gradient(to bottom, transparent, rgba(33, 150, 243, 0.6), transparent);
-  animation: flowDown 2.5s linear infinite;
+  background: linear-gradient(to bottom, transparent, rgb(33 150 243 / 60%), transparent);
+  animation: flow-down 2.5s linear infinite;
 }
 
-@keyframes flowDown {
-  0% { top: -50%; }
-  100% { top: 150%; }
+@keyframes flow-down {
+  0% {
+    top: -50%;
+  }
+
+  100% {
+    top: 150%;
+  }
 }
 
 /* 节点布局 */
@@ -84,8 +91,11 @@
 }
 
 /* 响应式适配 */
-@media (max-width: 768px) {
-  .timelineLine { left: 20px; }
+@media (width <= 768px) {
+  .timelineLine {
+    left: 20px;
+  }
+
   .cardWrapper {
     width: 85% !important;
     margin-left: 50px !important;
@@ -104,7 +114,7 @@
   height: 24px;
   background: white;
   border: 5px solid #fff;
-  box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
   border-radius: 50%;
   z-index: 2;
   transform: translateX(-50%);
@@ -116,17 +126,32 @@
 }
 
 /* 单独定义类名以便 CSS Modules 导出 */
-.dot.git { background-color: #0277bd; }
-.dot.ci { background-color: #ef6c00; }
-.dot.env { background-color: #2e7d32; }
-.dot.strategy { background-color: #6a1b9a; }
-.dot.ops { background-color: #c62828; }
+.dot.git {
+  background-color: #0277bd;
+}
 
-@media (max-width: 768px) {
+.dot.ci {
+  background-color: #ef6c00;
+}
+
+.dot.env {
+  background-color: #2e7d32;
+}
+
+.dot.strategy {
+  background-color: #6a1b9a;
+}
+
+.dot.ops {
+  background-color: #c62828;
+}
+
+@media (width <= 768px) {
   .dot {
     left: 20px;
     transform: none;
   }
+
   .node:hover .dot {
     transform: scale(1.2);
   }

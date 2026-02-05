@@ -334,7 +334,7 @@ const config = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif|webp|eot|ttf|woff|woff2|mp4|mp3|mkv|pdf)$/i,
+        test: /\.(png|jpe?g|gif|webp|avif|eot|ttf|woff|woff2|mp4|mp3|mkv|pdf)$/i,
         type: 'asset',
         parser: {
           // Conditions for converting to base64

@@ -1,4 +1,4 @@
-@import '../../styles/global.less';
+@import url('../../styles/global.less');
 
 .mdxToolbar {
   background: var(--mdx-bg-toolbar);
@@ -47,7 +47,7 @@
   line-height: 1;
 
   &:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgb(0 0 0 / 5%);
   }
 
   &.active {
@@ -89,9 +89,9 @@
 }
 
 .mdxToolBtn.active {
-  background: var(--mdx-active-bg, rgba(37, 99, 235, 0.1));
+  background: var(--mdx-active-bg, rgb(37 99 235 / 10%));
   color: var(--mdx-primary);
-  border-color: var(--mdx-active-border, rgba(37, 99, 235, 0.2));
+  border-color: var(--mdx-active-border, rgb(37 99 235 / 20%));
 }
 
 .mdxFileInput {
@@ -100,11 +100,8 @@
 
 .linkModalOverlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  inset: 0;
+  background: rgb(0 0 0 / 40%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,18 +112,21 @@
 .linkModal {
   background: var(--mdx-bg-surface);
   border-radius: 12px;
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 10%),
+    0 8px 10px -6px rgb(0 0 0 / 10%);
   width: 400px;
   max-width: 90vw;
   overflow: hidden;
-  animation: modalFadeIn 0.2s ease;
+  animation: modal-fade-in 0.2s ease;
 }
 
-@keyframes modalFadeIn {
+@keyframes modal-fade-in {
   from {
     opacity: 0;
     transform: scale(0.95) translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -183,7 +183,7 @@
 
   &:focus {
     border-color: var(--mdx-primary);
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 10%);
   }
 }
 
