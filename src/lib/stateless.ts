@@ -55,6 +55,7 @@ export { default as GradientTracking } from '../components/stateless/GradientTra
 export { default as GradualSpacing } from '../components/stateless/GradualSpacing'
 export { default as HorizontalScroll } from '../components/stateless/HorizontalScroll'
 export { default as IconCloud } from '../components/stateless/IconCloud'
+export { default as InteractiveBook } from '../components/stateless/InteractiveBook'
 export { default as InteractiveGrid } from '../components/stateless/InteractiveGrid'
 export { default as IntervalInput } from '../components/stateless/IntervalInput'
 export { default as IsometricCard } from '../components/stateless/IsometricCard'
