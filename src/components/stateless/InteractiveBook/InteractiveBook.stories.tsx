@@ -229,6 +229,7 @@ const meta: Meta<typeof InteractiveBook> = {
     bookAuthor: { control: 'text' },
     width: { control: 'number' },
     height: { control: 'number' },
+    enableKeyboard: { control: 'boolean' },
   },
   parameters: {
     layout: 'centered',
@@ -249,6 +250,78 @@ export const Default: Story = {
     bookTitle: 'AI Agent 完全指南',
     bookAuthor: 'AI 专家',
     pages: bookPages,
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
+  },
+}
+
+/**
+ * 页角翻页提示：鼠标悬停在页面右下角/左下角时，
+ * 页角会出现海浪卷起的动画效果，提示用户可以点击翻页。
+ */
+export const CornerCurlHint: Story = {
+  name: '页角翻页提示',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 400 }}>
+        打开书籍后，将鼠标悬停在页面的右下角或左下角，页角会出现海浪卷起的动画效果。点击页角即可翻页。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: 'AI Agent 完全指南',
+    bookAuthor: 'AI 专家',
+    pages: bookPages,
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
+  },
+}
+
+/**
+ * 少量页面示例：展示两页内容时的翻页交互，
+ * 最后一页（结束页）不再显示拖动手势。
+ */
+export const FewPages: Story = {
+  name: '少量页面',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full items-center justify-center bg-neutral-100 p-10">
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: '简短手册',
+    bookAuthor: '作者',
+    pages: [
+      {
+        pageNumber: 1,
+        title: '唯一的章节',
+        content: (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <p>"这本书只有一页正文，翻到最后一页时不再显示拖动手势。"</p>
+            <p>"将鼠标移到右下角，可以看到页角卷起效果。"</p>
+          </div>
+        ),
+        backContent: (
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+            <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>背面内容</p>
+          </div>
+        ),
+      },
+      {
+        pageNumber: 2,
+        title: '结束',
+        content: (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <p>"最后一页，拖动手势已禁用，鼠标恢复为普通箭头。"</p>
+          </div>
+        ),
+      },
+    ],
     width: 350,
     height: 500,
   },

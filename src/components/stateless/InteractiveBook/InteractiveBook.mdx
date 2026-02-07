@@ -16,7 +16,9 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
 - 🎨 3D 翻页动画效果
 - ⌨️ 完整的键盘导航支持（箭头键、Escape、Home、End）
 - 📖 双面内容显示（正面内容 + 背面内容）
-- 🎯 空状态处理
+- � 页角海浪卷起翻页提示
+- 🖱️ 拖拽翻页 & 点击翻页
+- �🎯 空状态处理
 - 🔄 页面变化回调
 - 📱 响应式设计
 
@@ -24,6 +26,22 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
 
 <Canvas>
   <Story of={InteractiveBookStories.Default} />
+</Canvas>
+
+## 页角翻页提示
+
+鼠标悬停在页面的右下角或左下角时，页角会出现海浪卷起的动画效果，提示用户可以点击翻页。
+
+<Canvas>
+  <Story of={InteractiveBookStories.CornerCurlHint} />
+</Canvas>
+
+## 少量页面
+
+当翻到最后一页（结束页）时，拖动手势自动禁用，鼠标恢复为普通箭头光标。
+
+<Canvas>
+  <Story of={InteractiveBookStories.FewPages} />
 </Canvas>
 
 ## Props（可调参数）
@@ -105,6 +123,20 @@ interface BookPage {
 - `Escape`：关闭书籍
 - `Home`：回到封面
 - `End`：跳到最后一页
+
+## 交互方式
+
+组件支持多种翻页交互方式：
+
+| 交互方式 | 说明 |
+|---------|------|
+| 拖拽翻页 | 在页面上按住并左右拖拽，超过阈值后松手翻页 |
+| 页角点击 | 鼠标悬停在页面右下角/左下角，出现卷起效果后点击翻页 |
+| 导航栏按钮 | 底部导航栏的前后翻页按钮 |
+| 键盘快捷键 | 方向键、Home、End、Escape |
+| 封面点击/拖拽 | 点击或向左拖拽封面打开书籍 |
+
+> **注意**：最后一页（结束页）禁用拖拽，鼠标光标恢复为普通箭头。
 
 ## 高级用法
 

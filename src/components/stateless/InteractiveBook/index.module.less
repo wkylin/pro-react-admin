@@ -529,3 +529,288 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+
+.dragHint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.dragIndicator {
+  position: absolute;
+  bottom: 80px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+  z-index: 1100;
+}
+
+.dragArrow {
+  font-size: 20px;
+  color: #3b82f6;
+  font-weight: bold;
+  opacity: 0.8;
+}
+
+.dragText {
+  background: rgba(59, 130, 246, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pages {
+  &.dragging {
+    .page {
+      transition: none !important;
+    }
+  }
+}
+
+.page.dragging {
+  box-shadow:
+    0 10px 30px rgb(0 0 0 / 20%),
+    0 0 0 2px rgb(59 130 246 / 15%);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(0, 0, 0, 0.1) 100%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+/* ===== 页角翻页卷起效果 ===== */
+.cornerZone {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  z-index: 10;
+  cursor: pointer;
+
+  .curlEffect {
+    position: absolute;
+    width: 0;
+    height: 0;
+    transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .curlShadow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .curlHint {
+    position: absolute;
+    font-size: 0.65rem;
+    color: #6b7280;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.25s ease 0.1s, transform 0.25s ease 0.1s;
+    pointer-events: none;
+  }
+
+  &.cornerActive {
+    .curlEffect {
+      width: 55px;
+      height: 55px;
+    }
+
+    .curlShadow {
+      width: 60px;
+      height: 60px;
+      opacity: 1;
+    }
+
+    .curlHint {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+/* 右下角 - 下一页 */
+.cornerBottomRight {
+  bottom: 0;
+  right: 0;
+
+  .curlEffect {
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(
+      225deg,
+      rgba(253, 251, 247, 0.95) 0%,
+      rgba(253, 251, 247, 0.9) 35%,
+      rgba(230, 225, 215, 0.85) 50%,
+      rgba(200, 195, 185, 0.4) 70%,
+      transparent 100%
+    );
+    border-top-left-radius: 100%;
+    box-shadow:
+      -3px -3px 8px rgba(0, 0, 0, 0.08),
+      -1px -1px 3px rgba(0, 0, 0, 0.04);
+    transform-origin: bottom right;
+    animation: none;
+  }
+
+  .curlShadow {
+    bottom: 0;
+    right: 0;
+    background: radial-gradient(
+      ellipse at bottom right,
+      rgba(0, 0, 0, 0.12) 0%,
+      rgba(0, 0, 0, 0.06) 40%,
+      transparent 70%
+    );
+    z-index: -1;
+  }
+
+  .curlHint {
+    bottom: 12px;
+    right: 60px;
+  }
+
+  &.cornerActive .curlEffect {
+    animation: curlWaveRight 1.8s ease-in-out infinite;
+  }
+}
+
+/* 左下角 - 上一页 */
+.cornerBottomLeft {
+  bottom: 0;
+  left: 0;
+
+  .curlEffect {
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(
+      315deg,
+      rgba(253, 251, 247, 0.95) 0%,
+      rgba(253, 251, 247, 0.9) 35%,
+      rgba(230, 225, 215, 0.85) 50%,
+      rgba(200, 195, 185, 0.4) 70%,
+      transparent 100%
+    );
+    border-top-right-radius: 100%;
+    box-shadow:
+      3px -3px 8px rgba(0, 0, 0, 0.08),
+      1px -1px 3px rgba(0, 0, 0, 0.04);
+    transform-origin: bottom left;
+    animation: none;
+  }
+
+  .curlShadow {
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(
+      ellipse at bottom left,
+      rgba(0, 0, 0, 0.12) 0%,
+      rgba(0, 0, 0, 0.06) 40%,
+      transparent 70%
+    );
+    z-index: -1;
+  }
+
+  .curlHint {
+    bottom: 12px;
+    left: 60px;
+  }
+
+  &.cornerActive .curlEffect {
+    animation: curlWaveLeft 1.8s ease-in-out infinite;
+  }
+}
+
+/* 海浪般卷起的动画 */
+@keyframes curlWaveRight {
+  0% {
+    width: 55px;
+    height: 55px;
+    box-shadow:
+      -3px -3px 8px rgba(0, 0, 0, 0.08),
+      -1px -1px 3px rgba(0, 0, 0, 0.04);
+  }
+  30% {
+    width: 70px;
+    height: 70px;
+    box-shadow:
+      -5px -5px 14px rgba(0, 0, 0, 0.12),
+      -2px -2px 5px rgba(0, 0, 0, 0.06);
+  }
+  60% {
+    width: 50px;
+    height: 50px;
+    box-shadow:
+      -2px -2px 6px rgba(0, 0, 0, 0.06),
+      -1px -1px 2px rgba(0, 0, 0, 0.03);
+  }
+  100% {
+    width: 55px;
+    height: 55px;
+    box-shadow:
+      -3px -3px 8px rgba(0, 0, 0, 0.08),
+      -1px -1px 3px rgba(0, 0, 0, 0.04);
+  }
+}
+
+@keyframes curlWaveLeft {
+  0% {
+    width: 55px;
+    height: 55px;
+    box-shadow:
+      3px -3px 8px rgba(0, 0, 0, 0.08),
+      1px -1px 3px rgba(0, 0, 0, 0.04);
+  }
+  30% {
+    width: 70px;
+    height: 70px;
+    box-shadow:
+      5px -5px 14px rgba(0, 0, 0, 0.12),
+      2px -2px 5px rgba(0, 0, 0, 0.06);
+  }
+  60% {
+    width: 50px;
+    height: 50px;
+    box-shadow:
+      2px -2px 6px rgba(0, 0, 0, 0.06),
+      1px -1px 2px rgba(0, 0, 0, 0.03);
+  }
+  100% {
+    width: 55px;
+    height: 55px;
+    box-shadow:
+      3px -3px 8px rgba(0, 0, 0, 0.08),
+      1px -1px 3px rgba(0, 0, 0, 0.04);
+  }
+}
