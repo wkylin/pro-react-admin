@@ -344,3 +344,28 @@ export const ImageBook: Story = {
     enableKeyboard: true,
   },
 }
+
+// ─── PDF 模式 ─────────────────────────────────────
+export const PdfBook: Story = {
+  name: 'PDF 模式（react-pdf）',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
+        传入 <code>pdfUrl</code> 后，使用 react-pdf 渲染 PDF 文件。
+        <br />
+        本地 Worker，不依赖 CDN。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: 'PDF 翻书示例',
+    bookAuthor: 'Demo',
+    pages: [],
+    pdfUrl: '/sample.pdf',
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
+  },
+}

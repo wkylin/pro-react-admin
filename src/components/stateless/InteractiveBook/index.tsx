@@ -2,7 +2,18 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, X, BookOpen } from 'lucide-react'
+import { pdfjs } from 'react-pdf'
 import styles from './index.module.less'
+
+// ─── 本地 Worker（兼容 Vite / Webpack 5） ──────────────────────
+// Vite：原生支持 new URL('...', import.meta.url)，构建时自动拷贝 worker 文件
+// Webpack 5：同样支持该语法（asset module），可正常解析
+// 降级：若运行时出错则回退到 unpkg CDN
+try {
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString()
+} catch {
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`
+}
 
 function cn(...inputs: (string | undefined | null | false)[]) {
   return clsx(inputs)
@@ -26,6 +37,12 @@ export interface InteractiveBookProps {
    * 传入后会忽略 pages 中的 content/backContent，改为渲染图片。
    */
   pageImages?: string[]
+  /**
+   * PDF 模式：传入 PDF 文件的 URL。
+   * 使用 react-pdf 渲染，每两页 PDF 组成一个书页（正面 + 背面）。
+   * 优先级：pdfUrl > pageImages > pages（JSX 内容）。
+   */
+  pdfUrl?: string
   className?: string
   width?: number | string
   height?: number | string
@@ -105,6 +122,73 @@ const LazyPageImage: React.FC<{
   )
 }
 
+// ─── PDF → 图片 hook：使用 pdfjs 离屏渲染每页，输出 data-URL 数组 ────
+// 完全在 DOM 之外完成，不受任何 CSS 3D transform / backface-visibility 影响
+function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefined) {
+  const [state, setState] = useState<{
+    images: string[]
+    loading: boolean
+    error: string | null
+  }>({ images: [], loading: false, error: null })
+  const taskRef = useRef<{ url: string; width: number | undefined } | null>(null)
+
+  const imagesCount = state.images.length
+
+  useEffect(() => {
+    if (!pdfUrl) return
+
+    // 相同参数不重复渲染
+    if (taskRef.current?.url === pdfUrl && taskRef.current?.width === renderWidth && imagesCount > 0) return
+    taskRef.current = { url: pdfUrl, width: renderWidth }
+
+    let cancelled = false
+
+    // 用 microtask 推迟 setState，避免 "set-state-in-effect" 同步调用
+    queueMicrotask(() => {
+      if (!cancelled) setState({ images: [], loading: true, error: null })
+    })
+
+    const run = async () => {
+      try {
+        const pdf = await pdfjs.getDocument(pdfUrl).promise
+        const urls: string[] = []
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          if (cancelled) return
+          const page = await pdf.getPage(i)
+          const baseViewport = page.getViewport({ scale: 1 })
+          // 按容器宽度等比缩放，×2 保证清晰度
+          const scale = renderWidth ? (renderWidth / baseViewport.width) * 2 : 2
+          const viewport = page.getViewport({ scale })
+
+          const canvas = document.createElement('canvas')
+          canvas.width = viewport.width
+          canvas.height = viewport.height
+          const ctx = canvas.getContext('2d')!
+          await page.render({ canvas, canvasContext: ctx, viewport }).promise
+          urls.push(canvas.toDataURL('image/png'))
+        }
+
+        if (!cancelled) {
+          setState({ images: urls, loading: false, error: null })
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('[InteractiveBook] PDF render error:', err)
+          setState({ images: [], loading: false, error: err instanceof Error ? err.message : String(err) })
+        }
+      }
+    }
+
+    run()
+    return () => {
+      cancelled = true
+    }
+  }, [pdfUrl, renderWidth, imagesCount])
+
+  return { pdfImages: state.images, pdfLoading: state.loading, pdfError: state.error }
+}
+
 // ─── 预加载 hook：提前把相邻页的图片载入浏览器缓存 ──
 function useImagePreloader(images: string[] | undefined, currentPageIndex: number) {
   const preloadedRef = useRef<Set<string>>(new Set())
@@ -139,6 +223,7 @@ export default function InteractiveBook({
   width = 350,
   height = 500,
   pageImages,
+  pdfUrl,
   onPageChange,
   enableKeyboard = true,
 }: InteractiveBookProps) {
@@ -152,15 +237,22 @@ export default function InteractiveBook({
   const currentDragXRef = useRef(0)
   const rafIdRef = useRef(0)
 
-  // ─── 计算图片模式下的书页 ─────────────────────────
-  const isImageMode = !!(pageImages && pageImages.length > 0)
-  const totalBookPages = isImageMode ? Math.ceil(pageImages!.length / 2) : pages.length
+  // ─── PDF → 图片 ─────────────────────────────────
+  const pdfRenderWidth = typeof width === 'number' ? width - 24 : undefined
+  const { pdfImages, pdfLoading, pdfError } = usePdfToImages(pdfUrl, pdfRenderWidth)
+  const isPdfMode = !!(pdfUrl && pdfUrl.length > 0)
+
+  // ─── 统一图片源：PDF 转换后的图片 或 用户传入的图片 ───
+  const resolvedImages = isPdfMode ? (pdfImages.length > 0 ? pdfImages : undefined) : pageImages
+  const isImageMode = !!(resolvedImages && resolvedImages.length > 0)
+
+  const totalBookPages = isImageMode ? Math.ceil(resolvedImages!.length / 2) : pages.length
   const bookPages: BookPage[] = isImageMode
-    ? new Array(totalBookPages).fill(0).map((_, i) => ({ pageNumber: i + 1 }) as BookPage)
+    ? new Array(Math.max(totalBookPages, 0)).fill(0).map((_, i) => ({ pageNumber: i + 1 }) as BookPage)
     : pages
 
   // 预加载相邻页图片
-  useImagePreloader(pageImages, currentPageIndex)
+  useImagePreloader(resolvedImages, currentPageIndex)
 
   const handleOpenBook = () => {
     setIsOpen(true)
@@ -390,6 +482,27 @@ export default function InteractiveBook({
 
   // 空内容状态
   if ((!pages || pages.length === 0) && !isImageMode) {
+    // PDF 正在加载 / 转换中
+    if (isPdfMode && (pdfLoading || pdfImages.length === 0)) {
+      return (
+        <div className={cn(styles.container, className)} style={{ width, height }}>
+          <div className={styles.emptyState} style={{ flexDirection: 'column', gap: 8 }}>
+            <div style={{ fontSize: 14, color: '#999' }}>PDF 加载中…</div>
+          </div>
+        </div>
+      )
+    }
+    // PDF 加载失败
+    if (isPdfMode && pdfError) {
+      return (
+        <div className={cn(styles.container, className)} style={{ width, height }}>
+          <div className={styles.emptyState} style={{ flexDirection: 'column', gap: 8 }}>
+            <div style={{ color: '#ef4444', fontWeight: 500 }}>PDF 加载失败</div>
+            <div style={{ fontSize: 12, color: '#999' }}>{pdfError}</div>
+          </div>
+        </div>
+      )
+    }
     return (
       <div className={cn(styles.container, className)} style={{ width, height }}>
         <div className={styles.emptyState}>
@@ -511,11 +624,11 @@ export default function InteractiveBook({
               }}
             >
               <div className={styles.pageContent}>
-                {isImageMode && pageImages ? (
+                {isImageMode && resolvedImages ? (
                   <div style={{ width: '100%', height: '100%' }}>
-                    {frontImgIdx < pageImages.length ? (
+                    {frontImgIdx < resolvedImages.length ? (
                       <LazyPageImage
-                        src={pageImages[frontImgIdx]}
+                        src={resolvedImages[frontImgIdx]}
                         shouldLoad={shouldLoadImages}
                         alt={`第 ${frontImgIdx + 1} 页`}
                       />
@@ -577,11 +690,11 @@ export default function InteractiveBook({
               <div className={styles.rightBorder} />
 
               <div className={styles.backContent}>
-                {isImageMode && pageImages ? (
+                {isImageMode && resolvedImages ? (
                   <div style={{ width: '100%', height: '100%' }}>
-                    {backImgIdx < pageImages.length ? (
+                    {backImgIdx < resolvedImages.length ? (
                       <LazyPageImage
-                        src={pageImages[backImgIdx]}
+                        src={resolvedImages[backImgIdx]}
                         shouldLoad={shouldLoadImages}
                         alt={`第 ${backImgIdx + 1} 页`}
                       />
