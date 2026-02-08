@@ -420,6 +420,7 @@
     "react-sticky-box": "^2.0.5",
     "react-syntax-highlighter": "^16.1.0",
     "react-to-print": "^3.2.0",
+    "react-window": "^2.2.6",
     "react-zoom-pan-pinch": "^3.7.0",
     "rehype-highlight": "^7.0.2",
     "rehype-katex": "^7.0.1",

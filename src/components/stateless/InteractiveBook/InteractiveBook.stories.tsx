@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import InteractiveBook, { InteractiveBookProps } from './index.tsx'
+import InteractiveBook, { InteractiveBookProps } from './index'
 import AiCover from '@assets/images/ai-cover.webp'
 
 // Sample book pages content
@@ -220,7 +220,6 @@ const bookPages = [
     ),
   },
 ]
-
 const meta: Meta<typeof InteractiveBook> = {
   title: 'Stateless/InteractiveBook',
   component: InteractiveBook,
@@ -256,10 +255,6 @@ export const Default: Story = {
   },
 }
 
-/**
- * 页角翻页提示：鼠标悬停在页面右下角/左下角时，
- * 页角会出现海浪卷起的动画效果，提示用户可以点击翻页。
- */
 export const CornerCurlHint: Story = {
   name: '页角翻页提示',
   render: (args: InteractiveBookProps) => (
@@ -281,10 +276,6 @@ export const CornerCurlHint: Story = {
   },
 }
 
-/**
- * 少量页面示例：展示两页内容时的翻页交互，
- * 最后一页（结束页）不再显示拖动手势。
- */
 export const FewPages: Story = {
   name: '少量页面',
   render: (args: InteractiveBookProps) => (
@@ -324,5 +315,32 @@ export const FewPages: Story = {
     ],
     width: 350,
     height: 500,
+  },
+}
+
+// 用 picsum.photos 生成示例图片 URL，模拟按页码分割的书页图片
+const demoPageImages = Array.from({ length: 20 }, (_, i) => `https://picsum.photos/seed/page${i + 1}/700/1000`)
+
+export const ImageBook: Story = {
+  name: '图片模式（逐页图片）',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
+        传入 <code>pageImages</code> 数组后，书页内容改为逐页加载图片。
+        <br />
+        仅预加载当前页 ±2 范围内的图片，支持几百页不卡顿。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: '图片翻书示例',
+    bookAuthor: 'Demo',
+    pages: [],
+    pageImages: demoPageImages,
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
   },
 }
