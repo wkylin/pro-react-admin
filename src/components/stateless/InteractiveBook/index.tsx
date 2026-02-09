@@ -311,10 +311,9 @@ export default function InteractiveBook({
   }
 
   // 处理拖拽翻页
-  const isLastPage = currentPageIndex >= totalBookPages - 1
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (!isOpen || isLastPage) return
+    if (!isOpen) return
     e.preventDefault()
     setIsDragging(true)
     dragStartXRef.current = e.clientX
@@ -372,7 +371,7 @@ export default function InteractiveBook({
 
   // 触摸处理
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (!isOpen || isLastPage) return
+    if (!isOpen) return
     e.preventDefault()
     const touch = e.touches[0]
     setIsDragging(true)
@@ -547,7 +546,7 @@ export default function InteractiveBook({
       className={cn(styles.pages, isDragging && styles.dragging)}
       style={{
         transformStyle: 'preserve-3d',
-        cursor: isOpen ? (isLastPage ? 'default' : isDragging ? 'grabbing' : 'grab') : 'default',
+        cursor: isOpen ? (isDragging ? 'grabbing' : 'pointer') : 'default',
       }}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
@@ -684,6 +683,7 @@ export default function InteractiveBook({
               style={{
                 transform: 'rotateY(180deg) translateZ(0.5px)',
                 ...(isImageMode ? { padding: 12 } : {}),
+                cursor: isOpen && !isDragging && index === currentPageIndex ? 'pointer' : undefined,
               }}
             >
               <div className={styles.rightShadow} />

@@ -1,6 +1,6 @@
 // .storybook/preview.tsx
 import React, { Suspense } from 'react'
-import type { Preview } from '@storybook/react' // 注意：Vite 版本用 @storybook/react
+import type { Preview } from '@storybook/react-vite' // 注意：Vite 版本用 @storybook/react
 import { MemoryRouter } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 
