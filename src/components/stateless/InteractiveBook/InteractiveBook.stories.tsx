@@ -363,7 +363,7 @@ export const PdfBook: Story = {
     bookTitle: 'PDF 翻书示例',
     bookAuthor: 'Demo',
     pages: [],
-    pdfUrl: '/sample.pdf',
+    pdfUrl: '/assets/pdf/sample.pdf',
     width: 350,
     height: 500,
     enableKeyboard: true,
