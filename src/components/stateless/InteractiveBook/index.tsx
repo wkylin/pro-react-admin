@@ -149,34 +149,72 @@ function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefi
     })
 
     const run = async () => {
-      try {
-        const pdf = await pdfjs.getDocument(pdfUrl).promise
-        const urls: string[] = []
-
-        for (let i = 1; i <= pdf.numPages; i++) {
-          if (cancelled) return
-          const page = await pdf.getPage(i)
-          const baseViewport = page.getViewport({ scale: 1 })
-          // 按容器宽度等比缩放，×2 保证清晰度
-          const scale = renderWidth ? (renderWidth / baseViewport.width) * 2 : 2
-          const viewport = page.getViewport({ scale })
-
-          const canvas = document.createElement('canvas')
-          canvas.width = viewport.width
-          canvas.height = viewport.height
-          const ctx = canvas.getContext('2d')!
-          await page.render({ canvas, canvasContext: ctx, viewport }).promise
-          urls.push(canvas.toDataURL('image/png'))
+      // 给出一组候选 URL，遇到 404 或网络错误时按顺序尝试
+      const buildCandidates = (orig: string) => {
+        const c: string[] = [orig]
+        try {
+          if (typeof window !== 'undefined') {
+            const origin = window.location.origin || ''
+            const p = window.location.pathname || '/'
+            const idx = p.indexOf('/storybook')
+            if (idx !== -1) {
+              const base = p.substring(0, idx) // 不包含 /storybook
+              c.push(`${base}/storybook${orig}`)
+              if (origin) c.push(`${origin}${base}/storybook${orig}`)
+            } else {
+              const parts = p.split('/').filter(Boolean)
+              if (parts.length >= 2) {
+                const repoPrefix = `/${parts[0]}/${parts[1]}`
+                c.push(`${repoPrefix}/storybook${orig}`)
+                if (origin) c.push(`${origin}${repoPrefix}/storybook${orig}`)
+              }
+            }
+          }
+        } catch {
+          // ignore
         }
+        return c
+      }
 
-        if (!cancelled) {
-          setState({ images: urls, loading: false, error: null })
+      const candidates = buildCandidates(pdfUrl)
+
+      let lastErr: any = null
+      for (const candidate of candidates) {
+        if (cancelled) return
+        try {
+          const pdf = await pdfjs.getDocument(candidate).promise
+          const urls: string[] = []
+
+          for (let i = 1; i <= pdf.numPages; i++) {
+            if (cancelled) return
+            const page = await pdf.getPage(i)
+            const baseViewport = page.getViewport({ scale: 1 })
+            // 按容器宽度等比缩放，×2 保证清晰度
+            const scale = renderWidth ? (renderWidth / baseViewport.width) * 2 : 2
+            const viewport = page.getViewport({ scale })
+
+            const canvas = document.createElement('canvas')
+            canvas.width = viewport.width
+            canvas.height = viewport.height
+            const ctx = canvas.getContext('2d')!
+            await page.render({ canvas, canvasContext: ctx, viewport }).promise
+            urls.push(canvas.toDataURL('image/png'))
+          }
+
+          if (!cancelled) {
+            setState({ images: urls, loading: false, error: null })
+          }
+          return
+        } catch (err) {
+          lastErr = err
+          // 若是最后一个候选仍失败，则报告错误
+          continue
         }
-      } catch (err) {
-        if (!cancelled) {
-          console.error('[InteractiveBook] PDF render error:', err)
-          setState({ images: [], loading: false, error: err instanceof Error ? err.message : String(err) })
-        }
+      }
+
+      if (!cancelled) {
+        console.error('[InteractiveBook] PDF render error (all candidates failed):', lastErr)
+        setState({ images: [], loading: false, error: lastErr instanceof Error ? lastErr.message : String(lastErr) })
       }
     }
 

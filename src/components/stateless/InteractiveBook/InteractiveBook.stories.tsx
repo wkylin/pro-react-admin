@@ -262,7 +262,28 @@ export const CornerCurlHint: Story = {
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 400 }}>
         打开书籍后，将鼠标悬停在页面的右下角或左下角，页角会出现海浪卷起的动画效果。点击页角即可翻页。
       </p>
-      <InteractiveBook {...args} />
+      {
+        // 在浏览器运行时根据当前 pathname 动态构造 PDF 地址，兼容部署到
+        // GitHub Pages 子路径（例如 /pro-react-admin/storybook/）的场景。
+        (() => {
+          if (typeof window === 'undefined') return <InteractiveBook {...args} />
+          const p = window.location.pathname
+          let runtimePdf = '/assets/pdf/sample.pdf'
+          const idx = p.indexOf('/storybook')
+          if (idx !== -1) {
+            const prefix = p.substring(0, idx + 1) // 保留到 /storybook 之前的斜杠
+            runtimePdf = `${prefix}storybook/assets/pdf/sample.pdf`
+          } else {
+            // 尝试基于仓库名（形如 /<user>/<repo>/...）推断
+            const parts = p.split('/').filter(Boolean)
+            if (parts.length >= 2) {
+              const repoPrefix = `/${parts[0]}/${parts[1]}/`
+              runtimePdf = `${repoPrefix}storybook/assets/pdf/sample.pdf`
+            }
+          }
+          return <InteractiveBook {...args} pdfUrl={runtimePdf} />
+        })()
+      }
     </div>
   ),
   args: {
