@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, X, BookOpen } from 'lucide-react'
 import { pdfjs } from 'react-pdf'
+import pageTurnAudio from '@/assets/audio/page-turn.mp3'
 import styles from './index.module.less'
 
 // ─── 本地 Worker（兼容 Vite / Webpack 5） ──────────────────────
@@ -289,6 +290,16 @@ export default function InteractiveBook({
   const dragStartTimeRef = useRef(0)
   const rafIdRef = useRef(0)
 
+  // ─── 翻页音效 ────────────────────────────────────
+  // 使用 DOM <audio> 元素而非 new Audio()，在 Storybook iframe 中更可靠
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const playPageTurnSound = () => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.currentTime = 0
+    audio.play().catch(() => {})
+  }
+
   // ─── PDF → 图片 ─────────────────────────────────
   const pdfRenderWidth = typeof width === 'number' ? width - 24 : undefined
   const { pdfImages, pdfLoading, pdfError } = usePdfToImages(pdfUrl, pdfRenderWidth)
@@ -308,6 +319,7 @@ export default function InteractiveBook({
 
   const handleOpenBook = () => {
     setIsOpen(true)
+    playPageTurnSound()
   }
 
   const handleCloseBook = (e: React.MouseEvent) => {
@@ -322,6 +334,7 @@ export default function InteractiveBook({
       const newIndex = currentPageIndex + 1
       setCurrentPageIndex(newIndex)
       onPageChange?.(newIndex)
+      playPageTurnSound()
     }
   }
 
@@ -331,6 +344,7 @@ export default function InteractiveBook({
       const newIndex = currentPageIndex - 1
       setCurrentPageIndex(newIndex)
       onPageChange?.(newIndex)
+      playPageTurnSound()
     }
   }
 
@@ -411,6 +425,7 @@ export default function InteractiveBook({
     if (!isOpen) {
       if (deltaX < -25 || (velocity > 0.3 && deltaX < -15)) {
         setIsOpen(true)
+        playPageTurnSound()
       }
       setIsDragging(false)
       setDragOffset(0)
@@ -428,10 +443,12 @@ export default function InteractiveBook({
         const newIndex = currentPageIndex + 1
         setCurrentPageIndex(newIndex)
         onPageChange?.(newIndex)
+        playPageTurnSound()
       } else if (deltaX > 0 && currentPageIndex >= 0) {
         const newIndex = currentPageIndex - 1
         setCurrentPageIndex(newIndex)
         onPageChange?.(newIndex)
+        playPageTurnSound()
       }
     }
 
@@ -555,11 +572,13 @@ export default function InteractiveBook({
           e.preventDefault()
           setCurrentPageIndex(-1)
           onPageChange?.(-1)
+          playPageTurnSound()
           break
         case 'End':
           e.preventDefault()
           setCurrentPageIndex(totalBookPages - 1)
           onPageChange?.(totalBookPages - 1)
+          playPageTurnSound()
           break
       }
     }
@@ -1259,6 +1278,9 @@ export default function InteractiveBook({
           <div className={styles.dragText}>{Math.abs(dragOffset) > 50 ? '松手翻页' : '继续拖拽'}</div>
         </motion.div>
       )}
+
+      {/* 翻页音效 — 使用 DOM audio 元素，兼容 Storybook iframe */}
+      <audio ref={audioRef} src={pageTurnAudio} preload="auto" />
     </div>
   )
 }
