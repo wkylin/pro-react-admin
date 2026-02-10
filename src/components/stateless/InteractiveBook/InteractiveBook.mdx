@@ -87,6 +87,22 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
   <Story of={InteractiveBookStories.MinimalMode} />
 </Canvas>
 
+## 翻页音效（开启）
+
+默认开启翻页音效（`enableSound={true}`），翻页时会播放纸张翻动的声音。点击、拖拽、键盘翻页均触发音效。
+
+<Canvas>
+  <Story of={InteractiveBookStories.SoundEnabled} />
+</Canvas>
+
+## 翻页音效（禁用）
+
+设置 `enableSound={false}` 禁用翻页音效，适合需要安静环境的场景。
+
+<Canvas>
+  <Story of={InteractiveBookStories.SoundDisabled} />
+</Canvas>
+
 ## Props（可调参数）
 
 <ArgTypes />
@@ -222,6 +238,32 @@ function Example() {
 }
 ```
 
+### 翻页音效配置
+
+```tsx
+import InteractiveBook from '@stateless/InteractiveBook'
+
+function Example() {
+  return (
+    <>
+      {/* 默认开启音效 */}
+      <InteractiveBook
+        coverImage="/cover.jpg"
+        pages={pages}
+        enableSound={true}
+      />
+
+      {/* 禁用音效 */}
+      <InteractiveBook
+        coverImage="/cover.jpg"
+        pages={pages}
+        enableSound={false}
+      />
+    </>
+  )
+}
+```
+
 ## 页面数据结构
 
 ```tsx
@@ -255,6 +297,7 @@ interface BookPage {
 | 页角点击      | 鼠标悬停在页面右下角/左下角，出现卷起效果后点击翻页 | `showCornerFlip` |
 | 导航栏按钮    | 底部导航栏的前后翻页按钮                            | `showNavigation` |
 | 键盘快捷键    | 方向键、Home、End、Escape                           | `enableKeyboard` |
+| 翻页音效      | 翻页时播放纸张翻动音效                              | `enableSound`    |
 | 封面点击/拖拽 | 点击或向左拖拽封面打开书籍                          | 始终可用   |
 
 > **注意**：最后一页（结束页）禁用拖拽，鼠标光标恢复为普通箭头。

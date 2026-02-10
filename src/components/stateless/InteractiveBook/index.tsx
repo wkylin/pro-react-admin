@@ -53,6 +53,16 @@ export interface InteractiveBookProps {
   showNavigation?: boolean
   /** 是否显示页角翻页热区（海浪呼吸效果），默认 true */
   showCornerFlip?: boolean
+  /** 是否启用翻页音效，默认 true */
+  enableSound?: boolean
+  /** 自定义音效文件 URL，默认使用内置翻页音效 */
+  soundSrc?: string
+  /** 初始是否打开书籍（跳过封面动画），默认 false */
+  defaultOpen?: boolean
+  /** 受控模式：外部控制书籍开合状态。传入后会覆盖内部 isOpen */
+  open?: boolean
+  /** 书籍关闭时的回调（用户点击关闭按钮时触发） */
+  onClose?: () => void
 }
 
 // ─── 图片懒加载组件 ────────────────────────────────
@@ -274,8 +284,25 @@ export default function InteractiveBook({
   enableKeyboard = true,
   showNavigation = true,
   showCornerFlip = true,
+  enableSound = true,
+  soundSrc,
+  defaultOpen = false,
+  open: controlledOpen,
+  onClose,
 }: InteractiveBookProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(controlledOpen ?? defaultOpen)
+
+  // 受控模式：外部 open 变化时同步内部状态
+  useEffect(() => {
+    if (controlledOpen === undefined) return
+    if (controlledOpen !== isOpen) {
+      setIsOpen(controlledOpen)
+      if (!controlledOpen) {
+        setCurrentPageIndex(-1)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledOpen])
   const [currentPageIndex, setCurrentPageIndex] = useState(-1)
   const [isHovering, setIsHovering] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
@@ -294,6 +321,7 @@ export default function InteractiveBook({
   // 使用 DOM <audio> 元素而非 new Audio()，在 Storybook iframe 中更可靠
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const playPageTurnSound = () => {
+    if (!enableSound) return
     const audio = audioRef.current
     if (!audio) return
     audio.currentTime = 0
@@ -326,6 +354,7 @@ export default function InteractiveBook({
     e.stopPropagation()
     setIsOpen(false)
     setCurrentPageIndex(-1)
+    onClose?.()
   }
 
   const nextPage = (e: React.MouseEvent) => {
@@ -1280,7 +1309,7 @@ export default function InteractiveBook({
       )}
 
       {/* 翻页音效 — 使用 DOM audio 元素，兼容 Storybook iframe */}
-      <audio ref={audioRef} src={pageTurnAudio} preload="auto" />
+      {enableSound && <audio ref={audioRef} src={soundSrc || pageTurnAudio} preload="auto" />}
     </div>
   )
 }

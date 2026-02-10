@@ -92,6 +92,7 @@ import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
 import InteractiveBook from '@stateless/InteractiveBook'
+import BookLibrary from './BookLibrary'
 
 const preCode = `
   const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
@@ -684,6 +685,8 @@ const Home = () => {
         width={350}
         height={500}
       />
+      {/* ─── 书籍列表 ─── */}
+      <BookLibrary />
       <section style={{ marginBottom: 15, fontSize: 20 }}>
         I love <span className={styles.circledHighlight}>coding</span> in{' '}
         <AlternatingText alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
