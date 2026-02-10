@@ -48,6 +48,10 @@ export interface InteractiveBookProps {
   height?: number | string
   onPageChange?: (pageIndex: number) => void
   enableKeyboard?: boolean
+  /** 是否显示底部导航栏，默认 true */
+  showNavigation?: boolean
+  /** 是否显示页角翻页热区（海浪呼吸效果），默认 true */
+  showCornerFlip?: boolean
 }
 
 // ─── 图片懒加载组件 ────────────────────────────────
@@ -158,7 +162,7 @@ function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefi
             const p = window.location.pathname || '/'
             const idx = p.indexOf('/storybook')
             if (idx !== -1) {
-              const base = p.substring(0, idx) // 不包含 /storybook
+              const base = p.substring(0, idx)
               c.push(`${base}/storybook${orig}`)
               if (origin) c.push(`${origin}${base}/storybook${orig}`)
             } else {
@@ -267,6 +271,8 @@ export default function InteractiveBook({
   pdfUrl,
   onPageChange,
   enableKeyboard = true,
+  showNavigation = true,
+  showCornerFlip = true,
 }: InteractiveBookProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [currentPageIndex, setCurrentPageIndex] = useState(-1)
@@ -280,6 +286,7 @@ export default function InteractiveBook({
   const dragStartYRef = useRef(0)
   const currentDragXRef = useRef(0)
   const currentDragYRef = useRef(0)
+  const dragStartTimeRef = useRef(0)
   const rafIdRef = useRef(0)
 
   // ─── PDF → 图片 ─────────────────────────────────
@@ -371,6 +378,7 @@ export default function InteractiveBook({
     dragStartYRef.current = e.clientY
     currentDragXRef.current = e.clientX
     currentDragYRef.current = e.clientY
+    dragStartTimeRef.current = Date.now()
     setDragOffset(0)
     setDragOffsetY(0)
   }
@@ -394,11 +402,14 @@ export default function InteractiveBook({
     }
 
     const deltaX = currentDragXRef.current - dragStartXRef.current
-    // 降低触发翻页的阈值，提高响应灵敏度
-    const threshold = 30
+    const elapsed = Math.max(Date.now() - dragStartTimeRef.current, 1)
+    const velocity = Math.abs(deltaX) / elapsed // px/ms
+
+    // 统一翻页判断：距离超过50px 或 快速滑动（速度>0.3 px/ms 且距离>25px）
+    const shouldFlip = Math.abs(deltaX) > 50 || (velocity > 0.3 && Math.abs(deltaX) > 25)
 
     if (!isOpen) {
-      if (deltaX < -threshold) {
+      if (deltaX < -25 || (velocity > 0.3 && deltaX < -15)) {
         setIsOpen(true)
       }
       setIsDragging(false)
@@ -408,10 +419,11 @@ export default function InteractiveBook({
       dragStartYRef.current = 0
       currentDragXRef.current = 0
       currentDragYRef.current = 0
+      dragStartTimeRef.current = 0
       return
     }
 
-    if (Math.abs(deltaX) > threshold) {
+    if (shouldFlip) {
       if (deltaX < 0 && currentPageIndex < totalBookPages - 1) {
         const newIndex = currentPageIndex + 1
         setCurrentPageIndex(newIndex)
@@ -430,6 +442,7 @@ export default function InteractiveBook({
     dragStartYRef.current = 0
     currentDragXRef.current = 0
     currentDragYRef.current = 0
+    dragStartTimeRef.current = 0
   }
 
   // 触摸处理
@@ -448,6 +461,7 @@ export default function InteractiveBook({
     dragStartYRef.current = touch.clientY
     currentDragXRef.current = touch.clientX
     currentDragYRef.current = touch.clientY
+    dragStartTimeRef.current = Date.now()
     setDragOffset(0)
     setDragOffsetY(0)
   }
@@ -665,21 +679,6 @@ export default function InteractiveBook({
           isOpen &&
           ((dragOffset < 0 && index === currentPageIndex + 1) || (dragOffset > 0 && index === currentPageIndex))
 
-        // 降低容器整体旋转幅度，主要依靠折角（Flap）效果
-        // 关键逻辑修复：如果是向右拖拽（左页），基准旋转角度应为 -180，必须在此基础上进行这一微调，否则会直接跳到右侧
-        let pageTransform = ''
-        if (isActiveDragPage) {
-          const curlStrength = Math.min(Math.abs(dragOffset) * 0.1, 15)
-          if (dragOffset < 0) {
-            // 右页向左翻：0 -> -15
-            pageTransform = `perspective(1200px) rotateY(${-curlStrength}deg)`
-          } else {
-            // 左页向右翻：-180 -> -165 (即 -180 + 15)
-            pageTransform = `perspective(1200px) rotateY(${-180 + curlStrength}deg)`
-          }
-        }
-        const curlZ = isActiveDragPage ? Math.min(Math.abs(dragOffset) * 0.15, 30) : 0
-
         // 计算折角几何 (Turn.js 风格算法)
         let hx = 0,
           hy = 0
@@ -698,9 +697,9 @@ export default function InteractiveBook({
         const W = typeof width === 'number' ? width : 300
         const H = typeof height === 'number' ? height : 500
 
-        // Helper: Construct polygon for the "Body" (Remaining Page) and "Ear" (The corner triangle)
         const getFoldPolygons = (isTR: boolean, isBR: boolean, isTL: boolean, isBL: boolean) => {
-          const chx = Math.min(hx, W * 2)
+          // 水平不超过页宽（书脊边界），垂直可延伸更多（模拟真实翻页）
+          const chx = Math.min(hx, W)
           const chy = Math.min(hy, H * 2)
 
           let body = ''
@@ -879,20 +878,10 @@ export default function InteractiveBook({
               transformStyle: 'preserve-3d',
               transformOrigin: 'left center',
               visibility: isDeeplyBuried ? 'hidden' : 'visible',
-              ...(isActiveDragPage
-                ? {
-                    transform: `${pageTransform} translateZ(${curlZ}px)`,
-                    transition: 'none',
-                    zIndex: 200,
-                    boxShadow: `
-                      ${dragOffset < 0 ? '-' : ''}${Math.min(Math.abs(dragOffset) * 0.15, 25)}px 10px 30px rgba(0,0,0,0.3),
-                      ${dragOffset < 0 ? '-' : ''}2px 0 5px rgba(0,0,0,0.1) inset
-                    `,
-                  }
-                : {}),
+              ...(isActiveDragPage ? { zIndex: 200 } : {}),
             }}
             initial="unflipped"
-            animate={isActiveDragPage ? undefined : isOpen && isFlipped ? 'flipped' : 'unflipped'}
+            animate={isOpen && isFlipped ? 'flipped' : 'unflipped'}
             variants={variants}
           >
             {/* ─── 正面 ─── */}
@@ -935,28 +924,32 @@ export default function InteractiveBook({
               <div className={styles.leftShadow} />
               <div className={styles.leftBorder} />
               {/* 右下角翻页热区 */}
-              {isOpen && !isDragging && index === currentPageIndex + 1 && index <= bookPages.length - 1 && (
-                <div
-                  className={cn(
-                    styles.cornerZone,
-                    styles.cornerBottomRight,
-                    cornerHover === 'next' && styles.cornerActive
-                  )}
-                  onMouseEnter={() => setCornerHover('next')}
-                  onMouseLeave={() => setCornerHover('none')}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setCornerHover('none')
-                    nextPage(e)
-                  }}
-                >
-                  <div className={styles.curlEffect} />
-                  <div className={styles.curlShadow} />
-                  <span className={styles.curlHint}>翻页 →</span>
-                </div>
-              )}
+              {showCornerFlip &&
+                isOpen &&
+                !isDragging &&
+                index === currentPageIndex + 1 &&
+                index <= bookPages.length - 1 && (
+                  <div
+                    className={cn(
+                      styles.cornerZone,
+                      styles.cornerBottomRight,
+                      cornerHover === 'next' && styles.cornerActive
+                    )}
+                    onMouseEnter={() => setCornerHover('next')}
+                    onMouseLeave={() => setCornerHover('none')}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onTouchStart={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setCornerHover('none')
+                      nextPage(e)
+                    }}
+                  >
+                    <div className={styles.curlEffect} />
+                    <div className={styles.curlShadow} />
+                    <span className={styles.curlHint}>翻页 →</span>
+                  </div>
+                )}
             </div>
 
             {/* ─── 背面 ─── */}
@@ -1001,7 +994,7 @@ export default function InteractiveBook({
                 )}
               </div>
               {/* 左下角翻页热区 */}
-              {isOpen && !isDragging && index === currentPageIndex && (
+              {showCornerFlip && isOpen && !isDragging && index === currentPageIndex && (
                 <div
                   className={cn(
                     styles.cornerZone,
@@ -1177,7 +1170,7 @@ export default function InteractiveBook({
 
       {/* ─── 导航栏 ─── */}
       <AnimatePresence>
-        {isOpen && (
+        {showNavigation && isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 20, x: '-50%' }}
             animate={{ opacity: 1, y: 0, x: '-50%' }}
@@ -1263,7 +1256,7 @@ export default function InteractiveBook({
           >
             →
           </div>
-          <div className={styles.dragText}>{Math.abs(dragOffset) > 80 ? '松手翻页' : '继续拖拽'}</div>
+          <div className={styles.dragText}>{Math.abs(dragOffset) > 50 ? '松手翻页' : '继续拖拽'}</div>
         </motion.div>
       )}
     </div>
