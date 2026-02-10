@@ -197,6 +197,9 @@ function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefi
             canvas.width = viewport.width
             canvas.height = viewport.height
             const ctx = canvas.getContext('2d')!
+            // 先填充淡黄纸张底色，避免白色背景
+            ctx.fillStyle = '#fdfbf7'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
             await page.render({ canvas, canvasContext: ctx, viewport }).promise
             urls.push(canvas.toDataURL('image/png'))
           }
@@ -269,10 +272,14 @@ export default function InteractiveBook({
   const [currentPageIndex, setCurrentPageIndex] = useState(-1)
   const [isHovering, setIsHovering] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [isTopHalf, setIsTopHalf] = useState(false)
   const [dragOffset, setDragOffset] = useState(0)
+  const [dragOffsetY, setDragOffsetY] = useState(0)
   const [cornerHover, setCornerHover] = useState<'none' | 'next' | 'prev'>('none')
   const dragStartXRef = useRef(0)
+  const dragStartYRef = useRef(0)
   const currentDragXRef = useRef(0)
+  const currentDragYRef = useRef(0)
   const rafIdRef = useRef(0)
 
   // ─── PDF → 图片 ─────────────────────────────────
@@ -354,17 +361,28 @@ export default function InteractiveBook({
     if (!isOpen) return
     e.preventDefault()
     setIsDragging(true)
+
+    // Determine if drag started in top or bottom half
+    const rect = (e.currentTarget as Element).getBoundingClientRect()
+    const relativeY = e.clientY - rect.top
+    setIsTopHalf(relativeY < rect.height / 2)
+
     dragStartXRef.current = e.clientX
+    dragStartYRef.current = e.clientY
     currentDragXRef.current = e.clientX
+    currentDragYRef.current = e.clientY
     setDragOffset(0)
+    setDragOffsetY(0)
   }
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging) return
     currentDragXRef.current = e.clientX
+    currentDragYRef.current = e.clientY
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
     rafIdRef.current = requestAnimationFrame(() => {
       setDragOffset(currentDragXRef.current - dragStartXRef.current)
+      setDragOffsetY(currentDragYRef.current - dragStartYRef.current)
     })
   }
 
@@ -376,7 +394,8 @@ export default function InteractiveBook({
     }
 
     const deltaX = currentDragXRef.current - dragStartXRef.current
-    const threshold = 80
+    // 降低触发翻页的阈值，提高响应灵敏度
+    const threshold = 30
 
     if (!isOpen) {
       if (deltaX < -threshold) {
@@ -384,8 +403,11 @@ export default function InteractiveBook({
       }
       setIsDragging(false)
       setDragOffset(0)
+      setDragOffsetY(0)
       dragStartXRef.current = 0
+      dragStartYRef.current = 0
       currentDragXRef.current = 0
+      currentDragYRef.current = 0
       return
     }
 
@@ -403,8 +425,11 @@ export default function InteractiveBook({
 
     setIsDragging(false)
     setDragOffset(0)
+    setDragOffsetY(0)
     dragStartXRef.current = 0
+    dragStartYRef.current = 0
     currentDragXRef.current = 0
+    currentDragYRef.current = 0
   }
 
   // 触摸处理
@@ -413,18 +438,30 @@ export default function InteractiveBook({
     e.preventDefault()
     const touch = e.touches[0]
     setIsDragging(true)
+
+    // Determine if drag started in top or bottom half
+    const rect = (e.currentTarget as Element).getBoundingClientRect()
+    const relativeY = touch.clientY - rect.top
+    setIsTopHalf(relativeY < rect.height / 2)
+
     dragStartXRef.current = touch.clientX
+    dragStartYRef.current = touch.clientY
     currentDragXRef.current = touch.clientX
+    currentDragYRef.current = touch.clientY
     setDragOffset(0)
+    setDragOffsetY(0)
   }
 
   const handleTouchMove = (e: TouchEvent) => {
     if (!isDragging) return
     e.preventDefault()
-    currentDragXRef.current = e.touches[0].clientX
+    const touch = e.touches[0]
+    currentDragXRef.current = touch.clientX
+    currentDragYRef.current = touch.clientY
     if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
     rafIdRef.current = requestAnimationFrame(() => {
       setDragOffset(currentDragXRef.current - dragStartXRef.current)
+      setDragOffsetY(currentDragYRef.current - dragStartYRef.current)
     })
   }
 
@@ -585,6 +622,8 @@ export default function InteractiveBook({
       style={{
         transformStyle: 'preserve-3d',
         cursor: isOpen ? (isDragging ? 'grabbing' : 'pointer') : 'default',
+        userSelect: isDragging ? 'none' : undefined,
+        WebkitUserSelect: isDragging ? 'none' : undefined,
       }}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
@@ -603,7 +642,8 @@ export default function InteractiveBook({
                 duration: 0.6,
                 ease: [0.645, 0.045, 0.355, 1] as const,
               },
-              zIndex: { delay: 0.6 },
+              // 若是刚翻过去的顶层页，立即提升层级；若是被压住的旧页，延迟层级调整
+              zIndex: { delay: isBuriedLeft ? 0.6 : 0 },
             },
           },
           unflipped: {
@@ -619,17 +659,217 @@ export default function InteractiveBook({
           },
         }
 
+        // 计算动态样式以模拟纸张弯曲
         const isActiveDragPage =
           isDragging &&
           isOpen &&
           ((dragOffset < 0 && index === currentPageIndex + 1) || (dragOffset > 0 && index === currentPageIndex))
-        const curlAngle = isActiveDragPage ? Math.min(Math.abs(dragOffset) * 0.25, 45) * (dragOffset < 0 ? -1 : 1) : 0
+
+        // 降低容器整体旋转幅度，主要依靠折角（Flap）效果
+        // 关键逻辑修复：如果是向右拖拽（左页），基准旋转角度应为 -180，必须在此基础上进行这一微调，否则会直接跳到右侧
+        let pageTransform = ''
+        if (isActiveDragPage) {
+          const curlStrength = Math.min(Math.abs(dragOffset) * 0.1, 15)
+          if (dragOffset < 0) {
+            // 右页向左翻：0 -> -15
+            pageTransform = `perspective(1200px) rotateY(${-curlStrength}deg)`
+          } else {
+            // 左页向右翻：-180 -> -165 (即 -180 + 15)
+            pageTransform = `perspective(1200px) rotateY(${-180 + curlStrength}deg)`
+          }
+        }
         const curlZ = isActiveDragPage ? Math.min(Math.abs(dragOffset) * 0.15, 30) : 0
 
-        // 图片索引：每个书页对应两张图片（正面=偶数索引，背面=奇数索引）
+        // 计算折角几何 (Turn.js 风格算法)
+        let hx = 0,
+          hy = 0
+        let safeDx = 0,
+          safeDy = 0
+
+        if (isActiveDragPage) {
+          const r2 = dragOffset * dragOffset + dragOffsetY * dragOffsetY
+          // Use a small epsilon to avoid division by zero
+          safeDy = Math.abs(dragOffsetY) < 1 ? (dragOffsetY >= 0 ? 1 : -1) : dragOffsetY
+          safeDx = Math.abs(dragOffset) < 1 ? (dragOffset >= 0 ? 1 : -1) : dragOffset
+          hx = Math.abs(r2 / (2 * safeDx))
+          hy = Math.abs(r2 / (2 * safeDy))
+        }
+
+        const W = typeof width === 'number' ? width : 300
+        const H = typeof height === 'number' ? height : 500
+
+        // Helper: Construct polygon for the "Body" (Remaining Page) and "Ear" (The corner triangle)
+        const getFoldPolygons = (isTR: boolean, isBR: boolean, isTL: boolean, isBL: boolean) => {
+          const chx = Math.min(hx, W * 2)
+          const chy = Math.min(hy, H * 2)
+
+          let body = ''
+          let ear = ''
+          let foldAxis = ''
+          let origin = ''
+
+          if (isTR) {
+            // Top-Right: Peeling towards Left-Bottom
+            body = `polygon(0% 0%, calc(100% - ${chx}px) 0%, 100% ${chy}px, 100% 100%, 0% 100%)`
+            ear = `polygon(100% 0%, calc(100% - ${chx}px) 0%, 100% ${chy}px)`
+            foldAxis = `${chx}, ${chy}, 0`
+            origin = `100% ${chy}px`
+          } else if (isBR) {
+            // Bottom-Right
+            body = `polygon(0% 0%, 100% 0%, 100% calc(100% - ${chy}px), calc(100% - ${chx}px) 100%, 0% 100%)`
+            ear = `polygon(100% 100%, 100% calc(100% - ${chy}px), calc(100% - ${chx}px) 100%)`
+            foldAxis = `${chx}, ${-chy}, 0`
+            origin = `100% calc(100% - ${chy}px)`
+          } else if (isTL) {
+            // Top-Left
+            body = `polygon(${chx}px 0%, 100% 0%, 100% 100%, 0% 100%, 0% ${chy}px)`
+            ear = `polygon(0% 0%, ${chx}px 0%, 0% ${chy}px)`
+            foldAxis = `${-chx}, ${chy}, 0`
+            origin = `0% ${chy}px`
+          } else if (isBL) {
+            // Bottom-Left
+            body = `polygon(0% 0%, 100% 0%, 100% 100%, ${chx}px 100%, 0% calc(100% - ${chy}px))`
+            ear = `polygon(0% 100%, ${chx}px 100%, 0% calc(100% - ${chy}px))`
+            foldAxis = `${-chx}, ${-chy}, 0`
+            origin = `0% calc(100% - ${chy}px)`
+          }
+          return { body, ear, foldAxis, origin }
+        }
+
+        let frontClipPath = undefined
+        let backClipPath = undefined
+        let flapStyle: React.CSSProperties | undefined = undefined
+        let flapContent = null
+
+        // 图片索引
         const frontImgIdx = index * 2
         const backImgIdx = index * 2 + 1
         const shouldLoadImages = isPageNearby(index)
+
+        // 提取内容渲染逻辑以便在折角（Flap）中复用
+        const renderFrontInner = () => (
+          <>
+            {isImageMode && resolvedImages ? (
+              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                <div className={styles.pageNumber}>PAGE {frontImgIdx + 1}</div>
+                {frontImgIdx < resolvedImages.length ? (
+                  <LazyPageImage
+                    src={resolvedImages[frontImgIdx]}
+                    shouldLoad={shouldLoadImages}
+                    alt={`第 ${frontImgIdx + 1} 页`}
+                  />
+                ) : (
+                  <div className={styles.pageNumberOnly}>
+                    <span>{frontImgIdx + 1}</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.pageText}>
+                <div className={styles.pageNumber}>PAGE {page.pageNumber * 2 - 1}</div>
+                {page.title && <h3 className={styles.pageTitle}>{page.title}</h3>}
+                <div className={styles.pageText}>{page.content}</div>
+              </div>
+            )}
+          </>
+        )
+
+        const renderBackInner = () => (
+          <>
+            {isImageMode && resolvedImages ? (
+              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                <div className={styles.backPageNumber}>PAGE {backImgIdx + 1}</div>
+                {backImgIdx < resolvedImages.length ? (
+                  <LazyPageImage
+                    src={resolvedImages[backImgIdx]}
+                    shouldLoad={shouldLoadImages}
+                    alt={`第 ${backImgIdx + 1} 页`}
+                  />
+                ) : (
+                  <div className={styles.pageNumberOnly}>
+                    <span>{backImgIdx + 1}</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.backText}>
+                <div className={styles.backPageNumber}>PAGE {page.pageNumber * 2}</div>
+                {page.backContent ? (
+                  <div className={styles.backText}>{page.backContent}</div>
+                ) : (
+                  <div className={styles.pageNumberOnly}>
+                    <span>{page.pageNumber * 2}</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        )
+
+        if (isActiveDragPage) {
+          let poly = null
+          if (dragOffset < 0) {
+            // Drag Right -> Left (Peeling Page N, revealing Back)
+            poly = getFoldPolygons(isTopHalf, !isTopHalf, false, false)
+            frontClipPath = poly.body
+
+            flapStyle = {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 50,
+              pointerEvents: 'none',
+              clipPath: poly.ear,
+              transformOrigin: poly.origin,
+              transform: `rotate3d(${poly.foldAxis}, 180deg)`,
+              backfaceVisibility: 'visible',
+              boxShadow: '-2px 0 10px rgba(0,0,0,0.1)',
+            }
+
+            // Flap shows the Back Content of the current page
+            flapContent = (
+              <div className={styles.pageBack} style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'visible' }}>
+                <div className={styles.rightShadow} />
+                <div className={styles.rightBorder} />
+                <div className={styles.backContent}>{renderBackInner()}</div>
+              </div>
+            )
+          } else {
+            // Drag Left -> Right (Peeling Page N-1, revealing Front)
+            // 左页向右翻：切掉左侧角（Visual Left），也就是 PageBack 的坐标系中的 TL/BL
+            // 修正前：使用了 TR/BR，导致切掉了书脊（Visual Right）
+            // 修正后：使用 TL/BL
+            poly = getFoldPolygons(false, false, isTopHalf, !isTopHalf)
+            backClipPath = poly.body
+
+            flapStyle = {
+              position: 'absolute',
+              top: 0,
+              // 【关键修正】对于左侧裁剪 (TL/BL)，Ear 是左边的三角形，left: 0 应该没问题，但需要确保 poly.ear 也是基于左上角的
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 50,
+              pointerEvents: 'none',
+              clipPath: poly.ear,
+              transformOrigin: poly.origin,
+              transform: `rotate3d(${poly.foldAxis}, 180deg)`,
+              backfaceVisibility: 'visible',
+              boxShadow: '2px 0 10px rgba(0,0,0,0.1)', // 修正阴影方向
+            }
+
+            // Flap shows the Front Content of the left page
+            flapContent = (
+              <div className={styles.pageFront} style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'visible' }}>
+                <div className={styles.leftShadow} />
+                <div className={styles.leftBorder} />
+                <div className={styles.pageContent}>{renderFrontInner()}</div>
+              </div>
+            )
+          }
+        }
 
         return (
           <motion.div
@@ -641,10 +881,13 @@ export default function InteractiveBook({
               visibility: isDeeplyBuried ? 'hidden' : 'visible',
               ...(isActiveDragPage
                 ? {
-                    transform: `perspective(1200px) rotateY(${curlAngle}deg) translateZ(${curlZ}px)`,
+                    transform: `${pageTransform} translateZ(${curlZ}px)`,
                     transition: 'none',
                     zIndex: 200,
-                    boxShadow: `${dragOffset < 0 ? '-' : ''}${Math.min(Math.abs(dragOffset) * 0.1, 15)}px 5px 20px rgba(0,0,0,0.15)`,
+                    boxShadow: `
+                      ${dragOffset < 0 ? '-' : ''}${Math.min(Math.abs(dragOffset) * 0.15, 25)}px 10px 30px rgba(0,0,0,0.3),
+                      ${dragOffset < 0 ? '-' : ''}2px 0 5px rgba(0,0,0,0.1) inset
+                    `,
                   }
                 : {}),
             }}
@@ -657,12 +900,13 @@ export default function InteractiveBook({
               className={styles.pageFront}
               style={{
                 transform: 'translateZ(0.5px)',
-                ...(isImageMode ? { padding: 12 } : {}),
+                clipPath: frontClipPath,
               }}
             >
               <div className={styles.pageContent}>
                 {isImageMode && resolvedImages ? (
-                  <div style={{ width: '100%', height: '100%' }}>
+                  <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                    <div className={styles.pageNumber}>PAGE {frontImgIdx + 1}</div>
                     {frontImgIdx < resolvedImages.length ? (
                       <LazyPageImage
                         src={resolvedImages[frontImgIdx]}
@@ -720,8 +964,8 @@ export default function InteractiveBook({
               className={styles.pageBack}
               style={{
                 transform: 'rotateY(180deg) translateZ(0.5px)',
-                ...(isImageMode ? { padding: 12 } : {}),
                 cursor: isOpen && !isDragging && index === currentPageIndex ? 'pointer' : undefined,
+                clipPath: backClipPath,
               }}
             >
               <div className={styles.rightShadow} />
@@ -729,7 +973,8 @@ export default function InteractiveBook({
 
               <div className={styles.backContent}>
                 {isImageMode && resolvedImages ? (
-                  <div style={{ width: '100%', height: '100%' }}>
+                  <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                    <div className={styles.backPageNumber}>PAGE {backImgIdx + 1}</div>
                     {backImgIdx < resolvedImages.length ? (
                       <LazyPageImage
                         src={resolvedImages[backImgIdx]}
@@ -779,6 +1024,66 @@ export default function InteractiveBook({
                 </div>
               )}
             </div>
+
+            {/* ─── 折角翻页效果（独立层，不受 clip-path 影响） ─── */}
+            {/* 右侧拖拽：在正面层上方显示折角 */}
+            {isActiveDragPage && dragOffset < 0 && flapStyle && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  transform: 'translateZ(1px)',
+                  pointerEvents: 'none',
+                  zIndex: 300,
+                }}
+              >
+                <div style={flapStyle}>
+                  {flapContent}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      background: isTopHalf
+                        ? 'linear-gradient(45deg, rgba(0,0,0,0.05) 0%, transparent 40%)'
+                        : 'linear-gradient(135deg, rgba(0,0,0,0.05) 0%, transparent 40%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+            {/* 左侧拖拽：在背面层上方显示折角 */}
+            {isActiveDragPage && dragOffset > 0 && flapStyle && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  transform: 'rotateY(180deg) translateZ(1px)',
+                  pointerEvents: 'none',
+                  zIndex: 300,
+                }}
+              >
+                <div style={flapStyle}>
+                  {flapContent}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      background: isTopHalf
+                        ? 'linear-gradient(-45deg, rgba(0,0,0,0.05) 0%, transparent 40%)'
+                        : 'linear-gradient(225deg, rgba(0,0,0,0.05) 0%, transparent 40%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </motion.div>
         )
       })}
@@ -789,8 +1094,8 @@ export default function InteractiveBook({
     <div
       className={cn(styles.container, className)}
       style={{
-        width: typeof width === 'number' ? width * 2 + 100 : '100%',
-        height: typeof height === 'number' ? height + 150 : 'auto',
+        width: typeof width === 'number' ? width * 2 + 300 : '100%',
+        height: typeof height === 'number' ? height + 240 : 'auto',
       }}
     >
       <div className={cn(styles.bookWrapper, isOpen && styles.open)} style={{ width, height }}>

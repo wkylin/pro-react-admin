@@ -6,7 +6,8 @@
   perspective: 2000px;
   width: 100%;
   height: auto;
-  padding-bottom: 120px;
+  padding: 48px 80px 140px;
+  box-sizing: border-box;
 }
 
 .emptyState {
@@ -619,8 +620,9 @@
     position: absolute;
     width: 0;
     height: 0;
-    transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-                height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition:
+      width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+      height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .curlShadow {
@@ -639,7 +641,9 @@
     white-space: nowrap;
     opacity: 0;
     transform: scale(0.8);
-    transition: opacity 0.25s ease 0.1s, transform 0.25s ease 0.1s;
+    transition:
+      opacity 0.25s ease 0.1s,
+      transform 0.25s ease 0.1s;
     pointer-events: none;
   }
 
