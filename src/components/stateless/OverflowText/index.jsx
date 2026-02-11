@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState, useLayoutEffect } from 'react'
+import React, { useEffect, useRef, useState, useLayoutEffect, useMemo } from 'react'
 import PortalTooltip from '../PortalTooltip'
 import styles from './index.module.less'
 
 // SSR-safe useLayoutEffect
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
+
+const EMPTY_STYLE = {}
+const EMPTY_TOOLTIP_PROPS = {}
 
 /**
  * OverflowText
@@ -22,14 +25,17 @@ const OverflowText = ({
   minWidth = 0,
   maxWidth,
   className = '',
-  style = {},
-  tooltipProps = {},
+  style = EMPTY_STYLE,
+  tooltipProps = EMPTY_TOOLTIP_PROPS,
   alwaysShow = false,
   lines = 0,
   onOverflowChange,
 }) => {
   const elRef = useRef(null)
   const [isOverflow, setIsOverflow] = useState(false)
+
+  // Stabilize style reference — only re-run effect when style content actually changes
+  const stableStyleKey = useMemo(() => JSON.stringify(style), [style])
 
   const check = () => {
     const el = elRef.current
@@ -60,7 +66,7 @@ const OverflowText = ({
   // Check on mount and updates
   useIsomorphicLayoutEffect(() => {
     check()
-  }, [text, lines, maxWidth, style, className])
+  }, [text, lines, maxWidth, stableStyleKey, className])
 
   useEffect(() => {
     const el = elRef.current
