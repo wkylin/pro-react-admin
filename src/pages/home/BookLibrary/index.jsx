@@ -1,8 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useLayoutEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Input, Tag } from 'antd'
 import { BookOutlined, ReadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons'
-import { AnimatePresence, motion } from 'framer-motion'
 import InteractiveBook from '@stateless/InteractiveBook'
 import styles from './index.module.less'
 
@@ -281,6 +280,12 @@ const bookLibraryData = [
 
 const allCategories = ['All', ...Array.from(new Set(bookLibraryData.map((b) => b.category)))]
 
+// ─── 弹窗行为配置 ─────────────────────────────────
+const OVERLAY_CONFIG = {
+  showCloseButton: true, // 是否显示关闭按钮
+  maskClosable: true, // 点击蒙层是否关闭
+}
+
 // ─── BookLibrary 组件 ────────────────────────────
 export default function BookLibrary() {
   const [activeCategory, setActiveCategory] = useState('All')
@@ -297,6 +302,9 @@ export default function BookLibrary() {
   const cardRefsMap = useRef({})
   const overlayContentRef = useRef(null)
   const maskRef = useRef(null)
+  const flySourceRef = useRef(null)
+  const openCleanupRef = useRef(null)
+  const selectedBookRef = useRef(null)
 
   const filteredBooks = bookLibraryData.filter((book) => {
     const matchCategory = activeCategory === 'All' || book.category === activeCategory
@@ -309,39 +317,103 @@ export default function BookLibrary() {
 
   const openBook = (book) => {
     if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+    if (openCleanupRef.current) clearTimeout(openCleanupRef.current)
     closePhaseRef.current = null
+
+    // 在 setState 之前捕获源卡片的位置
+    const cardEl = cardRefsMap.current[book.id]
+    flySourceRef.current = cardEl ? cardEl.getBoundingClientRect() : null
+
     setSelectedBook(book)
+    selectedBookRef.current = book
     setDialogOpen(true)
     setBookOpen(true)
-    // 重置 DOM 样式（防止上次飞回残留）
-    requestAnimationFrame(() => {
-      const el = overlayContentRef.current
-      const mask = maskRef.current
-      if (el) {
-        el.style.transition = ''
-        el.style.transform = ''
-        el.style.opacity = ''
-        el.style.overflow = ''
-        el.style.borderRadius = ''
-      }
-      if (mask) {
-        mask.style.transition = ''
-        mask.style.opacity = ''
-      }
-    })
   }
 
-  // 执行飞回动画（Phase 2）：直接操作 DOM + CSS transition
-  const doFlyback = useCallback(() => {
+  // ─── 飞出动画：卡片位置 → 屏幕中心（useLayoutEffect 在 paint 前执行） ───
+  useLayoutEffect(() => {
+    if (!dialogOpen || !selectedBook || !flySourceRef.current) return
+
     const contentEl = overlayContentRef.current
     const maskEl = maskRef.current
-    const cardEl = selectedBook ? cardRefsMap.current[selectedBook.id] : null
+    const sourceRect = flySourceRef.current
+    flySourceRef.current = null
+
+    if (!contentEl) return
+
+    // 计算卡片中心 → 内容中心 的偏移量
+    const contentRect = contentEl.getBoundingClientRect()
+    const tx = sourceRect.left + sourceRect.width / 2 - (contentRect.left + contentRect.width / 2)
+    const ty = sourceRect.top + sourceRect.height / 2 - (contentRect.top + contentRect.height / 2)
+    const ts = Math.max(sourceRect.width / contentRect.width, 0.12)
+
+    // ── 第 1 帧：无过渡，直接定位到卡片位置（小 + 透明） ──
+    contentEl.style.transition = 'none'
+    contentEl.style.transform = `translate(${tx}px, ${ty}px) scale(${ts})`
+    contentEl.style.opacity = '0'
+    contentEl.style.overflow = 'hidden'
+    contentEl.style.borderRadius = '12px'
+
+    if (maskEl) {
+      maskEl.style.transition = 'none'
+      maskEl.style.opacity = '0'
+    }
+
+    // 强制重排，提交初始状态到渲染管线
+
+    contentEl.offsetHeight
+
+    // ── 第 2 帧：启用过渡，飞向中心（逐渐放大 + 淡入） ──
+    requestAnimationFrame(() => {
+      contentEl.style.transition =
+        'transform 0.55s cubic-bezier(0.22,1,0.36,1), ' + 'opacity 0.4s ease, ' + 'border-radius 0.45s ease'
+      contentEl.style.transform = 'translate(0,0) scale(1)'
+      contentEl.style.opacity = '1'
+      contentEl.style.borderRadius = '0px'
+
+      if (maskEl) {
+        maskEl.style.transition = 'opacity 0.4s ease'
+        maskEl.style.opacity = '1'
+      }
+
+      // 触发分段渐变（顺向）
+      const seg = contentEl.querySelector('.segmentGradient')
+      if (seg) {
+        seg.classList.remove('seg-animate-reverse')
+
+        seg.offsetHeight
+        seg.classList.add('seg-animate')
+      }
+    })
+
+    // 动画结束后清理内联样式，为飞回做准备
+    openCleanupRef.current = setTimeout(() => {
+      if (!contentEl) return
+      contentEl.style.transition = ''
+      contentEl.style.transform = ''
+      contentEl.style.opacity = ''
+      contentEl.style.overflow = ''
+      contentEl.style.borderRadius = ''
+    }, 620)
+
+    return () => {
+      if (openCleanupRef.current) clearTimeout(openCleanupRef.current)
+    }
+  }, [dialogOpen, selectedBook])
+
+  // 执行飞回动画（Phase 2）：直接操作 DOM + CSS transition
+  const doFlyback = () => {
+    const contentEl = overlayContentRef.current
+    const maskEl = maskRef.current
+    const book = selectedBookRef.current
+    const cardEl = book ? cardRefsMap.current[book.id] : null
 
     if (!contentEl || !cardEl) {
       // 无法计算目标，直接卸载
       setDialogOpen(false)
       closePhaseRef.current = null
       setSelectedBook(null)
+      selectedBookRef.current = null
       setBookOpen(true)
       return
     }
@@ -354,11 +426,22 @@ export default function BookLibrary() {
 
     // 先设 transition，下一帧设目标值，确保浏览器识别为动画
     contentEl.style.overflow = 'hidden'
-    contentEl.style.borderRadius = '12px'
-    contentEl.style.transition = 'transform 0.5s cubic-bezier(0.4,0,0.2,1), opacity 0.5s cubic-bezier(0.4,0,0.2,1)'
+    contentEl.style.borderRadius = '0px'
+    contentEl.style.transition =
+      'transform 0.5s cubic-bezier(0.4,0,0.2,1), ' +
+      'opacity 0.5s cubic-bezier(0.4,0,0.2,1), ' +
+      'border-radius 0.4s cubic-bezier(0.4,0,0.2,1)'
 
     if (maskEl) {
       maskEl.style.transition = 'opacity 0.5s cubic-bezier(0.4,0,0.2,1)'
+    }
+
+    // 分段渐变逆向动画，制造飞回时的层次感
+    const seg = contentEl.querySelector('.segmentGradient')
+    if (seg) {
+      seg.classList.remove('seg-animate')
+      seg.offsetHeight
+      seg.classList.add('seg-animate-reverse')
     }
 
     // 下一帧应用目标值
@@ -366,6 +449,7 @@ export default function BookLibrary() {
       requestAnimationFrame(() => {
         contentEl.style.transform = `translate(${tx}px, ${ty}px) scale(${ts})`
         contentEl.style.opacity = '0'
+        contentEl.style.borderRadius = '12px'
         if (maskEl) {
           maskEl.style.opacity = '0'
         }
@@ -377,12 +461,13 @@ export default function BookLibrary() {
       setDialogOpen(false)
       closePhaseRef.current = null
       setSelectedBook(null)
+      selectedBookRef.current = null
       setBookOpen(true)
     }, 530)
-  }, [selectedBook])
+  }
 
   // 分段关闭入口：Phase 1 关闭书籍 → Phase 2 飞回
-  const startClose = useCallback(() => {
+  const startClose = () => {
     if (closePhaseRef.current) return
     closePhaseRef.current = 'book'
 
@@ -394,10 +479,10 @@ export default function BookLibrary() {
       closePhaseRef.current = 'flyback'
       doFlyback()
     }, 650)
-  }, [doFlyback])
+  }
 
   // InteractiveBook 内部关闭按钮触发（书已自行开始关闭动画）
-  const handleBookInternalClose = useCallback(() => {
+  const handleBookInternalClose = () => {
     if (closePhaseRef.current) return
     closePhaseRef.current = 'book'
 
@@ -406,7 +491,7 @@ export default function BookLibrary() {
       closePhaseRef.current = 'flyback'
       doFlyback()
     }, 650)
-  }, [doFlyback])
+  }
 
   return (
     <section className={styles.bookLibrary}>
@@ -441,38 +526,31 @@ export default function BookLibrary() {
 
       {/* 书籍网格（带过滤动画） */}
       <div className={styles.bookGrid}>
-        <AnimatePresence mode="popLayout">
-          {filteredBooks.map((book) => (
-            <motion.div
-              key={book.id}
-              ref={(el) => {
-                cardRefsMap.current[book.id] = el
-              }}
-              layout
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              transition={{ duration: 0.35, type: 'spring', stiffness: 300, damping: 25 }}
-              className={styles.bookCard}
-              onClick={() => openBook(book)}
-            >
-              <div className={styles.bookCoverWrap}>
-                <img src={book.cover} alt={book.title} className={styles.bookCoverImg} loading="lazy" />
-                <div className={styles.bookCoverOverlay}>
-                  <BookOutlined style={{ fontSize: 28, color: '#fff' }} />
-                  <span>阅读</span>
-                </div>
+        {filteredBooks.map((book) => (
+          <div
+            key={book.id}
+            ref={(el) => {
+              cardRefsMap.current[book.id] = el
+            }}
+            className={styles.bookCard}
+            onClick={() => openBook(book)}
+          >
+            <div className={styles.bookCoverWrap}>
+              <img src={book.cover} alt={book.title} className={styles.bookCoverImg} loading="lazy" />
+              <div className={styles.bookCoverOverlay}>
+                <BookOutlined style={{ fontSize: 28, color: '#fff' }} />
+                <span>阅读</span>
               </div>
-              <div className={styles.bookMeta}>
-                <h3 className={styles.bookCardTitle}>{book.title}</h3>
-                <p className={styles.bookCardAuthor}>{book.author}</p>
-                <Tag color="blue" style={{ fontSize: 11 }}>
-                  {book.category}
-                </Tag>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+            </div>
+            <div className={styles.bookMeta}>
+              <h3 className={styles.bookCardTitle}>{book.title}</h3>
+              <p className={styles.bookCardAuthor}>{book.author}</p>
+              <Tag color="blue" style={{ fontSize: 11 }}>
+                {book.category}
+              </Tag>
+            </div>
+          </div>
+        ))}
 
         {filteredBooks.length === 0 && (
           <div className={styles.bookEmpty}>
@@ -486,11 +564,24 @@ export default function BookLibrary() {
       {dialogOpen &&
         selectedBook &&
         createPortal(
-          <div ref={maskRef} className={styles.bookOverlayMask} onClick={startClose}>
-            <div ref={overlayContentRef} className={styles.bookOverlayContent} onClick={(e) => e.stopPropagation()}>
+          <div
+            ref={maskRef}
+            className={styles.bookOverlayMask}
+            onClick={OVERLAY_CONFIG.maskClosable ? startClose : undefined}
+          >
+            {/* 关闭按钮放在 mask 层，避免被 content 的 overflow:hidden 裁剪 */}
+            {OVERLAY_CONFIG.showCloseButton && (
               <button className={styles.bookOverlayClose} onClick={startClose} aria-label="关闭">
                 <CloseOutlined />
               </button>
+            )}
+            <div ref={overlayContentRef} className={styles.bookOverlayContent} onClick={(e) => e.stopPropagation()}>
+              {/* 分段渐变覆层（用于飞出/飞入时的视觉效果） */}
+              <div className={styles.segmentGradient + ' segmentGradient'}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className={`segmentStrip segmentStrip-${i + 1}`} />
+                ))}
+              </div>
               <InteractiveBook
                 coverImage={selectedBook.cover}
                 bookTitle={selectedBook.title}
