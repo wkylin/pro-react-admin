@@ -332,7 +332,7 @@ export default function BookLibrary() {
 
   // ─── 飞出动画：卡片位置 → 屏幕中心（useLayoutEffect 在 paint 前执行） ───
   useLayoutEffect(() => {
-    if (!dialogOpen || !selectedBook || !flySourceRef.current) return
+    if (!dialogOpen || !selectedBookRef.current || !flySourceRef.current) return
 
     const contentEl = overlayContentRef.current
     const maskEl = maskRef.current
@@ -399,7 +399,7 @@ export default function BookLibrary() {
     return () => {
       if (openCleanupRef.current) clearTimeout(openCleanupRef.current)
     }
-  }, [dialogOpen, selectedBook])
+  }, [dialogOpen])
 
   // 执行飞回动画（Phase 2）：直接操作 DOM + CSS transition
   const doFlyback = () => {
