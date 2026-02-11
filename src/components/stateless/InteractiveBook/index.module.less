@@ -6,7 +6,7 @@
   perspective: 2000px;
   width: 100%;
   height: auto;
-  padding: 48px 80px 140px;
+  padding: 32px 60px 80px;
   box-sizing: border-box;
 }
 
@@ -91,7 +91,7 @@
 }
 
 .bookTitle {
-  font-size: 3rem;
+  font-size: 3em;
   font-family: serif;
   font-weight: bold;
   letter-spacing: 0.1em;
@@ -99,7 +99,7 @@
 }
 
 .bookAuthor {
-  font-size: 0.875rem;
+  font-size: 0.875em;
   font-family: sans-serif;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -152,7 +152,7 @@
 }
 
 .innerTitle {
-  font-size: 2rem;
+  font-size: 2em;
   font-family: serif;
   color: #374151;
   margin-bottom: 8px;
@@ -167,7 +167,7 @@
 }
 
 .edition {
-  font-size: 0.75rem;
+  font-size: 0.75em;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -244,17 +244,17 @@
 }
 
 .pageNumber {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 0.65em;
+  color: #9ca3af;
   text-align: right;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   font-family: sans-serif;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .pageTitle {
-  font-size: 1.25rem;
+  font-size: 1.25em;
   font-weight: 600;
   text-align: center;
   margin-bottom: 20px;
@@ -268,7 +268,7 @@
   font-family: serif;
   color: #374151;
   line-height: 1.6;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   max-width: none;
   overflow-wrap: break-word;
   overflow: hidden;
@@ -304,7 +304,7 @@
   background-color: #fdfbf7;
   border-right: 1px solid #e5e5e5;
   overflow: hidden;
-  padding: 24px;
+  padding: 16px 24px 24px 24px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -338,12 +338,12 @@
 }
 
 .backPageNumber {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 0.65em;
+  color: #9ca3af;
   text-align: left;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
   font-family: sans-serif;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
@@ -352,7 +352,7 @@
   font-family: serif;
   color: #374151;
   line-height: 1.6;
-  font-size: 0.8rem;
+  font-size: 0.8em;
   max-width: none;
   display: flex;
   flex-direction: column;
@@ -366,11 +366,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.03;
+  opacity: 0.025;
 
   span {
     font-family: serif;
-    font-size: 6rem;
+    font-size: 5em;
     font-weight: bold;
     color: black;
     transform: rotate(90deg);
@@ -409,7 +409,7 @@
   border-radius: 9999px;
   background-color: #f3f4f6;
   color: #374151;
-  font-size: 0.875rem;
+  font-size: 0.875em;
   cursor: pointer;
   transition: background-color 0.2s;
   z-index: 50;
@@ -422,16 +422,16 @@
 
 .navigation {
   position: absolute;
-  bottom: 20px;
+  bottom: 12px;
   left: 50%;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   background-color: rgb(255 255 255 / 95%);
   backdrop-filter: blur(12px);
-  padding: 16px 32px;
+  padding: 10px 24px;
   border-radius: 50px;
-  box-shadow: 0 8px 32px rgb(0 0 0 / 12%);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   border: 1px solid rgb(0 0 0 / 8%);
   z-index: 10;
   animation: slide-up 0.5s ease-out;
@@ -450,7 +450,7 @@
 }
 
 .navButton {
-  padding: 12px;
+  padding: 8px;
   border-radius: 50%;
   transition: all 0.2s ease;
   color: #374151;
@@ -478,7 +478,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 80px;
+  min-width: 72px;
 }
 
 .navPage {
@@ -498,13 +498,13 @@
 
 .navDivider {
   width: 1px;
-  height: 32px;
+  height: 28px;
   background-color: #e5e7eb;
-  margin: 0 8px;
+  margin: 0 4px;
 }
 
 .closeNavButton {
-  padding: 12px;
+  padding: 8px;
   border-radius: 50%;
   color: #6b7280;
   cursor: pointer;
@@ -525,7 +525,7 @@
 
 .hint {
   position: absolute;
-  bottom: 40px;
+  bottom: 24px;
   color: #6b7280;
   font-size: 0.875rem;
   font-weight: 300;
@@ -829,4 +829,268 @@
   background: #f5f5f5;
   color: #bbb;
   font-size: 14px;
+}
+
+/* ===== 单页模式 ===== */
+.singlePageContainer {
+  padding: 24px 16px 80px;
+  /* 移动端滑动时不触发父级滚动 */
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 单页视口：裁剪翻过去的页面，让它们不在左侧残留 */
+.singlePageViewport {
+  position: relative;
+  overflow: hidden;
+  perspective: 2000px;
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.singlePage {
+  &.open {
+    transform: none;
+  }
+}
+
+.singlePageBack {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fdfbf7;
+}
+
+.paperTexture {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0%, transparent 5%, transparent 95%, rgba(0, 0, 0, 0.04) 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.03) 0%, transparent 8%, transparent 92%, rgba(0, 0, 0, 0.03) 100%);
+  opacity: 0.8;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(0, 0, 0, 0.015) 28px,
+      rgba(0, 0, 0, 0.015) 29px
+    );
+  }
+}
+
+/* ===== 移动端适配 ===== */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px 8px 72px;
+    /* 防止 iOS SafeArea 遮挡 */
+    padding-bottom: max(72px, env(safe-area-inset-bottom, 72px));
+  }
+
+  .singlePageContainer {
+    padding: 12px 8px 64px;
+    padding-bottom: max(64px, env(safe-area-inset-bottom, 64px));
+    max-width: 100% !important;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  /* 单页视口在移动端撑满宽度 */
+  .singlePageViewport {
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .navigation {
+    padding: 8px 12px;
+    gap: 8px;
+    bottom: 8px;
+    border-radius: 28px;
+    max-width: calc(100vw - 32px);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+  }
+
+  .navButton {
+    padding: 8px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .navInfo {
+    min-width: 50px;
+  }
+
+  .navPage {
+    font-size: 0.7rem;
+  }
+
+  .navStatus {
+    font-size: 0.55rem;
+  }
+
+  .navDivider {
+    height: 20px;
+    margin: 0 2px;
+  }
+
+  .closeNavButton {
+    padding: 8px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .bookTitle {
+    font-size: 1.75em;
+  }
+
+  .bookAuthor {
+    font-size: 0.7em;
+  }
+
+  .title {
+    bottom: 20px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .pageFront,
+  .pageBack {
+    padding: 12px;
+  }
+
+  .pageNumber,
+  .backPageNumber {
+    margin-bottom: 6px;
+    font-size: 0.55em;
+  }
+
+  .pageTitle {
+    font-size: 1em;
+    margin-bottom: 12px;
+  }
+
+  .pageText {
+    font-size: 0.7em;
+    line-height: 1.4;
+  }
+
+  .backText {
+    font-size: 0.7em;
+    line-height: 1.4;
+  }
+
+  .hint {
+    bottom: 20px;
+    font-size: 0.7rem;
+  }
+
+  .dragHint {
+    font-size: 0.65rem;
+  }
+
+  .cornerZone {
+    width: 50px;
+    height: 50px;
+  }
+
+  .curlHint {
+    font-size: 0.5rem;
+  }
+
+  .curlEffect {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .dragIndicator {
+    bottom: 50px;
+  }
+
+  .dragText {
+    font-size: 0.6rem;
+    padding: 3px 6px;
+  }
+
+  .innerCover {
+    padding: 16px;
+  }
+
+  .innerTitle {
+    font-size: 1.25em;
+  }
+
+  .edition {
+    font-size: 0.65em;
+  }
+
+  .closeButton {
+    padding: 6px;
+    top: 8px;
+    left: 8px;
+  }
+
+  .emptyState {
+    min-height: 200px;
+    font-size: 0.9rem;
+  }
+
+  .restartButton {
+    font-size: 0.75em;
+    padding: 6px 12px;
+  }
+
+  .endText {
+    font-size: 0.85em;
+  }
+
+  .leftShadow,
+  .rightShadow {
+    width: 12px;
+  }
+}
+
+/* ===== 极小屏幕适配（<400px） ===== */
+@media (max-width: 400px) {
+  .singlePageContainer {
+    padding: 8px 4px 72px;
+  }
+
+  .singlePageViewport {
+    border-radius: 2px;
+  }
+
+  .navigation {
+    padding: 6px 10px;
+    gap: 6px;
+    bottom: 4px;
+    border-radius: 24px;
+  }
+
+  .navButton,
+  .closeNavButton {
+    padding: 6px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .bookTitle {
+    font-size: 1.4em;
+  }
+
+  .pageFront,
+  .pageBack {
+    padding: 8px;
+  }
+
+  .cornerZone {
+    width: 40px;
+    height: 40px;
+  }
 }

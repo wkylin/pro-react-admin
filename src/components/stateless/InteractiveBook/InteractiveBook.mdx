@@ -9,7 +9,7 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
 
 # InteractiveBook
 
-3D 交互式书籍组件，支持翻页动画、键盘导航和自定义内容。提供 JSX 内容、图片和 PDF 三种渲染模式。
+3D 交互式书籍组件，支持翻页动画、键盘导航和自定义内容。提供 JSX 内容、图片和 PDF 三种渲染模式，支持单页/双页/自动检测三种翻页模式，内置移动端适配。
 
 ## 组件特性
 
@@ -18,17 +18,52 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
 - 📖 双面内容显示（正面内容 + 背面内容）
 - 🌊 页角海浪卷起翻页提示（可配置隐藏）
 - 🖱️ 拖拽翻页 & 点击翻页（速度感知阈值）
+- 📱 移动端适配：自动检测窄屏切换单页模式，触摸拖拽翻页，安全区适配
+- 📄 三种翻页模式：`double`（双页）/ `single`（单页）/ `auto`（自动检测）
+- 🎮 受控模式：外部控制书籍开合状态（`open` / `onClose` / `defaultOpen`）
 - 🎯 空状态处理
 - 🔄 页面变化回调
-- 📱 响应式设计
 - 🖼️ 图片模式（逐页图片渲染，智能懒加载）
 - 📄 PDF 模式（react-pdf 渲染，本地 Worker，不依赖 CDN）
 - 🔧 可配置导航栏和页角翻页热区
+- 🔊 翻页音效（可配置开关和自定义音源）
 
 ## 组件预览
 
 <Canvas>
   <Story of={InteractiveBookStories.Default} />
+</Canvas>
+
+## 单页模式
+
+每次显示一页，适合移动端。点击右侧 60% 翻下一页，左侧 40% 翻上一页，支持滑动手势和角落翻页。
+
+<Canvas>
+  <Story of={InteractiveBookStories.SinglePageMode} />
+</Canvas>
+
+## 单页图片模式
+
+单页模式下每张图片是一个独立页面（双页模式下每 2 张图片组成一个书页正面 + 背面）。
+
+<Canvas>
+  <Story of={InteractiveBookStories.SinglePageImageBook} />
+</Canvas>
+
+## 自动模式（响应式）
+
+`mode="auto"`（默认值）：窗口宽度 < 768px 自动切换为单页模式，宽屏使用双页模式。尝试调整浏览器窗口宽度观察效果。
+
+<Canvas>
+  <Story of={InteractiveBookStories.AutoMode} />
+</Canvas>
+
+## 移动端模拟
+
+在 375px 宽容器中模拟移动端效果。书本自适应容器宽度，触摸拖拽翻页，支持 iOS SafeArea 安全区。
+
+<Canvas>
+  <Story of={InteractiveBookStories.MobileSimulation} />
 </Canvas>
 
 ## 页角翻页提示
@@ -103,6 +138,14 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
   <Story of={InteractiveBookStories.SoundDisabled} />
 </Canvas>
 
+## 受控模式
+
+使用 `open` 和 `onClose` 外部控制书籍开合状态。设置 `defaultOpen={true}` 可直接打开书籍。
+
+<Canvas>
+  <Story of={InteractiveBookStories.ControlledMode} />
+</Canvas>
+
 ## Props（可调参数）
 
 <ArgTypes />
@@ -118,6 +161,21 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
 | 1      | PDF 模式 | 传入 `pdfUrl`    | 使用 react-pdf 渲染 PDF 文件             |
 | 2      | 图片模式 | 传入 `pageImages`| 逐页加载图片，智能懒加载当前页 ±2 范围   |
 | 3      | JSX 模式 | 传入 `pages`     | 自定义 React 内容，支持正面/背面         |
+
+## 翻页模式
+
+| 模式 | 值 | 说明 |
+| --- | --- | --- |
+| 双页 | `mode="double"` | 传统书籍展开，左右各一页 |
+| 单页 | `mode="single"` | 每次显示一页，适合移动端。点击右侧 60% 翻下一页，左侧 40% 翻上一页 |
+| 自动 | `mode="auto"` | 默认值。窗口宽度 < 768px 自动切换单页模式，宽屏使用双页模式 |
+
+### 单页模式交互
+
+- **点击翻页**：点击页面右侧 60% 区域翻下一页，左侧 40% 区域翻上一页
+- **拖拽翻页**：向左拖拽翻下一页（右上/右下角折角效果），向右拖拽翻上一页（左上/左下角折角效果）
+- **触摸手势**：原生 `touchstart` 事件注册（`passive: false`），确保移动端拖拽不触发浏览器默认滚动
+- **容器自适应**：书本自动撑满容器可用宽度（不超过传入的 `width` 上限），保持宽高比
 
 ## 基本使用
 
@@ -196,25 +254,47 @@ function Example() {
 }
 ```
 
-### 带回调的使用
+### 单页模式（移动端适配）
 
 ```tsx
 import InteractiveBook from '@stateless/InteractiveBook'
 
 function Example() {
-  const handlePageChange = (pageIndex: number) => {
-    console.log('当前页面索引:', pageIndex)
-  }
-
   return (
     <InteractiveBook
       coverImage="https://example.com/cover.jpg"
-      bookTitle="我的书籍"
-      bookAuthor="作者名"
+      bookTitle="移动端阅读"
       pages={pages}
-      onPageChange={handlePageChange}
-      enableKeyboard={true}
+      mode="auto"        // 窄屏自动切换单页（默认值）
+      width={350}
+      height={500}
     />
+  )
+}
+```
+
+### 受控模式
+
+```tsx
+import InteractiveBook from '@stateless/InteractiveBook'
+import { useState } from 'react'
+
+function Example() {
+  const [isOpen, setIsOpen] = useState(true)
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? '关闭' : '打开'}
+      </button>
+      <InteractiveBook
+        coverImage="https://example.com/cover.jpg"
+        bookTitle="受控书籍"
+        pages={pages}
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
+    </>
   )
 }
 ```
@@ -259,6 +339,13 @@ function Example() {
         pages={pages}
         enableSound={false}
       />
+
+      {/* 自定义音效 */}
+      <InteractiveBook
+        coverImage="/cover.jpg"
+        pages={pages}
+        soundSrc="/audio/custom-flip.mp3"
+      />
     </>
   )
 }
@@ -291,14 +378,16 @@ interface BookPage {
 
 组件支持多种翻页交互方式：
 
-| 交互方式      | 说明                                                | 可配置     |
-| ------------- | --------------------------------------------------- | ---------- |
-| 拖拽翻页      | 在页面上按住并左右拖拽，超过阈值后松手翻页          | 始终可用   |
-| 页角点击      | 鼠标悬停在页面右下角/左下角，出现卷起效果后点击翻页 | `showCornerFlip` |
-| 导航栏按钮    | 底部导航栏的前后翻页按钮                            | `showNavigation` |
-| 键盘快捷键    | 方向键、Home、End、Escape                           | `enableKeyboard` |
-| 翻页音效      | 翻页时播放纸张翻动音效                              | `enableSound`    |
-| 封面点击/拖拽 | 点击或向左拖拽封面打开书籍                          | 始终可用   |
+| 交互方式          | 说明                                                     | 可配置             |
+| ----------------- | -------------------------------------------------------- | ------------------ |
+| 拖拽翻页          | 在页面上按住并左右拖拽，超过阈值后松手翻页               | 始终可用           |
+| 页角点击          | 鼠标悬停在页面右下角/左下角，出现卷起效果后点击翻页      | `showCornerFlip`   |
+| 导航栏按钮        | 底部导航栏的前后翻页按钮                                 | `showNavigation`   |
+| 键盘快捷键        | 方向键、Home、End、Escape                                | `enableKeyboard`   |
+| 翻页音效          | 翻页时播放纸张翻动音效                                   | `enableSound`      |
+| 封面点击/拖拽     | 点击或向左拖拽封面打开书籍                               | 始终可用           |
+| 点击翻页（单页）  | 点击右侧 60% 下一页，左侧 40% 上一页                    | 单页模式自动启用   |
+| 触摸手势（移动端）| 原生 touch 事件，不触发浏览器默认滚动                    | 移动端自动启用     |
 
 > **注意**：最后一页（结束页）禁用拖拽，鼠标光标恢复为普通箭头。
 
@@ -316,17 +405,16 @@ interface BookPage {
 />
 ```
 
-### 响应式设计
+## 移动端适配
 
-组件支持响应式尺寸设置：
+组件内置完整的移动端适配：
 
-```tsx
-<InteractiveBook
-  width="100%"
-  height="auto"
-  // 其他属性...
-/>
-```
+- **自动模式检测**：`mode="auto"`（默认）会通过 `matchMedia('(max-width: 768px)')` 检测窄屏，自动切换单页模式
+- **容器自适应**：使用 `ResizeObserver` 监测容器宽度，书本自动撑满可用空间（不超过 `width` 上限）
+- **触摸事件优化**：使用原生 `addEventListener('touchstart', ..., { passive: false })` 注册，避免 React 合成事件的 passive 限制
+- **安全区适配**：底部 padding 使用 `env(safe-area-inset-bottom)` 适配 iOS 刘海/底部安全区
+- **极小屏幕**：针对 `<400px` 屏幕（如 iPhone SE）有额外样式压缩
+- **滚动隔离**：`overscroll-behavior: contain` 防止翻页手势触发父级滚动
 
 ## 注意事项
 
@@ -337,3 +425,5 @@ interface BookPage {
 - PDF 模式使用本地 Worker（`pdfjs-dist/build/pdf.worker.min.mjs`），无需外部 CDN
 - 图片模式仅预加载当前页 ±2 范围的图片，适合大量页面场景
 - `pdfUrl` 优先级高于 `pageImages`，`pageImages` 优先级高于 `pages`
+- 移动端触摸事件使用 `passive: false` 注册，确保 `preventDefault()` 正常工作
+- 单页模式下 JSX 内容的 `content` 和 `backContent` 会被拆成独立页面

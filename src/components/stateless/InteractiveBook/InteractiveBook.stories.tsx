@@ -224,14 +224,23 @@ const meta: Meta<typeof InteractiveBook> = {
   title: 'Stateless/InteractiveBook',
   component: InteractiveBook,
   argTypes: {
+    coverImage: { control: 'text', description: '封面图片 URL' },
     bookTitle: { control: 'text', description: '书籍标题' },
     bookAuthor: { control: 'text', description: '书籍作者' },
     width: { control: 'number', description: '书页宽度（px）' },
     height: { control: 'number', description: '书页高度（px）' },
+    mode: {
+      control: 'select',
+      options: ['auto', 'single', 'double'],
+      description: '翻页模式：auto 自动检测（<768px 切单页） / single 单页 / double 双页',
+    },
     enableKeyboard: { control: 'boolean', description: '是否启用键盘导航' },
     showNavigation: { control: 'boolean', description: '是否显示底部导航栏' },
     showCornerFlip: { control: 'boolean', description: '是否显示页角翻页热区（海浪呼吸效果）' },
     enableSound: { control: 'boolean', description: '是否启用翻页音效' },
+    soundSrc: { control: 'text', description: '自定义音效文件 URL' },
+    defaultOpen: { control: 'boolean', description: '初始是否打开书籍（跳过封面动画）' },
+    open: { control: 'boolean', description: '受控模式：外部控制书籍开合状态' },
     pageImages: { control: 'object', description: '图片模式：图片 URL 数组，每张图片对应书的一面' },
     pdfUrl: { control: 'text', description: 'PDF 模式：PDF 文件 URL' },
   },
@@ -346,6 +355,82 @@ export const FewPages: Story = {
 
 // 用 picsum.photos 生成示例图片 URL，模拟按页码分割的书页图片
 const demoPageImages = Array.from({ length: 20 }, (_, i) => `https://picsum.photos/seed/page${i + 1}/700/1000`)
+
+// ─── 单页模式 ───────────────────────────────────
+export const SinglePageMode: Story = {
+  name: '单页模式',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
+        单页模式（<code>mode="single"</code>）：每次显示一页，适合移动端。
+        <br />
+        点击右侧 60% 翻下一页，左侧 40% 翻上一页，支持滑动和角落翻页。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: 'AI Agent 完全指南',
+    bookAuthor: 'AI 专家',
+    pages: bookPages,
+    mode: 'single',
+    width: 320,
+    height: 460,
+    enableKeyboard: true,
+  },
+}
+
+// ─── 单页图片模式 ───────────────────────────────
+export const SinglePageImageBook: Story = {
+  name: '单页图片模式',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
+        单页图片模式：每张图片是一个独立页面。
+        <br />
+        双页模式下每 2 张图片组成一个书页（正面 + 背面），单页模式下每张图片是独立一页。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: '单页图片示例',
+    bookAuthor: 'Demo',
+    pages: [],
+    pageImages: demoPageImages,
+    mode: 'single',
+    width: 320,
+    height: 460,
+    enableKeyboard: true,
+  },
+}
+
+// ─── 自动模式（默认） ──────────────────────────────
+export const AutoMode: Story = {
+  name: '自动模式（响应式）',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
+        自动模式（<code>mode="auto"</code>，默认值）：窗口宽度 &lt; 768px 自动切换单页模式。
+        <br />
+        尝试调整浏览器窗口宽度观察效果。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: 'AI Agent 完全指南',
+    bookAuthor: 'AI 专家',
+    pages: bookPages,
+    mode: 'auto',
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
+  },
+}
 
 export const ImageBook: Story = {
   name: '图片模式（逐页图片）',
@@ -510,5 +595,64 @@ export const SoundDisabled: Story = {
     height: 500,
     enableKeyboard: true,
     enableSound: false,
+  },
+}
+
+// ─── 移动端模拟（窄容器） ──────────────────────────
+export const MobileSimulation: Story = {
+  name: '移动端模拟（窄容器）',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-4">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 360 }}>
+        在 375px 宽容器中模拟移动端效果。<code>mode="auto"</code> 会自动检测窗口宽度，
+        窄屏（&lt;768px）切换为单页模式。拖拽、点击右侧翻下一页，左侧翻上一页。
+      </p>
+      <div
+        style={{
+          width: 375,
+          border: '2px dashed #d1d5db',
+          borderRadius: 16,
+          padding: 0,
+          overflow: 'hidden',
+          background: '#fff',
+        }}
+      >
+        <InteractiveBook {...args} />
+      </div>
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: 'AI Agent 完全指南',
+    bookAuthor: 'AI 专家',
+    pages: bookPages,
+    mode: 'single',
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
+  },
+}
+
+// ─── 受控模式 ──────────────────────────────────
+export const ControlledMode: Story = {
+  name: '受控模式',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
+      <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
+        使用 <code>open</code> 和 <code>onClose</code> 外部控制书籍开合状态。 设置 <code>defaultOpen=true</code>{' '}
+        可直接打开书籍。
+      </p>
+      <InteractiveBook {...args} />
+    </div>
+  ),
+  args: {
+    coverImage: AiCover,
+    bookTitle: 'AI Agent 完全指南',
+    bookAuthor: 'AI 专家',
+    pages: bookPages,
+    width: 350,
+    height: 500,
+    enableKeyboard: true,
+    defaultOpen: true,
   },
 }

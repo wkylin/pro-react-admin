@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import AnimatedIcon from '@stateless/AnimatedIcon'
 import { RefreshCw, Zap } from 'lucide-react'
 import { CaptchaUtils, Difficulty } from './utils'
@@ -17,7 +17,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   const height = 180
   const pieceSize = 50
 
-  const getDifficultySettings = () => {
+  const difficultySettings = useMemo(() => {
     switch (difficulty) {
       case 'easy':
         return { maxShapes: 3, threshold: 20, tolerance: 5 }
@@ -26,7 +26,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
       default:
         return { maxShapes: 6, threshold: 15, tolerance: 3 }
     }
-  }
+  }, [difficulty])
 
   const [bgUrl, setBgUrl] = useState('')
   const [pieceUrl, setPieceUrl] = useState('')
@@ -45,20 +45,41 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
     callbacksRef.current = { onSuccess, onFail, onRefresh }
   }, [onSuccess, onFail, onRefresh])
 
+  // ─── 响应式缩放（适配移动端） ─────────────────
+  const canvasAreaRef = useRef<HTMLDivElement>(null)
+  const scaleRef = useRef(1)
+  const [displayScale, setDisplayScale] = useState(1)
+
+  useEffect(() => {
+    const el = canvasAreaRef.current
+    if (!el) return
+    const measure = () => {
+      const w = el.clientWidth
+      if (w > 0) {
+        const s = w / width
+        scaleRef.current = s
+        setDisplayScale((prev) => (Math.abs(prev - s) < 0.001 ? prev : s))
+      }
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [width])
+
   const refresh = useCallback(async () => {
     setIsRefreshing(true)
     setStatus('idle')
     setSliderX(0)
     currentXRef.current = 0
 
-    const settings = getDifficultySettings()
     const bg = CaptchaUtils.generateBgCanvas(width, height, difficulty)
     const tx = CaptchaUtils.random(100, width - pieceSize - 10)
     const ty = CaptchaUtils.random(20, height - pieceSize - 20)
     setTargetX(tx)
     setTargetY(ty)
 
-    const shapeType = CaptchaUtils.random(0, settings.maxShapes - 1)
+    const shapeType = CaptchaUtils.random(0, difficultySettings.maxShapes - 1)
 
     const [finalBg, piece] = await Promise.all([
       CaptchaUtils.cutHole(bg, tx, ty, pieceSize, shapeType),
@@ -70,7 +91,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
     setIsRefreshing(false)
 
     if (callbacksRef.current.onRefresh) callbacksRef.current.onRefresh()
-  }, [width, height, pieceSize, difficulty, getDifficultySettings])
+  }, [width, height, pieceSize, difficulty, difficultySettings])
 
   useEffect(() => {
     // 使用 Promise.resolve 延迟调用，避免在 effect 中同步触发 setState
@@ -84,7 +105,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
     (clientX: number) => {
       if (status === 'success' || isRefreshing) return
       setIsDragging(true)
-      startXRef.current = clientX - currentXRef.current
+      startXRef.current = clientX - currentXRef.current * scaleRef.current
     },
     [status, isRefreshing]
   )
@@ -93,14 +114,13 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
     (clientX: number) => {
       if (!isDragging) return
 
-      let x = clientX - startXRef.current
+      let x = (clientX - startXRef.current) / scaleRef.current
       if (x < 0) x = 0
       if (x > width - pieceSize) x = width - pieceSize
 
-      const settings = getDifficultySettings()
       const distToTarget = Math.abs(x - targetX)
 
-      if (distToTarget < settings.threshold) {
+      if (distToTarget < difficultySettings.threshold) {
         x = targetX
       }
 
@@ -113,17 +133,16 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
         if (callbacksRef.current.onSuccess) callbacksRef.current.onSuccess()
       }
     },
-    [isDragging, width, pieceSize, targetX, getDifficultySettings]
+    [isDragging, width, pieceSize, targetX, difficultySettings]
   )
 
   const handleEnd = useCallback(() => {
     if (!isDragging) return
     setIsDragging(false)
 
-    const settings = getDifficultySettings()
     const finalX = currentXRef.current
 
-    if (Math.abs(finalX - targetX) < settings.tolerance) {
+    if (Math.abs(finalX - targetX) < difficultySettings.tolerance) {
       setStatus('success')
       if (callbacksRef.current.onSuccess) callbacksRef.current.onSuccess()
     } else {
@@ -135,7 +154,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
         currentXRef.current = 0
       }, 800)
     }
-  }, [isDragging, targetX, getDifficultySettings])
+  }, [isDragging, targetX, difficultySettings])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX)
@@ -188,7 +207,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   }
 
   return (
-    <div className="w-[340px] rounded-lg bg-white p-5 shadow-lg select-none">
+    <div className="w-full max-w-[340px] rounded-lg bg-white p-5 shadow-lg select-none">
       <div className="mb-4 flex items-center justify-between font-semibold text-gray-800">
         <div className="flex items-center gap-2">
           <span>Slider Captcha</span>
@@ -214,7 +233,11 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
         </button>
       </div>
 
-      <div className="relative mb-4 h-[180px] w-[300px] overflow-hidden rounded border border-gray-300 bg-gray-200">
+      <div
+        ref={canvasAreaRef}
+        className="relative mb-4 w-full overflow-hidden rounded border border-gray-300 bg-gray-200"
+        style={{ aspectRatio: `${width} / ${height}` }}
+      >
         {bgUrl && (
           <img src={bgUrl} alt="Background" className="pointer-events-none block h-full w-full" draggable={false} />
         )}
@@ -223,11 +246,14 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
           <img
             src={pieceUrl}
             alt="Puzzle piece"
-            className={`absolute top-0 left-0 h-[50px] w-[50px] shadow-lg ${
+            className={`absolute top-0 left-0 shadow-lg ${
               status === 'success' ? 'pointer-events-none opacity-100' : 'opacity-95 hover:opacity-100'
             } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
             style={{
-              transform: `translate3d(${sliderX}px, ${targetY}px, 0) rotate(${isDragging && status !== 'success' ? 2 : 0}deg)`,
+              width: pieceSize * displayScale,
+              height: pieceSize * displayScale,
+              touchAction: 'none',
+              transform: `translate3d(${sliderX * displayScale}px, ${targetY * displayScale}px, 0) rotate(${isDragging && status !== 'success' ? 2 : 0}deg)`,
               willChange: isDragging ? 'transform' : 'auto',
               transition: status === 'success' ? 'transform 0.3s ease-out' : 'none',
               filter: status === 'fail' ? 'brightness(0.8)' : 'brightness(1)',
@@ -248,7 +274,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
       </div>
 
       <div
-        className={`relative h-[40px] w-[300px] overflow-hidden rounded-full border text-center text-sm leading-[40px] transition-all duration-300 ${getStatusColor()}`}
+        className={`relative h-[40px] w-full overflow-hidden rounded-full border text-center text-sm leading-[40px] transition-all duration-300 ${getStatusColor()}`}
       >
         {status === 'idle' && (
           <span className="block text-gray-500 transition-opacity duration-300">Drag to match the piece above</span>
@@ -261,9 +287,10 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
             status === 'success' ? 'pointer-events-none cursor-default' : isDragging ? 'cursor-grabbing' : 'cursor-grab'
           } ${getButtonColor()} ${status === 'success' ? 'animate-pulse' : ''}`}
           style={{
-            transform: `translate3d(${sliderX}px, 0, 0)`,
+            transform: `translate3d(${sliderX * displayScale}px, 0, 0)`,
             willChange: isDragging ? 'transform' : 'auto',
             transition: status === 'success' ? 'background-color 0.3s ease-out' : 'none',
+            touchAction: 'none',
           }}
           onMouseDown={(e) => {
             if (status === 'success') return
