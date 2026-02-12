@@ -23,17 +23,20 @@ winget install --id Gyan.FFmpeg --source winget
 访问官方网站：https://www.gyan.dev/ffmpeg/builds/
 
 下载最新的构建版本：
+
 - `ffmpeg-release-essentials.zip` （推荐，轻量版）
 - 或 `ffmpeg-release-full.7z` （完整版）
 
 #### 2. 解压文件
 
 将下载的压缩包解压到你选择的目录，例如：
+
 ```
 C:\ffmpeg
 ```
 
 解压后应该看到以下结构：
+
 ```
 C:\ffmpeg\
 ├── bin\
@@ -58,6 +61,7 @@ C:\ffmpeg\
 ##### 方式二：临时添加（仅当前会话）
 
 在命令提示符中运行：
+
 ```bash
 set PATH=%PATH%;C:\ffmpeg\bin
 ```
@@ -103,11 +107,13 @@ OPTIMIZE_MEDIA=1 npm run build:production
 ```
 
 **环境变量说明：**
+
 - `CI=1`：模拟持续集成环境，构建脚本会自动跳过媒体优化步骤
 - `OPTIMIZE_MEDIA=1`：强制运行媒体优化，即使在 CI 环境中也会执行
 
 **构建脚本逻辑：**
 项目在 `prebuild:production` 阶段会检查环境变量：
+
 - 如果检测到 CI 环境（`CI=1` 或其他 CI 变量），默认跳过媒体优化
 - 如果设置了 `OPTIMIZE_MEDIA=1`，则强制执行优化
 - 在本地开发环境中，如果没有设置 CI 变量，会尝试运行媒体优化
@@ -131,6 +137,7 @@ OPTIMIZE_MEDIA=1 npm run build:production
 ### 获取帮助
 
 如果遇到问题，可以：
+
 1. 检查 FFmpeg 官方网站的文档
 2. 查看项目 issue 或讨论区
 3. 联系开发团队
@@ -143,5 +150,5 @@ OPTIMIZE_MEDIA=1 npm run build:production
 
 ---
 
-*最后更新：2026年2月12日*</content>
+_最后更新：2026年2月12日_</content>
 <parameter name="filePath">c:\wui\pro-react\pro-react-admin\docs\FFMPEG_INSTALLATION.md
