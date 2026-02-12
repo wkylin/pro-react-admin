@@ -48,6 +48,7 @@ export type Resource =
   | 'zustand'
   | 'svg-viewer'
   | 'auto-deploy'
+  | 'dependencies'
   | 'text-editor'
   | 'deploy-flow'
 

@@ -84,6 +84,12 @@ export const uiRoutes = [
     element: <lazyComponents.AutoDeploy />,
   },
   {
+    path: 'dependencies',
+    name: '项目依赖分析',
+    i18nKey: 'menu.dependencies',
+    element: <lazyComponents.Dependencies />,
+  },
+  {
     path: 'text-editor',
     name: '文本编辑器',
     i18nKey: 'menu.textEditor',

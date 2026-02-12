@@ -83,6 +83,16 @@ const rawMainLayoutMenu = [
     ),
   },
   {
+    label: '项目依赖分析',
+    i18nKey: 'menu.dependencies',
+    path: '/dependencies',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <CloudUploadOutlined />
+      </AnimatedIcon>
+    ),
+  },
+  {
     label: 'Text Editor',
     i18nKey: 'menu.textEditor',
     path: '/text-editor',

@@ -112,6 +112,10 @@ export const lazyComponents = {
     preload: true,
   }),
 
+  Dependencies: lazyLoad(() => import('@pages/dependencies'), {
+    preload: true,
+  }),
+
   // 示例：如果新增一个按需加载的路由组件，请在此处注册（示例）
   // 例如：新增 pages/alerts/AlertDetail.jsx
   // AlertDetail: lazyLoad(() => import('@pages/alerts/AlertDetail'), { preload: false }),

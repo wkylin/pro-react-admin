@@ -80,6 +80,7 @@ const en = {
     topology: 'Topology',
     svgViewer: 'Arc Preview',
     autoDeploy: 'Auto Deploy',
+    dependencies: 'Dependencies',
     textEditor: 'Text Editor',
     deployFlow: 'Deploy Flow',
     permissionExample: 'Permission',

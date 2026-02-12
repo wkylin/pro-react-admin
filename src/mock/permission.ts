@@ -37,6 +37,7 @@ const allRoutes = [
   '/zustand',
   '/svg-viewer',
   '/auto-deploy',
+  '/dependencies',
   '/text-editor',
   '/deploy-flow',
 ]
@@ -64,6 +65,7 @@ const managerRoutes = [
   '/topology',
   '/svg-viewer',
   '/auto-deploy',
+  '/dependencies',
   '/text-editor',
   '/deploy-flow',
 ]
@@ -200,6 +202,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/topology': 'topology:read',
   '/zustand': 'zustand:read',
   '/svg-viewer': 'svg-viewer:read',
+  '/dependencies': 'dependencies:read',
   '/auto-deploy': 'auto-deploy:read',
   '/text-editor': 'text-editor:read',
   '/deploy-flow': 'deploy-flow:read',

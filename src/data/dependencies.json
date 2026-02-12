@@ -1,0 +1,974 @@
+{
+  "runtime": [
+    {
+      "name": "@ant-design/cssinjs",
+      "version": "^2.1.0"
+    },
+    {
+      "name": "@ant-design/icons",
+      "version": "^6.1.0"
+    },
+    {
+      "name": "@ant-design/maps",
+      "version": "^1.0.8"
+    },
+    {
+      "name": "@codesandbox/sandpack-react",
+      "version": "^2.20.0"
+    },
+    {
+      "name": "@emotion/is-prop-valid",
+      "version": "^1.4.0"
+    },
+    {
+      "name": "@loadable/component",
+      "version": "^5.16.7"
+    },
+    {
+      "name": "@number-flow/react",
+      "version": "^0.5.11"
+    },
+    {
+      "name": "@react-spring/core",
+      "version": "^10.0.3"
+    },
+    {
+      "name": "@react-spring/web",
+      "version": "^10.0.3"
+    },
+    {
+      "name": "@react-three/drei",
+      "version": "^10.7.7"
+    },
+    {
+      "name": "@react-three/fiber",
+      "version": "^9.5.0"
+    },
+    {
+      "name": "@sentry/react",
+      "version": "^10.38.0"
+    },
+    {
+      "name": "@sentry/tracing",
+      "version": "^7.120.4"
+    },
+    {
+      "name": "@smakss/react-scroll-direction",
+      "version": "^4.2.0"
+    },
+    {
+      "name": "@tiptap/extension-code-block-lowlight",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-image",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-link",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-placeholder",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-table",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-table-cell",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-table-header",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-table-row",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/extension-task-item",
+      "version": "^3.18.0"
+    },
+    {
+      "name": "@tiptap/extension-task-list",
+      "version": "^3.18.0"
+    },
+    {
+      "name": "@tiptap/extension-text-align",
+      "version": "^3.18.0"
+    },
+    {
+      "name": "@tiptap/react",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tiptap/starter-kit",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tsparticles/engine",
+      "version": "^3.9.1"
+    },
+    {
+      "name": "@tsparticles/react",
+      "version": "^3.0.0"
+    },
+    {
+      "name": "@tsparticles/slim",
+      "version": "^3.9.1"
+    },
+    {
+      "name": "@uiw/react-markdown-preview",
+      "version": "^5.1.5"
+    },
+    {
+      "name": "@uiw/react-md-editor",
+      "version": "^4.0.11"
+    },
+    {
+      "name": "@uiw/react-signature",
+      "version": "^1.3.4"
+    },
+    {
+      "name": "@vercel/analytics",
+      "version": "^1.6.1"
+    },
+    {
+      "name": "@vercel/speed-insights",
+      "version": "^1.3.1"
+    },
+    {
+      "name": "@xyflow/react",
+      "version": "^12.10.0"
+    },
+    {
+      "name": "antd",
+      "version": "^6.3.0"
+    },
+    {
+      "name": "axios",
+      "version": "^1.13.5"
+    },
+    {
+      "name": "canvas-confetti",
+      "version": "^1.9.4"
+    },
+    {
+      "name": "clsx",
+      "version": "^2.1.1"
+    },
+    {
+      "name": "copy-to-clipboard",
+      "version": "^3.3.3"
+    },
+    {
+      "name": "core-js",
+      "version": "^3.48.0"
+    },
+    {
+      "name": "crypto-js",
+      "version": "^4.2.0"
+    },
+    {
+      "name": "dayjs",
+      "version": "^1.11.19"
+    },
+    {
+      "name": "echarts",
+      "version": "^6.0.0"
+    },
+    {
+      "name": "esbuild",
+      "version": "^0.27.3"
+    },
+    {
+      "name": "framer-motion",
+      "version": "^12.34.0"
+    },
+    {
+      "name": "fuse.js",
+      "version": "^7.1.0"
+    },
+    {
+      "name": "highlight.js",
+      "version": "^11.11.1"
+    },
+    {
+      "name": "hls.js",
+      "version": "^1.6.15"
+    },
+    {
+      "name": "html-to-image",
+      "version": "^1.11.13"
+    },
+    {
+      "name": "html2canvas",
+      "version": "^1.4.1"
+    },
+    {
+      "name": "i18next",
+      "version": "^25.8.5"
+    },
+    {
+      "name": "i18next-browser-languagedetector",
+      "version": "^8.2.0"
+    },
+    {
+      "name": "immer",
+      "version": "^11.1.4"
+    },
+    {
+      "name": "isomorphic-dompurify",
+      "version": "^2.36.0"
+    },
+    {
+      "name": "jsencrypt",
+      "version": "^3.5.4"
+    },
+    {
+      "name": "jspdf",
+      "version": "^4.1.0"
+    },
+    {
+      "name": "katex",
+      "version": "^0.16.28"
+    },
+    {
+      "name": "less",
+      "version": "^4.5.1"
+    },
+    {
+      "name": "lodash",
+      "version": "^4.17.23"
+    },
+    {
+      "name": "lodash-es",
+      "version": "^4.17.23"
+    },
+    {
+      "name": "lowlight",
+      "version": "^3.3.0"
+    },
+    {
+      "name": "lucide-react",
+      "version": "^0.563.0"
+    },
+    {
+      "name": "maath",
+      "version": "^0.10.8"
+    },
+    {
+      "name": "marked",
+      "version": "^17.0.2"
+    },
+    {
+      "name": "markmap-common",
+      "version": "^0.18.9"
+    },
+    {
+      "name": "markmap-lib",
+      "version": "^0.18.12"
+    },
+    {
+      "name": "markmap-view",
+      "version": "^0.18.12"
+    },
+    {
+      "name": "mermaid",
+      "version": "^11.12.2"
+    },
+    {
+      "name": "motion",
+      "version": "^12.34.0"
+    },
+    {
+      "name": "pinyin-pro",
+      "version": "^3.28.0"
+    },
+    {
+      "name": "popmotion",
+      "version": "^11.0.5"
+    },
+    {
+      "name": "postcss-less",
+      "version": "^6.0.0"
+    },
+    {
+      "name": "prism-react-renderer",
+      "version": "^2.4.1"
+    },
+    {
+      "name": "prop-types",
+      "version": "^15.8.1"
+    },
+    {
+      "name": "qrcode",
+      "version": "^1.5.4"
+    },
+    {
+      "name": "qs",
+      "version": "^6.14.2"
+    },
+    {
+      "name": "react",
+      "version": "^19.2.4"
+    },
+    {
+      "name": "react-barcode",
+      "version": "^1.6.1"
+    },
+    {
+      "name": "react-dom",
+      "version": "^19.2.4"
+    },
+    {
+      "name": "react-draggable",
+      "version": "^4.5.0"
+    },
+    {
+      "name": "react-fast-marquee",
+      "version": "^1.6.5"
+    },
+    {
+      "name": "react-i18next",
+      "version": "^16.5.4"
+    },
+    {
+      "name": "react-markdown",
+      "version": "^10.1.0"
+    },
+    {
+      "name": "react-medium-image-zoom",
+      "version": "^5.4.0"
+    },
+    {
+      "name": "react-parallax-tilt",
+      "version": "^1.7.319"
+    },
+    {
+      "name": "react-pdf",
+      "version": "^10.3.0"
+    },
+    {
+      "name": "react-responsive-masonry",
+      "version": "^2.7.1"
+    },
+    {
+      "name": "react-router-dom",
+      "version": "^7.13.0"
+    },
+    {
+      "name": "react-sticky-box",
+      "version": "^2.0.5"
+    },
+    {
+      "name": "react-syntax-highlighter",
+      "version": "^16.1.0"
+    },
+    {
+      "name": "react-to-print",
+      "version": "^3.2.0"
+    },
+    {
+      "name": "react-window",
+      "version": "^2.2.6"
+    },
+    {
+      "name": "react-zoom-pan-pinch",
+      "version": "^3.7.0"
+    },
+    {
+      "name": "rehype-highlight",
+      "version": "^7.0.2"
+    },
+    {
+      "name": "rehype-katex",
+      "version": "^7.0.1"
+    },
+    {
+      "name": "rehype-raw",
+      "version": "^7.0.0"
+    },
+    {
+      "name": "remark-breaks",
+      "version": "^4.0.0"
+    },
+    {
+      "name": "remark-gfm",
+      "version": "^4.0.1"
+    },
+    {
+      "name": "remark-math",
+      "version": "^6.0.0"
+    },
+    {
+      "name": "remove-markdown",
+      "version": "^0.6.3"
+    },
+    {
+      "name": "resize-observer-polyfill",
+      "version": "^1.5.1"
+    },
+    {
+      "name": "screenfull",
+      "version": "^6.0.2"
+    },
+    {
+      "name": "three",
+      "version": "^0.182.0"
+    },
+    {
+      "name": "turndown",
+      "version": "^7.2.2"
+    },
+    {
+      "name": "turndown-plugin-gfm",
+      "version": "^1.0.2"
+    },
+    {
+      "name": "use-debounce",
+      "version": "^10.1.0"
+    },
+    {
+      "name": "zustand",
+      "version": "^5.0.11"
+    }
+  ],
+  "dev": [
+    {
+      "name": "@babel/core",
+      "version": "^7.29.0"
+    },
+    {
+      "name": "@babel/plugin-proposal-decorators",
+      "version": "^7.29.0"
+    },
+    {
+      "name": "@babel/plugin-syntax-dynamic-import",
+      "version": "^7.8.3"
+    },
+    {
+      "name": "@babel/plugin-transform-object-rest-spread",
+      "version": "^7.28.6"
+    },
+    {
+      "name": "@babel/plugin-transform-runtime",
+      "version": "^7.29.0"
+    },
+    {
+      "name": "@babel/preset-env",
+      "version": "^7.29.0"
+    },
+    {
+      "name": "@babel/preset-react",
+      "version": "^7.28.5"
+    },
+    {
+      "name": "@babel/preset-typescript",
+      "version": "^7.28.5"
+    },
+    {
+      "name": "@eslint/compat",
+      "version": "^2.0.2"
+    },
+    {
+      "name": "@eslint/eslintrc",
+      "version": "^3.3.3"
+    },
+    {
+      "name": "@eslint/js",
+      "version": "^9.39.2"
+    },
+    {
+      "name": "@koa/cors",
+      "version": "^5.0.0"
+    },
+    {
+      "name": "@playwright/test",
+      "version": "^1.58.2"
+    },
+    {
+      "name": "@pmmmwh/react-refresh-webpack-plugin",
+      "version": "^0.6.2"
+    },
+    {
+      "name": "@sentry/vite-plugin",
+      "version": "^4.9.1"
+    },
+    {
+      "name": "@sentry/webpack-plugin",
+      "version": "^4.9.1"
+    },
+    {
+      "name": "@storybook/addon-a11y",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "@storybook/addon-docs",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "@storybook/addon-links",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "@storybook/builder-vite",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "@storybook/csf-plugin",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "@storybook/react-vite",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "@svgr/webpack",
+      "version": "^8.1.0"
+    },
+    {
+      "name": "@tailwindcss/postcss",
+      "version": "^4.1.18"
+    },
+    {
+      "name": "@testing-library/dom",
+      "version": "^10.4.1"
+    },
+    {
+      "name": "@testing-library/jest-dom",
+      "version": "^6.9.1"
+    },
+    {
+      "name": "@testing-library/react",
+      "version": "^16.3.2"
+    },
+    {
+      "name": "@testing-library/user-event",
+      "version": "^14.6.1"
+    },
+    {
+      "name": "@types/dompurify",
+      "version": "^3.2.0"
+    },
+    {
+      "name": "@types/jest",
+      "version": "^30.0.0"
+    },
+    {
+      "name": "@types/jspdf",
+      "version": "^2.0.0"
+    },
+    {
+      "name": "@types/lodash",
+      "version": "^4.17.23"
+    },
+    {
+      "name": "@types/node",
+      "version": "^25.2.3"
+    },
+    {
+      "name": "@types/react",
+      "version": "^19.2.14"
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "^19.2.3"
+    },
+    {
+      "name": "@types/three",
+      "version": "^0.182.0"
+    },
+    {
+      "name": "@typescript-eslint/eslint-plugin",
+      "version": "^8.55.0"
+    },
+    {
+      "name": "@typescript-eslint/parser",
+      "version": "^8.55.0"
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "version": "^5.1.4"
+    },
+    {
+      "name": "antd-dayjs-webpack-plugin",
+      "version": "^1.0.6"
+    },
+    {
+      "name": "archiver",
+      "version": "^7.0.1"
+    },
+    {
+      "name": "babel-jest",
+      "version": "^30.2.0"
+    },
+    {
+      "name": "babel-loader",
+      "version": "^10.0.0"
+    },
+    {
+      "name": "babel-plugin-react-compiler",
+      "version": "latest"
+    },
+    {
+      "name": "babel-plugin-transform-remove-console",
+      "version": "^6.9.4"
+    },
+    {
+      "name": "babel-plugin-transform-remove-debugger",
+      "version": "^6.9.4"
+    },
+    {
+      "name": "better-mock",
+      "version": "^0.3.7"
+    },
+    {
+      "name": "case-sensitive-paths-webpack-plugin",
+      "version": "^2.4.0"
+    },
+    {
+      "name": "circular-dependency-plugin",
+      "version": "^5.2.2"
+    },
+    {
+      "name": "code-inspector-plugin",
+      "version": "^1.4.2"
+    },
+    {
+      "name": "commitizen",
+      "version": "^4.3.1"
+    },
+    {
+      "name": "compression-webpack-plugin",
+      "version": "^11.1.0"
+    },
+    {
+      "name": "concurrently",
+      "version": "^9.2.1"
+    },
+    {
+      "name": "conventional-changelog-cli",
+      "version": "^5.0.0"
+    },
+    {
+      "name": "copy-webpack-plugin",
+      "version": "^13.0.1"
+    },
+    {
+      "name": "cross-env",
+      "version": "^10.1.0"
+    },
+    {
+      "name": "css-loader",
+      "version": "^7.1.3"
+    },
+    {
+      "name": "css-minimizer-webpack-plugin",
+      "version": "^7.0.4"
+    },
+    {
+      "name": "cz-conventional-changelog",
+      "version": "^3.3.0"
+    },
+    {
+      "name": "depcheck",
+      "version": "^1.4.7"
+    },
+    {
+      "name": "dotenv",
+      "version": "^17.2.4"
+    },
+    {
+      "name": "dotenv-webpack",
+      "version": "^8.1.1"
+    },
+    {
+      "name": "esbuild-jest",
+      "version": "^0.5.0"
+    },
+    {
+      "name": "esbuild-loader",
+      "version": "^4.4.2"
+    },
+    {
+      "name": "eslint",
+      "version": "^9.39.2"
+    },
+    {
+      "name": "eslint-config-prettier",
+      "version": "^10.1.8"
+    },
+    {
+      "name": "eslint-plugin-import",
+      "version": "^2.32.0"
+    },
+    {
+      "name": "eslint-plugin-prettier",
+      "version": "^5.5.5"
+    },
+    {
+      "name": "eslint-plugin-promise",
+      "version": "^7.2.1"
+    },
+    {
+      "name": "eslint-plugin-react",
+      "version": "^7.37.5"
+    },
+    {
+      "name": "eslint-plugin-react-hooks",
+      "version": "latest"
+    },
+    {
+      "name": "eslint-plugin-storybook",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "eslint-plugin-unicorn",
+      "version": "^63.0.0"
+    },
+    {
+      "name": "eslint-webpack-plugin",
+      "version": "^5.0.2"
+    },
+    {
+      "name": "filemanager-webpack-plugin",
+      "version": "^9.0.1"
+    },
+    {
+      "name": "fork-ts-checker-webpack-plugin",
+      "version": "^9.1.0"
+    },
+    {
+      "name": "gh-pages",
+      "version": "^6.3.0"
+    },
+    {
+      "name": "glob",
+      "version": "^13.0.2"
+    },
+    {
+      "name": "globals",
+      "version": "^17.3.0"
+    },
+    {
+      "name": "html-minimizer-webpack-plugin",
+      "version": "^5.0.4"
+    },
+    {
+      "name": "html-webpack-plugin",
+      "version": "^5.6.6"
+    },
+    {
+      "name": "http-server",
+      "version": "^14.1.1"
+    },
+    {
+      "name": "husky",
+      "version": "^9.1.7"
+    },
+    {
+      "name": "image-minimizer-webpack-plugin",
+      "version": "^4.1.4"
+    },
+    {
+      "name": "install-pkg-lock",
+      "version": "^1.0.2"
+    },
+    {
+      "name": "jest",
+      "version": "^30.2.0"
+    },
+    {
+      "name": "jest-environment-jsdom",
+      "version": "^30.2.0"
+    },
+    {
+      "name": "koa",
+      "version": "^3.1.1"
+    },
+    {
+      "name": "koa-bodyparser",
+      "version": "^4.4.1"
+    },
+    {
+      "name": "koa-router",
+      "version": "^14.0.0"
+    },
+    {
+      "name": "lighthouse",
+      "version": "^13.0.3"
+    },
+    {
+      "name": "lint-staged",
+      "version": "^16.2.7"
+    },
+    {
+      "name": "markdownlint-cli",
+      "version": "^0.47.0"
+    },
+    {
+      "name": "mini-css-extract-plugin",
+      "version": "^2.10.0"
+    },
+    {
+      "name": "node-polyfill-webpack-plugin",
+      "version": "^4.1.0"
+    },
+    {
+      "name": "nodemon",
+      "version": "^3.1.11"
+    },
+    {
+      "name": "npm-check-updates",
+      "version": "^19.3.2"
+    },
+    {
+      "name": "portfinder",
+      "version": "^1.0.38"
+    },
+    {
+      "name": "postcss",
+      "version": "^8.5.6"
+    },
+    {
+      "name": "postcss-flexbugs-fixes",
+      "version": "^5.0.2"
+    },
+    {
+      "name": "postcss-loader",
+      "version": "^8.2.0"
+    },
+    {
+      "name": "postcss-normalize",
+      "version": "^13.0.1"
+    },
+    {
+      "name": "postcss-preset-env",
+      "version": "^11.1.3"
+    },
+    {
+      "name": "prettier",
+      "version": "^3.8.1"
+    },
+    {
+      "name": "prettier-plugin-tailwindcss",
+      "version": "^0.7.2"
+    },
+    {
+      "name": "purgecss-webpack-plugin",
+      "version": "^8.0.0"
+    },
+    {
+      "name": "react-refresh",
+      "version": "^0.18.0"
+    },
+    {
+      "name": "rimraf",
+      "version": "^6.1.2"
+    },
+    {
+      "name": "rollup-plugin-visualizer",
+      "version": "^6.0.5"
+    },
+    {
+      "name": "serve",
+      "version": "^14.2.5"
+    },
+    {
+      "name": "sharp",
+      "version": "^0.34.5"
+    },
+    {
+      "name": "shiki",
+      "version": "^3.22.0"
+    },
+    {
+      "name": "sonar-scanner",
+      "version": "^3.1.0"
+    },
+    {
+      "name": "standard",
+      "version": "^17.1.2"
+    },
+    {
+      "name": "standard-version",
+      "version": "^9.5.0"
+    },
+    {
+      "name": "storybook",
+      "version": "^10.2.8"
+    },
+    {
+      "name": "style-loader",
+      "version": "^4.0.0"
+    },
+    {
+      "name": "stylelint",
+      "version": "^17.2.0"
+    },
+    {
+      "name": "stylelint-config-standard",
+      "version": "^40.0.0"
+    },
+    {
+      "name": "typescript",
+      "version": "^5.9.3"
+    },
+    {
+      "name": "video.js",
+      "version": "^8.23.7"
+    },
+    {
+      "name": "vite",
+      "version": "^7.3.1"
+    },
+    {
+      "name": "vite-plugin-compression",
+      "version": "^0.5.1"
+    },
+    {
+      "name": "vite-plugin-dts",
+      "version": "^4.5.4"
+    },
+    {
+      "name": "vite-plugin-static-copy",
+      "version": "^3.2.0"
+    },
+    {
+      "name": "vite-plugin-svgr",
+      "version": "^4.5.0"
+    },
+    {
+      "name": "web-streams-polyfill",
+      "version": "^4.2.0"
+    },
+    {
+      "name": "webpack",
+      "version": "^5.105.1"
+    },
+    {
+      "name": "webpack-bundle-analyzer",
+      "version": "^5.2.0"
+    },
+    {
+      "name": "webpack-cli",
+      "version": "^6.0.1"
+    },
+    {
+      "name": "webpack-dev-server",
+      "version": "^5.2.3"
+    },
+    {
+      "name": "webpack-merge",
+      "version": "^6.0.1"
+    },
+    {
+      "name": "webpackbar",
+      "version": "^7.0.0"
+    }
+  ]
+}

@@ -80,6 +80,7 @@ const zh = {
     topology: '拓扑图',
     svgViewer: '架构预览',
     autoDeploy: '自动部署',
+    dependencies: '项目依赖分析',
     deployFlow: '部署流程',
     permissionExample: '权限示例',
     phBar: 'PH Bar',
