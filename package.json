@@ -264,7 +264,7 @@
     "eslint-plugin-storybook": "^10.2.16",
     "eslint-plugin-unicorn": "^63.0.0",
     "eslint-webpack-plugin": "^5.0.3",
-    "filemanager-webpack-plugin": "^10.0.0",
+    "filemanager-webpack-plugin": "^9.0.1",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "gh-pages": "^6.3.0",
     "glob": "^13.0.6",
