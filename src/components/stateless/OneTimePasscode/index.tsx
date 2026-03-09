@@ -132,7 +132,7 @@ export const OneTimePasscode: React.FC<OneTimePasscodeProps> = ({
   try {
     const maybe = antdTheme?.useToken?.()
     antdToken = maybe?.token ?? {}
-  } catch (err) {
+  } catch {
     antdToken = {}
   }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, X, BookOpen } from 'lucide-react'
@@ -396,13 +396,13 @@ export default function InteractiveBook({
   // ─── 翻页音效 ────────────────────────────────────
   // 使用 DOM <audio> 元素而非 new Audio()，在 Storybook iframe 中更可靠
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const playPageTurnSound = () => {
+  const playPageTurnSound = useCallback(() => {
     if (!enableSound) return
     const audio = audioRef.current
     if (!audio) return
     audio.currentTime = 0
     audio.play().catch(() => {})
-  }
+  }, [enableSound])
 
   // ─── PDF → 图片 ─────────────────────────────────
   const pdfRenderWidth = typeof effectiveWidth === 'number' ? effectiveWidth - 24 : undefined
@@ -760,7 +760,7 @@ export default function InteractiveBook({
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [enableKeyboard, isOpen, totalBookPages, onPageChange])
+  }, [enableKeyboard, isOpen, totalBookPages, onPageChange, playPageTurnSound])
 
   // 空内容状态
   if ((!pages || pages.length === 0) && !isImageMode) {

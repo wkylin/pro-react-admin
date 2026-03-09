@@ -61,7 +61,7 @@ export const AuthCallback: React.FC = () => {
     }
 
     handleCallback()
-  }, [location])
+  }, [location, redirectTo])
 
   if (error) {
     return (

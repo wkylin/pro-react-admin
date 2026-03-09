@@ -65,7 +65,7 @@ const NavigationTabs: React.FC<NavigationTabsProps> = ({ items = defaultItems, c
   }
 
   const activeItem = items[activeIndex]
-  const subItems = activeItem?.children || []
+  const subItems = useMemo(() => activeItem?.children || [], [activeItem])
   const hasChildren = subItems.length > 0
 
   // 获取当前显示的内容

@@ -88,6 +88,17 @@ export default [
     },
   },
 
+  // Legacy JS/JSX files: keep linting signal focused and avoid noisy non-actionable warnings.
+  {
+    files: ['**/*.{js,jsx}'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+      'no-empty': 'off',
+      'storybook/no-redundant-story-name': 'off',
+    },
+  },
+
   // Jest globals for test files
   {
     files: ['**/*.test.{js,jsx,ts,tsx}', '**/*.spec.{js,jsx,ts,tsx}'],

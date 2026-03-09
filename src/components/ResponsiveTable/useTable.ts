@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react'
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 
 // --- Type helpers ---
 export type RequestParamMap = {
@@ -148,7 +148,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
       const newUrl = `${window.location.pathname}?${params.toString()}`
       window.history.replaceState({}, '', newUrl)
     }
-  }, [pagination.current, pagination.pageSize])
+  }, [pagination, onPaginationChange, pageSyncToUrl])
 
   // internal data 支持本地或服务端返回的数据
   const [internalData, setInternalData] = useState(dataSource || [])
@@ -166,7 +166,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
     if (!ps || ps <= 0) return internalData || dataSource || []
     const start = (Number(current) - 1) * ps
     return (internalData || dataSource || []).slice(start, start + ps)
-  }, [dataSource, internalData, pagination.current, pagination.pageSize, sortState])
+  }, [dataSource, internalData, pagination, fetchData, reloadPage])
 
   // Helper: get nested value by path
   const getByPath = (obj: any, path: string) => {
@@ -289,127 +289,139 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
 
   // fetch page helper（用于服务端模式）
   // fetchPage 支持可选的 extraParams（例如查询表单的 filter 字段）
-  const fetchPage = async (
-    page = pagination.current,
-    pageSize = pagination.pageSize,
-    sort = sortState,
-    extraParams = {}
-  ) => {
-    const fetcher = fetchData || reloadPage
-    try {
-      let res
-      if (typeof fetcher === 'function') {
-        // 兼容性：向后兼容旧的 fetcher 签名，额外的参数会被忽略
-        res = await fetcher(page, pageSize, sort, extraParams)
-      } else if (fetchUrl) {
-        // build params according to requestParamMap
-        const params: Record<string, any> = {}
-        // if mergeSearchToFetch is enabled, merge initialSearch first (so extraParams override)
-        if (mergeSearchToFetch && initialSearch && typeof initialSearch === 'object') {
-          // if configured to merge only once, ensure we only merge the first time
-          if (!mergeSearchToFetchOnce || !initialMergedRef.current) {
-            Object.assign(params, initialSearch)
-            // mark as merged
-            initialMergedRef.current = true
+  const fetchPage = useCallback(
+    async (page = pagination.current, pageSize = pagination.pageSize, sort = sortState, extraParams = {}) => {
+      const fetcher = fetchData || reloadPage
+      try {
+        let res
+        if (typeof fetcher === 'function') {
+          // 兼容性：向后兼容旧的 fetcher 签名，额外的参数会被忽略
+          res = await fetcher(page, pageSize, sort, extraParams)
+        } else if (fetchUrl) {
+          // build params according to requestParamMap
+          const params: Record<string, any> = {}
+          // if mergeSearchToFetch is enabled, merge initialSearch first (so extraParams override)
+          if (mergeSearchToFetch && initialSearch && typeof initialSearch === 'object') {
+            // if configured to merge only once, ensure we only merge the first time
+            if (!mergeSearchToFetchOnce || !initialMergedRef.current) {
+              Object.assign(params, initialSearch)
+              // mark as merged
+              initialMergedRef.current = true
 
-            // optionally clear the used query keys from the URL to avoid user confusion
-            try {
-              if (clearUrlAfterInitialMerge && typeof window !== 'undefined' && window && window.location) {
-                const usedKeys = Object.keys(initialSearch || {})
-                if (usedKeys.length > 0) {
-                  const sp = new URLSearchParams(window.location.search)
-                  for (const k of usedKeys) sp.delete(k)
-                  const qs = sp.toString()
-                  const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname
-                  window.history.replaceState({}, '', newUrl)
+              // optionally clear the used query keys from the URL to avoid user confusion
+              try {
+                if (clearUrlAfterInitialMerge && typeof window !== 'undefined' && window && window.location) {
+                  const usedKeys = Object.keys(initialSearch || {})
+                  if (usedKeys.length > 0) {
+                    const sp = new URLSearchParams(window.location.search)
+                    for (const k of usedKeys) sp.delete(k)
+                    const qs = sp.toString()
+                    const newUrl = qs ? `${window.location.pathname}?${qs}` : window.location.pathname
+                    window.history.replaceState({}, '', newUrl)
+                  }
                 }
+              } catch {
+                // ignore URL modification errors
               }
-            } catch {
-              // ignore URL modification errors
             }
           }
+          // merge extraParams so explicit page/pageSize/sort override if provided
+          Object.assign(params, extraParams || {})
+          // use configured pageField to represent current page
+          if (requestParamMap.pageField) params[requestParamMap.pageField] = page
+          params[requestParamMap.pageSizeField] = pageSize
+          if (sort && sort.field) params[requestParamMap.sortField] = sort.field
+          if (sort && sort.order) params[requestParamMap.orderField] = sort.order
+          // choose request method
+          const method = (requestMethod || 'get').toLowerCase()
+          try {
+            if (method === 'get') {
+              res = await requestLib.get(fetchUrl, params)
+            } else if (typeof requestLib[method] === 'function') {
+              // POST/PUT etc: send params as body
+              res = await requestLib[method](fetchUrl, params)
+            } else {
+              // fallback to get
+              res = await requestLib.get(fetchUrl, params)
+            }
+          } catch (e) {
+            console.error('fetchPage request failed', e)
+            res = null
+          }
+        } else {
+          return Promise.resolve()
         }
-        // merge extraParams so explicit page/pageSize/sort override if provided
-        Object.assign(params, extraParams || {})
-        // use configured pageField to represent current page
-        if (requestParamMap.pageField) params[requestParamMap.pageField] = page
-        params[requestParamMap.pageSizeField] = pageSize
-        if (sort && sort.field) params[requestParamMap.sortField] = sort.field
-        if (sort && sort.order) params[requestParamMap.orderField] = sort.order
-        // choose request method
-        const method = (requestMethod || 'get').toLowerCase()
+        if (!res) return Promise.resolve(res)
+
+        // Try using responseFieldMap first (listField / totalField)
+        let list: any = undefined
         try {
-          if (method === 'get') {
-            res = await requestLib.get(fetchUrl, params)
-          } else if (typeof requestLib[method] === 'function') {
-            // POST/PUT etc: send params as body
-            res = await requestLib[method](fetchUrl, params)
-          } else {
-            // fallback to get
-            res = await requestLib.get(fetchUrl, params)
-          }
-        } catch (e) {
-          console.error('fetchPage request failed', e)
-          res = null
-        }
-      } else {
-        return Promise.resolve()
-      }
-      if (!res) return Promise.resolve(res)
-
-      // Try using responseFieldMap first (listField / totalField)
-      let list: any = undefined
-      try {
-        list = getByPath(res, responseFieldMap.listField)
-      } catch {
-        // ignore
-      }
-
-      // If mapping didn't yield an array, try a list of common candidate paths
-      if (!Array.isArray(list)) {
-        const listCandidates = []
-        if (responseFieldMap && responseFieldMap.listField) listCandidates.push(responseFieldMap.listField)
-        // common fallback paths
-        listCandidates.push('data.items', 'items', 'data', 'list')
-
-        for (const p of listCandidates) {
-          const v = getByPath(res, p)
-          if (Array.isArray(v)) {
-            list = v
-            break
-          }
+          list = getByPath(res, responseFieldMap.listField)
+        } catch {
+          // ignore
         }
 
-        // final fallback: if response itself is array
-        if (!Array.isArray(list) && Array.isArray(res)) list = res
-      }
+        // If mapping didn't yield an array, try a list of common candidate paths
+        if (!Array.isArray(list)) {
+          const listCandidates = []
+          if (responseFieldMap && responseFieldMap.listField) listCandidates.push(responseFieldMap.listField)
+          // common fallback paths
+          listCandidates.push('data.items', 'items', 'data', 'list')
 
-      if (Array.isArray(list)) {
-        setInternalData(list)
-
-        // resolve total using mapping first, then common fields
-        let totalCandidates = []
-        if (responseFieldMap && responseFieldMap.totalField) totalCandidates.push(responseFieldMap.totalField)
-        totalCandidates.push('total', 'count', 'data.total', 'data.count')
-
-        let resolvedTotal = undefined
-        for (const p of totalCandidates) {
-          const v = getByPath(res, p)
-          if (typeof v === 'number') {
-            resolvedTotal = v
-            break
+          for (const p of listCandidates) {
+            const v = getByPath(res, p)
+            if (Array.isArray(v)) {
+              list = v
+              break
+            }
           }
+
+          // final fallback: if response itself is array
+          if (!Array.isArray(list) && Array.isArray(res)) list = res
         }
 
-        if (typeof resolvedTotal === 'number') setTotal(resolvedTotal)
-        else setTotal(list.length)
+        if (Array.isArray(list)) {
+          setInternalData(list)
+
+          // resolve total using mapping first, then common fields
+          let totalCandidates = []
+          if (responseFieldMap && responseFieldMap.totalField) totalCandidates.push(responseFieldMap.totalField)
+          totalCandidates.push('total', 'count', 'data.total', 'data.count')
+
+          let resolvedTotal = undefined
+          for (const p of totalCandidates) {
+            const v = getByPath(res, p)
+            if (typeof v === 'number') {
+              resolvedTotal = v
+              break
+            }
+          }
+
+          if (typeof resolvedTotal === 'number') setTotal(resolvedTotal)
+          else setTotal(list.length)
+        }
+        return Promise.resolve(res)
+      } catch (e) {
+        console.error('fetchPage error', e)
+        return Promise.reject(e)
       }
-      return Promise.resolve(res)
-    } catch (e) {
-      console.error('fetchPage error', e)
-      return Promise.reject(e)
-    }
-  }
+    },
+    [
+      pagination,
+      sortState,
+      fetchData,
+      reloadPage,
+      fetchUrl,
+      mergeSearchToFetch,
+      initialSearch,
+      mergeSearchToFetchOnce,
+      clearUrlAfterInitialMerge,
+      requestParamMap,
+      requestMethod,
+      requestLib,
+      responseFieldMap,
+    ]
+  )
 
   // autoLoad on mount when fetchUrl or fetchData provided and autoLoad true
   const autoLoadRef = useRef(false)
@@ -439,7 +451,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
     }
 
     doFetch()
-  }, [])
+  }, [autoLoad, fetchData, reloadPage, fetchUrl, fetchPage, pagination, sortState])
 
   return {
     containerRef,

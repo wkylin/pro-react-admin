@@ -115,7 +115,7 @@ export const useIntersection = (options: UseIntersectionOptions = {}) => {
           window.removeEventListener('scroll', checkIntersect)
         }
         window.removeEventListener('resize', checkIntersect)
-      } catch (e) {
+      } catch {
         /* swallow */
       }
     }

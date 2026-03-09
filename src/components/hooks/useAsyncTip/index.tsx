@@ -110,6 +110,7 @@ export default (fn: AnyFn, options?: UseAsyncTipOptions, deps?: DependencyList) 
           return Promise.reject(err)
         })
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- custom deps is part of this hook API
     Array.isArray(deps) ? deps : [fn, options]
   )
   return callback
