@@ -384,7 +384,7 @@ const ProDemo = () => {
             {animatedListItems.map((item) => (
               <div key={item.id} className="flex flex-col items-center justify-center gap-4">
                 <div className="flex items-center justify-center gap-4">
-                  <div className="h-16 w-100 rounded-full bg-gradient-to-br from-purple-500 to-blue-500" />
+                  <div className="h-16 w-100 rounded-full bg-linear-to-br from-purple-500 to-blue-500" />
                 </div>
               </div>
             ))}

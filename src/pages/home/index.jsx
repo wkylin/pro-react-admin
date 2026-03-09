@@ -863,7 +863,7 @@ const Home = () => {
           secondImage={secondImage}
           firstImageClassName="object-cover object-left-top"
           secondImageClassName="object-cover object-left-top"
-          className="h-[200px]"
+          className="h-50"
           slideMode="drag"
         />
       </section>

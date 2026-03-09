@@ -122,7 +122,7 @@ const Contact = () => {
             color: colorText,
           }}
         >
-          <h2 className="mb-4 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-center text-3xl font-bold text-transparent md:text-5xl">
+          <h2 className="mb-4 bg-linear-to-r from-blue-400 to-purple-600 bg-clip-text text-center text-3xl font-bold text-transparent md:text-5xl">
             Get in Touch
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -186,7 +186,7 @@ const Contact = () => {
 
             <button
               type="submit"
-              className="flex w-full items-center justify-center space-x-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg"
+              className="flex w-full items-center justify-center space-x-2 rounded-xl bg-linear-to-r from-blue-500 to-purple-600 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg"
             >
               <span>Send Message</span>
               <AnimatedIcon variant="spin" mode="hover">

@@ -169,9 +169,9 @@ const MusicPlayer = () => {
   const remainingTime = duration - currentTime
 
   return (
-    <div className="mx-auto flex h-[700px] max-w-md flex-col overflow-hidden rounded-2xl bg-gray-900 font-sans text-white shadow-2xl">
+    <div className="mx-auto flex h-175 max-w-md flex-col overflow-hidden rounded-2xl bg-gray-900 font-sans text-white shadow-2xl">
       {/* === 上半部分：播放器控制 === */}
-      <div className="z-10 flex flex-col items-center bg-gradient-to-br from-gray-800 to-gray-900 p-6 shadow-lg">
+      <div className="z-10 flex flex-col items-center bg-linear-to-br from-gray-800 to-gray-900 p-6 shadow-lg">
         {/* 封面 & 旋转动画 */}
         <div
           className={`relative mb-6 h-56 w-56 overflow-hidden rounded-full border-8 border-gray-800 shadow-2xl ${isPlaying ? 'animate-[spin_12s_linear_infinite]' : ''}`}
@@ -282,9 +282,9 @@ const MusicPlayer = () => {
                 <div className="mr-2 flex w-10 items-center justify-center">
                   {isCurrent && isPlaying ? (
                     <div className="flex h-3 items-end gap-1">
-                      <span className="h-full w-0.5 animate-[bounce_1s_infinite] bg-green-500"></span>
-                      <span className="h-2/3 w-0.5 animate-[bounce_1.2s_infinite] bg-green-500"></span>
-                      <span className="h-1/2 w-0.5 animate-[bounce_0.8s_infinite] bg-green-500"></span>
+                      <span className="h-full w-0.5 animate-bounce bg-green-500"></span>
+                      <span className="h-2/3 w-0.5 animate-bounce bg-green-500" style={{ animationDelay: '0.2s' }}></span>
+                      <span className="h-1/2 w-0.5 animate-bounce bg-green-500" style={{ animationDelay: '0.4s' }}></span>
                     </div>
                   ) : (
                     <span className={`font-mono text-sm ${isCurrent ? 'text-green-500' : 'text-gray-600'}`}>
