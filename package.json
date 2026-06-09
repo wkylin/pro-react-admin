@@ -525,6 +525,11 @@
     "node": ">=24.0.0 <25"
   },
   "packageManager": "pnpm@11.5.2",
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "@tsparticles/engine"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
