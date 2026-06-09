@@ -522,8 +522,7 @@
     "semver": ">=7.7.4"
   },
   "engines": {
-    "node": ">=24.0.0 <25",
-    "pnpm": ">=11.5.2"
+    "node": ">=24.0.0 <25"
   },
   "packageManager": "pnpm@11.5.2",
   "browserslist": {
