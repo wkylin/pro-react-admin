@@ -1,4 +1,4 @@
-import Router from 'koa-router'
+import Router from '@koa/router'
 import { Mock, Random } from '../utils/index.js'
 
 const shops = new Router()

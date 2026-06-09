@@ -11,6 +11,7 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css|less|scss)$': '<rootDir>/jest/styleMock.js',
     '^@\\/(.*)$': '<rootDir>/src/$1',
+    '^isomorphic-dompurify$': '<rootDir>/node_modules/isomorphic-dompurify/dist/browser.js',
   },
   // Ignore built/distribution files to avoid haste name collisions
   modulePathIgnorePatterns: ['<rootDir>/dist-lib/'],

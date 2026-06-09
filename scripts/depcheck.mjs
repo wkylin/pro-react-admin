@@ -171,6 +171,75 @@ const buildConfigDeps = () => {
 const configDeps = buildConfigDeps()
 const usedByMeta = new Set([...scriptDeps, ...configDeps])
 
+const pnpmStrictResolutionDeps = new Set([
+  '@babel/runtime',
+  '@mermaid-js/parser',
+  '@rc-component/input',
+  '@rc-component/notification',
+  '@rc-component/util',
+  '@sentry-internal/browser-utils',
+  '@sentry-internal/feedback',
+  '@sentry-internal/replay',
+  '@sentry-internal/replay-canvas',
+  '@sentry/browser',
+  '@sentry/core',
+  '@sentry/tracing',
+  '@tiptap/extension-table-cell',
+  '@tiptap/extension-table-header',
+  '@tiptap/extension-table-row',
+  '@tsparticles/basic',
+  '@tsparticles/canvas-utils',
+  '@tsparticles/interaction-external-attract',
+  '@tsparticles/interaction-external-bounce',
+  '@tsparticles/interaction-external-bubble',
+  '@tsparticles/interaction-external-connect',
+  '@tsparticles/interaction-external-destroy',
+  '@tsparticles/interaction-external-grab',
+  '@tsparticles/interaction-external-parallax',
+  '@tsparticles/interaction-external-pause',
+  '@tsparticles/interaction-external-push',
+  '@tsparticles/interaction-external-remove',
+  '@tsparticles/interaction-external-repulse',
+  '@tsparticles/interaction-external-slow',
+  '@tsparticles/interaction-particles-attract',
+  '@tsparticles/interaction-particles-collisions',
+  '@tsparticles/interaction-particles-links',
+  '@tsparticles/plugin-blend',
+  '@tsparticles/plugin-easing-quad',
+  '@tsparticles/plugin-hex-color',
+  '@tsparticles/plugin-hsl-color',
+  '@tsparticles/plugin-interactivity',
+  '@tsparticles/plugin-move',
+  '@tsparticles/plugin-rgb-color',
+  '@tsparticles/shape-circle',
+  '@tsparticles/shape-emoji',
+  '@tsparticles/shape-image',
+  '@tsparticles/shape-line',
+  '@tsparticles/shape-polygon',
+  '@tsparticles/shape-square',
+  '@tsparticles/shape-star',
+  '@tsparticles/updater-life',
+  '@tsparticles/updater-opacity',
+  '@tsparticles/updater-out-modes',
+  '@tsparticles/updater-paint',
+  '@tsparticles/updater-rotate',
+  '@tsparticles/updater-size',
+  '@xyflow/system',
+  'es-toolkit',
+  'lodash-es',
+  'motion-dom',
+  'pdfjs-dist',
+  'react-window',
+  'turndown-plugin-gfm',
+  'zrender',
+])
+
+for (const name of pnpmStrictResolutionDeps) {
+  if (pkg?.dependencies?.[name] || pkg?.devDependencies?.[name]) {
+    usedByMeta.add(name)
+  }
+}
+
 // Some packages are indirectly required by bundled dependencies, but are not imported by our code.
 // Example: framer-motion's CJS bundle can require @emotion/is-prop-valid.
 if (pkg?.dependencies?.['framer-motion']) usedByMeta.add('@emotion/is-prop-valid')
@@ -178,6 +247,27 @@ if (pkg?.dependencies?.['framer-motion']) usedByMeta.add('@emotion/is-prop-valid
 // image-minimizer-webpack-plugin dynamically requires `sharp`.
 if (pkg?.devDependencies?.['image-minimizer-webpack-plugin'] || pkg?.dependencies?.['image-minimizer-webpack-plugin']) {
   usedByMeta.add('sharp')
+}
+
+const toolingConventionDeps = new Set([
+  '@eslint/compat',
+  '@eslint/eslintrc',
+  '@storybook/builder-vite',
+  '@storybook/csf-plugin',
+  'babel-plugin-transform-remove-debugger',
+  'eslint-plugin-prettier',
+  'eslint-plugin-promise',
+  'jest-environment-jsdom',
+  'npm-check-updates',
+  'prettier-plugin-tailwindcss',
+  'stylelint-config-standard',
+  'tailwindcss',
+])
+
+for (const name of toolingConventionDeps) {
+  if (pkg?.dependencies?.[name] || pkg?.devDependencies?.[name]) {
+    usedByMeta.add(name)
+  }
 }
 
 const report = await new Promise((resolve, reject) => {
@@ -214,6 +304,7 @@ const picked = {}
 const ignoreMissingPrefixes = [
   '@src/',
   '@pages/',
+  '@routers/',
   '@stateless/',
   '@stateful/',
   '@hooks/',
@@ -222,6 +313,8 @@ const ignoreMissingPrefixes = [
   '@app-hooks/',
   '@theme/',
 ]
+
+const ignoreMissingNames = new Set(['projectA', 'projectB'])
 
 const pickArray = (key) => {
   const arr = report?.[key]
@@ -242,6 +335,7 @@ const pickMissing = () => {
 
   const filtered = {}
   for (const [depName, files] of Object.entries(missing)) {
+    if (ignoreMissingNames.has(depName)) continue
     if (ignoreMissingPrefixes.some((p) => depName.startsWith(p))) continue
     filtered[depName] = files
   }
@@ -291,5 +385,5 @@ const summarize = (val) => {
 const summary = {}
 for (const [k, v] of Object.entries(picked)) summary[k] = summarize(v)
 console.log(JSON.stringify(summary, null, 2))
-console.log('\n提示：使用 `npm run depcheck -- --full` 输出完整列表')
+console.log('\n提示：使用 `pnpm run depcheck -- --full` 输出完整列表')
 process.exit(1)

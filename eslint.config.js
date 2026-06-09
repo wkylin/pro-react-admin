@@ -65,8 +65,10 @@ export default [
       },
     },
     rules: {
-      // React Hooks 严格检查
-      ...reactHooks.configs.recommended.rules,
+      // React Hooks 基础检查。React Compiler 相关规则对当前存量代码过于激进，
+      // 先保留 hooks 正确性规则，避免升级依赖后出现大面积非行为性报错。
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
 
       // 现代 React 实践
       'react/react-in-jsx-scope': 'off',
@@ -81,10 +83,11 @@ export default [
       // 未使用变量仅警告
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-useless-assignment': 'warn',
 
       // avoid hard failure on empty blocks
       'no-empty': 'warn',
-      'no-unused-disable-directive': 'off'
+      'no-unused-disable-directive': 'off',
     },
   },
 

@@ -156,19 +156,19 @@ import * as InteractiveBookStories from './InteractiveBook.stories'
 
 组件支持三种渲染模式，优先级从高到低：
 
-| 优先级 | 模式     | 触发条件         | 说明                                     |
-| ------ | -------- | ---------------- | ---------------------------------------- |
-| 1      | PDF 模式 | 传入 `pdfUrl`    | 使用 react-pdf 渲染 PDF 文件             |
-| 2      | 图片模式 | 传入 `pageImages`| 逐页加载图片，智能懒加载当前页 ±2 范围   |
-| 3      | JSX 模式 | 传入 `pages`     | 自定义 React 内容，支持正面/背面         |
+| 优先级 | 模式     | 触发条件          | 说明                                   |
+| ------ | -------- | ----------------- | -------------------------------------- |
+| 1      | PDF 模式 | 传入 `pdfUrl`     | 使用 react-pdf 渲染 PDF 文件           |
+| 2      | 图片模式 | 传入 `pageImages` | 逐页加载图片，智能懒加载当前页 ±2 范围 |
+| 3      | JSX 模式 | 传入 `pages`      | 自定义 React 内容，支持正面/背面       |
 
 ## 翻页模式
 
-| 模式 | 值 | 说明 |
-| --- | --- | --- |
-| 双页 | `mode="double"` | 传统书籍展开，左右各一页 |
+| 模式 | 值              | 说明                                                               |
+| ---- | --------------- | ------------------------------------------------------------------ |
+| 双页 | `mode="double"` | 传统书籍展开，左右各一页                                           |
 | 单页 | `mode="single"` | 每次显示一页，适合移动端。点击右侧 60% 翻下一页，左侧 40% 翻上一页 |
-| 自动 | `mode="auto"` | 默认值。窗口宽度 < 768px 自动切换单页模式，宽屏使用双页模式 |
+| 自动 | `mode="auto"`   | 默认值。窗口宽度 < 768px 自动切换单页模式，宽屏使用双页模式        |
 
 ### 单页模式交互
 
@@ -265,7 +265,7 @@ function Example() {
       coverImage="https://example.com/cover.jpg"
       bookTitle="移动端阅读"
       pages={pages}
-      mode="auto"        // 窄屏自动切换单页（默认值）
+      mode="auto" // 窄屏自动切换单页（默认值）
       width={350}
       height={500}
     />
@@ -284,9 +284,7 @@ function Example() {
 
   return (
     <>
-      <button onClick={() => setIsOpen(!isOpen)}>
-        {isOpen ? '关闭' : '打开'}
-      </button>
+      <button onClick={() => setIsOpen(!isOpen)}>{isOpen ? '关闭' : '打开'}</button>
       <InteractiveBook
         coverImage="https://example.com/cover.jpg"
         bookTitle="受控书籍"
@@ -310,9 +308,9 @@ function Example() {
       coverImage="https://example.com/cover.jpg"
       bookTitle="极简模式"
       pages={pages}
-      showNavigation={false}    // 隐藏底部导航栏
-      showCornerFlip={false}    // 隐藏页角翻页热区
-      enableKeyboard={true}     // 保留键盘翻页
+      showNavigation={false} // 隐藏底部导航栏
+      showCornerFlip={false} // 隐藏页角翻页热区
+      enableKeyboard={true} // 保留键盘翻页
     />
   )
 }
@@ -327,25 +325,13 @@ function Example() {
   return (
     <>
       {/* 默认开启音效 */}
-      <InteractiveBook
-        coverImage="/cover.jpg"
-        pages={pages}
-        enableSound={true}
-      />
+      <InteractiveBook coverImage="/cover.jpg" pages={pages} enableSound={true} />
 
       {/* 禁用音效 */}
-      <InteractiveBook
-        coverImage="/cover.jpg"
-        pages={pages}
-        enableSound={false}
-      />
+      <InteractiveBook coverImage="/cover.jpg" pages={pages} enableSound={false} />
 
       {/* 自定义音效 */}
-      <InteractiveBook
-        coverImage="/cover.jpg"
-        pages={pages}
-        soundSrc="/audio/custom-flip.mp3"
-      />
+      <InteractiveBook coverImage="/cover.jpg" pages={pages} soundSrc="/audio/custom-flip.mp3" />
     </>
   )
 }
@@ -366,28 +352,28 @@ interface BookPage {
 
 组件支持以下键盘操作（需设置 `enableKeyboard={true}`）：
 
-| 快捷键     | 功能       |
-| ---------- | ---------- |
-| `←`        | 向前翻页   |
-| `→`        | 向后翻页   |
-| `Escape`   | 关闭书籍   |
-| `Home`     | 回到封面   |
-| `End`      | 跳到最后页 |
+| 快捷键   | 功能       |
+| -------- | ---------- |
+| `←`      | 向前翻页   |
+| `→`      | 向后翻页   |
+| `Escape` | 关闭书籍   |
+| `Home`   | 回到封面   |
+| `End`    | 跳到最后页 |
 
 ## 交互方式
 
 组件支持多种翻页交互方式：
 
-| 交互方式          | 说明                                                     | 可配置             |
-| ----------------- | -------------------------------------------------------- | ------------------ |
-| 拖拽翻页          | 在页面上按住并左右拖拽，超过阈值后松手翻页               | 始终可用           |
-| 页角点击          | 鼠标悬停在页面右下角/左下角，出现卷起效果后点击翻页      | `showCornerFlip`   |
-| 导航栏按钮        | 底部导航栏的前后翻页按钮                                 | `showNavigation`   |
-| 键盘快捷键        | 方向键、Home、End、Escape                                | `enableKeyboard`   |
-| 翻页音效          | 翻页时播放纸张翻动音效                                   | `enableSound`      |
-| 封面点击/拖拽     | 点击或向左拖拽封面打开书籍                               | 始终可用           |
-| 点击翻页（单页）  | 点击右侧 60% 下一页，左侧 40% 上一页                    | 单页模式自动启用   |
-| 触摸手势（移动端）| 原生 touch 事件，不触发浏览器默认滚动                    | 移动端自动启用     |
+| 交互方式           | 说明                                                | 可配置           |
+| ------------------ | --------------------------------------------------- | ---------------- |
+| 拖拽翻页           | 在页面上按住并左右拖拽，超过阈值后松手翻页          | 始终可用         |
+| 页角点击           | 鼠标悬停在页面右下角/左下角，出现卷起效果后点击翻页 | `showCornerFlip` |
+| 导航栏按钮         | 底部导航栏的前后翻页按钮                            | `showNavigation` |
+| 键盘快捷键         | 方向键、Home、End、Escape                           | `enableKeyboard` |
+| 翻页音效           | 翻页时播放纸张翻动音效                              | `enableSound`    |
+| 封面点击/拖拽      | 点击或向左拖拽封面打开书籍                          | 始终可用         |
+| 点击翻页（单页）   | 点击右侧 60% 下一页，左侧 40% 上一页                | 单页模式自动启用 |
+| 触摸手势（移动端） | 原生 touch 事件，不触发浏览器默认滚动               | 移动端自动启用   |
 
 > **注意**：最后一页（结束页）禁用拖拽，鼠标光标恢复为普通箭头。
 
@@ -398,11 +384,7 @@ interface BookPage {
 组件使用 CSS Modules（Less），可以通过 `className` 传入自定义样式：
 
 ```tsx
-<InteractiveBook
-  className="my-custom-book"
-  coverImage="/cover.jpg"
-  pages={pages}
-/>
+<InteractiveBook className="my-custom-book" coverImage="/cover.jpg" pages={pages} />
 ```
 
 ## 移动端适配

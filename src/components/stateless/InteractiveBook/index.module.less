@@ -204,6 +204,12 @@
   height: 100%;
   z-index: 0;
   transform-style: preserve-3d;
+
+  &.dragging {
+    .page {
+      transition: none !important;
+    }
+  }
 }
 
 .page {
@@ -304,7 +310,7 @@
   background-color: #fdfbf7;
   border-right: 1px solid #e5e5e5;
   overflow: hidden;
-  padding: 16px 24px 24px 24px;
+  padding: 16px 24px 24px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -567,21 +573,13 @@
 }
 
 .dragText {
-  background: rgba(59, 130, 246, 0.8);
+  background: rgb(59 130 246 / 80%);
   color: white;
   padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.7rem;
   font-weight: 500;
   white-space: nowrap;
-}
-
-.pages {
-  &.dragging {
-    .page {
-      transition: none !important;
-    }
-  }
 }
 
 .page.dragging {
@@ -592,16 +590,8 @@
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.2) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(0, 0, 0, 0.1) 100%
-    );
+    inset: 0;
+    background: linear-gradient(135deg, rgb(255 255 255 / 20%) 0%, rgb(255 255 255 / 10%) 50%, rgb(0 0 0 / 10%) 100%);
     border-radius: inherit;
     pointer-events: none;
     z-index: 1;
@@ -676,16 +666,16 @@
     right: 0;
     background: linear-gradient(
       225deg,
-      rgba(253, 251, 247, 0.95) 0%,
-      rgba(253, 251, 247, 0.9) 35%,
-      rgba(230, 225, 215, 0.85) 50%,
-      rgba(200, 195, 185, 0.4) 70%,
+      rgb(253 251 247 / 95%) 0%,
+      rgb(253 251 247 / 90%) 35%,
+      rgb(230 225 215 / 85%) 50%,
+      rgb(200 195 185 / 40%) 70%,
       transparent 100%
     );
     border-top-left-radius: 100%;
     box-shadow:
-      -3px -3px 8px rgba(0, 0, 0, 0.08),
-      -1px -1px 3px rgba(0, 0, 0, 0.04);
+      -3px -3px 8px rgb(0 0 0 / 8%),
+      -1px -1px 3px rgb(0 0 0 / 4%);
     transform-origin: bottom right;
     animation: none;
   }
@@ -693,12 +683,7 @@
   .curlShadow {
     bottom: 0;
     right: 0;
-    background: radial-gradient(
-      ellipse at bottom right,
-      rgba(0, 0, 0, 0.12) 0%,
-      rgba(0, 0, 0, 0.06) 40%,
-      transparent 70%
-    );
+    background: radial-gradient(ellipse at bottom right, rgb(0 0 0 / 12%) 0%, rgb(0 0 0 / 6%) 40%, transparent 70%);
     z-index: -1;
   }
 
@@ -708,7 +693,7 @@
   }
 
   &.cornerActive .curlEffect {
-    animation: curlWaveRight 1.8s ease-in-out infinite;
+    animation: curl-wave-right 1.8s ease-in-out infinite;
   }
 }
 
@@ -722,16 +707,16 @@
     left: 0;
     background: linear-gradient(
       315deg,
-      rgba(253, 251, 247, 0.95) 0%,
-      rgba(253, 251, 247, 0.9) 35%,
-      rgba(230, 225, 215, 0.85) 50%,
-      rgba(200, 195, 185, 0.4) 70%,
+      rgb(253 251 247 / 95%) 0%,
+      rgb(253 251 247 / 90%) 35%,
+      rgb(230 225 215 / 85%) 50%,
+      rgb(200 195 185 / 40%) 70%,
       transparent 100%
     );
     border-top-right-radius: 100%;
     box-shadow:
-      3px -3px 8px rgba(0, 0, 0, 0.08),
-      1px -1px 3px rgba(0, 0, 0, 0.04);
+      3px -3px 8px rgb(0 0 0 / 8%),
+      1px -1px 3px rgb(0 0 0 / 4%);
     transform-origin: bottom left;
     animation: none;
   }
@@ -739,12 +724,7 @@
   .curlShadow {
     bottom: 0;
     left: 0;
-    background: radial-gradient(
-      ellipse at bottom left,
-      rgba(0, 0, 0, 0.12) 0%,
-      rgba(0, 0, 0, 0.06) 40%,
-      transparent 70%
-    );
+    background: radial-gradient(ellipse at bottom left, rgb(0 0 0 / 12%) 0%, rgb(0 0 0 / 6%) 40%, transparent 70%);
     z-index: -1;
   }
 
@@ -754,70 +734,76 @@
   }
 
   &.cornerActive .curlEffect {
-    animation: curlWaveLeft 1.8s ease-in-out infinite;
+    animation: curl-wave-left 1.8s ease-in-out infinite;
   }
 }
 
 /* 海浪般卷起的动画 */
-@keyframes curlWaveRight {
+@keyframes curl-wave-right {
   0% {
     width: 55px;
     height: 55px;
     box-shadow:
-      -3px -3px 8px rgba(0, 0, 0, 0.08),
-      -1px -1px 3px rgba(0, 0, 0, 0.04);
+      -3px -3px 8px rgb(0 0 0 / 8%),
+      -1px -1px 3px rgb(0 0 0 / 4%);
   }
+
   30% {
     width: 70px;
     height: 70px;
     box-shadow:
-      -5px -5px 14px rgba(0, 0, 0, 0.12),
-      -2px -2px 5px rgba(0, 0, 0, 0.06);
+      -5px -5px 14px rgb(0 0 0 / 12%),
+      -2px -2px 5px rgb(0 0 0 / 6%);
   }
+
   60% {
     width: 50px;
     height: 50px;
     box-shadow:
-      -2px -2px 6px rgba(0, 0, 0, 0.06),
-      -1px -1px 2px rgba(0, 0, 0, 0.03);
+      -2px -2px 6px rgb(0 0 0 / 6%),
+      -1px -1px 2px rgb(0 0 0 / 3%);
   }
+
   100% {
     width: 55px;
     height: 55px;
     box-shadow:
-      -3px -3px 8px rgba(0, 0, 0, 0.08),
-      -1px -1px 3px rgba(0, 0, 0, 0.04);
+      -3px -3px 8px rgb(0 0 0 / 8%),
+      -1px -1px 3px rgb(0 0 0 / 4%);
   }
 }
 
-@keyframes curlWaveLeft {
+@keyframes curl-wave-left {
   0% {
     width: 55px;
     height: 55px;
     box-shadow:
-      3px -3px 8px rgba(0, 0, 0, 0.08),
-      1px -1px 3px rgba(0, 0, 0, 0.04);
+      3px -3px 8px rgb(0 0 0 / 8%),
+      1px -1px 3px rgb(0 0 0 / 4%);
   }
+
   30% {
     width: 70px;
     height: 70px;
     box-shadow:
-      5px -5px 14px rgba(0, 0, 0, 0.12),
-      2px -2px 5px rgba(0, 0, 0, 0.06);
+      5px -5px 14px rgb(0 0 0 / 12%),
+      2px -2px 5px rgb(0 0 0 / 6%);
   }
+
   60% {
     width: 50px;
     height: 50px;
     box-shadow:
-      2px -2px 6px rgba(0, 0, 0, 0.06),
-      1px -1px 2px rgba(0, 0, 0, 0.03);
+      2px -2px 6px rgb(0 0 0 / 6%),
+      1px -1px 2px rgb(0 0 0 / 3%);
   }
+
   100% {
     width: 55px;
     height: 55px;
     box-shadow:
-      3px -3px 8px rgba(0, 0, 0, 0.08),
-      1px -1px 3px rgba(0, 0, 0, 0.04);
+      3px -3px 8px rgb(0 0 0 / 8%),
+      1px -1px 3px rgb(0 0 0 / 4%);
   }
 }
 
@@ -834,6 +820,7 @@
 /* ===== 单页模式 ===== */
 .singlePageContainer {
   padding: 24px 16px 80px;
+
   /* 移动端滑动时不触发父级滚动 */
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
@@ -845,7 +832,7 @@
   overflow: hidden;
   perspective: 2000px;
   border-radius: 0 4px 4px 0;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 12%);
 }
 
 .singlePage {
@@ -868,8 +855,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 0%, transparent 5%, transparent 95%, rgba(0, 0, 0, 0.04) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.03) 0%, transparent 8%, transparent 92%, rgba(0, 0, 0, 0.03) 100%);
+    linear-gradient(90deg, rgb(0 0 0 / 4%) 0%, transparent 5%, transparent 95%, rgb(0 0 0 / 4%) 100%),
+    linear-gradient(180deg, rgb(0 0 0 / 3%) 0%, transparent 8%, transparent 92%, rgb(0 0 0 / 3%) 100%);
   opacity: 0.8;
 
   &::after {
@@ -880,16 +867,17 @@
       0deg,
       transparent,
       transparent 28px,
-      rgba(0, 0, 0, 0.015) 28px,
-      rgba(0, 0, 0, 0.015) 29px
+      rgb(0 0 0 / 1.5%) 28px,
+      rgb(0 0 0 / 1.5%) 29px
     );
   }
 }
 
 /* ===== 移动端适配 ===== */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .container {
     padding: 16px 8px 72px;
+
     /* 防止 iOS SafeArea 遮挡 */
     padding-bottom: max(72px, env(safe-area-inset-bottom, 72px));
   }
@@ -905,7 +893,7 @@
   /* 单页视口在移动端撑满宽度 */
   .singlePageViewport {
     border-radius: 4px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   }
 
   .navigation {
@@ -1057,7 +1045,7 @@
 }
 
 /* ===== 极小屏幕适配（<400px） ===== */
-@media (max-width: 400px) {
+@media (width <= 400px) {
   .singlePageContainer {
     padding: 8px 4px 72px;
   }

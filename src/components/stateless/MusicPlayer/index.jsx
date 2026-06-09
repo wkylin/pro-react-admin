@@ -283,8 +283,14 @@ const MusicPlayer = () => {
                   {isCurrent && isPlaying ? (
                     <div className="flex h-3 items-end gap-1">
                       <span className="h-full w-0.5 animate-bounce bg-green-500"></span>
-                      <span className="h-2/3 w-0.5 animate-bounce bg-green-500" style={{ animationDelay: '0.2s' }}></span>
-                      <span className="h-1/2 w-0.5 animate-bounce bg-green-500" style={{ animationDelay: '0.4s' }}></span>
+                      <span
+                        className="h-2/3 w-0.5 animate-bounce bg-green-500"
+                        style={{ animationDelay: '0.2s' }}
+                      ></span>
+                      <span
+                        className="h-1/2 w-0.5 animate-bounce bg-green-500"
+                        style={{ animationDelay: '0.4s' }}
+                      ></span>
                     </div>
                   ) : (
                     <span className={`font-mono text-sm ${isCurrent ? 'text-green-500' : 'text-gray-600'}`}>

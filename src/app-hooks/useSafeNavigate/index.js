@@ -47,7 +47,7 @@ export default function useSafeNavigate() {
       return
     }
 
-    let ok = false
+    let ok
     try {
       ok = await permissionService.canAccessRoute(normalizedPath, false)
     } catch (err) {

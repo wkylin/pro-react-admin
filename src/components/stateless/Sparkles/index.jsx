@@ -1,21 +1,14 @@
-import React, { useId, useMemo, useEffect, useState } from 'react'
-import Particles, { initParticlesEngine } from '@tsparticles/react'
+import React, { useId } from 'react'
+import Particles, { ParticlesProvider, useParticlesProvider } from '@tsparticles/react'
 import { loadSlim } from '@tsparticles/slim'
 import clsx from 'clsx'
 import { motion, useAnimation } from 'motion/react'
 import { theme } from 'antd'
 
-const SparklesCore = (props) => {
+const SparklesCoreContent = (props) => {
   const { token } = theme.useToken()
   const { id, className, background, minSize, maxSize, speed, particleColor, particleDensity } = props
-  const [init, setInit] = useState(false)
-  useEffect(() => {
-    initParticlesEngine(async (engine) => {
-      await loadSlim(engine)
-    }).then(() => {
-      setInit(true)
-    })
-  }, [])
+  const { isInitialized } = useParticlesProvider()
   const controls = useAnimation()
 
   const particlesLoaded = async (container) => {
@@ -32,7 +25,7 @@ const SparklesCore = (props) => {
   const generatedId = useId()
   return (
     <motion.div animate={controls} className={clsx('opacity-0', className)}>
-      {init && (
+      {isInitialized && (
         <Particles
           id={id || generatedId}
           className={clsx('h-full w-full')}
@@ -411,5 +404,11 @@ const SparklesCore = (props) => {
     </motion.div>
   )
 }
+
+const SparklesCore = (props) => (
+  <ParticlesProvider init={loadSlim}>
+    <SparklesCoreContent {...props} />
+  </ParticlesProvider>
+)
 
 export default SparklesCore

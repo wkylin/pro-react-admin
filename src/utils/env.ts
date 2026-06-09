@@ -1,6 +1,15 @@
 const globalAny: any = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : {}
 
-const importMetaEnv: Record<string, any> = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env : {}
+const getImportMetaEnv = (): Record<string, any> => {
+  try {
+    const meta = new Function('return typeof import.meta === "undefined" ? undefined : import.meta')()
+    return meta?.env && typeof meta.env === 'object' ? meta.env : {}
+  } catch {
+    return {}
+  }
+}
+
+const importMetaEnv: Record<string, any> = getImportMetaEnv()
 const processEnv: Record<string, any> = typeof process !== 'undefined' && process.env ? process.env : {}
 
 // Ensure process.env exists in browser runtimes so legacy code can read from it

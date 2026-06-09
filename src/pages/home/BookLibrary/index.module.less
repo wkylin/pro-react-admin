@@ -5,7 +5,7 @@
   padding: 24px;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
 }
 
 .bookLibraryTitle {
@@ -43,10 +43,12 @@
   overflow: hidden;
   background: #fafafa;
   border: 1px solid #f0f0f0;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
 
   &:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
     transform: translateY(-4px);
   }
 }
@@ -74,7 +76,7 @@
 .bookCoverOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgb(0 0 0 / 45%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,12 +127,13 @@
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgb(0 0 0 / 60%);
   backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
   /* opacity 由 JS 控制 */
 }
 
@@ -141,6 +144,7 @@
   align-items: center;
   justify-content: center;
   padding: 32px;
+
   /* transform/opacity/border-radius 由 JS 控制 */
   will-change: transform, opacity;
 }
@@ -154,29 +158,33 @@
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   color: #333;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-  animation: closeBtnFadeIn 0.35s 0.45s ease both;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  animation: close-btn-fade-in 0.35s 0.45s ease both;
 
   &:hover {
     background: #fff;
     transform: scale(1.1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
   }
 }
 
-@keyframes closeBtnFadeIn {
+@keyframes close-btn-fade-in {
   from {
     opacity: 0;
     transform: scale(0.6);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -197,53 +205,119 @@
   left: 0;
   right: 0;
   height: calc(100% / 6);
-  background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0));
+  background: linear-gradient(90deg, rgb(255 255 255 / 18%), rgb(255 255 255 / 0%));
   opacity: 0;
   transform: translateY(6px);
 }
 
-:global(.segmentGradient .segmentStrip-1) { top: 0%; }
-:global(.segmentGradient .segmentStrip-2) { top: calc(100% / 6 * 1); }
-:global(.segmentGradient .segmentStrip-3) { top: calc(100% / 6 * 2); }
-:global(.segmentGradient .segmentStrip-4) { top: calc(100% / 6 * 3); }
-:global(.segmentGradient .segmentStrip-5) { top: calc(100% / 6 * 4); }
-:global(.segmentGradient .segmentStrip-6) { top: calc(100% / 6 * 5); }
-
-@keyframes stripEnter {
-  from { opacity: 0.9; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(-10px); }
+:global(.segmentGradient .segmentStrip-1) {
+  top: 0%;
 }
 
-@keyframes stripExit {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 0.9; transform: translateY(0); }
+:global(.segmentGradient .segmentStrip-2) {
+  top: calc(100% / 6 * 1);
+}
+
+:global(.segmentGradient .segmentStrip-3) {
+  top: calc(100% / 6 * 2);
+}
+
+:global(.segmentGradient .segmentStrip-4) {
+  top: calc(100% / 6 * 3);
+}
+
+:global(.segmentGradient .segmentStrip-5) {
+  top: calc(100% / 6 * 4);
+}
+
+:global(.segmentGradient .segmentStrip-6) {
+  top: calc(100% / 6 * 5);
+}
+
+@keyframes strip-enter {
+  from {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes strip-exit {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
 }
 
 /* 顺向：打开时的分段渐变 */
 :global(.seg-animate) .segmentStrip {
-  animation-name: stripEnter;
+  animation-name: strip-enter;
   animation-duration: 0.55s;
   animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.22,1,0.36,1);
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
-:global(.seg-animate) .segmentStrip-1 { animation-delay: 0s; }
-:global(.seg-animate) .segmentStrip-2 { animation-delay: 0.06s; }
-:global(.seg-animate) .segmentStrip-3 { animation-delay: 0.12s; }
-:global(.seg-animate) .segmentStrip-4 { animation-delay: 0.18s; }
-:global(.seg-animate) .segmentStrip-5 { animation-delay: 0.24s; }
-:global(.seg-animate) .segmentStrip-6 { animation-delay: 0.30s; }
+
+:global(.seg-animate) .segmentStrip-1 {
+  animation-delay: 0s;
+}
+
+:global(.seg-animate) .segmentStrip-2 {
+  animation-delay: 0.06s;
+}
+
+:global(.seg-animate) .segmentStrip-3 {
+  animation-delay: 0.12s;
+}
+
+:global(.seg-animate) .segmentStrip-4 {
+  animation-delay: 0.18s;
+}
+
+:global(.seg-animate) .segmentStrip-5 {
+  animation-delay: 0.24s;
+}
+
+:global(.seg-animate) .segmentStrip-6 {
+  animation-delay: 0.3s;
+}
 
 /* 逆向：飞回时的分段渐变（反向顺序） */
 :global(.seg-animate-reverse) .segmentStrip {
-  animation-name: stripExit;
+  animation-name: strip-exit;
   animation-duration: 0.42s;
   animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.22,1,0.36,1);
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
-:global(.seg-animate-reverse) .segmentStrip-6 { animation-delay: 0s; }
-:global(.seg-animate-reverse) .segmentStrip-5 { animation-delay: 0.05s; }
-:global(.seg-animate-reverse) .segmentStrip-4 { animation-delay: 0.10s; }
-:global(.seg-animate-reverse) .segmentStrip-3 { animation-delay: 0.15s; }
-:global(.seg-animate-reverse) .segmentStrip-2 { animation-delay: 0.20s; }
-:global(.seg-animate-reverse) .segmentStrip-1 { animation-delay: 0.25s; }
 
+:global(.seg-animate-reverse) .segmentStrip-6 {
+  animation-delay: 0s;
+}
+
+:global(.seg-animate-reverse) .segmentStrip-5 {
+  animation-delay: 0.05s;
+}
+
+:global(.seg-animate-reverse) .segmentStrip-4 {
+  animation-delay: 0.1s;
+}
+
+:global(.seg-animate-reverse) .segmentStrip-3 {
+  animation-delay: 0.15s;
+}
+
+:global(.seg-animate-reverse) .segmentStrip-2 {
+  animation-delay: 0.2s;
+}
+
+:global(.seg-animate-reverse) .segmentStrip-1 {
+  animation-delay: 0.25s;
+}

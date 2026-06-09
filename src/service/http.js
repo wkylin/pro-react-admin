@@ -72,7 +72,7 @@ export class EncryptionHandler {
       return encrypted
     } catch (error) {
       logger.error('AES 加密失败:', error)
-      throw new Error('AES 加密失败: ' + error.message)
+      throw new Error('AES 加密失败: ' + error.message, { cause: error })
     }
   }
 
@@ -83,7 +83,7 @@ export class EncryptionHandler {
       return decrypted
     } catch (error) {
       logger.error('AES 解密失败:', error)
-      throw new Error('AES 解密失败: ' + error.message)
+      throw new Error('AES 解密失败: ' + error.message, { cause: error })
     }
   }
 
@@ -107,7 +107,7 @@ export class EncryptionHandler {
       return JSON.stringify(chunks)
     } catch (error) {
       logger.error('RSA 加密失败:', error)
-      throw new Error('RSA 加密失败: ' + error.message)
+      throw new Error('RSA 加密失败: ' + error.message, { cause: error })
     }
   }
 
@@ -133,7 +133,7 @@ export class EncryptionHandler {
       return decryptedChunks.join('')
     } catch (error) {
       logger.error('RSA 解密失败:', error)
-      throw new Error('RSA 解密失败: ' + error.message)
+      throw new Error('RSA 解密失败: ' + error.message, { cause: error })
     }
   }
 
@@ -649,7 +649,9 @@ export const useRequest = (url, options = {}) => {
   )
 
   useEffect(() => {
-    fetchData()
+    queueMicrotask(() => {
+      fetchData()
+    })
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()

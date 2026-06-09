@@ -2,7 +2,7 @@
 // ESM-compatible Playwright-based script to capture a screenshot and record a short video of a Storybook page.
 // Usage: STORYBOOK_URL=http://localhost:6006 STORY_PATH='/?path=/story/your--story' OUT_DIR=docs/static/images node scripts/capture-storybook.js
 
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';
 import fs from 'fs';
 
 const url = process.env.STORYBOOK_URL || 'http://localhost:6006';

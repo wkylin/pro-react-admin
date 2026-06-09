@@ -228,7 +228,7 @@ const PortalTooltip = ({
 
   return (
     <>
-      {/* eslint-disable-next-line */}
+      {}
       {React.cloneElement(child, triggerProps)}
       {typeof document !== 'undefined' && createPortal(portalContent, document.body)}
     </>

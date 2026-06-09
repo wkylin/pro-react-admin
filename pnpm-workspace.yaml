@@ -1,0 +1,30 @@
+packages:
+  - .
+  - api
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - '@tsparticles/engine'
+  - core-js
+  - core-js-pure
+  - electron
+  - es5-ext
+  - esbuild
+  - sharp
+  - sonar-scanner
+  - unrs-resolver
+allowBuilds:
+  '@sentry/cli': true
+  '@tsparticles/engine': true
+  core-js: true
+  core-js-pure: true
+  electron: true
+  es5-ext: true
+  esbuild: true
+  sharp: true
+  sonar-scanner: true
+  unrs-resolver: true
+
+peerDependencyRules:
+  allowedVersions:
+    eslint: '10'

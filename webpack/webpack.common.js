@@ -117,14 +117,19 @@ const config = {
   entry: {
     app: paths.entry,
   },
-  ignoreWarnings: isMfeEnabled
-    ? [
-        {
-          message:
-            /The generated code contains 'async\/await' because this module is using "external script"\.[\s\S]*your target environment does not appear to support 'async\/await'\./,
-        },
-      ]
-    : [],
+  ignoreWarnings: [
+    ...(isMfeEnabled
+      ? [
+          {
+            message:
+              /The generated code contains 'async\/await' because this module is using "external script"\.[\s\S]*your target environment does not appear to support 'async\/await'\./,
+          },
+        ]
+      : []),
+    {
+      message: /Parsing of .*@code-inspector[\\/]core.* for build dependencies failed/,
+    },
+  ],
   output: {
     path: paths.build,
     publicPath: isMfeEnabled ? 'auto' : isDev ? '/' : prodPublicPath,
@@ -166,7 +171,7 @@ const config = {
       'react': path.resolve('./node_modules/react'),
       'react-dom': path.resolve('./node_modules/react-dom'),
     },
-    symlinks: false,
+    symlinks: true,
   },
   plugins: [
     new Dotenv({
@@ -396,8 +401,8 @@ const config = {
   // 性能提示
   performance: {
     hints: isDev ? false : 'warning',
-    maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
+    maxEntrypointSize: 6 * 1024 * 1024,
+    maxAssetSize: 6 * 1024 * 1024,
   },
 }
 

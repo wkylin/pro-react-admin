@@ -1,5 +1,5 @@
 import FixTabPanel from '@stateless/FixTabPanel'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 const codeString = `const profile = {

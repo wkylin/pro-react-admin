@@ -7,8 +7,8 @@ import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
 // import { PinInput } from 'react-input-pin-code'
 import SpotlightCard from '@stateless/Spotlight'
 // import Typewriter from 'typewriter-effect'
-import Marquee from 'react-fast-marquee'
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
+import MarqueeImport from 'react-fast-marquee'
+import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry/es'
 import useDetectScroll from '@smakss/react-scroll-direction'
 import FixTabPanel from '@stateless/FixTabPanel'
 import ReMarkdown from '@stateless/ReMarkdown'
@@ -125,6 +125,8 @@ const dataSteps = [
     code: 'npm run build',
   },
 ]
+
+const Marquee = MarqueeImport?.default || MarqueeImport
 
 const Home = () => {
   const [aiText, setAiText] = useState('')
@@ -349,10 +351,8 @@ const Home = () => {
   })
 
   useEffect(() => {
-    if (scrollRef.current) {
-      setCustomElement(scrollRef.current)
-    }
-  }, [scrollRef])
+    setCustomElement((currentElement) => currentElement || scrollRef.current)
+  }, [])
 
   const [barRect, barRef] = useRect()
 

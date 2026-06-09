@@ -4,8 +4,13 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { PermissionCode } from '../types/permission'
+import type { PermissionCode, Role, UserPermission } from '../types/permission'
 import { permissionService } from '../service/permissionService'
+
+type PermissionRole = string | Partial<Pick<Role, 'code'>> | null | undefined
+type PermissionPayload = Partial<Omit<UserPermission, 'roles'>> & {
+  roles?: PermissionRole[]
+}
 
 /**
  * 使用权限检查 Hook
@@ -16,6 +21,30 @@ export const usePermission = () => {
   const [routes, setRoutes] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
 
+  const applyPermissions = useCallback((userPermissions: PermissionPayload) => {
+    setPermissions(Array.isArray(userPermissions.permissions) ? userPermissions.permissions : [])
+
+    // 确保 roles 始终是数组
+    let rolesArray: string[] = []
+    if (Array.isArray(userPermissions.roles)) {
+      rolesArray = userPermissions.roles
+        .map((role: PermissionRole) => {
+          // 处理 role 可能是字符串或对象的情况
+          return typeof role === 'string' ? role : role?.code || ''
+        })
+        .filter(Boolean)
+    }
+    setRoles(rolesArray)
+
+    setRoutes(Array.isArray(userPermissions.routes) ? userPermissions.routes : [])
+  }, [])
+
+  const clearPermissions = useCallback(() => {
+    setPermissions([])
+    setRoles([])
+    setRoutes([])
+  }, [])
+
   /**
    * 加载权限信息
    */
@@ -23,35 +52,44 @@ export const usePermission = () => {
     try {
       setLoading(true)
       const userPermissions = await permissionService.getPermissions()
-      setPermissions(Array.isArray(userPermissions.permissions) ? userPermissions.permissions : [])
-
-      // 确保 roles 始终是数组
-      let rolesArray: string[] = []
-      if (Array.isArray(userPermissions.roles)) {
-        rolesArray = userPermissions.roles
-          .map((role) => {
-            // 处理 role 可能是字符串或对象的情况
-            return typeof role === 'string' ? role : role?.code || ''
-          })
-          .filter(Boolean)
-      }
-      setRoles(rolesArray)
-
-      setRoutes(Array.isArray(userPermissions.routes) ? userPermissions.routes : [])
+      applyPermissions(userPermissions)
     } catch (error) {
       console.error('加载权限失败:', error)
       // 确保错误时也设置空数组
-      setPermissions([])
-      setRoles([])
-      setRoutes([])
+      clearPermissions()
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [applyPermissions, clearPermissions])
 
   useEffect(() => {
-    loadPermissions()
-  }, [loadPermissions])
+    let isActive = true
+
+    const loadInitialPermissions = async () => {
+      try {
+        const userPermissions = await permissionService.getPermissions()
+        if (isActive) {
+          applyPermissions(userPermissions)
+        }
+      } catch (error) {
+        console.error('加载权限失败:', error)
+        if (isActive) {
+          // 确保错误时也设置空数组
+          clearPermissions()
+        }
+      } finally {
+        if (isActive) {
+          setLoading(false)
+        }
+      }
+    }
+
+    loadInitialPermissions()
+
+    return () => {
+      isActive = false
+    }
+  }, [applyPermissions, clearPermissions])
 
   /**
    * 检查单个权限

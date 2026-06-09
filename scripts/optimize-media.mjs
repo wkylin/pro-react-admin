@@ -8,6 +8,14 @@ const SKIP_OPTIMIZE_MEDIA =
   process.env.SKIP_OPTIMIZE_MEDIA === 'true' ||
   process.env.SKIP_OPTIMIZE_MEDIA === 'TRUE'
 
+const REQUIRE_FFMPEG =
+  process.env.REQUIRE_FFMPEG === '1' ||
+  process.env.REQUIRE_FFMPEG === 'true' ||
+  process.env.REQUIRE_FFMPEG === 'TRUE' ||
+  process.env.OPTIMIZE_MEDIA_STRICT === '1' ||
+  process.env.OPTIMIZE_MEDIA_STRICT === 'true' ||
+  process.env.OPTIMIZE_MEDIA_STRICT === 'TRUE'
+
 const projectRoot = process.cwd()
 
 const SRC_AUDIO_DIR = path.join(projectRoot, 'src', 'assets', 'audio')
@@ -88,6 +96,21 @@ async function copyAll({ fromDir, toDir }) {
     copied += 1
   }
   return { scanned, copied }
+}
+
+async function copyOriginals(reason) {
+  console.log(`[optimize:media] ${reason}, copying originals to *-optimized outputs...`)
+  await cleanDir(OUT_AUDIO_DIR)
+  await cleanDir(OUT_VIDEO_DIR)
+  await cleanDir(OUT_PUBLIC_AUDIO_DIR)
+
+  const r1 = await copyAll({ fromDir: SRC_AUDIO_DIR, toDir: OUT_AUDIO_DIR })
+  const r2 = await copyAll({ fromDir: SRC_VIDEO_DIR, toDir: OUT_VIDEO_DIR })
+  const r3 = await copyAll({ fromDir: SRC_PUBLIC_AUDIO_DIR, toDir: OUT_PUBLIC_AUDIO_DIR })
+
+  console.log(
+    `[optimize:media] copied. src-audio=${r1.copied}/${r1.scanned}, src-video=${r2.copied}/${r2.scanned}, public-audio=${r3.copied}/${r3.scanned}`
+  )
 }
 
 async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
@@ -173,18 +196,7 @@ async function optimizeOne({ inputPath, inputBaseDir, outputBaseDir }) {
 }
 
 if (SKIP_OPTIMIZE_MEDIA) {
-  console.log('[optimize:media] SKIP_OPTIMIZE_MEDIA=1, copying originals to *-optimized outputs...')
-  await cleanDir(OUT_AUDIO_DIR)
-  await cleanDir(OUT_VIDEO_DIR)
-  await cleanDir(OUT_PUBLIC_AUDIO_DIR)
-
-  const r1 = await copyAll({ fromDir: SRC_AUDIO_DIR, toDir: OUT_AUDIO_DIR })
-  const r2 = await copyAll({ fromDir: SRC_VIDEO_DIR, toDir: OUT_VIDEO_DIR })
-  const r3 = await copyAll({ fromDir: SRC_PUBLIC_AUDIO_DIR, toDir: OUT_PUBLIC_AUDIO_DIR })
-
-  console.log(
-    `[optimize:media] copied. src-audio=${r1.copied}/${r1.scanned}, src-video=${r2.copied}/${r2.scanned}, public-audio=${r3.copied}/${r3.scanned}`
-  )
+  await copyOriginals('SKIP_OPTIMIZE_MEDIA=1')
   process.exit(0)
 }
 
@@ -195,10 +207,23 @@ function checkFfmpegAvailable() {
 
 async function main() {
   if (!checkFfmpegAvailable()) {
-    console.error('[optimize:media] ffmpeg not found in PATH.')
-    console.error('Install ffmpeg and ensure `ffmpeg` is available in your terminal, then re-run.')
-    console.error('Windows quick path: https://www.gyan.dev/ffmpeg/builds/ (add bin to PATH)')
-    process.exit(1)
+    const installHint = [
+      'Install ffmpeg and ensure `ffmpeg` is available in your terminal.',
+      'macOS: brew install ffmpeg',
+      'Windows: https://www.gyan.dev/ffmpeg/builds/ (add bin to PATH)',
+    ]
+
+    if (REQUIRE_FFMPEG) {
+      console.error('[optimize:media] ffmpeg not found in PATH.')
+      for (const line of installHint) console.error(line)
+      process.exit(1)
+    }
+
+    console.warn('[optimize:media] ffmpeg not found in PATH; media will not be recompressed.')
+    for (const line of installHint) console.warn(line)
+    console.warn('[optimize:media] Set REQUIRE_FFMPEG=1 or OPTIMIZE_MEDIA_STRICT=1 to fail instead.')
+    await copyOriginals('ffmpeg unavailable')
+    return
   }
 
   const targets = [

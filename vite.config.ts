@@ -6,11 +6,28 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
 import path from 'path'
 import fs from 'fs'
-import archiver from 'archiver'
+import type { Archiver, ArchiverOptions } from 'archiver'
 import { fileURLToPath } from 'url'
+import { createRequire } from 'module'
 import packageJson from './package.json'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const require = createRequire(import.meta.url)
+const archiver = require('archiver') as (format: 'zip', options?: ArchiverOptions) => Archiver
+const manualChunkGroups: Record<string, string[]> = {
+  'vendor-zustand': ['zustand', 'zustand/middleware', 'zustand/middleware/immer', 'immer'],
+  'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+  'vendor-antd': ['antd', '@ant-design/icons'],
+  'vendor-hls': ['hls.js'],
+}
+
+const manualChunks = (id: string) => {
+  for (const [chunkName, modules] of Object.entries(manualChunkGroups)) {
+    if (modules.some((moduleName) => id.includes(`/node_modules/${moduleName}/`) || id.includes(`/node_modules/${moduleName}.`))) {
+      return chunkName
+    }
+  }
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -79,22 +96,6 @@ export default defineConfig(({ mode }) => {
     },
   })
 
-  const injectAppEntry = {
-    name: 'inject-app-entry',
-    transformIndexHtml(html: string) {
-      const tag = '<script type="module" src="/src/index.tsx"></script>'
-      return html.includes(tag) ? html : html.replace('</body>', `  ${tag}\n</body>`)
-    },
-    configureServer(server: import('vite').ViteDevServer) {
-      server.middlewares.use((req: import('http').IncomingMessage, _res: import('http').ServerResponse, next) => {
-        if (req.url === '/' || req.url === '/index.html') {
-          req.url = '/index.html'
-        }
-        next()
-      })
-    },
-  }
-
   return {
     plugins: [
       svgr({
@@ -106,7 +107,6 @@ export default defineConfig(({ mode }) => {
       }),
       react(),
       multiProjectIndexHtml(),
-      // injectAppEntry,
       ...(useAnalyze
         ? [visualizer({ filename: `${outDir}/stats.html`, gzipSize: true, brotliSize: true, open: false })]
         : []),
@@ -179,12 +179,7 @@ export default defineConfig(({ mode }) => {
         input: path.resolve(__dirname, 'index.html'),
         output: {
           // 确保 zustand 及其 middleware 打包到同一个 chunk 中，避免多实例问题
-          manualChunks: {
-            'vendor-zustand': ['zustand', 'zustand/middleware', 'zustand/middleware/immer', 'immer'],
-            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-            'vendor-antd': ['antd', '@ant-design/icons'],
-            'vendor-hls': ['hls.js'],
-          },
+          manualChunks,
         },
       },
     },

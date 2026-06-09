@@ -14,7 +14,7 @@ export default defineConfig({
       insertTypesEntry: false,
       tsconfigPath: './tsconfig.json',
       entryRoot: 'src/lib',
-      outDir: 'dist-lib/entries',
+      outDirs: 'dist-lib/entries',
       // 只生成 lib 入口相关类型，避免把 app 页面/未导出组件也卷入
       include: ['src/lib', 'src/vite-env.d.ts'],
     }),

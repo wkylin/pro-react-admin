@@ -34,6 +34,14 @@ const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
 const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
 const isMfeEnabled = mfeRole === 'host' || mfeRole === 'remote'
 
+const parseByteBudget = (value, fallback) => {
+  const parsed = Number(value)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
+}
+
+const maxEntrypointSize = parseByteBudget(process.env.WEBPACK_MAX_ENTRYPOINT_SIZE, 6 * 1024 * 1024)
+const maxAssetSize = parseByteBudget(process.env.WEBPACK_MAX_ASSET_SIZE, 6 * 1024 * 1024)
+
 const optimizedAudioDir = path.resolve(__dirname, '../src/assets-optimized/audio')
 const optimizedVideoDir = path.resolve(__dirname, '../src/assets-optimized/video')
 const hasOptimizedAudio = fs.existsSync(optimizedAudioDir)
@@ -52,6 +60,9 @@ const prodWebpackConfig = merge(common, {
       : {},
   // 使用文件缓存
   cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
+  infrastructureLogging: {
+    level: 'error',
+  },
   // 生产调试开关：设置环境变量 DEBUG_PROD=1 可在 production 构建中输出 source-map 并关闭压缩，便于定位仅在构建后出现的问题。
   // 默认保持原有生产行为（无 source-map，开启压缩）。
   devtool: process.env.DEBUG_PROD === '1' ? 'source-map' : false,
@@ -189,8 +200,8 @@ const prodWebpackConfig = merge(common, {
   },
   performance: {
     hints: 'warning',
-    maxEntrypointSize: 800000,
-    maxAssetSize: 400000,
+    maxEntrypointSize,
+    maxAssetSize,
   },
 })
 

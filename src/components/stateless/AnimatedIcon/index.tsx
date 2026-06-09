@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 
 type Variant = 'spin' | 'pulse' | 'bounce' | 'draw'
@@ -47,18 +47,20 @@ const AnimatedIcon: React.FC<Props> = ({ children, variant = 'spin', mode = 'hov
   } as any
 
   const childType: any = children.type
-
-  if (childType && (childType === 'svg' || childType.render || childType.displayName)) {
-    try {
-      const MotionIcon = motion.create(children.type as any)
-      return React.createElement(MotionIcon, { ...(children.props as any), ...rest, ...motionProps })
-    } catch {
-      return (
-        <motion.span {...motionProps} {...rest}>
-          {children}
-        </motion.span>
-      )
+  const MotionIcon = useMemo(() => {
+    if (!childType || !(childType === 'svg' || childType.render || childType.displayName)) {
+      return null
     }
+
+    try {
+      return motion.create(childType)
+    } catch {
+      return null
+    }
+  }, [childType])
+
+  if (MotionIcon) {
+    return React.createElement(MotionIcon, { ...(children.props as any), ...rest, ...motionProps })
   }
 
   return (
