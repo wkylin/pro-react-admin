@@ -90,7 +90,7 @@ export const usePrimaryNavItems = () => {
           <ProjectOutlined style={{ fontSize: 16 }} />
         </AnimatedIcon>
       ),
-      onClick: () => redirectTo('portfilo'),
+      onClick: () => window.open('https://wkylin.cn', '_blank'),
       show: hasAccess('/portfilo'),
     },
   ]

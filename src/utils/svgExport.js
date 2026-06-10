@@ -26,10 +26,7 @@ export function exportSvg(svgElement, fileName = 'mySvg.svg') {
         const v = cs.getPropertyValue(p)
         if (v) el.setAttribute(p, v)
       })
-    } catch (e) {
-      // ignore
-      console.log('e', e)
-    }
+    } catch (e) {}
   }
 
   ;[clone, ...Array.from(clone.querySelectorAll('*'))].forEach(inlineImportantStyles)
@@ -49,7 +46,6 @@ export function exportSvg(svgElement, fileName = 'mySvg.svg') {
         clone.setAttribute('viewBox', `0 0 ${width} ${height}`)
       }
     } catch (e) {
-      console.log('e', e)
       clone.setAttribute('viewBox', `0 0 ${width} ${height}`)
     }
   }

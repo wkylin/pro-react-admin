@@ -23,7 +23,6 @@ export function getStoredSvpUiLanguage() {
     const raw = window.localStorage?.getItem?.(SVP_UI_LANGUAGE_STORAGE_KEY)
     return normalizeLang(raw)
   } catch (error) {
-    console.log('error', error)
     return null
   }
 }
@@ -34,9 +33,7 @@ export function setStoredSvpUiLanguage(lang) {
   try {
     if (typeof window === 'undefined') return
     window.localStorage?.setItem?.(SVP_UI_LANGUAGE_STORAGE_KEY, normalized)
-  } catch (error) {
-    console.log('error', error)
-  }
+  } catch (error) {}
 }
 
 export function createSvpI18n(initialLanguage = 'zh') {

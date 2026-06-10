@@ -523,9 +523,7 @@ export const copyTextToClipboard = async (textToCopy) => {
     if (navigator?.clipboard?.writeText) {
       await navigator.clipboard.writeText(textToCopy)
     }
-  } catch (err) {
-    console.error(`复制到剪贴板失败:${err.message}`)
-  }
+  } catch (err) {}
 }
 
 export const getRandomId = () => {
