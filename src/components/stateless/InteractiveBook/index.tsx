@@ -849,6 +849,9 @@ export default function InteractiveBook({
       ref={pagesRef}
       onMouseDown={handleMouseDown}
     >
+      <div className={styles.gutterShadow} style={{ opacity: isOpen ? 0.82 : 0 }} />
+      <div className={styles.pageStackRight} style={{ opacity: isOpen ? 0.7 : 0 }} />
+      <div className={styles.pageStackBottom} style={{ opacity: isOpen ? 0.58 : 0 }} />
       {bookPages.map((page, index) => {
         const isFlipped = index <= currentPageIndex
         const isBuriedLeft = index < currentPageIndex
@@ -908,6 +911,26 @@ export default function InteractiveBook({
 
         const W = typeof effectiveWidth === 'number' ? effectiveWidth : 300
         const H = typeof effectiveHeight === 'number' ? effectiveHeight : 500
+        const dragProgress = isActiveDragPage ? Math.min(Math.abs(dragOffset) / Math.max(W * 0.92, 1), 1) : 0
+        const stackDepth = Math.min((bookPages.length - index) * 0.65, 14)
+        const frontTurnShadow = isActiveDragPage
+          ? dragOffset < 0
+            ? `linear-gradient(to left, rgba(31, 24, 14, ${0.08 + dragProgress * 0.22}) 0%, rgba(31, 24, 14, ${
+                0.04 + dragProgress * 0.14
+              }) 18%, transparent 46%)`
+            : `linear-gradient(to right, rgba(31, 24, 14, ${0.08 + dragProgress * 0.2}) 0%, rgba(31, 24, 14, ${
+                0.03 + dragProgress * 0.1
+              }) 16%, transparent 44%)`
+          : isFlipped
+            ? 'linear-gradient(to right, rgba(31, 24, 14, 0.08) 0%, transparent 22%)'
+            : 'linear-gradient(to left, rgba(31, 24, 14, 0.06) 0%, transparent 20%)'
+        const backTurnShadow = isActiveDragPage
+          ? dragOffset < 0
+            ? `linear-gradient(to right, rgba(45, 34, 18, ${0.1 + dragProgress * 0.2}) 0%, transparent 34%)`
+            : `linear-gradient(to left, rgba(45, 34, 18, ${0.1 + dragProgress * 0.2}) 0%, transparent 34%)`
+          : isFlipped
+            ? 'linear-gradient(to left, rgba(45, 34, 18, 0.1) 0%, transparent 28%)'
+            : 'linear-gradient(to right, rgba(45, 34, 18, 0.08) 0%, transparent 28%)'
 
         const getFoldPolygons = (isTR: boolean, isBR: boolean, isTL: boolean, isBL: boolean) => {
           // 水平不超过页宽（书脊边界），垂直可延伸更多（模拟真实翻页）
@@ -1131,6 +1154,13 @@ export default function InteractiveBook({
               transformStyle: 'preserve-3d',
               transformOrigin: 'left center',
               visibility: isDeeplyBuried ? 'hidden' : 'visible',
+              marginRight: isSinglePage ? 0 : `${Math.max(0, stackDepth * 0.18)}px`,
+              marginBottom: `${Math.max(0, stackDepth * 0.12)}px`,
+              boxShadow: isActiveDragPage
+                ? `0 18px 38px rgba(18, 12, 6, ${0.14 + dragProgress * 0.16})`
+                : isFlipped
+                  ? '0 10px 24px rgba(18, 12, 6, 0.12)'
+                  : '0 12px 28px rgba(18, 12, 6, 0.1)',
               ...(isActiveDragPage ? { zIndex: 200 } : {}),
             }}
             initial="unflipped"
@@ -1145,6 +1175,13 @@ export default function InteractiveBook({
                 clipPath: frontClipPath,
               }}
             >
+              <div
+                className={styles.pageTurnShade}
+                style={{
+                  background: frontTurnShadow,
+                  opacity: isActiveDragPage ? 1 : isFlipped ? 0.7 : 0.55,
+                }}
+              />
               <div className={styles.pageContent}>
                 {isImageMode && resolvedImages ? (
                   <div style={{ width: '100%', height: '100%', position: 'relative' }}>
@@ -1242,6 +1279,13 @@ export default function InteractiveBook({
                 clipPath: backClipPath,
               }}
             >
+              <div
+                className={styles.pageTurnShade}
+                style={{
+                  background: backTurnShadow,
+                  opacity: isActiveDragPage ? 1 : isFlipped ? 0.78 : 0.5,
+                }}
+              />
               <div className={styles.rightShadow} />
               <div className={styles.rightBorder} />
 
@@ -1399,6 +1443,13 @@ export default function InteractiveBook({
             height: effectiveHeight,
           }}
         >
+          <div className={styles.spreadShadow} style={{ opacity: isOpen && !isSinglePage ? 1 : 0 }} />
+          <div className={styles.spreadBackdrop} style={{ opacity: isOpen && !isSinglePage ? 1 : 0 }}>
+            <div className={styles.spreadBoard} />
+            <div className={styles.spreadLeftPage} />
+            <div className={styles.spreadRightPage} />
+            <div className={styles.spreadGutter} />
+          </div>
           {/* ─── 封面 ─── */}
           <motion.div
             className={styles.cover}
