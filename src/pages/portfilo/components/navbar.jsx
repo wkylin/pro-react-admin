@@ -63,7 +63,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="sticky top-0 z-[9999] flex justify-center p-4 py-6 font-mono text-xl backdrop-blur-md">
+    <nav className="sticky top-0 z-9999 flex justify-center p-4 py-6 font-mono text-xl backdrop-blur-md">
       <ul className="mb-0 flex list-none space-x-11 rounded-full border border-gray-500 bg-gray-900 px-8 py-4 tracking-widest opacity-80 backdrop-blur-md">
         <motion.li
           initial={{ opacity: 0, y: -50 }}

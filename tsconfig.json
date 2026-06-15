@@ -21,7 +21,6 @@
     "noFallthroughCasesInSwitch": true,
 
     /* 路径别名（与你的 vite.config.ts 保持一致） */
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "@src/*": ["./src/*"],
