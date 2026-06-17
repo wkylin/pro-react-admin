@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/wkylin/pro-react-admin/compare/v3.6.2...v3.7.0) (2026-06-17)
+
+
+### Features
+
+* book page ([7565efc](https://github.com/wkylin/pro-react-admin/commits/7565efc5e390f74245d20df62e2b4fda41feac74))
+* delete actions ([b747b20](https://github.com/wkylin/pro-react-admin/commits/b747b200ea3436977ae904bb78b2ef9155bad82c))
+* int book images ([e82d1f5](https://github.com/wkylin/pro-react-admin/commits/e82d1f56a6c63f1950c25de992c3aaca26f6eafc))
+* interactive book ([896b1d7](https://github.com/wkylin/pro-react-admin/commits/896b1d782e21f2e611fd31aaf507527f81ea44f0))
+* interactive book ([3837b56](https://github.com/wkylin/pro-react-admin/commits/3837b56d9ad1e2ddb5a111c08742c7db2dddeb8f))
+* interactive book ([e82f7e0](https://github.com/wkylin/pro-react-admin/commits/e82f7e063610d66f2e56d9aefcd800e62a967de4))
+* interactive book ([a3dbc2d](https://github.com/wkylin/pro-react-admin/commits/a3dbc2db887c25039450c758ae78625e1d1a9202))
+* interactive book ([c82f4ac](https://github.com/wkylin/pro-react-admin/commits/c82f4ac72426349236b46955c6b28a34cce0017f))
+* interactive book ([60219ff](https://github.com/wkylin/pro-react-admin/commits/60219ffec23672e495a1254afdb322247c587444))
+* interactive book ([3137154](https://github.com/wkylin/pro-react-admin/commits/31371547bc86e6000cb45f1262dff1e404960976))
+* interactive book pdf ([ec2d5ff](https://github.com/wkylin/pro-react-admin/commits/ec2d5ffceb03214989e04375f7e59187296a1d7e))
+* Interactive Book 翻页音效 ([eff4db6](https://github.com/wkylin/pro-react-admin/commits/eff4db65ed72960433712f7965b451991706d07b))
+* my profile ([ccfbd9c](https://github.com/wkylin/pro-react-admin/commits/ccfbd9cd05e71a30d57296046ba3301f5ab794ff))
+* tailwind ([c75f1b0](https://github.com/wkylin/pro-react-admin/commits/c75f1b068ab5b5b65ee34c6699521346717d3604))
+* tracking skd ([f357355](https://github.com/wkylin/pro-react-admin/commits/f3573550b05345a7881af222d9446dc722f9c13d))
+* 书籍列表 ([f56cd22](https://github.com/wkylin/pro-react-admin/commits/f56cd2236887730dc31a1126246063181f78160d))
+* 书籍列表动画优化 ([18f3313](https://github.com/wkylin/pro-react-admin/commits/18f3313469754c9e723207876736b9de11147501))
+* 书籍动画优化 ([6d7c2e0](https://github.com/wkylin/pro-react-admin/commits/6d7c2e07bc74cc248bf879ca251ca6a51aed6213))
+* 书籍支持单页及Auto和双页模式 ([2281b19](https://github.com/wkylin/pro-react-admin/commits/2281b193ae5eeddcbab24eb18150a212bcb2ccae))
+* 拖拽优化 ([2591077](https://github.com/wkylin/pro-react-admin/commits/25910772bafb9cfc8c5713a0506b4cc1ace211c0))
+* 项目依赖列表 ([e1ad53e](https://github.com/wkylin/pro-react-admin/commits/e1ad53e47e4ad217ed37e2d0dd9986970384c163))
+
+
+### Bug Fixes
+
+* eslint ([8f08eec](https://github.com/wkylin/pro-react-admin/commits/8f08eec049bb2a261a1a54434534df3711b78a64))
+
 ### [3.6.2](https://github.com/wkylin/pro-react-admin/compare/v3.6.1...v3.6.2) (2026-02-04)
 
 ### [3.6.1](https://github.com/wkylin/pro-react-admin/compare/v3.5.1...v3.6.1) (2026-02-04)
