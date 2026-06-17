@@ -101,4 +101,10 @@ export const uiRoutes = [
     i18nKey: 'menu.deployFlow',
     element: <lazyComponents.DeployFlow />,
   },
+  {
+    path: 'tracking',
+    name: '埋点数据看板',
+    i18nKey: 'menu.tracking',
+    element: <lazyComponents.TrackingDashboard />,
+  },
 ]

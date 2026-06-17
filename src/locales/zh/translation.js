@@ -120,6 +120,7 @@ const zh = {
 
     error: '错误',
     errorBoundary: '错误边界',
+    tracking: '埋点数据看板',
   },
   svp: {
     ariaPlaybackSettings: '播放设置',

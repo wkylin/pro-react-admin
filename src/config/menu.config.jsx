@@ -37,6 +37,7 @@ import {
   SafetyCertificateOutlined,
   NodeIndexOutlined,
   PlayCircleOutlined,
+  RadarChartOutlined,
 } from '@ant-design/icons'
 
 // 静态菜单配置
@@ -483,6 +484,16 @@ const rawMainLayoutMenu = [
     ],
   },
 
+  {
+    label: '埋点数据看板',
+    i18nKey: 'menu.tracking',
+    path: '/tracking',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <RadarChartOutlined />
+      </AnimatedIcon>
+    ),
+  },
   {
     label: 'Error',
     i18nKey: 'menu.error',

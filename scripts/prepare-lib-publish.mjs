@@ -63,6 +63,11 @@ async function main() {
         import: './entries/stateless.es.js',
         require: './entries/stateless.cjs.js',
       },
+      './tracking': {
+        types: './entries/tracking.d.ts',
+        import: './entries/tracking.es.js',
+        require: './entries/tracking.cjs.js',
+      },
       './style.css': './style.css',
     },
   }

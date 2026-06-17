@@ -23,7 +23,15 @@ const ApiSchema = new Schema({
   date: { type: Date, default: Date.now },
 })
 
+const { trackingCollect, getEvents, getStats, clearEvents } = require('./tracking-collect')
+
 const ApiModel = mongoose.model('apis', ApiSchema)
+
+// ==================== 埋点数据收集 API ====================
+app.post('/api/tracking/collect', trackingCollect)
+app.get('/api/tracking/events', getEvents)
+app.get('/api/tracking/stats', getStats)
+app.delete('/api/tracking/events', clearEvents)
 
 app.post('/apis', (req, res) => {
   const newItem = new ApiModel(req.body)

@@ -51,6 +51,7 @@ export type Resource =
   | 'dependencies'
   | 'text-editor'
   | 'deploy-flow'
+  | 'tracking'
 
 /**
  * 权限点定义

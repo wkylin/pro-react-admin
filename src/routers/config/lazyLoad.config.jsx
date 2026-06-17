@@ -100,6 +100,9 @@ export const lazyComponents = {
     preload: true,
   }),
   Print: lazyLoad(() => import('@pages/print'), { preload: true }),
+  // 埋点数据看板
+  TrackingDashboard: lazyLoad(() => import('@pages/tracking'), { preload: true }),
+
   // 通知页面
   Notifications: lazyLoad(() => import('@pages/notifications'), {
     preload: true,

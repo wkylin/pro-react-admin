@@ -50,6 +50,7 @@ export default [
         ...globals.node,
         ...globals.es2021,
         React: 'readonly',
+        EventListener: 'readonly',
       },
       parser: typescriptParser,
       ecmaVersion: 'latest',

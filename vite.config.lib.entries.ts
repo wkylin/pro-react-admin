@@ -42,6 +42,7 @@ export default defineConfig({
         core: path.resolve(__dirname, 'src/lib/core.ts'),
         stateful: path.resolve(__dirname, 'src/lib/stateful.ts'),
         stateless: path.resolve(__dirname, 'src/lib/stateless.ts'),
+        tracking: path.resolve(__dirname, 'src/lib/tracking/index.ts'),
       },
       formats: ['es', 'cjs'],
       fileName: (format, entryName) => `${entryName}.${format}.js`,

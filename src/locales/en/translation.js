@@ -121,6 +121,7 @@ const en = {
 
     error: 'Error',
     errorBoundary: 'ErrorBoundary',
+    tracking: 'Tracking Dashboard',
   },
   svp: {
     ariaPlaybackSettings: 'Playback settings',

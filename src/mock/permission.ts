@@ -40,6 +40,7 @@ const allRoutes = [
   '/dependencies',
   '/text-editor',
   '/deploy-flow',
+  '/tracking',
 ]
 
 // 超级管理员：所有路由
@@ -68,6 +69,7 @@ const managerRoutes = [
   '/dependencies',
   '/text-editor',
   '/deploy-flow',
+  '/tracking',
 ]
 
 // 业务员：业务相关功能
@@ -206,6 +208,7 @@ export const routePermissionMap: Record<string, PermissionCode> = {
   '/auto-deploy': 'auto-deploy:read',
   '/text-editor': 'text-editor:read',
   '/deploy-flow': 'deploy-flow:read',
+  '/tracking': 'tracking:read',
   '*': '*:*',
 }
 
