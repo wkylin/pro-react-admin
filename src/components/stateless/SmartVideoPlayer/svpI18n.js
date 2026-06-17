@@ -36,6 +36,9 @@ export function setStoredSvpUiLanguage(lang) {
   } catch (error) {}
 }
 
+/**
+ * @returns {import('i18next').i18n}
+ */
 export function createSvpI18n(initialLanguage = 'zh') {
   const instance = createInstance()
 
