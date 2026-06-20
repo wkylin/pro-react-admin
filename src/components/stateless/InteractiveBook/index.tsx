@@ -849,9 +849,6 @@ export default function InteractiveBook({
       ref={pagesRef}
       onMouseDown={handleMouseDown}
     >
-      <div className={styles.gutterShadow} style={{ opacity: isOpen ? 0.82 : 0 }} />
-      <div className={styles.pageStackRight} style={{ opacity: isOpen ? 0.7 : 0 }} />
-      <div className={styles.pageStackBottom} style={{ opacity: isOpen ? 0.58 : 0 }} />
       {bookPages.map((page, index) => {
         const isFlipped = index <= currentPageIndex
         const isBuriedLeft = index < currentPageIndex
@@ -1071,7 +1068,7 @@ export default function InteractiveBook({
               transformOrigin: poly.origin,
               transform: `rotate3d(${poly.foldAxis}, 180deg)`,
               backfaceVisibility: 'visible',
-              boxShadow: '-2px 0 10px rgba(0,0,0,0.1)',
+              boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
             }
 
             // Flap shows the Back Content of the current page
@@ -1156,11 +1153,7 @@ export default function InteractiveBook({
               visibility: isDeeplyBuried ? 'hidden' : 'visible',
               marginRight: isSinglePage ? 0 : `${Math.max(0, stackDepth * 0.18)}px`,
               marginBottom: `${Math.max(0, stackDepth * 0.12)}px`,
-              boxShadow: isActiveDragPage
-                ? `0 18px 38px rgba(18, 12, 6, ${0.14 + dragProgress * 0.16})`
-                : isFlipped
-                  ? '0 10px 24px rgba(18, 12, 6, 0.12)'
-                  : '0 12px 28px rgba(18, 12, 6, 0.1)',
+
               ...(isActiveDragPage ? { zIndex: 200 } : {}),
             }}
             initial="unflipped"
@@ -1445,7 +1438,6 @@ export default function InteractiveBook({
         >
           <div className={styles.spreadShadow} style={{ opacity: isOpen && !isSinglePage ? 1 : 0 }} />
           <div className={styles.spreadBackdrop} style={{ opacity: isOpen && !isSinglePage ? 1 : 0 }}>
-            <div className={styles.spreadBoard} />
             <div className={styles.spreadLeftPage} />
             <div className={styles.spreadRightPage} />
             <div className={styles.spreadGutter} />

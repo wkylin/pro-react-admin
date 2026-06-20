@@ -80,21 +80,11 @@
   transition: opacity 0.28s ease;
 }
 
-.spreadBoard,
 .spreadLeftPage,
 .spreadRightPage,
 .spreadGutter {
   position: absolute;
   pointer-events: none;
-}
-
-.spreadBoard {
-  inset: 6px 0 8px;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 82%) 0%, rgb(245 238 226 / 92%) 100%);
-  box-shadow:
-    0 18px 26px rgb(32 20 8 / 10%),
-    inset 0 0 0 1px rgb(210 194 168 / 28%);
 }
 
 .spreadLeftPage,
@@ -104,9 +94,7 @@
   width: calc(50% - 10px);
   background:
     linear-gradient(180deg, #fffdf9 0%, #f7f1e6 100%);
-  box-shadow:
-    0 8px 20px rgb(38 24 10 / 8%),
-    inset 0 0 0 1px rgb(223 209 183 / 38%);
+  box-shadow: inset 0 0 0 1px rgb(223 209 183 / 38%);
 }
 
 .spreadLeftPage {
@@ -146,9 +134,7 @@
   height: 100%;
   backface-visibility: hidden;
   border-radius: 0;
-  box-shadow:
-    0 0 0 1px rgb(255 255 255 / 10%),
-    inset 0 0 0 1px rgb(255 248 233 / 26%);
+  box-shadow: inset 0 0 0 1px rgb(255 248 233 / 26%);
   cursor: pointer;
   overflow: hidden;
   transform: translateZ(0.5px);
@@ -241,7 +227,6 @@
   flex-direction: column;
   padding: 32px;
   border-right: 1px solid #e5e5e5;
-  box-shadow: 0 5px 15px rgb(0 0 0 / 10%);
 }
 
 .innerContent {
@@ -316,65 +301,7 @@
   }
 }
 
-.gutterShadow {
-  position: absolute;
-  top: 18px;
-  bottom: 22px;
-  left: -2px;
-  width: 6px;
-  z-index: 2;
-  border-radius: 6px 0 0 6px;
-  background:
-    radial-gradient(90% 100% at 100% 50%, rgb(0 0 0 / 12%) 0%, rgb(0 0 0 / 5%) 42%, transparent 78%),
-    linear-gradient(180deg, rgb(88 65 34 / 10%) 0%, rgb(44 28 12 / 14%) 100%);
-  transform: translateZ(1px);
-  pointer-events: none;
-  transition: opacity 0.22s ease;
-}
 
-.pageStackRight {
-  position: absolute;
-  top: 24px;
-  right: -5px;
-  bottom: 40px;
-  width: 6px;
-  z-index: 1;
-  border-radius: 0 6px 6px 0;
-  background:
-    repeating-linear-gradient(
-      180deg,
-      #f5ebd8 0,
-      #eee1c8 5px,
-      #fff8ec 10px
-    ),
-    linear-gradient(90deg, rgb(155 124 82 / 10%) 0%, rgb(255 250 243 / 18%) 45%, rgb(121 90 52 / 10%) 100%);
-  box-shadow:
-    inset 1px 0 1px rgb(255 255 255 / 52%),
-    inset -1px 0 2px rgb(132 99 58 / 10%);
-  pointer-events: none;
-  transition: opacity 0.22s ease;
-}
-
-.pageStackBottom {
-  position: absolute;
-  left: 20px;
-  right: 34px;
-  bottom: -4px;
-  height: 5px;
-  z-index: 1;
-  border-radius: 0 0 8px 8px;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      #f5ebd8 0,
-      #ece0c5 7px,
-      #fff8ec 14px
-    ),
-    linear-gradient(180deg, rgb(146 112 69 / 5%) 0%, rgb(96 71 42 / 9%) 100%);
-  box-shadow: 0 4px 8px rgb(28 18 8 / 8%);
-  pointer-events: none;
-  transition: opacity 0.22s ease;
-}
 
 .page {
   position: absolute;
@@ -385,9 +312,6 @@
   transform-origin: left;
   background: linear-gradient(135deg, #fdfbf7 0%, #f6efe2 100%);
   border-radius: 0;
-  box-shadow:
-    0 4px 12px rgb(0 0 0 / 8%),
-    0 0 0 1px rgb(0 0 0 / 5%);
   border: 1px solid #ece2cf;
 }
 
@@ -577,14 +501,13 @@
   height: 100%;
   background-color: #fdfbf7;
   border-radius: 0;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 20%);
   border: 1px solid #e5e5e5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  opacity: 0.6;
+  opacity: 1;
   z-index: 1;
 }
 
@@ -625,7 +548,6 @@
   backdrop-filter: blur(12px);
   padding: 10px 24px;
   border-radius: 50px;
-  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   border: 1px solid rgb(0 0 0 / 8%);
   z-index: 10;
   animation: slide-up 0.5s ease-out;
@@ -771,10 +693,6 @@
 }
 
 .page.dragging {
-  box-shadow:
-    0 2px 16px rgb(0 0 0 / 14%),
-    0 0 0 1px rgb(59 130 246 / 10%);
-
   &::before {
     content: '';
     position: absolute;
@@ -1020,7 +938,7 @@
   overflow: hidden;
   perspective: 2000px;
   border-radius: 0;
-  box-shadow: 0 8px 32px rgb(0 0 0 / 12%);
+
 }
 
 .singlePage {
@@ -1081,7 +999,7 @@
   /* 单页视口在移动端撑满宽度 */
   .singlePageViewport {
     border-radius: 0;
-    box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
+
   }
 
   .navigation {
@@ -1090,7 +1008,7 @@
     bottom: 8px;
     border-radius: 28px;
     max-width: calc(100vw - 32px);
-    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+
   }
 
   .navButton {
