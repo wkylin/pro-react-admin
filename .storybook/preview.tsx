@@ -1,17 +1,10 @@
 // .storybook/preview.tsx
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 import type { Preview } from '@storybook/react-vite' // 注意：Vite 版本用 @storybook/react
 import { MemoryRouter } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 
 import i18n from '../src/i18n/i18n'
-
-// 导入全局样式
-import '../src/styles/reset.css'
-import '../src/styles/animate.css'
-
-// 覆盖全局样式以修复 Storybook 中的滚动问题
-import './preview.css'
 
 const preview: Preview = {
   decorators: [

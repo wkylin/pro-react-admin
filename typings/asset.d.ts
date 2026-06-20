@@ -25,3 +25,11 @@ declare module '*.bmp' {
   const value: any
   export = value
 }
+declare module '*.pdf' {
+  const value: string
+  export = value
+}
+declare module '*?url' {
+  const value: string
+  export default value
+}
