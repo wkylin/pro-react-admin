@@ -22,7 +22,6 @@ export default [
       'dist-lib/',
       'build/',
       'coverage/',
-      '**/*.d.ts',
       'CHANGELOG.md',
       'package-lock.json',
     ],
@@ -82,6 +81,7 @@ export default [
       'import/no-unresolved': 'off',
 
       // 未使用变量仅警告
+      'no-undef': 'off',
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-useless-assignment': 'warn',
@@ -89,6 +89,34 @@ export default [
       // avoid hard failure on empty blocks
       'no-empty': 'warn',
       'no-unused-disable-directive': 'off',
+    },
+  },
+
+  {
+    files: ['**/*.d.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021,
+      },
+      parser: typescriptParser,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+    },
+    rules: {
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
+
+  {
+    files: ['src/sw.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.serviceworker,
+      },
     },
   },
 

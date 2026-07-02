@@ -9,6 +9,7 @@ import * as glob from 'glob'
 import { PurgeCSSPlugin } from 'purgecss-webpack-plugin'
 import CompressionWebpackPlugin from 'compression-webpack-plugin'
 import { sentryWebpackPlugin } from '@sentry/webpack-plugin'
+import { InjectManifest } from '@serwist/webpack-plugin'
 import FileManagerPlugin from 'filemanager-webpack-plugin'
 import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin'
 import { EsbuildPlugin } from 'esbuild-loader'
@@ -30,6 +31,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env.production') })
 const regVendor = /[\\/]node_modules[\\/](axios|classnames|lodash)[\\/]/
 
 const useSentryMap = process.env.SENTRY_SOURCE_MAP === 'map'
+const buildTime = new Date().toISOString()
 
 const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
 const isMfeEnabled = mfeRole === 'host' || mfeRole === 'remote'
@@ -106,6 +108,29 @@ const prodWebpackConfig = merge(common, {
             }))
           : []),
       ],
+    }),
+    new webpack.DefinePlugin({
+      __APP_VERSION__: JSON.stringify(packageJson.version),
+      __APP_BUILD_TIME__: JSON.stringify(buildTime),
+    }),
+    new InjectManifest({
+      swSrc: path.resolve(__dirname, '../src/sw.ts'),
+      swDest: 'sw.js',
+      compileSrc: true,
+      disablePrecacheManifest: false,
+      maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+      exclude: [
+        /\.map$/,
+        /^manifest.*\.js$/,
+        /\.gz$/,
+        /\.br$/,
+        /compilation-stats\.json$/,
+        /stats\.json$/,
+        /asset-manifest\.json$/,
+        /version\.json$/,
+        /\.(mp3|mp4|wav|webm)$/i,
+      ],
+      include: [/\.(js|css|html|ico|png|svg|webp|json|txt|woff|woff2)$/i],
     }),
   ],
   optimization: {
@@ -202,6 +227,35 @@ const prodWebpackConfig = merge(common, {
     hints: 'warning',
     maxEntrypointSize,
     maxAssetSize,
+  },
+})
+
+prodWebpackConfig.plugins.push({
+  apply(compiler) {
+    compiler.hooks.thisCompilation.tap('EmitVersionManifestPlugin', (compilation) => {
+      compilation.hooks.processAssets.tap(
+        {
+          name: 'EmitVersionManifestPlugin',
+          stage: webpack.Compilation.PROCESS_ASSETS_STAGE_ADDITIONS,
+        },
+        () => {
+          compilation.emitAsset(
+            'version.json',
+            new webpack.sources.RawSource(
+              JSON.stringify(
+                {
+                  version: packageJson.version,
+                  buildTime,
+                  project: paths.projectName || 'default',
+                },
+                null,
+                2
+              )
+            )
+          )
+        }
+      )
+    })
   },
 })
 

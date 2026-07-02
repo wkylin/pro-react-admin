@@ -15,6 +15,7 @@ import { useProThemeContext } from './theme/hooks'
 import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 import { setMessageInstance } from '@utils/message'
 import { keepAliveManager } from '@/components/KeepAlive'
+import ServiceWorkerUpdatePrompt from '@/pwa/ServiceWorkerUpdatePrompt'
 
 dayjs.locale('zh-cn')
 
@@ -83,6 +84,7 @@ const ThemeIndex: React.FC = () => {
         iconPrefixCls="wui-icon"
         locale={zhCN}
       >
+        <ServiceWorkerUpdatePrompt />
         <RouterProvider router={router} />
       </ConfigProvider>
     </StyleProvider>

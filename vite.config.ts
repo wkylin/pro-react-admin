@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { serwist } from '@serwist/vite'
 import svgr from 'vite-plugin-svgr'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
@@ -32,6 +33,7 @@ const manualChunks = (id: string) => {
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const project = (process.env.PROJECT || env.PROJECT || env.VITE_PROJECT || 'default').trim() || 'default'
+  const buildTime = new Date().toISOString()
 
   const resolveProjectDir = (...segments: string[]) => path.resolve(__dirname, 'src', 'projects', project, ...segments)
   const projectEntry = project === 'default' ? '/src/index.tsx' : `/src/projects/${project}/index.tsx`
@@ -96,6 +98,25 @@ export default defineConfig(({ mode }) => {
     },
   })
 
+  const emitVersionManifest = () => ({
+    name: 'emit-version-manifest',
+    generateBundle() {
+      this.emitFile({
+        type: 'asset',
+        fileName: 'version.json',
+        source: JSON.stringify(
+          {
+            version: packageJson.version,
+            buildTime,
+            project,
+          },
+          null,
+          2
+        ),
+      })
+    },
+  })
+
   return {
     plugins: [
       svgr({
@@ -106,6 +127,17 @@ export default defineConfig(({ mode }) => {
         },
       }),
       react(),
+      emitVersionManifest(),
+      serwist({
+        disable: !isProd,
+        swSrc: 'src/sw.ts',
+        swDest: 'sw.js',
+        globDirectory: outDir,
+        injectionPoint: 'self.__SW_MANIFEST',
+        rollupFormat: 'iife',
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,txt,woff,woff2}'],
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+      }),
       multiProjectIndexHtml(),
       ...(useAnalyze
         ? [visualizer({ filename: `${outDir}/stats.html`, gzipSize: true, brotliSize: true, open: false })]
@@ -142,6 +174,8 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
       'process.env': clientEnv,
+      __APP_VERSION__: JSON.stringify(packageJson.version),
+      __APP_BUILD_TIME__: JSON.stringify(buildTime),
     },
     envPrefix: ['VITE_', 'APP_', 'REACT_APP_', 'IFRAME_', 'AUTH_', 'DEPLOYED_'],
     publicDir,
