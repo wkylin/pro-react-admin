@@ -29,19 +29,22 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build main app
-        run: npm run build:production
+        run: pnpm run build:production
         env:
           NODE_ENV: production
           PUBLIC_URL: /pro-react-admin
 
       - name: Build Storybook
-        run: npm run build-storybook
+        run: pnpm run build-storybook
         env:
           NODE_ENV: production
           STORYBOOK_BASE_HREF: /pro-react-admin/storybook/
