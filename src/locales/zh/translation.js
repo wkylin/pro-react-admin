@@ -85,6 +85,7 @@ const zh = {
     permissionExample: '权限示例',
     phBar: 'PH Bar',
     chatgpt: 'ChatGPT',
+    aiWorkbench: 'AI 工作台',
     reactTilt: 'React Tilt',
     zustand: 'Zustand',
     music: '音乐',

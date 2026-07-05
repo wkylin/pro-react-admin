@@ -1,0 +1,274 @@
+.smartChat {
+  display: flex;
+  min-height: 720px;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgb(59 130 246 / 0.08), transparent 26%),
+    linear-gradient(180deg, #fff, #f7f9fc 100%);
+  box-shadow: 0 18px 60px rgb(15 23 42 / 0.08);
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.description {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.alert {
+  margin-bottom: -4px;
+}
+
+.messageList {
+  display: flex;
+  min-height: 420px;
+  max-height: 720px;
+  flex: 1;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  border-radius: 18px;
+  background: rgb(248 250 252 / 0.92);
+  padding: 10px;
+}
+
+.emptyState {
+  display: grid;
+  min-height: 240px;
+  place-items: center;
+}
+
+.messageCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #fff;
+  padding: 16px;
+}
+
+.role-user {
+  align-self: flex-end;
+  width: min(88%, 720px);
+  background: linear-gradient(135deg, #fff7ed, #fffbeb);
+}
+
+.role-assistant,
+.role-system {
+  align-self: stretch;
+}
+
+.messageMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.streaming {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  font-size: 12px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+.messageCopyButton,
+.codeCopyButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.messageCopyButton svg,
+.codeCopyButton svg,
+.titleRow svg,
+.streaming svg,
+.buttonContent svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  display: block;
+}
+
+.messageCopyButton:hover,
+.codeCopyButton:hover {
+  transform: translateY(-1px);
+  background: #dbeafe;
+}
+
+.thoughtPanel {
+  margin-bottom: 12px;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  background: #f8fbff;
+  overflow: hidden;
+
+  summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 16px;
+    color: #1d4ed8;
+    font-weight: 600;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+.thoughtBody {
+  border-top: 1px solid #dbeafe;
+  padding: 0 16px 14px;
+  color: #334155;
+}
+
+.messageContent {
+  color: #0f172a;
+  line-height: 1.7;
+
+  :global(p) {
+    margin: 0 0 12px;
+  }
+
+  :global(ul),
+  :global(ol) {
+    margin: 0 0 12px;
+    padding-left: 20px;
+  }
+
+  :global(pre) {
+    margin: 0;
+  }
+}
+
+.inlineCode {
+  border-radius: 8px;
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 2px 6px;
+}
+
+.codeBlock {
+  overflow: hidden;
+  border: 1px solid #dbe3ef;
+  border-radius: 16px;
+  background: #0f172a;
+}
+
+.codeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgb(15 23 42 / 0.92);
+  color: #cbd5e1;
+  font-size: 12px;
+  padding: 10px 12px;
+}
+
+.codeCopyButton {
+  background: rgb(37 99 235 / 0.14);
+  color: #dbeafe;
+}
+
+.preBlock {
+  overflow-x: auto;
+  margin: 0;
+  padding: 14px;
+}
+
+.composer {
+  border: 1px solid #dbe3ef;
+  border-radius: 20px;
+  background: #fff;
+  padding: 12px;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 116px;
+  resize: vertical;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.composerFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.buttonContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (width <= 768px) {
+  .smartChat {
+    min-height: 640px;
+    border-radius: 20px;
+    padding: 16px;
+  }
+
+  .header,
+  .composerFooter,
+  .messageMeta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .role-user {
+    width: 100%;
+  }
+}

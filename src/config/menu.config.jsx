@@ -184,6 +184,16 @@ const rawMainLayoutMenu = [
     ),
   },
   {
+    label: 'AI Workbench',
+    i18nKey: 'menu.aiWorkbench',
+    path: '/ai-workbench',
+    icon: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <RobotOutlined />
+      </AnimatedIcon>
+    ),
+  },
+  {
     label: 'React Tilt',
     i18nKey: 'menu.reactTilt',
     path: '/tilt',

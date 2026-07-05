@@ -1,0 +1,133 @@
+.promptOptimizer {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgb(14 165 233 / 0.1), transparent 24%),
+    linear-gradient(180deg, #fff, #f8fafc 100%);
+  box-shadow: 0 18px 60px rgb(15 23 42 / 0.07);
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0f172a;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.description {
+  margin: 6px 0 0;
+  color: #64748b;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.formPanel,
+.previewPanel {
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: rgb(255 255 255 / 0.92);
+  padding: 18px;
+}
+
+.formPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  span {
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+.previewHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  h4 {
+    margin: 0 0 4px;
+    color: #0f172a;
+    font-size: 16px;
+  }
+}
+
+.divider {
+  margin: 16px 0;
+}
+
+.promptPreview {
+  overflow: auto;
+  min-height: 420px;
+  border-radius: 18px;
+  background: #0f172a;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+  padding: 18px;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.placeholder {
+  display: grid;
+  min-height: 420px;
+  place-items: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f8fafc, #fff);
+  padding: 24px;
+  text-align: center;
+
+  h4 {
+    margin: 0 0 8px;
+    color: #0f172a;
+  }
+}
+
+@media (width <= 960px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 768px) {
+  .promptOptimizer {
+    border-radius: 20px;
+    padding: 16px;
+  }
+
+  .header,
+  .previewHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

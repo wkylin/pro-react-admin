@@ -40,6 +40,7 @@ export type Resource =
   | 'motion'
   | 'echarts'
   | 'chatgpt'
+  | 'ai-workbench'
   | 'postmessage'
   | 'geo'
   | 'print'

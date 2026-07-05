@@ -37,6 +37,12 @@ export const uiRoutes = [
     element: <lazyComponents.ChatGpt />,
   },
   {
+    path: 'ai-workbench',
+    name: 'AI Workbench',
+    i18nKey: 'menu.aiWorkbench',
+    element: <lazyComponents.AiWorkbench />,
+  },
+  {
     path: 'prism',
     name: 'Prism Render',
     element: <lazyComponents.PrismRender />,

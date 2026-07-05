@@ -1,0 +1,355 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border: 1px solid #dbe3ef;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top left, rgb(14 165 233 / 16%), transparent 24%),
+    radial-gradient(circle at bottom right, rgb(249 115 22 / 12%), transparent 20%),
+    linear-gradient(135deg, #fff, #f8fafc);
+  padding: 24px;
+  box-shadow: 0 22px 60px rgb(15 23 42 / 8%);
+}
+
+.heroMain {
+  max-width: 860px;
+}
+
+.title {
+  margin: 12px 0 8px !important;
+}
+
+.subtitle {
+  margin-bottom: 0 !important;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.heroIcons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.iconBubble {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid #dbe3ef;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 92%);
+  color: #0f172a;
+  box-shadow: 0 14px 30px rgb(15 23 42 / 8%);
+}
+
+.metricCard,
+.panelCard,
+.chatCard {
+  border-radius: 24px !important;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 96%), rgb(248 250 252 / 96%)) !important;
+  box-shadow: 0 16px 40px rgb(15 23 42 / 6%) !important;
+}
+
+.metricLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.metricIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+}
+
+.layout {
+  margin-top: 0 !important;
+}
+
+.columnStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+
+  h3 {
+    margin: 0 0 6px;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.presetList {
+  :global(.ant-list-item) {
+    padding-inline: 0;
+  }
+}
+
+.presetItem {
+  align-items: flex-start !important;
+  gap: 16px;
+}
+
+.presetContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.presetTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.presetSummary {
+  margin-bottom: 8px !important;
+  color: #64748b;
+}
+
+.controlsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.controlBlock,
+.switchBlock {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 85%);
+  padding: 16px;
+}
+
+.controlLabelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.switchBlock {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.switchDesc {
+  margin: 6px 0 0 !important;
+  color: #64748b;
+}
+
+.chatHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  h3 {
+    margin: 0 0 6px;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.divider {
+  margin: 16px 0 !important;
+}
+
+.timelineItem {
+  padding-bottom: 6px;
+}
+
+.timelineHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.detailTabs {
+  :global(.ant-tabs-nav) {
+    margin-bottom: 24px;
+  }
+
+  :global(.ant-tabs-nav::before) {
+    border-bottom-color: #e2e8f0;
+  }
+
+  :global(.ant-tabs-tab) {
+    padding: 6px 4px 14px !important;
+    color: #64748b;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  :global(.ant-tabs-tab + .ant-tabs-tab) {
+    margin-left: 28px;
+  }
+
+  :global(.ant-tabs-tab-active .ant-tabs-tab-btn) {
+    color: #1d4ed8 !important;
+  }
+
+  :global(.ant-tabs-ink-bar) {
+    height: 3px !important;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+  }
+
+  :global(.ant-tabs-content-holder) {
+    padding-top: 4px;
+  }
+}
+
+.stateGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.archList {
+  :global(.ant-list-items) {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  :global(.ant-list-item) {
+    border: 1px solid #e5edf7;
+    border-radius: 22px;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 96%), rgb(248 250 252 / 92%));
+    padding: 22px 24px !important;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 90%);
+  }
+}
+
+.archItem {
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-items: center !important;
+  gap: 18px;
+}
+
+.archIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at top left, rgb(96 165 250 / 24%), transparent 60%),
+    linear-gradient(180deg, #eff6ff, #e2e8f0);
+  color: #1d4ed8;
+  box-shadow: 0 10px 24px rgb(37 99 235 / 10%);
+
+  :global(svg) {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.archDetail {
+  margin: 8px 0 0 !important;
+  color: #475569;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.highlightPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.highlightRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 82%);
+  padding: 16px;
+}
+
+.highlightText {
+  margin: 6px 0 0 !important;
+  color: #64748b;
+}
+
+@media (width <= 1200px) {
+  .controlsGrid,
+  .stateGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width <= 768px) {
+  .page {
+    padding: 12px;
+  }
+
+  .hero,
+  .chatHeader,
+  .sectionHeader,
+  .highlightRow,
+  .switchBlock {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .heroIcons {
+    justify-content: flex-start;
+  }
+
+  .detailTabs {
+    :global(.ant-tabs-tab) {
+      font-size: 15px;
+    }
+
+    :global(.ant-tabs-tab + .ant-tabs-tab) {
+      margin-left: 18px;
+    }
+  }
+
+  .archItem {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
