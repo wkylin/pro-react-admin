@@ -61,6 +61,7 @@ export default defineConfig(({ mode }) => {
   const useAnalyze = env.USE_ANALYZE === '1' || env.USE_ANALYZE === 'true'
   const isProd = mode === 'production'
   const useSentry = env.SENTRY_SOURCE_MAP === 'map' && isProd
+  const isStorybookBuild = process.env.STORYBOOK_BUILD === '1' || env.STORYBOOK_BUILD === '1'
 
   // 构建完成后压缩插件（受环境变量 ZIP_DIST 控制）
   const zipAfterBuild = () => ({
@@ -128,16 +129,20 @@ export default defineConfig(({ mode }) => {
       }),
       react(),
       emitVersionManifest(),
-      serwist({
-        disable: !isProd,
-        swSrc: 'src/sw.ts',
-        swDest: 'sw.js',
-        globDirectory: outDir,
-        injectionPoint: 'self.__SW_MANIFEST',
-        rollupFormat: 'iife',
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,txt,woff,woff2}'],
-        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
-      }),
+      ...(!isStorybookBuild
+        ? [
+            serwist({
+              disable: !isProd,
+              swSrc: 'src/sw.ts',
+              swDest: 'sw.js',
+              globDirectory: outDir,
+              injectionPoint: 'self.__SW_MANIFEST',
+              rollupFormat: 'iife',
+              globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,json,txt,woff,woff2}'],
+              maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+            }),
+          ]
+        : []),
       multiProjectIndexHtml(),
       ...(useAnalyze
         ? [visualizer({ filename: `${outDir}/stats.html`, gzipSize: true, brotliSize: true, open: false })]

@@ -54,6 +54,9 @@ const config: StorybookConfig = {
           if (!name) return true
           if (name === 'vite-plugin-compression') return false
           if (name === 'zip-after-build') return false
+          if (name.includes('serwist')) return false
+          if (name.includes('service-worker')) return false
+          if (name.includes('pwa')) return false
           if (name.includes('sentry')) return false
           if (name.includes('visualizer')) return false
           return true
@@ -86,12 +89,6 @@ const config: StorybookConfig = {
         },
       },
       cacheDir: path.resolve(rootDir, '.vite-cache/storybook'),
-      optimizeDeps: {
-        esbuildOptions: {
-          target: 'es2020',
-        },
-      },
-
       build: {
         chunkSizeWarningLimit: 2000,
         // 强制 preview 产物落在 storybook-static（否则会被主应用 outDir 污染，导致 iframe.html 缺失 -> 404）
