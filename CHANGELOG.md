@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/wkylin/pro-react-admin/compare/v3.8.0...v4.0.0) (2026-07-08)
+
+
+### Features
+
+* ai workbench ([a802285](https://github.com/wkylin/pro-react-admin/commits/a8022857c542e2c798e2e139cc4e47bcbf01bb1d))
+* interactive book ([2d68633](https://github.com/wkylin/pro-react-admin/commits/2d68633d3bc3f350721a1cc80d23aeff0b56350d))
+* interactive book ([06f1c39](https://github.com/wkylin/pro-react-admin/commits/06f1c39b2d1c92624160d20210bd102561bba409))
+* pwa ([b515382](https://github.com/wkylin/pro-react-admin/commits/b5153827e5071b60ada23c12252eb2af817e65de))
+
 ## [3.8.0](https://github.com/wkylin/pro-react-admin/compare/v3.7.0...v3.8.0) (2026-06-17)
 
 ## [3.7.0](https://github.com/wkylin/pro-react-admin/compare/v3.6.2...v3.7.0) (2026-06-17)
