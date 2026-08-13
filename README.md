@@ -324,6 +324,6 @@ Apache-2.0 © [wkylin](https://github.com/wkylin)
 
 ## ⭐️ Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=wkylin/pro-react-admin&type=Date)](https://star-history.com/#wkylin/pro-react-admin&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=wkylin/pro-react-admin&type=Date)](https://star-history.dera.page/#wkylin/pro-react-admin&Date)
 
 </div>
