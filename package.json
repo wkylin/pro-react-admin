@@ -354,7 +354,7 @@
     "@sentry/tracing": "^7.120.4",
     "@smakss/react-scroll-direction": "^4.3.1",
     "@svgr/babel-preset": "^8.1.0",
-    "@tiptap/core": "3.26.0",
+    "@tiptap/core": "3.30.4",
     "@tiptap/extension-code-block-lowlight": "^3.26.0",
     "@tiptap/extension-image": "^3.26.0",
     "@tiptap/extension-link": "^3.26.0",
