@@ -3,7 +3,7 @@ const path = require('path')
 
 const ROOT = path.resolve(__dirname, '..')
 const LOGGER_IMPORT_TARGET = path.join(ROOT, 'utils', 'logger') // src/utils/logger
-const exts = new Set(['.js', '.jsx', '.ts', '.tsx'])
+const exts = new Set(['.js', '.ts', '.tsx'])
 
 const MODE = process.argv.includes('--remove') ? 'remove' : 'logger' // logger|remove
 

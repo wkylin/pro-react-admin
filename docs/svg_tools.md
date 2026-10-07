@@ -1,6 +1,6 @@
 # svg_tools 使用说明
 
-合并后的脚本位于 `scripts/svg_tools.cjs`，用于检查和修复 `src/pages/svgViewer/index.jsx` 中内联 `SVG_SOURCE` 的常见问题（标签未闭合、`<br>` 标签缺斜杠等），以减少手动维护多个小脚本的开销。
+合并后的脚本位于 `scripts/svg_tools.cjs`，用于检查和修复 `src/pages/svgViewer/index.tsx` 中内联 `SVG_SOURCE` 的常见问题（标签未闭合、`<br>` 标签缺斜杠等），以减少手动维护多个小脚本的开销。
 
 前提
 
@@ -8,7 +8,7 @@
 
 默认目标文件
 
-- `src/pages/svgViewer/index.jsx`
+- `src/pages/svgViewer/index.tsx`
 
 用法
 
@@ -37,7 +37,7 @@ node scripts/svg_tools.cjs check
 对指定文件做替换 `<br>`：
 
 ```bash
-node scripts/svg_tools.cjs replace-br --file=src/pages/svgViewer/index.jsx
+node scripts/svg_tools.cjs replace-br --file=src/pages/svgViewer/index.tsx
 ```
 
 自动插入缺失 `</g>`：
@@ -71,4 +71,4 @@ git commit
 
 问题反馈
 
-- 如果脚本没有覆盖到你遇到的问题，请把 `src/pages/svgViewer/index.jsx` 的小片段（敏感信息打码）贴出来，我可以帮你改进脚本或手动修复。
+- 如果脚本没有覆盖到你遇到的问题，请把 `src/pages/svgViewer/index.tsx` 的小片段（敏感信息打码）贴出来，我可以帮你改进脚本或手动修复。

@@ -16,37 +16,37 @@
 - 单文件检查（显示所有问题）：
 
 ```
-npx eslint "src/pages/chatgpt/index.jsx" || true
+npx eslint "src/pages/chatgpt/index.tsx" || true
 ```
 
 - 单文件只显示 errors（quiet 模式，隐藏 warnings）：
 
 ```
-npx eslint --cache --quiet "src/pages/chatgpt/index.jsx" || true
+npx eslint --cache --quiet "src/pages/chatgpt/index.tsx" || true
 ```
 
 - 尝试对单文件自动修复：
 
 ```
-npx eslint --cache --fix "src/pages/chatgpt/index.jsx" || true
+npx eslint --cache --fix "src/pages/chatgpt/index.tsx" || true
 ```
 
 - 全量扫描并将文本输出保存到文件：
 
 ```
-npx eslint "src/**/*.{js,jsx,ts,tsx}" 2>&1 | tee eslint-report-full.txt
+npx eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report-full.txt
 ```
 
 - 全量输出为 JSON（便于后续统计）：
 
 ```
-npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
+npx eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
 ```
 
 - 在 debug 模式下运行（用于排查 flat-config / 插件加载问题）：
 
 ```
-npm run eslint -- --debug "src/**/*.{js,jsx,ts,tsx}"
+npm run eslint -- --debug "src/**/*.{js,ts,tsx}"
 ```
 
 - 如果 package.json 中有自定义脚本（例如 `lint:errors`），可以直接运行：
@@ -64,7 +64,7 @@ npm run lint:errors
 1. 生成 JSON 报告：
 
 ```
-npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
+npx eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
 ```
 
 2. 用 Node 脚本统计并输出为可读列表（在项目根运行）：
@@ -76,8 +76,8 @@ node -e "const r=require('./eslint-report.json'); const m={}; r.forEach(f=>{cons
 结果文件 `eslint-by-file.txt` 格式为：
 
 ```
-11	C:/.../src/components/KeepAlive/index.jsx
-5	C:/.../src/components/stateless/ReMarkdown/index.jsx
+11	C:/.../src/components/KeepAlive/index.tsx
+5	C:/.../src/components/stateless/ReMarkdown/index.tsx
 ...
 ```
 
@@ -90,7 +90,7 @@ node -e "const r=require('./eslint-report.json'); const m={}; r.forEach(f=>{cons
 如果不想生成 JSON，可以将完整文本输出并用 grep/awk/sed 统计（适合临时检查）：
 
 ```
-npx eslint "src/**/*.{js,jsx,ts,tsx}" 2>&1 | tee eslint-report.txt
+npx eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report.txt
 # 示例（在 Git Bash / WSL）
 grep -E "^\s+\d+:\d+\s+" eslint-report.txt | sed -E 's/^[ \t]*([0-9]+):([0-9]+)[ \t]+(error|warning).+\s+(.+)$/\4/' | sort | uniq -c | sort -rn
 ```
@@ -155,13 +155,13 @@ useEffect(() => {
 - 建议把全量输出保存为文本：
 
 ```
-npx eslint "src/**/*.{js,jsx,ts,tsx}" 2>&1 | tee eslint-report-full.txt
+npx eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report-full.txt
 ```
 
 - 若要将 JSON 报告上传/分析，使用 `--format json -o file`：
 
 ```
-npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
+npx eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
 ```
 
 ---
@@ -179,9 +179,9 @@ npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
 
 ```json
 "scripts": {
-  "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
-  "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
-  "lint:errors": "eslint 'src/**/*.{js,jsx,ts,tsx}' --quiet"
+  "lint": "eslint 'src/**/*.{js,ts,tsx}'",
+  "lint:fix": "eslint 'src/**/*.{js,ts,tsx}' --fix",
+  "lint:errors": "eslint 'src/**/*.{js,ts,tsx}' --quiet"
 }
 ```
 
@@ -194,7 +194,7 @@ npx eslint --format json "src/**/*.{js,jsx,ts,tsx}" -o eslint-report.json
 - 如果 ESLint 报错提示 plugin 配置无法加载或 `extends` 无效，先使用 debug 模式查看加载过程：
 
 ```
-npm run eslint -- --debug "src/**/*.{js,jsx,ts,tsx}"
+npm run eslint -- --debug "src/**/*.{js,ts,tsx}"
 ```
 
 - 确认 `eslint` 版本与插件版本兼容（flat config 与 legacy `extends` 行为不同，需要显式注册插件）。
@@ -212,7 +212,7 @@ npx eslint --no-cache "<files>"
 - 对单文件调试更快：
 
 ```
-npx eslint --cache "path/to/file.jsx" || true
+npx eslint --cache "path/to/file.tsx" || true
 ```
 
 - 如果需要把所有文件问题导出并在本地用编辑器跳转，优先使用 JSON 输出并在 VS Code 中安装 ESLint 扩展加载 `eslint-report.json`。

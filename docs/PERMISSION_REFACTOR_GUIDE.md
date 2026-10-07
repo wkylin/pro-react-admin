@@ -50,7 +50,7 @@
 
 ### 2. 路由工具函数
 
-**文件**: `src/routers/utils/index.jsx`
+**文件**: `src/routers/utils/index.tsx`
 
 提供了处理路由权限的核心工具函数：
 
@@ -64,16 +64,16 @@
 
 ## 🚀 路由系统改造
 
-**文件**: `src/routers/index.jsx`
+**文件**: `src/routers/index.tsx`
 
 路由配置流程如下：
 
-1.  **定义路由**: 在 `src/routers/modules/*.routes.jsx` 中定义各模块路由。
+1.  **定义路由**: 在 `src/routers/modules/*.routes.tsx` 中定义各模块路由。
 2.  **注入权限**: 使用 `annotateRoutesWithPermissions` 处理根路由，自动绑定权限。
 3.  **导出路由**: 导出处理后的 `annotatedRootRouter` 供 `App.tsx` 使用。
 
 ```javascript
-// src/routers/index.jsx
+// src/routers/index.tsx
 const annotatedRootRouter = annotateRoutesWithPermissions(rootRouter)
 export default annotatedRootRouter
 ```

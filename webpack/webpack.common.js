@@ -149,7 +149,7 @@ const config = {
     // contentBase: path.join(__dirname, "public"), // 配置额外的静态文件内容的访问路径
   },
   resolve: {
-    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '...'],
+    extensions: ['.mjs', '.js', '.ts', '.tsx', '...'],
     alias: {
       '@assets/audio': path.resolve('./src/assets/audio'),
       '@assets/video': path.resolve('./src/assets/video'),

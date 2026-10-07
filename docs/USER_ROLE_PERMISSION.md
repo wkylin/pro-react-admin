@@ -86,7 +86,7 @@ export const routePermissionMap = {
 }
 ```
 
-### 3. 路由守卫 (`src/routers/authRouter.jsx`)
+### 3. 路由守卫 (`src/routers/authRouter.tsx`)
 
 `AuthRouter` 组件在页面渲染前拦截路由跳转：
 
@@ -103,7 +103,7 @@ export const routePermissionMap = {
 - `src/mock/permission.ts`: **核心**。定义角色、测试账号、路由映射表、Mock 数据。
 - `src/service/permissionService.ts`: **服务层**。单例模式，负责权限的缓存、获取和校验方法 (`hasPermission`, `canAccessRoute`)。
 - `src/service/api/permission.ts`: **接口层**。处理 API 请求与 Mock 数据的切换。
-- `src/routers/authRouter.jsx`: **路由层**。实现路由守卫逻辑。
+- `src/routers/authRouter.tsx`: **路由层**。实现路由守卫逻辑。
 - `src/components/auth/PermissionGuard.tsx`: **组件层**。用于包裹需要权限控制的 UI 组件。
 
 ### 2. 如何在代码中使用权限

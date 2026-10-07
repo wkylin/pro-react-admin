@@ -1,4 +1,4 @@
-import { mainLayoutMenu } from '../config/menu.config.jsx'
+import { mainLayoutMenu } from '../config/menu.config.tsx'
 
 const normalize = (value) => {
   if (value === undefined || value === null) return ''

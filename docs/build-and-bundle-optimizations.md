@@ -132,17 +132,17 @@ SKIP_OPTIMIZE_MEDIA=1 npm run build:production
 
 #### 2) 视频资源块过大
 
-- 来源：`src/pages/video/index.jsx` 与 `src/components/stateless/LandingPage/index.jsx`
+- 来源：`src/pages/video/index.tsx` 与 `src/components/stateless/LandingPage/index.tsx`
 - 影响：同一份 `trailer.mp4` 约 4.2 MiB，且属于本地静态资源，不经过自适应码率或 CDN 流式分发。
 
 #### 3) 首页同步带入 PDF Worker
 
-- 来源：`src/pages/home/index.jsx` 同步 import `InteractiveBook`
+- 来源：`src/pages/home/index.tsx` 同步 import `InteractiveBook`
 - 影响：额外产出约 1.0 MiB 的 `pdf.worker.min.mjs`，即使用户不打开 PDF 书籍功能，也会随站点发布。
 
 #### 4) ChatGPT 页面块偏重
 
-- 来源：`src/pages/chatgpt/index.jsx`
+- 来源：`src/pages/chatgpt/index.tsx`
 - 主要组成：
   - 页面自身及关联模块约 1.5 MiB
   - Mermaid 独立 chunk 约 2.9 MiB
@@ -150,12 +150,12 @@ SKIP_OPTIMIZE_MEDIA=1 npm run build:production
 
 #### 5) ECharts 使用全量入口
 
-- 来源：`src/pages/echarts/index.jsx`
+- 来源：`src/pages/echarts/index.tsx`
 - 现状：当前打入的是 `echarts/index.js + 571 modules`，未做按需引入。
 
 #### 6) 菜单 hover 预加载会放大“懒加载页面”的实际网络成本
 
-- 触发点：`src/pages/layout/proSecNav/index.jsx`
+- 触发点：`src/pages/layout/proSecNav/index.tsx`
 - 现状：菜单项 hover 时会执行 `comp.preload()` 与页面模块预取。
 - 影响：即便页面路由本身是懒加载，用户悬停菜单后仍可能提前下载 `ChatGpt`、`Echarts`、`ReactMusic`、`MyVideo` 等重页面资源。
 
@@ -171,7 +171,7 @@ SKIP_OPTIMIZE_MEDIA=1 npm run build:production
 
 - 将首页里同步引入的 `InteractiveBook` 改成真正的动态加载，避免默认构建始终产出并暴露 1 MiB 的 PDF worker。
 - 将 `ChatGpt` 页里的 Mermaid 能力再拆一层：只有检测到 Mermaid 代码块或用户打开 Mermaid 面板时再加载 Mermaid。当前虽然 Mermaid 已是独立 chunk，但菜单预加载会放大实际下载成本。
-- 评估 `src/pages/layout/proSecNav/index.jsx` 的 hover 预加载策略，至少把 `ChatGpt`、`Echarts`、`ReactMusic`、`MyVideo`、`BigScreen` 这类重页面从自动预取名单里拿掉。
+- 评估 `src/pages/layout/proSecNav/index.tsx` 的 hover 预加载策略，至少把 `ChatGpt`、`Echarts`、`ReactMusic`、`MyVideo`、`BigScreen` 这类重页面从自动预取名单里拿掉。
 
 ### 优先级 P2：收缩第三方库体积
 

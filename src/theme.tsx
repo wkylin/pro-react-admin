@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { RouterProvider, createHashRouter } from 'react-router-dom'
+import { RouterProvider, createHashRouter, type RouteObject } from 'react-router-dom'
 import { ConfigProvider, theme, App as AntdApp } from 'antd'
 import { StyleProvider } from '@ant-design/cssinjs'
 import dayjs from 'dayjs'
@@ -63,7 +63,7 @@ const ThemeIndex: React.FC = () => {
         {
           element: <RootLayout />,
           errorElement: <RouterErrorElement />,
-          children: rootRouter,
+          children: rootRouter as RouteObject[],
         },
       ]),
     []

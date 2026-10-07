@@ -56,7 +56,7 @@
 路由守卫会自动检查用户是否有权限访问特定路由：
 
 ```tsx
-// src/routers/authRouter.jsx 已自动集成权限检查
+// src/routers/authRouter.tsx 已自动集成权限检查
 // 无需额外配置，系统会自动根据用户权限控制路由访问
 ```
 

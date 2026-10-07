@@ -53,7 +53,7 @@ ECharts 的已知行为：
 
 ## 目前谁在触发它？（触发方）
 
-触发方是 BigScreen 页面：[src/pages/bigScreen/index.jsx](../src/pages/bigScreen/index.jsx)
+触发方是 BigScreen 页面：[src/pages/bigScreen/index.tsx](../src/pages/bigScreen/index.tsx)
 
 关键点：
 
@@ -81,8 +81,8 @@ ECharts 的已知行为：
 
 ### 2) 个别图表组件（已改为 resize-only）
 
-- `PieNestCharts`：[src/components/stateless/PieNestCharts/index.jsx](../src/components/stateless/PieNestCharts/index.jsx)
-- `DonutCharts`：[src/components/stateless/DonutCharts/index.jsx](../src/components/stateless/DonutCharts/index.jsx)
+- `PieNestCharts`：[src/components/stateless/PieNestCharts/index.tsx](../src/components/stateless/PieNestCharts/index.tsx)
+- `DonutCharts`：[src/components/stateless/DonutCharts/index.tsx](../src/components/stateless/DonutCharts/index.tsx)
 
 当前都是：监听事件 -> `chartHandleRef.current?.resize?.()`，不再 remount。
 

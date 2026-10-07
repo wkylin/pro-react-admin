@@ -47,12 +47,12 @@ export default function transformer(file, api) {
 
       // create wrapper
       const iconElement = p.node;
-      const wrapper = j.jsxElement(
-        j.jsxOpeningElement(j.jsxIdentifier('AnimatedIcon'), [
-          j.jsxAttribute(j.jsxIdentifier('variant'), j.literal('spin')),
-          j.jsxAttribute(j.jsxIdentifier('mode'), j.literal('hover')),
+      const wrapper = j.tsxElement(
+        j.tsxOpeningElement(j.tsxIdentifier('AnimatedIcon'), [
+          j.tsxAttribute(j.tsxIdentifier('variant'), j.literal('spin')),
+          j.tsxAttribute(j.tsxIdentifier('mode'), j.literal('hover')),
         ]),
-        j.jsxClosingElement(j.jsxIdentifier('AnimatedIcon')),
+        j.tsxClosingElement(j.tsxIdentifier('AnimatedIcon')),
         [iconElement]
       );
 

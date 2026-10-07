@@ -41,7 +41,7 @@ export default function Page() {
 
 ## Configuration & Notes
 
-- The editor loads common languages for code highlighting via `lowlight` (see `components/stateless/MdxEditor/index.jsx`).
+- The editor loads common languages for code highlighting via `lowlight` (see `components/stateless/MdxEditor/index.tsx`).
 - If you bundle Tiptap extensions separately, ensure peer deps like `@floating-ui/dom` and `lowlight` are installed.
 - The component accepts optional props for controlled usage:
   - `initialMarkdown` (string) — 初始 MDX 内容，可用于从文件或接口加载文档。
@@ -56,7 +56,7 @@ If you need more advanced integrations (saving drafts, autosave), pass `initialM
 
 ## Props
 
-该组件支持以下可选 props（已在 `index.jsx` 中使用 `propTypes` 声明）：
+该组件支持以下可选 props（已在 `index.tsx` 中使用 `propTypes` 声明）：
 
 <ArgsTable
   rows={[

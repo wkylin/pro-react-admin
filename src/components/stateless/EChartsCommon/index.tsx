@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
 import * as echarts from 'echarts'
 import { EChartsType } from 'echarts'
 import china from '@assets/map/china.json'
@@ -23,13 +24,14 @@ const EChartsCommon = (props: {
   notMerge?: boolean
   lazyUpdate?: boolean
   option: OptionType
+  style?: CSSProperties
   instanceHandle?: (instance: EChartsType) => void
 }) => {
   const chartHandleRef = useRef<EChartHandle | null>(null)
   const [reinitKey, setReinitKey] = useState(0)
   const reinitSeqRef = useRef(0)
 
-  const { renderer = 'canvas', notMerge = false, lazyUpdate = false, option, instanceHandle } = props
+  const { renderer = 'canvas', notMerge = false, lazyUpdate = false, option, instanceHandle, style } = props
 
   const handleInit = useCallback(
     (chart: EChartsType) => {
@@ -70,6 +72,7 @@ const EChartsCommon = (props: {
         width: state.width,
         height: state.height,
         minHeight: '200px', // 确保容器有最小高度
+        ...style,
       }}
     />
   )

@@ -137,8 +137,8 @@ src/projects/
   <project>/
     index.tsx            # 项目入口（可复用通用 renderApp）
     routers/             # 项目路由（可选，存在则覆盖主路由）
-      index.jsx
-      authRouter.jsx
+      index.tsx
+      authRouter.tsx
     pages/               # 项目页面（可选）
     components/          # 项目组件（可选）
     public/              # 项目静态资源（可选，构建时叠加到 public）
@@ -167,7 +167,7 @@ src/projects/
 
 1) 新建目录：`src/projects/<yourProject>/`
 2) 添加入口：`src/projects/<yourProject>/index.tsx`
-3) （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.jsx`
+3) （可选）添加路由覆盖：`src/projects/<yourProject>/routers/index.tsx`
 4) 新增 pages/components 业务代码
 5) 复制一份脚本（参考 `projectA/projectB`）或直接使用 `cross-env PROJECT=<yourProject> ...` 启动/构建
 

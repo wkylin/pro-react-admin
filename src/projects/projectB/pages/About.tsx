@@ -12,7 +12,7 @@ export default function ProjectBAbout() {
           这是一条 Project B 的独立路由
         </Title>
         <Paragraph>
-          路由定义位于 <Text code>src/projects/projectB/routers/index.jsx</Text>。
+          路由定义位于 <Text code>src/projects/projectB/routers/index.tsx</Text>。
         </Paragraph>
 
         <Button>

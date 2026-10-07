@@ -14,11 +14,11 @@
   - `src/store/modules/appSlice.ts` —— 新增 App slice（包含 `isSidebarOpen`）
   - `src/store/index.ts` —— 组合 store（`useStore`）并添加 `persist`/`devtools` 中间件
   - `src/pages/zustand/index.tsx` —— 新增演示页面（ZustandDemo）
-  - `src/pages/layout/proSider/index.jsx` —— 改造：侧边栏切换由全局 `isSidebarOpen` 控制
-  - `src/pages/layout/index.jsx` —— 移除传入 `collapsed`/`onCollapse` 的调用点
-  - `src/routers/config/lazyLoad.config.jsx` —— 注册 `ZustandDemo` 懒加载组件
-  - `src/routers/modules/business.routes.jsx` —— 添加 `/zustand` 路由并配置 `meta.permission`
-  - `src/config/menu.config.jsx` —— 在主菜单中新增 `Zustand演示` 条目
+  - `src/pages/layout/proSider/index.tsx` —— 改造：侧边栏切换由全局 `isSidebarOpen` 控制
+  - `src/pages/layout/index.tsx` —— 移除传入 `collapsed`/`onCollapse` 的调用点
+  - `src/routers/config/lazyLoad.config.tsx` —— 注册 `ZustandDemo` 懒加载组件
+  - `src/routers/modules/business.routes.tsx` —— 添加 `/zustand` 路由并配置 `meta.permission`
+  - `src/config/menu.config.tsx` —— 在主菜单中新增 `Zustand演示` 条目
   - `docs/Zustand-Migration.md` —— （本文件）记录说明
 - 删除：
   - 项目中原始 Redux demo / action / reducer 文件（已删除冗余 `src/actions` / `src/reducers` 中的示例文件）
@@ -31,10 +31,10 @@
 
 - 侧边栏（ProSider）改造
   - 原来由 `Layout` 组件通过 props `collapsed/onCollapse` 控制的逻辑，已统一改为 `useStore` 中的 `isSidebarOpen` / `toggleSidebar()`。优点：中央化、任何组件可以直接控制侧边栏、保持状态一致。
-  - 修改位置：`src/pages/layout/proSider/index.jsx`、`src/pages/layout/index.jsx`
+  - 修改位置：`src/pages/layout/proSider/index.tsx`、`src/pages/layout/index.tsx`
 
 - 路由与页面
-  - 新增演示页面 `src/pages/zustand/index.tsx`，作为 Zustand 使用示例。通过 `lazyLoad.config.jsx` 注册后在 `business.routes.jsx` 中加入路由并配置权限（`meta.permission`），在 `menu.config.jsx` 新增菜单项。
+  - 新增演示页面 `src/pages/zustand/index.tsx`，作为 Zustand 使用示例。通过 `lazyLoad.config.tsx` 注册后在 `business.routes.tsx` 中加入路由并配置权限（`meta.permission`），在 `menu.config.tsx` 新增菜单项。
 
 - 清理 Redux 代码
   - 项目中原有用于示例的 Redux action/reducer 已删除，且已从依赖中卸载 `redux react-redux @reduxjs/toolkit redux-logger`。若项目还有其它 Redux 依赖点，会在构建/运行时暴露引用错误，请按需删除或替换。
@@ -116,9 +116,9 @@ npm run build:lib
 
 ### 代码层面已做的修改
 
-- 路由：`src/routers/modules/business.routes.jsx` 中新增路由条目 `/zustand`，并在 `meta` 中声明 `permission`（示例为 `['admin','manager','dev','user']`）与 `keepAlive: true`。
-- 懒加载：在 `src/routers/config/lazyLoad.config.jsx` 注册 `ZustandDemo`（`ZustandDemo: lazyLoad(() => import('@pages/zustand'), { preload: true })`）。
-- 菜单：在 `src/config/menu.config.jsx` 中新增菜单项并设置 `i18nKey: 'menu.zustand'`。
+- 路由：`src/routers/modules/business.routes.tsx` 中新增路由条目 `/zustand`，并在 `meta` 中声明 `permission`（示例为 `['admin','manager','dev','user']`）与 `keepAlive: true`。
+- 懒加载：在 `src/routers/config/lazyLoad.config.tsx` 注册 `ZustandDemo`（`ZustandDemo: lazyLoad(() => import('@pages/zustand'), { preload: true })`）。
+- 菜单：在 `src/config/menu.config.tsx` 中新增菜单项并设置 `i18nKey: 'menu.zustand'`。
 - 路由权限映射：`src/mock/permission.ts` 中已包含 `/zustand` 对应的 `routePermissionMap`（`'/zustand': 'zustand:read'`），并在 `mockRoles` 中为部分角色分配了 `zustand:read` 权限（例如 `admin`）。
 
 ### 如何为账号分配角色（开发/测试）
@@ -149,7 +149,7 @@ localStorage.setItem('user_role', 'admin')
 
 ### 修改 i18n key 的建议与示例
 
-- 菜单项已设置 `i18nKey: 'menu.zustand'`（`src/config/menu.config.jsx`）。请在项目的 i18n 字典中添加对应条目，例如：
+- 菜单项已设置 `i18nKey: 'menu.zustand'`（`src/config/menu.config.tsx`）。请在项目的 i18n 字典中添加对应条目，例如：
 
 ```json
 {
@@ -190,8 +190,8 @@ const canAccess = await permissionService.canAccessRoute('/zustand')
 
 ## 操作小结（快速步骤）
 
-1. 添加页面并注册路由：`src/pages/zustand/index.tsx` → `lazyLoad.config.jsx` → `business.routes.jsx`（加 `meta.permission`）
-2. 在 `src/config/menu.config.jsx` 中添加 `i18nKey` 并在本地化文件中添加对应翻译。
+1. 添加页面并注册路由：`src/pages/zustand/index.tsx` → `lazyLoad.config.tsx` → `business.routes.tsx`（加 `meta.permission`）
+2. 在 `src/config/menu.config.tsx` 中添加 `i18nKey` 并在本地化文件中添加对应翻译。
 3. 本地测试权限：使用 `localStorage.setItem('user_role', '<role_code>')` 或使用测试账号登录。
 4. 验证：登录后访问 `/zustand`，或在控制台调用 `permissionService.canAccessRoute('/zustand')`。
 

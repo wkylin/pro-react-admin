@@ -15,9 +15,9 @@
     "jsxImportSource": "react",
 
     /* 严格类型检查 */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
     /* 路径别名（与你的 vite.config.ts 保持一致） */

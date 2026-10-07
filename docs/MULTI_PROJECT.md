@@ -81,10 +81,10 @@ Webpack 构建产物目录：
 2) （可选）创建路由目录：`src/projects/projectC/routers/`
 
 - 如果你想先复用默认路由：
-  - `routers/index.jsx` 里写：
+  - `routers/index.tsx` 里写：
     - `export { default } from '@src/routers'`
     - `export * from '@src/routers'`
-  - `routers/authRouter.jsx` 里写：
+  - `routers/authRouter.tsx` 里写：
     - `export { default } from '@src/routers/authRouter'`
 
 3) （可选）创建静态资源目录：`src/projects/projectC/public/`

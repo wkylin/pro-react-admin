@@ -1,0 +1,434 @@
+import { Smartphone, Monitor, Rocket, Music } from 'lucide-react'
+import type { ComponentType, PropsWithChildren, ReactNode } from 'react'
+import PageContainer from '@stateless/PageContainer'
+import FixTabPanel from '@stateless/FixTabPanel'
+
+import LogoSlider from '@stateless/LogoSlider'
+import StarBack from '@stateless/StarBackground'
+import OrbitingCircles from '@stateless/OrbitingCircles'
+import FixTabs from '@stateless/FixTabs'
+import TagCard from '@stateless/TagCard'
+import DescBox from '@stateless/DescBox'
+import StatisticCard from '@stateless/StatisticCard'
+import TransferHistory from '@stateless/TransferHistory'
+import FixCarousel from '@stateless/FixCarouse'
+import OrgChart from '@stateless/OrgChart'
+import TrapezoidTabs from '@stateless/TrapezoidTabs'
+import MusicPlayer from '@stateless/MusicPlayer'
+import GradientStats from '@stateless/GradientStats'
+import MarketingHero from '@stateless/MarketingHero'
+import ScriptView from '@stateless/ScriptView'
+import ScrollLayout from '@stateless/ScrollLayout'
+import AnimatedList from '@stateless/AnimatedList'
+// import AnimationTabs from '@stateless/AnimationTabs'
+import StickyCard from '@stateless/StickyCard'
+import OverflowText from '@stateless/OverflowText'
+import SafeHtml from '@stateless/SafeHtml'
+import AnimatedIcon from '@stateless/AnimatedIcon'
+import SandpackBasic from '@stateless/SandpackBasic'
+import SpringPng from '@assets/images/spring.png'
+import HePng from '@assets/images/he.png'
+import SongPng from '@assets/images/song.png'
+import XuePng from '@assets/images/xue.png'
+import OneTimePasscode from '@stateless/OneTimePasscode'
+
+const companies = [SpringPng, HePng, SongPng, XuePng]
+
+const fixTabsData = [
+  {
+    id: 1,
+    label: '首页',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">首页</h2>
+        <p>这是首页的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 2,
+    label: '产品',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">产品</h2>
+        <p>这是产品的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 3,
+    label: '服务',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">服务</h2>
+        <p>这是服务的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 4,
+    label: '关于我们',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">关于我们</h2>
+        <p>这是关于我们的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+  {
+    id: 5,
+    label: '联系我们',
+    content: (
+      <div>
+        <h2 className="mb-4 text-xl font-bold">联系我们</h2>
+        <p>这是联系我们的内容区域。您可以在这里添加任何相关内容。</p>
+      </div>
+    ),
+  },
+]
+
+const customCommandMap = {
+  npm: 'npm run shadcn add button',
+  yarn: 'yarn shadcn add button',
+  pnpm: 'pnpm dlx shadcn@latest add button',
+  bun: 'bun x shadcn@latest add button',
+}
+
+const animatedListItems = Array.from({ length: 10 }, (_, index) => ({
+  id: `animated-${index + 1}`,
+}))
+
+const stickyCardItems = Array.from({ length: 4 }, (_, index) => ({
+  id: `sticky-${index + 1}`,
+}))
+
+const tagCardList = [
+  {
+    name: '基础属性标签',
+    tags: [
+      {
+        name: '本地客户',
+      },
+      {
+        name: '建筑行业',
+      },
+      {
+        name: '教育体系客户/医疗体系客户',
+      },
+    ],
+  },
+  {
+    name: '业务属性标签',
+    tags: [
+      {
+        name: '建设工程中重点客户',
+      },
+      {
+        name: '业务数量多',
+      },
+      {
+        name: '复合型客户',
+      },
+      {
+        name: '交易频次高',
+      },
+    ],
+  },
+  {
+    name: '价值评估标签',
+    tags: [
+      {
+        name: '重点客户/一般客户',
+      },
+      {
+        name: '战略合作客户',
+      },
+      {
+        name: '高影响力客户',
+      },
+      {
+        name: '长期委托协议客户',
+      },
+    ],
+  },
+  {
+    name: '风险控制标签',
+    tags: [
+      {
+        name: '信用等级高',
+      },
+      {
+        name: '内控制度完善',
+      },
+      {
+        name: '存在失信记录',
+      },
+      {
+        name: '中风险客户',
+      },
+    ],
+  },
+  {
+    name: '行为特征标签',
+    tags: [
+      {
+        name: '偏好线上客户/电话咨询',
+      },
+      {
+        name: '内控制度完善',
+      },
+      {
+        name: '存在失信记录',
+      },
+      {
+        name: '中风险客户',
+      },
+    ],
+  },
+  {
+    name: '其他标签',
+    tags: [
+      {
+        name: '紧急项目多',
+      },
+      {
+        name: '配合度高',
+      },
+      {
+        name: '推动效率高',
+      },
+      {
+        name: '响应时间长',
+      },
+    ],
+  },
+  {
+    name: '其他标签',
+    tags: [
+      {
+        name: '紧急项目多',
+      },
+      {
+        name: '配合度高',
+      },
+    ],
+  },
+]
+
+const orbitingItems = [
+  {
+    content: (
+      <AnimatedIcon variant="pulse" mode="hover">
+        <Monitor className="h-6 w-6 text-purple-500" />
+      </AnimatedIcon>
+    ),
+    radius: 80,
+    duration: 20,
+    reverse: true,
+  },
+  {
+    content: (
+      <AnimatedIcon variant="bounce" mode="hover">
+        <Smartphone className="h-6 w-6 text-green-500" />
+      </AnimatedIcon>
+    ),
+    radius: 140,
+    duration: 30,
+    delay: 15,
+    reverse: true,
+  },
+  {
+    content: (
+      <AnimatedIcon variant="spin" mode="hover">
+        <Rocket className="h-6 w-6 text-red-500" />
+      </AnimatedIcon>
+    ),
+    radius: 200,
+    duration: 40,
+    reverse: false,
+  },
+]
+
+const statisticItems = [
+  {
+    title: '参与项目数量',
+    value: 10,
+    unit: '宗',
+    icon: 'book',
+    showTooltip: true,
+    tooltipContent: '参与项目：缴纳保证金即为参与',
+    tooltipPlacement: 'top',
+  },
+  {
+    title: '同比增长',
+    value: 20,
+    unit: '%',
+    icon: 'rate',
+    showTooltip: false,
+  },
+]
+
+const FixTabPanelWithChildren = FixTabPanel as unknown as ComponentType<PropsWithChildren>
+const FixTabsWithData = FixTabs as unknown as ComponentType<{
+  tabs: typeof fixTabsData
+}>
+const StatisticCardWithItems = StatisticCard as unknown as ComponentType<{
+  items: typeof statisticItems
+}>
+const GradientStatsWithItems = GradientStats as unknown as ComponentType<{
+  items: string[]
+}>
+const TagCardWithList = TagCard as unknown as ComponentType<{
+  tagCardList: typeof tagCardList
+  showMax?: number
+}>
+const StickyCardWithItems = StickyCard as unknown as ComponentType<{
+  cards: typeof stickyCardItems
+  children?: ReactNode
+}>
+
+const ProDemo = () => {
+  return (
+    <FixTabPanelWithChildren>
+      <PageContainer title={undefined}>
+        <OneTimePasscode length={6} variant="compact" />
+        <div style={{ height: '400px' }}>
+          <ScrollLayout
+            headerHeight={60}
+            footerHeight={60}
+            header={
+              <div className="flex h-full items-center justify-between px-6">
+                <h1 className="text-xl font-bold">ScrollLayout 组件示例</h1>
+              </div>
+            }
+            footer={
+              <div className="flex h-full items-center justify-center text-sm">
+                <p>© 2025 ScrollLayout - 支持自定义样式</p>
+              </div>
+            }
+          >
+            <div className="space-y-4 p-6">
+              <h2 className="text-lg font-semibold">中间内容区域（可滚动）</h2>
+              {Array.from({ length: 30 }, (_, i) => (
+                <div key={i} className="rounded-lg p-4 shadow-sm">
+                  <h3 className="font-medium">内容块 {i + 1}</h3>
+                  <p className="text-muted-foreground mt-2 text-sm">
+                    这是一个灵活的布局组件，支持可选的 header/footer，自定义高度和样式
+                  </p>
+                </div>
+              ))}
+            </div>
+          </ScrollLayout>
+        </div>
+
+        <MusicPlayer />
+        <TransferHistory />
+        <FixCarousel />
+        <ScriptView codeLanguage="shell" commandMap={customCommandMap} className="" />
+        <TrapezoidTabs
+          tabs={[
+            { name: 'tab1', code: 'tab1' },
+            { name: 'tab2', code: 'tab2' },
+            { name: 'tab3', code: 'tab3' },
+          ]}
+          defaultActiveTab="tab1"
+          onTabChange={undefined}
+          className=""
+          style={{}}
+        />
+        <OverflowText
+          text="日有清欢，岁有余庆；月有小盈，年有大成。愿你过尽千帆仍有星辰可追，山海可赴。2026，我们更高处见。2026，打破常规，奔赴热爱，做不被定义的黑马！"
+          maxWidth={undefined}
+          onOverflowChange={undefined}
+          tooltipProps={{ placement: 'top' }}
+        />
+        <div style={{ maxWidth: 300, marginTop: 8 }}>
+          <OverflowText
+            text="这是一个很长的多行文本示例，用于展示多行 clamp 的行为。如果超出行数会显示省略并用 Tooltip 展示完整内容，支持中文和英文混合展示。"
+            lines={2}
+            maxWidth={undefined}
+            onOverflowChange={undefined}
+            tooltipProps={{ placement: 'top' }}
+          />
+        </div>
+        <SandpackBasic />
+        <div className="mt-10 mb-6 rounded-lg border p-4 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold">SafeHtml Demo</h3>
+          <SafeHtml
+            html={`<h2>SafeHtml 极其复杂示例</h2>
+              <p style="color: #333; font-size:14px;" aria-label="demo" data-role="main" data-info="allowed">This paragraph has <strong>bold</strong>, <em>italic</em>, <del>deleted</del>, and <span style="display:inline-block" data-count="3">inline span</span>.</p>
+              <p>Bad link: <a href="javascript:alert('x')" onclick="alert('x')">Click me</a> — Good link: <a href="https://example.com" target="_blank" rel="noopener noreferrer">Example</a></p>
+              <div style="background-image:url('javascript:alert(1)');" data-onclick="hack" data-onexec="evil">Styled div with potentially dangerous style and data attributes</div>
+              <svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="orange" onmouseover="alert(1)"/></svg>
+              <table><caption>Sample Table</caption><thead><tr><th>Col 1</th><th>Col 2</th></tr></thead><tbody><tr><td colspan="2">Merged</td></tr><tr><td>Cell</td><td>Cell</td></tr></tbody></table>
+              <pre><code>const x = 1; console.log(x);</code></pre>
+              <ul><li>Item 1</li><li>Item 2<ul><li>Sub 1</li><li>Sub 2</li></ul></li></ul>
+              <custom-widget data-info="widget" data-onclick="should-be-removed">Custom Element Content</custom-widget>
+              <iframe src="https://evil.com"></iframe>
+              <script>window.demoScript=true;</script>
+              <form action="/submit"><input name="n" value="v"/></form>
+              <p>End of demo — includes many attributes: aria-hidden="true", data-test="ok" <span aria-hidden="true">hidden span</span></p>`}
+            tag="article"
+            fallback={<div>加载中…</div>}
+            className="demo-safehtml"
+            config={{}}
+          />
+        </div>
+
+        <div className="mt-8 mb-6 rounded-lg border p-4 shadow-sm">
+          <h3 className="mb-2 text-lg font-semibold">AnimatedIcon Demo</h3>
+          <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+            <AnimatedIcon variant="spin" mode="hover">
+              <Smartphone className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="pulse" mode="hover">
+              <Monitor className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="bounce" mode="hover">
+              <Rocket className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="draw" mode="hover">
+              <Music className="h-6 w-6 text-gray-700" />
+            </AnimatedIcon>
+            <AnimatedIcon variant="spin" mode="auto">
+              <Rocket className="h-6 w-6 text-red-500" />
+            </AnimatedIcon>
+          </div>
+          <p className="text-muted-foreground mt-2 text-sm">
+            Hover icons to see interaction animations; the rightmost uses <code>mode="auto"</code>.
+          </p>
+        </div>
+
+        <OrbitingCircles items={orbitingItems} />
+        <StarBack />
+
+        <MarketingHero />
+        <FixTabsWithData tabs={fixTabsData} />
+        <StatisticCardWithItems items={statisticItems} />
+        <LogoSlider companies={companies} />
+        <section style={{ height: 240, overflow: 'hidden', margin: 20 }}>
+          <AnimatedList>
+            {animatedListItems.map((item) => (
+              <div key={item.id} className="flex flex-col items-center justify-center gap-4">
+                <div className="flex items-center justify-center gap-4">
+                  <div className="h-16 w-100 rounded-full bg-linear-to-br from-purple-500 to-blue-500" />
+                </div>
+              </div>
+            ))}
+          </AnimatedList>
+        </section>
+
+        <GradientStatsWithItems items={['200+', '400+', '120+', '300+']} />
+        <DescBox />
+        <TagCardWithList tagCardList={tagCardList} showMax={6} />
+        <StickyCardWithItems cards={stickyCardItems} />
+        <section style={{ marginBottom: '15px' }}>
+          <OrgChart />
+        </section>
+        {/* <AnimationTabs tabs={tabs} /> */}
+      </PageContainer>
+    </FixTabPanelWithChildren>
+  )
+}
+
+export default ProDemo

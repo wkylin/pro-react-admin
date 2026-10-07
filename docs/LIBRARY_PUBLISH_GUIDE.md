@@ -254,7 +254,7 @@ npm run pub:beta
 1. **构建报错 "Cannot find module"**:
    - 检查 `vite.config.lib.ts` 中的 `alias` 配置是否包含该路径。
    - 检查 `tsconfig.json` 中的 `paths` 配置。
-   - 确保文件扩展名正确（JSX 文件应为 `.jsx` 或 `.tsx`）。
+   - 确保文件扩展名正确（JSX 文件应为 `.tsx` 或 `.tsx`）。
 
 2. **发布失败 "You do not have permission to publish"**:
    - 检查是否登录了正确的 NPM 账号。

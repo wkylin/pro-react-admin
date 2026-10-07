@@ -54,7 +54,7 @@ export type Resource =
 
 #### 3.1 添加路由定义
 
-**文件**: `src/routers/modules/ui.routes.jsx`
+**文件**: `src/routers/modules/ui.routes.tsx`
 
 在路由配置中添加新页面路由：
 
@@ -71,7 +71,7 @@ export type Resource =
 
 #### 3.2 注册懒加载组件
 
-**文件**: `src/routers/config/lazyLoad.config.jsx`
+**文件**: `src/routers/config/lazyLoad.config.tsx`
 
 添加组件懒加载配置：
 
@@ -83,7 +83,7 @@ const PermissionExample = lazy(() => import('@/pages/permission'))
 
 #### 4.1 更新菜单结构
 
-**文件**: `src/config/menu.config.jsx`
+**文件**: `src/config/menu.config.tsx`
 
 在菜单配置中添加新菜单项：
 
@@ -186,7 +186,7 @@ export const testAccounts: Record<string, { password: string; role: string; name
 
 #### 8.1 登录时权限清理
 
-**文件**: `src/pages/signin/index.jsx`
+**文件**: `src/pages/signin/index.tsx`
 
 在登录成功后清除可能的手动设置角色：
 

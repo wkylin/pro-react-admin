@@ -33,7 +33,7 @@
 
 ### 相关文件
 
-- 拦截器：`src/routers/authRouter.jsx`
-- 路由元数据：`src/routers/index.jsx`（经 `annotateRoutesWithPermissions` 注入）
+- 拦截器：`src/routers/authRouter.tsx`
+- 路由元数据：`src/routers/index.tsx`（经 `annotateRoutesWithPermissions` 注入）
 - 公开路由列表：`src/routers/config/publicRoutes.ts`
 - 权限服务：`src/service/permissionService.ts`

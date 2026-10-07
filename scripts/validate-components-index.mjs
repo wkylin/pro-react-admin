@@ -4,7 +4,7 @@ import path from 'node:path'
 const projectRoot = process.cwd()
 const indexTs = path.join(projectRoot, 'src', 'components', 'index.ts')
 
-const DEFAULT_EXTS = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs']
+const DEFAULT_EXTS = ['.ts', '.tsx', '.js', '.mjs', '.cjs']
 
 function fileExists(filePath) {
   try {

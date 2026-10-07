@@ -1,0 +1,177 @@
+import AnimatedIcon from '@stateless/AnimatedIcon'
+import React, { useState, useEffect } from 'react'
+import { MapPin, Globe, Network, Loader2, RefreshCw } from 'lucide-react'
+
+interface IpApiResponse {
+  ip?: string
+  country_name?: string
+  region?: string
+  city?: string
+  org?: string
+  asn?: string
+  error?: boolean
+  reason?: string
+}
+
+const isIpApiResponse = (value: unknown): value is IpApiResponse => {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return false
+  }
+
+  const response = value as Record<string, unknown>
+  return (
+    (response.ip === undefined || typeof response.ip === 'string') &&
+    (response.country_name === undefined || typeof response.country_name === 'string') &&
+    (response.region === undefined || typeof response.region === 'string') &&
+    (response.city === undefined || typeof response.city === 'string') &&
+    (response.org === undefined || typeof response.org === 'string') &&
+    (response.asn === undefined || typeof response.asn === 'string') &&
+    (response.error === undefined || typeof response.error === 'boolean') &&
+    (response.reason === undefined || typeof response.reason === 'string')
+  )
+}
+
+const UserIP = (): React.JSX.Element => {
+  const [ipData, setIpData] = useState<IpApiResponse | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchIpInfo = async (signal?: AbortSignal): Promise<void> => {
+    setLoading(true)
+    setError(null)
+    try {
+      // 备选方案：
+      // 1. ipapi.co (推荐，支持 HTTPS，JSON 格式友好)
+      // 2. ip-api.com (注意：免费版仅支持 HTTP，HTTPS 站点调用会报错)
+      // 3. db-ip.com (每天限制次数)
+
+      // 这里使用 ipapi.co，它支持 HTTPS 且字段比较标准
+      const response = await fetch('https://ipapi.co/json/', { signal })
+
+      if (!response.ok) {
+        throw new Error('网络请求失败')
+      }
+
+      const data: unknown = await response.json()
+
+      if (!isIpApiResponse(data)) {
+        throw new Error('获取 IP 信息失败')
+      }
+
+      if (data.error) {
+        throw new Error(data.reason || '获取 IP 信息失败')
+      }
+
+      setIpData(data)
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return
+      console.error('IP Fetch Error:', err)
+      setError('无法获取位置信息，请检查网络设置')
+    } finally {
+      if (!signal?.aborted) {
+        setLoading(false)
+      }
+    }
+  }
+
+  const handleRetry: React.MouseEventHandler<HTMLButtonElement> = () => {
+    void fetchIpInfo()
+  }
+
+  useEffect(() => {
+    const controller = new AbortController()
+    void fetchIpInfo(controller.signal)
+    return () => controller.abort()
+  }, [])
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-xl border border-red-200 bg-red-50 p-6 text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
+        <p className="mb-2 font-medium">{error}</p>
+        <button
+          onClick={handleRetry}
+          className="flex items-center gap-2 rounded-lg bg-red-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-red-200 dark:bg-red-900/40 dark:hover:bg-red-900/60"
+        >
+          <AnimatedIcon variant="spin" mode="hover">
+            <RefreshCw size={16} />
+          </AnimatedIcon>{' '}
+          重试
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900 dark:shadow-neutral-900/50">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-lg font-semibold text-neutral-900 dark:text-neutral-100">当前网络信息</h2>
+        {loading && (
+          <AnimatedIcon variant="spin" mode="hover">
+            <Loader2 className="animate-spin text-neutral-400" size={20} />
+          </AnimatedIcon>
+        )}
+      </div>
+      <div className="grid gap-6 md:grid-cols-3">
+        {/* IP Address */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+            <AnimatedIcon variant="spin" mode="hover">
+              <Globe size={16} />
+            </AnimatedIcon>
+            <span>IP 地址</span>
+          </div>
+          <div className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
+            {loading ? (
+              <div className="h-7 w-32 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+            ) : (
+              ipData?.ip
+            )}
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+            <AnimatedIcon variant="spin" mode="hover">
+              <MapPin size={16} />
+            </AnimatedIcon>
+            <span>地理位置</span>
+          </div>
+          <div className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
+            {loading ? (
+              <div className="h-7 w-48 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+            ) : (
+              <span>
+                {ipData?.country_name} {ipData?.region} {ipData?.city}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* ISP */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+            <AnimatedIcon variant="spin" mode="hover">
+              <Network size={16} />
+            </AnimatedIcon>
+            <span>网络服务商</span>
+          </div>
+          <div className="text-lg font-medium text-neutral-900 dark:text-neutral-100">
+            {loading ? (
+              <div className="h-7 w-40 animate-pulse rounded bg-neutral-200 dark:bg-neutral-800" />
+            ) : (
+              ipData?.org || ipData?.asn || '未知'
+            )}
+          </div>
+        </div>
+      </div>
+      {!loading && ipData && (
+        <div className="mt-6 border-t border-neutral-100 pt-4 text-xs text-neutral-400 dark:border-neutral-800 dark:text-neutral-500">
+          数据来源: {ipData.org}
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default UserIP

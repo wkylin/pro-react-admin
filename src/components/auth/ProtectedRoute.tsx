@@ -13,6 +13,12 @@ interface ProtectedRouteProps {
   fallback?: React.ReactNode
 }
 
+const readToken = (value: unknown): string | null => {
+  if (typeof value !== 'object' || value === null || !('token' in value)) return null
+  const token = value.token
+  return typeof token === 'string' ? token : null
+}
+
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   permission,
@@ -21,7 +27,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   fallback,
 }) => {
   // Token 检查（保持原有逻辑）
-  const { token } = getLocalStorage('token') || getLocalStorage('github_token') || { token: null }
+  const token = readToken(getLocalStorage('token')) ?? readToken(getLocalStorage('github_token'))
 
   // 如果没有传入权限/角色要求，直接渲染（保持向下兼容）
   const needCheck = !!permission || (roles && roles.length > 0)

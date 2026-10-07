@@ -37,10 +37,10 @@
 
 ## 2. 代码位置与关键文件
 
-- 组件：`src/components/stateless/SmartVideoPlayer/index.jsx`
+- 组件：`src/components/stateless/SmartVideoPlayer/index.tsx`
 - 样式：`src/components/stateless/SmartVideoPlayer/index.module.css`
 - HTML5 video Hook：`src/components/hooks/useVideo/index.tsx`
-- 示例页面：`src/pages/video/index.jsx`
+- 示例页面：`src/pages/video/index.tsx`
 
 ---
 

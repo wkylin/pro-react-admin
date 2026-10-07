@@ -17,7 +17,7 @@ function walk(dir, fileList = []) {
     const full = path.join(dir, file)
     if (fs.statSync(full).isDirectory()) {
       walk(full, fileList)
-    } else if (/\.jsx?$/.test(full) || /\.tsx?$/.test(full) || /\.ts$/.test(full)) {
+    } else if (/\.tsx?$/.test(full) || /\.tsx?$/.test(full) || /\.ts$/.test(full)) {
       fileList.push(full)
     }
   })

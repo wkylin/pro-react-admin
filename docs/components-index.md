@@ -26,7 +26,7 @@
 
 当你新增了一个要对外发布的组件（或对外发布的 hooks / utils / types），需要：
 
-1. 确保组件本体在 `src/components/stateless/*` 或 `src/components/stateful/*` 或 `src/components/*`（核心组件）下有可导入的入口文件（通常是 `index.tsx` / `index.ts` / `index.jsx`）
+1. 确保组件本体在 `src/components/stateless/*` 或 `src/components/stateful/*` 或 `src/components/*`（核心组件）下有可导入的入口文件（通常是 `index.tsx` / `index.ts` / `index.tsx`）
 2. 在 `src/lib/index.ts` 增加对应的 `export`
 3. 运行一次 `npm run build:lib` 验证能生成类型与产物
 

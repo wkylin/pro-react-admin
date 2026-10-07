@@ -7,8 +7,8 @@
 ### 1. 路由 Key / Path 强制统一
 - **变更**：全量重构了路由配置，强制 **`key` 必须等于绝对路径 `path`**。
 - **影响范围**：
-  - `src/config/menu.config.jsx`: 菜单配置现已完全使用 path 作为唯一标识。
-  - `src/routers/modules/*.jsx`: 移除了所有手动指定的 `key`，由 `normalizeRouteTree` 自动生成。
+  - `src/config/menu.config.tsx`: 菜单配置现已完全使用 path 作为唯一标识。
+  - `src/routers/modules/*.tsx`: 移除了所有手动指定的 `key`，由 `normalizeRouteTree` 自动生成。
 - **目的**：解决 ProTabs 多标签页中因 `/route` 与 `route` 不一致导致的标签重复、无法关闭、高亮丢失等问题。
 - **开发注意**：
   - 新增路由时，**不要**再手动写 `key` 字段。
@@ -22,7 +22,7 @@
 
 ### 1. 路由定义与调整
 
-- **嵌套路由必须一键对齐完整 URL**：`src/routers/modules/nested.routes.jsx` 中所有 `key` 值等于页面最终路径，`index: true` 的子路由直接继承父级路径，不允许使用 `/xxx/index` 等派生写法。菜单高亮、面包屑、权限校验均依赖该字段。
+- **嵌套路由必须一键对齐完整 URL**：`src/routers/modules/nested.routes.tsx` 中所有 `key` 值等于页面最终路径，`index: true` 的子路由直接继承父级路径，不允许使用 `/xxx/index` 等派生写法。菜单高亮、面包屑、权限校验均依赖该字段。
 - **中间层级强制使用 `<Outlet />`**：含子路由的节点（如 `/tech/frontend`、`/tech/frontend/plugins`）统一渲染 `<Outlet />` 并挂载 `RouterErrorElement`，保证错误边界在每个模块内生效。
 - **分区级兜底页面**：每个模块新增 `path: '*'` 的 SectionNotFound，组件本身根据 `pathname` 计算“模块首页”路径，提供“返回模块首页/返回全局首页”两个按钮，避免从 404 直接掉到根路由。
 - **懒加载集中管理**：所有子页面指向 `lazyComponents`，配合 v7 的 `createHashRouter`，减少升级后 `Suspense`/`lazy` 组合的重复逻辑。

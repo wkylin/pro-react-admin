@@ -4,7 +4,7 @@ const path = require('path')
 
 function resolveTargetFile(provided) {
   if (provided) return path.resolve(provided)
-  return path.join(__dirname, '..', 'src', 'pages', 'svgViewer', 'index.jsx')
+  return path.join(__dirname, '..', 'src', 'pages', 'svgViewer', 'index.tsx')
 }
 
 function readFile(fp) {
@@ -147,7 +147,7 @@ function usage() {
   console.log('  replace-br      : replace <br> with <br/> inside SVG_SOURCE')
   console.log('  fix-unclosed-g  : insert missing </g> before </svg> to balance <g> tags')
   console.log('\nOptions:')
-  console.log('  --file=PATH     : specify target file (defaults to src/pages/svgViewer/index.jsx)')
+  console.log('  --file=PATH     : specify target file (defaults to src/pages/svgViewer/index.tsx)')
 }
 
 function main() {

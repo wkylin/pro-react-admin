@@ -368,7 +368,7 @@ console.log(request.getActiveRequestCount())
 
 - 📖 [完整文档](./REQUEST_ENCRYPTION.md)
 - 🔧 [配置示例](../src/config/encryption.example.js)
-- 🧪 [测试页面](../src/pages/crypto/index.jsx)
+- 🧪 [测试页面](../src/pages/crypto/index.tsx)
 - 📝 [API 文档](../src/service/request.js)
 
 ---
