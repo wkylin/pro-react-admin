@@ -87,7 +87,7 @@ sonar-scanner -Dsonar.token=
     {
       "label": "SonarQube 一键完整扫描",
       "type": "shell",
-      "command": "npm run test:coverage && sonar-scanner",
+      "command": "pnpm run test:coverage && sonar-scanner",
       "options": {
         "env": {
           "SONAR_TOKEN": ""

@@ -148,7 +148,7 @@ const PROMPT_PRESETS: { id: string; name: string; summary: string; tags: string[
       role: '平台发布架构师',
       objective: '为一个前端控制台设计发布方案，兼顾灰度、回滚、监控和值班交接。',
       audience: '前端负责人、SRE、测试经理',
-      context: '项目同时支持 webpack 和 vite 构建，需要兼容旧链路与新链路的发布节奏。',
+      context: '项目使用 Webpack 构建，需要兼顾灰度发布、回滚和线上观测。',
       constraints: '必须包含风险矩阵、回滚触发条件、观测指标和灰度计划。',
       outputFormat: '先给一句总结，再输出发布步骤表格，最后给值班 Runbook。',
       examples: '请解释如何在 SSE 或实时流能力上线时做灰度和埋点。',

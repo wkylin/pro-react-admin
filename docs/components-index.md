@@ -1,65 +1,32 @@
-# components/index.ts 维护说明（内部 barrel）
+# 组件库入口维护
 
-本项目存在两个“入口”概念：
+仓库中有两个导出边界：
 
-- **对外发布（build:lib）入口**：`src/lib/index.ts`（只包含可复用组件，避免把路由/页面代码打进 lib）
-- **项目内部 barrel**：`src/components/index.ts`（应用内部使用，包含更全的导出，可能会引用路由/页面相关组件）
+- `src/components/index.ts` 是应用内部 barrel，可供应用模块复用。
+- `src/lib/` 是 `@w.ui/wui-react` 的公开 API，只有这里导出的内容进入 npm 包。
 
-另外，对外发布目前还有一套“子路径多入口”的入口体系（用于更细粒度按需导入）：
+## 公开入口
 
-- **对外发布（build:lib:entries）入口**：
-  - `src/lib/core.ts`
-  - `src/lib/stateful.ts`
-  - `src/lib/stateless.ts`
+- `src/lib/index.ts`：聚合入口 `@w.ui/wui-react`
+- `src/lib/core.ts`：`@w.ui/wui-react/core`
+- `src/lib/stateful.ts`：`@w.ui/wui-react/stateful`
+- `src/lib/stateless.ts`：`@w.ui/wui-react/stateless`
+- `src/lib/tracking/index.ts`：`@w.ui/wui-react/tracking`
 
-- `vite.config.lib.ts` 的 `build.lib.entry` 指向 `src/lib/index.ts`
-- `npm run build:lib` 会基于它生成 `dist-lib/*`（包含 JS bundle 与 d.ts）
+Webpack 配置位于 `webpack/webpack.lib.js`，类型由 `tsconfig.lib.json` 生成。构建命令是 `pnpm run build:lib` 和 `pnpm run build:lib:entries`。
 
-- `vite.config.lib.entries.ts` 会基于 `core/stateful/stateless` 三入口生成 `dist-lib/entries/*`
-- `npm run build:lib:entries` 会生成可被 `package.json#exports` 子路径引用的 js + d.ts
+## 新增导出
 
-因此：**只有在 `src/lib/index.ts` 里导出的组件/工具，才会成为对外可用的库 API**。
+1. 将组件放在 `src/components/stateless/`、`src/components/stateful/` 或 `src/components/`。
+2. 从对应的 `src/lib/*.ts` 入口导出。
+3. 需要兼容聚合导入时，同时从 `src/lib/index.ts` 导出。
+4. 运行 `pnpm run build:lib && pnpm run build:lib:entries`。
+5. 检查 `dist-lib/` 产物和 `package.json#exports`。
 
-并且：**如果你希望消费者能通过 `@w.ui/wui-react/core|stateful|stateless` 按子路径导入，则还必须在对应的 `src/lib/*.ts` 入口里导出**。
+```ts
+export { default as MyComponent } from '../components/stateless/MyComponent'
+```
 
-## 什么时候需要改这个文件
+Storybook 的 `*.stories.*` 和 `*.mdx` 是演示内容，不要加入库入口。组件样式由 `@w.ui/wui-react/style.css` 提供。
 
-当你新增了一个要对外发布的组件（或对外发布的 hooks / utils / types），需要：
-
-1. 确保组件本体在 `src/components/stateless/*` 或 `src/components/stateful/*` 或 `src/components/*`（核心组件）下有可导入的入口文件（通常是 `index.tsx` / `index.ts` / `index.tsx`）
-2. 在 `src/lib/index.ts` 增加对应的 `export`
-3. 运行一次 `npm run build:lib` 验证能生成类型与产物
-
-> 注意：Storybook 的 `*.stories.*` / `*.mdx` **不应** 被导出，它们只是文档/演示。
-
-## 推荐目录与导出约定
-
-### 1) 组件实现位置
-
-- UI/展示类：优先放 `src/components/stateless/<ComponentName>/`
-- 需要状态/数据处理：放 `src/components/stateful/<ComponentName>/`
-- 项目级“核心壳/容器”能力：放 `src/components/<ComponentName>/`（例如 `ErrorBoundary`、`KeepAlive` 等）
-
-### 2) 入口文件
-
-推荐每个组件目录提供一个稳定入口（至少一个）：
-
-- `index.tsx`：导出 React 组件（默认导出）
-- `index.ts`：导出类型、常量、hooks 等
-
-保持一致的好处：`components/index.ts` 只需要写一行清晰的 re-export。
-
-### 3) 对外导出的命名
-
-- 默认导出组件：使用 `export { default as Xxx } from '...'`
-- 命名导出：使用 `export { Foo, Bar } from '...'` 或 `export * from '...'`
-
-尽量保证导出名与目录名一致（`SmartVideoPlayer` ↔ `stateless/SmartVideoPlayer`）。
-
-## 修改 checklist（建议每次都跑）
-
-1. `src/lib/index.ts` 已新增 export（对外发布 API）
-2. （可选）若你同时维护了 `src/components/index.ts`：`npm run check:components-index` 通过（避免漏加/写错导出路径）
-3. `npm run build:lib` 成功（产物 + d.ts）
-4. 如果该组件有样式（`.module.less/.css`），在消费侧能正常引入
-5. 如果该组件依赖路由/i18n 等上下文，在 Storybook 里可正常预览（可选，但建议）
+详细发布流程见[组件库指南](./LIBRARY_PUBLISH_GUIDE.md)。

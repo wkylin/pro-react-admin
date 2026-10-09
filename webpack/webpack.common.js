@@ -1,32 +1,48 @@
 import path, { dirname } from 'path'
+import { createRequire } from 'node:module'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import AntdDayjsWebpackPlugin from 'antd-dayjs-webpack-plugin'
-import Dotenv from 'dotenv-webpack'
 import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin'
 // import CircularDependencyPlugin from 'circular-dependency-plugin'
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
 import WebpackBar from 'webpackbar'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import ESLintWebpackPlugin from 'eslint-webpack-plugin'
-import { codeInspectorPlugin } from 'code-inspector-plugin'
+import WebpackCodeInspectorPlugin from '@code-inspector/webpack'
 import webpack from 'webpack'
 import paths from './paths.js'
-import { generateRemotesConfig, parseRemotesFromEnv } from './mfe.config.js'
+import { createPathAliases } from './aliases.js'
+import { generateRemotesConfig } from './mfe.config.js'
+import RemoteManifestPlugin from './remote-manifest-plugin.js'
+import { bundleBudget } from './bundle-budget.js'
+import { clientEnvKeys } from './client-env.js'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 import fs from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const require = createRequire(import.meta.url)
 
 const isDev = process.env.NODE_ENV === 'development'
 const isAnalyze = Boolean(Number(process.env.USE_ANALYZE || 0))
+const isStatsOnly = process.env.STATS_ONLY === '1'
 
 const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
 const isMfeHost = mfeRole === 'host'
 const isMfeRemote = mfeRole === 'remote'
 const isMfeEnabled = isMfeHost || isMfeRemote
+
+if (mfeRole && !isMfeEnabled) {
+  throw new Error('[webpack] MFE_ROLE must be either \"host\" or \"remote\"')
+}
+if (isMfeHost && paths.projectName !== 'shell') {
+  throw new Error('[webpack] MFE_ROLE=host requires PROJECT=shell')
+}
+if (isMfeRemote && !paths.project.mfeExpose) {
+  throw new Error('[webpack] MFE_ROLE=remote requires a registered Remote project')
+}
 
 const toMfeName = (name) => {
   const raw = (name || '').toString().trim() || 'app'
@@ -71,10 +87,18 @@ switch (process.env.BUILD_GOAL) {
     dotEnv = '.env.development'
 }
 
-// Ensure PUBLIC_URL (and other env vars) are available to this webpack config file.
-// Note: dotenv-webpack injects env vars into the bundle, but it doesn't affect the
-// Node.js process.env used while generating the webpack configuration.
-dotenv.config({ path: path.resolve(__dirname, '..', dotEnv) })
+// Load base and local overrides without replacing values provided by CI/Vercel.
+const externallyProvidedEnvKeys = new Set(Object.keys(process.env))
+for (const envPath of [
+  path.resolve(__dirname, '..', dotEnv),
+  path.resolve(__dirname, '..', dotEnv + '.local'),
+]) {
+  if (!fs.existsSync(envPath)) continue
+  const values = dotenv.parse(fs.readFileSync(envPath, 'utf8'))
+  for (const [key, value] of Object.entries(values)) {
+    if (!externallyProvidedEnvKeys.has(key)) process.env[key] = value
+  }
+}
 
 // GitHub Pages typically serves the site under "/<repo>/".
 // When building in GitHub Actions and PUBLIC_URL isn't explicitly provided,
@@ -108,6 +132,20 @@ const rawPublicUrl = process.env.PUBLIC_URL
 const prodPublicPath = normalizePublicPath(
   rawPublicUrl ||
     (process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_ACTIONS === '1' ? inferredGhPagesPublicUrl : '')
+)
+
+// Keep the browser-facing value consistent with Webpack's asset base path on GitHub Pages.
+if (
+  process.env.PUBLIC_URL === undefined &&
+  (process.env.GITHUB_ACTIONS === 'true' || process.env.GITHUB_ACTIONS === '1') &&
+  inferredGhPagesPublicUrl
+) {
+  process.env.PUBLIC_URL = inferredGhPagesPublicUrl
+}
+
+// Only values in this explicit browser allowlist are passed to DefinePlugin.
+const clientEnv = Object.fromEntries(
+  clientEnvKeys.filter((key) => process.env[key] !== undefined).map((key) => [key, process.env[key]])
 )
 
 const config = {
@@ -151,20 +189,10 @@ const config = {
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.tsx', '...'],
     alias: {
-      '@assets/audio': path.resolve('./src/assets/audio'),
-      '@assets/video': path.resolve('./src/assets/video'),
-      '@': path.resolve('./src'),
-      '@src': path.resolve('./src'),
-      '@app': paths.appDir,
-      '@stateless': path.resolve('./src/components/stateless'),
-      '@stateful': path.resolve('./src/components/stateful'),
-      '@hooks': path.resolve('./src/components/hooks'),
-      '@app-hooks': path.resolve('./src/app-hooks'),
-      '@assets': path.resolve('./src/assets'),
-      '@pages': path.resolve('./src/pages'),
-      '@routers': paths.routersDir,
-      '@utils': path.resolve('./src/utils'),
-      '@theme': path.resolve('./src/theme'),
+      ...createPathAliases(path.resolve(__dirname, '..'), {
+        '@app': paths.appDir,
+        '@routers': paths.routersDir,
+      }),
       // 确保关键依赖只有一个实例，避免 zustand middleware 错误
       'zustand': path.resolve('./node_modules/zustand'),
       'immer': path.resolve('./node_modules/immer'),
@@ -174,11 +202,12 @@ const config = {
     symlinks: true,
   },
   plugins: [
-    new Dotenv({
-      path: path.resolve(__dirname, '..', dotEnv),
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(clientEnv),
     }),
-    codeInspectorPlugin({
+    new WebpackCodeInspectorPlugin({
       bundler: 'webpack',
+      output: dirname(require.resolve('@code-inspector/webpack')),
     }),
     new HtmlWebpackPlugin({
       title:
@@ -234,6 +263,17 @@ const config = {
       cache: false, // 禁用/开启缓存
       cacheLocation: path.resolve(__dirname, '../node_modules/.cache/.eslintcache'), // 缓存目录
     }),
+    ...(isMfeRemote
+      ? [
+          new RemoteManifestPlugin({
+            projectName: paths.projectName,
+            version: packageJson.version,
+            sharedDependencies: Object.fromEntries(
+              ['react', 'react-dom'].filter((name) => deps[name]).map((name) => [name, deps[name]])
+            ),
+          }),
+        ]
+      : []),
   ],
   module: {
     // 将缺失的导出提示成错误而不是警告
@@ -373,7 +413,16 @@ const config = {
     ],
   },
   stats: {
-    ...(isAnalyze
+    ...(isStatsOnly
+      ? {
+          all: false,
+          assets: true,
+          entrypoints: true,
+          errors: true,
+          warnings: true,
+          errorDetails: true,
+        }
+      : isAnalyze
       ? {
           preset: 'verbose',
           assets: true,
@@ -401,8 +450,8 @@ const config = {
   // 性能提示
   performance: {
     hints: isDev ? false : 'warning',
-    maxEntrypointSize: 6 * 1024 * 1024,
-    maxAssetSize: 6 * 1024 * 1024,
+    maxEntrypointSize: bundleBudget.initialJavaScriptCssBytes,
+    maxAssetSize: bundleBudget.singleJavaScriptCssAssetBytes,
   },
 }
 
@@ -423,8 +472,7 @@ if (isMfeEnabled) {
 
   const resolveExpose = () => {
     if (!isMfeRemote) return {}
-    const project = (paths.projectName || 'default').toString()
-    const candidate = path.resolve(__dirname, `../src/projects/${project}/mfe/App.tsx`)
+    const candidate = paths.mfeExpose
     if (!fs.existsSync(candidate)) {
       // eslint-disable-next-line no-console
       console.warn(`[mfe] Missing expose file: ${candidate}`)
@@ -454,7 +502,7 @@ if (isMfeEnabled) {
   )
 }
 
-if (USE_ANALYZE) {
+if (USE_ANALYZE && !isStatsOnly) {
   config.plugins.push(new BundleAnalyzerPlugin())
 }
 

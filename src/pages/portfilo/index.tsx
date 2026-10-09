@@ -172,8 +172,8 @@ const MyPortfilo = () => {
   const projects = [
     {
       title: 'Pro React Admin',
-      desc: 'A comprehensive enterprise-level admin dashboard template based on React, Ant Design, and Vite.',
-      tags: ['React', 'Ant Design', 'Vite'],
+      desc: 'A comprehensive enterprise-level admin dashboard template based on React, Ant Design, and Webpack.',
+      tags: ['React', 'Ant Design', 'Webpack'],
       icon: (
         <AnimatedIcon variant="spin" mode="hover">
           <LaptopOutlined />

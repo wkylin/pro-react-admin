@@ -117,7 +117,6 @@ const zh = {
 
     buildTools: '构建工具',
     webpack: 'Webpack',
-    vite: 'Vite',
 
     error: '错误',
     errorBoundary: '错误边界',

@@ -1,41 +1,37 @@
-## 构建瘦身与体积分布基线
+# Webpack 构建体积基线
 
-### 目标
+实际构建数据不再手工抄在文档里。CI 在稳定的 Node.js 24、pnpm 11.5.2 和默认生产构建下生成 `compilation-stats.json`，并把文件保存为 14 天的 workflow artifact。
 
-- 通过 Vite 构建产出组件库，并按需生成体积分布报告，作为后续瘦身的基线。
-- 保持默认构建轻量，只有显式开启分析时才生成报告文件。
+## 当前门禁
 
-### 使用方式
+`config/bundle-budget.json` 是 Webpack performance hint 与 CI 检查共用的预算来源：
 
-- 常规库构建：
+- 初始 JavaScript + CSS entrypoint 总量：6 MiB。
+- 单个初始 JavaScript/CSS 资源：6 MiB。
 
-```bash
-npm run build:lib
-```
+这是构建输出的未压缩字节数。它是保护上限，不是当前实际体积的声明；当前实测值应从最近一次 CI 的 `webpack-stats-<run id>` artifact 查看。超过上限时，CI 会失败并打印各初始资源大小。不要只为通过 CI 就上调预算，应先检查同步加载页面、重复依赖和大资源。
 
-- 多入口子路径构建（用于 `exports` 子路径按需导入的基线产物）：
+## 本地生成相同数据
 
 ```bash
-npm run build:lib:entries
+CI=1 PUBLIC_URL=/ pnpm run build:stats
+pnpm run check:bundle-budget
 ```
 
-输出：`dist-lib/entries/*`（包含 `core/stateful/stateless` 的 `*.es.js`、`*.cjs.js` 与对应 `*.d.ts`）。
+`CI=1` 使媒体优化生命周期与 CI 一样跳过；设置 `OPTIMIZE_MEDIA=1` 会显式强制优化媒体，因此这两种数据不适合直接比较。构建目标、Node/pnpm 版本和环境变量应一致。
 
-- 生成 bundle 体积分布报告（treemap，含 gzip/brotli）：
+## 详细归因
+
+如需 Bundle Analyzer 的可视化模块树，运行：
 
 ```bash
-npm run build:lib:analyze
-# 等价命令：npm run analyze:lib
+pnpm run analyze:build
 ```
 
-输出：`dist-lib/bundle-report.html`。
+组件库使用独立分析命令：
 
-### 实现要点
+```bash
+pnpm run build:lib:analyze
+```
 
-- `vite.config.lib.ts` 中集成 `rollup-plugin-visualizer`，用 `USE_ANALYZE=1` 控制是否启用，避免常规构建额外开销。
-- 报告文件随构建生成，可用于 PR 附件或本地对比。
-
-### 后续可选
-
-- 在 CI 中为 release 或特定分支自动生成报告并上传为构建工件。
-- 配置 size budget（如限制单 bundle 体积）并在超限时失败。
+分析报告用于查找优化方向；只有 entrypoint/asset 预算是 CI 门禁。具体性能优化建议见[构建与包体优化说明](./build-and-bundle-optimizations.md)。

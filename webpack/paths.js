@@ -5,11 +5,25 @@ import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const root = resolve(__dirname, '..')
+const src = resolve(root, 'src')
+const registryPath = resolve(src, 'projects/registry.json')
+const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
 
 const projectName = (() => {
   const raw = (process.env.PROJECT || 'default').toString().trim()
   return raw || 'default'
 })()
+
+const project = Object.hasOwn(registry.projects, projectName) ? registry.projects[projectName] : undefined
+if (!project) {
+  throw new Error(
+    '[webpack] Unknown PROJECT="' +
+      projectName +
+      '". Registered projects: ' +
+      Object.keys(registry.projects).join(', ')
+  )
+}
 
 const existsDir = (p) => {
   try {
@@ -27,23 +41,25 @@ const existsFile = (p) => {
   }
 }
 
-const src = resolve(__dirname, '../src')
-const basePublicDir = resolve(__dirname, '../public')
-const projectRootDir = projectName === 'default' ? '' : resolve(src, 'projects', projectName)
-const projectPublicDir = projectRootDir ? resolve(projectRootDir, 'public') : ''
-const projectRoutersDir = projectRootDir ? resolve(projectRootDir, 'routers') : ''
+const basePublicDir = resolve(root, 'public')
+const projectRootDir = resolve(src, project.sourceRoot)
+const projectPublicDir = projectName === 'default' ? '' : resolve(projectRootDir, 'public')
+const projectRoutersDir = resolve(projectRootDir, project.routers)
+const entry = resolve(projectRootDir, project.entry)
+const mfeExpose = project.mfeExpose ? resolve(projectRootDir, project.mfeExpose) : undefined
+const build = resolve(root, project.output)
 
-const entry = (() => {
-  if (projectName === 'default') return resolve(src, 'index.tsx')
-  const candidate = resolve(projectRootDir, 'index.tsx')
-  if (existsFile(candidate)) return candidate
-  // Fail-safe: keep default app runnable even if project entry is missing.
-  // eslint-disable-next-line no-console
-  console.warn(`[webpack] PROJECT="${projectName}" entry not found: ${candidate} (fallback to default src/index.tsx)`)
-  return resolve(src, 'index.tsx')
-})()
-
-const build = resolve(__dirname, projectName === 'default' ? '../dist' : `../dist-${projectName}`)
+if (!existsFile(entry)) {
+  throw new Error('[webpack] Entry for PROJECT="' + projectName + '" does not exist: ' + entry)
+}
+if (!existsDir(projectRoutersDir)) {
+  throw new Error('[webpack] Router directory for PROJECT="' + projectName + '" does not exist: ' + projectRoutersDir)
+}
+if (process.env.MFE_ROLE === 'remote' && (!mfeExpose || !existsFile(mfeExpose))) {
+  throw new Error(
+    '[webpack] PROJECT="' + projectName + '" does not define a valid mfeExpose entry in ' + registryPath
+  )
+}
 
 const htmlTemplate = (() => {
   const candidate = projectPublicDir ? resolve(projectPublicDir, 'index.html') : ''
@@ -55,31 +71,24 @@ const favicon = (() => {
   return existsFile(candidate) ? candidate : resolve(basePublicDir, 'favicon.ico')
 })()
 
-const appDir = projectRootDir && existsDir(projectRootDir) ? projectRootDir : src
-const routersDir = projectRoutersDir && existsDir(projectRoutersDir) ? projectRoutersDir : resolve(src, 'routers')
-
+const appDir = projectRootDir
+const routersDir = projectRoutersDir
 const devServerStatic = [projectPublicDir, basePublicDir].filter((p) => existsDir(p))
 
 const copyPublicDirs = [basePublicDir]
 if (projectPublicDir && existsDir(projectPublicDir) && projectPublicDir !== basePublicDir) {
-  // Place project public last so it can override base public assets.
   copyPublicDirs.push(projectPublicDir)
 }
 
 export default {
-  // Source files
   projectName,
+  project,
   src,
-
   entry,
-
+  mfeExpose,
   appDir,
   routersDir,
-
-  // Production build files
   build,
-
-  // Static files that get copied to build folder
   public: basePublicDir,
   projectPublic: projectPublicDir,
   htmlTemplate,

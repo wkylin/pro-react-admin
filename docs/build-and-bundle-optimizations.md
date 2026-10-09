@@ -1,6 +1,8 @@
 # 构建与包体优化说明（Pro React Admin）
 
-本文档用于记录本项目已落地的构建/部署优化，以及仍建议继续推进的体积治理方向。
+本文档记录此前的构建/部署优化和历史分析线索。当前体积以 [Webpack 构建体积基线](./BUILD_BASELINE.md) 的 CI artifact 为准。
+
+> 当前构建入口已统一为 Webpack。下方具体 chunk/asset 数值来自 2026-03-09，作为历史线索保留，不能视为当前构建测量。优化前先用当前 stats 复核文件和依赖归因。
 
 ## 目标与约束
 
@@ -16,14 +18,11 @@
 - 删除了无引用的权限目录（`src/permission`）。
 - 影响：减少冗余代码与潜在误用点；对运行时无副作用。
 
-### 2) 图片资源压缩（生产构建）
+### 2) 图片压缩配置线索
 
 - 位置：`webpack/webpack.prod.js`
-- 做法：引入 `ImageMinimizerPlugin`（sharp 实现）对 `png/jpg/gif/webp/avif` 做生产期压缩。
-- 关键点：配置了 `loader: false` 避免 Webpack 5 下可能出现的 asset info 冲突。
-- 影响：
-  - 生产构建耗时略增加（CI 首次安装 sharp 也会略慢）。
-  - 输出图片体积显著降低（具体取决于原始素材质量）。
+- 当前状态：ImageMinimizerPlugin 配置已注释，不属于实际生产压缩步骤。
+- 影响：当前不能假设构建会自动优化图片；转换格式、降低分辨率或重新启用压缩前，应先看当前资源引用和视觉质量需求。
 
 ### 3) 音视频资源压缩（生产/CI 可运行的离线脚本）
 
@@ -42,15 +41,15 @@
     - `@assets/video` → `src/assets-optimized/video`
   - 通过 `CopyWebpackPlugin` 将 `public-optimized/audio` 复制到 `dist/audio`，保证最终站点对外路径不变。
 
-#### 3.2 build hook（默认行为）
+#### 3.2 build hook（当前行为）
 
 - 位置：`package.json`
-- 做法：在 `build:production` / `build:production:zip` 前通过 npm 的 `prebuild:*` 钩子运行 `optimize:media`。
+- 做法：本地运行 `build:production` / `build:production:zip` 前会通过 pnpm 生命周期钩子运行 `optimize:media`。
 - 影响：
-  - 本地构建体验：更“自动化”，但构建前会多一次扫描与压缩流程。
-  - CI（GitHub Actions）/ Vercel：如果每次都跑压缩会显著拉长构建时间（且压缩结果不一定会被缓存命中）。
+  - 本机构建前会多一次扫描与压缩流程，产物写入 Git 忽略的优化目录。
+  - GitHub Actions/Vercel 检测到 CI 环境时默认跳过；设置 `OPTIMIZE_MEDIA=1` 才会强制运行。
 
-> 建议：如果你希望 CI 只复用已提交的 `*-optimized` 产物，可以将该 hook 改为“CI 默认跳过、需要时用环境变量强制运行”（见本文末尾“建议继续推进”）。
+> `SKIP_OPTIMIZE_MEDIA` 不是当前脚本支持的变量。需要本地跳过该生命周期时，可使用 `CI=1 pnpm run build:production`；需要在 CI 强制优化时使用 `OPTIMIZE_MEDIA=1`。
 
 ### 4) GitHub Pages 部署链路
 
@@ -67,15 +66,16 @@
 - 路径形态：站点在 `/pro-react-admin/` 子路径下。
 - 受影响点：
   - `PUBLIC_URL` / Storybook base href 的正确性
-  - 生产 `publicPath`（Webpack 中使用相对路径 `./`）对静态资源引用更稳健
-  - 若 CI 每次运行音视频压缩：构建时间与失败概率上升（ffmpeg、文件系统、缓存命中率等因素）
+  - 生产 `publicPath` 由 `PUBLIC_URL` 规范为站点路径；GitHub Pages 工作流设置 `/pro-react-admin`，不是 `./`
+  - 若设置 `OPTIMIZE_MEDIA=1` 强制 CI 运行音视频压缩，会增加构建时间
 
 ### Vercel
 
 - 路径形态：一般为根路径 `/`。
 - 受影响点：
-  - 如果 Vercel 使用 Webpack 构建，需要确保它执行的是 `npm run build:production`
-  - 若 Vercel 构建阶段运行音视频压缩：会增加构建耗时；并且 Vercel 的缓存策略可能导致压缩收益不稳定
+  - 根级 `vercel.json` 没有显式设置 buildCommand/outputDirectory；聚合 MFE 脚本通过 `vercel-build` 生成 `dist-vercel/`，Dashboard 配置必须与所选产物匹配
+  - ProjectA/B standalone 配置使用各自的 Webpack build scripts
+  - CI 环境默认跳过音视频优化；若设置 `OPTIMIZE_MEDIA=1`，会增加构建时间
 
 ### 5) 生产构建兼容性修复 (ESM/Webpack)
 
@@ -97,13 +97,17 @@
     const plugin = importedPlugin?.default || importedPlugin;
     ```
 
-## 本次构建体积分布（2026-03-09）
+## 历史构建体积分布（2026-03-09）
 
-本节基于以下命令的实际产物与 stats 分析：
+本节为历史快照，不代表当前构建。不要仅凭旧 chunk 名称或大小直接改代码。
+
+当时的构建记录写的是 SKIP_OPTIMIZE_MEDIA=1 npm run build:production，但该变量当前不被 package hooks 识别，不能据此确认那次构建跳过了媒体预处理。需要复现时使用：
 
 ```bash
-SKIP_OPTIMIZE_MEDIA=1 npm run build:production
+CI=1 pnpm run build:production
 ```
+
+并重新生成当前 stats。
 
 ### 主要超大产物
 
@@ -220,5 +224,4 @@ import FileManagerPlugin from 'filemanager-webpack-plugin'
 如果后续需要重新评估升级，请先确认两点：
 
 1. `npm pack filemanager-webpack-plugin@<version>` 解包后，ESM 入口文件是否真实存在。
-2. `SKIP_OPTIMIZE_MEDIA=1 npm run build:production` 是否可以无兼容补丁直接通过。
-
+2. `CI=1 pnpm run build:production` 是否可以在跳过媒体预处理的情况下通过。

@@ -1,0 +1,172 @@
+name: Webpack CI
+
+on:
+  push:
+    branches:
+      - main
+      - webpack
+  pull_request:
+    branches:
+      - main
+      - webpack
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: webpack-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate project and client environment configuration
+        run: pnpm run check:project-registry
+
+      - name: Validate shared path aliases
+        run: pnpm run check:aliases
+
+      - name: Validate generated Module Federation contracts
+        run: pnpm run check:project-contracts
+
+      - name: Validate Vercel build targets and response headers
+        run: pnpm run check:deployment-config
+
+      - name: Run Jest
+        run: pnpm run test:jest -- --runInBand
+
+      - name: Build production application and collect Webpack stats
+        run: pnpm run build:stats
+        env:
+          NODE_ENV: production
+          PUBLIC_URL: /
+
+      - name: Enforce initial bundle budget
+        run: pnpm run check:bundle-budget
+
+      - name: Install Chromium for Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run browser end-to-end checks
+        run: pnpm run test:e2e
+
+      - name: Upload current Webpack stats
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webpack-stats-${{ github.run_id }}
+          path: compilation-stats.json
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  storybook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Storybook
+        run: pnpm run build-storybook
+        env:
+          NODE_ENV: production
+
+  microfrontends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Shell and all Remotes
+        run: pnpm run build:mf:vercel
+        env:
+          NODE_ENV: production
+
+      - name: Validate generated Remote contracts
+        run: pnpm run check:mfe-artifacts
+
+      - name: Install Chromium for Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Verify Remote load and fallback in the browser
+        run: pnpm run test:e2e:mfe
+
+      - name: Upload MFE Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-mfe-report-${{ github.run_id }}
+          path: |
+            playwright-mfe-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 14

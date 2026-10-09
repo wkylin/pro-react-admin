@@ -5,7 +5,7 @@ import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { Button, Layout, theme } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import FixLayout from '@src/components/stateless/FixLayout'
-import ViteLanding from './ViteLanding'
+import AdminLanding from './AdminLanding'
 
 const { Content } = Layout
 
@@ -51,7 +51,7 @@ const Dashboard = () => {
         >
           {renderBackHome()}
           <Routes>
-            <Route path="/" element={<ViteLanding />} />
+            <Route path="/" element={<AdminLanding />} />
           </Routes>
         </Content>
       </Layout>

@@ -37,7 +37,7 @@ export default function ProjectBReuse() {
               </Button>
             </Space>
 
-            <GradientStats items={['120+', 'RBAC', 'KeepAlive', 'Vite/Webpack']} />
+            <GradientStats items={['120+', 'RBAC', 'KeepAlive', 'Webpack 5']} />
           </Space>
         </Card>
 

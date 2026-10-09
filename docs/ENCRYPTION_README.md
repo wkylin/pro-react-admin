@@ -1,5 +1,7 @@
 # Request.js 接口加密功能说明
 
+安全边界：客户端加密密钥对浏览器使用者可见。固定 AES key 和服务端私钥不能放在前端；请求加密不能替代 HTTPS、身份认证或服务端授权。
+
 ## 📦 功能概述
 
 为 `request.js` 添加了完整的接口数据加密功能，支持多种加密方式，可灵活配置，开箱即用。
@@ -37,7 +39,7 @@
 import request from '@src/service/request'
 
 // 配置混合加密（推荐）
-request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+request.configureHybrid(PUBLIC_KEY)
 
 // 之后所有请求自动加密，无需任何修改！
 const data = await request.post('/api/login', { username, password })
@@ -53,10 +55,10 @@ import request from '@src/service/request'
 request.configureAES('1234567890123456')
 
 // 方式 B: 使用 RSA（高安全）
-request.configureRSA(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
+request.configureRSA(RSA_PUBLIC_KEY)
 
 // 方式 C: 使用混合加密（推荐）
-request.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
+request.configureHybrid(RSA_PUBLIC_KEY)
 
 // 2. 业务代码无需改动
 export const loginAPI = (credentials) => {
@@ -113,10 +115,10 @@ request.put('/api/user/info', { idCard, phone, address })
 request.configureAES(key)
 
 // RSA 加密
-request.configureRSA(publicKey, privateKey)
+request.configureRSA(publicKey)
 
 // 混合加密
-request.configureHybrid(publicKey, privateKey)
+request.configureHybrid(publicKey)
 
 // 启用/禁用
 request.enableEncryption()
@@ -153,11 +155,11 @@ request.get('/api/data', {}, {
 
 ### ✅ 推荐做法
 
-1. **使用环境变量存储密钥**
+1. **不要在浏览器保存固定 AES 密钥**
    ```bash
-   VITE_AES_KEY=your-secure-key
-   VITE_RSA_PUBLIC_KEY=...
+   REACT_APP_RSA_PUBLIC_KEY=...
    ```
+   RSA 公钥可以公开。前端 bundle 对用户可见，固定 AES 密钥、RSA 私钥和服务端凭据都不能放入客户端配置。使用 TLS、身份认证与服务端授权保护数据。
 
 2. **从后端获取公钥**
    ```javascript
@@ -168,7 +170,7 @@ request.get('/api/data', {}, {
 
 3. **使用混合加密模式**
    ```javascript
-   request.configureHybrid(publicKey, privateKey)
+   request.configureHybrid(publicKey)
    ```
 
 4. **私钥不要暴露给前端**（仅服务端持有）

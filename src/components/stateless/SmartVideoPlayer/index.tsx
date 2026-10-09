@@ -116,7 +116,7 @@ function unwrapCssModule(mod: unknown): Record<string, string> | null {
     // style-loader + css-loader often exports an array/object with `.locals`.
     if (cssModule.locals && typeof cssModule.locals === 'object') return cssModule.locals as Record<string, string>
 
-    // Vite/other pipelines may export the mapping object directly.
+    // Some CSS Module loaders export the mapping object directly.
     if (!Array.isArray(base)) return base as Record<string, string>
   }
 

@@ -120,9 +120,7 @@ const buildConfigDeps = () => {
   files.push(path.join(cwd, 'babel.config.js'))
   files.push(path.join(cwd, 'jest.config.cjs'))
   files.push(path.join(cwd, 'eslint.config.mjs'))
-  files.push(path.join(cwd, 'vite.config.ts'))
-  files.push(path.join(cwd, 'vite.config.lib.ts'))
-  files.push(path.join(cwd, 'vite.config.lib.entries.ts'))
+  files.push(path.join(cwd, 'tsconfig.lib.json'))
   files.push(path.join(cwd, 'postcss.config.js'))
 
   // Directories with build/storybook config
@@ -252,7 +250,8 @@ if (pkg?.devDependencies?.['image-minimizer-webpack-plugin'] || pkg?.dependencie
 const toolingConventionDeps = new Set([
   '@eslint/compat',
   '@eslint/eslintrc',
-  '@storybook/builder-vite',
+  '@storybook/addon-webpack5-compiler-babel',
+  '@storybook/builder-webpack5',
   '@storybook/csf-plugin',
   'babel-plugin-transform-remove-debugger',
   'eslint-plugin-prettier',
@@ -278,7 +277,6 @@ const report = await new Promise((resolve, reject) => {
         'node_modules',
         'dist',
         'dist-lib',
-        'dist-vite',
         'storybook-static',
         'coverage',
         'playwright-report',

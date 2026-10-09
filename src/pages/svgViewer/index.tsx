@@ -8,7 +8,7 @@ import { Card, Space, Typography, Row, Col } from 'antd'
 const { Title, Paragraph, Text } = Typography
 type SvgComponent = ComponentType<SVGProps<SVGSVGElement>>
 
-// Both bundlers load these SVGs through SVGR; vite/client declares SVG imports as URLs.
+// Webpack loads these SVGs as React components through SVGR.
 const ArchitectureDiagram = DiagramSvg as unknown as SvgComponent
 const RbacDiagram = DiagramSvgRbac as unknown as SvgComponent
 
@@ -76,7 +76,7 @@ const SvgViewer = () => {
                     <strong>React 19</strong>：利用最新的并发特性和性能优化
                   </li>
                   <li>
-                    <strong>双构建模式</strong>：Webpack 5 用于生产构建，Vite 7 用于快速开发
+                    <strong>统一构建链路</strong>：开发与生产均使用 Webpack 5
                   </li>
                   <li>
                     <strong>TypeScript 5</strong>：提供强类型支持
@@ -108,8 +108,8 @@ const SvgViewer = () => {
                 </ul>
                 <p style={{ color: 'rgba(255,255,255,0.8)' }}>
                   该架构图展示了 Pro React Admin 作为现代化企业级中后台解决方案的完整技术栈。核心优势在于 React 19
-                  的性能优化、双重架构设计、完善的权限体系和丰富的组件生态。构建系统支持 Webpack 和 Vite
-                  双模式，部署采用 GitHub Pages 自动化流程，监控集成 Sentry 错误追踪。
+                  的性能优化、清晰的模块边界、完善的权限体系和丰富的组件生态。应用与组件库均使用 Webpack 构建，部署采用
+                  GitHub Pages 自动化流程，监控集成 Sentry 错误追踪。
                 </p>
               </Card>
             </Col>

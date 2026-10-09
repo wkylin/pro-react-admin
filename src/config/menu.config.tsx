@@ -481,16 +481,6 @@ const rawMainLayoutMenu = [
           </AnimatedIcon>
         ),
       },
-      {
-        label: 'Vite',
-        i18nKey: 'menu.vite',
-        path: '/build/vite',
-        icon: (
-          <AnimatedIcon variant="spin" mode="hover">
-            <ThunderboltOutlined />
-          </AnimatedIcon>
-        ),
-      },
     ],
   },
 

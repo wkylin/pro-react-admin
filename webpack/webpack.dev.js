@@ -22,6 +22,14 @@ const devWebpackConfig = merge(common, {
   devServer: {
     allowedHosts: 'all',
     historyApiFallback: true,
+    ...(mfeRole === 'remote'
+      ? {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Cross-Origin-Resource-Policy': 'cross-origin',
+          },
+        }
+      : {}),
     client: {
       logging: 'error',
       progress: true,

@@ -39,7 +39,7 @@ interface TrackerProviderProps {
  *   config={{
  *     appId: 'pro-react-admin',
  *     endpoint: '/api/track',
- *     debug: import.meta.env.DEV,
+ *     debug: process.env.NODE_ENV !== 'production',
  *   }}
  *   plugins={{ pageview: true, click: true, performance: true }}
  * >

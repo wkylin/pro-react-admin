@@ -6,6 +6,9 @@
 /dist-projectC
 /dist-shell
 /dist-vercel
+/dist-mf-projectA
+/dist-mf-projectB
+/dist-pages
 /node_modules
 /.eslintcache
 tsconfig.tsbuildinfo
@@ -24,15 +27,15 @@ coverage
 # 忽略本地 env
 .env
 .env.local
+.env.dev.local
 .env.development.local
 .env.production.local
+.env.test.local
 
 *storybook.log
 storybook-static
 .vite-cache
 /dist-lib
-/dist-vite
-/dist-vite-zip
 /dist-zip
 /playwright-report
 /test-results

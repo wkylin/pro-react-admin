@@ -1,101 +1,88 @@
-# 多项目（Multi Project）模式
+# 多项目架构
 
-目标：一套依赖（一个 `node_modules`）承载多个业务项目；启动/构建时通过环境变量选择“当前项目入口”，做到**按项目入口打包**，避免每个项目重复克隆+重复装依赖。
+一份源码和一套依赖通过构建时 PROJECT 选择一个应用入口，输出独立静态应用。这与 Module Federation 在浏览器运行时加载 Remote 是两种能力。
 
-## 你现在得到什么
+## 项目注册表
 
-- 默认（单项目）完全不变：继续用根目录 `index.html` + `src/index.tsx`。
-- 多项目模式：通过 `PROJECT=projectA|projectB|...` 选择入口文件 `src/projects/<project>/index.tsx`。
-- 项目级 `public`：若存在 `src/projects/<project>/public`，则该目录作为 Vite 的 `publicDir`。
-- 项目级路由覆盖：若存在 `src/projects/<project>/routers`，则 `@routers` 会指向该目录；否则回退到默认 `src/routers`。
+src/projects/registry.json 是项目入口、source root、路由目录、输出目录和 MFE 暴露模块的单一清单。webpack/paths.js 据此选择构建入口和 @routers alias。未知 PROJECT、缺失入口或路由目录会直接报错，不会回退到主应用。
 
-## 目录约定
+| PROJECT | 入口 | 路由目录 | 输出目录 |
+| --- | --- | --- | --- |
+| default | src/index.tsx | src/routers | dist/ |
+| projectA | src/projects/projectA/index.tsx | src/projects/projectA/routers | dist-projectA/ |
+| projectB | src/projects/projectB/index.tsx | src/projects/projectB/routers | dist-projectB/ |
+| shell | src/projects/shell/index.tsx | src/projects/shell/routers | dist-shell/ |
 
-推荐结构（可按需增减）：
+ProjectA 的 routers/index.tsx 复用主应用路由；ProjectB 使用独立路由。Shell 仅作为 MFE Host 使用。
 
-- `src/projects/<project>/index.tsx`：项目入口（类似你描述的 `app.js`）。
-- `src/projects/<project>/routers/`：项目路由（可先用“包装转发”复用默认路由）。
-- `src/projects/<project>/public/`：项目静态资源（等价于 Vite 的 `public/`）。
+## 本地运行与构建
 
-## npm scripts
+普通应用入口：
 
-- 默认项目
-  - `npm run dev:vite`
-  - `npm run build:vite`
-  - `npm run preview:vite`
+- pnpm start
+- pnpm start:projectA
+- pnpm start:projectB
 
-- Project A
-  - `npm run dev:vite:projectA`
-  - `npm run build:vite:projectA`
-  - `npm run preview:vite:projectA`
+生产构建：
 
-- Project B
-  - `npm run dev:vite:projectB`
-  - `npm run build:vite:projectB`
-  - `npm run preview:vite:projectB`
+- pnpm run build:production
+- pnpm run build:production:projectA
+- pnpm run build:production:projectB
 
-## Webpack 静态预览（dist 自动切换）
+普通 start 命令从 8080 开始选择空闲端口。微前端联调使用固定的 8080/8081/8082 端口，不能与普通项目命令混为一组。
 
-以下脚本会根据 `PROJECT` 自动选择 `dist` 或 `dist-<project>`：
+修改注册表后运行 `pnpm run sync:project-contracts`，再运行 `pnpm run check:project-registry` 和 `pnpm run check:project-contracts`。静态 Remote imports 和类型声明由注册表生成，CI 会检查生成文件是否同步。
 
-- `npm run serve:prod` / `npm run serve:dev` / `npm run serve:test`
-- `npm run http:prod` / `npm run http:dev` / `npm run http:test`
+## 目录职责
 
-示例：
+```text
+src/
+├── index.tsx
+├── routers/                  # 主应用路由
+├── pages/                    # 主应用页面
+├── components/               # 共享组件
+└── projects/
+    ├── registry.json         # 构建和 Remote 配置清单
+    ├── projectA/
+    │   ├── index.tsx
+    │   ├── routers/          # 复用主路由
+    │   └── mfe/App.tsx       # Remote 暴露模块
+    ├── projectB/
+    │   ├── index.tsx
+    │   ├── pages/
+    │   ├── routers/
+    │   └── mfe/App.tsx
+    └── shell/
+        ├── index.tsx
+        └── routers/
+```
 
-- `PROJECT=projectA npm run build:production:projectA`
-- `PROJECT=projectA npm run serve:prod`
-- `PROJECT=projectA npm run http:prod`
+## Alias 边界
 
-### Webpack（现有 start/build 链路）
+- @app 指向当前项目目录；default 主应用指向 src。
+- @routers 指向注册表选择的路由目录。
+- @pages、@stateless、@stateful 等共享 alias 仍指向主 src 下的共享能力。
+- 项目专属代码可使用相对路径，或通过 @app 指向当前项目。
+- PROJECT 是构建时参数，同一个 bundle 内不能切换项目。
 
-- 默认项目
-  - `npm run start`
-  - `npm run build:production`
-  - `npm run prod:serve`
+路径 alias 由 `config/path-aliases.json` 统一维护，Webpack、Storybook 和组件库读取该清单，TypeScript paths 通过 `pnpm run sync:aliases` 生成。样式 loader 保持工具级配置，因为应用/lib 提取 CSS，而 Storybook 需要运行时注入。
 
-- Project A
-  - `npm run start:projectA`
-  - `npm run build:production:projectA`
-  - `npm run prod:serve:projectA`
+## 新增普通项目
 
-- Project B
-  - `npm run start:projectB`
-  - `npm run build:production:projectB`
-  - `npm run prod:serve:projectB`
+1. 在 src/projects/<name>/ 建立 index.tsx，并使用 renderApp 复用公共启动链。
+2. 在 src/projects/registry.json 中注册 sourceRoot、entry、routers 和唯一 output。
+3. 需要独立路由时创建 routers/；需要静态资源时创建 public/。
+4. 使用通用命令 `pnpm run project:dev -- <name>` 和 `pnpm run project:build -- <name>`；无需复制 webpack 命令。
+5. 运行 `pnpm run check:project-registry`，再按部署目标设置 PUBLIC_URL、Vercel 或 GitHub Pages 产物目录。
 
-构建产物目录：
+## 新增 MFE Remote
 
-- 默认：`dist-vite`
-- 非默认：`dist-vite-<project>`（例如 `dist-vite-projectA`）
+除普通项目外，还需要：
 
-Webpack 构建产物目录：
+1. 为注册项目添加 mfeExpose，例如 mfe/App.tsx；组件不要自行创建 Router。
+2. 在 registry.json 的 remotes 数组登记名称、标签、路由、开发端口、开发入口、生产路径和 URL 环境变量键。
+3. 运行 `pnpm run sync:project-contracts`，生成静态动态 import 和 `typings/module-federation.d.ts` 声明。
+4. 配置独立部署所需的 HTTPS Remote URL、manifest/JavaScript CORS、chunk publicPath 和缓存响应头。
+5. 运行注册表/生成文件检查并启动 Shell/Remote 完成浏览器联调。
 
-- 默认：`dist`
-- 非默认：`dist-<project>`（例如 `dist-projectA`）
-
-## 新增一个项目（例如 projectC）
-
-1) 创建入口文件：`src/projects/projectC/index.tsx`
-
-2) （可选）创建路由目录：`src/projects/projectC/routers/`
-
-- 如果你想先复用默认路由：
-  - `routers/index.tsx` 里写：
-    - `export { default } from '@src/routers'`
-    - `export * from '@src/routers'`
-  - `routers/authRouter.tsx` 里写：
-    - `export { default } from '@src/routers/authRouter'`
-
-3) （可选）创建静态资源目录：`src/projects/projectC/public/`
-
-4) 增加脚本（两种方式选一种）
-
-- 推荐：直接照着 `projectA`/`projectB` 在根 `package.json` 里添加：
-  - `cross-env PROJECT=projectC vite --host --config vite.config.ts`
-  - `cross-env PROJECT=projectC vite build --config vite.config.ts`
-
-## 说明（为什么能做到“按需打包”）
-
-Vite 在构建时只会从 `index.html` 注入的**入口脚本**向下依赖分析。
-当前实现会在构建/开发时把 `index.html` 里的默认入口 `/src/index.tsx` 替换为 `/src/projects/<project>/index.tsx`，因此不会把其它项目入口当成必需依赖链去打包。
+详细命令、协议和部署策略见微前端指南（MFE_DEPLOYMENT.md）。

@@ -1,0 +1,16 @@
+{
+  "@": "src",
+  "@src": "src",
+  "@app": "src",
+  "@routers": "src/routers",
+  "@assets/audio": "src/assets/audio",
+  "@assets/video": "src/assets/video",
+  "@stateless": "src/components/stateless",
+  "@stateful": "src/components/stateful",
+  "@hooks": "src/components/hooks",
+  "@app-hooks": "src/app-hooks",
+  "@assets": "src/assets",
+  "@pages": "src/pages",
+  "@utils": "src/utils",
+  "@theme": "src/theme"
+}

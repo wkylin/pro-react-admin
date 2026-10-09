@@ -4,6 +4,14 @@ import NoMatch from '@stateless/NoMatch'
 
 import Portal from '../pages/Portal'
 import RemoteApp from '../pages/RemoteApp'
+import type { RemoteName } from '../remote-components'
+import registry from '../../registry.json'
+
+const remoteRoutes = registry.remotes.map((remote) => ({
+  path: remote.routePath,
+  auth: false,
+  element: <RemoteApp remote={remote.name as RemoteName} />,
+}))
 
 const routes = [
   {
@@ -16,16 +24,7 @@ const routes = [
     auth: false,
     element: <Portal />,
   },
-  {
-    path: '/projectA',
-    auth: false,
-    element: <RemoteApp remote="projectA" />,
-  },
-  {
-    path: '/projectB',
-    auth: false,
-    element: <RemoteApp remote="projectB" />,
-  },
+  ...remoteRoutes,
   {
     path: '*',
     auth: false,

@@ -94,7 +94,7 @@ const PUBLIC_KEY = `...`
 const PRIVATE_KEY = `...`
 
 // 配置混合加密（会自动生成随机 AES 密钥）
-request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+request.configureHybrid(PUBLIC_KEY)
 
 // 之后所有请求会自动使用混合加密
 const data = await request.post('/api/user/register', {
@@ -157,7 +157,7 @@ const data = await request.get('/api/encrypted-data')
 request.configureAES('initial-key')
 
 // 切换到混合加密
-request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+request.configureHybrid(PUBLIC_KEY)
 
 // 临时禁用加密
 request.disableEncryption()
@@ -270,8 +270,10 @@ app.use((req, res, next) => {
 
 ### ⚠️ 密钥管理
 
+浏览器里的固定 AES 密钥会随代码发送给用户，不能用来保护数据免受浏览器使用者读取。REACT_APP_AES_KEY 不在 Webpack 浏览器白名单内，也不要通过后端接口把服务端 AES 密钥返回给浏览器。请求加密只适用于明确的传输协议需求，不能替代 HTTPS、身份认证或服务端授权。
+
 1. **永远不要将密钥硬编码在代码中**
-2. **使用环境变量或配置中心存储密钥**
+2. **固定 AES 密钥只在服务端管理**
 3. **定期更换密钥**
 4. **RSA 私钥绝不能暴露给前端**
 
@@ -281,17 +283,12 @@ app.use((req, res, next) => {
 // ❌ 不推荐：硬编码密钥
 request.configureAES('1234567890123456')
 
-// ✅ 推荐：从环境变量或接口获取
+// ✅ 公钥可由服务端公开接口提供
 const initEncryption = async () => {
-  // 方式 1: 从后端获取公钥
   const { publicKey } = await request.get('/api/get-public-key', {}, {
     encrypt: false  // 获取密钥的请求不能加密
   })
   request.configureRSA(publicKey)
-  
-  // 方式 2: 从环境变量读取
-  const key = import.meta.env.VITE_AES_KEY
-  request.configureAES(key)
 }
 
 // 在应用启动时初始化
@@ -303,7 +300,7 @@ initEncryption()
 ```javascript
 // 混合加密会为每次请求生成新的 AES 密钥
 // 即使一次通信被破解，也不影响其他请求的安全性
-request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+request.configureHybrid(PUBLIC_KEY)
 ```
 
 ---
@@ -374,7 +371,7 @@ MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDQENGCh5kJFG8f
  */
 export const initEncryption = () => {
   // 使用混合加密（推荐）
-  request.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
+  request.configureHybrid(RSA_PUBLIC_KEY)
   
   console.log('✅ 接口加密已启用')
   console.log('📊 加密配置:', request.getEncryptionConfig())

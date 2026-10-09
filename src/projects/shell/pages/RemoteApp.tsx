@@ -1,17 +1,13 @@
-import React, { Suspense, useEffect, useMemo } from 'react'
-import { Spin, Alert, message } from 'antd'
+import { Suspense, useEffect } from 'react'
+import { Button, Result, Spin, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import { emitMfeEvent, onMfeEvent } from '@/mfe/bridge'
+import { remoteComponents, type RemoteName } from '../remote-components'
 
-const RemoteProjectA = React.lazy(() => import('projectA/App'))
-const RemoteProjectB = React.lazy(() => import('projectB/App'))
-
-export default function RemoteApp(props: Readonly<{ remote: 'projectA' | 'projectB' }>) {
+export default function RemoteApp(props: Readonly<{ remote: RemoteName }>) {
   const navigate = useNavigate()
-
-  const Component = useMemo(() => {
-    return props.remote === 'projectA' ? RemoteProjectA : RemoteProjectB
-  }, [props.remote])
+  const Component = remoteComponents[props.remote]
 
   useEffect(() => {
     const offToast = onMfeEvent('mfe:toast', ({ type, content }) => {
@@ -46,27 +42,30 @@ export default function RemoteApp(props: Readonly<{ remote: 'projectA' | 'projec
   }, [navigate])
 
   return (
-    <Suspense
+    <ErrorBoundary
+      showDetails={false}
       fallback={
-        <div style={{ padding: 24 }}>
-          <Spin />
-        </div>
+        <Result
+          status="warning"
+          title="远程应用暂时不可用"
+          subTitle="请检查 Remote 服务和网络连接，然后刷新页面重试。"
+          extra={
+            <Button type="primary" onClick={() => window.location.reload()}>
+              刷新重试
+            </Button>
+          }
+        />
       }
     >
-      <React.Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div style={{ display: 'flex', justifyContent: 'center', padding: 32 }}>
+            <Spin />
+          </div>
+        }
+      >
         <Component />
-      </React.Suspense>
-    </Suspense>
-  )
-}
-
-export function RemoteLoadHint() {
-  return (
-    <Alert
-      type="info"
-      title="微前端提示"
-      description="如果页面一直在加载，请确认 remote 已启动并能访问 remoteEntry.js。通信建议：优先用 Host 作为中枢（事件/共享状态），必要时再上 postMessage。"
-      showIcon
-    />
+      </Suspense>
+    </ErrorBoundary>
   )
 }

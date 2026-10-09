@@ -4,10 +4,12 @@
  * ========================================
  *
  * 本文件包含常见的使用示例，可以直接复制到项目中使用
+ * 安全提示：浏览器里的固定 AES key 可被用户读取；本文件中的固定 key 只用于 API 演示，不提供密钥保密能力。
  */
 
 import request from '@src/service/request'
 import http, { encryptionConfig as httpEncryption } from '@src/service/http'
+import { getEnv } from '@utils/env'
 
 // ========================================
 // 示例 1: 基础配置（应用入口）
@@ -44,43 +46,15 @@ kKZxSh7Qy/Pre8QFvIKdsCu4hpIGkws86s1IHvFLCXsXUxPR5z3E69VuW6K6rkXT
 lwIDAQAB
 -----END PUBLIC KEY-----`
 
-const RSA_PRIVATE_KEY = `-----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDQENGCh5kJFG8f
-9AtsaF4zp5yYdTObih+pGAE+XXJOESvI5DyAaOavXpeWPtwB51nPS+q9SxadmHko
-xnlvm9BjgcaE988vcLOUj6IvQnJ8U30Owh7u5IOxK0F9stBqz4hgi7jtExb1g0CZ
-LxAWaqfganDpLW3cf7UB/BCkAbFcebf7aZMKWRq6084CqZOQDMzl4siKw4j9EThh
-mIdGXj2X7JQCakCpHDRae+pGXDvoRLqdpIHEczuJB4CWjxHliqF4PaQ3MlsRwns7
-B3hFx+iQpnFKHtDL8+t7xAW8gp2wK7iGkgaTCzzqzUge8UsJexdTE9HnPcTr1W5b
-orquRdOXAgMBAAECggEANFGeVSvCrBlSzh6gRrzBv0xs4JtMBFcJmgv6uBNoXEAO
-GgBmREXciAmJpZKd4O6rUyh8WOgKQkumX730qD9uea8W27Wyh/PXfEpX1nlnb2LR
-BgaDH8Afa0v8tl5h8RHJcbmAoUCVG9xKwJooefKMzy4EwWWWhAUq31piVtNEJYPT
-zEXXMrbDJJ9bCRJXgvJ+oeedcIMz1OktU/DKjPdHLdU71MR0NUCPPMmD9RmSCjk2
-TkswP3Mm6EpY85kG9xT5tNvr6p5Rsw828TAtYuybzVeJxnSvPY4IXr5Zqx+D5/B3
-GoZYfDBV+nA1RYddwwnl58W5BpbFbVvLhFJIsnr4lQKBgQDrNwONQMmLG38pq+TY
-0/JKcO0N1iFCIolOj7wyB8vOGOzAIqATEp1Tra5tRa0eVAlVl19rFrils0YNokgP
-ITv+K9Y79JzlSOH2bpMBCy5kB0IoYTDwNs0Kc2IMoV2NekAvFMVAS8Ldh2S39O4v
-a2JMGjHVoQCCcNDnq9QMAiMmzQKBgQDic6P5dbzMsKrHLRNu9gQRn7rrFe6FtErv
-2mMiIdAI/4BtUs9n4q4gNprZlhIXVGGpzZ2mXMXJsJvcE6JOSS6Z8wRHE/AfOoVI
-7i2qk5LFslvLHKrV1jqtyb6PTSG9Di9YF3u/JckSrMhUbDXG2PhN7Sp08O9cp3FY
-zc62jVH78wKBgFwdxXRSRRwHfruRKCSKjL7+jrf2fjvqTp/HxspJJ1XliQKODOar
-SZX11PPSb8QK4UT17VaBJXsvRGYegd37BAW8oUAFwlRBQM1D7Kph+J8QAKbTuVi5
-/X70RRfxMjQwBmbp2X4erYgYeCda8tT7Vxm6wH2LeimbiRTRxE+XnrCZAoGBAKyf
-6OUWyqjjGByjkQfqRKnGsO/alSyZhvKW8TEow3TIiPdNxEv2MjTeS2cJDpt4OMb/
-tmkGmcQpfHblBLpW8U5sQduJKGg17TruTiOVQbKxR2ZrYROHrs2iWEDXVJvQ/2hQ
-5oWNYV16F3C72LbP2WFWJSJmNKHWBwLiSO1Ch7ffAoGBAOEGk+98m4l1jtDkIr/w
-EYOns+p9wj3be5YfARMRHxFjJCyXyaZstuk4RsmHhOlnO999nVX7eCAU36HfEahQ
-l5BNkobjNZF/xd9XTWywJFTGJNg6ejF991ucWnfSwnlRbJN8sGYRrr/IYyd6a/YL
-v4U73TKOI+a1xxr6ZMQ4vzwt
------END PRIVATE KEY-----`
 
 export const setupEncryptionHybrid = () => {
   // 混合加密（RSA + AES，推荐生产环境使用）
 
   // Request.js 配置
-  request.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
+  request.configureHybrid(RSA_PUBLIC_KEY)
 
   // Http.js 配置
-  httpEncryption.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
+  httpEncryption.configureHybrid(RSA_PUBLIC_KEY)
 
   console.log('✅ 混合加密已启用')
 }
@@ -90,34 +64,26 @@ export const setupEncryptionHybrid = () => {
 // ========================================
 
 export const setupEncryptionFromEnv = () => {
-  const mode = import.meta.env.VITE_ENCRYPTION_MODE || 'none'
+  const mode = getEnv('REACT_APP_ENCRYPTION_MODE', 'none')
 
   switch (mode) {
     case 'aes':
-      const aesKey = import.meta.env.VITE_AES_KEY
-      if (aesKey) {
-        request.configureAES(aesKey)
-        httpEncryption.configureAES(aesKey)
-        console.log('✅ AES 加密已启用（环境变量）')
-      }
-      break
+      throw new Error('不要从浏览器环境变量读取固定 AES key；请使用服务器公钥或 TLS')
 
     case 'rsa':
-      const publicKey = import.meta.env.VITE_RSA_PUBLIC_KEY
-      const privateKey = import.meta.env.VITE_RSA_PRIVATE_KEY
+      const publicKey = getEnv('REACT_APP_RSA_PUBLIC_KEY')
       if (publicKey) {
-        request.configureRSA(publicKey, privateKey)
-        httpEncryption.configureRSA(publicKey, privateKey)
+        request.configureRSA(publicKey)
+        httpEncryption.configureRSA(publicKey)
         console.log('✅ RSA 加密已启用（环境变量）')
       }
       break
 
     case 'hybrid':
-      const hybridPublic = import.meta.env.VITE_RSA_PUBLIC_KEY
-      const hybridPrivate = import.meta.env.VITE_RSA_PRIVATE_KEY
+      const hybridPublic = getEnv('REACT_APP_RSA_PUBLIC_KEY')
       if (hybridPublic) {
-        request.configureHybrid(hybridPublic, hybridPrivate)
-        httpEncryption.configureHybrid(hybridPublic, hybridPrivate)
+        request.configureHybrid(hybridPublic)
+        httpEncryption.configureHybrid(hybridPublic)
         console.log('✅ 混合加密已启用（环境变量）')
       }
       break
@@ -147,10 +113,7 @@ export const setupEncryptionFromServer = async () => {
     // 根据服务器配置初始化
     switch (config.mode) {
       case 'AES':
-        // 注意：生产环境 AES 密钥应通过安全方式交换
-        request.configureAES(config.key)
-        httpEncryption.configureAES(config.key)
-        break
+        throw new Error('不要把服务端 AES key 返回给浏览器')
 
       case 'RSA':
         request.configureRSA(config.publicKey)
@@ -316,8 +279,8 @@ export const dynamicEncryption = async () => {
   await request.post('/api/data1', { test: 1 })
 
   // 切换到混合加密
-  request.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
-  httpEncryption.configureHybrid(RSA_PUBLIC_KEY, RSA_PRIVATE_KEY)
+  request.configureHybrid(RSA_PUBLIC_KEY)
+  httpEncryption.configureHybrid(RSA_PUBLIC_KEY)
 
   // 发送更多请求...
   await request.post('/api/data2', { test: 2 })
@@ -371,8 +334,8 @@ export const encryptionWithErrorHandling = async () => {
 // ========================================
 
 export const setupEncryptionByEnvironment = () => {
-  const isDev = import.meta.env.DEV
-  const isProd = import.meta.env.PROD
+  const isDev = getEnv('NODE_ENV') === 'development'
+  const isProd = getEnv('NODE_ENV') === 'production'
 
   if (isDev) {
     // 开发环境：不加密或使用简单密钥
@@ -381,7 +344,7 @@ export const setupEncryptionByEnvironment = () => {
     httpEncryption.disable()
   } else if (isProd) {
     // 生产环境：使用强加密
-    const publicKey = import.meta.env.VITE_RSA_PUBLIC_KEY
+    const publicKey = getEnv('REACT_APP_RSA_PUBLIC_KEY')
     if (publicKey) {
       request.configureHybrid(publicKey)
       httpEncryption.configureHybrid(publicKey)

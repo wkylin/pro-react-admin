@@ -16,6 +16,7 @@ import { EsbuildPlugin } from 'esbuild-loader'
 import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin'
 import common from './webpack.common.js'
 import paths from './paths.js'
+import { bundleBudget } from './bundle-budget.js'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
 
@@ -41,8 +42,8 @@ const parseByteBudget = (value, fallback) => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
 }
 
-const maxEntrypointSize = parseByteBudget(process.env.WEBPACK_MAX_ENTRYPOINT_SIZE, 6 * 1024 * 1024)
-const maxAssetSize = parseByteBudget(process.env.WEBPACK_MAX_ASSET_SIZE, 6 * 1024 * 1024)
+const maxEntrypointSize = parseByteBudget(process.env.WEBPACK_MAX_ENTRYPOINT_SIZE, bundleBudget.initialJavaScriptCssBytes)
+const maxAssetSize = parseByteBudget(process.env.WEBPACK_MAX_ASSET_SIZE, bundleBudget.singleJavaScriptCssAssetBytes)
 
 const optimizedAudioDir = path.resolve(__dirname, '../src/assets-optimized/audio')
 const optimizedVideoDir = path.resolve(__dirname, '../src/assets-optimized/video')

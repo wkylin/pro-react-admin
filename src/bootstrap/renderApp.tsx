@@ -38,6 +38,19 @@ const canUseVercelInsights = async () => {
   }
 }
 
+const getSentryTraceSampleRate = () => {
+  const value = Number(process.env.SENTRY_TRACES_SAMPLE_RATE)
+  return Number.isFinite(value) && value >= 0 && value <= 1 ? value : 0.1
+}
+
+const isSentryDisabledByUser = () => {
+  try {
+    return localStorage.getItem('SENTRY_DISABLE') === '1'
+  } catch {
+    return false
+  }
+}
+
 const VercelInsights = () => {
   const [enabled, setEnabled] = useState(false)
 
@@ -73,20 +86,18 @@ export function renderApp(options: RenderAppOptions) {
 
   const sentryDsn = process.env.SENTRY_DSN
   const shouldEnableSentry =
-    process.env.NODE_ENV === 'production' &&
-    !!sentryDsn &&
-    !isLocalhostRuntime() &&
-    localStorage.getItem('SENTRY_DISABLE') !== '1'
+    process.env.NODE_ENV === 'production' && !!sentryDsn && !isLocalhostRuntime() && !isSentryDisabledByUser()
 
   if (shouldEnableSentry) {
+    const replayEnabled = process.env.SENTRY_ENABLE_REPLAY === 'true'
     Sentry.init({
       dsn: sentryDsn,
-      sendDefaultPii: true,
-      integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-      tracesSampleRate: 1.0,
+      sendDefaultPii: process.env.SENTRY_SEND_DEFAULT_PII === 'true',
+      integrations: [Sentry.browserTracingIntegration(), ...(replayEnabled ? [Sentry.replayIntegration()] : [])],
+      tracesSampleRate: getSentryTraceSampleRate(),
       tracePropagationTargets: [/^https:\/\/wkylin\.sentry\.io\/api/],
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
+      replaysSessionSampleRate: replayEnabled ? 0.1 : 0,
+      replaysOnErrorSampleRate: replayEnabled ? 1.0 : 0,
       enableLogs: true,
     })
   }

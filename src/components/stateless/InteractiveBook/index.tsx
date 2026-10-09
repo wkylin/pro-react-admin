@@ -6,9 +6,8 @@ import { pdfjs } from 'react-pdf'
 import pageTurnAudio from '@/assets/audio/page-turn.mp3'
 import styles from './index.module.less'
 
-// ─── 本地 Worker（兼容 Vite / Webpack 5） ──────────────────────
-// Vite：原生支持 new URL('...', import.meta.url)，构建时自动拷贝 worker 文件
-// Webpack 5：同样支持该语法（asset module），可正常解析
+// ─── 本地 Worker（Webpack 5 asset module） ──────────────────────
+// Webpack 5 使用 new URL('...', import.meta.url) 解析并复制 worker 文件。
 // 降级：若运行时出错则回退到 unpkg CDN
 try {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString()

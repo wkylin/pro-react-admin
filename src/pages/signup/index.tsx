@@ -89,7 +89,7 @@ const SignUp = () => {
                   大屏控制台
                 </Title>
                 <Text type="secondary" className={styles.heroDesc}>
-                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Vite/Webpack 构建与产物压缩自动化。
+                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Webpack 5 构建与产物压缩自动化。
                 </Text>
 
                 <div className={styles.heroOrbit} aria-hidden="true">
@@ -150,11 +150,6 @@ const SignUp = () => {
                 name="register"
                 initialValues={{
                   agreement: true,
-                  username: process.env.AUTH_USER,
-                  email: process.env.AUTH_EMAIL,
-                  phone: process.env.AUTH_PHONE,
-                  password: process.env.AUTH_PASSWORD,
-                  confirmPassword: process.env.AUTH_PASSWORD,
                 }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}

@@ -118,7 +118,6 @@ const en = {
 
     buildTools: 'Build Tools',
     webpack: 'Webpack',
-    vite: 'Vite',
 
     error: 'Error',
     errorBoundary: 'ErrorBoundary',

@@ -144,8 +144,6 @@ export const lazyComponents = {
   WebpackList: lazyLoad(() => import('@pages/tech/demos/webpack'), {
     preload: true,
   }),
-  ViteList: lazyLoad(() => import('@pages/order/list'), { preload: true }),
-
   // 异常页面
   ErrorPage: lazyLoad(() => import('@pages/error'), { preload: true }),
   Exception403: lazyLoad(() => import('@stateless/Exception/exception403'), {

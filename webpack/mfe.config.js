@@ -1,135 +1,136 @@
-/**
- * Module Federation Remote Projects Configuration
- *
- * 在这里配置所有的远程项目，支持动态扩展
- */
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-/**
- * @typedef {Object} RemoteProject
- * @property {string} name - 项目名称，必须唯一
- * @property {string} devUrl - 开发环境的远程入口地址
- * @property {string} prodPath - 生产环境的相对路径（基于 PUBLIC_URL）
- * @property {string} [envKey] - 可选的环境变量键名，用于覆盖 devUrl
- */
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const registryPath = path.resolve(__dirname, '../src/projects/registry.json')
+export const projectRegistry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
+export const mfeProtocolVersion = projectRegistry.mfeProtocolVersion
 
-/**
- * @type {RemoteProject[]}
- */
-export const remoteProjects = [
-  {
-    name: 'projectA',
-    devUrl: 'http://localhost:8081/remoteEntry.js',
-    prodPath: '/projectA/remoteEntry.js',
-    envKey: 'MFE_PROJECTA_URL', // 允许通过 process.env.MFE_PROJECTA_URL 覆盖
-  },
-  {
-    name: 'projectB',
-    devUrl: 'http://localhost:8082/remoteEntry.js',
-    prodPath: '/projectB/remoteEntry.js',
-    envKey: 'MFE_PROJECTB_URL',
-  },
-  // 添加更多远程项目:
-  // {
-  //   name: 'projectC',
-  //   devUrl: 'http://localhost:8083/remoteEntry.js',
-  //   prodPath: '/projectC/remoteEntry.js',
-  //   envKey: 'MFE_PROJECTC_URL',
-  // },
-]
+export const remoteProjects = projectRegistry.remotes
 
-/**
- * 根据配置和当前环境生成 Module Federation 的 remotes 配置
- * @param {boolean} isDev - 是否为开发环境
- * @returns {Record<string, string>} remotes 配置对象
- *
- * 生产环境支持两种模式：
- * 1. 相对路径（同域部署）：prodPath = '/projectA/remoteEntry.js'
- * 2. 完整 URL（独立部署）：通过 MFE_PROJECTA_URL 环境变量指定
- *
- * 推荐方案：独立 Vercel 项目 + 完整 URL，避免子路径 routing 问题
- */
-export function generateRemotesConfig(isDev = false) {
-  const remotes = {}
-
-  // 支持通过环境变量覆盖并添加/替换远程项目
-  const projects = parseRemotesFromEnv()
-
-  // helper: 与 webpack.common.js 中 toMfeName 行为保持一致
-  const toSafeName = (name) => {
-    const raw = (name || '').toString().trim() || 'app'
-    const safe = raw.replace(/[^a-zA-Z0-9_]/g, '_')
-    return /^[0-9]/.test(safe) ? `app_${safe}` : safe
-  }
-
-  projects.forEach((project) => {
-    let url
-
-    if (project.envKey && process.env[project.envKey]) {
-      url = process.env[project.envKey].toString().trim()
-    } else {
-      url = isDev ? project.devUrl : project.prodPath
-    }
-
-    const rawName = project.name
-    const safeName = toSafeName(rawName)
-
-    // 尝试多种 window 全局名（rawName / safeName），以兼容不同构建时的 container 名称
-    const promiseCode = `promise new Promise((resolve, reject) => {
-      try {
-        if (typeof window['${rawName}'] !== 'undefined') return resolve(window['${rawName}'])
-        if (typeof window['${safeName}'] !== 'undefined') return resolve(window['${safeName}'])
-        const script = document.createElement('script')
-        script.src = '${url}'
-        script.async = true
-        script.onload = () => {
-          if (typeof window['${rawName}'] !== 'undefined') return resolve(window['${rawName}'])
-          if (typeof window['${safeName}'] !== 'undefined') return resolve(window['${safeName}'])
-          reject(new Error('Container ${rawName} not found on window after loading script'))
-        }
-        script.onerror = () => reject(new Error('Failed to load remote entry: ${url}'))
-        document.head.appendChild(script)
-      } catch (err) {
-        reject(err)
-      }
-    })`
-
-    remotes[rawName] = promiseCode
-  })
-
-  return remotes
+function toSafeName(name) {
+  const safe = name.replace(/[^a-zA-Z0-9_]/g, '_')
+  return /^[0-9]/.test(safe) ? 'app_' + safe : safe
 }
 
-/**
- * 从环境变量中动态解析远程项目配置
- * 支持格式: MFE_REMOTES=projectA@http://localhost:8081,projectB@http://localhost:8082
- * @returns {RemoteProject[]} 解析后的项目配置
- */
-export function parseRemotesFromEnv() {
-  const remotesEnv = process.env.MFE_REMOTES
-  if (!remotesEnv) return remoteProjects
+function validateRemoteUrl(value, { isDev, allowRelative, name }) {
+  const raw = String(value || '').trim()
+  if (!raw) throw new Error('[mfe.config] Missing remote URL for ' + name)
 
-  try {
-    const parsed = remotesEnv.split(',').map((item) => {
-      const [name, url] = item.trim().split('@')
-      if (!name || !url) return null
-
-      return {
-        name: name.trim(),
-        devUrl: url.trim(),
-        prodPath: url.trim(),
-      }
-    }).filter(Boolean)
-
-    // 合并配置：环境变量优先
-    const envNames = new Set(parsed.map(p => p.name))
-    const result = [
-      ...parsed,
-      ...remoteProjects.filter(p => !envNames.has(p.name))
-    ]
-
-    return result
-  } catch (error) {
-    console.warn('[mfe.config] Failed to parse MFE_REMOTES:', error)
-    return remoteProjects
+  if (allowRelative && raw.startsWith('/') && !raw.startsWith('//')) {
+    if (!raw.split('?')[0].endsWith('/remoteEntry.js')) {
+      throw new Error('[mfe.config] Remote URL must point to remoteEntry.js: ' + name)
+    }
+    return raw
   }
+
+  let parsed
+  try {
+    parsed = new URL(raw)
+  } catch {
+    throw new Error('[mfe.config] Invalid URL for ' + name + ': expected an absolute HTTP(S) URL')
+  }
+
+  if (!['http:', 'https:'].includes(parsed.protocol) || parsed.username || parsed.password) {
+    throw new Error('[mfe.config] Invalid URL for ' + name + ': only credential-free HTTP(S) URLs are allowed')
+  }
+  if (!parsed.pathname.endsWith('/remoteEntry.js')) {
+    throw new Error('[mfe.config] Remote URL must point to remoteEntry.js: ' + name)
+  }
+  if (!isDev && parsed.protocol !== 'https:') {
+    throw new Error('[mfe.config] Production remote URLs must use HTTPS: ' + name)
+  }
+
+  return parsed.toString()
+}
+
+function getRemoteUrl(project, isDev) {
+  const override = project.envKey ? process.env[project.envKey] : ''
+  if (override) {
+    return validateRemoteUrl(override, {
+      isDev,
+      allowRelative: false,
+      name: project.name,
+    })
+  }
+
+  return validateRemoteUrl(isDev ? project.devUrl : project.prodPath, {
+    isDev,
+    allowRelative: !isDev,
+    name: project.name,
+  })
+}
+
+function createRemoteLoader(project, url) {
+  const globalNames = Array.from(new Set([project.name, toSafeName(project.name)]))
+  const missingContainerMessage = JSON.stringify('Remote container not found after loading ' + project.name)
+  const loadFailureMessage = JSON.stringify('Failed to load remote entry for ' + project.name)
+  const timeoutMessage = JSON.stringify('Timed out loading remote entry for ' + project.name)
+  const manifestFailureMessage = JSON.stringify('Remote manifest is missing or incompatible for ' + project.name)
+
+  return [
+    'promise new Promise((resolve, reject) => {',
+    '  const globalNames = ' + JSON.stringify(globalNames) + ';',
+    '  const remoteUrl = ' + JSON.stringify(url) + ';',
+    '  const findContainer = () => globalNames.map((name) => window[name]).find(Boolean);',
+    '  const existingContainer = findContainer();',
+    '  if (existingContainer) return resolve(existingContainer);',
+    '  let settled = false;',
+    '  let retryTimer;',
+    '  let activeScript;',
+    '  const controller = new AbortController();',
+    '  const finish = (error, container) => {',
+    '    if (settled) return;',
+    '    settled = true;',
+    '    window.clearTimeout(timer);',
+    '    window.clearTimeout(retryTimer);',
+    '    if (activeScript) { activeScript.onload = null; activeScript.onerror = null; }',
+    '    if (error) { activeScript?.remove(); reject(error); }',
+    '    else resolve(container);',
+    '  };',
+    '  const timer = window.setTimeout(() => { controller.abort(); finish(new Error(' + timeoutMessage + ')); }, 15000);',
+    '  const loadAttempt = (attempt) => {',
+    '    const manifestUrl = new URL(remoteUrl, document.baseURI);',
+    '    manifestUrl.pathname = manifestUrl.pathname.replace(/remoteEntry\\.js$/, "remote-manifest.json");',
+    '    manifestUrl.search = "";',
+    '    fetch(manifestUrl.href, { cache: "no-store", credentials: "omit", signal: controller.signal })',
+    '      .then((response) => { if (!response.ok) throw new Error(' + manifestFailureMessage + '); return response.json(); })',
+    '      .then((manifest) => {',
+    '        if (manifest?.schemaVersion !== 1 || manifest?.name !== ' + JSON.stringify(project.name) + ' || manifest?.protocolVersion !== ' + Number(mfeProtocolVersion) + ') {',
+    '          throw new Error(' + manifestFailureMessage + ');',
+    '        }',
+    '        return new Promise((resolveAttempt, rejectAttempt) => {',
+    '          const script = document.createElement("script");',
+    '          activeScript = script;',
+    '          script.src = remoteUrl;',
+    '          script.async = true;',
+    '          script.crossOrigin = "anonymous";',
+    '          script.onload = () => {',
+    '            const container = findContainer();',
+    '            if (container) resolveAttempt(container);',
+    '            else rejectAttempt(new Error(' + missingContainerMessage + '));',
+    '          };',
+    '          script.onerror = () => rejectAttempt(new Error(' + loadFailureMessage + '));',
+    '          document.head.appendChild(script);',
+    '        });',
+    '      })',
+    '      .then((container) => finish(null, container))',
+    '      .catch((error) => {',
+    '        activeScript?.remove();',
+    '        if (settled) return;',
+    '        if (attempt < 2) retryTimer = window.setTimeout(() => loadAttempt(attempt + 1), 250);',
+    '        else finish(error);',
+    '      });',
+    '  };',
+    '  loadAttempt(1);',
+    '})',
+  ].join('\n')
+}
+
+export function generateRemotesConfig(isDev = false) {
+  return Object.fromEntries(
+    remoteProjects.map((project) => [project.name, createRemoteLoader(project, getRemoteUrl(project, isDev))])
+  )
 }

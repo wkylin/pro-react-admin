@@ -10,25 +10,21 @@
 
 ### 步骤 2: 配置环境变量
 
-在 `.env` 文件中添加：
+在 `.env.development` 或 `.env.production` 中添加：
 
 ```bash
-# 加密模式: none | aes | rsa | hybrid
-VITE_ENCRYPTION_MODE=hybrid
-
-# AES 密钥（16/24/32 字符）
-VITE_AES_KEY=my-secret-key-16
+# 加密模式: none | rsa | hybrid
+REACT_APP_ENCRYPTION_MODE=hybrid
 
 # RSA 公钥（从后端获取或自己生成）
-VITE_RSA_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
+REACT_APP_RSA_PUBLIC_KEY="-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...
 -----END PUBLIC KEY-----"
 
-# RSA 私钥（可选，仅用于解密响应，生产环境不应在前端配置）
-VITE_RSA_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDQ...
------END PRIVATE KEY-----"
+# 不要将 RSA 私钥或其他服务器凭据放入前端环境变量
 ```
+
+Webpack 只会将 webpack/client-env.js 白名单注入浏览器。RSA 公钥可以公开；固定 AES 密钥不能作为浏览器端秘密，Webpack 会拒绝注入 AES key、密码和其他凭据。前端加密不能代替 TLS、身份认证和服务端授权。
 
 ### 步骤 3: 初始化加密（在应用入口）
 
@@ -51,11 +47,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 ```javascript
 // src/index.tsx
 import request from '@src/service/request'
+import { getEnv } from '@utils/env'
 
 // 混合加密（推荐）
 request.configureHybrid(
-  import.meta.env.VITE_RSA_PUBLIC_KEY,
-  import.meta.env.VITE_RSA_PRIVATE_KEY
+  getEnv('REACT_APP_RSA_PUBLIC_KEY')
 )
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />)
@@ -282,11 +278,11 @@ app.get('/api/crypto/config', (req, res) => {
 
 ### ✅ 推荐做法
 
-1. **使用环境变量存储密钥**
+1. **不要在浏览器配置固定 AES 密钥**
    ```bash
-   # 不要硬编码在代码中
-   VITE_AES_KEY=your-secure-key
+   REACT_APP_RSA_PUBLIC_KEY=...
    ```
+   浏览器 bundle 对使用者可见。RSA 公钥可以公开，私钥和固定 AES 密钥只能保存在服务端。
 
 2. **从后端获取公钥**
    ```javascript
@@ -299,13 +295,13 @@ app.get('/api/crypto/config', (req, res) => {
 3. **使用混合加密**
    ```javascript
    // 结合 RSA 和 AES 的优点
-   request.configureHybrid(publicKey, privateKey)
+   request.configureHybrid(publicKey)
    ```
 
 4. **私钥不要暴露给前端**
    ```javascript
    // ❌ 不要这样做
-   request.configureRSA(publicKey, privateKey)  // 前端不需要私钥！
+   request.configureRSA(publicKey)  // 前端不需要私钥！
    
    // ✅ 只配置公钥
    request.configureRSA(publicKey)
@@ -313,7 +309,7 @@ app.get('/api/crypto/config', (req, res) => {
 
 5. **生产环境禁用日志**
    ```javascript
-   if (import.meta.env.PROD) {
+   if (process.env.NODE_ENV === 'production') {
      // 禁用加密相关日志
    }
    ```

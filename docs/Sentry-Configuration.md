@@ -1,273 +1,38 @@
-# Sentry 配置指南
+# Sentry 配置
 
-## 概述
+运行时监控由 `@sentry/react` 初始化，Webpack 生产构建使用 `@sentry/webpack-plugin` 上传 release 和 source maps。
 
-本文档详细介绍 pro-react-admin 项目中 Sentry 的配置和使用方法。Sentry 是一个开源的错误跟踪和性能监控平台，帮助开发者实时监控和修复生产环境中的问题。
+## 运行时 DSN
 
-## 安装依赖
+src/bootstrap/renderApp.tsx 只在生产环境、非 localhost 且提供 DSN 时初始化 Sentry。SENTRY_DSN 被显式加入 webpack/client-env.js，它是浏览器端的项目标识，不是上传凭据。
 
-项目中已安装以下 Sentry 相关依赖：
+默认不发送默认 PII，不启用 Session Replay，性能采样率为 0.1。确有产品和隐私审批需要时，才能在构建环境设置 SENTRY_SEND_DEFAULT_PII=true 或 SENTRY_ENABLE_REPLAY=true；SENTRY_TRACES_SAMPLE_RATE 可设置 0 到 1 之间的采样率。浏览器 localStorage 中的 SENTRY_DISABLE=1 仍可关闭 Sentry。
 
-```json
-{
-  "@sentry/react": "^10.29.0",
-  "@sentry/webpack-plugin": "^4.6.1",
-  "@sentry/vite-plugin": "^4.6.1"
-}
+## Release 和 source map 上传
+
+`webpack/webpack.prod.js` 只在 `SENTRY_SOURCE_MAP=map` 且存在 `SENTRY_AUTH_TOKEN` 时注册插件。组织、项目和 token 只供 Node 构建过程使用：
+
+```text
+SENTRY_AUTH_TOKEN  # CI secret
+SENTRY_ORG         # CI/build environment
+SENTRY_PROJECT     # CI/build environment
+SENTRY_DSN         # browser runtime DSN
 ```
 
-- `@sentry/react`: React 应用的 Sentry SDK
-- `@sentry/webpack-plugin`: 用于在 Webpack 构建时上传 source maps
-- `@sentry/vite-plugin`: 用于在 Vite 构建时上传 source maps
-
-## 环境变量配置
-
-在 `.env.production` 文件中配置 Sentry 相关环境变量：
-
-```dotenv
-# Sentry Configuration
-SENTRY_AUTH_TOKEN=your_sentry_auth_token
-SENTRY_ORG=wkylin
-SENTRY_PROJECT=pro-react-admin
-SENTRY_DSN=https://3d8db323c44ddb1f24ba4ba3f60e01c6@o64827.ingest.us.sentry.io/4510499314860032
-```
-
-### 环境变量说明：
-
-- `SENTRY_AUTH_TOKEN`: Sentry 认证令牌（从 Sentry 项目设置中获取）
-- `SENTRY_ORG`: Sentry 组织名称
-- `SENTRY_PROJECT`: Sentry 项目名称
-- `SENTRY_DSN`: Sentry 项目 DSN
-
-### Webpack 环境变量加载
-
-**重要说明**：对于 Webpack 构建，需要在 `webpack.prod.js` 文件顶部显式加载环境变量：
-
-```javascript
-// Load environment variables
-require('dotenv').config({ path: path.resolve(__dirname, '../.env.production') })
-```
-
-如果不添加此配置，webpack 构建时会显示 "No auth token provided" 警告，即使环境变量文件存在。
-
-## 应用配置
-
-### 1. Sentry 初始化配置
-
-在 `src/index.tsx` 中进行 Sentry 初始化：
-
-```typescript
-import * as Sentry from '@sentry/react'
-
-Sentry.init({
-  dsn: process.env.SENTRY_DSN || 'https://3d8db323c44ddb1f24ba4ba3f60e01c6@o64827.ingest.us.sentry.io/4510499314860032',
-  sendDefaultPii: true,
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-  tracesSampleRate: 1.0,
-  tracePropagationTargets: ['localhost', /^https:\/\/wkylin\.sentry\.io\/api/],
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
-  enableLogs: true,
-})
-```
-
-## Webpack 构建配置
-
-在 `webpack/webpack.prod.js` 中配置 Sentry Webpack 插件：
-
-```javascript
-const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
-
-if (process.env.SENTRY_SOURCE_MAP === 'map') {
-  prodWebpackConfig.plugins.push(
-    sentryWebpackPlugin({
-      release: packageJson.version,
-      include: path.join(__dirname, '../dist/static/js'),
-      urlPrefix: '~/static/js',
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      telemetry: false,
-    })
-  )
-}
-```
-
-## Vite 构建配置
-
-在 `vite.config.ts` 中添加 Sentry 插件：
-
-```typescript
-import { sentryVitePlugin } from '@sentry/vite-plugin'
-import packageJson from './package.json'
-
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '')
-  const isProd = mode === 'production'
-  const useSentry = env.SENTRY_SOURCE_MAP === 'map' && isProd
-
-  return {
-    plugins: [
-      // ... 其他插件
-      ...(useSentry
-        ? [
-            sentryVitePlugin({
-              org: env.SENTRY_ORG || 'wkylin',
-              project: env.SENTRY_PROJECT || 'pro-react-admin',
-              authToken: env.SENTRY_AUTH_TOKEN,
-              release: {
-                name: packageJson.version,
-              },
-              sourcemaps: {
-                assets: './dist-vite/assets/**',
-              },
-              bundleSizeOptimizations: {
-                excludeDebugStatements: true,
-                excludeTracing: false,
-                excludeReplayIframe: true,
-                excludeReplayShadowDom: true,
-                excludeReplayWorker: true,
-              },
-            }),
-          ]
-        : []),
-    ],
-    build: {
-      sourcemap: useSentry ? 'hidden' : false,
-    },
-  }
-})
-```
-
-## 构建脚本
-
-### Webpack 构建
-
-```json
-{
-  "scripts": {
-    "build:production": "cross-env SENTRY_SOURCE_MAP=map BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details"
-  }
-}
-```
-
-### Vite 构建
-
-```json
-{
-  "scripts": {
-    "build:vite": "vite build --config vite.config.ts",
-    "build:vite:sentry": "cross-env SENTRY_DISABLE_TELEMETRY=1 SENTRY_SOURCE_MAP=map vite build --config vite.config.ts"
-  }
-}
-```
-
-## 遥测设置
-
-Sentry 插件默认会发送遥测数据。要禁用遥测：
-
-### Webpack
-
-```javascript
-sentryWebpackPlugin({
-  // ... 其他配置
-  telemetry: false,
-})
-```
-
-### Vite
+生产构建命令已设置 `SENTRY_SOURCE_MAP=map`：
 
 ```bash
-# 使用环境变量
-cross-env SENTRY_DISABLE_TELEMETRY=1 vite build --config vite.config.ts
+pnpm run build:production
 ```
 
-## 使用方法
+若未设置 token，构建会继续，但跳过 Sentry 上传。不要把 SENTRY_AUTH_TOKEN 加入 webpack/client-env.js，也不要提交 token 到仓库。仓库旧 Git 历史可能保留曾经提交的 token，应轮换该凭据。
 
-### 手动发送事件
+## CI 配置
 
-```typescript
-import * as Sentry from '@sentry/react'
+在 GitHub Actions 或 Vercel 的构建环境中设置 `SENTRY_AUTH_TOKEN`、`SENTRY_ORG` 和 `SENTRY_PROJECT`；需要生产运行时上报时，再设置 `SENTRY_DSN`。所有上传凭据应通过 CI Secret 或部署平台的环境变量提供。
 
-// 发送消息
-Sentry.captureMessage('Something went wrong!')
+相关实现：
 
-// 发送异常
-Sentry.captureException(new Error('Something broke!'))
-
-// 发送自定义事件
-Sentry.captureEvent({
-  message: 'Custom event',
-  level: 'info',
-  tags: {
-    custom_tag: 'value',
-  },
-})
-```
-
-### 错误边界
-
-项目使用自定义的 ErrorBoundary 组件：
-
-```tsx
-import ErrorBoundary from '@/components/ErrorBoundary'
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <YourAppComponents />
-    </ErrorBoundary>
-  )
-}
-```
-
-## 常见问题
-
-### 1. 看不到统计消息
-
-**原因：**
-
-- 应用在开发环境中运行
-- 没有触发错误或事件
-- DSN 配置错误
-
-**解决方案：**
-
-1. 确保在生产环境中运行
-2. 手动触发测试事件
-3. 检查 DSN 配置
-
-### 2. Source Map 上传失败
-
-**原因：**
-
-- Auth Token 无效
-- 网络连接问题
-
-**解决方案：**
-
-1. 检查 Auth Token 是否正确
-2. 验证网络连接
-
-### 3. 构建时出现敏感信息警告
-
-**原因：**
-
-- Token 直接写在代码中
-
-**解决方案：**
-
-1. 使用环境变量存储敏感信息
-2. 不要将包含敏感信息的文件提交到版本控制
-
-## 安全注意事项
-
-1. **永远不要将敏感信息提交到版本控制**
-2. **使用环境变量存储 Auth Token 和 DSN**
-3. **定期轮换 Auth Token**
-4. **限制 Auth Token 的权限范围**
-
-## 更新日志
-
-- 2025-12-09: 重新配置 Sentry，使用环境变量存储敏感信息
-- 2025-12-09: 支持 Webpack 和 Vite 构建的 Sentry 配置
+- [`webpack/webpack.prod.js`](../webpack/webpack.prod.js)
+- [`webpack/webpack.common.js`](../webpack/webpack.common.js)
+- [`src/bootstrap/renderApp.tsx`](../src/bootstrap/renderApp.tsx)

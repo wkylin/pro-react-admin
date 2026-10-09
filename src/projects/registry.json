@@ -1,0 +1,51 @@
+{
+  "mfeProtocolVersion": 1,
+  "projects": {
+    "default": {
+      "sourceRoot": ".",
+      "entry": "index.tsx",
+      "routers": "routers",
+      "output": "dist"
+    },
+    "projectA": {
+      "sourceRoot": "projects/projectA",
+      "entry": "index.tsx",
+      "routers": "routers",
+      "mfeExpose": "mfe/App.tsx",
+      "output": "dist-projectA"
+    },
+    "projectB": {
+      "sourceRoot": "projects/projectB",
+      "entry": "index.tsx",
+      "routers": "routers",
+      "mfeExpose": "mfe/App.tsx",
+      "output": "dist-projectB"
+    },
+    "shell": {
+      "sourceRoot": "projects/shell",
+      "entry": "index.tsx",
+      "routers": "routers",
+      "output": "dist-shell"
+    }
+  },
+  "remotes": [
+    {
+      "name": "projectA",
+      "label": "ProjectA",
+      "routePath": "/projectA",
+      "devPort": 8081,
+      "devUrl": "http://localhost:8081/remoteEntry.js",
+      "prodPath": "/projectA/remoteEntry.js",
+      "envKey": "MFE_PROJECTA_URL"
+    },
+    {
+      "name": "projectB",
+      "label": "ProjectB",
+      "routePath": "/projectB",
+      "devPort": 8082,
+      "devUrl": "http://localhost:8082/remoteEntry.js",
+      "prodPath": "/projectB/remoteEntry.js",
+      "envKey": "MFE_PROJECTB_URL"
+    }
+  ]
+}

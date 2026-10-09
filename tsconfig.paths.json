@@ -1,0 +1,90 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@": [
+        "./src"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+      "@src": [
+        "./src"
+      ],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@app": [
+        "./src"
+      ],
+      "@app/*": [
+        "./src/*"
+      ],
+      "@routers": [
+        "./src/routers"
+      ],
+      "@routers/*": [
+        "./src/routers/*"
+      ],
+      "@assets/audio": [
+        "./src/assets/audio"
+      ],
+      "@assets/audio/*": [
+        "./src/assets/audio/*"
+      ],
+      "@assets/video": [
+        "./src/assets/video"
+      ],
+      "@assets/video/*": [
+        "./src/assets/video/*"
+      ],
+      "@stateless": [
+        "./src/components/stateless"
+      ],
+      "@stateless/*": [
+        "./src/components/stateless/*"
+      ],
+      "@stateful": [
+        "./src/components/stateful"
+      ],
+      "@stateful/*": [
+        "./src/components/stateful/*"
+      ],
+      "@hooks": [
+        "./src/components/hooks"
+      ],
+      "@hooks/*": [
+        "./src/components/hooks/*"
+      ],
+      "@app-hooks": [
+        "./src/app-hooks"
+      ],
+      "@app-hooks/*": [
+        "./src/app-hooks/*"
+      ],
+      "@assets": [
+        "./src/assets"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+      "@pages": [
+        "./src/pages"
+      ],
+      "@pages/*": [
+        "./src/pages/*"
+      ],
+      "@utils": [
+        "./src/utils"
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@theme": [
+        "./src/theme"
+      ],
+      "@theme/*": [
+        "./src/theme/*"
+      ]
+    }
+  }
+}

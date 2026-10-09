@@ -1,576 +1,109 @@
-# Module Federation 多项目部署指南
+# 微前端开发与部署
 
-## 概述
+项目使用 Webpack 5 Module Federation。Shell 在运行时加载 Remote 的 remoteEntry.js 和暴露的 App 组件。项目清单位于 src/projects/registry.json，构建和 Shell 路由共享这份 Remote 配置。
 
-本项目使用 Webpack Module Federation 实现微前端架构，支持动态扩展远程项目。配置已优化，无需硬编码项目名称。
+## 运行模型
 
-## 配置扩展
+- Shell/Host：src/projects/shell/index.tsx；路由在 src/projects/shell/routers/index.tsx。
+- ProjectA、ProjectB 的暴露模块：各自 src/projects/<name>/mfe/App.tsx。
+- Shell 的静态动态导入由 src/projects/shell/remote-components.tsx 生成；Webpack Module Federation 要求 remote 名称在构建期可解析。
+- RemoteApp 页面和 Portal 链接、Webpack remote URL 都根据注册表维护。
+- `src/projects/registry.json` 是 Remote 协议版本的单一来源；`pnpm run sync:project-contracts` 生成静态 imports 和 TS module declarations。
+- `scripts/validate-project-registry.mjs` 检查项目入口、路由目录、Remote 暴露文件和运行时环境变量白名单；CI 检查生成文件是否过期。
+- Webpack 将 React、React DOM、React Router、Ant Design、dayjs、zustand 和 immer 配置为 singleton/eager shared。
 
-### 1. 添加新的远程项目
+普通多项目构建由 PROJECT 选择一个完整应用入口；MFE 构建则分别产出 Shell 和 Remote。详见多项目说明（MULTI_PROJECT.md）。
 
-编辑 `webpack/mfe.config.js`，在 `remoteProjects` 数组中添加新项目：
+## 本地联调
 
-```javascript
-export const remoteProjects = [
-  {
-    name: 'projectA',
-    devUrl: 'http://localhost:8081/remoteEntry.js',
-    prodPath: '/projectA/remoteEntry.js',
-    envKey: 'MFE_PROJECTA_URL',
-  },
-  {
-    name: 'projectB',
-    devUrl: 'http://localhost:8082/remoteEntry.js',
-    prodPath: '/projectB/remoteEntry.js',
-    envKey: 'MFE_PROJECTB_URL',
-  },
-  // 新增项目 C
-  {
-    name: 'projectC',
-    devUrl: 'http://localhost:8083/remoteEntry.js',
-    prodPath: '/projectC/remoteEntry.js',
-    envKey: 'MFE_PROJECTC_URL',
-  },
-]
-```
+在三个终端分别启动 ProjectA、ProjectB，再启动 Shell：
 
-### 2. 通过环境变量配置
+1. pnpm run start:mf:projectA，Remote 默认 8081。
+2. pnpm run start:mf:projectB，Remote 默认 8082。
+3. pnpm run start:mf:shell，Shell 默认 8080。
 
-在 `.env.development` 或 `.env.production` 中配置：
+访问 http://localhost:8080/#/portal。先启动 Remote 可减少首次加载错误。可直接打开每个 Remote 的 `/remote-manifest.json` 和 `/remoteEntry.js`，确认 manifest 报告名称、版本及协议版本，且入口能响应 JavaScript。
 
-```bash
-# 单个项目覆盖
-MFE_PROJECTA_URL=http://192.168.1.100:8081/remoteEntry.js
-MFE_PROJECTB_URL=http://192.168.1.100:8082/remoteEntry.js
+常见检查：
 
-# 或者批量配置（高级）
-MFE_REMOTES=projectA@http://192.168.1.100:8081/remoteEntry.js,projectB@http://192.168.1.100:8082/remoteEntry.js
-```
+- Remote 的 remoteEntry.js 和后续 chunk 在浏览器 Network 中均返回成功。
+- Shell 的 MFE_PROJECTA_URL/MFE_PROJECTB_URL 指向对应 Remote。
+- Host 和 Remote 从同一仓库、同一依赖锁文件构建。
+- 修改依赖或 Webpack 配置后重启相关 dev server。
 
-## 开发环境部署
+## Remote URL
 
-### Host 应用（主应用）
+注册表中的 Remote 字段包括 name、label、routePath、devPort、devUrl、prodPath 和 envKey。默认同域部署使用 prodPath，例如 /projectA/remoteEntry.js；独立部署时通过 MFE_PROJECTA_URL 或 MFE_PROJECTB_URL 覆盖。
 
-```bash
-# 开发环境启动
-npm run dev
+构建期校验规则：
 
-# 推荐：直接用 npm scripts（会自动把 node_modules/.bin 加入 PATH）
-npm run start:mf:shell
+- 开发地址支持 HTTP 或 HTTPS。
+- 生产环境完整 URL 必须是 HTTPS，且不能在 URL 中携带用户名或密码。
+- 同域生产路径必须是以单斜线开头的绝对路径。
+- URL 会被安全序列化进 remote loader，不再直接拼接原始配置文本。
+- loader 先获取 `remote-manifest.json`，校验 schema、Remote 名称和 `mfeProtocolVersion` 后再加载 remoteEntry.js。
+- 请求或脚本加载失败自动重试一次；总等待上限为 15 秒，超时后 Shell 显示降级提示。
+- Remote manifest 和 remoteEntry.js 使用 no-cache 响应头；跨域部署需同时允许 manifest JSON 与 JavaScript chunk 的 CORS。
 
-# 或者：不依赖全局 PATH，用 npx 调用本地 cross-env
-npx cross-env NODE_ENV=development MFE_ROLE=host webpack serve --config webpack/webpack.dev.js
-```
+Remote imports 和 typings/module-federation.d.ts 都从注册表生成。添加、重命名 Remote 或修改协议版本后运行 `pnpm run sync:project-contracts`、`pnpm run check:project-registry` 和 `pnpm run check:project-contracts`。
 
-### Remote 应用（远程项目）
+## 事件通信协议
 
-启动 projectA：
-```bash
-# 推荐
-npm run start:mf:projectA
+src/mfe/bridge.ts 适用于同一页面里的 Host/Remote 通信，事件 payload 会在运行时校验。协议和全局 bus 使用版本号；Host 与 Remote 应一起升级，跨版本未知事件或无效 payload 会被丢弃。
 
-# 或者：npx 方式
-npx cross-env NODE_ENV=development MFE_ROLE=remote PROJECT=projectA webpack serve --config webpack/webpack.dev.js --port 8081
-```
+postMessage 仅用于 iframe/跨域集成：
 
-启动 projectB：
-```bash
-# 推荐
-npm run start:mf:projectB
+- 默认发往当前 origin，默认只接收同源消息。
+- 跨域时 attachMfePostMessageBridge 必须传入准确的 allowedOrigins。
+- iframe 默认把消息发给父窗口；父窗口发给指定 iframe 时，将目标 Window 作为 emitMfePostMessage 的第四个参数传入。
+- 不支持通配符 *；消息需要包含当前协议版本和合法事件结构。
 
-# 或者：npx 方式
-npx cross-env NODE_ENV=development MFE_ROLE=remote PROJECT=projectB webpack serve --config webpack/webpack.dev.js --port 8082
-```
+这是一条应用内通信桥，不是登录授权或服务端信任边界。不要在事件或共享状态中传递密码、访问 token 等秘密。
 
-## 生产环境部署
+## 构建
 
-### 1. 构建所有项目
+分别构建 Shell 和两个 Remote：
 
-#### 构建主应用（Host）
+- pnpm run build:mf:shell
+- pnpm run build:mf:projectA
+- pnpm run build:mf:projectB
+
+输出目录分别为 dist-shell/、dist-projectA/、dist-projectB/。普通 ProjectA/ProjectB 构建与 Remote 构建可能写入相同目录，不要同时运行。
+
+构建并组装 Vercel 聚合产物：
+
+- pnpm run vercel-build
+
+Shell 位于 dist-vercel 根目录；两个 Remote 分别位于 projectA/、projectB/。
+
+本地运行 MFE 浏览器 smoke 流程前，先生成聚合产物并安装 Playwright Chromium：
 
 ```bash
-# 推荐：直接用 npm scripts（会自动把 node_modules/.bin 加入 PATH）
-npm run build:mf:shell
-
-# 或者：不依赖全局 PATH，用 npx 调用本地 cross-env
-npx cross-env PROJECT=shell MFE_ROLE=host PUBLIC_URL=/ SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production webpack --config webpack/webpack.prod.js --stats-error-details
+pnpm run build:mf:vercel
+pnpm exec playwright install chromium
+pnpm run test:e2e:mfe
 ```
 
-输出目录：`dist/`
+测试会确认 ProjectA 能加载并校验 manifest，并让 ProjectB manifest 返回 503，确认 Host 重试一次后显示降级页。预览服务监听 5080。
 
-#### 构建远程应用（Remote）
+## Vercel 发布
 
-构建 projectA：
-```bash
-# 推荐
-npm run build:mf:projectA
+聚合 Vercel 配置：vercel.mfe.json，Build Command 为 pnpm run vercel-build，Output Directory 为 dist-vercel。使用 Vercel CLI 时指定 --local-config vercel.mfe.json；Git 集成仍需在 Dashboard 对照 Build Command、Output Directory 和 Root Directory。
 
-# 或者：npx 方式
-npx cross-env PROJECT=projectA MFE_ROLE=remote PUBLIC_URL=/projectA/ SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production webpack --config webpack/webpack.prod.js --stats-error-details
-```
+独立部署配置：
 
-输出目录：`dist-projectA/`
+| 配置 | 输出 |
+| --- | --- |
+| vercel.shell.json | dist-shell |
+| vercel.projectA.json | dist-projectA |
+| vercel.projectB.json | dist-projectB |
 
-构建 projectB：
-```bash
-# 推荐
-npm run build:mf:projectB
+所有配置都使用 pnpm。独立 Remote 域名应将完整 HTTPS remoteEntry.js URL 设置在 Shell 的构建环境，并允许 Host 加载 Remote 入口和后续 JavaScript chunk。完整部署入口见 DEPLOY.md。
 
-# 或者：npx 方式
-npx cross-env PROJECT=projectB MFE_ROLE=remote PUBLIC_URL=/projectB/ SENTRY_SOURCE_MAP=no BUILD_GOAL=production NODE_ENV=production webpack --config webpack/webpack.prod.js --stats-error-details
-```
+聚合部署对 root 和 Remote 子路径的 remoteEntry.js、remote-manifest.json 使用 no-cache；带 hash 的 static 资源使用长期 immutable 缓存。部署后仍要确认 CDN 实际响应头和 chunk publicPath。
 
-输出目录：`dist-projectB/`
+## 兼容边界
 
-### 2. 部署到服务器
-
-#### 方案 1: 同域名部署（推荐）
-
-将所有构建产物部署到同一域名的不同路径：
-
-```
-/var/www/myapp/
-├── index.html                 # 主应用入口
-├── static/                    # 主应用静态资源
-├── remoteEntry.js            # 主应用 MFE 入口（如果需要）
-├── projectA/
-│   ├── index.html
-│   ├── remoteEntry.js        # projectA 的 MFE 入口
-│   └── static/
-└── projectB/
-    ├── index.html
-    ├── remoteEntry.js        # projectB 的 MFE 入口
-    └── static/
-```
-
-Nginx 配置示例：
-
-```nginx
-server {
-    listen 80;
-    server_name myapp.example.com;
-    root /var/www/myapp;
-
-    # 主应用
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-
-    # projectA
-    location /projectA {
-        alias /var/www/myapp/projectA;
-        try_files $uri $uri/ /projectA/index.html;
-    }
-
-    # projectB
-    location /projectB {
-        alias /var/www/myapp/projectB;
-        try_files $uri $uri/ /projectB/index.html;
-    }
-
-    # 静态资源缓存
-    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf)$ {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-}
-```
-
-#### 方案 2: 跨域部署
-
-如果远程应用部署在不同域名：
-
-1. 更新 `webpack/mfe.config.js` 中的 `prodPath`：
-
-```javascript
-export const remoteProjects = [
-  {
-    name: 'projectA',
-    devUrl: 'http://localhost:8081/remoteEntry.js',
-    prodPath: 'https://projecta.example.com/remoteEntry.js', // 完整 URL
-    envKey: 'MFE_PROJECTA_URL',
-  },
-]
-```
-
-2. 配置远程应用的 CORS 头：
-
-```nginx
-server {
-    listen 80;
-    server_name projecta.example.com;
-    root /var/www/projectA;
-
-    location / {
-        # 允许主应用域名访问
-        add_header Access-Control-Allow-Origin "https://myapp.example.com";
-        add_header Access-Control-Allow-Methods "GET, OPTIONS";
-        add_header Access-Control-Allow-Headers "Content-Type";
-
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-### 3. 使用 Docker 部署
-
-#### Dockerfile 示例（单个应用）
-
-```dockerfile
-FROM node:18-alpine AS builder
-
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-ARG PROJECT_NAME
-ARG MFE_ROLE
-ENV NODE_ENV=production
-ENV PROJECT=${PROJECT_NAME}
-ENV MFE_ROLE=${MFE_ROLE}
-
-RUN npm run build
-
-FROM nginx:alpine
-ARG PROJECT_NAME
-COPY --from=builder /app/dist-${PROJECT_NAME:-}/ /usr/share/nginx/html/
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-#### docker-compose.yml 示例
-
-```yaml
-version: '3.8'
-
-services:
-  # 主应用
-  host:
-    build:
-      context: .
-      args:
-        MFE_ROLE: host
-    ports:
-      - "80:80"
-    networks:
-      - mfe-network
-
-  # 远程应用 A
-  projectA:
-    build:
-      context: .
-      args:
-        PROJECT_NAME: projectA
-        MFE_ROLE: remote
-    ports:
-      - "8081:80"
-    networks:
-      - mfe-network
-
-  # 远程应用 B
-  projectB:
-    build:
-      context: .
-      args:
-        PROJECT_NAME: projectB
-        MFE_ROLE: remote
-    ports:
-      - "8082:80"
-    networks:
-      - mfe-network
-
-networks:
-  mfe-network:
-    driver: bridge
-```
-
-启动所有服务：
-```bash
-docker-compose up -d
-```
-
-### 4. CI/CD 部署
-
-#### GitHub Actions 示例
-
-```yaml
-name: Deploy MFE Applications
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project:
-          # 建议：直接复用 package.json 里已定义的 build:mf:* 脚本
-          - { name: 'shell', role: 'host', script: 'build:mf:shell', path: 'dist-shell' }
-          - { name: 'projectA', role: 'remote', script: 'build:mf:projectA', path: 'dist-projectA' }
-          - { name: 'projectB', role: 'remote', script: 'build:mf:projectB', path: 'dist-projectB' }
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build ${{ matrix.project.name }}
-        run: |
-          npm run ${{ matrix.project.script }}
-
-          # 备选：如需不用 npm scripts，可改成 npx 形式（示意）
-          # npx cross-env PROJECT=${{ matrix.project.name }} MFE_ROLE=${{ matrix.project.role }} BUILD_GOAL=production NODE_ENV=production webpack --config ./webpack/webpack.prod.js --stats-error-details
-
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v2
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          SOURCE: ${{ matrix.project.path }}/
-          TARGET: /var/www/myapp/${{ matrix.project.name }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-```
-
-### 5. Vercel 部署（推荐方案：独立项目）
-
-#### 为什么推荐独立项目？
-
-将多个 MFE 放在同一 Vercel 项目 + 子路径下，使用 `publicPath: 'auto'` 经常出问题：
-- 刷新页面或深层路由时 `document.currentScript.src` 推断错误
-- Vercel rewrites 与 Module Federation chunk 加载互相干扰
-- 调试困难，排错成本高
-
-**推荐方案**：每个 MFE 独立 Vercel 项目，Host 用完整 URL 引用 Remote。
-
-#### 部署架构
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  独立 Vercel 项目                                                │
-├─────────────────────────────────────────────────────────────────┤
-│  pro-react-admin-shell.vercel.app     ← Host (主应用)           │
-│  pro-react-admin-projecta.vercel.app  ← Remote A               │
-│  pro-react-admin-projectb.vercel.app  ← Remote B               │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-#### 步骤 1: 创建三个 Vercel 项目
-
-在 Vercel Dashboard 中创建三个独立项目，连接同一个 Git 仓库：
-
-| 项目名 | 配置文件 | 用途 |
-|--------|----------|------|
-| `pro-react-admin-shell` | `vercel.shell.json` | Host 主应用 |
-| `pro-react-admin-projecta` | `vercel.projectA.json` | Remote A |
-| `pro-react-admin-projectb` | `vercel.projectB.json` | Remote B |
-
-#### 步骤 2: 配置各项目
-
-**Shell (Host) 项目设置：**
-- Framework Preset: `Other`
-- Build Command: `npm run build:mf:shell`
-- Output Directory: `dist-shell`
-- 环境变量:
-  ```
-  MFE_PROJECTA_URL=https://pro-react-admin-projecta.vercel.app/remoteEntry.js
-  MFE_PROJECTB_URL=https://pro-react-admin-projectb.vercel.app/remoteEntry.js
-  ```
-
-**ProjectA (Remote) 项目设置：**
-- Framework Preset: `Other`
-- Build Command: `cross-env PROJECT=projectA MFE_ROLE=remote npm run build:mf`
-- Output Directory: `dist-projectA`
-
-**ProjectB (Remote) 项目设置：**
-- Framework Preset: `Other`
-- Build Command: `cross-env PROJECT=projectB MFE_ROLE=remote npm run build:mf`
-- Output Directory: `dist-projectB`
-
-#### 步骤 3: 使用 Vercel CLI 部署（可选）
-
-```bash
-# 部署 Shell
-vercel --prod --local-config vercel.shell.json
-
-# 部署 ProjectA
-vercel --prod --local-config vercel.projectA.json
-
-# 部署 ProjectB
-vercel --prod --local-config vercel.projectB.json
-```
-
-#### 步骤 4: 配置自定义域名（推荐）
-
-为了更好的用户体验和品牌一致性：
-
-```
-app.yourdomain.com           → Shell (Host)
-projecta.yourdomain.com      → ProjectA (Remote)
-projectb.yourdomain.com      → ProjectB (Remote)
-```
-
-然后更新 Shell 的环境变量：
-```
-MFE_PROJECTA_URL=https://projecta.yourdomain.com/remoteEntry.js
-MFE_PROJECTB_URL=https://projectb.yourdomain.com/remoteEntry.js
-```
-
-#### 配置文件说明
-
-项目根目录包含三个 Vercel 配置文件：
-
-- `vercel.shell.json` - Shell (Host) 配置
-- `vercel.projectA.json` - ProjectA (Remote) 配置
-- `vercel.projectB.json` - ProjectB (Remote) 配置
-
-每个配置文件都包含：
-- `buildCommand`: 构建命令
-- `outputDirectory`: 输出目录
-- `rewrites`: SPA 路由支持
-- `headers`: CORS 和缓存配置（Remote 需要跨域头）
-
-#### 单项目部署（备选方案）
-
-如果坚持使用单项目 + 子路径方案，参考 `vercel.json`：
-
-```json
-{
-  "version": 2,
-  "buildCommand": "npm run build:mf:vercel",
-  "outputDirectory": "dist-vercel",
-  "rewrites": [
-    { "source": "/projectA/((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectA/index.html" },
-    { "source": "/projectB/((?!.*\\.[a-z0-9]+$).*)", "destination": "/projectB/index.html" },
-    { "source": "/((?!projectA|projectB)(?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
-  ]
-}
-```
-
-⚠️ **注意**：此方案需要精确配置 rewrites 正则表达式，且 `publicPath: 'auto'` 在某些边缘情况下可能失效。
-
-## 环境变量配置
-
-### .env.production 示例
-
-```bash
-# 构建目标
-BUILD_GOAL=production
-
-# 公共路径（根据部署位置调整）
-PUBLIC_URL=/
-
-# MFE 配置
-MFE_ROLE=host
-
-# 远程项目 URL（生产环境）
-# 如果使用相对路径，无需配置
-# 如果使用绝对路径或跨域，需要配置：
-# MFE_PROJECTA_URL=https://projecta.example.com/remoteEntry.js
-# MFE_PROJECTB_URL=https://projectb.example.com/remoteEntry.js
-
-# API 地址
-VITE_API_BASE_URL=https://api.example.com
-```
-
-## 验证部署
-
-### 1. 检查文件结构
-
-确保所有 `remoteEntry.js` 文件可访问：
-- 主应用：`https://myapp.example.com/`
-- projectA：`https://myapp.example.com/projectA/remoteEntry.js`
-- projectB：`https://myapp.example.com/projectB/remoteEntry.js`
-
-### 2. 浏览器控制台检查
-
-打开主应用，查看控制台：
-```javascript
-// 应该能看到类似输出
-[MFE] Remote projects configured: projectA, projectB
-```
-
-### 3. 网络面板检查
-
-检查是否成功加载了远程入口文件：
-- `remoteEntry.js` 应该返回 200 状态
-- 动态加载的 chunk 文件也应该成功加载
-
-## 常见问题
-
-### 1. remoteEntry.js 404 错误
-
-**原因**: 路径配置不正确
-
-**解决**:
-- 检查 `webpack/mfe.config.js` 中的 `prodPath` 是否正确
-- 检查 Nginx 配置是否正确映射路径
-- 确认文件确实存在于目标目录
-
-### 2. CORS 错误
-
-**原因**: 跨域配置问题
-
-**解决**:
-- 如果同域部署，使用相对路径
-- 如果跨域部署，配置正确的 CORS 头
-- 使用完整的 HTTPS URL
-
-### 3. 共享依赖版本冲突
-
-**原因**: 不同应用的依赖版本不一致
-
-**解决**:
-- 统一所有应用的 React、Antd 等关键依赖版本
-- 检查 `package.json` 确保版本一致
-- 使用 `npm list <package>` 检查实际安装版本
-
-### 4. 动态路径问题
-
-**原因**: SPA 路由与静态文件服务冲突
-
-**解决**:
-- 使用 `try_files $uri $uri/ /index.html` 配置
-- 确保 `publicPath` 设置正确（通常为 'auto' 或 '/'）
-
-## 性能优化建议
-
-1. **启用 HTTP/2**: 改善多文件加载性能
-2. **CDN 加速**: 将静态资源部署到 CDN
-3. **压缩资源**: 启用 Gzip/Brotli 压缩
-4. **缓存策略**: 设置合理的缓存过期时间
-5. **预加载**: 使用 `<link rel="preload">` 预加载关键资源
-
-## 安全建议
-
-1. **HTTPS**: 生产环境必须使用 HTTPS
-2. **CSP**: 配置内容安全策略
-3. **源验证**: 验证远程模块的来源
-4. **版本锁定**: 生产环境锁定依赖版本
-
-## 监控与日志
-
-建议添加以下监控：
-- 远程模块加载成功率
-- 加载时间监控
-- 错误日志收集
-- 用户体验指标（Core Web Vitals）
-
-## 更多资源
-
-- [Webpack Module Federation 文档](https://webpack.js.org/concepts/module-federation/)
-- [Module Federation Examples](https://github.com/module-federation/module-federation-examples)
-- 项目内其他文档：
-  - [docs/MULTI_PROJECT.md](./MULTI_PROJECT.md)
-  - [docs/DEPLOY.md](./DEPLOY.md)
+- Shell 与 Remote 当前共用单仓库依赖锁文件，React 等依赖按 singleton/eager 共享；协议 manifest 能拒绝不兼容协议，但不代表支持 Remote 独立升级共享依赖。
+- 新增 MFE 事件仍需要在 `MfeEventMap` 和运行时校验中显式声明，不能把事件桥当作任意 JSON 总线。
+- CI 会构建聚合 MFE，校验 artifact manifest，并在 Playwright 中覆盖 Remote 加载成功、manifest 校验及失败重试降级；上线后的跨域 CORS 和缓存行为仍需对 Vercel Preview 实际响应头做一次检查。

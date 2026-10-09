@@ -1,6 +1,6 @@
 // eslint.config.js
 // 2025 年最佳实践：Flat Config
-// 适合 React 19 + TypeScript 5 + Vite + Storybook 的组件库项目
+// 适合 React 19 + TypeScript 6 + Webpack 5 + Storybook 的应用与组件库
 
 import js from '@eslint/js'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'

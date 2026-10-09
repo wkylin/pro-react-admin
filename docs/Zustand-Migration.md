@@ -76,15 +76,13 @@ const toggle = useStore((s) => s.toggleSidebar)
 - 本地开发预览：
 
 ```bash
-npm run dev
-# 或（项目有多个脚本）
-npm run dev:vite
+pnpm start
 ```
 
 - 打包测试（库构建）：
 
 ```bash
-npm run build:lib
+ppnpm run build:lib
 ```
 
 - 推荐检查点：
@@ -103,7 +101,7 @@ npm run build:lib
 如需我：
 
 - 把 README / contrib 文档中添加迁移说明；
-- 运行一次端到端检查（`npm run test:e2e`）并修复发现的问题；
+- 运行一次端到端检查（`pnpm run test:e2e`）并修复发现的问题；
 - 或把更多业务模块按同样模式迁移 —— 我可以继续逐步替换并提交 PR。
 
 ---

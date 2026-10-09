@@ -2,6 +2,8 @@
 
 快速查找 API 文档。
 
+安全边界：浏览器中的 AES/RSA key 对使用者可见。configureAES 适合协议兼容或演示用途，不要把固定 AES key 当作秘密；不要把服务端私钥传给浏览器。请求加密不能替代 HTTPS、身份认证和服务端授权。
+
 ## 目录
 
 - [配置方法](#配置方法)
@@ -18,6 +20,8 @@
 
 配置 AES 对称加密。
 
+该 API 只是加密实现接口，不提供密钥保密能力。固定 AES key 如果在浏览器配置，用户可从 bundle 或运行时读取。
+
 **参数:**
 - `key` (string): AES 密钥，必须是 16/24/32 字符
 
@@ -30,7 +34,7 @@ request.configureAES('1234567890123456')
 
 ---
 
-### `request.configureRSA(publicKey, privateKey)`
+### `request.configureRSA(publicKey)`
 
 配置 RSA 非对称加密。
 
@@ -62,7 +66,7 @@ request.configureRSA(PUBLIC_KEY, PRIVATE_KEY)
 
 **示例:**
 ```javascript
-request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+request.configureHybrid(PUBLIC_KEY)
 ```
 
 **返回:** `request` (链式调用)
@@ -256,7 +260,7 @@ X-Encryption-Mode: AES|RSA|HYBRID
 import request from '@src/service/request'
 
 // 1. 配置加密
-request.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+request.configureHybrid(PUBLIC_KEY)
 
 // 2. 查看配置
 console.log(request.getEncryptionConfig())
@@ -280,7 +284,7 @@ request.enableEncryption()
 
 // 7. 链式调用
 request
-  .configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+  .configureHybrid(PUBLIC_KEY)
   .setEncryptRequest(true)
   .setEncryptResponse(true)
 ```
@@ -347,7 +351,7 @@ const decrypted = EncryptionHandler.decryptHybrid(
 
 ```javascript
 request
-  .configureHybrid(PUBLIC_KEY, PRIVATE_KEY)
+  .configureHybrid(PUBLIC_KEY)
   .setEncryptRequest(true)
   .setEncryptResponse(true)
   .enableEncryption()
