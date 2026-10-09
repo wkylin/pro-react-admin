@@ -469,6 +469,12 @@
     "zrender": "6.1.0",
     "zustand": "^5.0.14"
   },
+  "peerDependencies": {
+    "antd": "^6.4.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.3"
+  },
   "overrides": {
     "tmp": "0.2.5",
     "zustand": "^5.0.14",

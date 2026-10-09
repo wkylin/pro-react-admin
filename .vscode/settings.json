@@ -112,5 +112,8 @@
     "projectKey": "pro-react-admin"
   },
   "codegraphy.connectionType": "Interaction",
-  "codegraphy.nodeSize": "Lines"
+  "codegraphy.nodeSize": "Lines",
+  "json.schemaDownload.trustedDomains": {
+    "https://openapi.vercel.sh/vercel.json": true
+  }
 }

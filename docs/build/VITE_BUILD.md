@@ -11,17 +11,18 @@ Vite 是仓库当前唯一的构建工具。应用、多项目、组件库、Sto
 | ProjectA 独立构建 | `pnpm run build:production:projectA` | `dist-projectA/` |
 | ProjectB 独立构建 | `pnpm run build:production:projectB` | `dist-projectB/` |
 | 微前端宿主和远程应用 | `pnpm run build:mf:vercel` | `dist-vercel/` |
-| Storybook | `pnpm run build-storybook` | `storybook-static/` |
-| 组件库 | `pnpm run build:lib`、`pnpm run build:lib:entries` | `dist-lib/` |
+| Storybook 开发预览 | `pnpm run storybook` | <http://localhost:6006/> |
+| Storybook 静态构建/预览 | `pnpm run build-storybook` / `pnpm run serve:storybook` | `storybook-static/`，<http://localhost:6007/> |
+| 组件库 | `pnpm run prepublishOnly` | `dist-lib/` |
 
-本地开发、预览和端口说明见[本地开发指南](../getting-started/LOCAL_DEVELOPMENT.md)。微前端细节见[微前端部署](./MFE_DEPLOYMENT.md)。
+本地开发、预览和端口说明见[本地开发指南](../getting-started/LOCAL_DEVELOPMENT.md)。微前端细节见[微前端部署](./MFE_DEPLOYMENT.md)。Storybook 启动、静态预览、组件库构建和新项目接入步骤见[Storybook 与组件库指南](./COMPONENT_LIBRARY.md)。
 
 ## 配置入口
 
 - `vite.config.ts`：应用、项目入口、资源路径、应用产物和可选微前端插件。
 - `vite.config.lib.ts`：组件库根入口。
 - `vite.config.lib.entries.ts`：组件库分类子路径入口。
-- `vite.config.storybook.ts`：Storybook 配置。
+- `.storybook/main.ts`、`.storybook/preview.tsx`：Storybook 配置和全局预览装饰器。
 - `build/`：Vite 配置使用的环境、入口和 Module Federation 辅助模块。
 
 应用构建通过 `PROJECT` 选择默认应用或 `src/projects/<project>`。普通项目构建使用独立产物目录；`MFE_ROLE=host|remote` 时启用联邦构建配置。设置 `PUBLIC_URL` 调整静态资源 base，设置 `VITE_OUT_DIR` 覆盖输出目录。

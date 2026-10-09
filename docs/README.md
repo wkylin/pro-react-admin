@@ -16,7 +16,7 @@
 - [Vite 构建](./build/VITE_BUILD.md)：应用、组件库、Storybook、GitHub Pages 和微前端构建命令。
 - [部署说明](./build/DEPLOY.md)：GitHub Pages 与 Storybook 部署流程。
 - [微前端部署](./build/MFE_DEPLOYMENT.md)：Module Federation 本地联调、产物和 Vercel 部署。
-- [组件库构建与发布](./build/COMPONENT_LIBRARY.md)：库入口、npm 产物和发布流程。
+- [Storybook 与组件库](./build/COMPONENT_LIBRARY.md)：启动 Storybook、构建与发布 `@w.ui/wui-react`，以及在新项目中接入。
 
 ## 开发指南
 

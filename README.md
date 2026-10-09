@@ -30,10 +30,12 @@ pnpm run dev
 | --- | --- |
 | 启动默认应用 | `pnpm run dev` |
 | 启动 ProjectA / ProjectB | `pnpm run dev:projectA` / `pnpm run dev:projectB` |
+| 启动 Storybook | `pnpm run storybook`（<http://localhost:6006/>） |
+| 构建并预览 Storybook | `pnpm run build-storybook`，再运行 `pnpm run serve:storybook`（<http://localhost:6007/>） |
 | 构建默认应用 | `pnpm run build:production` |
 | 构建 GitHub Pages 版本 | `pnpm run build:pages` |
 | 启动微前端联调 | `pnpm run start:mf:shell`、`pnpm run start:mf:projectA`、`pnpm run start:mf:projectB` |
-| 构建组件库 | `pnpm run build:lib`、`pnpm run build:lib:entries` |
+| 构建组件库 | `pnpm run prepublishOnly` |
 
 ## 代码结构
 
@@ -84,4 +86,4 @@ docs/                # 按主题分层的开发文档
 - [微前端部署](./docs/build/MFE_DEPLOYMENT.md)
 - [路由与权限](./docs/development/ACCESS_CONTROL.md)
 - [请求与 API 层](./docs/development/REQUESTS.md)
-- [组件库构建与发布](./docs/build/COMPONENT_LIBRARY.md)
+- [Storybook 启动与组件库构建、接入和发布](./docs/build/COMPONENT_LIBRARY.md)

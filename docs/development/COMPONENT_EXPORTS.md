@@ -1,5 +1,7 @@
 # components/index.ts 维护说明（内部 barrel）
 
+在新项目中安装和使用 `@w.ui/wui-react`，以及启动 Storybook、构建或发布组件库，请查看[Storybook 与组件库指南](../build/COMPONENT_LIBRARY.md)。
+
 本项目存在两个“入口”概念：
 
 - **对外发布（build:lib）入口**：`src/lib/index.ts`（只包含可复用组件，避免把路由/页面代码打进 lib）

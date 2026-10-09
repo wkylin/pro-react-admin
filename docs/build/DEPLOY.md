@@ -7,7 +7,7 @@ GitHub Pages 的 CI 部署由 `.github/workflows/deploy-gh-pages.yml` 管理。�
 工作流使用 Node.js 24 和 pnpm 11.5.2，依次执行：
 
 1. 使用 `pnpm run build:production` 构建主应用，并设置 Pages 子路径 `/pro-react-admin/`。
-2. 使用 `pnpm run build-storybook` 构建 Storybook，并设置 base 路径 `/pro-react-admin/storybook/`。
+2. 使用 `pnpm run build-storybook` 构建 Storybook，并通过 `STORYBOOK_BASE_HREF=/pro-react-admin/storybook/` 设置 Pages 子路径。GitHub Actions 工作流已经配置此变量。
 3. 合并两个产物并上传给 GitHub Pages 部署 Action。
 
 当前在线路径：
@@ -23,6 +23,8 @@ GitHub Pages 的 CI 部署由 `.github/workflows/deploy-gh-pages.yml` 管理。�
 pnpm run build:pages
 pnpm run preview:pages
 ```
+
+在本地启动 Storybook 开发服务器使用 `pnpm run storybook`；构建后可使用 `pnpm run serve:storybook` 在 6007 端口预览。完整命令见[Storybook 与组件库指南](./COMPONENT_LIBRARY.md)。
 
 完整的构建目录、环境变量和预览验证命令见 [Vite 构建](./VITE_BUILD.md)。
 
