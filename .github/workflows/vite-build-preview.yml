@@ -1,0 +1,92 @@
+name: Vite Build and Preview
+
+on:
+  push:
+    branches:
+      - vite
+  pull_request:
+    branches:
+      - vite
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vite-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CI: 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and preview default app
+        run: |
+          pnpm run build:vite
+          pnpm run verify:vite:preview
+        env:
+          VITE_OUT_DIR: dist-vite
+          VERIFY_PROJECT: default
+
+      - name: Build and preview GitHub Pages base path
+        run: |
+          pnpm run build:vite:pages
+          pnpm run verify:vite:preview
+        env:
+          PUBLIC_URL: /pro-react-admin/
+          VITE_OUT_DIR: dist-vite-pages
+          VERIFY_PROJECT: default
+
+      - name: Build and preview projectA
+        run: |
+          pnpm run build:vite:projectA
+          pnpm run verify:vite:preview
+        env:
+          PROJECT: projectA
+          VITE_OUT_DIR: dist-vite-projectA
+          VERIFY_PROJECT: projectA
+
+      - name: Build and preview projectB
+        run: |
+          pnpm run build:vite:projectB
+          pnpm run verify:vite:preview
+        env:
+          PROJECT: projectB
+          VITE_OUT_DIR: dist-vite-projectB
+          VERIFY_PROJECT: projectB
+
+      - name: Upload preview artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vite-preview-${{ github.sha }}
+          path: |
+            dist-vite/
+            dist-vite-pages/
+            dist-vite-projectA/
+            dist-vite-projectB/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0

@@ -150,11 +150,6 @@ const SignUp = () => {
                 name="register"
                 initialValues={{
                   agreement: true,
-                  username: process.env.AUTH_USER,
-                  email: process.env.AUTH_EMAIL,
-                  phone: process.env.AUTH_PHONE,
-                  password: process.env.AUTH_PASSWORD,
-                  confirmPassword: process.env.AUTH_PASSWORD,
                 }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}

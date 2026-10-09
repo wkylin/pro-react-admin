@@ -16,6 +16,7 @@ import { generateRemotesConfig, parseRemotesFromEnv } from './mfe.config.js'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 import fs from 'fs'
+import { createPublicEnv } from '../build/public-env.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -75,6 +76,12 @@ switch (process.env.BUILD_GOAL) {
 // Note: dotenv-webpack injects env vars into the bundle, but it doesn't affect the
 // Node.js process.env used while generating the webpack configuration.
 dotenv.config({ path: path.resolve(__dirname, '..', dotEnv) })
+
+const publicEnv = createPublicEnv({
+  mode: process.env.NODE_ENV || 'development',
+  project: paths.projectName,
+  source: process.env,
+})
 
 // GitHub Pages typically serves the site under "/<repo>/".
 // When building in GitHub Actions and PUBLIC_URL isn't explicitly provided,
@@ -176,6 +183,9 @@ const config = {
   plugins: [
     new Dotenv({
       path: path.resolve(__dirname, '..', dotEnv),
+    }),
+    new webpack.DefinePlugin({
+      __APP_ENV__: JSON.stringify(publicEnv),
     }),
     codeInspectorPlugin({
       bundler: 'webpack',

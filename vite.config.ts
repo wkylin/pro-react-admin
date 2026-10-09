@@ -5,12 +5,14 @@ import svgr from 'vite-plugin-svgr'
 import compression from 'vite-plugin-compression'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 import path from 'path'
 import fs from 'fs'
 import type { Archiver, ArchiverOptions } from 'archiver'
 import { fileURLToPath } from 'url'
 import { createRequire } from 'module'
 import packageJson from './package.json'
+import { createPublicEnv } from './build/public-env.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const require = createRequire(import.meta.url)
@@ -30,33 +32,35 @@ const manualChunks = (id: string) => {
   }
 }
 
+const normalizeBase = (value: string | undefined) => {
+  const raw = (value ?? '').trim()
+  if (!raw || raw === '/') return '/'
+  if (raw === '.' || raw === './') return './'
+  if (raw.startsWith('http://') || raw.startsWith('https://')) return raw.endsWith('/') ? raw : `${raw}/`
+  const withLeadingSlash = raw.startsWith('/') ? raw : `/${raw}`
+  return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`
+}
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const project = (process.env.PROJECT || env.PROJECT || env.VITE_PROJECT || 'default').trim() || 'default'
+  const base = normalizeBase(process.env.PUBLIC_URL || env.PUBLIC_URL || env.VITE_BASE)
   const buildTime = new Date().toISOString()
 
   const resolveProjectDir = (...segments: string[]) => path.resolve(__dirname, 'src', 'projects', project, ...segments)
   const projectEntry = project === 'default' ? '/src/index.tsx' : `/src/projects/${project}/index.tsx`
   const projectPublicDir = project === 'default' ? path.resolve(__dirname, 'public') : resolveProjectDir('public')
   const hasProjectPublicDir = fs.existsSync(projectPublicDir) && fs.statSync(projectPublicDir).isDirectory()
-  const publicDir = hasProjectPublicDir ? projectPublicDir : path.resolve(__dirname, 'public')
-  const outDir = project === 'default' ? 'dist-vite' : `dist-vite-${project}`
-
-  const clientEnv = {
-    NODE_ENV: mode,
-    PROJECT: project,
-    APP_BASE_URL: env.APP_BASE_URL,
-    REACT_APP_USE_MOCK: env.REACT_APP_USE_MOCK,
-    AUTH_USER: env.AUTH_USER,
-    AUTH_EMAIL: env.AUTH_EMAIL,
-    AUTH_PHONE: env.AUTH_PHONE,
-    AUTH_PASSWORD: env.AUTH_PASSWORD,
-    IFRAME_ORIGIN: env.IFRAME_ORIGIN,
-    DEPLOYED_ENV: env.DEPLOYED_ENV,
-    REACT_APP_GITHUB_CLIENT_ID: env.REACT_APP_GITHUB_CLIENT_ID,
-    REACT_APP_GITHUB_CLIENT_SECRET: env.REACT_APP_GITHUB_CLIENT_SECRET,
-    REACT_APP_GITHUB_REDIRECT_URI: env.REACT_APP_GITHUB_REDIRECT_URI,
-  }
+  const projectPublicRelativePath = path.relative(__dirname, projectPublicDir)
+  const projectPublicPath = projectPublicDir.split(path.sep).join('/')
+  const projectPublicBaseSegments = projectPublicRelativePath.split(path.sep).filter(Boolean).length
+  const defaultOutDir = project === 'default' ? 'dist-vite' : `dist-vite-${project}`
+  const outDir = (process.env.VITE_OUT_DIR || env.VITE_OUT_DIR || defaultOutDir).trim()
+  const clientEnv = createPublicEnv({
+    mode,
+    project,
+    source: { ...env, ...process.env },
+  })
 
   const useAnalyze = env.USE_ANALYZE === '1' || env.USE_ANALYZE === 'true'
   const isProd = mode === 'production'
@@ -129,6 +133,23 @@ export default defineConfig(({ mode }) => {
       }),
       react(),
       emitVersionManifest(),
+      ...(project !== 'default' && hasProjectPublicDir
+        ? viteStaticCopy({
+            targets: [
+              {
+                src: [
+                  `${projectPublicPath}/**/*`,
+                  `!${projectPublicPath}/**/.gitkeep`,
+                  `!${projectPublicPath}/**/index.html`,
+                  `!${projectPublicPath}/**/audio/**`,
+                ],
+                dest: '.',
+                rename: { stripBase: projectPublicBaseSegments },
+              },
+            ],
+            silent: true,
+          })
+        : []),
       ...(!isStorybookBuild
         ? [
             serwist({
@@ -179,11 +200,16 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
       'process.env': clientEnv,
+      __APP_ENV__: JSON.stringify(clientEnv),
       __APP_VERSION__: JSON.stringify(packageJson.version),
       __APP_BUILD_TIME__: JSON.stringify(buildTime),
     },
-    envPrefix: ['VITE_', 'APP_', 'REACT_APP_', 'IFRAME_', 'AUTH_', 'DEPLOYED_'],
-    publicDir,
+    // Only VITE_* values are implicitly exposed. Legacy public keys are passed
+    // through the explicit allowlist above so AUTH_* and REACT_APP_* secrets
+    // cannot leak just because of their prefix.
+    envPrefix: 'VITE_',
+    base,
+    publicDir: path.resolve(__dirname, 'public'),
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'src'),

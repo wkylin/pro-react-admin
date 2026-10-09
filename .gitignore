@@ -32,6 +32,8 @@ storybook-static
 .vite-cache
 /dist-lib
 /dist-vite
+/dist-vite-pages
+/dist-vite-*/
 /dist-vite-zip
 /dist-zip
 /playwright-report

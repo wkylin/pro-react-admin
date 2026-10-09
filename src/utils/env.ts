@@ -1,22 +1,12 @@
 const globalAny: any = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : {}
-
-const getImportMetaEnv = (): Record<string, any> => {
-  try {
-    const meta = new Function('return typeof import.meta === "undefined" ? undefined : import.meta')()
-    return meta?.env && typeof meta.env === 'object' ? meta.env : {}
-  } catch {
-    return {}
-  }
-}
-
-const importMetaEnv: Record<string, any> = getImportMetaEnv()
+const buildEnv: Record<string, any> = typeof __APP_ENV__ !== 'undefined' ? __APP_ENV__ : {}
 const processEnv: Record<string, any> = typeof process !== 'undefined' && process.env ? process.env : {}
 
 // Ensure process.env exists in browser runtimes so legacy code can read from it
 if (typeof globalAny.process === 'undefined') {
-  globalAny.process = { env: { ...importMetaEnv, ...processEnv } }
+  globalAny.process = { env: { ...processEnv, ...buildEnv } }
 } else if (!globalAny.process.env) {
-  globalAny.process.env = { ...importMetaEnv, ...processEnv }
+  globalAny.process.env = { ...processEnv, ...buildEnv }
 }
 
 const expandKeyVariants = (key: string): string[] => {
@@ -31,7 +21,7 @@ const expandKeyVariants = (key: string): string[] => {
 const readEnv = (key: string): any => {
   const candidates = expandKeyVariants(key)
   for (const k of candidates) {
-    if (k in importMetaEnv && importMetaEnv[k] !== undefined) return importMetaEnv[k]
+    if (k in buildEnv && buildEnv[k] !== undefined) return buildEnv[k]
     if (k in processEnv && processEnv[k] !== undefined) return processEnv[k]
     if (globalAny.process?.env && k in globalAny.process.env && globalAny.process.env[k] !== undefined)
       return globalAny.process.env[k]

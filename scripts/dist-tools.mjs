@@ -9,6 +9,12 @@ function getProject() {
 
 function getDistDir() {
   const project = getProject()
+  const buildTool = (process.env.BUILD_TOOL || 'webpack').toLowerCase()
+  if (buildTool === 'vite') {
+    const configuredOutDir = (process.env.VITE_OUT_DIR || '').trim()
+    if (configuredOutDir) return configuredOutDir
+    return project === 'default' ? 'dist-vite' : `dist-vite-${project}`
+  }
   return project === 'default' ? 'dist' : `dist-${project}`
 }
 
