@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { serwist } from '@serwist/vite'
 import svgr from 'vite-plugin-svgr'
@@ -11,9 +11,9 @@ import fs from 'fs'
 import type { Archiver, ArchiverOptions } from 'archiver'
 import { fileURLToPath } from 'url'
 import { createRequire } from 'module'
-import packageJson from './package.json'
+import packageJson from './package.json' with { type: 'json' }
 import { createPublicEnv } from './build/public-env.js'
-import { createFederationPlugin } from './build/module-federation'
+import { createFederationPlugin } from './build/module-federation.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const require = createRequire(import.meta.url)
@@ -64,6 +64,7 @@ export default defineConfig(({ mode }) => {
   const projectPublicBaseSegments = projectPublicRelativePath.split(path.sep).filter(Boolean).length
   const defaultOutDir = project === 'default' ? 'dist' : `dist-${project}`
   const outDir = (process.env.VITE_OUT_DIR || env.VITE_OUT_DIR || defaultOutDir).trim()
+  const cacheScope = `${project}-${mfeRole || 'standalone'}`.replace(/[^a-zA-Z0-9_-]/g, '_')
   const clientEnv = createPublicEnv({
     mode,
     project,
@@ -117,7 +118,7 @@ export default defineConfig(({ mode }) => {
     },
   })
 
-  const emitVersionManifest = () => ({
+  const emitVersionManifest: Plugin = {
     name: 'emit-version-manifest',
     generateBundle() {
       this.emitFile({
@@ -134,7 +135,7 @@ export default defineConfig(({ mode }) => {
         ),
       })
     },
-  })
+  }
 
   return {
     plugins: [
@@ -146,7 +147,7 @@ export default defineConfig(({ mode }) => {
         },
       }),
       react(),
-      emitVersionManifest(),
+      emitVersionManifest,
       ...(project !== 'default' && hasProjectPublicDir
         ? viteStaticCopy({
             targets: [
@@ -224,6 +225,9 @@ export default defineConfig(({ mode }) => {
     // cannot leak just because of their prefix.
     envPrefix: 'VITE_',
     base,
+    // Federation wraps shared dependencies in owner-scoped virtual modules.
+    // Isolate optimizer caches so another project/role cannot reuse those IDs.
+    cacheDir: path.resolve(__dirname, 'node_modules/.vite', cacheScope),
     publicDir: path.resolve(__dirname, 'public'),
     resolve: {
       alias: {

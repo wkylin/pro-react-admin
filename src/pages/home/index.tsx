@@ -140,7 +140,9 @@ const dataSteps = [
   },
 ]
 
-const Marquee = MarqueeImport
+// react-fast-marquee publishes a CommonJS module whose `default` export can
+// remain wrapped by Vite's dependency optimizer. Unwrap it before using JSX.
+const Marquee = (MarqueeImport as unknown as { default?: typeof MarqueeImport }).default ?? MarqueeImport
 
 type AiImage = {
   imagePrompt: string
