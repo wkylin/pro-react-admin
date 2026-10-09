@@ -785,7 +785,7 @@ const resolveResponseData = (response) => {
   }
 
   const errorMsg = data.message || data.msg || '请求失败'
-  if (data.code === 401 || data.code === 403) {
+  if ((data.code === 401 || data.code === 403) && config.needToken !== false) {
     handleUnauthorized(errorMsg)
   }
 
@@ -841,7 +841,7 @@ axiosInstance.interceptors.response.use(
       }
 
       // 401/403 特殊处理
-      if (status === 401 || status === 403) {
+      if ((status === 401 || status === 403) && error.config?.needToken !== false) {
         handleUnauthorized(errorMessage)
       }
 

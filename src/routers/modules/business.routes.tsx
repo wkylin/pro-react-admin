@@ -28,14 +28,4 @@ export const businessRoutes = [
     name: 'Business',
     element: <lazyComponents.Business />,
   },
-  {
-    path: 'build/vite',
-    name: 'Vite',
-    element: <lazyComponents.ViteList />,
-  },
-  {
-    path: 'build/webpack',
-    name: 'Webpack',
-    element: <lazyComponents.WebpackList />,
-  },
 ]

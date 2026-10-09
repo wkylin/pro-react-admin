@@ -116,7 +116,6 @@ const zh = {
     go: 'Go',
 
     buildTools: '构建工具',
-    webpack: 'Webpack',
     vite: 'Vite',
 
     error: '错误',

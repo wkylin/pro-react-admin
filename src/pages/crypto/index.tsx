@@ -654,11 +654,11 @@ const APIEncryptionPanel = () => {
           <Text>
             <Text strong>4. 代码示例:</Text>
             <Text code style={{ display: 'block', marginTop: 4, padding: 8, background: token.colorFillAlter }}>
-              {`// 在应用入口配置\nimport request from '@src/service/request'\nrequest.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)\n\n// 之后所有请求自动加密\nconst data = await request.post('/api/login', credentials)`}
+              {`// 在应用入口配置\nimport request from '@src/service/request'\nrequest.configureHybrid(PUBLIC_KEY)\nrequest.setEncryptResponse(false)\n\n// 之后所有请求自动加密\nconst data = await request.post('/api/login', credentials)`}
             </Text>
           </Text>
           <Text type="secondary" style={{ fontSize: 12 }}>
-            💡 提示: 完整文档请查看 <Text code>docs/REQUEST_ENCRYPTION.md</Text>
+            💡 提示: 完整文档请查看 <Text code>docs/development/REQUEST_ENCRYPTION.md</Text>
           </Text>
         </Space>
       </Card>

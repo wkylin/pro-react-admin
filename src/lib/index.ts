@@ -1,4 +1,4 @@
-// Public library entry (for `npm run build:lib`).
+// Public library entry (for `pnpm run build:lib`).
 //
 // Intentionally excludes app-level routing/page helpers (e.g. auth routing helpers,
 // NoMatch/Exception route pages) so the library bundle doesn't pull `src/routers/*`

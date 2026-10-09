@@ -141,10 +141,7 @@ export const lazyComponents = {
   VuePerfPlugin: lazyLoad(() => import('@pages/tech/demos/vue/plugins/perf'), {
     preload: true,
   }),
-  WebpackList: lazyLoad(() => import('@pages/tech/demos/webpack'), {
-    preload: true,
-  }),
-  ViteList: lazyLoad(() => import('@pages/order/list'), { preload: true }),
+  ViteBuild: lazyLoad(() => import('@pages/build/vite'), { preload: true }),
 
   // 异常页面
   ErrorPage: lazyLoad(() => import('@pages/error'), { preload: true }),

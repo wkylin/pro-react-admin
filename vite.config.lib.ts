@@ -86,7 +86,7 @@ export default defineConfig({
     },
     minify: 'esbuild',
     // Some upstream CSS can be non-standard and confuse esbuild's CSS minifier.
-    // Run `LIB_DEBUG_CSS=1 npm run build:lib` to output non-minified CSS for debugging.
+    // Run `LIB_DEBUG_CSS=1 pnpm run build:lib` to output non-minified CSS for debugging.
     cssMinify: libDebugCss ? false : 'esbuild',
   },
   css: {

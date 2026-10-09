@@ -1,15 +1,6 @@
-import ThemeIndex from '@src/theme'
-import { ProThemeProvider } from '@src/theme/hooks'
-import WatermarkProvider from '@src/components/WatermarkProvider'
-import { renderApp } from '@src/bootstrap/renderApp'
+import { renderProjectApp } from '@src/bootstrap/renderProjectApp'
 
-renderApp({
+renderProjectApp({
   identifierPrefix: 'wuiB',
-  children: (
-    <ProThemeProvider>
-      <WatermarkProvider content="Project B">
-        <ThemeIndex />
-      </WatermarkProvider>
-    </ProThemeProvider>
-  ),
+  watermarkContent: 'Project B',
 })

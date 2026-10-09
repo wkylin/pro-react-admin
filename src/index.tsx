@@ -1,17 +1,9 @@
-import ThemeIndex from './theme'
-import { ProThemeProvider } from './theme/hooks'
-import WatermarkProvider from '@/components/WatermarkProvider'
-import { renderApp } from '@/bootstrap/renderApp'
+import { renderProjectApp } from '@/bootstrap/renderProjectApp'
 import { registerServiceWorker } from '@/pwa/registerServiceWorker'
 
 registerServiceWorker()
 
-renderApp({
-  children: (
-    <ProThemeProvider>
-      <WatermarkProvider content="Pro React Admin">
-        <ThemeIndex />
-      </WatermarkProvider>
-    </ProThemeProvider>
-  ),
+renderProjectApp({
+  identifierPrefix: 'wui',
+  watermarkContent: 'Pro React Admin',
 })

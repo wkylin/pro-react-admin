@@ -16,43 +16,43 @@
 - 单文件检查（显示所有问题）：
 
 ```
-npx eslint "src/pages/chatgpt/index.tsx" || true
+pnpm exec eslint "src/pages/chatgpt/index.tsx" || true
 ```
 
 - 单文件只显示 errors（quiet 模式，隐藏 warnings）：
 
 ```
-npx eslint --cache --quiet "src/pages/chatgpt/index.tsx" || true
+pnpm exec eslint --cache --quiet "src/pages/chatgpt/index.tsx" || true
 ```
 
 - 尝试对单文件自动修复：
 
 ```
-npx eslint --cache --fix "src/pages/chatgpt/index.tsx" || true
+pnpm exec eslint --cache --fix "src/pages/chatgpt/index.tsx" || true
 ```
 
 - 全量扫描并将文本输出保存到文件：
 
 ```
-npx eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report-full.txt
+pnpm exec eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report-full.txt
 ```
 
 - 全量输出为 JSON（便于后续统计）：
 
 ```
-npx eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
+pnpm exec eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
 ```
 
 - 在 debug 模式下运行（用于排查 flat-config / 插件加载问题）：
 
 ```
-npm run eslint -- --debug "src/**/*.{js,ts,tsx}"
+pnpm run eslint -- --debug "src/**/*.{js,ts,tsx}"
 ```
 
 - 如果 package.json 中有自定义脚本（例如 `lint:errors`），可以直接运行：
 
 ```
-npm run lint:errors
+pnpm run lint:errors
 ```
 
 ---
@@ -64,7 +64,7 @@ npm run lint:errors
 1. 生成 JSON 报告：
 
 ```
-npx eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
+pnpm exec eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
 ```
 
 2. 用 Node 脚本统计并输出为可读列表（在项目根运行）：
@@ -90,7 +90,7 @@ node -e "const r=require('./eslint-report.json'); const m={}; r.forEach(f=>{cons
 如果不想生成 JSON，可以将完整文本输出并用 grep/awk/sed 统计（适合临时检查）：
 
 ```
-npx eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report.txt
+pnpm exec eslint "src/**/*.{js,ts,tsx}" 2>&1 | tee eslint-report.txt
 # 示例（在 Git Bash / WSL）
 grep -E "^\s+\d+:\d+\s+" eslint-report.txt | sed -E 's/^[ \t]*([0-9]+):([0-9]+)[ \t]+(error|warning).+\s+(.+)$/\4/' | sort | uniq -c | sort -rn
 ```
@@ -194,7 +194,7 @@ npx eslint --format json "src/**/*.{js,ts,tsx}" -o eslint-report.json
 - 如果 ESLint 报错提示 plugin 配置无法加载或 `extends` 无效，先使用 debug 模式查看加载过程：
 
 ```
-npm run eslint -- --debug "src/**/*.{js,ts,tsx}"
+pnpm run eslint -- --debug "src/**/*.{js,ts,tsx}"
 ```
 
 - 确认 `eslint` 版本与插件版本兼容（flat config 与 legacy `extends` 行为不同，需要显式注册插件）。

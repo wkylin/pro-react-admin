@@ -17,7 +17,7 @@ try {
   console.log('-------------------------------------------------------')
   console.log('Step 1: Building Main App (Production)...')
   console.log('-------------------------------------------------------')
-  run('npm run build:production')
+  run('pnpm run build:production')
 
   // 2. Build Storybook
   console.log('\n-------------------------------------------------------')
@@ -28,7 +28,7 @@ try {
   // So root is /pro-react-admin/
   // Storybook should be at /pro-react-admin/storybook/
   const env = { ...process.env, STORYBOOK_BASE_HREF: '/pro-react-admin/storybook/' }
-  run('npm run build-storybook', { env })
+  run('pnpm run build-storybook', { env })
 
   // 3. Move Storybook to dist/storybook
   console.log('\n-------------------------------------------------------')
@@ -70,8 +70,7 @@ try {
   console.log('\n-------------------------------------------------------')
   console.log('Step 4: Deploying to GitHub Pages...')
   console.log('-------------------------------------------------------')
-  // We use npx to ensure we use the local gh-pages binary
-  run('npx gh-pages -d dist')
+  run('pnpm exec gh-pages -d dist')
 
   console.log('\n=======================================================')
   console.log('Deployment Complete! 🚀')

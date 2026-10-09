@@ -55,7 +55,7 @@ const getErrorMessage = (err: any) => {
 }
 
 const shouldShowErrorByDefault = (err: any) => {
-  // request.js/http.js 默认会 showError/isShowError=true 并自行 showMessage.error
+  // request.js 默认会自行显示错误提示
   // 这里尽量避免重复弹错：如果错误包含明显的 service 痕迹（status/code/response），默认不再重复提示
   if (err && typeof err === 'object') {
     if ('response' in err || 'status' in err || 'code' in err) return false

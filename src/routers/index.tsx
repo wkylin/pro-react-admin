@@ -13,33 +13,36 @@
 import { mainLayoutRoute, layoutRoutes } from './modules/layout.routes'
 import { authRoutes } from './modules/auth.routes'
 import { businessRoutes } from './modules/business.routes'
+import { buildRoutes } from './modules/build.routes'
 import { uiRoutes } from './modules/ui.routes'
 import { chartRoutes } from './modules/chart.routes'
 import { nestedRoutes } from './modules/nested.routes'
 import { errorRoutes } from './modules/error.routes'
 import { notificationRoutes } from './modules/notification.routes'
-import { techRoutes } from './modules/tech.routes'
 import { zustandRoutes } from './modules/zustand.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
 import type { RouteNode } from './utils'
 import { permissionService } from '@src/service/permissionService'
 
-// 整合主布局的子路由
-mainLayoutRoute.children = [
-  ...mainLayoutRoute.children,
-  ...businessRoutes,
-  ...uiRoutes,
-  ...chartRoutes,
-  ...nestedRoutes,
-  ...notificationRoutes,
-  ...techRoutes,
-  ...zustandRoutes,
-]
+// 用新对象组合路由，避免修改 layout.routes 导出的共享配置。
+const applicationLayoutRoute = {
+  ...mainLayoutRoute,
+  children: [
+    ...(mainLayoutRoute.children || []),
+    ...businessRoutes,
+    ...buildRoutes,
+    ...uiRoutes,
+    ...chartRoutes,
+    ...nestedRoutes,
+    ...notificationRoutes,
+    ...zustandRoutes,
+  ],
+}
 
 // 构建完整路由配置（原始数据）
 const rawRootRouter: RouteNode[] = [
   // 主布局路由（包含所有子路由）
-  mainLayoutRoute,
+  applicationLayoutRoute,
   // 认证相关路由
   ...authRoutes,
   // 独立布局路由

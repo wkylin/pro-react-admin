@@ -14,13 +14,24 @@ function pickDefined(obj) {
   return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined))
 }
 
+function toPublishedPath(value) {
+  return typeof value === 'string' ? value.replace(/^\.\/dist-lib\//, './') : value
+}
+
+function toPublishedExport(target) {
+  if (typeof target === 'string') return toPublishedPath(target)
+  if (!target || typeof target !== 'object') return target
+
+  return Object.fromEntries(Object.entries(target).map(([condition, value]) => [condition, toPublishedPath(value)]))
+}
+
 async function main() {
   const repoRoot = process.cwd()
   const rootPkgPath = path.join(repoRoot, 'package.json')
   const distDir = path.join(repoRoot, 'dist-lib')
 
   if (!(await fileExists(distDir))) {
-    throw new Error('dist-lib 不存在：请先运行 npm run build:lib && npm run build:lib:entries')
+    throw new Error('dist-lib 不存在：请先运行 pnpm run build:lib && pnpm run build:lib:entries')
   }
 
   const rootPkg = JSON.parse(await fs.readFile(rootPkgPath, 'utf8'))
@@ -39,37 +50,12 @@ async function main() {
     repository: rootPkg.repository,
     sideEffects: rootPkg.sideEffects,
     peerDependencies: rootPkg.peerDependencies,
-    main: './pro-react-components.umd.js',
-    module: './pro-react-components.es.js',
-    types: './index.d.ts',
-    exports: {
-      '.': {
-        types: './index.d.ts',
-        import: './pro-react-components.es.js',
-        require: './pro-react-components.umd.js',
-      },
-      './core': {
-        types: './entries/core.d.ts',
-        import: './entries/core.es.js',
-        require: './entries/core.cjs.js',
-      },
-      './stateful': {
-        types: './entries/stateful.d.ts',
-        import: './entries/stateful.es.js',
-        require: './entries/stateful.cjs.js',
-      },
-      './stateless': {
-        types: './entries/stateless.d.ts',
-        import: './entries/stateless.es.js',
-        require: './entries/stateless.cjs.js',
-      },
-      './tracking': {
-        types: './entries/tracking.d.ts',
-        import: './entries/tracking.es.js',
-        require: './entries/tracking.cjs.js',
-      },
-      './style.css': './style.css',
-    },
+    main: toPublishedPath(rootPkg.main),
+    module: toPublishedPath(rootPkg.module),
+    types: toPublishedPath(rootPkg.types),
+    exports: Object.fromEntries(
+      Object.entries(rootPkg.exports || {}).map(([subpath, target]) => [subpath, toPublishedExport(target)])
+    ),
   }
 
   const distPkgPath = path.join(distDir, 'package.json')

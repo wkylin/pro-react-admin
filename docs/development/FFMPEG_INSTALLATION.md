@@ -85,7 +85,7 @@ ffmpeg version 7.x.x Copyright (c) 2000-2024 the FFmpeg developers
 安装 FFmpeg 后，可以正常运行生产构建：
 
 ```bash
-npm run build:production
+pnpm run build:production
 ```
 
 构建过程会自动优化媒体文件。
@@ -96,10 +96,10 @@ npm run build:production
 
 ```bash
 # 模拟 CI 环境，跳过媒体优化
-CI=1 npm run build:production
+CI=1 pnpm run build:production
 
 # 或强制运行优化（需要先安装 FFmpeg）
-OPTIMIZE_MEDIA=1 npm run build:production
+OPTIMIZE_MEDIA=1 pnpm run build:production
 ```
 
 **环境变量说明：**

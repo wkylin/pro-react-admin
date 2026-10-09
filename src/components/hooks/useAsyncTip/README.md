@@ -70,7 +70,7 @@ const loadDetail = useAsyncTip((id) => request.get('/api/detail', { id }), {
 ## 重要提示
 
 - 本 hook 使用的提示能力来自 src/utils/message.ts，要求在应用根部已正确 setMessageInstance。
-- 如果 service 层（request.js/http.js）已经开启了 showError，hook 默认会尽量避免重复弹错。
+- 如果 service 层（request.js）已经开启了 showError，hook 默认会尽量避免重复弹错。
 
 ## 根组件初始化 message（与 theme.tsx 对应）
 

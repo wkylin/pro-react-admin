@@ -1,29 +1,15 @@
-import { createElement, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Table, type TableColumnsType } from 'antd'
 import FixTabPanel from '@stateless/FixTabPanel'
-import { http } from '@src/service/http'
-
-type Certificate = {
-  certificateName?: string
-  certificateNo?: string
-  certifyOrgName?: string
-  issueDate?: string
-  endDate?: string
-  status?: string
-}
+import { fetchCompanyCertificates, type CompanyCertificate } from '@src/service/api/company'
 
 type Company = {
   grid: string
   name: string
-  list: Certificate[]
+  list: CompanyCertificate[]
 }
 
-const fixColumns: TableColumnsType<Certificate> = [
-  // {
-  //   title: '序号',
-  //   dataIndex: 'index',
-  //   render: (_text, _record, index) => index +1 ,
-  // },
+const columns: TableColumnsType<CompanyCertificate> = [
   {
     title: '资质名称',
     dataIndex: 'certificateName',
@@ -56,7 +42,7 @@ const fixColumns: TableColumnsType<Certificate> = [
   },
 ]
 
-const initialFetchData: Company[] = [
+const initialCompanies: Company[] = [
   {
     grid: '2316258212',
     name: '上海徐汇规划建筑设计有限公司',
@@ -70,63 +56,54 @@ const initialFetchData: Company[] = [
 ]
 
 const Business = () => {
-  const [fetchData, setFetchData] = useState(initialFetchData)
+  const [companies, setCompanies] = useState(initialCompanies)
   const [loading, setLoading] = useState(false)
+
   useEffect(() => {
-    const fetchAllData = async () => {
-      const newFetchData = [...fetchData]
-      setLoading(true)
-      for (let i = 0; i < newFetchData.length; i++) {
-        const item = newFetchData[i]
+    let active = true
+    setLoading(true)
+
+    void Promise.all(
+      initialCompanies.map(async (company) => {
         try {
-          const res = await http.post(
-            'https://capi.tianyancha.com/cloud-business-state/company/certificate/detail/list',
-            {
-              companyGid: item.grid,
-              pageSize: 1000,
-              pageNum: 1,
-              certificateName: '-100',
-              status: '-100',
-              issueYear: '-100',
-              searchKey: '',
-              sortType: '',
-            }
-          )
-          setLoading(false)
-          newFetchData[i] = {
-            ...item,
-            list: res.data?.list || [],
-          }
+          const list = await fetchCompanyCertificates(company.grid)
+          return { ...company, list }
         } catch (error) {
-          setLoading(false)
-          console.error('数据请求失败:', error)
+          console.error(`获取 ${company.name} 的资质数据失败:`, error)
+          return company
         }
-      }
-      setFetchData(newFetchData)
+      })
+    )
+      .then((result) => {
+        if (active) setCompanies(result)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+
+    return () => {
+      active = false
     }
-    fetchAllData()
   }, [])
 
-  return createElement(
-    FixTabPanel,
-    null,
-    <>
-      {fetchData.map((item, index) => (
-        <section className="my-4" key={item.grid}>
+  return (
+    <FixTabPanel>
+      {companies.map((company, index) => (
+        <section className="my-4" key={company.grid}>
           <section className="my-4 text-lg">
             {index + 1}
-            <span>.</span> {item.name} : {item.list.length}
+            <span>.</span> {company.name} : {company.list.length}
           </section>
           <Table
             loading={loading}
-            columns={fixColumns}
-            dataSource={item.list}
+            columns={columns}
+            dataSource={company.list}
             rowKey="certificateNo"
             pagination={false}
           />
         </section>
       ))}
-    </>
+    </FixTabPanel>
   )
 }
 

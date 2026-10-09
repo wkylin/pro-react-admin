@@ -32,6 +32,11 @@
       "import": "./dist-lib/entries/stateless.es.js",
       "require": "./dist-lib/entries/stateless.cjs.js"
     },
+    "./tracking": {
+      "types": "./dist-lib/entries/tracking.d.ts",
+      "import": "./dist-lib/entries/tracking.es.js",
+      "require": "./dist-lib/entries/tracking.cjs.js"
+    },
     "./style.css": "./dist-lib/style.css"
   },
   "keywords": [

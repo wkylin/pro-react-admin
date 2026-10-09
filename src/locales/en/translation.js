@@ -117,7 +117,6 @@ const en = {
     go: 'Go',
 
     buildTools: 'Build Tools',
-    webpack: 'Webpack',
     vite: 'Vite',
 
     error: 'Error',

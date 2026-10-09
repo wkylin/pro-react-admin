@@ -31,7 +31,6 @@ import {
   ProjectOutlined,
   FileTextOutlined,
   ThunderboltOutlined,
-  ToolOutlined,
   CloudUploadOutlined,
   DatabaseOutlined,
   SafetyCertificateOutlined,
@@ -471,16 +470,6 @@ const rawMainLayoutMenu = [
       </AnimatedIcon>
     ),
     children: [
-      {
-        label: 'Webpack',
-        i18nKey: 'menu.webpack',
-        path: '/build/webpack',
-        icon: (
-          <AnimatedIcon variant="spin" mode="hover">
-            <ToolOutlined />
-          </AnimatedIcon>
-        ),
-      },
       {
         label: 'Vite',
         i18nKey: 'menu.vite',
