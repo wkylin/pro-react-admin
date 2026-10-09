@@ -3,6 +3,8 @@
 /dist
 /dist-projectA
 /dist-projectB
+/dist-mf-projectA
+/dist-mf-projectB
 /dist-projectC
 /dist-shell
 /dist-vercel
@@ -16,7 +18,6 @@ src/assets-optimized/
 public-optimized/
 public/bit
 api/node_modules
-webpack/profiling
 stats.html
 /.scannerwork
 # 忽略测试覆盖率输出
@@ -30,11 +31,9 @@ coverage
 *storybook.log
 storybook-static
 .vite-cache
+/.mf/
 /dist-lib
-/dist-vite
-/dist-vite-pages
-/dist-vite-*/
-/dist-vite-zip
+/dist-pages
 /dist-zip
 /playwright-report
 /test-results

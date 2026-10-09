@@ -38,7 +38,7 @@ const SvgViewer = () => {
                 Pro React Admin — 技术架构图
               </Title>
               <Paragraph style={{ color: 'rgba(255,255,255,0.75)', margin: '6px 0 0' }}>
-                双重架构、企业级特性与现代化构建流程的可视化展示
+                应用、组件库、企业级特性与现代化构建流程的可视化展示
               </Paragraph>
             </div>
           </div>
@@ -57,7 +57,7 @@ const SvgViewer = () => {
                 <Title level={4} style={{ color: '#fff' }}>
                   Pro React Admin 技术架构图:
                 </Title>
-                <h3 style={{ color: '#fff', marginTop: 6 }}>🏗️ 双重架构设计</h3>
+                <h3 style={{ color: '#fff', marginTop: 6 }}>🏗️ 应用与组件库架构</h3>
                 <ul style={{ color: 'rgba(255,255,255,0.78)', paddingLeft: 18 }}>
                   <li>
                     <strong>企业级应用</strong>：完整的中后台管理系统
@@ -76,7 +76,7 @@ const SvgViewer = () => {
                     <strong>React 19</strong>：利用最新的并发特性和性能优化
                   </li>
                   <li>
-                    <strong>双构建模式</strong>：Webpack 5 用于生产构建，Vite 7 用于快速开发
+                    <strong>统一构建工具</strong>：Vite 8 用于应用、组件库和微前端构建
                   </li>
                   <li>
                     <strong>TypeScript 5</strong>：提供强类型支持
@@ -108,8 +108,8 @@ const SvgViewer = () => {
                 </ul>
                 <p style={{ color: 'rgba(255,255,255,0.8)' }}>
                   该架构图展示了 Pro React Admin 作为现代化企业级中后台解决方案的完整技术栈。核心优势在于 React 19
-                  的性能优化、双重架构设计、完善的权限体系和丰富的组件生态。构建系统支持 Webpack 和 Vite
-                  双模式，部署采用 GitHub Pages 自动化流程，监控集成 Sentry 错误追踪。
+                  的性能优化、应用与组件库双重架构、完善的权限体系和丰富的组件生态。构建系统统一使用 Vite，部署采用
+                  GitHub Pages 自动化流程，监控集成 Sentry 错误追踪。
                 </p>
               </Card>
             </Col>

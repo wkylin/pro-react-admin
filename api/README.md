@@ -33,5 +33,5 @@ npm run dev
 
 Notes
 
-- In development the frontend `webpack` config already proxies `/api/github-token`, `/api/github-user`, `/api/github-email` to GitHub. This helper lets you run a local server that performs the token exchange securely and returns JSON.
+- In development, Vite proxies `/api/github-token`, `/api/github-user`, and `/api/github-email` to GitHub. This helper lets you run a local server that performs the token exchange securely and returns JSON.
 - Do NOT put `GITHUB_CLIENT_SECRET` into frontend env vars (e.g. `REACT_APP_*`). Keep it server-side only.

@@ -279,7 +279,7 @@ class AuthService {
       // 获取 access token
       // 注意：不要在浏览器端直接调用 GitHub 的 token 接口（需要 client_secret，且 GitHub token 接口不支持浏览器 CORS）。
       // 应始终将 code 发到后端，由后端使用 client_secret 与 GitHub 交换 access_token。
-      // 开发模式下使用 webpack dev proxy（/api/github-token）进行本地调试；生产环境也应提供同名后端接口。
+      // 开发模式下使用 Vite dev proxy（/api/github-token）进行本地调试；生产环境也应提供同名后端接口。
       const tokenEndpoint =
         process.env.NODE_ENV === 'development' ? 'http://localhost:5200/api/github-token' : '/api/github-token'
       const tokenResponse = await request.post(tokenEndpoint, {

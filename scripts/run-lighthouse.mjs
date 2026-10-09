@@ -30,8 +30,9 @@ const buildPortList = () => {
     if (ports.length > 0) return [...new Set(ports)]
   }
 
-  // Default: match webpack devServer portfinder strategy (8080,8081,...)
+  // Check the Vite dev port first, followed by the optional MFE dev-server ports.
   const ports = []
+  for (let p = 5173; p <= 5183; p += 1) ports.push(p)
   for (let p = 8080; p <= 8090; p += 1) ports.push(p)
   return ports
 }
@@ -92,7 +93,7 @@ const main = async () => {
 
   console.error('[lighthouse] 未发现可用的本地服务。')
   console.error('[lighthouse] 你可能还没启动 dev server，或端口不在扫描范围内。')
-  console.error('  1) 先运行: npm run start  (webpack dev server，默认从 8080 起)')
+  console.error('  1) 先运行: pnpm run dev  (Vite dev server，默认端口 5173)')
   console.error('  2) 再运行: npm run lighthouse')
   console.error('  或者显式指定 URL:')
   console.error('     cross-env LH_URL=http://localhost:8081 npm run lighthouse')

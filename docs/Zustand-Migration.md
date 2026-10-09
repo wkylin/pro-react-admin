@@ -78,7 +78,7 @@ const toggle = useStore((s) => s.toggleSidebar)
 ```bash
 npm run dev
 # 或（项目有多个脚本）
-npm run dev:vite
+pnpm run dev
 ```
 
 - 打包测试（库构建）：

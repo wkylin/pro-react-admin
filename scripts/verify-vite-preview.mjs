@@ -9,12 +9,13 @@ import { loadEnv, preview as createPreview } from 'vite'
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const viteEnv = loadEnv('production', projectRoot, '')
 const project = process.env.PROJECT || viteEnv.PROJECT || viteEnv.VITE_PROJECT || 'default'
-const outputDirName = process.env.VITE_OUT_DIR || viteEnv.VITE_OUT_DIR || (project === 'default' ? 'dist-vite' : `dist-vite-${project}`)
+const outputDirName = process.env.VITE_OUT_DIR || viteEnv.VITE_OUT_DIR || (project === 'default' ? 'dist' : `dist-${project}`)
 const outputDir = path.resolve(projectRoot, outputDirName)
 const expectedProject = process.env.VERIFY_PROJECT || project
 const configuredBase = (process.env.PUBLIC_URL || viteEnv.PUBLIC_URL || process.env.VITE_BASE || viteEnv.VITE_BASE || '/').trim()
 const base = normalizeBase(configuredBase)
 const port = Number(process.env.VITE_PREVIEW_PORT || 4173)
+const remoteEntryName = process.env.VERIFY_REMOTE_ENTRY || ''
 const basePath = getBasePath(base)
 const previewUrl = `http://127.0.0.1:${port}`
 
@@ -76,6 +77,7 @@ async function waitForPreview() {
 const htmlPath = path.join(outputDir, 'index.html')
 const versionPath = path.join(outputDir, 'version.json')
 await Promise.all([access(htmlPath), access(versionPath), access(path.join(outputDir, 'sw.js'))])
+if (remoteEntryName) await access(path.join(outputDir, remoteEntryName))
 
 const html = await readFile(htmlPath, 'utf8')
 const version = JSON.parse(await readFile(versionPath, 'utf8'))
@@ -123,7 +125,14 @@ try {
     assert.ok(assetResponse.ok, `Preview asset returned HTTP ${assetResponse.status}: ${url.pathname}`)
   }
 
-  console.log(`Vite preview verified: project=${expectedProject}, base=${base}, output=${path.relative(projectRoot, outputDir)}`)
+  if (remoteEntryName) {
+    const remoteEntryUrl = new URL(`${basePath}${remoteEntryName}`, `${previewUrl}/`)
+    const remoteEntryResponse = await fetch(remoteEntryUrl)
+    assert.ok(remoteEntryResponse.ok, `Remote entry returned HTTP ${remoteEntryResponse.status}: ${remoteEntryUrl.pathname}`)
+    assert.match(await remoteEntryResponse.text(), /remoteEntry|mf-manifest|modulepreload/i, 'Remote entry does not look like a federation container')
+  }
+
+  console.log(`Vite preview verified: project=${expectedProject}, base=${base}, output=${path.relative(projectRoot, outputDir)}${remoteEntryName ? `, remoteEntry=${remoteEntryName}` : ''}`)
 } finally {
   await new Promise((resolve, reject) => {
     previewServer.httpServer.close((error) => (error ? reject(error) : resolve()))

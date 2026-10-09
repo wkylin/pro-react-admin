@@ -89,7 +89,7 @@ const SignUp = () => {
                   大屏控制台
                 </Title>
                 <Text type="secondary" className={styles.heroDesc}>
-                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Vite/Webpack 构建与产物压缩自动化。
+                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Vite 构建与产物压缩自动化。
                 </Text>
 
                 <div className={styles.heroOrbit} aria-hidden="true">

@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url'
 import { createRequire } from 'module'
 import packageJson from './package.json'
 import { createPublicEnv } from './build/public-env.js'
+import { createFederationPlugin } from './build/module-federation'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const require = createRequire(import.meta.url)
@@ -46,6 +47,13 @@ export default defineConfig(({ mode }) => {
   const project = (process.env.PROJECT || env.PROJECT || env.VITE_PROJECT || 'default').trim() || 'default'
   const base = normalizeBase(process.env.PUBLIC_URL || env.PUBLIC_URL || env.VITE_BASE)
   const buildTime = new Date().toISOString()
+  const rawMfeRole = (process.env.MFE_ROLE || env.MFE_ROLE || '').trim()
+  if (rawMfeRole && rawMfeRole !== 'host' && rawMfeRole !== 'remote') {
+    throw new Error(`MFE_ROLE must be "host" or "remote" (received "${rawMfeRole}")`)
+  }
+  const mfeRole = rawMfeRole as 'host' | 'remote' | ''
+  const isMfeBuild = mfeRole === 'host' || mfeRole === 'remote'
+  const port = Number(process.env.PORT || env.PORT || (mfeRole === 'host' ? 8080 : project === 'projectA' ? 8081 : project === 'projectB' ? 8082 : 5173))
 
   const resolveProjectDir = (...segments: string[]) => path.resolve(__dirname, 'src', 'projects', project, ...segments)
   const projectEntry = project === 'default' ? '/src/index.tsx' : `/src/projects/${project}/index.tsx`
@@ -54,7 +62,7 @@ export default defineConfig(({ mode }) => {
   const projectPublicRelativePath = path.relative(__dirname, projectPublicDir)
   const projectPublicPath = projectPublicDir.split(path.sep).join('/')
   const projectPublicBaseSegments = projectPublicRelativePath.split(path.sep).filter(Boolean).length
-  const defaultOutDir = project === 'default' ? 'dist-vite' : `dist-vite-${project}`
+  const defaultOutDir = project === 'default' ? 'dist' : `dist-${project}`
   const outDir = (process.env.VITE_OUT_DIR || env.VITE_OUT_DIR || defaultOutDir).trim()
   const clientEnv = createPublicEnv({
     mode,
@@ -66,6 +74,12 @@ export default defineConfig(({ mode }) => {
   const isProd = mode === 'production'
   const useSentry = env.SENTRY_SOURCE_MAP === 'map' && isProd
   const isStorybookBuild = process.env.STORYBOOK_BUILD === '1' || env.STORYBOOK_BUILD === '1'
+  const federationPlugin = createFederationPlugin({
+    project,
+    role: mfeRole,
+    isDev: !isProd,
+    env: { ...env, ...process.env },
+  })
 
   // 构建完成后压缩插件（受环境变量 ZIP_DIST 控制）
   const zipAfterBuild = () => ({
@@ -75,7 +89,7 @@ export default defineConfig(({ mode }) => {
       if (!doZip || !isProd) return
 
       const outDirAbs = path.resolve(__dirname, outDir)
-      const zipDir = path.resolve(__dirname, 'dist-vite-zip')
+      const zipDir = path.resolve(__dirname, 'dist-zip')
       await fs.promises.mkdir(zipDir, { recursive: true })
       const archivePath = path.join(zipDir, project === 'default' ? 'pro-react-admin.zip' : `pro-react-admin-${project}.zip`)
 
@@ -197,6 +211,7 @@ export default defineConfig(({ mode }) => {
             }),
           ]
         : []),
+      ...(federationPlugin ? [federationPlugin] : []),
     ],
     define: {
       'process.env': clientEnv,
@@ -229,7 +244,76 @@ export default defineConfig(({ mode }) => {
       dedupe: ['zustand', 'immer', 'react', 'react-dom'],
     },
     server: {
-      port: 5173,
+      port,
+      strictPort: isMfeBuild,
+      ...(isMfeBuild ? { origin: `http://localhost:${port}` } : {}),
+      proxy: {
+        '/wkylin': {
+          target: 'https://my-json-server.typicode.com',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/v2': {
+          target: 'https://www.mocky.io',
+          changeOrigin: true,
+          secure: false,
+        },
+        '/faker': {
+          target: 'http://localhost:4000',
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: 'localhost',
+          rewrite: (requestPath) => requestPath.replace(/^\/faker/, ''),
+        },
+        '/api/github-token': {
+          target: 'https://github.com',
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: 'localhost',
+          rewrite: (requestPath) => requestPath.replace(/^\/api\/github-token/, '/login/oauth/access_token'),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyRequest) => {
+              proxyRequest.setHeader('Accept', 'application/json')
+              proxyRequest.setHeader('Content-Type', 'application/json')
+            })
+            proxy.on('proxyRes', (proxyResponse) => {
+              proxyResponse.headers['Access-Control-Allow-Origin'] = '*'
+            })
+          },
+        },
+        '/api/github-user': {
+          target: 'https://api.github.com',
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: 'localhost',
+          rewrite: (requestPath) => requestPath.replace(/^\/api\/github-user/, '/user'),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyRequest) => {
+              proxyRequest.setHeader('Accept', 'application/json')
+              proxyRequest.setHeader('Content-Type', 'application/json')
+            })
+            proxy.on('proxyRes', (proxyResponse) => {
+              proxyResponse.headers['Access-Control-Allow-Origin'] = '*'
+            })
+          },
+        },
+        '/api/github-email': {
+          target: 'https://api.github.com',
+          changeOrigin: true,
+          secure: false,
+          cookieDomainRewrite: 'localhost',
+          rewrite: (requestPath) => requestPath.replace(/^\/api\/github-email/, '/user/emails'),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyRequest) => {
+              proxyRequest.setHeader('Accept', 'application/json')
+              proxyRequest.setHeader('Content-Type', 'application/json')
+            })
+            proxy.on('proxyRes', (proxyResponse) => {
+              proxyResponse.headers['Access-Control-Allow-Origin'] = '*'
+            })
+          },
+        },
+      },
       open: false,
     },
     preview: {
@@ -243,8 +327,9 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: path.resolve(__dirname, 'index.html'),
         output: {
-          // 确保 zustand 及其 middleware 打包到同一个 chunk 中，避免多实例问题
-          manualChunks,
+          // Module Federation manages shared chunks itself; keep manual splitting
+          // disabled for those builds to avoid overriding its runtime boundaries.
+          ...(isMfeBuild ? {} : { manualChunks }),
         },
       },
     },

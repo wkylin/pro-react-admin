@@ -23,7 +23,7 @@ npm run deploy
 
 The `npm run deploy` command executes `scripts/deploy-gh.js`, which performs the following steps:
 
-1.  **Build Main App**: Runs `npm run build:production` to generate the production build in the `dist` directory.
+1.  **Build Main App**: Runs `pnpm run build:production` with Vite to generate the production build in the `dist` directory.
 2.  **Build Storybook**: Runs `npm run build-storybook` with `STORYBOOK_BASE_HREF=/pro-react-admin/storybook/`.
     - This ensures that Storybook assets are loaded correctly from the subdirectory.
     - The output is generated in `storybook-static`.

@@ -46,21 +46,7 @@ const PAGE_CANDIDATE_TEMPLATES = [
   (path: string, ext: string) => `/src/pages${path}/index${ext}`,
 ]
 
-// 兼容 Vite 和 Webpack：import.meta.glob 是 Vite 独有功能
-// 在 Webpack 构建中 import.meta 会是 undefined 或抛出错误
-const getPageModules = (): Record<string, () => Promise<unknown>> => {
-  try {
-    // 检查是否在 Vite 环境中
-    if (typeof import.meta !== 'undefined' && typeof import.meta.glob === 'function') {
-      return import.meta.glob('/src/pages/**/*.{js,ts,tsx}')
-    }
-  } catch {
-    // Webpack 环境下 import.meta 可能会抛出错误
-  }
-  return {}
-}
-
-const pageModules = getPageModules()
+const pageModules = import.meta.glob('/src/pages/**/*.{js,ts,tsx}')
 
 const hasOwn = (obj: object | null | undefined, key: PropertyKey): boolean => obj != null && Object.hasOwn(obj, key)
 

@@ -9,8 +9,8 @@ const root = path.resolve(__dirname, '..')
 const outDir = path.resolve(root, 'dist-vercel')
 
 const shellDir = path.resolve(root, 'dist-shell')
-const projectADir = path.resolve(root, 'dist-projectA')
-const projectBDir = path.resolve(root, 'dist-projectB')
+const projectADir = path.resolve(root, 'dist-mf-projectA')
+const projectBDir = path.resolve(root, 'dist-mf-projectB')
 
 function existsDir(p) {
   try {

@@ -45,48 +45,94 @@ jobs:
 
       - name: Build and preview default app
         run: |
-          pnpm run build:vite
+          pnpm run build:production
           pnpm run verify:vite:preview
         env:
-          VITE_OUT_DIR: dist-vite
+          VITE_OUT_DIR: dist
           VERIFY_PROJECT: default
 
       - name: Build and preview GitHub Pages base path
         run: |
-          pnpm run build:vite:pages
+          pnpm run build:pages
           pnpm run verify:vite:preview
         env:
           PUBLIC_URL: /pro-react-admin/
-          VITE_OUT_DIR: dist-vite-pages
+          VITE_OUT_DIR: dist-pages
           VERIFY_PROJECT: default
 
-      - name: Build and preview projectA
+      - name: Build and preview standalone projectA
         run: |
-          pnpm run build:vite:projectA
+          pnpm run build:production:projectA
           pnpm run verify:vite:preview
         env:
           PROJECT: projectA
-          VITE_OUT_DIR: dist-vite-projectA
+          VITE_OUT_DIR: dist-projectA
           VERIFY_PROJECT: projectA
 
-      - name: Build and preview projectB
+      - name: Build and preview standalone projectB
         run: |
-          pnpm run build:vite:projectB
+          pnpm run build:production:projectB
           pnpm run verify:vite:preview
         env:
           PROJECT: projectB
-          VITE_OUT_DIR: dist-vite-projectB
+          VITE_OUT_DIR: dist-projectB
           VERIFY_PROJECT: projectB
+
+      - name: Build and preview federation shell
+        run: |
+          pnpm run build:mf:shell
+          pnpm run verify:vite:preview
+        env:
+          PROJECT: shell
+          MFE_ROLE: host
+          PUBLIC_URL: /
+          VITE_OUT_DIR: dist-shell
+          VERIFY_PROJECT: shell
+
+      - name: Build and preview projectA federation remote
+        run: |
+          pnpm run build:mf:projectA
+          pnpm run verify:vite:preview
+        env:
+          PROJECT: projectA
+          MFE_ROLE: remote
+          PUBLIC_URL: /projectA/
+          VITE_OUT_DIR: dist-mf-projectA
+          VERIFY_PROJECT: projectA
+          VERIFY_REMOTE_ENTRY: remoteEntry.js
+
+      - name: Build and preview projectB federation remote
+        run: |
+          pnpm run build:mf:projectB
+          pnpm run verify:vite:preview
+        env:
+          PROJECT: projectB
+          MFE_ROLE: remote
+          PUBLIC_URL: /projectB/
+          VITE_OUT_DIR: dist-mf-projectB
+          VERIFY_PROJECT: projectB
+          VERIFY_REMOTE_ENTRY: remoteEntry.js
+
+      - name: Assemble Vercel multi-project output
+        run: node scripts/prepare-vercel-mfe.mjs
+
+      - name: Preview assembled Vercel shell output
+        run: pnpm run verify:vite:preview
+        env:
+          PROJECT: shell
+          MFE_ROLE: host
+          PUBLIC_URL: /
+          VITE_OUT_DIR: dist-vercel
+          VERIFY_PROJECT: shell
 
       - name: Upload preview artifacts
         uses: actions/upload-artifact@v4
         with:
           name: vite-preview-${{ github.sha }}
           path: |
-            dist-vite/
-            dist-vite-pages/
-            dist-vite-projectA/
-            dist-vite-projectB/
+            dist/
+            dist-pages/
+            dist-vercel/
           if-no-files-found: error
           retention-days: 7
           compression-level: 0

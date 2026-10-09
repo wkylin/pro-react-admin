@@ -8,7 +8,7 @@ const { Paragraph, Text } = Typography
 
 export default function ProjectBReuse() {
   const [msgApi, holder] = message.useMessage()
-  const snippet = 'PROJECT=projectB npm run build:production:projectB'
+  const snippet = 'pnpm run build:production:projectB'
 
   return (
     <PageContainer title="Project B / Reuse" footer={<span></span>}>
@@ -37,7 +37,7 @@ export default function ProjectBReuse() {
               </Button>
             </Space>
 
-            <GradientStats items={['120+', 'RBAC', 'KeepAlive', 'Vite/Webpack']} />
+            <GradientStats items={['120+', 'RBAC', 'KeepAlive', 'Vite 8']} />
           </Space>
         </Card>
 

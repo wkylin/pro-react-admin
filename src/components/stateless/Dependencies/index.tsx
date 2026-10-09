@@ -26,7 +26,7 @@ const columns: ColumnsType<Dependency> = [
       { text: 'Ant Design 相关', value: 'ant' },
       { text: 'TypeScript 相关', value: 'type' },
       { text: '测试相关', value: 'test' },
-      { text: '构建相关', value: 'webpack|vite|babel' },
+      { text: '构建相关', value: 'vite|babel' },
     ],
     onFilter: (value, record) => {
       const regex = new RegExp(value as string, 'i')

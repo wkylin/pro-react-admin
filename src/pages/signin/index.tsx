@@ -270,7 +270,7 @@ const SignIn = () => {
                 <div className={styles.heroPills}>
                   <span className={styles.pill}>Fast Tabs</span>
                   <span className={styles.pill}>Role-based Access</span>
-                  <span className={styles.pill}>Vite/Webpack Build</span>
+                  <span className={styles.pill}>Vite Build</span>
                 </div>
               </div>
             </section>

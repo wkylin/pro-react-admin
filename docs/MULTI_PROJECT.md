@@ -1,101 +1,42 @@
-# 多项目（Multi Project）模式
+# 多项目模式
 
-目标：一套依赖（一个 `node_modules`）承载多个业务项目；启动/构建时通过环境变量选择“当前项目入口”，做到**按项目入口打包**，避免每个项目重复克隆+重复装依赖。
+本分支使用一套 Vite 工具链和依赖目录承载多个业务入口。通过 PROJECT 选择构建目标。
 
-## 你现在得到什么
+## 项目入口
 
-- 默认（单项目）完全不变：继续用根目录 `index.html` + `src/index.tsx`。
-- 多项目模式：通过 `PROJECT=projectA|projectB|...` 选择入口文件 `src/projects/<project>/index.tsx`。
-- 项目级 `public`：若存在 `src/projects/<project>/public`，则该目录作为 Vite 的 `publicDir`。
-- 项目级路由覆盖：若存在 `src/projects/<project>/routers`，则 `@routers` 会指向该目录；否则回退到默认 `src/routers`。
+- 默认项目：src/index.tsx
+- ProjectA：src/projects/projectA/index.tsx
+- ProjectB：src/projects/projectB/index.tsx
 
-## 目录约定
+子项目可以提供自己的 routers、pages、components 和 public 目录。若项目有 routers 目录，构建别名 @routers 会指向项目路由；否则使用 src/routers。
 
-推荐结构（可按需增减）：
+## 常用命令
 
-- `src/projects/<project>/index.tsx`：项目入口（类似你描述的 `app.js`）。
-- `src/projects/<project>/routers/`：项目路由（可先用“包装转发”复用默认路由）。
-- `src/projects/<project>/public/`：项目静态资源（等价于 Vite 的 `public/`）。
+默认项目：
 
-## npm scripts
+    pnpm run dev
+    pnpm run build:production
+    pnpm run preview
 
-- 默认项目
-  - `npm run dev:vite`
-  - `npm run build:vite`
-  - `npm run preview:vite`
+ProjectA：
 
-- Project A
-  - `npm run dev:vite:projectA`
-  - `npm run build:vite:projectA`
-  - `npm run preview:vite:projectA`
+    pnpm run dev:projectA
+    pnpm run build:production:projectA
+    pnpm run preview:projectA
 
-- Project B
-  - `npm run dev:vite:projectB`
-  - `npm run build:vite:projectB`
-  - `npm run preview:vite:projectB`
+ProjectB：
 
-## Webpack 静态预览（dist 自动切换）
+    pnpm run dev:projectB
+    pnpm run build:production:projectB
+    pnpm run preview:projectB
 
-以下脚本会根据 `PROJECT` 自动选择 `dist` 或 `dist-<project>`：
+产物目录分别为 dist、dist-projectA 和 dist-projectB。可以使用 VITE_OUT_DIR 覆盖产物目录，使用 PUBLIC_URL 设置部署子路径。
 
-- `npm run serve:prod` / `npm run serve:dev` / `npm run serve:test`
-- `npm run http:prod` / `npm run http:dev` / `npm run http:test`
+## 新增项目
 
-示例：
+1. 新建 src/projects/<project>/index.tsx。
+2. 按需添加项目路由和静态资源目录。
+3. 使用 PROJECT=<project> pnpm exec vite --host --config vite.config.ts 开发。
+4. 使用 PROJECT=<project> pnpm exec vite build --config vite.config.ts 构建。
 
-- `PROJECT=projectA npm run build:production:projectA`
-- `PROJECT=projectA npm run serve:prod`
-- `PROJECT=projectA npm run http:prod`
-
-### Webpack（现有 start/build 链路）
-
-- 默认项目
-  - `npm run start`
-  - `npm run build:production`
-  - `npm run prod:serve`
-
-- Project A
-  - `npm run start:projectA`
-  - `npm run build:production:projectA`
-  - `npm run prod:serve:projectA`
-
-- Project B
-  - `npm run start:projectB`
-  - `npm run build:production:projectB`
-  - `npm run prod:serve:projectB`
-
-构建产物目录：
-
-- 默认：`dist-vite`
-- 非默认：`dist-vite-<project>`（例如 `dist-vite-projectA`）
-
-Webpack 构建产物目录：
-
-- 默认：`dist`
-- 非默认：`dist-<project>`（例如 `dist-projectA`）
-
-## 新增一个项目（例如 projectC）
-
-1) 创建入口文件：`src/projects/projectC/index.tsx`
-
-2) （可选）创建路由目录：`src/projects/projectC/routers/`
-
-- 如果你想先复用默认路由：
-  - `routers/index.tsx` 里写：
-    - `export { default } from '@src/routers'`
-    - `export * from '@src/routers'`
-  - `routers/authRouter.tsx` 里写：
-    - `export { default } from '@src/routers/authRouter'`
-
-3) （可选）创建静态资源目录：`src/projects/projectC/public/`
-
-4) 增加脚本（两种方式选一种）
-
-- 推荐：直接照着 `projectA`/`projectB` 在根 `package.json` 里添加：
-  - `cross-env PROJECT=projectC vite --host --config vite.config.ts`
-  - `cross-env PROJECT=projectC vite build --config vite.config.ts`
-
-## 说明（为什么能做到“按需打包”）
-
-Vite 在构建时只会从 `index.html` 注入的**入口脚本**向下依赖分析。
-当前实现会在构建/开发时把 `index.html` 里的默认入口 `/src/index.tsx` 替换为 `/src/projects/<project>/index.tsx`，因此不会把其它项目入口当成必需依赖链去打包。
+项目只会从所选 HTML 入口开始分析依赖，不会把其他项目入口打入同一个产物。

@@ -10,7 +10,7 @@ export default function Portal() {
       <Card>
         <Space orientation="vertical" size={12} style={{ width: '100%' }}>
           <Paragraph style={{ marginBottom: 0 }}>
-            这是微前端 <Text code>Shell</Text>（Host），通过 Webpack Module Federation 动态加载子应用。
+            这是微前端 <Text code>Shell</Text>（Host），通过 Vite Module Federation 动态加载子应用。
           </Paragraph>
           <Space wrap>
             <Button type="primary">

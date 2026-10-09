@@ -25,8 +25,8 @@ const readPackageJson = () => {
 
 const pkg = readPackageJson()
 
-// depcheck doesn't reliably detect dependencies that are only used in npm scripts.
-// Build a set of package names referenced in scripts/husky/lint-staged commands.
+// depcheck doesn't reliably detect dependencies that are only used in package scripts.
+// Build a set of package names referenced in scripts, Husky, and lint-staged commands.
 const buildScriptDeps = () => {
   const scriptDeps = new Set()
   if (!pkg) return scriptDeps
@@ -49,10 +49,7 @@ const buildScriptDeps = () => {
   const text = buckets.filter((x) => typeof x === 'string').join('\n')
   if (!text) return scriptDeps
 
-  // Some CLIs are invoked via a different package name than the underlying dependency.
-  // Example: `webpack` command requires `webpack-cli` to be installed.
   const implied = new Set()
-  if (/(^|\s)webpack(\s|$)/m.test(text)) implied.add('webpack-cli')
   // If we run Jest, TypeScript needs its globals (describe/test/expect/jest).
   if (/(^|\s)jest(\s|$)/m.test(text)) implied.add('@types/jest')
 
@@ -123,11 +120,11 @@ const buildConfigDeps = () => {
   files.push(path.join(cwd, 'vite.config.ts'))
   files.push(path.join(cwd, 'vite.config.lib.ts'))
   files.push(path.join(cwd, 'vite.config.lib.entries.ts'))
+  files.push(path.join(cwd, 'build/module-federation.ts'))
   files.push(path.join(cwd, 'postcss.config.js'))
 
   // Directories with build/storybook config
   walkFiles(path.join(cwd, '.storybook'), files)
-  walkFiles(path.join(cwd, 'webpack'), files)
   walkFiles(path.join(cwd, 'scripts'), files)
 
   const text = files
@@ -244,11 +241,6 @@ for (const name of pnpmStrictResolutionDeps) {
 // Example: framer-motion's CJS bundle can require @emotion/is-prop-valid.
 if (pkg?.dependencies?.['framer-motion']) usedByMeta.add('@emotion/is-prop-valid')
 
-// image-minimizer-webpack-plugin dynamically requires `sharp`.
-if (pkg?.devDependencies?.['image-minimizer-webpack-plugin'] || pkg?.dependencies?.['image-minimizer-webpack-plugin']) {
-  usedByMeta.add('sharp')
-}
-
 const toolingConventionDeps = new Set([
   '@eslint/compat',
   '@eslint/eslintrc',
@@ -278,7 +270,13 @@ const report = await new Promise((resolve, reject) => {
         'node_modules',
         'dist',
         'dist-lib',
-        'dist-vite',
+        'dist-pages',
+        'dist-shell',
+        'dist-projectA',
+        'dist-projectB',
+        'dist-mf-projectA',
+        'dist-mf-projectB',
+        'dist-vercel',
         'storybook-static',
         'coverage',
         'playwright-report',
@@ -290,7 +288,6 @@ const report = await new Promise((resolve, reject) => {
         depcheck.special.babel,
         depcheck.special.eslint,
         depcheck.special.jest,
-        depcheck.special.webpack,
         depcheck.special.husky,
         depcheck.special.prettier,
         depcheck.special.commitizen,

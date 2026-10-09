@@ -13,6 +13,14 @@
       "version": "^1.0.8"
     },
     {
+      "name": "@babel/helper-module-transforms",
+      "version": "^8.0.0"
+    },
+    {
+      "name": "@babel/runtime",
+      "version": "^7.29.7"
+    },
+    {
       "name": "@codesandbox/sandpack-react",
       "version": "^2.20.0"
     },
@@ -97,6 +105,10 @@
       "version": "^4.3.1"
     },
     {
+      "name": "@svgr/babel-preset",
+      "version": "^8.1.0"
+    },
+    {
       "name": "@tiptap/core",
       "version": "3.26.0"
     },
@@ -142,6 +154,10 @@
     },
     {
       "name": "@tiptap/extension-text-align",
+      "version": "^3.26.0"
+    },
+    {
+      "name": "@tiptap/extension-underline",
       "version": "^3.26.0"
     },
     {
@@ -377,6 +393,10 @@
       "version": "^1.11.21"
     },
     {
+      "name": "dompurify",
+      "version": "^3.4.8"
+    },
+    {
       "name": "echarts",
       "version": "^6.1.0"
     },
@@ -485,12 +505,20 @@
       "version": "^11.15.0"
     },
     {
+      "name": "micromark",
+      "version": "^4.0.2"
+    },
+    {
       "name": "motion",
       "version": "^12.40.0"
     },
     {
       "name": "motion-dom",
       "version": "12.40.0"
+    },
+    {
+      "name": "pdfjs-dist",
+      "version": "5.4.296"
     },
     {
       "name": "pinyin-pro",
@@ -522,7 +550,7 @@
     },
     {
       "name": "react",
-      "version": "^19.2.7"
+      "version": "^19.3.0"
     },
     {
       "name": "react-barcode",
@@ -530,7 +558,7 @@
     },
     {
       "name": "react-dom",
-      "version": "^19.2.7"
+      "version": "^19.3.0"
     },
     {
       "name": "react-draggable",
@@ -566,7 +594,7 @@
     },
     {
       "name": "react-router-dom",
-      "version": "^7.17.0"
+      "version": "^7.18.3"
     },
     {
       "name": "react-sticky-box",
@@ -699,20 +727,28 @@
       "version": "^5.0.0"
     },
     {
+      "name": "@koa/router",
+      "version": "^15.6.0"
+    },
+    {
       "name": "@playwright/test",
       "version": "^1.60.0"
     },
     {
-      "name": "@pmmmwh/react-refresh-webpack-plugin",
-      "version": "^0.6.2"
+      "name": "@module-federation/vite",
+      "version": "^1.22.1"
     },
     {
       "name": "@sentry/vite-plugin",
       "version": "^5.3.0"
     },
     {
-      "name": "@sentry/webpack-plugin",
-      "version": "^5.3.0"
+      "name": "@serwist/vite",
+      "version": "^9.5.11"
+    },
+    {
+      "name": "@serwist/window",
+      "version": "^9.5.11"
     },
     {
       "name": "@storybook/addon-a11y",
@@ -739,10 +775,6 @@
       "version": "^10.4.2"
     },
     {
-      "name": "@svgr/webpack",
-      "version": "^8.1.0"
-    },
-    {
       "name": "@tailwindcss/postcss",
       "version": "^4.3.0"
     },
@@ -752,27 +784,31 @@
     },
     {
       "name": "@testing-library/jest-dom",
-      "version": "^6.9.1"
+      "version": "^7.0.1"
     },
     {
       "name": "@testing-library/react",
-      "version": "^16.3.2"
+      "version": "^16.3.3"
     },
     {
       "name": "@testing-library/user-event",
-      "version": "^14.6.1"
+      "version": "^14.6.7"
     },
     {
-      "name": "@types/dompurify",
-      "version": "^3.2.0"
+      "name": "@types/archiver",
+      "version": "^8.0.0"
+    },
+    {
+      "name": "@types/crypto-js",
+      "version": "^4.2.2"
     },
     {
       "name": "@types/jest",
       "version": "^30.0.0"
     },
     {
-      "name": "@types/jspdf",
-      "version": "^2.0.0"
+      "name": "@types/loadable__component",
+      "version": "^5.13.10"
     },
     {
       "name": "@types/lodash",
@@ -783,12 +819,24 @@
       "version": "^25.9.2"
     },
     {
+      "name": "@types/prop-types",
+      "version": "^15.7.15"
+    },
+    {
+      "name": "@types/qrcode",
+      "version": "^1.5.6"
+    },
+    {
       "name": "@types/react",
-      "version": "^19.2.17"
+      "version": "^19.3.0"
     },
     {
       "name": "@types/react-dom",
-      "version": "^19.2.3"
+      "version": "^19.3.0"
+    },
+    {
+      "name": "@types/react-syntax-highlighter",
+      "version": "^15.5.13"
     },
     {
       "name": "@types/three",
@@ -804,11 +852,7 @@
     },
     {
       "name": "@vitejs/plugin-react",
-      "version": "^6.0.2"
-    },
-    {
-      "name": "antd-dayjs-webpack-plugin",
-      "version": "^1.0.6"
+      "version": "^6.1.1"
     },
     {
       "name": "archiver",
@@ -817,10 +861,6 @@
     {
       "name": "babel-jest",
       "version": "^30.4.1"
-    },
-    {
-      "name": "babel-loader",
-      "version": "^10.1.1"
     },
     {
       "name": "babel-plugin-react-compiler",
@@ -839,14 +879,6 @@
       "version": "^0.3.7"
     },
     {
-      "name": "case-sensitive-paths-webpack-plugin",
-      "version": "^2.4.0"
-    },
-    {
-      "name": "circular-dependency-plugin",
-      "version": "^5.2.2"
-    },
-    {
       "name": "code-inspector-plugin",
       "version": "^1.5.3"
     },
@@ -855,32 +887,16 @@
       "version": "4.3.1"
     },
     {
-      "name": "compression-webpack-plugin",
-      "version": "^12.0.0"
-    },
-    {
       "name": "concurrently",
       "version": "^10.0.3"
     },
     {
-      "name": "conventional-changelog-cli",
-      "version": "^5.0.0"
-    },
-    {
-      "name": "copy-webpack-plugin",
-      "version": "^14.0.0"
+      "name": "conventional-changelog",
+      "version": "^7.2.0"
     },
     {
       "name": "cross-env",
       "version": "^10.1.0"
-    },
-    {
-      "name": "css-loader",
-      "version": "^7.1.4"
-    },
-    {
-      "name": "css-minimizer-webpack-plugin",
-      "version": "^8.0.0"
     },
     {
       "name": "cz-conventional-changelog",
@@ -895,16 +911,8 @@
       "version": "^17.4.2"
     },
     {
-      "name": "dotenv-webpack",
-      "version": "^9.0.0"
-    },
-    {
       "name": "esbuild-jest",
       "version": "0.5.0"
-    },
-    {
-      "name": "esbuild-loader",
-      "version": "^4.4.3"
     },
     {
       "name": "eslint",
@@ -943,18 +951,6 @@
       "version": "^65.0.0"
     },
     {
-      "name": "eslint-webpack-plugin",
-      "version": "^6.0.0"
-    },
-    {
-      "name": "filemanager-webpack-plugin",
-      "version": "^10.0.1"
-    },
-    {
-      "name": "fork-ts-checker-webpack-plugin",
-      "version": "^9.1.0"
-    },
-    {
       "name": "gh-pages",
       "version": "^6.3.0"
     },
@@ -967,24 +963,12 @@
       "version": "^17.6.0"
     },
     {
-      "name": "html-minimizer-webpack-plugin",
-      "version": "^6.0.0"
-    },
-    {
-      "name": "html-webpack-plugin",
-      "version": "^5.6.7"
-    },
-    {
       "name": "http-server",
       "version": "^14.1.1"
     },
     {
       "name": "husky",
       "version": "^9.1.7"
-    },
-    {
-      "name": "image-minimizer-webpack-plugin",
-      "version": "^5.0.0"
     },
     {
       "name": "jest",
@@ -1003,10 +987,6 @@
       "version": "^4.4.1"
     },
     {
-      "name": "koa-router",
-      "version": "^14.0.0"
-    },
-    {
       "name": "lighthouse",
       "version": "^13.3.0"
     },
@@ -1017,14 +997,6 @@
     {
       "name": "markdownlint-cli",
       "version": "^0.48.0"
-    },
-    {
-      "name": "mini-css-extract-plugin",
-      "version": "^2.10.2"
-    },
-    {
-      "name": "node-polyfill-webpack-plugin",
-      "version": "4.1.0"
     },
     {
       "name": "nodemon",
@@ -1047,10 +1019,6 @@
       "version": "^5.0.2"
     },
     {
-      "name": "postcss-loader",
-      "version": "^8.2.1"
-    },
-    {
       "name": "postcss-normalize",
       "version": "^13.0.1"
     },
@@ -1067,16 +1035,12 @@
       "version": "^0.8.0"
     },
     {
-      "name": "purgecss-webpack-plugin",
-      "version": "^8.0.0"
-    },
-    {
       "name": "react-devtools",
       "version": "^7.0.1"
     },
     {
       "name": "react-refresh",
-      "version": "^0.18.0"
+      "version": "^0.19.0"
     },
     {
       "name": "rimraf",
@@ -1089,6 +1053,10 @@
     {
       "name": "serve",
       "version": "^14.2.6"
+    },
+    {
+      "name": "serwist",
+      "version": "^9.5.11"
     },
     {
       "name": "sharp",
@@ -1115,16 +1083,16 @@
       "version": "^10.4.2"
     },
     {
-      "name": "style-loader",
-      "version": "^4.0.0"
-    },
-    {
       "name": "stylelint",
       "version": "^17.13.0"
     },
     {
       "name": "stylelint-config-standard",
       "version": "^40.0.0"
+    },
+    {
+      "name": "tailwindcss",
+      "version": "^4.3.0"
     },
     {
       "name": "typescript",
@@ -1157,30 +1125,6 @@
     {
       "name": "web-streams-polyfill",
       "version": "^4.3.0"
-    },
-    {
-      "name": "webpack",
-      "version": "^5.107.2"
-    },
-    {
-      "name": "webpack-bundle-analyzer",
-      "version": "^5.3.0"
-    },
-    {
-      "name": "webpack-cli",
-      "version": "^7.0.3"
-    },
-    {
-      "name": "webpack-dev-server",
-      "version": "^5.2.4"
-    },
-    {
-      "name": "webpack-merge",
-      "version": "^6.0.1"
-    },
-    {
-      "name": "webpackbar",
-      "version": "^7.0.0"
     }
   ]
 }
