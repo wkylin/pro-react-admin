@@ -90,15 +90,28 @@ export function renderApp(options: RenderAppOptions) {
 
   if (shouldEnableSentry) {
     const replayEnabled = process.env.SENTRY_ENABLE_REPLAY === 'true'
+    const collectDefaultPii = process.env.SENTRY_SEND_DEFAULT_PII === 'true'
     Sentry.init({
       dsn: sentryDsn,
-      sendDefaultPii: process.env.SENTRY_SEND_DEFAULT_PII === 'true',
+      dataCollection: collectDefaultPii
+        ? {}
+        : {
+            userInfo: false,
+            cookies: false,
+            httpHeaders: false,
+            httpBodies: [],
+            urlQueryParams: false,
+            graphQL: { document: false, variables: false },
+            genAI: { inputs: false, outputs: false },
+            databaseQueryData: false,
+            queues: false,
+            stackFrameVariables: false,
+          },
       integrations: [Sentry.browserTracingIntegration(), ...(replayEnabled ? [Sentry.replayIntegration()] : [])],
       tracesSampleRate: getSentryTraceSampleRate(),
       tracePropagationTargets: [/^https:\/\/wkylin\.sentry\.io\/api/],
       replaysSessionSampleRate: replayEnabled ? 0.1 : 0,
       replaysOnErrorSampleRate: replayEnabled ? 1.0 : 0,
-      enableLogs: true,
     })
   }
 

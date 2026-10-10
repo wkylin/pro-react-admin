@@ -157,10 +157,6 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   const fixError = () => {
     refreshTab()
   }
-  // Note: pre-rendering via KeepAlive.preRenderAll was removed when KeepAlive
-  // was simplified to a portal-based implementation. If we reintroduce
-  // background pre-rendering later, re-add appropriate APIs on KeepAlive.
-
   return (
     <Tabs
       hideAdd

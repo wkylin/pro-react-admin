@@ -12,11 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^2.2.2",
+    "body-parser": "^2.3.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "helmet": "^8.2.0",
-    "mongoose": "^9.6.3"
+    "helmet": "^8.3.0",
+    "mongoose": "^9.11.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

@@ -204,7 +204,7 @@ function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefi
       for (const candidate of candidates) {
         if (cancelled) return
         try {
-          const pdf = await pdfjs.getDocument(candidate).promise
+          const pdf = await pdfjs.getDocument({ url: candidate }).promise
           const urls: string[] = []
 
           for (let i = 1; i <= pdf.numPages; i++) {

@@ -504,22 +504,27 @@ Layout / component styles
   flex-direction: column;
 }
 
-.layout-container > .wui-ant-tabs-nav {
+.layout-container > .wui-ant-tabs-nav,
+.layout-container > div > .pro-tabs {
   flex: 0 0 auto;
   margin-bottom: 0;
 }
 
-.layout-container > .wui-ant-tabs-content-holder {
-  flex: 1;
+.layout-container > .wui-ant-tabs-body-holder {
+  flex: 1 1 0%;
+  min-width: 0;
   min-height: 0;
   overflow: hidden;
 }
 
-.layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content {
+.layout-container > .wui-ant-tabs-body-holder > .wui-ant-tabs-body {
+  width: 100%;
   height: 100%;
+  min-height: 0;
 }
 
-.layout-container > .wui-ant-tabs-content-holder > .wui-ant-tabs-content > .wui-ant-tabs-tabpane {
+.layout-container > .wui-ant-tabs-body-holder > .wui-ant-tabs-body > .wui-ant-tabs-content {
+  width: 100%;
   height: 100%;
   padding: 0;
   box-sizing: border-box;
@@ -531,6 +536,7 @@ Layout / component styles
 }
 
 .layout-container .layout-tabpanel {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;

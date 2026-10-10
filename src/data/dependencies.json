@@ -6,7 +6,7 @@
     },
     {
       "name": "@ant-design/icons",
-      "version": "^6.2.5"
+      "version": "^6.3.4"
     },
     {
       "name": "@ant-design/maps",
@@ -14,11 +14,11 @@
     },
     {
       "name": "@babel/helper-module-transforms",
-      "version": "^8.0.0"
+      "version": "^8.0.6"
     },
     {
       "name": "@babel/runtime",
-      "version": "^7.29.7"
+      "version": "^8.0.7"
     },
     {
       "name": "@codesandbox/sandpack-react",
@@ -34,11 +34,11 @@
     },
     {
       "name": "@mermaid-js/parser",
-      "version": "1.1.1"
+      "version": "2.0.1"
     },
     {
       "name": "@number-flow/react",
-      "version": "^0.6.0"
+      "version": "^0.6.2"
     },
     {
       "name": "@rc-component/input",
@@ -46,59 +46,31 @@
     },
     {
       "name": "@rc-component/notification",
-      "version": "2.0.7"
+      "version": "2.1.1"
     },
     {
       "name": "@rc-component/util",
-      "version": "1.11.1"
+      "version": "1.13.0"
     },
     {
       "name": "@react-spring/core",
-      "version": "^10.1.0"
+      "version": "^10.1.2"
     },
     {
       "name": "@react-spring/web",
-      "version": "^10.1.0"
+      "version": "^10.1.2"
     },
     {
       "name": "@react-three/drei",
-      "version": "^10.7.7"
+      "version": "^10.7.9"
     },
     {
       "name": "@react-three/fiber",
-      "version": "^9.6.1"
-    },
-    {
-      "name": "@sentry-internal/browser-utils",
-      "version": "10.56.0"
-    },
-    {
-      "name": "@sentry-internal/feedback",
-      "version": "10.56.0"
-    },
-    {
-      "name": "@sentry-internal/replay",
-      "version": "10.56.0"
-    },
-    {
-      "name": "@sentry-internal/replay-canvas",
-      "version": "10.56.0"
-    },
-    {
-      "name": "@sentry/browser",
-      "version": "10.56.0"
-    },
-    {
-      "name": "@sentry/core",
-      "version": "10.56.0"
+      "version": "^9.8.1"
     },
     {
       "name": "@sentry/react",
-      "version": "^10.56.0"
-    },
-    {
-      "name": "@sentry/tracing",
-      "version": "^7.120.4"
+      "version": "^11.6.0"
     },
     {
       "name": "@smakss/react-scroll-direction",
@@ -110,227 +82,227 @@
     },
     {
       "name": "@tiptap/core",
-      "version": "3.26.0"
+      "version": "3.31.4"
     },
     {
       "name": "@tiptap/extension-code-block-lowlight",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-image",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-link",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-placeholder",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-table",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-table-cell",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-table-header",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-table-row",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-task-item",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-task-list",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-text-align",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/extension-underline",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/pm",
-      "version": "3.26.0"
+      "version": "3.31.4"
     },
     {
       "name": "@tiptap/react",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tiptap/starter-kit",
-      "version": "^3.26.0"
+      "version": "^3.31.4"
     },
     {
       "name": "@tsparticles/basic",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/canvas-utils",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/engine",
-      "version": "^4.1.3"
+      "version": "^4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-attract",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-bounce",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-bubble",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-connect",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-destroy",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-grab",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-parallax",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-pause",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-push",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-remove",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-repulse",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-external-slow",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-particles-attract",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-particles-collisions",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/interaction-particles-links",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-blend",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-easing-quad",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-hex-color",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-hsl-color",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-interactivity",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-move",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/plugin-rgb-color",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/react",
-      "version": "^4.1.3"
+      "version": "^4.4.0"
     },
     {
       "name": "@tsparticles/shape-circle",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/shape-emoji",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/shape-image",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/shape-line",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/shape-polygon",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/shape-square",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/shape-star",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/slim",
-      "version": "^4.1.3"
+      "version": "^4.4.0"
     },
     {
       "name": "@tsparticles/updater-life",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/updater-opacity",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/updater-out-modes",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/updater-paint",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/updater-rotate",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@tsparticles/updater-size",
-      "version": "4.1.3"
+      "version": "4.4.0"
     },
     {
       "name": "@uiw/react-markdown-preview",
@@ -338,7 +310,7 @@
     },
     {
       "name": "@uiw/react-md-editor",
-      "version": "^4.1.1"
+      "version": "^4.1.2"
     },
     {
       "name": "@uiw/react-signature",
@@ -354,19 +326,19 @@
     },
     {
       "name": "@xyflow/react",
-      "version": "^12.11.0"
+      "version": "^12.12.0"
     },
     {
       "name": "@xyflow/system",
-      "version": "0.0.77"
+      "version": "0.0.83"
     },
     {
       "name": "antd",
-      "version": "^6.4.3"
+      "version": "^6.6.5"
     },
     {
       "name": "axios",
-      "version": "^1.17.0"
+      "version": "^1.20.0"
     },
     {
       "name": "canvas-confetti",
@@ -382,7 +354,7 @@
     },
     {
       "name": "core-js",
-      "version": "^3.49.0"
+      "version": "^3.50.0"
     },
     {
       "name": "crypto-js",
@@ -390,11 +362,11 @@
     },
     {
       "name": "dayjs",
-      "version": "^1.11.21"
+      "version": "^1.11.23"
     },
     {
       "name": "dompurify",
-      "version": "^3.4.8"
+      "version": "^3.4.16"
     },
     {
       "name": "echarts",
@@ -402,27 +374,27 @@
     },
     {
       "name": "es-toolkit",
-      "version": "^1.47.0"
+      "version": "^1.52.0"
     },
     {
       "name": "esbuild",
-      "version": "^0.28.0"
+      "version": "^0.28.2"
     },
     {
       "name": "framer-motion",
-      "version": "^12.40.0"
+      "version": "^14.0.0"
     },
     {
       "name": "fuse.js",
-      "version": "^7.4.2"
+      "version": "^7.5.0"
     },
     {
       "name": "highlight.js",
-      "version": "^11.11.1"
+      "version": "^11.12.0"
     },
     {
       "name": "hls.js",
-      "version": "^1.6.16"
+      "version": "^1.7.3"
     },
     {
       "name": "html-to-image",
@@ -434,7 +406,7 @@
     },
     {
       "name": "i18next",
-      "version": "^26.3.1"
+      "version": "^26.4.2"
     },
     {
       "name": "i18next-browser-languagedetector",
@@ -442,11 +414,11 @@
     },
     {
       "name": "immer",
-      "version": "^11.1.8"
+      "version": "^11.1.21"
     },
     {
       "name": "isomorphic-dompurify",
-      "version": "^3.16.0"
+      "version": "^4.5.0"
     },
     {
       "name": "jsencrypt",
@@ -458,11 +430,11 @@
     },
     {
       "name": "katex",
-      "version": "^0.17.0"
+      "version": "^0.19.0"
     },
     {
       "name": "less",
-      "version": "^4.6.4"
+      "version": "^4.9.1"
     },
     {
       "name": "lodash",
@@ -478,7 +450,7 @@
     },
     {
       "name": "lucide-react",
-      "version": "^1.17.0"
+      "version": "^1.54.0"
     },
     {
       "name": "maath",
@@ -486,7 +458,7 @@
     },
     {
       "name": "marked",
-      "version": "^18.0.5"
+      "version": "^18.1.0"
     },
     {
       "name": "markmap-common",
@@ -502,27 +474,27 @@
     },
     {
       "name": "mermaid",
-      "version": "^11.15.0"
+      "version": "^12.1.0"
     },
     {
       "name": "micromark",
-      "version": "^4.0.2"
+      "version": "^4.0.3"
     },
     {
       "name": "motion",
-      "version": "^12.40.0"
+      "version": "^14.0.0"
     },
     {
       "name": "motion-dom",
-      "version": "12.40.0"
+      "version": "14.0.0"
     },
     {
       "name": "pdfjs-dist",
-      "version": "5.4.296"
+      "version": "6.4.299"
     },
     {
       "name": "pinyin-pro",
-      "version": "^3.28.1"
+      "version": "^3.29.4"
     },
     {
       "name": "popmotion",
@@ -546,7 +518,7 @@
     },
     {
       "name": "qs",
-      "version": "^6.15.2"
+      "version": "^6.16.0"
     },
     {
       "name": "react",
@@ -562,7 +534,7 @@
     },
     {
       "name": "react-draggable",
-      "version": "^4.6.0"
+      "version": "^4.7.2"
     },
     {
       "name": "react-fast-marquee",
@@ -570,7 +542,7 @@
     },
     {
       "name": "react-i18next",
-      "version": "^17.0.8"
+      "version": "^17.0.16"
     },
     {
       "name": "react-markdown",
@@ -578,23 +550,23 @@
     },
     {
       "name": "react-medium-image-zoom",
-      "version": "^5.4.6"
+      "version": "^5.4.9"
     },
     {
       "name": "react-parallax-tilt",
-      "version": "^1.7.330"
+      "version": "^1.7.346"
     },
     {
       "name": "react-pdf",
-      "version": "^10.4.1"
+      "version": "^11.0.0"
     },
     {
       "name": "react-responsive-masonry",
-      "version": "^2.7.2"
+      "version": "^2.9.0"
     },
     {
       "name": "react-router-dom",
-      "version": "^7.18.3"
+      "version": "^7.18.4"
     },
     {
       "name": "react-sticky-box",
@@ -602,7 +574,7 @@
     },
     {
       "name": "react-syntax-highlighter",
-      "version": "^16.1.1"
+      "version": "^16.1.2"
     },
     {
       "name": "react-to-print",
@@ -610,11 +582,11 @@
     },
     {
       "name": "react-window",
-      "version": "^2.2.7"
+      "version": "^2.3.3"
     },
     {
       "name": "react-zoom-pan-pinch",
-      "version": "^4.0.3"
+      "version": "^4.2.0"
     },
     {
       "name": "rehype-highlight",
@@ -642,7 +614,7 @@
     },
     {
       "name": "remove-markdown",
-      "version": "^0.6.4"
+      "version": "^0.8.0"
     },
     {
       "name": "resize-observer-polyfill",
@@ -654,7 +626,7 @@
     },
     {
       "name": "three",
-      "version": "^0.184.0"
+      "version": "^0.186.1"
     },
     {
       "name": "turndown",
@@ -674,49 +646,49 @@
     },
     {
       "name": "zustand",
-      "version": "^5.0.14"
+      "version": "^5.0.15"
     }
   ],
   "dev": [
     {
       "name": "@babel/core",
-      "version": "^7.29.7"
+      "version": "^8.0.7"
     },
     {
       "name": "@babel/plugin-proposal-decorators",
-      "version": "^7.29.7"
-    },
-    {
-      "name": "@babel/plugin-syntax-dynamic-import",
-      "version": "^7.8.3"
+      "version": "^8.0.2"
     },
     {
       "name": "@babel/plugin-transform-object-rest-spread",
-      "version": "^7.29.7"
+      "version": "^8.0.1"
     },
     {
       "name": "@babel/plugin-transform-runtime",
-      "version": "^7.29.7"
+      "version": "^8.0.6"
     },
     {
       "name": "@babel/preset-env",
-      "version": "^7.29.7"
+      "version": "^8.0.7"
     },
     {
       "name": "@babel/preset-react",
-      "version": "^7.29.7"
+      "version": "^8.0.1"
     },
     {
       "name": "@babel/preset-typescript",
-      "version": "^7.29.7"
+      "version": "^8.0.7"
+    },
+    {
+      "name": "@code-inspector/webpack",
+      "version": "^2.0.9"
     },
     {
       "name": "@eslint/compat",
-      "version": "^2.1.0"
+      "version": "^2.1.1"
     },
     {
       "name": "@eslint/eslintrc",
-      "version": "^3.3.5"
+      "version": "^3.3.7"
     },
     {
       "name": "@eslint/js",
@@ -728,27 +700,27 @@
     },
     {
       "name": "@koa/router",
-      "version": "^15.6.0"
+      "version": "^15.7.0"
     },
     {
       "name": "@playwright/test",
-      "version": "^1.60.0"
+      "version": "^1.64.0"
     },
     {
       "name": "@pmmmwh/react-refresh-webpack-plugin",
-      "version": "^0.6.2"
+      "version": "^0.6.3"
     },
     {
       "name": "@sentry/webpack-plugin",
-      "version": "^5.3.0"
+      "version": "^5.4.1"
     },
     {
       "name": "@serwist/webpack-plugin",
-      "version": "^9.5.11"
+      "version": "^9.5.13"
     },
     {
       "name": "@serwist/window",
-      "version": "^9.5.11"
+      "version": "^9.5.13"
     },
     {
       "name": "@storybook/addon-a11y",
@@ -764,7 +736,7 @@
     },
     {
       "name": "@storybook/addon-webpack5-compiler-babel",
-      "version": "^4.0.0"
+      "version": "^4.0.1"
     },
     {
       "name": "@storybook/builder-webpack5",
@@ -784,11 +756,11 @@
     },
     {
       "name": "@tailwindcss/postcss",
-      "version": "^4.3.0"
+      "version": "^4.3.3"
     },
     {
       "name": "@testing-library/dom",
-      "version": "^10.4.1"
+      "version": "^10.4.2"
     },
     {
       "name": "@testing-library/jest-dom",
@@ -820,11 +792,11 @@
     },
     {
       "name": "@types/lodash",
-      "version": "^4.17.24"
+      "version": "^4.17.25"
     },
     {
       "name": "@types/node",
-      "version": "^25.9.2"
+      "version": "^26.6.4"
     },
     {
       "name": "@types/prop-types",
@@ -848,15 +820,19 @@
     },
     {
       "name": "@types/three",
-      "version": "^0.184.1"
+      "version": "^0.186.0"
     },
     {
       "name": "@typescript-eslint/eslint-plugin",
-      "version": "^8.60.1"
+      "version": "^8.71.1"
     },
     {
       "name": "@typescript-eslint/parser",
-      "version": "^8.60.1"
+      "version": "^8.71.1"
+    },
+    {
+      "name": "@typescript/native",
+      "version": "npm:typescript@^7.0.2"
     },
     {
       "name": "antd-dayjs-webpack-plugin",
@@ -868,7 +844,7 @@
     },
     {
       "name": "babel-jest",
-      "version": "^30.4.1"
+      "version": "^30.5.2"
     },
     {
       "name": "babel-loader",
@@ -899,12 +875,8 @@
       "version": "^5.2.2"
     },
     {
-      "name": "@code-inspector/webpack",
-      "version": "^1.5.3"
-    },
-    {
       "name": "commitizen",
-      "version": "4.3.1"
+      "version": "4.3.2"
     },
     {
       "name": "compression-webpack-plugin",
@@ -912,11 +884,11 @@
     },
     {
       "name": "concurrently",
-      "version": "^10.0.3"
+      "version": "^10.0.6"
     },
     {
       "name": "conventional-changelog",
-      "version": "^7.2.0"
+      "version": "^8.1.3"
     },
     {
       "name": "copy-webpack-plugin",
@@ -928,7 +900,7 @@
     },
     {
       "name": "css-loader",
-      "version": "^7.1.4"
+      "version": "^7.1.5"
     },
     {
       "name": "css-minimizer-webpack-plugin",
@@ -944,7 +916,7 @@
     },
     {
       "name": "dotenv",
-      "version": "^17.4.2"
+      "version": "^18.0.6"
     },
     {
       "name": "esbuild-jest",
@@ -952,11 +924,11 @@
     },
     {
       "name": "esbuild-loader",
-      "version": "^4.4.3"
+      "version": "^4.5.0"
     },
     {
       "name": "eslint",
-      "version": "^10.4.1"
+      "version": "^10.12.0"
     },
     {
       "name": "eslint-config-prettier",
@@ -988,7 +960,7 @@
     },
     {
       "name": "eslint-plugin-unicorn",
-      "version": "^65.0.0"
+      "version": "^77.0.0"
     },
     {
       "name": "eslint-webpack-plugin",
@@ -1012,7 +984,7 @@
     },
     {
       "name": "globals",
-      "version": "^17.6.0"
+      "version": "^17.13.0"
     },
     {
       "name": "html-minimizer-webpack-plugin",
@@ -1020,7 +992,7 @@
     },
     {
       "name": "html-webpack-plugin",
-      "version": "^5.6.7"
+      "version": "^5.6.8"
     },
     {
       "name": "http-server",
@@ -1036,11 +1008,11 @@
     },
     {
       "name": "jest",
-      "version": "^30.4.2"
+      "version": "^30.5.2"
     },
     {
       "name": "jest-environment-jsdom",
-      "version": "^30.4.1"
+      "version": "^30.5.2"
     },
     {
       "name": "koa",
@@ -1051,20 +1023,20 @@
       "version": "^4.4.1"
     },
     {
+      "name": "less-loader",
+      "version": "^13.0.0"
+    },
+    {
       "name": "lighthouse",
-      "version": "^13.3.0"
+      "version": "^13.5.0"
     },
     {
       "name": "lint-staged",
-      "version": "^17.0.7"
-    },
-    {
-      "name": "less-loader",
-      "version": "^12.3.0"
+      "version": "^17.6.0"
     },
     {
       "name": "markdownlint-cli",
-      "version": "^0.48.0"
+      "version": "^0.49.1"
     },
     {
       "name": "mini-css-extract-plugin",
@@ -1080,7 +1052,7 @@
     },
     {
       "name": "npm-check-updates",
-      "version": "^22.2.3"
+      "version": "^23.1.0"
     },
     {
       "name": "portfinder",
@@ -1088,7 +1060,7 @@
     },
     {
       "name": "postcss",
-      "version": "^8.5.15"
+      "version": "^8.5.29"
     },
     {
       "name": "postcss-flexbugs-fixes",
@@ -1104,15 +1076,15 @@
     },
     {
       "name": "postcss-preset-env",
-      "version": "^11.3.0"
+      "version": "^11.6.1"
     },
     {
       "name": "prettier",
-      "version": "^3.8.3"
+      "version": "^3.9.9"
     },
     {
       "name": "prettier-plugin-tailwindcss",
-      "version": "^0.8.0"
+      "version": "^0.8.1"
     },
     {
       "name": "purgecss-webpack-plugin",
@@ -1120,7 +1092,7 @@
     },
     {
       "name": "react-devtools",
-      "version": "^7.0.1"
+      "version": "^8.0.0"
     },
     {
       "name": "react-refresh",
@@ -1136,15 +1108,15 @@
     },
     {
       "name": "serwist",
-      "version": "^9.5.11"
+      "version": "^9.5.13"
     },
     {
       "name": "sharp",
-      "version": "^0.34.5"
+      "version": "^0.35.5"
     },
     {
       "name": "shiki",
-      "version": "^4.2.0"
+      "version": "^4.5.0"
     },
     {
       "name": "sonar-scanner",
@@ -1168,7 +1140,7 @@
     },
     {
       "name": "stylelint",
-      "version": "^17.13.0"
+      "version": "^17.16.0"
     },
     {
       "name": "stylelint-config-standard",
@@ -1176,15 +1148,15 @@
     },
     {
       "name": "tailwindcss",
-      "version": "^4.3.0"
+      "version": "^4.3.3"
     },
     {
       "name": "typescript",
-      "version": "^6.0.3"
+      "version": "npm:@typescript/typescript6@^6.0.2"
     },
     {
       "name": "video.js",
-      "version": "^8.23.7"
+      "version": "^8.24.1"
     },
     {
       "name": "web-streams-polyfill",
@@ -1192,19 +1164,19 @@
     },
     {
       "name": "webpack",
-      "version": "^5.107.2"
+      "version": "^5.111.1"
     },
     {
       "name": "webpack-bundle-analyzer",
-      "version": "^5.3.0"
+      "version": "^5.4.0"
     },
     {
       "name": "webpack-cli",
-      "version": "^7.0.3"
+      "version": "^7.2.3"
     },
     {
       "name": "webpack-dev-server",
-      "version": "^5.2.4"
+      "version": "^6.0.0"
     },
     {
       "name": "webpack-merge",

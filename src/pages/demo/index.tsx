@@ -358,7 +358,7 @@ const ProDemo = () => {
             html={`<h2>SafeHtml 极其复杂示例</h2>
               <p style="color: #333; font-size:14px;" aria-label="demo" data-role="main" data-info="allowed">This paragraph has <strong>bold</strong>, <em>italic</em>, <del>deleted</del>, and <span style="display:inline-block" data-count="3">inline span</span>.</p>
               <p>Bad link: <a href="javascript:alert('x')" onclick="alert('x')">Click me</a> — Good link: <a href="https://example.com" target="_blank" rel="noopener noreferrer">Example</a></p>
-              <div style="background-image:url('javascript:alert(1)');" data-onclick="hack" data-onexec="evil">Styled div with potentially dangerous style and data attributes</div>
+              <div style="color: #b91c1c;" data-unsafe-css="background-image:url('javascript:alert(1)')" data-onclick="hack" data-onexec="evil">Styled div with potentially dangerous style and data attributes</div>
               <svg viewBox="0 0 100 100" width="100" height="100"><circle cx="50" cy="50" r="40" fill="orange" onmouseover="alert(1)"/></svg>
               <table><caption>Sample Table</caption><thead><tr><th>Col 1</th><th>Col 2</th></tr></thead><tbody><tr><td colspan="2">Merged</td></tr><tr><td>Cell</td><td>Cell</td></tr></tbody></table>
               <pre><code>const x = 1; console.log(x);</code></pre>

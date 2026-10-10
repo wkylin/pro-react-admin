@@ -1,6 +1,5 @@
 const plugins = [
-  ['@babel/plugin-syntax-dynamic-import'],
-  ['@babel/plugin-proposal-decorators', { legacy: true }],
+  ['@babel/plugin-proposal-decorators', { version: 'legacy' }],
   ['@babel/plugin-transform-runtime'],
   ['@babel/plugin-transform-object-rest-spread'],
   ['babel-plugin-react-compiler'],
@@ -15,17 +14,17 @@ module.exports = {
           browsers: ['> 1%', 'last 2 versions', 'not ie <= 8'],
         },
         modules: false,
-        useBuiltIns: 'entry',
-        corejs: 3,
-      },
-    ],
-    [
-      '@babel/preset-react',
-      {
-        runtime: 'automatic',
       },
     ],
     '@babel/preset-typescript',
+  ],
+  overrides: [
+    {
+      // Babel 8 enables JSX parsing through preset-react. Keep it off for .ts
+      // files so generic arrows such as <T>(value: T) remain valid TypeScript.
+      test: /\.(?:js|jsx|tsx)$/,
+      presets: [['@babel/preset-react', { runtime: 'automatic' }]],
+    },
   ],
   compact: true,
   comments: true,

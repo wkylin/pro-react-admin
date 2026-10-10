@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo, PropsWithChildren, useEffect } from 'react'
+import React, { createContext, useContext, useState, useMemo, useEffect, type PropsWithChildren } from 'react'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
