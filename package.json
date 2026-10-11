@@ -1,6 +1,6 @@
 {
   "name": "pro-react-admin",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "type": "module",
   "private": true,
   "description": "Multi-project React admin framework and microfrontend examples.",

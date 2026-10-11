@@ -61,3 +61,6 @@ storybook-static
 # 防止 Windows NUL 文件被误提交
 nul
 NUL
+
+# Vercel 项目关联、环境变量与本地构建产物
+/.vercel/

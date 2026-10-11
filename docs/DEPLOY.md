@@ -14,6 +14,8 @@ pnpm run test:e2e:enterprise
 
 ## 平台与组合
 
+根 `vercel.json` 部署默认后台展示应用，显式使用 `pnpm run build:production` 和 `dist` 输出目录。已关联项目可使用 `vercel --prod` 发布；通过 `vercel build --prod` 在本地生成并验证产物后，也可使用 `vercel deploy --prebuilt --prod` 上传同一产物。Vercel 项目关联、下载的环境变量和构建产物保存在 Git 忽略的 `.vercel/` 中。
+
 Vercel 聚合使用 `pnpm run build:mf:vercel`，依次构建登记的 Host/Remote，再按 registry.output 与 prodPath 组合到 dist-vercel，并检查容器/manifest。`sync:deployment` 从注册表生成聚合 headers；`check:deployment-contracts` 检测漂移，`check:deployment-config` 验证目标和缓存策略。Standalone Vercel 示例仍保留对应项目配置。
 
 GitHub Pages workflow 构建应用和 Storybook，`scripts/prepare-pages.mjs` 只组合已有目录到 dist-combined，生成导航与 .nojekyll。不存在构建入口时立即失败，不向发布目录静默复制过期内容。实际发布通过现有 Pages job；本地组合不发布。
@@ -36,4 +38,6 @@ Dockerfile 只打包已验证产物，基于非 root Nginx，提供 /healthz。A
 
 先上传新 hash 资源，再切换 HTML/Remote entry；保留旧 hash 资源供在途客户端使用，回滚入口也应指向仍存在的资源。PWA 注册/更新由 platform/pwa 管理，检查 scope、PUBLIC_URL 与缓存响应头；enterprise 入口目前没有自动注册 SW。
 
-CI 上传产物便于复用，但 CI 配置不是本地执行记录；结果见[验证](VALIDATION.md)。本次改造没有实际发布站点或镜像。
+CI 上传产物便于复用，但 CI 配置不是本地执行记录；结果见[验证](VALIDATION.md)。
+
+2026-10-11 已将默认后台 `5.0.0` 发布至 [Vercel 主站](https://pro-react-admin.vercel.app)，部署状态为 production / Ready。线上 `/version.json` 的版本、项目和构建时间与本地产物一致，首页与 5 个入口脚本均返回 200。本次使用下载的生产环境配置，通过 Vercel Build Output API 构建并上传已验证产物；本地复用已安装依赖，使用 `node scripts/project-command.mjs build default --stats` 的等价入口，没有执行包管理器 prehook 或上传 Sentry sourcemap。Docker 镜像构建与运行仍未在本机验证。
