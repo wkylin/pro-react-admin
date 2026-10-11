@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import fs from 'fs'
 
 test('denies access and shows message for unauthorized user', async ({ page }) => {
   // set token and limited permissions (only home)
@@ -15,12 +14,8 @@ test('denies access and shows message for unauthorized user', async ({ page }) =
   }, now)
 
   await page.goto('/#/permission')
-  const bodyText = await page.locator('body').innerText()
-  try {
-    fs.writeFileSync('test-results/unauthorized-body.txt', bodyText)
-  } catch (e) {}
-
   // ProtectedRoute 无权限时会跳转到 /403
-  await expect(page.locator('text=权限系统示例')).toHaveCount(0)
-  await expect(page.locator('text=Sorry, you are not authorized to access this page.')).toHaveCount(1)
+  await expect(page).toHaveURL(/#\/403$/)
+  await expect(page.getByText('权限系统示例', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('Sorry, you are not authorized to access this page.')).toBeVisible()
 })

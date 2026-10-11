@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test'
-import fs from 'fs'
 
 test('allows access for authorized user', async ({ page }) => {
   await page.addInitScript(() => {
@@ -9,11 +8,5 @@ test('allows access for authorized user', async ({ page }) => {
   })
 
   await page.goto('/#/permission')
-  await page.waitForLoadState('networkidle')
-  const bodyText = await page.locator('body').innerText()
-  // dump body text for debugging
-  try {
-    fs.writeFileSync('test-results/authorized-body.txt', bodyText)
-  } catch (e) {}
-  await expect(page.locator('text=权限系统示例')).toHaveCount(1)
+  await expect(page.getByText('权限系统示例', { exact: true })).toBeVisible()
 })

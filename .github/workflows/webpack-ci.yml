@@ -49,6 +49,12 @@ jobs:
       - name: Validate shared path aliases
         run: pnpm run check:aliases
 
+      - name: Validate route, menu and permission contracts
+        run: pnpm run check:route-contract
+
+      - name: Validate documentation against current source
+        run: pnpm run check:docs
+
       - name: Enforce shared-layer dependency direction
         run: pnpm run check:import-boundaries
 
@@ -67,8 +73,11 @@ jobs:
       - name: Strict type-check core architecture boundaries
         run: pnpm run typecheck:boundaries
 
+      - name: Strict type-check the public component library
+        run: pnpm run typecheck:lib
+
       - name: Run Jest
-        run: pnpm run test:jest -- --runInBand
+        run: pnpm run test:jest --runInBand
 
       - name: Build production application and collect Webpack stats
         run: pnpm run build:stats

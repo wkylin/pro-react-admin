@@ -1,47 +1,12 @@
+import { routePermissionMap } from '../model/policy'
 import { Role, UserPermission, PermissionCode } from '../model/permission'
 
 /**
  * 完整路由列表（包含所有实际存在的路由）
  */
-const allRoutes = [
-  '/',
-  '/demo',
-  '/motion',
-  '/business',
-  '/big-screen',
-  '/ph-bar',
-  '/qrcode',
-  '/prism',
-  '/tilt',
-  '/music',
-  '/crypto',
-  '/video',
-  '/echarts',
-  '/chatgpt',
-  '/ai-workbench',
-  '/postmessage',
-  '/geo',
-  '/print',
-  '/tech/frontend/vue',
-  '/tech/frontend/angular',
-  '/tech/backend',
-  '/build/webpack',
-  '/error',
-  '/dashboard',
-  '/mermaid',
-  '/profile',
-  '/contact',
-  '/portfilo',
-  '/permission',
-  '/topology',
-  '/zustand',
-  '/svg-viewer',
-  '/auto-deploy',
-  '/dependencies',
-  '/text-editor',
-  '/deploy-flow',
-  '/tracking',
-]
+const allRoutes = Object.keys(routePermissionMap).filter(
+  (path) => !['/signin', '/signup', '/auth/callback', '/terms', '/privacy'].includes(path)
+)
 
 // 超级管理员：所有路由
 const adminRoutes = [...allRoutes]
@@ -151,67 +116,7 @@ export const testAccounts: Record<string, { role: string; name: string }> = {
 /**
  * 路由权限映射
  */
-export const routePermissionMap: Record<string, PermissionCode> = {
-  '/': 'home:read',
-  '/dashboard': 'dashboard:read',
-  '/business': 'business:read',
-  '/big-screen': 'bigscreen:read',
-  '/contact': 'contact:read',
-  '/tech': 'tech:read',
-  '/tech/frontend': 'tech:read',
-  '/tech/frontend/react': 'tech:read',
-  '/build/webpack': 'build:read',
-  '/tech/frontend/plugins': 'tech:read',
-  '/tech/frontend/plugins/vue3': 'tech:read',
-  '/tech/frontend/plugins/perf': 'tech:read',
-  '/tech/frontend/angular': 'tech:read',
-  '/tech/frontend/angular/:id': 'tech:read',
-  '/tech/frontend/node': 'tech:read',
-  '/tech/frontend/node/:id': 'tech:read',
-  '/tech/backend': 'tech:read',
-  '/profile': 'profile:read',
-  '/demo': 'demo:read',
-  '/echarts': 'echarts:read',
-  '/geo': 'geo:read',
-  '/music': 'music:read',
-  '/video': 'video:read',
-  '/print': 'print:read',
-  '/postmessage': 'postmessage:read',
-  '/qrcode': 'qrcode:read',
-  '/prism': 'prism:read',
-  '/ph-bar': 'phbar:read',
-  '/portfilo': 'portfilo:read',
-  '/chatgpt': 'chatgpt:read',
-  '/ai-workbench': 'ai-workbench:read',
-  '/crypto': 'crypto:read',
-  '/error': 'error:read',
-  '/403': 'error:read',
-  '/404': 'error:read',
-  '/500': 'error:read',
-  '/signin': 'system:read',
-  '/signup': 'system:read',
-  '/auth/callback': 'system:read',
-  '/terms': 'system:read',
-  '/privacy': 'system:read',
-  '/setting': 'system:read',
-  '/faker/shops': 'business:read',
-  '/motion': 'motion:read',
-  '/my-iframe': 'ui:read',
-  '/tilt': 'tilt:read',
-  '/sub-error': 'error:read',
-  '/tech/frontend/framework': 'tech:read',
-  '/build': 'build:read',
-  '/permission': 'permission:read',
-  '/topology': 'topology:read',
-  '/zustand': 'zustand:read',
-  '/svg-viewer': 'svg-viewer:read',
-  '/dependencies': 'dependencies:read',
-  '/auto-deploy': 'auto-deploy:read',
-  '/text-editor': 'text-editor:read',
-  '/deploy-flow': 'deploy-flow:read',
-  '/tracking': 'tracking:read',
-  '*': '*:*',
-}
+export { routePermissionMap } from '../model/policy'
 
 const resolveRoutePermission = (route: string): PermissionCode | undefined => {
   const direct = routePermissionMap[route]

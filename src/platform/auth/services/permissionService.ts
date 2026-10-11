@@ -1,3 +1,4 @@
+import { withTimeout } from '@platform/api/core/async'
 /**
  * 权限服务
  * 单例模式，提供权限检查和管理功能
@@ -5,12 +6,16 @@
 
 import { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../model/permission'
 import * as permissionAPI from '../api/permission'
-import { routePermissionMap } from '../mocks/permission'
+import { routePermissionMap } from '../model/policy'
+import { readStoredToken } from '../model/session'
 
 class PermissionService {
   private static instance: PermissionService
   private userPermissions: UserPermission | null = null
+  private cachedAuthKey = ''
   private loadingPromise: Promise<UserPermission> | null = null
+  private loadingAuthKey = ''
+  private cacheGeneration = 0
   private readonly cacheExpireTime: number = 30 * 60 * 1000 // 30分钟
   private lastFetchTime: number = 0
 
@@ -43,10 +48,8 @@ class PermissionService {
   }
 
   /**
-   * 当前登录身份指纹（用于避免“切换账号/登出后仍复用旧权限缓存”）
-   * - 测试账号：localStorage.token = { token: email }
-   * - GitHub OAuth：github_user / github_token
-   * - 开发覆盖：user_role（会影响 mock 权限计算）
+   * Bind cache identity to the credential used by the request layer, plus the
+   * mock role override. A stored GitHub profile is not an active credential.
    */
   private safeReadStorage(key: string): string {
     try {
@@ -56,56 +59,11 @@ class PermissionService {
     }
   }
 
-  private roleSuffix(roleOverride: string): string {
-    return roleOverride ? `|role:${roleOverride}` : ''
-  }
-
-  private parseGithubIdentifier(githubUserRaw: string): string {
-    try {
-      const obj = JSON.parse(githubUserRaw)
-      const email = obj?.email || ''
-      const login = obj?.login || ''
-      const id = obj?.id || ''
-      return email || login || id || githubUserRaw
-    } catch {
-      return githubUserRaw
-    }
-  }
-
-  private parseTokenIdentifier(tokenRaw: string): string {
-    try {
-      const obj = JSON.parse(tokenRaw)
-      return obj?.token || tokenRaw
-    } catch {
-      return tokenRaw
-    }
-  }
-
   private getCurrentAuthKey(): string {
     const roleOverride = this.safeReadStorage(this.STORAGE_KEYS.ROLE_OVERRIDE)
-    const suffix = this.roleSuffix(roleOverride)
-
-    const githubUserRaw = this.safeReadStorage('github_user')
-    if (githubUserRaw) {
-      const identifier = this.parseGithubIdentifier(githubUserRaw)
-      return `github:${identifier}${suffix}`
-    }
-
-    const githubToken = this.safeReadStorage('github_token')
-    if (githubToken) {
-      return `githubToken:${githubToken}${suffix}`
-    }
-
-    // 测试账号 token
-    const rawToken = this.safeReadStorage('token')
-    if (rawToken) {
-      const identifier = this.parseTokenIdentifier(rawToken)
-      return `token:${identifier}${suffix}`
-    }
-
-    // 未登录但存在 roleOverride 的情况（演示页）
-    if (roleOverride) return `anonymous${suffix}`
-    return 'anonymous'
+    const suffix = roleOverride ? `|role:${roleOverride}` : ''
+    const token = readStoredToken()
+    return token ? `token:${token}${suffix}` : `anonymous${suffix}`
   }
 
   static getInstance(): PermissionService {
@@ -139,6 +97,7 @@ class PermissionService {
 
       if (stored && lastFetch) {
         this.userPermissions = this.normalizeUserPermissions(JSON.parse(stored))
+        this.cachedAuthKey = currentAuthKey
         this.lastFetchTime = parseInt(lastFetch, 10)
 
         // 检查缓存是否过期
@@ -157,13 +116,14 @@ class PermissionService {
    * 保存权限信息到 localStorage
    */
   private saveToStorage(permissions: UserPermission): void {
+    const normalized = this.normalizeUserPermissions(permissions)
+    this.userPermissions = normalized
+    this.cachedAuthKey = this.getCurrentAuthKey()
+    this.lastFetchTime = Date.now()
     try {
-      const normalized = this.normalizeUserPermissions(permissions)
       localStorage.setItem(this.STORAGE_KEYS.PERMISSIONS, JSON.stringify(normalized))
       localStorage.setItem(this.STORAGE_KEYS.FETCH_TIME, Date.now().toString())
       localStorage.setItem(this.STORAGE_KEYS.AUTH_KEY, this.getCurrentAuthKey())
-      this.userPermissions = normalized
-      this.lastFetchTime = Date.now()
     } catch (error) {
       console.error('保存权限信息失败:', error)
     }
@@ -173,11 +133,18 @@ class PermissionService {
    * 清除权限缓存
    */
   clearCache(): void {
+    this.cacheGeneration += 1
     this.userPermissions = null
+    this.cachedAuthKey = ''
     this.lastFetchTime = 0
-    localStorage.removeItem(this.STORAGE_KEYS.PERMISSIONS)
-    localStorage.removeItem(this.STORAGE_KEYS.FETCH_TIME)
-    localStorage.removeItem(this.STORAGE_KEYS.AUTH_KEY)
+    this.loadingPromise = null
+    for (const key of [this.STORAGE_KEYS.PERMISSIONS, this.STORAGE_KEYS.FETCH_TIME, this.STORAGE_KEYS.AUTH_KEY]) {
+      try {
+        localStorage.removeItem(key)
+      } catch {
+        /* Storage unavailable. */
+      }
+    }
   }
 
   /**
@@ -199,78 +166,50 @@ class PermissionService {
    * @param forceRefresh 是否强制刷新
    * @param userId 用户ID（可选，用于获取特定用户的权限）
    */
-  async getPermissions(forceRefresh: boolean = false, userId?: string): Promise<UserPermission> {
-    // 若登录身份发生变化，强制清理旧缓存并重新获取
-    try {
-      const storedAuthKey = localStorage.getItem(this.STORAGE_KEYS.AUTH_KEY)
-      const currentAuthKey = this.getCurrentAuthKey()
-      if (storedAuthKey && storedAuthKey !== currentAuthKey) {
-        this.clearCache()
-        forceRefresh = true
-      }
-    } catch {
-      // ignore
+  async getPermissions(forceRefresh = false, userId?: string): Promise<UserPermission> {
+    const denied = (): UserPermission => ({ userId: '', username: '', roles: [], permissions: [], routes: [] })
+    const authKey = this.getCurrentAuthKey()
+    const storedAuthKey = this.safeReadStorage(this.STORAGE_KEYS.AUTH_KEY)
+    if (
+      (this.userPermissions && this.cachedAuthKey !== authKey) ||
+      (storedAuthKey && storedAuthKey !== authKey) ||
+      (this.loadingPromise && this.loadingAuthKey !== authKey)
+    ) {
+      this.clearCache()
     }
+    if (!forceRefresh && this.userPermissions && Date.now() - this.lastFetchTime <= this.cacheExpireTime) {
+      return this.userPermissions
+    }
+    if (this.loadingPromise && this.loadingAuthKey === authKey) return this.loadingPromise
 
-    // 如果强制刷新或缓存过期，重新获取
-    const now = Date.now()
-    const isExpired = now - this.lastFetchTime > this.cacheExpireTime
-
-    if (forceRefresh || !this.userPermissions || isExpired) {
-      // 如果已有请求正在进行，返回该请求的 Promise（避免重复请求）
-      if (this.loadingPromise) {
-        return this.loadingPromise
-      }
-
-      // 发起新的请求，添加超时和错误处理
-      this.loadingPromise = Promise.race([
-        permissionAPI.getUserPermissions(userId),
-        new Promise<UserPermission>((_, reject) => {
-          setTimeout(() => {
-            reject(new Error('获取权限超时'))
-          }, 3000) // 3秒超时
-        }),
-      ]).catch((error) => {
-        console.error('获取权限失败:', error)
-        // 如果有缓存，返回缓存（即使过期）
-        if (this.userPermissions) {
-          console.warn('使用过期缓存权限')
-          return this.userPermissions
-        }
-        // 如果没有缓存，返回默认权限（普通用户）
-        return {
-          userId: '',
-          username: '',
-          roles: [],
-          permissions: [],
-          routes: [],
-        }
-      })
-
+    const generation = this.cacheGeneration
+    this.loadingAuthKey = authKey
+    const pending = (async (): Promise<UserPermission> => {
       try {
-        const permissions = this.normalizeUserPermissions(await this.loadingPromise)
+        const permissions = this.normalizeUserPermissions(
+          await withTimeout(permissionAPI.getUserPermissions(userId), 3000, '获取权限超时')
+        )
+        if (generation !== this.cacheGeneration || authKey !== this.getCurrentAuthKey()) return denied()
         this.saveToStorage(permissions)
         return permissions
       } catch (error) {
-        console.error('获取权限出错:', error)
-        // 如果出错且有缓存，返回缓存
-        if (this.userPermissions) {
-          return this.userPermissions
-        }
-        // 否则返回默认权限
-        return {
-          userId: '',
-          username: '',
-          roles: [],
-          permissions: [],
-          routes: [],
-        }
-      } finally {
-        this.loadingPromise = null
+        if (generation === this.cacheGeneration && authKey === this.getCurrentAuthKey()) this.clearCache()
+        console.warn('获取权限失败，拒绝授权:', error)
+        return denied()
       }
+    })()
+    this.loadingPromise = pending
+    try {
+      return await pending
+    } finally {
+      if (this.loadingPromise === pending) this.loadingPromise = null
     }
+  }
 
-    // 返回缓存的权限信息
+  /** Read only a fresh cache for this identity, without starting a request. */
+  peekPermissions(): UserPermission | null {
+    if (this.cachedAuthKey !== this.getCurrentAuthKey() || Date.now() - this.lastFetchTime > this.cacheExpireTime)
+      return null
     return this.userPermissions
   }
 

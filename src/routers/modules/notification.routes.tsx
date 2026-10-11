@@ -10,7 +10,7 @@ export const notificationRoutes = [
     meta: {
       title: '通知中心',
       icon: 'BellOutlined',
-      permission: 'notification',
+      permission: 'notification:read',
     },
   },
   // 动态路由：通知详情（单个组件，根据 id 与 query 加载不同内容）
@@ -18,6 +18,6 @@ export const notificationRoutes = [
     path: 'notification/:id',
     name: '通知详情',
     element: <lazyComponents.NotificationDetail />,
-    meta: { title: '通知详情', permission: 'notification' },
+    meta: { title: '通知详情', permission: 'notification:read' },
   },
 ]

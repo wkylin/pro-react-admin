@@ -10,7 +10,6 @@ import React, {
 } from 'react'
 import PropTypes from 'prop-types'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
-import Home from '@src/pages/home'
 
 type Pane = {
   title: ReactNode
@@ -41,7 +40,8 @@ const initialPanes: Pane[] = [
     title: '首页',
     i18nKey: 'home',
     key: '/',
-    content: <Home />,
+    // The router supplies content when this tab is first visited.
+    content: null,
     closable: false,
     path: '/',
   },

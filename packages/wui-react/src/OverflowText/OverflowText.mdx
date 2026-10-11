@@ -1,59 +1,20 @@
-import { Meta, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks'
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
 import * as Stories from './OverflowText.stories'
 
 <Meta of={Stories} />
 
-# OverflowText (溢出文本)
+# OverflowText
 
-一个智能文本组件，仅当文本实际溢出时才自动显示 Tooltip。
-支持单行和多行截断，并使用 `ResizeObserver` 进行稳健的溢出检测。
+文字截断与溢出提示组件。text 为 ReactNode，lines 大于 0 时使用多行截断，否则为单行；maxWidth/minWidth、style 和 className 控制尺寸。ResizeObserver、窗口 resize 与字体加载触发重新检测。
 
-内部使用 `PortalTooltip` 实现。
+默认仅溢出时显示 PortalTooltip，alwaysShow 强制显示；tooltipProps 注入提示属性，onOverflowChange 接收状态变化。父容器必须有可计算宽度。
 
-## 参数属性 (Props)
+安装后从 @w.ui/wui-react/overflow-text 导入，并导入 style.css。
 
-<ArgTypes />
+## 预览
 
-## 示例
+<Canvas of={Stories.Default} />
 
-### 单行截断
+## 当前参数
 
-默认行为。当文本超过容器宽度（由 `maxWidth` 控制）时，使用省略号截断。
-
-<Canvas>
-  <Story name="Single Line truncation" />
-</Canvas>
-
-### 多行截断
-
-使用 `lines` 属性指定在截断前显示多少行。
-
-<Canvas>
-  <Story name="Multi-line (2 lines)" />
-</Canvas>
-
-### 自定义 Tooltip 宽度
-
-你可以通过 `tooltipProps` 将属性传递给底层的 `PortalTooltip`。这对于通过 `overlayStyle` 自定义 Tooltip 悬浮层宽度非常有用。
-
-```jsx
-<OverflowText
-  text="..."
-  maxWidth={200}
-  tooltipProps={{
-    overlayStyle: { maxWidth: 500 },
-  }}
-/>
-```
-
-<Canvas>
-  <Story name="Custom Tooltip Width" />
-</Canvas>
-
-### 始终显示
-
-强制显示 Tooltip，即本文本并未溢出（通常用于调试或特定的 UX 需求）。
-
-<Canvas>
-  <Story name="Always Show Tooltip" />
-</Canvas>
+<ArgTypes of={Stories} />

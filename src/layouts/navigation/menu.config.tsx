@@ -1,3 +1,4 @@
+import { getRoutePolicy } from '@platform/auth/model/policy'
 import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import {
@@ -513,7 +514,14 @@ function normalizeMenu(items) {
     const { children, ...rest } = it
     const path = it.path || it.key
     // Ant Design Menu 需要 key 属性
-    const normalized = { ...rest, path, key: it.key || path }
+    const policy = getRoutePolicy(path)
+    const normalized = {
+      ...rest,
+      path,
+      key: it.key || path,
+      label: policy?.title || it.label,
+      i18nKey: policy?.i18nKey || it.i18nKey,
+    }
     if (children && Array.isArray(children)) {
       normalized.children = normalizeMenu(children)
     }

@@ -1,5 +1,5 @@
 {
-  "initialJavaScriptCssBytes": 6291456,
-  "singleJavaScriptCssAssetBytes": 6291456,
-  "source": "webpack/webpack.common.js performance defaults"
+  "initialJavaScriptCssBytes": 4194304,
+  "singleJavaScriptCssAssetBytes": 3145728,
+  "source": "production stats after removing the eager Home dependency from Tabs"
 }

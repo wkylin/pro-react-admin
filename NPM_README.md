@@ -1,90 +1,47 @@
-# `@w.ui/wui-react`
+# @w.ui/wui-react
 
-面向 React 19 和 Ant Design 6 的通用组件库。v5 的运行时代码全部位于 `packages/wui-react/src`，提供 ESM、CJS、TypeScript 类型、统一样式入口和按组件导入能力。
+React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package contains 12 public components; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
 
-## 安装
+## Install
 
 ```bash
 pnpm add @w.ui/wui-react react react-dom antd framer-motion
 ```
 
-React、React DOM、Ant Design 和 Framer Motion 是 peer dependencies，由消费项目提供。图标、HTML 清理和 class 工具由本包管理，不需要逐个安装。
+Peer ranges: React/React DOM >=19 <20, Ant Design >=6 <7, Framer Motion >=12 <15. Package Node support is ^22.22.2 || ^24.15.0 || >=26.0.0; the repository tooling has its own Node 24 constraint.
 
-## 版本矩阵
-
-| 组件库版本 | React      | React DOM  | Ant Design | Framer Motion | Node.js      |
-| ---------- | ---------- | ---------- | ---------- | ------------- | ------------ |
-| v5.x       | `>=19 <20` | `>=19 <20` | `>=6 <7`   | `>=12 <15`    | 见 `engines` |
-
-TypeScript 声明随包发布。消费端和 SSR 支持 `^22.22.2 || ^24.15.0 || >=26.0.0`，该范围来自 `package.json#engines.node` 和运行时依赖要求。仓库贡献者使用 Node.js 24.15.0 或更高的 24.x 与 pnpm 11.5.2，并应使用能够解析 package conditional exports 的现代构建工具。
-
-## 使用
-
-从主入口导入组件，并在应用入口只引入一次样式：
+## Usage
 
 ```tsx
-import { AnimatedIcon, OneTimePasscode, OverflowText, SafeHtml } from '@w.ui/wui-react'
+import OneTimePasscode from '@w.ui/wui-react/one-time-passcode'
 import '@w.ui/wui-react/style.css'
 
-export function Example() {
-  return (
-    <section>
-      <AnimatedIcon variant="pulse">
-        <span aria-hidden="true">★</span>
-      </AnimatedIcon>
-      <OneTimePasscode variant="compact" />
-      <OverflowText text="A very long piece of content" maxWidth={180} />
-      <SafeHtml html="<strong>Sanitized HTML</strong>" />
-    </section>
-  )
+export function CodeInput() {
+  return <OneTimePasscode length={6} onChange={(value) => console.log(value)} />
 }
 ```
 
-也可以使用独立子路径缩小解析范围：
+Named root imports are also available: `import { OneTimePasscode } from '@w.ui/wui-react'`. CommonJS consumers use `require('@w.ui/wui-react')`. Import the stylesheet once at your application entry.
 
-```tsx
-import AnimatedIcon from '@w.ui/wui-react/animated-icon'
-import ResponsiveTable from '@w.ui/wui-react/responsive-table'
-import '@w.ui/wui-react/style.css'
-```
+## Public components
 
-## 公共组件
+| Export                     | Subpath             |
+| -------------------------- | ------------------- |
+| AnimatedIcon               | animated-icon       |
+| IconFrame                  | icon-frame          |
+| MoveChecker                | move-checker        |
+| OneTimePasscode            | one-time-passcode   |
+| OverflowText               | overflow-text       |
+| PortalTooltip              | portal-tooltip      |
+| ResponsiveTable / useTable | responsive-table    |
+| SafeHtml                   | safe-html           |
+| ScrollLayout               | scroll-layout       |
+| ScrollableSections         | scrollable-sections |
+| SliderCaptcha              | slider-captcha      |
+| WatermarkProvider          | watermark-provider  |
 
-| 组件                 | 子路径                                | 用途                       |
-| -------------------- | ------------------------------------- | -------------------------- |
-| `AnimatedIcon`       | `@w.ui/wui-react/animated-icon`       | 图标动效                   |
-| `IconFrame`          | `@w.ui/wui-react/icon-frame`          | 统一图标尺寸与对齐         |
-| `MoveChecker`        | `@w.ui/wui-react/move-checker`        | 拖动确认交互               |
-| `OneTimePasscode`    | `@w.ui/wui-react/one-time-passcode`   | 一次性验证码输入           |
-| `OverflowText`       | `@w.ui/wui-react/overflow-text`       | 溢出检测与提示             |
-| `PortalTooltip`      | `@w.ui/wui-react/portal-tooltip`      | Portal 浮层提示            |
-| `ResponsiveTable`    | `@w.ui/wui-react/responsive-table`    | 可注入请求客户端的数据表格 |
-| `SafeHtml`           | `@w.ui/wui-react/safe-html`           | HTML 清理与安全渲染        |
-| `ScrollLayout`       | `@w.ui/wui-react/scroll-layout`       | 固定头尾的滚动布局         |
-| `ScrollableSections` | `@w.ui/wui-react/scrollable-sections` | 分区滚动与导航             |
-| `SliderCaptcha`      | `@w.ui/wui-react/slider-captcha`      | 滑块验证                   |
-| `WatermarkProvider`  | `@w.ui/wui-react/watermark-provider`  | 内容水印                   |
+Props types are exported from the root and corresponding subpaths. ResponsiveTable accepts a requestLib or fetchData integration; its default client does not inherit the admin application's authorization. SliderCaptcha is a UI challenge and requires server validation for security decisions. SafeHtml sanitizes content according to its implementation and props; review allowed content for your use case.
 
-v5 不再提供 `/core`、`/stateful`、`/stateless` 和 `/tracking` 入口。应用布局、路由、状态、埋点业务和演示组件属于 Pro React Admin 应用，不属于公共组件包。
+MdxEditor, SmartVideoPlayer and InteractiveBook remain application components and are not package exports.
 
-## 样式与主题
-
-- 在应用入口引入一次 `@w.ui/wui-react/style.css`。
-- Ant Design 组件读取其语义 token，可跟随消费项目的 `ConfigProvider` 亮色、暗色和品牌主题。
-- 自有样式使用 CSS Modules 或公开 CSS 变量，消费项目不应依赖组件内部类名和 DOM 层级。
-- 若使用服务端渲染，请让服务端和客户端加载相同的样式文件。
-
-## SSR 与浏览器能力
-
-包可以在服务端被导入。依赖 DOM、Portal、尺寸测量或动画的行为会在客户端挂载后启用；使用 Next.js App Router 等 React Server Components 环境时，请在调用交互组件的文件中声明 `'use client'`。
-
-`PortalTooltip`、`OverflowText`、`MoveChecker`、`ScrollableSections` 和 `SliderCaptcha` 需要浏览器环境才能获得完整交互。SSR 输出不应依赖客户端测量结果。
-
-## 模块格式
-
-- `import` 条件加载 ESM。
-- `require` 条件加载 CJS。
-- `exports` 只开放主入口、12 个组件子路径、`style.css` 和只读的 `package.json` 元数据。
-- TypeScript 会通过相同的 export map 解析声明文件。
-
-更多示例见 [Storybook](https://wkylin.github.io/pro-react-admin/storybook/)，源码和发布指南见 [GitHub 仓库](https://github.com/wkylin/pro-react-admin)。
+Source, Storybook and development documentation: [GitHub](https://github.com/wkylin/pro-react-admin). Published package: [npm](https://www.npmjs.com/package/@w.ui/wui-react).

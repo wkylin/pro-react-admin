@@ -7,7 +7,7 @@ export const zustandRoutes = [
     i18nKey: 'zustand',
     element: <lazyComponents.ZustandDemo />,
     meta: {
-      permission: ['admin', 'dev', 'user'],
+      permission: 'zustand:read',
       keepAlive: true,
     },
   },

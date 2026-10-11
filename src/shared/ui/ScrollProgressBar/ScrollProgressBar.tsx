@@ -18,8 +18,8 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
 }) => {
   const internalRef = useRef<HTMLDivElement>(null)
 
-  // 使用传入的容器或内部ref
-  const scrollContainerRef = container ? { current: container } : internalRef
+  // Omit container to track the document; the progress bar is not a scroll area.
+  const scrollContainerRef = container ? { current: container } : undefined
 
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,

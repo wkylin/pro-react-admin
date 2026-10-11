@@ -7,7 +7,8 @@
     "noEmit": false,
     "outDir": "packages/wui-react/dist/types",
     "rootDir": "packages/wui-react/src",
-    "stripInternal": true
+    "stripInternal": true,
+    "strict": true
   },
   "include": ["packages/wui-react/src/**/*", "typings/**/*.d.ts"],
   "exclude": [

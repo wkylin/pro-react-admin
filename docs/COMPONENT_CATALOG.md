@@ -6,15 +6,15 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  641 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  473 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `src/` 文件                   |  656 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  488 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
 | `packages/wui-react/src` 文件 |   43 | 组件库源码、stories 与组件文档                                      |
 | 组件库 TS/JS 源文件           |   31 | 组件库自身源码，不含 MDX                                            |
 | 样式文件                      |   88 | Less、CSS、SCSS                                                     |
 | CSS Modules                   |   82 | 文件名含 `.module.`                                                 |
 | Storybook stories             |    8 | `*.stories.*`                                                       |
-| TS/JS 测试文件                |    4 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
-| 根 package scripts            |  135 | `package.json#scripts` 命令数                                       |
+| TS/JS 测试文件                |   13 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
+| 根 package scripts            |  139 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    3 | 根应用、API 与组件库                                                |
 
 ## 可复用模块分类
@@ -29,8 +29,8 @@
 | `src/shared/ui`                         |    2 | 应用级共享 UI 模块入口                                                         |
 | `packages/wui-react/src`                |   12 | 已进入独立源码边界的组件库模块                                                 |
 | `src/layouts`                           |    9 | 应用壳与直接布局组件入口                                                       |
-| `src/pages` 页面入口                    |   57 | 含 `index.*` 的页面模块目录（直接子目录 39）                                   |
-| `src/features` 业务域                   |    3 | 已建立 feature-first 入口的业务域                                              |
+| `src/pages` 页面入口                    |   56 | 含 `index.*` 的页面模块目录（直接子目录 38）                                   |
+| `src/features` 业务域                   |    4 | 已建立 feature-first 入口的业务域                                              |
 | `src/projects` 项目入口                 |    6 | 含 `index.*` 的项目模块目录                                                    |
 
 ## Stateless 目录入口

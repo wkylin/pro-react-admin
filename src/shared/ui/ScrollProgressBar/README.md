@@ -1,81 +1,16 @@
-# ScrollProgressBar 组件使用说明
+# ScrollProgressBar
 
-这是一个可复用的滚动进度条组件，用于显示页面或容器的垂直滚动进度。
+使用 Motion useScroll/useSpring 显示滚动进度。传 container 绑定具体滚动区域，省略时跟踪文档。进度条自身不是滚动区域。
 
-## 重要提示：容器引用处理
+```tsx
+import ScrollProgressBar, { ScrollArea } from '@shared/ui/ScrollProgressBar'
 
-当使用自定义容器时，需要正确处理容器的引用：
-
-```jsx
-// ❌ 错误：直接使用 ref.current（可能为 null）
-<ScrollProgressBar container={scrollRef.current} />
-
-// ✅ 正确：使用 state 跟踪容器引用
-const [scrollContainer, setScrollContainer] = useState(null)
-useEffect(() => {
-	if (scrollRef.current) {
-		setScrollContainer(scrollRef.current)
-	}
-}, [])
-<ScrollProgressBar container={scrollContainer} />
-
-// ✅ 或者使用 ScrollArea 包装器（推荐）
-<ScrollArea>
-	{/* 内容 */}
+<ScrollProgressBar height={3} color="#1677ff" />
+<ScrollArea style={{ height: 300 }}>
+  <article>Long content</article>
 </ScrollArea>
 ```
 
-## 两种使用方式：
+position 支持 fixed/relative/absolute/sticky，默认 fixed；height 默认 3，color 可为 CSS 颜色或渐变；show 默认 true。springConfig 支持 stiffness/damping/restDelta。ScrollArea 创建 overflow-auto 容器并将节点传给进度条，需要显式提供可滚动尺寸。
 
-### 1. 直接使用 ScrollProgressBar（需要父组件提供滚动容器）
-
-```jsx
-import { useScroll } from 'motion/react'
-import ScrollProgressBar from '@shared/ui/ScrollProgressBar'
-
-// 监听整个页面滚动
-<ScrollProgressBar />
-
-// 监听指定容器（推荐使用 state 方式）
-const [scrollContainer, setScrollContainer] = useState(null)
-useEffect(() => {
-	if (scrollRef.current) setScrollContainer(scrollRef.current)
-}, [])
-<ScrollProgressBar container={scrollContainer} />
-```
-
-### 2. 使用 ScrollArea 包装器组件（推荐）
-
-```jsx
-import { ScrollArea } from '@shared/ui/ScrollProgressBar'
-;<ScrollArea className="h-screen overflow-auto">
-  <div className="content">{/* 你的内容 */}</div>
-</ScrollArea>
-```
-
-## Props:
-
-### ScrollProgressBar Props:
-
-- `container?: HTMLElement | null` - 滚动容器元素，不指定则监听页面滚动
-- `position?: 'fixed' | 'relative' | 'absolute' | 'sticky'` - 定位方式，默认 'fixed'
-- `height?: number` - 进度条高度，默认 3px
-- `color?: string` - 进度条颜色，支持CSS颜色或渐变，默认渐变色
-- `className?: string` - 额外CSS类名
-- `show?: boolean` - 是否显示进度条，默认 true
-- `springConfig?: object` - 动画配置
-
-### ScrollArea Props:
-
-继承 ScrollProgressBar 的所有 props（除 container），加上：
-
-- `children: React.ReactNode` - 子内容
-- `className?: string` - 容器额外CSS类名
-- `style?: React.CSSProperties` - 容器内联样式
-
-## 适用场景：
-
-- 主布局页面滚动进度
-- 子系统布局滚动进度
-- 任何需要滚动进度指示器的容器
-- 模态框、侧边栏等可滚动区域
+完整类型见 [types.ts](types.ts)。该组件属于应用 shared 层，不是当前 UI 包导出。

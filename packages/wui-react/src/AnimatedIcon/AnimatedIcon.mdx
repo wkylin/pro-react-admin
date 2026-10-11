@@ -1,57 +1,18 @@
-import { Meta, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks'
-import AnimatedIcon from './index'
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
 import * as Stories from './AnimatedIcon.stories'
-import { Music, Heart, Play, Smartphone } from 'lucide-react'
 
-<Meta title="WUI/AnimatedIcon" of={Stories} />
+<Meta of={Stories} />
 
 # AnimatedIcon
 
-A lightweight animated wrapper for icon components. Provides a small set of animation _variants_ and _modes_ and intentionally defaults to `mode="hover"` for performance. Animations respect the user's `prefers-reduced-motion` preference.
+轻量图标动画包装组件，公开类型是 AnimatedIconProps、AnimatedIconVariant、AnimatedIconMode。variant 支持 spin/pulse/bounce/draw，mode 支持 hover/auto/idle，默认 hover；children 需要单个 ReactElement。
 
-## Props
+动画尊重 prefers-reduced-motion。装饰图标设置 aria-hidden，交互按钮仍需可访问名称。安装后从 @w.ui/wui-react/animated-icon 导入，并在应用入口导入 style.css。
+
+## 预览
+
+<Canvas of={Stories.Playground} />
+
+## 当前参数
 
 <ArgTypes of={Stories} />
-
----
-
-## Examples
-
-### Basic playground
-
-<Canvas>
-  <Story name="Playground">
-    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-      <AnimatedIcon variant="spin" mode="hover">
-        <Music size={28} />
-      </AnimatedIcon>
-      <AnimatedIcon variant="pulse" mode="hover">
-        <Heart size={28} />
-      </AnimatedIcon>
-      <AnimatedIcon variant="bounce" mode="hover">
-        <Play size={28} />
-      </AnimatedIcon>
-      <AnimatedIcon variant="draw" mode="hover">
-        <Music size={28} />
-      </AnimatedIcon>
-    </div>
-  </Story>
-</Canvas>
-
-### Inline usage (code)
-
-```jsx
-<AnimatedIcon variant="spin" mode="hover">
-  <Music />
-</AnimatedIcon>
-```
-
----
-
-## Notes
-
-- **Accessibility:** If the icon is interactive (button/link), ensure it has an accessible name (aria-label or visible label). For purely decorative icons use `aria-hidden="true"` on the child SVG.
-- **Performance:** Prefer `mode="hover"` for many icons; reserve `mode="auto"` for isolated or small numbers of continuously-animated icons.
-- **Reduced motion:** Animations are disabled when `prefers-reduced-motion` is enabled on the user's system.
-
-> Tip: Use `variant="draw"` for decorative, one-off reveal animations and `variant="spin"` or `pulse` for status/feedback indicators.

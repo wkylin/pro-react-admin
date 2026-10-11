@@ -16,6 +16,8 @@ import { EsbuildPlugin } from 'esbuild-loader'
 import ImageMinimizerPlugin from 'image-minimizer-webpack-plugin'
 import common from './webpack.common.js'
 import paths from './paths.js'
+import { clientEnvKeys } from './client-env.js'
+import { remoteProjects } from './mfe.config.js'
 import { bundleBudget } from './bundle-budget.js'
 import dotenv from 'dotenv'
 import { fileURLToPath } from 'url'
@@ -36,13 +38,18 @@ const buildTime = new Date().toISOString()
 
 const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
 const isMfeEnabled = mfeRole === 'host' || mfeRole === 'remote'
+const isRemoteContainer = (chunk) => mfeRole === 'remote' && chunk.name === paths.projectName
+const applicationChunks = (chunk) => !isRemoteContainer(chunk)
 
 const parseByteBudget = (value, fallback) => {
   const parsed = Number(value)
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
 }
 
-const maxEntrypointSize = parseByteBudget(process.env.WEBPACK_MAX_ENTRYPOINT_SIZE, bundleBudget.initialJavaScriptCssBytes)
+const maxEntrypointSize = parseByteBudget(
+  process.env.WEBPACK_MAX_ENTRYPOINT_SIZE,
+  bundleBudget.initialJavaScriptCssBytes
+)
 const maxAssetSize = parseByteBudget(process.env.WEBPACK_MAX_ASSET_SIZE, bundleBudget.singleJavaScriptCssAssetBytes)
 
 const optimizedAudioDir = path.resolve(__dirname, '../src/assets-optimized/audio')
@@ -61,8 +68,20 @@ const prodWebpackConfig = merge(common, {
           },
         }
       : {},
-  // 使用文件缓存
-  cache: { type: 'filesystem', buildDependencies: { config: [__filename] } },
+  // Cache resolution and injected variables must not leak across project builds.
+  cache: {
+    type: 'filesystem',
+    name: `${paths.projectName}-${mfeRole || 'standalone'}-${process.env.BUILD_GOAL || 'production'}`,
+    version: JSON.stringify({
+      aliases: common.resolve.alias,
+      environment: Object.fromEntries(
+        [...clientEnvKeys, ...remoteProjects.map(({ envKey }) => envKey), 'SENTRY_SOURCE_MAP', 'DEBUG_PROD'].map(
+          (key) => [key, process.env[key]]
+        )
+      ),
+    }),
+    buildDependencies: { config: [__filename] },
+  },
   infrastructureLogging: {
     level: 'error',
   },
@@ -170,7 +189,9 @@ const prodWebpackConfig = merge(common, {
             // }),
           ],
     splitChunks: {
-      chunks: 'all',
+      // Hosts load remoteEntry.js by itself. Its eager shared providers must
+      // stay in that entry so the container exists as soon as the script loads.
+      chunks: applicationChunks,
       minChunks: 3,
       maxAsyncRequests: 6,
       maxInitialRequests: 4,
@@ -182,13 +203,13 @@ const prodWebpackConfig = merge(common, {
           minChunks: 1,
           priority: 10,
           enforce: true,
-          chunks: 'all',
+          chunks: applicationChunks,
         },
         react: {
           test(module) {
             return module.resource && module.resource.includes('node_modules/react')
           },
-          chunks: 'initial',
+          chunks: (chunk) => chunk.canBeInitial() && applicationChunks(chunk),
           filename: 'react.[contenthash].js',
           priority: 1,
           maxInitialRequests: 2,
@@ -198,7 +219,7 @@ const prodWebpackConfig = merge(common, {
         zustand: {
           test: /[\\/]node_modules[\\/](zustand|immer)[\\/]/,
           name: 'vendor-zustand',
-          chunks: 'all',
+          chunks: applicationChunks,
           priority: 20,
           enforce: true,
         },
@@ -206,7 +227,7 @@ const prodWebpackConfig = merge(common, {
         hls: {
           test: /[\\/]node_modules[\\/]hls\.js[\\/]/,
           name: 'vendor-hls',
-          chunks: 'all',
+          chunks: applicationChunks,
           priority: 20,
           enforce: true,
         },

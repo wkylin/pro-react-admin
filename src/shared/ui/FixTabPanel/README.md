@@ -1,50 +1,15 @@
-# FixTabPanel 组件使用说明
+# FixTabPanel
 
-FixTabPanel 是一个增强的可滚动面板组件，集成了滚动进度条功能。
-进度条使用粘性定位（sticky），在滚动时会固定在容器顶部。
+通用 Tab 面板容器，使用 shared 入口 `@shared/ui/FixTabPanel`。继承 HTML div 属性并转发 ref，默认宽高 100%、纵向滚动、横向隐藏。
 
-## 基本用法：
-
-```jsx
+```tsx
 import FixTabPanel from '@shared/ui/FixTabPanel'
-;<FixTabPanel style={{ height: '400px' }}>
-  <div>可滚动的内容</div>
+
+;<FixTabPanel fill={false} showScrollProgress>
+  <article>Long content</article>
 </FixTabPanel>
 ```
 
-## 高级用法：
+fill 默认 true，控制内部内容是否填满高度；showScrollProgress 默认 true；scrollProgressProps 可覆盖进度条配置。容器节点传给 ScrollProgressBar 和 BackTop，父级必须提供可计算高度。业务权限、Tab 路由与缓存由上层布局负责。
 
-```jsx
-<FixTabPanel
-  showScrollProgress={true}
-  scrollProgressProps={{
-    height: 4,
-    color: '#ff6b6b',
-    position: 'sticky',
-    springConfig: { stiffness: 200 },
-  }}
-  className="custom-panel"
-  style={{ height: '400px', border: '1px solid #ccc' }}
->
-  <div>内容</div>
-</FixTabPanel>
-```
-
-## Props：
-
-- `showScrollProgress?: boolean` - 是否显示滚动进度条（默认 true）
-- `scrollProgressProps?: object` - 滚动进度条的配置属性
-- 继承所有 `div` 的 HTML 属性
-
-## 重要提示：
-
-- **必须设置高度**: FixTabPanel 需要明确的 `height` 样式才能正确显示滚动条
-- **粘性定位**: 进度条使用 `position: sticky`，会在滚动时固定在容器顶部
-
-## 特性：
-
-- ✅ 相对定位容器
-- ✅ 粘性定位滚动进度条
-- ✅ 返回顶部按钮
-- ✅ 可自定义进度条样式
-- ✅ 支持所有标准 div 属性
+属性类型见 [types.ts](types.ts)，相关组件见 [ScrollProgressBar](../ScrollProgressBar/README.md)。

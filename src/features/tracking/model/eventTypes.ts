@@ -1,4 +1,4 @@
-import type { EventType } from '@/lib/tracking/types'
+import type { EventType } from '@platform/tracking/types'
 
 export const eventTypeColors: Record<EventType, string> = {
   pageview: '#1890ff',

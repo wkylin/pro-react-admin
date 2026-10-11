@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import vm from 'node:vm'
 import { fileURLToPath } from 'node:url'
 import {
   hasCompleteMfeSharedDependencies,
@@ -39,6 +40,23 @@ for (const remote of registry.remotes) {
     !hasCompleteMfeSharedDependencies(manifest.sharedDependencies, sharedDependencies)
   ) {
     throw new Error(`Remote contract mismatch in dist-vercel/${remote.name}/remote-manifest.json`)
+  }
+
+  // A Host loads only remoteEntry.js; evaluate its startup without app/vendor
+  // scripts to catch containers accidentally deferred behind initial chunks.
+  const entryUrl = `https://mfe.example/${remote.name}/remoteEntry.js`
+  const sandbox = {
+    document: { currentScript: { src: entryUrl, tagName: 'SCRIPT' }, baseURI: 'https://mfe.example/' },
+    URL,
+    setTimeout,
+    clearTimeout,
+  }
+  sandbox.window = sandbox
+  sandbox.self = sandbox
+  vm.runInNewContext(fs.readFileSync(entryPath, 'utf8'), sandbox, { timeout: 5000, filename: entryPath })
+  const container = sandbox[remote.name]
+  if (typeof container?.get !== 'function' || typeof container?.init !== 'function') {
+    throw new Error(`Remote container ${remote.name} is not available after loading remoteEntry.js alone`)
   }
 }
 

@@ -53,6 +53,8 @@ export type Resource =
   | 'text-editor'
   | 'deploy-flow'
   | 'tracking'
+  | 'notification'
+  | 'mermaid'
 
 /**
  * 权限点定义

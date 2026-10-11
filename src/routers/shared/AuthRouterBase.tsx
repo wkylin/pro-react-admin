@@ -1,269 +1,59 @@
-import { useState, useEffect, useRef, type PropsWithChildren } from 'react'
-import PropTypes from 'prop-types'
-import { Navigate, useLocation, matchPath } from 'react-router-dom'
-import { getLocalStorage } from '@shared/lib/publicFn'
+import { useState, useEffect, type PropsWithChildren } from 'react'
+import { Navigate, useLocation, matchRoutes, type RouteObject } from 'react-router-dom'
 import { permissionService } from '@platform/auth/services/permissionService'
-import type { PermissionCode } from '@platform/auth/model/permission'
-import { HashRouterUtils } from '@platform/navigation/hashRouter'
+import { readStoredToken } from '@platform/auth/model/session'
+import { evaluateAccessRequirements, type AccessRequirements } from '@platform/auth/model/policy'
 import { isPublicRoute, isRouteConfigPublic } from '@src/routers/config/publicRoutes'
-import { annotatedRootRouter, flattenRoutes } from '@routers'
-import { message } from 'antd'
-import { showMessage } from '@platform/feedback/message'
-import type { MessageInstance } from 'antd/es/message/interface'
-
-interface RoutePolicyMeta {
-  auth?: boolean
-  access?: 'public' | 'authenticated' | 'permissioned'
-  permission?: PermissionCode | PermissionCode[]
-  requireAll?: boolean
-  roles?: string | string[]
-  routeKey?: string
-  routePath?: string
-}
-
-interface RoutePolicyRoute {
-  auth?: boolean
-  meta?: RoutePolicyMeta
-  path?: string
-}
+import { annotatedRootRouter } from '@routers'
+import type { RouteNode } from '@src/routers/utils'
 
 type AuthRouterProps = PropsWithChildren<{ route?: object }>
+type AccessState = { key: string; allowed: boolean }
 
-const timeoutToken = (ms: number): Promise<'timeout'> =>
-  new Promise((resolve) => globalThis.setTimeout(() => resolve('timeout'), ms))
-
-const getStoredToken = (): unknown => {
-  const storedValue = getLocalStorage('token') || getLocalStorage('github_token')
-  return typeof storedValue === 'object' && storedValue !== null && 'token' in storedValue ? storedValue.token : null
-}
-
-const showDeniedMessage = (messageApi: MessageInstance): void => {
-  Promise.resolve()
-    .then(() => messageApi.open({ type: 'error', content: '您没有权限访问该页面' }))
-    .catch((e) => {
-      console.warn('Failed to show permission error message:', e)
-      return Promise.resolve(showMessage.error('您没有权限访问该页面'))
-    })
-    .catch((e) => {
-      console.warn('Failed to show permission error message:', e)
-    })
-}
-
-/**
- * 权限路由守卫组件（简化版）
- */
-const AuthRouterBase = (props: AuthRouterProps) => {
-  const location = useLocation()
-  const rawPathname = location?.pathname
-  const pathname = typeof rawPathname === 'string' ? rawPathname : '/'
-  if (rawPathname != null && typeof rawPathname !== 'string') {
-    HashRouterUtils.debugNavToOnce('AuthRouter.useLocation().pathname', rawPathname)
-  }
-  const [canAccess, setCanAccess] = useState<boolean | null>(null)
-  // navigate 不再直接使用；权限提示通过 message 实现
-  const lastDeniedPathRef = useRef('')
-  const [messageApi, contextHolder] = message.useMessage()
+/** Resolve the leaf route so a parent permission never authorizes an unrelated page. */
+const AuthRouterBase = ({ children, route }: AuthRouterProps) => {
+  const { pathname } = useLocation()
+  const token = readStoredToken()
+  const matches = matchRoutes(annotatedRootRouter as RouteObject[], { pathname })
+  const matchedRoute = matches?.at(-1)?.route as RouteNode | undefined
+  const publicPage = isPublicRoute(pathname) || isRouteConfigPublic(matchedRoute)
+  const signedInEntry = Boolean(token && (pathname === '/signin' || pathname === '/signup'))
+  const key = `${pathname}:${token || ''}`
+  const [access, setAccess] = useState<AccessState | null>(null)
+  const cached = permissionService.peekPermissions()
+  const requirements = (matchedRoute?.meta || {}) as AccessRequirements
+  const cachedAccess = cached ? evaluateAccessRequirements(cached, requirements) : null
 
   useEffect(() => {
-    const resolveRoutePolicy = (targetPath: string): RoutePolicyRoute | undefined => {
-      const flat = flattenRoutes(annotatedRootRouter || []) as RoutePolicyRoute[]
-      const normalized = String(targetPath || '').split('?')[0] || '/'
-
-      return flat.find((route) => {
-        const candidate = route?.meta?.routePath || route?.meta?.routeKey || route?.path
-        if (!candidate) return false
-        const pattern = candidate.startsWith('/') ? candidate : `/${candidate}`
-        return Boolean(
-          (() => {
-            try {
-              return (
-                matchPath({ path: pattern, end: true }, normalized) ||
-                matchPath(
-                  {
-                    path: pattern.endsWith('/*') ? pattern : `${pattern}/*`,
-                    end: false,
-                  },
-                  normalized
-                )
-              )
-            } catch (err) {
-              console.warn('AuthRouter matchPath error', pattern, normalized, err)
-              return false
-            }
-          })()
-        )
-      })
+    if (!token || publicPage || cachedAccess !== null) return
+    let active = true
+    const check = async (): Promise<boolean> => {
+      const current = await permissionService.getPermissions()
+      const policyAccess = evaluateAccessRequirements(current, (matchedRoute?.meta || {}) as AccessRequirements)
+      return policyAccess ?? permissionService.canAccessRoute(pathname)
     }
-
-    const allow = () => setCanAccess(true)
-    const deny = () => setCanAccess(false)
-
-    const redirectLoggedInFromPublic = async () => {
-      const routes = await permissionService.getAccessibleRoutes()
-      const safeRoutes = Array.isArray(routes) ? routes : []
-      const target = safeRoutes.includes('/') ? '/' : safeRoutes[0] || '/'
-      allow()
-      window.location.hash = `#${target}`
+    void check().then(
+      (allowed) => {
+        if (active) setAccess({ key, allowed })
+      },
+      () => {
+        if (active) setAccess({ key, allowed: false })
+      }
+    )
+    return () => {
+      active = false
     }
+  }, [key, pathname, token, publicPage, matchedRoute, route, cachedAccess])
 
-    const checkByPolicyMeta = async (policyMeta: RoutePolicyMeta): Promise<boolean | null> => {
-      const permissionsRequired = policyMeta.permission
-      const rolesRequired = policyMeta.roles
-      const requireAll = policyMeta.requireAll || false
-
-      if (permissionsRequired) {
-        if (Array.isArray(permissionsRequired)) {
-          const result = requireAll
-            ? await permissionService.hasAllPermissions(permissionsRequired)
-            : await permissionService.hasAnyPermission(permissionsRequired)
-          return !!result.hasPermission
-        }
-        return !!(await permissionService.hasPermission(permissionsRequired))
-      }
-
-      if (rolesRequired) {
-        if (Array.isArray(rolesRequired)) {
-          const result = requireAll
-            ? await permissionService.hasAllRoles(rolesRequired)
-            : await permissionService.hasAnyRole(rolesRequired)
-          return !!result.hasPermission
-        }
-        return !!(await permissionService.hasRole(rolesRequired))
-      }
-
-      return null
-    }
-
-    const checkAccessWithTimeout = async () => {
-      const permissionPromise = permissionService.canAccessRoute(pathname, false).catch(() => null)
-      const hasAccess = await Promise.race([permissionPromise, timeoutToken(3000)])
-
-      if (hasAccess === 'timeout') {
-        console.warn('权限检查超时，尝试强制刷新权限并重试')
-        try {
-          const forced = await permissionService.canAccessRoute(pathname, true)
-          return !!forced
-        } catch (e) {
-          console.error('强制刷新权限检查失败:', e)
-          return false
-        }
-      }
-
-      if (hasAccess === null) {
-        console.warn('权限检查返回 null，拒绝访问')
-        return false
-      }
-
-      return !!hasAccess
-    }
-
-    const checkAuth = async () => {
-      const token = getStoredToken()
-      const policyRoute = resolveRoutePolicy(pathname)
-      const policyMeta = policyRoute?.meta || {}
-      const isPolicyPublic = isRouteConfigPublic(policyRoute)
-
-      // 已登录访问纯公开页：跳转到可访问路由的首项
-      if (token && isPublicRoute(pathname)) {
-        try {
-          await redirectLoggedInFromPublic()
-          return
-        } catch {
-          allow()
-          window.location.hash = '#/'
-          return
-        }
-      }
-
-      // 未登录：公开路由放行，其余重定向到登录
-      if (!token) {
-        if (isPublicRoute(pathname) || isPolicyPublic) {
-          allow()
-          return
-        }
-        deny()
-        return
-      }
-
-      // 登录态下，公开路由直接放行
-      if (isPublicRoute(pathname) || isPolicyPublic) {
-        allow()
-        return
-      }
-
-      // 优先使用路由策略 meta.permission / meta.roles
-      try {
-        const policyResult = await checkByPolicyMeta(policyMeta)
-        if (policyResult !== null) {
-          setCanAccess(policyResult)
-          return
-        }
-      } catch (err) {
-        console.warn('基于路由策略的权限检查失败，尝试路由白名单回退', err)
-      }
-
-      // 回退：基于可访问路由列表校验
-      try {
-        setCanAccess(await checkAccessWithTimeout())
-      } catch (error) {
-        console.error('权限检查失败:', error)
-        deny()
-      }
-    }
-
-    checkAuth()
-  }, [pathname, props.route])
-
-  // 当已登录但无权限时，通过 effect 一次性提示并返回上一页
-  useEffect(() => {
-    if (canAccess !== null && !canAccess) {
-      const token = getStoredToken()
-      // 未登录会在渲染层由 Navigate 处理，这里只处理已登录但无权限的情况
-      if (!token) return
-
-      // 仅在首次遭遇该路径时弹一次提示，且不进行任何导航或刷新
-      if (lastDeniedPathRef.current === pathname) return
-      lastDeniedPathRef.current = pathname
-      showDeniedMessage(messageApi)
-      return
-    }
-
-    // 权限恢复或路径变化时，清空记录以便未来重试能再次提示
-    lastDeniedPathRef.current = ''
-  }, [canAccess, messageApi, pathname])
-
-  // 检查中
-  if (canAccess === null) {
-    return null
-  }
-
-  // 未登录或无权限
-  if (!canAccess) {
-    const token = getStoredToken()
-    if (!token) {
-      return (
-        <>
-          {contextHolder}
-          <Navigate to="/signin" replace />
-        </>
-      )
-    }
-    // 已登录但无权限：render 空（useEffect 会显示提示并导航到安全页面）
-    return <>{contextHolder}</>
-  }
-
-  // 有权限
-  return (
-    <>
-      {contextHolder}
-      {props.children}
-    </>
-  )
-}
-
-AuthRouterBase.propTypes = {
-  route: PropTypes.object,
-  children: PropTypes.node,
+  if (signedInEntry) return <Navigate to="/" replace />
+  if (publicPage) return <>{children}</>
+  if (!token) return <Navigate to="/signin" replace />
+  // A fresh cache decides immediately, so switching authorized routes keeps the
+  // layout and its cached tab forms mounted while still checking each leaf policy.
+  if (cachedAccess !== null) return cachedAccess ? <>{children}</> : <Navigate to="/403" replace />
+  if (access?.key !== key || (access.allowed && !cached)) return <div role="status">正在验证访问权限...</div>
+  if (!access.allowed) return <Navigate to="/403" replace />
+  return <>{children}</>
 }
 
 export default AuthRouterBase

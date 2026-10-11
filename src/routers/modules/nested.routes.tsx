@@ -34,6 +34,7 @@ export const nestedRoutes = [
         name: 'Vue',
         element: <lazyComponents.VueDemo />,
       },
+      { path: 'node', name: 'Node', element: <lazyComponents.NodeDemo /> },
       {
         path: 'angular',
         name: 'Angular',

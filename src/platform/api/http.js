@@ -2,8 +2,11 @@ import qs from 'qs'
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { showMessage } from '@platform/feedback/message'
 import { getEnv } from '@platform/config/env'
-import CryptoJS from 'crypto-js'
-import JSEncrypt from 'jsencrypt'
+import { EncryptionConfig, EncryptionHandler, isFormData } from './core/encryption'
+import { retry, runWithConcurrency } from './core/async'
+import { assertSuccessfulPayload, RequestError, getHttpErrorMessage } from './core/response'
+import { handleAuthenticationFailure } from '@platform/auth/model/session'
+export { EncryptionConfig, EncryptionHandler } from './core/encryption'
 import logger from '@platform/telemetry/logger'
 
 // ==================== 工具函数 ====================
@@ -12,220 +15,7 @@ const addTimestampSuffix = (params = {}) => ({
   _: Date.now(),
 })
 
-const isFormData = (data) => typeof FormData !== 'undefined' && data instanceof FormData
-const isBlob = (data) => typeof Blob !== 'undefined' && data instanceof Blob
-
-// ==================== 加密配置与处理 ====================
-export class EncryptionConfig {
-  constructor() {
-    this.enabled = false // 是否启用加密
-    this.mode = 'AES' // 加密模式: 'AES' | 'RSA' | 'HYBRID'
-    this.aesKey = '' // AES 密钥
-    this.rsaPublicKey = '' // RSA 公钥
-    this.rsaPrivateKey = '' // RSA 私钥
-    this.encryptRequest = true // 是否加密请求
-    this.encryptResponse = true // 是否加密响应
-    this.encryptionHeader = 'X-Encryption-Mode' // 加密模式标识头
-  }
-
-  configureAES(key) {
-    if (!key || (key.length !== 16 && key.length !== 24 && key.length !== 32)) {
-      throw new Error('AES 密钥长度必须是 16、24 或 32 字符')
-    }
-    this.mode = 'AES'
-    this.aesKey = key
-    this.enabled = true
-    logger.info('已配置 AES 加密模式')
-  }
-
-  configureRSA(publicKey, privateKey = '') {
-    if (!publicKey) throw new Error('RSA 公钥不能为空')
-    this.mode = 'RSA'
-    this.rsaPublicKey = publicKey
-    this.rsaPrivateKey = privateKey
-    this.enabled = true
-    logger.info('已配置 RSA 加密模式')
-  }
-
-  configureHybrid(rsaPublicKey, rsaPrivateKey = '') {
-    if (!rsaPublicKey) throw new Error('RSA 公钥不能为空')
-    this.mode = 'HYBRID'
-    this.rsaPublicKey = rsaPublicKey
-    this.rsaPrivateKey = rsaPrivateKey
-    this.enabled = true
-    this.aesKey = CryptoJS.lib.WordArray.random(16).toString()
-    logger.info('已配置混合加密模式')
-  }
-
-  disable() {
-    this.enabled = false
-    logger.info('已禁用加密功能')
-  }
-}
-
 export const encryptionConfig = new EncryptionConfig()
-
-export class EncryptionHandler {
-  static encryptAES(data, key) {
-    try {
-      const encrypted = CryptoJS.AES.encrypt(data, key).toString()
-      return encrypted
-    } catch (error) {
-      logger.error('AES 加密失败:', error)
-      throw new Error('AES 加密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  static decryptAES(cipherText, key) {
-    try {
-      const decrypted = CryptoJS.AES.decrypt(cipherText, key).toString(CryptoJS.enc.Utf8)
-      if (!decrypted) throw new Error('解密失败，可能是密钥错误')
-      return decrypted
-    } catch (error) {
-      logger.error('AES 解密失败:', error)
-      throw new Error('AES 解密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  static encryptRSA(data, publicKey) {
-    try {
-      const encrypt = new JSEncrypt()
-      encrypt.setPublicKey(publicKey)
-      const maxLength = 117
-      if (data.length <= maxLength) {
-        const encrypted = encrypt.encrypt(data)
-        if (!encrypted) throw new Error('RSA 加密失败')
-        return encrypted
-      }
-      const chunks = []
-      for (let i = 0; i < data.length; i += maxLength) {
-        const chunk = data.substring(i, i + maxLength)
-        const encrypted = encrypt.encrypt(chunk)
-        if (!encrypted) throw new Error('RSA 分段加密失败')
-        chunks.push(encrypted)
-      }
-      return JSON.stringify(chunks)
-    } catch (error) {
-      logger.error('RSA 加密失败:', error)
-      throw new Error('RSA 加密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  static decryptRSA(cipherText, privateKey) {
-    try {
-      const decrypt = new JSEncrypt()
-      decrypt.setPrivateKey(privateKey)
-      let chunks
-      try {
-        chunks = JSON.parse(cipherText)
-      } catch {
-        const decrypted = decrypt.decrypt(cipherText)
-        if (!decrypted) throw new Error('RSA 解密失败')
-        return decrypted
-      }
-      if (!Array.isArray(chunks)) throw new Error('无效的分段加密数据')
-      const decryptedChunks = []
-      for (const chunk of chunks) {
-        const decrypted = decrypt.decrypt(chunk)
-        if (!decrypted) throw new Error('RSA 分段解密失败')
-        decryptedChunks.push(decrypted)
-      }
-      return decryptedChunks.join('')
-    } catch (error) {
-      logger.error('RSA 解密失败:', error)
-      throw new Error('RSA 解密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  static encryptHybrid(data, aesKey, rsaPublicKey) {
-    const encryptedData = this.encryptAES(data, aesKey)
-    const encryptedKey = this.encryptRSA(aesKey, rsaPublicKey)
-    return { encryptedKey, encryptedData }
-  }
-
-  static decryptHybrid(encryptedData, encryptedKey, rsaPrivateKey) {
-    const aesKey = this.decryptRSA(encryptedKey, rsaPrivateKey)
-    return this.decryptAES(encryptedData, aesKey)
-  }
-
-  static encryptRequestData(data, config, encryptFields = []) {
-    if (!config.enabled || !config.encryptRequest || !data) return data
-    if (isFormData(data) || isBlob(data)) {
-      logger.warn('FormData/Blob 类型数据不进行加密')
-      return data
-    }
-
-    // 1. 部分字段加密
-    if (Array.isArray(encryptFields) && encryptFields.length > 0 && typeof data === 'object') {
-      const newData = { ...data }
-      encryptFields.forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(newData, field)) {
-          const value = newData[field]
-          const jsonValue = typeof value === 'string' ? value : JSON.stringify(value)
-
-          if (config.mode === 'AES') {
-            newData[field] = this.encryptAES(jsonValue, config.aesKey)
-          } else if (config.mode === 'RSA') {
-            newData[field] = this.encryptRSA(jsonValue, config.rsaPublicKey)
-          } else if (config.mode === 'HYBRID') {
-            // 混合加密部分字段：返回对象结构 { encrypted: '...', key: '...' }
-            const { encryptedKey, encryptedData } = this.encryptHybrid(jsonValue, config.aesKey, config.rsaPublicKey)
-            newData[field] = { encrypted: encryptedData, key: encryptedKey }
-          }
-        }
-      })
-      return newData
-    }
-
-    // 2. 全量加密
-    const jsonData = typeof data === 'string' ? data : JSON.stringify(data)
-    try {
-      switch (config.mode) {
-        case 'AES':
-          return { encrypted: this.encryptAES(jsonData, config.aesKey), mode: 'AES' }
-        case 'RSA':
-          return { encrypted: this.encryptRSA(jsonData, config.rsaPublicKey), mode: 'RSA' }
-        case 'HYBRID': {
-          const { encryptedKey, encryptedData } = this.encryptHybrid(jsonData, config.aesKey, config.rsaPublicKey)
-          return { encrypted: encryptedData, key: encryptedKey, mode: 'HYBRID' }
-        }
-        default:
-          return data
-      }
-    } catch (error) {
-      logger.error('加密请求数据失败:', error)
-      throw error
-    }
-  }
-
-  static decryptResponseData(data, config) {
-    if (!config.enabled || !config.encryptResponse || !data || !data.encrypted) return data
-    try {
-      let decrypted
-      switch (data.mode || config.mode) {
-        case 'AES':
-          decrypted = this.decryptAES(data.encrypted, config.aesKey)
-          break
-        case 'RSA':
-          decrypted = this.decryptRSA(data.encrypted, config.rsaPrivateKey)
-          break
-        case 'HYBRID':
-          decrypted = this.decryptHybrid(data.encrypted, data.key, config.rsaPrivateKey)
-          break
-        default:
-          return data
-      }
-      try {
-        return JSON.parse(decrypted)
-      } catch {
-        return decrypted
-      }
-    } catch (error) {
-      logger.error('解密响应数据失败:', error)
-      throw error
-    }
-  }
-}
 
 // ==================== 1. 配置常量 ====================
 const CONFIG = {
@@ -237,19 +27,6 @@ const CONFIG = {
 }
 
 // ==================== 2. 错误处理 ====================
-const HTTP_STATUS_MSG = {
-  400: '请求参数错误',
-  401: '未授权，请重新登录',
-  403: '拒绝访问',
-  404: '请求资源不存在',
-  408: '请求超时',
-  500: '服务器内部错误',
-  502: '网关错误',
-  503: '服务不可用',
-  504: '网关超时',
-  default: '请求失败',
-}
-
 class HttpClient {
   constructor(config = {}) {
     this.config = { ...CONFIG, ...config }
@@ -285,7 +62,7 @@ class HttpClient {
               }
             }
           } catch (error) {
-            logger.error('Body 加密失败:', error)
+            if (config.throwOnEncryptError !== false) throw error
           }
         }
 
@@ -303,7 +80,7 @@ class HttpClient {
               // 注意：Fetch/Axios 处理 params 对象时，如果变成 { encrypted: '...' } 形式，会自动序列化为 ?encrypted=...
             }
           } catch (error) {
-            logger.error('Params 加密失败:', error)
+            if (config.throwOnEncryptError !== false) throw error
           }
         }
       }
@@ -331,11 +108,11 @@ class HttpClient {
     let config = {
       url,
       method: 'GET',
-      headers: { ...this.config.HEADERS },
       timeout: this.config.TIMEOUT,
       baseURL: this.config.BASE_URL,
       isShowError: true,
       ...options,
+      headers: { ...this.config.HEADERS, ...options.headers },
     }
 
     // 1. 执行请求拦截器
@@ -349,13 +126,11 @@ class HttpClient {
 
     // 3. 超时控制
     const controller = config.controller || new AbortController()
-    const { signal } = controller
+    const signal = config.signal ? AbortSignal.any([controller.signal, config.signal]) : controller.signal
     const timeoutId = setTimeout(() => controller.abort(), config.timeout)
 
     try {
       const response = await fetch(fullUrl, { ...fetchOptions, signal })
-      clearTimeout(timeoutId)
-
       // 4. 处理响应数据
       let result = await this._handleResponseData(response, config)
 
@@ -366,8 +141,9 @@ class HttpClient {
 
       return result
     } catch (error) {
-      clearTimeout(timeoutId)
       return this._handleError(error, config)
+    } finally {
+      clearTimeout(timeoutId)
     }
   }
 
@@ -381,18 +157,22 @@ class HttpClient {
 
     if (params) {
       const queryString = qs.stringify(params, { addQueryPrefix: true })
-      url += queryString
+      url += url.includes('?') ? queryString.replace(/^\?/, '&') : queryString
     }
     return url
   }
 
   _buildOptions(config) {
     const { method, headers, payload, body } = config
-    const options = { method, headers }
+    const cleanHeaders = Object.fromEntries(Object.entries(headers).filter(([, value]) => value !== undefined))
+    if (isFormData(body) || isFormData(payload)) {
+      for (const key of Object.keys(cleanHeaders)) if (key.toLowerCase() === 'content-type') delete cleanHeaders[key]
+    }
+    const options = { method, headers: cleanHeaders, credentials: config.credentials || 'same-origin' }
 
-    if (body) {
+    if (body !== undefined) {
       options.body = body
-    } else if (payload) {
+    } else if (payload !== undefined) {
       if (headers['Content-Type']?.includes('application/json')) {
         options.body = JSON.stringify(payload)
       } else {
@@ -404,12 +184,12 @@ class HttpClient {
 
   async _handleResponseData(response, config) {
     if (!response.ok) {
-      const error = new Error(response.statusText || HTTP_STATUS_MSG[response.status] || HTTP_STATUS_MSG.default)
-      error.status = response.status
-      error.response = response
+      const error = new RequestError(getHttpErrorMessage(response.status), response.status, undefined, response)
       throw error
     }
 
+    if (config.responseType === 'raw') return response
+    if (response.status === 204 || response.status === 205) return undefined
     const contentType = response.headers.get('Content-Type') || ''
 
     if (
@@ -430,24 +210,12 @@ class HttpClient {
           try {
             data = EncryptionHandler.decryptResponseData(data, encryptionConfig)
           } catch (error) {
-            logger.error('响应解密失败:', error)
+            if (config.throwOnDecryptError !== false) throw error
           }
         }
       }
 
-      // 业务状态码检查 (参考原 fetch.js 逻辑)
-      if (data.code !== undefined && data.code !== 0 && data.code !== 200) {
-        if (data.code === 41002) {
-          // 项目使用 createHashRouter，必须使用 hash 跳转
-          try {
-            window.location.hash = '#/signin'
-          } catch (e) {
-            console.warn('跳转登录页失败，尝试使用 location.href:', e)
-            window.location.href = '#/signin'
-          }
-        }
-        throw new Error(data.message || `Error Code: ${data.code}`)
-      }
+      assertSuccessfulPayload(data, response.status)
       return data
     }
 
@@ -455,7 +223,8 @@ class HttpClient {
   }
 
   _handleError(error, config) {
-    const isShowError = config.isShowError !== false
+    handleAuthenticationFailure(error.status, error.code)
+    const isShowError = config.isShowError !== false && config.showError !== false
     let errorMsg = error.message
 
     if (error.name === 'AbortError') {
@@ -515,17 +284,7 @@ class HttpClient {
    * @param {object} [config] - 其他 Fetch 配置
    */
   async download(url, fileName, params = {}, config = {}) {
-    const fullUrl = this._buildUrl({
-      url,
-      baseURL: this.config.BASE_URL,
-      params,
-    })
-    const response = await fetch(fullUrl, {
-      method: 'GET',
-      headers: { ...this.config.HEADERS, ...config.headers },
-    })
-
-    if (!response.ok) throw new Error(`Download failed: ${response.statusText}`)
+    const response = await this.request(url, { ...config, method: 'GET', params, responseType: 'raw' })
 
     const reader = response.body.getReader()
     const contentLength = +response.headers.get('Content-Length')
@@ -574,24 +333,19 @@ class HttpClient {
   // ===== 高级功能 =====
 
   // 重试
-  async retry(fn, retries = 3, delay = 1000) {
-    for (let i = 0; i < retries; i++) {
-      try {
-        return await fn()
-      } catch (error) {
-        if (i === retries - 1) throw error
-        await new Promise((r) => setTimeout(r, delay))
-      }
-    }
+  retry(task, attempts = 3, delayMs = 1000) {
+    return retry(task, attempts, delayMs)
   }
-
-  // 并发控制 (简单实现)
-  parallel(tasks) {
-    return Promise.all(tasks.map((task) => (typeof task === 'function' ? task() : this.request(task.url, task))))
+  parallel(tasks, concurrency = 5) {
+    return runWithConcurrency(
+      tasks.map((task) => () => (typeof task === 'function' ? task() : this.request(task.url, task))),
+      concurrency
+    )
   }
 }
 
 // 创建默认 HTTP 客户端实例
+export { HttpClient }
 export const http = new HttpClient()
 
 // ==================== React Hooks ====================
@@ -634,25 +388,29 @@ export const useRequest = (url, options = {}) => {
           ...overrideOptions,
           controller,
         })
-        setData(res)
+        if (abortControllerRef.current === controller && !controller.signal.aborted) setData(res)
         return res
       } catch (err) {
-        if (err.name !== 'AbortError') {
+        if (abortControllerRef.current === controller && err.name !== 'AbortError') {
           setError(err)
         }
       } finally {
-        setLoading(false)
-        abortControllerRef.current = null
+        if (abortControllerRef.current === controller) {
+          setLoading(false)
+          abortControllerRef.current = null
+        }
       }
     },
     [url]
   )
 
   useEffect(() => {
+    let active = true
     queueMicrotask(() => {
-      fetchData()
+      if (active) fetchData()
     })
     return () => {
+      active = false
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
       }

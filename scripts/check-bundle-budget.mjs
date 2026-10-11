@@ -33,16 +33,22 @@ const assetSize = (name) => {
 }
 
 const initialSize = entrypointAssets.reduce((total, name) => total + assetSize(name), 0)
-const oversized = entrypointAssets
-  .map((name) => ({ name, size: assetSize(name) }))
+const oversized = [...assetMap.values()]
+  .filter(({ name }) => /\.(?:js|css)$/i.test(name))
+  .map(({ name, size }) => ({ name, size }))
   .filter(({ size }) => size > budget.singleJavaScriptCssAssetBytes)
 
-console.log(`[bundle-budget] initial JS/CSS: ${(initialSize / 1024 / 1024).toFixed(2)} MiB / ${(budget.initialJavaScriptCssBytes / 1024 / 1024).toFixed(2)} MiB`)
+console.log(
+  `[bundle-budget] initial JS/CSS: ${(initialSize / 1024 / 1024).toFixed(2)} MiB / ${(budget.initialJavaScriptCssBytes / 1024 / 1024).toFixed(2)} MiB`
+)
 for (const { name, size } of entrypointAssets.map((name) => ({ name, size: assetSize(name) }))) {
   console.log(`  ${(size / 1024).toFixed(1)} KiB  ${name}`)
 }
 
 if (initialSize > budget.initialJavaScriptCssBytes || oversized.length) {
   process.exitCode = 1
+  for (const { name, size } of oversized) {
+    console.error(`[bundle-budget] oversized asset: ${name} (${(size / 1024 / 1024).toFixed(2)} MiB)`)
+  }
   console.error('[bundle-budget] exceeded; update the budget only after reviewing a new baseline.')
 }

@@ -32,7 +32,7 @@
     "prebuild:production": "node scripts/prebuild-production.mjs",
     "prebuild:production:zip": "node scripts/prebuild-production.mjs",
     "prebuild:stats": "node scripts/prebuild-production.mjs",
-    "ci:quality": "pnpm run lint && pnpm run typecheck && pnpm run typecheck:boundaries && pnpm run test",
+    "ci:quality": "pnpm run lint && pnpm run check:aliases && pnpm run check:import-boundaries && pnpm run check:route-contract && pnpm run check:docs && pnpm run typecheck && pnpm run typecheck:boundaries && pnpm run typecheck:lib && pnpm run test",
     "prepare": "husky install",
     "dev": "pnpm run start",
     "dev:tracking": "node scripts/dev-tracking.mjs",
@@ -86,7 +86,7 @@
     "lighthouse": "node scripts/run-lighthouse.mjs",
     "faker": "nodemon faker/index.js",
     "generate:dependencies": "node scripts/generate-dependencies.cjs",
-    "test": "pnpm run test:jest && pnpm run test:coverage",
+    "test": "pnpm run test:coverage",
     "test:jest": "jest",
     "test:coverage": "jest --coverage",
     "test:e2e": "playwright test --config=playwright.config.ts",
@@ -159,7 +159,11 @@
     "clean": "pnpm prune && rimraf node_modules/.cache",
     "fresh": "pnpm run clean && rimraf node_modules package-lock.json && pnpm install",
     "nuke": "rimraf node_modules package-lock.json yarn.lock pnpm-lock.yaml && pnpm install",
-    "update:pnpm": "pnpm update --latest"
+    "update:pnpm": "pnpm update --latest",
+    "check:route-contract": "node scripts/validate-route-contract.mjs",
+    "typecheck:lib": "tsc6 --noEmit --emitDeclarationOnly false --project tsconfig.lib.json",
+    "generate:docs": "node scripts/generate-component-catalog.mjs && node scripts/generate-project-reference.mjs",
+    "check:docs": "node scripts/generate-project-reference.mjs --check && node scripts/validate-docs.mjs"
   },
   "author": "wkylin",
   "contributors": [

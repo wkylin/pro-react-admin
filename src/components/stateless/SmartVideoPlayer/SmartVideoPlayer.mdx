@@ -1,60 +1,20 @@
----
-title: SmartVideoPlayer
----
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './SmartVideoPlayer.stories'
 
-import { Meta, Canvas, Story, ArgTypes, Controls } from '@storybook/addon-docs/blocks'
-import * as SmartVideoPlayerStories from './SmartVideoPlayer.stories'
-
-<Meta of={SmartVideoPlayerStories} />
+<Meta of={Stories} />
 
 # SmartVideoPlayer
 
-统一的播放器封装（HTML5 / YouTube / Embed），内置设置面板、字幕/倍速、HLS（原生优先 + hls.js 动态加载）等能力。
+应用内部播放器，provider 支持 html5/youtube/embed。HTML5 用 src，YouTube 用 youtubeId，嵌入用 embedUrl 或 getEmbedUrl。可传字幕 trackSrc/trackLang、标题及外部来源链接。
 
-- “界面语言”只影响 SmartVideoPlayer 自身（不影响全站 i18n）
-- 语言通过 `localStorage: svpUiLanguage` 持久化（刷新后仍生效）
+initialConfig 设置初始配置，config/onConfigChange 提供受控配置；onError/onEvent 回调接收播放反馈。公开 ref 提供 play 与 playFromUserGesture。自动播放、全屏、画中画与跨域限制依赖浏览器和 provider，不能假定一致。
 
-## 组件预览
+当前不属于 @w.ui/wui-react 发布组件。
 
-<Canvas>
-  <Story of={SmartVideoPlayerStories.Html5Mp4} />
-</Canvas>
+## 预览
 
-## Props（可调参数）
+<Canvas of={Stories.Html5Mp4} />
 
-<ArgTypes />
+## 当前参数
 
-<Controls />
-
-## 说明
-
-- “界面语言”只影响 SmartVideoPlayer 自身（不影响全站 i18n）
-- 语言通过 localStorage 的 svpUiLanguage 持久化（刷新后仍生效）
-
-## 基本使用
-
-### HTML5（MP4）
-
-```tsx
-import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
-
-export default function Example() {
-  return (
-    <SmartVideoPlayer
-      provider="html5"
-      title="HTML5 MP4"
-      src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-    />
-  )
-}
-```
-
-### YouTube
-
-```tsx
-import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
-
-export default function Example() {
-  return <SmartVideoPlayer provider="youtube" title="YouTube" youtubeId="dQw4w9WgXcQ" />
-}
-```
+<ArgTypes of={Stories} />

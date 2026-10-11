@@ -1,5 +1,5 @@
 import type { ComponentType, PropsWithChildren, ReactNode } from 'react'
-import { routePermissionMap } from '@platform/auth/mocks/permission'
+import { routePermissionMap, getRoutePolicy } from '@platform/auth/model/policy'
 
 /**
  * 路由工具函数
@@ -157,12 +157,22 @@ export const annotateRoutesWithPermissions = (routes: readonly RouteNode[] = [])
     routeNodes.map((route: RouteNode): RouteNode => {
       const meta: RouteMeta = { ...(route.meta ?? {}) }
       const identifiers = collectRouteIdentifiers(route)
-      const matched = identifiers.find((identifier: string): boolean => Boolean(routePermissionMap[identifier]))
-      if (matched) {
-        meta.permission = routePermissionMap[matched]
+      const policy = identifiers.map(getRoutePolicy).find(Boolean)
+      const permission =
+        policy?.permission || identifiers.map((identifier) => routePermissionMap[identifier]).find(Boolean)
+      if (permission) {
+        meta.permission = permission
         if (meta.access !== 'public') meta.access = 'permissioned'
       }
-      const next: RouteNode = { ...route, meta }
+      const next: RouteNode = {
+        ...route,
+        meta,
+        handle: {
+          ...(route.handle || {}),
+          ...(policy?.title ? { title: policy.title } : {}),
+          ...(policy?.i18nKey ? { i18nKey: policy.i18nKey } : {}),
+        },
+      }
       if (Array.isArray(route.children)) {
         next.children = walk(route.children)
       }

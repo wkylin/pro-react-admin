@@ -210,6 +210,7 @@ CSS variables + theme overrides
 
 :root {
   color-scheme: light;
+
   --wui-bg-page: #f5f5f5;
   --wui-bg-surface: #fff;
   --wui-bg-elevated: #fff;
@@ -230,7 +231,7 @@ CSS variables + theme overrides
   --wui-text-danger: #c62828;
   --wui-bg-purple-subtle: #f9f0ff;
   --wui-text-purple: #722ed1;
-  --wui-flow-mask: rgba(240, 242, 243, 0.7);
+  --wui-flow-mask: rgb(240 242 243 / 70%);
   --wui-indicator-active: #3f3f46;
   --wui-indicator-inactive: #d1d5db;
   --background: #fff;
@@ -261,6 +262,7 @@ CSS variables + theme overrides
 
 :root[data-theme='dark'] {
   color-scheme: dark;
+
   --wui-bg-page: #141414;
   --wui-bg-surface: #1f1f1f;
   --wui-bg-elevated: #262626;
@@ -287,6 +289,7 @@ CSS variables + theme overrides
   --background: #0a0a0a;
   --foreground: #ededed;
   --color-gray-200: #383838;
+
   /* Stronger accent on dark backgrounds */
   --color-red-pers: #e5e7eb;
   --color-yellow-saff: #9ca3af;

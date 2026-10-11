@@ -1,45 +1,30 @@
-# 文档索引
+# 项目文档
 
-建议第一次接触仓库从新手入门开始，再按实际工作进入对应专题。
+本文档集按当前源码重建。重复的权限迁移、加密入门和构建优化文章已合并到下面的维护入口；历史版本变化保留在根目录 CHANGELOG.md。
 
-## 从这里开始
+| 主题                            | 文档                                     |
+| ------------------------------- | ---------------------------------------- |
+| 安装、启动、环境配置            | [快速开始](GETTING_STARTED.md)           |
+| 架构与剩余演进工作              | [技术架构](ARCHITECTURE.md)              |
+| 目录职责与依赖规则              | [源码目录](SRC_DIRECTORY_GUIDE.md)       |
+| 权限、路由、菜单契约            | [身份与授权](USER_ROLE_PERMISSION.md)    |
+| Axios / Fetch、错误、取消、并发 | [请求层](REQUESTS.md)                    |
+| 可选加密协议与兼容限制          | [请求加密](REQUEST_ENCRYPTION.md)        |
+| Express、OAuth helper、埋点管理 | [API](API.md)                            |
+| 埋点 SDK                        | [Tracking](TRACKING_SDK_ARCHITECTURE.md) |
+| Webpack、环境、体积预算         | [构建](BUILD.md)                         |
+| 静态部署、缓存、PWA             | [部署](DEPLOY.md)                        |
+| 构建时项目选择                  | [多项目](MULTI_PROJECT.md)               |
+| Shell、Remote、manifest 与降级  | [微前端](MFE_DEPLOYMENT.md)              |
+| ESLint、类型、单测、浏览器回归  | [质量门禁](QUALITY.md)                   |
+| Story 与 MDX                    | [Storybook](STORYBOOK.md)                |
+| 组件库打包与发布                | [组件库](LIBRARY_PUBLISH_GUIDE.md)       |
+| 表格数据接入                    | [ResponsiveTable](RESPONSIVE_TABLE.md)   |
+| 编辑器、视频、电子书、SVG、图表 | [应用组件](UI_COMPONENTS.md)             |
+| 媒体预处理                      | [FFmpeg](FFMPEG_INSTALLATION.md)         |
+| Sentry 与运行时日志             | [可观测性](OBSERVABILITY.md)             |
+| 版本、路由、环境变量、全部命令  | [自动生成参考](PROJECT_REFERENCE.md)     |
+| 应用组件与 npm 组件边界         | [自动生成目录](COMPONENT_CATALOG.md)     |
+| 本次本地验证结果与范围          | [验证记录](VALIDATION.md)                |
 
-- [新手入门：安装、本地运行、多项目、微前端、Storybook、组件库构建](./GETTING_STARTED.md)
-- [技术架构与当前改进项](./ARCHITECTURE.md)
-- [工程架构评估、组件规模与演进方案](./ENGINEERING_ARCHITECTURE.md)
-- [`src` 目录职责与依赖约定](./SRC_DIRECTORY_GUIDE.md)
-- [`src` 目录职责与依赖约定](./SRC_DIRECTORY_GUIDE.md)
-- [状态管理约定：全局、领域和局部状态](./Zustand-Migration.md)
-- [组件与源码清单（自动生成）](./COMPONENT_CATALOG.md)
-- [文档目录与阅读顺序](#阅读路径)
-
-## 构建与开发
-
-- [Webpack 构建和环境配置](./BUILD.md)
-- [本地 API helper](../api/README.md)
-- [多项目架构](./MULTI_PROJECT.md)
-- [微前端开发与部署](./MFE_DEPLOYMENT.md)
-- [Storybook 组件开发](./STORYBOOK.md)
-
-## 发布与部署
-
-- [应用与 Vercel/GitHub Pages 部署](./DEPLOY.md)
-- [组件库构建、接入和发布](./LIBRARY_PUBLISH_GUIDE.md)
-- [构建体积分析与优化](./BUILD_BASELINE.md)
-- [Sentry 运行时和构建上传](./Sentry-Configuration.md)
-
-## 业务能力
-
-- [用户角色和权限](./USER_ROLE_PERMISSION.md)
-- [权限策略](./PERMISSION_STRATEGY.md)
-- [权限系统扩展](./PERMISSION_SYSTEM_EXTENSION_GUIDE.md)
-- [请求与加密](./REQUESTS.md)、[加密 API](./ENCRYPTION_API_REFERENCE.md)
-- [埋点 SDK 架构](./TRACKING_SDK_ARCHITECTURE.md)
-- [视频播放器](./VIDEO_PLAYER_GUIDE.md)
-
-## 阅读路径
-
-- **新成员**：新手入门 → 技术架构 → Webpack 构建
-- **新增应用项目**：多项目架构 → 部署说明
-- **新增 Remote**：微前端指南 → 多项目架构 → 部署说明
-- **新增可发布组件**：Storybook 指南 → 组件库指南
+修改配置或公开组件后运行 `pnpm run generate:docs`，再运行 `pnpm run check:docs` 和 `pnpm run check:component-catalog`。生成文档检查不能代替人工核对接口行为；本地链接检查不访问外部网站，也不验证页内锚点。

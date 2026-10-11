@@ -5,6 +5,7 @@ import { lazyComponents } from '../config/lazyLoad.config'
  * 包含各种 UI 展示页面
  */
 export const uiRoutes = [
+  { path: 'motion', name: 'Motion', element: <lazyComponents.Motion /> },
   {
     path: 'qrcode',
     name: 'QrGenerate',

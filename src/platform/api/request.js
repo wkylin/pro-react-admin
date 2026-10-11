@@ -4,8 +4,10 @@ import { showMessage } from '@platform/feedback/message'
 // import { authService } from '@platform/auth/services/authService' // 移除以避免循环依赖
 import logger from '@platform/telemetry/logger'
 import { getEnv } from '@platform/config/env'
-import CryptoJS from 'crypto-js'
-import JSEncrypt from 'jsencrypt'
+import { EncryptionConfig, EncryptionHandler } from './core/encryption'
+import { delay, retry, runWithConcurrency, withTimeout } from './core/async'
+import { assertSuccessfulPayload, getHttpErrorMessage } from './core/response'
+import { readStoredToken, handleAuthenticationFailure } from '@platform/auth/model/session'
 
 // ==================== 1. 配置常量 ====================
 const CONFIG = {
@@ -22,20 +24,6 @@ const DEFAULT_HEADERS = {
 }
 
 // ==================== 2. HTTP 状态码错误消息映射 ====================
-const HTTP_ERROR_MESSAGES = {
-  400: '请求参数错误',
-  401: '未授权，请重新登录',
-  403: '没有权限访问',
-  404: '请求资源不存在',
-  405: '请求方法不允许',
-  408: '请求超时',
-  500: '服务器内部错误',
-  502: '网关错误',
-  503: '服务不可用',
-  504: '网关超时',
-  default: (status) => `请求失败 (${status})`,
-}
-
 const NETWORK_ERROR_MESSAGES = {
   ECONNABORTED: '请求超时',
   ETIMEDOUT: '连接超时',
@@ -44,391 +32,7 @@ const NETWORK_ERROR_MESSAGES = {
   default: '网络连接异常',
 }
 
-// ==================== 3. 加密配置管理 ====================
-class EncryptionConfig {
-  constructor() {
-    this.enabled = false // 是否启用加密
-    this.mode = 'AES' // 加密模式: 'AES' | 'RSA' | 'HYBRID'
-    this.aesKey = '' // AES 密钥
-    this.rsaPublicKey = '' // RSA 公钥
-    this.rsaPrivateKey = '' // RSA 私钥
-    this.encryptRequest = true // 是否加密请求
-    this.encryptResponse = true // 是否加密响应
-    this.encryptionHeader = 'X-Encryption-Mode' // 加密模式标识头
-    this.keyExchangeUrl = null // 密钥交换接口（可选）
-  }
-
-  /**
-   * 配置 AES 加密
-   * @param {string} key - AES 密钥（16/24/32 字符）
-   */
-  configureAES(key) {
-    if (!key || (key.length !== 16 && key.length !== 24 && key.length !== 32)) {
-      throw new Error('AES 密钥长度必须是 16、24 或 32 字符')
-    }
-    this.mode = 'AES'
-    this.aesKey = key
-    this.enabled = true
-    logger.info('已配置 AES 加密模式')
-  }
-
-  /**
-   * 配置 RSA 加密
-   * @param {string} publicKey - RSA 公钥
-   * @param {string} privateKey - RSA 私钥（可选，用于解密响应）
-   */
-  configureRSA(publicKey, privateKey = '') {
-    if (!publicKey) {
-      throw new Error('RSA 公钥不能为空')
-    }
-    this.mode = 'RSA'
-    this.rsaPublicKey = publicKey
-    this.rsaPrivateKey = privateKey
-    this.enabled = true
-    logger.info('已配置 RSA 加密模式')
-  }
-
-  /**
-   * 配置混合加密（RSA 加密 AES 密钥，AES 加密数据）
-   * @param {string} rsaPublicKey - RSA 公钥
-   * @param {string} rsaPrivateKey - RSA 私钥（可选）
-   */
-  configureHybrid(rsaPublicKey, rsaPrivateKey = '') {
-    if (!rsaPublicKey) {
-      throw new Error('RSA 公钥不能为空')
-    }
-    this.mode = 'HYBRID'
-    this.rsaPublicKey = rsaPublicKey
-    this.rsaPrivateKey = rsaPrivateKey
-    this.enabled = true
-    // 自动生成随机 AES 密钥
-    this.aesKey = CryptoJS.lib.WordArray.random(16).toString()
-    logger.info('已配置混合加密模式')
-  }
-
-  /**
-   * 禁用加密
-   */
-  disable() {
-    this.enabled = false
-    logger.info('已禁用加密功能')
-  }
-
-  /**
-   * 重置配置
-   */
-  reset() {
-    this.enabled = false
-    this.mode = 'AES'
-    this.aesKey = ''
-    this.rsaPublicKey = ''
-    this.rsaPrivateKey = ''
-    logger.info('已重置加密配置')
-  }
-}
-
 const encryptionConfig = new EncryptionConfig()
-
-// ==================== 4. 加密处理器 ====================
-class EncryptionHandler {
-  /**
-   * AES 加密
-   * @param {string} data - 待加密数据
-   * @param {string} key - 密钥
-   * @returns {string} 加密后的数据
-   */
-  static encryptAES(data, key) {
-    try {
-      const encrypted = CryptoJS.AES.encrypt(data, key).toString()
-      logger.log('AES 加密成功')
-      return encrypted
-    } catch (error) {
-      logger.error('AES 加密失败:', error)
-      throw new Error('AES 加密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  /**
-   * AES 解密
-   * @param {string} cipherText - 密文
-   * @param {string} key - 密钥
-   * @returns {string} 解密后的数据
-   */
-  static decryptAES(cipherText, key) {
-    try {
-      const decrypted = CryptoJS.AES.decrypt(cipherText, key).toString(CryptoJS.enc.Utf8)
-      if (!decrypted) {
-        throw new Error('解密失败，可能是密钥错误')
-      }
-      logger.log('AES 解密成功')
-      return decrypted
-    } catch (error) {
-      logger.error('AES 解密失败:', error)
-      throw new Error('AES 解密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  /**
-   * RSA 加密
-   * @param {string} data - 待加密数据
-   * @param {string} publicKey - 公钥
-   * @returns {string} 加密后的数据
-   */
-  static encryptRSA(data, publicKey) {
-    try {
-      const encrypt = new JSEncrypt()
-      encrypt.setPublicKey(publicKey)
-
-      // RSA 分段加密（处理长文本）
-      const maxLength = 117 // RSA 2048位密钥最大加密长度
-      if (data.length <= maxLength) {
-        const encrypted = encrypt.encrypt(data)
-        if (!encrypted) throw new Error('RSA 加密失败')
-        logger.log('RSA 加密成功')
-        return encrypted
-      }
-
-      // 分段加密
-      const chunks = []
-      for (let i = 0; i < data.length; i += maxLength) {
-        const chunk = data.substring(i, i + maxLength)
-        const encrypted = encrypt.encrypt(chunk)
-        if (!encrypted) throw new Error('RSA 分段加密失败')
-        chunks.push(encrypted)
-      }
-
-      logger.log(`RSA 分段加密成功 (${chunks.length} 段)`)
-      return JSON.stringify(chunks)
-    } catch (error) {
-      logger.error('RSA 加密失败:', error)
-      throw new Error('RSA 加密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  /**
-   * RSA 解密
-   * @param {string} cipherText - 密文
-   * @param {string} privateKey - 私钥
-   * @returns {string} 解密后的数据
-   */
-  static decryptRSA(cipherText, privateKey) {
-    try {
-      const decrypt = new JSEncrypt()
-      decrypt.setPrivateKey(privateKey)
-
-      // 尝试 JSON 解析（分段加密的情况）
-      let chunks
-      try {
-        chunks = JSON.parse(cipherText)
-      } catch {
-        // 单段加密
-        const decrypted = decrypt.decrypt(cipherText)
-        if (!decrypted) throw new Error('RSA 解密失败')
-        logger.log('RSA 解密成功')
-        return decrypted
-      }
-
-      // 分段解密
-      if (!Array.isArray(chunks)) {
-        throw new Error('无效的分段加密数据')
-      }
-
-      const decryptedChunks = []
-      for (const chunk of chunks) {
-        const decrypted = decrypt.decrypt(chunk)
-        if (!decrypted) throw new Error('RSA 分段解密失败')
-        decryptedChunks.push(decrypted)
-      }
-
-      logger.log(`RSA 分段解密成功 (${chunks.length} 段)`)
-      return decryptedChunks.join('')
-    } catch (error) {
-      logger.error('RSA 解密失败:', error)
-      throw new Error('RSA 解密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  /**
-   * 混合加密（RSA 加密 AES 密钥，AES 加密数据）
-   * @param {string} data - 待加密数据
-   * @param {string} aesKey - AES 密钥
-   * @param {string} rsaPublicKey - RSA 公钥
-   * @returns {object} { encryptedKey, encryptedData }
-   */
-  static encryptHybrid(data, aesKey, rsaPublicKey) {
-    try {
-      // 1. 使用 AES 加密数据
-      const encryptedData = this.encryptAES(data, aesKey)
-
-      // 2. 使用 RSA 加密 AES 密钥
-      const encryptedKey = this.encryptRSA(aesKey, rsaPublicKey)
-
-      logger.log('混合加密成功')
-      return {
-        encryptedKey,
-        encryptedData,
-      }
-    } catch (error) {
-      logger.error('混合加密失败:', error)
-      throw new Error('混合加密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  /**
-   * 混合解密
-   * @param {string} encryptedData - 加密的数据
-   * @param {string} encryptedKey - 加密的密钥
-   * @param {string} rsaPrivateKey - RSA 私钥
-   * @returns {string} 解密后的数据
-   */
-  static decryptHybrid(encryptedData, encryptedKey, rsaPrivateKey) {
-    try {
-      // 1. 使用 RSA 解密 AES 密钥
-      const aesKey = this.decryptRSA(encryptedKey, rsaPrivateKey)
-
-      // 2. 使用 AES 解密数据
-      const decryptedData = this.decryptAES(encryptedData, aesKey)
-
-      logger.log('混合解密成功')
-      return decryptedData
-    } catch (error) {
-      logger.error('混合解密失败:', error)
-      throw new Error('混合解密失败: ' + error.message, { cause: error })
-    }
-  }
-
-  /**
-   * 加密请求数据
-   * @param {any} data - 原始数据
-   * @param {EncryptionConfig} config - 加密配置
-   * @returns {any} 加密后的数据
-   */
-  static encryptRequestData(data, config, encryptFields = []) {
-    if (!config.enabled || !config.encryptRequest) {
-      return data
-    }
-
-    // 不加密特殊类型
-    if (RequestUtils.isFormData(data) || RequestUtils.isBlob(data)) {
-      logger.warn('FormData/Blob 类型数据不进行加密')
-      return data
-    }
-
-    // 1. 部分字段加密
-    if (Array.isArray(encryptFields) && encryptFields.length > 0 && typeof data === 'object') {
-      const newData = { ...data }
-      encryptFields.forEach((field) => {
-        if (Object.prototype.hasOwnProperty.call(newData, field)) {
-          const value = newData[field]
-          const jsonValue = typeof value === 'string' ? value : JSON.stringify(value)
-
-          if (config.mode === 'AES') {
-            newData[field] = this.encryptAES(jsonValue, config.aesKey)
-          } else if (config.mode === 'RSA') {
-            newData[field] = this.encryptRSA(jsonValue, config.rsaPublicKey)
-          } else if (config.mode === 'HYBRID') {
-            const { encryptedKey, encryptedData } = this.encryptHybrid(jsonValue, config.aesKey, config.rsaPublicKey)
-            newData[field] = { encrypted: encryptedData, key: encryptedKey }
-          }
-        }
-      })
-      return newData
-    }
-
-    // 2. 全量加密
-    // 转为 JSON 字符串
-    const jsonData = typeof data === 'string' ? data : JSON.stringify(data)
-
-    try {
-      switch (config.mode) {
-        case 'AES':
-          return {
-            encrypted: this.encryptAES(jsonData, config.aesKey),
-            mode: 'AES',
-          }
-
-        case 'RSA':
-          return {
-            encrypted: this.encryptRSA(jsonData, config.rsaPublicKey),
-            mode: 'RSA',
-          }
-
-        case 'HYBRID': {
-          const { encryptedKey, encryptedData } = this.encryptHybrid(jsonData, config.aesKey, config.rsaPublicKey)
-          return {
-            encrypted: encryptedData,
-            key: encryptedKey,
-            mode: 'HYBRID',
-          }
-        }
-
-        default:
-          logger.warn('未知的加密模式:', config.mode)
-          return data
-      }
-    } catch (error) {
-      logger.error('加密请求数据失败:', error)
-      throw error
-    }
-  }
-
-  /**
-   * 解密响应数据
-   * @param {any} data - 加密的数据
-   * @param {EncryptionConfig} config - 加密配置
-   * @returns {any} 解密后的数据
-   */
-  static decryptResponseData(data, config) {
-    if (!config.enabled || !config.encryptResponse) {
-      return data
-    }
-
-    // 检查是否为加密数据
-    if (!data || typeof data !== 'object' || !data.encrypted) {
-      return data
-    }
-
-    try {
-      let decrypted
-
-      switch (data.mode || config.mode) {
-        case 'AES':
-          decrypted = this.decryptAES(data.encrypted, config.aesKey)
-          break
-
-        case 'RSA':
-          if (!config.rsaPrivateKey) {
-            logger.warn('缺少 RSA 私钥，无法解密响应')
-            return data
-          }
-          decrypted = this.decryptRSA(data.encrypted, config.rsaPrivateKey)
-          break
-
-        case 'HYBRID':
-          if (!config.rsaPrivateKey) {
-            logger.warn('缺少 RSA 私钥，无法解密响应')
-            return data
-          }
-          decrypted = this.decryptHybrid(data.encrypted, data.key, config.rsaPrivateKey)
-          break
-
-        default:
-          logger.warn('未知的解密模式:', data.mode)
-          return data
-      }
-
-      // 尝试解析为 JSON
-      try {
-        return JSON.parse(decrypted)
-      } catch {
-        return decrypted
-      }
-    } catch (error) {
-      logger.error('解密响应数据失败:', error)
-      throw error
-    }
-  }
-}
 
 // ==================== 5. 请求管理 ====================
 class RequestManager {
@@ -459,8 +63,8 @@ class RequestManager {
   }
 
   // 6. 移除请求
-  removeRequest(requestKey) {
-    if (this.pendingRequests.has(requestKey)) {
+  removeRequest(requestKey, signal) {
+    if (this.pendingRequests.get(requestKey)?.signal === signal) {
       this.pendingRequests.delete(requestKey)
     }
   }
@@ -493,7 +97,7 @@ class RequestUtils {
 
   // 延迟函数
   static delay(ms) {
-    return new Promise((resolve) => globalThis.setTimeout(resolve, ms))
+    return delay(ms)
   }
 
   // 判断是否为 FormData
@@ -508,7 +112,7 @@ class RequestUtils {
 
   // 获取错误消息
   static getHttpErrorMessage(status) {
-    return HTTP_ERROR_MESSAGES[status] || HTTP_ERROR_MESSAGES.default(status)
+    return getHttpErrorMessage(status)
   }
 
   static getNetworkErrorMessage(code) {
@@ -561,6 +165,7 @@ let axiosInstance = axios.create({
 // 导出配置方法
 export function setAxiosInstance(instance) {
   axiosInstance = instance
+  installInterceptors(instance)
   logger.info('Axios 实例已更新')
 }
 
@@ -591,7 +196,8 @@ const ensureHeaders = (config) => {
 const applyDedup = (config) => {
   if (config.cancelDuplicate !== false) {
     const { requestKey, controller } = requestManager.cancelDuplicateRequest(config)
-    config.signal = controller.signal
+    config._dedupSignal = controller.signal
+    config.signal = config.signal ? AbortSignal.any([config.signal, controller.signal]) : controller.signal
     config._requestKey = requestKey
   }
 }
@@ -605,23 +211,11 @@ const applyTimestampSuffix = (config) => {
   }
 }
 
-const readGithubToken = () => {
-  try {
-    const tokenData = localStorage.getItem('github_token')
-    if (!tokenData) return null
-    return JSON.parse(tokenData).token || null
-  } catch (e) {
-    logger.warn('读取 token 失败', e)
-    return null
-  }
-}
-
 const applyAuthorization = (config) => {
   if (config.headers.Authorization || config.needToken === false) return
-  const token = readGithubToken()
+  const token = readStoredToken()
   if (!token) return
   config.headers.Authorization = `Bearer ${token}`
-  logger.log('已添加 Authorization:', `Bearer ${token.substring(0, 20)}...`)
 }
 
 const applyDataFormat = (config) => {
@@ -689,183 +283,127 @@ const applyRequestId = (config) => {
 }
 
 // ==================== 9. 请求拦截器 ====================
-axiosInstance.interceptors.request.use(
-  (config) => {
-    ensureHeaders(config)
-    applyDedup(config)
-    applyTimestampSuffix(config)
-    applyAuthorization(config)
-    applyDataFormat(config)
-    applyEncryption(config) // 新增：加密请求数据
-    applyRequestMetadata(config)
-    applyRequestId(config)
+const configuredInstances = new WeakSet()
 
-    logger.log(`发起请求: ${config.method?.toUpperCase()} ${config.url}`, {
-      params: config.params,
-      data: RequestUtils.isFormData(config.data) ? '[FormData]' : config.data,
-    })
+function installInterceptors(instance) {
+  if (configuredInstances.has(instance)) return
+  configuredInstances.add(instance)
+  instance.interceptors.request.use(
+    (config) => {
+      ensureHeaders(config)
+      applyDedup(config)
+      applyTimestampSuffix(config)
+      applyAuthorization(config)
+      applyDataFormat(config)
+      applyEncryption(config) // 新增：加密请求数据
+      applyRequestMetadata(config)
+      applyRequestId(config)
 
-    return config
-  },
-  (error) => {
-    logger.error('请求拦截器错误:', error)
-    RequestUtils.handleShowError('请求配置失败: ' + error.message, error.config?.showError !== false)
-    return Promise.reject(error)
-  }
-)
+      logger.log(`发起请求: ${config.method?.toUpperCase()} ${config.url}`, {
+        params: config.params,
+        data: RequestUtils.isFormData(config.data) ? '[FormData]' : config.data,
+      })
 
-// 处理未授权
-function handleUnauthorized(message) {
-  // authService.logout() // 移除以避免循环依赖
-  // 清理权限缓存与开发覆盖，避免跳转登录后仍沿用旧权限
-  try {
-    localStorage.removeItem('user_permissions')
-    localStorage.removeItem('permissions_fetch_time')
-    localStorage.removeItem('permissions_auth_key')
-    localStorage.removeItem('user_role')
-    localStorage.removeItem('force_demo_switch')
-  } catch (e) {
-    console.warn('清理权限缓存失败:', e)
-  }
-
-  localStorage.removeItem('token')
-  localStorage.removeItem('github_token')
-  localStorage.removeItem('github_user')
-
-  const isAtSignIn = () => {
-    const hash = String(window?.location?.hash || '')
-    return hash === '#/signin' || hash.startsWith('#/signin?') || hash.startsWith('#/signin/')
-  }
-
-  // 延迟跳转，确保消息显示
-  globalThis.setTimeout(() => {
-    // 项目使用 createHashRouter，必须使用 hash 跳转；否则静态部署下 /signin 会导致页面空白
-    if (!isAtSignIn()) window.location.hash = '#/signin'
-  }, 500)
-
-  logger.warn('用户未授权，已清除登录信息')
-  logger.warn(message)
-}
-
-const isHttpOk = (status) => status >= 200 && status < 300
-
-const isBusinessEnvelope = (data) => {
-  return !!(data && typeof data === 'object' && 'code' in data)
-}
-
-const resolveResponseData = (response) => {
-  const config = response.config
-
-  if (config.responseType === 'blob') return response
-
-  let { data, status } = response
-
-  // 尝试解密响应数据
-  try {
-    data = EncryptionHandler.decryptResponseData(data, encryptionConfig)
-  } catch (error) {
-    logger.error('响应数据解密失败:', error)
-    if (config.throwOnDecryptError !== false) {
-      throw error
-    }
-  }
-
-  if (!isHttpOk(status)) {
-    const errorMsg = RequestUtils.getHttpErrorMessage(status)
-    RequestUtils.handleShowError(errorMsg, config.showError !== false)
-    throw new Error(errorMsg)
-  }
-
-  if (!isBusinessEnvelope(data)) {
-    return config.returnFullResponse ? { ...response, data } : data
-  }
-
-  if (data.code === 0 || data.code === 200) {
-    return config.returnFullResponse ? { ...response, data } : data
-  }
-
-  const errorMsg = data.message || data.msg || '请求失败'
-  if (data.code === 401 || data.code === 403) {
-    handleUnauthorized(errorMsg)
-  }
-
-  RequestUtils.handleShowError(errorMsg, config.showError !== false)
-  const error = new Error(errorMsg)
-  error.code = data.code
-  error.response = { ...response, data }
-  throw error
-}
-
-// ==================== 10. 响应拦截器 ====================
-axiosInstance.interceptors.response.use(
-  (response) => {
-    const config = response.config
-
-    // 1. 移除已完成的请求
-    if (config._requestKey) {
-      requestManager.removeRequest(config._requestKey)
-    }
-
-    // 2. 记录响应时间
-    if (config.metadata?.startTime) {
-      const duration = Date.now() - config.metadata.startTime
-      logger.log(`请求完成: ${config.method?.toUpperCase()} ${config.url} [${duration}ms]`)
-    }
-
-    try {
-      return resolveResponseData(response)
-    } catch (e) {
-      return Promise.reject(e)
-    }
-  },
-  (error) => {
-    // 1. 移除失败的请求
-    if (error.config?._requestKey) {
-      requestManager.removeRequest(error.config._requestKey)
-    }
-
-    // 2. 请求被取消
-    if (axios.isCancel(error) || error.name === 'AbortError') {
-      logger.warn('请求已取消:', error.config?.url)
+      return config
+    },
+    (error) => {
+      logger.error('请求拦截器错误:', error)
+      RequestUtils.handleShowError('请求配置失败: ' + error.message, error.config?.showError !== false)
       return Promise.reject(error)
     }
+  )
 
-    // 3. 响应错误
-    if (error.response) {
-      const { status, data } = error.response
-      let errorMessage = RequestUtils.getHttpErrorMessage(status)
-
-      // 优先使用后端返回的错误信息
-      if (data && typeof data === 'object') {
-        errorMessage = data.message || data.msg || errorMessage
-      }
-
-      // 401/403 特殊处理
-      if (status === 401 || status === 403) {
-        handleUnauthorized(errorMessage)
-      }
-
-      RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
-
-      const customError = new Error(errorMessage)
-      customError.status = status
-      customError.response = error.response
-      return Promise.reject(customError)
+  const resolveResponseData = (response) => {
+    const config = response.config
+    if (config.responseType === 'blob') return response
+    let data = response.data
+    try {
+      if (config.decrypt !== false) data = EncryptionHandler.decryptResponseData(data, encryptionConfig)
+    } catch (error) {
+      if (config.throwOnDecryptError !== false) throw error
     }
-
-    // 4. 网络错误
-    if (error.request) {
-      const errorMessage = RequestUtils.getNetworkErrorMessage(error.code)
-      RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
-      return Promise.reject(new Error(errorMessage))
+    try {
+      assertSuccessfulPayload(data, response.status)
+    } catch (error) {
+      handleAuthenticationFailure(error.status, error.code)
+      error.response = { ...response, data }
+      RequestUtils.handleShowError(error.message, config.showError !== false)
+      throw error
     }
-
-    // 5. 其他错误
-    const errorMessage = error.message || '请求配置错误'
-    RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
-    return Promise.reject(error)
+    return config.returnFullResponse ? { ...response, data } : data
   }
-)
+
+  // ==================== 10. 响应拦截器 ====================
+  instance.interceptors.response.use(
+    (response) => {
+      const config = response.config
+
+      // 1. 移除已完成的请求
+      if (config._requestKey) {
+        requestManager.removeRequest(config._requestKey, config._dedupSignal)
+      }
+
+      // 2. 记录响应时间
+      if (config.metadata?.startTime) {
+        const duration = Date.now() - config.metadata.startTime
+        logger.log(`请求完成: ${config.method?.toUpperCase()} ${config.url} [${duration}ms]`)
+      }
+
+      try {
+        return resolveResponseData(response)
+      } catch (e) {
+        return Promise.reject(e)
+      }
+    },
+    (error) => {
+      // 1. 移除失败的请求
+      if (error.config?._requestKey) {
+        requestManager.removeRequest(error.config._requestKey, error.config._dedupSignal)
+      }
+
+      // 2. 请求被取消
+      if (axios.isCancel(error) || error.name === 'AbortError') {
+        logger.warn('请求已取消:', error.config?.url)
+        return Promise.reject(error)
+      }
+
+      // 3. 响应错误
+      if (error.response) {
+        const { status, data } = error.response
+        let errorMessage = RequestUtils.getHttpErrorMessage(status)
+
+        // 优先使用后端返回的错误信息
+        if (data && typeof data === 'object') {
+          errorMessage = data.message || data.msg || errorMessage
+        }
+
+        // 401/403 特殊处理
+        handleAuthenticationFailure(status)
+
+        RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
+
+        const customError = new Error(errorMessage)
+        customError.status = status
+        customError.response = error.response
+        return Promise.reject(customError)
+      }
+
+      // 4. 网络错误
+      if (error.request) {
+        const errorMessage = RequestUtils.getNetworkErrorMessage(error.code)
+        RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
+        return Promise.reject(new Error(errorMessage))
+      }
+
+      // 5. 其他错误
+      const errorMessage = error.message || '请求配置错误'
+      RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
+      return Promise.reject(error)
+    }
+  )
+}
+
+installInterceptors(axiosInstance)
 
 // ==================== 11. 文件下载处理 ====================
 class DownloadHandler {
@@ -895,56 +433,17 @@ class DownloadHandler {
 
 // ==================== 高级功能：并发控制与重试 ====================
 class RequestEnhancer {
-  // 并发控制
-  static async runWithConcurrency(tasks, concurrency = CONFIG.DEFAULT_CONCURRENCY) {
-    const results = []
-    const executing = []
-
-    for (const task of tasks) {
-      const promise = Promise.resolve().then(() => (typeof task === 'function' ? task() : task))
-      results.push(promise)
-
-      if (concurrency <= tasks.length) {
-        const executingPromise = promise.then(() => executing.splice(executing.indexOf(executingPromise), 1))
-        executing.push(executingPromise)
-
-        if (executing.length >= concurrency) {
-          await Promise.race(executing)
-        }
-      }
-    }
-
-    return Promise.all(results)
+  static runWithConcurrency(tasks, concurrency = CONFIG.DEFAULT_CONCURRENCY) {
+    return runWithConcurrency(
+      tasks.map((task) => () => (typeof task === 'function' ? task() : task)),
+      concurrency
+    )
   }
-
-  // 重试机制
-  static async retry(fn, attempts = CONFIG.RETRY_ATTEMPTS, delay = CONFIG.RETRY_DELAY) {
-    let lastError
-
-    for (let i = 0; i < attempts; i++) {
-      try {
-        return await fn()
-      } catch (error) {
-        lastError = error
-
-        // 最后一次尝试不延迟
-        if (i < attempts - 1) {
-          logger.warn(`请求失败，第 ${i + 1}/${attempts} 次重试...`)
-          await RequestUtils.delay(delay * (i + 1)) // 指数退避
-        }
-      }
-    }
-
-    logger.error(`请求失败，已重试 ${attempts} 次`)
-    throw lastError
+  static retry(task, attempts = CONFIG.RETRY_ATTEMPTS, delayMs = CONFIG.RETRY_DELAY) {
+    return retry(task, attempts, delayMs)
   }
-
-  // 超时控制
   static withTimeout(promise, timeout = CONFIG.TIMEOUT) {
-    return Promise.race([
-      promise,
-      new Promise((_, reject) => globalThis.setTimeout(() => reject(new Error('请求超时')), timeout)),
-    ])
+    return withTimeout(promise, timeout)
   }
 }
 

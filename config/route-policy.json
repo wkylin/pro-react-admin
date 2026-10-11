@@ -1,0 +1,284 @@
+{
+  "/": {
+    "permission": "home:read",
+    "title": "home",
+    "i18nKey": "home"
+  },
+  "/403": {
+    "permission": "error:read",
+    "title": "403"
+  },
+  "/404": {
+    "permission": "error:read",
+    "title": "404"
+  },
+  "/ai-workbench": {
+    "permission": "ai-workbench:read",
+    "title": "AI Workbench",
+    "i18nKey": "menu.aiWorkbench"
+  },
+  "/auth/callback": {
+    "permission": "system:read",
+    "title": "OAuth Callback"
+  },
+  "/auto-deploy": {
+    "permission": "auto-deploy:read",
+    "title": "自动部署",
+    "i18nKey": "menu.autoDeploy"
+  },
+  "/big-screen": {
+    "permission": "bigscreen:read",
+    "title": "Big Screen",
+    "i18nKey": "menu.bigScreen"
+  },
+  "/build": {
+    "permission": "build:read",
+    "title": "构建工具",
+    "i18nKey": "menu.buildTools",
+    "menuGroup": true
+  },
+  "/build/webpack": {
+    "permission": "build:read",
+    "title": "Webpack",
+    "i18nKey": "menu.webpack"
+  },
+  "/business": {
+    "permission": "business:read",
+    "title": "Business",
+    "i18nKey": "menu.business"
+  },
+  "/chatgpt": {
+    "permission": "chatgpt:read",
+    "title": "ChatGPT",
+    "i18nKey": "menu.chatgpt"
+  },
+  "/contact": {
+    "permission": "contact:read",
+    "title": "Contact",
+    "i18nKey": "menu.contact"
+  },
+  "/crypto": {
+    "permission": "crypto:read",
+    "title": "Crypto",
+    "i18nKey": "menu.crypto"
+  },
+  "/dashboard": {
+    "permission": "dashboard:read"
+  },
+  "/demo": {
+    "permission": "demo:read",
+    "title": "demo",
+    "i18nKey": "demo"
+  },
+  "/dependencies": {
+    "permission": "dependencies:read",
+    "title": "项目依赖分析",
+    "i18nKey": "menu.dependencies"
+  },
+  "/deploy-flow": {
+    "permission": "deploy-flow:read",
+    "title": "Deploy Flow",
+    "i18nKey": "menu.deployFlow"
+  },
+  "/echarts": {
+    "permission": "echarts:read",
+    "title": "Echarts",
+    "i18nKey": "menu.echarts"
+  },
+  "/error": {
+    "permission": "error:read",
+    "title": "ErrorBoundary",
+    "i18nKey": "menu.errorBoundary"
+  },
+  "/geo": {
+    "permission": "geo:read",
+    "title": "Geo Chart",
+    "i18nKey": "menu.geoChart"
+  },
+  "/mermaid": {
+    "title": "Mermaid",
+    "i18nKey": "menu.mermaid",
+    "permission": "mermaid:read"
+  },
+  "/motion": {
+    "permission": "motion:read",
+    "title": "Motion",
+    "i18nKey": "menu.motion"
+  },
+  "/music": {
+    "permission": "music:read",
+    "title": "Music",
+    "i18nKey": "menu.music"
+  },
+  "/my-iframe": {
+    "permission": "ui:read",
+    "title": "My Iframe"
+  },
+  "/notification/:id": {
+    "title": "通知详情",
+    "permission": "notification:read"
+  },
+  "/notifications": {
+    "title": "通知中心",
+    "permission": "notification:read"
+  },
+  "/permission": {
+    "permission": "permission:read",
+    "title": "权限示例",
+    "i18nKey": "menu.permissionExample"
+  },
+  "/ph-bar": {
+    "permission": "phbar:read",
+    "title": "PH Bar",
+    "i18nKey": "menu.phBar"
+  },
+  "/portfilo": {
+    "permission": "portfilo:read"
+  },
+  "/postmessage": {
+    "permission": "postmessage:read",
+    "title": "Post Message",
+    "i18nKey": "menu.postMessage"
+  },
+  "/print": {
+    "permission": "print:read",
+    "title": "Print",
+    "i18nKey": "menu.print"
+  },
+  "/prism": {
+    "permission": "prism:read",
+    "title": "Prism Render",
+    "i18nKey": "menu.prismRender"
+  },
+  "/privacy": {
+    "permission": "system:read",
+    "title": "隐私政策"
+  },
+  "/profile": {
+    "permission": "profile:read",
+    "title": "Profile",
+    "i18nKey": "menu.profile"
+  },
+  "/qrcode": {
+    "permission": "qrcode:read",
+    "title": "Qr Generate",
+    "i18nKey": "menu.qrGenerate"
+  },
+  "/signin": {
+    "permission": "system:read",
+    "title": "登录"
+  },
+  "/signup": {
+    "permission": "system:read",
+    "title": "注册"
+  },
+  "/sub-error": {
+    "permission": "error:read",
+    "title": "Error",
+    "i18nKey": "menu.error",
+    "menuGroup": true
+  },
+  "/svg-viewer": {
+    "permission": "svg-viewer:read",
+    "title": "SVG Viewer",
+    "i18nKey": "menu.svgViewer"
+  },
+  "/tech/backend": {
+    "permission": "tech:read",
+    "title": "后端技术栈",
+    "i18nKey": "menu.backendTechStack",
+    "menuGroup": true
+  },
+  "/tech/backend/go": {
+    "permission": "tech:read",
+    "title": "Go",
+    "i18nKey": "menu.go"
+  },
+  "/tech/backend/java": {
+    "permission": "tech:read",
+    "title": "Java",
+    "i18nKey": "menu.java"
+  },
+  "/tech/backend/node": {
+    "permission": "tech:read",
+    "title": "Node",
+    "i18nKey": "menu.node"
+  },
+  "/tech/frontend": {
+    "permission": "tech:read",
+    "title": "前端技术栈",
+    "i18nKey": "menu.frontendTechStack",
+    "menuGroup": true
+  },
+  "/tech/frontend/angular": {
+    "permission": "tech:read",
+    "title": "Angular",
+    "i18nKey": "menu.angular"
+  },
+  "/tech/frontend/node": {
+    "permission": "tech:read",
+    "title": "Node",
+    "i18nKey": "menu.node"
+  },
+  "/tech/frontend/plugins": {
+    "permission": "tech:read",
+    "title": "Vue 插件",
+    "i18nKey": "menu.vuePlugins",
+    "menuGroup": true
+  },
+  "/tech/frontend/plugins/perf": {
+    "permission": "tech:read",
+    "title": "性能优化",
+    "i18nKey": "menu.performanceOptimization"
+  },
+  "/tech/frontend/plugins/vue3": {
+    "permission": "tech:read",
+    "title": "Vue3 API",
+    "i18nKey": "menu.vue3Api"
+  },
+  "/tech/frontend/react": {
+    "permission": "tech:read",
+    "title": "React",
+    "i18nKey": "menu.react"
+  },
+  "/tech/frontend/vue": {
+    "permission": "tech:read",
+    "title": "Vue",
+    "i18nKey": "menu.vue",
+    "menuGroup": true
+  },
+  "/terms": {
+    "permission": "system:read",
+    "title": "用户协议"
+  },
+  "/text-editor": {
+    "permission": "text-editor:read",
+    "title": "Text Editor",
+    "i18nKey": "menu.textEditor"
+  },
+  "/tilt": {
+    "permission": "tilt:read",
+    "title": "React Tilt",
+    "i18nKey": "menu.reactTilt"
+  },
+  "/topology": {
+    "permission": "topology:read",
+    "title": "Topology",
+    "i18nKey": "menu.topology"
+  },
+  "/tracking": {
+    "permission": "tracking:read",
+    "title": "埋点数据看板",
+    "i18nKey": "menu.tracking"
+  },
+  "/video": {
+    "permission": "video:read",
+    "title": "Video",
+    "i18nKey": "menu.video"
+  },
+  "/zustand": {
+    "permission": "zustand:read",
+    "title": "Zustand演示",
+    "i18nKey": "menu.zustand"
+  }
+}

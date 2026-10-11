@@ -81,8 +81,6 @@ const toMfeName = (name) => {
   return /^[0-9]/.test(safe) ? `app_${safe}` : safe
 }
 
-const mfeName = isMfeEnabled ? toMfeName(paths.projectName) : undefined
-
 const packageJson = (() => {
   try {
     const pkg = fs.readFileSync(path.resolve(__dirname, '../package.json'), 'utf8')
@@ -204,9 +202,8 @@ const config = {
       asyncFunction: true,
     },
     uniqueName: isMfeEnabled ? toMfeName(paths.projectName) : undefined,
-    // For MF remotes in production we must expose the container globally so the host can find it.
-    // Using a string-keyed window export avoids minifier renaming issues.
-    library: isMfeRemote && mfeName ? { type: 'window', name: mfeName } : undefined,
+    // Only the Federation container exports a global; the standalone app must
+    // not overwrite that container when its entry executes.
     filename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     chunkFilename: isDev ? 'static/js/[name].js' : 'static/js/[name].[contenthash].js',
     // library: '',
@@ -452,6 +449,13 @@ const config = {
       ? {
           all: false,
           assets: true,
+          cachedAssets: true,
+          groupAssetsByEmitStatus: false,
+          groupAssetsByPath: false,
+          groupAssetsByExtension: false,
+          groupAssetsByChunk: false,
+          groupAssetsByInfo: false,
+          assetsSpace: Infinity,
           entrypoints: true,
           errors: true,
           warnings: true,

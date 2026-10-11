@@ -1,6 +1,8 @@
 type EnvMap = Record<string, string | undefined>
 
-const processEnv: EnvMap = typeof process !== 'undefined' && process.env ? process.env : {}
+// Webpack replaces process.env with the browser-safe object. A typeof process
+// guard would discard that injected object in browsers without a process global.
+const processEnv: EnvMap = process.env
 
 const expandKeyVariants = (key: string): string[] => {
   const variants = [key]

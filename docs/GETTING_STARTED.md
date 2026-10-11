@@ -1,224 +1,52 @@
-# 新手入门
+# 快速开始
 
-这份指南按仓库当前实现编写：应用、微前端、组件库和 Storybook 都由 Webpack 构建；Storybook 使用 Webpack 5 builder。日常开发只需启动主应用，其他模式按需启用。
+## 环境
 
-## 1. 准备环境
-
-- Node.js：`>=24.15.0 <25`（以根 `package.json` 的 `engines` 为准）
-- pnpm：11.5.2（由 packageManager 和 CI 固定）
-- Git
-
-确认版本：
+应用要求 Node.js >=24.15.0 且 <25，包管理器声明为 pnpm 11.5.2。使用仓库的 pnpm-lock.yaml 安装，避免混用 npm/yarn 修改锁文件。
 
 ```bash
-node --version
-pnpm --version
-```
-
-安装依赖：
-
-```bash
-pnpm install
-```
-
-如果本地 pnpm 版本不匹配，先启用 Corepack，再用项目指定版本安装依赖：
-
-```bash
-corepack enable
-corepack pnpm@11.5.2 install --frozen-lockfile
-```
-
-## 2. 启动主应用
-
-```bash
+pnpm install --frozen-lockfile
 pnpm start
 ```
 
-`pnpm start` 会启动主应用和本地 API。打开 [http://localhost:8080/](http://localhost:8080/)；Webpack Dev Server 会在 8080 被占用时向后查找可用端口，以终端输出的地址为准。应用使用 Hash Router，页面地址形如：
+`pnpm start` 通过 scripts/dev-tracking.mjs 同时启动前端与 Express helper。默认前端 http://localhost:8080，API 127.0.0.1:5200；实际端口以终端为准。开发默认使用内存埋点存储，不需要 MongoDB，脚本为 API 与开发代理共享临时管理 token。只运行前端可使用 `pnpm run start:web`，此时埋点服务须自行启动。
 
-```text
-http://localhost:8080/#/dashboard
-```
+## 本地配置
 
-基础运行不要求复制环境文件。仓库中的 `.env.<goal>` 保存默认值；个人配置放到对应的 `.env.<goal>.local`，例如 `.env.development.local`。local 文件已加入 Git 忽略。命令行/CI 环境变量优先，其次 local 文件，再其次基础文件。浏览器变量由 `webpack/client-env.js` 白名单注入；密码、私钥、OAuth secret、Sentry 上传 token 和 AES key 不允许进入白名单。
-
-### 埋点看板和本地 API
-
-本地 API 默认使用内存埋点存储。`pnpm start` 会同时启动 Express API 和 Webpack 前端，并为当前开发会话生成随机管理 token；该 token 只存在于服务端进程，由代理附加到 API 请求，不会进入浏览器。主应用仅在开发模式自动上报页面浏览事件，便于在埋点看板验证从 SDK 到 API 的完整链路；生产构建不会启用这段示例采集。
-
-若只需启动前端、不使用埋点看板，可运行：
-
-```bash
-pnpm run start:web
-```
-
-`pnpm run dev:tracking` 与 `pnpm start` 相同。API 默认监听 `127.0.0.1:5200`；前端代理转发 `/api/tracking/*`。遇到 8080 端口占用时，以终端打印的前端端口为准。未接通的埋点 API 会返回 JSON 错误，不会被 SPA 伪装成成功的 HTML。
-
-需要固定管理 token 或修改端口时，在 `.env.development.local` 配置：
+在根目录创建 .env.development.local。不要提交凭据。脚本与 Webpack 会读取开发配置，外部进程环境变量具有优先级。
 
 ```dotenv
-TRACKING_ADMIN_TOKEN=your-local-random-token
+REACT_APP_USE_MOCK=true
+APP_BASE_URL=
+TRACKING_STORE=memory
 TRACKING_API_PORT=5200
-TRACKING_API_TARGET=http://127.0.0.1:5200
 ```
 
-更改 `.env.development.local` 后重启服务。GitHub OAuth token exchange 需要 API 环境中的 `GITHUB_CLIENT_ID` 和 `GITHUB_CLIENT_SECRET`；secret 不能放进前端变量。本地 `/apis` 示例接口需要配置可用的 `MONGODB_URI`；生产默认要求 `TRACKING_STORE=mongodb` 和 `MONGODB_URI`，数据库不可用时 API 不会启动。Vercel/GitHub Pages 静态站点不包含这个 API 服务，生产使用埋点看板需要单独部署后端并配置服务端鉴权。更多配置见[本地 API helper](../api/README.md)。
+仓库 .env 模板（包括生产模板）显式开启 mock 授权，适合演示。只有 `REACT_APP_USE_MOCK=true` 才启用演示权限。接入真实服务时设为 false，并提供 `/api/permissions/current`、`/api/roles`；APP_BASE_URL 为空表示同源，不再隐式启用 mock。本地 api/ 不实现这两个授权接口，详见[权限](USER_ROLE_PERMISSION.md)。
 
-## 3. 运行多项目示例
+应用使用 Hash 路由，例如 `/#/permission`。演示登录使用本地身份，GitHub OAuth 则还需要服务端 helper 与 OAuth App 配置。GitHub client secret 只放服务端，浏览器变量清单见[实现参考](PROJECT_REFERENCE.md)。
 
-项目是同仓库、同依赖安装下的多个应用入口：
-
-| 模式     | 启动命令            | 默认路由选择                  | 产物目录       |
-| -------- | ------------------- | ----------------------------- | -------------- |
-| 主应用   | pnpm start          | src/routers                   | dist/          |
-| ProjectA | pnpm start:projectA | src/projects/projectA/routers | dist-projectA/ |
-| ProjectB | pnpm start:projectB | src/projects/projectB/routers | dist-projectB/ |
-
-主应用命令会同时启动本地埋点 API；ProjectA、ProjectB 命令只启动对应前端。这些命令分别从 8080 开始找空闲端口。对应生产构建：
+## 常用操作
 
 ```bash
-pnpm run build:production
-pnpm run build:production:projectA
-pnpm run build:production:projectB
-```
-
-src/projects/registry.json 是项目入口、路由目录、输出目录和微前端配置的清单。PROJECT 只能使用清单中的项目名；拼错会让 Webpack 直接报错，不会静默构建主应用。除保留的快捷命令外，也可以使用由注册表驱动的统一入口：`pnpm run project:dev -- projectA` 和 `pnpm run project:build -- projectA`。详见[多项目架构](./MULTI_PROJECT.md)。
-
-## 4. 本地联调微前端
-
-微前端需要三个进程。开三个终端，先启动两个 Remote，再启动 Shell：
-
-终端一：
-
-```bash
-pnpm run start:mf:projectA
-```
-
-终端二：
-
-```bash
-pnpm run start:mf:projectB
-```
-
-终端三：
-
-```bash
-pnpm run start:mf:shell
-```
-
-打开 [http://localhost:8080/#/portal](http://localhost:8080/#/portal)。Shell 在 8080，ProjectA Remote 在 8081，ProjectB Remote 在 8082。Shell 先读取 Remote 的 remote-manifest.json 验证协议，再请求 remoteEntry.js；失败后自动重试一次，仍失败则显示降级提示。新增或重命名 Remote 后运行 `pnpm run sync:project-contracts` 和 `pnpm run check:project-registry`。详见[微前端开发与部署](./MFE_DEPLOYMENT.md)。
-
-## 5. 启动 Storybook
-
-```bash
+pnpm run typecheck
+pnpm run typecheck:boundaries
+pnpm run typecheck:lib
+pnpm run check:route-contract
+pnpm run test:jest --runInBand
+pnpm run build:stats
+pnpm run check:bundle-budget
+pnpm run serve:dist
+pnpm run test:e2e
 pnpm run storybook
 ```
 
-打开 [http://localhost:6006](http://localhost:6006)。Stories 从 `src/` 和 `packages/wui-react/src/` 下的 `*.stories.*`、`*.mdx` 文件发现。增加组件示例时，在组件旁放置同名 `*.stories.tsx` 文件。配置、全局 decorator、静态产物和常见问题见[Storybook 指南](./STORYBOOK.md)。
+多项目和微前端是不同构建目标，见[多项目](MULTI_PROJECT.md)和[微前端](MFE_DEPLOYMENT.md)。组件包构建见[组件库](LIBRARY_PUBLISH_GUIDE.md)。
 
-构建静态 Storybook：
+## 排查
 
-```bash
-pnpm run build-storybook
-```
-
-产物位于 storybook-static/。部署到 GitHub Pages 的子路径时，工作流通过 STORYBOOK_BASE_HREF 设置 base href；本地构建默认不插入子路径。
-
-## 6. 构建 `@w.ui/wui-react` 组件库
-
-组件库源码、清单和发布产物都位于 `packages/wui-react/`。在仓库根目录执行完整构建：
-
-```bash
-pnpm run build:lib
-```
-
-`build:lib` 会清理旧产物，并一次生成 ESM、CJS、TypeScript 声明和统一样式：
-
-```text
-packages/wui-react/dist/
-├── esm/index.js               # ESM 根入口及 12 个子路径 .js
-├── cjs/index.cjs              # CJS 根入口及 12 个子路径 .cjs
-├── types/index.d.ts           # 根声明及各组件声明目录
-└── style.css                  # 统一样式入口
-```
-
-v5 提供根入口、`style.css` 和以下 12 个显式组件子路径：
-
-| 组件               | 导入路径                              |
-| ------------------ | ------------------------------------- |
-| AnimatedIcon       | `@w.ui/wui-react/animated-icon`       |
-| IconFrame          | `@w.ui/wui-react/icon-frame`          |
-| MoveChecker        | `@w.ui/wui-react/move-checker`        |
-| OneTimePasscode    | `@w.ui/wui-react/one-time-passcode`   |
-| OverflowText       | `@w.ui/wui-react/overflow-text`       |
-| PortalTooltip      | `@w.ui/wui-react/portal-tooltip`      |
-| ResponsiveTable    | `@w.ui/wui-react/responsive-table`    |
-| SafeHtml           | `@w.ui/wui-react/safe-html`           |
-| ScrollLayout       | `@w.ui/wui-react/scroll-layout`       |
-| ScrollableSections | `@w.ui/wui-react/scrollable-sections` |
-| SliderCaptcha      | `@w.ui/wui-react/slider-captcha`      |
-| WatermarkProvider  | `@w.ui/wui-react/watermark-provider`  |
-
-发布前准备和包内容预览使用：
-
-```bash
-pnpm run prepare:lib:release
-pnpm run pack:lib:dry-run
-```
-
-`prepare:lib:release` 会完整构建，并复制发布说明与许可证、检查 package exports、运行安装冒烟验证和包体积预算。`pack:lib:dry-run` 已包含同一套准备流程，无需先手工执行前一个命令，以免重复构建。
-
-本地账号具备 npm 发布权限时，可直接运行：
-
-```bash
-pnpm run pub       # latest
-pnpm run pub:beta  # beta
-```
-
-`pub` 和 `pub:beta` 会通过组件库自身的 `prepublishOnly` 自动执行一次完整发布准备，不要再手工串联构建命令。v5 的所有公开组件源码都由 `packages/wui-react/src/` 维护，不再提供旧分类兼容入口。
-
-新项目安装已发布版本和组件库使用示例见[@w.ui/wui-react 组件库指南](./LIBRARY_PUBLISH_GUIDE.md)。
-
-## 7. 构建和预览生产应用
-
-```bash
-pnpm run build:production
-pnpm run serve:dist
-```
-
-生产构建输出到 dist/，本地静态预览默认使用 5000 端口。指定项目时，预览脚本也要使用相同的 PROJECT：
-
-```bash
-pnpm run build:production:projectA
-PROJECT=projectA pnpm run serve:dist
-```
-
-build:production 有 prebuild 生命周期：本地会先运行媒体优化；GitHub Actions/Vercel 检测到 CI 时默认跳过。只有设置 OPTIMIZE_MEDIA=1 才会在 CI 强制执行。不要用 SKIP_OPTIMIZE_MEDIA 控制这个钩子，当前脚本不识别该变量。
-
-## 8. 从哪里开始改代码
-
-| 想做什么               | 优先查看                                                                   |
-| ---------------------- | -------------------------------------------------------------------------- |
-| 增加页面               | src/pages/ 和 src/routers/modules/                                         |
-| 增加菜单、权限         | src/layouts/navigation/menu.config.tsx、src/routers/                       |
-| 增加应用共享组件       | src/shared/ui/                                                             |
-| 增加项目差异           | src/projects/<project>/                                                    |
-| 增加微前端 remote 页面 | src/projects/<project>/mfe/App.tsx                                         |
-| 增加组件库公开 API     | packages/wui-react/src/、config/library-contract.mjs                       |
-| 增加 Storybook 示例    | 对应组件旁的 *.stories.tsx                                                 |
-| 调整应用构建           | webpack/webpack.common.js、webpack/webpack.dev.js、webpack/webpack.prod.js |
-
-修改 src/projects/registry.json 后运行 `pnpm run sync:project-contracts`；修改 `config/path-aliases.json` 后运行 `pnpm run sync:aliases`。GitHub Actions 会检查生成契约和 Vercel 部署配置，运行 Jest、主应用和 MFE Playwright E2E，构建主应用、Storybook 和 MFE 聚合产物，并检查首屏 bundle 预算。
-
-应用运行入口为 src/index.tsx；各项目通过自己的 index.tsx 复用 src/bootstrap/renderApp.tsx，再进入 src/theme.tsx 和路由。完整关系见[架构说明](./ARCHITECTURE.md)。
-
-提交改动前可运行 `pnpm run typecheck` 检查主应用类型，并运行 `pnpm run typecheck:boundaries` 检查路由、KeepAlive、微前端桥接、features、shared 和 platform 的严格类型。CI 会执行这些检查。`pnpm run ci:quality` 汇总只读 lint、类型检查和已有自动化测试。
-
-## 9. 常用参考
-
-- [Webpack 构建与配置](./BUILD.md)
-- [多项目架构](./MULTI_PROJECT.md)
-- [微前端开发与部署](./MFE_DEPLOYMENT.md)
-- [Storybook 指南](./STORYBOOK.md)
-- [应用部署](./DEPLOY.md)
-- [@w.ui/wui-react 组件库](./LIBRARY_PUBLISH_GUIDE.md)
+- 权限为空：确认 mock 开关、登录身份、服务响应格式及网络错误。真实服务失败会撤销本次授权，不会退回演示角色。
+- 埋点页 502：使用 pnpm start 启动配套 API，或检查 TRACKING_API_TARGET。
+- 埋点管理 401/503：确认服务端管理 token 与代理配置，不能把管理 token 注入浏览器。
+- 构建失败：先阅读首个 ESLint/类型/模块错误，检查 Node、pnpm 和 frozen lockfile 是否一致。
+- 浏览器显示旧版本：检查 Service Worker 更新提示、HTML 缓存及 PUBLIC_URL。

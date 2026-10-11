@@ -1,4 +1,4 @@
-import type { EventType, TrackEvent } from '@/lib/tracking/types'
+import type { EventType, TrackEvent } from '@platform/tracking/types'
 import type { Dayjs } from 'dayjs'
 
 export type TrackingDateRange = [Dayjs | null, Dayjs | null] | null

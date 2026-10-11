@@ -13,24 +13,8 @@ export const businessRoutes = [
     element: <lazyComponents.Demo />,
   },
   {
-    path: 'zustand',
-    name: 'Zustand演示',
-    i18nKey: 'zustand',
-    element: <lazyComponents.ZustandDemo />,
-  },
-  {
-    path: 'motion',
-    name: 'Motion',
-    element: <lazyComponents.Motion />,
-  },
-  {
     path: 'business',
     name: 'Business',
     element: <lazyComponents.Business />,
-  },
-  {
-    path: 'build/webpack',
-    name: 'Webpack',
-    element: <lazyComponents.WebpackList />,
   },
 ]

@@ -5,9 +5,7 @@ import loadable, {
 } from '@loadable/component'
 import Loading from '@stateless/Loading'
 
-import Home from '@pages/home'
 import Layout from '@layouts'
-import MyPortfilo from '@pages/portfilo'
 
 /**
  * 统一懒加载处理函数
@@ -39,7 +37,7 @@ export const lazyComponents = {
   // Layout: lazyLoad(() => import('@layouts')),
   Layout, // 布局改为同步加载，避免白屏
   Dashboard: lazyLoad(() => import('@pages/dashboard')),
-  MyPortfilo, // MyPortfilo 改为同步加载，避免刷新时一直 loading
+  MyPortfilo: lazyLoad(() => import('@pages/portfilo')),
 
   // 认证相关（直接导入，不需要懒加载）
   // SignIn 和 SignUp 在路由中直接导入，不使用懒加载
@@ -50,10 +48,9 @@ export const lazyComponents = {
   Privacy: lazyLoad(() => import('@pages/privacy')),
 
   // 业务页面
-  // Home: lazyLoad(() => import('@pages/home')),
-  Home, // 首页改为同步加载，避免首屏白屏闪烁
+  Home: lazyLoad(() => import('@pages/home')),
   Demo: lazyLoad(() => import('@pages/demo')),
-  Business: lazyLoad(() => import('@pages/business')),
+  Business: lazyLoad(() => import('@features/business')),
   ZustandDemo: lazyLoad(() => import('@pages/zustand')),
   AutoDeploy: lazyLoad(() => import('@pages/autoDeploy')),
   RichTextEditor: lazyLoad(() => import('@pages/richTextEditor')),

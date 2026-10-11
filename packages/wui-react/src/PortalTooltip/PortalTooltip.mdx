@@ -1,36 +1,20 @@
-import { Meta, Canvas, Story, ArgTypes } from '@storybook/addon-docs/blocks'
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
 import * as Stories from './PortalTooltip.stories'
 
 <Meta of={Stories} />
 
-# PortalTooltip (门户提示框)
+# PortalTooltip
 
-一个轻量级的 Tooltip 组件，将内容渲染到 Portal (`document.body`) 中。这避免了在滚动容器或复杂布局中使用时出现的 z-index 或被裁剪的问题。
+通过 createPortal 将提示渲染到 document.body，适用于会裁剪内容的滚动容器。title 和 children 为 ReactNode；trigger 支持 hover/click，visible 为受控显示，defaultVisible 为初始状态。
 
-## 参数属性 (Props)
+placement 支持 top/bottom/left/right/topLeft/topRight/bottomLeft/bottomRight。overlayStyle、overlayClassName、zIndex 控制提示层，默认 zIndex 1060。触发元素需要正确传递 ref 与事件；键盘焦点提示不能替代交互元素自身的可访问名称。
 
-<ArgTypes />
+安装后从 @w.ui/wui-react/portal-tooltip 导入，并导入 style.css。
 
-## 示例
+## 预览
 
-### 默认用法
+<Canvas of={Stories.Default} />
 
-<Canvas>
-  <Story name="Default" />
-</Canvas>
+## 当前参数
 
-### 自定义宽度
-
-你可以通过 `overlayStyle` 自定义 Tooltip 的最大宽度。默认为 `300px`。
-
-<Canvas>
-  <Story name="Custom MaxWidth (500px)" />
-</Canvas>
-
-### 所有位置方向
-
-支持 `top`, `bottom`, `left`, `right` 以及各个角落的变体。
-
-<Canvas>
-  <Story name="Placements" />
-</Canvas>
+<ArgTypes of={Stories} />

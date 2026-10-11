@@ -3,7 +3,7 @@ import { ProThemeProvider } from './theme/hooks'
 import WatermarkProvider from '@wui/WatermarkProvider'
 import { renderApp } from '@/bootstrap/renderApp'
 import { registerServiceWorker } from '@platform/pwa/registerServiceWorker'
-import { TrackerCore, PageViewPlugin } from '@/lib/tracking'
+import { TrackerCore, PageViewPlugin } from '@platform/tracking'
 
 registerServiceWorker()
 

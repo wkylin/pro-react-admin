@@ -1,134 +1,38 @@
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/f4d9bf1d-f45f-4c98-8bde-8c0b7144a120" alt="Pro React Admin" height="120" />
-</div>
-
-<div align="center">
-  <img src="https://img.shields.io/github/checks-status/wkylin/pro-react-admin/main" alt="CI status" />
-  <img src="https://img.shields.io/github/package-json/v/wkylin/pro-react-admin" alt="Version" />
-  <img src="https://img.shields.io/github/license/wkylin/pro-react-admin" alt="License" />
-</div>
-
 # Pro React Admin
 
-基于 React 19、TypeScript、Ant Design 6 和 Webpack 5 的中后台应用与组件库。当前仓库只用 Webpack 构建应用、Module Federation 和组件库；Storybook 使用 Webpack 5 builder。
+React 管理界面与多项目、微前端示例工作区，同时维护独立 UI 组件包 @w.ui/wui-react。运行时采用 React 19、React Router 7 Hash Router、Ant Design 6、Zustand 5，构建采用 Webpack 5 与 TypeScript 6。
 
-## 在线预览
+## 开始
 
-- [主应用](https://wkylin.github.io/pro-react-admin/)
-- [Storybook](https://wkylin.github.io/pro-react-admin/storybook/)
-- [Vercel 应用](https://pro-react-admin.vercel.app/)
-
-## 技术能力
-
-- RBAC 路由、菜单和页面权限控制
-- React 19、KeepAlive、多标签页、主题和国际化
-  - 通过 src/projects/registry.json 选择构建入口的多项目架构
-- Webpack 5 Module Federation Shell/Remote
-- 独立源码、ESM/CJS 和按组件子路径的 `@w.ui/wui-react` 组件库
-- Storybook 组件示例与文档
-- Jest、Testing Library、Playwright、ESLint 和 Stylelint
-
-## 本地运行
-
-环境要求：Node.js `>=24.15.0 <25`、pnpm 11.5.2。
+要求 Node.js >=24.15.0 且 <25、pnpm 11.5.2。
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 pnpm start
 ```
 
-`pnpm start` 会启动主应用和本地埋点 API。打开 http://localhost:8080/；具体端口以终端输出为准。只启动前端可用 `pnpm run start:web`。首次运行、环境变量、常见命令和故障排查见[新手入门](./docs/GETTING_STARTED.md)。
+默认打开 http://localhost:8080，启动脚本同时运行本地埋点 API。单独前端使用 `pnpm run start:web`。仓库环境模板开启演示权限，真实部署需设 REACT_APP_USE_MOCK=false 并接入授权服务；空 APP_BASE_URL 表示同源请求。
 
-## 项目结构
+## 架构入口
 
-```text
-.
-├── .storybook/       # Webpack 5 Storybook 配置
-├── api/              # 本地 Express API：埋点收集、统计和 OAuth helper
-├── config/           # 路径别名、构建体积预算和组件库发布契约
-├── docs/             # 新手、架构、构建、微前端和部署文档
-├── packages/
-│   └── wui-react/    # 可独立构建和发布的公共 React 组件
-├── public/           # 默认 HTML 模板和公共静态资源
-├── scripts/          # 构建辅助、优化、校验和发布脚本
-├── src/
-│   ├── bootstrap/    # 多入口共用的 React 启动逻辑
-│   ├── components/   # 按所有权迁移中的历史组件与 Hooks
-│   ├── features/     # 按业务领域组织页面、状态、API 与组件
-│   ├── layouts/      # 应用壳、导航、内容区与布局扩展点
-│   ├── lib/          # 应用内待迁移的历史导出，不进入 v5 npm 包
-│   ├── pages/        # 尚未迁入 feature 的页面与技术演示
-│   ├── platform/     # API、认证、PWA、遥测等横切能力
-│   ├── projects/     # 多项目入口与 Module Federation 组合
-│   ├── routers/      # 路由 registry、功能分组和守卫组合
-│   ├── shared/       # 应用级共享 UI 与纯工具
-│   ├── store/        # 应用壳全局状态
-│   └── theme.tsx     # 应用路由和主题入口
-└── webpack/          # 应用、MFE 和组件库 Webpack 配置
-```
+- [技术架构](docs/ARCHITECTURE.md)：分层、路由契约、请求核心与剩余迁移。
+- [源码职责](docs/SRC_DIRECTORY_GUIDE.md)：features / platform / shared / packages 边界。
+- [快速开始](docs/GETTING_STARTED.md)：配置与常用命令。
+- [文档索引](docs/README.md)：权限、API、构建、部署、质量与组件指南。
+- [实现参考](docs/PROJECT_REFERENCE.md)：自动生成版本、路由、环境变量和脚本。
+- [验证记录](docs/VALIDATION.md)：本次本地检查的实际结果。
 
-各目录边界、依赖方向和迁移规则见 [`src` 目录职责指南](./docs/SRC_DIRECTORY_GUIDE.md)。组件 Story 与组件源码同目录，根级 `.storybook` 管理 Storybook 配置、公共 story 资源和文档辅助组件；Story 文件不会进入应用运行时。
+默认应用的路由权限、标题与菜单元数据由 config/route-policy.json 管理；项目入口由 src/projects/registry.json 管理；组件库契约由 config/library-contract.mjs 管理。生成配置和文档由 CI 校验。
 
-## 多项目
+## 构建与验证
 
 ```bash
-pnpm start:projectA
-pnpm start:projectB
-pnpm run build:production:projectA
-pnpm run build:production:projectB
+pnpm run ci:quality
+pnpm run build:stats
+pnpm run check:bundle-budget
+pnpm run test:e2e
 ```
 
-PROJECT 按注册表在构建时选择项目入口和路由；未知项目名会直接失败，多项目不是运行时切换。也可用 `pnpm run project:dev -- projectA` 运行通用入口。见[多项目架构](./docs/MULTI_PROJECT.md)。
+多项目使用 `pnpm run project:dev projectA`；微前端见[指南](docs/MFE_DEPLOYMENT.md)。UI 包使用 `pnpm run prepare:lib:release`，消费文档见 [NPM_README](NPM_README.md)。根应用为 private，不作为 UI 包发布。
 
-## 微前端联调
-
-开三个终端，分别运行：
-
-```bash
-pnpm run start:mf:projectA
-pnpm run start:mf:projectB
-pnpm run start:mf:shell
-```
-
-访问 http://localhost:8080/#/portal。详见[微前端开发与部署](./docs/MFE_DEPLOYMENT.md)。
-
-## Storybook
-
-```bash
-pnpm run storybook
-```
-
-开发地址为 http://localhost:6006；静态构建命令为 pnpm run build-storybook。见[Storybook 组件开发指南](./docs/STORYBOOK.md)。
-
-## @w.ui/wui-react
-
-```bash
-pnpm run prepare:lib:release
-pnpm run pack:lib:dry-run
-```
-
-`packages/wui-react` 是独立 workspace package，源码、类型、样式和公共 API 都归它所有；构建产物位于 `packages/wui-react/dist/`。v5 提供主入口和 12 个按组件子路径，不再发布 `/core`、`/stateful`、`/stateless` 或 `/tracking` 兼容入口。
-
-```tsx
-import { OverflowText, SafeHtml } from '@w.ui/wui-react'
-import ResponsiveTable from '@w.ui/wui-react/responsive-table'
-import '@w.ui/wui-react/style.css'
-```
-
-组件准入、Git 管理、本地构建、npm pack、手动发布和 Trusted Publishing/OIDC 设置见[组件库开发与发布指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。已发布版本见 [npmjs.com](https://www.npmjs.com/package/@w.ui/wui-react)。
-
-## 部署
-
-- GitHub Pages 的 main 工作流部署主应用和 Storybook，不部署 MFE。
-- 根目录 vercel.json 保留当前安装、rewrite 和 headers；vercel.mfe.json 明确配置聚合 MFE 的 Build Command 与 dist-vercel/。Git 集成的 Vercel Dashboard 设置仍需与目标模式匹配。
-- Shell、ProjectA、ProjectB 的独立配置分别见 vercel.shell.json、vercel.projectA.json 和 vercel.projectB.json。
-- GitHub Actions 检查主应用、Storybook、聚合 MFE 和 bundle 预算；当前构建 stats 可从最近一次 workflow artifact 获取。
-
-## 文档
-
-- [文档索引](./docs/README.md)
-- [新手入门](./docs/GETTING_STARTED.md)
-- [技术架构与改进建议](./docs/ARCHITECTURE.md)
-- [构建配置](./docs/BUILD.md)
-- [微前端](./docs/MFE_DEPLOYMENT.md)
-- [权限系统](./docs/USER_ROLE_PERMISSION.md)
+本仓库仍有迁移中的 pages/components 和 JS 适配器；新核心边界与 UI 包严格类型检查不代表全仓已 strict。历史发行记录保留在 [CHANGELOG](CHANGELOG.md)。

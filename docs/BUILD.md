@@ -1,136 +1,39 @@
-# Webpack 构建与本地开发
+# Webpack 构建
 
-Webpack 5 是当前仓库唯一的应用构建工具。开发服务器、生产应用、多项目、Module Federation 和组件库使用仓库的 Webpack 配置；Storybook 使用 Webpack 5 builder。
+## 入口与环境
 
-## 环境要求
+webpack.common.js 提供规则、aliases、shared chunks 与通用插件；webpack.dev.js 管理开发服务器；webpack.prod.js 管理生产优化、产物与可选插件；webpack.lib.js 独立构建 UI 包。
 
-- Node.js `>=24.15.0 <25`
-- pnpm 11.5.2
+PROJECT 按 src/projects/registry.json 选择源码入口与输出，未知项目立即失败。生产文件缓存按项目、MFE 角色和 BUILD_GOAL 隔离，aliases、浏览器变量与 Remote URL 参与缓存版本，避免连续构建复用其它项目的路由。BUILD_GOAL 选择环境文件与目标，NODE_ENV 控制生产转换；不是在浏览器运行时切项目。
 
-```bash
-pnpm install
-pnpm start
-```
+| 变量                     | 用途                                          |
+| ------------------------ | --------------------------------------------- |
+| PROJECT                  | default / projectA / projectB / shell         |
+| BUILD_GOAL               | development、production、test、dev 等构建环境 |
+| PUBLIC_URL               | HTML 与静态资源基路径                         |
+| MFE_ROLE                 | host 或 remote，开启 Federation 配置          |
+| SENTRY_SOURCE_MAP        | no 关闭，map 启用对应 sourcemap 路径          |
+| STATS_ONLY / USE_ANALYZE | 统计与分析构建                                |
+| DIST_ZIP                 | 可选归档产物                                  |
+| OPTIMIZE_MEDIA           | CI 中显式启用媒体优化                         |
 
-默认命令会启动主应用和本地埋点 API，前端默认从 8080、API 默认 5200 启动，实际前端端口以终端为准。只运行前端使用 `pnpm run start:web`。完整首次运行步骤见[新手入门](./GETTING_STARTED.md)。
+浏览器只获得 webpack/client-env.js 白名单变量，见[参考](PROJECT_REFERENCE.md)。Sentry 上传 token、管理 token、私钥均为构建或服务端凭据，不能注入客户端。
 
-## 构建配置
-
-| 文件                              | 职责                                                          |
-| --------------------------------- | ------------------------------------------------------------- |
-| src/projects/registry.json        | 项目入口、路由目录、产物目录和 Remote 元数据单一清单          |
-| config/path-aliases.json          | Webpack、TypeScript、Storybook、组件库共用的路径别名清单      |
-| webpack/paths.js                  | 校验 PROJECT，并按注册表选择入口、路由/public 和产物目录      |
-| webpack/webpack.common.js         | 公共 Webpack 规则、项目 alias 覆盖、dotenv 加载与 MF 插件     |
-| webpack/webpack.dev.js            | 开发模式、HMR、代理和 Webpack Dev Server                      |
-| webpack/webpack.prod.js           | 生产压缩、代码分割、资源复制、PWA、Sentry 与产物              |
-| webpack/mfe.config.js             | 校验 Remote URL，并安全生成 Module Federation loader          |
-| webpack/remote-manifest-plugin.js | 为 Remote 输出协议、版本和共享依赖清单                        |
-| scripts/project-command.mjs       | 从项目注册表解析统一的多项目/微前端命令                       |
-| webpack/client-env.js             | 浏览器环境变量 allowlist 和敏感名称拒绝规则                   |
-| webpack/webpack.lib.js            | @w.ui/wui-react 的 ESM、CJS、类型、样式和 12 个显式子路径构建 |
-| .storybook/main.ts                | Storybook Webpack 5 builder、共享 alias 和 Less               |
-
-修改 config/path-aliases.json 后运行 `pnpm run sync:aliases`，生成供 TypeScript 编辑器读取的 tsconfig.paths.json。Webpack、Storybook 和组件库直接读取同一清单；CI 会检查生成文件和所有路径。
-
-## 常用命令
+## 命令
 
 ```bash
-# 本地应用
-pnpm start
-pnpm start:projectA
-pnpm start:projectB
-# 通用入口：新增项目无需再复制 Webpack 命令
-pnpm run project:dev -- projectA
-
-# 生产应用
 pnpm run build:production
-pnpm run build:production:projectA
-pnpm run build:production:projectB
-pnpm run project:build -- projectB
+pnpm run build:stats
+pnpm run check:bundle-budget
 pnpm run serve:dist
-
-# Storybook
-pnpm run storybook
-pnpm run build-storybook
-pnpm run serve:storybook
-
-# 组件库
-pnpm run build:lib
-pnpm run prepare:lib:release
-pnpm run pack:lib:dry-run
-pnpm run pub
-pnpm run pub:beta
 ```
 
-普通主应用输出到 dist/，普通项目输出到 dist-<project>/；MF 输出到 dist-shell/、dist-projectA/ 和 dist-projectB/；聚合 Vercel 输出到 dist-vercel/。组件库输出到 packages/wui-react/dist/，Storybook 输出到 storybook-static/。
+build:production 的 prehook 本地运行媒体优化，CI 默认跳过（OPTIMIZE_MEDIA=1 可强制）；FFmpeg 说明见[媒体](FFMPEG_INSTALLATION.md)。build:stats 生成 compilation-stats.json，关闭 Sentry sourcemap 上传，用于体积门禁。直接调用 Webpack 不会执行 pnpm prehooks，需要自行维护生成数据和媒体。
 
-## 组件库 v5 构建契约
+## 体积与加载
 
-`pnpm run build:lib` 会清理旧目录并完成一次全量构建。产物固定为：
+路由组件由 @loadable/component 与 lazyLoad.config.tsx 按需加载。首页与作品集现在也是异步入口；shared/vendor 分块会影响实际初始加载，所以仅添加 lazy 不足以证明减小首屏。
 
-```text
-packages/wui-react/dist/
-├── esm/index.js               # ESM 根入口及子路径 .js
-├── cjs/index.cjs              # CJS 根入口及子路径 .cjs
-├── types/index.d.ts           # 根声明及组件声明目录
-└── style.css                  # 统一样式入口
-```
+config/bundle-budget.json 保存原始 JS/CSS 预算。check-bundle-budget 从 entrypoint 汇总初始体积，并对全部 JS/CSS（含异步 chunk）检查单资源预算。它不包含图片、视频、source map，不是 gzip 大小。更新预算需先比较新的 stats 和加载行为。本次门禁按新结果收紧为初始 4 MiB、单资源 3 MiB；stats 显式列出缓存资源，避免隐藏分组漏检异步 chunk。
 
-package exports 除根入口和 `style.css` 外，只包含以下 12 个显式组件子路径：
-
-| 组件               | 导入路径                              |
-| ------------------ | ------------------------------------- |
-| AnimatedIcon       | `@w.ui/wui-react/animated-icon`       |
-| IconFrame          | `@w.ui/wui-react/icon-frame`          |
-| MoveChecker        | `@w.ui/wui-react/move-checker`        |
-| OneTimePasscode    | `@w.ui/wui-react/one-time-passcode`   |
-| OverflowText       | `@w.ui/wui-react/overflow-text`       |
-| PortalTooltip      | `@w.ui/wui-react/portal-tooltip`      |
-| ResponsiveTable    | `@w.ui/wui-react/responsive-table`    |
-| SafeHtml           | `@w.ui/wui-react/safe-html`           |
-| ScrollLayout       | `@w.ui/wui-react/scroll-layout`       |
-| ScrollableSections | `@w.ui/wui-react/scrollable-sections` |
-| SliderCaptcha      | `@w.ui/wui-react/slider-captcha`      |
-| WatermarkProvider  | `@w.ui/wui-react/watermark-provider`  |
-
-`prepare:lib:release` 在构建后准备 README/LICENSE，并检查 exports、安装冒烟验证和包体积预算；`pack:lib:dry-run` 已包含完整准备流程。`pub` 与 `pub:beta` 由 package 的 `prepublishOnly` 自动触发一次完整准备，因此发布前不要再串联构建，以免重复执行。组件库 v5 只维护上述根入口和组件子路径，不保留旧分类兼容入口。
-
-## 环境变量
-
-BUILD_GOAL 选择 dotenv 文件：
-
-| BUILD_GOAL           | 文件             |
-| -------------------- | ---------------- |
-| development 或未设置 | .env.development |
-| production           | .env.production  |
-| dev                  | .env.dev         |
-| test                 | .env.test        |
-
-.env.<goal>.local 是 Git 忽略的本机覆盖文件，例如 .env.development.local。Webpack 的读取顺序是命令行/CI 环境变量、local 覆盖、基础 .env.<goal> 文件。webpack/client-env.js 是唯一浏览器变量白名单；DefinePlugin 会把清单中的值写进 bundle。SENTRY_AUTH_TOKEN 等构建凭据不得加入客户端清单。实际变量读取入口是 src/platform/config/env.ts。
-
-PUBLIC_URL 决定普通生产资源的 publicPath；Webpack 会规范成带斜杠的路径。Module Federation 下 publicPath 使用 auto，Remote 部署仍需核对自身 chunk 地址、远程入口 URL 和响应头。
-
-## 项目注册表和生成契约
-
-src/projects/registry.json 驱动项目入口选择、端口、MFE URL、协议版本和 Remote imports。改动 Remote 清单后运行：
-
-```bash
-pnpm run sync:project-contracts
-pnpm run check:project-registry
-pnpm run check:project-contracts
-```
-
-Remote 构建会生成 remote-manifest.json。Shell 先读取 manifest，检查 Remote 名称、协议版本和共享依赖主版本，再加载 remoteEntry.js；网络或脚本失败时会重试一次，15 秒总超时后进入降级页。运行时保留了对旧 manifest（仅含 React/React DOM）的滚动升级兼容；新构建产物必须声明完整共享依赖清单。聚合构建完成后 `pnpm run check:mfe-artifacts` 会检查 Shell、Remote 入口和完整 manifest。
-
-## CI 与构建预算
-
-Webpack CI 执行注册表/别名/生成契约、Vercel build/header 检查、TypeScript 应用检查和核心边界 strict 检查，运行 Jest、主应用生产构建和 Playwright，并独立构建 Storybook、组件库和 MFE 聚合产物。组件库 CI 会验证 package exports 的构建文件并预览 npm tarball；MFE Playwright 流程覆盖 Remote manifest 校验、加载成功、失败重试和降级状态。主应用构建会生成 `compilation-stats.json` 并检查首屏 JS/CSS 预算；CI 将实际 stats 保存为 14 天 artifact。预算定义在 `config/bundle-budget.json`，与 Webpack 默认 6 MiB entrypoint/asset 上限一致。
-
-## 生产构建的媒体优化钩子
-
-运行 build:production 前会触发 prebuild:production。开发者本机默认执行 scripts/optimize-media.mjs，生成被 Git 忽略的 src/assets-optimized 和 public-optimized；GitHub Actions/Vercel 检测到 CI 环境时默认跳过。设置 OPTIMIZE_MEDIA=1 可强制执行。SKIP_OPTIMIZE_MEDIA 不是当前脚本支持的开关。
-
-## Storybook
-
-Storybook 运行方式、story 结构、decorator 和子路径部署见[Storybook 指南](./STORYBOOK.md)。默认开发地址 6006，静态目录为 storybook-static/。
+项目、aliases、路由、文档和 import 边界检查见[质量门禁](QUALITY.md)。构建成功仍需浏览器验证懒加载、权限与缓存。

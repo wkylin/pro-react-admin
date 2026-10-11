@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Button, Tag, Tooltip, Typography, type TableProps } from 'antd'
 import { EyeOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
-import type { EventType } from '@/lib/tracking/types'
+import type { EventType } from '@platform/tracking/types'
 import { getEventTypeColor, getEventTypeLabel } from '../model/eventTypes'
 import type { TrackingEvent } from '../model/types'
 
