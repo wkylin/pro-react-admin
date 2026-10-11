@@ -32,6 +32,8 @@ build:production 的 prehook 本地运行媒体优化，CI 默认跳过（OPTIMI
 
 统一工程入口支持 `pnpm run project:build enterprise --stats`，将当前项目产物与 compilation-enterprise-stats.json 同时生成。构建计划、doctor、dry-run、项目脚手架及预览共享注册表解析，见[多项目](MULTI_PROJECT.md)。
 
+开发与生产构建共用单行 WebpackBar reporter：终端中只显示百分比、进度条与构建阶段，使用 Webpack 的状态日志在原行更新并按终端宽度截短，不输出 loader 和模块路径。百分比是 Webpack 的阶段估算，显示值在单次构建中保持递增，重新编译时归零。开发服务器地址、警告和错误照常输出；状态日志负责清除、恢复进度行，避免重绘已有日志。CI、非 TTY 和 TERM=dumb 环境只记录构建开始与结束，不输出逐阶段进度；进度写入 stderr，不污染 stdout 的 stats JSON。
+
 ## 体积与加载
 
 展示路由使用 @loadable/component，认证与管理模块使用 React.lazy 按需加载。企业项目使用自己的路由树，避免导入展示路由清单。首页与作品集现在也是异步入口；shared/vendor 分块会影响实际初始加载，所以仅添加 lazy 不足以证明减小首屏。
