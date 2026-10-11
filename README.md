@@ -51,19 +51,21 @@ pnpm start
 ├── scripts/          # 构建辅助、优化、校验和发布脚本
 ├── src/
 │   ├── bootstrap/    # 多入口共用的 React 启动逻辑
-│   ├── components/   # 应用内部共享组件
-│   ├── lib/          # npm 组件库公开导出
-│   ├── mfe/          # Host/Remote 事件与状态桥
-│   ├── pages/        # 主应用业务页面
-│   ├── projects/     # 项目入口、registry.json 和 MFE shell
-│   ├── routers/      # 主路由、菜单与权限
-│   ├── service/      # 请求与 API
-│   ├── store/        # 全局状态
+│   ├── components/   # 按所有权迁移中的历史组件与 Hooks
+│   ├── features/     # 按业务领域组织页面、状态、API 与组件
+│   ├── layouts/      # 应用壳、导航、内容区与布局扩展点
+│   ├── lib/          # 已发布 npm API 的历史源码入口
+│   ├── pages/        # 尚未迁入 feature 的页面与技术演示
+│   ├── platform/     # API、认证、PWA、遥测等横切能力
+│   ├── projects/     # 多项目入口与 Module Federation 组合
+│   ├── routers/      # 路由 registry、功能分组和守卫组合
+│   ├── shared/       # 应用级共享 UI 与纯工具
+│   ├── store/        # 应用壳全局状态
 │   └── theme.tsx     # 应用路由和主题入口
 └── webpack/          # 应用、MFE 和组件库 Webpack 配置
 ```
 
-关键约定：src/pages 放主应用页面；src/components 放应用内共享组件；src/projects 放项目差异；src/lib 决定 npm 包公开 API。Story 文件不自动进入组件库。
+各目录边界、依赖方向和迁移规则见 [`src` 目录职责指南](./docs/SRC_DIRECTORY_GUIDE.md)。组件 Story 与组件源码同目录，根级 `.storybook` 管理 Storybook 配置、公共 story 资源和文档辅助组件；Story 文件不会进入应用运行时。
 
 ## 多项目
 
@@ -104,7 +106,7 @@ pnpm run build:lib:entries
 pnpm run prepare:lib:publish
 ```
 
-库有独立的 workspace 发布清单，构建产物位于 `packages/wui-react/dist/`。新项目可以按聚合入口或 /core、/stateful、/stateless、/tracking 子路径导入。构建、类型、样式与发布说明见[组件库指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。
+库有独立的 workspace 发布清单，构建产物位于 `packages/wui-react/dist/`。新项目可以按聚合入口或 /core、/stateful、/stateless、/tracking、/animated-icon 子路径导入。构建、类型、样式与发布说明见[组件库指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。
 
 ## 部署
 

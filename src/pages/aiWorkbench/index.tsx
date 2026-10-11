@@ -1,12 +1,4 @@
-import {
-  startTransition,
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useState,
-  type ComponentType,
-  type ReactNode,
-} from 'react'
+import { startTransition, useDeferredValue, useEffect, useMemo, useState, type ComponentType } from 'react'
 import {
   Alert,
   Button,
@@ -27,7 +19,7 @@ import {
   Typography,
 } from 'antd'
 import { Activity, Bot, BrainCircuit, DatabaseZap, Gauge, Layers3, Rocket, WandSparkles, Workflow } from 'lucide-react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import PromptOptimizer from '@stateless/PromptOptimizer'
 import SmartChat from '@stateless/SmartChat'
 
@@ -123,7 +115,6 @@ type PromptOptimizerProps = {
   copyLabel: string
 }
 
-const TypedFixTabPanel = FixTabPanel as unknown as ComponentType<{ children: ReactNode }>
 const TypedPromptOptimizer = PromptOptimizer as unknown as ComponentType<PromptOptimizerProps>
 const TypedSmartChat = SmartChat as unknown as ComponentType<SmartChatProps>
 
@@ -556,7 +547,7 @@ const AiWorkbench = () => {
   ]
 
   return (
-    <TypedFixTabPanel>
+    <FixTabPanel>
       <section className={styles.page}>
         <div className={styles.hero}>
           <div className={styles.heroMain}>
@@ -920,7 +911,7 @@ const AiWorkbench = () => {
           </Col>
         </Row>
       </section>
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

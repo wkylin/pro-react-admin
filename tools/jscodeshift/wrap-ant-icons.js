@@ -8,7 +8,7 @@ export default function transformer(file, api) {
   const root = j(file.source);
 
   const ANT_SOURCE = '@ant-design/icons';
-  const ANIMATED_IMPORT = '@stateless/AnimatedIcon';
+  const ANIMATED_IMPORT = '@shared/ui/AnimatedIcon';
 
   // find import from '@ant-design/icons'
   const antImports = root.find(j.ImportDeclaration, { source: { value: ANT_SOURCE } });

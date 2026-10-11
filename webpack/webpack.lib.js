@@ -17,6 +17,10 @@ const entries = {
   stateful: path.resolve(rootDir, 'src/lib/stateful.ts'),
   stateless: path.resolve(rootDir, 'src/lib/stateless.ts'),
   tracking: path.resolve(rootDir, 'src/lib/tracking/index.ts'),
+  animatedIcon: path.resolve(rootDir, 'packages/wui-react/src/AnimatedIcon/index.ts'),
+  oneTimePasscode: path.resolve(rootDir, 'packages/wui-react/src/OneTimePasscode/index.ts'),
+  watermarkProvider: path.resolve(rootDir, 'packages/wui-react/src/WatermarkProvider/index.ts'),
+  responsiveTable: path.resolve(rootDir, 'packages/wui-react/src/ResponsiveTable/index.ts'),
 }
 
 const externalPackages = libraryExternalPackages
@@ -94,20 +98,22 @@ const sharedRules = [
 ]
 
 const umdExternals = Object.fromEntries(
-  externalPackages.map((name) => [
-    name,
-    {
-      commonjs: name,
-      commonjs2: name,
-      amd: name,
-      root: {
-        react: 'React',
-        'react-dom': 'ReactDOM',
-        antd: 'antd',
-        'react-router-dom': 'ReactRouterDOM',
-      }[name],
-    },
-  ])
+  externalPackages
+    .filter((name) => name !== 'framer-motion')
+    .map((name) => [
+      name,
+      {
+        commonjs: name,
+        commonjs2: name,
+        amd: name,
+        root: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+          antd: 'antd',
+          'react-router-dom': 'ReactRouterDOM',
+        }[name],
+      },
+    ])
 )
 
 const createConfig = ({ name, entry, format, filename, cssFilename, externals, library, analyze = false }) => {

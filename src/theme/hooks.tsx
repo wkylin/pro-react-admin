@@ -7,10 +7,11 @@ import React, {
   useLayoutEffect,
   type PropsWithChildren,
 } from 'react'
+import type { LayoutMode } from '@layouts/types'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
-export type LayoutMode = 'side' | 'top' | 'mix'
+export type { LayoutMode } from '@layouts/types'
 export type ContentWidth = 'Fluid' | 'Fixed'
 
 export interface ThemeSettings {

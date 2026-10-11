@@ -1,9 +1,9 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { CheckCircle, Circle } from 'lucide-react'
 import { Button, Card, theme } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@/store'
 import { useProThemeContext } from '@/theme/hooks'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
@@ -83,7 +83,7 @@ const StepIndicator = ({
   showPercent = true,
 }: StepIndicatorProps) => {
   const { resolvedTheme } = useProThemeContext()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
   const isDark = resolvedTheme === 'dark'
 
   // 允许外部传入颜色；否则基于 theme 决定默认颜色
@@ -324,7 +324,7 @@ const NavigationButtons = ({
 }: NavigationButtonsProps) => {
   const { resolvedTheme } = useProThemeContext()
   const { token } = useToken()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
   const isDark = resolvedTheme === 'dark'
 
   const primaryColor = primaryColorProp || (isDark ? '#40a9ff' : '#0958d9')

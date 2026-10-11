@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react'
 import { Card, Button, Space, Tag, Divider, Row, Col, Switch, Alert } from 'antd'
-import { message } from '@utils/message'
-import { useStore } from '@/store'
-import { usePermission } from '@app-hooks/usePermission'
-import PermissionGuard from '@/components/auth/PermissionGuard'
-import AuthButton from '@/components/auth/AuthButton'
-import { permissionService } from '@src/service/permissionService'
-import FixTabPanel from '@stateless/FixTabPanel'
+import { message } from '@platform/feedback/message'
+import { useAppStore } from '@/store'
+import { usePermission } from '@platform/auth/hooks/usePermission'
+import PermissionGuard from '@platform/auth/components/PermissionGuard'
+import AuthButton from '@platform/auth/components/AuthButton'
+import { permissionService } from '@platform/auth/services/permissionService'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const PermissionExample = () => {
-  const screens = useStore((s) => s.screens)
+  const screens = useAppStore((s) => s.screens)
   const {
     permissions,
     roles,

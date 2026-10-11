@@ -1,6 +1,6 @@
 import React from 'react'
-import Layout from '@pages/layout'
-import { ProtectedRoute } from '@src/components/auth/ProtectedRoute'
+import Layout from '@layouts'
+import { ProtectedRoute } from '@platform/auth/components/ProtectedRoute'
 import type { RouteNode } from '@src/routers/utils'
 import { lazyComponents } from '../config/lazyLoad.config'
 

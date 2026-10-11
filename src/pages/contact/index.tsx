@@ -1,7 +1,7 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
-import { useState, type ChangeEvent, type ComponentType, type FormEvent, type PropsWithChildren } from 'react'
+import AnimatedIcon from '@wui/AnimatedIcon'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { theme } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import { Send } from 'lucide-react'
 
 type ContactFormData = {
@@ -12,8 +12,6 @@ type ContactFormData = {
 }
 
 type ContactFormErrors = Partial<Record<keyof ContactFormData, string>>
-
-const ContactFixTabPanel = FixTabPanel as ComponentType<PropsWithChildren>
 
 const Contact = () => {
   const [formData, setFormData] = useState<ContactFormData>({
@@ -113,7 +111,7 @@ const Contact = () => {
   } = theme.useToken()
 
   return (
-    <ContactFixTabPanel>
+    <FixTabPanel>
       <div
         className="code-window relative flex h-full items-center justify-center"
         style={{
@@ -230,7 +228,7 @@ const Contact = () => {
           )}
         </div>
       </div>
-    </ContactFixTabPanel>
+    </FixTabPanel>
   )
 }
 

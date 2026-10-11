@@ -1,6 +1,6 @@
 'use client'
 
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 
 import React, { useState } from 'react'
 import { Check, Copy } from 'lucide-react'

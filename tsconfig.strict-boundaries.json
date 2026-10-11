@@ -7,9 +7,22 @@
   },
   "include": [
     "src/routers/utils/index.tsx",
-    "src/components/KeepAlive/index.tsx",
-    "src/mfe/bridge.ts",
+    "src/features/**/*.ts",
+    "src/features/**/*.tsx",
+    "src/platform/**/*.ts",
+    "src/platform/**/*.tsx",
+    "src/shared/**/*.ts",
+    "src/shared/**/*.tsx",
     "typings/**/*.d.ts"
   ],
-  "exclude": ["node_modules", "dist", "packages/wui-react/dist", "coverage"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/wui-react/dist",
+    "coverage",
+    "src/shared/**/*.test.ts",
+    "src/shared/**/*.test.tsx",
+    "src/shared/**/*.spec.ts",
+    "src/shared/**/*.spec.tsx"
+  ]
 }

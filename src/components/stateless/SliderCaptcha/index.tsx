@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { RefreshCw, Zap } from 'lucide-react'
 import { CaptchaUtils, Difficulty } from './utils'
 

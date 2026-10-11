@@ -10,8 +10,9 @@ import {
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const registryPath = path.resolve(__dirname, '../src/projects/registry.json')
+const protocolPath = path.resolve(__dirname, '../config/mfe-protocol.json')
 export const projectRegistry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
-export const mfeProtocolVersion = projectRegistry.mfeProtocolVersion
+export const mfeProtocolVersion = JSON.parse(fs.readFileSync(protocolPath, 'utf8')).protocolVersion
 
 export const remoteProjects = projectRegistry.remotes
 

@@ -94,7 +94,7 @@
   - **解决方案**：在使用前进行兼容性解包：
 
     ```javascript
-    const plugin = importedPlugin?.default || importedPlugin;
+    const plugin = importedPlugin?.default || importedPlugin
     ```
 
 ## 历史构建体积分布（2026-03-09）
@@ -159,7 +159,7 @@ CI=1 pnpm run build:production
 
 #### 6) 菜单 hover 预加载会放大“懒加载页面”的实际网络成本
 
-- 触发点：`src/pages/layout/proSecNav/index.tsx`
+- 触发点：`src/layouts/proSecNav/index.tsx`
 - 现状：菜单项 hover 时会执行 `comp.preload()` 与页面模块预取。
 - 影响：即便页面路由本身是懒加载，用户悬停菜单后仍可能提前下载 `ChatGpt`、`Echarts`、`ReactMusic`、`MyVideo` 等重页面资源。
 
@@ -175,7 +175,7 @@ CI=1 pnpm run build:production
 
 - 将首页里同步引入的 `InteractiveBook` 改成真正的动态加载，避免默认构建始终产出并暴露 1 MiB 的 PDF worker。
 - 将 `ChatGpt` 页里的 Mermaid 能力再拆一层：只有检测到 Mermaid 代码块或用户打开 Mermaid 面板时再加载 Mermaid。当前虽然 Mermaid 已是独立 chunk，但菜单预加载会放大实际下载成本。
-- 评估 `src/pages/layout/proSecNav/index.tsx` 的 hover 预加载策略，至少把 `ChatGpt`、`Echarts`、`ReactMusic`、`MyVideo`、`BigScreen` 这类重页面从自动预取名单里拿掉。
+- 评估 `src/layouts/proSecNav/index.tsx` 的 hover 预加载策略，至少把 `ChatGpt`、`Echarts`、`ReactMusic`、`MyVideo`、`BigScreen` 这类重页面从自动预取名单里拿掉。
 
 ### 优先级 P2：收缩第三方库体积
 

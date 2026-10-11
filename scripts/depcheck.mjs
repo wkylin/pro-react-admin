@@ -298,9 +298,11 @@ const ignoreMissingPrefixes = [
   '@stateless/',
   '@stateful/',
   '@hooks/',
-  '@utils/',
   '@assets/',
-  '@app-hooks/',
+  '@platform/',
+  '@shared/',
+  '@features/',
+  '@wui/',
   '@theme/',
 ]
 

@@ -8,13 +8,14 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = path.join(root, 'src')
 const registryPath = path.join(sourceRoot, 'projects/registry.json')
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
+const mfeProtocol = JSON.parse(fs.readFileSync(path.join(root, 'config/mfe-protocol.json'), 'utf8'))
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 getMfeSharedDependencies({ ...(packageJson.dependencies || {}), ...(packageJson.peerDependencies || {}) })
 const projectNames = Object.keys(registry.projects || {})
 const outputDirs = new Set()
 
-if (!Number.isInteger(registry.mfeProtocolVersion) || registry.mfeProtocolVersion < 1) {
-  throw new Error('mfeProtocolVersion must be a positive integer')
+if (!Number.isInteger(mfeProtocol.protocolVersion) || mfeProtocol.protocolVersion < 1) {
+  throw new Error('config/mfe-protocol.json protocolVersion must be a positive integer')
 }
 
 assertClientEnvKeys(clientEnvKeys)

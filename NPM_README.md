@@ -5,15 +5,18 @@
 ## 安装
 
 ```bash
-pnpm add @w.ui/wui-react react react-dom antd react-router-dom
+pnpm add @w.ui/wui-react react react-dom antd react-router-dom framer-motion
 ```
 
-React、React DOM、Ant Design 和 React Router 是 peer dependencies，由消费项目提供。
+React、React DOM、Ant Design、React Router 和 Framer Motion 是 peer dependencies，由消费项目提供。
 
 ## 使用
 
 ```tsx
-import { OneTimePasscode, ColorfulText } from '@w.ui/wui-react'
+import { ColorfulText } from '@w.ui/wui-react'
+import OneTimePasscode from '@w.ui/wui-react/one-time-passcode'
+import AnimatedIcon from '@w.ui/wui-react/animated-icon'
+import ResponsiveTable from '@w.ui/wui-react/responsive-table'
 import '@w.ui/wui-react/style.css'
 
 export function Example() {
@@ -21,6 +24,14 @@ export function Example() {
     <>
       <OneTimePasscode variant="compact" />
       <ColorfulText text="Hello, colorful world!" />
+      <AnimatedIcon variant="pulse">
+        <span aria-hidden="true">★</span>
+      </AnimatedIcon>
+      <ResponsiveTable
+        rowKey="key"
+        columns={[{ title: 'Name', dataIndex: 'name' }]}
+        dataSource={[{ key: 'ada', name: 'Ada Lovelace' }]}
+      />
     </>
   )
 }
@@ -33,8 +44,11 @@ import { KeepAlive } from '@w.ui/wui-react/core'
 import { TreeList } from '@w.ui/wui-react/stateful'
 import { SmartVideoPlayer } from '@w.ui/wui-react/stateless'
 import { TrackerProvider } from '@w.ui/wui-react/tracking'
+import AnimatedIcon from '@w.ui/wui-react/animated-icon'
 import '@w.ui/wui-react/style.css'
 ```
+
+`AnimatedIcon`、`OneTimePasscode`、`WatermarkProvider` 和 `ResponsiveTable` 已迁入独立 package source，可使用子路径导入。
 
 ## 组件分类
 
@@ -42,6 +56,7 @@ import '@w.ui/wui-react/style.css'
 - `stateful`：树列表、标签组和其他带状态组件
 - `stateless`：动画、展示、输入、媒体和可视化组件
 - `tracking`：埋点核心、React Provider、插件和类型
+- 独立子路径：`animated-icon`、`one-time-passcode`、`watermark-provider`、`responsive-table`
 
 TypeScript 类型随包提供。若消费项目没有 React 类型，请安装 `@types/react` 和 `@types/react-dom`。
 

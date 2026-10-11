@@ -8,7 +8,7 @@
 
 ### 1. ProtectedRoute 组件
 
-**文件**: `src/components/auth/ProtectedRoute.tsx`
+**文件**: `src/platform/auth/components/ProtectedRoute.tsx`
 
 用于对路由或组件进行细粒度的权限控制。
 
@@ -55,7 +55,7 @@
 提供了处理路由权限的核心工具函数：
 
 - **`annotateRoutesWithPermissions(routes)`**:
-  基于 `src/mock/permission.ts` 中的 `routePermissionMap`，自动为路由对象注入 `meta.permission` 属性。这使得我们无需在每个路由配置中手动写权限码。
+  基于 `src/platform/auth/mocks/permission.ts` 中的 `routePermissionMap`，自动为路由对象注入 `meta.permission` 属性。这使得我们无需在每个路由配置中手动写权限码。
 
 - **`filterRoutesByAccessiblePaths(routes, accessiblePaths)`**:
   根据用户可访问的路径列表（从后端或 Mock 获取），递归过滤路由树。用于生成侧边栏菜单。
@@ -86,7 +86,7 @@ export default annotatedRootRouter
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { permissionService } from '@src/service/permissionService'
+import { permissionService } from '@platform/auth/services/permissionService'
 import { filterRoutesByAccessiblePaths } from '@src/routers/utils'
 import rootRouter from '@src/routers'
 
@@ -116,7 +116,7 @@ export const useMenuRoutes = () => {
 
 ### 2. 路由权限配置
 
-在 `src/mock/permission.ts` 的 `routePermissionMap` 中维护“路由路径”到“权限码”的映射。
+在 `src/platform/auth/mocks/permission.ts` 的 `routePermissionMap` 中维护“路由路径”到“权限码”的映射。
 
 ```typescript
 export const routePermissionMap = {
@@ -154,4 +154,4 @@ export const routePermissionMap = {
 
 ---
 
-**注意**: 本文档描述的功能依赖于 `src/service/permissionService.ts` 的正确实现及 `src/mock/permission.ts` 中的数据配置。
+**注意**: 本文档描述的功能依赖于 `src/platform/auth/services/permissionService.ts` 的正确实现及 `src/platform/auth/mocks/permission.ts` 中的数据配置。

@@ -1,7 +1,7 @@
 import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
-import { emitMfeEvent, patchMfeSharedState } from '@/mfe/bridge'
+import { emitMfeEvent, patchMfeSharedState } from '@platform/mfe/bridge'
 
 const { Paragraph, Text } = Typography
 

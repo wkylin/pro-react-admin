@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import { Highlight, themes } from 'prism-react-renderer'
 import useCopyToClipboard from '@hooks/useCopyToClipboard'

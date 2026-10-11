@@ -18,7 +18,7 @@
 ### 调用链概览
 
 1. 路由配置阶段：在路由定义中按需填充 `meta.permission` / `meta.roles` / `auth:false`。
-2. 运行时拦截：`AuthRouter` 在最外层包裹 `<Outlet />`（见 `src/components/RootLayout.tsx`）。
+2. 运行时拦截：`AuthRouter` 在最外层包裹 `<Outlet />`（见 `src/routers/components/RootLayout.tsx`）。
 3. 授权判定顺序：
    - 公开路由放行
    - `meta.permission` / `meta.roles` 校验（`requireAll` 可选）
@@ -36,4 +36,4 @@
 - 拦截器：`src/routers/authRouter.tsx`
 - 路由元数据：`src/routers/index.tsx`（经 `annotateRoutesWithPermissions` 注入）
 - 公开路由列表：`src/routers/config/publicRoutes.ts`
-- 权限服务：`src/service/permissionService.ts`
+- 权限服务：`src/platform/auth/services/permissionService.ts`

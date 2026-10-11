@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { type FormEventHandler } from 'react'
 import { FastForward, Rewind } from 'lucide-react'
 

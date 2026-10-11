@@ -49,6 +49,12 @@ jobs:
       - name: Validate shared path aliases
         run: pnpm run check:aliases
 
+      - name: Enforce shared-layer dependency direction
+        run: pnpm run check:import-boundaries
+
+      - name: Validate generated component catalog
+        run: pnpm run check:component-catalog
+
       - name: Validate generated Module Federation contracts
         run: pnpm run check:project-contracts
 

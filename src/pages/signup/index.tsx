@@ -1,9 +1,9 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
 import type { FormProps } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@/store'
 import {
   UserOutlined,
   LockOutlined,
@@ -15,7 +15,7 @@ import {
   PhoneOutlined,
 } from '@ant-design/icons'
 
-import { setLocalStorage } from '@utils/publicFn'
+import { setLocalStorage } from '@shared/lib/publicFn'
 import styles from './index.module.less'
 
 const { Title, Text, Link } = Typography
@@ -46,7 +46,7 @@ const passwordIconRender = (visible: boolean): React.ReactNode =>
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
   const { token } = theme.useToken()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
 
   const [form] = Form.useForm<SignUpFormValues>()
 

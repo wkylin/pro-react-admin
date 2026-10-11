@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Button, theme } from 'antd'

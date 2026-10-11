@@ -1,6 +1,6 @@
 import { Button, Card, Col, Row, Space, Tag, Typography } from 'antd'
 import { AppstoreOutlined, DeploymentUnitOutlined, SafetyCertificateOutlined, ToolOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 
 const { Paragraph, Title } = Typography
 

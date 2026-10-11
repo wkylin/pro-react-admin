@@ -1,18 +1,12 @@
 import { useState, useRef, useCallback, useMemo } from 'react'
-import type { ComponentType, CSSProperties, ReactNode } from 'react'
 import * as echarts from 'echarts'
 import type { EChartsOption, EChartsType } from 'echarts'
 import type { GeoJSON } from 'echarts/types/src/coord/geo/geoTypes.js'
 import type { ElementEvent } from 'zrender'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import EChart from '@stateless/EChart'
 import { useProThemeContext } from '@/theme/hooks'
 import fengxianGeo from './geo/fengxian.json'
-
-type GeoPanelProps = {
-  children?: ReactNode
-  style?: CSSProperties
-}
 
 type ChartEventParams = {
   componentType: string
@@ -23,8 +17,6 @@ const isChartEventParams = (params: unknown): params is ChartEventParams =>
   typeof params === 'object' && params !== null && 'componentType' in params && typeof params.componentType === 'string'
 
 const fengxianGeoJson = fengxianGeo as unknown as GeoJSON
-const TypedFixTabPanel = FixTabPanel as unknown as ComponentType<GeoPanelProps>
-
 const GeoChart = () => {
   const { resolvedTheme } = useProThemeContext()
   const chartInstanceRef = useRef<EChartsType | null>(null)
@@ -159,15 +151,15 @@ const GeoChart = () => {
   }, [name, geoJson, buildOption, region, resolvedTheme])
 
   return (
-    <TypedFixTabPanel style={{ backgroundColor: 'var(--wui-bg-page)' }}>
+    <FixTabPanel style={{ backgroundColor: 'var(--wui-bg-page)' }}>
       <EChart
         option={option}
         onInit={handleChartInit}
         onEvents={{ click: handleChartClick }}
         notMerge
-        style={{ height: '500px', width: '100%', margin: '0 auto' }}
+        style={{ height: '100%', minHeight: 0, width: '100%' }}
       />
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

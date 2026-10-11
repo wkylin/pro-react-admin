@@ -8,14 +8,14 @@ import 'dayjs/locale/zh-cn'
 import 'antd/dist/reset.css'
 import './styles/reset.css'
 
-import RootLayout from '@/components/RootLayout'
-import RouterErrorElement from '@/components/RouterErrorElement'
+import RootLayout from '@/routers/components/RootLayout'
+import RouterErrorElement from '@/routers/components/RouterErrorElement'
 import rootRouter from '@routers'
 import { useProThemeContext } from './theme/hooks'
 import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
-import { setMessageInstance } from '@utils/message'
-import { keepAliveManager } from '@/components/KeepAlive'
-import ServiceWorkerUpdatePrompt from '@/pwa/ServiceWorkerUpdatePrompt'
+import { setMessageInstance } from '@platform/feedback/message'
+import { keepAliveManager } from '@/platform/keep-alive'
+import ServiceWorkerUpdatePrompt from '@platform/pwa/ServiceWorkerUpdatePrompt'
 
 dayjs.locale('zh-cn')
 

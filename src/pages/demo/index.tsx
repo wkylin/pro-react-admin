@@ -1,7 +1,7 @@
 import { Smartphone, Monitor, Rocket, Music } from 'lucide-react'
-import type { ComponentType, PropsWithChildren, ReactNode } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 import PageContainer from '@stateless/PageContainer'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 import LogoSlider from '@stateless/LogoSlider'
 import StarBack from '@stateless/StarBackground'
@@ -24,13 +24,13 @@ import AnimatedList from '@stateless/AnimatedList'
 import StickyCard from '@stateless/StickyCard'
 import OverflowText from '@stateless/OverflowText'
 import SafeHtml from '@stateless/SafeHtml'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import SandpackBasic from '@stateless/SandpackBasic'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
-import OneTimePasscode from '@stateless/OneTimePasscode'
+import OneTimePasscode from '@wui/OneTimePasscode'
 
 const companies = [SpringPng, HePng, SongPng, XuePng]
 
@@ -268,7 +268,6 @@ const statisticItems = [
   },
 ]
 
-const FixTabPanelWithChildren = FixTabPanel as unknown as ComponentType<PropsWithChildren>
 const FixTabsWithData = FixTabs as unknown as ComponentType<{
   tabs: typeof fixTabsData
 }>
@@ -289,7 +288,7 @@ const StickyCardWithItems = StickyCard as unknown as ComponentType<{
 
 const ProDemo = () => {
   return (
-    <FixTabPanelWithChildren>
+    <FixTabPanel>
       <PageContainer title={undefined}>
         <OneTimePasscode length={6} variant="compact" />
         <div style={{ height: '400px' }}>
@@ -427,7 +426,7 @@ const ProDemo = () => {
         </section>
         {/* <AnimationTabs tabs={tabs} /> */}
       </PageContainer>
-    </FixTabPanelWithChildren>
+    </FixTabPanel>
   )
 }
 

@@ -1,20 +1,21 @@
-import FixTabPanel from '@stateless/FixTabPanel'
-import { Button, Card, Statistic, Switch, Space } from 'antd'
-import { useStore } from '@/store'
+import FixTabPanel from '@shared/ui/FixTabPanel'
+import { Button, Card, Statistic, Switch, Space, Typography } from 'antd'
+import { useAppStore } from '@/store'
+import { useZustandDemoStore } from './model/store'
 
 const ZustandDemo = () => {
-  const count = useStore((state) => state.count)
-  const increment = useStore((state) => state.increment)
-  const decrement = useStore((state) => state.decrement)
-  const asyncIncrement = useStore((state) => state.asyncIncrement)
+  const count = useZustandDemoStore((state) => state.count)
+  const increment = useZustandDemoStore((state) => state.increment)
+  const decrement = useZustandDemoStore((state) => state.decrement)
+  const asyncIncrement = useZustandDemoStore((state) => state.asyncIncrement)
 
-  const isSidebarOpen = useStore((state) => state.isSidebarOpen)
-  const toggleSidebar = useStore((state) => state.toggleSidebar)
+  const isSidebarOpen = useAppStore((state) => state.isSidebarOpen)
+  const toggleSidebar = useAppStore((state) => state.toggleSidebar)
 
-  const immerItems = useStore((state) => state.immerItems)
-  const pushImmerItem = useStore((state) => state.pushImmerItem)
-  const popImmerItem = useStore((state) => state.popImmerItem)
-  const clearImmerItems = useStore((state) => state.clearImmerItems)
+  const immerItems = useZustandDemoStore((state) => state.items)
+  const pushImmerItem = useZustandDemoStore((state) => state.pushItem)
+  const popImmerItem = useZustandDemoStore((state) => state.popItem)
+  const clearImmerItems = useZustandDemoStore((state) => state.clearItems)
 
   return (
     <FixTabPanel>
@@ -44,7 +45,9 @@ const ZustandDemo = () => {
               <Button onClick={toggleSidebar}>切换状态</Button>
             </Space>
           </div>
-          <div className="mt-4 text-gray-500">* 此状态已配置持久化，刷新页面后状态会保持。</div>
+          <Typography.Text type="secondary" className="mt-4 block">
+            * 侧边栏属于跨页面的全局应用状态，并配置为持久化。
+          </Typography.Text>
         </Card>
 
         <Card title="Zustand + Immer 示例">

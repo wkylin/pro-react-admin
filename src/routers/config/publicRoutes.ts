@@ -20,8 +20,8 @@ export function isPublicRoute(path: string): boolean {
  * 辅助函数：根据路由配置对象判断是否公开
  * 约定：`auth === false` 即为公开路由
  */
-export function isRouteConfigPublic(routeConfig?: { auth?: boolean }): boolean {
-  return !!routeConfig && routeConfig.auth === false
+export function isRouteConfigPublic(routeConfig?: { auth?: boolean; meta?: { access?: string } }): boolean {
+  return !!routeConfig && (routeConfig.auth === false || routeConfig.meta?.access === 'public')
 }
 
 /**

@@ -1,7 +1,7 @@
 import React from 'react'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Button } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const BackendStack = () => {
   const { redirectTo } = useSafeNavigate()

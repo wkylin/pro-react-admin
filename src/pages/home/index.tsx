@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import {
   version,
   useEffect,
@@ -6,12 +6,9 @@ import {
   useRef,
   type ChangeEvent,
   type ComponentType,
-  type ForwardRefExoticComponent,
   type KeyboardEvent,
   type MouseEvent,
-  type PropsWithoutRef,
   type ReactNode,
-  type RefAttributes,
   type TouchEvent,
 } from 'react'
 import { Input, Flex, Button } from 'antd'
@@ -24,7 +21,7 @@ import SpotlightCard from '@stateless/Spotlight'
 import MarqueeImport from 'react-fast-marquee'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import useDetectScroll from '@smakss/react-scroll-direction'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import ReMarkdown from '@stateless/ReMarkdown'
 // import LinearWrap from '@stateless/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
@@ -99,9 +96,9 @@ import {
   // randomNum,
   getDirection,
   oneApiImage,
-} from '@utils/aidFn'
-import { fireConfetti } from '@utils/confetti'
-import exportSvg from '@utils/svgExport'
+} from '@shared/lib/aidFn'
+import { fireConfetti } from '@shared/lib/confetti'
+import exportSvg from '@shared/lib/svgExport'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
@@ -162,10 +159,6 @@ type Resettable = {
 
 const AlternatingTextWithStrings = AlternatingText as unknown as ComponentType<TextRotationProps>
 const SlideTextWithStrings = SlideText as unknown as ComponentType<SlideTextProps>
-const FixTabPanelWithRef = FixTabPanel as unknown as ForwardRefExoticComponent<
-  PropsWithoutRef<{ children: ReactNode }> & RefAttributes<HTMLDivElement>
->
-
 const isResettable = (value: unknown): value is Resettable =>
   typeof value === 'object' && value !== null && 'reset' in value && typeof value.reset === 'function'
 
@@ -636,7 +629,7 @@ const Home = () => {
     },
   ]
   return (
-    <FixTabPanelWithRef ref={setScrollRef}>
+    <FixTabPanel ref={setScrollRef}>
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
@@ -1432,7 +1425,7 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <AutoSlider />
       </section>
-    </FixTabPanelWithRef>
+    </FixTabPanel>
   )
 }
 

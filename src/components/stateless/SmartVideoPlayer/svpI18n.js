@@ -1,8 +1,8 @@
 import { createInstance } from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
-import zh from '@/locales/zh/translation.js'
-import en from '@/locales/en/translation.js'
+import zh from '@/i18n/locales/zh/translation.js'
+import en from '@/i18n/locales/en/translation.js'
 
 export const SVP_UI_LANGUAGE_STORAGE_KEY = 'svpUiLanguage'
 

@@ -28,7 +28,7 @@ touch src/pages/permission/index.tsx
 
 #### 2.1 更新权限资源类型
 
-**文件**: `src/types/permission.ts`
+**文件**: `src/platform/auth/model/permission.ts`
 
 在 `Resource` 类型联合中添加新的资源类型：
 
@@ -83,7 +83,7 @@ const PermissionExample = lazy(() => import('@/pages/permission'))
 
 #### 4.1 更新菜单结构
 
-**文件**: `src/config/menu.config.tsx`
+**文件**: `src/layouts/navigation/menu.config.tsx`
 
 在菜单配置中添加新菜单项：
 
@@ -100,7 +100,7 @@ const PermissionExample = lazy(() => import('@/pages/permission'))
 
 #### 5.1 路由权限映射
 
-**文件**: `src/mock/permission.ts`
+**文件**: `src/platform/auth/mocks/permission.ts`
 
 在 `routePermissionMap` 中添加路由权限映射：
 
@@ -169,7 +169,7 @@ const { hasPermission, hasRole, canAccessRoute } = usePermission()
 
 #### 7.1 更新测试账号
 
-**文件**: `src/mock/permission.ts`
+**文件**: `src/platform/auth/mocks/permission.ts`
 
 在 `testAccounts` 中确保账号角色映射正确：
 
@@ -197,7 +197,7 @@ localStorage.removeItem('user_role')
 
 #### 8.2 退出时缓存清理
 
-**文件**: `src/service/authService.ts`
+**文件**: `src/platform/auth/services/authService.ts`
 
 确保 `logout()` 方法清除所有相关缓存：
 

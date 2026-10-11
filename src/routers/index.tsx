@@ -12,43 +12,49 @@
 
 import { mainLayoutRoute, layoutRoutes } from './modules/layout.routes'
 import { authRoutes } from './modules/auth.routes'
-import { businessRoutes } from './modules/business.routes'
-import { uiRoutes } from './modules/ui.routes'
-import { chartRoutes } from './modules/chart.routes'
-import { nestedRoutes } from './modules/nested.routes'
 import { errorRoutes } from './modules/error.routes'
-import { notificationRoutes } from './modules/notification.routes'
-import { techRoutes } from './modules/tech.routes'
-import { zustandRoutes } from './modules/zustand.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
 import type { RouteNode } from './utils'
-import { permissionService } from '@src/service/permissionService'
+import { applyRoutePolicy, mainRouteGroups } from './routeRegistry'
+import { permissionService } from '@platform/auth/services/permissionService'
 import { matchRoutes, type RouteObject } from 'react-router-dom'
 
-// 整合主布局的子路由
-mainLayoutRoute.children = [
-  ...mainLayoutRoute.children,
-  ...businessRoutes,
-  ...uiRoutes,
-  ...chartRoutes,
-  ...nestedRoutes,
-  ...notificationRoutes,
-  ...techRoutes,
-  ...zustandRoutes,
-]
+const groupedMainRoutes = mainRouteGroups.flatMap((group) =>
+  applyRoutePolicy(group.routes, {
+    category: group.category,
+    access: group.access,
+    layout: group.layout,
+  })
+)
+
+const mainRoute = applyRoutePolicy(
+  [
+    {
+      ...mainLayoutRoute,
+      children: [...(mainLayoutRoute.children ?? []), ...groupedMainRoutes],
+    },
+  ],
+  { category: 'application', access: 'authenticated', layout: 'primary' }
+)[0]
 
 // 构建完整路由配置（原始数据）
 const rawRootRouter: RouteNode[] = [
   // 主布局路由（包含所有子路由）
-  mainLayoutRoute,
+  mainRoute,
   // 认证相关路由
-  ...authRoutes,
+  ...applyRoutePolicy(authRoutes, { category: 'authentication', access: 'public', layout: 'none' }),
   // 独立布局路由
-  ...layoutRoutes,
+  ...applyRoutePolicy(layoutRoutes, { category: 'application', access: 'authenticated', layout: 'standalone' }),
   // 错误路由（404 放在最后）
-  ...errorRoutes.filter((route) => route.path !== '*'),
+  ...applyRoutePolicy(
+    errorRoutes.filter((route) => route.path !== '*'),
+    { category: 'system', access: 'public', layout: 'none' }
+  ),
   // 全局 404（必须放在最后）
-  ...errorRoutes.filter((route) => route.path === '*'),
+  ...applyRoutePolicy(
+    errorRoutes.filter((route) => route.path === '*'),
+    { category: 'system', access: 'public', layout: 'none' }
+  ),
 ].filter(Boolean)
 
 const rootRouter = normalizeRouteTree(rawRootRouter)

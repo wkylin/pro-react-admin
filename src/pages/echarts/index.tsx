@@ -1,5 +1,5 @@
 import React from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import EChartsCommon from '@stateless/EChartsCommon'
 
 const Echarts = () => {

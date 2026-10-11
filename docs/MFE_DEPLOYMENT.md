@@ -49,7 +49,7 @@ Remote imports 和 typings/module-federation.d.ts 都从注册表生成。添加
 
 ## 事件通信协议
 
-src/mfe/bridge.ts 适用于同一页面里的 Host/Remote 通信，事件 payload 会在运行时校验。协议和全局 bus 使用版本号；Host 与 Remote 应一起升级，跨版本未知事件或无效 payload 会被丢弃。
+src/platform/mfe/bridge.ts 适用于同一页面里的 Host/Remote 通信，事件 payload 会在运行时校验。协议版本由 `config/mfe-protocol.json` 单独维护，全局 bus 使用该版本隔离；Host 与 Remote 应一起升级，跨版本未知事件或无效 payload 会被丢弃。
 
 postMessage 仅用于 iframe/跨域集成：
 

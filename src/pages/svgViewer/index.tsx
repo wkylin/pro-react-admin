@@ -1,4 +1,4 @@
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import SvgPreview from '@stateless/SvgPreview'
 import DiagramSvgRbac from '@assets/svg/architecture-diagram-rbac.svg'
 import DiagramSvg from '@assets/svg/architecture-diagram.svg'

@@ -60,5 +60,5 @@ GitHub OAuth 的 secret 只放服务端环境。埋点里的匿名 ID、会话 I
 
 - 服务入口：`api/server.js`
 - 埋点持久化、查询和统计：`api/tracking-collect.js`
-- 前端 OAuth 请求：`src/service/authService.ts`
+- 前端 OAuth 请求：`src/platform/auth/services/authService.ts`
 - 本地运行步骤：[`docs/GETTING_STARTED.md`](../docs/GETTING_STARTED.md)

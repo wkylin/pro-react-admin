@@ -46,8 +46,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App />)
 
 ```javascript
 // src/index.tsx
-import request from '@src/service/request'
-import { getEnv } from '@utils/env'
+import request from '@platform/api/request'
+import { getEnv } from '@platform/config/env'
 
 // 混合加密（推荐）
 request.configureHybrid(
@@ -363,9 +363,9 @@ console.log(request.getActiveRequestCount())
 ## 📚 更多资源
 
 - 📖 [完整文档](./REQUEST_ENCRYPTION.md)
-- 🔧 [配置示例](../src/config/encryption.example.js)
+- 🔧 [配置示例](../docs/examples/encryption.example.js)
 - 🧪 [测试页面](../src/pages/crypto/index.tsx)
-- 📝 [API 文档](../src/service/request.js)
+- 📝 [API 文档](../src/platform/api/request.js)
 
 ---
 

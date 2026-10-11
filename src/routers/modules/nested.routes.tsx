@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import { lazyComponents } from '../config/lazyLoad.config'
-import RouterErrorElement from '@/components/RouterErrorElement'
+import RouterErrorElement from '@/routers/components/RouterErrorElement'
 
 /**
  * 嵌套路由配置

@@ -55,11 +55,23 @@
       "@hooks/*": [
         "./src/components/hooks/*"
       ],
-      "@app-hooks": [
-        "./src/app-hooks"
+      "@shared": [
+        "./src/shared"
       ],
-      "@app-hooks/*": [
-        "./src/app-hooks/*"
+      "@shared/*": [
+        "./src/shared/*"
+      ],
+      "@features": [
+        "./src/features"
+      ],
+      "@features/*": [
+        "./src/features/*"
+      ],
+      "@platform": [
+        "./src/platform"
+      ],
+      "@platform/*": [
+        "./src/platform/*"
       ],
       "@assets": [
         "./src/assets"
@@ -67,17 +79,23 @@
       "@assets/*": [
         "./src/assets/*"
       ],
+      "@layouts": [
+        "./src/layouts"
+      ],
+      "@layouts/*": [
+        "./src/layouts/*"
+      ],
+      "@wui": [
+        "./packages/wui-react/src"
+      ],
+      "@wui/*": [
+        "./packages/wui-react/src/*"
+      ],
       "@pages": [
         "./src/pages"
       ],
       "@pages/*": [
         "./src/pages/*"
-      ],
-      "@utils": [
-        "./src/utils"
-      ],
-      "@utils/*": [
-        "./src/utils/*"
       ],
       "@theme": [
         "./src/theme"

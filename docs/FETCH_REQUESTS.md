@@ -1,6 +1,6 @@
 # HTTP 请求模块使用指南
 
-位置: `src/service/http.js`
+位置: `src/platform/api/http.js`
 
 基于原生 `fetch` API 封装的 HTTP 客户端，提供了统一的错误处理、拦截器、超时控制、文件处理等功能，并包含一套 React Hooks。
 

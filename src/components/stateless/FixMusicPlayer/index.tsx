@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useActivate, useUnactivate } from '@src/components/KeepAlive'
+import { useActivate, useUnactivate } from '@platform/keep-alive'
 
 import Controls from './Controls'
 import Player from './Player'

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import {
   ReactFlow,
   MiniMap,
@@ -14,8 +14,8 @@ import {
   type Node,
   type ReactFlowInstance,
 } from '@xyflow/react'
-import type { ComponentType, CSSProperties, ReactNode } from 'react'
-import { useActivate } from '@/components/KeepAlive'
+import type { CSSProperties } from 'react'
+import { useActivate } from '@platform/keep-alive'
 
 import '@xyflow/react/dist/style.css'
 
@@ -28,10 +28,6 @@ interface TopologyNodeData extends Record<string, unknown> {
 
 type TopologyNode = Node<TopologyNodeData>
 type TopologyEdge = Edge
-type TopologyPanelProps = { fill?: boolean; children?: ReactNode }
-
-const TopologyPanel = FixTabPanel as ComponentType<TopologyPanelProps>
-
 // 定义节点样式，方便区分不同类型的组件
 const nodeStyles = {
   frontend: {
@@ -317,7 +313,7 @@ function Flow() {
   }, [refreshFlowViewport])
 
   return (
-    <TopologyPanel fill={true}>
+    <FixTabPanel fill={true}>
       <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
         <ReactFlow
           nodes={safeNodes}
@@ -335,7 +331,7 @@ function Flow() {
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>
-    </TopologyPanel>
+    </FixTabPanel>
   )
 }
 

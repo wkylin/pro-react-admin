@@ -74,7 +74,7 @@ BUILD_GOAL 选择 dotenv 文件：
 | dev                  | .env.dev         |
 | test                 | .env.test        |
 
-.env.<goal>.local 是 Git 忽略的本机覆盖文件，例如 .env.development.local。Webpack 的读取顺序是命令行/CI 环境变量、local 覆盖、基础 .env.<goal> 文件。webpack/client-env.js 是唯一浏览器变量白名单；DefinePlugin 会把清单中的值写进 bundle。SENTRY_AUTH_TOKEN 等构建凭据不得加入客户端清单。实际变量读取入口是 src/utils/env.ts。
+.env.<goal>.local 是 Git 忽略的本机覆盖文件，例如 .env.development.local。Webpack 的读取顺序是命令行/CI 环境变量、local 覆盖、基础 .env.<goal> 文件。webpack/client-env.js 是唯一浏览器变量白名单；DefinePlugin 会把清单中的值写进 bundle。SENTRY_AUTH_TOKEN 等构建凭据不得加入客户端清单。实际变量读取入口是 src/platform/config/env.ts。
 
 PUBLIC_URL 决定普通生产资源的 publicPath；Webpack 会规范成带斜杠的路径。Module Federation 下 publicPath 使用 auto，Remote 部署仍需核对自身 chunk 地址、远程入口 URL 和响应头。
 

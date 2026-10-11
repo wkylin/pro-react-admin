@@ -36,7 +36,7 @@
 ### 最简单的用法（3 行代码）
 
 ```javascript
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 // 配置混合加密（推荐）
 request.configureHybrid(PUBLIC_KEY)
@@ -49,7 +49,7 @@ const data = await request.post('/api/login', { username, password })
 
 ```javascript
 // 1. 在应用入口配置（src/index.tsx）
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 // 方式 A: 使用 AES（高性能）
 request.configureAES('1234567890123456')
@@ -75,7 +75,7 @@ const publicData = await request.get('/api/public', {}, {
 
 - **[快速开始指南](./ENCRYPTION_QUICK_START.md)** - 5分钟快速集成
 - **[完整文档](./REQUEST_ENCRYPTION.md)** - 详细的 API 文档和使用说明
-- **[配置示例](../src/config/encryption.example.js)** - 可复制的配置模板
+- **[配置示例](../docs/examples/encryption.example.js)** - 可复制的配置模板
 
 ## 🎯 使用场景
 

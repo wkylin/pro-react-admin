@@ -1,5 +1,5 @@
 import type { ComponentType, PropsWithChildren, ReactNode } from 'react'
-import { routePermissionMap } from '@src/mock/permission'
+import { routePermissionMap } from '@platform/auth/mocks/permission'
 
 /**
  * 路由工具函数
@@ -11,7 +11,10 @@ export interface RouteMeta extends Record<string, unknown> {
   routeKey?: string
   routePath?: string
   legacyKey?: string
-  permission?: string
+  permission?: string | string[]
+  category?: string
+  access?: 'public' | 'authenticated' | 'permissioned'
+  layout?: 'primary' | 'standalone' | 'none'
   tab?: boolean
   tabKey?: string
 }
@@ -157,6 +160,7 @@ export const annotateRoutesWithPermissions = (routes: readonly RouteNode[] = [])
       const matched = identifiers.find((identifier: string): boolean => Boolean(routePermissionMap[identifier]))
       if (matched) {
         meta.permission = routePermissionMap[matched]
+        if (meta.access !== 'public') meta.access = 'permissioned'
       }
       const next: RouteNode = { ...route, meta }
       if (Array.isArray(route.children)) {

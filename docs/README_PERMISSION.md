@@ -13,7 +13,7 @@
 
 ## 架构设计
 
-### 1. 类型定义 (`src/types/permission.ts`)
+### 1. 类型定义 (`src/platform/auth/model/permission.ts`)
 
 定义了权限系统的核心类型：
 
@@ -23,7 +23,7 @@
 - `Role`: 角色信息
 - `UserPermission`: 用户权限信息
 
-### 2. 权限服务 (`src/service/permissionService.ts`)
+### 2. 权限服务 (`src/platform/auth/services/permissionService.ts`)
 
 单例模式的权限服务，提供：
 
@@ -32,7 +32,7 @@
 - 路由权限检查
 - 权限缓存管理
 
-### 3. Mock 数据 (`src/mock/permission.ts`)
+### 3. Mock 数据 (`src/platform/auth/mocks/permission.ts`)
 
 提供 4 种预定义角色：
 
@@ -41,7 +41,7 @@
 - **业务员** (`business_user`): 拥有业务相关权限
 - **普通用户** (`user`): 仅拥有查看权限
 
-### 4. API 层 (`src/service/api/permission.ts`)
+### 4. API 层 (`src/platform/auth/api/permission.ts`)
 
 封装权限相关的 API 调用，支持：
 
@@ -67,7 +67,7 @@
 示例：
 
 ```tsx
-import useSafeNavigate from '@hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 
 const MyComponent = () => {
   const { redirectTo } = useSafeNavigate()
@@ -91,7 +91,7 @@ const MyComponent = () => {
 使用 `PermissionGuard` 组件控制内容的显示/隐藏：
 
 ```tsx
-import PermissionGuard from '@/components/auth/PermissionGuard'
+import PermissionGuard from '@platform/auth/components/PermissionGuard'
 
 // 单个权限检查
 <PermissionGuard permission="user:read" fallback={<div>无权限</div>}>
@@ -125,7 +125,7 @@ import PermissionGuard from '@/components/auth/PermissionGuard'
 使用 `AuthButton` 组件控制按钮的显示/禁用：
 
 ```tsx
-import AuthButton from '@/components/auth/AuthButton'
+import AuthButton from '@platform/auth/components/AuthButton'
 
 // 无权限时隐藏按钮
 <AuthButton permission="user:create" onClick={handleCreate}>
@@ -215,7 +215,7 @@ await permissionService.syncPermissions()
 
 ## 路由权限映射
 
-系统会自动根据以下映射检查路由权限（见 `src/mock/permission.ts`）：
+系统会自动根据以下映射检查路由权限（见 `src/platform/auth/mocks/permission.ts`）：
 
 ```typescript
 export const routePermissionMap = {
@@ -250,7 +250,7 @@ export const routePermissionMap = {
 
 ## 与后端集成
 
-当需要接入真实后端时，只需修改 `src/service/api/permission.ts`：
+当需要接入真实后端时，只需修改 `src/platform/auth/api/permission.ts`：
 
 ```typescript
 export const getUserPermissions = async (userId?: string): Promise<UserPermission> => {
@@ -284,7 +284,7 @@ export const getUserPermissions = async (userId?: string): Promise<UserPermissio
 
 **Q: 如何添加新的权限？**
 
-A: 在 `src/mock/permission.ts` 中的角色权限列表中添加新的权限代码即可。
+A: 在 `src/platform/auth/mocks/permission.ts` 中的角色权限列表中添加新的权限代码即可。
 
 **Q: 权限缓存多久更新一次？**
 

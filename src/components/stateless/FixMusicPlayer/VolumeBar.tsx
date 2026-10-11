@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { type ChangeEventHandler } from 'react'
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 

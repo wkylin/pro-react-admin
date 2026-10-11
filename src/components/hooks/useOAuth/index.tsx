@@ -1,5 +1,5 @@
 // OAuth Hook
-import { message } from '@utils/message'
+import { message } from '@platform/feedback/message'
 
 export function useOAuth() {
   const loginWithGitHub = () => {

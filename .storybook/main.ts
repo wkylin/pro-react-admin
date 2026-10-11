@@ -6,11 +6,18 @@ import { createPathAliases } from '../webpack/aliases.js'
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    './stories/**/*.mdx',
+    '../src/**/*.mdx',
+    '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+    '../packages/wui-react/src/**/*.mdx',
+    '../packages/wui-react/src/**/*.stories.@(js|jsx|mjs|ts|tsx)',
+  ],
   staticDirs: ['../public', { from: '../src/assets', to: '/assets' }],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-docs',
+    '@storybook/addon-a11y',
     '@storybook/addon-webpack5-compiler-babel',
   ],
   framework: {

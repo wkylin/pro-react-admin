@@ -1,7 +1,7 @@
 import { createElement, useEffect, useState } from 'react'
 import { Table, type TableColumnsType } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
-import { http } from '@src/service/http'
+import FixTabPanel from '@shared/ui/FixTabPanel'
+import { http } from '@platform/api/http'
 
 type Certificate = {
   certificateName?: string

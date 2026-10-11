@@ -257,7 +257,7 @@ X-Encryption-Mode: AES|RSA|HYBRID
 ## 完整示例
 
 ```javascript
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 // 1. 配置加密
 request.configureHybrid(PUBLIC_KEY)
@@ -296,7 +296,7 @@ request
 如果需要直接使用加密工具类：
 
 ```javascript
-import { EncryptionHandler } from '@src/service/request'
+import { EncryptionHandler } from '@platform/api/request'
 
 // AES 加密
 const encrypted = EncryptionHandler.encryptAES(data, key)
@@ -343,7 +343,7 @@ const decrypted = EncryptionHandler.decryptHybrid(
 - [快速开始指南](./ENCRYPTION_QUICK_START.md)
 - [完整文档](./REQUEST_ENCRYPTION.md)
 - [使用示例](./encryption-examples.js)
-- [配置示例](../src/config/encryption.example.js)
+- [配置示例](../docs/examples/encryption.example.js)
 
 ---
 

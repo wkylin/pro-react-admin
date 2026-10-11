@@ -1,7 +1,7 @@
 import React from 'react'
 import SignIn from '@pages/signin'
 import SignUp from '@pages/signup'
-import { AuthCallback } from '@src/components/auth/AuthCallback'
+import { AuthCallback } from '@platform/auth/components/AuthCallback'
 import { lazyComponents } from '../config/lazyLoad.config'
 
 /**

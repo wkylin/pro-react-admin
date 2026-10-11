@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useState, useEffect } from 'react'
 import { Select, Button } from 'antd'
 import { ChevronRight, ChevronLeft } from 'lucide-react'

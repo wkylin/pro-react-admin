@@ -6,6 +6,11 @@
 
 - [新手入门：安装、本地运行、多项目、微前端、Storybook、组件库构建](./GETTING_STARTED.md)
 - [技术架构与当前改进项](./ARCHITECTURE.md)
+- [工程架构评估、组件规模与演进方案](./ENGINEERING_ARCHITECTURE.md)
+- [`src` 目录职责与依赖约定](./SRC_DIRECTORY_GUIDE.md)
+- [`src` 目录职责与依赖约定](./SRC_DIRECTORY_GUIDE.md)
+- [状态管理约定：全局、领域和局部状态](./Zustand-Migration.md)
+- [组件与源码清单（自动生成）](./COMPONENT_CATALOG.md)
 - [文档目录与阅读顺序](#阅读路径)
 
 ## 构建与开发
@@ -15,7 +20,6 @@
 - [多项目架构](./MULTI_PROJECT.md)
 - [微前端开发与部署](./MFE_DEPLOYMENT.md)
 - [Storybook 组件开发](./STORYBOOK.md)
-- [组件库入口和导出约定](./components-index.md)
 
 ## 发布与部署
 
@@ -38,4 +42,4 @@
 - **新成员**：新手入门 → 技术架构 → Webpack 构建
 - **新增应用项目**：多项目架构 → 部署说明
 - **新增 Remote**：微前端指南 → 多项目架构 → 部署说明
-- **新增可发布组件**：Storybook 指南 → 组件库指南 → 组件索引
+- **新增可发布组件**：Storybook 指南 → 组件库指南

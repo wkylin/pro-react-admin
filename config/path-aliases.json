@@ -8,9 +8,12 @@
   "@stateless": "src/components/stateless",
   "@stateful": "src/components/stateful",
   "@hooks": "src/components/hooks",
-  "@app-hooks": "src/app-hooks",
+  "@shared": "src/shared",
+  "@features": "src/features",
+  "@platform": "src/platform",
   "@assets": "src/assets",
+  "@layouts": "src/layouts",
+  "@wui": "packages/wui-react/src",
   "@pages": "src/pages",
-  "@utils": "src/utils",
   "@theme": "src/theme"
 }

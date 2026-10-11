@@ -132,7 +132,7 @@ pnpm run build-storybook
 pnpm run build:lib
 ```
 
-产物生成在 `packages/wui-react/dist/`，包括 ESM/UMD 聚合包、`style.css` 和 `types/` 下的类型声明。若要生成 `/core`、`/stateful`、`/stateless`、`/tracking` 子路径入口并准备完整的发布目录，运行：
+产物生成在 `packages/wui-react/dist/`，包括 ESM/UMD 聚合包、`style.css` 和 `types/` 下的类型声明。若要生成 `/core`、`/stateful`、`/stateless`、`/tracking`、`/animated-icon` 子路径入口并准备完整的发布目录，运行：
 
 ```bash
 pnpm run prepublishOnly
@@ -153,7 +153,7 @@ pnpm run check:lib-package
 npm pack ./packages/wui-react --dry-run
 ```
 
-应用根 package 是私有的，组件库版本与发布入口在 `packages/wui-react/package.json` 单独维护。当前库源码仍位于 `src/lib/`，构建由根目录 Webpack 配置负责；源码迁入 package 是后续边界收敛工作。
+应用根 package 是私有的，组件库版本与发布入口在 `packages/wui-react/package.json` 单独维护。`AnimatedIcon` 已迁到 `packages/wui-react/src`；其他公开组件仍由 `src/lib/` 汇总。库构建由根目录 Webpack 配置负责，组件与构建配置会继续分批迁入 package。
 
 新项目安装已发布版本和组件库使用示例见[@w.ui/wui-react 组件库指南](./LIBRARY_PUBLISH_GUIDE.md)。
 
@@ -178,7 +178,7 @@ build:production 有 prebuild 生命周期：本地会先运行媒体优化；Gi
 | 想做什么               | 优先查看                                                                   |
 | ---------------------- | -------------------------------------------------------------------------- |
 | 增加页面               | src/pages/ 和 src/routers/modules/                                         |
-| 增加菜单、权限         | src/config/menu.config.tsx、src/routers/                                   |
+| 增加菜单、权限         | src/layouts/navigation/menu.config.tsx、src/routers/                                   |
 | 增加共享组件           | src/components/                                                            |
 | 增加项目差异           | src/projects/<project>/                                                    |
 | 增加微前端 remote 页面 | src/projects/<project>/mfe/App.tsx                                         |
@@ -190,7 +190,7 @@ build:production 有 prebuild 生命周期：本地会先运行媒体优化；Gi
 
 应用运行入口为 src/index.tsx；各项目通过自己的 index.tsx 复用 src/bootstrap/renderApp.tsx，再进入 src/theme.tsx 和路由。完整关系见[架构说明](./ARCHITECTURE.md)。
 
-提交改动前可运行 `pnpm run typecheck` 检查主应用类型，并运行 `pnpm run typecheck:boundaries` 检查路由、KeepAlive 和微前端桥接等核心边界的严格类型。CI 会执行这两项检查。`pnpm run ci:quality` 汇总只读 lint、类型检查和已有自动化测试。
+提交改动前可运行 `pnpm run typecheck` 检查主应用类型，并运行 `pnpm run typecheck:boundaries` 检查路由、KeepAlive、微前端桥接、features、shared 和 platform 的严格类型。CI 会执行这些检查。`pnpm run ci:quality` 汇总只读 lint、类型检查和已有自动化测试。
 
 ## 9. 常用参考
 

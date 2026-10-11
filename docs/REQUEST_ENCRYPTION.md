@@ -22,7 +22,7 @@
 ### 1. AES 加密（推荐用于高性能场景）
 
 ```javascript
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 // 配置 AES 密钥（16/24/32 字符）
 request.configureAES('1234567890123456')
@@ -48,7 +48,7 @@ const data = await request.post('/api/sensitive-data', {
 ### 2. RSA 加密（推荐用于高安全场景）
 
 ```javascript
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 const PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0BDRgoeZCRRvH/QLbGhe
@@ -88,7 +88,7 @@ const data = await request.post('/api/payment', {
 - 使用 AES 加密实际数据（高性能）
 
 ```javascript
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 const PUBLIC_KEY = `...`
 const PRIVATE_KEY = `...`
@@ -348,7 +348,7 @@ console.log(request.getEncryptionConfig())
 
 ```javascript
 // src/config/encryption.js
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 // RSA 密钥对（实际应从后端获取）
 const RSA_PUBLIC_KEY = `-----BEGIN PUBLIC KEY-----

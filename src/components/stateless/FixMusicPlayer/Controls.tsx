@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import type { Dispatch, SetStateAction } from 'react'
 import { Pause, Play, SkipBack, SkipForward, Shuffle, RotateCcw } from 'lucide-react'
 

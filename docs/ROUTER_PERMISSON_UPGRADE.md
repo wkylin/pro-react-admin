@@ -7,7 +7,7 @@
 ### 1. 路由 Key / Path 强制统一
 - **变更**：全量重构了路由配置，强制 **`key` 必须等于绝对路径 `path`**。
 - **影响范围**：
-  - `src/config/menu.config.tsx`: 菜单配置现已完全使用 path 作为唯一标识。
+  - `src/layouts/navigation/menu.config.tsx`: 菜单配置现已完全使用 path 作为唯一标识。
   - `src/routers/modules/*.tsx`: 移除了所有手动指定的 `key`，由 `normalizeRouteTree` 自动生成。
 - **目的**：解决 ProTabs 多标签页中因 `/route` 与 `route` 不一致导致的标签重复、无法关闭、高亮丢失等问题。
 - **开发注意**：
@@ -30,13 +30,13 @@
 
 ## 2. React Router v7 升级影响
 
-- **导航 Hook 统一**：`@hooks/useSafeNavigate` 只保留组件版实现，暴露 `redirectTo`（支持 `{ replace: true }`）与 `goBack`。`goBack` 会在历史栈不足时跳转 `/`，确保 v7 之后 `RouterProvider` 不再自动兜底。
+- **导航 Hook 统一**：`@platform/navigation/useSafeNavigate` 暴露 `redirectTo`（支持 `{ replace: true }`）与 `goBack`。`goBack` 会在历史栈不足时跳转 `/`，确保 v7 之后 `RouterProvider` 不再自动兜底。
 - **错误边界与 KeepAlive**：每个嵌套路由的 `errorElement` 指向 `RouterErrorElement`，并由 `FixTabPanel`、`KeepAlive` 控制 tabs/缓存行为，满足 v7 的“路由定义即数据”规范。
 - **通配符行为与 Tab 同步**：调整 wildcard 顺序后，`/tech/frontend/plugins/*` 优先匹配 SectionNotFound，再冒泡到顶级 `/tech/frontend/*`，防止 v7 的 `*` 误吞兄弟节点；FixTabPanel 负责在 tab 切换时保留当前模块上下文。
 
 ## 3. 权限与角色体系
 
-- **集中式权限服务**：`src/service/permissionService.ts` 作为单例负责：
+- **集中式权限服务**：`src/platform/auth/services/permissionService.ts` 作为单例负责：
   - 30 分钟缓存 + localStorage 持久化，支持 `forceRefresh`/`syncPermissions`。
   - `canAccessRoute` 先查 `routePermissionMap`（permission code 映射），再 fallback 到后端返回的 `routes` 列表，并在必要时自动刷新权限集。
   - 角色检查提供 `hasRole`/`hasAllRoles`/`hasAnyRole`，`*:*` 超级权限仍可直通所有路由。

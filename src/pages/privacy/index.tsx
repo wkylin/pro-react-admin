@@ -1,9 +1,9 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import { Layout, Typography, Card, Button, theme } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@/store'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import styles from './index.module.less'
 
 const { Title, Paragraph, Text } = Typography
@@ -12,7 +12,7 @@ const { Content } = Layout
 const Privacy = () => {
   const { redirectTo } = useSafeNavigate()
   const { token } = theme.useToken()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
 
   const cssVars = {
     '--legal-bg': token.colorBgBase,

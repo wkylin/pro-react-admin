@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import {
   useRef,
   useCallback,
@@ -13,7 +13,7 @@ import {
   type SetStateAction,
 } from 'react'
 import MarkmapHooks from '@stateful/markmap'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import MDEditor from '@uiw/react-md-editor'
 import { toPng, toSvg } from 'html-to-image'
 import {
@@ -33,7 +33,7 @@ import {
   Spin,
   theme,
 } from 'antd'
-import { message } from '@utils/message'
+import { message } from '@platform/feedback/message'
 import {
   DownloadOutlined,
   CopyOutlined,
@@ -50,7 +50,7 @@ import {
   PartitionOutlined,
   NodeIndexOutlined,
 } from '@ant-design/icons'
-import { copyTextToClipboard } from '@utils/aidFn'
+import { copyTextToClipboard } from '@shared/lib/aidFn'
 import initSSE from './fixSse'
 import removeMd from 'remove-markdown'
 import remarkMath from 'remark-math'
@@ -114,8 +114,6 @@ type ChatFormValues = {
   apiKey: string
   text: string
 }
-
-const TypedFixTabPanel = FixTabPanel as ComponentType<{ children?: ReactNode }>
 
 let mermaidPromise: Promise<Mermaid> | undefined
 const loadMermaid = (): Promise<Mermaid> => {
@@ -1521,7 +1519,7 @@ PRD文档内容：
   const markmapRef = useRef<HTMLDivElement | null>(null)
 
   return (
-    <TypedFixTabPanel>
+    <FixTabPanel>
       <div>
         <Card
           title={
@@ -1995,7 +1993,7 @@ PRD文档内容：
 
         <div ref={bottomRef} style={{ height: 20 }} />
       </div>
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

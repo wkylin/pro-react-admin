@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useRef, useState, useEffect } from 'react'
 import type { ComponentProps, ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -18,7 +18,7 @@ import {
   Tooltip,
   FloatButton,
 } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@/store'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import {
   GithubOutlined,
@@ -77,7 +77,7 @@ const AnimatedCard = ({ children, delay = 0 }: AnimatedCardProps) => (
 const MyPortfilo = () => {
   const navigate = useNavigate()
   const { token, theme: antdTheme } = useToken()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ container: containerRef })

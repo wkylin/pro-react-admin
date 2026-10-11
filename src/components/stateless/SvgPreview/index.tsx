@@ -1,7 +1,7 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useEffect, useRef, useState, type ComponentType, type SVGProps } from 'react'
 import { Button } from 'antd'
-import { message } from '@utils/message'
+import { message } from '@platform/feedback/message'
 import {
   ZoomInOutlined,
   ZoomOutOutlined,

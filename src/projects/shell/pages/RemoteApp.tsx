@@ -1,9 +1,9 @@
 import { Suspense, useEffect } from 'react'
 import { Button, Result, Spin } from 'antd'
-import { message } from '@utils/message'
+import { message } from '@platform/feedback/message'
 import { useNavigate } from 'react-router-dom'
-import ErrorBoundary from '@/components/ErrorBoundary'
-import { emitMfeEvent, onMfeEvent } from '@/mfe/bridge'
+import ErrorBoundary from '@/platform/errors/ErrorBoundary'
+import { emitMfeEvent, onMfeEvent } from '@platform/mfe/bridge'
 import { remoteComponents, type RemoteName } from '../remote-components'
 
 export default function RemoteApp(props: Readonly<{ remote: RemoteName }>) {

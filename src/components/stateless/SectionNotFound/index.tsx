@@ -1,10 +1,10 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useMemo } from 'react'
 import { Result, Button, Typography, Space } from 'antd'
 import { useLocation } from 'react-router-dom'
 import { HomeOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
-import FixTabPanel from '@stateless/FixTabPanel'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const { Paragraph, Text } = Typography
 

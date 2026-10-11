@@ -6,7 +6,7 @@ useAsyncTip 用于“包一层异步函数调用 + 统一提示”。它主要�
 - message 互相覆盖/误伤（只关闭当前请求的 loading）
 - 错误结构不统一（复用 service/request.js 的错误映射能力）
 
-该实现基于 antd v6：通过 App.useApp() 注入的 message 实例（见 src/utils/message.ts）。
+该实现基于 antd v6：通过 App.useApp() 注入的 message 实例（见 src/platform/feedback/message.ts）。
 
 ## 主要功能
 
@@ -44,7 +44,7 @@ useAsyncTip(fn, options?, deps?)
 
 ```tsx
 import useAsyncTip from '@hooks/useAsyncTip'
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 const save = useAsyncTip(
 	(payload) => request.post('/api/save', payload),
@@ -69,17 +69,17 @@ const loadDetail = useAsyncTip((id) => request.get('/api/detail', { id }), {
 
 ## 重要提示
 
-- 本 hook 使用的提示能力来自 src/utils/message.ts，要求在应用根部已正确 setMessageInstance。
+- 本 hook 使用的提示能力来自 src/platform/feedback/message.ts，要求在应用根部已正确 setMessageInstance。
 - 如果 service 层（request.js/http.js）已经开启了 showError，hook 默认会尽量避免重复弹错。
 
 ## 根组件初始化 message（与 theme.tsx 对应）
 
-项目使用 antd v6 的 App 上下文来获取 message 实例，并注入到 src/utils/message.ts：
+项目使用 antd v6 的 App 上下文来获取 message 实例，并注入到 src/platform/feedback/message.ts：
 
 ```tsx
 import { useEffect } from 'react'
 import { App as AntdApp } from 'antd'
-import { setMessageInstance } from '@utils/message'
+import { setMessageInstance } from '@platform/feedback/message'
 
 const ThemeIndex = () => {
 	const { message } = AntdApp.useApp()

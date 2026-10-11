@@ -1,18 +1,19 @@
 import { useState, useEffect, useRef, type PropsWithChildren } from 'react'
 import PropTypes from 'prop-types'
 import { Navigate, useLocation, matchPath } from 'react-router-dom'
-import type { MessageInstance } from 'antd/es/message/interface'
-import { getLocalStorage } from '@utils/publicFn'
-import { permissionService } from '@src/service/permissionService'
-import type { PermissionCode } from '@src/types/permission'
-import { HashRouterUtils } from '@src/utils/hashRouter'
+import { getLocalStorage } from '@shared/lib/publicFn'
+import { permissionService } from '@platform/auth/services/permissionService'
+import type { PermissionCode } from '@platform/auth/model/permission'
+import { HashRouterUtils } from '@platform/navigation/hashRouter'
 import { isPublicRoute, isRouteConfigPublic } from '@src/routers/config/publicRoutes'
 import { annotatedRootRouter, flattenRoutes } from '@routers'
 import { message } from 'antd'
-import { showMessage } from '@utils/message'
+import { showMessage } from '@platform/feedback/message'
+import type { MessageInstance } from 'antd/es/message/interface'
 
 interface RoutePolicyMeta {
   auth?: boolean
+  access?: 'public' | 'authenticated' | 'permissioned'
   permission?: PermissionCode | PermissionCode[]
   requireAll?: boolean
   roles?: string | string[]
@@ -26,33 +27,30 @@ interface RoutePolicyRoute {
   path?: string
 }
 
-type AuthRouterProps = PropsWithChildren<{ route?: RoutePolicyRoute }>
+type AuthRouterProps = PropsWithChildren<{ route?: object }>
 
 const timeoutToken = (ms: number): Promise<'timeout'> =>
   new Promise((resolve) => globalThis.setTimeout(() => resolve('timeout'), ms))
 
 const getStoredToken = (): unknown => {
-  const storedAuth =
-    getLocalStorage<Record<string, unknown>>('token') || getLocalStorage<Record<string, unknown>>('github_token')
-  return typeof storedAuth === 'object' && storedAuth !== null && 'token' in storedAuth ? storedAuth.token : null
+  const storedValue = getLocalStorage('token') || getLocalStorage('github_token')
+  return typeof storedValue === 'object' && storedValue !== null && 'token' in storedValue ? storedValue.token : null
 }
 
 const showDeniedMessage = (messageApi: MessageInstance): void => {
   Promise.resolve()
     .then(() => messageApi.open({ type: 'error', content: '您没有权限访问该页面' }))
-    .catch((e: unknown) => {
+    .catch((e) => {
       console.warn('Failed to show permission error message:', e)
       return Promise.resolve(showMessage.error('您没有权限访问该页面'))
     })
-    .catch((e: unknown) => {
+    .catch((e) => {
       console.warn('Failed to show permission error message:', e)
     })
 }
 
 /**
- * 权限路由守卫组件（共享实现）
- *
- * 说明：该文件会自动读取当前 alias 的 `@routers`（多项目下会被 PROJECT 覆盖）。
+ * 权限路由守卫组件（简化版）
  */
 const AuthRouterBase = (props: AuthRouterProps) => {
   const location = useLocation()
@@ -61,8 +59,8 @@ const AuthRouterBase = (props: AuthRouterProps) => {
   if (rawPathname != null && typeof rawPathname !== 'string') {
     HashRouterUtils.debugNavToOnce('AuthRouter.useLocation().pathname', rawPathname)
   }
-
   const [canAccess, setCanAccess] = useState<boolean | null>(null)
+  // navigate 不再直接使用；权限提示通过 message 实现
   const lastDeniedPathRef = useRef('')
   const [messageApi, contextHolder] = message.useMessage()
 
@@ -97,10 +95,10 @@ const AuthRouterBase = (props: AuthRouterProps) => {
       })
     }
 
-    const allow = (): void => setCanAccess(true)
-    const deny = (): void => setCanAccess(false)
+    const allow = () => setCanAccess(true)
+    const deny = () => setCanAccess(false)
 
-    const redirectLoggedInFromPublic = async (): Promise<void> => {
+    const redirectLoggedInFromPublic = async () => {
       const routes = await permissionService.getAccessibleRoutes()
       const safeRoutes = Array.isArray(routes) ? routes : []
       const target = safeRoutes.includes('/') ? '/' : safeRoutes[0] || '/'
@@ -136,7 +134,7 @@ const AuthRouterBase = (props: AuthRouterProps) => {
       return null
     }
 
-    const checkAccessWithTimeout = async (): Promise<boolean> => {
+    const checkAccessWithTimeout = async () => {
       const permissionPromise = permissionService.canAccessRoute(pathname, false).catch(() => null)
       const hasAccess = await Promise.race([permissionPromise, timeoutToken(3000)])
 
@@ -145,7 +143,7 @@ const AuthRouterBase = (props: AuthRouterProps) => {
         try {
           const forced = await permissionService.canAccessRoute(pathname, true)
           return !!forced
-        } catch (e: unknown) {
+        } catch (e) {
           console.error('强制刷新权限检查失败:', e)
           return false
         }
@@ -159,70 +157,102 @@ const AuthRouterBase = (props: AuthRouterProps) => {
       return !!hasAccess
     }
 
-    const checkAuth = async (): Promise<void> => {
+    const checkAuth = async () => {
       const token = getStoredToken()
       const policyRoute = resolveRoutePolicy(pathname)
       const policyMeta = policyRoute?.meta || {}
-      const isPolicyPublic = policyMeta.auth === false || isRouteConfigPublic(policyRoute)
+      const isPolicyPublic = isRouteConfigPublic(policyRoute)
 
+      // 已登录访问纯公开页：跳转到可访问路由的首项
       if (token && isPublicRoute(pathname)) {
         try {
           await redirectLoggedInFromPublic()
+          return
         } catch {
           allow()
+          window.location.hash = '#/'
+          return
         }
+      }
+
+      // 未登录：公开路由放行，其余重定向到登录
+      if (!token) {
+        if (isPublicRoute(pathname) || isPolicyPublic) {
+          allow()
+          return
+        }
+        deny()
         return
       }
 
+      // 登录态下，公开路由直接放行
       if (isPublicRoute(pathname) || isPolicyPublic) {
         allow()
         return
       }
 
-      if (!token) {
-        deny()
-        return
+      // 优先使用路由策略 meta.permission / meta.roles
+      try {
+        const policyResult = await checkByPolicyMeta(policyMeta)
+        if (policyResult !== null) {
+          setCanAccess(policyResult)
+          return
+        }
+      } catch (err) {
+        console.warn('基于路由策略的权限检查失败，尝试路由白名单回退', err)
       }
 
-      const metaResult = await checkByPolicyMeta(policyMeta)
-      if (metaResult === false) {
-        deny()
-        return
-      }
-      if (metaResult === true) {
-        allow()
-        return
-      }
-
-      const ok = await checkAccessWithTimeout()
-      if (ok) {
-        allow()
-      } else {
+      // 回退：基于可访问路由列表校验
+      try {
+        setCanAccess(await checkAccessWithTimeout())
+      } catch (error) {
+        console.error('权限检查失败:', error)
         deny()
       }
     }
 
-    checkAuth().catch((e: unknown) => {
-      console.warn('AuthRouter checkAuth failed:', e)
-      deny()
-    })
-  }, [pathname])
+    checkAuth()
+  }, [pathname, props.route])
 
-  if (canAccess === null) return null
+  // 当已登录但无权限时，通过 effect 一次性提示并返回上一页
+  useEffect(() => {
+    if (canAccess !== null && !canAccess) {
+      const token = getStoredToken()
+      // 未登录会在渲染层由 Navigate 处理，这里只处理已登录但无权限的情况
+      if (!token) return
 
-  if (canAccess === false) {
-    if (lastDeniedPathRef.current !== pathname) {
+      // 仅在首次遭遇该路径时弹一次提示，且不进行任何导航或刷新
+      if (lastDeniedPathRef.current === pathname) return
       lastDeniedPathRef.current = pathname
       showDeniedMessage(messageApi)
+      return
     }
-    return (
-      <>
-        {contextHolder}
-        <Navigate to="/signin" replace />
-      </>
-    )
+
+    // 权限恢复或路径变化时，清空记录以便未来重试能再次提示
+    lastDeniedPathRef.current = ''
+  }, [canAccess, messageApi, pathname])
+
+  // 检查中
+  if (canAccess === null) {
+    return null
   }
 
+  // 未登录或无权限
+  if (!canAccess) {
+    const token = getStoredToken()
+    if (!token) {
+      return (
+        <>
+          {contextHolder}
+          <Navigate to="/signin" replace />
+        </>
+      )
+    }
+    // 已登录但无权限：render 空（useEffect 会显示提示并导航到安全页面）
+    return <>{contextHolder}</>
+  }
+
+  // 有权限
   return (
     <>
       {contextHolder}
@@ -232,6 +262,7 @@ const AuthRouterBase = (props: AuthRouterProps) => {
 }
 
 AuthRouterBase.propTypes = {
+  route: PropTypes.object,
   children: PropTypes.node,
 }
 

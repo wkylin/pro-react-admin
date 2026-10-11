@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import DeploymentFlow from '@stateless/DeploymentFlow'
 
 const RichTextEditor = () => {

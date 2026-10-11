@@ -3,7 +3,7 @@ import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
-import { getMfeSharedState, onMfeEvent } from '@/mfe/bridge'
+import { getMfeSharedState, onMfeEvent } from '@platform/mfe/bridge'
 
 const { Paragraph, Text } = Typography
 

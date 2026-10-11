@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import { theme } from 'antd'
 import styles from './index.module.less'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { ArrowRight, CheckCircle } from 'lucide-react'
 
 type ColorObject = { type?: string; colors: string[] }

@@ -5,6 +5,7 @@ export const libraryPeerDependencies = Object.freeze({
   'react-dom': '>=19.0.0',
   antd: '>=6.0.0',
   'react-router-dom': '>=7.0.0',
+  'framer-motion': '>=12.0.0',
 })
 
 export const libraryExternalPackages = Object.freeze(Object.keys(libraryPeerDependencies))
@@ -36,6 +37,26 @@ export const libraryExports = Object.freeze({
     require: './dist/entries/tracking.cjs',
   },
   './style.css': './dist/style.css',
+  './animated-icon': {
+    types: './dist/types/packages/wui-react/src/AnimatedIcon/index.d.ts',
+    import: './dist/entries/animatedIcon.es.js',
+    require: './dist/entries/animatedIcon.cjs',
+  },
+  './one-time-passcode': {
+    types: './dist/types/packages/wui-react/src/OneTimePasscode/index.d.ts',
+    import: './dist/entries/oneTimePasscode.es.js',
+    require: './dist/entries/oneTimePasscode.cjs',
+  },
+  './watermark-provider': {
+    types: './dist/types/packages/wui-react/src/WatermarkProvider/index.d.ts',
+    import: './dist/entries/watermarkProvider.es.js',
+    require: './dist/entries/watermarkProvider.cjs',
+  },
+  './responsive-table': {
+    types: './dist/types/packages/wui-react/src/ResponsiveTable/index.d.ts',
+    import: './dist/entries/responsiveTable.es.js',
+    require: './dist/entries/responsiveTable.cjs',
+  },
 })
 
 export const libraryEntrypoints = Object.freeze({

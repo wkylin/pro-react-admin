@@ -1,5 +1,5 @@
 'use client'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useState, useEffect, useRef, useCallback, type MouseEvent, type TouchEvent } from 'react'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react'
 import { GitMerge } from 'lucide-react'

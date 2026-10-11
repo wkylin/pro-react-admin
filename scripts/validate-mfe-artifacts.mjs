@@ -10,6 +10,7 @@ import {
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const registry = JSON.parse(fs.readFileSync(path.join(root, 'src/projects/registry.json'), 'utf8'))
+const mfeProtocol = JSON.parse(fs.readFileSync(path.join(root, 'config/mfe-protocol.json'), 'utf8'))
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 const sharedDependencies = getMfeSharedDependencies({
   ...(packageJson.dependencies || {}),
@@ -33,7 +34,7 @@ for (const remote of registry.remotes) {
   if (
     manifest.schemaVersion !== MFE_MANIFEST_SCHEMA_VERSION ||
     manifest.name !== remote.name ||
-    manifest.protocolVersion !== registry.mfeProtocolVersion ||
+    manifest.protocolVersion !== mfeProtocol.protocolVersion ||
     manifest.exposes?.['./App'] !== expectedExpose ||
     !hasCompleteMfeSharedDependencies(manifest.sharedDependencies, sharedDependencies)
   ) {
@@ -42,5 +43,5 @@ for (const remote of registry.remotes) {
 }
 
 process.stdout.write(
-  `[mfe-artifacts] Shell and ${registry.remotes.length} Remote manifests match protocol v${registry.mfeProtocolVersion}\n`
+  `[mfe-artifacts] Shell and ${registry.remotes.length} Remote manifests match protocol v${mfeProtocol.protocolVersion}\n`
 )

@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { type CSSProperties } from 'react'
 import { Button, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'

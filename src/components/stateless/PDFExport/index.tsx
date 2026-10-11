@@ -1,5 +1,5 @@
 'use client'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useRef, useState, useCallback, useMemo } from 'react'
 import * as echarts from 'echarts'
 import html2canvas from 'html2canvas'

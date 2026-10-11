@@ -1,16 +1,10 @@
-// src/store/modules/appSlice.ts
-import { StateCreator } from 'zustand'
-import { StoreState, AppSlice, AppResponsive, Screens } from '../types'
+import type { StateCreator } from 'zustand'
+import type { AppState } from '../types'
 
-export const createAppSlice: StateCreator<StoreState, [['zustand/immer', never]], [], AppSlice & AppResponsive> = (
-  set
-) => ({
+export const createAppSlice: StateCreator<AppState> = (set) => ({
   isSidebarOpen: true,
   toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
   setSidebarOpen: (isOpen: boolean) => set({ isSidebarOpen: isOpen }),
-  // responsive state
-  isMobile: false,
-  screens: {} as Screens,
-  setScreens: (screens: Screens) => set({ screens, isMobile: !screens?.md }),
-  setIsMobile: (isMobile: boolean) => set({ isMobile }),
+  screens: { md: true },
+  setScreens: (screens) => set({ screens }),
 })

@@ -17,7 +17,7 @@
 
 ```tsx
 import React from 'react'
-import ResponsiveTable from '@/components/ResponsiveTable'
+import ResponsiveTable from '@w.ui/wui-react/responsive-table'
 
 const UserList = () => {
   const columns = [
@@ -59,6 +59,8 @@ const UserList = () => {
 ```
 
 ## 3. API 参考 (Props)
+
+`ResponsiveTable` 位于 `packages/wui-react/src/ResponsiveTable`，可从 `@w.ui/wui-react/responsive-table` 导入。`fetchUrl` 默认使用浏览器 `fetch` adapter；接入项目自有鉴权、请求拦截器或错误转换时，通过 `requestLib` 注入请求客户端，或使用 `fetchData` 显式控制数据加载。默认 query 来源为 `window.location.search`；React Router 等路由器可通过 `locationSearch` prop 传入当前 query，无需额外 Router Context。
 
 ### 3.1 基础配置
 
@@ -182,6 +184,8 @@ type ActionConfig<T> = {
 `ResponsiveTable` 内部使用的核心 Hook，也可单独使用。
 
 ```typescript
+import { useTable } from '@w.ui/wui-react/responsive-table'
+
 const {
   pagedData, // 当前页数据
   pagination, // 分页状态

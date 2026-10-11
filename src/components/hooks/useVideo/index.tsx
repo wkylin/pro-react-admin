@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useRef, type RefObject } from 'react'
-import { useActivate, useUnactivate } from '@src/components/KeepAlive'
+import { useActivate, useUnactivate } from '@platform/keep-alive'
 
 type UseVideoOptions = {
   enabled?: boolean

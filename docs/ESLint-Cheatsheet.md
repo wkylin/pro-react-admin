@@ -76,7 +76,7 @@ node -e "const r=require('./eslint-report.json'); const m={}; r.forEach(f=>{cons
 结果文件 `eslint-by-file.txt` 格式为：
 
 ```
-11	C:/.../src/components/KeepAlive/index.tsx
+11	C:/.../src/platform/keep-alive/index.tsx
 5	C:/.../src/components/stateless/ReMarkdown/index.tsx
 ...
 ```

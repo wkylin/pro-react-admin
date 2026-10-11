@@ -7,9 +7,9 @@
  * 安全提示：浏览器里的固定 AES key 可被用户读取；本文件中的固定 key 只用于 API 演示，不提供密钥保密能力。
  */
 
-import request from '@src/service/request'
-import http, { encryptionConfig as httpEncryption } from '@src/service/http'
-import { getEnv } from '@utils/env'
+import request from '@platform/api/request'
+import http, { encryptionConfig as httpEncryption } from '@platform/api/http'
+import { getEnv } from '@platform/config/env'
 
 // ========================================
 // 示例 1: 基础配置（应用入口）
@@ -410,7 +410,7 @@ export default {
  *
  * // src/index.tsx 或 src/main.tsx
  *
- * import { setupEncryptionHybrid } from './utils/encryption-examples' // 假设你复制到了 src/utils 目录
+ * import { setupEncryptionHybrid } from './encryption-examples' // 示例代码属于 src/platform/api
  *
  * // 应用启动时初始化
  * setupEncryptionHybrid()

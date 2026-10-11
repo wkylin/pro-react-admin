@@ -1,7 +1,7 @@
 import React from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import PHBarChart from '@stateless/PHBarChart'
-import { useActivate } from '@/components/KeepAlive'
+import { useActivate } from '@platform/keep-alive'
 
 const PHBar = () => {
   // 当页面被激活时，通知 PHBarChart 组件重新初始化

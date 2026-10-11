@@ -1,8 +1,8 @@
 import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
-import WatermarkProvider from '@/components/WatermarkProvider'
+import WatermarkProvider from '@wui/WatermarkProvider'
 import { renderApp } from '@/bootstrap/renderApp'
-import { registerServiceWorker } from '@/pwa/registerServiceWorker'
+import { registerServiceWorker } from '@platform/pwa/registerServiceWorker'
 import { TrackerCore, PageViewPlugin } from '@/lib/tracking'
 
 registerServiceWorker()

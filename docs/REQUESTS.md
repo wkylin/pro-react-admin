@@ -1,13 +1,13 @@
 # Request 请求模块使用指南
 
-位置: `src/service/request.js`
+位置: `src/platform/api/request.js`
 
 基于 Axios 封装的企业级 HTTP 请求库，提供了统一的错误处理、请求拦截、响应拦截、并发控制、文件处理等高级功能。
 
 ## 引入方式
 
 ```javascript
-import request from '@/service/request'
+import request from '@platform/api/request'
 ```
 
 ---
@@ -212,7 +212,7 @@ await request.series([
 结合 `RequestUtils.delay` 实现轮询。
 
 ```javascript
-import request, { RequestUtils } from '@/service/request'
+import request, { RequestUtils } from '@platform/api/request'
 
 async function pollStatus(taskId) {
   while (true) {

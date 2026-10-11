@@ -1,10 +1,10 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Button, Layout, theme } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import FixLayout from '@src/components/stateless/FixLayout'
+import FixLayout from '@layouts/FixLayout'
 import AdminLanding from './AdminLanding'
 
 const { Content } = Layout

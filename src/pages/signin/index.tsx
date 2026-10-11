@@ -1,14 +1,14 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useEffect, useState, useRef, type CSSProperties } from 'react'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal, type FormProps } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@/store'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { setLocalStorage } from '@utils/publicFn'
-import { useAuth } from '@src/service/useAuth'
-import { authService } from '@src/service/authService'
-import { permissionService } from '@src/service/permissionService'
-import { testAccounts } from '@src/mock/permission'
+import { setLocalStorage } from '@shared/lib/publicFn'
+import { useAuth } from '@platform/auth/hooks/useAuth'
+import { authService } from '@platform/auth/services/authService'
+import { permissionService } from '@platform/auth/services/permissionService'
+import { testAccounts } from '@platform/auth/mocks/permission'
 
 import SliderCaptcha from '@stateless/SliderCaptcha'
 import styles from './index.module.less'
@@ -76,7 +76,7 @@ const SignIn = () => {
   const { token } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm<SignInFormValues>()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
   const [accountPasswords, setAccountPasswords] = useState<Record<string, string>>({})
   const [captchaOpen, setCaptchaOpen] = useState(false)
   const [captchaKey, setCaptchaKey] = useState(() => Date.now())

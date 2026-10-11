@@ -34,7 +34,7 @@
 
 ## 三、角色与权限定义
 
-角色定义位于 `src/mock/permission.ts`，主要包含以下四种角色：
+角色定义位于 `src/platform/auth/mocks/permission.ts`，主要包含以下四种角色：
 
 ### 1. 超级管理员 (`super_admin`)
 
@@ -61,7 +61,7 @@
 
 ## 四、权限控制逻辑
 
-### 1. 权限获取流程 (`src/service/api/permission.ts`)
+### 1. 权限获取流程 (`src/platform/auth/api/permission.ts`)
 
 前端通过 `getUserPermissions` 获取权限，逻辑如下：
 
@@ -74,7 +74,7 @@
 
 ### 2. 路由权限映射 (`routePermissionMap`)
 
-系统维护了一个路由路径到权限码的映射表 (`src/mock/permission.ts`)，用于自动推导权限和校验路由访问：
+系统维护了一个路由路径到权限码的映射表 (`src/platform/auth/mocks/permission.ts`)，用于自动推导权限和校验路由访问：
 
 ```typescript
 export const routePermissionMap = {
@@ -100,11 +100,11 @@ export const routePermissionMap = {
 
 ### 1. 核心文件结构
 
-- `src/mock/permission.ts`: **核心**。定义角色、测试账号、路由映射表、Mock 数据。
-- `src/service/permissionService.ts`: **服务层**。单例模式，负责权限的缓存、获取和校验方法 (`hasPermission`, `canAccessRoute`)。
-- `src/service/api/permission.ts`: **接口层**。处理 API 请求与 Mock 数据的切换。
+- `src/platform/auth/mocks/permission.ts`: **核心**。定义角色、测试账号、路由映射表、Mock 数据。
+- `src/platform/auth/services/permissionService.ts`: **服务层**。单例模式，负责权限的缓存、获取和校验方法 (`hasPermission`, `canAccessRoute`)。
+- `src/platform/auth/api/permission.ts`: **接口层**。处理 API 请求与 Mock 数据的切换。
 - `src/routers/authRouter.tsx`: **路由层**。实现路由守卫逻辑。
-- `src/components/auth/PermissionGuard.tsx`: **组件层**。用于包裹需要权限控制的 UI 组件。
+- `src/platform/auth/components/PermissionGuard.tsx`: **组件层**。用于包裹需要权限控制的 UI 组件。
 
 ### 2. 如何在代码中使用权限
 
@@ -113,7 +113,7 @@ export const routePermissionMap = {
 使用 `PermissionGuard` 组件或 `usePermission` Hook：
 
 ```tsx
-import PermissionGuard from '@/components/auth/PermissionGuard'
+import PermissionGuard from '@platform/auth/components/PermissionGuard'
 
 // 仅拥有 user:create 权限的用户可见
 ;<PermissionGuard permission="user:create">

@@ -1,16 +1,6 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  type ComponentType,
-  type CSSProperties,
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-} from 'react'
+import { useState, useEffect, useRef, useMemo, type CSSProperties, type Dispatch, type SetStateAction } from 'react'
 import { Button, message, Form, Input, Steps, Card, Space } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import styles from './index.module.less'
 import mockApi from './mockApi'
 
@@ -64,8 +54,6 @@ type SidebarProps = {
 }
 
 const deploymentApi: DeploymentApi = mockApi
-const FixTabPanelWithFill = FixTabPanel as ComponentType<{ children?: ReactNode; fill?: boolean }>
-
 // 子组件：配置侧边栏
 const Sidebar = ({
   config,
@@ -511,7 +499,7 @@ export default function AutoDeploy() {
   }
 
   return (
-    <FixTabPanelWithFill fill={true}>
+    <FixTabPanel fill={true}>
       <div className={styles.app}>
         {contextHolder}
         <header className={styles.header}>
@@ -591,6 +579,6 @@ export default function AutoDeploy() {
           </div>
         </main>
       </div>
-    </FixTabPanelWithFill>
+    </FixTabPanel>
   )
 }
