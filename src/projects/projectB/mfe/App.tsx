@@ -4,10 +4,19 @@ import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
 import { getMfeSharedState, onMfeEvent } from '@platform/mfe/bridge'
+import RemoteScope from '@app/bootstrap/RemoteScope'
 
 const { Paragraph, Text } = Typography
 
-export default function ProjectBRemoteApp() {
+type SharedMessage = { from: string; text: string; at: number; to?: string }
+function parseMessage(value: unknown): SharedMessage | undefined {
+  if (!value || typeof value !== 'object' || !('from' in value) || !('text' in value) || !('at' in value))
+    return undefined
+  if (typeof value.from !== 'string' || typeof value.text !== 'string' || typeof value.at !== 'number') return undefined
+  return { from: value.from, text: value.text, at: value.at }
+}
+
+function ProjectBRemoteContent() {
   const standaloneOrigin = (() => {
     const raw = (process.env.PROJECTB_STANDALONE_ORIGIN || '').toString().trim()
     const origin = raw || (typeof window !== 'undefined' ? window.location.origin : '')
@@ -15,11 +24,13 @@ export default function ProjectBRemoteApp() {
   })()
   const standaloneAboutUrl = `${standaloneOrigin}/#/projectB/about`
 
-  const [lastMessage, setLastMessage] = useState<any>(() => (getMfeSharedState() as any).lastMessage)
+  const [lastMessage, setLastMessage] = useState<SharedMessage | undefined>(() =>
+    parseMessage(getMfeSharedState().lastMessage)
+  )
 
   useEffect(() => {
     const offState = onMfeEvent('mfe:state', ({ state }) => {
-      setLastMessage((state as any).lastMessage)
+      setLastMessage(parseMessage(state.lastMessage))
     })
     const offPong = onMfeEvent('mfe:pong', ({ from, to }) => {
       if (to !== 'projectB') return
@@ -58,5 +69,13 @@ export default function ProjectBRemoteApp() {
         </Card>
       </Space>
     </PageContainer>
+  )
+}
+
+export default function ProjectBRemoteApp() {
+  return (
+    <RemoteScope projectId="projectB">
+      <ProjectBRemoteContent />
+    </RemoteScope>
   )
 }

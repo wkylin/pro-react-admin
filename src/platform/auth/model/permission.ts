@@ -14,6 +14,7 @@ export type PermissionAction = 'create' | 'read' | 'update' | 'delete' | 'export
 export type Resource =
   | 'user'
   | 'role'
+  | 'audit'
   | 'dashboard'
   | 'system'
   | 'business'

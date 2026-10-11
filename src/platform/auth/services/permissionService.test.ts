@@ -40,7 +40,7 @@ describe('permission cache revocation', () => {
     await permissionService.getPermissions()
     localStorage.clear()
     expect((await permissionService.getPermissions()).permissions).toEqual([])
-    expect(getUserPermissions).toHaveBeenCalledTimes(2)
+    expect(getUserPermissions).toHaveBeenCalledTimes(1)
   })
 
   test('uses the active Bearer token when a previous GitHub profile remains in storage', async () => {
@@ -69,5 +69,21 @@ describe('permission cache revocation', () => {
     expect(permissionService.peekPermissions()).toBeNull()
     await expect(permissionService.getPermissions()).resolves.toEqual(limited)
     expect(getUserPermissions).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('permission cache validity', () => {
+  test('malformed persisted fetch timestamps never restore grants', () => {
+    jest.resetModules()
+    localStorage.clear()
+    localStorage.setItem('token', 'account')
+    localStorage.setItem('permissions_auth_key', 'token:account')
+    localStorage.setItem(
+      'user_permissions',
+      JSON.stringify({ userId: '1', username: 'admin', roles: [], permissions: ['*:*'], routes: ['*'] })
+    )
+    localStorage.setItem('permissions_fetch_time', 'not-a-time')
+    const { permissionService } = require('./permissionService')
+    expect(permissionService.peekPermissions()).toBeNull()
   })
 })

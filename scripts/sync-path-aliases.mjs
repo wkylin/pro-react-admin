@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { format } from 'prettier'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const manifestPath = path.join(root, 'config/path-aliases.json')
@@ -21,7 +22,7 @@ const paths = Object.fromEntries(
   ])
 )
 
-const generated = `${JSON.stringify({ compilerOptions: { paths } }, null, 2)}\n`
+const generated = await format(JSON.stringify({ compilerOptions: { paths } }), { filepath: generatedPath })
 const checkOnly = process.argv.includes('--check')
 
 if (checkOnly) {

@@ -53,7 +53,7 @@ const featureEntries = directEntryDirectories(path.join(src, 'features'))
 const projectEntries = entryDirectories(path.join(src, 'projects'))
 const sharedUiEntries = directEntryDirectories(path.join(src, 'shared', 'ui'))
 const wuiComponentEntries = directEntryDirectories(wuiSource)
-const layoutRoot = path.join(src, 'layouts')
+const layoutRoot = path.join(src, 'app/layouts')
 const layoutEntries = directEntryDirectories(layoutRoot)
 const layoutRootHasEntry = fs.existsSync(path.join(layoutRoot, 'index.tsx'))
 const styleFiles = srcFiles.filter((filePath) => styleFilePattern.test(filePath))
@@ -124,7 +124,7 @@ const markdown = `# 组件与源码清单
 | \`src/components/hooks\` | ${hookEntries.length} | 含入口文件的直接 Hook 模块目录，不含聚合入口 |
 | \`src/shared/ui\` | ${sharedUiEntries.length} | 应用级共享 UI 模块入口 |
 | \`packages/wui-react/src\` | ${wuiComponentEntries.length} | 已进入独立源码边界的组件库模块 |
-| \`src/layouts\` | ${layoutNames.length} | 应用壳与直接布局组件入口 |
+| \`src/app/layouts\` | ${layoutNames.length} | 应用壳与直接布局组件入口 |
 | \`src/pages\` 页面入口 | ${pageEntries.length} | 含 \`index.*\` 的页面模块目录（直接子目录 ${directPageEntries.length}） |
 | \`src/features\` 业务域 | ${featureEntries.length} | 已建立 feature-first 入口的业务域 |
 | \`src/projects\` 项目入口 | ${projectEntries.length} | 含 \`index.*\` 的项目模块目录 |

@@ -1,3 +1,4 @@
+import { loadProjectRegistry } from '../config/project-registry.mjs'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -5,9 +6,12 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const readConfig = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'))
 const configs = Object.fromEntries(
-  ['vercel.json', 'vercel.mfe.json', 'vercel.shell.json', 'vercel.projectA.json', 'vercel.projectB.json'].map((file) => [file, readConfig(file)])
+  ['vercel.json', 'vercel.mfe.json', 'vercel.shell.json', 'vercel.projectA.json', 'vercel.projectB.json'].map(
+    (file) => [file, readConfig(file)]
+  )
 )
 const packageJson = readConfig('package.json')
+const registry = loadProjectRegistry()
 
 function headersFor(config, source) {
   return config.headers?.find((rule) => rule.source === source)?.headers || []
@@ -31,18 +35,20 @@ if (packageJson.scripts['vercel-build'] !== 'pnpm run build:mf:vercel') {
   throw new Error('package.json vercel-build script no longer matches the aggregate deployment configuration')
 }
 
-for (const [configName, config] of [['vercel.json', configs['vercel.json']], ['vercel.mfe.json', aggregate]]) {
+for (const [configName, config] of [
+  ['vercel.json', configs['vercel.json']],
+  ['vercel.mfe.json', aggregate],
+]) {
   for (const source of [
-    '/remoteEntry.js',
-    '/remote-manifest.json',
-    '/projectA/remoteEntry.js',
-    '/projectA/remote-manifest.json',
-    '/projectB/remoteEntry.js',
-    '/projectB/remote-manifest.json',
-  ]) {
+    '',
+    ...registry.remotes.map((remote) => remote.prodPath.replace(/\/remoteEntry\.js$/, '')),
+  ].flatMap((base) => [`${base}/remoteEntry.js`, `${base}/remote-manifest.json`])) {
     assertNoCache(configName, config, source)
   }
-  for (const source of ['/static/(.*)', '/projectA/static/(.*)', '/projectB/static/(.*)']) {
+  for (const source of [
+    '/static/(.*)',
+    ...registry.remotes.map((remote) => remote.prodPath.replace(/remoteEntry\.js$/, 'static/(.*)')),
+  ]) {
     assertHeader(configName, config, source, 'Cache-Control', 'immutable')
   }
 }
@@ -50,10 +56,8 @@ for (const [configName, config] of [['vercel.json', configs['vercel.json']], ['v
 for (const name of ['shell', 'projectA', 'projectB']) {
   const file = `vercel.${name}.json`
   const config = configs[file]
-  const expectedCommand = packageJson.scripts[
-    name === 'shell' ? 'build:mf:shell' : `build:mf:${name}:standalone`
-  ]
-  const expectedOutput = name === 'shell' ? 'dist-shell' : `dist-${name}`
+  const expectedCommand = packageJson.scripts[name === 'shell' ? 'build:mf:shell' : `build:mf:${name}:standalone`]
+  const expectedOutput = registry.projects[name].output
   if (config.buildCommand !== `pnpm run ${name === 'shell' ? 'build:mf:shell' : `build:mf:${name}:standalone`}`) {
     throw new Error(`${file} build command does not match the package script (${expectedCommand})`)
   }

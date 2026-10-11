@@ -1,8 +1,8 @@
 {
   "@": "src",
   "@src": "src",
-  "@app": "src",
-  "@routers": "src/routers",
+  "@app": "src/app",
+  "@routers": "src/app/routing",
   "@assets/audio": "src/assets/audio",
   "@assets/video": "src/assets/video",
   "@stateless": "src/components/stateless",
@@ -12,7 +12,7 @@
   "@features": "src/features",
   "@platform": "src/platform",
   "@assets": "src/assets",
-  "@layouts": "src/layouts",
+  "@layouts": "src/app/layouts",
   "@wui": "packages/wui-react/src",
   "@pages": "src/pages",
   "@theme": "src/theme"

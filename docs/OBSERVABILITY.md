@@ -2,7 +2,7 @@
 
 ## Sentry
 
-bootstrap/renderApp.tsx 仅在生产、配置 SENTRY_DSN、非 localhost 且未设置 localStorage SENTRY_DISABLE=1 时初始化。SENTRY_TRACES_SAMPLE_RATE 限制 0..1，默认 0.1；Replay 仅在 SENTRY_ENABLE_REPLAY=true 开启，SENTRY_SEND_DEFAULT_PII=true 才开启默认 PII。
+app/bootstrap/renderApp.tsx 仅在生产、配置 SENTRY_DSN、非 localhost 且未设置 localStorage SENTRY_DISABLE=1 时动态导入并初始化 Sentry，未启用时不加载该异步模块。SENTRY_TRACES_SAMPLE_RATE 限制 0..1，默认 0.1；Replay 仅在 SENTRY_ENABLE_REPLAY=true 开启，SENTRY_SEND_DEFAULT_PII=true 才开启默认 PII。
 
 未开启默认 PII 时配置关闭 userInfo、cookies、请求头、请求体等默认采集项。业务主动写入错误/日志的内容仍需自行控制。Sentry sourcemap 上传由构建插件与服务端 token 配置负责；build:stats 明确关闭 sourcemap 上传。
 

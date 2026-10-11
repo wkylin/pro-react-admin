@@ -15,9 +15,15 @@ const files = [
   ...collect(path.join(root, '.storybook')),
   ...collect(path.join(root, 'src')),
   ...collect(path.join(root, 'packages/wui-react/src')),
-  ...['README.md', 'NPM_README.md', 'api/README.md', 'packages/wui-react/README.md'].map((name) =>
-    path.join(root, name)
-  ),
+  ...[
+    'README.md',
+    'NPM_README.md',
+    'CONTRIBUTING.md',
+    'SECURITY.md',
+    '.github/PULL_REQUEST_TEMPLATE.md',
+    'api/README.md',
+    'packages/wui-react/README.md',
+  ].map((name) => path.join(root, name)),
 ]
 const issues = []
 for (const file of files) {

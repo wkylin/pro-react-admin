@@ -16,7 +16,8 @@ i18n
         translation: translationInZh,
       },
     },
-    lng: 'zh',
+    supportedLngs: ['en', 'zh'],
+    load: 'languageOnly',
     fallbackLng: 'en', // 默认语言
     // debug: process.env.NODE_ENV !== 'production', // 开启调试模式
     interpolation: {

@@ -2,7 +2,11 @@
   "/": {
     "permission": "home:read",
     "title": "home",
-    "i18nKey": "home"
+    "i18nKey": "home",
+    "menu": {
+      "order": 0,
+      "icon": "HomeOutlined"
+    }
   },
   "/403": {
     "permission": "error:read",
@@ -15,7 +19,11 @@
   "/ai-workbench": {
     "permission": "ai-workbench:read",
     "title": "AI Workbench",
-    "i18nKey": "menu.aiWorkbench"
+    "i18nKey": "menu.aiWorkbench",
+    "menu": {
+      "order": 14,
+      "icon": "RobotOutlined"
+    }
   },
   "/auth/callback": {
     "permission": "system:read",
@@ -24,43 +32,76 @@
   "/auto-deploy": {
     "permission": "auto-deploy:read",
     "title": "自动部署",
-    "i18nKey": "menu.autoDeploy"
+    "i18nKey": "menu.autoDeploy",
+    "menu": {
+      "order": 3,
+      "icon": "CloudUploadOutlined"
+    }
   },
   "/big-screen": {
     "permission": "bigscreen:read",
     "title": "Big Screen",
-    "i18nKey": "menu.bigScreen"
+    "i18nKey": "menu.bigScreen",
+    "menu": {
+      "order": 19,
+      "icon": "FundProjectionScreenOutlined"
+    }
   },
   "/build": {
     "permission": "build:read",
     "title": "构建工具",
     "i18nKey": "menu.buildTools",
-    "menuGroup": true
+    "menuGroup": true,
+    "menu": {
+      "order": 31,
+      "icon": "ApartmentOutlined"
+    }
   },
   "/build/webpack": {
     "permission": "build:read",
     "title": "Webpack",
-    "i18nKey": "menu.webpack"
+    "i18nKey": "menu.webpack",
+    "menu": {
+      "parent": "/build",
+      "order": 0,
+      "icon": "ToolOutlined"
+    }
   },
   "/business": {
     "permission": "business:read",
     "title": "Business",
-    "i18nKey": "menu.business"
+    "i18nKey": "menu.business",
+    "menu": {
+      "order": 22,
+      "icon": "BankOutlined"
+    }
   },
   "/chatgpt": {
     "permission": "chatgpt:read",
     "title": "ChatGPT",
-    "i18nKey": "menu.chatgpt"
+    "i18nKey": "menu.chatgpt",
+    "menu": {
+      "order": 13,
+      "icon": "RobotOutlined"
+    }
   },
   "/contact": {
     "permission": "contact:read",
     "title": "Contact",
-    "i18nKey": "menu.contact"
+    "i18nKey": "menu.contact",
+    "menu": {
+      "order": 28,
+      "icon": "ContactsOutlined"
+    }
   },
   "/crypto": {
     "permission": "crypto:read",
     "title": "Crypto",
-    "i18nKey": "menu.crypto"
+    "i18nKey": "menu.crypto",
+    "menu": {
+      "order": 17,
+      "icon": "SafetyCertificateOutlined"
+    }
   },
   "/dashboard": {
     "permission": "dashboard:read"
@@ -68,47 +109,83 @@
   "/demo": {
     "permission": "demo:read",
     "title": "demo",
-    "i18nKey": "demo"
+    "i18nKey": "demo",
+    "menu": {
+      "order": 1,
+      "icon": "GlobalOutlined"
+    }
   },
   "/dependencies": {
     "permission": "dependencies:read",
     "title": "项目依赖分析",
-    "i18nKey": "menu.dependencies"
+    "i18nKey": "menu.dependencies",
+    "menu": {
+      "order": 4,
+      "icon": "CloudUploadOutlined"
+    }
   },
   "/deploy-flow": {
     "permission": "deploy-flow:read",
     "title": "Deploy Flow",
-    "i18nKey": "menu.deployFlow"
+    "i18nKey": "menu.deployFlow",
+    "menu": {
+      "order": 7,
+      "icon": "RocketOutlined"
+    }
   },
   "/echarts": {
     "permission": "echarts:read",
     "title": "Echarts",
-    "i18nKey": "menu.echarts"
+    "i18nKey": "menu.echarts",
+    "menu": {
+      "order": 20,
+      "icon": "PieChartOutlined"
+    }
   },
   "/error": {
     "permission": "error:read",
     "title": "ErrorBoundary",
-    "i18nKey": "menu.errorBoundary"
+    "i18nKey": "menu.errorBoundary",
+    "menu": {
+      "parent": "/sub-error",
+      "order": 0
+    }
   },
   "/geo": {
     "permission": "geo:read",
     "title": "Geo Chart",
-    "i18nKey": "menu.geoChart"
+    "i18nKey": "menu.geoChart",
+    "menu": {
+      "order": 25,
+      "icon": "EnvironmentOutlined"
+    }
   },
   "/mermaid": {
     "title": "Mermaid",
     "i18nKey": "menu.mermaid",
-    "permission": "mermaid:read"
+    "permission": "mermaid:read",
+    "menu": {
+      "order": 9,
+      "icon": "ProjectOutlined"
+    }
   },
   "/motion": {
     "permission": "motion:read",
     "title": "Motion",
-    "i18nKey": "menu.motion"
+    "i18nKey": "menu.motion",
+    "menu": {
+      "order": 8,
+      "icon": "PlayCircleOutlined"
+    }
   },
   "/music": {
     "permission": "music:read",
     "title": "Music",
-    "i18nKey": "menu.music"
+    "i18nKey": "menu.music",
+    "menu": {
+      "order": 16,
+      "icon": "SoundOutlined"
+    }
   },
   "/my-iframe": {
     "permission": "ui:read",
@@ -125,12 +202,20 @@
   "/permission": {
     "permission": "permission:read",
     "title": "权限示例",
-    "i18nKey": "menu.permissionExample"
+    "i18nKey": "menu.permissionExample",
+    "menu": {
+      "order": 11,
+      "icon": "LockOutlined"
+    }
   },
   "/ph-bar": {
     "permission": "phbar:read",
     "title": "PH Bar",
-    "i18nKey": "menu.phBar"
+    "i18nKey": "menu.phBar",
+    "menu": {
+      "order": 12,
+      "icon": "BarChartOutlined"
+    }
   },
   "/portfilo": {
     "permission": "portfilo:read"
@@ -138,17 +223,29 @@
   "/postmessage": {
     "permission": "postmessage:read",
     "title": "Post Message",
-    "i18nKey": "menu.postMessage"
+    "i18nKey": "menu.postMessage",
+    "menu": {
+      "order": 24,
+      "icon": "SendOutlined"
+    }
   },
   "/print": {
     "permission": "print:read",
     "title": "Print",
-    "i18nKey": "menu.print"
+    "i18nKey": "menu.print",
+    "menu": {
+      "order": 26,
+      "icon": "PrinterOutlined"
+    }
   },
   "/prism": {
     "permission": "prism:read",
     "title": "Prism Render",
-    "i18nKey": "menu.prismRender"
+    "i18nKey": "menu.prismRender",
+    "menu": {
+      "order": 23,
+      "icon": "HighlightOutlined"
+    }
   },
   "/privacy": {
     "permission": "system:read",
@@ -157,12 +254,20 @@
   "/profile": {
     "permission": "profile:read",
     "title": "Profile",
-    "i18nKey": "menu.profile"
+    "i18nKey": "menu.profile",
+    "menu": {
+      "order": 27,
+      "icon": "UserOutlined"
+    }
   },
   "/qrcode": {
     "permission": "qrcode:read",
     "title": "Qr Generate",
-    "i18nKey": "menu.qrGenerate"
+    "i18nKey": "menu.qrGenerate",
+    "menu": {
+      "order": 21,
+      "icon": "QrcodeOutlined"
+    }
   },
   "/signin": {
     "permission": "system:read",
@@ -176,76 +281,142 @@
     "permission": "error:read",
     "title": "Error",
     "i18nKey": "menu.error",
-    "menuGroup": true
+    "menuGroup": true,
+    "menu": {
+      "order": 33,
+      "icon": "QuestionCircleOutlined"
+    }
   },
   "/svg-viewer": {
     "permission": "svg-viewer:read",
     "title": "SVG Viewer",
-    "i18nKey": "menu.svgViewer"
+    "i18nKey": "menu.svgViewer",
+    "menu": {
+      "order": 2,
+      "icon": "HeatMapOutlined"
+    }
   },
   "/tech/backend": {
     "permission": "tech:read",
     "title": "后端技术栈",
     "i18nKey": "menu.backendTechStack",
-    "menuGroup": true
+    "menuGroup": true,
+    "menu": {
+      "order": 30,
+      "icon": "CloudServerOutlined"
+    }
   },
   "/tech/backend/go": {
     "permission": "tech:read",
     "title": "Go",
-    "i18nKey": "menu.go"
+    "i18nKey": "menu.go",
+    "menu": {
+      "parent": "/tech/backend",
+      "order": 2,
+      "icon": "CodeOutlined"
+    }
   },
   "/tech/backend/java": {
     "permission": "tech:read",
     "title": "Java",
-    "i18nKey": "menu.java"
+    "i18nKey": "menu.java",
+    "menu": {
+      "parent": "/tech/backend",
+      "order": 1,
+      "icon": "CodeOutlined"
+    }
   },
   "/tech/backend/node": {
     "permission": "tech:read",
     "title": "Node",
-    "i18nKey": "menu.node"
+    "i18nKey": "menu.node",
+    "menu": {
+      "parent": "/tech/backend",
+      "order": 0,
+      "icon": "CodeOutlined"
+    }
   },
   "/tech/frontend": {
     "permission": "tech:read",
     "title": "前端技术栈",
     "i18nKey": "menu.frontendTechStack",
-    "menuGroup": true
+    "menuGroup": true,
+    "menu": {
+      "order": 29,
+      "icon": "NodeIndexOutlined"
+    }
   },
   "/tech/frontend/angular": {
     "permission": "tech:read",
     "title": "Angular",
-    "i18nKey": "menu.angular"
+    "i18nKey": "menu.angular",
+    "menu": {
+      "parent": "/tech/frontend",
+      "order": 2,
+      "icon": "Html5Outlined"
+    }
   },
   "/tech/frontend/node": {
     "permission": "tech:read",
     "title": "Node",
-    "i18nKey": "menu.node"
+    "i18nKey": "menu.node",
+    "menu": {
+      "parent": "/tech/frontend",
+      "order": 3,
+      "icon": "CloudServerOutlined"
+    }
   },
   "/tech/frontend/plugins": {
     "permission": "tech:read",
     "title": "Vue 插件",
     "i18nKey": "menu.vuePlugins",
-    "menuGroup": true
+    "menuGroup": true,
+    "menu": {
+      "parent": "/tech/frontend/vue",
+      "order": 0,
+      "icon": "AppstoreOutlined"
+    }
   },
   "/tech/frontend/plugins/perf": {
     "permission": "tech:read",
     "title": "性能优化",
-    "i18nKey": "menu.performanceOptimization"
+    "i18nKey": "menu.performanceOptimization",
+    "menu": {
+      "parent": "/tech/frontend/plugins",
+      "order": 1,
+      "icon": "ThunderboltOutlined"
+    }
   },
   "/tech/frontend/plugins/vue3": {
     "permission": "tech:read",
     "title": "Vue3 API",
-    "i18nKey": "menu.vue3Api"
+    "i18nKey": "menu.vue3Api",
+    "menu": {
+      "parent": "/tech/frontend/plugins",
+      "order": 0,
+      "icon": "FileTextOutlined"
+    }
   },
   "/tech/frontend/react": {
     "permission": "tech:read",
     "title": "React",
-    "i18nKey": "menu.react"
+    "i18nKey": "menu.react",
+    "menu": {
+      "parent": "/tech/frontend",
+      "order": 0,
+      "icon": "CodeOutlined"
+    }
   },
   "/tech/frontend/vue": {
     "permission": "tech:read",
     "title": "Vue",
     "i18nKey": "menu.vue",
-    "menuGroup": true
+    "menuGroup": true,
+    "menu": {
+      "parent": "/tech/frontend",
+      "order": 1,
+      "icon": "CodeOutlined"
+    }
   },
   "/terms": {
     "permission": "system:read",
@@ -254,31 +425,94 @@
   "/text-editor": {
     "permission": "text-editor:read",
     "title": "Text Editor",
-    "i18nKey": "menu.textEditor"
+    "i18nKey": "menu.textEditor",
+    "menu": {
+      "order": 5,
+      "icon": "FileTextOutlined"
+    }
   },
   "/tilt": {
     "permission": "tilt:read",
     "title": "React Tilt",
-    "i18nKey": "menu.reactTilt"
+    "i18nKey": "menu.reactTilt",
+    "menu": {
+      "order": 15,
+      "icon": "ExperimentOutlined"
+    }
   },
   "/topology": {
     "permission": "topology:read",
     "title": "Topology",
-    "i18nKey": "menu.topology"
+    "i18nKey": "menu.topology",
+    "menu": {
+      "order": 10,
+      "icon": "DeploymentUnitOutlined"
+    }
   },
   "/tracking": {
     "permission": "tracking:read",
     "title": "埋点数据看板",
-    "i18nKey": "menu.tracking"
+    "i18nKey": "menu.tracking",
+    "menu": {
+      "order": 32,
+      "icon": "RadarChartOutlined"
+    }
   },
   "/video": {
     "permission": "video:read",
     "title": "Video",
-    "i18nKey": "menu.video"
+    "i18nKey": "menu.video",
+    "menu": {
+      "order": 18,
+      "icon": "VideoCameraOutlined"
+    }
   },
   "/zustand": {
     "permission": "zustand:read",
     "title": "Zustand演示",
-    "i18nKey": "menu.zustand"
+    "i18nKey": "menu.zustand",
+    "menu": {
+      "order": 6,
+      "icon": "DatabaseOutlined"
+    }
+  },
+  "/administration": {
+    "title": "组织管理",
+    "i18nKey": "admin.administration",
+    "menuGroup": true,
+    "menu": {
+      "order": 40,
+      "icon": "SafetyCertificateOutlined"
+    }
+  },
+  "/administration/users": {
+    "title": "用户管理",
+    "i18nKey": "admin.users",
+    "permission": "user:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 0,
+      "icon": "UserOutlined"
+    }
+  },
+  "/administration/roles": {
+    "title": "角色管理",
+    "i18nKey": "admin.roles",
+    "permission": "role:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 1,
+      "icon": "LockOutlined"
+    }
+  },
+  "/administration/audit": {
+    "title": "审计日志",
+    "i18nKey": "admin.audit",
+    "permission": "audit:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 2,
+      "icon": "FileTextOutlined"
+    }
   }
 }

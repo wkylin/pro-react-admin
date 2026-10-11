@@ -41,9 +41,7 @@ const NotificationDropdown = ({
 
   const safeNavigate = (path: string) => {
     setPopVisible(false)
-    setTimeout(() => {
-      navigate(path)
-    }, 10)
+    navigate(path)
   }
 
   const handleNotificationOpen = (id: number) => {
@@ -191,6 +189,7 @@ const NotificationDropdown = ({
         ghost={ghost}
         icon={iconNode}
         onClick={openDrawer}
+        aria-label="通知"
         aria-haspopup="dialog"
         aria-expanded={popVisible}
         style={{
@@ -205,6 +204,7 @@ const NotificationDropdown = ({
       <button
         type="button"
         onClick={openDrawer}
+        aria-label="通知"
         aria-haspopup="dialog"
         aria-expanded={popVisible}
         style={{

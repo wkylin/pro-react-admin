@@ -1,109 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import type { ReactNode, FC } from 'react'
 import { Navigate } from 'react-router-dom'
-import { getLocalStorage } from '@shared/lib/publicFn'
-import { permissionService } from '@platform/auth/services/permissionService'
-import type { PermissionCode } from '@platform/auth/model/permission'
+import { readStoredToken } from '../model/session'
+import { usePermission } from '../hooks/usePermission'
+import { evaluateAccessRequirements } from '../model/policy'
+import type { PermissionCode } from '../model/permission'
 
 interface ProtectedRouteProps {
-  children: React.ReactNode
+  children: ReactNode
   // 可选的权限/角色检查
   permission?: PermissionCode | PermissionCode[]
   roles?: string[]
   requireAll?: boolean
-  fallback?: React.ReactNode
+  fallback?: ReactNode
 }
 
-const readToken = (value: unknown): string | null => {
-  if (typeof value !== 'object' || value === null || !('token' in value)) return null
-  const token = value.token
-  return typeof token === 'string' ? token : null
-}
-
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   children,
   permission,
   roles,
   requireAll = false,
   fallback,
 }) => {
-  // Token 检查（保持原有逻辑）
-  const token = readToken(getLocalStorage('token')) ?? readToken(getLocalStorage('github_token'))
-
-  // 如果没有传入权限/角色要求，直接渲染（保持向下兼容）
-  const needCheck = !!permission || (roles && roles.length > 0)
-  const [allowed, setAllowed] = useState<boolean>(!needCheck)
-  const [checking, setChecking] = useState<boolean>(!!needCheck)
-
-  useEffect(() => {
-    if (!needCheck) return
-
-    let alive = true
-    const checkPermissions = async () => {
-      try {
-        let hasAccess = true
-
-        // 权限检查
-        if (permission) {
-          if (Array.isArray(permission)) {
-            if (requireAll) {
-              const result = await permissionService.hasAllPermissions(permission)
-              hasAccess = result.hasPermission
-            } else {
-              const result = await permissionService.hasAnyPermission(permission)
-              hasAccess = result.hasPermission
-            }
-          } else {
-            hasAccess = await permissionService.hasPermission(permission)
-          }
-        }
-
-        // 角色检查
-        if (hasAccess && roles && roles.length > 0) {
-          if (requireAll) {
-            const result = await permissionService.hasAllRoles(roles)
-            hasAccess = result.hasPermission
-          } else {
-            const result = await permissionService.hasAnyRole(roles)
-            hasAccess = result.hasPermission
-          }
-        }
-
-        if (alive) {
-          setAllowed(hasAccess)
-        }
-      } catch (error) {
-        console.error('ProtectedRoute 权限检查失败:', error)
-        if (alive) {
-          setAllowed(false)
-        }
-      } finally {
-        if (alive) {
-          setChecking(false)
-        }
-      }
-    }
-
-    checkPermissions()
-
-    return () => {
-      alive = false
-    }
-  }, [permission, roles, requireAll, needCheck])
-
-  // 登录态检查：在保证 hooks 顺序不变的前提下，若无 token 则跳转登录
-  if (!token) {
-    return <Navigate to="/signin" replace />
-  }
-
-  // 权限检查中，显示空白或加载状态
-  if (checking) {
-    return null
-  }
-
-  // 权限不足，显示 fallback 或跳转 403
-  if (!allowed) {
-    return fallback ? <>{fallback}</> : <Navigate to="/403" replace />
-  }
-
-  return <>{children}</>
+  const { current, loading } = usePermission()
+  if (!readStoredToken()) return <Navigate to="/signin" replace />
+  if (!permission && !roles?.length) return <>{children}</>
+  if (loading && !current) return <div role="status">正在验证访问权限...</div>
+  const allowed = current && evaluateAccessRequirements(current, { permission, roles, requireAll })
+  return allowed ? <>{children}</> : fallback !== undefined ? <>{fallback}</> : <Navigate to="/403" replace />
 }

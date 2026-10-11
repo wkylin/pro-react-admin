@@ -27,9 +27,9 @@ process.env.TRACKING_ADMIN_TOKEN ||= crypto.randomBytes(32).toString('hex')
 
 const { result } = concurrently(
   [
-    { command: 'pnpm --filter api dev', name: 'api', prefixColor: 'cyan' },
+    { command: `"${process.execPath}" --watch api/server.js`, name: 'api', prefixColor: 'cyan' },
     // Let Webpack inherit the terminal so WebpackBar can redraw one live progress bar.
-    { command: 'pnpm run start:web', name: 'web', raw: true },
+    { command: `"${process.execPath}" scripts/project-command.mjs dev`, name: 'web', raw: true },
   ],
   {
     cwd: root,

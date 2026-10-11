@@ -6,8 +6,14 @@ import { withTimeout } from '@platform/api/core/async'
 
 import { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../model/permission'
 import * as permissionAPI from '../api/permission'
-import { routePermissionMap } from '../model/policy'
-import { readStoredToken } from '../model/session'
+import { canAccessPath, matchesPermission } from '../model/policy'
+import { readStoredToken, SESSION_CHANGED_EVENT } from '../model/session'
+
+export interface PermissionSnapshot {
+  permissions: UserPermission | null
+  status: 'idle' | 'loading' | 'ready' | 'error'
+}
+const emptySnapshot: PermissionSnapshot = { permissions: null, status: 'idle' }
 
 class PermissionService {
   private static instance: PermissionService
@@ -18,6 +24,9 @@ class PermissionService {
   private cacheGeneration = 0
   private readonly cacheExpireTime: number = 30 * 60 * 1000 // 30分钟
   private lastFetchTime: number = 0
+  private listeners = new Set<() => void>()
+  private snapshot: PermissionSnapshot = emptySnapshot
+  private expiryTimer: ReturnType<typeof setTimeout> | undefined
 
   private readonly STORAGE_KEYS = {
     PERMISSIONS: 'user_permissions',
@@ -31,6 +40,58 @@ class PermissionService {
   private constructor() {
     // 从 localStorage 恢复权限信息
     this.loadFromStorage()
+    if (this.peekPermissions()) this.publish('ready')
+  }
+
+  getSnapshot = (): PermissionSnapshot =>
+    this.snapshot.permissions && !this.peekPermissions() ? emptySnapshot : this.snapshot
+
+  private onSessionChanged = (): void => {
+    this.clearCache()
+    if (readStoredToken()) void this.getPermissions()
+  }
+
+  private onStorage = (event: StorageEvent): void => {
+    if (event.key === null || ['token', 'github_token', 'user_role'].includes(event.key)) this.onSessionChanged()
+  }
+
+  subscribe = (listener: () => void): (() => void) => {
+    if (this.listeners.size === 0 && typeof window !== 'undefined') {
+      window.addEventListener('storage', this.onStorage)
+      window.addEventListener(SESSION_CHANGED_EVENT, this.onSessionChanged)
+      window.addEventListener('focus', this.onFocus)
+    }
+    this.listeners.add(listener)
+    this.scheduleExpiry()
+    return () => {
+      this.listeners.delete(listener)
+      if (this.listeners.size === 0 && typeof window !== 'undefined') {
+        window.removeEventListener('storage', this.onStorage)
+        window.removeEventListener(SESSION_CHANGED_EVENT, this.onSessionChanged)
+        window.removeEventListener('focus', this.onFocus)
+        clearTimeout(this.expiryTimer)
+      }
+    }
+  }
+
+  private publish(status: PermissionSnapshot['status']): void {
+    this.snapshot = { permissions: this.peekPermissions(), status }
+    this.scheduleExpiry()
+    for (const listener of this.listeners) listener()
+  }
+
+  private onFocus = (): void => {
+    if (this.snapshot.status === 'ready' && !this.peekPermissions()) this.onSessionChanged()
+  }
+
+  private scheduleExpiry(): void {
+    clearTimeout(this.expiryTimer)
+    if (this.listeners.size && this.userPermissions && this.snapshot.status === 'ready') {
+      this.expiryTimer = setTimeout(
+        this.onSessionChanged,
+        Math.max(1, this.lastFetchTime + this.cacheExpireTime - Date.now() + 1)
+      )
+    }
   }
 
   private normalizeUserPermissions(input: UserPermission): UserPermission {
@@ -101,7 +162,11 @@ class PermissionService {
         this.lastFetchTime = parseInt(lastFetch, 10)
 
         // 检查缓存是否过期
-        if (Date.now() - this.lastFetchTime > this.cacheExpireTime) {
+        if (
+          !Number.isFinite(this.lastFetchTime) ||
+          Date.now() - this.lastFetchTime > this.cacheExpireTime ||
+          this.lastFetchTime > Date.now()
+        ) {
           this.userPermissions = null
           this.lastFetchTime = 0
         }
@@ -127,6 +192,7 @@ class PermissionService {
     } catch (error) {
       console.error('保存权限信息失败:', error)
     }
+    this.publish('ready')
   }
 
   /**
@@ -145,6 +211,7 @@ class PermissionService {
         /* Storage unavailable. */
       }
     }
+    this.publish('idle')
   }
 
   /**
@@ -168,6 +235,11 @@ class PermissionService {
    */
   async getPermissions(forceRefresh = false, userId?: string): Promise<UserPermission> {
     const denied = (): UserPermission => ({ userId: '', username: '', roles: [], permissions: [], routes: [] })
+    if (!readStoredToken()) {
+      if (this.userPermissions || this.loadingPromise) this.clearCache()
+      this.publish('error')
+      return denied()
+    }
     const authKey = this.getCurrentAuthKey()
     const storedAuthKey = this.safeReadStorage(this.STORAGE_KEYS.AUTH_KEY)
     if (
@@ -184,6 +256,7 @@ class PermissionService {
 
     const generation = this.cacheGeneration
     this.loadingAuthKey = authKey
+    this.publish('loading')
     const pending = (async (): Promise<UserPermission> => {
       try {
         const permissions = this.normalizeUserPermissions(
@@ -193,7 +266,10 @@ class PermissionService {
         this.saveToStorage(permissions)
         return permissions
       } catch (error) {
-        if (generation === this.cacheGeneration && authKey === this.getCurrentAuthKey()) this.clearCache()
+        if (generation === this.cacheGeneration && authKey === this.getCurrentAuthKey()) {
+          this.clearCache()
+          this.publish('error')
+        }
         console.warn('获取权限失败，拒绝授权:', error)
         return denied()
       }
@@ -221,28 +297,7 @@ class PermissionService {
   async hasPermission(permission: PermissionCode, forceRefresh: boolean = false): Promise<boolean> {
     const permissions = await this.getPermissions(forceRefresh)
 
-    // 超级权限
-    if (permissions.permissions.includes('*:*')) {
-      return true
-    }
-
-    // 精确匹配
-    if (permissions.permissions.includes(permission)) {
-      return true
-    }
-
-    // 通配符匹配
-    const [resource, action] = permission.split(':')
-    if (action && permissions.permissions.includes(`${resource}:*` as PermissionCode)) {
-      return true
-    }
-
-    // 资源级权限
-    if (permissions.permissions.includes(resource as PermissionCode)) {
-      return true
-    }
-
-    return false
+    return matchesPermission(permission, permissions.permissions)
   }
 
   /**
@@ -332,110 +387,8 @@ class PermissionService {
    * 检查路由权限
    */
   async canAccessRoute(routePath: string, forceRefresh: boolean = false): Promise<boolean> {
-    try {
-      const normalizedRoutePath = typeof routePath === 'string' ? routePath : ''
-      if (!normalizedRoutePath) {
-        // 运行时兜底：避免非字符串 routePath 导致 split/match 崩溃
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('[permissionService.canAccessRoute] invalid routePath (non-string):', routePath)
-        }
-        return false
-      }
-
-      // 优先使用缓存，避免重复请求
-      const permissions = await this.getPermissions(forceRefresh)
-
-      // 超级管理员可以访问所有路由
-      if (permissions.permissions.includes('*:*')) {
-        return true
-      }
-
-      const escapeRegexPart = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-      const makeRouteRegexFromPattern = (patternKey: string): RegExp | null => {
-        if (!patternKey) return null
-        if (patternKey === '*') return /^.*$/
-
-        const parts = patternKey.split('/').map((part) => {
-          if (part === '*') return '.*'
-          if (part.startsWith(':')) return '[^/]+'
-          return escapeRegexPart(part)
-        })
-
-        try {
-          return new RegExp(`^${parts.join('/')}$`)
-        } catch {
-          return null
-        }
-      }
-
-      // 优先基于 route -> permission 映射进行检查（permission-code 为主）
-      const findPermissionForRoute = (path: string): PermissionCode | null => {
-        if (!routePermissionMap) return null
-        // 直接精确匹配
-        if (routePermissionMap[path]) return routePermissionMap[path]
-        // 否则尝试使用 pattern 匹配（支持 :param 风格）
-        const keys = Object.keys(routePermissionMap)
-        for (const key of keys) {
-          if (key === '*') continue
-          const regex = makeRouteRegexFromPattern(key)
-          if (regex?.test(path)) return routePermissionMap[key]
-        }
-
-        // 兜底规则（如 '*'）
-        return routePermissionMap['*'] ?? null
-      }
-
-      const mappedPerm = findPermissionForRoute(normalizedRoutePath)
-      if (mappedPerm) {
-        // 若存在映射，则以 permission-code 为准（优先）。若 forceRefresh 为 true，传递到 hasPermission
-        const ok = await this.hasPermission(mappedPerm, forceRefresh)
-        return !!ok
-      }
-
-      // 内部函数：使用给定权限列表检查路由
-      const matchWithRoutes = (routes: string[] | undefined) => {
-        if (!routes || !Array.isArray(routes)) return false
-        return routes.some((route) => {
-          // 精确匹配
-          if (route === normalizedRoutePath) {
-            return true
-          }
-
-          // 通配符：允许 routes 列表中存在 '*' 作为全量
-          if (route === '*') {
-            return true
-          }
-
-          // 通配符匹配（如 /coupons/edit/:id）
-          const regex = makeRouteRegexFromPattern(route)
-          return !!regex?.test(normalizedRoutePath)
-        })
-      }
-
-      // 首次尝试使用当前缓存的 routes
-      if (matchWithRoutes(permissions.routes)) {
-        return true
-      }
-
-      // 如果未匹配且不是强制刷新，尝试强制刷新一次权限并重试（处理缓存旧数据场景）
-      if (!forceRefresh) {
-        try {
-          const refreshed = await this.getPermissions(true)
-          if (refreshed.permissions.includes('*:*')) return true
-          return matchWithRoutes(refreshed.routes)
-        } catch (e) {
-          console.warn('刷新权限以检查路由时失败，继续返回 false', e)
-        }
-      }
-
-      // 如果没有路由列表或未匹配，返回 false
-      return false
-    } catch (error) {
-      console.error('检查路由权限失败:', error)
-      // 如果权限检查失败，默认返回 false
-      return false
-    }
+    if (typeof routePath !== 'string' || !routePath) return false
+    return canAccessPath(await this.getPermissions(forceRefresh), routePath)
   }
 
   /**

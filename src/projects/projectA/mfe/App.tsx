@@ -2,10 +2,11 @@ import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
 import { emitMfeEvent, patchMfeSharedState } from '@platform/mfe/bridge'
+import RemoteScope from '@app/bootstrap/RemoteScope'
 
 const { Paragraph, Text } = Typography
 
-export default function ProjectARemoteApp() {
+function ProjectARemoteContent() {
   return (
     <PageContainer title="ProjectA (Remote)" footer={<span></span>}>
       <Card>
@@ -53,5 +54,13 @@ export default function ProjectARemoteApp() {
         </Space>
       </Card>
     </PageContainer>
+  )
+}
+
+export default function ProjectARemoteApp() {
+  return (
+    <RemoteScope projectId="projectA">
+      <ProjectARemoteContent />
+    </RemoteScope>
   )
 }

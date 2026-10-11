@@ -1,55 +1,58 @@
 import fs from 'node:fs'
-import path from 'node:path'
-import { spawn } from 'node:child_process'
-import { fileURLToPath } from 'node:url'
+import { createBuildPlan, loadProjectRegistry, resolveProject } from '../config/project-registry.mjs'
+import { localCli, runNodeCli } from './local-cli.mjs'
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const registry = JSON.parse(fs.readFileSync(path.join(root, 'src/projects/registry.json'), 'utf8'))
-const [action, projectName = 'default'] = process.argv.slice(2)
-const project = registry.projects[projectName]
-const remote = (registry.remotes || []).find(({ name }) => name === projectName)
-
-if (!project) throw new Error(`Unknown project "${projectName}". Registered projects: ${Object.keys(registry.projects).join(', ')}`)
-if (!['dev', 'build', 'mfe-dev', 'mfe-build', 'mfe-build-standalone'].includes(action)) {
-  throw new Error('Usage: project-command.mjs <dev|build|mfe-dev|mfe-build|mfe-build-standalone> <project>')
-}
-if (action.startsWith('mfe-') && projectName !== 'shell' && (!project.mfeExpose || !remote)) {
-  throw new Error(`Project "${projectName}" is not registered as a Module Federation Remote`)
-}
-
-const isDev = action === 'dev' || action === 'mfe-dev'
-const isMfe = action.startsWith('mfe-')
-const isStandalone = action === 'mfe-build-standalone'
-const env = {
-  ...process.env,
-  PROJECT: projectName,
-  BUILD_GOAL: isDev ? 'development' : 'production',
-  NODE_ENV: isDev ? 'development' : 'production',
-  NODE_OPTIONS: process.env.NODE_OPTIONS || '--trace-deprecation',
-  SENTRY_SOURCE_MAP: isMfe ? 'no' : isDev ? 'no' : 'map',
-}
-
-if (!isMfe) delete env.MFE_ROLE
-if (action === 'mfe-dev') {
-  if (projectName === 'shell') {
-    env.MFE_ROLE = 'host'
-    env.PORT = env.PORT || '8080'
-    for (const item of registry.remotes || []) env[item.envKey] = item.devUrl
-  } else {
-    env.MFE_ROLE = 'remote'
-    env.PORT = env.PORT || String(remote.devPort)
+const [action, projectName = process.env.PROJECT || 'default', ...options] = process.argv.slice(2)
+const registry = loadProjectRegistry()
+if (action === 'list' || action === 'doctor') {
+  for (const name of Object.keys(registry.projects)) {
+    const selected = resolveProject(name, registry)
+    if (action === 'doctor') {
+      for (const file of [selected.entry, selected.routers, ...(selected.mfeExpose ? [selected.mfeExpose] : [])]) {
+        if (!fs.existsSync(file)) throw new Error(`Missing project source: ${file}`)
+      }
+    }
+    console.log(
+      `${name}: ${selected.project.sourceRoot} -> ${selected.project.output}${selected.remote ? ' (remote)' : selected.project.mfeHost ? ' (host)' : ''}`
+    )
   }
-} else if (isMfe) {
-  env.MFE_ROLE = projectName === 'shell' ? 'host' : 'remote'
-  env.PUBLIC_URL = projectName === 'shell' || isStandalone ? '/' : remote.prodPath.replace(/remoteEntry\.js$/, '')
-}
-
-const args = ['exec', 'webpack', ...(isDev ? ['serve'] : []), '--config', isDev ? './webpack/webpack.dev.js' : './webpack/webpack.prod.js', '--stats-error-details']
-const child = spawn('pnpm', args, { cwd: root, env, stdio: 'inherit', shell: process.platform === 'win32' })
-child.on('error', (error) => {
-  console.error(`[project-command] Could not start webpack: ${error.message}`)
-  process.exitCode = 1
-})
-child.on('exit', (code, signal) => {
-  process.exitCode = signal ? 1 : code ?? 1
-})
+  if (action === 'doctor') {
+    console.log(`Node ${process.version}; installed Webpack CLI: ${localCli('webpack-cli', 'webpack-cli')}`)
+  }
+} else if (['dev', 'build', 'mfe-dev', 'mfe-build', 'mfe-build-standalone'].includes(action)) {
+  if (options.some((arg) => !['--dry-run', '--stats'].includes(arg)))
+    throw new Error('Only --dry-run/--stats are supported; set PORT/PUBLIC_URL in the environment')
+  const plan = createBuildPlan(action, projectName, process.env, registry)
+  if (options.includes('--stats')) {
+    if (action.endsWith('dev')) throw new Error('--stats requires a build action')
+    Object.assign(plan.env, { STATS_ONLY: '1', USE_ANALYZE: '1', SENTRY_SOURCE_MAP: 'no' })
+    plan.args.push(`--json=compilation-${plan.selected.name === 'default' ? '' : `${plan.selected.name}-`}stats.json`)
+  }
+  if (options.includes('--dry-run')) {
+    const keys = [
+      'PROJECT',
+      'NODE_ENV',
+      'BUILD_GOAL',
+      'MFE_ROLE',
+      'PORT',
+      'PUBLIC_URL',
+      'SENTRY_SOURCE_MAP',
+      ...registry.remotes.map(({ envKey }) => envKey),
+    ]
+    console.log(
+      JSON.stringify(
+        {
+          project: plan.selected.name,
+          output: plan.selected.project.output,
+          args: plan.args,
+          env: Object.fromEntries(keys.filter((key) => plan.env[key] !== undefined).map((key) => [key, plan.env[key]])),
+        },
+        null,
+        2
+      )
+    )
+  } else runNodeCli(localCli('webpack-cli', 'webpack-cli'), plan.args, plan.env)
+} else
+  throw new Error(
+    'Usage: project-command.mjs <list|doctor|dev|build|mfe-dev|mfe-build|mfe-build-standalone> [project] [--dry-run]'
+  )

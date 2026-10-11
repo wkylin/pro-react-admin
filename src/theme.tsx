@@ -4,17 +4,18 @@ import { ConfigProvider, theme, App as AntdApp } from 'antd'
 import { StyleProvider } from '@ant-design/cssinjs'
 import dayjs from 'dayjs'
 import zhCN from 'antd/locale/zh_CN'
+import enUS from 'antd/locale/en_US'
+import { useTranslation } from 'react-i18next'
 import 'dayjs/locale/zh-cn'
 import 'antd/dist/reset.css'
 import './styles/reset.css'
 
-import RootLayout from '@/routers/components/RootLayout'
-import RouterErrorElement from '@/routers/components/RouterErrorElement'
+import RootLayout from '@app/routing/components/RootLayout'
+import RouterErrorElement from '@app/routing/components/RouterErrorElement'
 import rootRouter from '@routers'
 import { useProThemeContext } from './theme/hooks'
 import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 import { setMessageInstance } from '@platform/feedback/message'
-import { keepAliveManager } from '@/platform/keep-alive'
 import ServiceWorkerUpdatePrompt from '@platform/pwa/ServiceWorkerUpdatePrompt'
 
 dayjs.locale('zh-cn')
@@ -22,22 +23,16 @@ dayjs.locale('zh-cn')
 const ThemeIndex: React.FC = () => {
   useRemoveGlobalLoader()
   const { themeSettings, resolvedTheme } = useProThemeContext()
+  const { i18n } = useTranslation()
+  const isChinese = i18n.resolvedLanguage?.startsWith('zh') ?? true
+  useEffect(() => {
+    dayjs.locale(isChinese ? 'zh-cn' : 'en')
+  }, [isChinese])
 
   const { message } = AntdApp.useApp()
 
   useEffect(() => {
     setMessageInstance(message)
-    try {
-      keepAliveManager.setOptions({
-        deactivateDelay: 500,
-        keepInactiveCount: 0,
-        limit: 5,
-      })
-    } catch (e) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn('keepAliveManager.setOptions failed:', e)
-      }
-    }
   }, [message])
 
   const algorithms = [resolvedTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm]
@@ -68,7 +63,7 @@ const ThemeIndex: React.FC = () => {
         input={{ autoComplete: 'off' }}
         prefixCls="wui-ant"
         iconPrefixCls="wui-icon"
-        locale={zhCN}
+        locale={isChinese ? zhCN : enUS}
       >
         <ServiceWorkerUpdatePrompt />
         <RouterProvider router={router} />

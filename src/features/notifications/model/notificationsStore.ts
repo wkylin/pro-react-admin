@@ -1,4 +1,6 @@
-import { create } from 'zustand'
+import { createStore } from 'zustand/vanilla'
+import { useStore } from 'zustand'
+import { createContext, createElement, useContext, useState, type ReactNode } from 'react'
 import type { Notification } from './types'
 
 export interface NotificationsState {
@@ -17,18 +19,32 @@ const initialNotifications: Notification[] = Array.from({ length: 12 }, (_, inde
   time: `${index + 1} 分钟前`,
 }))
 
-export const useNotificationsStore = create<NotificationsState>((set) => ({
-  notifications: initialNotifications,
-  markRead: (id) =>
-    set((state) => ({
-      notifications: state.notifications.map((notification) =>
-        notification.id === id ? { ...notification, read: true } : notification
-      ),
-    })),
-  markAllRead: () =>
-    set((state) => ({
-      notifications: state.notifications.map((notification) => ({ ...notification, read: true })),
-    })),
-  remove: (id) => set((state) => ({ notifications: state.notifications.filter((item) => item.id !== id) })),
-  clear: () => set({ notifications: [] }),
-}))
+export const createNotificationsStore = () =>
+  createStore<NotificationsState>((set) => ({
+    notifications: initialNotifications.map((notification) => ({ ...notification })),
+    markRead: (id) =>
+      set((state) => ({
+        notifications: state.notifications.map((notification) =>
+          notification.id === id ? { ...notification, read: true } : notification
+        ),
+      })),
+    markAllRead: () =>
+      set((state) => ({
+        notifications: state.notifications.map((notification) => ({ ...notification, read: true })),
+      })),
+    remove: (id) => set((state) => ({ notifications: state.notifications.filter((item) => item.id !== id) })),
+    clear: () => set({ notifications: [] }),
+  }))
+
+const Context = createContext<ReturnType<typeof createNotificationsStore> | null>(null)
+
+export function NotificationsProvider({ children }: { children: ReactNode }) {
+  const [store] = useState(createNotificationsStore)
+  return createElement(Context.Provider, { value: store }, children)
+}
+
+export function useNotificationsStore<T>(selector: (state: NotificationsState) => T): T {
+  const store = useContext(Context)
+  if (!store) throw new Error('NotificationsProvider required')
+  return useStore(store, selector)
+}

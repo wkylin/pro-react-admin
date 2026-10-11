@@ -1,3 +1,4 @@
+import { loadProjectRegistry, resolveInside } from '../config/project-registry.mjs'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -7,7 +8,7 @@ import { getMfeSharedDependencies } from '../config/mfe-contract.mjs'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = path.join(root, 'src')
 const registryPath = path.join(sourceRoot, 'projects/registry.json')
-const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
+const registry = loadProjectRegistry()
 const mfeProtocol = JSON.parse(fs.readFileSync(path.join(root, 'config/mfe-protocol.json'), 'utf8'))
 const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 getMfeSharedDependencies({ ...(packageJson.dependencies || {}), ...(packageJson.peerDependencies || {}) })
@@ -19,18 +20,6 @@ if (!Number.isInteger(mfeProtocol.protocolVersion) || mfeProtocol.protocolVersio
 }
 
 assertClientEnvKeys(clientEnvKeys)
-
-function resolveInside(base, relativePath, label) {
-  if (typeof relativePath !== 'string' || !relativePath.trim()) {
-    throw new Error(label + ' must be a non-empty relative path')
-  }
-  if (path.isAbsolute(relativePath)) throw new Error(label + ' must be relative')
-  const absolutePath = path.resolve(base, relativePath)
-  if (absolutePath !== base && !absolutePath.startsWith(base + path.sep)) {
-    throw new Error(label + ' must stay inside ' + base)
-  }
-  return absolutePath
-}
 
 for (const name of projectNames) {
   const project = registry.projects[name]
@@ -96,7 +85,10 @@ for (const remote of remotes) {
 const shellEntry = fs.readFileSync(path.join(sourceRoot, 'projects/shell/remote-components.tsx'), 'utf8')
 const federationTypes = fs.readFileSync(path.join(root, 'typings/module-federation.d.ts'), 'utf8')
 const staticImports = Array.from(shellEntry.matchAll(/import\(['"]([^'"]+)\/App['"]\)/g), (match) => match[1]).sort()
-const typeDeclarations = Array.from(federationTypes.matchAll(/declare module ['"]([^'"]+)\/App['"]/g), (match) => match[1]).sort()
+const typeDeclarations = Array.from(
+  federationTypes.matchAll(/declare module ['"]([^'"]+)\/App['"]/g),
+  (match) => match[1]
+).sort()
 const expectedNames = [...remoteNames].sort()
 
 if (JSON.stringify(staticImports) !== JSON.stringify(expectedNames)) {

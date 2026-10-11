@@ -76,6 +76,12 @@ jobs:
       - name: Strict type-check the public component library
         run: pnpm run typecheck:lib
 
+      - name: Test project tooling and scaffolding
+        run: pnpm run test:tooling
+
+      - name: Validate generated deployment contracts
+        run: pnpm run check:deployment-contracts
+
       - name: Run Jest
         run: pnpm run test:jest --runInBand
 
@@ -93,6 +99,13 @@ jobs:
 
       - name: Run browser end-to-end checks
         run: pnpm run test:e2e
+
+      - name: Upload validated production application
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-${{ github.sha }}
+          path: dist/
+          retention-days: 14
 
       - name: Upload current Webpack stats
         if: always()
@@ -221,3 +234,42 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 14
+
+  enterprise:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build lean enterprise application
+        run: pnpm run build:enterprise:stats
+        env:
+          PUBLIC_URL: /
+      - name: Check enterprise bundle
+        run: node scripts/check-bundle-budget.mjs compilation-enterprise-stats.json enterprise
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify resource workflows and revocation repeatedly
+        run: pnpm run test:e2e:enterprise --repeat-each=5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enterprise-${{ github.sha }}
+          path: |
+            dist-enterprise/
+            compilation-enterprise-stats.json
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enterprise-browser-report-${{ github.run_id }}
+          path: |
+            playwright-enterprise-report/
+            test-results/
+          if-no-files-found: ignore

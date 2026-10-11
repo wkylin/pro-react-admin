@@ -8,6 +8,7 @@ import React, {
   type PropsWithChildren,
 } from 'react'
 import type { LayoutMode } from '@layouts/types'
+import { useApplicationScope } from '@app/model'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
@@ -40,8 +41,8 @@ export const defaultSettings: ThemeSettings = {
   colorWeak: false,
   grayMode: false,
   compactAlgorithm: false,
-  pointerMove: true,
-  magicTrail: true,
+  pointerMove: false,
+  magicTrail: false,
 }
 
 export interface ProThemeContextValue {
@@ -66,20 +67,20 @@ type ProThemeProviderProps = PropsWithChildren<{
   defaultSettings?: Partial<ThemeSettings>
 }>
 
-const STORAGE_KEY = 'pro-react-admin-theme-settings'
-
 const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSettings: initialSettings }) => {
+  const { projectId } = useApplicationScope()
+  const storageKey = `pro-react-admin:${projectId}:theme`
   const [systemPrefersDark, setSystemPrefersDark] = useState(
     () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches === true
   )
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      try {
+    try {
+      const stored = localStorage.getItem(storageKey)
+      if (stored) {
         return { ...defaultSettings, ...JSON.parse(stored), ...initialSettings }
-      } catch (e) {
-        console.error('Failed to parse theme settings from local storage', e)
       }
+    } catch (e) {
+      console.warn('Theme preferences unavailable', e)
     }
     return { ...defaultSettings, ...initialSettings }
   })
@@ -88,7 +89,11 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     themeSettings.themeMode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : themeSettings.themeMode
 
   useLayoutEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(themeSettings))
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(themeSettings))
+    } catch {
+      /* Session preferences still work. */
+    }
 
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
@@ -103,7 +108,7 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     } else {
       html.style.filter = ''
     }
-  }, [themeSettings, resolvedTheme])
+  }, [themeSettings, resolvedTheme, storageKey])
 
   // Keep Ant Design, CSS variables and Tailwind dark: utilities in sync with OS changes.
   useEffect(() => {

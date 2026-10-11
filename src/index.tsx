@@ -1,21 +1,22 @@
 import ThemeIndex from './theme'
 import { ProThemeProvider } from './theme/hooks'
 import WatermarkProvider from '@wui/WatermarkProvider'
-import { renderApp } from '@/bootstrap/renderApp'
+import { renderApp } from '@app/bootstrap/renderApp'
 import { registerServiceWorker } from '@platform/pwa/registerServiceWorker'
-import { TrackerCore, PageViewPlugin } from '@platform/tracking'
 
 registerServiceWorker()
 
 // Populate the local tracking dashboard with page views during development only.
 if (process.env.NODE_ENV === 'development') {
-  const tracker = new TrackerCore({
-    appId: 'pro-react-admin',
-    appVersion: 'local',
-    endpoint: '/api/tracking/collect',
-    batchInterval: 1000,
+  void import('@platform/tracking').then(({ TrackerCore, PageViewPlugin }) => {
+    const tracker = new TrackerCore({
+      appId: 'pro-react-admin',
+      appVersion: 'local',
+      endpoint: '/api/tracking/collect',
+      batchInterval: 1000,
+    })
+    tracker.use(PageViewPlugin)
   })
-  tracker.use(PageViewPlugin)
 }
 
 renderApp({

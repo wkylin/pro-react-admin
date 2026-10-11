@@ -29,6 +29,6 @@ module.exports = {
   },
   // Ignore built/distribution files to avoid haste name collisions
   modulePathIgnorePatterns: ['<rootDir>/packages/wui-react/dist/', '<rootDir>/.delta/'],
-  testPathIgnorePatterns: ['/tests/e2e/', '/.delta/'],
+  testPathIgnorePatterns: ['/tests/e2e/', '/.delta/', '/scripts/'],
   setupFilesAfterEnv: ['<rootDir>/jest/setupTests.js'],
 }

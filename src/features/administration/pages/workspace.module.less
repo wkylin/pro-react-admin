@@ -1,0 +1,55 @@
+.workspace {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.toolbar {
+  display: flex;
+  gap: 12px;
+
+  > :first-child {
+    max-width: 420px;
+  }
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.code {
+  font-family: SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+@media (width <= 640px) {
+  .workspace {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

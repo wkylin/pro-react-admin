@@ -12,12 +12,24 @@ const absolute = (parent, current) => (current.startsWith('/') ? current : `${pa
 
 /** Read declarative route data without executing JSX, pages, or browser-dependent services. */
 export function collectRouteDeclarations() {
-  const directory = path.join(root, 'src/routers/modules')
+  const directory = path.join(root, 'src/app/routing/modules')
+  const featureDirectory = path.join(root, 'src/features')
+  const files = [
+    ...fs
+      .readdirSync(directory)
+      .filter((name) => name.endsWith('.routes.tsx'))
+      .map((name) => path.join(directory, name)),
+    ...fs
+      .readdirSync(featureDirectory, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => path.join(featureDirectory, entry.name, 'routes.tsx'))
+      .filter((file) => fs.existsSync(file)),
+  ]
   const routes = []
-  for (const file of fs.readdirSync(directory).filter((name) => name.endsWith('.routes.tsx'))) {
+  for (const file of files) {
     const source = ts.createSourceFile(
       file,
-      fs.readFileSync(path.join(directory, file), 'utf8'),
+      fs.readFileSync(file, 'utf8'),
       ts.ScriptTarget.Latest,
       true,
       ts.ScriptKind.TSX
@@ -31,7 +43,7 @@ export function collectRouteDeclarations() {
       routes.push({
         path: fullPath,
         index,
-        file: `src/routers/modules/${file}`,
+        file: path.relative(root, file).split(path.sep).join('/'),
         name:
           string(property(node, 'name')) ||
           (meta && ts.isObjectLiteralExpression(meta) ? string(property(meta, 'title')) : undefined),
@@ -55,28 +67,16 @@ export function collectRouteDeclarations() {
 }
 
 export function collectMenuDeclarations() {
-  const file = 'src/layouts/navigation/menu.config.tsx'
-  const source = ts.createSourceFile(
-    file,
-    fs.readFileSync(path.join(root, file), 'utf8'),
-    ts.ScriptTarget.Latest,
-    true,
-    ts.ScriptKind.TSX
-  )
-  const menus = []
-  const walk = (node) => {
-    if (ts.isObjectLiteralExpression(node)) {
-      const menuPath = string(property(node, 'path'))
-      if (menuPath)
-        menus.push({
-          path: menuPath,
-          title: string(property(node, 'label')),
-          i18nKey: string(property(node, 'i18nKey')),
-          group: Boolean(property(node, 'children')),
-        })
-    }
-    ts.forEachChild(node, walk)
-  }
-  walk(source)
-  return menus
+  const policies = JSON.parse(fs.readFileSync(path.join(root, 'config/route-policy.json'), 'utf8'))
+  return Object.entries(policies)
+    .filter(([, policy]) => policy.menu)
+    .map(([path, policy]) => ({
+      path,
+      title: policy.title,
+      i18nKey: policy.i18nKey,
+      group: Boolean(policy.menuGroup),
+      parent: policy.menu.parent,
+      order: policy.menu.order,
+      icon: policy.menu.icon,
+    }))
 }

@@ -13,6 +13,9 @@ node_modules/
 /.eslintcache
 tsconfig.tsbuildinfo
 compilation-stats.json
+compilation-*-stats.json
+/dist-*/
+/artifacts/
 .yarn/cache
 /packagehash.txt
 src/assets-optimized/
@@ -40,6 +43,8 @@ storybook-static
 /packages/wui-react/LICENSE
 /dist-zip
 /playwright-report
+/playwright-enterprise-report
+/playwright-mfe-report
 /test-results
 
 # 一次性报告输出（避免误提交）

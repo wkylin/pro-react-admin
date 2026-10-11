@@ -1,12 +1,8 @@
-/**
- * 权限守卫组件
- * 根据权限控制子组件的显示/隐藏
- */
-
-import React, { useState, useEffect, ReactNode } from 'react'
-import type { PermissionCode } from '@platform/auth/model/permission'
-import { permissionService } from '@platform/auth/services/permissionService'
+import type { FC, ReactNode } from 'react'
 import { Spin } from 'antd'
+import type { PermissionCode } from '../model/permission'
+import { usePermission } from '../hooks/usePermission'
+import { evaluateAccessRequirements } from '../model/policy'
 
 interface PermissionGuardProps {
   /**
@@ -47,11 +43,7 @@ interface PermissionGuardProps {
   children: ReactNode
 }
 
-/**
- * 权限守卫组件
- * 根据权限控制子组件的渲染
- */
-const PermissionGuard: React.FC<PermissionGuardProps> = ({
+const PermissionGuard: FC<PermissionGuardProps> = ({
   permission,
   permissions,
   requireAll = false,
@@ -62,68 +54,16 @@ const PermissionGuard: React.FC<PermissionGuardProps> = ({
   loading = <Spin size="small" />,
   children,
 }) => {
-  const [hasPermission, setHasPermission] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const checkPermission = async () => {
-      try {
-        setIsLoading(true)
-        // 默认通过：按需叠加权限/角色限制
-        let result = true
-
-        // 检查权限
-        if (permission) {
-          result = await permissionService.hasPermission(permission)
-        } else if (permissions && permissions.length > 0) {
-          if (requireAll) {
-            const checkResult = await permissionService.hasAllPermissions(permissions)
-            result = checkResult.hasPermission
-          } else {
-            const checkResult = await permissionService.hasAnyPermission(permissions)
-            result = checkResult.hasPermission
-          }
-        }
-
-        // 检查角色（若已有权限限制则需先通过权限；若无权限限制则直接检查角色）
-        if (result && role) {
-          result = await permissionService.hasRole(role)
-        } else if (result && roles && roles.length > 0) {
-          if (requireAllRoles) {
-            const checkResult = await permissionService.hasAllRoles(roles)
-            result = checkResult.hasPermission
-          } else {
-            const checkResult = await permissionService.hasAnyRole(roles)
-            result = checkResult.hasPermission
-          }
-        }
-
-        // 如果既没有权限也没有角色要求，默认显示
-        if (!permission && !permissions && !role && !roles) {
-          result = true
-        }
-
-        setHasPermission(result)
-      } catch (error) {
-        console.error('权限检查失败:', error)
-        setHasPermission(false)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    checkPermission()
-  }, [permission, permissions, requireAll, role, roles, requireAllRoles])
-
-  if (isLoading) {
-    return <>{loading}</>
-  }
-
-  if (!hasPermission) {
-    return <>{fallback}</>
-  }
-
-  return <>{children}</>
+  const { current, loading: checking } = usePermission()
+  const requiredPermission = permission || (permissions?.length ? permissions : undefined)
+  const requiredRoles = role || (roles?.length ? roles : undefined)
+  if (!requiredPermission && !requiredRoles) return <>{children}</>
+  if (checking && !current) return <>{loading}</>
+  const permissionAllowed =
+    current && (evaluateAccessRequirements(current, { permission: requiredPermission, requireAll }) ?? true)
+  const rolesAllowed =
+    current && (evaluateAccessRequirements(current, { roles: requiredRoles, requireAll: requireAllRoles }) ?? true)
+  return permissionAllowed && rolesAllowed ? <>{children}</> : <>{fallback}</>
 }
 
 export default PermissionGuard

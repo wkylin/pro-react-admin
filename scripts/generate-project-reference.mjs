@@ -65,6 +65,10 @@ ${rows(routeEntries.sort((a, b) => a.path.localeCompare(b.path)).map((route) => 
 
 初始 entrypoint JS/CSS：${budget.initialJavaScriptCssBytes} bytes；单个 JS/CSS 资源：${budget.singleJavaScriptCssAssetBytes} bytes。此处是原始产物预算，不是 gzip 大小或实际测量值。
 
+| 项目覆盖 | 初始 JS/CSS bytes | 单资源 bytes | 全部 JS/CSS bytes |
+| --- | --- | --- | --- |
+${rows(Object.entries(budget.projects || {}).map(([name, limits]) => [name, limits.initialJavaScriptCssBytes, limits.singleJavaScriptCssAssetBytes, limits.totalJavaScriptCssBytes || '不单独限制']))}
+
 ## 所有根目录命令
 
 命令来自 \`package.json#scripts\`，不会自动执行。发布、清理和依赖更新命令应按实际操作目的使用。

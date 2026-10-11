@@ -1,6 +1,6 @@
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import { Button, Card, Statistic, Switch, Space, Typography } from 'antd'
-import { useAppStore } from '@/store'
+import { useAppStore } from '@app/model'
 import { useZustandDemoStore } from './model/store'
 
 const ZustandDemo = () => {

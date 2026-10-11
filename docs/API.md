@@ -39,3 +39,7 @@ pnpm --filter api dev
 内存存储重启丢失，限速也是进程内实现。MongoDB tracking_events 有查询索引与 90 天 _receivedAt TTL。反向代理须正确处理身份、来源与 API 路径；不要将 TRACKING_ADMIN_TOKEN、client secret 注入浏览器包。
 
 开发 Webpack 的 /api/tracking 代理在服务端注入管理 header，仅用于本地开发。静态部署不会继承该代理；生产管理页面需要真实身份鉴权和服务端代理。开发 GitHub 路由当前代理至 GitHub，不能假设它与 api/server.js 的 helper 配置完全相同。
+
+## 企业业务接口边界
+
+用户、角色与审计页面通过 DataProvider 接入 `/api/admin/...`，接口与资源结构见[企业资源](ENTERPRISE.md)。当前 helper 不实现 RBAC、业务 CRUD、租户或不可篡改审计；关闭演示后需要真实业务服务，不会回退本地 demo。

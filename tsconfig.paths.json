@@ -1,108 +1,40 @@
 {
   "compilerOptions": {
     "paths": {
-      "@": [
-        "./src"
-      ],
-      "@/*": [
-        "./src/*"
-      ],
-      "@src": [
-        "./src"
-      ],
-      "@src/*": [
-        "./src/*"
-      ],
-      "@app": [
-        "./src"
-      ],
-      "@app/*": [
-        "./src/*"
-      ],
-      "@routers": [
-        "./src/routers"
-      ],
-      "@routers/*": [
-        "./src/routers/*"
-      ],
-      "@assets/audio": [
-        "./src/assets/audio"
-      ],
-      "@assets/audio/*": [
-        "./src/assets/audio/*"
-      ],
-      "@assets/video": [
-        "./src/assets/video"
-      ],
-      "@assets/video/*": [
-        "./src/assets/video/*"
-      ],
-      "@stateless": [
-        "./src/components/stateless"
-      ],
-      "@stateless/*": [
-        "./src/components/stateless/*"
-      ],
-      "@stateful": [
-        "./src/components/stateful"
-      ],
-      "@stateful/*": [
-        "./src/components/stateful/*"
-      ],
-      "@hooks": [
-        "./src/components/hooks"
-      ],
-      "@hooks/*": [
-        "./src/components/hooks/*"
-      ],
-      "@shared": [
-        "./src/shared"
-      ],
-      "@shared/*": [
-        "./src/shared/*"
-      ],
-      "@features": [
-        "./src/features"
-      ],
-      "@features/*": [
-        "./src/features/*"
-      ],
-      "@platform": [
-        "./src/platform"
-      ],
-      "@platform/*": [
-        "./src/platform/*"
-      ],
-      "@assets": [
-        "./src/assets"
-      ],
-      "@assets/*": [
-        "./src/assets/*"
-      ],
-      "@layouts": [
-        "./src/layouts"
-      ],
-      "@layouts/*": [
-        "./src/layouts/*"
-      ],
-      "@wui": [
-        "./packages/wui-react/src"
-      ],
-      "@wui/*": [
-        "./packages/wui-react/src/*"
-      ],
-      "@pages": [
-        "./src/pages"
-      ],
-      "@pages/*": [
-        "./src/pages/*"
-      ],
-      "@theme": [
-        "./src/theme"
-      ],
-      "@theme/*": [
-        "./src/theme/*"
-      ]
+      "@": ["./src"],
+      "@/*": ["./src/*"],
+      "@src": ["./src"],
+      "@src/*": ["./src/*"],
+      "@app": ["./src/app"],
+      "@app/*": ["./src/app/*"],
+      "@routers": ["./src/app/routing"],
+      "@routers/*": ["./src/app/routing/*"],
+      "@assets/audio": ["./src/assets/audio"],
+      "@assets/audio/*": ["./src/assets/audio/*"],
+      "@assets/video": ["./src/assets/video"],
+      "@assets/video/*": ["./src/assets/video/*"],
+      "@stateless": ["./src/components/stateless"],
+      "@stateless/*": ["./src/components/stateless/*"],
+      "@stateful": ["./src/components/stateful"],
+      "@stateful/*": ["./src/components/stateful/*"],
+      "@hooks": ["./src/components/hooks"],
+      "@hooks/*": ["./src/components/hooks/*"],
+      "@shared": ["./src/shared"],
+      "@shared/*": ["./src/shared/*"],
+      "@features": ["./src/features"],
+      "@features/*": ["./src/features/*"],
+      "@platform": ["./src/platform"],
+      "@platform/*": ["./src/platform/*"],
+      "@assets": ["./src/assets"],
+      "@assets/*": ["./src/assets/*"],
+      "@layouts": ["./src/app/layouts"],
+      "@layouts/*": ["./src/app/layouts/*"],
+      "@wui": ["./packages/wui-react/src"],
+      "@wui/*": ["./packages/wui-react/src/*"],
+      "@pages": ["./src/pages"],
+      "@pages/*": ["./src/pages/*"],
+      "@theme": ["./src/theme"],
+      "@theme/*": ["./src/theme/*"]
     }
   }
 }

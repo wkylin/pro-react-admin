@@ -1,7 +1,7 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import { Layout, Typography, Card, Button, theme } from 'antd'
-import { selectIsMobile, useAppStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@app/model'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import styles from './index.module.less'

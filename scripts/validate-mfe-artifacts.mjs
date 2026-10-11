@@ -23,7 +23,7 @@ const shellIndex = path.join(outputDir, 'index.html')
 if (!fs.existsSync(shellIndex)) throw new Error('Missing Shell entry: dist-vercel/index.html')
 
 for (const remote of registry.remotes) {
-  const remoteDir = path.join(outputDir, remote.name)
+  const remoteDir = path.join(outputDir, path.posix.dirname(remote.prodPath).slice(1))
   const manifestPath = path.join(remoteDir, 'remote-manifest.json')
   const entryPath = path.join(remoteDir, 'remoteEntry.js')
   if (!fs.existsSync(entryPath)) throw new Error(`Missing Remote entry: dist-vercel/${remote.name}/remoteEntry.js`)

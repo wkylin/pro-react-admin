@@ -1,11 +1,13 @@
 import policies from '../../../../config/route-policy.json'
 import type { PermissionCode, UserPermission } from './permission'
+import { matchPath } from 'react-router-dom'
 
 export interface RoutePolicy {
   permission?: PermissionCode
   title?: string
   i18nKey?: string
   menuGroup?: boolean
+  menu?: { parent?: string; order: number; icon?: string }
 }
 export const routePolicies: Readonly<Record<string, RoutePolicy>> = policies as Record<string, RoutePolicy>
 export const routePermissionMap: Readonly<Record<string, PermissionCode>> = Object.fromEntries(
@@ -15,6 +17,10 @@ export const routePermissionMap: Readonly<Record<string, PermissionCode>> = Obje
 export function getRoutePolicy(path: string): RoutePolicy | undefined {
   const normalized = path.replace(/\/\*$/, '') || '/'
   if (routePolicies[normalized]) return routePolicies[normalized]
+  const dynamic = Object.keys(routePolicies)
+    .filter((key) => key.includes(':') && matchPath({ path: key, end: true }, normalized))
+    .sort((left, right) => right.length - left.length)[0]
+  if (dynamic) return routePolicies[dynamic]
   const inherited = Object.keys(routePolicies)
     .filter((key) => key !== '/' && normalized.startsWith(`${key}/`))
     .sort((left, right) => right.length - left.length)[0]
@@ -53,4 +59,14 @@ export function evaluateAccessRequirements(current: UserPermission, required: Ac
     !roles ||
     (Array.isArray(roles) ? combine(roles.map((role) => roleCodes.includes(role))) : roleCodes.includes(roles))
   return permissionAllowed && roleAllowed
+}
+
+/** Route policies override broad route grants; unmapped pages need an explicit whitelist. */
+export function canAccessPath(current: UserPermission, pathname: string): boolean {
+  const policy = getRoutePolicy(pathname)
+  if (policy?.permission) return matchesPermission(policy.permission, current.permissions)
+  return (
+    current.permissions.includes('*:*') ||
+    current.routes.some((path) => path === '*' || Boolean(matchPath({ path, end: true }, pathname)))
+  )
 }

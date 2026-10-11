@@ -216,7 +216,6 @@ const config = {
     extensions: ['.mjs', '.js', '.ts', '.tsx', '...'],
     alias: {
       ...createPathAliases(path.resolve(__dirname, '..'), {
-        '@app': paths.appDir,
         '@routers': paths.routersDir,
       }),
       // 确保关键依赖只有一个实例，避免 zustand middleware 错误

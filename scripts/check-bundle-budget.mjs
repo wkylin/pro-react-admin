@@ -4,7 +4,9 @@ import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const statsPath = path.resolve(root, process.argv[2] || 'compilation-stats.json')
-const budget = JSON.parse(fs.readFileSync(path.join(root, 'config/bundle-budget.json'), 'utf8'))
+const budgets = JSON.parse(fs.readFileSync(path.join(root, 'config/bundle-budget.json'), 'utf8'))
+const projectName = process.argv[3] || process.env.PROJECT || 'default'
+const budget = { ...budgets, ...budgets.projects?.[projectName] }
 
 if (!fs.existsSync(statsPath)) {
   throw new Error(`Missing Webpack stats file: ${path.relative(root, statsPath)}. Run pnpm run build:stats first.`)
@@ -45,7 +47,18 @@ for (const { name, size } of entrypointAssets.map((name) => ({ name, size: asset
   console.log(`  ${(size / 1024).toFixed(1)} KiB  ${name}`)
 }
 
-if (initialSize > budget.initialJavaScriptCssBytes || oversized.length) {
+const totalSize = [...assetMap.values()]
+  .filter(({ name }) => /\.(?:js|css)$/i.test(name))
+  .reduce((total, asset) => total + asset.size, 0)
+if (budget.totalJavaScriptCssBytes)
+  console.log(
+    `[bundle-budget] all JS/CSS: ${(totalSize / 1024 / 1024).toFixed(2)} MiB / ${(budget.totalJavaScriptCssBytes / 1024 / 1024).toFixed(2)} MiB`
+  )
+if (
+  initialSize > budget.initialJavaScriptCssBytes ||
+  oversized.length ||
+  (budget.totalJavaScriptCssBytes && totalSize > budget.totalJavaScriptCssBytes)
+) {
   process.exitCode = 1
   for (const { name, size } of oversized) {
     console.error(`[bundle-budget] oversized asset: ${name} (${(size / 1024 / 1024).toFixed(2)} MiB)`)

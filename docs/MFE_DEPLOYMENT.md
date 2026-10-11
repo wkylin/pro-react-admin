@@ -29,8 +29,16 @@ pnpm run check:deployment-config
 pnpm run test:e2e:mfe
 ```
 
-构建 Shell 和两个 Remote，再由 prepare-vercel-mfe.mjs 组合 dist-vercel：根目录是 Shell，Remote 放在各自子目录。对应部署配置为 vercel.mfe.json；standalone Remote 构建使用独立命令并设根 PUBLIC_URL。
+build-mfe.mjs 从注册表查找 mfeHost 和所有 remotes，直接调用已安装 Webpack，逐项构建并验证产物，再由 prepare-vercel-mfe.mjs 按 output/prodPath 组合 dist-vercel：根目录是 Shell，Remote 放在各自子目录。对应部署配置为 vercel.mfe.json；standalone Remote 构建使用独立命令并设根 PUBLIC_URL。
 
 跨域部署须配置 manifest 的 CORS、script 的可访问性与 CSP。remoteEntry/manifest 应及时验证，hash chunks 可长期缓存；旧资源需保留到在途页面退出。
 
 浏览器回归测试验证 manifest 成功加载及服务失败后 2 次重试、fallback。构建 artifact 检查既验证 manifest，也在隔离 VM 中单独执行 remoteEntry.js，确认容器同步可用；浏览器回归验证真实 chunk 与共享模块加载。不能仅凭注册表宣称 Remote 已可运行。
+
+## 根实例与通信边界
+
+Standalone 通过 renderApp 创建独立 Store/KeepAlive Provider；导出的 Remote App 通过 RemoteScope 创建自己的上下文，复用 Host router，断点仅写本地 Store，不更改 Host document class。Host 卸载 Remote 时 React effects 清理订阅；projectB 共享消息经过字段校验，不使用 any 作为业务状态。
+
+Bridge 是版本化的显式共享事件/状态，不是共用 UI Store。postMessage 验证版本、事件字段与精确 origin；不接受 wildcard origin。共享状态也不属于可信授权源。Module Federation 的 shared singleton 不等于状态、样式、身份或安全沙箱。
+
+Fallback 保留整页刷新重试，因为失败的 Federation 外部 promise 可能被模块运行时缓存；仅重新创建 React.lazy 不保证恢复。刷新会重建运行时并重新校验 manifest。新 Remote 通过 project:create 生成并同步静态 import/type 和部署 headers；同步检查见质量门禁。

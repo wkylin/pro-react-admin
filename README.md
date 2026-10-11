@@ -1,6 +1,6 @@
 # Pro React Admin
 
-React 管理界面与多项目、微前端示例工作区，同时维护独立 UI 组件包 @w.ui/wui-react。运行时采用 React 19、React Router 7 Hash Router、Ant Design 6、Zustand 5，构建采用 Webpack 5 与 TypeScript 6。
+React 企业管理应用与组件工作区，基于 React 19、Ant Design 6、React Router 7、Zustand 5、Webpack 5 和 TypeScript 6。提供完整展示应用、精简企业入口、多项目构建、Module Federation Host/Remote，以及独立 UI 包 @w.ui/wui-react。
 
 ## 开始
 
@@ -8,31 +8,42 @@ React 管理界面与多项目、微前端示例工作区，同时维护独立 U
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm start
+pnpm run start:enterprise
 ```
 
-默认打开 http://localhost:8080，启动脚本同时运行本地埋点 API。单独前端使用 `pnpm run start:web`。仓库环境模板开启演示权限，真实部署需设 REACT_APP_USE_MOCK=false 并接入授权服务；空 APP_BASE_URL 表示同源请求。
+企业入口包含工作台、用户、角色和审计管理；`pnpm start` 启动完整展示应用与本地 Tracking helper。环境模板开启演示权限，演示数据只保留在当前应用实例中；正式业务需关闭 REACT_APP_USE_MOCK 并接入真实权限与数据服务。
 
-## 架构入口
+## 工程能力
 
-- [技术架构](docs/ARCHITECTURE.md)：分层、路由契约、请求核心与剩余迁移。
-- [源码职责](docs/SRC_DIRECTORY_GUIDE.md)：features / platform / shared / packages 边界。
-- [快速开始](docs/GETTING_STARTED.md)：配置与常用命令。
-- [文档索引](docs/README.md)：权限、API、构建、部署、质量与组件指南。
-- [实现参考](docs/PROJECT_REFERENCE.md)：自动生成版本、路由、环境变量和脚本。
-- [验证记录](docs/VALIDATION.md)：本次本地检查的实际结果。
+- 明确的 app/features/platform/shared/UI 包边界，类型与依赖方向门禁。
+- 一处维护权限、标题和菜单元数据；导航与搜索同步授权，已挂载页面响应撤权。
+- 每个应用根独立 Store 和页面缓存，项目偏好按命名空间保存。
+- 注册表驱动开发、构建、预览、清理和部署，支持 doctor、dry-run 与项目脚手架。
+- 可替换的类型化 DataProvider、REST adapter、用户/角色 CRUD 和只读审计示例。
+- 编译期业务模块契约，统一路由、Provider、资源目录、依赖和权限控制的 Header 插槽。
+- 展示与企业路由独立，重型页面和可选效果按需加载，生产包体积门禁。
 
-默认应用的路由权限、标题与菜单元数据由 config/route-policy.json 管理；项目入口由 src/projects/registry.json 管理；组件库契约由 config/library-contract.mjs 管理。生成配置和文档由 CI 校验。
-
-## 构建与验证
+## 常用命令
 
 ```bash
+pnpm run project:doctor
+pnpm run project:create customer --dry-run
+pnpm run project:dev projectA
+pnpm run build:enterprise:stats
+pnpm run test:e2e:enterprise
 pnpm run ci:quality
-pnpm run build:stats
-pnpm run check:bundle-budget
-pnpm run test:e2e
 ```
 
-多项目使用 `pnpm run project:dev projectA`；微前端见[指南](docs/MFE_DEPLOYMENT.md)。UI 包使用 `pnpm run prepare:lib:release`，消费文档见 [NPM_README](NPM_README.md)。根应用为 private，不作为 UI 包发布。
+微前端、Docker 静态镜像、Vercel/GitHub Pages 与组件库发布见文档。根应用为 private，UI 包独立构建和发布。
 
-本仓库仍有迁移中的 pages/components 和 JS 适配器；新核心边界与 UI 包严格类型检查不代表全仓已 strict。历史发行记录保留在 [CHANGELOG](CHANGELOG.md)。
+## 维护入口
+
+- [架构与边界](docs/ARCHITECTURE.md)、[源码职责](docs/SRC_DIRECTORY_GUIDE.md)。
+- [企业资源接入](docs/ENTERPRISE.md)、[权限与导航](docs/USER_ROLE_PERMISSION.md)。
+- [业务模块扩展](docs/MODULES.md)。
+- [多项目](docs/MULTI_PROJECT.md)、[微前端](docs/MFE_DEPLOYMENT.md)、[构建与部署](docs/DEPLOY.md)。
+- [GitHub 开源对标](docs/BENCHMARKS.md)、[实测验证](docs/VALIDATION.md)。
+- [文档索引](docs/README.md)、[自动生成参考](docs/PROJECT_REFERENCE.md)。
+- [贡献指南](CONTRIBUTING.md)、[安全说明](SECURITY.md)、[组件包用法](NPM_README.md)。
+
+工程正在从展示模板向可扩展业务产品演进。真实租户/RBAC 后端、服务端审计与缓存、插件系统及全仓 strict 仍需继续完善，详见架构和对标文档。

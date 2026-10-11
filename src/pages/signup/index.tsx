@@ -3,7 +3,7 @@ import React from 'react'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
 import type { FormProps } from 'antd'
-import { selectIsMobile, useAppStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@app/model'
 import {
   UserOutlined,
   LockOutlined,

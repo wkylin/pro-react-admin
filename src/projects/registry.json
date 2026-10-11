@@ -3,7 +3,7 @@
     "default": {
       "sourceRoot": ".",
       "entry": "index.tsx",
-      "routers": "routers",
+      "routers": "app/routing",
       "output": "dist"
     },
     "projectA": {
@@ -24,7 +24,14 @@
       "sourceRoot": "projects/shell",
       "entry": "index.tsx",
       "routers": "routers",
-      "output": "dist-shell"
+      "output": "dist-shell",
+      "mfeHost": true
+    },
+    "enterprise": {
+      "sourceRoot": "projects/enterprise",
+      "entry": "index.tsx",
+      "routers": "routers",
+      "output": "dist-enterprise"
     }
   },
   "remotes": [

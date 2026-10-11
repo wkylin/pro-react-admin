@@ -18,7 +18,7 @@ import {
   Tooltip,
   FloatButton,
 } from 'antd'
-import { selectIsMobile, useAppStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@app/model'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import {
   GithubOutlined,

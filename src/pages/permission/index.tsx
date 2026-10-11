@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Card, Button, Space, Tag, Divider, Row, Col, Switch, Alert } from 'antd'
 import { message } from '@platform/feedback/message'
-import { useAppStore } from '@/store'
+import { useAppStore } from '@app/model'
 import { usePermission } from '@platform/auth/hooks/usePermission'
 import PermissionGuard from '@platform/auth/components/PermissionGuard'
 import AuthButton from '@platform/auth/components/AuthButton'

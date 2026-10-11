@@ -1,59 +1,72 @@
 # 技术架构
 
-## 定位与工作区
+## 产品与应用边界
 
-这是一个浏览器 React 管理界面、多个项目样例、Module Federation 示例和独立 UI 包组成的 pnpm workspace。根应用不是 SSR 项目；api/ 是 Express OAuth 与埋点 helper，不是完整业务后端。
+Pro React Admin 是 React 管理应用工作区，包含组件展示应用、精简企业入口、多个独立项目、Module Federation Host/Remote 和独立 UI 包。它采用 React 19、Ant Design 6、React Router 7 Hash Router、Zustand 5、Webpack 5、TypeScript 6。声明版本见[自动生成参考](PROJECT_REFERENCE.md)，安装版本以 lockfile 为准。
 
-React 19、React Router 7 Hash Router、Ant Design 6 与 Zustand 5 负责运行时；Webpack 5、Babel 8、esbuild 与 TypeScript 6 负责构建及检查。声明版本由[实现参考](PROJECT_REFERENCE.md)生成，安装版本由 lockfile 决定。
+`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、审计、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。企业入口是可扩展业务基础，API helper 仍是 OAuth/Tracking 服务；真实身份、RBAC、业务持久化需要接入业务后端。
 
 ```mermaid
 flowchart TD
-  Registry[项目注册表与构建配置] --> Bootstrap[入口与 Bootstrap]
-  Bootstrap --> App[项目壳 / 路由 / 布局 / 主题]
-  App --> Features[Features 业务模块]
-  App --> Legacy[迁移中的 pages / components]
-  Features --> Platform[Platform 权限 / 请求 / Tracking / MFE]
-  Features --> Shared[Shared 通用 UI]
-  App --> UI[独立 wui-react 包]
-  Platform --> Backend[同源或外部 API]
-  Policy[路由策略 JSON] --> App
+  Registry[项目注册表] --> Build[统一项目解析与 CLI]
+  Build --> Roots[default / enterprise / projects / shell]
+  Roots --> App[app 装配 / 路由 / 布局 / Store Provider]
+  App --> Features[features 业务模块]
+  Features --> Platform[platform 请求 / 授权 / DataProvider / MFE]
+  Features --> Shared[shared 通用能力]
+  App --> Package[packages/wui-react]
+  Policy[路由与菜单策略] --> App
   Policy --> Platform
+  Platform --> Service[可替换业务服务]
 ```
 
-## 当前边界
+## 代码组织
 
-| 层                           | 职责与依赖                                              |
-| ---------------------------- | ------------------------------------------------------- |
-| bootstrap                    | React root、StrictMode、AntdApp、i18n、错误边界、Sentry |
-| projects / layouts / routers | 项目装配、导航、Tabs、页面容器、入口选择                |
-| features                     | 按业务组织 pages、hooks、api、model，使用公开 index.ts  |
-| platform                     | 浏览器基础设施；不能导入业务页面或布局                  |
-| shared                       | 通用组件、纯工具；不能反向依赖 platform 或业务          |
-| packages/wui-react           | 自包含可发布 UI；不能导入应用 src                       |
-| pages / components           | 尚未完全迁移的页面、演示和历史组件                      |
+| 目录                   | 职责                                                     | 约束                                      |
+| ---------------------- | -------------------------------------------------------- | ----------------------------------------- |
+| src/app/bootstrap      | React root、统一 Application、RemoteScope、Provider 装配 | 入口返回 root/store/unmount，支持明确销毁 |
+| src/app/routing        | 展示应用路由模块、认证装配                               | 通用路由算法在 platform/navigation        |
+| src/app/layouts        | 导航、搜索、面包屑、Tabs、布局预设                       | 使用项目路由和共享权限快照                |
+| src/app/model          | 应用壳 Store 工厂与 Provider                             | 每个根实例独立，持久化按 projectId 命名   |
+| src/features           | 按领域组织 pages/api/model/hooks                         | 页面通过领域 API 或 DataProvider 访问数据 |
+| src/platform           | 请求、授权、导航、缓存、MFE、PWA、Tracking               | 不导入 app、features、pages、projects     |
+| src/shared             | 通用组件和纯工具                                         | 不反向依赖平台或业务                      |
+| src/projects           | 项目入口与路由差异                                       | 复用装配与平台，不复制基础算法            |
+| packages/wui-react     | 可发布 UI 组件                                           | 自包含，禁止导入应用 src                  |
+| src/pages / components | 展示页面和待迁移组件                                     | 新业务优先进入 features；按业务变化迁移   |
 
-scripts/check-import-boundaries.mjs 强制 shared、platform 和 UI 包的导入方向；它检查静态 import/export 与字面量动态 import，不是完整模块依赖分析。别名由 config/path-aliases.json 派生并检查。
+`config/path-aliases.json` 派生 TS/Jest/Webpack 别名。`@routers` 是构建时项目路由别名；`@app/routing` 明确指共享装配与展示路由，不等于当前项目。导入方向由 `check:import-boundaries` 强制检查。
 
-## 路由与授权
+## 路由、菜单与授权
 
-路由模块保留页面结构，config/route-policy.json 统一权限、标题和 i18n key，菜单配置负责图标与排列。注入过程继承最近的父级策略，契约检查识别重复路径、缺失菜单页面及失效策略。mock 权限也使用同一策略，不是策略来源。
+`config/route-policy.json` 是权限、标题、翻译、菜单父级、排序和图标名的维护入口。页面结构仍由路由模块表达。导航树统一供侧栏和全局搜索使用，并同时过滤未注册页面和未授权页面；空分组不展示。面包屑从 React Router 实际匹配生成，参数页使用实际地址。`normalizeRouteTree` 统一 index/相对路径/绝对路径和 Tab metadata，projectB 不再复制算法。
 
-PermissionService 以身份键隔离缓存，正常缓存有效期为 30 分钟。刷新失败清除授权，在途响应在切号、清缓存后失效。路由守卫按实际匹配的叶子路由判定权限与角色，避免父路由覆盖子页面；拒绝访问进入 403。有效身份缓存可同步判定切页访问，保留布局与 Tab 表单状态。菜单过滤和按钮守卫共享授权服务。前端控制可见性和交互；业务服务仍必须独立授权。
+`PermissionService` 维护身份绑定的缓存和订阅快照，`useSyncExternalStore` 让路由、菜单、按钮和角色守卫同时响应刷新、失败撤权、同页退出和跨标签页身份变更。订阅期间缓存到期会重新同步，回到窗口也检查失效缓存。旧请求由 generation 与当前凭据双重检查丢弃。策略优先于宽泛 routes grant，未知路径须显式授权。详见[授权](USER_ROLE_PERMISSION.md)。
 
-## 请求与领域数据
+## 状态与生命周期
 
-Axios request.js 与 Fetch http.js 保留各自传输能力，复用严格类型的 core/async、core/response、core/encryption 及 session 处理。HTTP/business 错误统一，成功 envelope 保留；领域 API 显式 unwrap 并验证 unknown。类型化 apiClient/fetchClient 提供新代码入口，泛型声明不代替运行时校验。
+`createAppStore`/`AppStoreProvider` 为每个应用根创建 Zustand store，只持久化侧栏偏好，键为 `pro-react-admin:<projectId>:shell`；主题使用独立 `:theme` 键。业务数据、登录身份、ReactNode 和断点不持久化到壳 Store。同一个 projectId 的不同根仍隔离内存；后续根可以恢复同项目偏好。
 
-features/business 展示该模式：两个公司资质请求并行、结构解码、卸载取消。它仍使用外部示例数据源，实际部署要解决认证、CORS 与业务服务契约。
+`KeepAliveProvider` 管理本根的缓存、LRU 和定时器，默认保留最多 5 个非持久页面，首页独立保留。退出 Provider 取消定时器；Remote 的相同 pathname 不会互相驱逐。Tabs 刷新使用 generation 实际重挂载当前页面，保留其它页草稿。缓存限额以内保留草稿，超过限额会丢弃最旧页；这不是永久草稿存储。
 
-## 状态与性能
+权限代表当前浏览器登录会话，仍共享 localStorage 凭据；它没有多租户或多个并行身份隔离。Module Federation 共享依赖也不提供权限或样式沙箱。需要不同身份或不可信子应用时应采用 iframe/独立 origin 或额外会话上下文。
 
-Zustand 全局 store 只维护侧栏和断点，持久化侧栏状态。业务状态保留在 feature hooks 或页面内部，权限缓存单独管理。首页与作品集进入懒加载配置；图表、媒体、编辑器等重型页面按路由加载。初始 JS/CSS 预算来自 config/bundle-budget.json，体积参考必须由 stats 重新测量。
+## 数据与功能
 
-UI 包直接从 packages/wui-react/src 构建 ESM/CJS、统一 CSS 与声明文件，旧 src/lib 聚合入口已移除。Tracking SDK 属于 platform；它不随 UI 包发布。
+`platform/modules` 提供编译期模块契约 v1：模块声明 routes、resources、Provider、dependencies 和 Header 插槽。default 选择组织管理与通知，enterprise 仅选择组织管理。注册表检查版本、依赖环、重复路由和精确权限策略，Provider 随应用根创建与销毁；通知 Store 已消除全局单例。公共 Header 通过模块插槽装配通知，详见[模块指南](MODULES.md)。
 
-## 剩余演进
+`platform/data/provider.ts` 定义分页、查询、取消、CRUD 和资源解析契约；REST adapter 复用已有请求层和会话处理，响应经领域 parser 验证。`features/administration` 提供用户 CRUD、角色配置、状态编辑、查询/分页和只读审计。demo Provider 在应用实例中维护数据并检查角色引用，REST Provider 对接真实接口；详见[企业资源接入](ENTERPRISE.md)。
 
-根 tsconfig.strict 仍为 false，平台新核心、业务边界和 UI 包开启严格检查；遗留请求适配器仍为 JavaScript。pages/components 的迁移按业务发生时逐步完成，避免仅改目录名称。
+Provider 是可替换边界，目前没有引入统一服务端状态缓存框架。新增复杂业务可在 Provider 上接入 TanStack Query 等能力，应先明确缓存键、失效、身份隔离与重试语义。已有 notifications/business/tracking feature 可逐步接入，不为目录统一强行改写全部业务。
 
-后续重点是缩小初始共享依赖、迁移旧 JS 的类型边界、拆分演示依赖，以及完善真实服务契约。Tracking Provider 的实例创建仍在渲染期，动态插件与 StrictMode 生命周期需要专项改造；Image GET 兜底也不匹配本地仅 POST collector，详见[Tracking](TRACKING_SDK_ARCHITECTURE.md)。
+## 构建、部署与性能
+
+`config/project-registry.mjs` 为 Webpack、项目命令、预览、清理、脚手架和部署组合提供同一项目解析；拒绝越界和重叠产物目录。脚手架同步 Remote import/type、部署 headers 和项目参考。生产缓存按项目/MFE 角色/环境隔离。
+
+Sentry 在启用时动态加载；设置抽屉、鼠标效果、轨迹按需加载，装饰动画默认关闭。企业路由树不引用展示路由清单，避免把图表/媒体/编辑器编译为业务页面。实际收益由 stats 和浏览器检查确认，见[验证记录](VALIDATION.md)。
+
+部署使用现成产物组合，支持 Vercel、GitHub Pages 和 Nginx 静态镜像；HTML/Remote entry/manifest 及时刷新，内容 hash 资源长期缓存。CI 分别验证展示、企业、微前端、Storybook、组件库，上传可复用产物。修改流水线不代表已部署。
+
+## 下一阶段
+
+对标依据、已处理劣势和优先级见[开源对标](BENCHMARKS.md)。仍需推进真实 RBAC/租户/审计后端、统一服务端状态缓存、运行期插件及兼容性治理、遗留 JS 类型化、全仓 strict、SSR/路由 loader 的适用性评估，以及 Tracking 生命周期专项。应按可验证的业务能力迭代，不以新增依赖或 Star 数替代产品验收。

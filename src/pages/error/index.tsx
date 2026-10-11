@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Card, Typography, Row, Col } from 'antd'
-import { useAppStore } from '@/store'
+import { useAppStore } from '@app/model'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const { Title, Paragraph, Text } = Typography

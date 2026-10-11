@@ -5,17 +5,20 @@ import { MemoryRouter } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 
 import i18n from '../src/i18n/i18n'
+import { AppStoreProvider } from '../src/app/model'
 
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <I18nextProvider i18n={i18n}>
-        <Suspense fallback={<div style={{ padding: 12 }}>Loading…</div>}>
-          <MemoryRouter initialEntries={['/']}>
-            <Story />
-          </MemoryRouter>
-        </Suspense>
-      </I18nextProvider>
+      <AppStoreProvider projectId="storybook">
+        <I18nextProvider i18n={i18n}>
+          <Suspense fallback={<div style={{ padding: 12 }}>Loading…</div>}>
+            <MemoryRouter initialEntries={['/']}>
+              <Story />
+            </MemoryRouter>
+          </Suspense>
+        </I18nextProvider>
+      </AppStoreProvider>
     ),
   ],
 

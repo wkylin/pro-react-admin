@@ -1,222 +1,45 @@
-/**
- * 权限检查 Hook
- * 提供便捷的权限检查方法
- */
-
-import { useState, useEffect, useCallback } from 'react'
-import type { PermissionCode, Role, UserPermission } from '../model/permission'
+import { useEffect, useMemo, useSyncExternalStore } from 'react'
+import type { PermissionCode } from '../model/permission'
 import { permissionService } from '../services/permissionService'
+import { matchesPermission, canAccessPath } from '../model/policy'
 
-type PermissionRole = string | Partial<Pick<Role, 'code'>> | null | undefined
-type PermissionPayload = Partial<Omit<UserPermission, 'roles'>> & {
-  roles?: PermissionRole[]
+const emptyList: string[] = []
+const actions = {
+  hasPermission: (permission: PermissionCode) => permissionService.hasPermission(permission),
+  hasAllPermissions: (permissions: PermissionCode[]) => permissionService.hasAllPermissions(permissions),
+  hasAnyPermission: (permissions: PermissionCode[]) => permissionService.hasAnyPermission(permissions),
+  hasRole: (role: string) => permissionService.hasRole(role),
+  hasAllRoles: (roles: string[]) => permissionService.hasAllRoles(roles),
+  hasAnyRole: (roles: string[]) => permissionService.hasAnyRole(roles),
+  canAccessRoute: (path: string) => permissionService.canAccessRoute(path),
+  refreshPermissions: () => permissionService.syncPermissions(),
 }
 
-/**
- * 使用权限检查 Hook
- */
-export const usePermission = () => {
-  const [permissions, setPermissions] = useState<string[]>([])
-  const [roles, setRoles] = useState<string[]>([])
-  const [routes, setRoutes] = useState<string[]>([])
-  const [loading, setLoading] = useState(true)
-
-  const applyPermissions = useCallback((userPermissions: PermissionPayload) => {
-    setPermissions(Array.isArray(userPermissions.permissions) ? userPermissions.permissions : [])
-
-    // 确保 roles 始终是数组
-    let rolesArray: string[] = []
-    if (Array.isArray(userPermissions.roles)) {
-      rolesArray = userPermissions.roles
-        .map((role: PermissionRole) => {
-          // 处理 role 可能是字符串或对象的情况
-          return typeof role === 'string' ? role : role?.code || ''
-        })
-        .filter(Boolean)
-    }
-    setRoles(rolesArray)
-
-    setRoutes(Array.isArray(userPermissions.routes) ? userPermissions.routes : [])
-  }, [])
-
-  const clearPermissions = useCallback(() => {
-    setPermissions([])
-    setRoles([])
-    setRoutes([])
-  }, [])
-
-  /**
-   * 加载权限信息
-   */
-  const loadPermissions = useCallback(async () => {
-    try {
-      setLoading(true)
-      const userPermissions = await permissionService.getPermissions()
-      applyPermissions(userPermissions)
-    } catch (error) {
-      console.error('加载权限失败:', error)
-      // 确保错误时也设置空数组
-      clearPermissions()
-    } finally {
-      setLoading(false)
-    }
-  }, [applyPermissions, clearPermissions])
-
+/** All consumers observe one snapshot, including refresh, revocation and cross-tab logout. */
+export function usePermission() {
+  const snapshot = useSyncExternalStore(permissionService.subscribe, permissionService.getSnapshot)
   useEffect(() => {
-    let isActive = true
-
-    const loadInitialPermissions = async () => {
-      try {
-        const userPermissions = await permissionService.getPermissions()
-        if (isActive) {
-          applyPermissions(userPermissions)
-        }
-      } catch (error) {
-        console.error('加载权限失败:', error)
-        if (isActive) {
-          // 确保错误时也设置空数组
-          clearPermissions()
-        }
-      } finally {
-        if (isActive) {
-          setLoading(false)
-        }
-      }
-    }
-
-    loadInitialPermissions()
-
-    return () => {
-      isActive = false
-    }
-  }, [applyPermissions, clearPermissions])
-
-  /**
-   * 检查单个权限
-   */
-  const hasPermission = useCallback(async (permission: PermissionCode): Promise<boolean> => {
-    return permissionService.hasPermission(permission)
-  }, [])
-
-  /**
-   * 检查多个权限（全部需要）
-   */
-  const hasAllPermissions = useCallback(async (permissions: PermissionCode[]) => {
-    return permissionService.hasAllPermissions(permissions)
-  }, [])
-
-  /**
-   * 检查多个权限（任一即可）
-   */
-  const hasAnyPermission = useCallback(async (permissions: PermissionCode[]) => {
-    return permissionService.hasAnyPermission(permissions)
-  }, [])
-
-  /**
-   * 检查角色
-   */
-  const hasRole = useCallback(async (roleCode: string): Promise<boolean> => {
-    return permissionService.hasRole(roleCode)
-  }, [])
-
-  /**
-   * 检查多个角色（全部需要）
-   */
-  const hasAllRoles = useCallback(async (roleCodes: string[]) => {
-    return permissionService.hasAllRoles(roleCodes)
-  }, [])
-
-  /**
-   * 检查多个角色（任一即可）
-   */
-  const hasAnyRole = useCallback(async (roleCodes: string[]) => {
-    return permissionService.hasAnyRole(roleCodes)
-  }, [])
-
-  /**
-   * 检查路由权限
-   */
-  const canAccessRoute = useCallback(async (routePath: string): Promise<boolean> => {
-    return permissionService.canAccessRoute(routePath)
-  }, [])
-
-  /**
-   * 刷新权限
-   */
-  const refreshPermissions = useCallback(async () => {
-    await permissionService.syncPermissions()
-    await loadPermissions()
-  }, [loadPermissions])
-
+    if (snapshot.status === 'idle') void permissionService.getPermissions()
+  }, [snapshot.status])
+  const current = snapshot.permissions
+  const roles = useMemo(() => current?.roles.map((role) => role.code) ?? emptyList, [current])
   return {
-    // 权限列表
-    permissions,
+    current,
+    permissions: current?.permissions ?? emptyList,
     roles,
-    routes,
-    loading,
-    // 检查方法
-    hasPermission,
-    hasAllPermissions,
-    hasAnyPermission,
-    hasRole,
-    hasAllRoles,
-    hasAnyRole,
-    canAccessRoute,
-    // 操作方法
-    refreshPermissions,
+    routes: current?.routes ?? emptyList,
+    loading: snapshot.status === 'idle' || snapshot.status === 'loading',
+    status: snapshot.status,
+    ...actions,
   }
 }
 
-/**
- * 检查单个权限的 Hook
- */
-export const useCheckPermission = (permission: PermissionCode) => {
-  const [hasPermission, setHasPermission] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const check = async () => {
-      try {
-        setLoading(true)
-        const result = await permissionService.hasPermission(permission)
-        setHasPermission(result)
-      } catch (error) {
-        console.error('检查权限失败:', error)
-        setHasPermission(false)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    check()
-  }, [permission])
-
-  return { hasPermission, loading }
+export function useCheckPermission(permission: PermissionCode) {
+  const { current, loading } = usePermission()
+  return { hasPermission: Boolean(current && matchesPermission(permission, current.permissions)), loading }
 }
 
-/**
- * 检查路由权限的 Hook
- */
-export const useCheckRoute = (routePath: string) => {
-  const [canAccess, setCanAccess] = useState(false)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const check = async () => {
-      try {
-        setLoading(true)
-        const result = await permissionService.canAccessRoute(routePath)
-        setCanAccess(result)
-      } catch (error) {
-        console.error('检查路由权限失败:', error)
-        setCanAccess(false)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    check()
-  }, [routePath])
-
-  return { canAccess, loading }
+export function useCheckRoute(routePath: string) {
+  const { current, loading } = usePermission()
+  return { canAccess: Boolean(current && canAccessPath(current, routePath)), loading }
 }

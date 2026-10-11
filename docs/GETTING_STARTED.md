@@ -6,10 +6,13 @@
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm start
+pnpm run start:enterprise
+# 完整展示应用与本地 API：pnpm start
 ```
 
 `pnpm start` 通过 scripts/dev-tracking.mjs 同时启动前端与 Express helper。默认前端 http://localhost:8080，API 127.0.0.1:5200；实际端口以终端为准。开发默认使用内存埋点存储，不需要 MongoDB，脚本为 API 与开发代理共享临时管理 token。只运行前端可使用 `pnpm run start:web`，此时埋点服务须自行启动。
+
+企业入口仅包含工作台、用户、角色与审计模块，独立于展示路由。演示可使用 admin@test.com 超级管理员、manager@test.com 管理员、business@test.com 业务员、user@test.com 普通用户；登录页面的演示机制不是真实服务认证。资源接入见[企业模块](ENTERPRISE.md)。
 
 ## 本地配置
 

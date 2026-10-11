@@ -3,10 +3,10 @@
   "compilerOptions": {
     "strict": true,
     "noEmit": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest", "@testing-library/jest-dom"]
   },
   "include": [
-    "src/routers/utils/index.tsx",
+    "src/app/routing/utils/index.tsx",
     "src/features/**/*.ts",
     "src/features/**/*.tsx",
     "src/platform/**/*.ts",
@@ -14,10 +14,12 @@
     "src/shared/**/*.ts",
     "src/shared/**/*.tsx",
     "typings/**/*.d.ts",
-    "src/store/**/*.ts",
-    "src/bootstrap/**/*.tsx",
-    "src/layouts/registry.ts",
-    "src/layouts/types.ts"
+    "src/app/model/**/*.ts",
+    "src/app/model/**/*.tsx",
+    "src/app/bootstrap/renderApp.tsx",
+    "src/app/bootstrap/providers/**/*.tsx",
+    "src/app/layouts/registry.ts",
+    "src/app/layouts/types.ts"
   ],
   "exclude": [
     "node_modules",
