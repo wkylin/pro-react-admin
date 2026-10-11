@@ -30,6 +30,8 @@ function isLoopbackOrigin(origin) {
 
 app.use(
   cors({
+    // Axios uses credentials:include; trusted origins must receive the matching CORS flag.
+    credentials: true,
     origin(origin, callback) {
       if (!origin) return callback(null, true)
       const isDevelopmentLoopback = process.env.NODE_ENV !== 'production' && isLoopbackOrigin(origin)
@@ -40,6 +42,18 @@ app.use(
 )
 app.use('/api/tracking/collect', limitTrackingRequests)
 app.use(bodyParser.json({ limit: '1mb' }))
+
+// Business services are explicit opt-in; static deployments and demos do not open a local database.
+const enterpriseService =
+  process.env.ENTERPRISE_ENABLED === 'true' ? require('./enterprise/runtime.cjs').openEnterpriseService() : null
+if (enterpriseService) {
+  app.use('/api', require('./enterprise/router.cjs').createEnterpriseRouter(enterpriseService))
+} else {
+  app.use(['/api/auth', '/api/admin', '/api/permissions/current', '/api/roles'], (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store')
+    res.status(503).json({ error: 'enterprise_not_configured', message: '企业业务 API 尚未启用' })
+  })
+}
 
 const mongoose = require('mongoose')
 
@@ -318,10 +332,22 @@ async function startServer() {
 
   const port = Number(process.env.TRACKING_API_PORT || process.env.PORT || 5200)
   const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'
-  app.listen(port, host, () => console.log(`Server started on ${host}:${port}; tracking store=${trackingStoreMode}`))
+  const server = app.listen(port, host, () =>
+    console.log(
+      `Server started on ${host}:${port}; tracking store=${trackingStoreMode}; enterprise=${Boolean(enterpriseService)}`
+    )
+  )
+  for (const signal of ['SIGTERM', 'SIGINT'])
+    process.once(signal, () => {
+      server.close(async () => {
+        enterpriseService?.store.close()
+        await mongoose.disconnect()
+      })
+    })
 }
 
 startServer().catch((error) => {
   console.error('API server startup failed:', error?.message || error)
+  enterpriseService?.store.close()
   process.exitCode = 1
 })

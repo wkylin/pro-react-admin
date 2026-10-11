@@ -7,7 +7,8 @@
     "server": "nodemon server",
     "start": "node server.js",
     "dev": "node --watch --env-file-if-exists=../.env.development.local server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "bootstrap": "node --env-file-if-exists=../.env.development.local enterprise/bootstrap.mjs",
+    "test": "node --test enterprise/*.test.mjs"
   },
   "author": "",
   "license": "ISC",

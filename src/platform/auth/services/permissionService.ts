@@ -7,7 +7,7 @@ import { withTimeout } from '@platform/api/core/async'
 import { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../model/permission'
 import * as permissionAPI from '../api/permission'
 import { canAccessPath, matchesPermission } from '../model/policy'
-import { readStoredToken, SESSION_CHANGED_EVENT } from '../model/session'
+import { readStoredToken, readEnterpriseSession, SESSION_CHANGED_EVENT } from '../model/session'
 
 export interface PermissionSnapshot {
   permissions: UserPermission | null
@@ -22,7 +22,9 @@ class PermissionService {
   private loadingPromise: Promise<UserPermission> | null = null
   private loadingAuthKey = ''
   private cacheGeneration = 0
-  private readonly cacheExpireTime: number = 30 * 60 * 1000 // 30分钟
+  private get cacheExpireTime(): number {
+    return permissionAPI.isDemoPermissionMode?.() ? 30 * 60 * 1000 : 60_000
+  }
   private lastFetchTime: number = 0
   private listeners = new Set<() => void>()
   private snapshot: PermissionSnapshot = emptySnapshot
@@ -52,7 +54,8 @@ class PermissionService {
   }
 
   private onStorage = (event: StorageEvent): void => {
-    if (event.key === null || ['token', 'github_token', 'user_role'].includes(event.key)) this.onSessionChanged()
+    if (event.key === null || ['enterprise_session', 'token', 'github_token', 'user_role'].includes(event.key))
+      this.onSessionChanged()
   }
 
   subscribe = (listener: () => void): (() => void) => {
@@ -81,6 +84,10 @@ class PermissionService {
   }
 
   private onFocus = (): void => {
+    if (readEnterpriseSession()) {
+      void this.getPermissions(true)
+      return
+    }
     if (this.snapshot.status === 'ready' && !this.peekPermissions()) this.onSessionChanged()
   }
 
@@ -124,7 +131,12 @@ class PermissionService {
     const roleOverride = this.safeReadStorage(this.STORAGE_KEYS.ROLE_OVERRIDE)
     const suffix = roleOverride ? `|role:${roleOverride}` : ''
     const token = readStoredToken()
-    return token ? `token:${token}${suffix}` : `anonymous${suffix}`
+    const enterprise = readEnterpriseSession()
+    return enterprise
+      ? `tenant:${enterprise.tenantId}|token:${enterprise.token}`
+      : token
+        ? `token:${token}${suffix}`
+        : `anonymous${suffix}`
   }
 
   static getInstance(): PermissionService {

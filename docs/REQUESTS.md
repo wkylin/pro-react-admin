@@ -30,13 +30,13 @@ export async function loadName(signal: AbortSignal): Promise<string> {
 
 HTTP 非 2xx 失败；JSON 中存在 code 时，仅数字 0/200 成功。成功 envelope 原样保留，unwrapPayload 在领域层读取 data。RequestError 携带 status、code、response（按传输情况）。两种适配器的 HTTP 错误 body 处理仍有差异，不能假设所有错误均已读取 JSON。
 
-401/41002 失效会话，403 保留登录。showError:false（Fetch 也支持 isShowError:false）关闭默认提示，页面自行显示。取消和超时拒绝 Promise，调用方仍需 catch；卸载时不要把取消提示当作业务错误。
+401/41002 失效当前请求身份的会话，403 保留登录；换号后迟到的旧 401 不清理新会话。needToken:false 不附带身份，也不触发登录失败清理。showError:false（Fetch 也支持 isShowError:false）关闭默认提示，页面自行显示。取消和超时拒绝 Promise，调用方仍需 catch；卸载时不要把取消提示当作业务错误。
 
 ## 传输差异
 
 Axios 默认 baseURL 为 APP_BASE_URL、读取 token、可取消重复请求；替换 Axios instance 后仍安装统一拦截器。外部 AbortSignal 与去重 controller 合并，旧取消请求只清理自己的记录，不能删除新请求。
 
-Fetch 使用原生 fetch 与同源 credentials，默认不自动附加 Bearer token；需要时显式传 headers。FormData 自动移除 Content-Type，让浏览器生成 boundary；URL 已有 query 时正确追加 `&`。timeout 覆盖响应 body 读取，finally 清 timer；raw Response 模式返回后，后续 body 消费不在该超时范围。204/205 返回 undefined。
+Fetch 使用原生 fetch 与同源 credentials，现在与 Axios 一样默认附加活动 Bearer token，企业会话同时附带 X-Tenant-ID；needToken:false 或显式 Authorization 可覆盖自动处理。FormData 自动移除 Content-Type，让浏览器生成 boundary；URL 已有 query 时正确追加 `&`。timeout 覆盖响应 body 读取，finally 清 timer；raw Response 模式返回后，后续 body 消费不在该超时范围。204/205 返回 undefined。
 
 GET/DELETE 默认加时间戳防缓存，可设 addTimestamp:false。响应类型、上传下载及额外传输选项仍使用对应 legacy 适配器，JsonClient 只覆盖常用 JSON 方法。
 
@@ -47,3 +47,5 @@ core/async 的 attempts 包含第一次请求，取消不重试。runWithConcurr
 features/business 的 useCompanyCertificates 并行读取公司资质，API decoder 检查返回结构，卸载取消并避免旧状态更新。不要在页面重复封装重试、token 失效或 envelope 检查。
 
 可选加密见[协议说明](REQUEST_ENCRYPTION.md)。
+
+服务端状态的浏览器缓存属于 platform/data/cache.ts 的 Provider 装饰层，不在传输层重复缓存。键、TTL、取消、失效与身份隔离见[企业资源](ENTERPRISE.md)。企业 API 自身使用 Cache-Control:no-store，不把授权响应交给 HTTP/CDN 缓存。

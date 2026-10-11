@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import LightIcon from '@assets/svg/light.svg'
 import DarkIcon from '@assets/svg/dark.svg'
 import { useProThemeContext } from '@src/theme/hooks'
-import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button, type MenuProps } from 'antd'
+import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button, Tag, type MenuProps } from 'antd'
 import { showMessage } from '@platform/feedback/message'
 import GlobalSearch from '@layouts/proHeader/components/GlobalSearch'
 import AnimatedIcon from '@wui/AnimatedIcon'
@@ -31,6 +31,7 @@ import { ModuleAction, ModuleActions, useModuleActions } from '@platform/modules
 
 import { useAuth } from '@platform/auth/hooks/useAuth'
 import { authService } from '@platform/auth/services/authService'
+import { readEnterpriseSession } from '@platform/auth/model/session'
 import { permissionService } from '@platform/auth/services/permissionService'
 import { HashRouterUtils } from '@platform/navigation/hashRouter'
 import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
@@ -445,14 +446,16 @@ const renderHeaderActions = (isMobile: boolean, props: HeaderActionsProps) =>
 
 const renderUserTrigger = (isAuthenticated: boolean, user: GitHubUser | null, iconButtonStyle: CSSProperties) =>
   isAuthenticated && user ? (
-    <Avatar
-      src={user.avatar_url || undefined}
-      icon={
-        <AnimatedIcon variant="spin" mode="hover">
-          <UserOutlined style={{ fontSize: 16 }} />
-        </AnimatedIcon>
-      }
-    />
+    <Button type="text" shape="circle" aria-label={user.name || user.login} style={iconButtonStyle}>
+      <Avatar
+        src={user.avatar_url || undefined}
+        icon={
+          <AnimatedIcon variant="spin" mode="hover">
+            <UserOutlined style={{ fontSize: 16 }} />
+          </AnimatedIcon>
+        }
+      />
+    </Button>
   ) : (
     <Button
       icon={
@@ -494,7 +497,8 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
 
   const storedToken = getLocalStorage<{ token?: string }>('token')
   const tokenValue =
-    typeof storedToken === 'object' && storedToken !== null ? storedToken.token || 'wkylin.w' : 'wkylin.w'
+    user?.name ||
+    (typeof storedToken === 'object' && storedToken !== null ? storedToken.token || 'wkylin.w' : 'wkylin.w')
   const items = React.useMemo(() => buildUserMenuItems({ t, tokenValue }), [t, tokenValue])
 
   const mobileMoreItems = React.useMemo(
@@ -612,6 +616,7 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
           <Dropdown arrow menu={{ items, onClick: handleUserMenuClick }} trigger={['click']}>
             {renderUserTrigger(isAuthenticated, user, iconButtonStyle)}
           </Dropdown>
+          {readEnterpriseSession() && <Tag title={t('identity.tenant')}>{readEnterpriseSession()?.tenantId}</Tag>}
           {/* 全局搜索弹窗 */}
           <GlobalSearch open={searchOpen} onClose={() => setSearchOpen(false)} onNavigate={redirectTo} />
         </div>

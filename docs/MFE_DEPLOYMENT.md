@@ -1,5 +1,7 @@
 # Module Federation 开发与部署
 
+按终端划分的启动命令、访问地址和独立 Remote 预览见[快速上手](GETTING_STARTED.md#微前端)。
+
 ## 开发
 
 分别启动三个终端：
@@ -30,6 +32,14 @@ pnpm run test:e2e:mfe
 ```
 
 build-mfe.mjs 从注册表查找 mfeHost 和所有 remotes，直接调用已安装 Webpack，逐项构建并验证产物，再由 prepare-vercel-mfe.mjs 按 output/prodPath 组合 dist-vercel：根目录是 Shell，Remote 放在各自子目录。对应部署配置为 vercel.mfe.json；standalone Remote 构建使用独立命令并设根 PUBLIC_URL。
+
+本地预览聚合产物，构建后执行：
+
+```bash
+pnpm exec serve -s dist-vercel -l 5080
+```
+
+访问 http://localhost:5080/#/portal。`build:mf:vercel` 不会自动部署；`PROJECT=shell pnpm run serve:dist` 只预览 `dist-shell`，无法同时提供组合目录里的两个 Remote。
 
 跨域部署须配置 manifest 的 CORS、script 的可访问性与 CSP。remoteEntry/manifest 应及时验证，hash chunks 可长期缓存；旧资源需保留到在途页面退出。
 

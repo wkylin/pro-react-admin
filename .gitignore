@@ -22,6 +22,7 @@ src/assets-optimized/
 public-optimized/
 public/bit
 api/node_modules
+/api/data/
 webpack/profiling
 stats.html
 /.scannerwork
@@ -33,6 +34,7 @@ coverage
 .env.dev.local
 .env.development.local
 .env.production.local
+.env.enterprise.production.local
 .env.test.local
 
 *storybook.log
@@ -44,6 +46,7 @@ storybook-static
 /dist-zip
 /playwright-report
 /playwright-enterprise-report
+/playwright-enterprise-api-report
 /playwright-mfe-report
 /test-results
 

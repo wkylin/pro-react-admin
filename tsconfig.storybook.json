@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [".storybook", "src", "packages/wui-react/src", "typings"],
+  "exclude": ["node_modules", "**/dist", "coverage"]
+}

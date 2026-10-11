@@ -11,6 +11,24 @@ const jsonResponse = (payload: unknown, status = 200) => ({
 })
 const originalFetch = globalThis.fetch
 
+test('a 401 from explicit old credentials cannot log out the current identity', async () => {
+  localStorage.clear()
+  localStorage.setItem('token', 'current-account')
+  globalThis.fetch = jest.fn().mockResolvedValue(jsonResponse({}, 401))
+  await expect(
+    new HttpClient().get(
+      '/api/private',
+      {},
+      {
+        headers: { authorization: 'Bearer previous-account' },
+        showError: false,
+      }
+    )
+  ).rejects.toHaveProperty('status', 401)
+  expect(localStorage.getItem('token')).toBe('current-account')
+  localStorage.clear()
+})
+
 afterEach(() => {
   encryptionConfig.reset()
   globalThis.fetch = originalFetch

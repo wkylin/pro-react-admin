@@ -3,7 +3,7 @@ import AnimatedIcon from './index'
 import { Music, Heart, Play } from 'lucide-react'
 
 const meta: Meta<typeof AnimatedIcon> = {
-  title: 'WUI/AnimatedIcon',
+  title: 'WUI/Components/AnimatedIcon',
   component: AnimatedIcon,
   argTypes: {
     variant: { control: { type: 'radio' }, options: ['spin', 'pulse', 'bounce', 'draw'] },

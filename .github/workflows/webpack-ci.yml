@@ -73,6 +73,12 @@ jobs:
       - name: Strict type-check core architecture boundaries
         run: pnpm run typecheck:boundaries
 
+      - name: Strict type-check enterprise business backend
+        run: pnpm run typecheck:api
+
+      - name: Verify persistent enterprise API, tenant isolation and transactional audit
+        run: pnpm run test:api
+
       - name: Strict type-check the public component library
         run: pnpm run typecheck:lib
 
@@ -151,10 +157,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate Storybook source coverage and types
+        run: |
+          pnpm run check:stories
+          pnpm run typecheck:storybook
+
       - name: Build Storybook
         run: pnpm run build-storybook
         env:
           NODE_ENV: production
+
+      - name: Check built Storybook component coverage
+        run: node scripts/validate-stories.mjs --built
 
   library:
     runs-on: ubuntu-latest
@@ -272,4 +286,34 @@ jobs:
           path: |
             playwright-enterprise-report/
             test-results/
+          if-no-files-found: ignore
+
+  enterprise-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build application with real tenant authentication
+        run: pnpm run build:enterprise:api
+        env:
+          PUBLIC_URL: /
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify real login, durable CRUD, audit and tenant switching
+        run: pnpm run test:e2e:enterprise:api --repeat-each=5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enterprise-api-browser-report-${{ github.run_id }}
+          path: |
+            playwright-enterprise-api-report/
+            test-results/enterprise-api/
           if-no-files-found: ignore

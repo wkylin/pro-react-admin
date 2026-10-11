@@ -7,7 +7,12 @@ import { getEnv } from '@platform/config/env'
 import { EncryptionConfig, EncryptionHandler } from './core/encryption'
 import { delay, retry, runWithConcurrency, withTimeout } from './core/async'
 import { assertSuccessfulPayload, getHttpErrorMessage } from './core/response'
-import { readStoredToken, handleAuthenticationFailure } from '@platform/auth/model/session'
+import {
+  readStoredToken,
+  readEnterpriseSession,
+  getRequestIdentity,
+  handleAuthenticationFailure,
+} from '@platform/auth/model/session'
 
 // ==================== 1. 配置常量 ====================
 const CONFIG = {
@@ -53,7 +58,7 @@ class RequestManager {
     if (this.pendingRequests.has(requestKey)) {
       const controller = this.pendingRequests.get(requestKey)
       controller.abort()
-      logger.warn('取消重复请求:', requestKey)
+      logger.warn('取消重复请求:', config.method?.toUpperCase(), config.url)
     }
 
     const controller = new AbortController()
@@ -180,7 +185,7 @@ export function setDefaultHeaders(headers) {
     ...axiosInstance.defaults.headers,
     ...headers,
   }
-  logger.info('默认请求头已更新:', headers)
+  logger.info('默认请求头已更新')
 }
 
 export function setTimeout(timeout) {
@@ -212,10 +217,12 @@ const applyTimestampSuffix = (config) => {
 }
 
 const applyAuthorization = (config) => {
-  if (config.headers.Authorization || config.needToken === false) return
+  if (config.headers.get?.('Authorization') || config.headers.Authorization || config.needToken === false) return
   const token = readStoredToken()
   if (!token) return
   config.headers.Authorization = `Bearer ${token}`
+  const enterprise = readEnterpriseSession()
+  if (enterprise) config.headers['X-Tenant-ID'] = enterprise.tenantId
 }
 
 const applyDataFormat = (config) => {
@@ -294,6 +301,9 @@ function installInterceptors(instance) {
       applyDedup(config)
       applyTimestampSuffix(config)
       applyAuthorization(config)
+      config._sessionIdentity = getRequestIdentity(
+        config.headers.get?.('Authorization') || config.headers.Authorization
+      )
       applyDataFormat(config)
       applyEncryption(config) // 新增：加密请求数据
       applyRequestMetadata(config)
@@ -301,7 +311,12 @@ function installInterceptors(instance) {
 
       logger.log(`发起请求: ${config.method?.toUpperCase()} ${config.url}`, {
         params: config.params,
-        data: RequestUtils.isFormData(config.data) ? '[FormData]' : config.data,
+        data:
+          config.url?.includes('/api/auth/') || config.data?.password !== undefined
+            ? '[sensitive]'
+            : RequestUtils.isFormData(config.data)
+              ? '[FormData]'
+              : config.data,
       })
 
       return config
@@ -325,7 +340,7 @@ function installInterceptors(instance) {
     try {
       assertSuccessfulPayload(data, response.status)
     } catch (error) {
-      handleAuthenticationFailure(error.status, error.code)
+      if (config.needToken !== false) handleAuthenticationFailure(error.status, error.code, config._sessionIdentity)
       error.response = { ...response, data }
       RequestUtils.handleShowError(error.message, config.showError !== false)
       throw error
@@ -378,7 +393,8 @@ function installInterceptors(instance) {
         }
 
         // 401/403 特殊处理
-        handleAuthenticationFailure(status)
+        if (error.config?.needToken !== false)
+          handleAuthenticationFailure(status, undefined, error.config?._sessionIdentity)
 
         RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
 

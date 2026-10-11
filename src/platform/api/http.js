@@ -5,7 +5,12 @@ import { getEnv } from '@platform/config/env'
 import { EncryptionConfig, EncryptionHandler, isFormData } from './core/encryption'
 import { retry, runWithConcurrency } from './core/async'
 import { assertSuccessfulPayload, RequestError, getHttpErrorMessage } from './core/response'
-import { handleAuthenticationFailure } from '@platform/auth/model/session'
+import {
+  readStoredToken,
+  readEnterpriseSession,
+  getRequestIdentity,
+  handleAuthenticationFailure,
+} from '@platform/auth/model/session'
 export { EncryptionConfig, EncryptionHandler } from './core/encryption'
 import logger from '@platform/telemetry/logger'
 
@@ -114,11 +119,23 @@ class HttpClient {
       ...options,
       headers: { ...this.config.HEADERS, ...options.headers },
     }
+    if (
+      config.needToken !== false &&
+      !Object.keys(config.headers).some((key) => key.toLowerCase() === 'authorization')
+    ) {
+      const token = readStoredToken()
+      if (token) config.headers.Authorization = `Bearer ${token}`
+      const enterprise = readEnterpriseSession()
+      if (enterprise) config.headers['X-Tenant-ID'] = enterprise.tenantId
+    }
 
     // 1. 执行请求拦截器
     for (const interceptor of this.interceptors.request) {
       config = await interceptor(config)
     }
+    config._sessionIdentity = getRequestIdentity(
+      Object.entries(config.headers).find(([key]) => key.toLowerCase() === 'authorization')?.[1]
+    )
 
     // 2. 处理 URL 和参数
     const fullUrl = this._buildUrl(config)
@@ -223,7 +240,7 @@ class HttpClient {
   }
 
   _handleError(error, config) {
-    handleAuthenticationFailure(error.status, error.code)
+    if (config.needToken !== false) handleAuthenticationFailure(error.status, error.code, config._sessionIdentity)
     const isShowError = config.isShowError !== false && config.showError !== false
     let errorMsg = error.message
 

@@ -1,4 +1,8 @@
 node_modules
+api/node_modules
+api/data
+.vercel
+dist*
 npm-debug.log
 .yarn
 .pnpm-debug.log

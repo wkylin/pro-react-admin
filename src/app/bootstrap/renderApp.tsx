@@ -7,7 +7,7 @@ import { App as AntdApp } from 'antd'
 import ErrorBoundary from '@/platform/errors/ErrorBoundary'
 import GlobalBreakpointListener from '@app/bootstrap/providers/GlobalBreakpointListener'
 import { AppStoreProvider, createAppStore } from '@app/model'
-import { KeepAliveProvider } from '@platform/keep-alive'
+import SessionScope from './SessionScope'
 import i18n from '@/i18n/i18n'
 
 const isLocalhostRuntime = () => {
@@ -147,7 +147,7 @@ export function renderApp(options: RenderAppOptions) {
   root.render(
     <StrictMode>
       <AppStoreProvider projectId={projectId} store={store}>
-        <KeepAliveProvider>
+        <SessionScope>
           <AntdApp>
             <I18nextProvider i18n={i18n}>
               <GlobalBreakpointListener />
@@ -159,7 +159,7 @@ export function renderApp(options: RenderAppOptions) {
               </ErrorBoundary>
             </I18nextProvider>
           </AntdApp>
-        </KeepAliveProvider>
+        </SessionScope>
       </AppStoreProvider>
     </StrictMode>
   )

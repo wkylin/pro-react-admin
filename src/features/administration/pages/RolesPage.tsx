@@ -9,6 +9,7 @@ import { useResourceList } from '../model/useResourceList'
 import type { ManagedRole } from '../model/resources'
 import ResourceWorkspace from './ResourceWorkspace'
 import styles from './workspace.module.less'
+import { permissionService } from '@platform/auth/services/permissionService'
 
 type RoleInput = Omit<ManagedRole, 'id'>
 const permissionOptions = [
@@ -24,7 +25,7 @@ const permissionOptions = [
 ].map((value) => ({ value, label: value }))
 export default function RolesPage() {
   const { t } = useTranslation()
-  const { provider } = useAdministration()
+  const { provider, demo } = useAdministration()
   const { message } = App.useApp()
   const list = useResourceList('roles')
   const createAllowed = useCheckPermission('role:create').hasPermission
@@ -48,6 +49,7 @@ export default function RolesPage() {
     try {
       if (editing === 'new') await provider.create('roles', input)
       else await provider.update('roles', editing.id, input)
+      if (!demo) await permissionService.syncPermissions()
       setEditing(null)
       list.reload()
       void message.success(t('admin.saved'))

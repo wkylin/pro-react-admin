@@ -24,6 +24,9 @@ const config: StorybookConfig = {
     name: '@storybook/react-webpack5',
     options: {},
   },
+  // The application enables react-refresh/babel in the development environment.
+  // Storybook owns HMR and does not install the application's Refresh runtime.
+  babel: async (options) => ({ ...options, envName: 'storybook' }),
   core: {
     builder: {
       name: '@storybook/builder-webpack5',
@@ -39,6 +42,26 @@ const config: StorybookConfig = {
 
     webpackConfig.module ??= { rules: [] }
     webpackConfig.module.rules ??= []
+    // Compile the same Tailwind source used by the application.
+    const addPostcss = (rules: NonNullable<NonNullable<typeof webpackConfig.module>['rules']>) => {
+      for (const rule of rules) {
+        if (!rule || typeof rule !== 'object') continue
+        if (rule.oneOf) addPostcss(rule.oneOf)
+        if (rule.rules) addPostcss(rule.rules)
+        if (rule.test instanceof RegExp && rule.test.test('icon.svg')) {
+          rule.exclude = [rule.exclude, /\.svg$/i].filter(Boolean) as typeof rule.exclude
+        }
+        if (rule.test instanceof RegExp && rule.test.test('reset.css') && Array.isArray(rule.use)) {
+          rule.use.push('postcss-loader')
+        }
+      }
+    }
+    addPostcss(webpackConfig.module.rules)
+    webpackConfig.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: [{ loader: '@svgr/webpack', options: { icon: true } }],
+    })
     // Storybook injects styles at runtime; app/library extraction rules remain build-specific.
     webpackConfig.module.rules.push({
       test: /\.less$/i,
@@ -53,6 +76,7 @@ const config: StorybookConfig = {
               auto: /\.module\.less$/i,
               localIdentName: '[name]__[local]--[hash:base64:5]',
               exportLocalsConvention: 'camelCase',
+              namedExport: false,
             },
           },
         },

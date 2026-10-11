@@ -1,5 +1,7 @@
 # 多项目与脚手架
 
+projectA/projectB 独立预览、并行启动和构建命令见[快速上手](GETTING_STARTED.md#多项目)；需要 Shell 加载 Remote 时使用[微前端模式](GETTING_STARTED.md#微前端)。
+
 `src/projects/registry.json` 登记项目源码、入口、路由、输出与 Remote 配置；`config/project-registry.mjs` 统一验证、路径解析和构建计划。Webpack、开发命令、预览、清理和部署不再各自推算目录。`mfeHost: true` 标识 Host，Remote 由 `remotes` 和 `mfeExpose` 登记。
 
 ```bash

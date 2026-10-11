@@ -10,6 +10,8 @@ import { useAuth } from '@platform/auth/hooks/useAuth'
 import { authService } from '@platform/auth/services/authService'
 import { permissionService } from '@platform/auth/services/permissionService'
 import { testAccounts } from '@platform/auth/mocks/permission'
+import { isDemoPermissionMode } from '@platform/auth/api/permission'
+import EnterpriseSignIn from '@platform/auth/components/EnterpriseSignIn'
 
 import styles from './index.module.less'
 
@@ -70,7 +72,7 @@ const loadOrInitPasswords = (): Record<string, string> => {
   }
 }
 
-const SignIn = () => {
+const DemoSignIn = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const { token } = theme.useToken()
@@ -433,4 +435,6 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default function SignIn() {
+  return isDemoPermissionMode() ? <DemoSignIn /> : <EnterpriseSignIn />
+}

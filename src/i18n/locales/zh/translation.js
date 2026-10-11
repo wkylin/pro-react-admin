@@ -1,4 +1,15 @@
 const zh = {
+  identity: {
+    title: '登录业务工作区',
+    description: '输入租户 ID 和管理员分配的账号。',
+    tenant: '租户 ID',
+    password: '密码',
+    resetPassword: '新密码（选填）',
+    signIn: '登录',
+    failed: '登录失败',
+    invalidCredentials: '请检查租户、邮箱和密码。',
+    tryLater: '登录尝试过于频繁，请稍后重试。',
+  },
   admin: {
     administration: '组织管理',
     users: '用户管理',

@@ -17,7 +17,7 @@ const Demo: React.FC<ResponsiveTableProps<NotificationRecord>> = (props) => (
 )
 
 const meta: Meta<typeof Demo> = {
-  title: 'ProReactAdmin/ResponsiveTable',
+  title: 'WUI/Components/ResponsiveTable',
   component: Demo,
   parameters: {
     layout: 'fullscreen',

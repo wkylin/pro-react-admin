@@ -1,0 +1,13 @@
+test('an invalid enterprise credential never restores a leftover GitHub identity', () => {
+  jest.resetModules()
+  localStorage.clear()
+  localStorage.setItem('enterprise_session', 'invalid-json')
+  localStorage.setItem('github_token', 'previous-github-token')
+  localStorage.setItem('github_user', JSON.stringify({ id: 1, login: 'previous-github-user' }))
+  jest.doMock('../api/permission', () => ({ isDemoPermissionMode: () => false }))
+  jest.doMock('./permissionService', () => ({ permissionService: { syncPermissions: jest.fn() } }))
+  const { authService } = require('./authService')
+  expect(authService.getState().isAuthenticated).toBe(false)
+  expect(authService.getState().user).toBeNull()
+  localStorage.clear()
+})

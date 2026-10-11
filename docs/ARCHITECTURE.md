@@ -4,7 +4,7 @@
 
 Pro React Admin 是 React 管理应用工作区，包含组件展示应用、精简企业入口、多个独立项目、Module Federation Host/Remote 和独立 UI 包。它采用 React 19、Ant Design 6、React Router 7 Hash Router、Zustand 5、Webpack 5、TypeScript 6。声明版本见[自动生成参考](PROJECT_REFERENCE.md)，安装版本以 lockfile 为准。
 
-`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、审计、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。企业入口是可扩展业务基础，API helper 仍是 OAuth/Tracking 服务；真实身份、RBAC、业务持久化需要接入业务后端。
+`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、审计、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。`api/enterprise` 提供可选的真实业务后端：租户账号、RBAC、持久化用户/角色、会话撤销与事务审计。它适合单实例自托管；前端仍可通过 Provider 接入其它业务服务。
 
 ```mermaid
 flowchart TD
@@ -18,6 +18,9 @@ flowchart TD
   Policy[路由与菜单策略] --> App
   Policy --> Platform
   Platform --> Service[可替换业务服务]
+  Service --> HTTP[Express 企业 Router]
+  HTTP --> Domain[strict 业务授权与会话]
+  Domain --> SQLite[SQLite 事务 / 租户过滤 / 追加审计]
 ```
 
 ## 代码组织
@@ -33,6 +36,7 @@ flowchart TD
 | src/shared             | 通用组件和纯工具                                         | 不反向依赖平台或业务                      |
 | src/projects           | 项目入口与路由差异                                       | 复用装配与平台，不复制基础算法            |
 | packages/wui-react     | 可发布 UI 组件                                           | 自包含，禁止导入应用 src                  |
+| api/enterprise         | HTTP adapter、业务服务、SQLite 存储、显式租户初始化      | 业务核心 strict；授权和审计在服务端执行   |
 | src/pages / components | 展示页面和待迁移组件                                     | 新业务优先进入 features；按业务变化迁移   |
 
 `config/path-aliases.json` 派生 TS/Jest/Webpack 别名。`@routers` 是构建时项目路由别名；`@app/routing` 明确指共享装配与展示路由，不等于当前项目。导入方向由 `check:import-boundaries` 强制检查。
@@ -49,7 +53,7 @@ flowchart TD
 
 `KeepAliveProvider` 管理本根的缓存、LRU 和定时器，默认保留最多 5 个非持久页面，首页独立保留。退出 Provider 取消定时器；Remote 的相同 pathname 不会互相驱逐。Tabs 刷新使用 generation 实际重挂载当前页面，保留其它页草稿。缓存限额以内保留草稿，超过限额会丢弃最旧页；这不是永久草稿存储。
 
-权限代表当前浏览器登录会话，仍共享 localStorage 凭据；它没有多租户或多个并行身份隔离。Module Federation 共享依赖也不提供权限或样式沙箱。需要不同身份或不可信子应用时应采用 iframe/独立 origin 或额外会话上下文。
+`SessionScope` 在凭据或租户变化时销毁页面树、Tabs、KeepAlive 与业务 Provider，避免旧身份的数据与表单进入新工作区。企业权限缓存绑定 tenant/token，资源缓存实例绑定当前会话。当前 origin 仍只有一个活动身份，跨标签页共享并同步切换；不支持多个并行身份。Module Federation 不提供权限或样式沙箱，不可信子应用须使用独立 origin/iframe。
 
 ## 数据与功能
 
@@ -57,7 +61,9 @@ flowchart TD
 
 `platform/data/provider.ts` 定义分页、查询、取消、CRUD 和资源解析契约；REST adapter 复用已有请求层和会话处理，响应经领域 parser 验证。`features/administration` 提供用户 CRUD、角色配置、状态编辑、查询/分页和只读审计。demo Provider 在应用实例中维护数据并检查角色引用，REST Provider 对接真实接口；详见[企业资源接入](ENTERPRISE.md)。
 
-Provider 是可替换边界，目前没有引入统一服务端状态缓存框架。新增复杂业务可在 Provider 上接入 TanStack Query 等能力，应先明确缓存键、失效、身份隔离与重试语义。已有 notifications/business/tracking feature 可逐步接入，不为目录统一强行改写全部业务。
+`platform/data/cache.ts` 在 Provider 上装饰服务端数据缓存：按会话创建实例，资源/记录/规范查询组成键，15 秒 TTL、最多 100 项、同键请求共享、每消费者独立取消。成功写入通知相关资源重新加载，用户/角色写入失效审计，角色写入同时失效用户和角色选项；失败不缓存。失效或身份变化后，在途旧结果不能重新填充缓存。它是浏览器内存缓存，尚无后台刷新、乐观更新、实时订阅或分布式缓存。其它 feature 暂未统一迁移。
+
+企业后端使用 Node 24 原生 TypeScript 与 SQLite，不新增数据库驱动。HTTP、业务授权、存储分别组织；所有列表/记录/写入按服务端会话的 tenant_id 过滤，header 不能选择另一个租户。每次请求从数据库读取有效账号和角色，不缓存授权结论。业务写入、会话撤销、审计在同一事务提交；数据库触发器拒绝审计 UPDATE/DELETE。数据库管理员仍可修改文件或触发器，因此它不是外部防篡改审计系统。边界与部署要求见[企业资源](ENTERPRISE.md)。
 
 ## 构建、部署与性能
 
@@ -69,4 +75,4 @@ Sentry 在启用时动态加载；设置抽屉、鼠标效果、轨迹按需加�
 
 ## 下一阶段
 
-对标依据、已处理劣势和优先级见[开源对标](BENCHMARKS.md)。仍需推进真实 RBAC/租户/审计后端、统一服务端状态缓存、运行期插件及兼容性治理、遗留 JS 类型化、全仓 strict、SSR/路由 loader 的适用性评估，以及 Tracking 生命周期专项。应按可验证的业务能力迭代，不以新增依赖或 Star 数替代产品验收。
+对标依据、已处理劣势和优先级见[开源对标](BENCHMARKS.md)。下一阶段优先推进 OIDC/SSO、多组织成员关系、租户运营与数据库升级/备份治理；随后扩展查询缓存的后台刷新与实时失效、运行期插件和兼容性治理、遗留 JS 类型化及全仓 strict。根 strict 尚未打开；新增业务后端通过独立 strict 门禁。SSR/路由 loader、Tracking 生命周期和 Web Vitals 仍需按实际业务评估。

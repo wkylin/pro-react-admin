@@ -1,6 +1,6 @@
 # 身份、权限与导航
 
-`REACT_APP_USE_MOCK=true` 显式开启演示授权；关闭后只请求真实接口，失败不会降级为 mock。空 APP_BASE_URL 表示同源服务；api/ helper 暂未实现 RBAC 接口。演示邮箱 token 不适用于真实服务。
+`REACT_APP_USE_MOCK=true` 显式开启演示授权；关闭后显示真实租户登录，只请求真实接口，失败不会降级为 mock。空 APP_BASE_URL 表示同源服务；设置 ENTERPRISE_ENABLED=true 可启用仓库的租户/RBAC 服务。演示邮箱和 GitHub token 不适用于该企业服务。
 
 ## 真实接口
 
@@ -25,14 +25,14 @@
 
 PermissionService 保存稳定快照，usePermission、ProtectedRoute、PermissionGuard、路由和菜单通过 `useSyncExternalStore` 订阅。刷新结果、刷新失败和清理会话同时更新所有已挂载消费者，不需要重新进页面。订阅时安装 storage、session-changed、focus 监听，最后一个消费者卸载时移除并取消到期计时器。
 
-缓存有效期 30 分钟，按 active token 与演示 role override 绑定；同一资料的 GitHub token 更新也会失效。订阅期间到期重新同步，focus 检查失效缓存。清缓存提升 generation，在途旧响应在退出或切号后不可提交。
+演示权限缓存有效期 30 分钟，真实权限为 60 秒。企业缓存按 tenant/token 绑定，演示按 active token/role override 绑定；GitHub token 更新也会失效。订阅期间到期重新同步，真实企业会话在 focus 强制刷新。清缓存提升 generation，在途旧响应在退出或切号后不可提交。服务端每次请求重新读取角色，UI 没有外部撤权推送，展示同步与服务端强制授权的时效不同。
 
-readStoredToken 优先读取 token，再读取 github_token，兼容原始字符串和 JSON token；GitHub profile 不代表有效凭据。没有 token 时不会请求授权服务或获取演示权限。登录/切换后调用 syncPermissions；同页退出使用 clearSession，它通知订阅者；跨标签页 token/role 变化由 storage 事件同步。
+readStoredToken 优先读取有效 enterprise_session，然后兼容 token/github_token 的原始字符串和 JSON；已存在但过期/无效的企业会话不回退旧凭据。GitHub profile 不代表有效凭据，真实模式也不会恢复演示邮箱身份。企业登录保存经 parser 验证的会话并清理旧身份；到期自动清除。登录/切换后调用 syncPermissions，同页退出使用 clearSession 通知消费者；跨标签页通过 storage 同步。
 
-HTTP 401、业务数字 401/41002 清理会话并跳转 signin；403 保留身份。业务字符串 `"401"` 不等于数字 401。前端会话仍共享当前 origin 的凭据，尚未提供多个并行身份的 Provider。
+HTTP 401、业务数字 401/41002 清理会话并跳转 signin；403 保留身份。请求捕获身份，旧身份迟到的 401 不会清理新会话，needToken:false 的登录失败也不清理已有会话。业务字符串 `"401"` 不等于数字 401。SessionScope 在身份变化时销毁页面/Tab/业务缓存。当前 origin 仍共享一个活动会话，不支持多个并行身份。
 
 ## 验证与边界
 
 单测覆盖多消费者刷新/撤权、监听销毁、跨标签页凭据变化、匿名拒绝、切号在途结果和策略越权。浏览器验证无刷新撤权和真实叶子路由保护。
 
-localStorage 不属于可信授权源。业务后端每次请求须验证真实身份与 tenant 范围；角色管理和账号停用还需要服务端会话失效和审计。完整接入契约见[企业资源](ENTERPRISE.md)。
+localStorage 不属于可信授权源。企业后端每次请求验证数据库会话、tenant、用户状态和角色；拒绝跨租户 ID、超出自身权限的授予和最后管理员停用。角色/状态/邮箱/密码变化按规则失效会话，业务写入和审计一起提交。完整接入与 SQLite 部署边界见[企业资源](ENTERPRISE.md)。

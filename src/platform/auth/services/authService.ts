@@ -2,6 +2,15 @@ import { GITHUB_OAUTH_CONFIG } from '../authConfig'
 import request from '@platform/api/request'
 import logger from '@platform/telemetry/logger'
 import { permissionService } from './permissionService'
+import { isDemoPermissionMode } from '../api/permission'
+import {
+  readEnterpriseSession,
+  saveEnterpriseSession,
+  subscribeSession,
+  SESSION_CHANGED_EVENT,
+  clearSession,
+  type EnterpriseSession,
+} from '../model/session'
 
 export interface GitHubUser {
   id: number
@@ -121,6 +130,12 @@ class AuthService {
 
   private constructor() {
     this.loadFromStorage()
+    if (typeof window !== 'undefined')
+      subscribeSession(() => {
+        this.authState = { user: null, token: null, isAuthenticated: false, isLoading: false }
+        this.loadFromStorage()
+        this.notifyListeners()
+      })
   }
 
   static getInstance(): AuthService {
@@ -132,6 +147,24 @@ class AuthService {
 
   private loadFromStorage() {
     try {
+      const enterprise = readEnterpriseSession()
+      if (enterprise) {
+        this.authState = {
+          user: {
+            id: 0,
+            login: enterprise.user.email,
+            name: enterprise.user.name,
+            email: enterprise.user.email,
+            avatar_url: '',
+            html_url: '',
+          },
+          token: enterprise.token,
+          isAuthenticated: true,
+          isLoading: false,
+        }
+        return
+      }
+      if (localStorage.getItem('enterprise_session')) return
       const tokenData = localStorage.getItem('github_token')
       const userData = localStorage.getItem('github_user')
 
@@ -151,7 +184,7 @@ class AuthService {
       // 兼容“测试账号登录”：localStorage.token = { token: email }
       const testTokenData = localStorage.getItem('token')
       const testToken = parseToken(testTokenData)
-      if (testToken && isLikelyEmail(testToken)) {
+      if (isDemoPermissionMode() && testToken && isLikelyEmail(testToken)) {
         this.authState = {
           token: testToken,
           user: buildTestAccountUser(testToken),
@@ -189,6 +222,11 @@ class AuthService {
     return { ...this.authState }
   }
 
+  async setEnterpriseAuthenticated(session: EnterpriseSession): Promise<void> {
+    saveEnterpriseSession(session)
+    await permissionService.syncPermissions()
+  }
+
   async setAuthenticated(isAuthenticated: boolean, user?: GitHubUser | null, token?: string | null): Promise<void> {
     this.authState.isAuthenticated = isAuthenticated
 
@@ -206,6 +244,7 @@ class AuthService {
     }
 
     this.saveToStorage()
+    window.dispatchEvent(new Event(SESSION_CHANGED_EVENT))
     this.notifyListeners()
 
     // 如果已登录，强制同步权限，保证菜单与路由权限为最新
@@ -226,6 +265,7 @@ class AuthService {
    * - 不写入 github_token/github_user，仅依赖 localStorage.token
    */
   async setTestAccountAuthenticated(email: string): Promise<void> {
+    if (!isDemoPermissionMode()) throw new Error('测试账号仅用于演示环境')
     this.authState = {
       user: buildTestAccountUser(email),
       token: email,
@@ -235,12 +275,14 @@ class AuthService {
 
     // 避免残留 GitHub 登录态影响鉴权逻辑
     try {
+      localStorage.removeItem('enterprise_session')
       localStorage.removeItem('github_token')
       localStorage.removeItem('github_user')
     } catch (e) {
       console.warn('移除本地存储键失败:', e)
     }
 
+    window.dispatchEvent(new Event(SESSION_CHANGED_EVENT))
     this.notifyListeners()
 
     try {
@@ -365,6 +407,21 @@ class AuthService {
   }
 
   logout(): void {
+    const enterprise = readEnterpriseSession()
+    if (enterprise)
+      void request
+        .delete(
+          '/api/auth/session',
+          {},
+          {
+            headers: { Authorization: `Bearer ${enterprise.token}`, 'X-Tenant-ID': enterprise.tenantId },
+            showError: false,
+            encrypt: false,
+          }
+        )
+        .catch((error: unknown) =>
+          logger.warn('服务端会话注销失败:', error instanceof Error ? error.message : 'unknown')
+        )
     this.authState = {
       user: null,
       token: null,
@@ -387,6 +444,7 @@ class AuthService {
       logger.warn('移除本地存储键失败:', e)
     }
     this.saveToStorage()
+    clearSession()
     this.notifyListeners()
     // SPA 跳转到登录页
     if (typeof window !== 'undefined') {

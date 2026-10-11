@@ -1,10 +1,13 @@
 export default [
   {
+    context: ['/api/auth', '/api/admin', '/api/permissions', '/api/roles'],
+    target: process.env.ENTERPRISE_API_TARGET || `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200}`,
+    changeOrigin: true,
+  },
+  {
     // Keep the admin token in the dev-server process; it is never injected into the browser bundle.
     context: ['/api/tracking'],
-    target:
-      process.env.TRACKING_API_TARGET ||
-      `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200}`,
+    target: process.env.TRACKING_API_TARGET || `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200}`,
     changeOrigin: true,
     on: {
       proxyReq: (proxyReq) => {

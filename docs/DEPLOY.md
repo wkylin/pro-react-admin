@@ -1,5 +1,9 @@
 # 部署与产物
 
+企业业务后端需独立部署在有持久卷的单实例 Node 24 主机，配置 ENTERPRISE_ENABLED=true、ENTERPRISE_DB_PATH、CORS_ORIGINS，经 HTTPS/反向代理服务前端。SQLite 不适用 Vercel 临时文件系统，本实现检测该环境后拒绝开启；Vercel 继续部署静态前端，真实模式通过 APP_BASE_URL 或同源代理接入外部服务。首次显式初始化租户和当前运维限制见[企业资源](ENTERPRISE.md)。
+
+`deploy/Dockerfile` 用于静态站点；`deploy/enterprise/Dockerfile` 和 `compose.enterprise.yaml` 提供业务 API、SQLite 持久卷及 Caddy HTTPS 网关。逐条部署命令、生产配置、演示/真实登录与 Vercel 静态产物上传见[Vercel 与 SQLite 部署指南](VERCEL_SQLITE.md)。Docker 镜像运行和数据库备份恢复仍需在实际主机验证。
+
 ## 构建、验证、复用
 
 按项目构建一次，在同一产物上运行测试，再上传/组合/打包；不要在发布阶段用不同参数重新生成一个未验证目录。
@@ -18,7 +22,9 @@ pnpm run test:e2e:enterprise
 
 Vercel 聚合使用 `pnpm run build:mf:vercel`，依次构建登记的 Host/Remote，再按 registry.output 与 prodPath 组合到 dist-vercel，并检查容器/manifest。`sync:deployment` 从注册表生成聚合 headers；`check:deployment-contracts` 检测漂移，`check:deployment-config` 验证目标和缓存策略。Standalone Vercel 示例仍保留对应项目配置。
 
-GitHub Pages workflow 构建应用和 Storybook，`scripts/prepare-pages.mjs` 只组合已有目录到 dist-combined，生成导航与 .nojekyll。不存在构建入口时立即失败，不向发布目录静默复制过期内容。实际发布通过现有 Pages job；本地组合不发布。
+GitHub Pages workflow 使用 `pnpm run build:pages` 构建全部场景，或通过 workflow_dispatch 选择 default、enterprise、mfe、multi、storybook。产物在 dist-combined，包含导航、部署清单与 .nojekyll；各项目分别编译对应 PUBLIC_URL，MFE Host 注入真实 HTTPS Remote 地址。`pnpm run check:pages` 检查 HTML 资源、Storybook base 与 Remote 容器。逐条命令、Fork/自定义域名与 Release 流程见 [GitHub 部署指南](GITHUB_DEPLOYMENT.md)。原 `prepare:pages` 仍仅组合已有单应用和 Storybook，适用于旧单入口流程。
+
+Storybook 可部署到 Pages 的 `/storybook/` 或独立 Vercel 项目。`vercel.storybook.json` 提供源码构建配置；`pnpm run vercel:prepare:storybook` 将已有静态产物准备到独立 artifacts 目录，不覆盖后台应用的 Vercel 关联。命令见 [Storybook](STORYBOOK.md)。
 
 ## Nginx 静态镜像
 

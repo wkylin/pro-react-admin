@@ -11,6 +11,7 @@ export function useResourceList<K extends keyof AdministrationSchema>(resource: 
     data: { items: [], total: 0 },
     loading: true,
   })
+  useEffect(() => provider.subscribe?.(resource, () => setRevision((value) => value + 1)), [provider, resource])
   useEffect(() => {
     const controller = new AbortController()
     setState((current) => ({ ...current, loading: true, error: undefined }))
@@ -32,7 +33,10 @@ export function useResourceList<K extends keyof AdministrationSchema>(resource: 
     )
     return () => controller.abort()
   }, [provider, resource, query, revision])
-  const reload = useCallback(() => setRevision((value) => value + 1), [])
+  const reload = useCallback(() => {
+    provider.invalidate?.(resource)
+    if (!provider.subscribe) setRevision((value) => value + 1)
+  }, [provider, resource])
   const search = useCallback((value: string) => setQuery((current) => ({ ...current, page: 1, search: value })), [])
   return { ...state, query, setQuery, reload, search }
 }

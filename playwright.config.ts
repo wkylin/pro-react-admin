@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
-  testIgnore: ['**/mfe-remote.spec.ts', '**/enterprise.spec.ts'],
+  testIgnore: ['**/mfe-remote.spec.ts', '**/enterprise.spec.ts', '**/enterprise-api.spec.ts'],
   timeout: 30_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,

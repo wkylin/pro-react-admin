@@ -1,0 +1,30 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: deploy/enterprise/Dockerfile
+    env_file:
+      - .env.enterprise.production.local
+    volumes:
+      - enterprise-data:/data
+    restart: unless-stopped
+
+  gateway:
+    image: caddy:2-alpine
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?Set API_DOMAIN in .env.enterprise.production.local}
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./deploy/enterprise/Caddyfile:/etc/caddy/Caddyfile:ro
+      - gateway-data:/data
+      - gateway-config:/config
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  enterprise-data:
+  gateway-data:
+  gateway-config:

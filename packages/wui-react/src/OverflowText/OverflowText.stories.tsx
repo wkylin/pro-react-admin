@@ -21,7 +21,7 @@ const renderOverflowText = (args: OverflowTextStoryProps) => (
 )
 
 const meta: Meta<typeof OverflowText> = {
-  title: 'Stateless/OverflowText',
+  title: 'WUI/Components/OverflowText',
   component: OverflowText,
   render: renderOverflowText,
   argTypes: {

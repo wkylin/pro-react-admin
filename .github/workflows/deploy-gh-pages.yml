@@ -2,9 +2,15 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      target:
+        description: Application set (Storybook is always included)
+        required: true
+        default: all
+        type: choice
+        options: [all, default, enterprise, mfe, multi, storybook]
 
 permissions:
   contents: read
@@ -12,64 +18,57 @@ permissions:
   id-token: write
 
 concurrency:
-  group: 'pages'
+  group: pages
   cancel-in-progress: false
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
+    timeout-minutes: 60
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
         with:
           version: 11.5.2
           run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
-          cache: 'pnpm'
+          cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build main app
-        run: pnpm run build:production
+      - run: pnpm install --frozen-lockfile
+      - name: Configure Pages and infer the actual domain/path
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Validate component story coverage and types
+        run: |
+          pnpm run check:stories
+          pnpm run typecheck:storybook
+      - name: Build selected applications and Storybook
+        run: pnpm run build:pages
         env:
-          NODE_ENV: production
-          PUBLIC_URL: /pro-react-admin
-
-      - name: Build Storybook
-        run: pnpm run build-storybook
-        env:
-          NODE_ENV: production
-          STORYBOOK_BASE_HREF: /pro-react-admin/storybook/
-
-      - name: Organize existing build artifacts
-        run: node scripts/prepare-pages.mjs
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          PAGES_TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || 'all' }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PAGES_SITE_URL: ${{ steps.pages.outputs.origin }}
+          STORYBOOK_DISABLE_TELEMETRY: '1'
+      - name: Verify every component reached the Storybook index
+        run: node scripts/validate-stories.mjs --built
+      - name: Verify built assets, base paths and federation containers
+        run: pnpm run check:pages
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist-combined'
-
-      - name: Deploy to GitHub Pages
+          path: dist-combined
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Output deployment URL
+      - name: Record preview links
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+          TARGET: ${{ github.event_name == 'workflow_dispatch' && inputs.target || 'all' }}
         run: |
-          echo "🚀 Deployment successful!"
-          echo "📱 Main App: https://wkylin.github.io/pro-react-admin/"
-          echo "📚 Storybook: https://wkylin.github.io/pro-react-admin/storybook/"
+          echo "Preview: ${PAGE_URL}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Storybook: ${PAGE_URL}storybook/" >> "$GITHUB_STEP_SUMMARY"
+          echo "Target: ${TARGET}; see deployment.json and portal.html for available entries." >> "$GITHUB_STEP_SUMMARY"

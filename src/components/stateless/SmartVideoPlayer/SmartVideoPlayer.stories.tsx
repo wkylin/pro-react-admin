@@ -1,15 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
-import type { ComponentType } from 'react'
 
 import SmartVideoPlayer from '@stateless/SmartVideoPlayer'
 
-// SmartVideoPlayer is implemented in JS via forwardRef/memo, so TS only infers RefAttributes.
-// Cast to a generic component type for Storybook args/controls.
-const SmartVideoPlayerAny = SmartVideoPlayer as unknown as ComponentType<any>
-
 const meta = {
-  title: 'ProReactAdmin/SmartVideoPlayer',
-  component: SmartVideoPlayerAny,
+  title: 'Components/Stateless/SmartVideoPlayer',
+  component: SmartVideoPlayer,
   parameters: {
     layout: 'fullscreen',
   },
@@ -131,11 +126,11 @@ const meta = {
       </div>
     )
   },
-} satisfies Meta<typeof SmartVideoPlayerAny>
+} satisfies Meta<typeof SmartVideoPlayer>
 
 export default meta
 
-type Story = StoryObj<typeof SmartVideoPlayerAny>
+type Story = StoryObj<typeof SmartVideoPlayer>
 
 export const Html5Mp4: Story = {
   args: {

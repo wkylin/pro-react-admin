@@ -16,6 +16,8 @@ export interface ListResult<T> {
   total: number
 }
 export interface DataProvider<Schema extends { [K in keyof Schema]: DataRecord }> {
+  subscribe?(resource: keyof Schema & string, listener: () => void): () => void
+  invalidate?(resource?: keyof Schema & string): void
   list<K extends keyof Schema & string>(
     resource: K,
     query: ListQuery,

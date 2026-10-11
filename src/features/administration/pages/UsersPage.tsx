@@ -23,10 +23,10 @@ import { useAdministration } from '../model/AdministrationProvider'
 import type { ManagedRole, ManagedUser } from '../model/resources'
 import styles from './workspace.module.less'
 
-type UserInput = Omit<ManagedUser, 'id'>
+type UserInput = Omit<ManagedUser, 'id'> & { password?: string }
 export default function UsersPage() {
   const { t } = useTranslation()
-  const { provider } = useAdministration()
+  const { provider, demo } = useAdministration()
   const { message } = App.useApp()
   const list = useResourceList('users')
   const createAllowed = useCheckPermission('user:create').hasPermission
@@ -35,8 +35,10 @@ export default function UsersPage() {
   const [form] = Form.useForm<UserInput>()
   const [editing, setEditing] = useState<ManagedUser | 'new' | null>(null)
   const [roles, setRoles] = useState<ManagedRole[]>([])
+  const [roleRevision, setRoleRevision] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
+  useEffect(() => provider.subscribe?.('roles', () => setRoleRevision((value) => value + 1)), [provider])
   useEffect(() => {
     if (!createAllowed && !updateAllowed) return
     const controller = new AbortController()
@@ -49,7 +51,7 @@ export default function UsersPage() {
       }
     )
     return () => controller.abort()
-  }, [provider, t, createAllowed, updateAllowed])
+  }, [provider, t, createAllowed, updateAllowed, roleRevision])
   const open = (user: ManagedUser | 'new') => {
     form.resetFields()
     form.setFieldsValue(user === 'new' ? { name: '', email: '', role: roles[0]?.code, status: 'active' } : user)
@@ -60,6 +62,7 @@ export default function UsersPage() {
     if (!editing || (editing === 'new' ? !createAllowed : !updateAllowed)) return
     const input = await form.validateFields().catch(() => null)
     if (!input) return
+    if (input.password === '') delete input.password
     setBusy(true)
     try {
       if (editing === 'new') await provider.create('users', input)
@@ -195,6 +198,15 @@ export default function UsersPage() {
           <Form.Item name="email" label={t('admin.email')} rules={[{ required: true, type: 'email' }]}>
             <Input type="email" />
           </Form.Item>
+          {!demo && (
+            <Form.Item
+              name="password"
+              label={t(editing === 'new' ? 'identity.password' : 'identity.resetPassword')}
+              rules={[{ required: editing === 'new', min: 12, max: 256 }]}
+            >
+              <Input.Password autoComplete="new-password" />
+            </Form.Item>
+          )}
           <Form.Item name="role" label={t('admin.role')} rules={[{ required: true }]}>
             <Select showSearch options={roles.map((role) => ({ value: role.code, label: role.name }))} />
           </Form.Item>

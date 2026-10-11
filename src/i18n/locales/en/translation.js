@@ -1,4 +1,15 @@
 const en = {
+  identity: {
+    title: 'Sign in to your workspace',
+    description: 'Use your tenant ID and administrator-provisioned account.',
+    tenant: 'Tenant ID',
+    password: 'Password',
+    resetPassword: 'New password (optional)',
+    signIn: 'Sign in',
+    failed: 'Sign-in failed',
+    invalidCredentials: 'Check your tenant, email and password.',
+    tryLater: 'Too many sign-in attempts. Please try again later.',
+  },
   admin: {
     administration: 'Administration',
     users: 'Users',

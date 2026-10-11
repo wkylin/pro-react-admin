@@ -5,7 +5,7 @@ import PortalTooltip from './index'
 type PortalTooltipStoryProps = ComponentProps<typeof PortalTooltip>
 
 const meta: Meta<typeof PortalTooltip> = {
-  title: 'Stateless/PortalTooltip',
+  title: 'WUI/Components/PortalTooltip',
   component: PortalTooltip,
   argTypes: {
     placement: {

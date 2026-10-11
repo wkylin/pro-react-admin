@@ -8,7 +8,7 @@ app/bootstrap/renderApp.tsx 仅在生产、配置 SENTRY_DSN、非 localhost 且
 
 ## 本地日志与埋点
 
-platform/telemetry/logger 为环境感知日志入口。不要记录 Authorization 或原始 token。请求层现已移除 token 输出，API 管理 token 只存在服务端与开发代理。
+platform/telemetry/logger 为环境感知日志入口。不要记录 Authorization、原始 token 或密码。企业登录请求隐藏 payload，取消重复请求只记录 method/URL，默认 headers 更新不输出值；会话注销失败只输出 message。API 管理 token 只存在服务端与开发代理。
 
 Tracking 是业务事件采集，Sentry 是运行时错误与性能；它们配置与生命周期独立。默认生产入口不自动启动 Tracking SDK。详情见[Tracking](TRACKING_SDK_ARCHITECTURE.md)。
 
