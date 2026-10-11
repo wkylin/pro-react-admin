@@ -1,9 +1,12 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import AnimatedIcon from '@wui/AnimatedIcon'
+import { useState, useEffect, useRef, useCallback, useMemo, type KeyboardEvent } from 'react'
 import { RefreshCw, Zap } from 'lucide-react'
-import { CaptchaUtils, Difficulty } from './utils'
+import AnimatedIcon from '../AnimatedIcon'
+import styles from './index.module.less'
+import { CaptchaUtils, type Difficulty } from './utils'
 
-interface SliderCaptchaProps {
+export type { Difficulty as SliderCaptchaDifficulty } from './utils'
+
+export interface SliderCaptchaProps {
   onSuccess?: () => void
   onFail?: () => void
   onRefresh?: () => void
@@ -12,7 +15,7 @@ interface SliderCaptchaProps {
 
 type CaptchaStatus = 'idle' | 'success' | 'fail'
 
-const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefresh, difficulty = 'medium' }) => {
+const SliderCaptcha = ({ onSuccess, onFail, onRefresh, difficulty = 'medium' }: SliderCaptchaProps) => {
   const width = 300
   const height = 180
   const pieceSize = 50
@@ -40,10 +43,23 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   const startXRef = useRef(0)
   const currentXRef = useRef(0)
   const callbacksRef = useRef({ onSuccess, onFail, onRefresh })
+  const completedRef = useRef(false)
+  const mountedRef = useRef(false)
+  const refreshSequenceRef = useRef(0)
+  const failTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     callbacksRef.current = { onSuccess, onFail, onRefresh }
   }, [onSuccess, onFail, onRefresh])
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      refreshSequenceRef.current += 1
+      if (failTimerRef.current !== null) clearTimeout(failTimerRef.current)
+    }
+  }, [])
 
   // ─── 响应式缩放（适配移动端） ─────────────────
   const canvasAreaRef = useRef<HTMLDivElement>(null)
@@ -62,12 +78,23 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
       }
     }
     measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(measure)
+      ro.observe(el)
+      return () => ro.disconnect()
+    }
+
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
   }, [width])
 
   const refresh = useCallback(async () => {
+    const refreshSequence = ++refreshSequenceRef.current
+    if (failTimerRef.current !== null) {
+      clearTimeout(failTimerRef.current)
+      failTimerRef.current = null
+    }
+    completedRef.current = false
     setIsRefreshing(true)
     setStatus('idle')
     setSliderX(0)
@@ -81,29 +108,48 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
 
     const shapeType = CaptchaUtils.random(0, difficultySettings.maxShapes - 1)
 
-    const [finalBg, piece] = await Promise.all([
-      CaptchaUtils.cutHole(bg, tx, ty, pieceSize, shapeType),
-      CaptchaUtils.generatePiece(bg, tx, ty, pieceSize, shapeType),
-    ])
+    try {
+      const [finalBg, piece] = await Promise.all([
+        CaptchaUtils.cutHole(bg, tx, ty, pieceSize, shapeType),
+        CaptchaUtils.generatePiece(bg, tx, ty, pieceSize, shapeType),
+      ])
 
-    setBgUrl(finalBg)
-    setPieceUrl(piece)
-    setIsRefreshing(false)
-
-    if (callbacksRef.current.onRefresh) callbacksRef.current.onRefresh()
+      if (!mountedRef.current || refreshSequence !== refreshSequenceRef.current) return
+      setBgUrl(finalBg)
+      setPieceUrl(piece)
+      callbacksRef.current.onRefresh?.()
+    } catch {
+      if (!mountedRef.current || refreshSequence !== refreshSequenceRef.current) return
+      setBgUrl('')
+      setPieceUrl('')
+    } finally {
+      if (mountedRef.current && refreshSequence === refreshSequenceRef.current) {
+        setIsRefreshing(false)
+      }
+    }
   }, [width, height, pieceSize, difficulty, difficultySettings])
 
   useEffect(() => {
-    // 使用 Promise.resolve 延迟调用，避免在 effect 中同步触发 setState
+    let cancelled = false
     Promise.resolve().then(() => {
-      refresh()
+      if (!cancelled) void refresh()
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      cancelled = true
+    }
+  }, [refresh])
+
+  const completeSuccess = useCallback(() => {
+    if (completedRef.current) return
+    completedRef.current = true
+    setIsDragging(false)
+    setStatus('success')
+    callbacksRef.current.onSuccess?.()
   }, [])
 
   const handleStart = useCallback(
     (clientX: number) => {
-      if (status === 'success' || isRefreshing) return
+      if (status === 'success' || isRefreshing || completedRef.current) return
       setIsDragging(true)
       startXRef.current = clientX - currentXRef.current * scaleRef.current
     },
@@ -128,40 +174,64 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
       setSliderX(x)
 
       if (x === targetX) {
-        setIsDragging(false)
-        setStatus('success')
-        if (callbacksRef.current.onSuccess) callbacksRef.current.onSuccess()
+        completeSuccess()
       }
     },
-    [isDragging, width, pieceSize, targetX, difficultySettings]
+    [completeSuccess, isDragging, width, pieceSize, targetX, difficultySettings]
   )
 
   const handleEnd = useCallback(() => {
-    if (!isDragging) return
+    if (!isDragging || completedRef.current) return
     setIsDragging(false)
 
     const finalX = currentXRef.current
 
     if (Math.abs(finalX - targetX) < difficultySettings.tolerance) {
-      setStatus('success')
-      if (callbacksRef.current.onSuccess) callbacksRef.current.onSuccess()
+      completeSuccess()
     } else {
       setStatus('fail')
-      if (callbacksRef.current.onFail) callbacksRef.current.onFail()
-      setTimeout(() => {
+      callbacksRef.current.onFail?.()
+      if (failTimerRef.current !== null) clearTimeout(failTimerRef.current)
+      failTimerRef.current = setTimeout(() => {
+        if (!mountedRef.current) return
         setStatus('idle')
         setSliderX(0)
         currentXRef.current = 0
+        failTimerRef.current = null
       }, 800)
     }
-  }, [isDragging, targetX, difficultySettings])
+  }, [completeSuccess, isDragging, targetX, difficultySettings])
+
+  const handleSliderKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (status === 'success' || isRefreshing || completedRef.current) return
+
+      const max = width - pieceSize
+      const step = Math.max(1, Math.round(max / 30))
+      let next = currentXRef.current
+
+      if (event.key === 'ArrowRight' || event.key === 'ArrowUp') next = Math.min(max, next + step)
+      else if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') next = Math.max(0, next - step)
+      else if (event.key === 'Home') next = 0
+      else if (event.key === 'End') next = max
+      else return
+
+      event.preventDefault()
+      if (Math.abs(next - targetX) < difficultySettings.threshold) next = targetX
+      currentXRef.current = next
+      setSliderX(next)
+      if (next === targetX) completeSuccess()
+    },
+    [completeSuccess, difficultySettings.threshold, isRefreshing, pieceSize, status, targetX, width]
+  )
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX)
     const handleMouseUp = () => handleEnd()
     const handleTouchMove = (e: TouchEvent) => {
       e.preventDefault()
-      handleMove(e.touches[0].clientX)
+      const touch = e.touches[0]
+      if (touch) handleMove(touch.clientX)
     }
     const handleTouchEnd = () => handleEnd()
 
@@ -180,25 +250,25 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
     }
   }, [isDragging, handleMove, handleEnd])
 
-  const getStatusColor = () => {
+  const getTrackClassName = () => {
     switch (status) {
       case 'success':
-        return 'border-green-500 bg-green-50 dark:border-green-700 dark:bg-green-950/40'
+        return styles.trackSuccess
       case 'fail':
-        return 'border-red-500 bg-red-50 dark:border-red-700 dark:bg-red-950/40'
+        return styles.trackFail
       default:
-        return 'border-gray-300 bg-gray-50 dark:border-neutral-700 dark:bg-neutral-800'
+        return styles.trackIdle
     }
   }
 
-  const getButtonColor = () => {
+  const getSliderClassName = () => {
     switch (status) {
       case 'success':
-        return 'bg-green-500'
+        return styles.sliderSuccess
       case 'fail':
-        return 'bg-red-500'
+        return styles.sliderFail
       default:
-        return 'bg-blue-500'
+        return ''
     }
   }
 
@@ -207,11 +277,11 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   }
 
   return (
-    <div className="w-full max-w-[340px] rounded-lg bg-white p-5 text-gray-900 shadow-lg select-none dark:bg-neutral-900 dark:text-neutral-100">
-      <div className="mb-4 flex items-center justify-between font-semibold text-gray-800 dark:text-neutral-100">
-        <div className="flex items-center gap-2">
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.heading}>
           <span>Slider Captcha</span>
-          <span className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-neutral-800 dark:text-neutral-300">
+          <span className={styles.difficulty}>
             <AnimatedIcon variant="pulse" mode="hover">
               <Zap size={12} />
             </AnimatedIcon>
@@ -219,36 +289,29 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
           </span>
         </div>
         <button
+          type="button"
           onClick={refresh}
           disabled={isRefreshing}
-          className="p-1 text-lg text-blue-500 transition-transform hover:rotate-180 disabled:opacity-50"
+          className={styles.refreshButton}
+          aria-label="Refresh captcha"
         >
-          <AnimatedIcon
-            variant="spin"
-            mode={isRefreshing ? 'auto' : 'idle'}
-            className={isRefreshing ? 'animate-spin' : ''}
-          >
+          <AnimatedIcon variant="spin" mode={isRefreshing ? 'auto' : 'idle'}>
             <RefreshCw size={18} />
           </AnimatedIcon>
         </button>
       </div>
 
-      <div
-        ref={canvasAreaRef}
-        className="relative mb-4 w-full overflow-hidden rounded border border-gray-300 bg-gray-200 dark:border-neutral-700 dark:bg-neutral-800"
-        style={{ aspectRatio: `${width} / ${height}` }}
-      >
-        {bgUrl && (
-          <img src={bgUrl} alt="Background" className="pointer-events-none block h-full w-full" draggable={false} />
-        )}
+      <div ref={canvasAreaRef} className={styles.canvasArea} style={{ aspectRatio: `${width} / ${height}` }}>
+        {bgUrl && <img src={bgUrl} alt="" aria-hidden className={styles.backgroundImage} draggable={false} />}
 
         {pieceUrl && (
           <img
             src={pieceUrl}
-            alt="Puzzle piece"
-            className={`absolute top-0 left-0 shadow-lg ${
-              status === 'success' ? 'pointer-events-none opacity-100' : 'opacity-95 hover:opacity-100'
-            } ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            alt=""
+            aria-hidden
+            className={`${styles.puzzlePiece} ${status === 'success' ? styles.puzzlePieceSuccess : ''} ${
+              status === 'fail' ? styles.puzzlePieceFail : ''
+            } ${isDragging ? styles.puzzlePieceDragging : ''}`}
             style={{
               width: pieceSize * displayScale,
               height: pieceSize * displayScale,
@@ -256,7 +319,6 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
               transform: `translate3d(${sliderX * displayScale}px, ${targetY * displayScale}px, 0) rotate(${isDragging && status !== 'success' ? 2 : 0}deg)`,
               willChange: isDragging ? 'transform' : 'auto',
               transition: status === 'success' ? 'transform 0.3s ease-out' : 'none',
-              filter: status === 'fail' ? 'brightness(0.8)' : 'brightness(1)',
             }}
             onMouseDown={(e) => {
               if (status === 'success') return
@@ -266,28 +328,21 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
             onTouchStart={(e) => {
               if (status === 'success') return
               e.preventDefault()
-              handleStart(e.touches[0].clientX)
+              const touch = e.touches[0]
+              if (touch) handleStart(touch.clientX)
             }}
             draggable={false}
           />
         )}
       </div>
 
-      <div
-        className={`relative h-[40px] w-full overflow-hidden rounded-full border text-center text-sm leading-[40px] transition-all duration-300 ${getStatusColor()}`}
-      >
-        {status === 'idle' && (
-          <span className="block text-gray-500 transition-opacity duration-300 dark:text-neutral-400">
-            Drag to match the piece above
-          </span>
-        )}
-        {status === 'success' && <span className="block animate-pulse font-bold text-green-600">✓ Verified!</span>}
-        {status === 'fail' && <span className="block font-bold text-red-600">✗ Try again</span>}
+      <div className={`${styles.track} ${getTrackClassName()}`} aria-live="polite">
+        {status === 'idle' && <span className={styles.statusText}>Drag to match the piece above</span>}
+        {status === 'success' && <span className={`${styles.statusText} ${styles.statusSuccess}`}>✓ Verified!</span>}
+        {status === 'fail' && <span className={`${styles.statusText} ${styles.statusFail}`}>✗ Try again</span>}
 
         <div
-          className={`absolute top-0 left-0 z-10 flex h-[40px] w-[44px] items-center justify-center rounded-full text-white shadow-md ${
-            status === 'success' ? 'pointer-events-none cursor-default' : isDragging ? 'cursor-grabbing' : 'cursor-grab'
-          } ${getButtonColor()} ${status === 'success' ? 'animate-pulse' : ''}`}
+          className={`${styles.slider} ${getSliderClassName()} ${isDragging ? styles.sliderDragging : ''}`}
           style={{
             transform: `translate3d(${sliderX * displayScale}px, 0, 0)`,
             willChange: isDragging ? 'transform' : 'auto',
@@ -302,8 +357,17 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
           onTouchStart={(e) => {
             if (status === 'success') return
             e.preventDefault()
-            handleStart(e.touches[0].clientX)
+            const touch = e.touches[0]
+            if (touch) handleStart(touch.clientX)
           }}
+          onKeyDown={handleSliderKeyDown}
+          role="slider"
+          tabIndex={0}
+          aria-label="Move the puzzle piece into the matching space"
+          aria-valuemin={0}
+          aria-valuemax={width - pieceSize}
+          aria-valuenow={Math.round(sliderX)}
+          aria-valuetext={status === 'success' ? 'Verified' : `${Math.round(sliderX)} of ${width - pieceSize}`}
         >
           ➤
         </div>
@@ -312,4 +376,5 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   )
 }
 
+export { SliderCaptcha }
 export default SliderCaptcha

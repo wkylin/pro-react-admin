@@ -35,7 +35,8 @@ function genWatermarkDataUrl(text: string, opacity: number, rotate: number) {
   const size = 220
   canvas.width = size
   canvas.height = size
-  const ctx = canvas.getContext('2d')!
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return ''
   ctx.clearRect(0, 0, size, size)
   ctx.globalAlpha = opacity
   ctx.translate(size / 2, size / 2)

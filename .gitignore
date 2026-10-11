@@ -9,7 +9,7 @@
 /dist-mf-projectA
 /dist-mf-projectB
 /dist-pages
-/node_modules
+node_modules/
 /.eslintcache
 tsconfig.tsbuildinfo
 compilation-stats.json

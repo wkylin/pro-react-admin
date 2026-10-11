@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode, type RefObject } from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import clsx from 'clsx'
 import styles from './index.module.less'
 
@@ -18,14 +18,14 @@ import styles from './index.module.less'
  * @param {string} contentClassName - 内容的自定义CSS类名
  * @param {string} componentClassName - 组件容器的自定义CSS类名
  */
-interface Section {
+export interface ScrollableSection {
   title: string
   content?: ReactNode
   component?: ReactNode
 }
 
-interface ScrollableSectionsProps {
-  sections?: Section[]
+export interface ScrollableSectionsProps {
+  sections?: ScrollableSection[]
   scrollContainerRef?: RefObject<HTMLElement | null>
   className?: string
   navUlClassName?: string
@@ -35,8 +35,18 @@ interface ScrollableSectionsProps {
   componentClassName?: string
 }
 
+const EMPTY_SECTIONS: ScrollableSection[] = []
+
+const findSectionIndex = (positions: readonly number[], scrollTop: number) => {
+  if (positions.length === 0 || scrollTop <= positions[0]) return 0
+  for (let index = 0; index < positions.length - 1; index++) {
+    if (scrollTop > positions[index] && scrollTop <= positions[index + 1]) return index + 1
+  }
+  return positions.length - 1
+}
+
 const ScrollableSections = ({
-  sections = [],
+  sections = EMPTY_SECTIONS,
   scrollContainerRef,
   className = '',
   navUlClassName = '',
@@ -51,8 +61,8 @@ const ScrollableSections = ({
   const [activeScrollY, setActiveScrollY] = useState(0)
   const [scrollHighlightIndex, setScrollHighlightIndex] = useState(-1)
 
-  const navItemsRef = useRef<HTMLLIElement[]>([])
-  const sectionRefs = useRef<Record<string, HTMLElement>>({})
+  const navRef = useRef<HTMLElement | null>(null)
+  const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
 
   const navItems = sections.map((section) => section.title)
 
@@ -80,79 +90,44 @@ const ScrollableSections = ({
     return clsx(...classes)
   }
 
-  const findIndex = (arr: readonly number[], x: number) => {
-    if (x <= arr[0]) {
-      return 0
-    }
-    for (let index = 0; index < arr.length - 1; index++) {
-      if (x > arr[index] && x <= arr[index + 1]) {
-        return index + 1
-      }
-    }
-    return arr.length
-  }
-
   // 使用传统的事件监听来跟踪滚动状态
   useEffect(() => {
     const container = scrollContainerRef?.current
     if (!container) return
 
-    let ticking = false
+    let frameId: number | null = null
 
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const scrollTop = container.scrollTop
-          setActiveScrollY(scrollTop)
+      if (frameId !== null) return
 
-          // 计算当前激活的导航项
-          const currentPositions = sections.map((section) => {
-            const sectionId = `${section.title.toLowerCase().replace(/\s+/g, '-')}-section`
-            const sectionElement = sectionRefs.current[sectionId]
-            if (sectionElement) {
-              const rect = sectionElement.getBoundingClientRect()
-              const containerRect = container.getBoundingClientRect()
-              return rect.top - containerRect.top + scrollTop
-            }
-            return 0
-          })
+      frameId = requestAnimationFrame(() => {
+        const scrollTop = container.scrollTop
+        setActiveScrollY(scrollTop)
 
-          const index = findIndex(currentPositions, scrollTop)
-          const validIndex = Math.max(0, Math.min(index, sections.length - 1))
-          setActiveNavItemIndex(validIndex)
-          setScrollHighlightIndex(validIndex)
-          ticking = false
+        const containerRect = container.getBoundingClientRect()
+        const currentPositions = sections.map((_, index) => {
+          const sectionElement = sectionRefs.current[index]
+          if (!sectionElement) return 0
+          const rect = sectionElement.getBoundingClientRect()
+          return rect.top - containerRect.top + scrollTop
         })
-        ticking = true
-      }
+
+        const index = findSectionIndex(currentPositions, scrollTop)
+        const validIndex = Math.max(0, Math.min(index, sections.length - 1))
+        setActiveNavItemIndex(validIndex)
+        setScrollHighlightIndex(validIndex)
+        frameId = null
+      })
     }
 
     container.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll() // 初始化调用
 
     return () => {
+      if (frameId !== null) cancelAnimationFrame(frameId)
       container.removeEventListener('scroll', handleScroll)
     }
   }, [scrollContainerRef, sections])
-
-  // 获取 navItem 和 section 的 DOM 元素引用并存储
-  useEffect(() => {
-    // 延迟执行，确保DOM完全渲染
-    const timer = setTimeout(() => {
-      navItemsRef.current = Array.from(document.querySelectorAll<HTMLLIElement>(`.${styles.navItem}`))
-      // 重新初始化sectionRefs
-      sectionRefs.current = {}
-      sections.forEach((section) => {
-        const sectionId = `${section.title.toLowerCase().replace(/\s+/g, '-')}-section`
-        const element = document.getElementById(sectionId)
-        if (element) {
-          sectionRefs.current[sectionId] = element
-        }
-      })
-    }, 100)
-
-    return () => clearTimeout(timer)
-  }, [sections])
 
   // 动态计算各 section 的位置信息并存入 state，避免在渲染时读取 ref.current
   const [sectionPositions, setSectionPositions] = useState<number[]>([])
@@ -161,12 +136,11 @@ const ScrollableSections = ({
     const container = scrollContainerRef?.current
     if (!container) return
 
-    const positions = sections.map((section) => {
-      const sectionId = `${section.title.toLowerCase().replace(/\s+/g, '-')}-section`
-      const sectionElement = sectionRefs.current[sectionId]
+    const containerRect = container.getBoundingClientRect()
+    const positions = sections.map((_, index) => {
+      const sectionElement = sectionRefs.current[index]
       if (sectionElement) {
         const rect = sectionElement.getBoundingClientRect()
-        const containerRect = container.getBoundingClientRect()
         return rect.top - containerRect.top + container.scrollTop
       }
       return 0
@@ -188,7 +162,7 @@ const ScrollableSections = ({
 
     // 计算导航高度
     const updateNavHeight = () => {
-      const navElement = document.querySelector<HTMLElement>(`.${styles.nav}`)
+      const navElement = navRef.current
       if (navElement) {
         const height = navElement.offsetHeight
         setNavHeight(height)
@@ -199,21 +173,20 @@ const ScrollableSections = ({
     updateSectionHeight()
     updateNavHeight()
 
-    // 监听窗口大小变化
-    const resizeObserver = new ResizeObserver(() => {
+    const updateSizes = () => {
       updateSectionHeight()
       updateNavHeight()
-    })
-
-    resizeObserver.observe(container)
-
-    // 监听窗口resize事件
-    window.addEventListener('resize', updateNavHeight)
-
-    return () => {
-      resizeObserver.disconnect()
-      window.removeEventListener('resize', updateNavHeight)
     }
+
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(updateSizes)
+      resizeObserver.observe(container)
+      if (navRef.current) resizeObserver.observe(navRef.current)
+      return () => resizeObserver.disconnect()
+    }
+
+    window.addEventListener('resize', updateSizes)
+    return () => window.removeEventListener('resize', updateSizes)
   }, [scrollContainerRef])
 
   // 处理点击 navItem 滚动到对应 section 的逻辑
@@ -224,9 +197,7 @@ const ScrollableSections = ({
     // 立即设置激活状态，提供即时视觉反馈
     setActiveNavItemIndex(index)
 
-    const section = sections[index]
-    const sectionId = `${section.title.toLowerCase().replace(/\s+/g, '-')}-section`
-    const sectionElement = sectionRefs.current[sectionId]
+    const sectionElement = sectionRefs.current[index]
     if (sectionElement) {
       // 使用scrollTo，减去导航高度以避免遮挡
       const elementPosition = sectionElement.offsetTop - navHeight - 20 // 多减去一些间距
@@ -241,7 +212,9 @@ const ScrollableSections = ({
   return (
     <div className={className}>
       <motion.nav
+        ref={navRef}
         className={styles.nav}
+        aria-label="Section navigation"
         style={{
           position:
             sectionPositions.length > 0 && activeScrollY > sectionPositions[sectionPositions.length - 1]
@@ -258,43 +231,40 @@ const ScrollableSections = ({
       >
         <ul className={getClassName('navUl', navUlClassName)}>
           {navItems.map((item, index) => (
-            <li
-              key={index}
-              className={getClassName('navItem', navLiClassName, {
-                active: index === activeNavItemIndex,
-                'scroll-highlight': index === scrollHighlightIndex,
-              })}
-              onClick={() => handleNavItemClick(index)}
-            >
-              {item}
-              <div className={styles.activeIndicator} />
-              <div className={styles.scrollIndicator} />
+            <li key={`${item}-${index}`}>
+              <button
+                type="button"
+                className={getClassName('navItem', navLiClassName, {
+                  active: index === activeNavItemIndex,
+                  'scroll-highlight': index === scrollHighlightIndex,
+                })}
+                onClick={() => handleNavItemClick(index)}
+                aria-current={index === activeNavItemIndex ? 'location' : undefined}
+              >
+                {item}
+                <span className={styles.activeIndicator} aria-hidden />
+                <span className={styles.scrollIndicator} aria-hidden />
+              </button>
             </li>
           ))}
         </ul>
       </motion.nav>
 
-      <div className="content" style={{ paddingTop: `${navHeight + 20}px` }}>
-        {sections.map((section) => (
+      <div className={styles.sectionsContent} style={{ paddingTop: `${navHeight + 20}px` }}>
+        {sections.map((section, index) => (
           <div
-            key={section.title}
-            id={`${section.title.toLowerCase().replace(/\s+/g, '-')}-section`}
+            key={`${section.title}-${index}`}
             className={styles.section}
             style={{ minHeight: containerHeight }}
             ref={(element) => {
-              const sectionId = `${section.title.toLowerCase().replace(/\s+/g, '-')}-section`
-              if (element) {
-                sectionRefs.current[sectionId] = element
-              } else {
-                delete sectionRefs.current[sectionId]
-              }
+              sectionRefs.current[index] = element
             }}
           >
             <div>
               <h2 className={getClassName('title', titleClassName)}>{section.title} Section</h2>
-              <p className={getClassName('content', contentClassName)}>
-                {section.content || `这里是 ${section.title} 部分的详细内容......这里展示了各种动画效果和交互功能。`}
-              </p>
+              <div className={getClassName('content', contentClassName)}>
+                {section.content ?? `这里是 ${section.title} 部分的详细内容......这里展示了各种动画效果和交互功能。`}
+              </div>
               {section.component && (
                 <div className={getClassName('component', componentClassName)}>{section.component}</div>
               )}

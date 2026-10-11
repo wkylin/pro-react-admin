@@ -1,0 +1,82 @@
+name: Publish @w.ui/wui-react
+
+on:
+  push:
+    tags:
+      - 'wui-react-v*'
+  workflow_dispatch:
+    inputs:
+      dist_tag:
+        description: npm dist-tag; it must match the package version channel
+        required: true
+        default: latest
+        type: choice
+        options:
+          - latest
+          - beta
+          - next
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-wui-react-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build, validate and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: npm
+
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js and npm registry
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          registry-url: https://registry.npmjs.org
+
+      - name: Setup trusted publishing npm version
+        run: |
+          npm install --global 'npm@^11.5.1'
+          npm --version
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate release channel
+        id: release
+        env:
+          WUI_RELEASE_REF: ${{ github.ref_name }}
+          WUI_DIST_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.dist_tag || '' }}
+        run: |
+          echo "version=$(node -p \"require('./packages/wui-react/package.json').version\")" >> "$GITHUB_OUTPUT"
+          echo "dist_tag=$(node scripts/validate-lib-release.mjs --print-tag)" >> "$GITHUB_OUTPUT"
+
+      - name: Reject an existing npm version
+        env:
+          WUI_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          if npm view "@w.ui/wui-react@${WUI_VERSION}" version --registry=https://registry.npmjs.org >/dev/null 2>&1; then
+            echo "@w.ui/wui-react@${WUI_VERSION} already exists on npm." >&2
+            exit 1
+          fi
+
+      - name: Publish with npm trusted publishing
+        working-directory: packages/wui-react
+        env:
+          WUI_DIST_TAG: ${{ steps.release.outputs.dist_tag }}
+        run: npm publish --access public --tag "$WUI_DIST_TAG"

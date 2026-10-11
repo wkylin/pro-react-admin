@@ -1,4 +1,5 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
+import MoveChecker from '@wui/MoveChecker'
 import {
   version,
   useEffect,
@@ -8,7 +9,6 @@ import {
   type ComponentType,
   type KeyboardEvent,
   type MouseEvent,
-  type ReactNode,
   type TouchEvent,
 } from 'react'
 import { Input, Flex, Button } from 'antd'
@@ -74,7 +74,6 @@ import GradualSpacing from '@stateless/GradualSpacing'
 import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
 import InViewBasicMultiple from '@stateless/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
-import MoveChecker from '@stateless/MoveChecker'
 import FlipWords from '@stateless/FlipWords'
 import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'

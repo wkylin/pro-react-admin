@@ -1,24 +1,28 @@
-import React, { useState, useRef, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useRef, useEffect, useId, useLayoutEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import styles from './index.module.less'
 
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-type Placement = 'top' | 'bottom' | 'left' | 'right' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
+export type PortalTooltipPlacement =
+  'top' | 'bottom' | 'left' | 'right' | 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight'
 
 type TriggerProps = {
   onMouseEnter?: React.MouseEventHandler<HTMLElement>
   onMouseLeave?: React.MouseEventHandler<HTMLElement>
+  onFocus?: React.FocusEventHandler<HTMLElement>
+  onBlur?: React.FocusEventHandler<HTMLElement>
   onClick?: React.MouseEventHandler<HTMLElement>
+  'aria-describedby'?: string
   ref?: React.Ref<HTMLElement>
 }
 
-type PortalTooltipProps = {
+export type PortalTooltipProps = {
   children: React.ReactNode
   title?: React.ReactNode
   visible?: boolean
   defaultVisible?: boolean
-  placement?: Placement
+  placement?: PortalTooltipPlacement
   overlayStyle?: React.CSSProperties
   overlayClassName?: string
   zIndex?: number
@@ -34,8 +38,8 @@ const fillRef = (ref: React.Ref<HTMLElement> | undefined, node: HTMLElement | nu
   }
 }
 
-const getOppositePlacement = (placement: Placement): Placement => {
-  const map: Record<Placement, Placement> = {
+const getOppositePlacement = (placement: PortalTooltipPlacement): PortalTooltipPlacement => {
+  const map: Record<PortalTooltipPlacement, PortalTooltipPlacement> = {
     top: 'bottom',
     bottom: 'top',
     left: 'right',
@@ -62,18 +66,19 @@ const PortalTooltip = ({
   const [visible, setVisible] = useState(defaultVisible)
   const [coords, setCoords] = useState({ left: 0, top: 0 })
   const [effectivePlacement, setEffectivePlacement] = useState(placement)
+  const tooltipId = useId()
   const arrowStyle: React.CSSProperties = {}
   const targetRef = useRef<HTMLElement | null>(null)
   const tooltipRef = useRef<HTMLDivElement | null>(null)
 
   const isControlled = controlledVisible !== undefined
-  const show = isControlled ? controlledVisible : visible
+  const show = (isControlled ? controlledVisible : visible) && title !== null && title !== undefined
 
   useEffect(() => {
     setEffectivePlacement(placement)
   }, [placement])
 
-  const updatePosition = () => {
+  const updatePosition = useCallback(() => {
     if (!targetRef.current || !tooltipRef.current || !show) return
 
     const targetRect = targetRef.current.getBoundingClientRect()
@@ -84,9 +89,9 @@ const PortalTooltip = ({
     const viewportWidth = window.innerWidth
     const viewportHeight = window.innerHeight
 
-    const getCoords = (p: Placement) => {
-      let t = 0
-      let l = 0
+    const getCoords = (p: PortalTooltipPlacement) => {
+      let t: number
+      let l: number
       switch (p) {
         case 'top':
           t = targetRect.top + scrollY - tooltipRect.height - gap
@@ -172,7 +177,7 @@ const PortalTooltip = ({
 
     setCoords(newCoords)
     setEffectivePlacement(activePlacement)
-  }
+  }, [placement, show])
 
   useIsomorphicLayoutEffect(() => {
     if (show) {
@@ -184,7 +189,7 @@ const PortalTooltip = ({
       window.removeEventListener('resize', updatePosition)
       window.removeEventListener('scroll', updatePosition, true)
     }
-  }, [show, placement, title])
+  }, [show, title, updatePosition])
 
   const handleMouseEnter = () => {
     if (trigger === 'hover' && !isControlled) setVisible(true)
@@ -194,8 +199,16 @@ const PortalTooltip = ({
     if (trigger === 'hover' && !isControlled) setVisible(false)
   }
 
+  const handleFocus = () => {
+    if (trigger === 'hover' && !isControlled) setVisible(true)
+  }
+
+  const handleBlur = () => {
+    if (trigger === 'hover' && !isControlled) setVisible(false)
+  }
+
   const handleClick = () => {
-    if (trigger === 'click' && !isControlled) setVisible(!visible)
+    if (trigger === 'click' && !isControlled) setVisible((current) => !current)
   }
 
   const child: React.ReactElement<TriggerProps> = React.isValidElement<TriggerProps>(children)
@@ -211,10 +224,21 @@ const PortalTooltip = ({
       handleMouseLeave()
       child.props.onMouseLeave && child.props.onMouseLeave(e)
     },
+    onFocus: (e: React.FocusEvent<HTMLElement>) => {
+      handleFocus()
+      child.props.onFocus && child.props.onFocus(e)
+    },
+    onBlur: (e: React.FocusEvent<HTMLElement>) => {
+      handleBlur()
+      child.props.onBlur && child.props.onBlur(e)
+    },
     onClick: (e: React.MouseEvent<HTMLElement>) => {
       handleClick()
       child.props.onClick && child.props.onClick(e)
     },
+    'aria-describedby': show
+      ? [child.props['aria-describedby'], tooltipId].filter(Boolean).join(' ')
+      : child.props['aria-describedby'],
     ref: (node: HTMLElement | null) => {
       targetRef.current = node
       const childRef = child.props.ref
@@ -234,6 +258,8 @@ const PortalTooltip = ({
 
   const portalContent = show ? (
     <div
+      id={tooltipId}
+      role="tooltip"
       className={`${styles.tooltipContainer} ${show ? styles.visible : ''} ${overlayClassName}`}
       style={{ left: coords.left, top: coords.top, zIndex, ...restOverlayStyle }}
       ref={tooltipRef}
@@ -248,7 +274,7 @@ const PortalTooltip = ({
   return (
     <>
       {React.cloneElement(child, triggerProps)}
-      {typeof document !== 'undefined' && createPortal(portalContent, document.body)}
+      {portalContent && typeof document !== 'undefined' ? createPortal(portalContent, document.body) : null}
     </>
   )
 }

@@ -38,7 +38,7 @@ const requestJson = async (url: string, method: string, params?: RequestParams):
   return contentType.includes('application/json') ? response.json() : response.text()
 }
 
-/** Small browser request adapter for package components that opt into `fetchUrl`. */
+/** Small browser request adapter used by ResponsiveTable when `fetchUrl` is set. */
 export const httpRequest = {
   get: (url: string, params?: RequestParams) => requestJson(url, 'GET', params),
   post: (url: string, params?: RequestParams) => requestJson(url, 'POST', params),

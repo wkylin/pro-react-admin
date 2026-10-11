@@ -1,4 +1,5 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
+import SliderCaptcha from '@wui/SliderCaptcha'
 import { useEffect, useState, useRef, type CSSProperties } from 'react'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal, type FormProps } from 'antd'
@@ -10,7 +11,6 @@ import { authService } from '@platform/auth/services/authService'
 import { permissionService } from '@platform/auth/services/permissionService'
 import { testAccounts } from '@platform/auth/mocks/permission'
 
-import SliderCaptcha from '@stateless/SliderCaptcha'
 import styles from './index.module.less'
 
 const { Title, Text, Paragraph } = Typography
@@ -183,7 +183,9 @@ const SignIn = () => {
       setLocalStorage('token', { token: email })
       try {
         localStorage.removeItem('user_role')
-      } catch {}
+      } catch {
+        // Storage access may be unavailable in restricted browser contexts.
+      }
 
       await authService.setTestAccountAuthenticated(email)
       const routes = await permissionService.getAccessibleRoutes(true)
@@ -207,7 +209,9 @@ const SignIn = () => {
       setSubmitting(false)
       try {
         if (typeof hideLoading === 'function') hideLoading()
-      } catch {}
+      } catch {
+        // The Ant Design message disposer is best effort during navigation.
+      }
     }
   }
 

@@ -1,6 +1,9 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import process from 'node:process'
+import { error, log } from 'node:console'
 import { fileURLToPath } from 'node:url'
+import { format } from 'prettier'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const src = path.join(root, 'src')
@@ -162,17 +165,18 @@ ${formatNames(authFiles)}
 `
 
 const outputPath = path.join(root, 'docs', 'COMPONENT_CATALOG.md')
+const formattedMarkdown = await format(markdown, { filepath: outputPath })
 if (process.argv.includes('--check')) {
   const current = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : ''
-  if (current !== markdown) {
-    console.error(`[component-catalog] ${relative(outputPath)} is stale. Run: pnpm run generate:component-catalog`)
+  if (current !== formattedMarkdown) {
+    error(`[component-catalog] ${relative(outputPath)} is stale. Run: pnpm run generate:component-catalog`)
     process.exitCode = 1
   } else {
-    console.log(`[component-catalog] ${relative(outputPath)} is up to date.`)
+    log(`[component-catalog] ${relative(outputPath)} is up to date.`)
   }
 } else {
-  fs.writeFileSync(outputPath, markdown)
-  console.log(
+  fs.writeFileSync(outputPath, formattedMarkdown)
+  log(
     `[component-catalog] Generated ${relative(outputPath)} (${statelessEntries.length} stateless entries, ${sharedUiEntries.length} shared UI entries, ${hookEntries.length} hook modules).`
   )
 }

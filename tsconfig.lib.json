@@ -6,9 +6,10 @@
     "emitDeclarationOnly": true,
     "noEmit": false,
     "outDir": "packages/wui-react/dist/types",
-    "rootDir": "."
+    "rootDir": "packages/wui-react/src",
+    "stripInternal": true
   },
-  "include": ["src/lib/**/*", "packages/wui-react/src/**/*", "src/**/*.d.ts", "typings/**/*.d.ts"],
+  "include": ["packages/wui-react/src/**/*", "typings/**/*.d.ts"],
   "exclude": [
     "node_modules",
     "dist",

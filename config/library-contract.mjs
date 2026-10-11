@@ -1,66 +1,158 @@
 export const libraryPackageName = '@w.ui/wui-react'
 
-export const libraryPeerDependencies = Object.freeze({
-  react: '>=19.0.0',
-  'react-dom': '>=19.0.0',
-  antd: '>=6.0.0',
-  'react-router-dom': '>=7.0.0',
-  'framer-motion': '>=12.0.0',
+export const libraryEngines = Object.freeze({
+  node: '^22.22.2 || ^24.15.0 || >=26.0.0',
 })
 
-export const libraryExternalPackages = Object.freeze(Object.keys(libraryPeerDependencies))
+export const libraryComponents = Object.freeze([
+  {
+    name: 'AnimatedIcon',
+    subpath: 'animated-icon',
+    source: 'AnimatedIcon/index.ts',
+    types: 'AnimatedIcon/index.d.ts',
+    typeExports: ['AnimatedIconProps', 'AnimatedIconVariant', 'AnimatedIconMode'],
+  },
+  {
+    name: 'IconFrame',
+    subpath: 'icon-frame',
+    source: 'IconFrame/index.tsx',
+    types: 'IconFrame/index.d.ts',
+    typeExports: ['IconFrameProps'],
+  },
+  {
+    name: 'MoveChecker',
+    subpath: 'move-checker',
+    source: 'MoveChecker/index.tsx',
+    types: 'MoveChecker/index.d.ts',
+    typeExports: ['MoveCheckerColor', 'MoveCheckerColorObject', 'MoveCheckerHandle', 'MoveCheckerProps'],
+  },
+  {
+    name: 'OneTimePasscode',
+    subpath: 'one-time-passcode',
+    source: 'OneTimePasscode/index.ts',
+    types: 'OneTimePasscode/index.d.ts',
+    typeExports: ['OneTimePasscodeProps'],
+  },
+  {
+    name: 'OverflowText',
+    subpath: 'overflow-text',
+    source: 'OverflowText/index.tsx',
+    types: 'OverflowText/index.d.ts',
+    typeExports: ['OverflowTextProps', 'OverflowTextTooltipProps'],
+  },
+  {
+    name: 'PortalTooltip',
+    subpath: 'portal-tooltip',
+    source: 'PortalTooltip/index.tsx',
+    types: 'PortalTooltip/index.d.ts',
+    typeExports: ['PortalTooltipPlacement', 'PortalTooltipProps'],
+  },
+  {
+    name: 'ResponsiveTable',
+    subpath: 'responsive-table',
+    source: 'ResponsiveTable/index.ts',
+    types: 'ResponsiveTable/index.d.ts',
+    runtimeExports: ['useTable'],
+    typeExports: [
+      'ActionConfig',
+      'ResponsiveTableProps',
+      'RequestClient',
+      'RequestParamMap',
+      'ResponseFieldMap',
+      'TablePagination',
+      'UseTableOptions',
+      'UseTableReturn',
+    ],
+  },
+  {
+    name: 'SafeHtml',
+    subpath: 'safe-html',
+    source: 'SafeHtml/index.tsx',
+    types: 'SafeHtml/index.d.ts',
+    typeExports: ['SafeHtmlProps'],
+  },
+  {
+    name: 'ScrollLayout',
+    subpath: 'scroll-layout',
+    source: 'ScrollLayout/index.tsx',
+    types: 'ScrollLayout/index.d.ts',
+    typeExports: ['ScrollLayoutProps'],
+  },
+  {
+    name: 'ScrollableSections',
+    subpath: 'scrollable-sections',
+    source: 'ScrollableSections/index.tsx',
+    types: 'ScrollableSections/index.d.ts',
+    typeExports: ['ScrollableSection', 'ScrollableSectionsProps'],
+  },
+  {
+    name: 'SliderCaptcha',
+    subpath: 'slider-captcha',
+    source: 'SliderCaptcha/index.tsx',
+    types: 'SliderCaptcha/index.d.ts',
+    typeExports: ['SliderCaptchaDifficulty', 'SliderCaptchaProps'],
+  },
+  {
+    name: 'WatermarkProvider',
+    subpath: 'watermark-provider',
+    source: 'WatermarkProvider/index.ts',
+    types: 'WatermarkProvider/index.d.ts',
+    typeExports: ['WatermarkProviderProps'],
+  },
+])
+
+export const libraryPeerDependencies = Object.freeze({
+  antd: '>=6.0.0 <7.0.0',
+  'framer-motion': '>=12.0.0 <15.0.0',
+  react: '>=19.0.0 <20.0.0',
+  'react-dom': '>=19.0.0 <20.0.0',
+})
+
+export const libraryRuntimeDependencies = Object.freeze({
+  '@ant-design/icons': '^6.3.4',
+  clsx: '^2.1.1',
+  dompurify: '^3.4.16',
+  'isomorphic-dompurify': '^4.5.0',
+  'lucide-react': '^1.54.0',
+})
+
+export const libraryExternalPackages = Object.freeze([
+  ...Object.keys(libraryPeerDependencies),
+  ...Object.keys(libraryRuntimeDependencies),
+])
+
+const componentExports = Object.fromEntries(
+  libraryComponents.map(({ subpath, types }) => [
+    `./${subpath}`,
+    {
+      types: `./dist/types/${types}`,
+      import: `./dist/esm/${subpath}.js`,
+      require: `./dist/cjs/${subpath}.cjs`,
+      default: `./dist/esm/${subpath}.js`,
+    },
+  ])
+)
 
 export const libraryExports = Object.freeze({
   '.': {
-    types: './dist/types/src/lib/index.d.ts',
-    import: './dist/pro-react-components.es.js',
-    require: './dist/pro-react-components.umd.cjs',
+    types: './dist/types/index.d.ts',
+    import: './dist/esm/index.js',
+    require: './dist/cjs/index.cjs',
+    default: './dist/esm/index.js',
   },
-  './core': {
-    types: './dist/types/src/lib/core.d.ts',
-    import: './dist/entries/core.es.js',
-    require: './dist/entries/core.cjs',
-  },
-  './stateful': {
-    types: './dist/types/src/lib/stateful.d.ts',
-    import: './dist/entries/stateful.es.js',
-    require: './dist/entries/stateful.cjs',
-  },
-  './stateless': {
-    types: './dist/types/src/lib/stateless.d.ts',
-    import: './dist/entries/stateless.es.js',
-    require: './dist/entries/stateless.cjs',
-  },
-  './tracking': {
-    types: './dist/types/src/lib/tracking/index.d.ts',
-    import: './dist/entries/tracking.es.js',
-    require: './dist/entries/tracking.cjs',
-  },
+  ...componentExports,
   './style.css': './dist/style.css',
-  './animated-icon': {
-    types: './dist/types/packages/wui-react/src/AnimatedIcon/index.d.ts',
-    import: './dist/entries/animatedIcon.es.js',
-    require: './dist/entries/animatedIcon.cjs',
-  },
-  './one-time-passcode': {
-    types: './dist/types/packages/wui-react/src/OneTimePasscode/index.d.ts',
-    import: './dist/entries/oneTimePasscode.es.js',
-    require: './dist/entries/oneTimePasscode.cjs',
-  },
-  './watermark-provider': {
-    types: './dist/types/packages/wui-react/src/WatermarkProvider/index.d.ts',
-    import: './dist/entries/watermarkProvider.es.js',
-    require: './dist/entries/watermarkProvider.cjs',
-  },
-  './responsive-table': {
-    types: './dist/types/packages/wui-react/src/ResponsiveTable/index.d.ts',
-    import: './dist/entries/responsiveTable.es.js',
-    require: './dist/entries/responsiveTable.cjs',
-  },
+  './package.json': './package.json',
 })
 
 export const libraryEntrypoints = Object.freeze({
-  main: './dist/pro-react-components.umd.cjs',
-  module: './dist/pro-react-components.es.js',
-  types: './dist/types/src/lib/index.d.ts',
+  main: './dist/cjs/index.cjs',
+  module: './dist/esm/index.js',
+  types: './dist/types/index.d.ts',
+})
+
+export const libraryPackageBudget = Object.freeze({
+  maxFiles: 250,
+  maxPackedBytes: 5 * 1024 * 1024,
+  maxUnpackedBytes: 15 * 1024 * 1024,
 })

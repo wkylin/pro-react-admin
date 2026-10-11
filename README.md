@@ -24,13 +24,13 @@
 - React 19、KeepAlive、多标签页、主题和国际化
   - 通过 src/projects/registry.json 选择构建入口的多项目架构
 - Webpack 5 Module Federation Shell/Remote
-- 明确导出 API 的 @w.ui/wui-react 组件库
+- 独立源码、ESM/CJS 和按组件子路径的 `@w.ui/wui-react` 组件库
 - Storybook 组件示例与文档
 - Jest、Testing Library、Playwright、ESLint 和 Stylelint
 
 ## 本地运行
 
-环境要求：Node.js 24.x、pnpm 11.5.2。
+环境要求：Node.js `>=24.15.0 <25`、pnpm 11.5.2。
 
 ```bash
 pnpm install
@@ -47,6 +47,8 @@ pnpm start
 ├── api/              # 本地 Express API：埋点收集、统计和 OAuth helper
 ├── config/           # 路径别名、构建体积预算和组件库发布契约
 ├── docs/             # 新手、架构、构建、微前端和部署文档
+├── packages/
+│   └── wui-react/    # 可独立构建和发布的公共 React 组件
 ├── public/           # 默认 HTML 模板和公共静态资源
 ├── scripts/          # 构建辅助、优化、校验和发布脚本
 ├── src/
@@ -54,7 +56,7 @@ pnpm start
 │   ├── components/   # 按所有权迁移中的历史组件与 Hooks
 │   ├── features/     # 按业务领域组织页面、状态、API 与组件
 │   ├── layouts/      # 应用壳、导航、内容区与布局扩展点
-│   ├── lib/          # 已发布 npm API 的历史源码入口
+│   ├── lib/          # 应用内待迁移的历史导出，不进入 v5 npm 包
 │   ├── pages/        # 尚未迁入 feature 的页面与技术演示
 │   ├── platform/     # API、认证、PWA、遥测等横切能力
 │   ├── projects/     # 多项目入口与 Module Federation 组合
@@ -101,12 +103,19 @@ pnpm run storybook
 ## @w.ui/wui-react
 
 ```bash
-pnpm run build:lib
-pnpm run build:lib:entries
-pnpm run prepare:lib:publish
+pnpm run prepare:lib:release
+pnpm run pack:lib:dry-run
 ```
 
-库有独立的 workspace 发布清单，构建产物位于 `packages/wui-react/dist/`。新项目可以按聚合入口或 /core、/stateful、/stateless、/tracking、/animated-icon 子路径导入。构建、类型、样式与发布说明见[组件库指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。
+`packages/wui-react` 是独立 workspace package，源码、类型、样式和公共 API 都归它所有；构建产物位于 `packages/wui-react/dist/`。v5 提供主入口和 12 个按组件子路径，不再发布 `/core`、`/stateful`、`/stateless` 或 `/tracking` 兼容入口。
+
+```tsx
+import { OverflowText, SafeHtml } from '@w.ui/wui-react'
+import ResponsiveTable from '@w.ui/wui-react/responsive-table'
+import '@w.ui/wui-react/style.css'
+```
+
+组件准入、Git 管理、本地构建、npm pack、手动发布和 Trusted Publishing/OIDC 设置见[组件库开发与发布指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。已发布版本见 [npmjs.com](https://www.npmjs.com/package/@w.ui/wui-react)。
 
 ## 部署
 

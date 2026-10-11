@@ -4,7 +4,7 @@ Webpack 5 是当前仓库唯一的应用构建工具。开发服务器、生产�
 
 ## 环境要求
 
-- Node.js 24.x
+- Node.js `>=24.15.0 <25`
 - pnpm 11.5.2
 
 ```bash
@@ -16,20 +16,20 @@ pnpm start
 
 ## 构建配置
 
-| 文件                              | 职责                                                                       |
-| --------------------------------- | -------------------------------------------------------------------------- |
-| src/projects/registry.json        | 项目入口、路由目录、产物目录和 Remote 元数据单一清单                       |
-| config/path-aliases.json          | Webpack、TypeScript、Storybook、组件库共用的路径别名清单                   |
-| webpack/paths.js                  | 校验 PROJECT，并按注册表选择入口、路由/public 和产物目录                   |
-| webpack/webpack.common.js         | 公共 Webpack 规则、项目 alias 覆盖、dotenv 加载与 MF 插件                  |
-| webpack/webpack.dev.js            | 开发模式、HMR、代理和 Webpack Dev Server                                   |
-| webpack/webpack.prod.js           | 生产压缩、代码分割、资源复制、PWA、Sentry 与产物                           |
-| webpack/mfe.config.js             | 校验 Remote URL，并安全生成 Module Federation loader                       |
-| webpack/remote-manifest-plugin.js | 为 Remote 输出协议、版本和共享依赖清单                                     |
-| scripts/project-command.mjs       | 从项目注册表解析统一的多项目/微前端命令                                    |
-| webpack/client-env.js             | 浏览器环境变量 allowlist 和敏感名称拒绝规则                                |
-| webpack/webpack.lib.js            | @w.ui/wui-react 的 ESM、UMD/CJS 和子路径构建，输出到独立 workspace package |
-| .storybook/main.ts                | Storybook Webpack 5 builder、共享 alias 和 Less                            |
+| 文件                              | 职责                                                          |
+| --------------------------------- | ------------------------------------------------------------- |
+| src/projects/registry.json        | 项目入口、路由目录、产物目录和 Remote 元数据单一清单          |
+| config/path-aliases.json          | Webpack、TypeScript、Storybook、组件库共用的路径别名清单      |
+| webpack/paths.js                  | 校验 PROJECT，并按注册表选择入口、路由/public 和产物目录      |
+| webpack/webpack.common.js         | 公共 Webpack 规则、项目 alias 覆盖、dotenv 加载与 MF 插件     |
+| webpack/webpack.dev.js            | 开发模式、HMR、代理和 Webpack Dev Server                      |
+| webpack/webpack.prod.js           | 生产压缩、代码分割、资源复制、PWA、Sentry 与产物              |
+| webpack/mfe.config.js             | 校验 Remote URL，并安全生成 Module Federation loader          |
+| webpack/remote-manifest-plugin.js | 为 Remote 输出协议、版本和共享依赖清单                        |
+| scripts/project-command.mjs       | 从项目注册表解析统一的多项目/微前端命令                       |
+| webpack/client-env.js             | 浏览器环境变量 allowlist 和敏感名称拒绝规则                   |
+| webpack/webpack.lib.js            | @w.ui/wui-react 的 ESM、CJS、类型、样式和 12 个显式子路径构建 |
+| .storybook/main.ts                | Storybook Webpack 5 builder、共享 alias 和 Less               |
 
 修改 config/path-aliases.json 后运行 `pnpm run sync:aliases`，生成供 TypeScript 编辑器读取的 tsconfig.paths.json。Webpack、Storybook 和组件库直接读取同一清单；CI 会检查生成文件和所有路径。
 
@@ -57,11 +57,44 @@ pnpm run serve:storybook
 
 # 组件库
 pnpm run build:lib
-pnpm run build:lib:entries
-pnpm run prepare:lib:publish
+pnpm run prepare:lib:release
+pnpm run pack:lib:dry-run
+pnpm run pub
+pnpm run pub:beta
 ```
 
 普通主应用输出到 dist/，普通项目输出到 dist-<project>/；MF 输出到 dist-shell/、dist-projectA/ 和 dist-projectB/；聚合 Vercel 输出到 dist-vercel/。组件库输出到 packages/wui-react/dist/，Storybook 输出到 storybook-static/。
+
+## 组件库 v5 构建契约
+
+`pnpm run build:lib` 会清理旧目录并完成一次全量构建。产物固定为：
+
+```text
+packages/wui-react/dist/
+├── esm/index.js               # ESM 根入口及子路径 .js
+├── cjs/index.cjs              # CJS 根入口及子路径 .cjs
+├── types/index.d.ts           # 根声明及组件声明目录
+└── style.css                  # 统一样式入口
+```
+
+package exports 除根入口和 `style.css` 外，只包含以下 12 个显式组件子路径：
+
+| 组件               | 导入路径                              |
+| ------------------ | ------------------------------------- |
+| AnimatedIcon       | `@w.ui/wui-react/animated-icon`       |
+| IconFrame          | `@w.ui/wui-react/icon-frame`          |
+| MoveChecker        | `@w.ui/wui-react/move-checker`        |
+| OneTimePasscode    | `@w.ui/wui-react/one-time-passcode`   |
+| OverflowText       | `@w.ui/wui-react/overflow-text`       |
+| PortalTooltip      | `@w.ui/wui-react/portal-tooltip`      |
+| ResponsiveTable    | `@w.ui/wui-react/responsive-table`    |
+| SafeHtml           | `@w.ui/wui-react/safe-html`           |
+| ScrollLayout       | `@w.ui/wui-react/scroll-layout`       |
+| ScrollableSections | `@w.ui/wui-react/scrollable-sections` |
+| SliderCaptcha      | `@w.ui/wui-react/slider-captcha`      |
+| WatermarkProvider  | `@w.ui/wui-react/watermark-provider`  |
+
+`prepare:lib:release` 在构建后准备 README/LICENSE，并检查 exports、安装冒烟验证和包体积预算；`pack:lib:dry-run` 已包含完整准备流程。`pub` 与 `pub:beta` 由 package 的 `prepublishOnly` 自动触发一次完整准备，因此发布前不要再串联构建，以免重复执行。组件库 v5 只维护上述根入口和组件子路径，不保留旧分类兼容入口。
 
 ## 环境变量
 

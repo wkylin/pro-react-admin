@@ -62,7 +62,6 @@ export const CustomTooltipWidth: Story = {
       overlayStyle: { maxWidth: 500 },
     },
   },
-  name: 'Custom Tooltip Width',
 }
 
 export const NoOverflow: Story = {

@@ -2,7 +2,7 @@
 import type { ReactNode, CSSProperties } from 'react'
 import styles from './index.module.less'
 
-interface ScrollLayoutProps {
+export interface ScrollLayoutProps {
   header?: ReactNode
   footer?: ReactNode
   children: ReactNode

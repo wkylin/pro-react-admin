@@ -10,6 +10,7 @@ export const CaptchaUtils = {
   },
 
   generateBgCanvas: (width: number, height: number, difficulty: Difficulty = 'medium'): string => {
+    if (typeof document === 'undefined') return ''
     const canvas = document.createElement('canvas')
     canvas.width = width
     canvas.height = height
@@ -142,6 +143,8 @@ export const CaptchaUtils = {
   },
 
   generatePiece: (bgUrl: string, tx: number, ty: number, size: number, type: number): Promise<string> => {
+    if (typeof document === 'undefined' || typeof Image === 'undefined' || !bgUrl) return Promise.resolve('')
+
     return new Promise((resolve) => {
       const img = new Image()
       img.onload = () => {
@@ -169,11 +172,14 @@ export const CaptchaUtils = {
 
         resolve(canvas.toDataURL())
       }
+      img.onerror = () => resolve('')
       img.src = bgUrl
     })
   },
 
   cutHole: (bgUrl: string, tx: number, ty: number, size: number, type: number): Promise<string> => {
+    if (typeof document === 'undefined' || typeof Image === 'undefined' || !bgUrl) return Promise.resolve('')
+
     return new Promise((resolve) => {
       const img = new Image()
       img.onload = () => {
@@ -185,8 +191,8 @@ export const CaptchaUtils = {
           return
         }
 
-        canvas.width = 300
-        canvas.height = 180
+        canvas.width = img.naturalWidth || img.width || 300
+        canvas.height = img.naturalHeight || img.height || 180
 
         ctx.drawImage(img, 0, 0)
 
@@ -203,6 +209,7 @@ export const CaptchaUtils = {
 
         resolve(canvas.toDataURL())
       }
+      img.onerror = () => resolve('')
       img.src = bgUrl
     })
   },

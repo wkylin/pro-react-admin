@@ -1,29 +1,35 @@
+import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import { createPathAliases } from './aliases.js'
-import { libraryExternalPackages } from '../config/library-contract.mjs'
+import { libraryComponents, libraryExternalPackages } from '../config/library-contract.mjs'
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const outputPath = path.resolve(rootDir, 'packages/wui-react/dist')
-const target = process.env.LIB_BUILD_TARGET || 'main'
+const packageSourceDir = path.join(rootDir, 'packages/wui-react/src')
+const outputPath = path.join(rootDir, 'packages/wui-react/dist')
 const useAnalyze = process.env.USE_ANALYZE === '1'
 
-const aliases = createPathAliases(rootDir)
+const componentEntries = Object.fromEntries(
+  libraryComponents.map(({ subpath, source }) => [subpath, path.join(packageSourceDir, source)])
+)
+const styleEntries = fs
+  .readdirSync(packageSourceDir, { recursive: true, withFileTypes: true })
+  .filter((entry) => entry.isFile() && /\.(?:css|less)$/i.test(entry.name))
+  .map((entry) => path.join(entry.parentPath, entry.name))
+  .sort()
 
-const entries = {
-  core: path.resolve(rootDir, 'src/lib/core.ts'),
-  stateful: path.resolve(rootDir, 'src/lib/stateful.ts'),
-  stateless: path.resolve(rootDir, 'src/lib/stateless.ts'),
-  tracking: path.resolve(rootDir, 'src/lib/tracking/index.ts'),
-  animatedIcon: path.resolve(rootDir, 'packages/wui-react/src/AnimatedIcon/index.ts'),
-  oneTimePasscode: path.resolve(rootDir, 'packages/wui-react/src/OneTimePasscode/index.ts'),
-  watermarkProvider: path.resolve(rootDir, 'packages/wui-react/src/WatermarkProvider/index.ts'),
-  responsiveTable: path.resolve(rootDir, 'packages/wui-react/src/ResponsiveTable/index.ts'),
-}
+const isExternalRequest = (request = '') =>
+  libraryExternalPackages.some((packageName) => request === packageName || request.startsWith(`${packageName}/`))
 
-const externalPackages = libraryExternalPackages
+const createExternals = (type) =>
+  function externalizeLibraryDependencies({ request }, callback) {
+    if (isExternalRequest(request)) {
+      callback(null, `${type} ${request}`)
+      return
+    }
+    callback()
+  }
 
 const sharedRules = [
   {
@@ -47,14 +53,6 @@ const sharedRules = [
     },
   },
   {
-    test: /\.jsx?$/,
-    exclude: /node_modules/,
-    use: {
-      loader: 'esbuild-loader',
-      options: { loader: 'jsx', target: 'es2022', jsx: 'automatic' },
-    },
-  },
-  {
     test: /\.css$/i,
     use: [MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
   },
@@ -68,7 +66,7 @@ const sharedRules = [
           importLoaders: 2,
           modules: {
             auto: /\.module\.less$/i,
-            localIdentName: '[name]__[local]--[hash:base64:5]',
+            localIdentName: 'wui-[name]__[local]--[hash:base64:5]',
             namedExport: false,
             exportLocalsConvention: 'camelCase',
           },
@@ -97,63 +95,56 @@ const sharedRules = [
   },
 ]
 
-const umdExternals = Object.fromEntries(
-  externalPackages
-    .filter((name) => name !== 'framer-motion')
-    .map((name) => [
-      name,
-      {
-        commonjs: name,
-        commonjs2: name,
-        amd: name,
-        root: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          antd: 'antd',
-          'react-router-dom': 'ReactRouterDOM',
-        }[name],
-      },
-    ])
-)
-
-const createConfig = ({ name, entry, format, filename, cssFilename, externals, library, analyze = false }) => {
-  const isModule = format === 'es'
-  const isCjs = format === 'cjs'
+const createConfig = ({ format, entries, includeStyleEntry = false, analyze = false }) => {
+  const isEsm = format === 'esm'
+  const entry = includeStyleEntry
+    ? {
+        ...entries,
+        style: {
+          import: styleEntries,
+          filename: 'esm/style-entry.js',
+        },
+      }
+    : entries
 
   return {
-    name: `wui-react-${name}-${format}`,
+    name: `wui-react-${format}`,
     mode: 'production',
-    target: 'web',
+    target: ['web', 'es2022'],
     entry,
     devtool: false,
     output: {
       path: outputPath,
-      filename,
+      filename: isEsm ? 'esm/[name].js' : 'cjs/[name].cjs',
+      chunkFilename: isEsm ? 'esm/chunks/[name].[contenthash:8].js' : 'cjs/chunks/[name].[contenthash:8].cjs',
       clean: false,
       publicPath: 'auto',
-      globalObject: 'typeof self !== "undefined" ? self : this',
-      library,
-      ...(isModule ? { module: true } : {}),
+      globalObject: 'globalThis',
+      library: { type: isEsm ? 'module' : 'commonjs2' },
+      ...(isEsm ? { module: true } : {}),
     },
-    experiments: isModule ? { outputModule: true } : {},
-    externals,
-    externalsType: isModule ? 'module' : isCjs ? 'commonjs' : undefined,
+    experiments: isEsm ? { outputModule: true } : {},
+    externals: [createExternals(isEsm ? 'module' : 'commonjs')],
     resolve: {
       extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
       extensionAlias: {
         '.js': ['.ts', '.tsx', '.js'],
         '.jsx': ['.tsx', '.jsx'],
       },
-      alias: aliases,
+      alias: {
+        '@wui': packageSourceDir,
+      },
     },
     module: { rules: sharedRules },
     plugins: [
-      new MiniCssExtractPlugin({ filename: cssFilename }),
+      new MiniCssExtractPlugin({
+        filename: ({ chunk }) => (chunk?.name === 'style' ? 'style.css' : `${format}-styles/[name].css`),
+      }),
       ...(analyze && useAnalyze
         ? [
             new BundleAnalyzerPlugin({
               analyzerMode: 'static',
-              reportFilename: path.resolve(outputPath, 'bundle-report.html'),
+              reportFilename: path.join(rootDir, 'webpack/profiling/wui-react.html'),
               openAnalyzer: false,
             }),
           ]
@@ -164,52 +155,16 @@ const createConfig = ({ name, entry, format, filename, cssFilename, externals, l
       splitChunks: false,
       runtimeChunk: false,
     },
-    performance: { hints: false },
+    performance: {
+      hints: 'error',
+      maxAssetSize: 512 * 1024,
+      maxEntrypointSize: 512 * 1024,
+    },
     stats: 'errors-warnings',
   }
 }
 
-const mainConfigs = [
-  createConfig({
-    name: 'main',
-    entry: { main: path.resolve(rootDir, 'src/lib/index.ts') },
-    format: 'es',
-    filename: 'pro-react-components.es.js',
-    cssFilename: 'style.css',
-    externals: externalPackages,
-    library: { type: 'module' },
-    analyze: true,
-  }),
-  createConfig({
-    name: 'main',
-    entry: { main: path.resolve(rootDir, 'src/lib/index.ts') },
-    format: 'umd',
-    filename: 'pro-react-components.umd.cjs',
-    cssFilename: 'style.umd.css',
-    externals: umdExternals,
-    library: { name: 'ProReactComponents', type: 'umd', umdNamedDefine: true },
-  }),
+export default [
+  createConfig({ format: 'esm', entries: componentEntries, includeStyleEntry: true, analyze: true }),
+  createConfig({ format: 'cjs', entries: componentEntries }),
 ]
-
-const entryConfigs = [
-  createConfig({
-    name: 'entries',
-    entry: entries,
-    format: 'es',
-    filename: 'entries/[name].es.js',
-    cssFilename: 'entries/[name].es.css',
-    externals: externalPackages,
-    library: { type: 'module' },
-  }),
-  createConfig({
-    name: 'entries',
-    entry: entries,
-    format: 'cjs',
-    filename: 'entries/[name].cjs',
-    cssFilename: 'entries/[name].cjs.css',
-    externals: externalPackages,
-    library: { type: 'commonjs2' },
-  }),
-]
-
-export default target === 'entries' ? entryConfigs : mainConfigs

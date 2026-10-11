@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useLayoutEffect, useMemo } from 'react'
+import { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react'
 import type { ComponentProps, CSSProperties, ReactNode } from 'react'
 import PortalTooltip from '../PortalTooltip'
 import styles from './index.module.less'
@@ -6,22 +6,22 @@ import styles from './index.module.less'
 // SSR-safe useLayoutEffect
 const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-type TooltipProps = Omit<ComponentProps<typeof PortalTooltip>, 'children'>
+export type OverflowTextTooltipProps = Omit<ComponentProps<typeof PortalTooltip>, 'children'>
 
-type OverflowTextProps = {
+export type OverflowTextProps = {
   text?: ReactNode
   minWidth?: CSSProperties['minWidth']
   maxWidth?: CSSProperties['maxWidth']
   className?: string
   style?: CSSProperties
-  tooltipProps?: TooltipProps
+  tooltipProps?: OverflowTextTooltipProps
   alwaysShow?: boolean
   lines?: number
   onOverflowChange?: (isOverflow: boolean) => void
 }
 
 const EMPTY_STYLE: CSSProperties = {}
-const EMPTY_TOOLTIP_PROPS: TooltipProps = {}
+const EMPTY_TOOLTIP_PROPS: OverflowTextTooltipProps = {}
 
 /**
  * OverflowText
@@ -48,11 +48,9 @@ const OverflowText = ({
 }: OverflowTextProps) => {
   const elRef = useRef<HTMLSpanElement>(null)
   const [isOverflow, setIsOverflow] = useState(false)
+  const overflowRef = useRef(false)
 
-  // Stabilize style reference — only re-run effect when style content actually changes
-  const stableStyleKey = useMemo(() => JSON.stringify(style), [style])
-
-  const check = () => {
+  const check = useCallback(() => {
     const el = elRef.current
     if (!el) return
 
@@ -60,36 +58,29 @@ const OverflowText = ({
 
     // For single line: use scrollWidth > clientWidth
     // For multi line: use scrollHeight > clientHeight
-    let overflow = false
+    const overflow = isMulti ? el.scrollHeight > el.clientHeight : el.scrollWidth > el.clientWidth
 
-    if (isMulti) {
-      overflow = el.scrollHeight > el.clientHeight
-    } else {
-      // Single line check
-      overflow = el.scrollWidth > el.clientWidth
-    }
-
-    setIsOverflow((prev) => {
-      if (prev !== overflow) {
-        if (typeof onOverflowChange === 'function') onOverflowChange(overflow)
-        return overflow
-      }
-      return prev
-    })
-  }
+    if (overflowRef.current === overflow) return
+    overflowRef.current = overflow
+    setIsOverflow(overflow)
+    onOverflowChange?.(overflow)
+  }, [lines, onOverflowChange])
 
   // Check on mount and updates
   useIsomorphicLayoutEffect(() => {
     check()
-  }, [text, lines, maxWidth, stableStyleKey, className])
+  }, [check, text, maxWidth, minWidth, style, className])
 
   useEffect(() => {
     const el = elRef.current
     if (!el || typeof window === 'undefined') return
 
     // Re-check when fonts load (crucial for custom fonts delay)
+    let cancelled = false
     if (document.fonts) {
-      document.fonts.ready.then(check)
+      document.fonts.ready.then(() => {
+        if (!cancelled) check()
+      })
     }
 
     // ResizeObserver to detect container/element size changes
@@ -103,10 +94,11 @@ const OverflowText = ({
     window.addEventListener('resize', check)
 
     return () => {
+      cancelled = true
       if (ro) ro.disconnect()
       window.removeEventListener('resize', check)
     }
-  }, [text, lines])
+  }, [check, text])
 
   // Construct styles
   const effectiveMaxWidth = maxWidth
@@ -134,7 +126,7 @@ const OverflowText = ({
   )
 
   return alwaysShow || isOverflow ? (
-    <PortalTooltip title={typeof text === 'string' ? text : undefined} {...tooltipProps}>
+    <PortalTooltip title={text} {...tooltipProps}>
       {child}
     </PortalTooltip>
   ) : (

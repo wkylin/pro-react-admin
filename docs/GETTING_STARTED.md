@@ -4,7 +4,7 @@
 
 ## 1. 准备环境
 
-- Node.js：24.x（package.json 限定为 24.x）
+- Node.js：`>=24.15.0 <25`（以根 `package.json` 的 `engines` 为准）
 - pnpm：11.5.2（由 packageManager 和 CI 固定）
 - Git
 
@@ -114,7 +114,7 @@ pnpm run start:mf:shell
 pnpm run storybook
 ```
 
-打开 [http://localhost:6006](http://localhost:6006)。Stories 从 src 下的 _.stories._ 和 *.mdx 文件发现。增加组件示例时，跟随组件放置同名 *.stories.tsx 文件。配置、全局 decorator、静态产物和常见问题见[Storybook 指南](./STORYBOOK.md)。
+打开 [http://localhost:6006](http://localhost:6006)。Stories 从 `src/` 和 `packages/wui-react/src/` 下的 `*.stories.*`、`*.mdx` 文件发现。增加组件示例时，在组件旁放置同名 `*.stories.tsx` 文件。配置、全局 decorator、静态产物和常见问题见[Storybook 指南](./STORYBOOK.md)。
 
 构建静态 Storybook：
 
@@ -126,34 +126,56 @@ pnpm run build-storybook
 
 ## 6. 构建 `@w.ui/wui-react` 组件库
 
-在仓库根目录运行。只需要构建聚合入口、样式和 TypeScript 声明时：
+组件库源码、清单和发布产物都位于 `packages/wui-react/`。在仓库根目录执行完整构建：
 
 ```bash
 pnpm run build:lib
 ```
 
-产物生成在 `packages/wui-react/dist/`，包括 ESM/UMD 聚合包、`style.css` 和 `types/` 下的类型声明。若要生成 `/core`、`/stateful`、`/stateless`、`/tracking`、`/animated-icon` 子路径入口并准备完整的发布目录，运行：
+`build:lib` 会清理旧产物，并一次生成 ESM、CJS、TypeScript 声明和统一样式：
 
-```bash
-pnpm run prepublishOnly
+```text
+packages/wui-react/dist/
+├── esm/index.js               # ESM 根入口及 12 个子路径 .js
+├── cjs/index.cjs              # CJS 根入口及 12 个子路径 .cjs
+├── types/index.d.ts           # 根声明及各组件声明目录
+└── style.css                  # 统一样式入口
 ```
 
-该命令依次构建聚合包、子路径入口并准备独立 workspace package；它**只构建，不会发布到 npm**。单独执行各步骤时，命令顺序如下：
+v5 提供根入口、`style.css` 和以下 12 个显式组件子路径：
+
+| 组件               | 导入路径                              |
+| ------------------ | ------------------------------------- |
+| AnimatedIcon       | `@w.ui/wui-react/animated-icon`       |
+| IconFrame          | `@w.ui/wui-react/icon-frame`          |
+| MoveChecker        | `@w.ui/wui-react/move-checker`        |
+| OneTimePasscode    | `@w.ui/wui-react/one-time-passcode`   |
+| OverflowText       | `@w.ui/wui-react/overflow-text`       |
+| PortalTooltip      | `@w.ui/wui-react/portal-tooltip`      |
+| ResponsiveTable    | `@w.ui/wui-react/responsive-table`    |
+| SafeHtml           | `@w.ui/wui-react/safe-html`           |
+| ScrollLayout       | `@w.ui/wui-react/scroll-layout`       |
+| ScrollableSections | `@w.ui/wui-react/scrollable-sections` |
+| SliderCaptcha      | `@w.ui/wui-react/slider-captcha`      |
+| WatermarkProvider  | `@w.ui/wui-react/watermark-provider`  |
+
+发布前准备和包内容预览使用：
 
 ```bash
-pnpm run build:lib
-pnpm run build:lib:entries
-pnpm run prepare:lib:publish
-pnpm run check:lib-package
+pnpm run prepare:lib:release
+pnpm run pack:lib:dry-run
 ```
 
-准备发布前可预览将打包的文件：
+`prepare:lib:release` 会完整构建，并复制发布说明与许可证、检查 package exports、运行安装冒烟验证和包体积预算。`pack:lib:dry-run` 已包含同一套准备流程，无需先手工执行前一个命令，以免重复构建。
+
+本地账号具备 npm 发布权限时，可直接运行：
 
 ```bash
-npm pack ./packages/wui-react --dry-run
+pnpm run pub       # latest
+pnpm run pub:beta  # beta
 ```
 
-应用根 package 是私有的，组件库版本与发布入口在 `packages/wui-react/package.json` 单独维护。`AnimatedIcon` 已迁到 `packages/wui-react/src`；其他公开组件仍由 `src/lib/` 汇总。库构建由根目录 Webpack 配置负责，组件与构建配置会继续分批迁入 package。
+`pub` 和 `pub:beta` 会通过组件库自身的 `prepublishOnly` 自动执行一次完整发布准备，不要再手工串联构建命令。v5 的所有公开组件源码都由 `packages/wui-react/src/` 维护，不再提供旧分类兼容入口。
 
 新项目安装已发布版本和组件库使用示例见[@w.ui/wui-react 组件库指南](./LIBRARY_PUBLISH_GUIDE.md)。
 
@@ -178,11 +200,11 @@ build:production 有 prebuild 生命周期：本地会先运行媒体优化；Gi
 | 想做什么               | 优先查看                                                                   |
 | ---------------------- | -------------------------------------------------------------------------- |
 | 增加页面               | src/pages/ 和 src/routers/modules/                                         |
-| 增加菜单、权限         | src/layouts/navigation/menu.config.tsx、src/routers/                                   |
-| 增加共享组件           | src/components/                                                            |
+| 增加菜单、权限         | src/layouts/navigation/menu.config.tsx、src/routers/                       |
+| 增加应用共享组件       | src/shared/ui/                                                             |
 | 增加项目差异           | src/projects/<project>/                                                    |
 | 增加微前端 remote 页面 | src/projects/<project>/mfe/App.tsx                                         |
-| 增加组件库公开 API     | src/lib/、config/library-contract.mjs                                      |
+| 增加组件库公开 API     | packages/wui-react/src/、config/library-contract.mjs                       |
 | 增加 Storybook 示例    | 对应组件旁的 *.stories.tsx                                                 |
 | 调整应用构建           | webpack/webpack.common.js、webpack/webpack.dev.js、webpack/webpack.prod.js |
 

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react'
-import { httpRequest } from '../lib/httpRequest'
+import type { Dispatch, Key, RefObject, SetStateAction } from 'react'
+import { httpRequest } from './httpRequest'
 
 // --- Type helpers ---
 export type RequestParamMap = {
@@ -16,13 +17,15 @@ export type ResponseFieldMap = {
 
 export type RequestClient = Pick<typeof httpRequest, 'get'> & Partial<typeof httpRequest>
 
+export type TablePagination = { current: number; pageSize: number }
+
 export type UseTableOptions<T = any> = {
   dataSource?: T[]
-  initialPagination?: { current: number; pageSize: number }
+  initialPagination?: TablePagination
   minBodyHeight?: number
   minWidth?: number
   pageSyncToUrl?: boolean
-  onPaginationChange?: (pagination: { current: number; pageSize: number }) => void
+  onPaginationChange?: (pagination: TablePagination) => void
   reloadPage?: ((page: number, pageSize: number) => Promise<any>) | null
   fetchData?: ((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise<any>) | null
   fetchUrl?: string | null
@@ -42,22 +45,15 @@ export type UseTableOptions<T = any> = {
 }
 
 export type UseTableReturn<T = any> = {
-  containerRef: ReturnType<typeof useRef>
-  pagination: { current: number; pageSize: number }
-  setPagination: (
-    p:
-      | { current: number; pageSize: number }
-      | ((prev: { current: number; pageSize: number }) => {
-          current: number
-          pageSize: number
-        })
-  ) => void
+  containerRef: RefObject<HTMLDivElement | null>
+  pagination: TablePagination
+  setPagination: Dispatch<SetStateAction<TablePagination>>
   tableScroll: { x: number; y: number }
   pagedData: T[]
   handleDelete: (deleteFn: (record?: T) => Promise<any>, record?: T) => Promise<void>
-  selectedRowKeys: Array<React.Key>
-  setSelectedRowKeys: (keys: Array<React.Key>) => void
-  handleSelectionChange: (keys: Array<React.Key>, rows: T[]) => { keys: Array<React.Key>; rows: T[] }
+  selectedRowKeys: Key[]
+  setSelectedRowKeys: Dispatch<SetStateAction<Key[]>>
+  handleSelectionChange: (keys: Key[], rows: T[]) => { keys: Key[]; rows: T[] }
   selectionMode: 'multiple' | 'single' | 'none'
   isRowSelectable: (record: T) => boolean
   calcIndex: (localIndex: number) => number
@@ -106,6 +102,15 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
   // ensure serverSort is referenced (used by consumer components); keep a no-op to avoid TS unused error
   void serverSort
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const mountedRef = useRef(false)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
+  }, [])
+
   const [pagination, setPagination] = useState(initialPagination)
   // ensure pagination numbers are normalized
   useEffect(() => {
@@ -124,7 +129,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
 
   // 同步 URL（可选）
   useEffect(() => {
-    if (!pageSyncToUrl) return
+    if (!pageSyncToUrl || typeof window === 'undefined') return
     const params = new URLSearchParams(window.location.search)
     const pageStr = params.get('page')
     const current = pageStr ? parseInt(pageStr, 10) : null
@@ -142,7 +147,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
   useEffect(() => {
     const { current, pageSize } = pagination
     onPaginationChange(pagination)
-    if (pageSyncToUrl) {
+    if (pageSyncToUrl && typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search)
       params.set('page', String(current))
       params.set('pageSize', String(pageSize))
@@ -229,9 +234,14 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
     }
 
     calc()
-    const ro = new ResizeObserver(() => calc())
-    ro.observe(node)
-    return () => ro.disconnect()
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(calc)
+      ro.observe(node)
+      return () => ro.disconnect()
+    }
+
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
   }, [containerRef, minBodyHeight, minWidth, pagination.pageSize])
 
   // 删除后处理：deleteFn 应返回 Promise；如果当前页删除后无条目且页码>1，则自动回退并触发 reload
@@ -239,6 +249,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
     if (typeof deleteFn !== 'function') throw new Error('deleteFn must be a function')
     // 执行删除
     await Promise.resolve(deleteFn(record))
+    if (!mountedRef.current) return
 
     const { current, pageSize } = pagination
     // 如果本页只有一条（将被删除），尝试回退到上一页
@@ -267,9 +278,9 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
   }
 
   // 选择相关
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
 
-  const handleSelectionChange = (keys: Array<React.Key>, rows: T[]) => {
+  const handleSelectionChange = (keys: Key[], rows: T[]) => {
     setSelectedRowKeys(keys || [])
     return { keys, rows }
   }
@@ -383,6 +394,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
         }
 
         if (Array.isArray(list)) {
+          if (!mountedRef.current) return Promise.resolve(res)
           setInternalData(list)
 
           // resolve total using mapping first, then common fields

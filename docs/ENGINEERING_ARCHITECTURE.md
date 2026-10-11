@@ -10,22 +10,22 @@
 
 ## 当前结构与指标
 
-| 领域          | 现状                                                                                                                              | 工程影响                                                                       |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| 源码规模      | 当前规模见自动生成的源码清单                                                                                                      | 完整分类与统计口径见[组件与源码清单](./COMPONENT_CATALOG.md)                   |
-| 共享 UI       | `src/shared/ui` 有 2 个应用级模块；`packages/wui-react/src` 已有 4 个独立组件；历史 `stateless` 有 163 个入口，`stateful` 有 4 个 | 新共享层有依赖方向检查；旧目录仍需按复用范围与 package 发布边界迁移 |
-| Hooks         | `src/components/hooks` 有 49 个历史 Hook 模块；布局 Hook 在 `layouts`，平台导航和认证 Hook 在 `platform`                           | 按调用者迁入 `shared/hooks`、feature 或 platform；旧目录不再新增 Hook          |
-| 页面与项目    | `src/pages` 有 57 个入口模块，分布在 39 个直接子目录；`src/projects` 有 6 个入口模块                                              | 页面按演示名称组织，跨项目共用逻辑和项目私有逻辑边界需要持续校验               |
-| Feature-first | `tracking`、`notifications` 与 `dependencies` 已按领域组织页面、组件、hooks、store/数据与模型；路由加载 feature 入口 | feature 已纳入 strict 类型检查；tracking SDK 仍在旧 npm API 源码入口，待按发布契约迁移 |
-| 路由与权限    | `src/routers/routeRegistry.ts` 按功能分组；元数据含功能类别、访问级别与布局类型                                                   | 根守卫已复用共享实现；菜单元数据与权限 mock 尚未合并，需要后续建立校验         |
-| 状态管理      | 全局 `useAppStore` 只管理应用壳；通知 store 属于 feature；示例 store 属于页面；临时交互留在 React state                           | 全局/领域/局部生命周期已区分；历史 store/service 仍需按所有权迁移              |
-| 布局扩展      | `src/layouts` 提供 `side/top/mix` preset registry、类型化覆盖和 header/sider/content slots                                        | 默认组合保留现有行为；项目可通过 `createLayoutRegistry` 扩展槽位和导航位置     |
-| 组件 API      | 应用级 `src/components/index.ts` 聚合出口已删除；4 个组件已有独立 package source 和子路径入口，历史 npm 聚合 API 仍由 `src/lib` 维护 | 新增应用组件不再进入大 barrel；旧组件库 API 仍需逐批解耦 |
-| 样式          | 样式与 CSS Modules 数量以自动生成清单为准                                                                                           | 模块样式基础不错；剩余全局样式、组件内联值和主题 token 需要约束                |
-| 文档与演示    | Storybook、源码测试数量以自动生成清单为准                                                                                            | 公开组件的交互、暗黑主题、响应式和无障碍状态覆盖不足                           |
-| 工具配置      | 根 package 有 131 个脚本，workspace 包含根应用、API、`packages/wui-react`                                                         | 有多个命令别名和专项发布命令，新人不容易分辨标准命令                           |
-| 部署目标      | 5 个 Vercel JSON 配置和 GitHub Pages workflow                                                                                     | 部署目标多；仓库配置与平台控制面板必须继续保持一致                             |
-| 类型边界      | 全量类型检查覆盖应用；strict 检查覆盖路由工具、KeepAlive、MFE bridge、`src/features`、`src/shared` 和 `src/platform`              | 新迁移层由 CI 执行 strict 检查；旧目录仍分阶段迁移                             |
+| 领域          | 现状                                                                                                                          | 工程影响                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 源码规模      | 当前规模见自动生成的源码清单                                                                                                  | 完整分类与统计口径见[组件与源码清单](./COMPONENT_CATALOG.md)               |
+| 共享 UI       | `src/shared/ui` 保存应用级复用模块；`packages/wui-react/src` 有 12 个公共组件目录；历史 `stateless/stateful` 仍待按所有权迁移 | package 与应用共享层已有明确准入边界；旧目录不再新增组件                   |
+| Hooks         | `src/components/hooks` 有 49 个历史 Hook 模块；布局 Hook 在 `layouts`，平台导航和认证 Hook 在 `platform`                      | 按调用者迁入 `shared/hooks`、feature 或 platform；旧目录不再新增 Hook      |
+| 页面与项目    | `src/pages` 有 57 个入口模块，分布在 39 个直接子目录；`src/projects` 有 6 个入口模块                                          | 页面按演示名称组织，跨项目共用逻辑和项目私有逻辑边界需要持续校验           |
+| Feature-first | `tracking`、`notifications` 与 `dependencies` 已按领域组织页面、组件、hooks、store/数据与模型；路由加载 feature 入口          | feature 已纳入 strict 类型检查；业务埋点不再作为组件库兼容入口发布         |
+| 路由与权限    | `src/routers/routeRegistry.ts` 按功能分组；元数据含功能类别、访问级别与布局类型                                               | 根守卫已复用共享实现；菜单元数据与权限 mock 尚未合并，需要后续建立校验     |
+| 状态管理      | 全局 `useAppStore` 只管理应用壳；通知 store 属于 feature；示例 store 属于页面；临时交互留在 React state                       | 全局/领域/局部生命周期已区分；历史 store/service 仍需按所有权迁移          |
+| 布局扩展      | `src/layouts` 提供 `side/top/mix` preset registry、类型化覆盖和 header/sider/content slots                                    | 默认组合保留现有行为；项目可通过 `createLayoutRegistry` 扩展槽位和导航位置 |
+| 组件 API      | v5 的 12 个组件、类型、样式与子路径全部由 `packages/wui-react` 持有；应用级大 barrel 已删除                                   | npm 构建不读取 `src`；公共 API 由 export map 和语义化版本管理              |
+| 样式          | 样式与 CSS Modules 数量以自动生成清单为准                                                                                     | 模块样式基础不错；剩余全局样式、组件内联值和主题 token 需要约束            |
+| 文档与演示    | Storybook、源码测试数量以自动生成清单为准                                                                                     | 公开组件的交互、暗黑主题、响应式和无障碍状态覆盖不足                       |
+| 工具配置      | 根 package 有大量应用、项目、组件库和发布脚本；workspace 包含根应用、API、`packages/wui-react`                                | 有多个命令别名和专项发布命令，新人不容易分辨标准命令                       |
+| 部署目标      | 5 个 Vercel JSON 配置和 GitHub Pages workflow                                                                                 | 部署目标多；仓库配置与平台控制面板必须继续保持一致                         |
+| 类型边界      | 全量类型检查覆盖应用；strict 检查覆盖路由工具、KeepAlive、MFE bridge、`src/features`、`src/shared` 和 `src/platform`          | 新迁移层由 CI 执行 strict 检查；旧目录仍分阶段迁移                         |
 
 清单里的组件数字按入口目录/文件统计，不是对所有 React 函数组件做 AST 识别后的总数。它反映当前目录维护面，并保留每个模块名称，适合追踪分类和迁移变化。
 
@@ -43,11 +43,19 @@
 
 组件入哪个分类由复用范围和运行时依赖决定，不由组件内部是否使用 React state 决定。应用内部不保留废弃路径的兼容导出；可发布包的 API 变更必须按语义化版本显式管理。
 
+### `packages` 的工程作用
+
+根级 `packages/` 是 monorepo 中可独立构建、测试、定版和发布的 package 集合。目前的 `packages/wui-react` 面向外部 React 项目，不承担本应用的业务编排。它拥有自己的 `package.json`、版本、export map、peer dependencies 和发布生命周期；根应用只是该 package 的一个使用方。
+
+Git 保存 package manifest、`src/**`、Story、测试和发布 workflow。`node_modules`、`dist` 及准备发布时复制的 package README/LICENSE 都是可重建产物，不提交。CI 从干净 checkout 重新构建并检查 tarball，才能证明发布不依赖开发者本机残留文件。
+
+当前公共目录为 `AnimatedIcon`、`IconFrame`、`MoveChecker`、`OneTimePasscode`、`OverflowText`、`PortalTooltip`、`ResponsiveTable`、`SafeHtml`、`ScrollLayout`、`ScrollableSections`、`SliderCaptcha` 和 `WatermarkProvider`。主入口导出全部组件，每个组件另有 kebab-case 子路径；未列入 `package.json#exports` 的文件均为内部实现。
+
 ## 当前结构的主要不足
 
 ### 1. 组件按实现方式分类，不按职责和所有权分类
 
-`src/components/stateless` 是最大集合，当前有 164 个入口模块，其中 148 个在该目录第一层，16 个是嵌套入口。目录中有不少有内部状态、请求、导航或业务语义的组件，因此“stateless”会误导使用者。`stateful` 只有 4 个模块，也无法表达组件的领域归属。新共享 UI 从该目录迁出后集中放入 `src/shared/ui`，布局包装器迁入 `src/layouts`。
+`src/components/stateless` 是最大集合，当前有 155 个入口模块，其中 139 个在该目录第一层，16 个是嵌套入口。目录中有不少有内部状态、请求、导航或业务语义的组件，因此“stateless”会误导使用者。`stateful` 只有 4 个模块，也无法表达组件的领域归属。新共享 UI 从该目录迁出后集中放入 `src/shared/ui`，布局包装器迁入 `src/layouts`。
 
 将组件继续堆进这两个目录，会使搜索、代码所有权和 bundle 依赖越来越难判断。新增模块应按“应用功能”“共享 UI”“平台能力”归属；历史模块按功能批次迁移，不再向旧目录增加新组件。
 
@@ -55,13 +63,15 @@
 
 历史页面主要在 `src/pages`，项目差异在 `src/projects`，部分旧组件仍在 `src/components/stateless` 和 `stateful`。新增或修改一个业务域时，开发者需要跨多个目录找页面、请求、状态、组件和样式。新业务应在 `src/features/<domain>` 内按垂直切片组织。
 
-### 3. 组件库 package 已有独立源码切片，旧 API 仍与应用耦合
+### 3. 组件库边界已独立，发布治理需要持续执行
 
-`packages/wui-react` 有自己的包清单，`AnimatedIcon`、`OneTimePasscode`、`WatermarkProvider` 和 `ResponsiveTable` 已迁入 `packages/wui-react/src`，并提供独立 ESM/CJS/types 子路径。OTP 组件直接使用 Ant Design theme token，不依赖应用主题 Context；ResponsiveTable 使用 package 内浏览器请求 adapter，也不要求外部 Router Context。其余公开入口仍从 `src/lib` 汇总并由根 Webpack 配置生成，因此整体 package 仍依赖应用源码与 alias。import boundary 检查 package-owned source 不得反向导入 `src/`；后续按公开 API 清单逐批迁移。
+v5 将 12 个公共组件收敛到 `packages/wui-react/src`，主入口、按组件子路径、类型和样式都由 package 自己持有。`/core`、`/stateful`、`/stateless` 和 `/tracking` 兼容入口不再发布，npm 构建也不再读取 `src/lib`。import boundary 检查必须持续阻止 package 反向导入应用 `src`、路由、store、service、环境配置和项目 alias。
+
+接下来的风险来自 API 治理：每个新增 export 都会成为外部契约，需要同时具备稳定 Props、主题与 SSR 约束、依赖归属、Story/测试、bundle 评估和语义化版本说明。源码放进 `packages` 并不自动代表它适合发布。
 
 ### 4. 组件校验不足以支撑大型团队协作
 
-Storybook 静态构建已经进入 CI，但当前只发现 8 个 story，且故事不等于完整行为测试。公共组件需要统一的属性/API 示例、空/加载/错误状态、暗色主题、键盘可达和窄屏状态。Storybook 已加入 a11y addon，可用于交互检查；还需要逐步为公共组件补 stories 和有针对性的组件测试。
+Storybook 静态构建已经进入 CI，但 Story 不等于完整行为测试。12 个公共组件需要统一的属性/API 示例、空/加载/错误状态、暗色主题、键盘可达、SSR 导入和窄屏状态。Storybook 已加入 a11y addon；发布门禁还应持续补齐关键交互测试和按组件 bundle 检查。
 
 ### 5. 样式虽以 CSS Modules 为主，主题契约还不够显式
 
@@ -73,7 +83,7 @@ Storybook 静态构建已经进入 CI，但当前只发现 8 个 story，且故�
 
 ### 7. 命令入口数量削弱了“单一正确路径”
 
-131 个根脚本包含标准命令、兼容 alias、专项构建、分析和发布操作。底层项目脚本已有 `scripts/project-command.mjs` 和项目注册表，今后应将它们作为唯一实现，保持必要兼容别名但标记用途，并在新文档中只推荐一组标准命令。
+根脚本包含标准命令、兼容 alias、专项构建、分析和发布操作。底层项目脚本已有 `scripts/project-command.mjs` 和项目注册表，今后应将它们作为唯一实现，保持必要兼容别名但标记用途，并在新文档中只推荐一组标准命令。
 
 ### 8. 路由拆包存在无效预加载选项，性能预算仍是保护线
 
@@ -138,9 +148,11 @@ src/
 
 packages/
   wui-react/
-    src/                  # 稳定且不依赖应用私有模块的公开组件
-    stories/              # 或由组件自身目录持有 stories
-    styles/
+    package.json          # npm 版本、exports、依赖和发布元数据
+    src/
+      index.ts            # 12 个组件的主入口
+      ComponentName/      # 实现、类型、样式、Story 与测试
+    dist/                 # 本地/CI 生成，不提交 Git
 ```
 
 依赖方向应是单向的：
@@ -155,12 +167,14 @@ flowchart TD
   Features --> Platform[platform interfaces]
   Projects --> Features
   Projects --> Shared
-  Wui[wui-react package] --> Peer[React / Ant Design peers]
+  Wui[wui-react package] --> Peer[React / React DOM / Ant Design / Framer Motion peers]
+  Wui --> Runtime[icon / HTML sanitizer / class utility runtime dependencies]
 ```
 
 - `shared` 不导入页面或业务 feature；
 - feature 不读取其他 feature 的私有文件，跨域复用通过对方 `index.ts` 或上提到 `shared`；
 - `packages/wui-react` 不导入 `src/` alias，不依赖应用路由、store、service 或运行时配置；
+- 宿主框架依赖声明为 peer dependency，组件内部工具声明为 package dependency，构建与测试工具只属于 dev dependency；
 - 项目入口负责组合 feature，不复制 feature 实现；
 - app/layouts 负责应用编排，业务页面不直接控制全局布局状态。
 
@@ -179,6 +193,16 @@ ComponentName/
 ```
 
 应用业务组件放入对应 `features/<name>/components`；跨功能复用但尚未进入组件库的应用组件放入 `shared/ui`；公共 npm API 才能进入 `packages/wui-react`。不再给新组件使用 `stateless/stateful` 分类。
+
+公共组件还必须通过以下发布准入检查：
+
+- 不含业务术语、固定接口、认证假设和项目级路由或状态；请求能力通过 Props 或 adapter 注入；
+- 不依赖根应用 alias；在 package 边界内可以独立解析、构建和生成类型；
+- Ant Design UI 使用语义 token，自有 UI 使用公开 CSS 变量或 CSS Modules，并验证亮色、暗色和品牌主题；
+- 模块在 SSR 阶段可安全导入，浏览器 API、Portal 和尺寸测量延迟到客户端生命周期；
+- 明确 peer/runtime/dev dependency 归属，具有 Story、关键交互测试、无障碍和窄屏样例；
+- 主入口和子路径同时提供 ESM、CJS 与类型声明，样式通过唯一公开入口加载；
+- export 删除、重命名、默认行为改变和 peer 主版本提升都通过 major release 管理。
 
 布局层应通过类型化配置组合，而不是从页面组件直接访问布局内部：
 
@@ -199,30 +223,31 @@ const registry = createLayoutRegistry({
 
 ## 分阶段实施
 
-| 阶段                    | 目标                                                                         | 可验收结果                                                                                                                                                                            |
-| ----------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0. 建立可观测清单       | 自动统计组件、Hook、页面、样式、Story 和脚本                                 | 本次已添加 `pnpm run generate:component-catalog` 与生成清单                                                                                                                           |
+| 阶段                    | 目标                                                                         | 可验收结果                                                                                                                                          |
+| ----------------------- | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0. 建立可观测清单       | 自动统计组件、Hook、页面、样式、Story 和脚本                                 | 本次已添加 `pnpm run generate:component-catalog` 与生成清单                                                                                         |
 | 1. 固定新代码边界       | 新功能按 feature-first；feature、shared、platform 启用 strict 与依赖方向检查 | tracking/notifications 已纳入 strict；`@shared`、`@features`、`@platform` alias 和 CI boundary 检查已建立；旧 tracking/notifications 页面入口已删除 |
-| 2. 用垂直切片迁移业务域 | 选择通知、埋点看板和依赖分析，拆分页面、领域状态、类型和请求                 | tracking、notifications、dependencies 页面及领域状态/数据已归属 feature；埋点 SDK 仍需按发布 API 契约迁移 |
-| 3. 统一路由与状态所有权 | 按功能注册路由元数据；拆分全局壳状态、feature 状态与局部状态                 | 已有 route registry 和共享 AuthRouter；`useAppStore` 只管理壳状态；通知使用 feature store；菜单配置/权限 mock 一致性校验仍待补齐                                                      |
-| 4. 建立组件质量基线     | 优先覆盖 `wui-react` 对外组件的 Storybook、主题和交互                        | 每个公开导出有用途/Props story；关键交互有测试；a11y 检查可复现                                                                                                                       |
-| 5. 独立组件库源码       | 将稳定组件迁入 `packages/wui-react/src`，根应用只依赖 package API            | `AnimatedIcon`、`OneTimePasscode`、`WatermarkProvider`、`ResponsiveTable` 已有独立源码和子路径；其余 API 仍由 `src/lib` 聚合，完整脱离应用构建与 `npm pack` 仍待完成 |
-| 6. 收敛布局与构建 API   | 完成 layout registry、slots 和类型化选项；project/deploy 命令保持单一实现    | 默认布局 registry、preset 覆盖和 Header/Sider/Content slots 已实现；CI 按部署目标检查构建产物和资源预算                                                                               |
-| 7. 扩大严格质量门禁     | 分 feature 启用 TypeScript strict 和 import boundary                         | 新模块默认 strict；历史代码逐目录迁移，不用全仓一次性豁免                                                                                                                             |
+| 2. 用垂直切片迁移业务域 | 选择通知、埋点看板和依赖分析，拆分页面、领域状态、类型和请求                 | tracking、notifications、dependencies 页面及领域状态/数据已归属 feature；业务埋点留在 feature/platform 边界                                         |
+| 3. 统一路由与状态所有权 | 按功能注册路由元数据；拆分全局壳状态、feature 状态与局部状态                 | 已有 route registry 和共享 AuthRouter；`useAppStore` 只管理壳状态；通知使用 feature store；菜单配置/权限 mock 一致性校验仍待补齐                    |
+| 4. 建立组件质量基线     | 优先覆盖 `wui-react` 对外组件的 Storybook、主题和交互                        | 每个公开导出有用途/Props story；关键交互有测试；a11y 检查可复现                                                                                     |
+| 5. 独立组件库源码       | 将稳定组件迁入 `packages/wui-react/src`，根应用只依赖 package API            | v5 的 12 个组件由 package 自己持有；删除旧分类入口；ESM/CJS/types/style、消费端导入 smoke 与 dry-run package 检查使用同一发布契约                   |
+| 6. 收敛布局与构建 API   | 完成 layout registry、slots 和类型化选项；project/deploy 命令保持单一实现    | 默认布局 registry、preset 覆盖和 Header/Sider/Content slots 已实现；CI 按部署目标检查构建产物和资源预算                                             |
+| 7. 扩大严格质量门禁     | 分 feature 启用 TypeScript strict 和 import boundary                         | 新模块默认 strict；历史代码逐目录迁移，不用全仓一次性豁免                                                                                           |
 
 ## 建议优先级
 
-1. **组件库源码解耦**：继续将稳定 shared UI 和 stateless 组件迁入 package 内部源码，确保 npm 构建不读取应用私有目录与 alias。
+1. **组件发布质量门禁**：让 12 个公共组件具备主题、SSR、Story、交互测试、依赖和 bundle 基线；用 Trusted Publishing/OIDC 发布可追溯产物。
 2. **路由/菜单/权限单一来源**：基于已建立的 route registry 做菜单漂移和权限声明校验，再逐组消除重复数据。
-3. **旧目录迁移**：继续将旧 stateless/stateful 与页面实现按 feature 所有权搬迁，先挑复用面明确的模块。
-4. **公共组件 stories 和暗色主题**：优先覆盖稳定公开 API，而不是追求所有演示页都进入 Storybook。
+3. **旧目录迁移**：继续将旧 stateless/stateful 与页面实现按 feature 所有权搬迁；只有通过公共组件准入检查的模块进入 package。
+4. **依赖与版本治理**：固定 peer 支持区间、自动校验 export map 和 tarball，破坏性变更只进入主版本。
 
 ### 本次已落实
 
 - 添加可重复生成的组件与源码清单，并在文档索引中加入入口。
 - 将埋点看板迁入 `src/features/tracking`；将通知列表、详情、顶部抽屉和通知领域 store 收敛到 `src/features/notifications`，移除旧 `src/pages/notifications` 与旧 stateless 组件入口。通知表格、抽屉、详情现在共享同一数据源。
-- `src/shared/ui` 仅保留应用级 `ScrollProgressBar`、`FixTabPanel`；`AnimatedIcon`、`OneTimePasscode`、`WatermarkProvider`、`ResponsiveTable` 已迁入 `packages/wui-react/src` 并提供独立子路径导出。ResponsiveTable 的默认 fetch 使用 package 内置浏览器 adapter，支持注入请求客户端，不依赖应用 service。
-- 新增 package-owned 组件从应用主题和状态中解耦；OTP 改用 Ant Design theme token，水印组件只依赖 React。Webpack 为两者生成 ESM/CJS 入口和类型声明；应用与 Storybook 从 package source 引用，boundary 检查禁止 package source 导入应用 `src/`。
+- `src/shared/ui` 仅保留应用级复用模块；12 个稳定组件归入 `packages/wui-react/src`，并通过主入口和按组件子路径公开。ResponsiveTable 的请求能力由 adapter 注入，不依赖应用 service。
+- v5 npm API 已移除 `/core`、`/stateful`、`/stateless` 和 `/tracking` 兼容入口；Webpack 为主入口和 12 个组件生成 ESM/CJS 与类型声明，统一输出样式。boundary 检查禁止 package source 导入应用 `src/`。
+- 发布命令收敛为 release preparation、dry-run pack、正式发布和 beta 发布四类高层入口，避免手工串联造成重复构建；自动发布使用 npm Trusted Publishing 与 GitHub OIDC。
 - 将 GlobalSearch 移入 `layouts/proHeader/components`；RootLayout 与 RouterErrorElement 移入 `routers/components`；鉴权组件归入 `platform/auth/components`；KeepAlive 和 ErrorBoundary 归入 `platform`，断点监听归入 `bootstrap/providers`。清理无引用的 `src/components/index.ts`、对应校验脚本、旧 RichEditor 类型占位和 NavigationTabs 实现；SmartVideoPlayer 的 Storybook 文件与源码归并。
 - 将权限类型、mock、API、服务和 Hook 统一迁入 `src/platform/auth`；HTTP clients 归入 `src/platform/api`，HashRouter 能力归入 `src/platform/navigation`。`src/store` 收敛为应用壳状态：持久化侧栏状态与断点数据；移动端标记由 selector 推导。通知状态放在 feature store，Zustand demo 状态放在示例页面域，弹窗等交互保持局部状态。
 - 将微前端 bridge 迁入 `src/platform/mfe`，日志、Ant Design message adapter 和环境读取分别归入 `platform/telemetry`、`platform/feedback` 与 `platform/config`；删除无引用的 HOC 示例目录。
@@ -237,4 +262,4 @@ const registry = createLayoutRegistry({
 - 将认证/权限、通用 API、纯共享工具和 PWA 分别归入 `src/platform/auth`、`src/platform/api`、`src/shared/lib` 和 `src/platform/pwa`；移除 `@utils` alias 和未使用的 Storybook `blocks-shim`。
 - 将 Storybook starter 文档、资源和文档辅助组件统一归入根级 `.storybook`，源码扫描脚本移至 `scripts/maintenance` 并限制为扫描 `src`。
 
-本次没有迁移所有存量目录；`src/components/stateless` 仍有 163 个入口，`src/lib` 中多数历史导出还没有整体迁出应用源码。路由菜单/权限仍有多份配置；后续按明确阶段消除重复配置并迁移旧目录。应用内部不保留已删除路径的兼容导出。
+本次没有迁移所有存量目录；`src/components/stateless/stateful` 和部分历史导出仍需按 feature、shared、layout 或 platform 所有权迁移。这些应用代码不再通过 npm 组件包间接发布。路由菜单/权限仍有多份配置，后续按明确阶段消除重复配置。应用内部不保留已删除路径的兼容导出。

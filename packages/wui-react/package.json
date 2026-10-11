@@ -1,7 +1,7 @@
 {
   "name": "@w.ui/wui-react",
-  "version": "4.0.0",
-  "description": "Reusable React components and application utilities from Pro React Admin.",
+  "version": "5.0.0",
+  "description": "Reusable React UI components from Pro React Admin.",
   "type": "module",
   "private": false,
   "files": [
@@ -9,60 +9,93 @@
     "README.md",
     "LICENSE"
   ],
-  "main": "./dist/pro-react-components.umd.cjs",
-  "module": "./dist/pro-react-components.es.js",
-  "types": "./dist/types/src/lib/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/src/lib/index.d.ts",
-      "import": "./dist/pro-react-components.es.js",
-      "require": "./dist/pro-react-components.umd.cjs"
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.js"
     },
-    "./core": {
-      "types": "./dist/types/src/lib/core.d.ts",
-      "import": "./dist/entries/core.es.js",
-      "require": "./dist/entries/core.cjs"
-    },
-    "./stateful": {
-      "types": "./dist/types/src/lib/stateful.d.ts",
-      "import": "./dist/entries/stateful.es.js",
-      "require": "./dist/entries/stateful.cjs"
-    },
-    "./stateless": {
-      "types": "./dist/types/src/lib/stateless.d.ts",
-      "import": "./dist/entries/stateless.es.js",
-      "require": "./dist/entries/stateless.cjs"
-    },
-    "./tracking": {
-      "types": "./dist/types/src/lib/tracking/index.d.ts",
-      "import": "./dist/entries/tracking.es.js",
-      "require": "./dist/entries/tracking.cjs"
-    },
-    "./style.css": "./dist/style.css",
     "./animated-icon": {
-      "types": "./dist/types/packages/wui-react/src/AnimatedIcon/index.d.ts",
-      "import": "./dist/entries/animatedIcon.es.js",
-      "require": "./dist/entries/animatedIcon.cjs"
+      "types": "./dist/types/AnimatedIcon/index.d.ts",
+      "import": "./dist/esm/animated-icon.js",
+      "require": "./dist/cjs/animated-icon.cjs",
+      "default": "./dist/esm/animated-icon.js"
+    },
+    "./icon-frame": {
+      "types": "./dist/types/IconFrame/index.d.ts",
+      "import": "./dist/esm/icon-frame.js",
+      "require": "./dist/cjs/icon-frame.cjs",
+      "default": "./dist/esm/icon-frame.js"
+    },
+    "./move-checker": {
+      "types": "./dist/types/MoveChecker/index.d.ts",
+      "import": "./dist/esm/move-checker.js",
+      "require": "./dist/cjs/move-checker.cjs",
+      "default": "./dist/esm/move-checker.js"
     },
     "./one-time-passcode": {
-      "types": "./dist/types/packages/wui-react/src/OneTimePasscode/index.d.ts",
-      "import": "./dist/entries/oneTimePasscode.es.js",
-      "require": "./dist/entries/oneTimePasscode.cjs"
+      "types": "./dist/types/OneTimePasscode/index.d.ts",
+      "import": "./dist/esm/one-time-passcode.js",
+      "require": "./dist/cjs/one-time-passcode.cjs",
+      "default": "./dist/esm/one-time-passcode.js"
     },
-    "./watermark-provider": {
-      "types": "./dist/types/packages/wui-react/src/WatermarkProvider/index.d.ts",
-      "import": "./dist/entries/watermarkProvider.es.js",
-      "require": "./dist/entries/watermarkProvider.cjs"
+    "./overflow-text": {
+      "types": "./dist/types/OverflowText/index.d.ts",
+      "import": "./dist/esm/overflow-text.js",
+      "require": "./dist/cjs/overflow-text.cjs",
+      "default": "./dist/esm/overflow-text.js"
+    },
+    "./portal-tooltip": {
+      "types": "./dist/types/PortalTooltip/index.d.ts",
+      "import": "./dist/esm/portal-tooltip.js",
+      "require": "./dist/cjs/portal-tooltip.cjs",
+      "default": "./dist/esm/portal-tooltip.js"
     },
     "./responsive-table": {
-      "types": "./dist/types/packages/wui-react/src/ResponsiveTable/index.d.ts",
-      "import": "./dist/entries/responsiveTable.es.js",
-      "require": "./dist/entries/responsiveTable.cjs"
-    }
+      "types": "./dist/types/ResponsiveTable/index.d.ts",
+      "import": "./dist/esm/responsive-table.js",
+      "require": "./dist/cjs/responsive-table.cjs",
+      "default": "./dist/esm/responsive-table.js"
+    },
+    "./safe-html": {
+      "types": "./dist/types/SafeHtml/index.d.ts",
+      "import": "./dist/esm/safe-html.js",
+      "require": "./dist/cjs/safe-html.cjs",
+      "default": "./dist/esm/safe-html.js"
+    },
+    "./scroll-layout": {
+      "types": "./dist/types/ScrollLayout/index.d.ts",
+      "import": "./dist/esm/scroll-layout.js",
+      "require": "./dist/cjs/scroll-layout.cjs",
+      "default": "./dist/esm/scroll-layout.js"
+    },
+    "./scrollable-sections": {
+      "types": "./dist/types/ScrollableSections/index.d.ts",
+      "import": "./dist/esm/scrollable-sections.js",
+      "require": "./dist/cjs/scrollable-sections.cjs",
+      "default": "./dist/esm/scrollable-sections.js"
+    },
+    "./slider-captcha": {
+      "types": "./dist/types/SliderCaptcha/index.d.ts",
+      "import": "./dist/esm/slider-captcha.js",
+      "require": "./dist/cjs/slider-captcha.cjs",
+      "default": "./dist/esm/slider-captcha.js"
+    },
+    "./watermark-provider": {
+      "types": "./dist/types/WatermarkProvider/index.d.ts",
+      "import": "./dist/esm/watermark-provider.js",
+      "require": "./dist/cjs/watermark-provider.cjs",
+      "default": "./dist/esm/watermark-provider.js"
+    },
+    "./style.css": "./dist/style.css",
+    "./package.json": "./package.json"
   },
   "sideEffects": [
-    "**/*.css",
-    "**/*.less"
+    "**/*.css"
   ],
   "keywords": [
     "React",
@@ -81,15 +114,28 @@
     "directory": "packages/wui-react"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
+  },
+  "scripts": {
+    "prepublishOnly": "node ../../scripts/validate-lib-release.mjs && pnpm --dir ../.. run prepare:lib:release"
   },
   "license": "MIT",
   "author": "wkylin",
+  "dependencies": {
+    "@ant-design/icons": "^6.3.4",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.16",
+    "isomorphic-dompurify": "^4.5.0",
+    "lucide-react": "^1.54.0"
+  },
   "peerDependencies": {
-    "react": ">=19.0.0",
-    "react-dom": ">=19.0.0",
-    "antd": ">=6.0.0",
-    "react-router-dom": ">=7.0.0",
-    "framer-motion": ">=12.0.0"
+    "antd": ">=6.0.0 <7.0.0",
+    "framer-motion": ">=12.0.0 <15.0.0",
+    "react": ">=19.0.0 <20.0.0",
+    "react-dom": ">=19.0.0 <20.0.0"
   }
 }

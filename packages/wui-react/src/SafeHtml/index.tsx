@@ -58,17 +58,16 @@ const DEFAULT_CONFIG = {
     'align',
     'colspan',
     'rowspan',
-    'style',
     /^data-(?!.*(on|exec|eval))/,
     /^aria-/,
   ],
-  ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel|data|tel):|[^&:/?#]*(?:[/?#]|$))/i, // 禁 javascript: 等
   FORBID_TAGS: ['script', 'style', 'iframe', 'frame', 'frameset', 'object', 'embed', 'form', 'input', 'textarea'],
-  CUSTOM_ELEMENT_HANDLING: { tagNameCheck: (tagName: string) => !/^on\w+/.test(tagName) }, // 彻底杀 on* 事件
   WHOLE_DOCUMENT: false,
 } as unknown as DOMPurifyConfig
 
-interface SafeHtmlProps extends React.HTMLAttributes<HTMLElement> {
+const EMPTY_CONFIG: Partial<DOMPurifyConfig> = {}
+
+export interface SafeHtmlProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'dangerouslySetInnerHTML'> {
   html: string
   config?: Partial<DOMPurifyConfig>
   tag?: React.ElementType
@@ -76,7 +75,7 @@ interface SafeHtmlProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const SafeHtml = memo<SafeHtmlProps>(
-  ({ html, config = {}, tag = 'div', fallback = null, className = '', ...props }) => {
+  ({ html, config = EMPTY_CONFIG, tag = 'div', fallback = null, className = '', ...props }) => {
     const WrapperEl: React.ElementType = tag as React.ElementType
     const cleanHtml = useMemo(() => {
       const finalConfig: DOMPurifyConfig = { ...DEFAULT_CONFIG, ...(config as Partial<DOMPurifyConfig>) }
@@ -88,9 +87,9 @@ const SafeHtml = memo<SafeHtmlProps>(
     if (!cleanHtml && fallback) return <>{fallback}</>
 
     return React.createElement(WrapperEl, {
+      ...props,
       className: `safe-html ${className}`,
       dangerouslySetInnerHTML: { __html: cleanHtml },
-      ...props,
     })
   }
 )

@@ -24,7 +24,7 @@ import {
   theme,
 } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
-import useTable, { type RequestClient } from './useTable'
+import useTable, { type RequestClient, type TablePagination } from './useTable'
 
 const ScrollbarHeaderCell = (cellProps: any) => {
   const className = cellProps?.className ?? ''
@@ -53,14 +53,14 @@ export type ResponsiveTableProps<T = any> = {
   columns?: ColumnsType<T>
   dataSource?: T[]
   rowKey?: string | ((record: T) => React.Key)
-  initialPagination?: { current: number; pageSize: number }
+  initialPagination?: TablePagination
   minBodyHeight?: number
   minWidth?: number
   showColumnSettings?: boolean
   pageSyncToUrl?: boolean
   /** Query string used to initialize search state. Defaults to the current browser URL. */
   locationSearch?: string
-  onPaginationChange?: (pagination: { current: number; pageSize: number }) => void
+  onPaginationChange?: (pagination: TablePagination) => void
   onChange?: (...args: any[]) => any
   // actions can be preset strings or detailed configs
   actions?: Array<'view' | 'edit' | 'delete' | ActionConfig<T>>
@@ -74,7 +74,7 @@ export type ResponsiveTableProps<T = any> = {
   indexMode?: 'global' | 'page' | 'custom'
   indexFixed?: false | 'left' | 'right'
   actionsFixed?: false | 'left' | 'right'
-  customIndexRender?: (record: T, index: number, pagination: any) => ReactNode
+  customIndexRender?: (record: T, index: number, pagination: TablePagination) => ReactNode
   rowSelection?: null | 'multiple' | 'single'
   rowSelectable?: ((record: T) => boolean) | string | null
   fetchData?: ((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise<any>) | null

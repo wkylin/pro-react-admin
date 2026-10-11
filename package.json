@@ -124,11 +124,15 @@
     "postbuild-storybook": "node ./scripts/add-storybook-base.cjs",
     "serve:storybook": "serve storybook-static -p 6007",
     "serve:storybook:http": "cd storybook-static && pnpm exec http-server -p 6006 -o",
-    "build:lib": "rimraf packages/wui-react/dist && cross-env LIB_BUILD_TARGET=main webpack --config ./webpack/webpack.lib.js && node scripts/finalize-lib-build.mjs main && pnpm run build:lib:types",
-    "build:lib:entries": "cross-env LIB_BUILD_TARGET=entries webpack --config ./webpack/webpack.lib.js && node scripts/finalize-lib-build.mjs entries",
+    "build:lib": "rimraf packages/wui-react/dist && cross-env NODE_ENV=production webpack --config ./webpack/webpack.lib.js && pnpm run build:lib:types && node scripts/finalize-lib-build.mjs",
     "build:lib:types": "tsc6 --project tsconfig.lib.json",
     "prepare:lib:publish": "node scripts/prepare-lib-publish.mjs",
     "check:lib-package": "node scripts/validate-lib-package.mjs",
+    "check:lib-smoke": "node scripts/smoke-lib-package.mjs",
+    "check:lib-size": "node scripts/check-lib-package-size.mjs",
+    "check:lib-release": "node scripts/validate-lib-release.mjs",
+    "prepare:lib:release": "pnpm run build:lib && pnpm run prepare:lib:publish && pnpm run check:lib-package && pnpm run check:lib-smoke && pnpm run check:lib-size",
+    "pack:lib:dry-run": "pnpm run prepare:lib:release && npm pack ./packages/wui-react --dry-run --ignore-scripts",
     "build:lib:analyze": "cross-env USE_ANALYZE=1 pnpm run build:lib",
     "analyze:lib": "pnpm run build:lib:analyze",
     "generate:component-catalog": "node scripts/generate-component-catalog.mjs",
@@ -144,9 +148,9 @@
     "sync:project-contracts": "node scripts/sync-project-contracts.mjs",
     "check:project-contracts": "node scripts/sync-project-contracts.mjs --check",
     "check:bundle-budget": "node scripts/check-bundle-budget.mjs",
-    "prepublishOnly": "pnpm run build:lib && pnpm run build:lib:entries && pnpm run prepare:lib:publish && pnpm run check:lib-package",
-    "pub": "echo 'Please ensure you are logged in to npm: npm login' && pnpm run prepublishOnly && pnpm publish ./packages/wui-react --access public",
-    "pub:beta": "pnpm run prepublishOnly && pnpm publish ./packages/wui-react --tag beta --access public",
+    "prepublishOnly": "pnpm run prepare:lib:release",
+    "pub": "cross-env WUI_DIST_TAG=latest pnpm --dir packages/wui-react publish --access public",
+    "pub:beta": "cross-env WUI_DIST_TAG=beta pnpm --dir packages/wui-react publish --tag beta --access public",
     "release:lib:patch": "npm --prefix packages/wui-react version patch --no-git-tag-version",
     "release:lib:minor": "npm --prefix packages/wui-react version minor --no-git-tag-version",
     "release:lib:major": "npm --prefix packages/wui-react version major --no-git-tag-version",
@@ -501,7 +505,7 @@
     "semver": ">=7.7.4"
   },
   "engines": {
-    "node": ">=24.0.0 <25"
+    "node": ">=24.15.0 <25"
   },
   "packageManager": "pnpm@11.5.2",
   "pnpm": {

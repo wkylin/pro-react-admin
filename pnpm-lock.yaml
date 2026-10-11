@@ -922,21 +922,33 @@ importers:
 
   packages/wui-react:
     dependencies:
+      '@ant-design/icons':
+        specifier: ^6.3.4
+        version: 6.3.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       antd:
-        specifier: '>=6.0.0'
+        specifier: '>=6.0.0 <7.0.0'
         version: 6.6.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      dompurify:
+        specifier: ^3.4.16
+        version: 3.4.16
       framer-motion:
-        specifier: '>=12.0.0'
+        specifier: '>=12.0.0 <15.0.0'
         version: 14.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      isomorphic-dompurify:
+        specifier: ^4.5.0
+        version: 4.5.0(@noble/hashes@1.8.0)
+      lucide-react:
+        specifier: ^1.54.0
+        version: 1.54.0(@types/react@19.3.0)(react@19.3.0)
       react:
-        specifier: '>=19.0.0'
+        specifier: '>=19.0.0 <20.0.0'
         version: 19.3.0
       react-dom:
-        specifier: '>=19.0.0'
+        specifier: '>=19.0.0 <20.0.0'
         version: 19.3.0(react@19.3.0)
-      react-router-dom:
-        specifier: '>=7.0.0'
-        version: 7.18.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
 
 packages:
 

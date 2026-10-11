@@ -15,20 +15,21 @@
   background-image: radial-gradient(transparent 1px, #666 1px);
 }
 
-.nav ul {
+.navUl {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-}
-
-/* Desktop styles applied via root class `.is-desktop` */
-.is-desktop .nav ul {
-  gap: 2rem;
-  padding: 1.5rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .navItem {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  font: inherit;
   cursor: pointer;
   padding: 5px 20px;
   color: #000;
@@ -41,16 +42,15 @@
   transform: translateZ(0);
 }
 
+.navItem:focus-visible {
+  outline: 2px solid #0894ff;
+  outline-offset: 3px;
+}
+
 .navItem:hover {
   color: #333;
   background-color: rgb(255 255 255 / 10%);
   transform: translateY(-2px);
-}
-
-/* Desktop styles applied via root class `.is-desktop` */
-.is-desktop .navItem {
-  font-size: 1.05rem;
-  padding: 8px 25px;
 }
 
 :global(:root[data-theme='dark']) .navItem {
@@ -143,6 +143,10 @@
   padding: 4rem 2rem;
 }
 
+.sectionsContent {
+  width: 100%;
+}
+
 .section .title {
   font-size: 2.5rem;
   font-weight: 800;
@@ -167,12 +171,6 @@
   border-radius: 2px;
 }
 
-/* Desktop styles applied via root class `.is-desktop` */
-.is-desktop .section .title {
-  font-size: 3.5rem;
-  margin-bottom: 3rem;
-}
-
 :global(:root[data-theme='dark']) .section .title {
   color: #f1f5f9;
 }
@@ -185,12 +183,6 @@
   max-width: 800px;
   margin: 0 auto 3rem;
   font-weight: 400;
-}
-
-/* Desktop styles applied via root class `.is-desktop` */
-.is-desktop .section .content {
-  font-size: 1.25rem;
-  line-height: 1.8;
 }
 
 :global(:root[data-theme='dark']) .section .content {
@@ -282,4 +274,26 @@
 :global(:root[data-theme='dark']) .custom-component {
   background: linear-gradient(135deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 10%));
   box-shadow: 0 20px 40px rgb(0 0 0 / 30%);
+}
+
+@media (width >= 1024px) {
+  .navUl {
+    gap: 2rem;
+    padding: 1.5rem 2rem;
+  }
+
+  .navItem {
+    padding: 8px 25px;
+    font-size: 1.05rem;
+  }
+
+  .section .title {
+    margin-bottom: 3rem;
+    font-size: 3.5rem;
+  }
+
+  .section .content {
+    font-size: 1.25rem;
+    line-height: 1.8;
+  }
 }

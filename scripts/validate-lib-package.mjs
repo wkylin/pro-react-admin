@@ -5,10 +5,13 @@ import process from 'node:process'
 import { isDeepStrictEqual } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import {
+  libraryComponents,
+  libraryEngines,
   libraryEntrypoints,
   libraryExports,
   libraryPackageName,
   libraryPeerDependencies,
+  libraryRuntimeDependencies,
 } from '../config/library-contract.mjs'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -43,7 +46,7 @@ async function main() {
     throw new Error(`无法读取组件库 workspace 清单：${packageJsonPath}`, { cause: error })
   }
 
-  const requiredFields = ['name', 'version', 'main', 'module', 'types', 'exports', 'peerDependencies']
+  const requiredFields = ['name', 'version', 'main', 'module', 'types', 'exports', 'dependencies', 'peerDependencies']
   const missingFields = requiredFields.filter((field) => !packageJson[field])
   if (missingFields.length > 0) {
     throw new Error(`组件库 package.json 缺少字段：${missingFields.join(', ')}`)
@@ -57,17 +60,35 @@ async function main() {
   if (packageJson.type !== 'module') {
     throw new Error('组件库 package 必须声明 type: module')
   }
-  if (!['dist', 'README.md', 'LICENSE'].every((entry) => packageJson.files?.includes(entry))) {
-    throw new Error('组件库 files 必须包含 dist、README.md 和 LICENSE')
+  if (!isDeepStrictEqual(packageJson.engines, libraryEngines)) {
+    throw new Error('组件库 engines 与 config/library-contract.mjs 不一致')
   }
-  if (packageJson.publishConfig?.access !== 'public') {
-    throw new Error('组件库 publishConfig.access 必须为 public')
+  if (!/^5\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(packageJson.version)) {
+    throw new Error('clean package 架构必须使用 5.x 语义化版本')
+  }
+  if (!isDeepStrictEqual(packageJson.files, ['dist', 'README.md', 'LICENSE'])) {
+    throw new Error('组件库 files 必须且只能包含 dist、README.md 和 LICENSE')
+  }
+  if (
+    packageJson.publishConfig?.access !== 'public' ||
+    packageJson.publishConfig?.registry !== 'https://registry.npmjs.org/'
+  ) {
+    throw new Error('组件库 publishConfig 必须固定到 npm public registry')
+  }
+  if (
+    packageJson.scripts?.prepublishOnly !==
+    'node ../../scripts/validate-lib-release.mjs && pnpm --dir ../.. run prepare:lib:release'
+  ) {
+    throw new Error('组件库必须通过 prepublishOnly 执行完整发布前构建与校验')
   }
   if (!rootPackageJson.private || rootPackageJson.name === libraryPackageName) {
     throw new Error('应用根 package 必须保持 private，并与组件库使用独立 package 名称')
   }
   if (!isDeepStrictEqual(packageJson.peerDependencies, libraryPeerDependencies)) {
     throw new Error('组件库 peerDependencies 与 config/library-contract.mjs 不一致')
+  }
+  if (!isDeepStrictEqual(packageJson.dependencies, libraryRuntimeDependencies)) {
+    throw new Error('组件库 dependencies 与 config/library-contract.mjs 不一致')
   }
   if (!isDeepStrictEqual(packageJson.exports, libraryExports)) {
     throw new Error('组件库 exports 与 config/library-contract.mjs 不一致')
@@ -78,6 +99,33 @@ async function main() {
     packageJson.types !== libraryEntrypoints.types
   ) {
     throw new Error('组件库 main/module/types 与 config/library-contract.mjs 不一致')
+  }
+
+  const sourceRoot = path.join(packageDir, 'src')
+  const declaredSourceDirectories = new Set(libraryComponents.map(({ source }) => source.split('/')[0]))
+  const actualSourceDirectories = new Set(
+    (await fs.readdir(sourceRoot, { withFileTypes: true }))
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+  )
+  if (!isDeepStrictEqual(actualSourceDirectories, declaredSourceDirectories)) {
+    throw new Error(
+      `组件源码目录与 public contract 不一致：actual=${[...actualSourceDirectories].sort().join(', ')}; declared=${[
+        ...declaredSourceDirectories,
+      ]
+        .sort()
+        .join(', ')}`
+    )
+  }
+
+  const missingSources = []
+  for (const component of libraryComponents) {
+    if (!(await fileExists(path.join(sourceRoot, component.source)))) {
+      missingSources.push(component.source)
+    }
+  }
+  if (missingSources.length > 0) {
+    throw new Error(`组件库 public source 缺失：\n- ${missingSources.join('\n- ')}`)
   }
 
   const exportTargets = collectExportTargets(packageJson.exports)
@@ -107,7 +155,25 @@ async function main() {
     throw new Error(`组件库发布路径缺失或无效：\n- ${missingTargets.join('\n- ')}`)
   }
 
-  log(`Validated ${packageTargets.length} component-library package targets.`)
+  const distDir = path.join(packageDir, 'dist')
+  const distPaths = (await fs.readdir(distDir, { recursive: true })).map((entry) => `dist/${entry}`)
+  const foundLegacyOutputs = distPaths.filter(
+    (relativePath) =>
+      relativePath.startsWith('dist/entries/') ||
+      relativePath.includes('pro-react-components') ||
+      relativePath.includes('.umd.') ||
+      relativePath.startsWith('dist/types/src/') ||
+      relativePath.startsWith('dist/esm-styles/') ||
+      relativePath.startsWith('dist/cjs-styles/') ||
+      relativePath.endsWith('/style-entry.js')
+  )
+  if (foundLegacyOutputs.length > 0) {
+    throw new Error(`组件库仍包含 v4 legacy 产物：\n- ${foundLegacyOutputs.join('\n- ')}`)
+  }
+
+  log(
+    `Validated ${libraryComponents.length} components and ${packageTargets.length} publish targets for ${packageJson.name}@${packageJson.version}.`
+  )
 }
 
 main().catch((error) => {
