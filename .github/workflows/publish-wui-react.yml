@@ -63,8 +63,12 @@ jobs:
           WUI_RELEASE_REF: ${{ github.ref_name }}
           WUI_DIST_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.dist_tag || '' }}
         run: |
-          echo "version=$(node -p \"require('./packages/wui-react/package.json').version\")" >> "$GITHUB_OUTPUT"
-          echo "dist_tag=$(node scripts/validate-lib-release.mjs --print-tag)" >> "$GITHUB_OUTPUT"
+          PACKAGE_VERSION="$(node -p 'require("./packages/wui-react/package.json").version')"
+          DIST_TAG="$(node scripts/validate-lib-release.mjs --print-tag)"
+          {
+            echo "version=$PACKAGE_VERSION"
+            echo "dist_tag=$DIST_TAG"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Reject an existing npm version
         env:
