@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate, type LinkProps, type NavLinkProps } from 'react-router-dom'
 import type { MouseEvent, RefAttributes } from 'react'
-import { message } from 'antd'
+import { message } from '@utils/message'
 import { permissionService } from '@src/service/permissionService'
 import { HashRouterUtils } from '@src/utils/hashRouter'
 

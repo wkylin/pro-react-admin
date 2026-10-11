@@ -1,6 +1,7 @@
 packages:
   - .
   - api
+  - packages/wui-react
 
 onlyBuiltDependencies:
   - '@sentry/cli'

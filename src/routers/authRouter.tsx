@@ -8,6 +8,7 @@ import { HashRouterUtils } from '@src/utils/hashRouter'
 import { isPublicRoute, isRouteConfigPublic } from './config/publicRoutes'
 import { annotatedRootRouter, flattenRoutes } from './index'
 import { message } from 'antd'
+import { showMessage } from '@utils/message'
 import type { MessageInstance } from 'antd/es/message/interface'
 
 interface RoutePolicyMeta {
@@ -40,7 +41,7 @@ const showDeniedMessage = (messageApi: MessageInstance): void => {
     .then(() => messageApi.open({ type: 'error', content: '您没有权限访问该页面' }))
     .catch((e) => {
       console.warn('Failed to show permission error message:', e)
-      return Promise.resolve(message.error('您没有权限访问该页面'))
+      return Promise.resolve(showMessage.error('您没有权限访问该页面'))
     })
     .catch((e) => {
       console.warn('Failed to show permission error message:', e)

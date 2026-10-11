@@ -1,12 +1,12 @@
 @import url('./styles/global.less');
 
 .mdxApp {
-  --mdx-bg-body: #f8fafc;
-  --mdx-bg-surface: #fff;
-  --mdx-bg-toolbar: #fff;
-  --mdx-border: #e2e8f0;
-  --mdx-text-main: #0f172a;
-  --mdx-text-muted: #64748b;
+  --mdx-bg-body: var(--wui-bg-page, #f8fafc);
+  --mdx-bg-surface: var(--wui-bg-surface, #fff);
+  --mdx-bg-toolbar: var(--wui-bg-elevated, #fff);
+  --mdx-border: var(--wui-border, #e2e8f0);
+  --mdx-text-main: var(--wui-text-primary, #0f172a);
+  --mdx-text-muted: var(--wui-text-secondary, #64748b);
   --mdx-primary: #2563eb;
   --mdx-primary-hover: #1d4ed8;
   --mdx-code-bg: #1e293b;
@@ -29,15 +29,8 @@
     color 0.3s;
 
   &.themeDark {
-    --mdx-bg-body: #0f172a;
-    --mdx-bg-surface: #1e293b;
-    --mdx-bg-toolbar: #1e293b;
-    --mdx-border: #334155;
-    --mdx-text-main: #f1f5f9;
-    --mdx-text-muted: #94a3b8;
     --mdx-primary: #3b82f6;
     --mdx-primary-hover: #60a5fa;
-    --mdx-code-bg: #020617;
     --mdx-active-bg: rgb(59 130 246 / 15%);
     --mdx-active-border: rgb(59 130 246 / 30%);
   }

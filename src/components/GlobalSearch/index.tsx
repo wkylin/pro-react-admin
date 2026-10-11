@@ -714,8 +714,8 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
   const inputRef = useRef<InputRef>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const { redirectTo } = useSafeNavigate()
-  const { themeSettings } = useProThemeContext()
-  const isDark = themeSettings.themeMode === 'dark'
+  const { resolvedTheme } = useProThemeContext()
+  const isDark = resolvedTheme === 'dark'
   const { token } = theme.useToken()
 
   const keyword = useDebouncedTrimmedValue(inputValue, 150)

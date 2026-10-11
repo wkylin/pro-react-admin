@@ -7,7 +7,7 @@ const { Header, Content } = Layout
 
 const FixLayout = ({ children }) => {
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, colorBorderSecondary },
   } = theme.useToken()
 
   return (
@@ -21,7 +21,7 @@ const FixLayout = ({ children }) => {
           padding: '0 20px',
           height: 48,
           lineHeight: '48px',
-          borderBottom: '1px solid #f0f0f0',
+          borderBottom: `1px solid ${colorBorderSecondary}`,
           zIndex: 100,
         }}
       >

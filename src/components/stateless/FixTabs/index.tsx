@@ -18,8 +18,8 @@ interface FixTabsProps {
 }
 
 const FixTabs = ({ tabs = [], defaultActiveId }: FixTabsProps) => {
-  const { themeSettings } = useProThemeContext()
-  const isDark = themeSettings.themeMode === 'dark'
+  const { resolvedTheme } = useProThemeContext()
+  const isDark = resolvedTheme === 'dark'
 
   const [activeTab, setActiveTab] = useState(defaultActiveId || (tabs[0] && tabs[0].id))
 

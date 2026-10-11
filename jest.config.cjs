@@ -14,7 +14,7 @@ module.exports = {
     '^isomorphic-dompurify$': '<rootDir>/node_modules/isomorphic-dompurify/dist/browser.js',
   },
   // Ignore built/distribution files to avoid haste name collisions
-  modulePathIgnorePatterns: ['<rootDir>/dist-lib/'],
+  modulePathIgnorePatterns: ['<rootDir>/packages/wui-react/dist/'],
   testPathIgnorePatterns: ['/tests/e2e/'],
   setupFilesAfterEnv: ['<rootDir>/jest/setupTests.js'],
 }

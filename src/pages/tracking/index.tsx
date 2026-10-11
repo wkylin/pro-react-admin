@@ -5,6 +5,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import type { ComponentProps, CSSProperties } from 'react'
 import {
+  Alert,
   Statistic,
   Row,
   Col,
@@ -18,7 +19,7 @@ import {
   Modal,
   Descriptions,
   Typography,
-  message,
+  App,
   Popconfirm,
   Empty,
   Segmented,
@@ -43,7 +44,9 @@ import * as echarts from 'echarts'
 import type { EChartsCoreOption, EChartsType } from 'echarts'
 import dayjs from 'dayjs'
 import logger from '@utils/logger'
+import FixTabPanel from '@stateless/FixTabPanel'
 import type { EventType, TrackEvent } from '../../lib/tracking/types'
+import { useOptionalProThemeContext } from '@/theme/hooks'
 
 const { Text, Title, Paragraph } = Typography
 const { RangePicker } = DatePicker
@@ -57,29 +60,27 @@ interface EchartsBoxProps {
 const EchartsBox = ({ option, style }: EchartsBoxProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const chartRef = useRef<EChartsType | null>(null)
+  const themeContext = useOptionalProThemeContext()
+  const chartTheme = themeContext?.resolvedTheme === 'dark' ? 'dark' : undefined
 
   useEffect(() => {
-    if (!containerRef.current || !option) return
-
-    if (!chartRef.current) {
-      chartRef.current = echarts.init(containerRef.current)
-    }
-
-    chartRef.current.setOption(option, true)
-
-    const handleResize = () => chartRef.current?.resize()
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [option])
-
-  useEffect(() => {
+    if (!containerRef.current) return
+    chartRef.current = echarts.init(containerRef.current, chartTheme)
     return () => {
       chartRef.current?.dispose()
       chartRef.current = null
     }
+  }, [chartTheme])
+
+  useEffect(() => {
+    if (!option) return
+    chartRef.current?.setOption(option, true)
+  }, [option, chartTheme])
+
+  useEffect(() => {
+    const handleResize = () => chartRef.current?.resize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   return <div ref={containerRef} style={{ width: '100%', ...style }} />
@@ -177,12 +178,32 @@ const getEventTypeLabel = (eventType: string) => eventTypeLabels[eventType as Ev
 
 const getJson = async <T,>(input: RequestInfo | URL, init?: RequestInit): Promise<T> => {
   const response = await fetch(input, init)
-  return response.json() as Promise<T>
+  const contentType = response.headers.get('content-type') || ''
+  if (!contentType.toLowerCase().includes('json')) {
+    const isLocalDevelopment =
+      typeof window !== 'undefined' && ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname)
+    const guidance = isLocalDevelopment
+      ? '当前请求落到了前端 HTML 回退页。请停止旧服务并运行 pnpm start，再访问终端输出的前端地址。'
+      : '请检查部署环境中的 /api/tracking 服务端代理配置。'
+
+    throw new Error(
+      `埋点 API ${response.url} 返回 HTTP ${response.status}，Content-Type 为 ${contentType || '未知'}；预期 JSON。${guidance}`
+    )
+  }
+
+  const payload = (await response.json()) as T & { error?: string; message?: string }
+  if (!response.ok) {
+    const message = payload?.message || payload?.error || response.statusText
+    throw new Error(`埋点 API 请求失败（HTTP ${response.status}）：${message}`)
+  }
+  return payload
 }
 
 // ==================== 主组件 ====================
 const TrackingDashboard = () => {
+  const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
+  const [apiErrors, setApiErrors] = useState<Partial<Record<'stats' | 'events', string>>>({})
   const [stats, setStats] = useState<TrackingStats | null>(null)
   const [events, setEvents] = useState<TrackingEvent[]>([])
   const [pagination, setPagination] = useState({ current: 1, pageSize: 50, total: 0 })
@@ -206,7 +227,13 @@ const TrackingDashboard = () => {
       if (res.code === 0 && res.data) {
         setStats(res.data)
       }
+      setApiErrors((current) => {
+        const next = { ...current }
+        delete next.stats
+        return next
+      })
     } catch (err) {
+      setApiErrors((current) => ({ ...current, stats: err instanceof Error ? err.message : String(err) }))
       logger.error('获取统计数据失败:', err)
     }
   }, [])
@@ -233,7 +260,13 @@ const TrackingDashboard = () => {
           setEvents(res.data.items)
           setPagination({ current: page, pageSize, total: res.data.total })
         }
+        setApiErrors((current) => {
+          const next = { ...current }
+          delete next.events
+          return next
+        })
       } catch (err) {
+        setApiErrors((current) => ({ ...current, events: err instanceof Error ? err.message : String(err) }))
         logger.error('获取事件列表失败:', err)
       } finally {
         setLoading(false)
@@ -242,13 +275,20 @@ const TrackingDashboard = () => {
     [filters]
   )
 
+  const pollingStateRef = useRef({ fetchStats, fetchEvents, currentPage: pagination.current })
+
   useEffect(() => {
-    fetchStats()
-    fetchEvents()
+    pollingStateRef.current = { fetchStats, fetchEvents, currentPage: pagination.current }
+  }, [fetchEvents, fetchStats, pagination])
+
+  useEffect(() => {
+    pollingStateRef.current.fetchStats()
+    pollingStateRef.current.fetchEvents()
     // 每 10 秒自动刷新
     const timer = setInterval(() => {
-      fetchStats()
-      if (pagination.current === 1) fetchEvents()
+      const { fetchStats: refreshStats, fetchEvents: refreshEvents, currentPage } = pollingStateRef.current
+      refreshStats()
+      if (currentPage === 1) refreshEvents()
     }, 10000)
     return () => clearInterval(timer)
   }, [])
@@ -555,6 +595,8 @@ const TrackingDashboard = () => {
     []
   )
 
+  const apiError = Object.values(apiErrors).join('；')
+
   // ==================== Top 事件排行榜 ====================
   const topEventsList = useMemo(() => {
     if (!stats?.topEvents || stats.topEvents.length === 0) return null
@@ -581,265 +623,298 @@ const TrackingDashboard = () => {
     )
   }, [stats])
 
+  const detailEvent = detailModal.event
+  const detailItems = detailEvent
+    ? [
+        { key: 'eventId', label: '事件 ID', children: <Text copyable>{detailEvent.eventId}</Text> },
+        { key: 'eventName', label: '事件名称', children: <Text strong>{detailEvent.eventName}</Text> },
+        {
+          key: 'eventType',
+          label: '事件类型',
+          children: (
+            <Tag color={eventTypeColors[detailEvent.eventType]}>
+              {eventTypeLabels[detailEvent.eventType] || detailEvent.eventType}
+            </Tag>
+          ),
+        },
+        {
+          key: 'timestamp',
+          label: '时间',
+          children: dayjs(detailEvent.timestamp).format('YYYY-MM-DD HH:mm:ss.SSS'),
+        },
+        {
+          key: 'pageUrl',
+          label: '页面 URL',
+          children: (
+            <Text copyable style={{ fontSize: 12 }}>
+              {detailEvent.pageUrl}
+            </Text>
+          ),
+        },
+        { key: 'pageTitle', label: '页面标题', children: detailEvent.pageTitle },
+        { key: 'referrer', label: '来源', children: detailEvent.referrer || '- (直接访问)' },
+        {
+          key: 'userId',
+          label: '用户 ID',
+          children: detailEvent.userId || <Text type="secondary">未登录</Text>,
+        },
+        {
+          key: 'anonymousId',
+          label: '设备 ID',
+          children: (
+            <Text code copyable>
+              {detailEvent.anonymousId}
+            </Text>
+          ),
+        },
+        { key: 'sessionId', label: '会话 ID', children: <Text code>{detailEvent.sessionId}</Text> },
+        { key: 'clientIp', label: '客户端 IP', children: detailEvent._clientIp || '-' },
+        {
+          key: 'userAgent',
+          label: 'User Agent',
+          children: <Text style={{ fontSize: 11, wordBreak: 'break-all' }}>{detailEvent._userAgent || '-'}</Text>,
+        },
+        {
+          key: 'deviceInfo',
+          label: '设备信息',
+          children: (
+            <Text style={{ fontSize: 11 }}>
+              {detailEvent.context
+                ? `${detailEvent.context.screenWidth}x${detailEvent.context.screenHeight} @${detailEvent.context.devicePixelRatio}x | ${detailEvent.context.platform} | ${detailEvent.context.language}`
+                : '-'}
+            </Text>
+          ),
+        },
+        {
+          key: 'properties',
+          label: '自定义属性',
+          children: (
+            <pre
+              style={{
+                maxHeight: 300,
+                overflow: 'auto',
+                fontSize: 11,
+                background: 'var(--wui-bg-subtle)',
+                padding: 12,
+                borderRadius: 6,
+                margin: 0,
+              }}
+            >
+              {JSON.stringify(detailEvent.properties, null, 2)}
+            </pre>
+          ),
+        },
+        {
+          key: 'serverInfo',
+          label: '服务端信息',
+          children: (
+            <Text style={{ fontSize: 11 }}>
+              收到时间: {detailEvent._receivedAt || '-'}
+              <br />
+              App: {detailEvent._appId}@{detailEvent._appVersion}
+              <br />
+              SDK: {detailEvent._sdkVersion}
+              <br />
+              发送时间: {detailEvent._sentAt || '-'}
+            </Text>
+          ),
+        },
+      ]
+    : []
+
   // ==================== 渲染 ====================
   return (
-    <div style={{ padding: 24, minHeight: '100vh' }}>
-      {/* 头部 */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 24,
-        }}
-      >
-        <div>
-          <Title level={3} style={{ margin: 0 }}>
-            <RadarChartOutlined style={{ marginRight: 12, color: '#646cff' }} />
-            埋点数据看板
-          </Title>
-          <Paragraph type="secondary" style={{ margin: '4px 0 0' }}>
-            实时查看前端埋点事件、性能指标与错误监控
-          </Paragraph>
-        </div>
-        <Space>
-          <Segmented
-            options={[
-              { label: '概览', value: 'overview', icon: <DashboardOutlined /> },
-              { label: '事件列表', value: 'events', icon: <TableOutlined /> },
-            ]}
-            value={viewMode}
-            onChange={(value) => setViewMode(value as 'overview' | 'events')}
-          />
-          <Button icon={<ReloadOutlined />} onClick={handleRefresh}>
-            刷新
-          </Button>
-          <Popconfirm title="确认清空所有埋点数据？" onConfirm={handleClearAll}>
-            <Button icon={<DeleteOutlined />} danger>
-              清空
-            </Button>
-          </Popconfirm>
-        </Space>
-      </div>
-
-      {/* 统计卡片 */}
-      {statCards}
-
-      <Divider />
-
-      {/* 概览视图 */}
-      {viewMode === 'overview' && (
-        <>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} lg={12}>
-              <Card title="24 小时事件趋势" size="small">
-                {trendChartOption ? (
-                  <EchartsBox option={trendChartOption} style={{ height: 300 }} />
-                ) : (
-                  <Empty description="暂无趋势数据" />
-                )}
-              </Card>
-            </Col>
-            <Col xs={24} lg={12}>
-              <Card title="事件类型分布" size="small">
-                {typeChartOption ? (
-                  <EchartsBox option={typeChartOption} style={{ height: 300 }} />
-                ) : (
-                  <Empty description="暂无分类数据" />
-                )}
-              </Card>
-            </Col>
-          </Row>
-
-          <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-            <Col xs={24} lg={12}>
-              <Card
-                title={
-                  <Space>
-                    <ThunderboltOutlined />
-                    性能指标 (Web Vitals)
-                  </Space>
-                }
-                size="small"
-              >
-                {perfRadarOption ? (
-                  <EchartsBox option={perfRadarOption} style={{ height: 300 }} />
-                ) : (
-                  <Empty description="暂无性能数据" />
-                )}
-                {stats?.perfStats && (
-                  <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
-                    {Object.entries(stats.perfStats).map(([key, val]) => (
-                      <Card key={key} size="small" style={{ flex: 1, minWidth: 120 }}>
-                        <Statistic
-                          title={key.toUpperCase()}
-                          value={val.avg}
-                          suffix={key === 'cls' ? '' : 'ms'}
-                          precision={key === 'cls' ? 3 : 0}
-                          styles={{
-                            value: {
-                              color:
-                                val.rating === 'good'
-                                  ? '#52c41a'
-                                  : val.rating === 'needs-improvement'
-                                    ? '#faad14'
-                                    : '#ff4d4f',
-                            },
-                          }}
-                        />
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </Card>
-            </Col>
-            <Col xs={24} lg={12}>
-              <Card title="🔥 Top 10 事件排行" size="small">
-                {topEventsList || <Empty description="暂无事件数据" />}
-              </Card>
-            </Col>
-          </Row>
-        </>
-      )}
-
-      {/* 事件列表视图 */}
-      {viewMode === 'events' && (
-        <>
-          {/* 筛选栏 */}
-          <Card size="small" style={{ marginBottom: 16 }}>
-            <Space wrap>
-              <Select
-                placeholder="事件类型"
-                allowClear
-                value={filters.eventType}
-                onChange={(v) => setFilters({ ...filters, eventType: v })}
-                style={{ minWidth: 140 }}
-                options={Object.entries(eventTypeLabels).map(([value, label]) => ({ value, label }))}
-              />
-              <RangePicker
-                showTime
-                placeholder={['开始时间', '结束时间']}
-                onChange={(dates) => setFilters({ ...filters, timeRange: dates })}
-              />
-              <Button type="primary" onClick={() => fetchEvents(1, pagination.pageSize)}>
-                查询
-              </Button>
-              <Button
-                onClick={() => {
-                  setFilters({ eventType: undefined, eventName: undefined, timeRange: undefined })
-                  fetchEvents(1, 50)
-                }}
-              >
-                重置
-              </Button>
-            </Space>
-          </Card>
-
-          {/* 事件表格 */}
-          <Card size="small">
-            <Table
-              rowKey="eventId"
-              columns={columns}
-              dataSource={events}
-              loading={loading}
-              size="small"
-              scroll={{ x: 900 }}
-              pagination={{
-                ...pagination,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                showTotal: (total) => `共 ${total} 条`,
-                onChange: (page, pageSize) => fetchEvents(page, pageSize),
-              }}
-              locale={{ emptyText: <Empty description="暂无事件，请确认埋点 SDK 已初始化" /> }}
+    <FixTabPanel fill={false}>
+      <div style={{ padding: 24 }}>
+        {/* 头部 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 24,
+          }}
+        >
+          <div>
+            <Title level={3} style={{ margin: 0 }}>
+              <RadarChartOutlined style={{ marginRight: 12, color: '#646cff' }} />
+              埋点数据看板
+            </Title>
+            <Paragraph type="secondary" style={{ margin: '4px 0 0' }}>
+              实时查看前端埋点事件、性能指标与错误监控
+            </Paragraph>
+          </div>
+          <Space>
+            <Segmented
+              options={[
+                { label: '概览', value: 'overview', icon: <DashboardOutlined /> },
+                { label: '事件列表', value: 'events', icon: <TableOutlined /> },
+              ]}
+              value={viewMode}
+              onChange={(value) => setViewMode(value as 'overview' | 'events')}
             />
-          </Card>
-        </>
-      )}
+            <Button icon={<ReloadOutlined />} onClick={handleRefresh}>
+              刷新
+            </Button>
+            <Popconfirm title="确认清空所有埋点数据？" onConfirm={handleClearAll}>
+              <Button icon={<DeleteOutlined />} danger>
+                清空
+              </Button>
+            </Popconfirm>
+          </Space>
+        </div>
 
-      {/* 事件详情 Modal */}
-      <Modal
-        title="事件详情"
-        open={detailModal.open}
-        onCancel={() => setDetailModal({ open: false, event: null })}
-        footer={null}
-        width={700}
-      >
-        {detailModal.event && (
-          <Descriptions column={1} bordered size="small">
-            <Descriptions.Item label="事件 ID">
-              <Text copyable>{detailModal.event.eventId}</Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="事件名称">
-              <Text strong>{detailModal.event.eventName}</Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="事件类型">
-              <Tag color={eventTypeColors[detailModal.event.eventType]}>
-                {eventTypeLabels[detailModal.event.eventType] || detailModal.event.eventType}
-              </Tag>
-            </Descriptions.Item>
-            <Descriptions.Item label="时间">
-              {dayjs(detailModal.event.timestamp).format('YYYY-MM-DD HH:mm:ss.SSS')}
-            </Descriptions.Item>
-            <Descriptions.Item label="页面 URL">
-              <Text copyable style={{ fontSize: 12 }}>
-                {detailModal.event.pageUrl}
-              </Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="页面标题">{detailModal.event.pageTitle}</Descriptions.Item>
-            <Descriptions.Item label="来源">{detailModal.event.referrer || '- (直接访问)'}</Descriptions.Item>
-            <Descriptions.Item label="用户 ID">
-              {detailModal.event.userId || <Text type="secondary">未登录</Text>}
-            </Descriptions.Item>
-            <Descriptions.Item label="设备 ID">
-              <Text code copyable>
-                {detailModal.event.anonymousId}
-              </Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="会话 ID">
-              <Text code>{detailModal.event.sessionId}</Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="客户端 IP">{detailModal.event._clientIp || '-'}</Descriptions.Item>
-            <Descriptions.Item label="User Agent">
-              <Text style={{ fontSize: 11, wordBreak: 'break-all' }}>{detailModal.event._userAgent || '-'}</Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="设备信息">
-              <Text style={{ fontSize: 11 }}>
-                {detailModal.event.context
-                  ? `${detailModal.event.context.screenWidth}x${detailModal.event.context.screenHeight} @${detailModal.event.context.devicePixelRatio}x | ${detailModal.event.context.platform} | ${detailModal.event.context.language}`
-                  : '-'}
-              </Text>
-            </Descriptions.Item>
-            <Descriptions.Item label="自定义属性">
-              <pre
-                style={{
-                  maxHeight: 300,
-                  overflow: 'auto',
-                  fontSize: 11,
-                  background: '#f5f5f5',
-                  padding: 12,
-                  borderRadius: 6,
-                  margin: 0,
-                }}
-              >
-                {JSON.stringify(detailModal.event.properties, null, 2)}
-              </pre>
-            </Descriptions.Item>
-            <Descriptions.Item label="服务端信息">
-              <Text style={{ fontSize: 11 }}>
-                收到时间: {detailModal.event._receivedAt || '-'}
-                <br />
-                App: {detailModal.event._appId}@{detailModal.event._appVersion}
-                <br />
-                SDK: {detailModal.event._sdkVersion}
-                <br />
-                发送时间: {detailModal.event._sentAt || '-'}
-              </Text>
-            </Descriptions.Item>
-          </Descriptions>
+        {apiError && (
+          <Alert type="error" showIcon title="埋点 API 暂不可用" description={apiError} style={{ marginBottom: 16 }} />
         )}
-      </Modal>
-    </div>
+
+        {/* 统计卡片 */}
+        {statCards}
+
+        <Divider />
+
+        {/* 概览视图 */}
+        {viewMode === 'overview' && (
+          <>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} lg={12}>
+                <Card title="24 小时事件趋势" size="small">
+                  {trendChartOption ? (
+                    <EchartsBox option={trendChartOption} style={{ height: 300 }} />
+                  ) : (
+                    <Empty description="暂无趋势数据" />
+                  )}
+                </Card>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Card title="事件类型分布" size="small">
+                  {typeChartOption ? (
+                    <EchartsBox option={typeChartOption} style={{ height: 300 }} />
+                  ) : (
+                    <Empty description="暂无分类数据" />
+                  )}
+                </Card>
+              </Col>
+            </Row>
+
+            <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
+              <Col xs={24} lg={12}>
+                <Card
+                  title={
+                    <Space>
+                      <ThunderboltOutlined />
+                      性能指标 (Web Vitals)
+                    </Space>
+                  }
+                  size="small"
+                >
+                  {perfRadarOption ? (
+                    <EchartsBox option={perfRadarOption} style={{ height: 300 }} />
+                  ) : (
+                    <Empty description="暂无性能数据" />
+                  )}
+                  {stats?.perfStats && (
+                    <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
+                      {Object.entries(stats.perfStats).map(([key, val]) => (
+                        <Card key={key} size="small" style={{ flex: 1, minWidth: 120 }}>
+                          <Statistic
+                            title={key.toUpperCase()}
+                            value={val.avg}
+                            suffix={key === 'cls' ? '' : 'ms'}
+                            precision={key === 'cls' ? 3 : 0}
+                            styles={{
+                              value: {
+                                color:
+                                  val.rating === 'good'
+                                    ? '#52c41a'
+                                    : val.rating === 'needs-improvement'
+                                      ? '#faad14'
+                                      : '#ff4d4f',
+                              },
+                            }}
+                          />
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </Card>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Card title="🔥 Top 10 事件排行" size="small">
+                  {topEventsList || <Empty description="暂无事件数据" />}
+                </Card>
+              </Col>
+            </Row>
+          </>
+        )}
+
+        {/* 事件列表视图 */}
+        {viewMode === 'events' && (
+          <>
+            {/* 筛选栏 */}
+            <Card size="small" style={{ marginBottom: 16 }}>
+              <Space wrap>
+                <Select
+                  placeholder="事件类型"
+                  allowClear
+                  value={filters.eventType}
+                  onChange={(v) => setFilters({ ...filters, eventType: v })}
+                  style={{ minWidth: 140 }}
+                  options={Object.entries(eventTypeLabels).map(([value, label]) => ({ value, label }))}
+                />
+                <RangePicker
+                  showTime
+                  placeholder={['开始时间', '结束时间']}
+                  onChange={(dates) => setFilters({ ...filters, timeRange: dates })}
+                />
+                <Button type="primary" onClick={() => fetchEvents(1, pagination.pageSize)}>
+                  查询
+                </Button>
+                <Button
+                  onClick={() => {
+                    setFilters({ eventType: undefined, eventName: undefined, timeRange: undefined })
+                    fetchEvents(1, 50)
+                  }}
+                >
+                  重置
+                </Button>
+              </Space>
+            </Card>
+
+            {/* 事件表格 */}
+            <Card size="small">
+              <Table
+                rowKey="eventId"
+                columns={columns}
+                dataSource={events}
+                loading={loading}
+                size="small"
+                scroll={{ x: 900 }}
+                pagination={{
+                  ...pagination,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  showTotal: (total) => `共 ${total} 条`,
+                  onChange: (page, pageSize) => fetchEvents(page, pageSize),
+                }}
+                locale={{ emptyText: <Empty description="暂无事件，请确认埋点 SDK 已初始化" /> }}
+              />
+            </Card>
+          </>
+        )}
+
+        {/* 事件详情 Modal */}
+        <Modal
+          title="事件详情"
+          open={detailModal.open}
+          onCancel={() => setDetailModal({ open: false, event: null })}
+          footer={null}
+          width={700}
+        >
+          {detailEvent && <Descriptions column={1} bordered size="small" items={detailItems} />}
+        </Modal>
+      </div>
+    </FixTabPanel>
   )
 }
 

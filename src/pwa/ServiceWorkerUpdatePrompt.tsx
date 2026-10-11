@@ -42,7 +42,7 @@ const ServiceWorkerUpdatePrompt = () => {
 
       notification.open({
         key: 'pwa-update-ready',
-        message: '发现新版本',
+        title: '发现新版本',
         description: buildDescription(detail.meta),
         placement: 'bottomRight',
         duration: 0,

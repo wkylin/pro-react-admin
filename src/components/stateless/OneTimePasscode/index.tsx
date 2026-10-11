@@ -138,7 +138,7 @@ export const OneTimePasscode: React.FC<OneTimePasscodeProps> = ({
 
   const themeSettings = optionalTheme?.themeSettings
   const primary = themeSettings?.colorPrimary ?? antdToken.colorPrimary ?? '#1677ff'
-  const themeMode = themeSettings?.themeMode ?? 'light'
+  const themeMode = optionalTheme?.resolvedTheme ?? 'light'
   const hexToRgb = (hex: string) => {
     const h = hex.replace('#', '')
     const bigint = parseInt(

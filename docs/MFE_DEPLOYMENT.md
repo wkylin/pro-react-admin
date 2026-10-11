@@ -41,7 +41,7 @@
 - 生产环境完整 URL 必须是 HTTPS，且不能在 URL 中携带用户名或密码。
 - 同域生产路径必须是以单斜线开头的绝对路径。
 - URL 会被安全序列化进 remote loader，不再直接拼接原始配置文本。
-- loader 先获取 `remote-manifest.json`，校验 schema、Remote 名称和 `mfeProtocolVersion` 后再加载 remoteEntry.js。
+- loader 先获取 `remote-manifest.json`，校验 schema、Remote 名称、`mfeProtocolVersion` 和共享依赖主版本后再加载 remoteEntry.js。旧版只声明 React/React DOM 的 manifest 在滚动升级窗口内仍可加载；新构建必须声明完整共享依赖清单，并由 CI 严格验收。
 - 请求或脚本加载失败自动重试一次；总等待上限为 15 秒，超时后 Shell 显示降级提示。
 - Remote manifest 和 remoteEntry.js 使用 no-cache 响应头；跨域部署需同时允许 manifest JSON 与 JavaScript chunk 的 CORS。
 
@@ -92,9 +92,9 @@ pnpm run test:e2e:mfe
 
 独立部署配置：
 
-| 配置 | 输出 |
-| --- | --- |
-| vercel.shell.json | dist-shell |
+| 配置                 | 输出          |
+| -------------------- | ------------- |
+| vercel.shell.json    | dist-shell    |
 | vercel.projectA.json | dist-projectA |
 | vercel.projectB.json | dist-projectB |
 
@@ -104,6 +104,6 @@ pnpm run test:e2e:mfe
 
 ## 兼容边界
 
-- Shell 与 Remote 当前共用单仓库依赖锁文件，React 等依赖按 singleton/eager 共享；协议 manifest 能拒绝不兼容协议，但不代表支持 Remote 独立升级共享依赖。
+- Shell 与 Remote 当前共用单仓库依赖锁文件，React 等依赖按 singleton/eager/strictVersion 共享。manifest 检查共享依赖主版本；旧 manifest 兼容窗口只显式验证 React/React DOM，其余依赖仍由 Module Federation 的严格版本协商拒绝不兼容版本。当前不提供跨主版本依赖的并行加载能力。
 - 新增 MFE 事件仍需要在 `MfeEventMap` 和运行时校验中显式声明，不能把事件桥当作任意 JSON 总线。
 - CI 会构建聚合 MFE，校验 artifact manifest，并在 Playwright 中覆盖 Remote 加载成功、manifest 校验及失败重试降级；上线后的跨域 CORS 和缓存行为仍需对 Vercel Preview 实际响应头做一次检查。

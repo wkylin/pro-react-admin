@@ -2,7 +2,7 @@
 //
 // Intentionally excludes app-level routing/page helpers (e.g. auth routing helpers,
 // NoMatch/Exception route pages) so the library bundle doesn't pull `src/routers/*`
-// and `src/pages/*` into `dist-lib/*`.
+// and `src/pages/*` into `packages/wui-react/dist/*`.
 
 export * from './core.js'
 export * from './stateful.js'

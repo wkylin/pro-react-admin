@@ -32,11 +32,11 @@ const ProLayout = () => {
   // 使用安全的 store 访问，当 middleware 加载失败时提供默认值
   const isMobile = useSafeStore((s) => s.isMobile, false)
 
-  const { themeSettings } = useProThemeContext()
-  const { layout, themeMode, navTheme } = themeSettings
+  const { themeSettings, resolvedTheme } = useProThemeContext()
+  const { layout, navTheme } = themeSettings
 
   // 在暗黑模式下，导航栏强制为暗色，否则跟随 navTheme 设置
-  const effectiveNavTheme = themeMode === 'dark' ? 'dark' : navTheme
+  const effectiveNavTheme = resolvedTheme === 'dark' ? 'dark' : navTheme
 
   return (
     <Layout className={styles.layout} ref={layoutRef}>

@@ -21,7 +21,7 @@ dayjs.locale('zh-cn')
 
 const ThemeIndex: React.FC = () => {
   useRemoveGlobalLoader()
-  const { themeSettings } = useProThemeContext()
+  const { themeSettings, resolvedTheme } = useProThemeContext()
 
   const { message } = AntdApp.useApp()
 
@@ -40,22 +40,8 @@ const ThemeIndex: React.FC = () => {
     }
   }, [message])
 
-  const getAlgorithm = () => {
-    const algorithms = []
-    const prefersDark =
-      typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-    const isDarkMode = themeSettings.themeMode === 'dark' || (themeSettings.themeMode === 'system' && prefersDark)
-    if (isDarkMode) {
-      algorithms.push(theme.darkAlgorithm)
-    } else {
-      algorithms.push(theme.defaultAlgorithm)
-    }
-
-    if (themeSettings.compactAlgorithm) {
-      algorithms.push(theme.compactAlgorithm)
-    }
-    return algorithms
-  }
+  const algorithms = [resolvedTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm]
+  if (themeSettings.compactAlgorithm) algorithms.push(theme.compactAlgorithm)
 
   const router = useMemo(
     () =>
@@ -73,7 +59,7 @@ const ThemeIndex: React.FC = () => {
     <StyleProvider hashPriority="high">
       <ConfigProvider
         theme={{
-          algorithm: getAlgorithm(),
+          algorithm: algorithms,
           token: {
             colorPrimary: themeSettings.colorPrimary,
           },

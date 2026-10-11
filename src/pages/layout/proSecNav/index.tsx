@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { HomeOutlined } from '@ant-design/icons'
 import { permissionService } from '@src/service/permissionService'
 import { annotatedRootRouter, flattenRoutes } from '@src/routers'
+import { showMessage } from '@utils/message'
 
 import styles from './index.module.less'
 
@@ -47,7 +48,7 @@ const PAGE_CANDIDATE_TEMPLATES = [
 ]
 
 type WebpackPageContext = {
-  keys: () => string[];
+  keys: () => string[]
   (key: string): Promise<unknown>
 }
 
@@ -153,7 +154,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }: ProSecNavP
       .then(() => messageApi.open({ type: 'error', content: '您没有权限访问该页面' }))
       .catch((e) => {
         console.warn('Menu item permission check error:', e)
-        return Promise.resolve(message.error('您没有权限访问该页面'))
+        return Promise.resolve(showMessage.error('您没有权限访问该页面'))
       })
       .catch((err) => {
         console.warn('Failed to show error message:', err)

@@ -2,6 +2,9 @@
 /* stylelint-disable-next-line import-notation */
 @import 'tailwindcss';
 
+/* Make Tailwind's dark: utilities follow the app's active theme setting. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
 /*
 -------------------------------------------------------------------------------
 Theme / animations
@@ -206,6 +209,30 @@ CSS variables + theme overrides
 */
 
 :root {
+  color-scheme: light;
+  --wui-bg-page: #f5f5f5;
+  --wui-bg-surface: #fff;
+  --wui-bg-elevated: #fff;
+  --wui-bg-subtle: #f8fafc;
+  --wui-text-primary: #171717;
+  --wui-text-secondary: #525f70;
+  --wui-text-muted: #6b7280;
+  --wui-border: #e5e7eb;
+  --wui-border-strong: #d1d5db;
+  --wui-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+  --wui-bg-info-subtle: #e1f5fe;
+  --wui-bg-success-subtle: #e8f5e9;
+  --wui-bg-warning-subtle: #fff3e0;
+  --wui-bg-danger-subtle: #ffebee;
+  --wui-text-info: #0277bd;
+  --wui-text-success: #2e7d32;
+  --wui-text-warning: #ef6c00;
+  --wui-text-danger: #c62828;
+  --wui-bg-purple-subtle: #f9f0ff;
+  --wui-text-purple: #722ed1;
+  --wui-flow-mask: rgba(240, 242, 243, 0.7);
+  --wui-indicator-active: #3f3f46;
+  --wui-indicator-inactive: #d1d5db;
   --background: #fff;
   --foreground: #171717;
   --duration: 0.5;
@@ -232,14 +259,34 @@ CSS variables + theme overrides
   --wui-scrollbar-thumb-solid: rgb(203 213 225);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 :root[data-theme='dark'] {
+  color-scheme: dark;
+  --wui-bg-page: #141414;
+  --wui-bg-surface: #1f1f1f;
+  --wui-bg-elevated: #262626;
+  --wui-bg-subtle: #171717;
+  --wui-text-primary: #f5f5f5;
+  --wui-text-secondary: #c2c2c2;
+  --wui-text-muted: #a3a3a3;
+  --wui-border: #383838;
+  --wui-border-strong: #4a4a4a;
+  --wui-shadow: 0 8px 24px rgb(0 0 0 / 28%);
+  --wui-bg-info-subtle: rgb(3 105 161 / 22%);
+  --wui-bg-success-subtle: rgb(21 128 61 / 22%);
+  --wui-bg-warning-subtle: rgb(180 83 9 / 22%);
+  --wui-bg-danger-subtle: rgb(185 28 28 / 22%);
+  --wui-text-info: #7dd3fc;
+  --wui-text-success: #86efac;
+  --wui-text-warning: #fdba74;
+  --wui-text-danger: #fca5a5;
+  --wui-bg-purple-subtle: rgb(109 40 217 / 22%);
+  --wui-text-purple: #c4b5fd;
+  --wui-flow-mask: rgb(15 23 42 / 12%);
+  --wui-indicator-active: #d4d4d8;
+  --wui-indicator-inactive: #52525b;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --color-gray-200: #383838;
   /* Stronger accent on dark backgrounds */
   --color-red-pers: #e5e7eb;
   --color-yellow-saff: #9ca3af;
@@ -290,6 +337,47 @@ body {
   text-size-adjust: 100%;
   box-sizing: border-box;
   scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--wui-bg-page);
+  color: var(--wui-text-primary);
+}
+
+:root[data-theme='dark'] .react-flow__controls {
+  background: var(--wui-bg-elevated);
+  border-color: var(--wui-border-strong);
+  box-shadow: var(--wui-shadow);
+}
+
+:root[data-theme='dark'] .react-flow {
+  background-color: var(--wui-bg-page);
+}
+
+:root[data-theme='dark'] .react-flow__controls-button {
+  background: var(--wui-bg-elevated);
+  color: var(--wui-text-primary);
+  border-color: var(--wui-border);
+  fill: currentcolor;
+}
+
+:root[data-theme='dark'] .react-flow__minimap {
+  background: var(--wui-bg-surface);
+}
+
+:root[data-theme='dark'] .react-flow__attribution {
+  background: rgb(20 20 20 / 80%);
+  color: var(--wui-text-muted);
+}
+
+:root[data-theme='dark'] .react-flow__edge-path {
+  stroke: var(--wui-text-muted);
+}
+
+:root[data-theme='dark'] .react-flow__background pattern circle,
+:root[data-theme='dark'] .react-flow__background pattern path {
+  fill: var(--wui-border-strong);
+  stroke: var(--wui-border-strong);
 }
 
 /* Firefox: apply to all actual scroll containers (not only html/body). */

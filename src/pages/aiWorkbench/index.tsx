@@ -608,14 +608,14 @@ const AiWorkbench = () => {
         <Alert
           type="info"
           showIcon
-          message={<Text strong>当前环境</Text>}
+          title={<Text strong>当前环境</Text>}
           description={<Text>当前页面使用本地模拟流式响应，便于联调模板、对话、配置和事件记录等功能。</Text>}
         />
 
         <Row gutter={[20, 20]} className={styles.layout}>
           <Col xs={24} xxl={10}>
             <div className={styles.columnStack}>
-              <Card className={styles.panelCard} bordered={false}>
+              <Card className={styles.panelCard} variant="borderless">
                 <div className={styles.sectionHeader}>
                   <div>
                     <h3>提示词模板</h3>
@@ -662,7 +662,7 @@ const AiWorkbench = () => {
 
           <Col xs={24} xxl={14}>
             <div className={styles.columnStack}>
-              <Card className={styles.panelCard} bordered={false}>
+              <Card className={styles.panelCard} variant="borderless">
                 <div className={styles.sectionHeader}>
                   <div>
                     <h3>运行配置</h3>
@@ -749,7 +749,7 @@ const AiWorkbench = () => {
                 </div>
               </Card>
 
-              <Card className={styles.chatCard} bordered={false}>
+              <Card className={styles.chatCard} variant="borderless">
                 <div className={styles.chatHeader}>
                   <div>
                     <h3>会话窗口</h3>
@@ -798,7 +798,7 @@ const AiWorkbench = () => {
 
         <Row gutter={[20, 20]}>
           <Col xs={24} xl={14}>
-            <Card className={styles.panelCard} bordered={false}>
+            <Card className={styles.panelCard} variant="borderless">
               <Tabs
                 className={styles.detailTabs}
                 items={[
@@ -816,7 +816,7 @@ const AiWorkbench = () => {
                                 : event.type === 'abort'
                                   ? 'orange'
                                   : 'blue',
-                          children: (
+                          content: (
                             <div className={styles.timelineItem}>
                               <div className={styles.timelineHeader}>
                                 <strong>{event.type}</strong>
@@ -879,7 +879,7 @@ const AiWorkbench = () => {
           </Col>
 
           <Col xs={24} xl={10}>
-            <Card className={styles.panelCard} bordered={false}>
+            <Card className={styles.panelCard} variant="borderless">
               <div className={styles.sectionHeader}>
                 <div>
                   <h3>运行概览</h3>

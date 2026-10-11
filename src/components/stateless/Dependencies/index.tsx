@@ -4,7 +4,6 @@ import type { ColumnsType } from 'antd/es/table'
 import dependenciesData from '../../../data/dependencies.json'
 
 const { Title } = Typography
-const { TabPane } = Tabs
 const { Search } = Input
 
 interface Dependency {
@@ -73,7 +72,7 @@ const Dependencies: React.FC = () => {
   return (
     <div style={{ padding: '20px' }}>
       <Title level={2}>项目依赖列表</Title>
-      <Space direction="vertical" style={{ width: '100%', marginBottom: '16px' }}>
+      <Space orientation="vertical" style={{ width: '100%', marginBottom: '16px' }}>
         <Search
           placeholder="搜索依赖名称或版本..."
           onSearch={handleSearch}
@@ -82,36 +81,48 @@ const Dependencies: React.FC = () => {
           allowClear
         />
       </Space>
-      <Tabs activeKey={activeTab} onChange={handleTabChange}>
-        <TabPane tab={`运行时依赖 (${filteredRuntimeDeps.length})`} key="1">
-          <Table
-            columns={columns}
-            dataSource={filteredRuntimeDeps}
-            rowKey="name"
-            pagination={{
-              pageSize: 10,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
-              pageSizeOptions: ['10', '20', '50', '100'],
-            }}
-          />
-        </TabPane>
-        <TabPane tab={`开发依赖 (${filteredDevDeps.length})`} key="2">
-          <Table
-            columns={columns}
-            dataSource={filteredDevDeps}
-            rowKey="name"
-            pagination={{
-              pageSize: 10,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
-              pageSizeOptions: ['10', '20', '50', '100'],
-            }}
-          />
-        </TabPane>
-      </Tabs>
+      <Tabs
+        activeKey={activeTab}
+        onChange={handleTabChange}
+        items={[
+          {
+            key: '1',
+            label: `运行时依赖 (${filteredRuntimeDeps.length})`,
+            children: (
+              <Table
+                columns={columns}
+                dataSource={filteredRuntimeDeps}
+                rowKey="name"
+                pagination={{
+                  pageSize: 10,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+                  pageSizeOptions: ['10', '20', '50', '100'],
+                }}
+              />
+            ),
+          },
+          {
+            key: '2',
+            label: `开发依赖 (${filteredDevDeps.length})`,
+            children: (
+              <Table
+                columns={columns}
+                dataSource={filteredDevDeps}
+                rowKey="name"
+                pagination={{
+                  pageSize: 10,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+                  pageSizeOptions: ['10', '20', '50', '100'],
+                }}
+              />
+            ),
+          },
+        ]}
+      />
     </div>
   )
 }

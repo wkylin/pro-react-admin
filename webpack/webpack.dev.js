@@ -41,6 +41,40 @@ const devWebpackConfig = merge(common, {
     },
     static: (paths.devServerStatic || []).map((directory) => ({ directory })),
     compress: true,
+    setupMiddlewares(middlewares) {
+      // Keep API mistakes from being disguised as a successful SPA index.html response.
+      const historyFallbackIndex = middlewares.findIndex(({ name }) => name === 'connect-history-api-fallback')
+      const optionsMiddlewareIndex = middlewares.findIndex(({ name }) => name === 'options-middleware')
+      const insertionIndex =
+        historyFallbackIndex >= 0
+          ? historyFallbackIndex
+          : optionsMiddlewareIndex >= 0
+            ? optionsMiddlewareIndex
+            : middlewares.length
+
+      middlewares.splice(insertionIndex, 0, {
+        name: 'tracking-api-unmatched',
+        middleware: (request, response, next) => {
+          const pathname = request.url?.split('?')[0] || ''
+          if (pathname !== '/api/tracking' && !pathname.startsWith('/api/tracking/')) {
+            next()
+            return
+          }
+
+          response.statusCode = 503
+          response.setHeader('Cache-Control', 'no-store')
+          response.setHeader('Content-Type', 'application/json; charset=utf-8')
+          response.end(
+            JSON.stringify({
+              error: 'tracking_api_unavailable',
+              message: '埋点 API 路由未接通。请运行 pnpm start 启动前端和本地 API。',
+            })
+          )
+        },
+      })
+
+      return middlewares
+    },
     // open: true,
     hot: true,
     proxy: devProxy,

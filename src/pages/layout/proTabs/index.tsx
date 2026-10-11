@@ -1,14 +1,5 @@
 import AnimatedIcon from '@stateless/AnimatedIcon'
-import {
-  useState,
-  useEffect,
-  useRef,
-  Suspense,
-  useTransition,
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-} from 'react'
+import { useState, useEffect, Suspense, useTransition, type Dispatch, type ReactNode, type SetStateAction } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
@@ -26,6 +17,7 @@ type Pane = {
   title: ReactNode
   i18nKey?: string
   key: string
+  routeId?: string
   content: ReactNode
   closable: boolean
   path?: string
@@ -48,11 +40,25 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext() as ProTabContextValue
   const [isReload, setIsReload] = useState(false)
   const [, startTransition] = useTransition()
-  const pathRef = useRef('')
-
   const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
-  const { pathname, search } = useLocation()
+  const { pathname } = useLocation()
+  const currentRoutePaneIndex = panes.findIndex((pane) => pane.key === panesItem.key)
+  const currentRoutePane = currentRoutePaneIndex < 0 ? undefined : panes[currentRoutePaneIndex]
+  const currentRoutePaneNeedsUpdate =
+    !currentRoutePane ||
+    currentRoutePane.routeId !== panesItem.routeId ||
+    currentRoutePane.path !== panesItem.path ||
+    currentRoutePane.title !== panesItem.title ||
+    currentRoutePane.i18nKey !== panesItem.i18nKey ||
+    currentRoutePane.closable !== panesItem.closable
+  const visiblePanes =
+    currentRoutePaneIndex < 0
+      ? [...panes, panesItem]
+      : currentRoutePaneNeedsUpdate
+        ? panes.map((pane, index) => (index === currentRoutePaneIndex ? { ...pane, ...panesItem } : pane))
+        : panes
+  const visibleActiveKey = tabActiveKey || activeKey || visiblePanes[0]?.key
 
   const {
     token: { colorBgContainer },
@@ -77,28 +83,27 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   }, [pathname])
 
   useEffect(() => {
-    const newPath = pathname + search
+    if (!panesItem.path || !panesItem.key) return
+    setPanes((currentPanes) => {
+      const index = currentPanes.findIndex((item) => item.key === panesItem.key)
+      if (index === -1) return [...currentPanes, panesItem]
 
-    if (!panesItem.path || panesItem.path === pathRef.current) return
+      const currentPane = currentPanes[index]
+      const hasPaneChanged =
+        currentPane.routeId !== panesItem.routeId ||
+        currentPane.path !== panesItem.path ||
+        currentPane.title !== panesItem.title ||
+        currentPane.i18nKey !== panesItem.i18nKey ||
+        currentPane.closable !== panesItem.closable
 
-    pathRef.current = newPath
+      // useOutlet creates a new React element on every render. Keep the cached page
+      // instance stable unless its route or visible metadata actually changed.
+      if (!hasPaneChanged) return currentPanes
 
-    const index = panes.findIndex((item) => item.key === panesItem.key)
+      return currentPanes.map((pane, paneIndex) => (paneIndex === index ? { ...pane, ...panesItem } : pane))
+    })
     setActiveKey(tabActiveKey)
-
-    if (!panesItem.key || (index > -1 && newPath === panes[index].path)) {
-      return
-    }
-
-    if (index > -1) {
-      // avoid mutating existing panes array in place
-      const newPanes = panes.map((p, i) => (i === index ? { ...p, path: newPath } : p))
-      setPanes(newPanes)
-      return
-    }
-
-    setPanes([...panes, panesItem])
-  }, [pathname, tabActiveKey])
+  }, [panesItem, setActiveKey, setPanes, tabActiveKey])
 
   const onChange: NonNullable<TabsProps['onChange']> = (key) => {
     startTransition(() => {
@@ -108,7 +113,7 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
 
   // tab点击
   const onTabClick: NonNullable<TabsProps['onTabClick']> = (targetKey) => {
-    const pane = panes.filter((item) => item.key === targetKey)[0]
+    const pane = visiblePanes.find((item) => item.key === targetKey)
     const path = (pane && (pane.path || pane.key)) || targetKey
     startTransition(() => {
       redirectTo(path)
@@ -131,13 +136,13 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
 
   const onTabContextMenu = (rightMenuKey: 'all' | 'other') => {
     if (rightMenuKey === 'all') {
-      const filterPanes = panes.filter((pane) => pane.key === '/')
+      const filterPanes = visiblePanes.filter((pane) => pane.key === '/')
       setPanes(filterPanes)
       redirectTo('/')
       setActiveKey('/')
     }
     if (rightMenuKey === 'other') {
-      const filterPanes = panes.filter((pane) => pane.key === '/' || pane.key === activeKey)
+      const filterPanes = visiblePanes.filter((pane) => pane.key === '/' || pane.key === visibleActiveKey)
       setPanes(filterPanes)
     }
   }
@@ -173,7 +178,7 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
         zIndex: 2,
         marginBottom: 0,
       }}
-      activeKey={activeKey}
+      activeKey={visibleActiveKey}
       destroyOnHidden={false}
       tabBarExtraContent={{
         left: (
@@ -188,7 +193,7 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
             <Space style={{ padding: '0 5px' }}>
               <Fullscreen ele="#fullScreenContent" placement="left" tips="主内容全屏" />
             </Space>
-            {panes.length > 2 ? (
+            {visiblePanes.length > 2 ? (
               <Dropdown
                 menu={{
                   items: tabRightMenu,
@@ -209,10 +214,10 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
           </>
         ),
       }}
-      items={panes.map((pane) => ({
+      items={visiblePanes.map((pane) => ({
         label: (
           <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-            {pane.key === activeKey && pane.key !== '/404' && (
+            {pane.key === visibleActiveKey && pane.key !== '/404' && (
               <AnimatedIcon variant="spin" mode="hover">
                 <SyncOutlined onClick={refreshTab} title="刷新" spin={isReload} />
               </AnimatedIcon>
@@ -226,9 +231,9 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
         children: (
           <ErrorBoundary onReset={fixError} navigate={redirectTo}>
             <div className="layout-tabpanel">
-              <KeepAlive id={pane.key} active={pane.key === activeKey} persistOnUnmount={pane.key === '/'}>
+              <KeepAlive id={pane.key} active={pane.key === visibleActiveKey} persistOnUnmount={pane.key === '/'}>
                 <Suspense fallback={<Loading />}>
-                  {isReload && pane.key === activeKey && pane.key !== '/404' ? <Loading /> : <>{pane.content}</>}
+                  {isReload && pane.key === visibleActiveKey && pane.key !== '/404' ? <Loading /> : <>{pane.content}</>}
                 </Suspense>
               </KeepAlive>
             </div>

@@ -88,7 +88,7 @@
       border-radius: 2px;
       border: 1px solid rgb(40 120 255 / 50%);
       font-size: 16px;
-      color: #333;
+      color: var(--wui-text-primary, #333);
       line-height: 21px;
       display: flex;
       align-items: center;
@@ -110,7 +110,7 @@
       margin-left: 21px;
       position: relative;
       font-size: 16px;
-      color: #333;
+      color: var(--wui-text-primary, #333);
 
       &::before {
         content: '';
@@ -166,15 +166,15 @@
         padding: 8px;
         min-width: 280px;
         height: 76px;
-        background: #fff;
+        background: var(--wui-bg-elevated, #fff);
         border-radius: 2px;
-        border: 1px solid #d2d2d2;
+        border: 1px solid var(--wui-border-strong, #d2d2d2);
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
         font-size: 16px;
-        color: #333;
+        color: var(--wui-text-primary, #333);
         line-height: 24px;
         text-align: right;
       }
@@ -227,7 +227,7 @@
       .transferYear {
         margin-top: 10px;
         font-size: 16px;
-        color: #333;
+        color: var(--wui-text-primary, #333);
         line-height: 24px;
       }
     }

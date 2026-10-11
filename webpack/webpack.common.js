@@ -17,6 +17,7 @@ import { generateRemotesConfig } from './mfe.config.js'
 import RemoteManifestPlugin from './remote-manifest-plugin.js'
 import { bundleBudget } from './bundle-budget.js'
 import { clientEnvKeys } from './client-env.js'
+import { getMfeSharedDependencies } from '../config/mfe-contract.mjs'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 import fs from 'fs'
@@ -65,6 +66,7 @@ const deps = {
   ...(packageJson.dependencies || {}),
   ...(packageJson.peerDependencies || {}),
 }
+const mfeSharedDependencies = isMfeEnabled ? getMfeSharedDependencies(deps) : {}
 
 const UNABLE_ANALYZE = 0
 const USE_ANALYZE = process.env.USE_ANALYZE || UNABLE_ANALYZE
@@ -89,10 +91,7 @@ switch (process.env.BUILD_GOAL) {
 
 // Load base and local overrides without replacing values provided by CI/Vercel.
 const externallyProvidedEnvKeys = new Set(Object.keys(process.env))
-for (const envPath of [
-  path.resolve(__dirname, '..', dotEnv),
-  path.resolve(__dirname, '..', dotEnv + '.local'),
-]) {
+for (const envPath of [path.resolve(__dirname, '..', dotEnv), path.resolve(__dirname, '..', dotEnv + '.local')]) {
   if (!fs.existsSync(envPath)) continue
   const values = dotenv.parse(fs.readFileSync(envPath, 'utf8'))
   for (const [key, value] of Object.entries(values)) {
@@ -194,9 +193,9 @@ const config = {
         '@routers': paths.routersDir,
       }),
       // 确保关键依赖只有一个实例，避免 zustand middleware 错误
-      'zustand': path.resolve('./node_modules/zustand'),
-      'immer': path.resolve('./node_modules/immer'),
-      'react': path.resolve('./node_modules/react'),
+      zustand: path.resolve('./node_modules/zustand'),
+      immer: path.resolve('./node_modules/immer'),
+      react: path.resolve('./node_modules/react'),
       'react-dom': path.resolve('./node_modules/react-dom'),
     },
     symlinks: true,
@@ -268,9 +267,7 @@ const config = {
           new RemoteManifestPlugin({
             projectName: paths.projectName,
             version: packageJson.version,
-            sharedDependencies: Object.fromEntries(
-              ['react', 'react-dom'].filter((name) => deps[name]).map((name) => [name, deps[name]])
-            ),
+            sharedDependencies: mfeSharedDependencies,
           }),
         ]
       : []),
@@ -423,29 +420,29 @@ const config = {
           errorDetails: true,
         }
       : isAnalyze
-      ? {
-          preset: 'verbose',
-          assets: true,
-          chunks: true,
-          chunkModules: true,
-          chunkOrigins: true,
-          chunkRelations: true,
-          entrypoints: true,
-          modules: true,
-          nestedModules: true,
-          dependentModules: true,
-          reasons: true,
-          ids: true,
-          errorDetails: true,
-        }
-      : {
-          all: false,
-          errors: true,
-          warnings: true,
-          errorDetails: true,
-          moduleTrace: true,
-          excludeAssets: /node_modules/,
-        }),
+        ? {
+            preset: 'verbose',
+            assets: true,
+            chunks: true,
+            chunkModules: true,
+            chunkOrigins: true,
+            chunkRelations: true,
+            entrypoints: true,
+            modules: true,
+            nestedModules: true,
+            dependentModules: true,
+            reasons: true,
+            ids: true,
+            errorDetails: true,
+          }
+        : {
+            all: false,
+            errors: true,
+            warnings: true,
+            errorDetails: true,
+            moduleTrace: true,
+            excludeAssets: /node_modules/,
+          }),
   },
   // 性能提示
   performance: {
@@ -462,7 +459,7 @@ if (isMfeEnabled) {
   // 使用动态配置生成 remotes
   // 注意：即使当前构建目标是 remote，也可能会编译到 Host 的路由/页面文件。
   // 为避免出现 "Can't resolve 'projectA/App'" 这类编译错误，这里统一注册 remotes。
-  const remotes = generateRemotesConfig(isDev)
+  const remotes = generateRemotesConfig(isDev, mfeSharedDependencies)
 
   // 输出配置信息（仅在开发环境）
   if (isDev && isMfeHost) {
@@ -489,15 +486,12 @@ if (isMfeEnabled) {
       library: { type: 'window', name: mfeName },
       exposes: resolveExpose(),
       remotes,
-      shared: {
-        react: { singleton: true, eager: true, requiredVersion: deps.react || false },
-        'react-dom': { singleton: true, eager: true, requiredVersion: deps['react-dom'] || false },
-        'react-router-dom': { singleton: true, eager: true, requiredVersion: deps['react-router-dom'] || false },
-        antd: { singleton: true, eager: true, requiredVersion: deps.antd || false },
-        dayjs: { singleton: true, eager: true, requiredVersion: deps.dayjs || false },
-        zustand: { singleton: true, eager: true, requiredVersion: deps.zustand || false },
-        immer: { singleton: true, eager: true, requiredVersion: deps.immer || false },
-      },
+      shared: Object.fromEntries(
+        Object.entries(mfeSharedDependencies).map(([name, requiredVersion]) => [
+          name,
+          { singleton: true, eager: true, strictVersion: true, requiredVersion },
+        ])
+      ),
     })
   )
 }

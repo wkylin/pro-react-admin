@@ -1,6 +1,11 @@
 .shinyText {
-  color: #333;
-  background: linear-gradient(120deg, rgb(0 0 0 / 0%) 40%, rgb(0 0 0 / 80%) 50%, #000 60%);
+  color: var(--wui-text-primary, #333);
+  background: linear-gradient(
+    120deg,
+    var(--wui-text-primary, #333) 40%,
+    var(--wui-text-secondary, #555) 50%,
+    var(--wui-text-primary, #333) 60%
+  );
   background-size: 200% 100%;
   background-clip: text;
   display: inline-block;

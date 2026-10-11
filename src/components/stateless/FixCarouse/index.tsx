@@ -107,7 +107,7 @@ const FixCarousel = ({ tradeList = [] }) => {
           <button
             key={index}
             className={`h-2 w-2 rounded-full ring ring-blue-600/80 transition-colors duration-300 hover:bg-blue-600/80 ${
-              currentPage === index ? 'bg-blue-600/80' : 'bg-white'
+              currentPage === index ? 'bg-blue-600/80' : 'bg-gray-300 dark:bg-neutral-700'
             }`}
             onClick={() => goToPage(index)}
           ></button>

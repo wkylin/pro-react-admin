@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { message } from 'antd'
+import { message } from '@utils/message'
 import Icon from '@ant-design/icons'
 import ReactMarkdown from 'react-markdown'
 import type { Components, ExtraProps } from 'react-markdown'

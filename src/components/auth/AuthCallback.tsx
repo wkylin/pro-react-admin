@@ -87,7 +87,7 @@ export const AuthCallback: React.FC = () => {
         height: '100vh',
       }}
     >
-      <Spin size="large" fullscreen tip="正在处理登录..." />
+      <Spin size="large" fullscreen description="正在处理登录..." />
     </div>
   )
 }

@@ -45,9 +45,9 @@ const DARK_PALETTE = {
 
 const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { themeSettings } = useProThemeContext()
+  const { resolvedTheme } = useProThemeContext()
   const { token } = theme.useToken()
-  const isDarkMode = themeSettings.themeMode === 'dark'
+  const isDarkMode = resolvedTheme === 'dark'
 
   const visibleCardList = React.useMemo(() => tagCardList.slice(0, showMax), [tagCardList, showMax])
 

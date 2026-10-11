@@ -10,23 +10,23 @@ const Section: React.FC<{ title: string; tags: string[]; highlight?: boolean; ex
 }) => (
   <div
     style={{
-      background: 'white',
-      border: '1px solid #eee',
+      background: 'var(--wui-bg-elevated)',
+      border: '1px solid var(--wui-border)',
       borderRadius: '8px',
       padding: '15px',
       marginTop: '10px',
-      ...(highlight && { background: '#fff3e0', borderColor: '#ffe0b2' }),
+      ...(highlight && { background: 'var(--wui-bg-warning-subtle)', borderColor: 'var(--wui-text-warning)' }),
     }}
   >
     <div
       style={{
         fontSize: '12px',
         fontWeight: 700,
-        color: '#666',
+        color: 'var(--wui-text-secondary)',
         marginBottom: '10px',
-        borderBottom: '1px solid #eee',
+        borderBottom: '1px solid var(--wui-border)',
         paddingBottom: '8px',
-        ...(highlight && { color: '#ef6c00', borderBottomColor: '#ffe0b2' }),
+        ...(highlight && { color: 'var(--wui-text-warning)', borderBottomColor: 'var(--wui-text-warning)' }),
       }}
     >
       {title}
@@ -39,14 +39,14 @@ const Section: React.FC<{ title: string; tags: string[]; highlight?: boolean; ex
             fontSize: '11px',
             padding: '4px 10px',
             borderRadius: '4px',
-            background: '#f5f5f5',
-            color: '#555',
-            border: '1px solid #eee',
+            background: 'var(--wui-bg-subtle)',
+            color: 'var(--wui-text-secondary)',
+            border: '1px solid var(--wui-border)',
             ...(highlight &&
               tag.includes('回滚') && {
-                color: '#ef6c00',
-                background: 'white',
-                border: '1px solid #ef6c00',
+                color: 'var(--wui-text-warning)',
+                background: 'var(--wui-bg-elevated)',
+                border: '1px solid var(--wui-text-warning)',
                 fontWeight: 'bold',
                 fontSize: '13px',
                 padding: '6px 12px',
@@ -100,7 +100,7 @@ const Phase05: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
             highlight={true}
             tags={['🔄 一键回滚']}
             extraContent={
-              <div style={{ fontSize: '12px', color: '#555', marginTop: '8px' }}>
+              <div style={{ fontSize: '12px', color: 'var(--wui-text-secondary)', marginTop: '8px' }}>
                 支持秒级回退至上一稳定版本，基于 K8s ReplicaSet 历史记录。
               </div>
             }

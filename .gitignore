@@ -35,7 +35,9 @@ coverage
 *storybook.log
 storybook-static
 .vite-cache
-/dist-lib
+/packages/wui-react/dist/
+/packages/wui-react/README.md
+/packages/wui-react/LICENSE
 /dist-zip
 /playwright-report
 /test-results

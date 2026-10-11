@@ -4,8 +4,10 @@ import LightIcon from '@assets/svg/light.svg'
 import DarkIcon from '@assets/svg/dark.svg'
 import { useProThemeContext } from '@src/theme/hooks'
 import { Layout, Space, Dropdown, theme, Avatar, message, Tooltip, Button, type MenuProps } from 'antd'
+import { showMessage } from '@utils/message'
 import GlobalSearch from '@src/components/GlobalSearch'
 import AnimatedIcon from '@stateless/AnimatedIcon'
+import IconFrame from '@stateless/IconFrame'
 import {
   UserOutlined,
   LogoutOutlined,
@@ -80,6 +82,19 @@ const useSafeStore = <T,>(selector: (state: StoreState) => T, defaultValue: T): 
 }
 
 const DENIED_TIP = '您没有权限访问该页面'
+const HEADER_ACTION_BUTTON_STYLE: CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flex: '0 0 24px',
+  width: 24,
+  height: 24,
+  minWidth: 24,
+  minHeight: 24,
+  padding: 0,
+  fontSize: 16,
+}
 
 const safeNotifyDeniedOnce = async ({
   path,
@@ -101,7 +116,7 @@ const safeNotifyDeniedOnce = async ({
       console.warn('[ProHeader] messageApi.open failed', err)
     }
     try {
-      await Promise.resolve(message.error(DENIED_TIP))
+      await Promise.resolve(showMessage.error(DENIED_TIP))
     } catch (err2) {
       if (process.env.NODE_ENV === 'development') {
         console.warn('[ProHeader] notify denied failed', err2)
@@ -300,6 +315,23 @@ const renderDesktopNav = (isMobile: boolean, layout: HeaderLayout | undefined, c
   )
 }
 
+const renderThemeToggleAction = (t: TFunction, isDark: boolean, handleThemeToggle: () => void): ReactNode => (
+  <Tooltip title={isDark ? t('header.themeLight') : t('header.themeDark')} placement="bottom">
+    <Button
+      onClick={handleThemeToggle}
+      size="small"
+      style={HEADER_ACTION_BUTTON_STYLE}
+      icon={
+        <IconFrame>
+          <AnimatedIcon variant="spin" mode="hover">
+            {isDark ? <LightIcon /> : <DarkIcon />}
+          </AnimatedIcon>
+        </IconFrame>
+      }
+    />
+  </Tooltip>
+)
+
 const renderDesktopActions = ({
   t,
   iconButtonStyle,
@@ -311,8 +343,8 @@ const renderDesktopActions = ({
   redirectWrapped,
   setSearchOpen,
 }: HeaderActionsProps) => (
-  <Space orientation="horizontal" style={{ paddingRight: 8 }}>
-    <SoundBar iconColor={undefined} buttonStyle={{ border: 'none' }} />
+  <Space orientation="horizontal" align="center" size={8} style={{ paddingRight: 8 }}>
+    <SoundBar iconColor={undefined} buttonStyle={{ ...iconButtonStyle, border: 'none' }} />
     <Tooltip title={t('header.searchTooltip')} placement="bottom">
       <Button
         icon={
@@ -341,24 +373,7 @@ const renderDesktopActions = ({
       />
     </Tooltip>
     <Fullscreen buttonStyle={iconButtonStyle} />
-    <Tooltip title={isDark ? t('header.themeLight') : t('header.themeDark')} placement="bottom">
-      <Button
-        onClick={handleThemeToggle}
-        size="small"
-        style={{ margin: '0 4px', fontSize: 16 }}
-        icon={
-          isDark ? (
-            <span style={{ display: 'inline-flex', width: 16, height: 16 }}>
-              <LightIcon />
-            </span>
-          ) : (
-            <span style={{ display: 'inline-flex', width: 16, height: 16 }}>
-              <DarkIcon />
-            </span>
-          )
-        }
-      />
-    </Tooltip>
+    {renderThemeToggleAction(t, isDark, handleThemeToggle)}
     <Tooltip title={t('header.preferences')} placement="bottom">
       <Button
         icon={
@@ -395,19 +410,20 @@ const renderDesktopActions = ({
         style={iconButtonStyle}
       />
     </Tooltip>
-    <LanguageSwitcher />
+    <LanguageSwitcher buttonStyle={iconButtonStyle} />
   </Space>
 )
 
 const renderMobileActions = ({
   t,
+  iconButtonStyle,
   isTopDarkHeader,
   isDark,
   handleThemeToggle,
   mobileMoreItems,
   setSearchOpen,
 }: HeaderActionsProps) => (
-  <Space>
+  <Space align="center" size={8}>
     <Tooltip title={t('header.search')}>
       <Button
         icon={
@@ -416,38 +432,22 @@ const renderMobileActions = ({
           </AnimatedIcon>
         }
         size="small"
-        style={{ fontSize: 18 }}
+        style={iconButtonStyle}
         onClick={() => setSearchOpen(true)}
       />
     </Tooltip>
-    <Tooltip title={isDark ? t('header.themeLight') : t('header.themeDark')} placement="bottom">
+    {renderThemeToggleAction(t, isDark, handleThemeToggle)}
+    <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
       <Button
-        onClick={handleThemeToggle}
+        aria-label="More actions"
         size="small"
-        style={{ margin: '0 4px', fontSize: 16 }}
+        style={iconButtonStyle}
         icon={
-          isDark ? (
-            <span style={{ display: 'inline-flex', width: 16, height: 16 }}>
-              <LightIcon />
-            </span>
-          ) : (
-            <span style={{ display: 'inline-flex', width: 16, height: 16 }}>
-              <DarkIcon />
-            </span>
-          )
+          <AnimatedIcon variant="spin" mode="hover">
+            <MoreOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />
+          </AnimatedIcon>
         }
       />
-    </Tooltip>
-    <Dropdown menu={{ items: mobileMoreItems }} trigger={['click']}>
-      <AnimatedIcon variant="spin" mode="hover">
-        <MoreOutlined
-          style={{
-            fontSize: 20,
-            cursor: 'pointer',
-            color: isTopDarkHeader ? '#fff' : undefined,
-          }}
-        />
-      </AnimatedIcon>
     </Dropdown>
   </Space>
 )
@@ -552,10 +552,8 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }: ProH
   const {
     token: { colorBgContainer, colorBorder },
   } = theme.useToken()
-  const { themeSettings, updateSettings } = useProThemeContext()
-  const prefersDark =
-    typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const isDark = themeSettings.themeMode === 'dark' || (themeSettings.themeMode === 'system' && prefersDark)
+  const { themeSettings, resolvedTheme, updateSettings } = useProThemeContext()
+  const isDark = resolvedTheme === 'dark'
   const effectiveNavTheme = isDark ? 'dark' : themeSettings.navTheme
 
   const isTopDarkHeader = layout === 'top' && effectiveNavTheme === 'dark'
@@ -580,7 +578,7 @@ const ProHeader = ({ layout, onSettingClick, children, onMobileMenuClick }: ProH
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
-  const iconButtonStyle = React.useMemo<CSSProperties>(() => ({ fontSize: 16 }), [])
+  const iconButtonStyle = HEADER_ACTION_BUTTON_STYLE
 
   const isMobile = useSafeStore((s) => s.isMobile, false)
 

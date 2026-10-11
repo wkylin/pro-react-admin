@@ -37,15 +37,15 @@ pnpm install
 pnpm start
 ```
 
-打开 http://localhost:8080/。首次运行、环境变量、常见命令和故障排查见[新手入门](./docs/GETTING_STARTED.md)。
+`pnpm start` 会启动主应用和本地埋点 API。打开 http://localhost:8080/；具体端口以终端输出为准。只启动前端可用 `pnpm run start:web`。首次运行、环境变量、常见命令和故障排查见[新手入门](./docs/GETTING_STARTED.md)。
 
 ## 项目结构
 
 ```text
 .
 ├── .storybook/       # Webpack 5 Storybook 配置
-├── api/              # pnpm workspace 中的可选 Express API helper
-├── config/           # 共享路径别名和构建体积预算
+├── api/              # 本地 Express API：埋点收集、统计和 OAuth helper
+├── config/           # 路径别名、构建体积预算和组件库发布契约
 ├── docs/             # 新手、架构、构建、微前端和部署文档
 ├── public/           # 默认 HTML 模板和公共静态资源
 ├── scripts/          # 构建辅助、优化、校验和发布脚本
@@ -104,7 +104,7 @@ pnpm run build:lib:entries
 pnpm run prepare:lib:publish
 ```
 
-新项目可以按聚合入口或 /core、/stateful、/stateless、/tracking 子路径导入。构建、类型、样式与发布说明见[组件库指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。
+库有独立的 workspace 发布清单，构建产物位于 `packages/wui-react/dist/`。新项目可以按聚合入口或 /core、/stateful、/stateless、/tracking 子路径导入。构建、类型、样式与发布说明见[组件库指南](./docs/LIBRARY_PUBLISH_GUIDE.md)。
 
 ## 部署
 

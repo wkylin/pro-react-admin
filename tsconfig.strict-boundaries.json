@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": [
+    "src/routers/utils/index.tsx",
+    "src/components/KeepAlive/index.tsx",
+    "src/mfe/bridge.ts",
+    "typings/**/*.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "packages/wui-react/dist", "coverage"]
+}

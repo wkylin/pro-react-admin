@@ -116,9 +116,10 @@
 
 .container {
   position: relative;
-  background: #fff;
+  background: var(--wui-bg-elevated, #fff);
+  color: var(--wui-text-primary, #171717);
   padding: 15px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--wui-border-strong, #ccc);
   margin-top: 20px;
   border-radius: 8px;
   text-align: center;
@@ -139,24 +140,24 @@
 .container.top::after {
   bottom: 100%;
   left: 19px;
-  border-bottom-color: #ccc;
+  border-bottom-color: var(--wui-border-strong, #ccc);
 }
 
 .container.top::after {
   left: 20px;
-  border-bottom-color: #fff;
+  border-bottom-color: var(--wui-bg-elevated, #fff);
 }
 
 .container.bottom::before,
 .container.bottom::after {
   top: 100%;
   right: 19px;
-  border-top-color: #ccc;
+  border-top-color: var(--wui-border-strong, #ccc);
 }
 
 .container.bottom::after {
   right: 20px;
-  border-top-color: #fff;
+  border-top-color: var(--wui-bg-elevated, #fff);
 }
 
 .no-scrollbars {

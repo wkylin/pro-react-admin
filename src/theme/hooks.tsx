@@ -1,4 +1,12 @@
-import React, { createContext, useContext, useState, useMemo, useEffect, type PropsWithChildren } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+  useLayoutEffect,
+  type PropsWithChildren,
+} from 'react'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
@@ -37,6 +45,7 @@ export const defaultSettings: ThemeSettings = {
 
 export interface ProThemeContextValue {
   themeSettings: ThemeSettings
+  resolvedTheme: 'light' | 'dark'
   setThemeSettings: React.Dispatch<React.SetStateAction<ThemeSettings>>
   updateSettings: (settings: Partial<ThemeSettings>) => void
 }
@@ -59,6 +68,9 @@ type ProThemeProviderProps = PropsWithChildren<{
 const STORAGE_KEY = 'pro-react-admin-theme-settings'
 
 const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSettings: initialSettings }) => {
+  const [systemPrefersDark, setSystemPrefersDark] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches === true
+  )
   const [themeSettings, setThemeSettings] = useState<ThemeSettings>(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
@@ -71,20 +83,17 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     return { ...defaultSettings, ...initialSettings }
   })
 
-  useEffect(() => {
+  const resolvedTheme: 'light' | 'dark' =
+    themeSettings.themeMode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : themeSettings.themeMode
+
+  useLayoutEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(themeSettings))
 
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
 
-    // Determine effective theme for CSS when 'system' mode is selected
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)')
-    let effectiveTheme = themeSettings.themeMode
-    if (themeSettings.themeMode === 'system') {
-      effectiveTheme = prefersDark?.matches ? 'dark' : 'light'
-    }
-    // Expose theme mode to global CSS (e.g. scrollbar styles)
-    html.dataset.theme = effectiveTheme
+    // Expose the same resolved theme to global CSS and non-AntD components.
+    html.dataset.theme = resolvedTheme
 
     if (themeSettings.grayMode) {
       html.style.filter = 'grayscale(1)'
@@ -93,32 +102,28 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     } else {
       html.style.filter = ''
     }
-  }, [themeSettings])
+  }, [themeSettings, resolvedTheme])
 
-  // Listen to system preference changes when user selects 'system' mode
+  // Keep Ant Design, CSS variables and Tailwind dark: utilities in sync with OS changes.
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return
     const mql = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      if (themeSettings.themeMode === 'system') {
-        document.documentElement.dataset.theme = e.matches ? 'dark' : 'light'
-      }
-    }
+    const handler = (e: MediaQueryListEvent) => setSystemPrefersDark(e.matches)
     if (mql.addEventListener) mql.addEventListener('change', handler)
     else if ((mql as any).addListener) (mql as any).addListener(handler)
     return () => {
       if (mql.removeEventListener) mql.removeEventListener('change', handler)
       else if ((mql as any).removeListener) (mql as any).removeListener(handler)
     }
-  }, [themeSettings.themeMode])
+  }, [])
 
   const updateSettings = (settings: Partial<ThemeSettings>) => {
     setThemeSettings((prev) => ({ ...prev, ...settings }))
   }
 
   const themeProvider = useMemo<ProThemeContextValue>(
-    () => ({ themeSettings, setThemeSettings, updateSettings }),
-    [themeSettings]
+    () => ({ themeSettings, resolvedTheme, setThemeSettings, updateSettings }),
+    [themeSettings, resolvedTheme]
   )
 
   return <ProThemeContext.Provider value={themeProvider}>{children}</ProThemeContext.Provider>

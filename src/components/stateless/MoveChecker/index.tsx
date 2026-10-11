@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { theme } from 'antd'
 import styles from './index.module.less'
 import AnimatedIcon from '@stateless/AnimatedIcon'
 import { ArrowRight, CheckCircle } from 'lucide-react'
@@ -29,22 +30,33 @@ const MoveChecker = forwardRef<MoveCheckerHandle, MoveCheckerProps>(
       onResult = undefined,
       initialText = '请按住滑块，拖动到最后',
       successText = '验证通过',
-      initialTextColor = '#777',
-      successTextColor = '#fff',
-      boxBg = '#ddd',
+      initialTextColor,
+      successTextColor,
+      boxBg,
       bgColor = 'linear-gradient(to right,#68cd0f,#35cca1)',
       bgColorS = 'linear-gradient(to right,#68cd0f,#66e92d)',
-      sliderBg = '#fff',
-      sliderSuccessBg = '#fff',
+      sliderBg,
+      sliderSuccessBg,
     },
     ref
   ) => {
+    const { token } = theme.useToken()
+    const resolvedInitialTextColor = initialTextColor ?? token.colorTextSecondary
+    const resolvedSuccessTextColor = successTextColor ?? token.colorTextLightSolid
+    const resolvedBoxBg = boxBg ?? token.colorFillTertiary
+    const resolvedSliderBg = sliderBg ?? token.colorBgElevated
+    const resolvedSliderSuccessBg = sliderSuccessBg ?? token.colorBgContainer
+
     const [isSuccess, setIsSuccess] = useState(false)
     const [isShow, setIsShow] = useState(false)
     const [bgWidth, setBgWidth] = useState(40)
     const [sliderLeft, setSliderLeft] = useState(0)
     const [txt, setTxt] = useState(initialText)
-    const [txtColor, setTxtColor] = useState(initialTextColor)
+    const [txtColor, setTxtColor] = useState(resolvedInitialTextColor)
+
+    useEffect(() => {
+      setTxtColor(isSuccess ? resolvedSuccessTextColor : resolvedInitialTextColor)
+    }, [isSuccess, resolvedInitialTextColor, resolvedSuccessTextColor])
 
     const boxRef = useRef<HTMLDivElement | null>(null)
     const bgColorRef = useRef<HTMLDivElement | null>(null)
@@ -130,7 +142,7 @@ const MoveChecker = forwardRef<MoveCheckerHandle, MoveCheckerProps>(
       isSuccessRef.current = true
       setIsShow(true)
       setTxt(successText)
-      setTxtColor(successTextColor)
+      setTxtColor(resolvedSuccessTextColor)
       setTimeout(() => setIsShow(false), 200)
       if (boxRef.current) setBgWidth(boxRef.current.offsetWidth)
       setSliderLeft(successMoveDistance.current)
@@ -144,13 +156,13 @@ const MoveChecker = forwardRef<MoveCheckerHandle, MoveCheckerProps>(
       setSliderLeft(0)
       isSuccessRef.current = false
       setTxt(initialText)
-      setTxtColor(initialTextColor)
+      setTxtColor(resolvedInitialTextColor)
       onResult && onResult(false)
     }
 
     useImperativeHandle(ref, () => ({ reset }))
 
-    const boxStyle = { backgroundColor: boxBg }
+    const boxStyle = { backgroundColor: resolvedBoxBg }
 
     const resolveColorProp = (bg: ColorProp): string => {
       if (!bg) return ''
@@ -169,7 +181,7 @@ const MoveChecker = forwardRef<MoveCheckerHandle, MoveCheckerProps>(
 
     const sliderStyle: React.CSSProperties = {
       left: `${sliderLeft}px`,
-      background: resolveColorProp(isSuccess ? sliderSuccessBg : sliderBg),
+      background: resolveColorProp(isSuccess ? resolvedSliderSuccessBg : resolvedSliderBg),
     }
 
     const parseColorsFromString = (str: string | undefined) => {
@@ -233,7 +245,7 @@ const MoveChecker = forwardRef<MoveCheckerHandle, MoveCheckerProps>(
       return avgLum > 160 ? '#222' : '#fff'
     }
 
-    const sliderIconColor = isSuccess ? deriveIconColor(sliderSuccessBg) : deriveIconColor(sliderBg)
+    const sliderIconColor = isSuccess ? deriveIconColor(resolvedSliderSuccessBg) : deriveIconColor(resolvedSliderBg)
 
     return (
       <div ref={boxRef} className={styles.box} style={boxStyle}>

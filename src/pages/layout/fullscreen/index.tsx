@@ -1,7 +1,8 @@
 import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import screenfull from 'screenfull'
-import { message, Tooltip, Button } from 'antd'
+import { Tooltip, Button } from 'antd'
+import { message } from '@utils/message'
 import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 
 interface FullScreenProps {

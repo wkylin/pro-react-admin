@@ -831,10 +831,6 @@
       "version": "^8.71.1"
     },
     {
-      "name": "@typescript/native",
-      "version": "npm:typescript@^7.0.2"
-    },
-    {
       "name": "antd-dayjs-webpack-plugin",
       "version": "^1.0.6"
     },
@@ -852,7 +848,7 @@
     },
     {
       "name": "babel-plugin-react-compiler",
-      "version": "latest"
+      "version": "1.0.0"
     },
     {
       "name": "babel-plugin-transform-remove-console",
@@ -952,7 +948,7 @@
     },
     {
       "name": "eslint-plugin-react-hooks",
-      "version": "latest"
+      "version": "7.1.1"
     },
     {
       "name": "eslint-plugin-storybook",

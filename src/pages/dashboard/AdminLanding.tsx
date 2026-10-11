@@ -33,7 +33,7 @@ const AdminLanding = () => {
   return (
     <main style={{ minHeight: '100%', padding: 'clamp(24px, 6vw, 72px)' }}>
       <div style={{ maxWidth: 1120, margin: '0 auto' }}>
-        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        <Space orientation="vertical" size="large" style={{ width: '100%' }}>
           <div>
             <Tag color="blue">REACT 19 · WEBPACK 5</Tag>
             <Title style={{ marginTop: 12, marginBottom: 8 }}>Pro React Admin</Title>

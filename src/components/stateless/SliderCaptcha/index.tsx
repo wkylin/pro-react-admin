@@ -183,11 +183,11 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   const getStatusColor = () => {
     switch (status) {
       case 'success':
-        return 'border-green-500 bg-green-50'
+        return 'border-green-500 bg-green-50 dark:border-green-700 dark:bg-green-950/40'
       case 'fail':
-        return 'border-red-500 bg-red-50'
+        return 'border-red-500 bg-red-50 dark:border-red-700 dark:bg-red-950/40'
       default:
-        return 'border-gray-300 bg-gray-50'
+        return 'border-gray-300 bg-gray-50 dark:border-neutral-700 dark:bg-neutral-800'
     }
   }
 
@@ -207,11 +207,11 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
   }
 
   return (
-    <div className="w-full max-w-[340px] rounded-lg bg-white p-5 shadow-lg select-none">
-      <div className="mb-4 flex items-center justify-between font-semibold text-gray-800">
+    <div className="w-full max-w-[340px] rounded-lg bg-white p-5 text-gray-900 shadow-lg select-none dark:bg-neutral-900 dark:text-neutral-100">
+      <div className="mb-4 flex items-center justify-between font-semibold text-gray-800 dark:text-neutral-100">
         <div className="flex items-center gap-2">
           <span>Slider Captcha</span>
-          <span className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600">
+          <span className="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-600 dark:bg-neutral-800 dark:text-neutral-300">
             <AnimatedIcon variant="pulse" mode="hover">
               <Zap size={12} />
             </AnimatedIcon>
@@ -235,7 +235,7 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
 
       <div
         ref={canvasAreaRef}
-        className="relative mb-4 w-full overflow-hidden rounded border border-gray-300 bg-gray-200"
+        className="relative mb-4 w-full overflow-hidden rounded border border-gray-300 bg-gray-200 dark:border-neutral-700 dark:bg-neutral-800"
         style={{ aspectRatio: `${width} / ${height}` }}
       >
         {bgUrl && (
@@ -277,7 +277,9 @@ const SliderCaptcha: React.FC<SliderCaptchaProps> = ({ onSuccess, onFail, onRefr
         className={`relative h-[40px] w-full overflow-hidden rounded-full border text-center text-sm leading-[40px] transition-all duration-300 ${getStatusColor()}`}
       >
         {status === 'idle' && (
-          <span className="block text-gray-500 transition-opacity duration-300">Drag to match the piece above</span>
+          <span className="block text-gray-500 transition-opacity duration-300 dark:text-neutral-400">
+            Drag to match the piece above
+          </span>
         )}
         {status === 'success' && <span className="block animate-pulse font-bold text-green-600">✓ Verified!</span>}
         {status === 'fail' && <span className="block font-bold text-red-600">✗ Try again</span>}

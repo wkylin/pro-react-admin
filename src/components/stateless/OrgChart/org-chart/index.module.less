@@ -7,7 +7,7 @@
 .emptyState {
   text-align: center;
   padding: 40px;
-  color: #999;
+  color: var(--wui-text-muted, #999);
   font-size: 16px;
 }
 
@@ -33,9 +33,9 @@
   height: 28px;
   line-height: 28px;
   padding: 0 12px;
-  background: rgb(40 120 255 / 7%);
+  background: var(--wui-bg-info-subtle, rgb(40 120 255 / 7%));
   border-radius: 2px;
-  border: 1px solid rgb(40 120 255 / 50%);
+  border: 1px solid var(--wui-text-info, rgb(40 120 255 / 50%));
   text-align: center;
   box-sizing: border-box;
   width: auto;
@@ -82,7 +82,7 @@
 .currentTitle,
 .childTitle {
   font-size: 14px;
-  color: #333;
+  color: var(--wui-text-primary, #333);
   white-space: nowrap;
   display: flex;
   align-items: center;

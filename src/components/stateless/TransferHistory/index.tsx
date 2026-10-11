@@ -49,8 +49,8 @@ const cancelScheduledFrame = (cancelFrame: ScheduledFrame) => cancelFrame()
  * @param {number} [props.defaultDisplayCount=3] - 默认显示的子项数量
  */
 const TransferHistory = ({ defaultDisplayCount = 3 }: TransferHistoryProps) => {
-  const { themeSettings } = useProThemeContext()
-  const isDark = themeSettings?.themeMode === 'dark'
+  const { resolvedTheme } = useProThemeContext()
+  const isDark = resolvedTheme === 'dark'
   const [expanded, setExpanded] = useState<boolean>(false)
   const [leftLineHeight, setLeftLineHeight] = useState<string>('100%')
   const leftLineRef = useRef<HTMLDivElement | null>(null)

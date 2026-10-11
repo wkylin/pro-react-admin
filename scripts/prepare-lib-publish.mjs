@@ -1,107 +1,27 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { error as logError, log } from 'node:console'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 
-async function fileExists(filePath) {
-  try {
-    await fs.access(filePath)
-    return true
-  } catch {
-    return false
-  }
-}
-
-function pickDefined(obj) {
-  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined))
-}
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const packageDir = path.join(repoRoot, 'packages/wui-react')
 
 async function main() {
-  const repoRoot = process.cwd()
-  const rootPkgPath = path.join(repoRoot, 'package.json')
-  const distDir = path.join(repoRoot, 'dist-lib')
+  const readmeSource = path.join(repoRoot, 'NPM_README.md')
+  const licenseSource = path.join(repoRoot, 'LICENSE')
+  const packageManifest = path.join(packageDir, 'package.json')
+  const distDir = path.join(packageDir, 'dist')
 
-  if (!(await fileExists(distDir))) {
-    throw new Error('dist-lib 不存在：请先运行 npm run build:lib && npm run build:lib:entries')
-  }
+  await fs.access(distDir)
+  await fs.access(packageManifest)
+  await fs.copyFile(readmeSource, path.join(packageDir, 'README.md'))
+  await fs.copyFile(licenseSource, path.join(packageDir, 'LICENSE'))
 
-  const rootPkg = JSON.parse(await fs.readFile(rootPkgPath, 'utf8'))
-
-  // dist-lib 作为“发布目录”时，exports/main/module/types 需要去掉 dist-lib 前缀。
-  const distPkg = {
-    name: rootPkg.name,
-    version: rootPkg.version,
-    description: rootPkg.description,
-    type: 'module',
-    keywords: rootPkg.keywords,
-    homepage: rootPkg.homepage,
-    bugs: rootPkg.bugs,
-    license: rootPkg.license,
-    author: rootPkg.author,
-    contributors: rootPkg.contributors,
-    repository: rootPkg.repository,
-    sideEffects: rootPkg.sideEffects,
-    peerDependencies: {
-      react: '>=19.0.0',
-      'react-dom': '>=19.0.0',
-      antd: '>=6.0.0',
-      'react-router-dom': '>=7.0.0',
-    },
-    main: './pro-react-components.umd.cjs',
-    module: './pro-react-components.es.js',
-    types: './types/src/lib/index.d.ts',
-    exports: {
-      '.': {
-        types: './types/src/lib/index.d.ts',
-        import: './pro-react-components.es.js',
-        require: './pro-react-components.umd.cjs',
-      },
-      './core': {
-        types: './types/src/lib/core.d.ts',
-        import: './entries/core.es.js',
-        require: './entries/core.cjs',
-      },
-      './stateful': {
-        types: './types/src/lib/stateful.d.ts',
-        import: './entries/stateful.es.js',
-        require: './entries/stateful.cjs',
-      },
-      './stateless': {
-        types: './types/src/lib/stateless.d.ts',
-        import: './entries/stateless.es.js',
-        require: './entries/stateless.cjs',
-      },
-      './tracking': {
-        types: './types/src/lib/tracking/index.d.ts',
-        import: './entries/tracking.es.js',
-        require: './entries/tracking.cjs',
-      },
-      './style.css': './style.css',
-    },
-  }
-
-  const distPkgPath = path.join(distDir, 'package.json')
-  await fs.writeFile(distPkgPath, JSON.stringify(pickDefined(distPkg), null, 2) + '\n', 'utf8')
-
-  // README：发布包使用 dist-lib/README.md（不影响仓库根 README.md）
-  const npmReadmePath = path.join(repoRoot, 'NPM_README.md')
-  const distReadmePath = path.join(distDir, 'README.md')
-  if (await fileExists(npmReadmePath)) {
-    await fs.copyFile(npmReadmePath, distReadmePath)
-  } else {
-    await fs.writeFile(distReadmePath, `# ${rootPkg.name}\n\nThis package is built from pro-react-admin.\n`, 'utf8')
-  }
-
-  // LICENSE：npm 展示会优先识别包根目录的 LICENSE
-  const licenseSrc = path.join(repoRoot, 'LICENSE')
-  const licenseDest = path.join(distDir, 'LICENSE')
-  if (await fileExists(licenseSrc)) {
-    await fs.copyFile(licenseSrc, licenseDest)
-  }
-
-  // 给发布目录一个最小 .npmignore（可选）：不强制添加，避免误删产物。
+  log('Prepared packages/wui-react for packing.')
 }
 
 main().catch((err) => {
-  // eslint-disable-next-line no-console
-  console.error(err)
+  logError(err)
   process.exit(1)
 })

@@ -17,7 +17,6 @@ import request from '@src/service/request'
 
 const { TextArea } = Input
 const { Title, Text, Paragraph } = Typography
-const { Option } = Select
 
 type EncryptionStatus = {
   enabled: boolean
@@ -496,11 +495,16 @@ const APIEncryptionPanel = () => {
             <Space orientation="vertical" style={{ width: '100%' }} size="middle">
               <div>
                 <Text strong>1. 选择加密模式</Text>
-                <Select value={encryptMode} onChange={setEncryptMode} style={{ width: '100%', marginTop: 8 }}>
-                  <Option value="AES">AES 对称加密（高性能）</Option>
-                  <Option value="RSA">RSA 非对称加密（高安全）</Option>
-                  <Option value="HYBRID">混合加密（推荐）</Option>
-                </Select>
+                <Select
+                  value={encryptMode}
+                  onChange={setEncryptMode}
+                  style={{ width: '100%', marginTop: 8 }}
+                  options={[
+                    { value: 'AES', label: 'AES 对称加密（高性能）' },
+                    { value: 'RSA', label: 'RSA 非对称加密（高安全）' },
+                    { value: 'HYBRID', label: '混合加密（推荐）' },
+                  ]}
+                />
               </div>
 
               {(encryptMode === 'AES' || encryptMode === 'HYBRID') && (

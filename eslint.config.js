@@ -19,7 +19,7 @@ export default [
     ignores: [
       'node_modules/',
       'dist/',
-      'dist-lib/',
+      'packages/wui-react/dist/',
       'build/',
       'coverage/',
       'CHANGELOG.md',

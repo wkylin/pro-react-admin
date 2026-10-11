@@ -3,9 +3,10 @@ import { fileURLToPath } from 'node:url'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import { createPathAliases } from './aliases.js'
+import { libraryExternalPackages } from '../config/library-contract.mjs'
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const outputPath = path.resolve(rootDir, 'dist-lib')
+const outputPath = path.resolve(rootDir, 'packages/wui-react/dist')
 const target = process.env.LIB_BUILD_TARGET || 'main'
 const useAnalyze = process.env.USE_ANALYZE === '1'
 
@@ -18,7 +19,7 @@ const entries = {
   tracking: path.resolve(rootDir, 'src/lib/tracking/index.ts'),
 }
 
-const externalPackages = ['react', 'react-dom', 'antd', 'react-router-dom']
+const externalPackages = libraryExternalPackages
 
 const sharedRules = [
   {
@@ -51,11 +52,7 @@ const sharedRules = [
   },
   {
     test: /\.css$/i,
-    use: [
-      MiniCssExtractPlugin.loader,
-      { loader: 'css-loader', options: { importLoaders: 1 } },
-      'postcss-loader',
-    ],
+    use: [MiniCssExtractPlugin.loader, { loader: 'css-loader', options: { importLoaders: 1 } }, 'postcss-loader'],
   },
   {
     test: /\.less$/i,

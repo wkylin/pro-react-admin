@@ -2,7 +2,6 @@ import AnimatedIcon from '@stateless/AnimatedIcon'
 import React, { type ReactNode } from 'react'
 import { Tooltip, type TooltipProps } from 'antd'
 import { BookOpen, Wallet, TrendingUp, HelpCircle } from 'lucide-react'
-import { useProThemeContext } from '@src/theme/hooks'
 import styles from './index.module.less'
 
 const iconMap = {
@@ -26,9 +25,6 @@ type StatisticCardProps = {
 }
 
 const StatisticCard = ({ items = [] }: StatisticCardProps) => {
-  const { themeSettings } = useProThemeContext()
-  const isDark = themeSettings.themeMode === 'dark'
-
   const getIcon = (iconName: StatisticCardItem['icon']) => {
     const Icon = (iconName && iconMap[iconName]) || BookOpen
     return (
@@ -39,7 +35,7 @@ const StatisticCard = ({ items = [] }: StatisticCardProps) => {
   }
 
   return (
-    <div className={`${styles.statisticCard} ${isDark ? styles.dark : ''}`}>
+    <div className={styles.statisticCard}>
       {items.map((item, index) => (
         <div key={index} className={styles.statisticCardItem}>
           <div className={styles.flexRoundSpace}>

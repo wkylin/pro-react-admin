@@ -1,6 +1,11 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import {
+  getMfeSharedDependencies,
+  MFE_MANIFEST_SCHEMA_VERSION,
+  areMfeSharedDependenciesCompatible,
+} from '../config/mfe-contract.mjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -63,7 +68,7 @@ function getRemoteUrl(project, isDev) {
   })
 }
 
-function createRemoteLoader(project, url) {
+function createRemoteLoader(project, url, expectedSharedDependencies) {
   const globalNames = Array.from(new Set([project.name, toSafeName(project.name)]))
   const missingContainerMessage = JSON.stringify('Remote container not found after loading ' + project.name)
   const loadFailureMessage = JSON.stringify('Failed to load remote entry for ' + project.name)
@@ -74,6 +79,8 @@ function createRemoteLoader(project, url) {
     'promise new Promise((resolve, reject) => {',
     '  const globalNames = ' + JSON.stringify(globalNames) + ';',
     '  const remoteUrl = ' + JSON.stringify(url) + ';',
+    '  const expectedSharedDependencies = ' + JSON.stringify(expectedSharedDependencies) + ';',
+    '  const hasCompatibleSharedDependencies = ' + areMfeSharedDependenciesCompatible.toString() + ';',
     '  const findContainer = () => globalNames.map((name) => window[name]).find(Boolean);',
     '  const existingContainer = findContainer();',
     '  if (existingContainer) return resolve(existingContainer);',
@@ -90,15 +97,25 @@ function createRemoteLoader(project, url) {
     '    if (error) { activeScript?.remove(); reject(error); }',
     '    else resolve(container);',
     '  };',
-    '  const timer = window.setTimeout(() => { controller.abort(); finish(new Error(' + timeoutMessage + ')); }, 15000);',
+    '  const timer = window.setTimeout(() => { controller.abort(); finish(new Error(' +
+      timeoutMessage +
+      ')); }, 15000);',
     '  const loadAttempt = (attempt) => {',
     '    const manifestUrl = new URL(remoteUrl, document.baseURI);',
     '    manifestUrl.pathname = manifestUrl.pathname.replace(/remoteEntry\\.js$/, "remote-manifest.json");',
     '    manifestUrl.search = "";',
     '    fetch(manifestUrl.href, { cache: "no-store", credentials: "omit", signal: controller.signal })',
-    '      .then((response) => { if (!response.ok) throw new Error(' + manifestFailureMessage + '); return response.json(); })',
+    '      .then((response) => { if (!response.ok) throw new Error(' +
+      manifestFailureMessage +
+      '); return response.json(); })',
     '      .then((manifest) => {',
-    '        if (manifest?.schemaVersion !== 1 || manifest?.name !== ' + JSON.stringify(project.name) + ' || manifest?.protocolVersion !== ' + Number(mfeProtocolVersion) + ') {',
+    '        if (manifest?.schemaVersion !== ' +
+      Number(MFE_MANIFEST_SCHEMA_VERSION) +
+      ' || manifest?.name !== ' +
+      JSON.stringify(project.name) +
+      ' || manifest?.protocolVersion !== ' +
+      Number(mfeProtocolVersion) +
+      ' || !hasCompatibleSharedDependencies(manifest?.sharedDependencies, expectedSharedDependencies)) {',
     '          throw new Error(' + manifestFailureMessage + ');',
     '        }',
     '        return new Promise((resolveAttempt, rejectAttempt) => {',
@@ -129,8 +146,12 @@ function createRemoteLoader(project, url) {
   ].join('\n')
 }
 
-export function generateRemotesConfig(isDev = false) {
+export function generateRemotesConfig(isDev = false, dependencies = {}) {
+  const sharedDependencies = getMfeSharedDependencies(dependencies)
   return Object.fromEntries(
-    remoteProjects.map((project) => [project.name, createRemoteLoader(project, getRemoteUrl(project, isDev))])
+    remoteProjects.map((project) => [
+      project.name,
+      createRemoteLoader(project, getRemoteUrl(project, isDev), sharedDependencies),
+    ])
   )
 }

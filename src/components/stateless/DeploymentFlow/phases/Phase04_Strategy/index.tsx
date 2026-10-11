@@ -40,8 +40,8 @@ const Phase04: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
             <div
               key={idx}
               style={{
-                background: 'white',
-                border: '1px solid #eee',
+                background: 'var(--wui-bg-elevated)',
+                border: '1px solid var(--wui-border)',
                 padding: '12px',
                 borderRadius: '8px',
                 textAlign: 'center',
@@ -50,15 +50,19 @@ const Phase04: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
                 cursor: 'pointer',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#6a1b9a')}
-              onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#eee')}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--wui-border)')}
             >
               <span style={{ fontSize: '20px', marginBottom: '6px', display: 'block' }}>{item.icon}</span>
-              <strong style={{ fontWeight: 700, fontSize: '13px', color: '#333', display: 'block' }}>
+              <strong style={{ fontWeight: 700, fontSize: '13px', color: 'var(--wui-text-primary)', display: 'block' }}>
                 {item.title}
               </strong>
-              <span style={{ fontSize: '10px', color: '#999', marginTop: '4px', display: 'block' }}>{item.desc}</span>
+              <span style={{ fontSize: '10px', color: 'var(--wui-text-muted)', marginTop: '4px', display: 'block' }}>
+                {item.desc}
+              </span>
               {item.note && (
-                <span style={{ fontSize: '9px', color: '#aaa', display: 'block', marginTop: '4px' }}>{item.note}</span>
+                <span style={{ fontSize: '9px', color: 'var(--wui-text-muted)', display: 'block', marginTop: '4px' }}>
+                  {item.note}
+                </span>
               )}
             </div>
           ))}

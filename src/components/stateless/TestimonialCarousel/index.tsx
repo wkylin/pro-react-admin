@@ -41,8 +41,8 @@ const TestimonialCarousel = () => {
     exit: { opacity: 0, y: '100%', scale: 0.1 },
   }
   const dotVariants = {
-    active: { scale: 1.2, backgroundColor: '#3f3f46' },
-    inactive: { scale: 1, backgroundColor: '#D1D5DB' },
+    active: { scale: 1.2, backgroundColor: 'var(--wui-indicator-active)' },
+    inactive: { scale: 1, backgroundColor: 'var(--wui-indicator-inactive)' },
   }
 
   return (
@@ -66,7 +66,7 @@ const TestimonialCarousel = () => {
             <p className="text m-0 text-center font-medium tracking-tight">&quot;{text}&quot;</p>
             <div className="mx-auto mt-5">
               <div className="flex flex-col items-center justify-center space-x-3">
-                <div className="font-regular text-sm text-gray-900/80">{author}</div>
+                <div className="font-regular text-sm text-gray-900/80 dark:text-gray-100/80">{author}</div>
               </div>
             </div>
           </motion.div>

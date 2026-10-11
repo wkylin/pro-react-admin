@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { message } from 'antd'
+import { message } from '@utils/message'
 import { permissionService } from '@src/service/permissionService'
 import { HashRouterUtils } from '@src/utils/hashRouter'
 

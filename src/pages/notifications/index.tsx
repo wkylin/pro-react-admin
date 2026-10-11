@@ -2,7 +2,8 @@ import { useState, useMemo, useRef } from 'react'
 import type { ForwardRefExoticComponent, HTMLAttributes, Key, ReactNode, RefAttributes } from 'react'
 import useSafeNavigate from '@app-hooks/useSafeNavigate'
 import { useLocation } from 'react-router-dom'
-import { Button, Badge, Typography, Modal, message } from 'antd'
+import { Button, Badge, Typography, Modal } from 'antd'
+import { message } from '@utils/message'
 import type { ColumnType } from 'antd/es/table'
 import ResponsiveTable from '@/components/ResponsiveTable'
 import { useProThemeContext } from '@/theme/hooks'
@@ -45,7 +46,7 @@ const TypedFixTabPanel = FixTabPanel as ForwardRefExoticComponent<
 >
 
 const NotificationsPage = () => {
-  const { themeSettings } = useProThemeContext()
+  const { resolvedTheme } = useProThemeContext()
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 })
   const [modal, setModal] = useState<{ visible: boolean; record: Notification | null }>({
     visible: false,
@@ -107,7 +108,7 @@ const NotificationsPage = () => {
   }
 
   // 主题色适配
-  const color = themeSettings.themeMode === 'dark' ? '#eee' : '#222'
+  const color = resolvedTheme === 'dark' ? '#eee' : '#222'
 
   const columns: NotificationColumn[] = [
     {
@@ -392,7 +393,7 @@ const NotificationsPage = () => {
         }}
       >
         <Typography.Paragraph style={{ color }}>{modal.record?.description}</Typography.Paragraph>
-        <div style={{ color: '#999' }}>时间：{modal.record?.time}</div>
+        <div style={{ color: 'var(--wui-text-muted)' }}>时间：{modal.record?.time}</div>
       </Modal>
     </TypedFixTabPanel>
   )

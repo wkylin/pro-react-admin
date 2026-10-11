@@ -2,6 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import { type CSSProperties, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import * as echarts from 'echarts'
 import type { EChartsOption, EChartsType } from 'echarts'
+import { useOptionalProThemeContext } from '@/theme/hooks'
 
 type LoadingOption = Parameters<EChartsType['showLoading']>[1]
 
@@ -71,6 +72,8 @@ const EChart = forwardRef<EChartHandle, EChartProps>((props, ref) => {
 
   const onInitRef = useStableLatest(onInit)
   const onEventsRef = useStableLatest(onEvents)
+  const themeContext = useOptionalProThemeContext()
+  const effectiveTheme = props.theme === undefined ? (themeContext?.resolvedTheme === 'dark' ? 'dark' : null) : theme
 
   const dispose = useCallback(() => {
     if (initObserverRef.current) {
@@ -106,14 +109,14 @@ const EChart = forwardRef<EChartHandle, EChartProps>((props, ref) => {
   // Init / Re-init when renderer/theme/initOptions changes.
   const initKey = useMemo(() => {
     let themeKey = 'null-theme'
-    if (typeof theme === 'string') {
-      themeKey = theme
-    } else if (theme) {
+    if (typeof effectiveTheme === 'string') {
+      themeKey = effectiveTheme
+    } else if (effectiveTheme) {
       themeKey = 'object-theme'
     }
     const rendererKey = typeof renderer === 'string' ? renderer : 'renderer'
     return `${rendererKey}__${themeKey}`
-  }, [renderer, theme])
+  }, [renderer, effectiveTheme])
 
   useEffect(() => {
     const el = domRef.current
@@ -123,7 +126,7 @@ const EChart = forwardRef<EChartHandle, EChartProps>((props, ref) => {
       // Re-init safely.
       dispose()
 
-      const chart = echarts.init(el, theme, {
+      const chart = echarts.init(el, effectiveTheme, {
         renderer,
         ...initOptions,
       })

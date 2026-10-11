@@ -6,10 +6,23 @@ import { routePermissionMap } from '@src/mock/permission'
  */
 
 export interface RouteMeta extends Record<string, unknown> {
+  title?: string
+  i18nKey?: string
   routeKey?: string
   routePath?: string
   legacyKey?: string
   permission?: string
+  tab?: boolean
+  tabKey?: string
+}
+
+export interface RouteHandle extends Record<string, unknown> {
+  tab?: boolean
+  tabKey?: string
+  routeKey?: string
+  routePath?: string
+  title?: string
+  i18nKey?: string
 }
 
 export interface RouteNode {
@@ -22,6 +35,7 @@ export interface RouteNode {
   key?: string
   auth?: boolean
   meta?: RouteMeta | null
+  handle?: RouteHandle
   [property: string]: unknown
 }
 

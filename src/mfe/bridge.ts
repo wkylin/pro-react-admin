@@ -18,16 +18,21 @@ export const MFE_POST_MESSAGE_TYPE = POST_MESSAGE_TYPE
 const TOAST_TYPES = new Set<MfeToastType>(['success', 'info', 'warning', 'error'])
 const UNSAFE_STATE_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
 
-function getWindow(): any {
+type MfeWindow = Window & Record<string, unknown>
+
+function getWindow(): MfeWindow | undefined {
   if (typeof window === 'undefined') return undefined
-  return window as any
+  return window as unknown as MfeWindow
 }
 
 function getBus(): EventTarget {
   const w = getWindow()
   if (!w) return new EventTarget()
-  if (!w[BUS_KEY]) w[BUS_KEY] = new EventTarget()
-  return w[BUS_KEY] as EventTarget
+  const bus = w[BUS_KEY]
+  if (bus instanceof EventTarget) return bus
+  const nextBus = new EventTarget()
+  w[BUS_KEY] = nextBus
+  return nextBus
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -95,7 +100,7 @@ export function onMfeEvent<K extends keyof MfeEventMap>(
 ): () => void {
   const bus = getBus()
   const listener = (evt: Event) => {
-    const detail = (evt as CustomEvent).detail
+    const detail = (evt as CustomEvent<unknown>).detail
     if (isValidEvent(type, detail)) handler(detail as MfeEventMap[K])
   }
   bus.addEventListener(String(type), listener)
@@ -105,8 +110,11 @@ export function onMfeEvent<K extends keyof MfeEventMap>(
 export function getMfeSharedState(): Record<string, unknown> {
   const w = getWindow()
   if (!w) return Object.create(null)
-  if (!w[STATE_KEY]) w[STATE_KEY] = Object.create(null)
-  return w[STATE_KEY] as Record<string, unknown>
+  const state = w[STATE_KEY]
+  if (isRecord(state)) return state
+  const nextState = Object.create(null) as Record<string, unknown>
+  w[STATE_KEY] = nextState
+  return nextState
 }
 
 export function patchMfeSharedState(patch: Record<string, unknown>, from?: string) {

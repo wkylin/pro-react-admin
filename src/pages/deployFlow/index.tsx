@@ -9,26 +9,32 @@ const RichTextEditor = () => {
     <FixTabPanel ref={panelRef}>
       <header
         style={{
-          background: '#fff',
+          background: 'var(--wui-bg-surface)',
           padding: '50px 20px',
           textAlign: 'center',
-          borderBottom: '1px solid #eceff1',
-          boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
+          borderBottom: '1px solid var(--wui-border)',
+          boxShadow: 'var(--wui-shadow)',
           position: 'relative',
           zIndex: 10,
         }}
       >
         <h1
-          style={{ fontSize: '26px', fontWeight: 800, marginBottom: '8px', color: '#263238', letterSpacing: '-0.5px' }}
+          style={{
+            fontSize: '26px',
+            fontWeight: 800,
+            marginBottom: '8px',
+            color: 'var(--wui-text-primary)',
+            letterSpacing: '-0.5px',
+          }}
         >
           Frontend Engineering Deployment
         </h1>
-        <p style={{ fontSize: '14px', color: '#546e7a', fontWeight: 400 }}>
+        <p style={{ fontSize: '14px', color: 'var(--wui-text-secondary)', fontWeight: 400 }}>
           标准工程化全链路流程{' '}
           <span
             style={{
-              color: '#ef6c00',
-              background: '#fff3e0',
+              color: 'var(--wui-text-warning)',
+              background: 'var(--wui-bg-warning-subtle)',
               padding: '2px 6px',
               borderRadius: '4px',
               fontSize: '12px',
@@ -41,7 +47,7 @@ const RichTextEditor = () => {
         </p>
       </header>
       <DeploymentFlow scrollContainerRef={panelRef} />
-      <footer style={{ textAlign: 'center', color: '#999', fontSize: '12px', marginTop: '50px' }}>
+      <footer style={{ textAlign: 'center', color: 'var(--wui-text-muted)', fontSize: '12px', marginTop: '50px' }}>
         Enterprise Frontend Architecture Visualization
       </footer>
     </FixTabPanel>

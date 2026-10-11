@@ -715,11 +715,8 @@ const Home = () => {
           onResult={(r) => console.log('result', r)}
           initialText="请按住滑块，拖动到最后"
           successText="验证通过"
-          boxBg="#ddd"
           bgColor="linear-gradient(to right,#68cd0f,#35cca1)"
           bgColorS="linear-gradient(to right,#68cd0f,#66e92d)"
-          sliderBg="#fff"
-          sliderSuccessBg="#ddd"
         />
         <Button type="primary" style={{ margin: '10px' }} onClick={() => mcRef.current && mcRef.current.reset()}>
           重置验证
@@ -1156,7 +1153,7 @@ const Home = () => {
           height={200}
           minScratchPercentage={70}
           onComplete={() => undefined}
-          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 bg-gray-100"
+          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-[var(--wui-border-strong)] bg-[var(--wui-bg-subtle)]"
         >
           <p className="text-9xl">✨</p>
         </ScratchToReveal>

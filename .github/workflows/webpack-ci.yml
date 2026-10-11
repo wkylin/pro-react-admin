@@ -55,6 +55,12 @@ jobs:
       - name: Validate Vercel build targets and response headers
         run: pnpm run check:deployment-config
 
+      - name: Type-check the application
+        run: pnpm run typecheck
+
+      - name: Strict type-check core architecture boundaries
+        run: pnpm run typecheck:boundaries
+
       - name: Run Jest
         run: pnpm run test:jest -- --runInBand
 
@@ -121,6 +127,36 @@ jobs:
         run: pnpm run build-storybook
         env:
           NODE_ENV: production
+
+  library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and validate the publishable component library
+        run: pnpm run prepublishOnly
+
+      - name: Preview npm package contents
+        run: npm pack ./packages/wui-react --dry-run
 
   microfrontends:
     runs-on: ubuntu-latest

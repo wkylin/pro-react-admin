@@ -20,7 +20,8 @@ import {
   Clock,
   FileCode,
 } from 'lucide-react'
-import { Button, Tooltip, message, Space, Card, theme } from 'antd'
+import { Button, Tooltip, Space, Card, theme } from 'antd'
+import { message } from '@utils/message'
 
 const SAMPLES = {
   Flowchart: `graph TD

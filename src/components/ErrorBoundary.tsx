@@ -74,7 +74,7 @@ export default class ErrorBoundary extends React.Component<Props, State> {
                     </Text>
                   </Paragraph>
                   <Paragraph>
-                    <code className="block rounded bg-gray-100 p-2 whitespace-pre-wrap">
+                    <code className="block rounded bg-gray-100 p-2 whitespace-pre-wrap text-gray-900 dark:bg-gray-800 dark:text-gray-100">
                       {this.state.error.message}
                     </code>
                   </Paragraph>

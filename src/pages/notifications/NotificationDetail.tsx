@@ -8,7 +8,7 @@ const NotificationDetail = () => {
   const { id } = useParams()
   const { search } = useLocation()
   const { redirectTo } = useSafeNavigate()
-  const { themeSettings } = useProThemeContext()
+  const { resolvedTheme } = useProThemeContext()
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState(null)
 
@@ -41,10 +41,11 @@ const NotificationDetail = () => {
     }
   }, [id, search])
 
-  const bgColor = themeSettings.themeMode === 'dark' ? '#18191c' : '#fff'
-  const boxShadow = themeSettings.themeMode === 'dark' ? '0 2px 8px #0006' : '0 2px 8px #0001'
-  const borderColor = themeSettings.themeMode === 'dark' ? '#333639' : '#f0f0f0'
-  const color = themeSettings.themeMode === 'dark' ? '#eee' : '#222'
+  const isDark = resolvedTheme === 'dark'
+  const bgColor = isDark ? '#18191c' : '#fff'
+  const boxShadow = isDark ? '0 2px 8px #0006' : '0 2px 8px #0001'
+  const borderColor = isDark ? '#333639' : '#f0f0f0'
+  const color = isDark ? '#eee' : '#222'
 
   return (
     <Card

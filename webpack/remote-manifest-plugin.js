@@ -1,4 +1,5 @@
 import { mfeProtocolVersion, projectRegistry } from './mfe.config.js'
+import { MFE_MANIFEST_SCHEMA_VERSION } from '../config/mfe-contract.mjs'
 
 export default class RemoteManifestPlugin {
   constructor({ projectName, version, sharedDependencies = {} }) {
@@ -19,7 +20,7 @@ export default class RemoteManifestPlugin {
         },
         () => {
           const manifest = {
-            schemaVersion: 1,
+            schemaVersion: MFE_MANIFEST_SCHEMA_VERSION,
             name: remote.name,
             label: remote.label,
             version: this.version,

@@ -16,6 +16,7 @@ type Pane = {
   title: ReactNode
   i18nKey?: string
   key: string
+  routeId?: string
   content: ReactNode
   closable: boolean
   path?: string
@@ -67,9 +68,12 @@ const ProTabProvider = ({ children }: ProTabProviderProps) => {
       if (targetKey !== activeKey) {
         setPanes(filterPanes)
       } else {
-        const nextPath = filterPanes[delIndex - 1].key
-        redirectTo(nextPath)
-        setActiveKey(nextPath)
+        const nextPane = filterPanes[delIndex - 1] || filterPanes[0]
+        if (nextPane) {
+          const nextPath = nextPane.path || nextPane.key
+          redirectTo(nextPath)
+          setActiveKey(nextPane.key)
+        }
         setPanes(filterPanes)
       }
       callbackFun()

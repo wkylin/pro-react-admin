@@ -1,8 +1,10 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 
-const rootDir = process.cwd()
-const distDir = path.join(rootDir, 'dist-lib')
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+const distDir = path.join(rootDir, 'packages/wui-react/dist')
 const target = process.argv[2]
 
 if (!['main', 'entries'].includes(target)) {

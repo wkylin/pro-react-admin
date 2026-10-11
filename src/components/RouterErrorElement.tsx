@@ -42,7 +42,7 @@ const RouterErrorElement: React.FC = () => {
               </Text>
             </Paragraph>
             <Paragraph>
-              <code className="block rounded bg-gray-100 p-2 whitespace-pre-wrap">
+              <code className="block rounded bg-gray-100 p-2 whitespace-pre-wrap text-gray-900 dark:bg-gray-800 dark:text-gray-100">
                 {error?.message || error?.statusText || 'Unknown Error'}
               </code>
             </Paragraph>

@@ -88,7 +88,7 @@ const walkFiles = (dir, out, depth = 0) => {
   for (const ent of entries) {
     const full = path.join(dir, ent.name)
     if (ent.isDirectory()) {
-      if (ent.name === 'node_modules' || ent.name === 'dist' || ent.name === 'dist-lib') continue
+      if (ent.name === 'node_modules' || ent.name === 'dist') continue
       walkFiles(full, out, depth + 1)
     } else if (ent.isFile()) {
       out.push(full)
@@ -269,7 +269,6 @@ const report = await new Promise((resolve, reject) => {
       ignoreDirs: [
         'node_modules',
         'dist',
-        'dist-lib',
         'storybook-static',
         'coverage',
         'playwright-report',

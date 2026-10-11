@@ -19,7 +19,6 @@ import { setLocalStorage } from '@utils/publicFn'
 import styles from './index.module.less'
 
 const { Title, Text, Link } = Typography
-const { Option } = Select
 const { Content } = Layout
 // responsive handled by global Zustand `isMobile`
 
@@ -209,10 +208,14 @@ const SignUp = () => {
                 <Form.Item label="手机号码" required>
                   <Space.Compact style={{ width: '100%' }}>
                     <Form.Item name="prefix" noStyle initialValue="86">
-                      <Select style={{ width: 90, height: 44 }} size="large">
-                        <Option value="86">+86</Option>
-                        <Option value="44">+44</Option>
-                      </Select>
+                      <Select
+                        style={{ width: 90, height: 44 }}
+                        size="large"
+                        options={[
+                          { value: '86', label: '+86' },
+                          { value: '44', label: '+44' },
+                        ]}
+                      />
                     </Form.Item>
                     <Form.Item
                       name="phone"

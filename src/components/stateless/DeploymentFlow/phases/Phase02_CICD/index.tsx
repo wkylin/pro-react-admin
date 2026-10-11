@@ -7,22 +7,27 @@ const Step: React.FC<{ title: string; desc: string; type: 'ci' | 'cd' }> = ({ ti
     style={{
       flex: 1,
       position: 'relative',
-      border: '1px solid #eee',
+      border: '1px solid var(--wui-border)',
       borderRadius: '6px',
       padding: '8px',
       fontSize: '11px',
       textAlign: 'center',
       boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
       borderLeft: type === 'ci' ? '3px solid #ef6c00' : '3px solid #2e7d32',
-      background: type === 'cd' ? '#f1f8e9' : 'white',
+      background: type === 'cd' ? 'var(--wui-bg-success-subtle)' : 'var(--wui-bg-elevated)',
     }}
   >
     <h5
-      style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '600', color: type === 'ci' ? '#ef6c00' : '#2e7d32' }}
+      style={{
+        margin: '0 0 4px 0',
+        fontSize: '12px',
+        fontWeight: '600',
+        color: type === 'ci' ? 'var(--wui-text-warning)' : 'var(--wui-text-success)',
+      }}
     >
       {title}
     </h5>
-    <p style={{ margin: 0, color: '#999', fontSize: '10px' }}>{desc}</p>
+    <p style={{ margin: 0, color: 'var(--wui-text-muted)', fontSize: '10px' }}>{desc}</p>
   </div>
 )
 
@@ -54,18 +59,18 @@ const Phase02: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
         <div
           style={{
             marginTop: '15px',
-            border: '1px solid #eee',
+            border: '1px solid var(--wui-border)',
             borderRadius: '8px',
             overflow: 'hidden',
-            background: 'white',
+            background: 'var(--wui-bg-elevated)',
           }}
         >
-          <div style={{ padding: '15px', borderBottom: '1px solid #eee' }}>
+          <div style={{ padding: '15px', borderBottom: '1px solid var(--wui-border)' }}>
             <div
               style={{
                 fontSize: '11px',
                 fontWeight: '700',
-                color: '#90a4ae',
+                color: 'var(--wui-text-muted)',
                 textTransform: 'uppercase',
                 marginBottom: '12px',
                 display: 'flex',
@@ -146,12 +151,12 @@ const Phase02: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
               🐳 Docker Image
             </div>
           </div>
-          <div style={{ padding: '15px', background: '#fcfcfc' }}>
+          <div style={{ padding: '15px', background: 'var(--wui-bg-subtle)' }}>
             <div
               style={{
                 fontSize: '11px',
                 fontWeight: '700',
-                color: '#90a4ae',
+                color: 'var(--wui-text-muted)',
                 textTransform: 'uppercase',
                 marginBottom: '12px',
                 display: 'flex',

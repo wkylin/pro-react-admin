@@ -485,8 +485,13 @@ export default function AutoDeploy() {
     setTimeout(() => {
       const win = window.open('', '_blank')
       if (win) {
+        const isDark = document.documentElement.dataset.theme === 'dark'
+        const pageBackground = isDark ? '#0f172a' : '#f0f9ff'
+        const pageColor = isDark ? '#7dd3fc' : '#0284c7'
+        const spinnerBorder = isDark ? '#334155' : '#bae6fd'
+        const spinnerAccent = isDark ? '#0ea5e9' : '#0284c7'
         win.document.write(`
-          <style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#f0f9ff;color:#0284c7;flex-direction:column}h1{font-size:2rem;margin-bottom:10px}.spinner{width:40px;height:40px;border:4px solid #bae6fd;border-top:4px solid #0284c7;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+          <style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:${pageBackground};color:${pageColor};flex-direction:column}h1{font-size:2rem;margin-bottom:10px}.spinner{width:40px;height:40px;border:4px solid ${spinnerBorder};border-top:4px solid ${spinnerAccent};border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
           <div class="spinner"></div><h1>App Loaded</h1><p>Served at ${config.nginxPath}</p>
         `)
         win.document.close()
@@ -501,7 +506,7 @@ export default function AutoDeploy() {
       case 'success':
         return { color: '#10b981', background: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.2)' }
       default:
-        return { borderColor: 'rgba(255,255,255,0.1)' }
+        return { borderColor: 'var(--wui-border)' }
     }
   }
 

@@ -30,11 +30,13 @@ function makeBookPage(pageNumber: number, title: string, paragraphs: string[], n
       >
         {nextChapter ? (
           <>
-            <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
-            <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：{nextChapter}</p>
+            <p style={{ fontStyle: 'italic', color: 'var(--wui-text-muted)', marginBottom: '8px' }}>
+              翻到下一页，探索更多...
+            </p>
+            <p style={{ fontSize: '0.9rem', color: 'var(--wui-text-secondary)' }}>下一章：{nextChapter}</p>
           </>
         ) : (
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>书籍结束</p>
+          <p style={{ fontStyle: 'italic', color: 'var(--wui-text-muted)' }}>书籍结束</p>
         )}
       </div>
     ),
@@ -524,7 +526,7 @@ export default function BookLibrary() {
       {/* 搜索 + 过滤栏 */}
       <div className={styles.bookFilterBar}>
         <Input
-          prefix={<SearchOutlined style={{ color: '#aaa' }} />}
+          prefix={<SearchOutlined style={{ color: 'var(--wui-text-muted)' }} />}
           placeholder="搜索书籍..."
           allowClear
           value={searchText}
@@ -575,7 +577,7 @@ export default function BookLibrary() {
 
         {filteredBooks.length === 0 && (
           <div className={styles.bookEmpty}>
-            <BookOutlined style={{ fontSize: 48, color: '#ccc' }} />
+            <BookOutlined style={{ fontSize: 48, color: 'var(--wui-text-muted)' }} />
             <p>未找到匹配的书籍</p>
           </div>
         )}

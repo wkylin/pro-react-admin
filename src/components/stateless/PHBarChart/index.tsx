@@ -4,9 +4,16 @@ import React, { useRef, useEffect, useCallback, useMemo } from 'react'
 import type { EChartsOption } from 'echarts'
 import { Card, Row, Col, Typography, Space } from 'antd'
 import EChart, { type EChartHandle } from '@stateless/EChart'
+import { useOptionalProThemeContext } from '@/theme/hooks'
 const { Title, Text } = Typography
 const PHBarChart: React.FC = () => {
   const chartHandleRef = useRef<EChartHandle>(null)
+  const themeContext = useOptionalProThemeContext()
+  const isDark = themeContext?.resolvedTheme === 'dark'
+  const chartTextColor = isDark ? '#d1d5db' : '#666'
+  const chartHeadingColor = isDark ? '#f3f4f6' : '#2c3e50'
+  const chartAxisColor = isDark ? '#52525b' : '#ddd'
+  const chartGridColor = isDark ? '#383838' : '#eee'
   // 颜色计算函数 - 增强NaN保护
   const getPHColor = useCallback((ph: number | string): string => {
     // 确保ph是数字类型
@@ -205,7 +212,7 @@ const PHBarChart: React.FC = () => {
         top: 10,
         textStyle: {
           fontSize: 18,
-          color: '#2c3e50',
+          color: chartHeadingColor,
         },
       },
       tooltip: {
@@ -251,7 +258,7 @@ const PHBarChart: React.FC = () => {
         data: categories,
         top: 40,
         textStyle: {
-          color: '#666',
+          color: chartTextColor,
         },
         itemWidth: 15,
         itemHeight: 15,
@@ -268,11 +275,11 @@ const PHBarChart: React.FC = () => {
         data: categories,
         axisLine: {
           lineStyle: {
-            color: '#ddd',
+            color: chartAxisColor,
           },
         },
         axisLabel: {
-          color: '#666',
+          color: chartTextColor,
           fontSize: 14,
           fontWeight: 'bold',
         },
@@ -285,23 +292,23 @@ const PHBarChart: React.FC = () => {
         nameLocation: 'middle',
         nameGap: 40,
         nameTextStyle: {
-          color: '#666',
+          color: chartTextColor,
           fontSize: 14,
           fontWeight: 'bold',
         },
         axisLine: {
           lineStyle: {
-            color: '#ddd',
+            color: chartAxisColor,
           },
         },
         axisLabel: {
-          color: '#666',
+          color: chartTextColor,
           formatter: '{value}',
         },
         splitLine: {
           lineStyle: {
             type: 'dashed',
-            color: '#eee',
+            color: chartGridColor,
           },
         },
       },
@@ -309,7 +316,7 @@ const PHBarChart: React.FC = () => {
     }
 
     return option
-  }, [getPHColor, getPHType])
+  }, [getPHColor, getPHType, chartHeadingColor, chartTextColor, chartAxisColor, chartGridColor])
 
   useEffect(() => {
     const handleResize = () => chartHandleRef.current?.resize()
@@ -370,7 +377,7 @@ const PHBarChart: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               padding: '8px 15px',
-              backgroundColor: '#f8f9fa',
+              backgroundColor: 'var(--wui-bg-subtle)',
               borderRadius: '4px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             }}
@@ -391,7 +398,7 @@ const PHBarChart: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               padding: '8px 15px',
-              backgroundColor: '#f8f9fa',
+              backgroundColor: 'var(--wui-bg-subtle)',
               borderRadius: '4px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             }}
@@ -412,7 +419,7 @@ const PHBarChart: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               padding: '8px 15px',
-              backgroundColor: '#f8f9fa',
+              backgroundColor: 'var(--wui-bg-subtle)',
               borderRadius: '4px',
               boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
             }}

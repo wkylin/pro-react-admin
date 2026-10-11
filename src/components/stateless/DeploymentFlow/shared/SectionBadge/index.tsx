@@ -17,8 +17,8 @@ export const SectionBadge: React.FC<Props> = ({ phaseNumber, label, isLeft }) =>
         fontWeight: '700',
         textTransform: 'uppercase',
         letterSpacing: '1px',
-        color: isLeft ? '#0277bd' : '#ef6c00',
-        background: isLeft ? '#e1f5fe' : '#fff3e0',
+        color: isLeft ? 'var(--wui-text-info)' : 'var(--wui-text-warning)',
+        background: isLeft ? 'var(--wui-bg-info-subtle)' : 'var(--wui-bg-warning-subtle)',
       }}
     >
       {phaseNumber}: {label}

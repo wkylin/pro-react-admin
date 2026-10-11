@@ -349,7 +349,7 @@ const SignIn = () => {
                         centered
                         open={captchaOpen}
                         footer={null}
-                        maskClosable={false}
+                        mask={{ closable: false }}
                         onCancel={() => setCaptchaOpen(false)}
                         afterClose={() => {
                           setCaptchaKey(Date.now())

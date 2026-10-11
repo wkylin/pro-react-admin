@@ -23,6 +23,7 @@ import { zustandRoutes } from './modules/zustand.routes'
 import { annotateRoutesWithPermissions, filterRoutesByAccessiblePaths } from './utils'
 import type { RouteNode } from './utils'
 import { permissionService } from '@src/service/permissionService'
+import { matchRoutes, type RouteObject } from 'react-router-dom'
 
 // 整合主布局的子路由
 mainLayoutRoute.children = [
@@ -74,12 +75,23 @@ function normalizeRouteTree(routes: readonly RouteNode[], parentFullPath = ''): 
         }
       }
       const normalizedKey = fullPath
+      const hasChildren = Array.isArray(route.children) && route.children.length > 0
+      const routeMeta = route.meta || {}
 
-      const next = {
+      const next: RouteNode = {
         ...route,
         key: normalizedKey,
+        handle: {
+          ...(route.handle || {}),
+          routeKey: route.handle?.routeKey || normalizedKey,
+          routePath: route.handle?.routePath || fullPath,
+          title: route.handle?.title || routeMeta.title || route.name,
+          i18nKey: route.handle?.i18nKey || route.i18nKey || routeMeta.i18nKey,
+          tab: route.handle?.tab ?? routeMeta.tab ?? (!hasChildren && Boolean(route.element)),
+          tabKey: route.handle?.tabKey || routeMeta.tabKey,
+        },
         meta: {
-          ...(route.meta || {}),
+          ...routeMeta,
           routePath: fullPath,
           routeKey: normalizedKey,
           ...(route.key && route.key !== normalizedKey ? { legacyKey: route.key } : {}),
@@ -117,74 +129,11 @@ export function flattenRoutes(routes) {
 }
 
 export function getKeyName(path = '/') {
-  try {
-    const flatRoutes = flattenRoutes(annotatedRootRouter)
-
-    if (!flatRoutes || flatRoutes.length === 0) {
-      console.warn('getKeyName: no routes available')
-      return path
-    }
-
-    const normalized = String(path || '')
-      .split('?')[0]
-      .replace(/^\//, '')
-
-    const doesMatch = (candidate) => {
-      if (!candidate && candidate !== '') return false
-      const value = String(candidate).trim()
-      if (!value) {
-        return normalized === ''
-      }
-      const candidatePath = value.replace(/^\//, '')
-
-      if (candidatePath === '' && normalized === '') {
-        return true
-      }
-
-      if (candidatePath === normalized) {
-        return true
-      }
-
-      if (candidatePath.includes(':')) {
-        const pattern = '^' + candidatePath.replace(/:[^/]+/g, '[^/]+') + '$'
-        try {
-          return new RegExp(pattern).test(normalized)
-        } catch (err) {
-          console.warn('getKeyName: invalid route pattern', candidatePath, err)
-          return false
-        }
-      }
-
-      if (candidatePath.endsWith('*')) {
-        const base = candidatePath.replace(/\*$/, '')
-        if (!base) {
-          return false
-        }
-        return normalized.startsWith(base.replace(/\/$/, ''))
-      }
-
-      return false
-    }
-
-    const matchRoute = (r) => {
-      if (!r) return false
-      const candidates = [r.meta?.routePath, r.key, r.meta?.legacyKey, r.path]
-      return candidates.some((candidate) => doesMatch(candidate))
-    }
-
-    const route = flatRoutes.find(matchRoute)
-
-    if (!route) {
-      console.warn(`getKeyName: route not found for path "${path}"`)
-      return path
-    }
-
-    // prefer explicit meta.key, then existing key, then normalized path, title, fallback path
-    return route.meta?.key || route.key || route.meta?.routeKey || route.meta?.title || path
-  } catch (error) {
-    console.error('getKeyName error:', error)
-    return path
-  }
+  const pathname = String(path || '/').split('?')[0] || '/'
+  const matches = matchRoutes(annotatedRootRouter as RouteObject[], { pathname })
+  const route = matches?.at(-1)?.route as RouteNode | undefined
+  if (!route) return path
+  return route.handle?.tabKey || route.meta?.key || route.key || route.meta?.routeKey || route.meta?.title || path
 }
 
 /**

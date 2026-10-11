@@ -1,5 +1,6 @@
 import { Suspense, useEffect } from 'react'
-import { Button, Result, Spin, message } from 'antd'
+import { Button, Result, Spin } from 'antd'
+import { message } from '@utils/message'
 import { useNavigate } from 'react-router-dom'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import { emitMfeEvent, onMfeEvent } from '@/mfe/bridge'

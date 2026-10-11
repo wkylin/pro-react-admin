@@ -1,5 +1,6 @@
 import AnimatedIcon from '@stateless/AnimatedIcon'
-import React, { useState } from 'react'
+import IconFrame from '@stateless/IconFrame'
+import React, { useState, type CSSProperties } from 'react'
 import { Badge, Button, Space, Typography, theme, Drawer } from 'antd'
 import { useStore } from '@/store'
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
@@ -42,6 +43,16 @@ const initialNotifications = [
     time: '1天前',
   },
 ]
+
+const notificationIconFrameStyle: CSSProperties = {
+  boxSizing: 'border-box',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flex: '0 0 16px',
+  width: 16,
+  height: 16,
+}
 
 const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghost = false }) => {
   const [notifications, setNotifications] = useState(initialNotifications)
@@ -194,10 +205,12 @@ const NotificationDropdown = ({ iconColor, variant = 'inline', buttonStyle, ghos
   const openDrawer = () => setPopVisible(true)
 
   const iconNode = (
-    <Badge count={unreadCount} size="small" overflowCount={49}>
-      <AnimatedIcon variant="spin" mode="hover">
-        <BellOutlined style={{ fontSize: 16, color: iconColor }} />
-      </AnimatedIcon>
+    <Badge style={notificationIconFrameStyle} count={unreadCount} size="small" offset={[-4, 4]} overflowCount={49}>
+      <IconFrame>
+        <AnimatedIcon variant="spin" mode="hover">
+          <BellOutlined style={{ fontSize: 16, color: iconColor }} />
+        </AnimatedIcon>
+      </IconFrame>
     </Badge>
   )
 

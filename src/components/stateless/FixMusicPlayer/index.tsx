@@ -13,7 +13,7 @@ import { useProThemeContext } from '@/theme/hooks'
 import { theme } from 'antd'
 
 const MusicPlayer = () => {
-  const { themeSettings } = useProThemeContext()
+  const { themeSettings, resolvedTheme } = useProThemeContext()
   const {
     currentIndex,
     isPlaying,
@@ -57,7 +57,7 @@ const MusicPlayer = () => {
   })
 
   // 根据主题调整背景色和文本色
-  const isDark = themeSettings.themeMode === 'dark'
+  const isDark = resolvedTheme === 'dark'
   const bgClass = isDark
     ? 'bg-linear-to-br from-black/20 to-[#1a1a4a] backdrop-blur-lg'
     : 'bg-linear-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg'
@@ -74,7 +74,7 @@ const MusicPlayer = () => {
           isPlaying={isPlaying}
           isActive={isActive}
           onSongClick={handleSongClick}
-          themeMode={themeSettings.themeMode}
+          themeMode={resolvedTheme}
           textColor={textColor}
           secondaryTextColor={secondaryTextColor}
           activeColor={activeColor}
@@ -101,7 +101,7 @@ const MusicPlayer = () => {
               handlePrevSong={handlePrevSong}
               handleNextSong={handleNextSong}
               textColor={textColor}
-              themeMode={themeSettings.themeMode}
+              themeMode={resolvedTheme}
             />
             <Seekbar
               value={appTime}
@@ -111,7 +111,7 @@ const MusicPlayer = () => {
               setSeekTime={handleSeek}
               appTime={appTime}
               textColor={textColor}
-              themeMode={themeSettings.themeMode}
+              themeMode={resolvedTheme}
             />
             <Player
               activeSong={activeSong}
@@ -131,7 +131,7 @@ const MusicPlayer = () => {
             onChange={(event) => handleVolumeChange(event.target.value)}
             setVolume={handleVolumeChange}
             textColor={textColor}
-            themeMode={themeSettings.themeMode}
+            themeMode={resolvedTheme}
           />
         </div>
       </div>

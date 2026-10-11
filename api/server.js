@@ -136,6 +136,10 @@ app.get('/api/tracking/stats', requireAdminToken, getStats)
 app.delete('/api/tracking/events', requireAdminToken, clearEvents)
 
 app.post('/apis', requireAdminToken, async (req, res) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ error: 'mongodb_not_configured' })
+  }
+
   const { url, delay } = req.body || {}
   if (typeof url !== 'string' || !url.trim()) {
     return res.status(400).json({ error: 'invalid_url' })
@@ -295,7 +299,7 @@ app.get('/api/github-email', async (req, res) => {
 })
 
 async function startServer() {
-  const mongodbUri = process.env.MONGODB_URI || (process.env.NODE_ENV === 'production' ? '' : 'mongodb://127.0.0.1:27017/promotion?retryWrites=true')
+  const mongodbUri = process.env.MONGODB_URI || ''
 
   if (trackingStoreMode === 'mongodb' && !mongodbUri) {
     throw new Error('MONGODB_URI is required when TRACKING_STORE=mongodb (the production default)')
@@ -312,8 +316,9 @@ async function startServer() {
     }
   }
 
-  const port = process.env.PORT || 5200
-  app.listen(port, () => console.log(`Server started on port ${port}; tracking store=${trackingStoreMode}`))
+  const port = Number(process.env.TRACKING_API_PORT || process.env.PORT || 5200)
+  const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'
+  app.listen(port, host, () => console.log(`Server started on ${host}:${port}; tracking store=${trackingStoreMode}`))
 }
 
 startServer().catch((error) => {

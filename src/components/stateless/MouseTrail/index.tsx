@@ -70,7 +70,7 @@ const ImageMouseTrail = ({
       onTouchMove={(e) => handleOnMove(e.touches[0])}
       ref={containerRef}
       className={clsx(
-        'relative grid h-screen w-full place-content-center overflow-hidden bg-white text-slate-900',
+        'relative grid h-screen w-full place-content-center overflow-hidden bg-white text-slate-900 dark:bg-neutral-950 dark:text-slate-100',
         className
       )}
     >

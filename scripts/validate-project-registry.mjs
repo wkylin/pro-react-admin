@@ -2,11 +2,14 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { assertClientEnvKeys, clientEnvKeys } from '../webpack/client-env.js'
+import { getMfeSharedDependencies } from '../config/mfe-contract.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = path.join(root, 'src')
 const registryPath = path.join(sourceRoot, 'projects/registry.json')
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'))
+const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
+getMfeSharedDependencies({ ...(packageJson.dependencies || {}), ...(packageJson.peerDependencies || {}) })
 const projectNames = Object.keys(registry.projects || {})
 const outputDirs = new Set()
 
