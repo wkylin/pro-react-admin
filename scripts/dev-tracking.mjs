@@ -1,9 +1,9 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
-import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import dotenv from 'dotenv'
+import concurrently from 'concurrently'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const providedEnvKeys = new Set(Object.keys(process.env))
@@ -25,32 +25,23 @@ process.env.TRACKING_API_PORT ||= '5200'
 process.env.TRACKING_API_TARGET ||= `http://127.0.0.1:${process.env.TRACKING_API_PORT}`
 process.env.TRACKING_ADMIN_TOKEN ||= crypto.randomBytes(32).toString('hex')
 
-const child = spawn(
-  'pnpm',
+const { result } = concurrently(
   [
-    'exec',
-    'concurrently',
-    '-k',
-    '-n',
-    'api,web',
-    '-c',
-    'cyan,green',
-    'pnpm --filter api dev',
-    'pnpm run start:web',
+    { command: 'pnpm --filter api dev', name: 'api', prefixColor: 'cyan' },
+    // Let Webpack inherit the terminal so WebpackBar can redraw one live progress bar.
+    { command: 'pnpm run start:web', name: 'web', raw: true },
   ],
   {
     cwd: root,
-    env: process.env,
-    stdio: 'inherit',
-    shell: process.platform === 'win32',
+    killOthersOn: ['success', 'failure'],
   }
 )
 
-child.on('error', (error) => {
-  console.error(`[dev:tracking] Could not start local services: ${error.message}`)
-  process.exitCode = 1
-})
-
-child.on('exit', (code, signal) => {
-  process.exitCode = signal ? 1 : (code ?? 1)
-})
+result.then(
+  () => {
+    process.exitCode = 0
+  },
+  () => {
+    process.exitCode = 1
+  }
+)

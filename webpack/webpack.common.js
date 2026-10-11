@@ -29,6 +29,36 @@ const require = createRequire(import.meta.url)
 const isDev = process.env.NODE_ENV === 'development'
 const isAnalyze = Boolean(Number(process.env.USE_ANALYZE || 0))
 const isStatsOnly = process.env.STATS_ONLY === '1'
+const isInteractiveTerminal = Boolean(process.stdout.isTTY && process.stderr.isTTY)
+const supportsProgressColor = !('NO_COLOR' in process.env) && process.env.TERM !== 'dumb'
+
+const renderProgressBar = (progress) => {
+  const width = 20
+  const complete = Math.round((progress / 100) * width)
+  const filled = '█'.repeat(complete)
+  const remaining = '░'.repeat(width - complete)
+
+  if (!supportsProgressColor) return `${filled}${remaining}`
+  return `\u001b[32m${filled}\u001b[90m${remaining}\u001b[0m`
+}
+
+let lastReportedProgress = 0
+const webpackLineProgressReporter = {
+  start({ state }) {
+    lastReportedProgress = 0
+    process.stderr.write(`[webpackbar] Compiling ${state.name}\n`)
+  },
+  progress({ state }) {
+    const progress = Math.floor(state.progress / 10) * 10
+    if (progress < 10 || progress >= 100 || progress <= lastReportedProgress) return
+
+    lastReportedProgress = progress
+    process.stderr.write(`[webpackbar] ${state.name} [${renderProgressBar(progress)}] ${progress}%\n`)
+  },
+  done({ state }) {
+    process.stderr.write(`[webpackbar] ${state.name} [${renderProgressBar(100)}] 100% ${state.message}\n`)
+  },
+}
 
 const mfeRole = (process.env.MFE_ROLE || '').toString().trim() // 'host' | 'remote' | ''
 const isMfeHost = mfeRole === 'host'
@@ -245,7 +275,15 @@ const config = {
     //   cwd: process.cwd(),
     // }),
     new NodePolyfillPlugin(),
-    new WebpackBar(),
+    new WebpackBar({
+      color: 'green',
+      ...(isDev && !isInteractiveTerminal
+        ? {
+            // Keep progress readable when output is piped and cannot redraw in place.
+            reporters: [webpackLineProgressReporter],
+          }
+        : {}),
+    }),
     new ForkTsCheckerWebpackPlugin({
       async: true,
       typescript: {

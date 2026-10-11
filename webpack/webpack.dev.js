@@ -31,7 +31,7 @@ const devWebpackConfig = merge(common, {
         }
       : {}),
     client: {
-      logging: 'error',
+      logging: 'info',
       progress: true,
       overlay: {
         errors: true,
