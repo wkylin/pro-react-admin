@@ -8,7 +8,7 @@ export const ExampleWithScrollArea = () => {
     <ScrollArea height={4} color="#ff6b6b" className="h-96 rounded-lg border">
       <div className="space-y-4 p-4">
         {Array.from({ length: 50 }, (_, i) => (
-          <div key={i} className="h-16 rounded bg-[var(--wui-bg-subtle)] p-4 text-[var(--wui-text-primary)]">
+          <div key={i} className="h-16 rounded bg-(--wui-bg-subtle) p-4 text-(--wui-text-primary)">
             内容块 {i + 1}
           </div>
         ))}
@@ -38,7 +38,7 @@ export const ExampleWithDirectUsage = () => {
       />
       <div className="space-y-4 p-4">
         {Array.from({ length: 50 }, (_, i) => (
-          <div key={i} className="h-16 rounded bg-[var(--wui-bg-subtle)] p-4 text-[var(--wui-text-primary)]">
+          <div key={i} className="h-16 rounded bg-(--wui-bg-subtle) p-4 text-(--wui-text-primary)">
             内容块 {i + 1}
           </div>
         ))}
