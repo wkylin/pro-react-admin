@@ -17,6 +17,7 @@
 | 埋点 SDK                                                  | [Tracking](TRACKING_SDK_ARCHITECTURE.md) |
 | Webpack、环境、体积预算                                   | [构建](BUILD.md)                         |
 | 静态部署、缓存、PWA                                       | [部署](DEPLOY.md)                        |
+| 手动 Actions、本地 Pages、Vercel、Release、核验与回退     | [手动部署](MANUAL_DEPLOYMENT.md)         |
 | Vercel 演示登录、SQLite 持久 API、Docker 与 HTTPS         | [Vercel / SQLite](VERCEL_SQLITE.md)      |
 | GitHub Pages 各应用、Storybook 与 v5 标签/Release         | [GitHub 部署](GITHUB_DEPLOYMENT.md)      |
 | 构建时项目选择                                            | [多项目](MULTI_PROJECT.md)               |

@@ -8,7 +8,7 @@ React 企业管理应用与组件工作区，基于 React 19、Ant Design 6、Re
 - [Storybook 组件预览](https://wkylin.github.io/pro-react-admin/storybook/)。
 - [GitHub Pages 各应用导航](https://wkylin.github.io/pro-react-admin/portal.html)。
 
-Pages 的新增示例和全部应用入口以本次 Actions 部署成功为准。部署选择、真实 API 边界和逐条命令见 [GitHub 部署指南](docs/GITHUB_DEPLOYMENT.md)；组件站还可独立部署到 Vercel，见 [Storybook 指南](docs/STORYBOOK.md)。
+Pages 的新增示例和全部应用入口以本次 Actions 部署成功为准。手动触发、本地上传、Vercel、Release、核验与回退的完整步骤见 [手动部署指南](docs/MANUAL_DEPLOYMENT.md)。Pages 配置见 [GitHub 部署指南](docs/GITHUB_DEPLOYMENT.md)，组件预览见 [Storybook 指南](docs/STORYBOOK.md)。
 
 ## 快速上手
 

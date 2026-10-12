@@ -2,6 +2,8 @@
 
 Storybook 10.6 使用 React Webpack5 builder，直接编译当前源码；不读取旧 npm 包或 `packages/wui-react/dist`。组件 story 与源码同目录，`.storybook` 保存公共配置、开发指南和 Provider。查看新版本无需先构建 lib。
 
+手动发布完整步骤见 [手动部署指南](MANUAL_DEPLOYMENT.md)，包括 Pages 全量上传和独立 Vercel 组件站。
+
 ## 本地启动
 
 在仓库根目录使用 Node.js >=24.15.0 且 <25，先安装仓库锁定的依赖：
@@ -144,4 +146,4 @@ npx vercel deploy --cwd artifacts/vercel-storybook --prebuilt --prod
 
 准备命令只写入 Git 忽略的 `artifacts/vercel-storybook/.vercel/output`，保留根应用关联。若产物包含 Pages base，准备命令会拒绝它，需先取消终端中的 `STORYBOOK_BASE_HREF` 并重建。把部署命令返回的真实 production URL 加入 README；未实际部署前不填猜测域名。
 
-也可以在独立 Vercel 项目导入同一个 GitHub 仓库，Framework 选 Other，Node 选 24.x，Install Command 为 `pnpm install --frozen-lockfile`，Build Command 为 `pnpm run build-storybook`，Output Directory 为 `storybook-static`。项目配置可参考根 `vercel.storybook.json`；仓库根 `vercel.json` 默认构建后台应用，需要在组件站项目设置中明确覆盖这三个命令/目录。静态 Storybook 不需要 API rewrite 或 SPA fallback。
+也可以在独立 checkout 中关联组件站 Vercel 项目，Node 选 24.x，构建与部署时明确指定 `--local-config vercel.storybook.json`。该配置使用 `pnpm install --frozen-lockfile`、`pnpm run build-storybook` 和 `storybook-static`；根 `vercel.json` 默认构建后台应用，不能将其作为组件站配置。静态 Storybook 不需要 API rewrite 或 SPA fallback。

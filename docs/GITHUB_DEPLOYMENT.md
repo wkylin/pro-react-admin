@@ -2,6 +2,8 @@
 
 GitHub 托管代码，GitHub Actions 构建并上传静态站点，GitHub Pages 提供预览。当前部署入口是 `.github/workflows/deploy-gh-pages.yml` 与 `pnpm run build:pages`。同一站点可以同时展示默认后台、企业演示、独立多项目、微前端和 Storybook。
 
+需要逐步手动操作时，见 [手动部署指南](MANUAL_DEPLOYMENT.md)：包含网页/CLI 触发、本地上传 `gh-pages` 分支、Vercel、Release、上线核验和回退。
+
 ## 先启用 Pages
 
 1. 将代码推送到自己的 GitHub 仓库；项目和组件站所需依赖使用仓库的 lockfile。
@@ -135,6 +137,8 @@ GitHub Pages 只托管静态内容，不能运行 Express，不能存储可写 S
 真实模式需先在有持久卷的 Node 24 主机部署企业 API，再以 HTTPS/CORS 连接前端。生产前端覆盖 `REACT_APP_USE_MOCK=false`、`APP_BASE_URL=https://api.example.com`，PUBLIC_URL 对应实际部署路径，并独立验证登录和越权拒绝；不要直接使用公开演示构建冒充真实权限隔离。初始化、Docker、HTTPS、Vercel 配置与数据库边界见 [Vercel / SQLite](VERCEL_SQLITE.md)。
 
 ## 创建 v5.1.0 标签与 Release
+
+`v5.1.0` 已发布。下面保留该版本首次发布的流程说明；重新部署不执行标签创建命令。新版本发布与完全手动打包见 [手动部署指南](MANUAL_DEPLOYMENT.md#6-手动管理-github-release)。
 
 根应用标签为 `v5.1.0`。本次 GitHub Release 附带 5.1.0 组件包构建产物，不自动发布到 npm，也不创建 `wui-react-v5.1.0` 标签。不要移动已经存在的标签，也不要使用 `git push --tags` 意外触发组件包发布。如果本次改动尚未提交，在当前 `main` 分支执行完整发布流程：
 
