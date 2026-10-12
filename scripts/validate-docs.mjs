@@ -22,7 +22,6 @@ const files = [
     'SECURITY.md',
     '.github/PULL_REQUEST_TEMPLATE.md',
     'api/README.md',
-    'packages/wui-react/README.md',
   ].map((name) => path.join(root, name)),
 ]
 const issues = []

@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 - Repair Storybook previews and component behavior across animation, visualization, layout, media, and shared UI examples.
 - Give the header avatar its own dimensions while preserving the compact sizing of other tool icons.
+- Validate package documentation from its tracked source so release checks work in a clean checkout.
 
 The GitHub Release includes a verified `@w.ui/wui-react` 5.1.0 tarball. npm publication remains a separate step.
 
