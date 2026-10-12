@@ -4,6 +4,7 @@ import process from 'node:process'
 import { log } from 'node:console'
 import { spawnSync } from 'node:child_process'
 import { createPagesPlan } from '../config/pages-plan.mjs'
+import { renderPortalHtml } from './pages-portal.mjs'
 import { workspaceRoot, resolveInside } from '../config/project-registry.mjs'
 import { localCli } from './local-cli.mjs'
 
@@ -52,7 +53,7 @@ if (process.argv.includes('--dry-run')) {
     ...(plan.tasks.some((task) => task.destination === 'mfe') ? [['微前端', './mfe/#/portal']] : []),
     ['Storybook', './storybook/'],
   ]
-  const html = `<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Pro React Admin ${version}</title><body><main><h1>Pro React Admin ${version}</h1><ul>${links.map(([label, href]) => `<li><a href="${href}">${label}</a></li>`).join('')}</ul></main></body></html>`
+  const html = renderPortalHtml(version, links, repository)
   fs.writeFileSync(path.join(output, 'portal.html'), html)
   if (!fs.existsSync(path.join(output, 'index.html'))) fs.writeFileSync(path.join(output, 'index.html'), html)
   fs.writeFileSync(path.join(output, '.nojekyll'), '')

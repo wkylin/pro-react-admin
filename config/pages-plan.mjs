@@ -42,8 +42,19 @@ export function createPagesPlan(
     const remotes = Object.fromEntries(
       registry.remotes.map((remote) => [remote.envKey, site.origin + base + 'mfe' + remote.prodPath])
     )
-    for (const remote of registry.remotes)
-      app(remote.name, 'mfe' + remote.prodPath.replace(/\/remoteEntry\.js$/, ''), 'mfe-build', remotes)
+    for (const remote of registry.remotes) {
+      // The all target includes the standalone projectB artifact at this sibling path.
+      const standaloneProjectB =
+        target === 'all' && remote.name === 'projectB'
+          ? { PROJECTB_STANDALONE_BASE_URL: `${site.origin}${base}projects/projectB/` }
+          : {}
+      app(
+        remote.name,
+        'mfe' + remote.prodPath.replace(/\/remoteEntry\.js$/, ''),
+        'mfe-build',
+        { ...remotes, ...standaloneProjectB }
+      )
+    }
     app(host, 'mfe', 'mfe-build', remotes)
   }
   tasks.push({

@@ -52,3 +52,7 @@ Standalone 通过 renderApp 创建独立 Store/KeepAlive Provider；导出的 Re
 Bridge 是版本化的显式共享事件/状态，不是共用 UI Store。postMessage 验证版本、事件字段与精确 origin；不接受 wildcard origin。共享状态也不属于可信授权源。Module Federation 的 shared singleton 不等于状态、样式、身份或安全沙箱。
 
 Fallback 保留整页刷新重试，因为失败的 Federation 外部 promise 可能被模块运行时缓存；仅重新创建 React.lazy 不保证恢复。刷新会重建运行时并重新校验 manifest。新 Remote 通过 project:create 生成并同步静态 import/type 和部署 headers；同步检查见质量门禁。
+
+### ProjectB 的 Standalone 链接
+
+Remote 页面中的“打开 Standalone 的 About”指向独立构建的 ProjectB 应用，因此链接需要包含 Pages 的仓库子路径和 `projects/projectB/` 目录。GitHub Pages `all` 构建会根据 `PAGES_SITE_URL` 与 `PAGES_BASE_PATH` 注入 `PROJECTB_STANDALONE_BASE_URL`；例如当前站点生成 `https://wkylin.github.io/pro-react-admin/projects/projectB/`。`mfe` 单独构建不包含 Standalone 产物，所以不会显示这个链接。其它部署可将 `PROJECTB_STANDALONE_BASE_URL` 设置为独立应用目录 URL；保留 `PROJECTB_STANDALONE_ORIGIN` 作为旧的根路径覆盖项。

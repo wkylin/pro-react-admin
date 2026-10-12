@@ -7,6 +7,10 @@ import { getMfeSharedState, onMfeEvent } from '@platform/mfe/bridge'
 import RemoteScope from '@app/bootstrap/RemoteScope'
 
 const { Paragraph, Text } = Typography
+const standaloneBaseUrl = (process.env.PROJECTB_STANDALONE_BASE_URL || process.env.PROJECTB_STANDALONE_ORIGIN || '')
+  .trim()
+  .replace(/\/+$/, '')
+const standaloneAboutUrl = standaloneBaseUrl ? `${standaloneBaseUrl}/#/projectB/about` : undefined
 
 type SharedMessage = { from: string; text: string; at: number; to?: string }
 function parseMessage(value: unknown): SharedMessage | undefined {
@@ -17,13 +21,6 @@ function parseMessage(value: unknown): SharedMessage | undefined {
 }
 
 function ProjectBRemoteContent() {
-  const standaloneOrigin = (() => {
-    const raw = (process.env.PROJECTB_STANDALONE_ORIGIN || '').toString().trim()
-    const origin = raw || (typeof window !== 'undefined' ? window.location.origin : '')
-    return origin.replace(/\/+$/, '')
-  })()
-  const standaloneAboutUrl = `${standaloneOrigin}/#/projectB/about`
-
   const [lastMessage, setLastMessage] = useState<SharedMessage | undefined>(() =>
     parseMessage(getMfeSharedState().lastMessage)
   )
@@ -59,11 +56,11 @@ function ProjectBRemoteContent() {
               <Button>
                 <Link to="/portal">返回 Portal</Link>
               </Button>
-              <Button type="primary">
-                <a href={standaloneAboutUrl} target="_blank" rel="noreferrer">
+              {standaloneAboutUrl ? (
+                <Button type="primary" href={standaloneAboutUrl} target="_blank" rel="noreferrer">
                   打开 Standalone 的 About
-                </a>
-              </Button>
+                </Button>
+              ) : null}
             </Space>
           </Space>
         </Card>
