@@ -63,6 +63,7 @@ Theme / animations
   --animate-wui-slide-right: wui-slide-right 2s linear infinite;
   --animate-wui-slide-down: wui-slide-down 2s linear infinite;
   --animate-wui-slide-left: wui-slide-left 2s linear infinite;
+  --animate-wui-slide-up: wui-slide-up 2s linear infinite;
 
   @keyframes wui-slide-right {
     0% {

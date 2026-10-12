@@ -7,12 +7,22 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div style={{ position: 'relative', minHeight: 360, padding: 24, overflow: 'hidden' }}>
+      <div
+        style={{
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: 360,
+          padding: 24,
+          overflow: 'hidden',
+        }}
+      >
         <Story />
       </div>
     ),
   ],
-  args: { children: <div style={{ padding: 24 }}>Pro React Admin 5.0 · 当前源码示例</div> },
+  args: { children: 'Button' },
 } satisfies Meta<typeof Component>
 
 export default meta

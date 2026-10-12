@@ -1,5 +1,68 @@
 # 工程重构验证记录
 
+## 2026-10-12 ShootingStars 空白预览修复
+
+原组件使用 window.innerWidth / innerHeight 生成和移除流星，Storybook 内的 SVG 比窗口小，流星可能出现在预览范围之外；左右边缘的纵坐标还错误地按窗口宽度生成。所有实例共用 gradient ID，定时生成任务在更新或卸载时也没有取消。
+
+现在按 SVG 实际宽高计算四个边缘的起点和移动边界，ResizeObserver 同步尺寸，隐藏区域等待有尺寸后再生成；每个实例使用独立渐变 ID。统一管理流星生成与动画帧，帧间隔修正移动距离，流星离开区域后停止动画帧，参数更新和卸载清理定时器、观察器与事件。示例增加明确高度的深色区域、较长尾迹、较短间隔及操作说明，新增 Warm Colors / Compact。
+
+8 项回归在修复前失败、修复后全部通过，覆盖窗口大于容器时四边起点都在 SVG 范围内、流星移动/离开、渐变隔离、零尺寸恢复/缩放、参数变化及卸载清理；Storybook/根应用类型、修改范围 ESLint 和 stories 覆盖通过。浏览器核验命令被自动审批服务 403「内容审计命中风险规则」拦截，命令未执行，本次没有真实浏览器视觉复核结果；未重新构建生产产物或发布。
+
+## 2026-10-12 ScrollProgressBar 容器定位修复
+
+ScrollArea 原先将进度条设为 relative，条形会随内容滚出区域；FixTabPanel 原先设为 fixed，位置参照页面顶端而非面板。现在两者默认 sticky，将进度条保持在自身滚动容器的顶部；负 margin 抵消条形高度，避免给内容增加滚动高度，pointer-events: none 保留底层交互。滚动容器 ref 保持稳定，独立 ScrollProgressBar 仍默认 fixed，显式 position 可以覆盖默认值。同步修正 sticky 使用示例与组件说明。
+
+旧实现的容器定位回归失败，修复后 5 项组件测试通过。使用真实 Motion 验证两个区域相互独立、0%→50%→100%→0% 的双向滚动、无需滚动时为零及隐藏；还验证 FixTabPanel 的 ref、onScroll 与进度绑定实际面板节点。Storybook/根应用类型、strict 架构边界、修改范围 ESLint 和 stories 覆盖通过。顶部进度为零时条形宽度为零，不将这种状态当作渲染失败。
+
+浏览器测量命令被自动审批服务 403「内容审计命中风险规则」拦截，命令未执行，因此本次尚无滚动前后位置的浏览器实测；组件测试中的 sticky 样式和滚动进度验证不等同于视觉复核。本轮未重新构建生产产物或发布。
+
+## 2026-10-12 TransferHistory 分支箭头与展开图标修复
+
+用户截图中的公司分支箭头缺失，源于 Less 将 `.subItemLine` 嵌套为 `.subItemContainer` 的子元素选择器，但 JSX 将两者放在同一个元素上。现在使用 `&.subItemLine`，分支箭头、短连接线与末行间距规则都能匹配实际结构。展开按钮原先仅有空的 `<i>` 和旧版 anticon class，改用真实的 DownOutlined / UpOutlined SVG，并同步 aria-expanded。
+
+挂载后的 effect 还会清空已绑定的公司 refs，造成主连接线保留 100% 高度并延伸至展开按钮。现在保留 refs，统一按首末可见公司的中心测量高度，在展开、收起、默认数量或尺寸变化时重新测量，并清理待执行帧和 ResizeObserver。新增 Single Company / All Companies 示例，默认示例可调整显示数量。
+
+3 项组件回归在修改前失败、修改后通过，覆盖真实 SVG、展开/收起、初始连接线高度、默认数量变化与卸载清理。Less 实际编译后，分支 DOM 匹配箭头与短线的伪元素选择器，三角形边框和线段宽度检查通过；Storybook/根应用类型、修改范围 ESLint、Stylelint 和 stories 覆盖通过。浏览器复现命令被自动审批服务 403「内容审计命中风险规则」拦截，未执行，因此本次没有浏览器视觉复核结果，也没有重新构建生产产物或发布。
+
+## 2026-10-12 MagicTrail 空白预览修复
+
+在 Chrome 复现默认示例空白：正常父容器的鼠标事件无法触发轨迹，直接向覆盖层派发事件才能绘制。原组件在省略 `containerRef` 时监听了 `pointer-events: none` 的覆盖层，而粒子绘制代码被注释。颜色透明度拼接也只适用于完整十六进制颜色。
+
+现在默认监听父容器，保留显式 ref，并按 Canvas 的位置计算坐标；恢复粒子绘制，通过 globalAlpha 实现消退，支持 RGB/HSL/命名颜色和空调色板回退。首次移动前不启动动画，停下后效果消退并停止动画帧；ResizeObserver 同步尺寸与设备像素比例，卸载清理事件和绘制。新增深色体验区、操作说明、测试按钮、Explicit Container 和 Trail Only 示例。
+
+5 项组件回归在修复前失败、修复后全部通过，覆盖父容器输入、显式祖先坐标、颜色、尺寸/卸载和闲置停止；Storybook/根应用类型、修改文件 ESLint、Prettier、stories 覆盖通过。Chrome 的 Docs 各 Canvas 在输入前完全透明，移动后鼠标区域有实际像素，原点没有误绘，消退后全部清空；默认独立示例的真实鼠标连续移动触发线条与粒子，底层测试按钮真实点击计数增加，独立会话浏览器 errors 为空。使用用户已有的 6006 服务，没有额外启动 Storybook；本轮未重新构建生产产物或发布。
+
+文档链接/命令、组件目录同步和 git diff 检查通过。验证结束后关闭独立浏览器会话的清理命令被自动审批服务 403「内容审计命中风险规则」拦截，命令未执行；此前浏览器验证已完成。
+
+## 2026-10-12 DescBox 对齐修复
+
+Chrome 在修改前的 Docs 场景测得客户性质标签与首个选项文字相差 4px，6 个长名称被截断。选项组件的上下 padding、固定三列和复选框单独设置的间距造成错位与不一致换行。
+
+DescBox 现在统一字段和选项的行高、起点与网格间距，选项按容器空间排成等宽列，完整显示长名称；容器宽度不足 960px 时详情改为上下排列。RadioInput 新增可选 className / wrapText，DescBox 单独去除选项 padding 并启用首行图标对齐。新增 Compact、Narrow stories 便于检查窄容器。
+
+本次 Storybook/根应用类型、ESLint、Stylelint、Prettier、Less 编译、stories 覆盖和 git diff 检查通过。修改后的浏览器复核两次被自动审批服务 403 拦截，命令未执行，因此不记录修改后实测的对齐或溢出结果；此前复现结果不代表修复后渲染已验证。
+
+## 2026-10-12 ScrollableSections 滚动导航修复
+
+在 Storybook Docs 复现滚动到审计区块后仍激活概览：示例未传可选 `scrollContainerRef`，原组件只监听显式 ref，因此完全没有同步滚动。原索引算法也会提前激活下一节；点击使用 offsetTop，遇到额外定位祖先时与实际滚动容器的坐标不一致。
+
+现在优先使用显式容器，省略时识别最近滚动祖先或窗口；按导航下方的区块起点更新激活项，点击使用同一容器坐标。导航在最后一节保持吸顶可见，容器、导航和内容尺寸变化时重新计算，卸载移除监听与观察器。新增 Explicit Container story 展示嵌套容器。
+
+实际验证：5 项组件回归通过，覆盖自动容器、显式 ref、窗口、末节与点击坐标；公共组件包共 4 suites / 13 tests 通过。strict UI 包类型、Storybook/根类型、修改组件的 ESLint 错误检查与 stories 覆盖通过。Chrome 在原 Docs 场景验证概览→设置→审计与返回概览，三个导航各重复点击两次均定位并激活对应区块；显式 ref 示例滚动至审计、点击设置均同步，外层滚动位置保持 0。
+
+## 2026-10-12 Storybook 开发预览复核
+
+用户反馈本地 `$RefreshSig$ is not defined` 后，本次核对了开发编译与浏览器实际运行。此前开发产物中的 Refresh 引用仍会被旧进程提供；当前配置重启后，6006 服务返回的 main iframe bundle 已无 `$RefreshSig$` / `$RefreshReg$`。普通启动额外显式设置 `BABEL_ENV=storybook`，增加 `storybook:clean` 和 `storybook:reset`，文档要求先停止旧服务再清理。应用自身的 React Refresh 保留。
+
+本次实际结果：
+
+- 完整 Storybook 开发服务编译成功；修正设置抽屉和权限模块的类型导入后，HMR 编译状态为 0 errors / 0 warnings。
+- 新增回归通过真实 Storybook presets、Babel compiler addon 和 Webpack development loader 编译 store/theme，并在没有 Refresh 全局变量的 VM 中成功加载。
+- 工程工具测试 17/17，其中 Storybook 3/3；Storybook/根应用类型检查和修改范围 ESLint 错误检查通过。
+- Chrome 实际验证 AnimatedIcon、ScrollProgressBar、CheckableTags、SettingDrawer 四个示例渲染；CheckableTags 的 React 选项由未选中切换为选中。最终新建会话通过 Storybook 管理页面加载 SettingDrawer，浏览器 errors 列表为空。
+
+测试时曾与用户的 6006 服务并行启动独立 6008 进程，两个进程共享输出目录引起 HMR 重载；已停止本次创建的 6008 进程，最终浏览器检查使用 6006。生产静态构建、全量 Jest、Pages/Vercel 部署和 Git 推送没有在本轮重新执行，不将此前结果算作本次新验证。
+
 ## 2026-10-12 Storybook、GitHub 部署与 Release 准备
 
 本阶段修复 Storybook 的 React Refresh 配置和类型运行时导入，补齐源码 stories、Pages 多场景构建、Vercel 独立组件站产物、部署指南与应用 Release workflow。此前企业 API 和浏览器结果保留在下一阶段记录中，不视为本次重新执行。

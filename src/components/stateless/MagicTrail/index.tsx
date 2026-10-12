@@ -28,9 +28,25 @@ interface Particle {
   size: number
 }
 
+const DEFAULT_COLORS = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981']
+
+const createParticle = (x: number, y: number, color: string): Particle => {
+  const angle = Math.random() * Math.PI * 2
+  const speed = Math.random() * 2 + 1
+  return {
+    x,
+    y,
+    vx: Math.cos(angle) * speed,
+    vy: Math.sin(angle) * speed,
+    life: 1,
+    color,
+    size: Math.random() * 3 + 1,
+  }
+}
+
 const MagicTrail = ({
   className,
-  colors = ['#8b5cf6', '#ec4899', '#3b82f6', '#10b981'],
+  colors = DEFAULT_COLORS,
   particleCount = 50,
   trailLength = 35,
   decay = 0.03,
@@ -38,108 +54,102 @@ const MagicTrail = ({
   containerRef,
 }: MagicTrailProps) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
-  const points = useRef<TrailPoint[]>([])
-  const particles = useRef<Particle[]>([])
-  const mousePos = useRef({ x: 0, y: 0 })
-  const targetPos = useRef({ x: 0, y: 0 })
-  const animationFrameId = useRef<number | null>(null)
-  const colorIndex = useRef(0)
-  const lastAddTime = useRef(0)
-  const isPointerInBounds = useRef(true)
-
-  const createParticle = (x: number, y: number, color: string): Particle => {
-    const angle = Math.random() * Math.PI * 2
-    const speed = Math.random() * 2 + 1
-    return {
-      x,
-      y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      life: 1,
-      color,
-      size: Math.random() * 3 + 1,
-    }
-  }
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const container = containerRef?.current || canvas?.parentElement
+    // The overlay ignores pointer events; listen on its host instead.
+    const container = containerRef?.current ?? canvas?.parentElement?.parentElement
     if (!canvas || !container) return
 
     const ctx = canvas.getContext('2d', { alpha: true })
     if (!ctx) return
 
+    const palette = colors.length ? colors : DEFAULT_COLORS
+    const maxPoints = Math.max(0, Math.floor(trailLength))
+    const maxParticles = Math.max(0, Math.floor(particleCount))
+    const fade = Math.min(1, Math.max(0.001, decay))
+    const follow = Math.min(1, Math.max(0.01, smoothing))
+    let points: TrailPoint[] = []
+    let particles: Particle[] = []
+    let mousePos = { x: 0, y: 0 }
+    let targetPos = { x: 0, y: 0 }
+    let lastEmittedPosition: { x: number; y: number } | null = null
+    let isPointerInBounds = false
+    let animationFrameId: number | null = null
+    let colorIndex = 0
+    let width = 0
+    let height = 0
+    let pixelRatio = 0
+
     const updateCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1
-      const rect = container.getBoundingClientRect()
-      canvas.width = rect.width * dpr
-      canvas.height = rect.height * dpr
-      ctx.scale(dpr, dpr)
+      const rect = canvas.getBoundingClientRect()
+      if (width === rect.width && height === rect.height && pixelRatio === dpr) return
+      width = rect.width
+      height = rect.height
+      pixelRatio = dpr
+      canvas.width = Math.round(width * dpr)
+      canvas.height = Math.round(height * dpr)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      points = []
+      particles = []
+      lastEmittedPosition = null
+      isPointerInBounds = false
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId)
+        animationFrameId = null
+      }
     }
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect()
+      // A supplied event owner may be an ancestor of the positioned canvas.
+      const rect = canvas.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
-      isPointerInBounds.current = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height
-
-      if (isPointerInBounds.current) {
-        targetPos.current = { x, y }
+      if (rect.width <= 0 || rect.height <= 0 || x < 0 || x > rect.width || y < 0 || y > rect.height) {
+        isPointerInBounds = false
+        return
       }
+      if (!isPointerInBounds) {
+        mousePos = { x, y }
+        lastEmittedPosition = null
+        points = []
+      }
+      isPointerInBounds = true
+      targetPos = { x, y }
+      if (animationFrameId === null) animationFrameId = requestAnimationFrame(animate)
     }
 
     const handleMouseLeave = () => {
-      isPointerInBounds.current = false
+      isPointerInBounds = false
     }
 
     const addPoint = () => {
-      if (!isPointerInBounds.current) {
-        return
-      }
+      if (!isPointerInBounds) return
 
-      const now = performance.now()
-      const timeDiff = now - lastAddTime.current
+      mousePos.x += (targetPos.x - mousePos.x) * follow
+      mousePos.y += (targetPos.y - mousePos.y) * follow
 
-      mousePos.current.x += (targetPos.current.x - mousePos.current.x) * smoothing
-      mousePos.current.y += (targetPos.current.y - mousePos.current.y) * smoothing
-
-      const lastPoint = points.current[points.current.length - 1]
-      const distance = lastPoint
-        ? Math.hypot(mousePos.current.x - lastPoint.x, mousePos.current.y - lastPoint.y)
+      const distance = lastEmittedPosition
+        ? Math.hypot(mousePos.x - lastEmittedPosition.x, mousePos.y - lastEmittedPosition.y)
         : Infinity
-
-      if (distance > 2 || timeDiff > 16) {
-        const currentColor = colors[colorIndex.current]
-
-        points.current.push({
-          x: mousePos.current.x,
-          y: mousePos.current.y,
-          age: 0,
-          color: currentColor,
-        })
-
-        for (let i = 0; i < 3; i++) {
-          particles.current.push(createParticle(mousePos.current.x, mousePos.current.y, currentColor))
-        }
-
-        if (distance > 10) {
-          colorIndex.current = (colorIndex.current + 1) % colors.length
-        }
-
-        lastAddTime.current = now
-
-        if (points.current.length > trailLength) {
-          points.current.shift()
-        }
-
-        if (particles.current.length > particleCount) {
-          particles.current = particles.current.slice(-particleCount)
-        }
+      if (distance <= 2) return
+      const color = palette[colorIndex]
+      lastEmittedPosition = { ...mousePos }
+      if (maxPoints > 0) {
+        points.push({ ...mousePos, age: 0, color })
+        if (points.length > maxPoints) points.shift()
       }
+      for (let i = 0; i < Math.min(3, maxParticles); i++) {
+        particles.push(createParticle(mousePos.x, mousePos.y, color))
+      }
+      if (particles.length > maxParticles) particles = particles.slice(-maxParticles)
+      if (distance > 10) colorIndex = (colorIndex + 1) % palette.length
     }
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+    function animate() {
+      animationFrameId = null
+      ctx.clearRect(0, 0, width, height)
       ctx.globalCompositeOperation = 'lighter'
 
       addPoint()
@@ -148,30 +158,19 @@ const MagicTrail = ({
       ctx.lineJoin = 'round'
       ctx.shadowBlur = 15
 
-      for (let i = 1; i < points.current.length; i++) {
-        const point = points.current[i]
-        const prevPoint = points.current[i - 1]
+      for (let i = 1; i < points.length; i++) {
+        const point = points[i]
+        const prevPoint = points[i - 1]
         const opacity = Math.max(1 - point.age, 0)
         const size = Math.max(4 * (1 - point.age), 0)
 
         ctx.shadowColor = point.color
         const gradient = ctx.createLinearGradient(prevPoint.x, prevPoint.y, point.x, point.y)
-
-        const prevOpacity = Math.max(1 - prevPoint.age, 0)
-        gradient.addColorStop(
-          0,
-          `${prevPoint.color}${Math.floor(prevOpacity * 255)
-            .toString(16)
-            .padStart(2, '0')}`
-        )
-        gradient.addColorStop(
-          1,
-          `${point.color}${Math.floor(opacity * 255)
-            .toString(16)
-            .padStart(2, '0')}`
-        )
+        gradient.addColorStop(0, prevPoint.color)
+        gradient.addColorStop(1, point.color)
 
         ctx.beginPath()
+        ctx.globalAlpha = opacity
         ctx.strokeStyle = gradient
         ctx.lineWidth = size
         ctx.moveTo(prevPoint.x, prevPoint.y)
@@ -179,52 +178,56 @@ const MagicTrail = ({
         ctx.stroke()
       }
 
-      ctx.shadowBlur = 0
-      particles.current.forEach((particle) => {
+      ctx.shadowBlur = 6
+      particles.forEach((particle) => {
         particle.x += particle.vx
         particle.y += particle.vy
         particle.vy += 0.05
         particle.life -= 0.02
 
-        // if (particle.life > 0) {
-        //   const opacity = particle.life;
-        //   drawSparkle(
-        //     particle.x,
-        //     particle.y,
-        //     particle.size * opacity,
-        //     particle.color,
-        //   );
-        // }
+        if (particle.life > 0) {
+          ctx.beginPath()
+          ctx.globalAlpha = particle.life
+          ctx.fillStyle = particle.color
+          ctx.shadowColor = particle.color
+          ctx.arc(particle.x, particle.y, particle.size * particle.life, 0, Math.PI * 2)
+          ctx.fill()
+        }
       })
 
-      particles.current = particles.current.filter((p) => p.life > 0)
-
-      points.current.forEach((point) => {
-        point.age += decay
+      ctx.globalAlpha = 1
+      particles = particles.filter((particle) => particle.life > 0)
+      points.forEach((point) => {
+        point.age += fade
       })
-      points.current = points.current.filter((point) => point.age < 1)
-
-      animationFrameId.current = requestAnimationFrame(animate)
+      points = points.filter((point) => point.age < 1)
+      if (points.length || particles.length) {
+        animationFrameId = requestAnimationFrame(animate)
+      } else {
+        ctx.clearRect(0, 0, width, height)
+      }
     }
 
     updateCanvasSize()
+    const resizeObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(updateCanvasSize)
+    resizeObserver?.observe(canvas)
     window.addEventListener('resize', updateCanvasSize)
     container.addEventListener('mousemove', handleMouseMove)
     container.addEventListener('mouseleave', handleMouseLeave)
-    animate()
 
     return () => {
+      resizeObserver?.disconnect()
       window.removeEventListener('resize', updateCanvasSize)
       container.removeEventListener('mousemove', handleMouseMove)
       container.removeEventListener('mouseleave', handleMouseLeave)
-      if (animationFrameId.current) {
-        cancelAnimationFrame(animationFrameId.current)
-      }
+      if (animationFrameId !== null) cancelAnimationFrame(animationFrameId)
+      ctx.clearRect(0, 0, width, height)
     }
   }, [colors, trailLength, decay, smoothing, particleCount, containerRef])
 
   return (
     <div
+      aria-hidden="true"
       className={clsx('pointer-events-none absolute inset-0', className)}
       style={{ width: '100%', height: '100%', zIndex: 100 }}
     >

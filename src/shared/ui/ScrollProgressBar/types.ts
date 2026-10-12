@@ -3,7 +3,7 @@ import type * as React from 'react'
 export interface ScrollProgressBarProps {
   /** 滚动容器元素；未指定时监听页面滚动。 */
   container?: HTMLElement | null
-  /** 定位方式。 */
+  /** 定位方式；独立使用默认 fixed，ScrollArea 默认 sticky。 */
   position?: 'fixed' | 'relative' | 'absolute' | 'sticky'
   /** 进度条高度，默认 3px。 */
   height?: number

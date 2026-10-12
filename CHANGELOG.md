@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [5.1.0](https://github.com/wkylin/pro-react-admin/compare/v5.0.0...v5.1.0) (2026-10-12)
+
+### Features
+
+- Rebuild the project architecture view around the current application, platform, delivery, and deployment layers.
+- Expand the Webpack reference page with the build scenarios and configuration used by this repository.
+- Restore populated values when editing users and roles in the administration examples.
+
+### Bug Fixes
+
+- Repair Storybook previews and component behavior across animation, visualization, layout, media, and shared UI examples.
+- Give the header avatar its own dimensions while preserving the compact sizing of other tool icons.
+
+The GitHub Release includes a verified `@w.ui/wui-react` 5.1.0 tarball. npm publication remains a separate step.
+
 ## [4.0.0](https://github.com/wkylin/pro-react-admin/compare/v3.8.0...v4.0.0) (2026-07-08)
 
 

@@ -5,6 +5,14 @@ const meta = {
   title: 'Shared/ScrollProgressBar',
   component: ScrollArea,
   tags: ['autodocs'],
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '进度条吸附在本区域顶部，仅跟踪区域内部滚动。顶部进度为 0，滚动到底部达到 100%；内容无需滚动时保持 0。',
+      },
+    },
+  },
   args: {
     style: { height: 360, border: '1px solid #d9d9d9' },
     height: 4,

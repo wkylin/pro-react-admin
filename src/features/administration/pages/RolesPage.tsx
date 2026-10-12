@@ -36,8 +36,6 @@ export default function RolesPage() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
   const open = (role: ManagedRole | 'new') => {
-    form.resetFields()
-    form.setFieldsValue(role === 'new' ? { name: '', code: '', permissions: [] } : role)
     setError(undefined)
     setEditing(role)
   }
@@ -155,7 +153,19 @@ export default function RolesPage() {
         destroyOnHidden
       >
         {error && <Alert type="error" title={error} showIcon />}
-        <Form form={form} layout="vertical" preserve={false}>
+        <Form
+          key={editing === 'new' ? 'new' : (editing?.id ?? 'closed')}
+          form={form}
+          layout="vertical"
+          preserve={false}
+          initialValues={
+            editing === 'new'
+              ? { permissions: [] }
+              : editing
+                ? { name: editing.name, code: editing.code, permissions: editing.permissions }
+                : undefined
+          }
+        >
           <Form.Item name="name" label={t('admin.name')} rules={[{ required: true, whitespace: true, max: 80 }]}>
             <Input maxLength={80} />
           </Form.Item>

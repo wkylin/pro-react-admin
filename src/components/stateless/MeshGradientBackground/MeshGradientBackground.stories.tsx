@@ -7,7 +7,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div style={{ position: 'relative', minHeight: 360, padding: 24, overflow: 'hidden' }}>
+      <div style={{ position: 'relative', height: 360, overflow: 'hidden' }}>
         <Story />
       </div>
     ),

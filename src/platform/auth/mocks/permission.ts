@@ -1,5 +1,5 @@
 import { routePermissionMap } from '../model/policy'
-import { Role, UserPermission, PermissionCode } from '../model/permission'
+import type { Role, UserPermission, PermissionCode } from '../model/permission'
 
 /**
  * 完整路由列表（包含所有实际存在的路由）

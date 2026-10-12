@@ -4,7 +4,7 @@ import { withTimeout } from '@platform/api/core/async'
  * 单例模式，提供权限检查和管理功能
  */
 
-import { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../model/permission'
+import type { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../model/permission'
 import * as permissionAPI from '../api/permission'
 import { canAccessPath, matchesPermission } from '../model/policy'
 import { readStoredToken, readEnterpriseSession, SESSION_CHANGED_EVENT } from '../model/session'

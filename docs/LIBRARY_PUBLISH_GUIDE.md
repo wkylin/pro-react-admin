@@ -125,14 +125,14 @@ npm profile enable-2fa auth-and-writes
 然后重新发布固定 tarball，按 CLI 提示完成认证。若需要 OTP，在自己终端执行，并把占位值替换为当前验证码：
 
 ```bash
-npm publish ./artifacts/npm/w.ui-wui-react-5.0.0.tgz --access public --tag latest --registry=https://registry.npmjs.org/ --ignore-scripts --otp="你的当前验证码"
+npm publish ./artifacts/npm/w.ui-wui-react-5.1.0.tgz --access public --tag latest --registry=https://registry.npmjs.org/ --ignore-scripts --otp="你的当前验证码"
 ```
 
 另一种认证方式是 npmjs 中具有该包写权限、允许 bypass 2FA 的 granular access token；GitHub Actions 优先使用下面的 Trusted Publishing。无论使用哪种方式，都要在发布后通过 registry 核验，不能把登录成功或 tarball 生成当成发布成功。
 
 ## 打包并发布同一份产物
 
-先完成上面的构建和所有检查。下面以稳定版 **5.0.0** 为例，后续发布时用本地 manifest 对应的真实版本替换文件名。
+先完成上面的构建和所有检查。下面以稳定版 **5.1.0** 为例，后续发布时用本地 manifest 对应的真实版本替换文件名。
 
 仅查看打包清单：
 
@@ -147,17 +147,17 @@ node --input-type=module -e "import fs from 'node:fs'; fs.mkdirSync('artifacts/n
 npm pack ./packages/wui-react --pack-destination artifacts/npm --ignore-scripts
 ```
 
-生成 `artifacts/npm/w.ui-wui-react-5.0.0.tgz`；具体文件名以 npm 输出为准。`artifacts/` 被 Git 忽略，不会污染源码提交。
+生成 `artifacts/npm/w.ui-wui-react-5.1.0.tgz`；具体文件名以 npm 输出为准。`artifacts/` 被 Git 忽略，不会污染源码提交。
 
 上传刚才生成的 tarball：
 
 ```bash
-npm publish ./artifacts/npm/w.ui-wui-react-5.0.0.tgz --access public --tag latest --registry=https://registry.npmjs.org/ --ignore-scripts
+npm publish ./artifacts/npm/w.ui-wui-react-5.1.0.tgz --access public --tag latest --registry=https://registry.npmjs.org/ --ignore-scripts
 ```
 
 这里的 `--ignore-scripts` 用于发布**已经完成构建和完整验证**的固定 tarball，避免上传时再次运行生命周期脚本、重建另一份包。它不代替发布前检查。使用 tarball 也不依赖全局 pnpm 启动器。
 
-发布预发布包时，先将 manifest 改成对应版本，再完整准备和打包，例如 `5.1.0-beta.0` 应使用该文件名和 `--tag beta`。不能将稳定版本随意发布到 beta，也不能将 beta 版本放到 latest。
+发布预发布包时，先将 manifest 改成对应版本，再完整准备和打包，例如 `5.2.0-beta.0` 应使用该文件名和 `--tag beta`。不能将稳定版本随意发布到 beta，也不能将 beta 版本放到 latest。
 
 ### 从工作区直接发布
 
@@ -172,10 +172,10 @@ pnpm run pub
 
 ## 发布后核验与使用
 
-以 5.0.0 为例：
+以 5.1.0 为例：
 
 ```bash
-npm view @w.ui/wui-react@5.0.0 version dist.integrity dist.tarball --json --registry=https://registry.npmjs.org/
+npm view @w.ui/wui-react@5.1.0 version dist.integrity dist.tarball --json --registry=https://registry.npmjs.org/
 npm dist-tag ls @w.ui/wui-react --registry=https://registry.npmjs.org/
 ```
 
@@ -184,7 +184,7 @@ npm dist-tag ls @w.ui/wui-react --registry=https://registry.npmjs.org/
 在独立 React 项目安装，以下范围与包 peer 契约一致：
 
 ```bash
-pnpm add @w.ui/wui-react@5.0.0 "react@^19" "react-dom@^19" "antd@^6" "framer-motion@^12"
+pnpm add @w.ui/wui-react@5.1.0 "react@^19" "react-dom@^19" "antd@^6" "framer-motion@^12"
 ```
 
 ```tsx
@@ -207,8 +207,8 @@ export function CodeInput() {
 在版本和源码已提交后，用与 manifest 一致的标签触发，例如：
 
 ```bash
-git tag wui-react-v5.0.0
-git push origin wui-react-v5.0.0
+git tag wui-react-v5.1.0
+git push origin wui-react-v5.1.0
 ```
 
 不要为已通过本机发布的同一版本再次触发发布；工作流会拒绝重复版本。发布来源和标签必须对应最终包源码。

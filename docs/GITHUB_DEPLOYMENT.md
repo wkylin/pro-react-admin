@@ -134,27 +134,27 @@ GitHub Pages 只托管静态内容，不能运行 Express，不能存储可写 S
 
 真实模式需先在有持久卷的 Node 24 主机部署企业 API，再以 HTTPS/CORS 连接前端。生产前端覆盖 `REACT_APP_USE_MOCK=false`、`APP_BASE_URL=https://api.example.com`，PUBLIC_URL 对应实际部署路径，并独立验证登录和越权拒绝；不要直接使用公开演示构建冒充真实权限隔离。初始化、Docker、HTTPS、Vercel 配置与数据库边界见 [Vercel / SQLite](VERCEL_SQLITE.md)。
 
-## 创建 v5.0.0 标签与 Release
+## 创建 v5.1.0 标签与 Release
 
-根应用标签为 `v5.0.0`；UI 包标签为 `wui-react-v5.0.0`。不要移动已经存在的标签，也不要使用 `git push --tags` 意外触发组件包重复发布。如果本次改动尚未提交，在当前 `main` 分支执行完整发布流程：
+根应用标签为 `v5.1.0`。本次 GitHub Release 附带 5.1.0 组件包构建产物，不自动发布到 npm，也不创建 `wui-react-v5.1.0` 标签。不要移动已经存在的标签，也不要使用 `git push --tags` 意外触发组件包发布。如果本次改动尚未提交，在当前 `main` 分支执行完整发布流程：
 
 ```bash
 git status --short
 git fetch origin main --tags
 git add -A
-git commit -m "feat: release enterprise platform and component previews for v5"
-git tag -a v5.0.0 -m "Pro React Admin v5.0.0"
-git push --atomic origin main v5.0.0
+git commit -m "feat: release component previews and architecture for v5.1.0"
+git tag -a v5.1.0 -m "Pro React Admin v5.1.0"
+git push --atomic origin main v5.1.0
 ```
 
 已经提交本次改动时跳过 `git add` 和 `git commit`。`--atomic` 要求分支与标签一起推送成功，避免分支更新被拒绝后标签仍触发 Release。首次部署前按本文开头启用 Pages；推送 `main` 触发 Pages 的 `all` 部署，推送应用标签触发 Release。
 
-新增 `.github/workflows/release.yml` 在收到应用 `v*` 标签后校验根版本、文档与 Storybook，构建并验证 UI 包，生成 tarball/checksum，创建 GitHub Release；不会执行 npm publish。发布说明来自 `docs/releases/v5.0.0.md`。Actions 创建的 Release 只在这些检查通过后生成。
+`.github/workflows/release.yml` 在收到应用 `v*` 标签后校验根版本、文档与 Storybook，构建并验证 UI 包，生成 tarball/checksum，创建 GitHub Release；不会执行 npm publish。发布说明来自 `docs/releases/v5.1.0.md`。Actions 创建的 Release 只在这些检查通过后生成。
 
 已有标签触发失败时，可重跑对应 Release workflow；不要为重跑修改标签。需要手动创建时，先确认该标签指向当前待发布提交，执行：
 
 ```bash
-gh release create v5.0.0 --verify-tag --title "Pro React Admin v5.0.0" --notes-file docs/releases/v5.0.0.md
+gh release create v5.1.0 --verify-tag --title "Pro React Admin v5.1.0" --notes-file docs/releases/v5.1.0.md
 ```
 
 自动 workflow 与手动命令二选一，避免重复创建。npmjs 的 2FA/Trusted Publishing 与 GitHub Release 是两套发布流程；npm 未完成认证不表示 GitHub Release 已成功或失败。组件包构建、发布与核验命令见 [lib 发布指南](LIBRARY_PUBLISH_GUIDE.md)。

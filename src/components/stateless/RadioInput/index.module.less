@@ -83,4 +83,19 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
+  &.wrapText {
+    align-items: flex-start;
+
+    .indicator {
+      margin-top: calc((1.5em - 16px) / 2);
+    }
+
+    .label {
+      white-space: normal;
+      overflow: visible;
+      overflow-wrap: anywhere;
+      text-overflow: clip;
+    }
+  }
 }

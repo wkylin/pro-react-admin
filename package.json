@@ -1,6 +1,6 @@
 {
   "name": "pro-react-admin",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "type": "module",
   "private": true,
   "description": "Multi-project React admin framework and microfrontend examples.",
@@ -120,7 +120,9 @@
     "clean:dist": "rimraf  ./dist",
     "clean:modules": "rimraf  node_modules",
     "js-analyzer": "js-analyzer --root ./",
-    "storybook": "storybook dev -p 6006",
+    "storybook": "cross-env BABEL_ENV=storybook storybook dev -p 6006",
+    "storybook:clean": "rimraf node_modules/.cache/storybook node_modules/.cache/.storybook node_modules/.cache/storybook-babel",
+    "storybook:reset": "npm run storybook:clean && npm run storybook",
     "build-storybook": "cross-env STORYBOOK_BUILD=1 storybook build -o storybook-static",
     "postbuild-storybook": "node ./scripts/add-storybook-base.cjs",
     "serve:storybook": "serve storybook-static -p 6007",

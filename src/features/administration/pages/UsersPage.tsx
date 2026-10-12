@@ -53,8 +53,6 @@ export default function UsersPage() {
     return () => controller.abort()
   }, [provider, t, createAllowed, updateAllowed, roleRevision])
   const open = (user: ManagedUser | 'new') => {
-    form.resetFields()
-    form.setFieldsValue(user === 'new' ? { name: '', email: '', role: roles[0]?.code, status: 'active' } : user)
     setError(undefined)
     setEditing(user)
   }
@@ -191,7 +189,19 @@ export default function UsersPage() {
         destroyOnHidden
       >
         {error && <Alert type="error" title={error} showIcon />}
-        <Form form={form} layout="vertical" preserve={false}>
+        <Form
+          key={editing === 'new' ? 'new' : (editing?.id ?? 'closed')}
+          form={form}
+          layout="vertical"
+          preserve={false}
+          initialValues={
+            editing === 'new'
+              ? { role: roles[0]?.code, status: 'active' }
+              : editing
+                ? { name: editing.name, email: editing.email, role: editing.role, status: editing.status }
+                : undefined
+          }
+        >
           <Form.Item name="name" label={t('admin.name')} rules={[{ required: true, whitespace: true, max: 80 }]}>
             <Input maxLength={80} />
           </Form.Item>

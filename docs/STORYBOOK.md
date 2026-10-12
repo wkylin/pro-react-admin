@@ -19,12 +19,16 @@ npm run storybook
 npm run storybook -- --port 6008 --no-open
 ```
 
-`$RefreshSig$ is not defined` 的原因是根 Babel 开发配置注入了 React Refresh，但 Storybook 没有应用的 Refresh runtime。`.storybook/main.ts` 为 Storybook 指定独立的 Babel `envName: storybook`；应用开发构建继续保留 Refresh。不要通过给 window 写空函数来遮蔽异常。配置改动后需要重启进程；怀疑旧构建缓存时，先停止服务，再删除 Storybook 专用缓存：
+`$RefreshSig$ is not defined` 的原因是根 Babel 开发配置注入了 React Refresh，但 Storybook 没有应用的 Refresh runtime。`.storybook/main.ts` 为 Babel loader 指定独立的 `envName: storybook`，`npm run storybook` 也通过 cross-env 显式设置 `BABEL_ENV=storybook`；应用开发构建继续保留 Refresh。
+
+已经运行的进程不会自动采用新的启动环境或主配置。更新配置后，先在旧终端按 Ctrl+C 停止 Storybook，再清理专用缓存并重新启动：
 
 ```bash
-node --input-type=module -e "import fs from 'node:fs'; for (const p of ['node_modules/.cache/storybook', 'node_modules/.cache/.storybook', 'node_modules/.cache/storybook-babel']) fs.rmSync(p, { recursive: true, force: true })"
-npm run storybook
+npm run storybook:reset
+# 打开 http://localhost:6006，并刷新原来的浏览器页面
 ```
+
+单独清理缓存使用 `npm run storybook:clean`。不要在服务运行时清缓存；同一工作区同时启动多个 Storybook 进程会共享开发输出目录，可能引起 HMR 持续重载，应先停止旧进程再改端口。不要给 window 写空的 Refresh 函数来遮蔽异常。生产静态构建不走相同的开发运行时，构建通过还需要验证开发预览。
 
 根 Babel 的类型导入应显式使用 `import type`。例如 ECharts 的 GeoJSON 类型没有可执行 `.js` 文件，不能让 Babel 将它保留为运行时 import。
 
@@ -41,6 +45,16 @@ npm run storybook
 
 Storybook 全局提供应用 store、翻译、MemoryRouter、主题、Ant Design ConfigProvider/App。样式使用应用 Tailwind 源文件，Less 的 CSS Modules 保留默认导出，SVG 组件按应用规则转译。示例不启动企业 API；TreeList 和 SmartChat 提供本地模拟响应。外部视频、图片、IP 和 Sandpack 示例仍可能访问第三方服务，离线浏览不保证这些资源可用。
 
+ScrollableSections 的 Default 示例自动识别最近的滚动容器，滚动到哪个区块就高亮对应导航；Explicit Container 示例通过 `scrollContainerRef` 指定嵌套容器。无滚动祖先时组件监听窗口。点击导航会在吸顶导航下方留出 20px 间距并平滑定位，滚到最后一个区块时导航保持可见。
+
+MagicTrail 的 Default 示例在深色区域展示鼠标轨迹与粒子，需要移动鼠标触发；停下或移出后效果逐渐消退。Explicit Container 示例演示外层 `containerRef` 和 RGB/HSL/命名颜色，Trail Only 将 `particleCount` 设为 0。覆盖层不拦截底层按钮。实际使用时将组件放在有明确尺寸且 `position: relative` 的容器中；不传 ref 时默认监听父容器，绘制位置以 Canvas 为原点。
+
+TransferHistory 的 Default 默认显示 3 家公司，分支短线以箭头连接公司卡片；“展开全部公司”旁显示向下箭头，展开后改为向上箭头并可收起。Single Company / All Companies 分别展示 1 家和全部公司，Controls 可调整 `defaultDisplayCount`。左侧主连接线仅覆盖首末可见公司，不延伸至展开按钮；时间轴超宽时可横向滚动。
+
+ScrollProgressBar 的 Default / Gradient 使用 ScrollArea，进度条吸附在示例自身滚动区域的顶部；FixTabPanel 也使用容器内的 sticky 定位。需要滚动示例内部区域，顶部进度为 0，中间约 50%，底部 100%；Empty 内容无需滚动，因此宽度保持为零。独立 ScrollProgressBar 省略 container 时仍支持页面进度，默认 fixed。
+
+ShootingStars 的 Default 自动在深色区域生成流星，无需鼠标操作；示例使用 500～1000ms 间隔和较长尾迹，Warm Colors 展示暖色效果，Compact 展示 320px 窄容器。组件按自身 SVG 尺寸生成和移除流星，随容器大小变化调整，不使用浏览器窗口尺寸。实际使用时放在有明确尺寸且 `position: relative` 的容器中。
+
 ## 构建与检查
 
 ```bash
@@ -52,7 +66,7 @@ node scripts/validate-stories.mjs --built
 npm run serve:storybook
 ```
 
-静态输出为 `storybook-static`，预览 http://localhost:6007。`check:stories` 检查每个 UI 入口是否有 story；`--built` 进一步确认每个组件进入实际构建索引。Webpack CI 和 Pages workflow 同时执行源码覆盖、类型及构建索引检查。索引检查不能代替浏览器交互验证。
+静态输出为 `storybook-static`，预览 http://localhost:6007。`check:stories` 检查每个 UI 入口是否有 story；`--built` 进一步确认每个组件进入实际构建索引。`test:tooling` 包含真实 Storybook Babel compiler addon 与 Webpack 开发转译回归，验证截图报错涉及的 store/theme 模块能够加载。Webpack CI 和 Pages workflow 同时执行源码覆盖、类型及构建索引检查。索引检查不能代替浏览器交互验证。
 
 正常环境优先使用 package scripts；包管理器启动器出现异常时，可以用已安装的 Node CLI 复现：
 

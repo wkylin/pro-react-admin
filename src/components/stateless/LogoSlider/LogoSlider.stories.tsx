@@ -1,4 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import SpringPng from '@assets/images/spring.png'
+import HePng from '@assets/images/he.png'
+import SongPng from '@assets/images/song.png'
+import XuePng from '@assets/images/xue.png'
 import Component from './index'
 
 const meta = {
@@ -12,7 +16,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { companies: ['React', 'Ant Design', 'TypeScript', 'Webpack', 'Zustand'], radius: 120 },
+  args: { companies: [SpringPng, HePng, SongPng, XuePng], radius: 120 },
 } satisfies Meta<typeof Component>
 
 export default meta

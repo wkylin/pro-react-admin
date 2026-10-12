@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import { Route } from 'react-router-dom'
 import Component from './index'
 
 const meta = {
@@ -12,7 +13,9 @@ const meta = {
       </div>
     ),
   ],
-  args: { children: <div style={{ padding: 24 }}>Pro React Admin 5.0 · 当前源码示例</div> },
+  args: {
+    children: <Route path="/" element={<div style={{ padding: 24 }}>Pro React Admin 5.0 · 当前源码示例</div>} />,
+  },
 } satisfies Meta<typeof Component>
 
 export default meta

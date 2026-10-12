@@ -444,14 +444,15 @@ const renderMobileActions = ({
 const renderHeaderActions = (isMobile: boolean, props: HeaderActionsProps) =>
   isMobile ? renderMobileActions(props) : renderDesktopActions(props)
 
-const renderUserTrigger = (isAuthenticated: boolean, user: GitHubUser | null, iconButtonStyle: CSSProperties) =>
+const renderUserTrigger = (isAuthenticated: boolean, user: GitHubUser | null) =>
   isAuthenticated && user ? (
-    <Button type="text" shape="circle" aria-label={user.name || user.login} style={iconButtonStyle}>
+    <Button type="text" shape="circle" aria-label={user.name || user.login} className={styles.userTrigger}>
       <Avatar
+        size={40}
         src={user.avatar_url || undefined}
         icon={
           <AnimatedIcon variant="spin" mode="hover">
-            <UserOutlined style={{ fontSize: 16 }} />
+            <UserOutlined style={{ fontSize: 20 }} />
           </AnimatedIcon>
         }
       />
@@ -460,12 +461,12 @@ const renderUserTrigger = (isAuthenticated: boolean, user: GitHubUser | null, ic
     <Button
       icon={
         <AnimatedIcon variant="spin" mode="hover">
-          <UserOutlined style={{ fontSize: 16 }} />
+          <UserOutlined style={{ fontSize: 20 }} />
         </AnimatedIcon>
       }
       type="default"
-      shape="round"
-      style={iconButtonStyle}
+      shape="circle"
+      className={styles.userTrigger}
     />
   )
 
@@ -614,7 +615,7 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
             setSearchOpen,
           })}
           <Dropdown arrow menu={{ items, onClick: handleUserMenuClick }} trigger={['click']}>
-            {renderUserTrigger(isAuthenticated, user, iconButtonStyle)}
+            {renderUserTrigger(isAuthenticated, user)}
           </Dropdown>
           {readEnterpriseSession() && <Tag title={t('identity.tenant')}>{readEnterpriseSession()?.tenantId}</Tag>}
           {/* 全局搜索弹窗 */}

@@ -2,7 +2,7 @@ import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import { Drawer, Switch, Divider, Tooltip, theme, ColorPicker, Radio } from 'antd'
 import { CheckOutlined } from '@ant-design/icons'
-import { useProThemeContext, ThemeSettings } from '@/theme/hooks'
+import { useProThemeContext, type ThemeSettings } from '@/theme/hooks'
 import { useTranslation } from 'react-i18next'
 
 const { useToken } = theme

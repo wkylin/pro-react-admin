@@ -76,33 +76,32 @@ const AnimationTabs = ({
           </button>
         ))}
       </div>
-      <FadeInDiv tabs={tabs} key={active.value} hovering={hovering} className={clsx('mt-32', contentClassName)} />
+      <FadeInDiv tabs={tabs} key={active.value} hovering={hovering} className={contentClassName} />
     </>
   )
 }
 
 export const FadeInDiv = ({ className, tabs, hovering }: FadeInDivProps) => {
-  const isActive = (tab: AnimationTab) => {
-    return tab.value === tabs[0].value
-  }
   return (
-    <div className="relative h-full w-full">
+    <div className="relative mt-20 grid w-full">
       {tabs.map((tab, idx) => (
         <motion.div
           key={tab.value}
           layoutId={tab.value}
+          aria-hidden={idx !== 0}
           style={{
-            scale: 1 - idx * 0.1,
+            scale: Math.max(0.7, 1 - idx * 0.1),
             top: hovering ? idx * -50 : 0,
-            zIndex: -idx,
+            zIndex: tabs.length - idx,
             opacity: idx < 3 ? 1 - idx * 0.1 : 0,
+            pointerEvents: idx === 0 ? 'auto' : 'none',
           }}
           animate={{
-            y: isActive(tab) ? [0, 40, 0] : 0,
+            y: idx === 0 ? [0, 40, 0] : 0,
           }}
-          className={clsx('absolute top-0 left-0 h-full w-full', className)}
+          className={clsx('relative col-start-1 row-start-1 min-w-0', className)}
         >
-          {tab.content}
+          {idx === 0 ? tab.content : null}
         </motion.div>
       ))}
     </div>

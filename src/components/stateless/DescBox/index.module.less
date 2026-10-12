@@ -1,54 +1,53 @@
 .descWrapper {
+  container-type: inline-size;
   padding: 10px;
-  overflow-x: auto;
   background-color: var(--desc-bg-color);
+}
 
-  .descBox {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    font-size: 14px;
+.descColumns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px 32px;
+}
 
-    .descLabel {
-      flex: 0 0 120px;
-      color: var(--desc-label-color);
-      text-align: right;
-      margin-right: 10px;
-    }
+.descBox {
+  display: grid;
+  grid-template-columns: 6em minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
 
-    .descContent {
-      flex: 1;
-      text-align: left;
-      color: var(--desc-content-color);
+.descLabel {
+  color: var(--desc-label-color);
+  text-align: right;
+}
 
-      .descItem {
-        margin-bottom: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        justify-content: flex-start;
+.descContent {
+  min-width: 0;
+  text-align: left;
+  color: var(--desc-content-color);
+  overflow-wrap: anywhere;
+}
 
-        .descItemBox {
-          width: 33.33%;
-        }
-      }
+.descChoices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr));
+  gap: 12px 16px;
+  align-items: start;
 
-      .descItemNormal {
-        .descItemBox {
-          width: auto;
-          margin-right: 20px;
-        }
-      }
-
-      .descItem.lastItem {
-        margin-bottom: 0;
-      }
-    }
+  .descOption {
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
+    padding: 0;
   }
 }
 
-/* Mobile adjustments */
-:global(.is-mobile) .descWrapper .descBox .descLabel {
-  flex: 0 0 60px;
-  margin-right: 5px;
+@container (min-width: 960px) {
+  .descColumns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

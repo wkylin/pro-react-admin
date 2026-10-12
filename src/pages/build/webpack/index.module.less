@@ -1,0 +1,327 @@
+.page {
+  min-height: 100%;
+  container-type: inline-size;
+  background: var(--guide-surface);
+  color: var(--guide-text);
+}
+
+.inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px clamp(20px, 4%, 48px) 80px;
+}
+
+.header {
+  padding-bottom: 34px;
+  border-bottom: 1px solid var(--guide-border);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--guide-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.intro {
+  max-width: 790px;
+  margin: 14px 0 0;
+  color: var(--guide-muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--guide-border);
+  border-bottom: 1px solid var(--guide-border);
+}
+
+.flow li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px 20px 18px 0;
+}
+
+.flow li + li {
+  padding-left: 20px;
+  border-left: 1px solid var(--guide-border);
+}
+
+.flow li span {
+  color: var(--guide-muted);
+  font-size: 12px;
+}
+
+.flow code {
+  font-size: 12px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.flowNote {
+  margin: 12px 0 0;
+  color: var(--guide-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 44px;
+}
+
+.contents {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  gap: 2px;
+  padding-top: 32px;
+}
+
+.contentsLabel {
+  margin-bottom: 10px;
+  color: var(--guide-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.contents button {
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-left: 2px solid transparent;
+  background: transparent;
+  color: var(--guide-muted);
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contents button:hover,
+.contents button:focus-visible {
+  border-left-color: var(--guide-accent);
+  background: var(--guide-accent-soft);
+  color: var(--guide-accent);
+}
+
+.contents button:focus-visible {
+  outline: 2px solid var(--guide-accent);
+  outline-offset: 2px;
+}
+
+.article {
+  min-width: 0;
+}
+
+.section {
+  padding: 32px 0 38px;
+  border-bottom: 1px solid var(--guide-border);
+  scroll-margin-top: 16px;
+}
+
+.section:last-child {
+  border-bottom: 0;
+}
+
+.section h2 {
+  margin: 0 0 16px;
+  font-size: 21px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.section h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.5;
+}
+
+.section p {
+  margin: 0 0 14px;
+  color: var(--guide-muted);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.section code,
+.flowNote code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--guide-subtle);
+  color: var(--guide-text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+.tableScroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border-top: 1px solid var(--guide-border);
+}
+
+.tableScroll table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tableScroll th,
+.tableScroll td {
+  padding: 13px 12px;
+  border-bottom: 1px solid var(--guide-border);
+  font-size: 13px;
+  line-height: 1.6;
+  vertical-align: top;
+}
+
+.tableScroll thead th {
+  background: var(--guide-subtle);
+  color: var(--guide-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tableScroll tbody th {
+  min-width: 92px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tableScroll td {
+  color: var(--guide-muted);
+}
+
+.facts,
+.modeGrid {
+  display: grid;
+  gap: 22px;
+  margin: 20px 0 22px;
+}
+
+.facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.modeGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.facts > div,
+.modeGrid > div {
+  min-width: 0;
+  padding-top: 15px;
+  border-top: 2px solid var(--guide-border);
+}
+
+.facts p,
+.modeGrid p {
+  margin-bottom: 0;
+}
+
+.note {
+  margin-top: 20px;
+  padding: 14px 18px;
+  border-left: 3px solid var(--guide-accent);
+  background: var(--guide-accent-soft);
+}
+
+.note strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.note p,
+.section .reference {
+  margin-bottom: 0;
+  font-size: 13px;
+}
+
+.reference {
+  margin-top: 18px !important;
+}
+
+@container (width <= 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .contents {
+    position: static;
+    flex-direction: row;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--guide-border);
+  }
+
+  .contentsLabel {
+    display: none;
+  }
+
+  .contents button {
+    width: auto;
+    flex: none;
+    border-left: 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+
+  .contents button:hover,
+  .contents button:focus-visible {
+    border-left-color: transparent;
+    border-bottom-color: var(--guide-accent);
+  }
+}
+
+@container (width <= 650px) {
+  .inner {
+    padding: 24px 18px 64px;
+  }
+
+  .header h1 {
+    font-size: 27px;
+  }
+
+  .flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flow li:nth-child(3) {
+    padding-left: 0;
+    border-top: 1px solid var(--guide-border);
+    border-left: 0;
+  }
+
+  .flow li:nth-child(4) {
+    border-top: 1px solid var(--guide-border);
+  }
+
+  .facts,
+  .modeGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+}

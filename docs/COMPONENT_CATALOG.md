@@ -6,15 +6,15 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  843 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  674 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
-| `packages/wui-react/src` 文件 |   50 | 组件库源码、stories 与组件文档                                      |
-| 组件库 TS/JS 源文件           |   38 | 组件库自身源码，不含 MDX                                            |
-| 样式文件                      |   89 | Less、CSS、SCSS                                                     |
-| CSS Modules                   |   83 | 文件名含 `.module.`                                                 |
+| `src/` 文件                   |  849 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  679 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `packages/wui-react/src` 文件 |   51 | 组件库源码、stories 与组件文档                                      |
+| 组件库 TS/JS 源文件           |   39 | 组件库自身源码，不含 MDX                                            |
+| 样式文件                      |   91 | Less、CSS、SCSS                                                     |
+| CSS Modules                   |   85 | 文件名含 `.module.`                                                 |
 | Storybook stories             |  157 | `*.stories.*`                                                       |
-| TS/JS 测试文件                |   26 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
-| 根 package scripts            |  162 | `package.json#scripts` 命令数                                       |
+| TS/JS 测试文件                |   31 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
+| 根 package scripts            |  164 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    3 | 根应用、API 与组件库                                                |
 
 ## 可复用模块分类

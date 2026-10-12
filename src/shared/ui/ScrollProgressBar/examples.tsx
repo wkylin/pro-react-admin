@@ -32,7 +32,7 @@ export const ExampleWithDirectUsage = () => {
     <div ref={scrollRef} className="relative h-96 overflow-auto rounded-lg border">
       <ScrollProgressBar
         container={scrollContainer}
-        position="relative"
+        position="sticky"
         height={4}
         color="linear-gradient(90deg, #667eea 0%, #764ba2 100%)"
       />
@@ -50,9 +50,8 @@ export const ExampleWithDirectUsage = () => {
 // 示例5：粘性定位进度条
 export const ExampleStickyPosition = () => {
   return (
-    <div style={{ height: '400px', border: '1px solid #ccc', overflow: 'hidden' }}>
-      <ScrollProgressBar position="sticky" height={4} color="#FF9800" />
-      <div style={{ padding: '20px', height: '600px', overflow: 'auto' }}>
+    <ScrollArea style={{ height: '400px', border: '1px solid #ccc' }} height={4} color="#FF9800">
+      <div style={{ padding: '20px' }}>
         <h3>粘性定位进度条示例</h3>
         <p>进度条使用 position: sticky，会在滚动时固定在顶部。</p>
         {Array.from({ length: 30 }, (_, i) => (
@@ -61,6 +60,6 @@ export const ExampleStickyPosition = () => {
           </p>
         ))}
       </div>
-    </div>
+    </ScrollArea>
   )
 }

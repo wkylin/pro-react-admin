@@ -34,16 +34,16 @@ const Meteors = ({ starCount = 50, primaryColor = '#ffffff', className = '' }) =
           key={star.id}
           className={`absolute h-[2px] rounded-full bg-gradient-to-r from-current to-transparent drop-shadow-[0_0_6px_currentColor]`}
           style={{
-            top: `${star.topOffset}vh`,
+            top: `${star.topOffset}%`,
             width: '6em',
             color: primaryColor,
             willChange: 'transform',
           }}
-          initial={{ x: '104em' }}
-          animate={{ x: '-30em' }}
+          initial={{ left: '110%' }}
+          animate={{ left: '-30%' }}
           transition={{
             duration: star.fallDuration,
-            delay: star.fallDelay,
+            delay: -star.fallDelay,
             repeat: Infinity,
             ease: 'linear',
             repeatType: 'loop',

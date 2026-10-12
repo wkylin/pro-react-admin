@@ -35,7 +35,6 @@ const ImageMouseTrail = ({
     const relativeY = y - containerRect.top
     image.style.left = `${relativeX}px`
     image.style.top = `${relativeY}px`
-    console.log(refs.current[refs.current?.length - 1])
     if (currentZIndexRef.current > 40) {
       currentZIndexRef.current = 1
     }
@@ -58,9 +57,12 @@ const ImageMouseTrail = ({
   const handleOnMove = (e: PointerPosition) => {
     if (distanceFromLast(e.clientX, e.clientY) > window.innerWidth / distance) {
       const lead = refs.current[globalIndex % refs.current.length].current
-      const tail = refs.current[(globalIndex - maxNumberOfImages) % refs.current.length]?.current
-      if (lead) activate(lead, e.clientX, e.clientY)
+      const tail =
+        globalIndex >= maxNumberOfImages && maxNumberOfImages < refs.current.length
+          ? refs.current[(globalIndex - maxNumberOfImages) % refs.current.length]?.current
+          : null
       if (tail) deactivate(tail)
+      if (lead) activate(lead, e.clientX, e.clientY)
       globalIndex++
     }
   }
@@ -75,20 +77,18 @@ const ImageMouseTrail = ({
       )}
     >
       {items.map((item, index) => (
-        <>
-          <img
-            key={index}
-            className={clsx(
-              "opacity:0 data-[status='active']:ease-out-expo absolute -translate-x-[50%] -translate-y-[50%] scale-0 object-cover transition-transform duration-300 data-[status='active']:scale-100 data-[status='active']:opacity-100 data-[status='active']:duration-500",
-              imgClass
-            )}
-            data-index={index}
-            data-status="inactive"
-            src={item}
-            alt={`image-${index}`}
-            ref={refs.current[index]}
-          />
-        </>
+        <img
+          key={index}
+          className={clsx(
+            "data-[status='active']:ease-out-expo absolute -translate-x-[50%] -translate-y-[50%] scale-0 object-cover opacity-0 transition-[transform,opacity] duration-300 data-[status='active']:scale-100 data-[status='active']:opacity-100 data-[status='active']:duration-500",
+            imgClass
+          )}
+          data-index={index}
+          data-status="inactive"
+          src={item}
+          alt={`image-${index}`}
+          ref={refs.current[index]}
+        />
       ))}
       <article className="relative z-40">{children}</article>
     </section>

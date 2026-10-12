@@ -7,12 +7,20 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     (Story) => (
-      <div style={{ position: 'relative', minHeight: 360, padding: 24, overflow: 'hidden' }}>
+      <div
+        style={{
+          position: 'relative',
+          height: 360,
+          overflow: 'hidden',
+          background: '#0b1326',
+          fontSize: 12,
+        }}
+      >
         <Story />
       </div>
     ),
   ],
-  args: {},
+  args: { starCount: 70 },
 } satisfies Meta<typeof Component>
 
 export default meta

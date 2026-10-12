@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { motion, useScroll, useSpring } from 'motion/react'
 import clsx from 'clsx'
 import type { ScrollAreaProps, ScrollProgressBarProps } from './types'
@@ -16,10 +16,8 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
     restDelta: 0.001,
   },
 }) => {
-  const internalRef = useRef<HTMLDivElement>(null)
-
   // Omit container to track the document; the progress bar is not a scroll area.
-  const scrollContainerRef = container ? { current: container } : undefined
+  const scrollContainerRef = useMemo(() => (container ? { current: container } : undefined), [container])
 
   const { scrollYProgress } = useScroll({
     container: scrollContainerRef,
@@ -53,6 +51,8 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
               left: 0,
               width: '100%',
               zIndex: 10,
+              // Keep the sticky overlay out of the content's scroll height.
+              marginBottom: -height,
             }
           : {
               position: 'relative' as const,
@@ -61,7 +61,6 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
 
   return (
     <motion.div
-      ref={internalRef}
       className={clsx('scroll-progress-bar', className)}
       style={{
         ...positionStyles,
@@ -69,6 +68,7 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
         backgroundImage: typeof color === 'string' && color.includes('gradient') ? color : undefined,
         backgroundColor: typeof color === 'string' && !color.includes('gradient') ? color : undefined,
         borderRadius: '3px',
+        pointerEvents: 'none',
         transformOrigin: 'left',
         scaleX: scaleX,
       }}
@@ -79,17 +79,18 @@ const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
 export default ScrollProgressBar
 
 // 包装器组件：提供滚动容器和进度条
-export const ScrollArea: React.FC<ScrollAreaProps> = ({ children, className, style, ...progressBarProps }) => {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [containerNode, setContainerNode] = React.useState<HTMLElement | null>(null)
-
-  React.useEffect(() => {
-    setContainerNode(scrollRef.current)
-  }, [])
+export const ScrollArea: React.FC<ScrollAreaProps> = ({
+  children,
+  className,
+  style,
+  position = 'sticky',
+  ...progressBarProps
+}) => {
+  const [containerNode, setContainerNode] = useState<HTMLDivElement | null>(null)
 
   return (
-    <div ref={scrollRef} className={clsx('relative overflow-auto', className)} style={style}>
-      {containerNode && <ScrollProgressBar container={containerNode} position="relative" {...progressBarProps} />}
+    <div ref={setContainerNode} className={clsx('relative overflow-auto', className)} style={style}>
+      {containerNode && <ScrollProgressBar container={containerNode} position={position} {...progressBarProps} />}
       {children}
     </div>
   )

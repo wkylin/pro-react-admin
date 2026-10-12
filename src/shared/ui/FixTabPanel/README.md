@@ -12,4 +12,6 @@ import FixTabPanel from '@shared/ui/FixTabPanel'
 
 fill 默认 true，控制内部内容是否填满高度；showScrollProgress 默认 true；scrollProgressProps 可覆盖进度条配置。容器节点传给 ScrollProgressBar 和 BackTop，父级必须提供可计算高度。业务权限、Tab 路由与缓存由上层布局负责。
 
+进度条默认 sticky，定位在面板自身顶部，面板内容滚动时保持可见；它不增加内容高度。可通过 `scrollProgressProps.position` 显式指定其它定位方式。容器 ref 和 onScroll 仍绑定实际滚动节点。
+
 属性类型见 [types.ts](types.ts)，相关组件见 [ScrollProgressBar](../ScrollProgressBar/README.md)。

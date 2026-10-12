@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { FloatButton } from 'antd'
-import { VerticalAlignTopOutlined } from '@ant-design/icons'
+import VerticalAlignTopOutlined from '@ant-design/icons/VerticalAlignTopOutlined'
 import AnimatedIcon from '@wui/AnimatedIcon'
 import ScrollProgressBar from '../ScrollProgressBar'
 import type { FixTabPanelProps } from './types'
@@ -41,11 +41,7 @@ const FixTabPanel = React.forwardRef<HTMLDivElement, FixTabPanelProps>(
         }}
       >
         {showScrollProgress && containerNode && (
-          <ScrollProgressBar
-            container={containerNode}
-            position="fixed" // sticky
-            {...scrollProgressProps}
-          />
+          <ScrollProgressBar container={containerNode} position="sticky" {...scrollProgressProps} />
         )}
         <div
           style={{

@@ -7,6 +7,8 @@ import { createPagesPlan } from '../config/pages-plan.mjs'
 import { workspaceRoot, resolveInside } from '../config/project-registry.mjs'
 import { localCli } from './local-cli.mjs'
 
+const { version } = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8'))
+
 const repository = process.env.GITHUB_REPOSITORY || 'wkylin/pro-react-admin'
 const [owner, repo] = repository.split('/')
 const plan = createPagesPlan({
@@ -50,7 +52,7 @@ if (process.argv.includes('--dry-run')) {
     ...(plan.tasks.some((task) => task.destination === 'mfe') ? [['微前端', './mfe/#/portal']] : []),
     ['Storybook', './storybook/'],
   ]
-  const html = `<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Pro React Admin 5.0</title><body><main><h1>Pro React Admin 5.0</h1><ul>${links.map(([label, href]) => `<li><a href="${href}">${label}</a></li>`).join('')}</ul></main></body></html>`
+  const html = `<!doctype html><html lang="zh"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Pro React Admin ${version}</title><body><main><h1>Pro React Admin ${version}</h1><ul>${links.map(([label, href]) => `<li><a href="${href}">${label}</a></li>`).join('')}</ul></main></body></html>`
   fs.writeFileSync(path.join(output, 'portal.html'), html)
   if (!fs.existsSync(path.join(output, 'index.html'))) fs.writeFileSync(path.join(output, 'index.html'), html)
   fs.writeFileSync(path.join(output, '.nojekyll'), '')

@@ -12,10 +12,21 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: { defaultDisplayCount: 3 },
+  argTypes: {
+    defaultDisplayCount: { control: { type: 'range', min: 1, max: 5, step: 1 } },
+  },
 } satisfies Meta<typeof Component>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
+
+export const SingleCompany: Story = {
+  args: { defaultDisplayCount: 1 },
+}
+
+export const AllCompanies: Story = {
+  args: { defaultDisplayCount: 5 },
+}

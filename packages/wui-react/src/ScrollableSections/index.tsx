@@ -10,7 +10,7 @@ import styles from './index.module.less'
  * @param {Object} sections[].title - section标题
  * @param {string} sections[].content - section内容文本
  * @param {React.Component} sections[].component - 可选的自定义组件
- * @param {React.RefObject} scrollContainerRef - 外部滚动容器的ref
+ * @param {React.RefObject} scrollContainerRef - 外部滚动容器的ref，省略时识别最近滚动祖先或窗口
  * @param {string} className - 额外的CSS类名
  * @param {string} navUlClassName - 导航ul的自定义CSS类名
  * @param {string} navLiClassName - 导航li的自定义CSS类名
@@ -37,12 +37,35 @@ export interface ScrollableSectionsProps {
 
 const EMPTY_SECTIONS: ScrollableSection[] = []
 
-const findSectionIndex = (positions: readonly number[], scrollTop: number) => {
-  if (positions.length === 0 || scrollTop <= positions[0]) return 0
-  for (let index = 0; index < positions.length - 1; index++) {
-    if (scrollTop > positions[index] && scrollTop <= positions[index + 1]) return index + 1
+type ScrollTarget = HTMLElement | Window
+const SECTION_GAP = 20
+
+const findScrollTarget = (element: HTMLElement): ScrollTarget => {
+  let parent = element.parentElement
+  while (parent && parent !== document.body && parent !== document.documentElement) {
+    if (/(auto|scroll|overlay)/.test(window.getComputedStyle(parent).overflowY)) return parent
+    parent = parent.parentElement
   }
-  return positions.length - 1
+  return window
+}
+
+const isWindow = (target: ScrollTarget): target is Window => target === window
+
+const getScrollViewport = (target: ScrollTarget) => {
+  if (isWindow(target)) {
+    return {
+      top: 0,
+      scrollTop: window.scrollY,
+      height: window.innerHeight,
+      maxScroll: Math.max(0, (document.scrollingElement ?? document.documentElement).scrollHeight - window.innerHeight),
+    }
+  }
+  return {
+    top: target.getBoundingClientRect().top + target.clientTop,
+    scrollTop: target.scrollTop,
+    height: target.clientHeight,
+    maxScroll: Math.max(0, target.scrollHeight - target.clientHeight),
+  }
 }
 
 const ScrollableSections = ({
@@ -58,9 +81,10 @@ const ScrollableSections = ({
   const [containerHeight, setContainerHeight] = useState('80vh')
   const [navHeight, setNavHeight] = useState(80)
   const [activeNavItemIndex, setActiveNavItemIndex] = useState(0)
-  const [activeScrollY, setActiveScrollY] = useState(0)
   const [scrollHighlightIndex, setScrollHighlightIndex] = useState(-1)
 
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const scrollTargetRef = useRef<ScrollTarget | null>(null)
   const navRef = useRef<HTMLElement | null>(null)
   const sectionRefs = useRef<Array<HTMLDivElement | null>>([])
 
@@ -90,143 +114,97 @@ const ScrollableSections = ({
     return clsx(...classes)
   }
 
-  // 使用传统的事件监听来跟踪滚动状态
+  // Explicit containers take precedence; standalone stories also work without a ref.
   useEffect(() => {
-    const container = scrollContainerRef?.current
-    if (!container) return
+    const root = rootRef.current
+    if (!root) return
+    const target = scrollContainerRef?.current ?? findScrollTarget(root)
+    scrollTargetRef.current = target
+    sectionRefs.current.length = sections.length
 
     let frameId: number | null = null
 
-    const handleScroll = () => {
-      if (frameId !== null) return
+    const update = () => {
+      frameId = null
+      const viewport = getScrollViewport(target)
+      const navigationHeight = navRef.current?.getBoundingClientRect().height ?? 0
+      if (viewport.height > 0) setContainerHeight(`${Math.round(viewport.height)}px`)
+      setNavHeight(navigationHeight)
 
-      frameId = requestAnimationFrame(() => {
-        const scrollTop = container.scrollTop
-        setActiveScrollY(scrollTop)
-
-        const containerRect = container.getBoundingClientRect()
-        const currentPositions = sections.map((_, index) => {
-          const sectionElement = sectionRefs.current[index]
-          if (!sectionElement) return 0
-          const rect = sectionElement.getBoundingClientRect()
-          return rect.top - containerRect.top + scrollTop
-        })
-
-        const index = findSectionIndex(currentPositions, scrollTop)
-        const validIndex = Math.max(0, Math.min(index, sections.length - 1))
-        setActiveNavItemIndex(validIndex)
-        setScrollHighlightIndex(validIndex)
-        frameId = null
+      // The section under the sticky navigation stays active until the next starts.
+      const activationLine = viewport.top + navigationHeight + SECTION_GAP
+      let index = 0
+      sectionRefs.current.forEach((section, sectionIndex) => {
+        if (section && section.getBoundingClientRect().top <= activationLine + 1) index = sectionIndex
       })
+      const lastSection = sectionRefs.current[sections.length - 1]
+      if (
+        lastSection &&
+        viewport.scrollTop > 0 &&
+        viewport.scrollTop >= viewport.maxScroll - 1 &&
+        lastSection.getBoundingClientRect().top < viewport.top + viewport.height
+      ) {
+        index = sections.length - 1
+      }
+      setActiveNavItemIndex(index)
+      setScrollHighlightIndex(index)
     }
 
-    container.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // 初始化调用
+    const scheduleUpdate = () => {
+      if (frameId === null) frameId = requestAnimationFrame(update)
+    }
+    target.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate)
+    scheduleUpdate()
+
+    let resizeObserver: ResizeObserver | undefined
+    if (typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(scheduleUpdate)
+      if (!isWindow(target)) resizeObserver.observe(target)
+      resizeObserver.observe(root)
+      if (navRef.current) resizeObserver.observe(navRef.current)
+      sectionRefs.current.forEach((section) => {
+        if (section) resizeObserver?.observe(section)
+      })
+    }
 
     return () => {
       if (frameId !== null) cancelAnimationFrame(frameId)
-      container.removeEventListener('scroll', handleScroll)
+      target.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
+      resizeObserver?.disconnect()
+      scrollTargetRef.current = null
     }
   }, [scrollContainerRef, sections])
 
-  // 动态计算各 section 的位置信息并存入 state，避免在渲染时读取 ref.current
-  const [sectionPositions, setSectionPositions] = useState<number[]>([])
-
-  useEffect(() => {
-    const container = scrollContainerRef?.current
-    if (!container) return
-
-    const containerRect = container.getBoundingClientRect()
-    const positions = sections.map((_, index) => {
-      const sectionElement = sectionRefs.current[index]
-      if (sectionElement) {
-        const rect = sectionElement.getBoundingClientRect()
-        return rect.top - containerRect.top + container.scrollTop
-      }
-      return 0
-    })
-
-    setSectionPositions(positions)
-  }, [activeScrollY, scrollContainerRef, sections])
-
-  // 动态计算section高度（基于容器高度的100%）
-  useEffect(() => {
-    const container = scrollContainerRef?.current
-    if (!container) return
-
-    const updateSectionHeight = () => {
-      const containerHeight = container.offsetHeight
-      const sectionHeight = Math.round(containerHeight * 1)
-      setContainerHeight(`${sectionHeight}px`)
-    }
-
-    // 计算导航高度
-    const updateNavHeight = () => {
-      const navElement = navRef.current
-      if (navElement) {
-        const height = navElement.offsetHeight
-        setNavHeight(height)
-      }
-    }
-
-    // 初始计算
-    updateSectionHeight()
-    updateNavHeight()
-
-    const updateSizes = () => {
-      updateSectionHeight()
-      updateNavHeight()
-    }
-
-    if (typeof ResizeObserver !== 'undefined') {
-      const resizeObserver = new ResizeObserver(updateSizes)
-      resizeObserver.observe(container)
-      if (navRef.current) resizeObserver.observe(navRef.current)
-      return () => resizeObserver.disconnect()
-    }
-
-    window.addEventListener('resize', updateSizes)
-    return () => window.removeEventListener('resize', updateSizes)
-  }, [scrollContainerRef])
-
   // 处理点击 navItem 滚动到对应 section 的逻辑
   const handleNavItemClick = (index: number) => {
-    const container = scrollContainerRef?.current
-    if (!container) return
+    const target = scrollTargetRef.current
+    const section = sectionRefs.current[index]
+    if (!target || !section) return
 
     // 立即设置激活状态，提供即时视觉反馈
     setActiveNavItemIndex(index)
-
-    const sectionElement = sectionRefs.current[index]
-    if (sectionElement) {
-      // 使用scrollTo，减去导航高度以避免遮挡
-      const elementPosition = sectionElement.offsetTop - navHeight - 20 // 多减去一些间距
-
-      container.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth',
-      })
-    }
+    setScrollHighlightIndex(index)
+    const viewport = getScrollViewport(target)
+    const navigationHeight = navRef.current?.getBoundingClientRect().height ?? 0
+    const top = section.getBoundingClientRect().top - viewport.top + viewport.scrollTop - navigationHeight - SECTION_GAP
+    target.scrollTo({ top: Math.max(0, Math.min(top, viewport.maxScroll)), behavior: 'smooth' })
   }
 
   return (
-    <div className={className}>
+    <div ref={rootRef} className={className}>
       <motion.nav
         ref={navRef}
         className={styles.nav}
         aria-label="Section navigation"
         style={{
-          position:
-            sectionPositions.length > 0 && activeScrollY > sectionPositions[sectionPositions.length - 1]
-              ? 'relative'
-              : 'sticky',
+          position: 'sticky',
           top: 0,
           zIndex: 10,
         }}
         initial={{ opacity: 1 }}
-        animate={{
-          opacity: sectionPositions.length > 0 && activeScrollY > sectionPositions[sectionPositions.length - 1] ? 0 : 1,
-        }}
+        animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
         <ul className={getClassName('navUl', navUlClassName)}>
@@ -250,7 +228,7 @@ const ScrollableSections = ({
         </ul>
       </motion.nav>
 
-      <div className={styles.sectionsContent} style={{ paddingTop: `${navHeight + 20}px` }}>
+      <div className={styles.sectionsContent} style={{ paddingTop: `${navHeight + SECTION_GAP}px` }}>
         {sections.map((section, index) => (
           <div
             key={`${section.title}-${index}`}

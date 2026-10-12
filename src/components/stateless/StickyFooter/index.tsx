@@ -1,14 +1,20 @@
 import React from 'react'
 import clsx from 'clsx'
 
-const StickyFooter = ({ children, className, heightValue = '100dvh', ...props }) => {
+type StickyFooterProps = React.HTMLAttributes<HTMLDivElement> & {
+  heightValue?: string | number
+}
+
+const StickyFooter = ({ children, className, heightValue = '100dvh', style, ...props }: StickyFooterProps) => {
   return (
     <div
-      className={`relative h-[${heightValue}]`}
-      style={{ clipPath: 'polygon(0% 0, 100% 0%, 100% 100%, 0 100%)' }}
+      className="relative"
+      style={{ height: heightValue, clipPath: 'polygon(0% 0, 100% 0%, 100% 100%, 0 100%)', ...style }}
       {...props}
     >
-      <div className={clsx(`fixed bottom-[100px] h-[${heightValue}] w-full`, className)}>{children}</div>
+      <div className={clsx('fixed bottom-[100px] flex w-full items-end', className)} style={{ height: heightValue }}>
+        {children}
+      </div>
     </div>
   )
 }

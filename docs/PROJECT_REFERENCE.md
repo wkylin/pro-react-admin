@@ -4,7 +4,7 @@
 
 ## 运行环境与版本
 
-Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`5.0.0`；组件库：`5.0.0`。
+Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`5.1.0`；组件库：`5.1.0`。
 
 | 技术             | 声明版本                           |
 | ---------------- | ---------------------------------- |
@@ -252,7 +252,9 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`5.0.0`；�
 | pnpm run clean:dist                    | rimraf ./dist                                                                                                                                                                                                                                                                                                 |
 | pnpm run clean:modules                 | rimraf node_modules                                                                                                                                                                                                                                                                                           |
 | pnpm run js-analyzer                   | js-analyzer --root ./                                                                                                                                                                                                                                                                                         |
-| pnpm run storybook                     | storybook dev -p 6006                                                                                                                                                                                                                                                                                         |
+| pnpm run storybook                     | cross-env BABEL_ENV=storybook storybook dev -p 6006                                                                                                                                                                                                                                                           |
+| pnpm run storybook:clean               | rimraf node_modules/.cache/storybook node_modules/.cache/.storybook node_modules/.cache/storybook-babel                                                                                                                                                                                                       |
+| pnpm run storybook:reset               | npm run storybook:clean && npm run storybook                                                                                                                                                                                                                                                                  |
 | pnpm run build-storybook               | cross-env STORYBOOK_BUILD=1 storybook build -o storybook-static                                                                                                                                                                                                                                               |
 | pnpm run postbuild-storybook           | node ./scripts/add-storybook-base.cjs                                                                                                                                                                                                                                                                         |
 | pnpm run serve:storybook               | serve storybook-static -p 6007                                                                                                                                                                                                                                                                                |
