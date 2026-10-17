@@ -470,7 +470,7 @@
     "prism-react-renderer": "^2.4.1",
     "prop-types": "^15.8.1",
     "qrcode": "^1.5.4",
-    "qs": "^6.16.0",
+    "qs": "^6.16.1",
     "react": "^19.3.0",
     "react-barcode": "^1.6.1",
     "react-dom": "^19.3.0",
