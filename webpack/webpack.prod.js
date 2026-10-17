@@ -130,7 +130,6 @@ const prodWebpackConfig = merge(common, {
       ],
     }),
     new webpack.DefinePlugin({
-      __APP_VERSION__: JSON.stringify(packageJson.version),
       __APP_BUILD_TIME__: JSON.stringify(buildTime),
     }),
     new InjectManifest({

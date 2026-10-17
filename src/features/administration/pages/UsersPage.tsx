@@ -4,6 +4,7 @@ import {
   App,
   Button,
   Form,
+  Grid,
   Input,
   Modal,
   Popconfirm,
@@ -26,6 +27,7 @@ import styles from './workspace.module.less'
 type UserInput = Omit<ManagedUser, 'id'> & { password?: string }
 export default function UsersPage() {
   const { t } = useTranslation()
+  const screens = Grid.useBreakpoint()
   const { provider, demo } = useAdministration()
   const { message } = App.useApp()
   const list = useResourceList('users')
@@ -93,12 +95,19 @@ export default function UsersPage() {
         <div className={styles.identity}>
           <Typography.Text strong>{user.name}</Typography.Text>
           <Typography.Text type="secondary">{user.email}</Typography.Text>
+          <div className={styles.mobileMeta}>
+            <Tag>
+              <span className={styles.code}>{user.role}</span>
+            </Tag>
+            <Tag color={user.status === 'active' ? 'success' : 'default'}>{t(`admin.${user.status}`)}</Tag>
+          </div>
         </div>
       ),
     },
     {
       title: t('admin.role'),
       dataIndex: 'role',
+      responsive: ['md'],
       render: (role: string) => (
         <Tag>
           <span className={styles.code}>{role}</span>
@@ -108,6 +117,7 @@ export default function UsersPage() {
     {
       title: t('admin.status'),
       dataIndex: 'status',
+      responsive: ['md'],
       render: (status: ManagedUser['status']) => (
         <Tag color={status === 'active' ? 'success' : 'default'}>{t(`admin.${status}`)}</Tag>
       ),
@@ -158,7 +168,8 @@ export default function UsersPage() {
         columns={columns}
         dataSource={list.data.items}
         loading={list.loading}
-        scroll={{ x: 650 }}
+        size={screens.md ? 'middle' : 'small'}
+        scroll={screens.md ? { x: 650 } : undefined}
         pagination={{
           current: list.query.page,
           pageSize: list.query.pageSize,

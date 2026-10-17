@@ -27,7 +27,7 @@ PermissionService 保存稳定快照，usePermission、ProtectedRoute、Permissi
 
 演示权限缓存有效期 30 分钟，真实权限为 60 秒。企业缓存按 tenant/token 绑定，演示按 active token/role override 绑定；GitHub token 更新也会失效。订阅期间到期重新同步，真实企业会话在 focus 强制刷新。清缓存提升 generation，在途旧响应在退出或切号后不可提交。服务端每次请求重新读取角色，UI 没有外部撤权推送，展示同步与服务端强制授权的时效不同。
 
-readStoredToken 优先读取有效 enterprise_session，然后兼容 token/github_token 的原始字符串和 JSON；已存在但过期/无效的企业会话不回退旧凭据。GitHub profile 不代表有效凭据，真实模式也不会恢复演示邮箱身份。企业登录保存经 parser 验证的会话并清理旧身份；到期自动清除。登录/切换后调用 syncPermissions，同页退出使用 clearSession 通知消费者；跨标签页通过 storage 同步。
+真实租户模式只接受有效的 `enterprise_session`；过期或无效会话不会回退到旧 token/GitHub 身份。`token` 和 `github_token` 仅在显式 `REACT_APP_USE_MOCK=true` 的演示模式读取，且只接受当前 JSON `{ token }` 格式；旧的裸字符串格式已移除。GitHub profile 不代表有效凭据。企业登录保存经 parser 验证的会话并清理演示身份；到期自动清除。登录/切换后调用 syncPermissions，同页退出使用 clearSession 通知消费者；跨标签页通过 storage 同步。
 
 HTTP 401、业务数字 401/41002 清理会话并跳转 signin；403 保留身份。请求捕获身份，旧身份迟到的 401 不会清理新会话，needToken:false 的登录失败也不清理已有会话。业务字符串 `"401"` 不等于数字 401。SessionScope 在身份变化时销毁页面/Tab/业务缓存。当前 origin 仍共享一个活动会话，不支持多个并行身份。
 

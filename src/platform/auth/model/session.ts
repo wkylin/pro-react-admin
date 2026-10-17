@@ -1,3 +1,5 @@
+import { getEnvBool } from '@platform/config/env'
+
 const sessionKeys = [
   'enterprise_session',
   'token',
@@ -105,16 +107,18 @@ export function readStoredToken(): string | null {
   } catch {
     return null
   }
+  // Legacy demo credentials are never an authentication fallback in tenant mode.
+  if (!getEnvBool('REACT_APP_USE_MOCK', false)) return null
   for (const key of ['token', 'github_token']) {
     try {
       const raw = localStorage.getItem(key)
       if (!raw) continue
       try {
         const parsed: unknown = JSON.parse(raw)
-        if (typeof parsed === 'string' && parsed) return parsed
         if (
           parsed &&
           typeof parsed === 'object' &&
+          !Array.isArray(parsed) &&
           'token' in parsed &&
           typeof parsed.token === 'string' &&
           parsed.token
@@ -122,7 +126,7 @@ export function readStoredToken(): string | null {
           return parsed.token
         }
       } catch {
-        return raw
+        // Ignore obsolete raw-string credentials; current demo storage is JSON.
       }
     } catch {
       return null

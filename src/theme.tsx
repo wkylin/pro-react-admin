@@ -14,6 +14,7 @@ import RootLayout from '@app/routing/components/RootLayout'
 import RouterErrorElement from '@app/routing/components/RouterErrorElement'
 import rootRouter from '@routers'
 import { useProThemeContext } from './theme/hooks'
+import { getAccessiblePrimaryColor, getAccessibleTertiaryTextColor, getContrastingTextColor } from './theme/contrast'
 import { useRemoveGlobalLoader } from '@hooks/useRemoveGlobalLoader'
 import { setMessageInstance } from '@platform/feedback/message'
 import ServiceWorkerUpdatePrompt from '@platform/pwa/ServiceWorkerUpdatePrompt'
@@ -23,6 +24,25 @@ dayjs.locale('zh-cn')
 const ThemeIndex: React.FC = () => {
   useRemoveGlobalLoader()
   const { themeSettings, resolvedTheme } = useProThemeContext()
+  const colorPrimary = getAccessiblePrimaryColor(themeSettings.colorPrimary, resolvedTheme)
+  const darkMenuSelectedBg = getAccessiblePrimaryColor(colorPrimary, 'light')
+  const colorTextTertiary = getAccessibleTertiaryTextColor(resolvedTheme)
+  const primaryButtonText = getContrastingTextColor(colorPrimary)
+  const baseAlgorithm = resolvedTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
+  const accessibleAlgorithm = (...args: Parameters<typeof baseAlgorithm>) => ({
+    ...baseAlgorithm(...args),
+    colorPrimary,
+    colorPrimaryHover: colorPrimary,
+    colorPrimaryActive: colorPrimary,
+    colorPrimaryText: colorPrimary,
+    colorPrimaryTextHover: colorPrimary,
+    colorPrimaryTextActive: colorPrimary,
+    colorLink: colorPrimary,
+    colorLinkHover: colorPrimary,
+    colorLinkActive: colorPrimary,
+    colorTextTertiary,
+    colorTextDescription: colorTextTertiary,
+  })
   const { i18n } = useTranslation()
   const isChinese = i18n.resolvedLanguage?.startsWith('zh') ?? true
   useEffect(() => {
@@ -35,7 +55,7 @@ const ThemeIndex: React.FC = () => {
     setMessageInstance(message)
   }, [message])
 
-  const algorithms = [resolvedTheme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm]
+  const algorithms: Array<typeof theme.defaultAlgorithm> = [accessibleAlgorithm]
   if (themeSettings.compactAlgorithm) algorithms.push(theme.compactAlgorithm)
 
   const router = useMemo(
@@ -56,7 +76,32 @@ const ThemeIndex: React.FC = () => {
         theme={{
           algorithm: algorithms,
           token: {
-            colorPrimary: themeSettings.colorPrimary,
+            colorPrimary,
+            colorPrimaryHover: colorPrimary,
+            colorPrimaryActive: colorPrimary,
+            colorPrimaryText: colorPrimary,
+            colorPrimaryTextHover: colorPrimary,
+            colorPrimaryTextActive: colorPrimary,
+            colorLink: colorPrimary,
+            colorLinkHover: colorPrimary,
+            colorLinkActive: colorPrimary,
+            colorTextTertiary,
+            colorTextDescription: colorTextTertiary,
+          },
+          components: {
+            Button: {
+              primaryColor: primaryButtonText,
+              colorLink: colorPrimary,
+              colorLinkHover: colorPrimary,
+              colorLinkActive: colorPrimary,
+            },
+            Menu: {
+              itemSelectedColor: '#1f1f1f',
+              darkItemSelectedBg: darkMenuSelectedBg,
+            },
+            Tabs: {
+              itemSelectedColor: colorPrimary,
+            },
           },
         }}
         componentSize="middle"

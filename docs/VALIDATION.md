@@ -161,4 +161,122 @@ node scripts/check-bundle-budget.mjs compilation-enterprise-stats.json enterpris
 
 企业后端适合单实例 Node 24 自托管、持久卷 SQLite；不能部署到 Vercel 临时文件系统。审计是同事务追加记录，数据库管理员可绕过触发器，不是外部防篡改/合规认证。前端资源缓存位于浏览器内存，尚无服务端/分布式查询缓存、后台刷新或实时撤权推送。
 
-根 strict 仍为 false，业务后端新增独立 strict 门禁；CommonJS HTTP adapter 和其它 legacy helper 尚未全部类型化。当前 origin 只有一个活动身份，支持注销换租户，不支持一个身份的跨租户成员关系/并行身份。SSO/MFA/邀请/密码找回、组织层级、迁移/备份、运行期插件与兼容协商继续待办，见[架构](ARCHITECTURE.md)和[对标](BENCHMARKS.md)。
+根 strict 仍为 false，业务后端新增独立 strict 门禁；CommonJS HTTP adapter 和其它 legacy helper 尚未全部类型化。数据库已有 schema v2、版本迁移、备份校验/恢复和组织成员切换基础，但当前前端只保留一个活动会话，组织账号关联/解绑没有运营 UI/API。SSO/MFA/邀请/密码找回、组织层级、真实部署旧库演练、运行期插件与兼容协商继续待办，见[架构](ARCHITECTURE.md)和[对标](BENCHMARKS.md)。
+
+## 2026-10-17 实时客户端与 MFE 消息契约
+
+本轮将遗留 `useWebsocket` hook 迁移为 TypeScript，修复 URL/开关变化和重连时的旧 socket 事件竞态，增加可选的有界指数退避、发送、消息解码与错误状态。ProjectA/ProjectB 示例共用 `MfeSharedMessage` 解析器并限制字段、长度和时间戳。该 hook 仍没有企业 API 调用方或服务端事件 schema；MFE 浏览器消息不作为 WS 服务端协议，资源缓存也未接入实时失效。
+
+| 检查            | 结果                                                                   |
+| --------------- | ---------------------------------------------------------------------- |
+| 根 TypeScript   | `tsconfig.json` 通过                                                   |
+| Strict 边界类型 | `tsconfig.strict-boundaries.json` 通过                                 |
+| ESLint          | 修改范围无诊断；全 src 0 errors、84 warnings（均在本轮未修改的文件）   |
+| Jest            | 34 suites、123 项通过；包括新增 WebSocket 生命周期和 MFE 消息解析回归  |
+| 工程工具        | `node --test scripts/*.test.mjs` 17/17 通过                            |
+| 工程契约        | import boundaries、项目 Remote 契约、路由策略通过                      |
+| 文档与格式      | 51 份项目文档链接/命令、组件目录、修改文档 Markdownlint、Prettier 通过 |
+
+执行环境为 Node.js v26.11.1，仓库要求 Node 24.15 至 24.x；上述检查在当前环境通过，但发布前仍应在受支持的 Node 24 运行时复验。Jest CLI 被 Console Ninja 注入并尝试连接 loopback，在沙箱中返回 `EPERM`；全量测试改用 Jest 官方 API 入口运行：
+
+```bash
+node --input-type=module -e 'import { run } from "jest"; await run(["--runInBand", "--coverage=false"])'
+```
+
+WS hook/MFE bridge 的实现阶段未重建 MFE 生产产物或运行浏览器回归：仓库已有 `dist-vercel` 产物，现有构建流程会重写该目录。后续企业工作区页面回归见“企业工作区体验与无障碍收紧”；它们不验证业务 WS/SSE 服务端。未执行外部部署，也没有可连接的企业 WS 服务端；部署目标和服务端事件契约需要在后续阶段确定。
+
+## 2026-10-17 SQLite 租户数据与运维基础
+
+本轮增加 schema v2 principals/tenant_memberships、服务端活动租户切换、版本化迁移、SHA-256 + 逻辑指纹备份、离线恢复和原 schema 回滚模式。旧 v1 fixture 按迁移前仓库 EnterpriseStore 的 schema 冻结，重复邮箱未合并，凭据仍按旧组织成员分别保留；迁移前后和备份恢复后，两组织的有效权限与租户隔离审计列表逐项一致。当前 workspace 没有真实部署旧库，因此自动 fixture 演练不是生产旧库验收替代品。
+
+| 检查             | 结果                                                                                |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| 企业 API         | 21/21；包含旧 scrypt 密码/会话兼容、有效成员切换、撤权和事务审计                    |
+| 迁移与恢复       | v1 → v2 权限/审计一致、迁移前备份验证、v2 覆盖恢复、v1 自动升级恢复、原 schema 回滚 |
+| API strict       | `tsconfig.api.json` 通过                                                            |
+| 文档/依赖边界    | 51 份本地链接与命令、项目参考、import boundaries 通过                               |
+| 本地真实模式预览 | Web 8091 → API 5201；临时 SQLite 登录后读取到用户管理记录                           |
+| CLI              | `db-admin.mjs` migrate / backup / verify-backup 在临时路径运行通过                  |
+
+本机 Node.js v26.11.1，项目声明要求 Node 24.15.x；结果需要在受支持 Node 24 上复验。`pnpm run` 本轮在启动脚本前报 `unable to open database file`，因此使用仓库内 Node/TypeScript CLI 运行等价检查。HTTP 集成和本地浏览器流程在本机 loopback 权限下执行；预览 API 与 Web 仍以隔离临时数据库运行，地址为 `http://127.0.0.1:8091/#/signin`。临时登录凭据只用于本轮本机预览，不可用于其它环境。
+
+## 2026-10-17 企业工作区体验与无障碍收紧
+
+标签栏的刷新、全屏和当前页关闭操作移到 tablist 外；关闭当前页保留原有返回上一页行为，并提供中英文可访问名称。工作区补齐页面 landmark/标题与操作名称，主题 token 和选中菜单文字按浅色/深色分别保证可读性；生产浏览器门禁采样菜单、链接、活动 tab、次要文字和主按钮的对比度。渐变动画保留装饰用途并隐藏于辅助技术。
+
+| 检查              | 结果                                                                                               |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| 企业版生产构建    | 通过                                                                                               |
+| 企业版 Playwright | 8/8 通过，单 worker；覆盖标签关闭、浅色/深色对比度、用户/角色管理、审计和跨标签撤权                |
+| 本地 axe          | 0 violations；2 组 incomplete 分别涉及折叠菜单 `aria-controls` 目标及渐变/叠层背景的自动对比度判定 |
+| ESLint            | 修改范围 0 errors；`autoDeploy/index.tsx` 有 6 条 warnings                                         |
+| Stylelint         | 修改样式通过                                                                                       |
+| Prettier          | 检查文件通过                                                                                       |
+| 本机预览          | mock 模式：`http://127.0.0.1:8094/#/administration/users`；演示账号数据保存在当前浏览器内存中      |
+
+本机运行 Node.js v26.11.1（项目要求 Node 24.15.x）；发布前需在受支持 Node 24 上复验。axe 的 `incomplete` 不是通过结论，菜单目标和渐变/叠层文字仍需人工检查；en/zh 键/占位符一致性已有门禁，但硬编码文案覆盖率和真实设备 Web Vitals 仍未建立。当前复核另启 `PORT=8094` 的默认演示预览：登录、组织管理、两条演示用户记录、添加用户对话框和深色主题均已实测；没有提交写操作。此前 8093 进程只显示静态 loader、`#root` 为空，本轮保留原进程并使用 8094。该预览和回归只覆盖客户端工作区，不包含可连接的企业 WS/SSE 服务端。
+
+## 2026-10-17 编译期模块契约 v2 与本地复核
+
+该记录形成时旧 v1 manifest 仍可注册；后续已移除此分支，当前状态见本文末“退役兼容入口清理”。组织管理与通知使用 v2，声明 capability、宿主 SemVer 范围、连续数据迁移链的 checksum/备份/回滚边界及卸载清理策略。旧版 SQLite 建表结构改为独立冻结 fixture，避免测试与新 migration SQL 同源；v1/v2 结构、外键、索引、约束或触发器定义不符时拒绝迁移/启动/备份。同路径并发备份通过独占发布保证胜者文件不被覆盖或删除。
+
+| 检查                        | 结果                                                                                    |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| 模块 v1/v2 与版本范围单测   | 22/22 通过                                                                              |
+| SQLite 维护回归             | 8/8 通过；旧 v1 权限/审计一致、坏目标恢复、备份/回滚、并发备份及弱化 trigger/index 拒绝 |
+| 企业 API HTTP/SQLite 集成   | 21/21 通过，临时 loopback 服务                                                          |
+| Enterprise production build | `node scripts/project-command.mjs build enterprise` 通过                                |
+| 类型/边界                   | strict boundaries、API strict、Webpack TS checker 通过                                  |
+| 页面本地复核                | 8094 默认演示服务，用户管理页 2 条演示数据，未提交数据                                  |
+| 本地 axe                    | 0 violations；2 组 incomplete 仍需人工判断                                              |
+| i18n                        | en/zh 224 键、插值变量一致；修复中文 `menu.textEditor` 缺失                             |
+| 文档与格式                  | 项目参考同步、51 份文档链接/命令、Prettier、ESLint、diff 检查通过                       |
+
+本次 Enterprise production build 退出码为 0；默认开发预览在 8094，tracking API 在 5200 以内存模式运行。`pnpm run` 在当前环境启动时报 `unable to open database file`，因此使用仓库内 Node/TypeScript CLI 等价执行；项目参考、文档校验直接运行成功。控制台还记录到默认首页 demo 的重复 React key 和 antd render notice 警告，它们不在用户管理列表的数据加载路径。自动浏览器错误列表为空。本记录形成时业务 WS/SSE 服务端尚未实现；后续本地服务端闭环与代理复核见本文“企业资源 WebSocket 本地闭环”一节。演示 UI 的浏览器本地数据不能作为真实 API/租户验收。
+
+## 2026-10-17 国际化资源契约门禁
+
+en/zh 翻译资源目前各有 224 个字符串键；检查器比对缺键、多余键、非字符串值及 `{{placeholder}}` 插值变量，并进入 `ci:quality`。初次运行发现中文缺少 `menu.textEditor`，补齐为“文本编辑器”。
+
+| 检查                             | 结果                           |
+| -------------------------------- | ------------------------------ |
+| `node scripts/validate-i18n.mjs` | en/zh 224 键及插值变量一致     |
+| 国际化契约单测                   | 2/2 通过                       |
+| 工程工具全量回归                 | 19/19 通过，包含国际化契约测试 |
+
+该门禁只保证已声明的 en/zh 翻译资源结构和插值变量一致，不检查每个 UI 文案是否都经由 i18n，也不替代真实语言切换和视觉审校。
+
+## 2026-10-17 本地企业工作区浏览器复核
+
+本轮加入中英文键盘跳转到主内容、渐变装饰的 reduced-motion/forced-colors 支持，并修复可见导航子菜单 `aria-controls` 指向尚未挂载节点的问题。干净浏览器会话中直达 Users 页后路由保持 `#/administration/users`；先前观察到的回首页现象本轮未复现，未发现相应路由缺陷。
+
+| 检查                        | 结果                                                                      |
+| --------------------------- | ------------------------------------------------------------------------- |
+| 本地企业版页面              | `http://localhost:8096/#/administration/users`，用户列表正常显示          |
+| Playwright 本地浏览器复核   | 5/5 通过：主题对比度、键盘跳转、减少动态效果/强制颜色、菜单目标、关闭标签 |
+| Enterprise production build | `node scripts/project-command.mjs build enterprise` 编译通过              |
+| 根类型与 strict boundaries  | `tsconfig.json`、`tsconfig.strict-boundaries.json` 通过                   |
+| 修改范围代码质量            | ESLint、Stylelint、Prettier 及 `git diff --check` 通过                    |
+| 页面运行错误                | 路由诊断浏览器未观察到 page error                                         |
+
+使用 Chrome for Testing 155 和临时 Playwright 配置连接本地 enterprise dev server；测试使用隔离页面上下文中的演示身份，没有写入真实业务数据。服务当前保持运行，便于打开上述地址预览。Node.js 为 v26.11.1，项目声明要求 Node 24.15.x，发布前仍需在受支持版本复验。此次没有重新运行 axe 或真实设备 Web Vitals，也没有部署。本段复核时企业 WS/SSE 服务端尚不存在；后续实现与当前代理核验见本文“企业资源 WebSocket 本地闭环”一节。
+
+## 2026-10-17 企业资源 WebSocket 本地闭环
+
+此前“服务端实时通道未实现”的记录反映当时状态，由本节更新。现在服务端签发 30 秒、单次使用且绑定会话/成员/组织的一次性票据；连接通过首帧认证，服务端在写入事务提交后仅广播 `users`/`roles`/`audit` 资源失效，不携带业务记录或租户 ID。事件按组织分序，保留最近 1,000 条进程内事件；断点过期时客户端全量失效缓存并重连。开发代理同时转发 `/api/events` 的 HTTP 票据请求和 WebSocket upgrade。
+
+| 检查                         | 结果                                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------ |
+| 本地 API/SQLite 冒烟         | 登录、一次性票据、错误组织拒绝、在线/离线写入、实时通知和重连重放均通过             |
+| Enterprise dev proxy/页面    | `8097/#/signin` 正常渲染；票据路由返回 API JSON `401`，WS 经代理 upgrade 后按预期以 `4401` 拒绝未认证连接 |
+| WS 消息边界                  | 仅含 `version/type/id/scope/resource/occurredAt`；无记录字段与组织标识               |
+| 类型/i18n 门禁               | 根类型、API strict、选定 strict boundaries、en/zh 对齐与逐文件硬编码文案预算均通过 |
+| 运行环境                     | 临时 SQLite、单实例；Node v26.11.1（项目支持范围为 Node 24.15.x）                    |
+
+这是临时本机单实例冒烟，不替代 Node 24 验收、生产旧库/主机恢复演练或多实例验证；未运行自动化测试套件，也未部署。WS 日志目前是进程内有界窗口，进程重启/多实例需全量失效或后续接入共享 outbox；真实设备 Web Vitals 仍要等部署流量。
+
+## 2026-10-17 退役兼容入口清理
+
+Enterprise 入口只暴露登录、条款和隐私路由；登录组件根据显式 Mock 开关选择展示登录或租户登录，不再挂载注册页/GitHub OAuth callback。旧 token 字符串和 GitHub 凭据只在显式演示模式读取，真实租户模式只接受服务端会话。模块注册表只接受 manifest v2；MFE 远程清单必须完整声明共享依赖，不再接受只声明 React/React DOM 的旧清单。路由权限不再匹配遗留自定义 key，KeepAlive 必须置于应用级 Provider 内，移除了全局单例兜底。
+
+SQLite schema v1 → v2 前向迁移继续保留，用于升级已部署数据库；备份验证、回滚和恢复逻辑不是页面/协议兼容 fallback。公开展示项目、Mock 数据和演示登录继续保留；Enterprise 普通开发/构建默认租户登录，显式设置 `REACT_APP_USE_MOCK=true` 或 Pages 演示构建才启用 Mock。

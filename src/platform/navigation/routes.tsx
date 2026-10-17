@@ -11,7 +11,6 @@ export interface RouteMeta extends Record<string, unknown> {
   i18nKey?: string
   routeKey?: string
   routePath?: string
-  legacyKey?: string
   permission?: string | string[]
   category?: string
   access?: 'public' | 'authenticated' | 'permissioned'
@@ -70,7 +69,6 @@ export function normalizeRouteTree(routes: readonly RouteNode[], parentPath = ''
         ...meta,
         routePath: fullPath,
         routeKey: fullPath,
-        ...(route.key && route.key !== fullPath ? { legacyKey: route.key } : {}),
       },
       ...(route.children ? { children: normalizeRouteTree(route.children, fullPath) } : {}),
     }
@@ -255,7 +253,6 @@ const collectRouteIdentifiers = (route: RouteNode): string[] => {
   add(route.key)
   add(route.meta?.routeKey)
   add(route.meta?.routePath)
-  add(route.meta?.legacyKey)
   add(route.path)
 
   return Array.from(new Set(identifiers))

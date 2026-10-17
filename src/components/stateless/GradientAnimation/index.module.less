@@ -1,13 +1,37 @@
+/* stylelint-disable property-no-vendor-prefix */
 .package-name {
-  color: transparent;
-  background: linear-gradient(45deg, #ff6347, #ffd700, #32cd32, #1e90ff, #8a2be2);
+  color: var(--wui-text-primary, #171717);
+  background-image: linear-gradient(45deg in srgb, var(--package-gradient-stops));
   background-size: 400% 400%;
   background-clip: text;
+  -webkit-background-clip: text;
   font-size: 16px;
   font-weight: 700;
   line-height: 1.1;
   animation: gradient-animation 5s ease infinite;
-  filter: drop-shadow(1px 2px 0 #fff);
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .package-name {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .package-name {
+    animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .package-name {
+    animation: none;
+    background-image: none;
+    background-clip: border-box;
+    color: CanvasText;
+    -webkit-text-fill-color: CanvasText;
+  }
 }
 
 @keyframes gradient-animation {

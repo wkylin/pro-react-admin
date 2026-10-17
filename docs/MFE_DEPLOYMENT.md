@@ -18,7 +18,7 @@ Shell 默认 8080，Remote 为 8081/8082。Shell `/#/portal` 展示入口，`/#/
 
 config/mfe-protocol.json 当前 protocolVersion 为 1，config/mfe-contract.mjs 定义 manifest 与共享依赖兼容策略，platform/mfe/bridge.ts 定义跨应用交互。生成项目契约由 sync:project-contracts 管理。
 
-Host 加载前先 fetch 同目录 remote-manifest.json，校验 schemaVersion、name、protocolVersion 与 sharedDependencies。通过后才注入 remoteEntry.js。加载最多尝试 2 次，间隔 250 ms，总超时 15 秒；失败显示远程应用不可用的 fallback。共享 React 等依赖必须满足契约，manifest 检查不代替 Remote 来源信任。当前共享依赖使用 eager 模式；Remote 容器保留其同步初始化依赖，只有独立应用入口参与初始分块，remoteEntry.js 必须单独加载即可提供 get/init。独立应用不再导出相同全局变量，避免覆盖容器。
+Host 加载前先 fetch 同目录 remote-manifest.json，校验 schemaVersion、name、protocolVersion 与完整 sharedDependencies。缺少共享依赖声明的旧式部分清单直接拒绝，不再猜测默认依赖；通过后才注入 remoteEntry.js。加载最多尝试 2 次，间隔 250 ms，总超时 15 秒；失败显示远程应用不可用的 fallback。共享 React 等依赖必须满足契约，manifest 检查不代替 Remote 来源信任。当前共享依赖使用 eager 模式；Remote 容器保留其同步初始化依赖，只有独立应用入口参与初始分块，remoteEntry.js 必须单独加载即可提供 get/init。独立应用不再导出相同全局变量，避免覆盖容器。
 
 开发 URL 来自注册表，生产默认 /projectA/remoteEntry.js、/projectB/remoteEntry.js。MFE_PROJECTA_URL、MFE_PROJECTB_URL 可在构建侧覆盖，覆盖值需指向无凭据的绝对 HTTPS URL；生产默认同源相对路径由配置支持。
 
@@ -39,7 +39,7 @@ build-mfe.mjs 从注册表查找 mfeHost 和所有 remotes，直接调用已安�
 pnpm exec serve -s dist-vercel -l 5080
 ```
 
-访问 http://localhost:5080/#/portal。`build:mf:vercel` 不会自动部署；`PROJECT=shell pnpm run serve:dist` 只预览 `dist-shell`，无法同时提供组合目录里的两个 Remote。
+访问 `http://localhost:5080/#/portal`。`build:mf:vercel` 不会自动部署；`PROJECT=shell pnpm run serve:dist` 只预览 `dist-shell`，无法同时提供组合目录里的两个 Remote。
 
 跨域部署须配置 manifest 的 CORS、script 的可访问性与 CSP。remoteEntry/manifest 应及时验证，hash chunks 可长期缓存；旧资源需保留到在途页面退出。
 
@@ -47,7 +47,9 @@ pnpm exec serve -s dist-vercel -l 5080
 
 ## 根实例与通信边界
 
-Standalone 通过 renderApp 创建独立 Store/KeepAlive Provider；导出的 Remote App 通过 RemoteScope 创建自己的上下文，复用 Host router，断点仅写本地 Store，不更改 Host document class。Host 卸载 Remote 时 React effects 清理订阅；projectB 共享消息经过字段校验，不使用 any 作为业务状态。
+Standalone 通过 renderApp 创建独立 Store/KeepAlive Provider；导出的 Remote App 通过 RemoteScope 创建自己的上下文，复用 Host router，断点仅写本地 Store，不更改 Host document class。Host 卸载 Remote 时 React effects 清理订阅。ProjectA → ProjectB 示例消息使用 `MfeSharedMessage` 类型，并由 `parseMfeSharedMessage` 校验共享状态中的字段、长度和时间戳；通用 `mfe:state` 仍允许其它模块化状态。
+
+`src/components/hooks/useWebsocket` 是独立的通用浏览器 WebSocket hook，不属于 MFE bridge 协议，也不是企业资源事件客户端。企业管理 Provider 通过 `platform/data/resourceEvents.ts` 订阅经票据认证的 `/api/events`，收到资源失效事件后清理对应缓存；其服务端协议和单实例限制见[企业资源](ENTERPRISE.md#资源-websocket-实时失效)。`mfe:*` 仍只表示 Host/Remote 浏览器内通信。
 
 Bridge 是版本化的显式共享事件/状态，不是共用 UI Store。postMessage 验证版本、事件字段与精确 origin；不接受 wildcard origin。共享状态也不属于可信授权源。Module Federation 的 shared singleton 不等于状态、样式、身份或安全沙箱。
 

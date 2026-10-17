@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { getContrastRatio } from '../../src/theme/contrast'
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
@@ -6,6 +7,149 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem('user_role', 'super_admin')
     localStorage.setItem('i18nextLng', 'en')
   })
+})
+
+test('workspace accessibility keeps landmarks, tab controls, and contrast within WCAG AA', async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem('pro-react-admin:enterprise:theme'))
+  await page.goto('/#/administration/users')
+  await expect(page.getByRole('heading', { name: 'Users', exact: true, level: 1 })).toBeVisible()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(page.getByRole('main')).toHaveCount(1)
+  await expect(page.locator('[role="tablist"] > button')).toHaveCount(0)
+  await expect(page.getByRole('group', { name: 'Page actions' })).toBeVisible()
+
+  const collectWorkspaceContrast = async () =>
+    page.evaluate(() => {
+      const selectors = [
+        'aside .wui-ant-menu-item-selected .wui-ant-menu-title-content > span',
+        '.layout-header .wui-ant-btn-link',
+        '.wui-ant-tabs-tab-active .wui-ant-tabs-tab-btn',
+        '.wui-ant-typography-secondary',
+        '.wui-ant-btn-primary',
+      ]
+
+      return selectors.flatMap((selector) => {
+        const element = document.querySelector<HTMLElement>(selector)
+        if (!element) return []
+
+        let background = 'rgb(255, 255, 255)'
+        let backgroundSource = 'default'
+        for (let parent: HTMLElement | null = element; parent; parent = parent.parentElement) {
+          const candidate = getComputedStyle(parent).backgroundColor
+          const channels = candidate.match(/[\d.]+/g)?.map(Number)
+          if (channels && (channels[3] === undefined || channels[3] >= 0.99)) {
+            background = candidate
+            backgroundSource = `${parent.tagName.toLowerCase()}.${parent.className}`
+            break
+          }
+        }
+        const selectedItem = element.closest('.wui-ant-menu-item-selected') as HTMLElement | null
+
+        return [
+          {
+            selector,
+            foreground: getComputedStyle(element).color,
+            background,
+            backgroundSource,
+            theme: document.documentElement.dataset.theme,
+            selectedInlineStyle: selectedItem?.getAttribute('style'),
+          },
+        ]
+      })
+    })
+
+  const waitForWorkspaceContrast = async () => {
+    await expect
+      .poll(
+        async () => {
+          const samples = await collectWorkspaceContrast()
+          if (samples.length !== 5) return 0
+          return Math.min(...samples.map((sample) => getContrastRatio(sample.foreground, sample.background)))
+        },
+        { message: 'workspace contrast settles above WCAG AA', timeout: 10_000 }
+      )
+      .toBeGreaterThanOrEqual(4.5)
+  }
+
+  const checkWorkspaceContrast = async () => {
+    const samples = await collectWorkspaceContrast()
+    expect(samples).toHaveLength(5)
+    for (const sample of samples) {
+      const ratio = getContrastRatio(sample.foreground, sample.background)
+      expect(
+        ratio,
+        `${sample.selector}: ${sample.foreground} on ${sample.background}; ${JSON.stringify(sample)}`
+      ).toBeGreaterThanOrEqual(4.5)
+    }
+  }
+
+  await waitForWorkspaceContrast()
+  await checkWorkspaceContrast()
+  await page.getByRole('button', { name: 'Dark mode' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await waitForWorkspaceContrast()
+  await checkWorkspaceContrast()
+})
+
+test('keyboard skip link focuses main content without changing the hash route', async ({ page }) => {
+  await page.goto('/#/administration/users')
+  const skipLink = page.getByRole('link', { name: 'Skip to main content', exact: true })
+  await expect(skipLink).toBeAttached()
+  await expect(page).toHaveURL(/#\/administration\/users$/)
+  await page.keyboard.press('Tab')
+  if (!(await skipLink.evaluate((element) => document.activeElement === element))) await page.keyboard.press('Tab')
+  await expect(skipLink).toBeFocused()
+  const routeBeforeActivation = page.url()
+  await page.keyboard.press('Enter')
+
+  await expect(page.locator('#fullScreenContent')).toBeFocused()
+  await expect(page).toHaveURL(routeBeforeActivation)
+})
+
+test('brand motion respects reduced-motion and forced-colors preferences', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/#/administration/users')
+
+  const brandName = page.locator('[style*="--package-gradient-stops"]').first()
+  await expect(brandName).toBeVisible()
+  await expect.poll(() => brandName.evaluate((element) => getComputedStyle(element).animationName)).toBe('none')
+
+  await page.emulateMedia({ forcedColors: 'active' })
+  const forcedColors = await brandName.evaluate((element) => {
+    const styles = getComputedStyle(element)
+    return { backgroundImage: styles.backgroundImage, color: styles.getPropertyValue('-webkit-text-fill-color') }
+  })
+  expect(forcedColors.backgroundImage).toBe('none')
+  expect(forcedColors.color).not.toBe('rgba(0, 0, 0, 0)')
+})
+
+test('visible aria-controls references resolve to existing DOM targets', async ({ page }) => {
+  await page.goto('/#/administration/users')
+  const danglingControls = await page.locator('[aria-controls]:visible').evaluateAll((elements) =>
+    elements.flatMap((element) => {
+      const controls = element.getAttribute('aria-controls') || ''
+      return controls
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .filter((id) => !document.getElementById(id))
+        .map((id) => ({ element: element.outerHTML.slice(0, 240), missingTarget: id }))
+    })
+  )
+
+  expect(danglingControls, JSON.stringify(danglingControls, null, 2)).toEqual([])
+})
+
+test('the active closable tab has an accessible close action outside the tablist', async ({ page }) => {
+  await page.goto('/#/administration/users')
+  await expect(page.getByRole('tab', { name: 'Users', exact: true })).toBeVisible()
+  const closeCurrentTab = page.getByRole('button', { name: 'Close current tab', exact: true })
+  await expect(closeCurrentTab).toBeVisible()
+  await expect(page.locator('[role="tablist"] .wui-ant-tabs-tab-remove')).toHaveCount(0)
+  await expect(page.locator('[role="tablist"] button[aria-label]')).toHaveCount(0)
+  await closeCurrentTab.click()
+  await expect(page).toHaveURL(/#\/$/)
+  await expect(page.getByRole('tab', { name: 'Users', exact: true })).toHaveCount(0)
 })
 
 test('creates a user, preserves the shared resource session, and records an audit event', async ({ page }) => {

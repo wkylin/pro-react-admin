@@ -284,7 +284,8 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     title: '联邦契约与桥接',
     subtitle: 'manifest · shared deps',
     category: 'platform',
-    description: 'Loader 验证 Remote manifest 和共享依赖版本后注入入口；宿主与 Remote 的消息桥检查来源。',
+    description:
+      'Loader 验证 Remote manifest 和共享依赖版本后注入入口；宿主与 Remote 的消息桥检查来源，示例共享消息经类型化解析。',
     files: ['config/mfe-contract.mjs', 'webpack/mfe.config.js', 'src/platform/mfe/bridge.ts'],
     note: '联邦不提供权限或样式沙箱，不可信子应用需要独立 origin 或 iframe。',
   },

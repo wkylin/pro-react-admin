@@ -20,6 +20,7 @@ const devWebpackConfig = merge(common, {
   devtool: 'eval-cheap-module-source-map',
   cache: { type: 'memory' },
   devServer: {
+    host: process.env.HOST || '0.0.0.0',
     allowedHosts: 'all',
     historyApiFallback: true,
     ...(mfeRole === 'remote'

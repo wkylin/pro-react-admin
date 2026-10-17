@@ -226,7 +226,7 @@ export default function ProMdxEditor({
     <div className={`${styles.mdxApp} ${viewClass} ${themeClass}`}>
       <Header theme={activeTheme} onThemeChange={handleThemeChange} onCopy={handleCopy} onDownload={handleDownload} />
       <Toolbar editor={editor} viewMode={viewMode} onChangeViewMode={setViewMode} editorKey={editorKey} />
-      <main className={styles.mdxMainContent}>
+      <div className={styles.mdxMainContent}>
         <EditorCore
           editor={editor}
           onStatsUpdate={setStats}
@@ -241,7 +241,7 @@ export default function ProMdxEditor({
             scrollRef={sourceScrollRef}
           />
         )}
-      </main>
+      </div>
       <Footer cursorPos={stats.cursorPos} stats={stats.stats} />
       {toast && <div className={`${styles.mdxToast} ${styles[`mdxToast_${toast.type}`] || ''}`}>{toast.message}</div>}
     </div>

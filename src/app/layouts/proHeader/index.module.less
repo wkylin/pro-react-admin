@@ -11,6 +11,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
 }
 
 .logo img {
@@ -31,6 +35,11 @@
   padding-right: 10px;
 }
 
+.headerActions > :global(.wui-ant-space-item) {
+  display: flex;
+  align-items: center;
+}
+
 .userTrigger {
   display: inline-flex;
   flex: 0 0 44px;
@@ -42,6 +51,29 @@
   min-height: 44px;
   padding: 2px;
   vertical-align: middle;
+}
+
+.menuUserName,
+.tenantOption {
+  display: block;
+  max-width: min(240px, 60vw);
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.tenantOptionId {
+  display: block;
+  opacity: 0.7;
+  font-size: 12px;
+}
+
+.tenantTag {
+  display: inline-block;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .topLayoutLogo {

@@ -14,6 +14,7 @@ import {
   ArrowDownOutlined,
 } from '@ant-design/icons'
 import { useProThemeContext } from '@src/theme/hooks'
+import { useTranslation } from 'react-i18next'
 
 interface GlobalSearchProps {
   open: boolean
@@ -484,6 +485,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
   token,
   modalRender,
 }) => {
+  const { t } = useTranslation()
   const modalWidth = isFullscreen ? '100%' : 600
   const modalStyle = isFullscreen
     ? { top: 0, margin: 0, maxWidth: '100vw', padding: 0, height: '100vh' }
@@ -525,7 +527,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           cursor: isFullscreen ? 'default' : 'move',
         }}
       >
-        <div style={{ fontSize: 16, fontWeight: 600, color: palette.titleColor }}>菜单搜索</div>
+        <div style={{ fontSize: 16, fontWeight: 600, color: palette.titleColor }}>{t('header.search')}</div>
         <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
           <button
             type="button"
@@ -539,7 +541,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
               border: 'none',
               padding: 0,
             }}
-            title={isFullscreen ? '退出全屏' : '全屏'}
+            title={isFullscreen ? t('header.exitFullscreen') : t('header.fullscreen')}
           >
             {isFullscreen ? (
               <AnimatedIcon variant="spin" mode="hover">
@@ -563,7 +565,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
               border: 'none',
               padding: 0,
             }}
-            title="关闭"
+            title={t('header.close')}
           >
             <AnimatedIcon variant="spin" mode="hover">
               <CloseOutlined />
@@ -579,8 +581,8 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
               <SearchOutlined style={{ color: palette.inputPrefixColor }} />
             </AnimatedIcon>
           }
-          placeholder="请输入...（支持中文、拼音及英文）"
-          title="请输入...（支持中文、拼音及英文）"
+          placeholder={t('header.searchMenuPlaceholder')}
+          title={t('header.searchMenuPlaceholder')}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={onKeyDown}
@@ -616,7 +618,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
               color: palette.listEmptyText,
             }}
           >
-            无匹配菜单
+            {t('header.noMenuResults')}
           </div>
         ) : (
           listToRender.map((entry, idx) => (
@@ -654,13 +656,13 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           <AnimatedIcon variant="spin" mode="hover">
             <ArrowDownOutlined style={{ fontSize: 10 }} />
           </AnimatedIcon>{' '}
-          导航
+          {t('header.navigateResults')}
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <AnimatedIcon variant="spin" mode="hover">
             <EnterOutlined style={{ fontSize: 10, color: palette.enterIcon }} />
           </AnimatedIcon>{' '}
-          选择
+          {t('header.selectResult')}
         </span>
         <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <span
@@ -674,7 +676,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           >
             ESC
           </span>{' '}
-          关闭
+          {t('header.close')}
         </span>
       </div>
     </Modal>

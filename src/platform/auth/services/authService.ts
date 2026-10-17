@@ -93,19 +93,13 @@ function parseGitHubUser(jsonLike: unknown): GitHubUser | null {
 function parseToken(jsonLike: unknown): string | null {
   if (typeof jsonLike !== 'string') return null
   try {
-    // 尝试解析为对象（新格式：{ token: "xxx" }）
-    const obj = JSON.parse(jsonLike)
-    if (obj && typeof obj === 'object' && typeof obj.token === 'string') {
+    const obj: unknown = JSON.parse(jsonLike)
+    if (obj && typeof obj === 'object' && !Array.isArray(obj) && 'token' in obj && typeof obj.token === 'string') {
       return obj.token
-    }
-    // 兼容直接字符串格式（旧版本）
-    if (typeof obj === 'string') {
-      return obj
     }
     return null
   } catch {
-    // 如果解析失败，可能本身就是纯字符串 token（最旧版本）
-    return jsonLike
+    return null
   }
 }
 
@@ -164,7 +158,7 @@ class AuthService {
         }
         return
       }
-      if (localStorage.getItem('enterprise_session')) return
+      if (localStorage.getItem('enterprise_session') || !isDemoPermissionMode()) return
       const tokenData = localStorage.getItem('github_token')
       const userData = localStorage.getItem('github_user')
 
@@ -322,9 +316,7 @@ class AuthService {
       // 注意：不要在浏览器端直接调用 GitHub 的 token 接口（需要 client_secret，且 GitHub token 接口不支持浏览器 CORS）。
       // 应始终将 code 发到后端，由后端使用 client_secret 与 GitHub 交换 access_token。
       // 开发模式下使用 webpack dev proxy（/api/github-token）进行本地调试；生产环境也应提供同名后端接口。
-      const tokenEndpoint =
-        process.env.NODE_ENV === 'development' ? 'http://localhost:5200/api/github-token' : '/api/github-token'
-      const tokenResponse = await request.post(tokenEndpoint, {
+      const tokenResponse = await request.post('/api/github-token', {
         // 仅将必要信息发送给后端，后端负责与 GitHub 交互并返回统一格式的 { access_token }
         client_id: GITHUB_OAUTH_CONFIG.clientId,
         code,
@@ -344,10 +336,8 @@ class AuthService {
       const accessToken = tokenData.access_token
 
       // 获取用户信息
-      const userEndpoint =
-        process.env.NODE_ENV === 'development' ? 'http://localhost:5200/api/github-user' : '/api/github-user'
       const userResponse = await request.get(
-        userEndpoint,
+        '/api/github-user',
         {},
         {
           headers: {
@@ -360,10 +350,8 @@ class AuthService {
       const userData = extractResponseData<Partial<GitHubUser>>(userResponse)
 
       // 获取用户邮箱
-      const emailEndpoint =
-        process.env.NODE_ENV === 'development' ? 'http://localhost:5200/api/github-email' : '/api/github-email'
       const emailResponse = await request.get(
-        emailEndpoint,
+        '/api/github-email',
         {},
         {
           headers: {
@@ -414,7 +402,7 @@ class AuthService {
           '/api/auth/session',
           {},
           {
-            headers: { Authorization: `Bearer ${enterprise.token}`, 'X-Tenant-ID': enterprise.tenantId },
+            headers: { Authorization: `Bearer ${enterprise.token}` },
             showError: false,
             encrypt: false,
           }

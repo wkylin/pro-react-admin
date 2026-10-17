@@ -30,7 +30,7 @@ const permissionCatalog = new Set([
   ),
 ])
 const reservedRole = 'tenant-admin'
-type UserRow = User & { tenant_id: string; password_hash: string | null }
+type UserRow = User & { tenant_id: string; principal_id: string; password_hash: string | null }
 type RoleRow = Omit<Role, 'permissions'> & { permissions: string }
 const publicUser = ({ id, name, email: address, role, status }: UserRow): User => ({
   id,
@@ -94,15 +94,22 @@ export class EnterpriseService {
       this.store.run('INSERT INTO tenants VALUES (?,?,?)', id, tenantName, 'active')
       this.store.run('INSERT INTO roles VALUES (?,?,?,?,?)', randomUUID(), id, '租户管理员', reservedRole, '["*:*"]')
       const user: User = { id: randomUUID(), name, email: address, role: reservedRole, status: 'active' }
+      const principalId = randomUUID()
       this.store.run(
-        'INSERT INTO users VALUES (?,?,?,?,?,?,?)',
+        'INSERT INTO principals (id,created_at) VALUES (?,?)',
+        principalId,
+        new Date(this.now()).toISOString()
+      )
+      this.store.run(
+        'INSERT INTO users (id,tenant_id,name,email,role,status,password_hash,principal_id) VALUES (?,?,?,?,?,?,?,?)',
         user.id,
         id,
         name,
         address,
         user.role,
         user.status,
-        hash
+        hash,
+        principalId
       )
       this.audit({ tenantId: id, user }, 'bootstrap', 'tenants', id)
       return user
@@ -127,6 +134,7 @@ export class EnterpriseService {
         !user ||
         user.status !== 'active' ||
         tenant?.status !== 'active' ||
+        user.principal_id !== initial?.principal_id ||
         user.password_hash !== initial?.password_hash
       )
         return fail(401, 'invalid_credentials')
@@ -145,8 +153,10 @@ export class EnterpriseService {
     })
   }
   private authenticateHash(hash: string): Principal {
-    const session = this.store.one<{ tenant_id: string; user_id: string }>(
-      'SELECT tenant_id,user_id FROM sessions WHERE hash=? AND expires_at>?',
+    const session = this.store.one<{ tenant_id: string; user_id: string; principal_id: string }>(
+      `SELECT s.tenant_id,s.user_id,u.principal_id
+       FROM sessions s JOIN users u ON u.tenant_id=s.tenant_id AND u.id=s.user_id
+       WHERE s.hash=? AND s.expires_at>?`,
       hash,
       this.now()
     )
@@ -159,6 +169,7 @@ export class EnterpriseService {
     const tenant = this.store.one<{ status: string }>('SELECT status FROM tenants WHERE id=?', session.tenant_id)
     if (!user || user.status !== 'active' || tenant?.status !== 'active') return fail(401, 'session_revoked')
     return {
+      principalId: session.principal_id,
       tenantId: session.tenant_id,
       user: publicUser(user),
       role: this.role(session.tenant_id, user.role),
@@ -170,6 +181,70 @@ export class EnterpriseService {
     const principal = this.authenticateHash(tokenHash(token))
     if (requestedTenant !== undefined && requestedTenant !== principal.tenantId) fail(403, 'tenant_mismatch')
     return principal
+  }
+  /** Revalidate long-lived transports against the live session and the tenant captured at upgrade time. */
+  authenticateSession(sessionHash: string, expectedTenantId: string, expectedPrincipalId: string): Principal {
+    const principal = this.authenticateHash(sessionHash)
+    if (principal.tenantId !== expectedTenantId || principal.principalId !== expectedPrincipalId)
+      return fail(401, 'session_identity_changed')
+    return principal
+  }
+  listTenants(principal: Principal) {
+    return this.store.all<{ id: string; name: string }>(
+      `SELECT t.id,t.name FROM tenant_memberships m
+       JOIN tenants t ON t.id=m.tenant_id
+       JOIN users u ON u.tenant_id=m.tenant_id AND u.id=m.user_id AND u.principal_id=m.principal_id
+       WHERE m.principal_id=? AND t.status='active' AND u.status='active'
+       ORDER BY t.name COLLATE NOCASE,t.id`,
+      principal.principalId
+    )
+  }
+  switchTenant(principal: Principal, value: unknown) {
+    const input = object(value)
+    onlyFields(input, ['tenantId'])
+    const nextTenantId = tenantId(input.tenantId)
+    return this.store.transaction(() => {
+      const actor = this.authenticateHash(principal.sessionHash)
+      if (actor.principalId !== principal.principalId) return fail(401, 'session_identity_changed')
+
+      const membership = this.store.one<UserRow>(
+        `SELECT u.* FROM tenant_memberships m
+         JOIN users u ON u.tenant_id=m.tenant_id AND u.id=m.user_id AND u.principal_id=m.principal_id
+         JOIN tenants t ON t.id=m.tenant_id
+         WHERE m.tenant_id=? AND m.principal_id=? AND u.status='active' AND t.status='active'`,
+        nextTenantId,
+        actor.principalId
+      )
+      if (!membership) return fail(403, 'active_tenant_membership_required')
+      if (nextTenantId === actor.tenantId) {
+        const session = this.store.one<{ expires_at: number }>(
+          'SELECT expires_at FROM sessions WHERE hash=?',
+          actor.sessionHash
+        )
+        return { tenantId: actor.tenantId, user: actor.user, expiresAt: session?.expires_at }
+      }
+
+      const session = this.store.one<{ expires_at: number }>(
+        'SELECT expires_at FROM sessions WHERE hash=? AND expires_at>? ',
+        actor.sessionHash,
+        this.now()
+      )
+      if (!session) return fail(401, 'session_expired')
+      this.store.run(
+        'UPDATE sessions SET tenant_id=?,user_id=? WHERE hash=?',
+        nextTenantId,
+        membership.id,
+        actor.sessionHash
+      )
+      this.audit(actor, 'tenant_switch_out', 'tenants', nextTenantId)
+      this.audit(
+        { tenantId: nextTenantId, user: publicUser(membership) },
+        'tenant_switch_in',
+        'tenants',
+        actor.tenantId
+      )
+      return { tenantId: nextTenantId, user: publicUser(membership), expiresAt: session.expires_at }
+    })
   }
   private require(principal: Principal, permission: string) {
     if (!permits(principal.role.permissions, permission)) fail(403, 'forbidden')
@@ -369,18 +444,26 @@ export class EnterpriseService {
             const role = this.role(actor.tenantId, next.role)
             if (!canDelegate(actor.role.permissions, role.permissions)) fail(403, 'grant_escalation')
             if (previous) this.protectLastAdmin(actor, previous, next as Omit<User, 'id'>)
-            if (action === 'create')
+            if (action === 'create') {
+              const principalId = randomUUID()
               this.store.run(
-                'INSERT INTO users VALUES (?,?,?,?,?,?,?)',
+                'INSERT INTO principals (id,created_at) VALUES (?,?)',
+                principalId,
+                new Date(this.now()).toISOString()
+              )
+              this.store.run(
+                `INSERT INTO users (id,tenant_id,name,email,role,status,password_hash,principal_id)
+                 VALUES (?,?,?,?,?,?,?,?)`,
                 recordId,
                 actor.tenantId,
                 next.name,
                 next.email,
                 next.role,
                 String(next.status),
-                passwordHash ?? null
+                passwordHash ?? null,
+                principalId
               )
-            else {
+            } else {
               this.store.run(
                 'UPDATE users SET name=?,email=?,role=?,status=? WHERE tenant_id=? AND id=?',
                 next.name,
@@ -397,12 +480,9 @@ export class EnterpriseService {
                   actor.tenantId,
                   recordId
                 )
-              if (
-                passwordHash !== undefined ||
-                next.role !== previous!.role ||
-                next.status !== previous!.status ||
-                next.email !== previous!.email
-              )
+              if (passwordHash !== undefined)
+                this.store.run('DELETE FROM sessions WHERE tenant_id=? AND user_id=?', actor.tenantId, recordId)
+              if (next.role !== previous!.role || next.status !== previous!.status || next.email !== previous!.email)
                 this.store.run('DELETE FROM sessions WHERE tenant_id=? AND user_id=?', actor.tenantId, recordId)
             }
           }

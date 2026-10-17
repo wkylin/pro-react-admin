@@ -491,6 +491,9 @@ importers:
       use-debounce:
         specifier: ^10.1.1
         version: 10.1.1(react@19.3.0)
+      web-vitals:
+        specifier: 6.2.3
+        version: 6.2.3
       zrender:
         specifier: 6.1.0
         version: 6.1.0
@@ -915,6 +918,9 @@ importers:
       mongoose:
         specifier: ^9.11.1
         version: 9.11.1(socks@2.8.9)
+      ws:
+        specifier: 8.22.0
+        version: 8.22.0
     devDependencies:
       nodemon:
         specifier: ^3.1.14

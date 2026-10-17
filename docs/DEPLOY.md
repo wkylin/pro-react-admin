@@ -2,9 +2,9 @@
 
 按顺序执行的手动发布命令见 [手动部署指南](MANUAL_DEPLOYMENT.md)，涵盖 Pages、Vercel、Storybook、Release 与回退。
 
-企业业务后端需独立部署在有持久卷的单实例 Node 24 主机，配置 ENTERPRISE_ENABLED=true、ENTERPRISE_DB_PATH、CORS_ORIGINS，经 HTTPS/反向代理服务前端。SQLite 不适用 Vercel 临时文件系统，本实现检测该环境后拒绝开启；Vercel 继续部署静态前端，真实模式通过 APP_BASE_URL 或同源代理接入外部服务。首次显式初始化租户和当前运维限制见[企业资源](ENTERPRISE.md)。
+企业业务后端需独立部署在有持久卷的单实例 Node 24 主机，配置 ENTERPRISE_ENABLED=true、ENTERPRISE_DB_PATH、CORS_ORIGINS，经 HTTPS/反向代理服务前端。SQLite 不适用 Vercel 临时文件系统，本实现检测该环境后拒绝开启；Vercel 继续部署静态前端，真实模式通过 APP_BASE_URL 或同源代理接入外部服务。租户初始化、版本化迁移、备份校验和恢复限制见[企业资源](ENTERPRISE.md)。
 
-`deploy/Dockerfile` 用于静态站点；`deploy/enterprise/Dockerfile` 和 `compose.enterprise.yaml` 提供业务 API、SQLite 持久卷及 Caddy HTTPS 网关。逐条部署命令、生产配置、演示/真实登录与 Vercel 静态产物上传见[Vercel 与 SQLite 部署指南](VERCEL_SQLITE.md)。Docker 镜像运行和数据库备份恢复仍需在实际主机验证。
+`deploy/Dockerfile` 用于静态站点；`deploy/enterprise/Dockerfile` 和 `compose.enterprise.yaml` 提供业务 API、SQLite 持久卷及 Caddy HTTPS 网关。逐条部署命令、生产配置、演示/真实登录与 Vercel 静态产物上传见[Vercel 与 SQLite 部署指南](VERCEL_SQLITE.md)。容器恢复和真实部署旧库升级仍需在目标主机副本演练。
 
 ## 构建、验证、复用
 

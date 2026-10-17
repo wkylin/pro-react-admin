@@ -18,6 +18,9 @@
     "src/app/model/**/*.tsx",
     "src/app/bootstrap/renderApp.tsx",
     "src/app/bootstrap/providers/**/*.tsx",
+    "src/app/layouts/proTabs/context.tsx",
+    "src/app/layouts/proTabs/index.tsx",
+    "src/app/layouts/proSider/index.tsx",
     "src/app/layouts/registry.ts",
     "src/app/layouts/types.ts"
   ],

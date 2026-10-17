@@ -8,8 +8,10 @@ export default function AdministrationHome() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   return (
-    <section className={styles.workspace}>
-      <Typography.Title level={2}>{t('admin.workspace')}</Typography.Title>
+    <section className={styles.workspace} aria-labelledby="administration-home-title">
+      <Typography.Title id="administration-home-title" level={1}>
+        {t('admin.workspace')}
+      </Typography.Title>
       <Typography.Paragraph type="secondary">{t('admin.workspaceDescription')}</Typography.Paragraph>
       <Space wrap>
         <PermissionGuard permission="user:read">

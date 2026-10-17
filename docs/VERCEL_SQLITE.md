@@ -95,6 +95,9 @@ ENTERPRISE_BOOTSTRAP_PASSWORD="替换为你自己的12至256字符密码"
 docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml config --quiet
 docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml build api
 
+# 建立或升级 schema；正式迁移前先按运维流程验证离机备份
+docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/db-admin.mjs migrate
+
 # 首次初始化该租户，数据写入同一持久卷
 docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/bootstrap.mjs
 ```
@@ -112,7 +115,7 @@ curl -i https://api.example.com/api/auth/session
 
 `enterprise-data` 持久卷保存 `/data/enterprise.sqlite` 及 WAL 文件；容器重建、普通 `down`/`up` 保留业务数据。不要使用 `docker compose down -v` 删除卷。API 不发布主机端口，网关在容器网络访问 `api:5200`；仅 HTTPS 网关对外提供服务。一个数据库对应一个 API 实例，不能以共享文件方式横向扩容。
 
-`TRACKING_STORE=memory` 只控制埋点数据，用户、角色、会话和审计仍保存到 SQLite。数据库备份恢复、后续 schema 迁移和集中审计仍需部署方维护；当前镜像与 Compose 提供首次部署和持久卷基础。
+`TRACKING_STORE=memory` 只控制埋点数据，用户、角色、会话和审计仍保存到 SQLite。服务启动只校验 schema，不自动升级。迁移、带校验 manifest 的备份和恢复命令见[企业 SQLite 运维](ENTERPRISE.md#sqlite-迁移备份与恢复)；正式环境仍需部署方确定异机备份频率、保留周期和 RPO/RTO，并在真实旧库副本上演练。
 
 ### 构建并部署真实登录前端
 

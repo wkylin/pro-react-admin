@@ -20,7 +20,7 @@ pnpm run typecheck:lib
 pnpm run lint
 ```
 
-check:route-contract 从 TS AST 收集默认应用路由，从策略 manifest 收集菜单，拒绝重复路由、无页面菜单、父级环、同级排序冲突、未注册图标和失效策略。check:docs 比较生成参考，并检查项目文档的本地 Markdown 链接及根 pnpm run 命令；不验证外网与页内锚点。根 prettier:check 当前检查 src，文档和构建脚本可额外使用 pnpm exec prettier。
+check:route-contract 从 TS AST 收集默认应用路由，从策略 manifest 收集菜单，拒绝重复路由、无页面菜单、父级环、同级排序冲突、未注册图标和失效策略。check:docs 比较生成参考，并检查项目文档的本地 Markdown 文件/标题锚点及根 pnpm run 命令；不验证外网或文档行为语义。契约变更需人工对照[文档维护约定](README.md#维护约定)复核当前能力表与专题说明。根 prettier:check 当前检查 src，文档和构建脚本可额外使用 pnpm exec prettier。
 
 ## Jest
 

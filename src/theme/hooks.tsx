@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 import type { LayoutMode } from '@layouts/types'
 import { useApplicationScope } from '@app/model'
+import { getAccessiblePrimaryColor } from './contrast'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
@@ -87,6 +88,7 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
 
   const resolvedTheme: 'light' | 'dark' =
     themeSettings.themeMode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : themeSettings.themeMode
+  const accessiblePrimaryColor = getAccessiblePrimaryColor(themeSettings.colorPrimary, resolvedTheme)
 
   useLayoutEffect(() => {
     try {
@@ -98,7 +100,8 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
 
-    // Expose the same resolved theme to global CSS and non-AntD components.
+    // Publish contrast-safe CSS values before exposing the next theme to global styles.
+    html.style.setProperty('--pro-accessible-primary-color', accessiblePrimaryColor)
     html.dataset.theme = resolvedTheme
 
     if (themeSettings.grayMode) {
@@ -108,7 +111,7 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     } else {
       html.style.filter = ''
     }
-  }, [themeSettings, resolvedTheme, storageKey])
+  }, [themeSettings, resolvedTheme, storageKey, accessiblePrimaryColor])
 
   // Keep Ant Design, CSS variables and Tailwind dark: utilities in sync with OS changes.
   useEffect(() => {

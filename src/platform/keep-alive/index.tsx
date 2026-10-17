@@ -101,11 +101,13 @@ export function createKeepAliveManager(options: KeepAliveOptions = {}) {
   return manager
 }
 
-// Compatibility for standalone consumers. Applications always install a provider.
-export const keepAliveManager = createKeepAliveManager()
-const ManagerContext = createContext(keepAliveManager)
+const ManagerContext = createContext<ReturnType<typeof createKeepAliveManager> | null>(null)
 const ActiveContext = createContext(false)
-export const useKeepAliveManager = () => useContext(ManagerContext)
+export const useKeepAliveManager = () => {
+  const manager = useContext(ManagerContext)
+  if (!manager) throw new Error('KeepAliveProvider required')
+  return manager
+}
 export const useKeepAliveContext = () => useContext(ActiveContext)
 
 export function KeepAliveProvider({ children, options }: { children: ReactNode; options?: KeepAliveOptions }) {

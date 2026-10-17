@@ -505,14 +505,14 @@ export default function AutoDeploy() {
         <header className={styles.header}>
           <div className={styles.brand}>
             <div className={styles['brand-icon']}>D</div>
-            <span>AutoDeploy 控制台</span>
+            <h1>AutoDeploy 控制台</h1>
           </div>
           <div className={styles.statusBadge} style={getStatusStyle()}>
             {statusText}
           </div>
         </header>
 
-        <main className={styles.main}>
+        <section className={styles.main} aria-label="自动部署配置和执行">
           <Sidebar
             config={config}
             setConfig={setConfig}
@@ -577,7 +577,7 @@ export default function AutoDeploy() {
               </aside>
             </div>
           </div>
-        </main>
+        </section>
       </div>
     </FixTabPanel>
   )

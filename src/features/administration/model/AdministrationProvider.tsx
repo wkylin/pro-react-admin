@@ -9,8 +9,9 @@ import { createCachedDataProvider } from '@platform/data/cache'
 import { getSessionIdentity } from '@platform/auth/model/session'
 import { useSessionIdentity } from '@platform/auth/hooks/useSessionIdentity'
 import { usePermission } from '@platform/auth/hooks/usePermission'
+import { subscribeResourceEvents } from '@platform/data/resourceEvents'
 
-type AdministrationContextValue = { provider: DataProvider<AdministrationSchema>; demo: boolean }
+type AdministrationContextValue = { provider: DataProvider<AdministrationSchema>; demo: boolean; realtime: boolean }
 const Context = createContext<AdministrationContextValue | null>(null)
 export function AdministrationProvider({
   children,
@@ -40,6 +41,7 @@ function ScopedAdministration({
     const demo = !provider && isDemoPermissionMode()
     return {
       demo,
+      realtime: !provider && !demo,
       provider: createCachedDataProvider(
         provider ??
           (demo
@@ -62,6 +64,10 @@ function ScopedAdministration({
         if (lifetime.current === ended) value.provider.dispose()
       })
     }
+  }, [value])
+  useEffect(() => {
+    if (!value.realtime) return
+    return subscribeResourceEvents((resource) => value.provider.invalidate?.(resource))
   }, [value])
   return <Context.Provider value={value}>{children}</Context.Provider>
 }

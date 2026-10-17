@@ -2,17 +2,42 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { fireEvent, render, screen } from '@testing-library/react'
 import {
   ApplicationModules,
-  createModuleRegistry,
+  createModuleRegistry as buildModuleRegistry,
   ModuleActions,
   useApplicationModules,
   type ApplicationModule,
+  type ModuleCapability,
 } from './index'
+import { administrationManifest } from '@features/administration/manifest'
+import { notificationsManifest } from '@features/notifications/manifest'
+
+const TEST_HOST_VERSION = '5.1.0'
 
 const moduleWith = (id: string, path: string): ApplicationModule => ({
   id,
-  contractVersion: 1,
+  contractVersion: 2,
+  version: '1.0.0',
+  compatibility: { application: '>=5.1.0 <6.0.0' },
+  capabilities: ['routes'],
   routes: [{ path, element: <div /> }],
+  data: { minimumSupportedVersion: 0, currentVersion: 0, migrations: [] },
+  uninstall: { dataPolicy: 'ephemeral', cleanup: 'none' },
 })
+
+const createModuleRegistry = (definitions: readonly ApplicationModule[], hostVersion = TEST_HOST_VERSION) => {
+  const testDefinitions = definitions.map((definition) => {
+    const capabilities: ModuleCapability[] = ['routes']
+    if (definition.resources && Object.keys(definition.resources).length) capabilities.push('resources')
+    if (definition.Provider) capabilities.push('provider')
+    if (definition.headerAction) capabilities.push('header-action')
+    return {
+      ...definition,
+      capabilities,
+      uninstall: { ...definition.uninstall, cleanup: definition.Provider ? 'provider-unmount' : 'none' } as const,
+    }
+  })
+  return buildModuleRegistry(testDefinitions, { hostVersion })
+}
 
 test('selected features supply permissioned routes and namespaced data definitions', () => {
   const definition = moduleWith('members', 'administration/users')
@@ -143,7 +168,87 @@ test('public authentication routes and unsupported contract versions cannot ente
   expect(() =>
     createModuleRegistry([{ ...definition, routes: [{ path: 'administration/users', element: <div />, auth: false }] }])
   ).toThrow('Public routes')
-  expect(() => createModuleRegistry([{ ...definition, contractVersion: 2 } as unknown as ApplicationModule])).toThrow(
+  expect(() => createModuleRegistry([{ ...definition, contractVersion: 3 } as unknown as ApplicationModule])).toThrow(
     'Unsupported module contract'
   )
+})
+
+test('the registry rejects legacy contracts and checks v2 application compatibility', () => {
+  const current = moduleWith('current', 'administration/users')
+  expect(() =>
+    buildModuleRegistry([{ ...current, contractVersion: 1 } as unknown as ApplicationModule], {
+      hostVersion: '5.1.0',
+    })
+  ).toThrow('Unsupported module contract')
+  expect(buildModuleRegistry([current], { hostVersion: '5.1.0' }).modules[0].contractVersion).toBe(2)
+  expect(() => buildModuleRegistry([current], { hostVersion: '6.0.0' })).toThrow('incompatible with application')
+})
+
+test('shipped feature manifests declare only the capabilities they compile', () => {
+  const Provider = ({ children }: { children: ReactNode }) => <>{children}</>
+  const registry = buildModuleRegistry(
+    [
+      {
+        ...administrationManifest,
+        routes: [{ path: 'administration/users', element: <div /> }],
+        resources: { users: { path: '/api/admin/users', parse: (value: unknown) => value as { id: string } } },
+        Provider,
+      },
+      {
+        ...notificationsManifest,
+        routes: [{ path: 'notifications', element: <div /> }],
+        Provider,
+        headerAction: { Component: () => null, route: '/notifications' },
+      },
+    ],
+    {
+      hostVersion: TEST_HOST_VERSION,
+    }
+  )
+  expect(registry.modules.map(({ id }) => id)).toEqual(['administration', 'notifications'])
+  expect(registry.modules.map(({ contractVersion }) => contractVersion)).toEqual([2, 2])
+})
+
+test('v2 capabilities, migration chains and uninstall lifecycle declarations fail closed', () => {
+  const definition = moduleWith('invalid', 'administration/users')
+  expect(() => buildModuleRegistry([{ ...definition, routes: [] }], { hostVersion: TEST_HOST_VERSION })).toThrow(
+    'must declare at least one route'
+  )
+  expect(() =>
+    buildModuleRegistry([{ ...definition, capabilities: ['routes', 'provider'] }], { hostVersion: TEST_HOST_VERSION })
+  ).toThrow('capability declaration')
+
+  const migration = {
+    id: 'users-v1',
+    from: 0,
+    to: 1,
+    checksum: 'a'.repeat(64),
+    requiresBackup: true,
+    rollback: 'backup-restore' as const,
+  }
+  const migrated = {
+    ...definition,
+    data: { minimumSupportedVersion: 0, currentVersion: 1, migrations: [migration] },
+    uninstall: { ...definition.uninstall, dataPolicy: 'retain' as const },
+  }
+  expect(buildModuleRegistry([migrated], { hostVersion: TEST_HOST_VERSION }).modules).toHaveLength(1)
+  expect(() =>
+    buildModuleRegistry([{ ...migrated, data: { ...migrated.data, migrations: [] } }], {
+      hostVersion: TEST_HOST_VERSION,
+    })
+  ).toThrow('missing migration')
+
+  const withProvider = { ...definition, Provider: () => null }
+  expect(() =>
+    buildModuleRegistry(
+      [
+        {
+          ...withProvider,
+          capabilities: ['routes', 'provider'],
+          uninstall: { ...definition.uninstall, cleanup: 'none' },
+        },
+      ],
+      { hostVersion: TEST_HOST_VERSION }
+    )
+  ).toThrow('uninstall cleanup must match')
 })

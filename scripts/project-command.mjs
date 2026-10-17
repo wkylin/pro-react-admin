@@ -36,6 +36,7 @@ if (action === 'list' || action === 'doctor') {
       'MFE_ROLE',
       'PORT',
       'PUBLIC_URL',
+      'REACT_APP_USE_MOCK',
       'SENTRY_SOURCE_MAP',
       ...registry.remotes.map(({ envKey }) => envKey),
     ]

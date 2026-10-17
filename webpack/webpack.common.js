@@ -200,6 +200,7 @@ const config = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(clientEnv),
+      __APP_VERSION__: JSON.stringify(packageJson.version || '0.0.0'),
     }),
     new WebpackCodeInspectorPlugin({
       bundler: 'webpack',

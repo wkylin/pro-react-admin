@@ -1,5 +1,6 @@
 import React, { useRef, useState, lazy, Suspense } from 'react'
 import { Layout, Drawer } from 'antd'
+import { useTranslation } from 'react-i18next'
 import { selectIsMobile, useAppStore } from '@app/model'
 import { ProTabProvider } from '@layouts/proTabs/context'
 import ProHeader from './proHeader'
@@ -23,6 +24,7 @@ const ProLayout = ({ registry = defaultLayoutRegistry }: ProLayoutProps) => {
   const [settingOpen, setSettingOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const isMobile = useAppStore(selectIsMobile)
+  const { t } = useTranslation()
 
   const { themeSettings, resolvedTheme } = useProThemeContext()
   const { layout, navTheme } = themeSettings
@@ -33,6 +35,16 @@ const ProLayout = ({ registry = defaultLayoutRegistry }: ProLayoutProps) => {
 
   return (
     <Layout className={styles.layout} ref={layoutRef}>
+      <a
+        className={styles.skipLink}
+        href="#fullScreenContent"
+        onClick={(event) => {
+          event.preventDefault()
+          document.getElementById('fullScreenContent')?.focus({ preventScroll: true })
+        }}
+      >
+        {t('header.skipToContent')}
+      </a>
       <Suspense fallback={null}>
         {themeSettings.pointerMove ? <PointerMove /> : null}
         {themeSettings.magicTrail ? (

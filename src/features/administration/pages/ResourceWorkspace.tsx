@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useId, type ReactNode } from 'react'
 import { Alert, Button, Input, Space, Typography } from 'antd'
 import { ReloadOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +9,7 @@ export default function ResourceWorkspace({
   title,
   description,
   actions,
+  searchPlaceholder,
   onSearch,
   onReload,
   error,
@@ -17,6 +18,7 @@ export default function ResourceWorkspace({
   title: string
   description: string
   actions?: ReactNode
+  searchPlaceholder?: string
   onSearch: (value: string) => void
   onReload: () => void
   error?: string
@@ -24,11 +26,14 @@ export default function ResourceWorkspace({
 }) {
   const { demo } = useAdministration()
   const { t } = useTranslation()
+  const titleId = useId()
   return (
-    <section className={styles.workspace} aria-label={title}>
+    <section className={styles.workspace} aria-labelledby={titleId}>
       <header className={styles.header}>
         <div>
-          <Typography.Title level={2}>{title}</Typography.Title>
+          <Typography.Title id={titleId} level={1}>
+            {title}
+          </Typography.Title>
           <Typography.Paragraph type="secondary">{description}</Typography.Paragraph>
         </div>
         <Space wrap>{actions}</Space>
@@ -37,7 +42,7 @@ export default function ResourceWorkspace({
       <div className={styles.toolbar}>
         <Input.Search
           aria-label={t('admin.search')}
-          placeholder={t('admin.searchPlaceholder')}
+          placeholder={searchPlaceholder ?? t('admin.searchPlaceholder')}
           allowClear
           onSearch={onSearch}
         />

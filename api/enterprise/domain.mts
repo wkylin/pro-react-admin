@@ -82,6 +82,7 @@ export interface Audit {
 }
 export type Resource = 'users' | 'roles' | 'audit'
 export interface Principal {
+  principalId: string
   tenantId: string
   user: User
   role: Role

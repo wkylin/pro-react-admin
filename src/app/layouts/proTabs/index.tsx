@@ -1,17 +1,18 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
-import { useEffect, Suspense, useTransition, type Dispatch, type ReactNode, type SetStateAction } from 'react'
+import { useEffect, Suspense, useTransition, type CSSProperties, type Dispatch, type SetStateAction } from 'react'
 import PropTypes from 'prop-types'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
-import { Tabs, Dropdown, Space, theme, Button, type TabsProps } from 'antd'
+import { Tabs, Dropdown, theme, Button, type TabsProps } from 'antd'
 import StickyBox from 'react-sticky-box'
-import { SyncOutlined, FireOutlined, DownOutlined } from '@ant-design/icons'
+import { SyncOutlined, FireOutlined, EllipsisOutlined, CloseOutlined } from '@ant-design/icons'
 import ErrorBoundary from '@/platform/errors/ErrorBoundary'
 import { useTranslation } from 'react-i18next'
 import { useProTabContext, type Pane } from '@layouts/proTabs/context'
 import Loading from '@src/components/stateless/Loading'
 import Fullscreen from '../fullscreen'
 import KeepAlive from '@platform/keep-alive'
+import styles from './index.module.less'
 
 type ProTabsProps = {
   panesItem: Pane
@@ -48,18 +49,74 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
         ? panes.map((pane, index) => (index === currentRoutePaneIndex ? { ...pane, ...panesItem } : pane))
         : panes
   const visibleActiveKey = tabActiveKey || activeKey || visiblePanes[0]?.key
+  const activePane = visiblePanes.find((pane) => pane.key === visibleActiveKey)
 
   const {
-    token: { colorBgContainer },
+    token: { colorBgContainer, colorBorderSecondary },
   } = theme.useToken()
 
   const renderTabBar: NonNullable<TabsProps['renderTabBar']> = (tabBarProps, DefaultTabBar) => (
-    <StickyBox offsetTop={0} style={{ zIndex: 10 }}>
+    <StickyBox
+      className={`${styles.tabBarRow} layout-tabbar-shell`}
+      offsetTop={0}
+      style={
+        {
+          zIndex: 10,
+          backgroundColor: colorBgContainer,
+          '--pro-tabs-border-color': colorBorderSecondary,
+        } as CSSProperties
+      }
+    >
+      <span className={styles.tabBarDecoration} aria-hidden="true">
+        <AnimatedIcon variant="spin" mode="hover">
+          <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} aria-hidden="true" />
+        </AnimatedIcon>
+      </span>
       <DefaultTabBar
         {...tabBarProps}
-        className="pro-tabs"
-        style={{ ...tabBarProps.style, backgroundColor: colorBgContainer }}
+        extra={undefined}
+        className={`pro-tabs ${styles.tabList}`}
+        style={{ ...tabBarProps.style, backgroundColor: colorBgContainer, flex: '1 1 auto', minWidth: 0 }}
       />
+      <div className={styles.tabBarActions} role="group" aria-label={t('admin.pageActions')}>
+        {activePane?.closable ? (
+          <Button
+            type="text"
+            size="small"
+            aria-label={t('admin.closeCurrentTab')}
+            title={t('admin.closeCurrentTab')}
+            icon={<CloseOutlined aria-hidden />}
+            onClick={() => removeTab(visibleActiveKey)}
+          />
+        ) : null}
+        <Button
+          type="text"
+          size="small"
+          aria-label={t('admin.refresh')}
+          icon={<SyncOutlined aria-hidden />}
+          onClick={refreshTab}
+        />
+        <Fullscreen ele="#fullScreenContent" placement="left" tips={t('admin.contentFullscreen')} />
+        {visiblePanes.length > 2 ? (
+          <Dropdown
+            menu={{
+              items: tabRightMenu,
+              onClick: ({ key }) => {
+                if (key === 'all' || key === 'other') onTabContextMenu(key)
+              },
+            }}
+            trigger={['click']}
+          >
+            <Button
+              type="text"
+              size="small"
+              aria-label={t('header.moreActions')}
+              title={t('header.moreActions')}
+              icon={<EllipsisOutlined aria-hidden />}
+            />
+          </Dropdown>
+        ) : null}
+      </div>
     </StickyBox>
   )
 
@@ -111,10 +168,6 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
 
   const onTabScroll: NonNullable<TabsProps['onTabScroll']> = () => {}
 
-  const onEdit: NonNullable<TabsProps['onEdit']> = (targetKey, action) => {
-    if (action === 'remove' && typeof targetKey === 'string') removeTab(targetKey)
-  }
-
   // 刷新当前 tab
   const refreshTab = () => {
     setPanes((current) =>
@@ -140,11 +193,11 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   // tab 右键菜单
   const tabRightMenu = [
     {
-      label: '关闭其他',
+      label: t('admin.closeOtherTabs'),
       key: 'other',
     },
     {
-      label: '全部关闭',
+      label: t('admin.closeAllTabs'),
       key: 'all',
     },
   ]
@@ -160,7 +213,6 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       onChange={onChange}
       onTabClick={onTabClick}
       onTabScroll={onTabScroll}
-      onEdit={onEdit}
       renderTabBar={renderTabBar}
       className="layout-container"
       id="container"
@@ -170,47 +222,6 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       }}
       activeKey={visibleActiveKey}
       destroyOnHidden={false}
-      tabBarExtraContent={{
-        left: (
-          <Space align="center" size={30} style={{ margin: '0 10px' }}>
-            <AnimatedIcon variant="spin" mode="hover">
-              <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} />
-            </AnimatedIcon>
-          </Space>
-        ),
-        right: (
-          <>
-            <Button
-              type="text"
-              size="small"
-              aria-label={t('admin.refresh')}
-              icon={<SyncOutlined aria-hidden />}
-              onClick={refreshTab}
-            />
-            <Space style={{ padding: '0 5px' }}>
-              <Fullscreen ele="#fullScreenContent" placement="left" tips="主内容全屏" />
-            </Space>
-            {visiblePanes.length > 2 ? (
-              <Dropdown
-                menu={{
-                  items: tabRightMenu,
-                  onClick: ({ key }) => {
-                    if (key === 'all' || key === 'other') onTabContextMenu(key)
-                  },
-                }}
-                trigger={['hover']}
-              >
-                <Button type="link">
-                  More{' '}
-                  <AnimatedIcon variant="spin" mode="hover">
-                    <DownOutlined />
-                  </AnimatedIcon>
-                </Button>
-              </Dropdown>
-            ) : null}
-          </>
-        ),
-      }}
       items={visiblePanes.map((pane) => ({
         label: (
           <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
@@ -218,7 +229,8 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
           </span>
         ),
         key: pane.key,
-        closable: pane.closable,
+        // Keep non-tab controls (including close actions) outside the tablist.
+        closable: false,
         forceRender: true,
         children: (
           <ErrorBoundary key={`${pane.key}:${pane.generation ?? 0}`} onReset={fixError} navigate={redirectTo}>

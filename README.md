@@ -22,7 +22,7 @@ pnpm install --frozen-lockfile
 pnpm start
 ```
 
-已有仓库只需在根目录安装并启动。访问 http://localhost:8080/#/signin，点击 `admin@test.com` 自动填充当前浏览器生成的演示密码，再点击登录并完成滑块验证；没有统一固定密码。`pnpm start` 同时启动完整展示应用和本地 API（5200），开发埋点使用内存，无需 MongoDB。
+已有仓库只需在根目录安装并启动。访问 http://localhost:8080/#/signin，点击 `admin@test.com` 自动填充当前浏览器生成的演示密码，再点击登录并完成滑块验证；没有统一固定密码。`pnpm start` 同时启动完整展示应用和本地 API（从 5200 起，占用时递增并同步前端代理），开发埋点使用内存，无需 MongoDB。实际端口以终端输出为准。
 
 所有后续命令均在仓库根目录执行；切换场景前用 Ctrl+C 停止旧服务。编译完成后手动打开浏览器，端口以终端输出为准。完整步骤、环境切换及排查见[快速上手指南](docs/GETTING_STARTED.md)。
 
@@ -34,23 +34,25 @@ node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.
 
 实际文件被 Git 忽略，默认演示配置不包含密码；已有配置会保留。变量说明和开发/生产加载规则见[本地环境文件](docs/GETTING_STARTED.md#本地环境文件)。
 
-| 场景           | 命令                                            | 默认地址 / 输出              |
-| -------------- | ----------------------------------------------- | ---------------------------- |
-| 默认应用与 API | `pnpm start`                                    | Web 8080、API 5200           |
-| 仅默认前端     | `pnpm run start:web`                            | 8080                         |
-| 企业演示       | `pnpm run start:enterprise`                     | 8080                         |
-| 多项目         | `pnpm run project:dev projectA` / `projectB`    | 默认 8080，可设置 `PORT`     |
-| 微前端         | 分别启动三个 `start:mf:*`，见下文               | Shell 8080、Remote 8081/8082 |
-| 本地 lib       | `pnpm run prepare:lib:release`                  | `packages/wui-react/dist`    |
-| 真实租户登录   | 配置并初始化后 `pnpm run start:enterprise:full` | Web 8080、API 5200           |
+| 场景           | 命令                                                                    | 默认地址 / 输出                | 登录账户                                      |
+| -------------- | ----------------------------------------------------------------------- | ------------------------------ | --------------------------------------------- |
+| 默认应用与 API | `pnpm start`                                                            | Web 从 8080 起、API 从 5200 起 | `admin@test.com` 等演示账号，密码由浏览器生成 |
+| 仅默认前端     | `pnpm run start:web`                                                    | 8080                           | 同上                                          |
+| 企业演示       | `pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise` | 8080                           | 同上                                          |
+| 多项目         | `pnpm run project:dev projectA` / `projectB`                            | 默认 8080，可设置 `PORT`       | projectA 使用演示账号；projectB 无需登录      |
+| 微前端         | 分别启动三个 `start:mf:*`，见下文                                       | Shell 8080、Remote 8081/8082   | 公开通信示例，无需登录                        |
+| 本地 lib       | `pnpm run prepare:lib:release`                                          | `packages/wui-react/dist`      | 不适用                                        |
+| 真实租户登录   | 配置并初始化后 `pnpm run start:enterprise:full`                         | Web 从 8080 起、API 从 5200 起 | 初始化时设置的租户 ID、邮箱和自选密码         |
+
+当前开发机的隔离预览账户另记在 Git 忽略的 `docs/LOCAL_PREVIEW.local.md`；该文件不随仓库分发，预览账号也不是项目默认账号。
 
 ### 默认应用和企业演示
 
-以下使用模板默认的 `REACT_APP_USE_MOCK=true`。企业入口包含工作台、用户、角色和审计管理；完整体验使用 `admin@test.com`。其它演示账号为 `manager@test.com`、`business@test.com`、`user@test.com`，可退出登录后切换，对比权限。
+默认应用使用模板中的 `REACT_APP_USE_MOCK=true`；Enterprise 入口需在命令中显式开启 Mock。企业入口包含工作台、用户、角色和审计管理；完整体验使用 `admin@test.com`。其它演示账号为 `manager@test.com`、`business@test.com`、`user@test.com`，可退出登录后切换，对比权限。点击登录页账号会填入该浏览器生成的密码，没有统一固定密码。
 
 ```bash
 # 企业演示：仅前端
-pnpm run start:enterprise
+pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise
 ```
 
 登录后访问 `/#/administration/users`、`/#/administration/roles`、`/#/administration/audit`。演示数据刷新后重置，编辑演示角色不会改变测试账号授权，也不会创建可登录的新用户。
@@ -65,7 +67,7 @@ pnpm run serve:dist
 
 ```bash
 # 企业入口：dist-enterprise，预览 http://localhost:5000/#/signin
-pnpm run build:enterprise:stats
+pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run build:enterprise:stats
 PROJECT=enterprise pnpm run serve:dist
 ```
 

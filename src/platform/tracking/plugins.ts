@@ -3,6 +3,7 @@
 // ============================================================
 
 import type { TrackerPlugin, ITrackerCore } from './types'
+import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
 
 // ===================== 页面浏览插件 =====================
 /**
@@ -186,169 +187,47 @@ export const ExposurePlugin: TrackerPlugin = {
 
 // ===================== 性能监控插件 =====================
 /**
- * 自动采集 Web Vitals 核心指标：
- * - FCP (First Contentful Paint)
- * - LCP (Largest Contentful Paint)
- * - FID (First Input Delay)
- * - CLS (Cumulative Layout Shift)
- * - TTFB (Time to First Byte)
+ * Use the reference Web Vitals implementation. A single page-lifetime observer set
+ * fans out to currently mounted trackers so MFE remounts do not add duplicate observers.
  */
+const activePerformanceTrackers = new Set<ITrackerCore>()
+let performanceObserversInstalled = false
+
+function reportWebVital(metric: Metric) {
+  const name = metric.name.toLowerCase()
+  const unit = metric.name === 'CLS' ? 'unitless' : 'ms'
+  const value = Math.round(metric.value * 100) / 100
+  const properties = {
+    metric: metric.name,
+    value,
+    delta: Math.round(metric.delta * 100) / 100,
+    unit,
+    rating: metric.rating,
+    navigationType: metric.navigationType,
+  }
+  for (const tracker of activePerformanceTrackers) tracker.track(name, properties, 'performance')
+}
+
+function installWebVitalObservers() {
+  if (performanceObserversInstalled || typeof window === 'undefined') return
+  performanceObserversInstalled = true
+  // web-vitals reports page-level metrics at its lifecycle boundary and has no unsubscribe API.
+  // Keep exactly one set for the page lifetime; plugin cleanup only removes tracker subscribers.
+  onCLS(reportWebVital)
+  onFCP(reportWebVital)
+  onINP(reportWebVital)
+  onLCP(reportWebVital)
+  onTTFB(reportWebVital)
+}
+
 export const PerformancePlugin: TrackerPlugin = {
   name: 'performance',
-  version: '1.0.0',
+  version: '3.0.0',
   install(tracker: ITrackerCore) {
-    // 页面加载完成后采集 Navigation Timing
-    const collectNavigationTiming = () => {
-      if (typeof window === 'undefined') return
-
-      const timing = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-
-      if (!timing) return
-
-      const metrics: Record<string, unknown> = {
-        ttfb: timing.responseStart - timing.requestStart,
-        fcp: 0, // 将通过 paint observer 获取
-        domReady: timing.domContentLoadedEventEnd - timing.fetchStart,
-        pageLoad: timing.loadEventEnd - timing.fetchStart,
-        dnsTime: timing.domainLookupEnd - timing.domainLookupStart,
-        tcpTime: timing.connectEnd - timing.connectStart,
-        sslTime: timing.secureConnectionStart > 0 ? timing.connectEnd - timing.secureConnectionStart : 0,
-        redirectTime: timing.redirectEnd - timing.redirectStart,
-        transferSize: timing.transferSize,
-        resourceSize: timing.decodedBodySize,
-      }
-
-      tracker.track('navigation_timing', metrics, 'performance')
-    }
-
-    // FCP
-    const fcpObserver = new PerformanceObserver((list) => {
-      const entries = list.getEntriesByType('paint')
-      for (const entry of entries) {
-        if (entry.name === 'first-contentful-paint') {
-          tracker.track(
-            'fcp',
-            {
-              value: Math.round(entry.startTime),
-              rating: entry.startTime < 1800 ? 'good' : entry.startTime < 3000 ? 'needs-improvement' : 'poor',
-            },
-            'performance'
-          )
-        }
-      }
-    })
-
-    try {
-      fcpObserver.observe({ type: 'paint', buffered: true })
-    } catch {
-      // 浏览器不支持
-    }
-
-    // LCP
-    const lcpObserver = new PerformanceObserver((list) => {
-      const entries = list.getEntries()
-      const lastEntry = entries[entries.length - 1]
-      if (lastEntry) {
-        tracker.track(
-          'lcp',
-          {
-            value: Math.round(lastEntry.startTime),
-            element: (lastEntry as unknown as { element?: Element }).element?.tagName || 'unknown',
-            rating: lastEntry.startTime < 2500 ? 'good' : lastEntry.startTime < 4000 ? 'needs-improvement' : 'poor',
-          },
-          'performance'
-        )
-      }
-    })
-
-    try {
-      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true })
-    } catch {
-      // 浏览器不支持
-    }
-
-    // FID (First Input Delay)
-    const fidObserver = new PerformanceObserver((list) => {
-      const entries = list.getEntries()
-      for (const entry of entries) {
-        const fidEntry = entry as PerformanceEventTiming
-        tracker.track(
-          'fid',
-          {
-            value: Math.round(fidEntry.processingStart - fidEntry.startTime),
-            name: fidEntry.name,
-            rating:
-              fidEntry.processingStart - fidEntry.startTime < 100
-                ? 'good'
-                : fidEntry.processingStart - fidEntry.startTime < 300
-                  ? 'needs-improvement'
-                  : 'poor',
-          },
-          'performance'
-        )
-      }
-    })
-
-    try {
-      fidObserver.observe({ type: 'first-input', buffered: true })
-    } catch {
-      // 浏览器不支持
-    }
-
-    // CLS
-    let clsValue = 0
-    const clsObserver = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        const clsEntry = entry as PerformanceEventTiming & { hadRecentInput: boolean; value: number }
-        if (!clsEntry.hadRecentInput) {
-          clsValue += clsEntry.value
-        }
-      }
-    })
-
-    try {
-      clsObserver.observe({ type: 'layout-shift', buffered: true })
-    } catch {
-      // 浏览器不支持
-    }
-
-    // 页面卸载前上报 CLS
-    const reportCLS = () => {
-      if (clsValue > 0) {
-        tracker.track(
-          'cls',
-          {
-            value: Math.round(clsValue * 1000) / 1000,
-            rating: clsValue < 0.1 ? 'good' : clsValue < 0.25 ? 'needs-improvement' : 'poor',
-          },
-          'performance'
-        )
-      }
-    }
-
-    window.addEventListener('beforeunload', reportCLS)
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'hidden') {
-        reportCLS()
-      }
-    })
-
-    // 延迟收集 Navigation Timing（等数据就绪）
-    if (document.readyState === 'complete') {
-      setTimeout(collectNavigationTiming, 0)
-    } else {
-      window.addEventListener('load', () => {
-        setTimeout(collectNavigationTiming, 1000)
-      })
-    }
-
-    return () => {
-      fcpObserver.disconnect()
-      lcpObserver.disconnect()
-      fidObserver.disconnect()
-      clsObserver.disconnect()
-      window.removeEventListener('beforeunload', reportCLS)
-    }
+    if (typeof window === 'undefined') return
+    activePerformanceTrackers.add(tracker)
+    installWebVitalObservers()
+    return () => activePerformanceTrackers.delete(tracker)
   },
 }
 

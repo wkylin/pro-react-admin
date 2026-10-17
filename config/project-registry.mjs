@@ -103,6 +103,8 @@ export function createBuildPlan(action, name, inherited = {}, registry = loadPro
     BUILD_GOAL: isDev ? 'development' : 'production',
     SENTRY_SOURCE_MAP: isDev || isMfe ? 'no' : (inherited.SENTRY_SOURCE_MAP ?? 'map'),
   }
+  // Enterprise builds default to tenant-backed auth; demo mode must be explicit.
+  if (selected.name === 'enterprise' && env.REACT_APP_USE_MOCK === undefined) env.REACT_APP_USE_MOCK = 'false'
   delete env.MFE_ROLE
   if (isMfe) {
     env.MFE_ROLE = host ? 'host' : 'remote'

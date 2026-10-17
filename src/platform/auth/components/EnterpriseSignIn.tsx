@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Alert, Button, Card, Form, Input, Layout, Typography } from 'antd'
+import { Alert, Button, Card, Form, Input, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { loginEnterprise } from '../api/enterprise'
@@ -33,9 +33,14 @@ export default function EnterpriseSignIn() {
     }
   }
   return (
-    <Layout style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 16 }}>
+    <main
+      aria-labelledby="enterprise-sign-in-title"
+      style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: 16 }}
+    >
       <Card style={{ width: '100%', maxWidth: 420 }}>
-        <Typography.Title level={2}>{t('identity.title')}</Typography.Title>
+        <Typography.Title id="enterprise-sign-in-title" level={1}>
+          {t('identity.title')}
+        </Typography.Title>
         <Typography.Paragraph type="secondary">{t('identity.description')}</Typography.Paragraph>
         {error && <Alert type="error" title={error} showIcon style={{ marginBottom: 16 }} />}
         <Form<Credentials> layout="vertical" onFinish={(values) => void submit(values)}>
@@ -57,6 +62,6 @@ export default function EnterpriseSignIn() {
           </Button>
         </Form>
       </Card>
-    </Layout>
+    </main>
   )
 }

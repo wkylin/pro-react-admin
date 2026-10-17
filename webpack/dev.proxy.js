@@ -1,13 +1,16 @@
+const localApiTarget = `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200}`
+
 export default [
   {
-    context: ['/api/auth', '/api/admin', '/api/permissions', '/api/roles'],
-    target: process.env.ENTERPRISE_API_TARGET || `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200}`,
+    context: ['/api/auth', '/api/admin', '/api/permissions', '/api/roles', '/api/events'],
+    target: process.env.ENTERPRISE_API_TARGET || localApiTarget,
     changeOrigin: true,
+    ws: true,
   },
   {
     // Keep the admin token in the dev-server process; it is never injected into the browser bundle.
     context: ['/api/tracking'],
-    target: process.env.TRACKING_API_TARGET || `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200}`,
+    target: process.env.TRACKING_API_TARGET || localApiTarget,
     changeOrigin: true,
     on: {
       proxyReq: (proxyReq) => {
@@ -62,48 +65,8 @@ export default [
     cookieDomainRewrite: 'localhost',
   },
   {
-    context: ['/api/github-token'],
-    target: 'https://github.com',
-    pathRewrite: { '/api/github-token': '/login/oauth/access_token' },
-    secure: false,
+    context: ['/api/github-token', '/api/github-user', '/api/github-email'],
+    target: localApiTarget,
     changeOrigin: true,
-    cookieDomainRewrite: 'localhost',
-    onProxyReq: (proxyReq, req, res) => {
-      proxyReq.setHeader('Accept', 'application/json')
-      proxyReq.setHeader('Content-Type', 'application/json')
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['Access-Control-Allow-Origin'] = '*'
-    },
-  },
-  {
-    context: ['/api/github-user'],
-    target: 'https://api.github.com',
-    pathRewrite: { '/api/github-user': '/user' },
-    secure: false,
-    changeOrigin: true,
-    cookieDomainRewrite: 'localhost',
-    onProxyReq: (proxyReq, req, res) => {
-      proxyReq.setHeader('Accept', 'application/json')
-      proxyReq.setHeader('Content-Type', 'application/json')
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['Access-Control-Allow-Origin'] = '*'
-    },
-  },
-  {
-    context: ['/api/github-email'],
-    target: 'https://api.github.com',
-    pathRewrite: { '/api/github-email': '/user/emails' },
-    secure: false,
-    changeOrigin: true,
-    cookieDomainRewrite: 'localhost',
-    onProxyReq: (proxyReq, req, res) => {
-      proxyReq.setHeader('Accept', 'application/json')
-      proxyReq.setHeader('Content-Type', 'application/json')
-    },
-    onProxyRes: (proxyRes, req, res) => {
-      proxyRes.headers['Access-Control-Allow-Origin'] = '*'
-    },
   },
 ]

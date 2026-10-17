@@ -2,3 +2,25 @@
   height: 100%;
   overflow: hidden;
 }
+
+.skipLink {
+  position: fixed;
+  z-index: 10000;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  opacity: 0;
+  pointer-events: none;
+  border: 2px solid Highlight;
+  border-radius: 0.25rem;
+  background: Canvas;
+  color: CanvasText;
+  font-weight: 600;
+}
+
+.skipLink:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  outline: 2px solid CanvasText;
+  outline-offset: 2px;
+}

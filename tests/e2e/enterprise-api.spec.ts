@@ -17,6 +17,15 @@ async function signOut(page: Page) {
   await expect(page.getByRole('heading', { name: 'Sign in to your workspace' })).toBeVisible()
 }
 
+test('enterprise sign-in exposes a named main landmark, page heading, and labeled fields', async ({ page }) => {
+  await page.goto('/#/signin')
+  await expect(page.getByRole('main', { name: 'Sign in to your workspace' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Sign in to your workspace', exact: true, level: 1 })).toBeVisible()
+  await expect(page.getByLabel('Tenant ID', { exact: true })).toBeVisible()
+  await expect(page.getByLabel('Email', { exact: true })).toBeVisible()
+  await expect(page.getByLabel('Password', { exact: true })).toBeVisible()
+})
+
 test('real user creation survives a reload and generates server audit', async ({ page }) => {
   await signIn(page)
   await page.getByRole('button', { name: 'Users', exact: true }).click()

@@ -229,8 +229,8 @@ const capabilityRows = [
   },
   {
     area: '数据',
-    shipped: '类型化 DataProvider、管理资源会话缓存、可选 SQLite 企业服务。',
-    boundary: '缓存没有后台刷新或实时订阅；SQLite 面向单实例。',
+    shipped: '类型化 DataProvider、管理资源会话缓存、可选 SQLite 企业服务和通用 WebSocket hook。',
+    boundary: 'WebSocket 尚无企业 API 调用方；缓存没有后台刷新或实时订阅，SQLite 面向单实例。',
   },
   {
     area: '状态',

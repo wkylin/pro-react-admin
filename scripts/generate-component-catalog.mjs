@@ -68,16 +68,13 @@ const workspaceFile = fs.readFileSync(path.join(root, 'pnpm-workspace.yaml'), 'u
 const workspacePackages = workspaceFile.match(/^packages:\s*\n((?:\s+-[^\n]*\n?)+)/m)?.[1]
 const workspacePackageCount = workspacePackages ? workspacePackages.trim().split(/\r?\n/).length : 0
 const formatNames = (names) => {
-  if (names.length === 0) return '_无_'
+  if (names.length === 0) return '无'
   const columns = 4
   const rows = []
   for (let index = 0; index < names.length; index += columns) {
-    rows.push(
-      `| ${names
-        .slice(index, index + columns)
-        .map((name) => `\`${name}\``)
-        .join(' | ')}${' |'.repeat(columns - names.slice(index, index + columns).length)}`
-    )
+    const cells = names.slice(index, index + columns).map((name) => `\`${name}\``)
+    while (cells.length < columns) cells.push('')
+    rows.push(`| ${cells.join(' | ')} |`)
   }
   return [`| 模块 | 模块 | 模块 | 模块 |`, `| --- | --- | --- | --- |`, ...rows].join('\n')
 }

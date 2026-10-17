@@ -5,6 +5,7 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { selectIsMobile, useAppStore } from '@app/model'
 import type { ComponentProps, FC, ReactNode } from 'react'
 import type { LayoutSlots } from '../types'
+import { useTranslation } from 'react-i18next'
 
 import styles from './index.module.less'
 
@@ -18,6 +19,7 @@ const ProSider: FC<ProSiderProps> = ({ children, theme = 'light', slots }) => {
   const isSidebarOpen = useAppStore((state) => state.isSidebarOpen)
   const toggleSidebar = useAppStore((state) => state.toggleSidebar)
   const isMobile = useAppStore(selectIsMobile)
+  const { t } = useTranslation()
 
   return (
     <Layout.Sider
@@ -37,7 +39,7 @@ const ProSider: FC<ProSiderProps> = ({ children, theme = 'light', slots }) => {
         <button
           type="button"
           className={styles.proLink}
-          aria-label={isSidebarOpen ? '收起侧边栏' : '展开侧边栏'}
+          aria-label={t(isSidebarOpen ? 'header.collapseSidebar' : 'header.expandSidebar')}
           onClick={() => toggleSidebar()}
         >
           {isSidebarOpen ? (

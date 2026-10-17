@@ -2,6 +2,13 @@ import mfeProtocol from '../../../config/mfe-protocol.json'
 
 export type MfeToastType = 'success' | 'info' | 'warning' | 'error'
 
+export type MfeSharedMessage = {
+  from: string
+  text: string
+  at: number
+  to?: string
+}
+
 export type MfeEventMap = {
   'mfe:ping': { from: string; at: number }
   'mfe:pong': { from: string; to: string; at: number }
@@ -17,6 +24,7 @@ const POST_MESSAGE_TYPE = 'WUI_MFE_EVENT'
 export const MFE_POST_MESSAGE_TYPE = POST_MESSAGE_TYPE
 const TOAST_TYPES = new Set<MfeToastType>(['success', 'info', 'warning', 'error'])
 const UNSAFE_STATE_KEYS = new Set(['__proto__', 'constructor', 'prototype'])
+const SHARED_MESSAGE_KEYS = new Set(['from', 'text', 'at', 'to'])
 
 type MfeWindow = Window & Record<string, unknown>
 
@@ -39,6 +47,32 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false
   const prototype = Object.getPrototypeOf(value)
   return prototype === Object.prototype || prototype === null
+}
+
+/** Parse the ProjectA -> ProjectB demo message from untrusted shared state. */
+export function parseMfeSharedMessage(value: unknown): MfeSharedMessage | undefined {
+  if (!isRecord(value)) return undefined
+  if (Object.keys(value).some((key) => !SHARED_MESSAGE_KEYS.has(key))) return undefined
+  if (
+    typeof value.from !== 'string' ||
+    value.from.length === 0 ||
+    value.from.length > 64 ||
+    typeof value.text !== 'string' ||
+    value.text.length > 2_000 ||
+    typeof value.at !== 'number' ||
+    !Number.isFinite(value.at) ||
+    value.at < 0 ||
+    ('to' in value && (typeof value.to !== 'string' || value.to.length === 0 || value.to.length > 64))
+  ) {
+    return undefined
+  }
+
+  return {
+    from: value.from,
+    text: value.text,
+    at: value.at,
+    ...('to' in value ? { to: value.to as string } : {}),
+  }
 }
 
 function hasControlCharacter(value: string) {

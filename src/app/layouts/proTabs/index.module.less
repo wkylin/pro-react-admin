@@ -1,0 +1,53 @@
+.tabBarRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tabBarDecoration {
+  display: flex;
+  flex: 0 0 auto;
+  align-self: stretch;
+  align-items: center;
+  padding: 0 10px;
+  position: relative;
+}
+
+.tabList {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tabBarActions {
+  display: flex;
+  flex: 0 0 auto;
+  align-self: stretch;
+  align-items: center;
+  gap: 4px;
+  padding: 0 8px;
+  position: relative;
+}
+
+.tabBarDecoration::after,
+.tabBarActions::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background-color: var(--pro-tabs-border-color, #f0f0f0);
+  content: '';
+  pointer-events: none;
+}
+
+@media (width <= 576px) {
+  .tabBarDecoration {
+    display: none;
+  }
+
+  .tabBarActions {
+    gap: 0;
+    padding: 0 4px;
+  }
+}

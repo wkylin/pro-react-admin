@@ -36,6 +36,7 @@ coverage
 .env.production.local
 .env.enterprise.production.local
 .env.test.local
+/docs/LOCAL_PREVIEW.local.md
 
 *storybook.log
 storybook-static

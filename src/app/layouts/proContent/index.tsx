@@ -7,7 +7,7 @@ import ProTabs from '../proTabs'
 import styles from './index.module.less'
 import type { LayoutSlots } from '../types'
 
-const { Content, Header, Footer } = Layout
+const { Content, Footer } = Layout
 
 type Pane = ComponentProps<typeof ProTabs>['panesItem']
 
@@ -45,13 +45,18 @@ const ProContent = ({ showTabs = true, slots }: ProContentProps) => {
   } = theme.useToken()
   return (
     <Layout className={styles.layout} id="fullScreen">
-      <Header className="layout-header" style={{ backgroundColor: colorBgLayout }}>
+      <div className="layout-header" style={{ backgroundColor: colorBgLayout }}>
         <section className="flex items-center justify-between">
           <ProBreadcrumb />
           {/* <ClockFace /> */}
         </section>
-      </Header>
-      <Content className="layout-content" id="fullScreenContent" style={{ backgroundColor: colorBgContainer }}>
+      </div>
+      <Content
+        className="layout-content"
+        id="fullScreenContent"
+        tabIndex={-1}
+        style={{ backgroundColor: colorBgContainer }}
+      >
         {slots?.contentStart}
         {showTabs ? <ProTabs panesItem={panesItem} tabActiveKey={tabKey} /> : outlet}
         {slots?.contentEnd}

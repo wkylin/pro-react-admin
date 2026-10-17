@@ -149,17 +149,27 @@ function getMemoryStats() {
   }
 
   const perfStats = {}
-  for (const metric of ['fcp', 'lcp', 'fid', 'cls']) {
+  for (const metric of ['ttfb', 'fcp', 'lcp', 'inp', 'cls', 'fid']) {
     const values = recent
       .filter((event) => event.eventType === 'performance' && event.eventName === metric)
-      .map((event) => event.properties?.value)
-      .filter((value) => typeof value === 'number')
+      .map((event) => event.properties)
+      .filter((properties) => typeof properties?.value === 'number' && Number.isFinite(properties.value))
     if (values.length) {
+      const sorted = values.map(({ value }) => value).sort((left, right) => left - right)
+      const ratingCounts = values.reduce(
+        (counts, properties) => {
+          if (['good', 'needs-improvement', 'poor'].includes(properties.rating)) counts[properties.rating] += 1
+          return counts
+        },
+        { good: 0, 'needs-improvement': 0, poor: 0 }
+      )
       perfStats[metric] = {
-        avg: Math.round((values.reduce((sum, value) => sum + value, 0) / values.length) * 100) / 100,
-        min: Math.min(...values),
-        max: Math.max(...values),
+        avg: Math.round((sorted.reduce((sum, value) => sum + value, 0) / sorted.length) * 100) / 100,
+        min: sorted[0],
+        max: sorted[sorted.length - 1],
+        p75: sorted[Math.max(0, Math.ceil(sorted.length * 0.75) - 1)],
         count: values.length,
+        ratingCounts,
       }
     }
   }
@@ -188,6 +198,44 @@ async function getMongoStats() {
   const recentFilter = { timestamp: { $gte: last24h } }
   const since7d = { timestamp: { $gte: last7d } }
   const count = (promise) => promise.then((rows) => rows[0]?.count || 0)
+  const performanceMatch = {
+    ...recentFilter,
+    eventType: 'performance',
+    eventName: { $in: ['ttfb', 'fcp', 'lcp', 'inp', 'cls', 'fid'] },
+    'properties.value': { $type: 'number' },
+  }
+  const ratingCounts = {
+    goodCount: { $sum: { $cond: [{ $eq: ['$properties.rating', 'good'] }, 1, 0] } },
+    needsImprovementCount: {
+      $sum: { $cond: [{ $eq: ['$properties.rating', 'needs-improvement'] }, 1, 0] },
+    },
+    poorCount: { $sum: { $cond: [{ $eq: ['$properties.rating', 'poor'] }, 1, 0] } },
+  }
+  const performancePipeline = (withPercentile) => [
+    { $match: performanceMatch },
+    {
+      $group: {
+        _id: '$eventName',
+        avg: { $avg: '$properties.value' },
+        min: { $min: '$properties.value' },
+        max: { $max: '$properties.value' },
+        count: { $sum: 1 },
+        ...ratingCounts,
+        ...(withPercentile
+          ? { p75: { $percentile: { input: '$properties.value', p: [0.75], method: 'approximate' } } }
+          : {}),
+      },
+    },
+  ]
+  const readPerformance = async () => {
+    try {
+      return { rows: await TrackingEventModel.aggregate(performancePipeline(true)), p75Available: true }
+    } catch (error) {
+      const message = String(error?.message || error)
+      if (!/\$percentile|percentile.*not supported|unknown group operator/i.test(message)) throw error
+      return { rows: await TrackingEventModel.aggregate(performancePipeline(false)), p75Available: false }
+    }
+  }
   const [
     total,
     lastHourCount,
@@ -199,7 +247,7 @@ async function getMongoStats() {
     types,
     topEvents,
     trend,
-    performance,
+    performanceResult,
   ] = await Promise.all([
     TrackingEventModel.countDocuments(),
     TrackingEventModel.countDocuments({ timestamp: { $gte: lastHour } }),
@@ -215,10 +263,7 @@ async function getMongoStats() {
       { $group: { _id: { $dateToString: { format: '%Y-%m-%dT%H:00', date: { $toDate: '$timestamp' }, timezone: 'UTC' } }, count: { $sum: 1 } } },
       { $sort: { _id: 1 } },
     ]),
-    TrackingEventModel.aggregate([
-      { $match: { ...recentFilter, eventType: 'performance', eventName: { $in: ['fcp', 'lcp', 'fid', 'cls'] }, 'properties.value': { $type: 'number' } } },
-      { $group: { _id: '$eventName', avg: { $avg: '$properties.value' }, min: { $min: '$properties.value' }, max: { $max: '$properties.value' }, count: { $sum: 1 } } },
-    ]),
+    readPerformance(),
   ])
 
   return {
@@ -232,7 +277,17 @@ async function getMongoStats() {
     byType: Object.fromEntries(types.map(({ _id, count: value }) => [_id || 'unknown', value])),
     topEvents: topEvents.map(({ _id, count: value }) => ({ name: _id || 'unknown', count: value })),
     trend: trend.map(({ _id, count: value }) => ({ hour: `${_id}:00Z`, count: value })),
-    perfStats: Object.fromEntries(performance.map(({ _id, ...stats }) => [_id, { ...stats, avg: Math.round(stats.avg * 100) / 100 }])),
+    perfStats: Object.fromEntries(
+      performanceResult.rows.map(({ _id, p75, goodCount, needsImprovementCount, poorCount, ...stats }) => [
+        _id,
+        {
+          ...stats,
+          avg: Math.round(stats.avg * 100) / 100,
+          ...(performanceResult.p75Available && Array.isArray(p75) ? { p75: p75[0] } : {}),
+          ratingCounts: { good: goodCount, 'needs-improvement': needsImprovementCount, poor: poorCount },
+        },
+      ])
+    ),
   }
 }
 

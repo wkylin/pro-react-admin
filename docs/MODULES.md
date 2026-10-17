@@ -2,7 +2,7 @@
 
 ## 已实现契约
 
-`platform/modules` 提供编译期业务模块契约 v1。模块声明自己的路由、资源定义、Provider、依赖和可选 Header 插槽；应用选择模块清单，注册表验证后提供页面与 Provider 装配。当前已经接入组织管理与通知两个模块。
+`platform/modules` 只接受静态业务模块契约 v2。模块声明自己的路由、资源定义、Provider、依赖、能力、宿主版本范围、数据版本/迁移边界、卸载策略和可选 Header 插槽；应用选择模块清单，注册表校验后提供页面与 Provider 装配。当前组织管理与通知使用 v2。模块仍随宿主静态编译；没有运行期下载或执行第三方插件。
 
 | 入口       | 清单文件                           | 启用模块                      |
 | ---------- | ---------------------------------- | ----------------------------- |
@@ -34,10 +34,15 @@ import { administrationRoutes } from './routes'
 
 export const administrationModule: ApplicationModule = {
   id: 'administration',
-  contractVersion: 1,
+  contractVersion: 2,
+  version: '1.0.0',
+  compatibility: { application: '>=5.1.0 <6.0.0' },
+  capabilities: ['routes', 'resources', 'provider'],
   routes: administrationRoutes,
   resources: administrationResources,
   Provider: AdministrationProvider,
+  data: { minimumSupportedVersion: 0, currentVersion: 0, migrations: [] },
+  uninstall: { dataPolicy: 'retain', cleanup: 'provider-unmount' },
 }
 ```
 
@@ -49,7 +54,11 @@ export const administrationModule: ApplicationModule = {
 
 ## 依赖、权限与插槽
 
-模块 id 必须唯一，contractVersion 必须为 1。依赖通过 `dependencies: ['other-module']` 显式声明，应用须同时选择依赖。注册表按依赖顺序排列 Provider；依赖的 Provider 位于消费者外层。重复 id、缺失依赖、循环依赖和重复页面会在挂载前失败。
+模块 id 必须唯一，且 manifest 必须声明 `contractVersion: 2`；旧 v1 和未知版本均直接拒绝。清单至少声明一条路由，并给出模块 SemVer、应用版本范围、与实际编译功能完全一致的 capability 集、数据迁移边界和卸载策略。宿主版本从 package version 注入，范围支持 exact、`^`、`~`、比较符 conjunction 与 `||`；未知语法和不兼容版本失败关闭。当前正式模块范围是 `>=5.1.0 <6.0.0`。
+
+依赖通过 `dependencies: ['other-module']` 显式声明，应用须同时选择依赖。注册表按依赖顺序排列 Provider；依赖的 Provider 位于消费者外层。重复 id、缺失依赖、循环依赖和重复页面会在页面装配前失败。当前注册表只接受 v2，应用版本范围不匹配及其它契约版本均失败关闭。
+
+`data` 以连续整数版本表示模块私有持久数据，迁移须有唯一 id、前后版本、SHA-256 checksum、备份要求和回滚级别；迁移链必须覆盖最小支持版本到当前版本。这个清单只声明兼容与运维要求，不在浏览器中执行迁移。需要持久化数据时，由模块所属服务实现迁移和备份流程。`uninstall.dataPolicy` 说明保留、归档后移除、经确认移除或纯内存数据；`cleanup` 必须与 Provider 的 React unmount 生命周期一致。当前清单不会自动删除后端数据。
 
 业务模块页面必须有显式权限策略，不能覆盖为公共页面，也不能通过 handle.routePath 隐藏真实地址。大小写不同、参数名不同但匹配结构相同的路径视为冲突。该检查覆盖已选模块；与遗留应用路由的冲突继续由路由契约 CI 检查。
 
@@ -57,7 +66,7 @@ export const administrationModule: ApplicationModule = {
 
 ## 状态与销毁
 
-每个 ApplicationModules 挂载都会创建自己的业务 Provider 树。Provider 使用 useState 创建 Store 或客户端，useEffect 的返回函数注销监听、取消请求和清理计时器；不要在模块文件顶层创建用户数据单例。模块 registry 是静态声明，不存储用户数据。
+每个 ApplicationModules 挂载都会创建自己的业务 Provider 树。Provider 使用 useState 创建 Store 或客户端，useEffect 的返回函数注销监听、取消请求和清理计时器；不要在模块文件顶层创建用户数据单例。模块 registry 是静态声明，不存储用户数据。当前卸载策略只声明代码随宿主移除后 Provider 必须清理实例资源；它不提供动态模块热卸载、数据删除或自动回滚。
 
 React StrictMode 会执行额外的 effect 安装与清理，模块 Provider 必须支持这一行为。模块选择发生在应用装配时；改变运行期模块清单、路由重建、版本协商、远程插件下载和不可信插件沙箱不属于当前契约。它也不替代 Module Federation 的 Remote 生命周期协议。
 

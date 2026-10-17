@@ -12,9 +12,11 @@
   align-items: center;
   gap: 16px;
 
-  h2 {
+  :global(h1.wui-ant-typography) {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
+    font-size: 28px;
+    line-height: 1.3;
   }
 
   p {
@@ -27,7 +29,13 @@
   gap: 12px;
 
   > :first-child {
+    flex: 1;
+    min-width: 0;
     max-width: 420px;
+  }
+
+  > button {
+    flex: none;
   }
 }
 
@@ -35,12 +43,64 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  overflow-wrap: anywhere;
+}
+
+.mobileMeta {
+  display: none;
+}
+
+.mobileAudit {
+  display: none;
 }
 
 .code {
   font-family: SFMono-Regular, Consolas, monospace;
   font-size: 12px;
   overflow-wrap: anywhere;
+}
+
+@media (width < 768px) {
+  .desktopTime {
+    display: none;
+  }
+
+  .mobileAudit {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-wrap: anywhere;
+  }
+
+  .auditSummary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    :global(.wui-ant-tag) {
+      margin-inline-end: 0;
+      white-space: normal;
+    }
+  }
+
+  .auditRecord {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .mobileMeta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+
+    :global(.wui-ant-tag) {
+      margin-inline-end: 0;
+    }
+  }
 }
 
 @media (width <= 640px) {
@@ -51,5 +111,9 @@
   .header {
     flex-direction: column;
     align-items: flex-start;
+
+    :global(h1.wui-ant-typography) {
+      font-size: 26px;
+    }
   }
 }

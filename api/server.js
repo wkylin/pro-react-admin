@@ -1,6 +1,7 @@
 const helmet = require('helmet')
 const express = require('express')
 const crypto = require('node:crypto')
+const http = require('node:http')
 
 const app = express()
 app.use(helmet())
@@ -46,8 +47,15 @@ app.use(bodyParser.json({ limit: '1mb' }))
 // Business services are explicit opt-in; static deployments and demos do not open a local database.
 const enterpriseService =
   process.env.ENTERPRISE_ENABLED === 'true' ? require('./enterprise/runtime.cjs').openEnterpriseService() : null
+const enterpriseEvents = enterpriseService
+  ? require('./enterprise/events.cjs').createEnterpriseEvents(enterpriseService, {
+      isAllowedOrigin(origin) {
+        return configuredOrigins.has(origin) || (process.env.NODE_ENV !== 'production' && isLoopbackOrigin(origin))
+      },
+    })
+  : null
 if (enterpriseService) {
-  app.use('/api', require('./enterprise/router.cjs').createEnterpriseRouter(enterpriseService))
+  app.use('/api', require('./enterprise/router.cjs').createEnterpriseRouter(enterpriseService, { events: enterpriseEvents }))
 } else {
   app.use(['/api/auth', '/api/admin', '/api/permissions/current', '/api/roles'], (_req, res) => {
     res.setHeader('Cache-Control', 'no-store')
@@ -332,7 +340,15 @@ async function startServer() {
 
   const port = Number(process.env.TRACKING_API_PORT || process.env.PORT || 5200)
   const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'
-  const server = app.listen(port, host, () =>
+  const server = http.createServer(app)
+  if (enterpriseEvents) enterpriseEvents.attach(server)
+  else
+    server.on('upgrade', (request, socket) => {
+      if (request.url?.split('?')[0] !== '/api/events') return socket.destroy()
+      socket.write('HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\nCache-Control: no-store\r\n\r\n')
+      socket.destroy()
+    })
+  server.listen(port, host, () =>
     console.log(
       `Server started on ${host}:${port}; tracking store=${trackingStoreMode}; enterprise=${Boolean(enterpriseService)}`
     )
@@ -340,6 +356,7 @@ async function startServer() {
   for (const signal of ['SIGTERM', 'SIGINT'])
     process.once(signal, () => {
       server.close(async () => {
+        enterpriseEvents?.close()
         enterpriseService?.store.close()
         await mongoose.disconnect()
       })

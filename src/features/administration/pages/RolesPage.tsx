@@ -1,5 +1,20 @@
 import { useState } from 'react'
-import { Alert, App, Button, Form, Input, Modal, Popconfirm, Select, Space, Table, Tag, type TableProps } from 'antd'
+import {
+  Alert,
+  App,
+  Button,
+  Form,
+  Grid,
+  Input,
+  Modal,
+  Popconfirm,
+  Select,
+  Space,
+  Table,
+  Tag,
+  Typography,
+  type TableProps,
+} from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { useCheckPermission } from '@platform/auth/hooks/usePermission'
@@ -25,6 +40,7 @@ const permissionOptions = [
 ].map((value) => ({ value, label: value }))
 export default function RolesPage() {
   const { t } = useTranslation()
+  const screens = Grid.useBreakpoint()
   const { provider, demo } = useAdministration()
   const { message } = App.useApp()
   const list = useResourceList('roles')
@@ -68,15 +84,31 @@ export default function RolesPage() {
     }
   }
   const columns: TableProps<ManagedRole>['columns'] = [
-    { title: t('admin.role'), dataIndex: 'name' },
+    {
+      title: t('admin.role'),
+      dataIndex: 'name',
+      render: (_, role) => (
+        <div className={styles.identity}>
+          <Typography.Text strong>{role.name}</Typography.Text>
+          <div className={styles.mobileMeta}>
+            <span className={styles.code}>{role.code}</span>
+            {role.permissions.map((permission) => (
+              <Tag key={permission}>{permission}</Tag>
+            ))}
+          </div>
+        </div>
+      ),
+    },
     {
       title: t('admin.code'),
       dataIndex: 'code',
+      responsive: ['md'],
       render: (code: string) => <span className={styles.code}>{code}</span>,
     },
     {
       title: t('admin.permissions'),
       dataIndex: 'permissions',
+      responsive: ['md'],
       render: (permissions: string[]) => (
         <Space wrap>
           {permissions.map((permission) => (
@@ -131,7 +163,8 @@ export default function RolesPage() {
         columns={columns}
         dataSource={list.data.items}
         loading={list.loading}
-        scroll={{ x: 650 }}
+        size={screens.md ? 'middle' : 'small'}
+        scroll={screens.md ? { x: 650 } : undefined}
         pagination={{
           current: list.query.page,
           pageSize: list.query.pageSize,

@@ -4,11 +4,13 @@ import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { authService } from '@platform/auth/services/authService'
 import { permissionService } from '@platform/auth/services/permissionService'
+import { useTranslation } from 'react-i18next'
 
 export const AuthCallback: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const { redirectTo } = useSafeNavigate()
   const location = useLocation()
+  const { t } = useTranslation()
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -18,12 +20,12 @@ export const AuthCallback: React.FC = () => {
         const errorParam = urlParams.get('error')
 
         if (errorParam) {
-          setError(`GitHub OAuth 错误: ${errorParam}`)
+          setError(t('identity.providerFailed'))
           return
         }
 
         if (!code) {
-          setError('未收到授权码')
+          setError(t('identity.authorizationCodeMissing'))
           return
         }
 
@@ -56,22 +58,22 @@ export const AuthCallback: React.FC = () => {
         }
       } catch (err) {
         console.error('Callback handling error:', err)
-        setError(err instanceof Error ? err.message : '登录失败')
+        setError(t('identity.callbackFailed'))
       }
     }
 
     handleCallback()
-  }, [location, redirectTo])
+  }, [location, redirectTo, t])
 
   if (error) {
     return (
       <Result
         status="error"
-        title="登录失败"
+        title={t('identity.failed')}
         subTitle={error}
         extra={[
           <button key="retry" onClick={() => redirectTo('/signin')}>
-            重试
+            {t('identity.retrySignIn')}
           </button>,
         ]}
       />
@@ -87,7 +89,7 @@ export const AuthCallback: React.FC = () => {
         height: '100vh',
       }}
     >
-      <Spin size="large" fullscreen description="正在处理登录..." />
+      <Spin size="large" fullscreen description={t('identity.processingSignIn')} />
     </div>
   )
 }

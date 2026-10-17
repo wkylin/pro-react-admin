@@ -3,7 +3,7 @@ import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
-import { getMfeSharedState, onMfeEvent } from '@platform/mfe/bridge'
+import { getMfeSharedState, onMfeEvent, parseMfeSharedMessage } from '@platform/mfe/bridge'
 import RemoteScope from '@app/bootstrap/RemoteScope'
 
 const { Paragraph, Text } = Typography
@@ -12,22 +12,12 @@ const standaloneBaseUrl = (process.env.PROJECTB_STANDALONE_BASE_URL || process.e
   .replace(/\/+$/, '')
 const standaloneAboutUrl = standaloneBaseUrl ? `${standaloneBaseUrl}/#/projectB/about` : undefined
 
-type SharedMessage = { from: string; text: string; at: number; to?: string }
-function parseMessage(value: unknown): SharedMessage | undefined {
-  if (!value || typeof value !== 'object' || !('from' in value) || !('text' in value) || !('at' in value))
-    return undefined
-  if (typeof value.from !== 'string' || typeof value.text !== 'string' || typeof value.at !== 'number') return undefined
-  return { from: value.from, text: value.text, at: value.at }
-}
-
 function ProjectBRemoteContent() {
-  const [lastMessage, setLastMessage] = useState<SharedMessage | undefined>(() =>
-    parseMessage(getMfeSharedState().lastMessage)
-  )
+  const [lastMessage, setLastMessage] = useState(() => parseMfeSharedMessage(getMfeSharedState().lastMessage))
 
   useEffect(() => {
     const offState = onMfeEvent('mfe:state', ({ state }) => {
-      setLastMessage(parseMessage(state.lastMessage))
+      setLastMessage(parseMfeSharedMessage(state.lastMessage))
     })
     const offPong = onMfeEvent('mfe:pong', ({ from, to }) => {
       if (to !== 'projectB') return

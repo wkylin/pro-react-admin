@@ -116,6 +116,37 @@ test('tenant-bound sessions isolate list, record, write, audit and spoofed heade
   assert.deepEqual(new Set(audit.body.items.map((row) => row.recordId)), new Set(['beta', beta.user.id]))
   assert.equal(alphaUsers.headers.get('cache-control'), 'no-store')
 })
+test('an authenticated identity can switch only to an active linked tenant membership', async (t) => {
+  const f = await fixture(t)
+  const alphaUser = f.service.store.one('SELECT id,principal_id FROM users WHERE tenant_id=?', 'alpha')
+  const betaUser = f.service.store.one('SELECT id,principal_id FROM users WHERE tenant_id=?', 'beta')
+  assert.notEqual(alphaUser.principal_id, betaUser.principal_id)
+
+  // This is an operator-provisioned identity link. The public API intentionally cannot create one.
+  f.service.store.run(
+    'UPDATE users SET principal_id=? WHERE tenant_id=? AND id=?',
+    alphaUser.principal_id,
+    'beta',
+    betaUser.id
+  )
+  assert.equal(f.service.store.one('SELECT id FROM principals WHERE id=?', betaUser.principal_id), undefined)
+
+  const switched = await f.request('POST', '/auth/session/tenant', f.admin.token, { tenantId: 'beta' })
+  assert.equal(switched.status, 200)
+  assert.equal(switched.body.tenantId, 'beta')
+  assert.equal((await f.request('GET', '/auth/session', f.admin.token)).body.tenantId, 'beta')
+  assert.equal((await f.request('GET', '/admin/users', f.admin.token)).body.items[0].id, betaUser.id)
+  assert.equal((await f.request('GET', '/admin/users', f.admin.token, undefined, 'alpha')).status, 403)
+
+  const switchedBack = await f.request('POST', '/auth/session/tenant', f.admin.token, { tenantId: 'alpha' })
+  assert.equal(switchedBack.status, 200)
+  assert.equal(switchedBack.body.tenantId, 'alpha')
+  assert.equal((await f.request('POST', '/auth/session/tenant', f.admin.token, { tenantId: 'missing' })).status, 403)
+  assert.equal(
+    (await f.request('POST', '/auth/session/tenant', f.admin.token, { tenantId: 'beta', principalId: 'spoof' })).status,
+    400
+  )
+})
 test('RBAC enforces direct requests; client roles and GitHub/demo tokens cannot grant access', async (t) => {
   const f = await fixture(t),
     member = await f.createMember()

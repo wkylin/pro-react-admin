@@ -12,16 +12,43 @@ import { annotateRoutesWithPermissions, normalizeRouteTree, type RouteNode } fro
 import type { DataRecord, ResourceDefinitions } from '@platform/data/provider'
 import { usePermission } from '@platform/auth/hooks/usePermission'
 import { canAccessPath } from '@platform/auth/model/policy'
+import { satisfiesVersionRange } from './version-range'
 
 /** Compiled, trusted features. Authentication and the application shell remain application-owned. */
-export interface ApplicationModule {
+interface ApplicationModuleBase {
   id: string
-  contractVersion: 1
   dependencies?: readonly string[]
   routes: readonly RouteNode[]
   resources?: ResourceDefinitions<Record<string, DataRecord>>
   Provider?: ComponentType<{ children: ReactNode }>
   headerAction?: { Component: ComponentType<ModuleActionProps>; route?: string }
+}
+
+export type ModuleCapability = 'routes' | 'resources' | 'provider' | 'header-action'
+
+export interface ModuleDataMigration {
+  id: string
+  from: number
+  to: number
+  checksum: string
+  requiresBackup: boolean
+  rollback: 'reversible' | 'backup-restore' | 'forward-only'
+}
+
+export interface ApplicationModule extends ApplicationModuleBase {
+  contractVersion: 2
+  version: string
+  compatibility: { application: string }
+  capabilities: readonly ModuleCapability[]
+  data: {
+    minimumSupportedVersion: number
+    currentVersion: number
+    migrations: readonly ModuleDataMigration[]
+  }
+  uninstall: {
+    dataPolicy: 'retain' | 'archive-before-removal' | 'remove-after-confirmation' | 'ephemeral'
+    cleanup: 'provider-unmount' | 'none'
+  }
 }
 
 export interface ModuleActionProps {
@@ -30,17 +57,26 @@ export interface ModuleActionProps {
 }
 
 export interface ModuleRegistry {
+  hostVersion: string
   modules: readonly ApplicationModule[]
   routes: RouteNode[]
   resources: Readonly<Record<string, ResourceDefinitions<Record<string, DataRecord>>>>
 }
 
 /** Resolve dependencies and validate the complete composition before mounting any feature. */
-export function createModuleRegistry(definitions: readonly ApplicationModule[]): ModuleRegistry {
+export function createModuleRegistry(
+  definitions: readonly ApplicationModule[],
+  { hostVersion }: { hostVersion: string }
+): ModuleRegistry {
+  if (!satisfiesVersionRange(hostVersion, hostVersion)) throw new Error(`Invalid application version: ${hostVersion}`)
+
   const byId = new Map<string, ApplicationModule>()
   for (const definition of definitions) {
+    if (!definition || typeof definition !== 'object') throw new Error('Invalid module manifest')
     if (!/^[a-z][a-z0-9-]*$/.test(definition.id)) throw new Error(`Invalid module id: ${definition.id}`)
-    if (definition.contractVersion !== 1) throw new Error(`Unsupported module contract: ${definition.id}`)
+    const moduleId = definition.id
+    if (definition.contractVersion !== 2) throw new Error(`Unsupported module contract: ${moduleId}`)
+    validateV2Manifest(definition, hostVersion)
     if (byId.has(definition.id)) throw new Error(`Duplicate module: ${definition.id}`)
     byId.set(definition.id, definition)
   }
@@ -97,7 +133,85 @@ export function createModuleRegistry(definitions: readonly ApplicationModule[]):
     routes.push(...annotateRoutesWithPermissions(normalized))
     resources[definition.id] = Object.freeze({ ...definition.resources })
   }
-  return { modules: Object.freeze(ordered), routes, resources: Object.freeze(resources) }
+  return { hostVersion, modules: Object.freeze(ordered), routes, resources: Object.freeze(resources) }
+}
+
+function validateV2Manifest(module: ApplicationModule, hostVersion: string) {
+  if (!Array.isArray(module.routes) || module.routes.length === 0)
+    throw new Error(`Module ${module.id} must declare at least one route`)
+  if (!satisfiesVersionRange(module.version, module.version)) throw new Error(`Invalid module version: ${module.id}`)
+  if (!module.compatibility || typeof module.compatibility.application !== 'string')
+    throw new Error(`Module ${module.id} has an invalid application compatibility range`)
+  if (!satisfiesVersionRange(hostVersion, module.compatibility.application))
+    throw new Error(`Module ${module.id} is incompatible with application ${hostVersion}`)
+
+  const knownCapabilities: readonly ModuleCapability[] = ['routes', 'resources', 'provider', 'header-action']
+  if (!Array.isArray(module.capabilities)) throw new Error(`Module ${module.id} must declare its capabilities`)
+  const actualCapabilities = new Set<ModuleCapability>(['routes'])
+  if (module.resources && Object.keys(module.resources).length) actualCapabilities.add('resources')
+  if (module.Provider) actualCapabilities.add('provider')
+  if (module.headerAction) actualCapabilities.add('header-action')
+
+  const declared = new Set(module.capabilities)
+  if (
+    declared.size !== module.capabilities.length ||
+    module.capabilities.some((capability) => !knownCapabilities.includes(capability)) ||
+    declared.size !== actualCapabilities.size ||
+    [...actualCapabilities].some((capability) => !declared.has(capability))
+  ) {
+    throw new Error(`Module ${module.id} capability declaration does not match its compiled features`)
+  }
+
+  if (!module.data || !Array.isArray(module.data.migrations))
+    throw new Error(`Module ${module.id} has an invalid data migration contract`)
+  const { minimumSupportedVersion, currentVersion, migrations } = module.data
+  if (
+    !Number.isSafeInteger(minimumSupportedVersion) ||
+    !Number.isSafeInteger(currentVersion) ||
+    minimumSupportedVersion < 0 ||
+    currentVersion < minimumSupportedVersion
+  ) {
+    throw new Error(`Module ${module.id} has an invalid data version range`)
+  }
+  const migrationByFrom = new Map<number, ModuleDataMigration>()
+  const migrationIds = new Set<string>()
+  for (const migration of migrations) {
+    if (
+      !migration ||
+      typeof migration !== 'object' ||
+      !/^[a-z][a-z0-9-]*$/.test(migration.id) ||
+      migrationIds.has(migration.id) ||
+      !Number.isSafeInteger(migration.from) ||
+      !Number.isSafeInteger(migration.to) ||
+      migration.from < minimumSupportedVersion ||
+      migration.to !== migration.from + 1 ||
+      migration.to > currentVersion ||
+      !/^[a-f0-9]{64}$/.test(migration.checksum) ||
+      typeof migration.requiresBackup !== 'boolean' ||
+      !['reversible', 'backup-restore', 'forward-only'].includes(migration.rollback) ||
+      (migration.rollback !== 'reversible' && !migration.requiresBackup) ||
+      migrationByFrom.has(migration.from)
+    ) {
+      const migrationId = migration && typeof migration === 'object' ? migration.id : 'unknown'
+      throw new Error(`Module ${module.id} has an invalid data migration: ${migrationId}`)
+    }
+    migrationIds.add(migration.id)
+    migrationByFrom.set(migration.from, migration)
+  }
+  for (let version = minimumSupportedVersion; version < currentVersion; version += 1) {
+    if (!migrationByFrom.has(version))
+      throw new Error(`Module ${module.id} is missing migration from data version ${version}`)
+  }
+  const uninstallDataPolicies = ['retain', 'archive-before-removal', 'remove-after-confirmation', 'ephemeral']
+  if (!module.uninstall || !uninstallDataPolicies.includes(module.uninstall.dataPolicy)) {
+    throw new Error(`Module ${module.id} has an invalid uninstall data policy`)
+  }
+  if (module.uninstall.cleanup !== (module.Provider ? 'provider-unmount' : 'none')) {
+    throw new Error(`Module ${module.id} uninstall cleanup must match its Provider lifecycle`)
+  }
+  if (module.uninstall.dataPolicy === 'ephemeral' && currentVersion > 0) {
+    throw new Error(`Module ${module.id} cannot mark versioned persistent data as ephemeral`)
+  }
 }
 
 const ModuleContext = createContext<ModuleRegistry | null>(null)
