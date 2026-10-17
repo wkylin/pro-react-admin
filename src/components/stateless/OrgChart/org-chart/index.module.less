@@ -191,6 +191,84 @@
   }
 }
 
+.horizontal {
+  .orgChart,
+  .currentContainer {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .line {
+    width: 24px;
+    height: 1px;
+  }
+
+  .downWithLine::before {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: none;
+  }
+
+  .childrenContainer {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+    padding: 0;
+  }
+
+  .childWrapper {
+    flex-direction: row;
+    align-items: center;
+    min-width: 0;
+    padding: 8px 0;
+
+    &::before,
+    &::after {
+      left: 0;
+      width: 1px;
+      height: 50%;
+    }
+
+    &::before {
+      top: 0;
+    }
+
+    &::after {
+      top: 50%;
+    }
+  }
+
+  .arrow {
+    width: 24px;
+    height: 1px;
+    flex: 0 0 24px;
+  }
+
+  .downArrowWithLine::before {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    transform: none;
+  }
+
+  .downArrowWithLine::after {
+    top: 50%;
+    left: 100%;
+    transform: translate(-100%, -50%);
+    border-top: 5px solid transparent;
+    border-right: 0;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #2878ff;
+  }
+
+  .animated {
+    animation-name: fade-in-horizontal;
+  }
+}
+
 .animated {
   animation: fade-in 0.5s ease-in-out;
 }
@@ -204,6 +282,18 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-horizontal {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -224,6 +314,11 @@
 :global(.is-mobile) .childWrapper {
   padding: 0 4px;
   min-width: 80px;
+}
+
+:global(.is-mobile) .horizontal .childWrapper {
+  padding: 8px 0;
+  min-width: 0;
 }
 
 :global(.is-mobile) .expandIcon {

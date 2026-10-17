@@ -24,6 +24,7 @@ interface OrgChartCustomStyles {
 
 interface OrgChartProps {
   data: OrgChartNode
+  orientation?: 'vertical' | 'horizontal'
   onNodeClick?: (node: FlatOrgChartNode, event: MouseEvent<HTMLButtonElement>) => void
   onNodeExpand?: (node: FlatOrgChartNode, isExpanded: boolean) => void
   defaultExpanded?: boolean
@@ -59,6 +60,7 @@ const flattenTreeData = (node: OrgChartNode, parentId: NodeId | null = null, lev
 
 const OrgChart = ({
   data,
+  orientation = 'vertical',
   onNodeClick,
   onNodeExpand,
   defaultExpanded = true,
@@ -66,8 +68,8 @@ const OrgChart = ({
   nodeClassName,
   rootNodeClassName,
   animated = true,
-  expandIcon = '▼',
-  collapseIcon = '▲',
+  expandIcon = orientation === 'horizontal' ? '▶' : '▼',
+  collapseIcon = orientation === 'horizontal' ? '◀' : '▲',
   showExpandIcon = true,
   customStyles = {},
 }: OrgChartProps) => {
@@ -218,13 +220,18 @@ const OrgChart = ({
     return <div className={styles.emptyState}>暂无组织架构数据</div>
   }
 
-  return <div className={styles.chartContainer}>{renderNodeTree(rootNodeId)}</div>
+  return (
+    <div className={`${styles.chartContainer} ${orientation === 'horizontal' ? styles.horizontal : ''}`}>
+      {renderNodeTree(rootNodeId)}
+    </div>
+  )
 }
 
 export default OrgChart
 
 OrgChart.propTypes = {
   data: PropTypes.object,
+  orientation: PropTypes.oneOf(['vertical', 'horizontal']),
   onNodeClick: PropTypes.func,
   onNodeExpand: PropTypes.func,
   defaultExpanded: PropTypes.bool,
