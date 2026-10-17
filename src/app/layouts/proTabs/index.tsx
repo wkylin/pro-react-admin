@@ -1,7 +1,17 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
-import { useEffect, Suspense, useTransition, type CSSProperties, type Dispatch, type SetStateAction } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  Suspense,
+  useTransition,
+  type CSSProperties,
+  type Dispatch,
+  type SetStateAction,
+} from 'react'
 import PropTypes from 'prop-types'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useRevalidator } from 'react-router-dom'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Tabs, Dropdown, theme, Button, type TabsProps } from 'antd'
 import StickyBox from 'react-sticky-box'
@@ -30,9 +40,12 @@ type ProTabContextValue = {
 const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext() as ProTabContextValue
   const [, startTransition] = useTransition()
+  const tabBarRef = useRef<HTMLDivElement>(null)
+  const [actionPosition, setActionPosition] = useState<{ key: string; left: number; top: number } | null>(null)
   const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
   const { pathname } = useLocation()
+  const revalidator = useRevalidator()
   const currentRoutePaneIndex = panes.findIndex((pane) => pane.key === panesItem.key)
   const currentRoutePane = currentRoutePaneIndex < 0 ? undefined : panes[currentRoutePaneIndex]
   const currentRoutePaneNeedsUpdate =
@@ -54,6 +67,61 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   const {
     token: { colorBgContainer, colorBorderSecondary },
   } = theme.useToken()
+
+  useLayoutEffect(() => {
+    const tabBar = tabBarRef.current?.parentElement
+    if (!tabBar) return
+
+    let frame = 0
+    const updatePosition = () => {
+      const slot = tabBar.querySelector<HTMLElement>('[data-tab-action-slot]')
+      if (!slot) {
+        setActionPosition(null)
+        return
+      }
+
+      const slotRect = slot.getBoundingClientRect()
+      const barRect = tabBar.getBoundingClientRect()
+      const next = {
+        key: visibleActiveKey,
+        left: Math.round(slotRect.left - barRect.left),
+        top: Math.round(slotRect.top - barRect.top),
+      }
+      setActionPosition((current) =>
+        current?.key === next.key && current.left === next.left && current.top === next.top ? current : next
+      )
+    }
+    const schedulePosition = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(updatePosition)
+    }
+
+    updatePosition()
+    const resizeObserver = new ResizeObserver(schedulePosition)
+    resizeObserver.observe(tabBar)
+    const tabList = tabBar.querySelector<HTMLElement>('[role="tablist"]')
+    if (tabList) resizeObserver.observe(tabList)
+    const mutationObserver = new MutationObserver(schedulePosition)
+    if (tabList) {
+      mutationObserver.observe(tabList, {
+        attributes: true,
+        attributeFilter: ['class', 'style'],
+        childList: true,
+        characterData: true,
+        subtree: true,
+      })
+    }
+    tabBar.addEventListener('scroll', schedulePosition, true)
+    window.addEventListener('resize', schedulePosition)
+
+    return () => {
+      cancelAnimationFrame(frame)
+      resizeObserver.disconnect()
+      mutationObserver.disconnect()
+      tabBar.removeEventListener('scroll', schedulePosition, true)
+      window.removeEventListener('resize', schedulePosition)
+    }
+  }, [visibleActiveKey, visiblePanes.length, t])
 
   const renderTabBar: NonNullable<TabsProps['renderTabBar']> = (tabBarProps, DefaultTabBar) => (
     <StickyBox
@@ -78,24 +146,35 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
         className={`pro-tabs ${styles.tabList}`}
         style={{ ...tabBarProps.style, backgroundColor: colorBgContainer, flex: '1 1 auto', minWidth: 0 }}
       />
-      <div className={styles.tabBarActions} role="group" aria-label={t('admin.pageActions')}>
-        {activePane?.closable ? (
-          <Button
-            type="text"
-            size="small"
-            aria-label={t('admin.closeCurrentTab')}
-            title={t('admin.closeCurrentTab')}
-            icon={<CloseOutlined aria-hidden />}
-            onClick={() => removeTab(visibleActiveKey)}
-          />
-        ) : null}
-        <Button
-          type="text"
-          size="small"
-          aria-label={t('admin.refresh')}
-          icon={<SyncOutlined aria-hidden />}
-          onClick={refreshTab}
-        />
+      {activePane && actionPosition?.key === visibleActiveKey ? (
+        <div className={styles.activeTabActions} style={{ left: actionPosition.left, top: actionPosition.top }}>
+          {activePane.closable ? (
+            <button
+              type="button"
+              className={styles.tabActionButton}
+              aria-label={t('admin.closeCurrentTab')}
+              title={t('admin.closeCurrentTab')}
+              onClick={() => removeTab(visibleActiveKey)}
+            >
+              <CloseOutlined aria-hidden />
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className={styles.tabActionButton}
+            aria-label={t('admin.refresh')}
+            title={t('admin.refresh')}
+            onClick={refreshTab}
+          >
+            <SyncOutlined
+              key={activePane.generation ?? 0}
+              className={activePane.generation ? styles.tabRefreshIcon : undefined}
+              aria-hidden
+            />
+          </button>
+        </div>
+      ) : null}
+      <div className={styles.tabBarActions} ref={tabBarRef} role="group" aria-label={t('admin.pageActions')}>
         <Fullscreen ele="#fullScreenContent" placement="left" tips={t('admin.contentFullscreen')} />
         {visiblePanes.length > 2 ? (
           <Dropdown
@@ -170,11 +249,22 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
 
   // 刷新当前 tab
   const refreshTab = () => {
-    setPanes((current) =>
-      current.map((pane) =>
-        pane.key === visibleActiveKey ? { ...pane, generation: (pane.generation ?? 0) + 1 } : pane
+    if (!activePane) return
+    setPanes((current) => {
+      const index = current.findIndex((pane) => pane.key === visibleActiveKey)
+      if (index < 0) return [...current, { ...activePane, generation: (activePane.generation ?? 0) + 1 }]
+
+      return current.map((pane) =>
+        pane.key === visibleActiveKey
+          ? {
+              ...pane,
+              content: pane.key === panesItem.key ? panesItem.content : pane.content,
+              generation: (pane.generation ?? 0) + 1,
+            }
+          : pane
       )
-    )
+    })
+    void revalidator.revalidate()
   }
 
   const onTabContextMenu = (rightMenuKey: 'all' | 'other') => {
@@ -224,12 +314,19 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       destroyOnHidden={false}
       items={visiblePanes.map((pane) => ({
         label: (
-          <span style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-            {pane.i18nKey ? t(pane.i18nKey) : pane.title}
+          <span className={styles.tabLabel}>
+            <span>{pane.i18nKey ? t(pane.i18nKey) : pane.title}</span>
+            {pane.key === visibleActiveKey ? (
+              <span
+                className={`${styles.tabActionSlot} ${pane.closable ? '' : styles.tabActionSlotSingle}`}
+                data-tab-action-slot=""
+                aria-hidden="true"
+              />
+            ) : null}
           </span>
         ),
         key: pane.key,
-        // Keep non-tab controls (including close actions) outside the tablist.
+        // Action buttons are positioned over the active tab but stay outside the tablist.
         closable: false,
         forceRender: true,
         children: (

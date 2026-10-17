@@ -107,6 +107,23 @@ const devWebpackConfig = merge(common, {
     new ReactRefreshWebpackPlugin({
       overlay: false,
     }),
+    {
+      apply(compiler) {
+        compiler.hooks.infrastructureLog.tap('IgnoreClosedDevResponse', (origin, type, args) => {
+          const error = args[1]
+          // A browser can close a streamed asset request while navigating away.
+          if (
+            origin === 'webpack-dev-middleware' &&
+            type === 'error' &&
+            args[0] === 'Stream error:' &&
+            error?.code === 'ERR_STREAM_PREMATURE_CLOSE' &&
+            error.stack?.includes('ServerResponse.onclose')
+          ) {
+            return true
+          }
+        })
+      },
+    },
     // new webpack.debug.ProfilingPlugin({
     //   outputPath: path.join(__dirname, 'profiling/profileEvents.json'),
     // }),

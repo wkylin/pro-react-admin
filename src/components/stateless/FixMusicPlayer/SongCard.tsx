@@ -10,7 +10,7 @@ type SongCardProps = {
   }
   isPlaying: boolean
   isActive: boolean
-  onClick: React.MouseEventHandler<HTMLDivElement>
+  onClick: React.MouseEventHandler<HTMLButtonElement>
   themeMode: string
   textColor: string
   secondaryTextColor: string
@@ -32,11 +32,18 @@ const SongCard = ({
   const bgColor = isDark ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)'
 
   return (
-    <div
-      className="bg-opacity-80 hover:bg-opacity-60 flex w-full max-w-62.5 cursor-pointer flex-col rounded-lg p-3 transition-all duration-300 hover:shadow-lg sm:p-4"
-      style={{ backgroundColor: bgColor }}
+    <button
+      type="button"
+      className="bg-opacity-80 hover:bg-opacity-60 flex w-full max-w-62.5 cursor-pointer flex-col rounded-lg p-3 text-left transition-all duration-300 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 sm:p-4"
+      style={{
+        backgroundColor: bgColor,
+        outlineColor: activeColor,
+        boxShadow: isActive ? `inset 0 0 0 2px ${activeColor}` : undefined,
+      }}
       onClick={onClick}
-      title={`点击播放: ${song.title} - ${song.subtitle}`}
+      aria-label={`${isCurrentSong ? '暂停' : '播放'}: ${song.title} - ${song.subtitle}`}
+      aria-pressed={isActive}
+      title={`${isCurrentSong ? '暂停' : '播放'}: ${song.title} - ${song.subtitle}`}
     >
       <div className="group relative h-48 w-full sm:h-56">
         <img
@@ -77,7 +84,7 @@ const SongCard = ({
           {song.subtitle}
         </p>
       </div>
-    </div>
+    </button>
   )
 }
 

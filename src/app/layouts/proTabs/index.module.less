@@ -1,8 +1,82 @@
 .tabBarRow {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
   overflow: hidden;
+}
+
+.tabLabel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  white-space: nowrap;
+}
+
+.tabActionSlot {
+  display: inline-block;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 24px;
+  margin-inline-start: 2px;
+}
+
+.tabActionSlotSingle {
+  flex-basis: 24px;
+  width: 24px;
+}
+
+.activeTabActions {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 24px;
+}
+
+.tabActionButton {
+  display: inline-flex;
+  flex: 0 0 24px;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 9px;
+  opacity: 0.7;
+
+  &:hover {
+    background: rgb(127 127 127 / 10%);
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentcolor;
+    outline-offset: 1px;
+    opacity: 1;
+  }
+}
+
+.tabRefreshIcon {
+  animation: tabRefreshTurn 0.55s ease-in-out;
+}
+
+@keyframes tabRefreshTurn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabRefreshIcon {
+    animation: none;
+  }
 }
 
 .tabBarDecoration {
@@ -15,8 +89,39 @@
 }
 
 .tabList {
+  display: flex;
   flex: 1 1 auto;
+  align-items: center;
   min-width: 0;
+  overflow: hidden;
+
+  :global(.wui-ant-tabs-nav-wrap) {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  :global(.wui-ant-tabs-nav-list) {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab.wui-ant-tabs-tab-active) {
+    padding-inline-end: 8px;
+  }
+
+  :global(.wui-ant-tabs-nav-operations) {
+    flex: 0 0 auto;
+  }
+
+  :global(.wui-ant-tabs-nav-operations-hidden) {
+    display: none;
+  }
 }
 
 .tabBarActions {

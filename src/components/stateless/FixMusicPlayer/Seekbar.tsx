@@ -1,5 +1,5 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
-import React, { type FormEventHandler } from 'react'
+import { type FormEventHandler } from 'react'
 import { FastForward, Rewind } from 'lucide-react'
 
 type SeekbarProps = {
@@ -21,20 +21,23 @@ const formatTime = (time: number) => {
 
 const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime, textColor, themeMode }: SeekbarProps) => {
   const activeColor = themeMode === 'dark' ? '#ff4d4f' : '#1890ff'
+  const progress = max > 0 ? Math.min(100, (value / max) * 100) : 0
 
   return (
-    <div className="hidden flex-row items-center sm:flex">
-      <AnimatedIcon variant="spin" mode="hover">
-        <Rewind
-          size={16}
-          color={textColor}
-          onClick={() => setSeekTime(Math.max(0, appTime - 5))}
-          className="hidden cursor-pointer lg:mr-1 lg:block"
-        >
-          <title>快退5秒</title>
-        </Rewind>
-      </AnimatedIcon>
-      <span className="mr-1 text-xs sm:text-sm" style={{ color: textColor }}>
+    <div className="hidden w-full max-w-xl items-center gap-2 px-3 sm:flex">
+      <button
+        type="button"
+        className="hidden h-6 w-6 shrink-0 items-center justify-center rounded-md hover:bg-black/10 focus-visible:outline-2 lg:inline-flex dark:hover:bg-white/10"
+        onClick={() => setSeekTime(Math.max(0, appTime - 5))}
+        disabled={max <= 0}
+        aria-label="快退5秒"
+        title="快退5秒"
+      >
+        <AnimatedIcon variant="spin" mode="hover">
+          <Rewind size={16} color={textColor} />
+        </AnimatedIcon>
+      </button>
+      <span className="w-10 shrink-0 text-right text-xs tabular-nums" style={{ color: textColor }}>
         {formatTime(value)}
       </span>
       <input
@@ -44,25 +47,28 @@ const Seekbar = ({ value, min, max, onInput, setSeekTime, appTime, textColor, th
         min={min}
         max={max}
         onInput={onInput}
-        className="mx-2 h-1 w-20 sm:mx-4 sm:w-24 md:w-56 2xl:mx-6 2xl:w-96"
+        className="h-1 min-w-0 flex-1"
         style={{
-          background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${(value / max) * 100}%, #ccc ${(value / max) * 100}%, #ccc 100%)`,
+          background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${progress}%, #ccc ${progress}%, #ccc 100%)`,
         }}
+        aria-label="播放进度"
         title={`进度: ${formatTime(value)} / ${formatTime(max)}`}
       />
-      <span className="mb-0 text-xs sm:text-sm" style={{ color: textColor }}>
+      <span className="w-10 shrink-0 text-xs tabular-nums" style={{ color: textColor }}>
         {formatTime(max)}
       </span>
-      <AnimatedIcon variant="spin" mode="hover">
-        <FastForward
-          size={16}
-          color={textColor}
-          onClick={() => setSeekTime(Math.min(max, appTime + 5))}
-          className="hidden cursor-pointer lg:ml-1 lg:block"
-        >
-          <title>快进5秒</title>
-        </FastForward>
-      </AnimatedIcon>
+      <button
+        type="button"
+        className="hidden h-6 w-6 shrink-0 items-center justify-center rounded-md hover:bg-black/10 focus-visible:outline-2 lg:inline-flex dark:hover:bg-white/10"
+        onClick={() => setSeekTime(Math.min(max, appTime + 5))}
+        disabled={max <= 0}
+        aria-label="快进5秒"
+        title="快进5秒"
+      >
+        <AnimatedIcon variant="spin" mode="hover">
+          <FastForward size={16} color={textColor} />
+        </AnimatedIcon>
+      </button>
     </div>
   )
 }
