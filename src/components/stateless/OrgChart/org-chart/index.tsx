@@ -160,24 +160,6 @@ const OrgChart = ({
     return map
   }, [flatData])
 
-  const handleChildClick = (childId: NodeId, event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-
-    const childNode = nodeMap.get(childId)
-    if (!childNode) return
-
-    if (childNode.childrenIds.length > 0) {
-      toggleNodeExpansion(childId)
-
-      if (onNodeExpand) {
-        const isExpanded = expandedNodes.has(childId)
-        onNodeExpand(childNode, !isExpanded)
-      }
-    }
-
-    if (onNodeClick) onNodeClick(childNode, event)
-  }
-
   // 渲染单个节点及其子树
   const renderNodeTree = (nodeId: NodeId): ReactNode => {
     const node = nodeMap.get(nodeId)
@@ -194,7 +176,9 @@ const OrgChart = ({
           <button
             type="button"
             className={` ${styles.currentBox} ${node.level === 0 ? styles.rootBox : ''} ${isHighlighted ? styles.highlightedParent : ''} ${nodeClassName || ''} ${node.level === 0 ? rootNodeClassName || '' : ''} ${animated ? styles.animated : ''} ${hasChildren ? styles.hasChildren : ''} `}
-            style={customStyles.currentBox}
+            style={
+              node.level === 0 ? customStyles.currentBox : { ...customStyles.currentBox, ...customStyles.childBox }
+            }
             aria-expanded={hasChildren ? isExpanded : undefined}
             onMouseEnter={() => highlightOnHover && setHoveredNodeId(nodeId)}
             onMouseLeave={() => highlightOnHover && setHoveredNodeId(null)}
@@ -215,27 +199,12 @@ const OrgChart = ({
         {/* 子节点容器 */}
         {hasChildren && isExpanded && (
           <div className={styles.childrenContainer}>
-            <div className={styles.childrenScroll}>
-              <div className={styles.childrenWrapper}>
-                {node.childrenIds.map((childId) => (
-                  <div key={childId} className={styles.childWrapper}>
-                    <div className={`${styles.arrow} ${styles.arrowChild} ${styles.downArrowWithLine}`}></div>
-                    <button
-                      type="button"
-                      className={` ${styles.childBox} ${isNodeHighlighted(childId) ? styles.highlightedChild : ''} ${animated ? styles.animated : ''} `}
-                      style={customStyles.childBox}
-                      onMouseEnter={() => highlightOnHover && setHoveredNodeId(childId)}
-                      onMouseLeave={() => highlightOnHover && setHoveredNodeId(null)}
-                      onClick={(e) => handleChildClick(childId, e)}
-                    >
-                      <div className={styles.childTitle}>{nodeMap.get(childId)?.name}</div>
-                    </button>
-                    {/* 递归渲染子节点 */}
-                    {renderNodeTree(childId)}
-                  </div>
-                ))}
+            {node.childrenIds.map((childId) => (
+              <div key={childId} className={styles.childWrapper}>
+                <div className={`${styles.arrow} ${styles.downArrowWithLine}`}></div>
+                {renderNodeTree(childId)}
               </div>
-            </div>
+            ))}
           </div>
         )}
       </div>

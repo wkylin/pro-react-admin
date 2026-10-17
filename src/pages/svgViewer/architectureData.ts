@@ -128,9 +128,9 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: 'routes · resources · Provider',
     category: 'platform',
     description:
-      '编译期模块契约 v1 声明路由、资源、Provider、依赖和 Header 插槽，注册时验证版本、依赖环、重复路由及精确权限。',
+      '静态模块契约 v2 声明路由、资源、Provider、依赖和 Header 插槽，注册时校验能力、宿主版本范围、迁移与卸载声明、重复路由及精确权限。',
     files: ['src/platform/modules/index.tsx', 'src/app/modules/default.ts', 'src/projects/enterprise/modules.ts'],
-    note: 'default 装配组织管理和通知；enterprise 只装配组织管理。当前不是运行时插件系统。',
+    note: 'default 装配组织管理和通知；enterprise 只装配组织管理。清单随宿主编译，不会自动执行数据迁移。',
   },
   layout: {
     title: '应用布局',
@@ -153,8 +153,13 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     title: '身份会话',
     subtitle: '演示 / GitHub / 企业登录',
     category: 'platform',
-    description: '身份模型识别演示、GitHub OAuth 与企业会话；同一 origin 的活动身份同步影响权限快照与业务数据作用域。',
-    files: ['src/platform/auth/model/session.ts', 'src/platform/auth/services/authService.ts'],
+    description:
+      '身份模型识别演示、GitHub OAuth 与企业会话；企业身份支持多组织成员关系和活动组织切换，并同步更新权限与数据作用域。',
+    files: [
+      'src/platform/auth/model/session.ts',
+      'src/platform/auth/services/authService.ts',
+      'api/enterprise/service.mts',
+    ],
     note: '同源仍只支持一个活动身份，不提供多身份并行工作区。',
   },
   permissions: {
@@ -215,8 +220,12 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: '15s TTL · 失效通知',
     category: 'platform',
     description: '管理资源缓存按当前会话创建，支持同键请求共享、独立取消、写入失效及身份变化后的旧结果丢弃。',
-    files: ['src/platform/data/cache.ts', 'src/features/administration/model/AdministrationProvider.tsx'],
-    note: '最多保留 100 项；没有后台刷新、乐观更新或实时订阅，其他 feature 尚未统一接入。',
+    files: [
+      'src/platform/data/cache.ts',
+      'src/platform/data/resourceEvents.ts',
+      'src/features/administration/model/AdministrationProvider.tsx',
+    ],
+    note: '最多保留 100 项；企业模式接收 WebSocket 资源失效通知，但无后台刷新、乐观更新或记录内容订阅，其他 feature 尚未统一接入。',
   },
   transport: {
     title: 'HTTP 请求层',
@@ -231,9 +240,9 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: 'Express · 条件启用',
     category: 'service',
     description:
-      'ENTERPRISE_ENABLED=true 时挂载登录、会话、权限、用户、角色与只读审计接口；未启用时不把演示数据冒充真实服务。',
-    files: ['api/server.js', 'api/enterprise/router.cjs', 'api/enterprise/service.mts'],
-    note: '服务端执行租户过滤、RBAC 和事务审计，适合单实例自托管。',
+      'ENTERPRISE_ENABLED=true 时挂载登录、会话、权限、用户、角色、只读审计与资源失效 WebSocket；未启用时不把演示数据冒充真实服务。',
+    files: ['api/server.js', 'api/enterprise/router.cjs', 'api/enterprise/events.cjs'],
+    note: '服务端执行租户过滤、RBAC 和事务审计；WebSocket 事件日志保存在单实例进程内。',
   },
   database: {
     title: '持久化与审计',

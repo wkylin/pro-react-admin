@@ -145,8 +145,8 @@ const accessRows = [
   },
   {
     step: '04 写入与失效',
-    browser: '会话内缓存共享同键请求，写入后失效关联资源并阻止旧请求回填。',
-    server: '业务写入、会话撤销与追加审计在 SQLite 事务中完成。',
+    browser: '会话内缓存共享同键请求；写入或收到企业 WebSocket 事件后失效资源，并阻止旧请求回填。',
+    server: '业务写入、会话撤销与追加审计在 SQLite 事务中完成；提交后向获授权的同租户连接发布资源失效事件。',
   },
 ]
 
@@ -219,23 +219,23 @@ const startPaths = [
 const capabilityRows = [
   {
     area: '模块',
-    shipped: '编译期模块契约、依赖验证、资源与 Header 插槽。',
-    boundary: '运行期插件下载、版本协商和不可信代码沙箱尚未提供。',
+    shipped: '静态模块契约 v2 声明能力、宿主版本范围、数据迁移与卸载策略；注册时校验依赖、路由和权限。',
+    boundary: '迁移仅声明不执行；运行期加载、来源信任、版本协商与插件沙箱尚未提供。',
   },
   {
     area: '认证',
-    shipped: '演示、GitHub 与企业会话；企业端强制 RBAC 和租户过滤。',
-    boundary: 'OIDC / SSO、多组织成员关系属于后续演进。',
+    shipped: '演示、GitHub 与企业会话；企业身份支持多组织成员关系和活动组织切换，服务端执行 RBAC 与租户过滤。',
+    boundary: 'OIDC / SSO、账号关联与解绑、邀请与找回、成员管理仍待实现。',
   },
   {
     area: '数据',
-    shipped: '类型化 DataProvider、管理资源会话缓存、可选 SQLite 企业服务和通用 WebSocket hook。',
-    boundary: 'WebSocket 尚无企业 API 调用方；缓存没有后台刷新或实时订阅，SQLite 面向单实例。',
+    shipped: '类型化 DataProvider、会话缓存、SQLite 企业 API；已接入按租户和读取权限过滤的 WebSocket 资源失效通知。',
+    boundary: '事件日志限单实例；跨实例广播、后台刷新、乐观更新和记录内容订阅尚未提供。',
   },
   {
     area: '状态',
-    shipped: '根实例 Store、会话切换清理、有限 KeepAlive 页面缓存。',
-    boundary: 'Tabs 不跨刷新恢复；草稿没有永久持久化。',
+    shipped: '根实例 Store、会话切换清理、有限 KeepAlive 页面缓存；AI 工作台可选本地保存。',
+    boundary: 'Tabs 不跨刷新恢复；缺少跨业务统一草稿持久化。',
   },
 ]
 

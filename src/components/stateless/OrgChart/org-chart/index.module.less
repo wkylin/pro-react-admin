@@ -12,11 +12,14 @@
 }
 
 .orgChart {
-  margin: 5px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: max-content;
+  width: max-content;
+}
+
+.chartContainer > .orgChart {
+  margin-inline: auto;
 }
 
 .currentContainer {
@@ -25,28 +28,23 @@
   align-items: center;
 }
 
-.currentBox,
-.childBox {
+.currentBox {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   height: 28px;
   line-height: 28px;
   padding: 0 12px;
-  background: var(--wui-bg-info-subtle, rgb(40 120 255 / 7%));
+  background: rgb(40 120 255 / 80%);
   border-radius: 2px;
   border: 1px solid var(--wui-text-info, rgb(40 120 255 / 50%));
+  box-shadow: 0 2px 8px rgb(40 120 255 / 30%);
   text-align: center;
-  box-sizing: border-box;
   width: auto;
   transition: all 0.3s ease;
   position: relative;
   cursor: pointer;
-}
-
-.currentBox {
-  background: rgb(40 120 255 / 80%);
-  box-shadow: 0 2px 8px rgb(40 120 255 / 30%);
+  box-sizing: border-box;
 }
 
 .rootBox {
@@ -72,25 +70,13 @@
   z-index: 10;
 }
 
-.highlightedChild {
-  background: rgb(40 120 255 / 15%) !important;
-  border-color: rgb(40 120 255 / 80%) !important;
-  transform: scale(1.05);
-  z-index: 10;
-}
-
-.currentTitle,
-.childTitle {
+.currentTitle {
   font-size: 14px;
-  color: var(--wui-text-primary, #333);
+  color: #fff;
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.currentTitle {
-  color: #fff;
 }
 
 .expandIcon {
@@ -112,12 +98,7 @@
 
 .arrow {
   position: relative;
-  height: 30px;
-  margin: 0 0 3px;
-}
-
-.arrowChild {
-  height: 14px;
+  height: 18px;
 }
 
 .downArrowWithLine {
@@ -167,21 +148,6 @@
 
 .childrenContainer {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  position: relative;
-  width: 100%;
-}
-
-.childrenScroll {
-  width: 100%;
-  overflow: auto visible;
-  padding-bottom: 10px;
-  position: relative;
-}
-
-.childrenWrapper {
-  display: flex;
   align-items: flex-start;
   position: relative;
   width: max-content;
@@ -225,10 +191,6 @@
   }
 }
 
-.childBox {
-  text-align: center;
-}
-
 .animated {
   animation: fade-in 0.5s ease-in-out;
 }
@@ -246,8 +208,7 @@
 }
 
 /* Mobile styles applied via root class `.is-mobile` */
-:global(.is-mobile) .currentBox,
-:global(.is-mobile) .childBox {
+:global(.is-mobile) .currentBox {
   padding: 0 8px;
   font-size: 12px;
   height: 24px;
