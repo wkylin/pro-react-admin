@@ -2,6 +2,8 @@
 
 GitHub 托管代码，GitHub Actions 构建并上传静态站点，GitHub Pages 提供预览。当前部署入口是 `.github/workflows/deploy-gh-pages.yml` 与 `pnpm run build:pages`。同一站点可以同时展示默认后台、企业演示、独立多项目、微前端和 Storybook。
 
+需要将同类聚合产物部署到自己的服务器时，参见 [Pages 构建产物与 Nginx 部署](GITHUB_PAGES_TO_NGINX.md)，其中说明两种挂载路径、缓存、更新顺序与当前 PWA 限制。
+
 需要逐步手动操作时，见 [手动部署指南](MANUAL_DEPLOYMENT.md)：包含网页/CLI 触发、本地上传 `gh-pages` 分支、Vercel、Release、上线核验和回退。
 
 ## 先启用 Pages

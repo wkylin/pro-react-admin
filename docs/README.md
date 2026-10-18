@@ -23,6 +23,7 @@
 | 手动 Actions、本地 Pages、Vercel、Release、核验与回退     | [手动部署](MANUAL_DEPLOYMENT.md)                                |
 | Vercel 演示登录、SQLite 持久 API、Docker 与 HTTPS         | [Vercel / SQLite](VERCEL_SQLITE.md)                             |
 | GitHub Pages 各应用、Storybook 与 v5 标签/Release         | [GitHub 部署](GITHUB_DEPLOYMENT.md)                             |
+| Pages 构建链、聚合产物与自有 Nginx 根/子路径部署            | [Pages 到 Nginx](GITHUB_PAGES_TO_NGINX.md)                      |
 | 构建时项目选择                                            | [多项目](MULTI_PROJECT.md)                                      |
 | Shell、Remote、manifest 与降级                            | [微前端](MFE_DEPLOYMENT.md)                                     |
 | ESLint、类型、单测、浏览器回归                            | [质量门禁](QUALITY.md)                                          |

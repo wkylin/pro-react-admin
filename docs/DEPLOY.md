@@ -30,15 +30,9 @@ Storybook 可部署到 Pages 的 `/storybook/` 或独立 Vercel 项目。`vercel
 
 ## Nginx 静态镜像
 
-```bash
-pnpm run build:enterprise
-docker build -f deploy/Dockerfile --build-arg ARTIFACT_DIR=dist-enterprise -t pro-react-admin:local .
-docker run --rm -p 8080:8080 pro-react-admin:local
-```
+`deploy/Dockerfile` 只打包已构建产物，基于非 root Nginx，提供 `/healthz`；`ARTIFACT_DIR` 默认是 `dist-enterprise`，也可选择其它构建目录。当前 `.dockerignore` 排除了 `dist*`，因此直接以仓库根作为 Docker 构建上下文会导致 Dockerfile 的 `COPY` 找不到产物；使用镜像前需先调整构建上下文。项目提供静态配置，镜像构建/运行仍应在有 Docker 的环境独立核验；基础镜像版本应按组织镜像策略固定与维护。自有宿主机 Nginx 的根路径/子路径配置及上传命令见 [Pages 构建产物与 Nginx 部署](GITHUB_PAGES_TO_NGINX.md)。
 
-Dockerfile 只打包已验证产物，基于非 root Nginx，提供 /healthz。ARTIFACT_DIR 可以选择 dist 或 dist-vercel 等现有目录。项目提供静态配置，镜像构建/运行应在有 Docker 的环境独立核验；基础镜像版本应按组织镜像策略固定与维护。
-
-`deploy/nginx.conf` 给 hash 静态资源长期缓存，对 HTML、SW、Remote entry/manifest 关闭缓存。未配置的 /api/ 返回 JSON 503，避免把 HTML fallback 当成业务响应；部署时替换为真实代理，或在构建时设置 APP_BASE_URL。独立跨域 Remote 还需配置明确 CORS 与 CSP。
+`deploy/nginx.conf` 给 `static/` 资源长期缓存，对 `index.html`、`sw.js`、Remote entry/manifest 关闭缓存；其它 HTML 未设置专门的缓存头。未配置的 `/api/` 返回 JSON 503，避免把 HTML fallback 当成业务响应；部署时替换为真实代理，或在构建时设置 `APP_BASE_URL`。独立跨域 Remote 还需配置明确 CORS 与 CSP。
 
 ## API、身份和更新
 
