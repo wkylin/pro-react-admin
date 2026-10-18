@@ -1,6 +1,16 @@
-import { renderProjectApp } from '@src/bootstrap/renderProjectApp'
+import ThemeIndex from '@src/theme'
+import { ProThemeProvider } from '@src/theme/hooks'
+import WatermarkProvider from '@wui/WatermarkProvider'
+import { renderApp } from '@app/bootstrap/renderApp'
 
-renderProjectApp({
+renderApp({
+  projectId: 'shell',
   identifierPrefix: 'wuiShell',
-  watermarkContent: 'Micro Frontend Shell',
+  children: (
+    <ProThemeProvider>
+      <WatermarkProvider content="Micro Frontend Shell">
+        <ThemeIndex />
+      </WatermarkProvider>
+    </ProThemeProvider>
+  ),
 })

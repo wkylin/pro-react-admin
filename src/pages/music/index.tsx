@@ -1,4 +1,4 @@
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import FixMusicPlayer from '@stateless/FixMusicPlayer'
 
 const Music = () => {

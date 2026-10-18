@@ -1,9 +1,9 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
 import type { FormProps } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@app/model'
 import {
   UserOutlined,
   LockOutlined,
@@ -15,11 +15,10 @@ import {
   PhoneOutlined,
 } from '@ant-design/icons'
 
-import { setLocalStorage } from '@utils/publicFn'
+import { setLocalStorage } from '@shared/lib/publicFn'
 import styles from './index.module.less'
 
 const { Title, Text, Link } = Typography
-const { Option } = Select
 const { Content } = Layout
 // responsive handled by global Zustand `isMobile`
 
@@ -47,7 +46,7 @@ const passwordIconRender = (visible: boolean): React.ReactNode =>
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
   const { token } = theme.useToken()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
 
   const [form] = Form.useForm<SignUpFormValues>()
 
@@ -89,7 +88,7 @@ const SignUp = () => {
                   大屏控制台
                 </Title>
                 <Text type="secondary" className={styles.heroDesc}>
-                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Vite 构建与产物压缩自动化。
+                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Vite 8 构建与产物压缩自动化。
                 </Text>
 
                 <div className={styles.heroOrbit} aria-hidden="true">
@@ -209,10 +208,14 @@ const SignUp = () => {
                 <Form.Item label="手机号码" required>
                   <Space.Compact style={{ width: '100%' }}>
                     <Form.Item name="prefix" noStyle initialValue="86">
-                      <Select style={{ width: 90, height: 44 }} size="large">
-                        <Option value="86">+86</Option>
-                        <Option value="44">+44</Option>
-                      </Select>
+                      <Select
+                        style={{ width: 90, height: 44 }}
+                        size="large"
+                        options={[
+                          { value: '86', label: '+86' },
+                          { value: '44', label: '+44' },
+                        ]}
+                      />
                     </Form.Item>
                     <Form.Item
                       name="phone"

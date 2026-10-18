@@ -1,0 +1,20 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './PortalTooltip.stories'
+
+<Meta of={Stories} />
+
+# PortalTooltip
+
+通过 createPortal 将提示渲染到 document.body，适用于会裁剪内容的滚动容器。title 和 children 为 ReactNode；trigger 支持 hover/click，visible 为受控显示，defaultVisible 为初始状态。
+
+placement 支持 top/bottom/left/right/topLeft/topRight/bottomLeft/bottomRight。overlayStyle、overlayClassName、zIndex 控制提示层，默认 zIndex 1060。触发元素需要正确传递 ref 与事件；键盘焦点提示不能替代交互元素自身的可访问名称。
+
+安装后从 @w.ui/wui-react/portal-tooltip 导入，并导入 style.css。
+
+## 预览
+
+<Canvas of={Stories.Default} />
+
+## 当前参数
+
+<ArgTypes of={Stories} />

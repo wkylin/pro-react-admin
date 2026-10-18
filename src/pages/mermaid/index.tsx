@@ -1,7 +1,7 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
-import { useState, useRef, useCallback, type ComponentType, type ReactNode } from 'react'
+import AnimatedIcon from '@wui/AnimatedIcon'
+import { useState, useRef, useCallback, type ReactNode } from 'react'
 import MermaidHooks from '@stateful/mermaidHooks'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import PageContainer from '@stateless/PageContainer'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'
 import { toPng, toSvg } from 'html-to-image'
@@ -20,7 +20,8 @@ import {
   Clock,
   FileCode,
 } from 'lucide-react'
-import { Button, Tooltip, message, Space, Card, theme } from 'antd'
+import { Button, Tooltip, Space, Card, theme } from 'antd'
+import { message } from '@platform/feedback/message'
 
 const SAMPLES = {
   Flowchart: `graph TD
@@ -70,9 +71,6 @@ const SAMPLES = {
 type SampleType = keyof typeof SAMPLES
 type DownloadFormat = 'png' | 'svg'
 
-type FixTabPanelWithChildren = ComponentType<{ children?: ReactNode }>
-
-const TypedFixTabPanel = FixTabPanel as unknown as FixTabPanelWithChildren
 const mermaidConfig: MermaidConfig = {}
 
 const MermaidDemo = () => {
@@ -176,7 +174,7 @@ const MermaidDemo = () => {
   }, [previewRef, token.colorBgLayout, copyCodeFallback])
 
   return (
-    <TypedFixTabPanel>
+    <FixTabPanel>
       <PageContainer title="Mermaid Live Editor" footer={<></>}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {/* Editor Section */}
@@ -360,7 +358,7 @@ const MermaidDemo = () => {
           </div>
         </div>
       </PageContainer>
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

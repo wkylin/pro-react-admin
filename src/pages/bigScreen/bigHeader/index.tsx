@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { formatTime } from '@utils/publicFn'
+import { formatTime } from '@shared/lib/publicFn'
 
 const stateInfo = {
   title: '大数据可视化平台',

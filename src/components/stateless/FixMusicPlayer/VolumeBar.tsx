@@ -1,5 +1,5 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
-import React, { type ChangeEventHandler } from 'react'
+import AnimatedIcon from '@wui/AnimatedIcon'
+import { type ChangeEventHandler } from 'react'
 import { Volume1, Volume2, VolumeX } from 'lucide-react'
 
 type VolumeBarProps = {
@@ -16,35 +16,27 @@ const VolumeBar = ({ value, min, max, onChange, setVolume, textColor, themeMode 
   const volumeValue = parseFloat(String(value))
   const activeColor = themeMode === 'dark' ? '#ff4d4f' : '#1890ff'
 
-  const getVolumeIcon = () => {
-    if (volumeValue === 0)
-      return (
-        <AnimatedIcon variant="spin" mode="hover">
-          <VolumeX size={25} color={textColor} onClick={() => setVolume(1)} className="cursor-pointer">
-            <title>点击恢复音量</title>
-          </VolumeX>
-        </AnimatedIcon>
-      )
-    if (volumeValue <= 0.5)
-      return (
-        <AnimatedIcon variant="spin" mode="hover">
-          <Volume1 size={25} color={textColor} onClick={() => setVolume(0)} className="cursor-pointer">
-            <title>点击静音</title>
-          </Volume1>
-        </AnimatedIcon>
-      )
-    return (
-      <AnimatedIcon variant="spin" mode="hover">
-        <Volume2 size={25} color={textColor} onClick={() => setVolume(0)} className="cursor-pointer">
-          <title>点击静音</title>
-        </Volume2>
-      </AnimatedIcon>
-    )
-  }
+  const muted = volumeValue === 0
 
   return (
     <div className="flex items-center justify-end">
-      {getVolumeIcon()}
+      <button
+        type="button"
+        className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md hover:bg-black/10 focus-visible:outline-2 dark:hover:bg-white/10"
+        onClick={() => setVolume(muted ? 1 : 0)}
+        aria-label={muted ? '恢复音量' : '静音'}
+        title={muted ? '恢复音量' : '静音'}
+      >
+        <AnimatedIcon variant="spin" mode="hover">
+          {muted ? (
+            <VolumeX size={25} color={textColor} />
+          ) : volumeValue <= 0.5 ? (
+            <Volume1 size={25} color={textColor} />
+          ) : (
+            <Volume2 size={25} color={textColor} />
+          )}
+        </AnimatedIcon>
+      </button>
       <input
         type="range"
         step="any"
@@ -56,6 +48,7 @@ const VolumeBar = ({ value, min, max, onChange, setVolume, textColor, themeMode 
         style={{
           background: `linear-gradient(to right, ${activeColor} 0%, ${activeColor} ${volumeValue * 100}%, #ccc ${volumeValue * 100}%, #ccc 100%)`,
         }}
+        aria-label="音量"
         title={`音量: ${Math.round(volumeValue * 100)}%`}
       />
     </div>

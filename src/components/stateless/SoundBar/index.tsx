@@ -63,7 +63,7 @@ const SoundBar = ({ iconColor, buttonStyle, ghost = false }: SoundBarProps) => {
         icon={iconNode}
         style={{ fontSize: 16, ...(buttonStyle || {}) }}
       />
-      <audio src={music} ref={audioRef} loop>
+      <audio src={music} ref={audioRef} preload="none" loop>
         <track kind="captions" default />
       </audio>
     </>

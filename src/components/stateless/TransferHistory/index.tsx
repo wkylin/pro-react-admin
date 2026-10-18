@@ -1,6 +1,8 @@
-import { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import { useState, useRef, useLayoutEffect } from 'react'
 import type { MouseEventHandler } from 'react'
 import { Button } from 'antd'
+import DownOutlined from '@ant-design/icons/DownOutlined'
+import UpOutlined from '@ant-design/icons/UpOutlined'
 import styles from './index.module.less'
 import { useProThemeContext } from '@src/theme/hooks'
 
@@ -41,27 +43,18 @@ const scheduleFrame = (callback: FrameRequestCallback): ScheduledFrame => {
   return () => clearTimeout(timeout)
 }
 
-const cancelScheduledFrame = (cancelFrame: ScheduledFrame) => cancelFrame()
-
 /**
  * 转让历史组件
  * @param {Object} props - 组件属性
  * @param {number} [props.defaultDisplayCount=3] - 默认显示的子项数量
  */
 const TransferHistory = ({ defaultDisplayCount = 3 }: TransferHistoryProps) => {
-  const { themeSettings } = useProThemeContext()
-  const isDark = themeSettings?.themeMode === 'dark'
+  const { resolvedTheme } = useProThemeContext()
+  const isDark = resolvedTheme === 'dark'
   const [expanded, setExpanded] = useState<boolean>(false)
-  const [leftLineHeight, setLeftLineHeight] = useState<string>('100%')
+  const [leftLineHeight, setLeftLineHeight] = useState<string>('0px')
   const leftLineRef = useRef<HTMLDivElement | null>(null)
   const itemRefs = useRef<Array<HTMLDivElement | null>>([])
-  const contentWrapperRef = useRef<HTMLDivElement | null>(null)
-  const rafRef = useRef<number>(0)
-
-  // 初始化引用数组
-  useEffect(() => {
-    itemRefs.current = []
-  }, [])
 
   // 模拟数据
   const transferData: TransferHistoryGroup[] = [
@@ -163,77 +156,40 @@ const TransferHistory = ({ defaultDisplayCount = 3 }: TransferHistoryProps) => {
   ]
 
   /**
-   * 计算左侧线条高度（不包含按钮高度）
-   */
-  const calculateLineHeight = () => {
-    if (!transferData || !transferData[0] || !transferData[0].children || transferData[0].children.length === 0) {
-      setLeftLineHeight('0px')
-      return
-    }
-
-    // 根据展开状态计算显示的子项数量
-    const displayCount = expanded
-      ? transferData[0].children.length
-      : Math.min(defaultDisplayCount, transferData[0].children.length)
-    const lastIndex = displayCount - 1
-
-    // 确保元素已渲染
-    if (!itemRefs.current[0] || !itemRefs.current[lastIndex] || !leftLineRef.current) {
-      return
-    }
-
-    // 计算实际内容高度（仅包含子项容器，不包含按钮）
-    // 使用getBoundingClientRect获取精确高度
-    const firstItemRect = itemRefs.current[0].getBoundingClientRect()
-    const lastItemRect = itemRefs.current[lastIndex].getBoundingClientRect()
-
-    // 计算线条高度：从第一个子项的中心到最后一个子项的中心
-    const lineHeight = lastItemRect.top + lastItemRect.height / 2 - (firstItemRect.top + firstItemRect.height / 2)
-
-    // 使用 requestAnimationFrame 延迟设置 state，避免在 effect 中同步 setState 导致的警告
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(() => {
-      setLeftLineHeight(`${lineHeight}px`)
-      rafRef.current = 0
-    })
-  }
-
-  /**
    * 切换展开/折叠状态
    */
   const toggleExpand: MouseEventHandler<HTMLButtonElement> = () => {
     setExpanded((currentExpanded) => !currentExpanded)
   }
 
-  // 使用useLayoutEffect确保在DOM更新后立即计算
   useLayoutEffect(() => {
-    // 延迟调用，避免在 Layout effect 中直接触发同步 setState
-    const raf = scheduleFrame(() => calculateLineHeight())
+    let cancelMeasurement: ScheduledFrame | null = null
+    const queueMeasurement = () => {
+      cancelMeasurement?.()
+      cancelMeasurement = scheduleFrame(() => {
+        cancelMeasurement = null
+        const visibleItems = itemRefs.current.filter((element) => element !== null)
+        const first = visibleItems[0]?.getBoundingClientRect()
+        const last = visibleItems[visibleItems.length - 1]?.getBoundingClientRect()
+        // Stop at the last company center, excluding the expand button.
+        const height = first && last ? last.top + last.height / 2 - (first.top + first.height / 2) : 0
+        setLeftLineHeight(`${Math.max(0, height)}px`)
+      })
+    }
+
+    const observer = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(queueMeasurement)
+    if (leftLineRef.current) observer?.observe(leftLineRef.current)
+    itemRefs.current.forEach((element) => {
+      if (element) observer?.observe(element)
+    })
+    queueMeasurement()
+    window.addEventListener('resize', queueMeasurement)
     return () => {
-      cancelScheduledFrame(raf)
+      window.removeEventListener('resize', queueMeasurement)
+      observer?.disconnect()
+      cancelMeasurement?.()
     }
-  }, [expanded])
-
-  // 组件挂载后计算线条高度
-  useLayoutEffect(() => {
-    // 延迟计算以避免在 mount 时同步 setState
-    const raf = scheduleFrame(() => calculateLineHeight())
-
-    // 添加窗口大小变化时的重新计算（节流到 rAF）
-    let resizeRaf = 0
-    const handleResize = (_event: UIEvent) => {
-      if (resizeRaf) cancelAnimationFrame(resizeRaf)
-      resizeRaf = requestAnimationFrame(() => calculateLineHeight())
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      if (rafRef.current) cancelAnimationFrame(rafRef.current)
-      cancelScheduledFrame(raf)
-      if (resizeRaf) cancelAnimationFrame(resizeRaf)
-    }
-  }, [expanded])
+  }, [expanded, defaultDisplayCount])
 
   // 主题色彩
   const mainBg = isDark ? 'rgba(40,120,255,0.15)' : 'rgba(40,120,255,0.07)'
@@ -256,7 +212,7 @@ const TransferHistory = ({ defaultDisplayCount = 3 }: TransferHistoryProps) => {
           )}
 
           {/* 主体内容区域 */}
-          <div className={styles.contentWrapper} ref={contentWrapperRef} style={{ minWidth: 800 }}>
+          <div className={styles.contentWrapper} style={{ minWidth: 800 }}>
             <div className={styles.leftContent}>
               <div className={styles.levelTwo}>
                 <div className={styles.verticalConnector} style={{ height: leftLineHeight }}></div>
@@ -353,9 +309,15 @@ const TransferHistory = ({ defaultDisplayCount = 3 }: TransferHistoryProps) => {
 
               {item.children && item.children.length > defaultDisplayCount && (
                 <div className={styles.expandButtonContainer}>
-                  <Button type="link" onClick={toggleExpand} className={styles.expandButton}>
+                  <Button
+                    type="link"
+                    onClick={toggleExpand}
+                    className={styles.expandButton}
+                    icon={expanded ? <UpOutlined /> : <DownOutlined />}
+                    iconPlacement="end"
+                    aria-expanded={expanded}
+                  >
                     {expanded ? '收起部分公司' : '展开全部公司'}
-                    <i className={expanded ? 'anticon anticon-up' : 'anticon anticon-down'}></i>
                   </Button>
                 </div>
               )}

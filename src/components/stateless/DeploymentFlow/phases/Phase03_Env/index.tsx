@@ -41,10 +41,10 @@ const Phase03: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
             justifyContent: 'space-between',
             alignItems: 'center',
             marginTop: '15px',
-            background: 'white',
+            background: 'var(--wui-bg-elevated)',
             padding: '15px',
             borderRadius: '8px',
-            border: '1px solid #eee',
+            border: '1px solid var(--wui-border)',
             position: 'relative',
           }}
         >
@@ -55,7 +55,7 @@ const Phase03: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
                   style={{
                     flex: 1,
                     height: '2px',
-                    background: '#e0e0e0',
+                    background: 'var(--wui-border-strong)',
                     margin: '0 5px',
                     position: 'relative',
                     top: '-18px',
@@ -77,20 +77,22 @@ const Phase03: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
                     width: '40px',
                     height: '40px',
                     borderRadius: '50%',
-                    background: env.color || '#f5f5f5',
-                    border: '2px solid #e0e0e0',
+                    background: env.color || 'var(--wui-bg-subtle)',
+                    border: '2px solid var(--wui-border-strong)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 700,
                     fontSize: '12px',
-                    color: env.textColor || '#777',
+                    color: env.textColor || 'var(--wui-text-muted)',
                     transition: 'all 0.3s',
                   }}
                 >
                   {env.id}
                 </div>
-                <div style={{ marginTop: '6px', fontSize: '10px', color: '#999', fontWeight: 600 }}>{env.label}</div>
+                <div style={{ marginTop: '6px', fontSize: '10px', color: 'var(--wui-text-muted)', fontWeight: 600 }}>
+                  {env.label}
+                </div>
               </div>
             </React.Fragment>
           ))}

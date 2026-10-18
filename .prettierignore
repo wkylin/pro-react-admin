@@ -1,8 +1,10 @@
 node_modules/**
 package-lock.json
 yarn.lock
-build/**
 dist/**
+dist-*/**
+artifacts/**
+.mf/**
 .vscode/**
 .yarn/**
 compilation-stats.json

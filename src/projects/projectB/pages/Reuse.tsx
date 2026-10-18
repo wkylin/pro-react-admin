@@ -8,7 +8,7 @@ const { Paragraph, Text } = Typography
 
 export default function ProjectBReuse() {
   const [msgApi, holder] = message.useMessage()
-  const snippet = 'pnpm run build:production:projectB'
+  const snippet = 'PROJECT=projectB npm run build:production:projectB'
 
   return (
     <PageContainer title="Project B / Reuse" footer={<span></span>}>

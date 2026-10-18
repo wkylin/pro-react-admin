@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useState, type ReactNode } from 'react'
 import clsx from 'clsx'
 import { Check, Copy } from 'lucide-react'

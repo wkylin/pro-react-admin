@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Project/开发指南" />
+
+# Pro React Admin Storybook
+
+当前 Storybook 使用 React Vite builder，扫描应用 src 与 packages/wui-react/src 的组件 Story 和 MDX。组件源码、Story、文档放在同一目录，根 .storybook 提供 preview decorators、资源与 Less 规则。
+
+## 本地运行
+
+```bash
+pnpm run storybook
+pnpm run build-storybook
+pnpm run serve:storybook
+```
+
+开发端口 6006，静态输出 storybook-static。安装需要 Node 24 与仓库指定 pnpm；依赖版本由 lockfile 固定。
+
+## 两类组件
+
+WUI 组件在 packages/wui-react/src，是发布包的源码；应用组件在 src/components 或 src/shared，不会自动成为 npm 导出。公开组件以 config/library-contract.mjs 为准，发布检查包含严格声明编译和 ESM/CJS 消费 smoke。
+
+## 更新方式
+
+props 用类型声明维护，文档用 ArgTypes 展示，Canvas 直接绑定同目录导出的 Story。修改组件契约后生成目录，再检查文档和静态构建。完整维护指南位于仓库 docs/STORYBOOK.md 与 docs/LIBRARY_PUBLISH_GUIDE.md。

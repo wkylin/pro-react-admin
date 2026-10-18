@@ -1,9 +1,9 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useState } from 'react'
 import { motion } from 'motion/react'
 import { CheckCircle, Circle } from 'lucide-react'
 import { Button, Card, theme } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@app/model'
 import { useProThemeContext } from '@/theme/hooks'
 import clsx from 'clsx'
 import PropTypes from 'prop-types'
@@ -82,9 +82,9 @@ const StepIndicator = ({
   gradientColors = ['#ff7a18', '#af002d', '#319197'],
   showPercent = true,
 }: StepIndicatorProps) => {
-  const { themeSettings } = useProThemeContext()
-  const isMobile = useStore((s) => s.isMobile)
-  const isDark = themeSettings.themeMode === 'dark'
+  const { resolvedTheme } = useProThemeContext()
+  const isMobile = useAppStore(selectIsMobile)
+  const isDark = resolvedTheme === 'dark'
 
   // 允许外部传入颜色；否则基于 theme 决定默认颜色
   const activeColor = propActiveColor || (isDark ? '#40a9ff' : '#0958d9')
@@ -266,9 +266,9 @@ StepIndicator.propTypes = {
 }
 
 const StepContent = ({ step }: StepContentProps) => {
-  const { themeSettings } = useProThemeContext()
+  const { resolvedTheme } = useProThemeContext()
   const { token } = useToken()
-  const isDark = themeSettings.themeMode === 'dark'
+  const isDark = resolvedTheme === 'dark'
 
   return (
     <Card
@@ -322,10 +322,10 @@ const NavigationButtons = ({
   handleNext,
   primaryColor: primaryColorProp,
 }: NavigationButtonsProps) => {
-  const { themeSettings } = useProThemeContext()
+  const { resolvedTheme } = useProThemeContext()
   const { token } = useToken()
-  const isMobile = useStore((s) => s.isMobile)
-  const isDark = themeSettings.themeMode === 'dark'
+  const isMobile = useAppStore(selectIsMobile)
+  const isDark = resolvedTheme === 'dark'
 
   const primaryColor = primaryColorProp || (isDark ? '#40a9ff' : '#0958d9')
   const secondaryBg = isDark ? token.colorBgContainer : '#f8f9fa'

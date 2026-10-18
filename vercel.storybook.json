@@ -1,0 +1,12 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm run build-storybook",
+  "outputDirectory": "storybook-static",
+  "headers": [
+    { "source": "/index.json", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+    { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] },
+    { "source": "/iframe.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+  ]
+}

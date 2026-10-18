@@ -3,12 +3,12 @@
   min-height: 720px;
   flex-direction: column;
   gap: 16px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--wui-border, #e5e7eb);
   border-radius: 24px;
   background:
-    radial-gradient(circle at top right, rgb(59 130 246 / 0.08), transparent 26%),
-    linear-gradient(180deg, #fff, #f7f9fc 100%);
-  box-shadow: 0 18px 60px rgb(15 23 42 / 0.08);
+    radial-gradient(circle at top right, rgb(59 130 246 / 8%), transparent 26%),
+    linear-gradient(180deg, var(--wui-bg-surface, #fff), var(--wui-bg-page, #f7f9fc) 100%);
+  box-shadow: var(--wui-shadow, 0 18px 60px rgb(15 23 42 / 8%));
   padding: 20px;
 }
 
@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #0f172a;
+  color: var(--wui-text-primary, #0f172a);
 
   h3 {
     margin: 0;
@@ -34,7 +34,7 @@
 
 .description {
   margin: 6px 0 0;
-  color: #64748b;
+  color: var(--wui-text-secondary, #64748b);
 }
 
 .alert {
@@ -50,7 +50,7 @@
   gap: 14px;
   overflow-y: auto;
   border-radius: 18px;
-  background: rgb(248 250 252 / 0.92);
+  background: var(--wui-bg-subtle, rgb(248 250 252 / 92%));
   padding: 10px;
 }
 
@@ -61,16 +61,16 @@
 }
 
 .messageCard {
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--wui-border, #e2e8f0);
   border-radius: 20px;
-  background: #fff;
+  background: var(--wui-bg-surface, #fff);
   padding: 16px;
 }
 
 .role-user {
   align-self: flex-end;
   width: min(88%, 720px);
-  background: linear-gradient(135deg, #fff7ed, #fffbeb);
+  background: var(--wui-bg-warning-subtle, linear-gradient(135deg, #fff7ed, #fffbeb));
 }
 
 .role-assistant,
@@ -90,7 +90,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #2563eb;
+  color: var(--wui-text-info, #2563eb);
   font-size: 12px;
 }
 
@@ -105,8 +105,8 @@
   gap: 6px;
   border: 0;
   border-radius: 999px;
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: var(--wui-bg-info-subtle, #eff6ff);
+  color: var(--wui-text-info, #1d4ed8);
   cursor: pointer;
   padding: 6px 10px;
   transition:
@@ -128,21 +128,21 @@
 .messageCopyButton:hover,
 .codeCopyButton:hover {
   transform: translateY(-1px);
-  background: #dbeafe;
+  background: var(--wui-bg-info-subtle, #dbeafe);
 }
 
 .thoughtPanel {
   margin-bottom: 12px;
-  border: 1px solid #dbeafe;
+  border: 1px solid var(--wui-border-strong, #dbeafe);
   border-radius: 16px;
-  background: #f8fbff;
+  background: var(--wui-bg-info-subtle, #f8fbff);
   overflow: hidden;
 
   summary {
     cursor: pointer;
     list-style: none;
     padding: 12px 16px;
-    color: #1d4ed8;
+    color: var(--wui-text-info, #1d4ed8);
     font-weight: 600;
   }
 
@@ -152,13 +152,13 @@
 }
 
 .thoughtBody {
-  border-top: 1px solid #dbeafe;
+  border-top: 1px solid var(--wui-border-strong, #dbeafe);
   padding: 0 16px 14px;
-  color: #334155;
+  color: var(--wui-text-secondary, #334155);
 }
 
 .messageContent {
-  color: #0f172a;
+  color: var(--wui-text-primary, #0f172a);
   line-height: 1.7;
 
   :global(p) {
@@ -178,14 +178,14 @@
 
 .inlineCode {
   border-radius: 8px;
-  background: #e2e8f0;
-  color: #0f172a;
+  background: var(--wui-bg-elevated, #e2e8f0);
+  color: var(--wui-text-primary, #0f172a);
   padding: 2px 6px;
 }
 
 .codeBlock {
   overflow: hidden;
-  border: 1px solid #dbe3ef;
+  border: 1px solid var(--wui-border, #dbe3ef);
   border-radius: 16px;
   background: #0f172a;
 }
@@ -194,14 +194,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgb(15 23 42 / 0.92);
+  background: rgb(15 23 42 / 92%);
   color: #cbd5e1;
   font-size: 12px;
   padding: 10px 12px;
 }
 
 .codeCopyButton {
-  background: rgb(37 99 235 / 0.14);
+  background: rgb(37 99 235 / 14%);
   color: #dbeafe;
 }
 
@@ -212,9 +212,9 @@
 }
 
 .composer {
-  border: 1px solid #dbe3ef;
+  border: 1px solid var(--wui-border, #dbe3ef);
   border-radius: 20px;
-  background: #fff;
+  background: var(--wui-bg-surface, #fff);
   padding: 12px;
 }
 
@@ -225,9 +225,13 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #0f172a;
+  color: var(--wui-text-primary, #0f172a);
   font-size: 14px;
   line-height: 1.7;
+}
+
+.textarea::placeholder {
+  color: var(--wui-text-muted, #94a3b8);
 }
 
 .composerFooter {

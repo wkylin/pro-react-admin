@@ -3,7 +3,7 @@
   max-width: 900px;
   margin: 30px auto;
   padding: 24px;
-  background: #fff;
+  background: var(--wui-bg-surface);
   border-radius: 16px;
   box-shadow: 0 2px 12px rgb(0 0 0 / 6%);
 }
@@ -41,8 +41,8 @@
   cursor: pointer;
   border-radius: 12px;
   overflow: hidden;
-  background: #fafafa;
-  border: 1px solid #f0f0f0;
+  background: var(--wui-bg-subtle);
+  border: 1px solid var(--wui-border);
   transition:
     box-shadow 0.3s,
     transform 0.3s;
@@ -58,7 +58,7 @@
   width: 100%;
   aspect-ratio: 7 / 10;
   overflow: hidden;
-  background: #e8e8e8;
+  background: var(--wui-bg-subtle);
 }
 
 .bookCoverImg {
@@ -108,7 +108,7 @@
 
 .bookCardAuthor {
   font-size: 12px;
-  color: #999;
+  color: var(--wui-text-muted);
   margin: 0 0 6px;
 }
 
@@ -120,7 +120,7 @@
   justify-content: center;
   gap: 12px;
   padding: 40px;
-  color: #999;
+  color: var(--wui-text-muted);
 }
 
 .bookOverlayMask {
@@ -158,13 +158,13 @@
   height: 40px;
   border-radius: 50%;
   border: none;
-  background: rgb(255 255 255 / 92%);
+  background: var(--wui-bg-elevated);
   box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  color: #333;
+  color: var(--wui-text-primary);
   cursor: pointer;
   transition:
     transform 0.2s,
@@ -173,7 +173,7 @@
   animation: close-btn-fade-in 0.35s 0.45s ease both;
 
   &:hover {
-    background: #fff;
+    background: var(--wui-bg-surface);
     transform: scale(1.1);
     box-shadow: 0 4px 16px rgb(0 0 0 / 25%);
   }

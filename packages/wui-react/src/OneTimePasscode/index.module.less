@@ -1,0 +1,96 @@
+.wrapper {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+}
+
+.input {
+  width: 3.25rem; /* base size */
+  height: 3.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(15 23 32 / 6%);
+  background: var(--otp-bg);
+  color: var(--otp-fg);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 20px rgb(2 6 23 / 6%);
+  transition:
+    box-shadow 180ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 160ms ease,
+    border-color 120ms ease;
+  appearance: none;
+  outline: none;
+  caret-color: var(--otp-primary);
+}
+
+/* Variants */
+.modern .input {
+  /* subtle elevation and slightly larger */
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.9rem;
+  font-size: 1.125rem;
+  box-shadow: 0 10px 28px rgb(2 6 23 / 8%);
+}
+
+/* explicit variant classes to ensure CSS module exports these keys */
+.modern {
+  --otp-variant-scale: 1.02;
+}
+
+.compact .input {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgb(2 6 23 / 4%);
+}
+
+.compact {
+  --otp-variant-scale: 0.96;
+}
+
+.classic .input {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgb(15 23 32 / 12%);
+  background: var(--otp-bg);
+  box-shadow: inset 0 -2px 6px rgb(0 0 0 / 2%);
+}
+
+.classic {
+  --otp-variant-scale: 1;
+}
+
+.input:focus {
+  transform: translateY(-2px) scale(1.02);
+  border-color: var(--otp-primary);
+  box-shadow:
+    0 10px 30px rgb(2 6 23 / 8%),
+    0 0 0 8px rgb(var(--otp-primary-rgb), 0.12);
+}
+
+.input[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+@media (width <= 575px) {
+  .input {
+    width: 2.1rem;
+    height: 2.1rem;
+    font-size: 0.95rem;
+  }
+}
+
+.centeredWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}

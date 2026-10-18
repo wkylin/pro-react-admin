@@ -1,4 +1,5 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
+import MoveChecker from '@wui/MoveChecker'
 import {
   version,
   useEffect,
@@ -6,12 +7,8 @@ import {
   useRef,
   type ChangeEvent,
   type ComponentType,
-  type ForwardRefExoticComponent,
   type KeyboardEvent,
   type MouseEvent,
-  type PropsWithoutRef,
-  type ReactNode,
-  type RefAttributes,
   type TouchEvent,
 } from 'react'
 import { Input, Flex, Button } from 'antd'
@@ -24,7 +21,7 @@ import SpotlightCard from '@stateless/Spotlight'
 import MarqueeImport from 'react-fast-marquee'
 import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import useDetectScroll from '@smakss/react-scroll-direction'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import ReMarkdown from '@stateless/ReMarkdown'
 // import LinearWrap from '@stateless/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
@@ -77,7 +74,6 @@ import GradualSpacing from '@stateless/GradualSpacing'
 import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
 import InViewBasicMultiple from '@stateless/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
-import MoveChecker from '@stateless/MoveChecker'
 import FlipWords from '@stateless/FlipWords'
 import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
@@ -99,9 +95,9 @@ import {
   // randomNum,
   getDirection,
   oneApiImage,
-} from '@utils/aidFn'
-import { fireConfetti } from '@utils/confetti'
-import exportSvg from '@utils/svgExport'
+} from '@shared/lib/aidFn'
+import { fireConfetti } from '@shared/lib/confetti'
+import exportSvg from '@shared/lib/svgExport'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
@@ -164,10 +160,6 @@ type Resettable = {
 
 const AlternatingTextWithStrings = AlternatingText as unknown as ComponentType<TextRotationProps>
 const SlideTextWithStrings = SlideText as unknown as ComponentType<SlideTextProps>
-const FixTabPanelWithRef = FixTabPanel as unknown as ForwardRefExoticComponent<
-  PropsWithoutRef<{ children: ReactNode }> & RefAttributes<HTMLDivElement>
->
-
 const isResettable = (value: unknown): value is Resettable =>
   typeof value === 'object' && value !== null && 'reset' in value && typeof value.reset === 'function'
 
@@ -638,7 +630,7 @@ const Home = () => {
     },
   ]
   return (
-    <FixTabPanelWithRef ref={setScrollRef}>
+    <FixTabPanel ref={setScrollRef}>
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
         <ColorfulText text={`React version: ${version}`} />
       </section>
@@ -717,11 +709,8 @@ const Home = () => {
           onResult={(r) => console.log('result', r)}
           initialText="请按住滑块，拖动到最后"
           successText="验证通过"
-          boxBg="#ddd"
           bgColor="linear-gradient(to right,#68cd0f,#35cca1)"
           bgColorS="linear-gradient(to right,#68cd0f,#66e92d)"
-          sliderBg="#fff"
-          sliderSuccessBg="#ddd"
         />
         <Button type="primary" style={{ margin: '10px' }} onClick={() => mcRef.current && mcRef.current.reset()}>
           重置验证
@@ -1158,7 +1147,7 @@ const Home = () => {
           height={200}
           minScratchPercentage={70}
           onComplete={() => undefined}
-          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 bg-gray-100"
+          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-[var(--wui-border-strong)] bg-[var(--wui-bg-subtle)]"
         >
           <p className="text-9xl">✨</p>
         </ScratchToReveal>
@@ -1437,7 +1426,7 @@ const Home = () => {
       <section style={{ margin: 20 }}>
         <AutoSlider />
       </section>
-    </FixTabPanelWithRef>
+    </FixTabPanel>
   )
 }
 

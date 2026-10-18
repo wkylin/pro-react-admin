@@ -1,77 +1,47 @@
 # @w.ui/wui-react
 
-面向 React 19 与 Ant Design 6 项目的共享组件库，包含通用 UI、状态组件和埋点 SDK。样式通过独立 CSS 入口导入，TypeScript 声明随包提供。
+React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package contains 12 public components; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
 
-## 安装
-
-组件库将 React、React DOM、Ant Design 和 React Router 作为 peer dependencies。新项目可以一次安装这些依赖：
+## Install
 
 ```bash
-pnpm add react react-dom antd react-router-dom @w.ui/wui-react
+pnpm add @w.ui/wui-react react react-dom antd framer-motion
 ```
 
-已有 React 项目可先确认以下 peer dependency 版本兼容，再安装 `@w.ui/wui-react`：
+Peer ranges: React/React DOM >=19 <20, Ant Design >=6 <7, Framer Motion >=12 <15. Package Node support is ^22.22.2 || ^24.15.0 || >=26.0.0; the repository tooling has its own Node 24 constraint.
 
-| 依赖 | 版本范围 |
-| --- | --- |
-| `react`、`react-dom` | `^19.3.0` |
-| `antd` | `^6.4.3` |
-| `react-router-dom` | `^7.18.3` |
-
-如果项目已安装这些依赖，只需执行 `pnpm add @w.ui/wui-react`。npm 和 yarn 项目也可以使用对应的安装命令。
-
-## 使用
-
-从根入口导入组件：
+## Usage
 
 ```tsx
+import OneTimePasscode from '@w.ui/wui-react/one-time-passcode'
 import '@w.ui/wui-react/style.css'
-import { OneTimePasscode, ColorfulText } from '@w.ui/wui-react'
 
-export function Example() {
-  return (
-    <>
-      <OneTimePasscode variant="compact" />
-      <ColorfulText text="Hello" />
-    </>
-  )
+export function CodeInput() {
+  return <OneTimePasscode length={6} onChange={(value) => console.log(value)} />
 }
 ```
 
-## 导入路径
+Named root imports are also available: `import { OneTimePasscode } from '@w.ui/wui-react'`. CommonJS consumers use `require('@w.ui/wui-react')`. Import the stylesheet once at your application entry.
 
-| 导入路径 | 内容 |
-| --- | --- |
-| `@w.ui/wui-react` | 聚合组件入口 |
-| `@w.ui/wui-react/core` | 核心组件 |
-| `@w.ui/wui-react/stateful` | 有状态组件 |
-| `@w.ui/wui-react/stateless` | 展示与交互组件 |
-| `@w.ui/wui-react/tracking` | 埋点 SDK |
-| `@w.ui/wui-react/style.css` | 组件样式 |
+## Public components
 
-按类别导入示例：
+| Export                     | Subpath             |
+| -------------------------- | ------------------- |
+| AnimatedIcon               | animated-icon       |
+| IconFrame                  | icon-frame          |
+| MoveChecker                | move-checker        |
+| OneTimePasscode            | one-time-passcode   |
+| OverflowText               | overflow-text       |
+| PortalTooltip              | portal-tooltip      |
+| ResponsiveTable / useTable | responsive-table    |
+| SafeHtml                   | safe-html           |
+| ScrollLayout               | scroll-layout       |
+| ScrollableSections         | scrollable-sections |
+| SliderCaptcha              | slider-captcha      |
+| WatermarkProvider          | watermark-provider  |
 
-```tsx
-import { KeepAlive } from '@w.ui/wui-react/core'
-import { TreeList } from '@w.ui/wui-react/stateful'
-import { TrackerCore } from '@w.ui/wui-react/tracking'
-import '@w.ui/wui-react/style.css'
-```
+Props types are exported from the root and corresponding subpaths. ResponsiveTable accepts a requestLib or fetchData integration; its default client does not inherit the admin application's authorization. SliderCaptcha is a UI challenge and requires server validation for security decisions. SafeHtml sanitizes content according to its implementation and props; review allowed content for your use case.
 
-按需选择一个入口即可；所有入口都提供 TypeScript 类型。使用需要路由、国际化或其他 React Context 的组件时，请在应用中提供相应的 Provider。
+MdxEditor, SmartVideoPlayer and InteractiveBook remain application components and are not package exports.
 
-## 本地构建产物接入
-
-在组件库仓库中运行 `pnpm run prepublishOnly`，生成并准备 `dist-lib/`。然后在消费项目中安装本地构建目录：
-
-```bash
-pnpm add /绝对路径/pro-react-admin/dist-lib
-```
-
-这适合发布前验证；日常接入应安装 npm registry 中发布的版本。
-
-## 组件和类型
-
-完整公开导出见下方导入路径表；库源码和各入口维护说明见[仓库组件导出文档](https://github.com/wkylin/pro-react-admin/blob/vite/docs/development/COMPONENT_EXPORTS.md)。
-
-本仓库的 Storybook、构建、本地验证和发布流程见[组件库指南](https://github.com/wkylin/pro-react-admin/blob/vite/docs/build/COMPONENT_LIBRARY.md)。
+Source, Storybook and development documentation: [GitHub](https://github.com/wkylin/pro-react-admin). Build and publishing instructions: [release guide](https://github.com/wkylin/pro-react-admin/blob/main/docs/LIBRARY_PUBLISH_GUIDE.md). Published package: [npm](https://www.npmjs.com/package/@w.ui/wui-react).

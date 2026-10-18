@@ -38,8 +38,8 @@ const Phase01: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
           <div
             style={{
               flex: 1,
-              background: 'white',
-              border: '1px solid #eee',
+              background: 'var(--wui-bg-elevated)',
+              border: '1px solid var(--wui-border)',
               borderRadius: '8px',
               padding: '10px',
               display: 'flex',
@@ -58,15 +58,19 @@ const Phase01: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
                   fontSize: '11px',
                   padding: '4px 8px',
                   borderRadius: '4px',
-                  borderLeft: '3px solid #ccc',
-                  background: '#fafafa',
+                  borderLeft: '3px solid var(--wui-border-strong)',
+                  background: 'var(--wui-bg-subtle)',
                   ...(idx === 0 && {
-                    borderLeftColor: '#0277bd',
+                    borderLeftColor: 'var(--wui-text-info)',
                     fontWeight: 700,
-                    color: '#0277bd',
-                    background: '#e1f5fe',
+                    color: 'var(--wui-text-info)',
+                    background: 'var(--wui-bg-info-subtle)',
                   }),
-                  ...(idx === 3 && { borderLeftColor: '#c62828', color: '#c62828', background: '#ffebee' }),
+                  ...(idx === 3 && {
+                    borderLeftColor: 'var(--wui-text-danger)',
+                    color: 'var(--wui-text-danger)',
+                    background: 'var(--wui-bg-danger-subtle)',
+                  }),
                 }}
               >
                 {item.split(' (')[0]} <span>{item.split(' ')[1]}</span>
@@ -84,12 +88,16 @@ const Phase01: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<
               style={{
                 fontSize: '10px',
                 padding: '4px 8px',
-                background: 'white',
-                border: '1px solid #e0e0e0',
+                background: 'var(--wui-bg-elevated)',
+                border: '1px solid var(--wui-border)',
                 borderRadius: '4px',
-                color: '#555',
+                color: 'var(--wui-text-secondary)',
                 fontWeight: 500,
-                ...(idx > 1 && { borderColor: '#2e7d32', color: '#2e7d32', background: '#e8f5e9' }),
+                ...(idx > 1 && {
+                  borderColor: 'var(--wui-text-success)',
+                  color: 'var(--wui-text-success)',
+                  background: 'var(--wui-bg-success-subtle)',
+                }),
               }}
             >
               {tag}

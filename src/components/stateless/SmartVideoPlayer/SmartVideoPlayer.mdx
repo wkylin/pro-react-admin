@@ -1,0 +1,20 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './SmartVideoPlayer.stories'
+
+<Meta of={Stories} />
+
+# SmartVideoPlayer
+
+应用内部播放器，provider 支持 html5/youtube/embed。HTML5 用 src，YouTube 用 youtubeId，嵌入用 embedUrl 或 getEmbedUrl。可传字幕 trackSrc/trackLang、标题及外部来源链接。
+
+initialConfig 设置初始配置，config/onConfigChange 提供受控配置；onError/onEvent 回调接收播放反馈。公开 ref 提供 play 与 playFromUserGesture。自动播放、全屏、画中画与跨域限制依赖浏览器和 provider，不能假定一致。
+
+当前不属于 @w.ui/wui-react 发布组件。
+
+## 预览
+
+<Canvas of={Stories.Html5Mp4} />
+
+## 当前参数
+
+<ArgTypes of={Stories} />

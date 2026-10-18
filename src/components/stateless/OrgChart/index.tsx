@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Segmented } from 'antd'
 import OrgChart from './org-chart'
 
 // 示例组织数据
@@ -55,6 +57,7 @@ const orgData = {
 }
 
 function OrgChartDemo() {
+  const [orientation, setOrientation] = useState<'vertical' | 'horizontal'>('vertical')
   // 自定义样式
   const customStyles = {
     currentBox: {
@@ -67,14 +70,26 @@ function OrgChartDemo() {
 
   return (
     <div className="chart-container">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+        <Segmented
+          aria-label="布局方向"
+          value={orientation}
+          options={[
+            { label: '纵向', value: 'vertical' },
+            { label: '横向', value: 'horizontal' },
+          ]}
+          onChange={(value) => setOrientation(value === 'horizontal' ? 'horizontal' : 'vertical')}
+        />
+      </div>
       <OrgChart
         data={orgData}
+        orientation={orientation}
         defaultExpanded={true}
         highlightOnHover={true}
         animated={true}
         rootNodeClassName="custom-root-node"
         expandIcon="▶"
-        collapseIcon="▼"
+        collapseIcon={orientation === 'horizontal' ? '◀' : '▼'}
         showExpandIcon={true}
         customStyles={customStyles}
       />

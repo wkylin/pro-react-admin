@@ -1,13 +1,4 @@
-const PUBLIC_ENV_KEYS = [
-  'APP_BASE_URL',
-  'DEPLOYED_ENV',
-  'IFRAME_ORIGIN',
-  'PROJECTB_STANDALONE_ORIGIN',
-  'REACT_APP_GITHUB_CLIENT_ID',
-  'REACT_APP_GITHUB_REDIRECT_URI',
-  'REACT_APP_USE_MOCK',
-  'SENTRY_DSN',
-]
+import { clientEnvKeys } from './client-env.js'
 
 /**
  * Build the explicit environment surface that may be embedded in browser code.
@@ -19,11 +10,11 @@ const PUBLIC_ENV_KEYS = [
  */
 export function createPublicEnv({ mode, project, source = {} }) {
   const result = {
-    NODE_ENV: mode,
+    NODE_ENV: source.NODE_ENV || (mode === 'production' ? 'production' : 'development'),
     PROJECT: project,
   }
 
-  for (const key of PUBLIC_ENV_KEYS) {
+  for (const key of clientEnvKeys) {
     const value = source[key]
     if (value !== undefined) result[key] = value
   }

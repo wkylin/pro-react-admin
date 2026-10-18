@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import * as echarts from 'echarts'
-import { EChartsType } from 'echarts'
+import type { EChartsType } from 'echarts'
 import china from '@assets/map/china.json'
-import { GeoJSONCompressed } from 'echarts/types/src/coord/geo/geoTypes.js'
+import type { GeoJSONCompressed } from 'echarts/types/src/coord/geo/geoTypes.js'
 import EChart, { type EChartHandle } from '../EChart'
 import useBigScreenChartsReinit from '@/components/hooks/useBigScreenChartsReinit'
 

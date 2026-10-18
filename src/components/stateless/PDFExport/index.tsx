@@ -1,5 +1,5 @@
 'use client'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useRef, useState, useCallback, useMemo } from 'react'
 import * as echarts from 'echarts'
 import html2canvas from 'html2canvas'
@@ -292,7 +292,7 @@ const PDFExportDemo: React.FC = () => {
             color: '#999',
           }}
         >
-          <Paragraph>本报告由React 19 + ECharts 6 + Ant Design 5技术栈生成</Paragraph>
+          <Paragraph>本报告由React 19 + ECharts 6 + Ant Design 6技术栈生成</Paragraph>
         </div>
       </div>
     </div>

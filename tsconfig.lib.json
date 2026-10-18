@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "outDir": "packages/wui-react/dist/types",
+    "rootDir": "packages/wui-react/src",
+    "stripInternal": true,
+    "strict": true
+  },
+  "include": ["packages/wui-react/src/**/*", "typings/**/*.d.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "packages/wui-react/dist",
+    "coverage",
+    "packages/wui-react/src/**/*.stories.*",
+    "packages/wui-react/src/**/*.test.*",
+    "packages/wui-react/src/**/*.spec.*"
+  ]
+}

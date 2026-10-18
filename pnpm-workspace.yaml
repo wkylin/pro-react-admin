@@ -1,6 +1,7 @@
 packages:
   - .
   - api
+  - packages/wui-react
 
 onlyBuiltDependencies:
   - '@sentry/cli'
@@ -14,6 +15,7 @@ onlyBuiltDependencies:
   - sonar-scanner
   - unrs-resolver
 allowBuilds:
+  '@parcel/watcher': false
   '@sentry/cli': true
   '@tsparticles/engine': true
   core-js: true
@@ -21,6 +23,7 @@ allowBuilds:
   electron: true
   es5-ext: true
   esbuild: true
+  node-pty: false
   sharp: true
   sonar-scanner: true
   unrs-resolver: true

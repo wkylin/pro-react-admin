@@ -1,8 +1,8 @@
 import React from 'react'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Alert, Button } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
-import { useProTabContext } from '@app-hooks/proTabsContext'
+import FixTabPanel from '@shared/ui/FixTabPanel'
+import { useProTabContext } from '@layouts/proTabs/context'
 
 const VueDemo = () => {
   const { activeKey, removeTab } = useProTabContext()

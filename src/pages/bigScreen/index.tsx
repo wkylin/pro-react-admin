@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react'
-import type { ComponentProps, ComponentType } from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
-import previewFitScale from '@utils/previewScale'
-import { useActivate } from '@/components/KeepAlive'
+import FixTabPanel from '@shared/ui/FixTabPanel'
+import previewFitScale from '@shared/lib/previewScale'
+import { useActivate } from '@platform/keep-alive'
 import { useLocation } from 'react-router-dom'
 import ChinaMap from './chinaMap'
 
@@ -25,8 +24,6 @@ type PreviewFitScale = (
 ) => PreviewScaleController
 
 const createPreviewScale = previewFitScale as PreviewFitScale
-const BigScreenFixTabPanel = FixTabPanel as ComponentType<ComponentProps<typeof FixTabPanel> & { fill?: boolean }>
-
 const BigScreen = () => {
   const scaleDom = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
@@ -72,11 +69,11 @@ const BigScreen = () => {
     }
   }, [pathname])
   return (
-    <BigScreenFixTabPanel fill={true}>
+    <FixTabPanel fill={true}>
       <section ref={scaleDom} style={{ height: '100%', width: '100%', transformOrigin: 'top left' }}>
         <ChinaMap />
       </section>
-    </BigScreenFixTabPanel>
+    </FixTabPanel>
   )
 }
 

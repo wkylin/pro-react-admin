@@ -149,7 +149,7 @@ const DynamicBackground = () => {
         </h1>
         <h3>
           with <span>React</span>, <span>Angular</span>, <span>Vue</span>, <span>Typescript</span>, <span>Redux</span>,{' '}
-          <span>Node</span>, <span>GraphQL</span>,<span>CSS</span>, <span>HTML</span>, <span>Webpack</span>,{' '}
+          <span>Node</span>, <span>GraphQL</span>,<span>CSS</span>, <span>HTML</span>, <span>Vite</span>,{' '}
           <span>Rollup</span>, <span>ESLint</span>, <span>Prettier</span>, <span>Stylelint</span>,<span>PostCSS</span>,{' '}
           <span>Styled Components</span>, <span>Emotion</span>, <span>Material UI</span>, <span>Ant Design</span>,{' '}
           <span>Bootstrap</span>, <span>Foundation</span>,<span>React Native</span>, <span>Flutter</span>,{' '}

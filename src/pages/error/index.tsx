@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Card, Typography, Row, Col } from 'antd'
-import { useStore } from '@/store'
-import FixTabPanel from '@stateless/FixTabPanel'
+import { useAppStore } from '@app/model'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const { Title, Paragraph, Text } = Typography
 
 const MyError = () => {
   const [shouldThrow, setShouldThrow] = useState(false)
-  const screens = useStore((s) => s.screens)
+  const screens = useAppStore((s) => s.screens)
 
   if (shouldThrow) {
     // 模拟一个渲染错误
@@ -20,7 +20,7 @@ const MyError = () => {
     <FixTabPanel>
       <div style={{ padding: screens.xs ? 16 : 24 }}>
         {/* 错误边界测试 */}
-        <Card title="错误边界测试" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+        <Card title="错误边界测试" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={16}>
               <Title level={4}>ErrorBoundary 测试页面</Title>

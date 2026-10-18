@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { motion, useAnimation } from 'framer-motion'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 
 const FloatingIcon = ({ children, initialX }) => {
   const [isClient, setIsClient] = useState(false)

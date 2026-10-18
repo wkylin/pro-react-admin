@@ -1,6 +1,6 @@
 'use client'
 
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 
 import React, { useState } from 'react'
 import { Check, Copy } from 'lucide-react'
@@ -9,8 +9,8 @@ import { useProThemeContext } from '@src/theme/hooks'
 import styles from './index.module.less'
 
 const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage = 'bash', commandMap, className }) => {
-  const { themeSettings } = useProThemeContext()
-  const isDark = themeSettings.themeMode === 'dark'
+  const { resolvedTheme } = useProThemeContext()
+  const isDark = resolvedTheme === 'dark'
 
   const packageManagers = Object.keys(commandMap)
   const [packageManager, setPackageManager] = useState(packageManagers[0])

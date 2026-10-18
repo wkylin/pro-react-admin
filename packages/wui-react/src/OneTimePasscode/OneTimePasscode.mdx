@@ -1,0 +1,20 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './OneTimePasscode.stories'
+
+<Meta of={Stories} />
+
+# OneTimePasscode
+
+OTP/PIN 输入组件，length 默认 6。value/onChange 控制输入，也可不传 value 使用内部状态；支持 autoFocus、disabled、validateChar、className 与 inputClassName。
+
+variant 支持 modern/compact/classic。validateChar 对单字符校验，数字示例为 `(ch) => ch === '' || /^[0-9]$/.test(ch)`。组件只管理输入，不验证一次性密码的有效性；校验由业务服务完成。
+
+安装后从 @w.ui/wui-react/one-time-passcode 导入，并导入 style.css。
+
+## 预览
+
+<Canvas of={Stories.Modern} />
+
+## 当前参数
+
+<ArgTypes of={Stories} />

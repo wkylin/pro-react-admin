@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
     /* 基础选项 */
     "target": "ES2022",
@@ -19,24 +20,6 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-
-    /* 路径别名（与你的 vite.config.ts 保持一致） */
-    "paths": {
-      "@/*": ["./src/*"],
-      "@src/*": ["./src/*"],
-      "@app": ["./src"],
-      "@app/*": ["./src/*"],
-      "@stateless/*": ["./src/components/stateless/*"],
-      "@stateful/*": ["./src/components/stateful/*"],
-      "@hooks/*": ["./src/components/hooks/*"],
-      "@app-hooks/*": ["./src/app-hooks/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@routers": ["./src/routers/index"],
-      "@routers/*": ["./src/routers/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@theme/*": ["./src/theme/*"]
-    },
 
     /* 其他推荐选项 */
     "resolveJsonModule": true,

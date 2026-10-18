@@ -2,9 +2,11 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './tests/e2e',
+  testIgnore: ['**/mfe-remote.spec.ts', '**/enterprise.spec.ts', '**/enterprise-api.spec.ts'],
   timeout: 30_000,
   expect: { timeout: 10_000 },
   fullyParallel: true,
+  outputDir: './test-results/default',
   reporter: [['list'], ['html', { outputFolder: 'playwright-report' }]],
   use: {
     headless: true,
@@ -16,10 +18,10 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'npx serve -s dist -l 5000',
+    command: 'node scripts/dist-tools.mjs serve --port 5000',
     url: 'http://localhost:5000',
     timeout: 60_000,
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
   },
   projects: [
     {
@@ -27,5 +29,4 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  setupFilesAfterEnv: ['./tests/e2e/setup.ts'],
 })

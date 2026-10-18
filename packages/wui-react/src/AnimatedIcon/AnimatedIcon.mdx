@@ -1,0 +1,18 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './AnimatedIcon.stories'
+
+<Meta of={Stories} />
+
+# AnimatedIcon
+
+轻量图标动画包装组件，公开类型是 AnimatedIconProps、AnimatedIconVariant、AnimatedIconMode。variant 支持 spin/pulse/bounce/draw，mode 支持 hover/auto/idle，默认 hover；children 需要单个 ReactElement。
+
+动画尊重 prefers-reduced-motion。装饰图标设置 aria-hidden，交互按钮仍需可访问名称。安装后从 @w.ui/wui-react/animated-icon 导入，并在应用入口导入 style.css。
+
+## 预览
+
+<Canvas of={Stories.Playground} />
+
+## 当前参数
+
+<ArgTypes of={Stories} />

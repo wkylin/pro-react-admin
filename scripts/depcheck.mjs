@@ -25,8 +25,8 @@ const readPackageJson = () => {
 
 const pkg = readPackageJson()
 
-// depcheck doesn't reliably detect dependencies that are only used in package scripts.
-// Build a set of package names referenced in scripts, Husky, and lint-staged commands.
+// depcheck doesn't reliably detect dependencies that are only used in npm scripts.
+// Build a set of package names referenced in scripts/husky/lint-staged commands.
 const buildScriptDeps = () => {
   const scriptDeps = new Set()
   if (!pkg) return scriptDeps
@@ -49,6 +49,7 @@ const buildScriptDeps = () => {
   const text = buckets.filter((x) => typeof x === 'string').join('\n')
   if (!text) return scriptDeps
 
+  // Some CLIs are invoked via a different package name than the underlying dependency.
   const implied = new Set()
   // If we run Jest, TypeScript needs its globals (describe/test/expect/jest).
   if (/(^|\s)jest(\s|$)/m.test(text)) implied.add('@types/jest')
@@ -85,7 +86,7 @@ const walkFiles = (dir, out, depth = 0) => {
   for (const ent of entries) {
     const full = path.join(dir, ent.name)
     if (ent.isDirectory()) {
-      if (ent.name === 'node_modules' || ent.name === 'dist' || ent.name === 'dist-lib') continue
+      if (ent.name === 'node_modules' || ent.name === 'dist') continue
       walkFiles(full, out, depth + 1)
     } else if (ent.isFile()) {
       out.push(full)
@@ -114,17 +115,16 @@ const buildConfigDeps = () => {
 
   const files = []
   // Common config entry points
-  files.push(path.join(cwd, 'babel.config.js'))
-  files.push(path.join(cwd, 'jest.config.cjs'))
-  files.push(path.join(cwd, 'eslint.config.mjs'))
   files.push(path.join(cwd, 'vite.config.ts'))
   files.push(path.join(cwd, 'vite.config.lib.ts'))
-  files.push(path.join(cwd, 'vite.config.lib.entries.ts'))
-  files.push(path.join(cwd, 'build/module-federation.ts'))
+  files.push(path.join(cwd, 'jest.config.cjs'))
+  files.push(path.join(cwd, 'eslint.config.js'))
+  files.push(path.join(cwd, 'tsconfig.lib.json'))
   files.push(path.join(cwd, 'postcss.config.js'))
 
   // Directories with build/storybook config
   walkFiles(path.join(cwd, '.storybook'), files)
+  walkFiles(path.join(cwd, 'build'), files)
   walkFiles(path.join(cwd, 'scripts'), files)
 
   const text = files
@@ -137,29 +137,9 @@ const buildConfigDeps = () => {
 
   const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-  // Babel allows shorthand plugin/preset names in config.
-  // Example: 'transform-remove-console' refers to 'babel-plugin-transform-remove-console'.
-  const buildNameVariants = (name) => {
-    const variants = new Set([name])
-
-    if (name.startsWith('babel-plugin-')) variants.add(name.slice('babel-plugin-'.length))
-    if (name.startsWith('babel-preset-')) variants.add(name.slice('babel-preset-'.length))
-
-    if (name.startsWith('@babel/plugin-')) variants.add(name.slice('@babel/plugin-'.length))
-    if (name.startsWith('@babel/preset-')) variants.add(name.slice('@babel/preset-'.length))
-
-    return [...variants]
-  }
-
   for (const name of depNames) {
-    const variants = buildNameVariants(name)
-    for (const v of variants) {
-      const re = new RegExp(`(^|[^\\w@/-])${escapeRe(v)}(?=($|[^\\w@/-]))`, 'm')
-      if (re.test(text)) {
-        configDeps.add(name)
-        break
-      }
-    }
+    const re = new RegExp(`(^|[^\\w@/-])${escapeRe(name)}(?=($|[^\\w@/-]))`, 'm')
+    if (re.test(text)) configDeps.add(name)
   }
 
   return configDeps
@@ -169,18 +149,10 @@ const configDeps = buildConfigDeps()
 const usedByMeta = new Set([...scriptDeps, ...configDeps])
 
 const pnpmStrictResolutionDeps = new Set([
-  '@babel/runtime',
   '@mermaid-js/parser',
   '@rc-component/input',
   '@rc-component/notification',
   '@rc-component/util',
-  '@sentry-internal/browser-utils',
-  '@sentry-internal/feedback',
-  '@sentry-internal/replay',
-  '@sentry-internal/replay-canvas',
-  '@sentry/browser',
-  '@sentry/core',
-  '@sentry/tracing',
   '@tiptap/extension-table-cell',
   '@tiptap/extension-table-header',
   '@tiptap/extension-table-row',
@@ -245,8 +217,6 @@ const toolingConventionDeps = new Set([
   '@eslint/compat',
   '@eslint/eslintrc',
   '@storybook/builder-vite',
-  '@storybook/csf-plugin',
-  'babel-plugin-transform-remove-debugger',
   'eslint-plugin-prettier',
   'eslint-plugin-promise',
   'jest-environment-jsdom',
@@ -266,26 +236,10 @@ const report = await new Promise((resolve, reject) => {
   depcheck(
     cwd,
     {
-      ignoreDirs: [
-        'node_modules',
-        'dist',
-        'dist-lib',
-        'dist-pages',
-        'dist-shell',
-        'dist-projectA',
-        'dist-projectB',
-        'dist-mf-projectA',
-        'dist-mf-projectB',
-        'dist-vercel',
-        'storybook-static',
-        'coverage',
-        'playwright-report',
-        'test-results',
-      ],
+      ignoreDirs: ['node_modules', 'dist', 'storybook-static', 'coverage', 'playwright-report', 'test-results'],
       // Avoid the ttypescript special (it reads tsconfig.json as strict JSON and can fail on JSONC).
       specials: [
         depcheck.special.bin,
-        depcheck.special.babel,
         depcheck.special.eslint,
         depcheck.special.jest,
         depcheck.special.husky,
@@ -305,9 +259,11 @@ const ignoreMissingPrefixes = [
   '@stateless/',
   '@stateful/',
   '@hooks/',
-  '@utils/',
   '@assets/',
-  '@app-hooks/',
+  '@platform/',
+  '@shared/',
+  '@features/',
+  '@wui/',
   '@theme/',
 ]
 

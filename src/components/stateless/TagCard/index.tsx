@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { Button, theme } from 'antd'
@@ -45,9 +45,9 @@ const DARK_PALETTE = {
 
 const TagCard = ({ tagCardList = [], showMax = Infinity }) => {
   const [isExpanded, setIsExpanded] = useState(false)
-  const { themeSettings } = useProThemeContext()
+  const { resolvedTheme } = useProThemeContext()
   const { token } = theme.useToken()
-  const isDarkMode = themeSettings.themeMode === 'dark'
+  const isDarkMode = resolvedTheme === 'dark'
 
   const visibleCardList = React.useMemo(() => tagCardList.slice(0, showMax), [tagCardList, showMax])
 

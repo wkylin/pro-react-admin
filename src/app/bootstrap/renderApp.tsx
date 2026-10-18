@@ -1,0 +1,167 @@
+import { StrictMode, Suspense, useEffect, useState, type ReactNode } from 'react'
+import ReactDOM from 'react-dom/client'
+import { I18nextProvider } from 'react-i18next'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/react'
+import { App as AntdApp } from 'antd'
+import ErrorBoundary from '@/platform/errors/ErrorBoundary'
+import GlobalBreakpointListener from '@app/bootstrap/providers/GlobalBreakpointListener'
+import { AppStoreProvider, createAppStore } from '@app/model'
+import SessionScope from './SessionScope'
+import i18n from '@/i18n/i18n'
+
+const isLocalhostRuntime = () => {
+  try {
+    const host = window.location.hostname
+    return host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0'
+  } catch {
+    return false
+  }
+}
+
+const isLikelyJavaScriptResponse = (contentType: string | null) => {
+  if (!contentType) return false
+  const ct = contentType.toLowerCase()
+  if (ct.includes('text/html')) return false
+  return ct.includes('javascript') || ct.includes('ecmascript')
+}
+
+const canUseVercelInsights = async () => {
+  try {
+    const res = await fetch('/_vercel/insights/script.js', {
+      method: 'GET',
+      cache: 'no-store',
+    })
+    if (!res.ok) return false
+    return isLikelyJavaScriptResponse(res.headers.get('content-type'))
+  } catch {
+    return false
+  }
+}
+
+const getSentryTraceSampleRate = () => {
+  const value = Number(process.env.SENTRY_TRACES_SAMPLE_RATE)
+  return Number.isFinite(value) && value >= 0 && value <= 1 ? value : 0.1
+}
+
+const isSentryDisabledByUser = () => {
+  try {
+    return localStorage.getItem('SENTRY_DISABLE') === '1'
+  } catch {
+    return false
+  }
+}
+
+const VercelInsights = () => {
+  const [enabled, setEnabled] = useState(false)
+
+  useEffect(() => {
+    if (process.env.NODE_ENV !== 'production') return
+    let cancelled = false
+    void (async () => {
+      const ok = await canUseVercelInsights()
+      if (!cancelled) setEnabled(ok)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  if (!enabled) return null
+  return (
+    <>
+      <Analytics />
+      <SpeedInsights />
+    </>
+  )
+}
+
+export type RenderAppOptions = {
+  element?: HTMLElement | null
+  identifierPrefix?: string
+  children: ReactNode
+  projectId?: string
+}
+
+export function renderApp(options: RenderAppOptions) {
+  const {
+    element = document.getElementById('root'),
+    identifierPrefix = 'wui',
+    projectId = 'default',
+    children,
+  } = options
+
+  const sentryDsn = process.env.SENTRY_DSN
+  const shouldEnableSentry =
+    process.env.NODE_ENV === 'production' && !!sentryDsn && !isLocalhostRuntime() && !isSentryDisabledByUser()
+
+  if (shouldEnableSentry) {
+    const replayEnabled = process.env.SENTRY_ENABLE_REPLAY === 'true'
+    const collectDefaultPii = process.env.SENTRY_SEND_DEFAULT_PII === 'true'
+    void import('@sentry/react')
+      .then((Sentry) =>
+        Sentry.init({
+          dsn: sentryDsn,
+          dataCollection: collectDefaultPii
+            ? {}
+            : {
+                userInfo: false,
+                cookies: false,
+                httpHeaders: false,
+                httpBodies: [],
+                urlQueryParams: false,
+                graphQL: { document: false, variables: false },
+                genAI: { inputs: false, outputs: false },
+                databaseQueryData: false,
+                queues: false,
+                stackFrameVariables: false,
+              },
+          integrations: [Sentry.browserTracingIntegration(), ...(replayEnabled ? [Sentry.replayIntegration()] : [])],
+          tracesSampleRate: getSentryTraceSampleRate(),
+          tracePropagationTargets: [/^https:\/\/wkylin\.sentry\.io\/api/],
+          replaysSessionSampleRate: replayEnabled ? 0.1 : 0,
+          replaysOnErrorSampleRate: replayEnabled ? 1.0 : 0,
+        })
+      )
+      .catch((error: unknown) => console.warn('Observability initialization failed', error))
+  }
+
+  if (!element) {
+    throw new Error('renderApp: #root element not found')
+  }
+
+  const root = ReactDOM.createRoot(element as HTMLDivElement, {
+    onCaughtError: (error) => {
+      console.log('caught error', error)
+    },
+    onUncaughtError: (error) => {
+      console.log('uncaught error', error)
+    },
+    onRecoverableError: (error) => {
+      console.log('recoverable error', error)
+    },
+    identifierPrefix,
+  })
+  const store = createAppStore(projectId)
+
+  root.render(
+    <StrictMode>
+      <AppStoreProvider projectId={projectId} store={store}>
+        <SessionScope>
+          <AntdApp>
+            <I18nextProvider i18n={i18n}>
+              <GlobalBreakpointListener />
+              <ErrorBoundary>
+                <Suspense fallback={<div>Loading...</div>}>
+                  {children}
+                  <VercelInsights />
+                </Suspense>
+              </ErrorBoundary>
+            </I18nextProvider>
+          </AntdApp>
+        </SessionScope>
+      </AppStoreProvider>
+    </StrictMode>
+  )
+  return { root, store, unmount: () => root.unmount() }
+}

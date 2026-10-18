@@ -1,4 +1,4 @@
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/prism'
 import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 

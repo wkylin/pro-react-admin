@@ -1,4 +1,8 @@
 node_modules
+api/node_modules
+api/data
+.vercel
+dist*
 npm-debug.log
 .yarn
 .pnpm-debug.log
@@ -6,8 +10,12 @@ npm-debug.log
 .env.*
 .git
 coverage
-dist
 .vscode
 .DS_Store
 .idea
 *.local
+storybook-static
+playwright-report
+playwright-mfe-report
+playwright-enterprise-report
+test-results

@@ -1,7 +1,7 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
-import { useState, type ChangeEvent, type ComponentType, type FormEvent, type PropsWithChildren } from 'react'
+import AnimatedIcon from '@wui/AnimatedIcon'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { theme } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import { Send } from 'lucide-react'
 
 type ContactFormData = {
@@ -12,8 +12,6 @@ type ContactFormData = {
 }
 
 type ContactFormErrors = Partial<Record<keyof ContactFormData, string>>
-
-const ContactFixTabPanel = FixTabPanel as ComponentType<PropsWithChildren>
 
 const Contact = () => {
   const [formData, setFormData] = useState<ContactFormData>({
@@ -113,11 +111,10 @@ const Contact = () => {
   } = theme.useToken()
 
   return (
-    <ContactFixTabPanel>
+    <FixTabPanel>
       <div
         className="code-window relative flex h-full items-center justify-center"
         style={{
-          minHeight: '100vh',
           padding: '24px 8px',
           backgroundColor: colorBgContainer,
         }}
@@ -148,8 +145,10 @@ const Contact = () => {
                   name="name"
                   placeholder="Your Name"
                   className={`w-full rounded-xl border px-4 py-3 ${
-                    errors.name ? 'border-red-500' : 'border-gray-300/50 bg-white/30'
-                  } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
+                    errors.name
+                      ? 'border-red-500 dark:border-red-500'
+                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
+                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
                   value={formData.name}
                   onChange={handleInputChange}
                 />
@@ -162,8 +161,10 @@ const Contact = () => {
                   name="email"
                   placeholder="Your Email"
                   className={`w-full rounded-xl border px-4 py-3 ${
-                    errors.email ? 'border-red-500' : 'border-gray-300/50 bg-white/30 text-gray-800'
-                  } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
+                    errors.email
+                      ? 'border-red-500 dark:border-red-500'
+                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
+                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
                   value={formData.email}
                   onChange={handleInputChange}
                 />
@@ -176,8 +177,10 @@ const Contact = () => {
                   name="subject"
                   placeholder="Subject"
                   className={`w-full rounded-xl border px-4 py-3 ${
-                    errors.subject ? 'border-red-500' : 'border-gray-300/50 bg-white/30 text-gray-800'
-                  } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
+                    errors.subject
+                      ? 'border-red-500 dark:border-red-500'
+                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
+                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
                   value={formData.subject}
                   onChange={handleInputChange}
                 />
@@ -190,8 +193,10 @@ const Contact = () => {
                   placeholder="Your Message"
                   rows={4}
                   className={`w-full resize-none rounded-xl border px-4 py-3 ${
-                    errors.message ? 'border-red-500' : 'border-gray-300/50 bg-white/30 text-gray-800'
-                  } backdrop-blur-sm transition-colors focus:border-blue-500 focus:outline-none`}
+                    errors.message
+                      ? 'border-red-500 dark:border-red-500'
+                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
+                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
                   value={formData.message}
                   onChange={handleInputChange}
                 ></textarea>
@@ -222,7 +227,7 @@ const Contact = () => {
           )}
         </div>
       </div>
-    </ContactFixTabPanel>
+    </FixTabPanel>
   )
 }
 

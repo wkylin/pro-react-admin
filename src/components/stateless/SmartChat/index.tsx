@@ -524,7 +524,7 @@ function SmartChat({
         </Space>
       </div>
 
-      {errorMessage ? <Alert className={styles.alert} type="error" showIcon message={errorMessage} /> : null}
+      {errorMessage ? <Alert className={styles.alert} type="error" showIcon title={errorMessage} /> : null}
 
       <div className={styles.messageList} ref={listRef}>
         {messages.length === 0 ? (

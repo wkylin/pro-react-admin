@@ -1,7 +1,6 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useState } from 'react'
-import type { ForwardRefExoticComponent, HTMLAttributes, ReactNode, RefAttributes } from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import CryptoJS, { AES, enc } from 'crypto-js'
 import JSEncrypt from 'jsencrypt'
 import { Card, Tabs, Input, Button, Space, Typography, Row, Col, Divider, Alert, theme, Select, App } from 'antd'
@@ -13,11 +12,10 @@ import {
   ApiOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons'
-import request from '@src/service/request'
+import request from '@platform/api/request'
 
 const { TextArea } = Input
 const { Title, Text, Paragraph } = Typography
-const { Option } = Select
 
 type EncryptionStatus = {
   enabled: boolean
@@ -25,10 +23,6 @@ type EncryptionStatus = {
   encryptRequest: boolean
   encryptResponse: boolean
 }
-
-const TypedFixTabPanel = FixTabPanel as ForwardRefExoticComponent<
-  HTMLAttributes<HTMLDivElement> & { children?: ReactNode } & RefAttributes<HTMLDivElement>
->
 
 const getErrorMessage = (error: unknown) => (error instanceof Error ? error.message : String(error))
 
@@ -496,11 +490,16 @@ const APIEncryptionPanel = () => {
             <Space orientation="vertical" style={{ width: '100%' }} size="middle">
               <div>
                 <Text strong>1. 选择加密模式</Text>
-                <Select value={encryptMode} onChange={setEncryptMode} style={{ width: '100%', marginTop: 8 }}>
-                  <Option value="AES">AES 对称加密（高性能）</Option>
-                  <Option value="RSA">RSA 非对称加密（高安全）</Option>
-                  <Option value="HYBRID">混合加密（推荐）</Option>
-                </Select>
+                <Select
+                  value={encryptMode}
+                  onChange={setEncryptMode}
+                  style={{ width: '100%', marginTop: 8 }}
+                  options={[
+                    { value: 'AES', label: 'AES 对称加密（高性能）' },
+                    { value: 'RSA', label: 'RSA 非对称加密（高安全）' },
+                    { value: 'HYBRID', label: '混合加密（推荐）' },
+                  ]}
+                />
               </div>
 
               {(encryptMode === 'AES' || encryptMode === 'HYBRID') && (
@@ -654,11 +653,11 @@ const APIEncryptionPanel = () => {
           <Text>
             <Text strong>4. 代码示例:</Text>
             <Text code style={{ display: 'block', marginTop: 4, padding: 8, background: token.colorFillAlter }}>
-              {`// 在应用入口配置\nimport request from '@src/service/request'\nrequest.configureHybrid(PUBLIC_KEY)\nrequest.setEncryptResponse(false)\n\n// 之后所有请求自动加密\nconst data = await request.post('/api/login', credentials)`}
+              {`// 在应用入口配置\nimport request from '@platform/api/request'\nrequest.configureHybrid(PUBLIC_KEY, PRIVATE_KEY)\n\n// 之后所有请求自动加密\nconst data = await request.post('/api/login', credentials)`}
             </Text>
           </Text>
           <Text type="secondary" style={{ fontSize: 12 }}>
-            💡 提示: 完整文档请查看 <Text code>docs/development/REQUEST_ENCRYPTION.md</Text>
+            💡 提示: 完整文档请查看 <Text code>docs/REQUEST_ENCRYPTION.md</Text>
           </Text>
         </Space>
       </Card>
@@ -707,7 +706,7 @@ const MyCrypto = () => {
   ]
 
   return (
-    <TypedFixTabPanel>
+    <FixTabPanel>
       <App>
         <Card variant="borderless" style={{ minHeight: '100%' }}>
           <Title level={3}>加密算法实验室</Title>
@@ -718,7 +717,7 @@ const MyCrypto = () => {
           <Tabs defaultActiveKey="aes" items={items} type="card" animated={{ inkBar: true, tabPane: false }} />
         </Card>
       </App>
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

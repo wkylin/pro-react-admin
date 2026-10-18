@@ -7,9 +7,17 @@ interface RadioInputProps {
   text?: string
   checked?: boolean
   type?: 'radio' | 'checkbox'
+  className?: string
+  wrapText?: boolean
 }
 
-const RadioInput = ({ text = '单选', checked = false, type = 'radio' }: RadioInputProps) => {
+const RadioInput = ({
+  text = '单选',
+  checked = false,
+  type = 'radio',
+  className,
+  wrapText = false,
+}: RadioInputProps) => {
   const { token } = theme.useToken()
   const isChecked = checked
 
@@ -22,7 +30,7 @@ const RadioInput = ({ text = '单选', checked = false, type = 'radio' }: RadioI
   }
 
   return (
-    <div className={styles.radioContainer} style={cssVars}>
+    <div className={clsx(styles.radioContainer, { [styles.wrapText]: wrapText }, className)} style={cssVars}>
       <span
         className={clsx(styles.indicator, {
           [styles.checked]: isChecked,

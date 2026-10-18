@@ -3,21 +3,29 @@
 /dist
 /dist-projectA
 /dist-projectB
-/dist-mf-projectA
-/dist-mf-projectB
 /dist-projectC
 /dist-shell
 /dist-vercel
-/node_modules
+/dist-mf-projectA
+/dist-mf-projectB
+/dist-pages
+node_modules/
 /.eslintcache
 tsconfig.tsbuildinfo
+build-stats.json
+build-*-stats.json
 compilation-stats.json
+compilation-*-stats.json
+/.mf/
+/dist-*/
+/artifacts/
 .yarn/cache
 /packagehash.txt
 src/assets-optimized/
 public-optimized/
 public/bit
 api/node_modules
+/api/data/
 stats.html
 /.scannerwork
 # 忽略测试覆盖率输出
@@ -25,17 +33,24 @@ coverage
 # 忽略本地 env
 .env
 .env.local
+.env.dev.local
 .env.development.local
 .env.production.local
+.env.enterprise.production.local
+.env.test.local
+/docs/LOCAL_PREVIEW.local.md
 
 *storybook.log
 storybook-static
 .vite-cache
-/.mf/
-/dist-lib
-/dist-pages
+/packages/wui-react/dist/
+/packages/wui-react/README.md
+/packages/wui-react/LICENSE
 /dist-zip
 /playwright-report
+/playwright-enterprise-report
+/playwright-enterprise-api-report
+/playwright-mfe-report
 /test-results
 
 # 一次性报告输出（避免误提交）
@@ -52,3 +67,6 @@ storybook-static
 # 防止 Windows NUL 文件被误提交
 nul
 NUL
+
+# Vercel 项目关联、环境变量与本地构建产物
+/.vercel/

@@ -14,6 +14,9 @@ type VideoSource =
 
 interface VideoOptions {
   autoplay?: boolean | 'play' | 'muted' | 'any'
+  controls?: boolean
+  fluid?: boolean
+  poster?: string
   sources?: VideoSource[]
 }
 
@@ -57,6 +60,9 @@ export const VideoJS = Object.assign(
 
         player.autoplay(options.autoplay)
         player.src(options.sources)
+        if (options.controls !== undefined) player.controls(options.controls)
+        if (options.fluid !== undefined) player.fluid(options.fluid)
+        if (options.poster !== undefined) player.poster(options.poster)
       }
     }, [options, videoRef])
 
@@ -81,6 +87,9 @@ export const VideoJS = Object.assign(
     propTypes: {
       options: PropTypes.shape({
         autoplay: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['play', 'muted', 'any'])]),
+        controls: PropTypes.bool,
+        fluid: PropTypes.bool,
+        poster: PropTypes.string,
         sources: PropTypes.arrayOf(
           PropTypes.oneOfType([
             PropTypes.string,

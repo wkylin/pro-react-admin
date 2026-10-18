@@ -1,11 +1,12 @@
 import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
-import { emitMfeEvent, patchMfeSharedState } from '@/mfe/bridge'
+import { emitMfeEvent, patchMfeSharedState, type MfeSharedMessage } from '@platform/mfe/bridge'
+import RemoteScope from '@app/bootstrap/RemoteScope'
 
 const { Paragraph, Text } = Typography
 
-export default function ProjectARemoteApp() {
+function ProjectARemoteContent() {
   return (
     <PageContainer title="ProjectA (Remote)" footer={<span></span>}>
       <Card>
@@ -34,18 +35,14 @@ export default function ProjectARemoteApp() {
             <Button onClick={() => emitMfeEvent('mfe:ping', { from: 'projectA', at: Date.now() })}>Ping Host</Button>
             <Button
               type="primary"
-              onClick={() =>
-                patchMfeSharedState(
-                  {
-                    lastMessage: {
-                      from: 'projectA',
-                      at: Date.now(),
-                      text: `hello projectB: ${Math.random().toString(16).slice(2)}`,
-                    },
-                  },
-                  'projectA'
-                )
-              }
+              onClick={() => {
+                const lastMessage: MfeSharedMessage = {
+                  from: 'projectA',
+                  at: Date.now(),
+                  text: `hello projectB: ${Math.random().toString(16).slice(2)}`,
+                }
+                patchMfeSharedState({ lastMessage }, 'projectA')
+              }}
             >
               写共享状态（给 ProjectB 看）
             </Button>
@@ -53,5 +50,13 @@ export default function ProjectARemoteApp() {
         </Space>
       </Card>
     </PageContainer>
+  )
+}
+
+export default function ProjectARemoteApp() {
+  return (
+    <RemoteScope projectId="projectA">
+      <ProjectARemoteContent />
+    </RemoteScope>
   )
 }

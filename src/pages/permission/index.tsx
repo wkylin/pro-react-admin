@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
-import { Card, Button, Space, Tag, message, Divider, Row, Col, Switch, Alert } from 'antd'
-import { useStore } from '@/store'
-import { usePermission } from '@app-hooks/usePermission'
-import PermissionGuard from '@/components/auth/PermissionGuard'
-import AuthButton from '@/components/auth/AuthButton'
-import { permissionService } from '@src/service/permissionService'
-import FixTabPanel from '@stateless/FixTabPanel'
+import { Card, Button, Space, Tag, Divider, Row, Col, Switch, Alert } from 'antd'
+import { message } from '@platform/feedback/message'
+import { useAppStore } from '@app/model'
+import { usePermission } from '@platform/auth/hooks/usePermission'
+import PermissionGuard from '@platform/auth/components/PermissionGuard'
+import AuthButton from '@platform/auth/components/AuthButton'
+import { permissionService } from '@platform/auth/services/permissionService'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const PermissionExample = () => {
-  const screens = useStore((s) => s.screens)
+  const screens = useAppStore((s) => s.screens)
   const {
     permissions,
     roles,
@@ -84,7 +85,7 @@ const PermissionExample = () => {
           localStorage.getItem('github_user')) &&
           !forceDemoSwitch && (
             <Alert
-              message="已使用登录账户权限，示例切换已禁用"
+              title="已使用登录账户权限，示例切换已禁用"
               description={
                 <div>
                   如需临时启用示例切换（仅用于开发），可在下方启用“开发强制开关”。启用后示例切换会覆盖当前页面权限视图，但不会修改后端用户数据。
@@ -107,18 +108,18 @@ const PermissionExample = () => {
             }}
           >
             <Switch checked={forceDemoSwitch} onChange={toggleForceDemoSwitch} />
-            <span style={{ color: 'rgba(0,0,0,0.65)' }}>开发：强制启用示例切换（仅页面级别）</span>
+            <span style={{ color: 'var(--wui-text-secondary)' }}>开发：强制启用示例切换（仅页面级别）</span>
           </div>
         )}
 
         {/* 权限说明 */}
-        <Card title="权限说明" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+        <Card title="权限说明" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
           <Row gutter={[16, 8]}>
             <Col xs={24} sm={12} lg={6}>
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -131,7 +132,7 @@ const PermissionExample = () => {
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -144,7 +145,7 @@ const PermissionExample = () => {
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -157,7 +158,7 @@ const PermissionExample = () => {
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -204,7 +205,7 @@ const PermissionExample = () => {
         </Card>
 
         {/* 角色切换 */}
-        <Card title="角色列表" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+        <Card title="角色列表" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
           <Row gutter={[16, 16]}>
             {[
               {
@@ -239,7 +240,7 @@ const PermissionExample = () => {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     padding: '8px',
-                    border: '1px solid #f0f0f0',
+                    border: '1px solid var(--wui-border)',
                     borderRadius: '4px',
                   }}
                 >
@@ -277,13 +278,13 @@ const PermissionExample = () => {
         </Card>
 
         {/* 权限组件示例 */}
-        <Card title="PermissionGuard 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+        <Card title="PermissionGuard 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={8}>
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -298,7 +299,7 @@ const PermissionExample = () => {
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -316,7 +317,7 @@ const PermissionExample = () => {
               <div
                 style={{
                   padding: '8px',
-                  border: '1px solid #f0f0f0',
+                  border: '1px solid var(--wui-border)',
                   borderRadius: '4px',
                 }}
               >
@@ -334,7 +335,7 @@ const PermissionExample = () => {
         </Card>
 
         {/* 按钮权限示例 */}
-        <Card title="AuthButton 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+        <Card title="AuthButton 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
           <Row gutter={[8, 8]}>
             <Col xs={24} sm={8}>
               <AuthButton permission="user:create" onClick={() => message.success('创建用户')} block>
@@ -364,7 +365,7 @@ const PermissionExample = () => {
         </Card>
 
         {/* Hook 检查示例 */}
-        <Card title="usePermission Hook 检查" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'default'}>
+        <Card title="usePermission Hook 检查" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
           <Row gutter={[8, 8]}>
             <Col xs={24} sm={12} md={6}>
               <Button
@@ -425,7 +426,7 @@ const PermissionExample = () => {
         </Card>
 
         {/* 刷新权限 */}
-        <Card title="权限操作" size={screens.xs ? 'small' : 'default'}>
+        <Card title="权限操作" size={screens.xs ? 'small' : 'medium'}>
           <Button onClick={refreshPermissions} block={!!screens.xs}>
             刷新权限
           </Button>

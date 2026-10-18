@@ -1,0 +1,20 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './ResponsiveTable.stories'
+
+<Meta of={Stories} />
+
+# ResponsiveTable
+
+基于 Ant Design Table 的容器自适应表格，公开入口同时导出 useTable 与请求/分页类型。支持本地 dataSource、远程 fetchUrl 或 fetchData，以及 requestLib 注入。
+
+远程请求默认客户端属于组件包，不共享管理应用的 token 与拦截器。autoLoad 默认 false；响应映射默认 data/total，请求映射默认 page/pageSize/sort/order。业务校验、取消和授权应由注入的请求层定义。
+
+pageSyncToUrl 默认 false，selectionMode 支持 multiple/single/none。完整接入说明见仓库 docs/RESPONSIVE_TABLE.md。安装后从 @w.ui/wui-react/responsive-table 导入，并导入 style.css。
+
+## 预览
+
+<Canvas of={Stories.Index} />
+
+## 当前参数
+
+<ArgTypes of={Stories} />

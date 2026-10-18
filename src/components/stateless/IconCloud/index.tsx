@@ -136,8 +136,8 @@ const IconCloud = ({ icons, images }: IconCloudProps) => {
     const rect = canvas?.getBoundingClientRect()
     if (!rect || !canvas) return
 
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
+    const x = ((e.clientX - rect.left) * canvas.width) / rect.width
+    const y = ((e.clientY - rect.top) * canvas.height) / rect.height
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -188,16 +188,17 @@ const IconCloud = ({ icons, images }: IconCloudProps) => {
   }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = canvasRef.current?.getBoundingClientRect()
-    if (rect) {
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
+    const canvas = canvasRef.current
+    const rect = canvas?.getBoundingClientRect()
+    if (rect && canvas) {
+      const x = ((e.clientX - rect.left) * canvas.width) / rect.width
+      const y = ((e.clientY - rect.top) * canvas.height) / rect.height
       setMousePos({ x, y })
     }
 
     if (isDragging) {
-      const deltaX = e.clientX - lastMousePos.x
-      const deltaY = e.clientY - lastMousePos.y
+      const deltaX = (e.clientX - lastMousePos.x) * (canvas && rect ? canvas.width / rect.width : 1)
+      const deltaY = (e.clientY - lastMousePos.y) * (canvas && rect ? canvas.height / rect.height : 1)
 
       rotationRef.current = {
         x: rotationRef.current.x + deltaY * 0.002,
@@ -302,6 +303,7 @@ const IconCloud = ({ icons, images }: IconCloudProps) => {
       ref={canvasRef}
       width={360}
       height={360}
+      style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}

@@ -1,1 +1,1 @@
-export { default } from '@src/routers/shared/AuthRouterBase'
+export { default } from '@app/routing/shared/AuthRouterBase'

@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useState, useEffect, useRef } from 'react'
 import { ArrowRight, ArrowLeft, Quote } from 'lucide-react'
 import styles from './index.module.less'

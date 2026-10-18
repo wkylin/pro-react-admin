@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - name: Verify application tag and release notes
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs'
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+          const tag = `v${pkg.version}`
+          if (process.env.RELEASE_TAG !== tag) throw new Error(`Expected application tag ${tag}`)
+          if (!fs.existsSync(`docs/releases/${tag}.md`)) throw new Error('Missing release notes')
+          JS
+      - name: Validate architecture, documentation and Storybook types
+        run: |
+          pnpm run check:docs
+          pnpm run check:component-catalog
+          pnpm run check:stories
+          pnpm run typecheck:storybook
+          pnpm run typecheck:boundaries
+          pnpm run typecheck:api
+          pnpm run test:tooling
+      - name: Build and validate the public UI package
+        run: pnpm run prepare:lib:release
+      - name: Build and validate Storybook
+        run: |
+          pnpm run build-storybook
+          node scripts/validate-stories.mjs --built
+      - name: Pack verified library and create checksums
+        run: |
+          mkdir -p artifacts/npm
+          npm pack ./packages/wui-react --pack-destination artifacts/npm --ignore-scripts
+          cd artifacts/npm
+          sha256sum ./*.tgz > SHA256SUMS
+      - name: Create GitHub Release and attach the verified package
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Pro React Admin ${{ github.ref_name }}
+          body_path: docs/releases/${{ github.ref_name }}.md
+          fail_on_unmatched_files: true
+          files: |
+            artifacts/npm/*.tgz
+            artifacts/npm/SHA256SUMS

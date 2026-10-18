@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, type ReactEventHandler } from 'react'
+import { useRef, useEffect, type ReactEventHandler } from 'react'
 
 type PlayerProps = {
   activeSong: { audioUrl?: string } | null
@@ -22,20 +22,20 @@ const Player = ({
   repeat,
 }: PlayerProps) => {
   const audioRef = useRef<HTMLAudioElement>(null)
-  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
 
-    if (isPlaying && !isLoading) {
+    if (isPlaying && activeSong?.audioUrl) {
       audio.play().catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === 'AbortError') return
         console.error('Error playing audio:', error)
       })
     } else {
       audio.pause()
     }
-  }, [isPlaying, isLoading])
+  }, [isPlaying, activeSong?.audioUrl])
 
   useEffect(() => {
     const audio = audioRef.current
@@ -50,28 +50,6 @@ const Player = ({
       audio.currentTime = seekTime
     }
   }, [seekTime])
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (audio && activeSong?.audioUrl) {
-      // 延迟设置加载状态，避免在 effect 同步调用 setState
-      const id = setTimeout(() => setIsLoading(true), 0)
-      audio.load()
-
-      const handleLoadedData = () => {
-        setIsLoading(false)
-      }
-
-      audio.addEventListener('loadeddata', handleLoadedData)
-
-      return () => {
-        clearTimeout(id)
-        audio.removeEventListener('loadeddata', handleLoadedData)
-      }
-    }
-
-    return undefined
-  }, [activeSong?.audioUrl])
 
   return (
     <audio

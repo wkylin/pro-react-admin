@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react'
 const useMusicPlayer = (initialSongs = []) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isActive, setIsActive] = useState(initialSongs.length > 0)
+  const [isActive, setIsActive] = useState(false)
   const [duration, setDuration] = useState(0)
   const [seekTime, setSeekTime] = useState(0)
   const [appTime, setAppTime] = useState(0)
@@ -12,31 +12,49 @@ const useMusicPlayer = (initialSongs = []) => {
   const [shuffle, setShuffle] = useState(false)
   const [currentSongs, setCurrentSongs] = useState(initialSongs)
 
-  const activeSong = currentSongs[currentIndex] || null
+  const activeSong = isActive ? currentSongs[currentIndex] || null : null
+
+  const resetProgress = useCallback(() => {
+    setDuration(0)
+    setSeekTime(0)
+    setAppTime(0)
+  }, [])
 
   const handlePlayPause = useCallback(() => {
-    if (!isActive && currentSongs.length === 0) return
+    if (currentSongs.length === 0) return
     setIsPlaying((prev) => !prev)
     if (!isActive) setIsActive(true)
   }, [isActive, currentSongs.length])
 
   const handleNextSong = useCallback(() => {
+    if (currentSongs.length === 0) return
     if (shuffle) {
-      setCurrentIndex(Math.floor(Math.random() * currentSongs.length))
+      setCurrentIndex((prev) =>
+        currentSongs.length > 1
+          ? (prev + 1 + Math.floor(Math.random() * (currentSongs.length - 1))) % currentSongs.length
+          : prev
+      )
     } else {
       setCurrentIndex((prev) => (prev + 1) % currentSongs.length)
     }
+    resetProgress()
     setIsPlaying(true)
-  }, [shuffle, currentSongs.length])
+  }, [shuffle, currentSongs.length, resetProgress])
 
   const handlePrevSong = useCallback(() => {
+    if (currentSongs.length === 0) return
     if (shuffle) {
-      setCurrentIndex(Math.floor(Math.random() * currentSongs.length))
+      setCurrentIndex((prev) =>
+        currentSongs.length > 1
+          ? (prev + 1 + Math.floor(Math.random() * (currentSongs.length - 1))) % currentSongs.length
+          : prev
+      )
     } else {
       setCurrentIndex((prev) => (prev - 1 + currentSongs.length) % currentSongs.length)
     }
+    resetProgress()
     setIsPlaying(true)
-  }, [shuffle, currentSongs.length])
+  }, [shuffle, currentSongs.length, resetProgress])
 
   const handleSeek = useCallback((time) => {
     setSeekTime(time)
@@ -48,18 +66,31 @@ const useMusicPlayer = (initialSongs = []) => {
 
   const handleLoadedData = useCallback((event) => {
     setDuration(event.target.duration)
-    setIsActive(true)
   }, [])
 
   const handleTimeUpdate = useCallback((event) => {
     setAppTime(event.target.currentTime)
   }, [])
 
-  const handleSongClick = useCallback((index) => {
-    setCurrentIndex(index)
-    setIsPlaying(true)
-    setIsActive(true)
-  }, [])
+  const handleSongClick = useCallback(
+    (index) => {
+      if (isActive && index === currentIndex) {
+        setIsPlaying((prev) => !prev)
+        return
+      }
+      setCurrentIndex(index)
+      resetProgress()
+      setIsPlaying(true)
+      setIsActive(true)
+    },
+    [currentIndex, isActive, resetProgress]
+  )
+
+  const handleClose = useCallback(() => {
+    setIsPlaying(false)
+    setIsActive(false)
+    resetProgress()
+  }, [resetProgress])
 
   const handleEnded = useCallback(() => {
     if (repeat) {
@@ -95,6 +126,7 @@ const useMusicPlayer = (initialSongs = []) => {
     handleTimeUpdate,
     handleEnded,
     handleSongClick,
+    handleClose,
   }
 }
 

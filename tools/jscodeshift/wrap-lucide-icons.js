@@ -23,13 +23,13 @@ export default function transformer(file, api) {
   if (iconNames.length === 0) return null;
 
   // ensure AnimatedIcon is imported
-  const hasAnimatedImport = root.find(j.ImportDeclaration, { source: { value: '@stateless/AnimatedIcon' } }).size() > 0;
+  const hasAnimatedImport = root.find(j.ImportDeclaration, { source: { value: '@shared/ui/AnimatedIcon' } }).size() > 0;
   if (!hasAnimatedImport) {
     const firstImport = root.find(j.ImportDeclaration).at(0);
     if (firstImport.size() > 0) {
-      firstImport.insertBefore(j.importDeclaration([j.importDefaultSpecifier(j.identifier('AnimatedIcon'))], j.literal('@stateless/AnimatedIcon')));
+      firstImport.insertBefore(j.importDeclaration([j.importDefaultSpecifier(j.identifier('AnimatedIcon'))], j.literal('@shared/ui/AnimatedIcon')));
     } else {
-      root.get().node.program.body.unshift(j.importDeclaration([j.importDefaultSpecifier(j.identifier('AnimatedIcon'))], j.literal('@stateless/AnimatedIcon')));
+      root.get().node.program.body.unshift(j.importDeclaration([j.importDefaultSpecifier(j.identifier('AnimatedIcon'))], j.literal('@shared/ui/AnimatedIcon')));
     }
   }
 

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import {
   ReactFlow,
   MiniMap,
@@ -14,8 +14,8 @@ import {
   type Node,
   type ReactFlowInstance,
 } from '@xyflow/react'
-import type { ComponentType, CSSProperties, ReactNode } from 'react'
-import { useActivate } from '@/components/KeepAlive'
+import type { CSSProperties } from 'react'
+import { useActivate } from '@platform/keep-alive'
 
 import '@xyflow/react/dist/style.css'
 
@@ -28,37 +28,33 @@ interface TopologyNodeData extends Record<string, unknown> {
 
 type TopologyNode = Node<TopologyNodeData>
 type TopologyEdge = Edge
-type TopologyPanelProps = { fill?: boolean; children?: ReactNode }
-
-const TopologyPanel = FixTabPanel as ComponentType<TopologyPanelProps>
-
 // 定义节点样式，方便区分不同类型的组件
 const nodeStyles = {
   frontend: {
-    background: '#e6f7ff',
-    border: '1px solid #91d5ff',
-    color: '#1890ff',
+    background: 'var(--wui-bg-info-subtle)',
+    border: '1px solid var(--wui-text-info)',
+    color: 'var(--wui-text-info)',
   },
   gateway: {
-    background: '#fff7e6',
-    border: '1px solid #ffd591',
-    color: '#d46b08',
+    background: 'var(--wui-bg-warning-subtle)',
+    border: '1px solid var(--wui-text-warning)',
+    color: 'var(--wui-text-warning)',
   },
   service: {
-    background: '#f6ffed',
-    border: '1px solid #b7eb8f',
-    color: '#52c41a',
+    background: 'var(--wui-bg-success-subtle)',
+    border: '1px solid var(--wui-text-success)',
+    color: 'var(--wui-text-success)',
   },
   data: {
-    background: '#f9f0ff',
-    border: '1px solid #d3adf7',
-    color: '#722ed1',
+    background: 'var(--wui-bg-purple-subtle)',
+    border: '1px solid var(--wui-text-purple)',
+    color: 'var(--wui-text-purple)',
   },
   // 修复：移除了 CSS 属性值中不必要的内部引号
   infra: {
-    background: '#fff1f0',
-    border: '1px solid #ffccc7',
-    color: '#f5222d',
+    background: 'var(--wui-bg-danger-subtle)',
+    border: '1px solid var(--wui-text-danger)',
+    color: 'var(--wui-text-danger)',
   },
 } satisfies Record<NodeCategory, CSSProperties>
 
@@ -317,7 +313,7 @@ function Flow() {
   }, [refreshFlowViewport])
 
   return (
-    <TopologyPanel fill={true}>
+    <FixTabPanel fill={true}>
       <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
         <ReactFlow
           nodes={safeNodes}
@@ -330,12 +326,12 @@ function Flow() {
           }}
           fitView
         >
-          <MiniMap />
+          <MiniMap maskColor="var(--wui-flow-mask)" />
           <Controls />
           <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </div>
-    </TopologyPanel>
+    </FixTabPanel>
   )
 }
 

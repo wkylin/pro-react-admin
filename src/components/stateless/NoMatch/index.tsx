@@ -1,9 +1,9 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { Button, Result, Flex, Typography, theme } from 'antd'
 import { HomeOutlined, RollbackOutlined } from '@ant-design/icons'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { useProThemeContext } from '@src/theme/hooks'
 
 const { Text, Paragraph } = Typography

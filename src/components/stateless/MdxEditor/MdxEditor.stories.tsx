@@ -4,7 +4,7 @@ import sample from './examples/sample.mdx?raw'
 import sampleAdvanced from './examples/sample-advanced.mdx?raw'
 
 export default {
-  title: 'stateless/MdxEditor',
+  title: 'Components/Stateless/MdxEditor',
   component: ProMdxEditor,
   parameters: {
     docs: {

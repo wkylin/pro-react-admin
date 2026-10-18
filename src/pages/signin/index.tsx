@@ -1,16 +1,18 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
+import SliderCaptcha from '@wui/SliderCaptcha'
 import { useEffect, useState, useRef, type CSSProperties } from 'react'
-import useSafeNavigate from '@app-hooks/useSafeNavigate'
+import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal, type FormProps } from 'antd'
-import { useStore } from '@/store'
+import { selectIsMobile, useAppStore } from '@app/model'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { setLocalStorage } from '@utils/publicFn'
-import { useAuth } from '@src/service/useAuth'
-import { authService } from '@src/service/authService'
-import { permissionService } from '@src/service/permissionService'
-import { testAccounts } from '@src/mock/permission'
+import { setLocalStorage } from '@shared/lib/publicFn'
+import { useAuth } from '@platform/auth/hooks/useAuth'
+import { authService } from '@platform/auth/services/authService'
+import { permissionService } from '@platform/auth/services/permissionService'
+import { testAccounts } from '@platform/auth/mocks/permission'
+import { isDemoPermissionMode } from '@platform/auth/api/permission'
+import EnterpriseSignIn from '@platform/auth/components/EnterpriseSignIn'
 
-import SliderCaptcha from '@stateless/SliderCaptcha'
 import styles from './index.module.less'
 
 const { Title, Text, Paragraph } = Typography
@@ -70,13 +72,13 @@ const loadOrInitPasswords = (): Record<string, string> => {
   }
 }
 
-const SignIn = () => {
+const DemoSignIn = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const { token } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm<SignInFormValues>()
-  const isMobile = useStore((s) => s.isMobile)
+  const isMobile = useAppStore(selectIsMobile)
   const [accountPasswords, setAccountPasswords] = useState<Record<string, string>>({})
   const [captchaOpen, setCaptchaOpen] = useState(false)
   const [captchaKey, setCaptchaKey] = useState(() => Date.now())
@@ -183,7 +185,9 @@ const SignIn = () => {
       setLocalStorage('token', { token: email })
       try {
         localStorage.removeItem('user_role')
-      } catch {}
+      } catch {
+        // Storage access may be unavailable in restricted browser contexts.
+      }
 
       await authService.setTestAccountAuthenticated(email)
       const routes = await permissionService.getAccessibleRoutes(true)
@@ -207,7 +211,9 @@ const SignIn = () => {
       setSubmitting(false)
       try {
         if (typeof hideLoading === 'function') hideLoading()
-      } catch {}
+      } catch {
+        // The Ant Design message disposer is best effort during navigation.
+      }
     }
   }
 
@@ -270,7 +276,7 @@ const SignIn = () => {
                 <div className={styles.heroPills}>
                   <span className={styles.pill}>Fast Tabs</span>
                   <span className={styles.pill}>Role-based Access</span>
-                  <span className={styles.pill}>Vite Build</span>
+                  <span className={styles.pill}>Vite 8 Build</span>
                 </div>
               </div>
             </section>
@@ -349,7 +355,7 @@ const SignIn = () => {
                         centered
                         open={captchaOpen}
                         footer={null}
-                        maskClosable={false}
+                        mask={{ closable: false }}
                         onCancel={() => setCaptchaOpen(false)}
                         afterClose={() => {
                           setCaptchaKey(Date.now())
@@ -429,4 +435,6 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default function SignIn() {
+  return isDemoPermissionMode() ? <DemoSignIn /> : <EnterpriseSignIn />
+}

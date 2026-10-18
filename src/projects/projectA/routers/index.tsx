@@ -1,2 +1,2 @@
-export { default } from '@src/routers'
-export * from '@src/routers'
+export { default } from '@app/routing'
+export * from '@app/routing'

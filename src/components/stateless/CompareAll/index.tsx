@@ -1,5 +1,5 @@
 'use client'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { useState, useEffect, useRef, useCallback, type MouseEvent, type TouchEvent } from 'react'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'motion/react'
 import { GitMerge } from 'lucide-react'
@@ -171,9 +171,9 @@ const Compare = ({
           <div className="absolute top-1/2 left-0 z-10 h-1/2 w-10 -translate-y-1/2 bg-linear-to-r from-cyan-400 via-transparent to-transparent [mask-image:radial-gradient(50px_at_left,white,transparent)] opacity-100" />
           <div className="absolute top-1/2 -right-10 h-3/4 w-10 -translate-y-1/2 [mask-image:radial-gradient(100px_at_left,white,transparent)]"></div>
           {showHandlebar && (
-            <div className="absolute top-1/2 -right-2.5 z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white shadow-[0px_-1px_0px_0px_#FFFFFF40]">
+            <div className="absolute top-1/2 -right-2.5 z-30 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-md bg-white text-gray-900 shadow-[0px_-1px_0px_0px_#FFFFFF40] dark:bg-neutral-800 dark:text-neutral-100">
               <AnimatedIcon variant="spin" mode="hover">
-                <GitMerge className="h-4 w-4 text-black" />
+                <GitMerge className="h-4 w-4 text-black dark:text-white" />
               </AnimatedIcon>
             </div>
           )}

@@ -5,7 +5,7 @@ tests/
 test-results/
 docs/
 scripts/
-webpack/
+build/
 faker/
 
 # 配置文件
@@ -13,7 +13,6 @@ faker/
 *.config.ts
 *.config.mjs
 tsconfig.json
-babel.config.js
 biome.json
 cspell.json
 eslint.config.mjs
@@ -52,4 +51,5 @@ node_modules/
 *.tsbuildinfo
 stats.json
 compilation-stats.json
+build-stats.json
 packagehash.txt

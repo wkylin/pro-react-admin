@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Alert } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 const NodeDemo = () => {
   const [searchParams] = useSearchParams()

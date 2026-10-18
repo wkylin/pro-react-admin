@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Highlight, themes } from 'prism-react-renderer'
 
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 
 import styles from './index.module.less'
 

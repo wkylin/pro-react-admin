@@ -25,11 +25,35 @@ declare module '*.bmp' {
   const value: any
   export = value
 }
+declare module '*.webp' {
+  const value: string
+  export default value
+}
+declare module '*.avif' {
+  const value: string
+  export default value
+}
+declare module '*.mp3' {
+  const value: string
+  export default value
+}
+declare module '*.mp4' {
+  const value: string
+  export default value
+}
+declare module '*.mkv' {
+  const value: string
+  export default value
+}
 declare module '*.pdf' {
   const value: string
   export = value
 }
 declare module '*?url' {
+  const value: string
+  export default value
+}
+declare module '*?raw' {
   const value: string
   export default value
 }

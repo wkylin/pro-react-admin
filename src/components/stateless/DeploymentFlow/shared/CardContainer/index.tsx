@@ -25,11 +25,11 @@ export const CardContainer: React.FC<Props> = ({
   return (
     <div
       style={{
-        background: 'white',
+        background: 'var(--wui-bg-surface)',
         borderRadius: '16px',
         padding: '30px',
         boxShadow: '0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05)',
-        border: '1px solid #fff',
+        border: '1px solid var(--wui-border)',
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
         position: 'relative',
         overflow: 'hidden',
@@ -65,7 +65,7 @@ export const CardContainer: React.FC<Props> = ({
             alignItems: 'center',
             gap: '10px',
             margin: 0,
-            color: '#263238',
+            color: 'var(--wui-text-primary)',
             flexDirection: isLeft ? 'row-reverse' : 'row',
             justifyContent: isLeft ? 'flex-end' : 'flex-start',
           }}
@@ -77,12 +77,12 @@ export const CardContainer: React.FC<Props> = ({
         <div
           style={{
             fontSize: '14px',
-            color: '#546e7a',
+            color: 'var(--wui-text-secondary)',
             lineHeight: '1.7',
-            background: '#f8f9fa',
+            background: 'var(--wui-bg-subtle)',
             padding: '16px',
             borderRadius: '8px',
-            borderLeft: '4px solid #cfd8dc',
+            borderLeft: '4px solid var(--wui-border-strong)',
             position: 'relative',
           }}
         >

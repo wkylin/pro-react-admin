@@ -1,6 +1,6 @@
 import { useCallback, type DependencyList } from 'react'
-import { showMessage } from '@src/utils/message'
-import { RequestUtils } from '@src/service/request'
+import { showMessage } from '@platform/feedback/message'
+import { RequestUtils } from '@platform/api/request'
 
 type AnyFn = (...args: any[]) => any
 type TipHandler = (val: any) => void

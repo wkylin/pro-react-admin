@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import styles from './index.module.less'
 
 import SmartVideoPlayer, { type SmartVideoPlayerProps, type SmartVideoPlayerRef } from '@stateless/SmartVideoPlayer'

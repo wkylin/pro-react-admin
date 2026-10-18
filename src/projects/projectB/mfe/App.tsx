@@ -3,23 +3,21 @@ import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@stateless/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
-import { getMfeSharedState, onMfeEvent } from '@/mfe/bridge'
+import { getMfeSharedState, onMfeEvent, parseMfeSharedMessage } from '@platform/mfe/bridge'
+import RemoteScope from '@app/bootstrap/RemoteScope'
 
 const { Paragraph, Text } = Typography
+const standaloneBaseUrl = (process.env.PROJECTB_STANDALONE_BASE_URL || process.env.PROJECTB_STANDALONE_ORIGIN || '')
+  .trim()
+  .replace(/\/+$/, '')
+const standaloneAboutUrl = standaloneBaseUrl ? `${standaloneBaseUrl}/#/projectB/about` : undefined
 
-export default function ProjectBRemoteApp() {
-  const standaloneOrigin = (() => {
-    const raw = (process.env.PROJECTB_STANDALONE_ORIGIN || '').toString().trim()
-    const origin = raw || (typeof window !== 'undefined' ? window.location.origin : '')
-    return origin.replace(/\/+$/, '')
-  })()
-  const standaloneAboutUrl = `${standaloneOrigin}/#/projectB/about`
-
-  const [lastMessage, setLastMessage] = useState<any>(() => (getMfeSharedState() as any).lastMessage)
+function ProjectBRemoteContent() {
+  const [lastMessage, setLastMessage] = useState(() => parseMfeSharedMessage(getMfeSharedState().lastMessage))
 
   useEffect(() => {
     const offState = onMfeEvent('mfe:state', ({ state }) => {
-      setLastMessage((state as any).lastMessage)
+      setLastMessage(parseMfeSharedMessage(state.lastMessage))
     })
     const offPong = onMfeEvent('mfe:pong', ({ from, to }) => {
       if (to !== 'projectB') return
@@ -48,15 +46,23 @@ export default function ProjectBRemoteApp() {
               <Button>
                 <Link to="/portal">返回 Portal</Link>
               </Button>
-              <Button type="primary">
-                <a href={standaloneAboutUrl} target="_blank" rel="noreferrer">
+              {standaloneAboutUrl ? (
+                <Button type="primary" href={standaloneAboutUrl} target="_blank" rel="noreferrer">
                   打开 Standalone 的 About
-                </a>
-              </Button>
+                </Button>
+              ) : null}
             </Space>
           </Space>
         </Card>
       </Space>
     </PageContainer>
+  )
+}
+
+export default function ProjectBRemoteApp() {
+  return (
+    <RemoteScope projectId="projectB">
+      <ProjectBRemoteContent />
+    </RemoteScope>
   )
 }

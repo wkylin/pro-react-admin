@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import {
   useRef,
   useCallback,
@@ -13,7 +13,7 @@ import {
   type SetStateAction,
 } from 'react'
 import MarkmapHooks from '@stateful/markmap'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import MDEditor from '@uiw/react-md-editor'
 import { toPng, toSvg } from 'html-to-image'
 import {
@@ -22,7 +22,6 @@ import {
   Form,
   Input,
   Space,
-  message,
   Card,
   Typography,
   Progress,
@@ -34,6 +33,7 @@ import {
   Spin,
   theme,
 } from 'antd'
+import { message } from '@platform/feedback/message'
 import {
   DownloadOutlined,
   CopyOutlined,
@@ -50,7 +50,7 @@ import {
   PartitionOutlined,
   NodeIndexOutlined,
 } from '@ant-design/icons'
-import { copyTextToClipboard } from '@utils/aidFn'
+import { copyTextToClipboard } from '@shared/lib/aidFn'
 import initSSE from './fixSse'
 import removeMd from 'remove-markdown'
 import remarkMath from 'remark-math'
@@ -114,8 +114,6 @@ type ChatFormValues = {
   apiKey: string
   text: string
 }
-
-const TypedFixTabPanel = FixTabPanel as ComponentType<{ children?: ReactNode }>
 
 let mermaidPromise: Promise<Mermaid> | undefined
 const loadMermaid = (): Promise<Mermaid> => {
@@ -302,7 +300,7 @@ const CustomComponents: Components = {
           minWidth: '100%',
           tableLayout: 'auto',
           borderCollapse: 'collapse',
-          border: '1px solid #d9d9d9',
+          border: '1px solid var(--wui-border-strong)',
           borderRadius: '6px',
           overflow: 'hidden',
         }}
@@ -316,8 +314,8 @@ const CustomComponents: Components = {
     <thead
       {...props}
       style={{
-        backgroundColor: '#fafafa',
-        borderBottom: '2px solid #d9d9d9',
+        backgroundColor: 'var(--wui-bg-subtle)',
+        borderBottom: '2px solid var(--wui-border-strong)',
       }}
     >
       {children}
@@ -331,8 +329,8 @@ const CustomComponents: Components = {
         padding: '12px 16px',
         textAlign: 'left',
         fontWeight: 600,
-        color: '#262626',
-        borderRight: '1px solid #d9d9d9',
+        color: 'var(--wui-text-primary)',
+        borderRight: '1px solid var(--wui-border-strong)',
         whiteSpace: 'normal',
       }}
     >
@@ -345,8 +343,8 @@ const CustomComponents: Components = {
       {...props}
       style={{
         padding: '12px 16px',
-        borderBottom: '1px solid #f0f0f0',
-        borderRight: '1px solid #f0f0f0',
+        borderBottom: '1px solid var(--wui-border)',
+        borderRight: '1px solid var(--wui-border)',
         verticalAlign: 'top',
         whiteSpace: 'normal',
         wordBreak: 'break-word',
@@ -1521,7 +1519,7 @@ PRD文档内容：
   const markmapRef = useRef<HTMLDivElement | null>(null)
 
   return (
-    <TypedFixTabPanel>
+    <FixTabPanel>
       <div>
         <Card
           title={
@@ -1919,10 +1917,10 @@ PRD文档内容：
               <div
                 ref={markmapRef}
                 style={{
-                  border: '1px solid #d9d9d9',
+                  border: '1px solid var(--wui-border-strong)',
                   borderRadius: 6,
                   padding: 20,
-                  backgroundColor: '#fafafa',
+                  backgroundColor: 'var(--wui-bg-subtle)',
                   minHeight: 400,
                 }}
               >
@@ -1995,7 +1993,7 @@ PRD文档内容：
 
         <div ref={bottomRef} style={{ height: 20 }} />
       </div>
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

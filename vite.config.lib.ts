@@ -1,102 +1,48 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import dts from 'vite-plugin-dts'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import svgr from 'vite-plugin-svgr'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { libraryComponents, libraryExternalPackages } from './config/library-contract.mjs'
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const useAnalyze = Boolean(process.env.USE_ANALYZE)
-const libDebugCss = process.env.LIB_DEBUG_CSS === '1'
-
-const analyzePlugin =
-  useAnalyze &&
-  visualizer({
-    filename: 'dist-lib/bundle-report.html',
-    title: 'pro-react-admin library bundle',
-    gzipSize: true,
-    brotliSize: true,
-    template: 'treemap',
-  })
+const root = path.dirname(fileURLToPath(import.meta.url))
+const source = path.join(root, 'packages/wui-react/src')
 
 export default defineConfig({
   plugins: [
     react(),
-    dts({
-      insertTypesEntry: true,
-      tsconfigPath: './tsconfig.json',
-      // 只生成对外 lib 入口可达的类型，避免把未导出的页面/组件也卷进来。
-      // 同时显式包含全局声明（例如 *.module.less）
-      include: ['src/lib', 'src/vite-env.d.ts'],
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'NPM_README.md',
-          dest: '.', // 这里 '.' 代表相对于 build.outDir (即 dist-lib) 的根目录
-          rename: 'README.md',
-        },
-      ],
-    }),
-    // 仅在 USE_ANALYZE=1 时生成体积分布报告
-    analyzePlugin,
-  ].filter(Boolean),
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-      '@src': path.resolve(__dirname, 'src'),
-      '@stateless': path.resolve(__dirname, 'src/components/stateless'),
-      '@stateful': path.resolve(__dirname, 'src/components/stateful'),
-      '@hooks': path.resolve(__dirname, 'src/components/hooks'),
-      '@app-hooks': path.resolve(__dirname, 'src/app-hooks'),
-      '@assets': path.resolve(__dirname, 'src/assets'),
-      '@pages': path.resolve(__dirname, 'src/pages'),
-      '@routers': path.resolve(__dirname, 'src/routers'),
-      '@utils': path.resolve(__dirname, 'src/utils'),
-      '@theme': path.resolve(__dirname, 'src/theme'),
-    },
+    svgr({ include: '**/*.svg', svgrOptions: { exportType: 'default' } }),
+    ...(process.env.USE_ANALYZE === '1' ? [visualizer({ filename: 'artifacts/library-stats.html', open: false })] : []),
+  ],
+  resolve: { alias: { '@wui': source } },
+  css: {
+    preprocessorOptions: { less: { javascriptEnabled: true } },
+    modules: { localsConvention: 'camelCase' },
   },
   build: {
-    outDir: 'dist-lib',
+    outDir: 'packages/wui-react/dist',
+    emptyOutDir: true,
+    target: 'es2022',
     lib: {
-      entry: path.resolve(__dirname, 'src/lib/index.ts'),
-      name: 'ProReactComponents',
-      fileName: (format) => `pro-react-components.${format}.js`,
+      entry: Object.fromEntries(
+        libraryComponents.map(({ subpath, source: entry }) => [subpath, path.join(source, entry)])
+      ),
+      formats: ['es', 'cjs'],
+      fileName: (format, name) => (format === 'es' ? `esm/${name}.js` : `cjs/${name}.cjs`),
+      cssFileName: 'style',
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'antd', 'react-router-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          antd: 'antd',
-          'react-router-dom': 'ReactRouterDOM',
+      external: (id) => libraryExternalPackages.some((name) => id === name || id.startsWith(`${name}/`)),
+      output: [
+        { format: 'es', entryFileNames: 'esm/[name].js', chunkFileNames: 'esm/chunks/[name]-[hash].js' },
+        {
+          format: 'cjs',
+          exports: 'named',
+          entryFileNames: 'cjs/[name].cjs',
+          chunkFileNames: 'cjs/chunks/[name]-[hash].cjs',
         },
-        // Produce stable, predictable chunk filenames for consumers (no hashes)
-        chunkFileNames: (chunkInfo) => {
-          return chunkInfo.name ? `chunk-${chunkInfo.name}.js` : 'chunk-[hash].js'
-        },
-        assetFileNames: (assetInfo) => {
-          // Keep a stable css entry for consumers: `@w.ui/wui-react/style.css`
-          if (assetInfo.name && assetInfo.name.endsWith('.css')) return 'style.css'
-          return assetInfo.name ?? 'assets/[name]-[hash][extname]'
-        },
-      },
-    },
-    minify: 'esbuild',
-    // Some upstream CSS can be non-standard and confuse esbuild's CSS minifier.
-    // Run `LIB_DEBUG_CSS=1 pnpm run build:lib` to output non-minified CSS for debugging.
-    cssMinify: libDebugCss ? false : 'esbuild',
-  },
-  css: {
-    preprocessorOptions: {
-      less: {
-        javascriptEnabled: true,
-      },
-    },
-    modules: {
-      localsConvention: 'camelCase',
+      ],
     },
   },
 })

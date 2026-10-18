@@ -1,16 +1,6 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  type ComponentType,
-  type CSSProperties,
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-} from 'react'
+import { useState, useEffect, useRef, useMemo, type CSSProperties, type Dispatch, type SetStateAction } from 'react'
 import { Button, message, Form, Input, Steps, Card, Space } from 'antd'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import styles from './index.module.less'
 import mockApi from './mockApi'
 
@@ -64,8 +54,6 @@ type SidebarProps = {
 }
 
 const deploymentApi: DeploymentApi = mockApi
-const FixTabPanelWithFill = FixTabPanel as ComponentType<{ children?: ReactNode; fill?: boolean }>
-
 // 子组件：配置侧边栏
 const Sidebar = ({
   config,
@@ -485,8 +473,13 @@ export default function AutoDeploy() {
     setTimeout(() => {
       const win = window.open('', '_blank')
       if (win) {
+        const isDark = document.documentElement.dataset.theme === 'dark'
+        const pageBackground = isDark ? '#0f172a' : '#f0f9ff'
+        const pageColor = isDark ? '#7dd3fc' : '#0284c7'
+        const spinnerBorder = isDark ? '#334155' : '#bae6fd'
+        const spinnerAccent = isDark ? '#0ea5e9' : '#0284c7'
         win.document.write(`
-          <style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:#f0f9ff;color:#0284c7;flex-direction:column}h1{font-size:2rem;margin-bottom:10px}.spinner{width:40px;height:40px;border:4px solid #bae6fd;border-top:4px solid #0284c7;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+          <style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;margin:0;background:${pageBackground};color:${pageColor};flex-direction:column}h1{font-size:2rem;margin-bottom:10px}.spinner{width:40px;height:40px;border:4px solid ${spinnerBorder};border-top:4px solid ${spinnerAccent};border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
           <div class="spinner"></div><h1>App Loaded</h1><p>Served at ${config.nginxPath}</p>
         `)
         win.document.close()
@@ -501,25 +494,25 @@ export default function AutoDeploy() {
       case 'success':
         return { color: '#10b981', background: 'rgba(16, 185, 129, 0.1)', borderColor: 'rgba(16, 185, 129, 0.2)' }
       default:
-        return { borderColor: 'rgba(255,255,255,0.1)' }
+        return { borderColor: 'var(--wui-border)' }
     }
   }
 
   return (
-    <FixTabPanelWithFill fill={true}>
+    <FixTabPanel fill={true}>
       <div className={styles.app}>
         {contextHolder}
         <header className={styles.header}>
           <div className={styles.brand}>
             <div className={styles['brand-icon']}>D</div>
-            <span>AutoDeploy 控制台</span>
+            <h1>AutoDeploy 控制台</h1>
           </div>
           <div className={styles.statusBadge} style={getStatusStyle()}>
             {statusText}
           </div>
         </header>
 
-        <main className={styles.main}>
+        <section className={styles.main} aria-label="自动部署配置和执行">
           <Sidebar
             config={config}
             setConfig={setConfig}
@@ -584,8 +577,8 @@ export default function AutoDeploy() {
               </aside>
             </div>
           </div>
-        </main>
+        </section>
       </div>
-    </FixTabPanelWithFill>
+    </FixTabPanel>
   )
 }

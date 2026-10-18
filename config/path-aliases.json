@@ -1,0 +1,19 @@
+{
+  "@": "src",
+  "@src": "src",
+  "@app": "src/app",
+  "@routers": "src/app/routing",
+  "@assets/audio": "src/assets/audio",
+  "@assets/video": "src/assets/video",
+  "@stateless": "src/components/stateless",
+  "@stateful": "src/components/stateful",
+  "@hooks": "src/components/hooks",
+  "@shared": "src/shared",
+  "@features": "src/features",
+  "@platform": "src/platform",
+  "@assets": "src/assets",
+  "@layouts": "src/app/layouts",
+  "@wui": "packages/wui-react/src",
+  "@pages": "src/pages",
+  "@theme": "src/theme"
+}

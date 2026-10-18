@@ -1,0 +1,3 @@
+{$API_DOMAIN} {
+	reverse_proxy api:5200
+}

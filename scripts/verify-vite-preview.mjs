@@ -5,14 +5,20 @@ import process from 'node:process'
 import { setTimeout as delay } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import { loadEnv, preview as createPreview } from 'vite'
+import { resolveProject, resolveBuildOutput } from '../config/project-registry.mjs'
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const viteEnv = loadEnv('production', projectRoot, '')
 const project = process.env.PROJECT || viteEnv.PROJECT || viteEnv.VITE_PROJECT || 'default'
-const outputDirName = process.env.VITE_OUT_DIR || viteEnv.VITE_OUT_DIR || (project === 'default' ? 'dist' : `dist-${project}`)
-const outputDir = path.resolve(projectRoot, outputDirName)
+const outputDir = resolveBuildOutput(resolveProject(project), process.env.VITE_OUT_DIR || viteEnv.VITE_OUT_DIR)
 const expectedProject = process.env.VERIFY_PROJECT || project
-const configuredBase = (process.env.PUBLIC_URL || viteEnv.PUBLIC_URL || process.env.VITE_BASE || viteEnv.VITE_BASE || '/').trim()
+const configuredBase = (
+  process.env.PUBLIC_URL ||
+  viteEnv.PUBLIC_URL ||
+  process.env.VITE_BASE ||
+  viteEnv.VITE_BASE ||
+  '/'
+).trim()
 const base = normalizeBase(configuredBase)
 const port = Number(process.env.VITE_PREVIEW_PORT || 4173)
 const remoteEntryName = process.env.VERIFY_REMOTE_ENTRY || ''
@@ -87,7 +93,10 @@ const assetReferences = [...html.matchAll(/\b(?:src|href)=["']([^"']+)["']/g)]
   .map((match) => match[1])
   .filter((reference) => /\.[a-z0-9]+(?:[?#].*)?$/i.test(reference))
 
-assert.ok(assetReferences.some((reference) => /\.js(?:[?#].*)?$/i.test(reference)), 'index.html does not reference a JavaScript entry')
+assert.ok(
+  assetReferences.some((reference) => /\.js(?:[?#].*)?$/i.test(reference)),
+  'index.html does not reference a JavaScript entry'
+)
 
 for (const reference of assetReferences) {
   const filePath = localPathFromReference(reference)
@@ -95,7 +104,9 @@ for (const reference of assetReferences) {
 }
 
 if (process.argv.includes('--static-only')) {
-  console.log(`Vite preview files verified: project=${expectedProject}, base=${base}, output=${path.relative(projectRoot, outputDir)}`)
+  console.log(
+    `Vite preview files verified: project=${expectedProject}, base=${base}, output=${path.relative(projectRoot, outputDir)}`
+  )
   process.exit(0)
 }
 
@@ -128,11 +139,20 @@ try {
   if (remoteEntryName) {
     const remoteEntryUrl = new URL(`${basePath}${remoteEntryName}`, `${previewUrl}/`)
     const remoteEntryResponse = await fetch(remoteEntryUrl)
-    assert.ok(remoteEntryResponse.ok, `Remote entry returned HTTP ${remoteEntryResponse.status}: ${remoteEntryUrl.pathname}`)
-    assert.match(await remoteEntryResponse.text(), /remoteEntry|mf-manifest|modulepreload/i, 'Remote entry does not look like a federation container')
+    assert.ok(
+      remoteEntryResponse.ok,
+      `Remote entry returned HTTP ${remoteEntryResponse.status}: ${remoteEntryUrl.pathname}`
+    )
+    assert.match(
+      await remoteEntryResponse.text(),
+      /remoteEntry|mf-manifest|modulepreload/i,
+      'Remote entry does not look like a federation container'
+    )
   }
 
-  console.log(`Vite preview verified: project=${expectedProject}, base=${base}, output=${path.relative(projectRoot, outputDir)}${remoteEntryName ? `, remoteEntry=${remoteEntryName}` : ''}`)
+  console.log(
+    `Vite preview verified: project=${expectedProject}, base=${base}, output=${path.relative(projectRoot, outputDir)}${remoteEntryName ? `, remoteEntry=${remoteEntryName}` : ''}`
+  )
 } finally {
   await new Promise((resolve, reject) => {
     previewServer.httpServer.close((error) => (error ? reject(error) : resolve()))

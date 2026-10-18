@@ -53,7 +53,7 @@ jobs:
 
       - name: Build and preview GitHub Pages base path
         run: |
-          pnpm run build:pages
+          pnpm run build:pages:app
           pnpm run verify:vite:preview
         env:
           PUBLIC_URL: /pro-react-admin/
@@ -97,7 +97,7 @@ jobs:
           PROJECT: projectA
           MFE_ROLE: remote
           PUBLIC_URL: /projectA/
-          VITE_OUT_DIR: dist-mf-projectA
+          VITE_OUT_DIR: dist-projectA
           VERIFY_PROJECT: projectA
           VERIFY_REMOTE_ENTRY: remoteEntry.js
 
@@ -109,7 +109,7 @@ jobs:
           PROJECT: projectB
           MFE_ROLE: remote
           PUBLIC_URL: /projectB/
-          VITE_OUT_DIR: dist-mf-projectB
+          VITE_OUT_DIR: dist-projectB
           VERIFY_PROJECT: projectB
           VERIFY_REMOTE_ENTRY: remoteEntry.js
 

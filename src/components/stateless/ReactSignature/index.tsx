@@ -1,7 +1,7 @@
 'use client'
 import clsx from 'clsx'
 import Signature, { type SignatureRef } from '@uiw/react-signature'
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import { CheckIcon, CopyIcon, DownloadIcon, Eraser, RefreshCcwIcon } from 'lucide-react'
 import { type ComponentProps, useRef, useState } from 'react'
 import { useCopy } from '@hooks/useCopyToClipboard'

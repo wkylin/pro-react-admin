@@ -1,0 +1,15 @@
+name: Feature request
+description: Propose a concrete enterprise workflow or extension.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem and workflow
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Expected behavior and acceptance criteria
+    validations:
+      required: true

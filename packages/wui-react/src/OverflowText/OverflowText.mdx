@@ -1,0 +1,20 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import * as Stories from './OverflowText.stories'
+
+<Meta of={Stories} />
+
+# OverflowText
+
+文字截断与溢出提示组件。text 为 ReactNode，lines 大于 0 时使用多行截断，否则为单行；maxWidth/minWidth、style 和 className 控制尺寸。ResizeObserver、窗口 resize 与字体加载触发重新检测。
+
+默认仅溢出时显示 PortalTooltip，alwaysShow 强制显示；tooltipProps 注入提示属性，onOverflowChange 接收状态变化。父容器必须有可计算宽度。
+
+安装后从 @w.ui/wui-react/overflow-text 导入，并导入 style.css。
+
+## 预览
+
+<Canvas of={Stories.Default} />
+
+## 当前参数
+
+<ArgTypes of={Stories} />

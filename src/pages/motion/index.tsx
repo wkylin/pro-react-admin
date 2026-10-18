@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { motion, useAnimationControls } from 'motion/react'
-import FixTabPanel from '@stateless/FixTabPanel'
-import ScrollableSections from '@stateless/ScrollableSections'
+import ScrollableSections from '@wui/ScrollableSections'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import AboutSection from '@stateless/AboutSection'
 import ContactSection from '@stateless/ContactSection'
 

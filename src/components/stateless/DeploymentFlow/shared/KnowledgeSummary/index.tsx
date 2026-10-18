@@ -5,9 +5,9 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     style={{
       fontSize: '18px',
       fontWeight: 700,
-      color: '#263238',
+      color: 'var(--wui-text-primary)',
       marginBottom: '20px',
-      borderBottom: '2px solid #e0e0e0',
+      borderBottom: '2px solid var(--wui-border-strong)',
       paddingBottom: '10px',
     }}
   >
@@ -16,24 +16,34 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 )
 
 const SubTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <h4 style={{ fontSize: '15px', fontWeight: 600, color: '#546e7a', marginTop: '20px', marginBottom: '10px' }}>
+  <h4
+    style={{
+      fontSize: '15px',
+      fontWeight: 600,
+      color: 'var(--wui-text-secondary)',
+      marginTop: '20px',
+      marginBottom: '10px',
+    }}
+  >
     {children}
   </h4>
 )
 
 const TextBlock: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <p style={{ fontSize: '14px', color: '#455a64', lineHeight: '1.8', marginBottom: '12px' }}>{children}</p>
+  <p style={{ fontSize: '14px', color: 'var(--wui-text-secondary)', lineHeight: '1.8', marginBottom: '12px' }}>
+    {children}
+  </p>
 )
 
 const ListPoint: React.FC<{ highlight?: boolean; children: React.ReactNode }> = ({ highlight, children }) => (
   <li
     style={{
       fontSize: '14px',
-      color: '#455a64',
+      color: 'var(--wui-text-secondary)',
       lineHeight: '1.8',
       marginBottom: '8px',
       marginLeft: '20px',
-      background: highlight ? '#fff3e0' : 'transparent',
+      background: highlight ? 'var(--wui-bg-warning-subtle)' : 'transparent',
       padding: highlight ? '4px 8px' : '0',
       borderRadius: '4px',
       borderLeft: highlight ? '3px solid #ff9800' : 'none',

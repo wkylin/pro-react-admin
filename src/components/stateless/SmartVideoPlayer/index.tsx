@@ -1,4 +1,4 @@
-import AnimatedIcon from '@stateless/AnimatedIcon'
+import AnimatedIcon from '@wui/AnimatedIcon'
 import React, { useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { createPortal } from 'react-dom'
@@ -23,7 +23,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 
-import * as stylesModule from './index.module.less'
+import stylesRaw from './index.module.less'
 import { createSvpI18n, setStoredSvpUiLanguage } from './svpI18n'
 
 type PlayerProvider = 'html5' | 'youtube' | 'embed'
@@ -96,34 +96,6 @@ function getErrorDetails(error: unknown): { name?: string; message?: string } {
   return {}
 }
 
-function unwrapCssModule(mod: unknown): Record<string, string> | null {
-  if (!mod) return null
-
-  const candidates: unknown[] = []
-
-  if (typeof mod === 'object') {
-    const exports = mod as Record<string, unknown>
-    if (exports.default) candidates.push(exports.default)
-    if (exports.Ay) candidates.push(exports.Ay)
-  }
-
-  candidates.push(mod)
-
-  for (const base of candidates) {
-    if (!base || typeof base !== 'object') continue
-    const cssModule = base as { locals?: unknown }
-
-    // style-loader + css-loader often exports an array/object with `.locals`.
-    if (cssModule.locals && typeof cssModule.locals === 'object') return cssModule.locals as Record<string, string>
-
-    // Vite/other pipelines may export the mapping object directly.
-    if (!Array.isArray(base)) return base as Record<string, string>
-  }
-
-  return null
-}
-
-const stylesRaw = unwrapCssModule(stylesModule) || {}
 const styles = new Proxy(stylesRaw, {
   get(target, prop: string | symbol) {
     if (typeof prop !== 'string') return undefined

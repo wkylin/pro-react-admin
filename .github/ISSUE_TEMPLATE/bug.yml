@@ -1,0 +1,21 @@
+name: Bug report
+description: Report reproducible application or tooling behavior.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Commit or version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include selected project, build command, browser and expected/actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Sanitized logs or test result
+      description: Remove tokens, secrets and private data.

@@ -6,7 +6,9 @@ import { pdfjs } from 'react-pdf'
 import pageTurnAudio from '@/assets/audio/page-turn.mp3'
 import styles from './index.module.less'
 
-// Vite 会在构建时复制本地 Worker；运行时异常时回退到 unpkg CDN。
+// ─── 本地 Worker（Vite 8 asset module） ──────────────────────
+// Vite 8 使用 new URL('...', import.meta.url) 解析并复制 worker 文件。
+// 降级：若运行时出错则回退到 unpkg CDN
 try {
   pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString()
 } catch {
@@ -83,7 +85,12 @@ const LazyPageImage: React.FC<{
   const [error, setError] = useState(false)
 
   if (!shouldLoad) {
-    return <div className={styles.imgPlaceholder} style={{ width: '100%', height: '100%', background: '#f5f5f5' }} />
+    return (
+      <div
+        className={styles.imgPlaceholder}
+        style={{ width: '100%', height: '100%', background: 'var(--wui-bg-subtle)' }}
+      />
+    )
   }
 
   return (
@@ -97,8 +104,8 @@ const LazyPageImage: React.FC<{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#f9f9f9',
-            color: '#bbb',
+            background: 'var(--wui-bg-subtle)',
+            color: 'var(--wui-text-muted)',
             fontSize: 14,
           }}
         >
@@ -113,8 +120,8 @@ const LazyPageImage: React.FC<{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: '#fafafa',
-            color: '#ccc',
+            background: 'var(--wui-bg-subtle)',
+            color: 'var(--wui-text-muted)',
             fontSize: 13,
           }}
         >
@@ -202,7 +209,7 @@ function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefi
       for (const candidate of candidates) {
         if (cancelled) return
         try {
-          const pdf = await pdfjs.getDocument(candidate).promise
+          const pdf = await pdfjs.getDocument({ url: candidate }).promise
           const urls: string[] = []
 
           for (let i = 1; i <= pdf.numPages; i++) {
@@ -770,7 +777,7 @@ export default function InteractiveBook({
           style={{ width: effectiveWidth, height: effectiveHeight }}
         >
           <div className={styles.emptyState} style={{ flexDirection: 'column', gap: 8 }}>
-            <div style={{ fontSize: 14, color: '#999' }}>PDF 加载中…</div>
+            <div style={{ fontSize: 14, color: 'var(--wui-text-muted)' }}>PDF 加载中…</div>
           </div>
         </div>
       )
@@ -785,7 +792,7 @@ export default function InteractiveBook({
         >
           <div className={styles.emptyState} style={{ flexDirection: 'column', gap: 8 }}>
             <div style={{ color: '#ef4444', fontWeight: 500 }}>PDF 加载失败</div>
-            <div style={{ fontSize: 12, color: '#999' }}>{pdfError}</div>
+            <div style={{ fontSize: 12, color: 'var(--wui-text-muted)' }}>{pdfError}</div>
           </div>
         </div>
       )

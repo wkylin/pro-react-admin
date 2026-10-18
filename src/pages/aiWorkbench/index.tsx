@@ -1,12 +1,4 @@
-import {
-  startTransition,
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useState,
-  type ComponentType,
-  type ReactNode,
-} from 'react'
+import { startTransition, useDeferredValue, useEffect, useMemo, useState, type ComponentType } from 'react'
 import {
   Alert,
   Button,
@@ -27,7 +19,7 @@ import {
   Typography,
 } from 'antd'
 import { Activity, Bot, BrainCircuit, DatabaseZap, Gauge, Layers3, Rocket, WandSparkles, Workflow } from 'lucide-react'
-import FixTabPanel from '@stateless/FixTabPanel'
+import FixTabPanel from '@shared/ui/FixTabPanel'
 import PromptOptimizer from '@stateless/PromptOptimizer'
 import SmartChat from '@stateless/SmartChat'
 
@@ -123,7 +115,6 @@ type PromptOptimizerProps = {
   copyLabel: string
 }
 
-const TypedFixTabPanel = FixTabPanel as unknown as ComponentType<{ children: ReactNode }>
 const TypedPromptOptimizer = PromptOptimizer as unknown as ComponentType<PromptOptimizerProps>
 const TypedSmartChat = SmartChat as unknown as ComponentType<SmartChatProps>
 
@@ -148,7 +139,7 @@ const PROMPT_PRESETS: { id: string; name: string; summary: string; tags: string[
       role: '平台发布架构师',
       objective: '为一个前端控制台设计发布方案，兼顾灰度、回滚、监控和值班交接。',
       audience: '前端负责人、SRE、测试经理',
-      context: '项目使用 Vite 构建，需要兼顾 GitHub Pages 与 Vercel 的部署节奏。',
+      context: '项目使用 Vite 构建，需要兼顾灰度发布、回滚和线上观测。',
       constraints: '必须包含风险矩阵、回滚触发条件、观测指标和灰度计划。',
       outputFormat: '先给一句总结，再输出发布步骤表格，最后给值班 Runbook。',
       examples: '请解释如何在 SSE 或实时流能力上线时做灰度和埋点。',
@@ -556,7 +547,7 @@ const AiWorkbench = () => {
   ]
 
   return (
-    <TypedFixTabPanel>
+    <FixTabPanel>
       <section className={styles.page}>
         <div className={styles.hero}>
           <div className={styles.heroMain}>
@@ -608,14 +599,14 @@ const AiWorkbench = () => {
         <Alert
           type="info"
           showIcon
-          message={<Text strong>当前环境</Text>}
+          title={<Text strong>当前环境</Text>}
           description={<Text>当前页面使用本地模拟流式响应，便于联调模板、对话、配置和事件记录等功能。</Text>}
         />
 
         <Row gutter={[20, 20]} className={styles.layout}>
           <Col xs={24} xxl={10}>
             <div className={styles.columnStack}>
-              <Card className={styles.panelCard} bordered={false}>
+              <Card className={styles.panelCard} variant="borderless">
                 <div className={styles.sectionHeader}>
                   <div>
                     <h3>提示词模板</h3>
@@ -662,7 +653,7 @@ const AiWorkbench = () => {
 
           <Col xs={24} xxl={14}>
             <div className={styles.columnStack}>
-              <Card className={styles.panelCard} bordered={false}>
+              <Card className={styles.panelCard} variant="borderless">
                 <div className={styles.sectionHeader}>
                   <div>
                     <h3>运行配置</h3>
@@ -749,7 +740,7 @@ const AiWorkbench = () => {
                 </div>
               </Card>
 
-              <Card className={styles.chatCard} bordered={false}>
+              <Card className={styles.chatCard} variant="borderless">
                 <div className={styles.chatHeader}>
                   <div>
                     <h3>会话窗口</h3>
@@ -798,7 +789,7 @@ const AiWorkbench = () => {
 
         <Row gutter={[20, 20]}>
           <Col xs={24} xl={14}>
-            <Card className={styles.panelCard} bordered={false}>
+            <Card className={styles.panelCard} variant="borderless">
               <Tabs
                 className={styles.detailTabs}
                 items={[
@@ -816,7 +807,7 @@ const AiWorkbench = () => {
                                 : event.type === 'abort'
                                   ? 'orange'
                                   : 'blue',
-                          children: (
+                          content: (
                             <div className={styles.timelineItem}>
                               <div className={styles.timelineHeader}>
                                 <strong>{event.type}</strong>
@@ -879,7 +870,7 @@ const AiWorkbench = () => {
           </Col>
 
           <Col xs={24} xl={10}>
-            <Card className={styles.panelCard} bordered={false}>
+            <Card className={styles.panelCard} variant="borderless">
               <div className={styles.sectionHeader}>
                 <div>
                   <h3>运行概览</h3>
@@ -920,7 +911,7 @@ const AiWorkbench = () => {
           </Col>
         </Row>
       </section>
-    </TypedFixTabPanel>
+    </FixTabPanel>
   )
 }
 

@@ -17,10 +17,10 @@
   width: 100%;
   height: 100%;
   min-height: 400px;
-  background-color: #f9fafb;
+  background-color: var(--wui-bg-subtle);
   border-radius: 8px;
-  border: 2px dashed #d1d5db;
-  color: #6b7280;
+  border: 2px dashed var(--wui-border-strong);
+  color: var(--wui-text-secondary);
   font-size: 1.125rem;
   font-weight: 500;
 }
@@ -62,8 +62,13 @@
   height: calc(100% + 44px);
   pointer-events: none;
   z-index: -1;
-  background:
-    radial-gradient(ellipse at center bottom, rgb(32 20 8 / 18%) 0%, rgb(32 20 8 / 11%) 30%, rgb(32 20 8 / 5%) 52%, transparent 78%);
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgb(32 20 8 / 18%) 0%,
+    rgb(32 20 8 / 11%) 30%,
+    rgb(32 20 8 / 5%) 52%,
+    transparent 78%
+  );
   filter: blur(24px);
   transform: translateY(30px) scaleY(1.08);
   transition: opacity 0.28s ease;
@@ -92,8 +97,7 @@
   top: 10px;
   bottom: 12px;
   width: calc(50% - 10px);
-  background:
-    linear-gradient(180deg, #fffdf9 0%, #f7f1e6 100%);
+  background: linear-gradient(180deg, #fffdf9 0%, #f7f1e6 100%);
   box-shadow: inset 0 0 0 1px rgb(223 209 183 / 38%);
 }
 
@@ -110,8 +114,7 @@
   bottom: 14px;
   left: calc(50% - 10px);
   width: 20px;
-  background:
-    linear-gradient(90deg, rgb(72 52 28 / 22%) 0%, rgb(31 20 10 / 10%) 28%, rgb(255 255 255 / 0%) 100%);
+  background: linear-gradient(90deg, rgb(72 52 28 / 22%) 0%, rgb(31 20 10 / 10%) 28%, rgb(255 255 255 / 0%) 100%);
   filter: blur(1px);
 }
 
@@ -266,13 +269,13 @@
   top: 16px;
   left: 16px;
   padding: 10px;
-  color: #6b7280;
+  color: var(--wui-text-secondary, #6b7280);
   cursor: pointer;
   transition: all 0.3s ease;
   border-radius: 50%;
-  background-color: rgb(255 255 255 / 80%);
+  background-color: var(--wui-bg-elevated, rgb(255 255 255 / 80%));
   backdrop-filter: blur(4px);
-  border: 1px solid rgb(0 0 0 / 10%);
+  border: 1px solid var(--wui-border, rgb(0 0 0 / 10%));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -300,8 +303,6 @@
     }
   }
 }
-
-
 
 .page {
   position: absolute;
@@ -522,8 +523,8 @@
   gap: 8px;
   padding: 8px 16px;
   border-radius: 9999px;
-  background-color: #f3f4f6;
-  color: #374151;
+  background-color: var(--wui-bg-subtle, #f3f4f6);
+  color: var(--wui-text-primary, #374151);
   font-size: 0.875em;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -531,7 +532,7 @@
   position: relative;
 
   &:hover {
-    background-color: #e5e7eb;
+    background-color: var(--wui-bg-elevated, #e5e7eb);
   }
 }
 
@@ -542,11 +543,11 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background-color: rgb(255 255 255 / 95%);
+  background-color: var(--wui-bg-elevated, rgb(255 255 255 / 95%));
   backdrop-filter: blur(12px);
   padding: 10px 24px;
   border-radius: 50px;
-  border: 1px solid rgb(0 0 0 / 8%);
+  border: 1px solid var(--wui-border, rgb(0 0 0 / 8%));
   z-index: 10;
   animation: slide-up 0.5s ease-out;
 }
@@ -567,7 +568,7 @@
   padding: 8px;
   border-radius: 50%;
   transition: all 0.2s ease;
-  color: #374151;
+  color: var(--wui-text-primary, #374151);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -600,12 +601,12 @@
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: 0.1em;
-  color: #374151;
+  color: var(--wui-text-primary, #374151);
 }
 
 .navStatus {
   font-size: 0.625rem;
-  color: #6b7280;
+  color: var(--wui-text-muted, #6b7280);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -613,14 +614,14 @@
 .navDivider {
   width: 1px;
   height: 28px;
-  background-color: #e5e7eb;
+  background-color: var(--wui-border-strong, #e5e7eb);
   margin: 0 4px;
 }
 
 .closeNavButton {
   padding: 8px;
   border-radius: 50%;
-  color: #6b7280;
+  color: var(--wui-text-secondary, #6b7280);
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -640,7 +641,7 @@
 .hint {
   position: absolute;
   bottom: 24px;
-  color: #6b7280;
+  color: var(--wui-text-secondary, #6b7280);
   font-size: 0.875rem;
   font-weight: 300;
   letter-spacing: 0.1em;
@@ -652,7 +653,7 @@
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  color: #6b7280;
+  color: var(--wui-text-secondary, #6b7280);
   font-size: 0.75rem;
   font-weight: 300;
   letter-spacing: 0.1em;
@@ -916,8 +917,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f5f5f5;
-  color: #bbb;
+  background: var(--wui-bg-subtle, #f5f5f5);
+  color: var(--wui-text-muted, #bbb);
   font-size: 14px;
 }
 
@@ -936,7 +937,6 @@
   overflow: hidden;
   perspective: 2000px;
   border-radius: 0;
-
 }
 
 .singlePage {
@@ -997,7 +997,6 @@
   /* 单页视口在移动端撑满宽度 */
   .singlePageViewport {
     border-radius: 0;
-
   }
 
   .navigation {
@@ -1006,7 +1005,6 @@
     bottom: 8px;
     border-radius: 28px;
     max-width: calc(100vw - 32px);
-
   }
 
   .navButton {

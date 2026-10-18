@@ -21,6 +21,7 @@ import styles from './index.module.less'
 import './styles/global.less'
 import './styles/codeHighlight.less'
 import PropTypes from 'prop-types'
+import { useOptionalProThemeContext } from '@/theme/hooks'
 
 // 创建 lowlight 实例，加载常用语言
 const lowlight = createLowlight(common)
@@ -61,7 +62,9 @@ export default function ProMdxEditor({
   const [markdown, setMarkdown] = useState(initialMarkdownProp ?? defaultMarkdown)
   const [stats, setStats] = useState<Stats>({ cursorPos: '行 1, 列 1', stats: '0 字符 / 0 词' })
   const [toast, setToast] = useState<Toast | null>(null)
-  const [theme, setTheme] = useState('light')
+  const [localTheme, setLocalTheme] = useState('light')
+  const themeContext = useOptionalProThemeContext()
+  const activeTheme = themeContext?.resolvedTheme ?? localTheme
   const [editorKey, setEditorKey] = useState(0) // 用于强制刷新工具栏
   const lastMarkdownFromEditorRef = useRef(markdown)
   const toastTimerRef = useRef<number | null>(null)
@@ -129,8 +132,12 @@ export default function ProMdxEditor({
   }, [])
 
   const handleThemeChange = useCallback(() => {
-    setTheme((t) => (t === 'light' ? 'dark' : 'light'))
-  }, [])
+    if (themeContext) {
+      themeContext.updateSettings({ themeMode: activeTheme === 'dark' ? 'light' : 'dark' })
+      return
+    }
+    setLocalTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))
+  }, [activeTheme, themeContext])
 
   useEffect(() => {
     return () => {
@@ -213,13 +220,13 @@ export default function ProMdxEditor({
   }
 
   const viewClass = viewMode === 'split' ? styles.viewSplit : viewMode === 'code' ? styles.viewCode : ''
-  const themeClass = theme === 'dark' ? styles.themeDark : ''
+  const themeClass = activeTheme === 'dark' ? styles.themeDark : ''
 
   return (
     <div className={`${styles.mdxApp} ${viewClass} ${themeClass}`}>
-      <Header theme={theme} onThemeChange={handleThemeChange} onCopy={handleCopy} onDownload={handleDownload} />
+      <Header theme={activeTheme} onThemeChange={handleThemeChange} onCopy={handleCopy} onDownload={handleDownload} />
       <Toolbar editor={editor} viewMode={viewMode} onChangeViewMode={setViewMode} editorKey={editorKey} />
-      <main className={styles.mdxMainContent}>
+      <div className={styles.mdxMainContent}>
         <EditorCore
           editor={editor}
           onStatsUpdate={setStats}
@@ -234,7 +241,7 @@ export default function ProMdxEditor({
             scrollRef={sourceScrollRef}
           />
         )}
-      </main>
+      </div>
       <Footer cursorPos={stats.cursorPos} stats={stats.stats} />
       {toast && <div className={`${styles.mdxToast} ${styles[`mdxToast_${toast.type}`] || ''}`}>{toast.message}</div>}
     </div>

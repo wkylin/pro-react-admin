@@ -2,7 +2,7 @@ import React from 'react'
 
 import styles from './index.module.less'
 
-const MultiColorBorder = ({ text, wrapperStyles = { color: '#fff' }, contentStyles = { color: '#fff' } }) => (
+const MultiColorBorder = ({ text, wrapperStyles = {}, contentStyles = {} }) => (
   <>
     <section
       className={styles.multiWrapper}

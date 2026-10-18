@@ -1,0 +1,12 @@
+{
+  "initialJavaScriptCssBytes": 3355443,
+  "singleJavaScriptCssAssetBytes": 3145728,
+  "source": "2026-10-11 measured default entry 2.85 MiB; enterprise entry 2.68 MiB, all JS/CSS 3.50 MiB",
+  "projects": {
+    "enterprise": {
+      "initialJavaScriptCssBytes": 3145728,
+      "singleJavaScriptCssAssetBytes": 3145728,
+      "totalJavaScriptCssBytes": 5242880
+    }
+  }
+}
