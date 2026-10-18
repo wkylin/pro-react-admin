@@ -226,17 +226,21 @@ const meta: Meta<typeof InteractiveBook> = {
   argTypes: {
     coverImage: { control: 'text', description: '封面图片 URL' },
     bookTitle: { control: 'text', description: '书籍标题' },
+    coverTitle: { control: false, description: '自定义封面标题排版，可使用 React 节点控制断行' },
     bookAuthor: { control: 'text', description: '书籍作者' },
     width: { control: 'number', description: '书页宽度（px）' },
     height: { control: 'number', description: '书页高度（px）' },
+    thickness: { control: { type: 'range', min: 6, max: 64, step: 1 }, description: '纸张厚度（px）' },
+    coverColor: { control: 'color', description: '封面、书脊与封底的装帧颜色' },
+    textured: { control: 'boolean', description: '是否显示封面纸纹' },
     mode: {
       control: 'select',
       options: ['auto', 'single', 'double'],
-      description: '翻页模式：auto 自动检测（<768px 切单页） / single 单页 / double 双页',
+      description: '翻页模式：auto 按屏幕和容器宽度切换 / single 单页 / double 双页',
     },
     enableKeyboard: { control: 'boolean', description: '是否启用键盘导航' },
     showNavigation: { control: 'boolean', description: '是否显示底部导航栏' },
-    showCornerFlip: { control: 'boolean', description: '是否显示页角翻页热区（海浪呼吸效果）' },
+    showCornerFlip: { control: 'boolean', description: '是否启用悬停书角的预卷页效果' },
     enableSound: { control: 'boolean', description: '是否启用翻页音效' },
     soundSrc: { control: 'text', description: '自定义音效文件 URL' },
     defaultOpen: { control: 'boolean', description: '初始是否打开书籍（跳过封面动画）' },
@@ -265,7 +269,19 @@ export const Default: Story = {
     pages: bookPages,
     width: 350,
     height: 500,
+    thickness: 36,
+    coverColor: '#1d2c4b',
+    textured: true,
     enableKeyboard: true,
+  },
+}
+
+export const OpenSpread: Story = {
+  ...Default,
+  name: '展开阅读',
+  args: {
+    ...Default.args,
+    defaultOpen: true,
   },
 }
 
@@ -274,7 +290,7 @@ export const CornerCurlHint: Story = {
   render: (args: InteractiveBookProps) => (
     <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 400 }}>
-        打开书籍后，将鼠标悬停在页面的右下角或左下角，页角会出现海浪卷起的动画效果。点击页角即可翻页。
+        打开书籍后，将鼠标悬停在页面的右下角或左下角，页角会随指针轻轻卷起。可点击书角翻页，也可按住书角拖动，松手后翻页或回弹。
       </p>
       <InteractiveBook {...args} pdfUrl={new URL('./assets/pdf/sample.pdf', window.location.href).href} />
     </div>
@@ -485,11 +501,11 @@ export const HideNavigation: Story = {
 
 // ─── 隐藏页角翻页 ─────────────────────────────────────
 export const HideCornerFlip: Story = {
-  name: '隐藏页角翻页热区',
+  name: '关闭悬停卷角预览',
   render: (args: InteractiveBookProps) => (
     <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
-        设置 <code>showCornerFlip=false</code> 隐藏页角海浪翻页热区，仅保留拖拽、导航栏和键盘翻页方式。
+        设置 <code>showCornerFlip=false</code> 关闭悬停书角的预卷页效果，仍可拖拽、点击书角，或使用导航栏和键盘翻页。
       </p>
       <InteractiveBook {...args} />
     </div>

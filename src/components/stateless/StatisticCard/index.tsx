@@ -1,5 +1,5 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
-import React, { type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { Tooltip, type TooltipProps } from 'antd'
 import { BookOpen, Wallet, TrendingUp, HelpCircle } from 'lucide-react'
 import styles from './index.module.less'

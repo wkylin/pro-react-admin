@@ -1,0 +1,280 @@
+.paperBlock {
+  position: absolute;
+  inset: 4px 4px 4px 0;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  transform: rotateY(calc(-1 * var(--spread-angle, 0deg)));
+  transition: transform 0.72s cubic-bezier(0.645, 0.045, 0.355, 1);
+  pointer-events: none;
+}
+
+.paperSurface,
+.foreEdge,
+.topEdge,
+.bottomEdge {
+  position: absolute;
+  backface-visibility: hidden;
+  transition:
+    transform 0.72s cubic-bezier(0.645, 0.045, 0.355, 1),
+    width 0.72s cubic-bezier(0.645, 0.045, 0.355, 1),
+    height 0.72s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.paperSurface {
+  inset: 0;
+  border-radius: 0 2px 2px 0;
+  background: #faf9f4;
+  transform: translateZ(var(--block-depth));
+  box-shadow: inset 8px 0 14px -10px rgb(43 31 15 / 35%);
+}
+
+.foreEdge {
+  top: 0;
+  left: 100%;
+  width: var(--block-depth);
+  height: 100%;
+  transform-origin: left center;
+  transform: translateZ(var(--block-depth)) rotateY(90deg);
+  background:
+    linear-gradient(0deg, rgb(58 61 69 / 12%), transparent 18%, rgb(255 255 255 / 35%) 70%),
+    repeating-linear-gradient(90deg, #f6f4ee 0 1px, #dedbd2 1px 1.35px, #faf9f4 1.35px 2.5px);
+}
+
+.topEdge,
+.bottomEdge {
+  left: 0;
+  width: 100%;
+  height: var(--block-depth);
+  background: repeating-linear-gradient(0deg, #f6f4ee 0 1px, #e3dfd5 1px 1.35px, #faf9f4 1.35px 2.5px);
+}
+
+.topEdge {
+  top: 0;
+  transform-origin: top center;
+  transform: rotateX(90deg);
+}
+
+.bottomEdge {
+  bottom: 0;
+  transform-origin: bottom center;
+  transform: rotateX(-90deg);
+  background-image:
+    linear-gradient(rgb(58 61 69 / 10%), rgb(58 61 69 / 10%)),
+    repeating-linear-gradient(0deg, #f6f4ee 0 1px, #dedbd2 1px 1.35px, #faf9f4 1.35px 2.5px);
+}
+
+.leftBlock {
+  right: 100%;
+  left: calc(-100% + 4px);
+  transform-origin: right center;
+  transform: rotateY(var(--spread-angle, 0deg));
+
+  .paperSurface {
+    box-shadow: inset -8px 0 14px -10px rgb(43 31 15 / 35%);
+  }
+
+  .foreEdge {
+    right: 100%;
+    left: auto;
+    transform-origin: right center;
+    transform: translateZ(var(--block-depth)) rotateY(-90deg);
+  }
+}
+
+.coverScene {
+  width: 100%;
+  padding: 28px 22px 30px;
+  perspective: 1000px;
+  perspective-origin: 50% 40%;
+}
+
+.closedBook {
+  position: relative;
+  width: 100%;
+  max-width: 180px;
+  aspect-ratio: 49 / 60;
+  margin: auto;
+  transform-style: preserve-3d;
+  transform-origin: center center calc(var(--book-depth) / 2);
+  transform: translateX(var(--book-preview-offset, 0)) rotateX(4deg) rotateY(var(--book-preview-y, -18deg))
+    scale(var(--book-preview-scale, 1));
+  transition: transform 0.45s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.frontBoard,
+.backBoard {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 4px 4px 6px;
+  background: var(--book-color);
+}
+
+.backBoard {
+  transform: translateZ(-1.5px);
+  box-shadow:
+    4px 5px 8px rgb(14 23 43 / 7%),
+    10px 12px 20px rgb(14 23 43 / 12%);
+}
+
+.frontBoard {
+  overflow: hidden;
+  transform: translateZ(calc(var(--book-depth) + 3px));
+}
+
+.coverArtwork {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+  border-radius: inherit;
+  background: var(--book-color);
+  color: #f4f7fd;
+}
+
+.artworkImage {
+  position: absolute;
+  inset: 38% 8% 15% 13%;
+  overflow: hidden;
+  border: 1px solid rgb(221 232 255 / 18%);
+  background: linear-gradient(145deg, rgb(200 215 255 / 14%), transparent);
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 55%;
+    filter: saturate(0.8) contrast(0.96);
+  }
+}
+
+.coverHeading {
+  position: absolute;
+  top: 8.5%;
+  right: 8%;
+  left: 13%;
+  font-family: 'Avenir Next', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: clamp(16px, 11.6cqi, 48px);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.coverAuthor {
+  position: absolute;
+  right: 8%;
+  bottom: 5.8%;
+  left: 13%;
+  margin: 0;
+  color: #c0cde5;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  font-size: clamp(9px, 3.2cqi, 14px);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+}
+
+.titleWord {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+}
+
+.coverFinish {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgb(255 255 255 / 6%), transparent 28%, rgb(0 0 0 / 4%));
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 10%),
+    inset 0 1px 1px rgb(255 255 255 / 22%),
+    inset 3px 0 3px rgb(0 0 0 / 12%),
+    inset 0 -1px 1px rgb(0 0 0 / 18%);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 7.2%;
+    border-radius: 6px 0 0 6px;
+    background:
+      linear-gradient(
+        90deg,
+        transparent 12%,
+        rgb(255 255 255 / 10%) 29%,
+        transparent 50%,
+        transparent 75%,
+        rgb(255 255 255 / 14%) 91%,
+        transparent
+      ),
+      linear-gradient(
+        90deg,
+        rgb(0 0 0 / 5%),
+        rgb(0 0 0 / 14%) 12%,
+        transparent 30%,
+        rgb(0 0 0 / 5%) 50%,
+        rgb(0 0 0 / 20%) 74%,
+        rgb(0 0 0 / 30%) 76%,
+        transparent
+      );
+  }
+}
+
+.textured::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: url('../../../assets/svg/noise.svg') repeat;
+  background-size: 180px 180px;
+  mix-blend-mode: soft-light;
+  opacity: 0.14;
+}
+
+.bindingSpine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--book-depth) + 5px);
+  height: 100%;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 28%), transparent 35%, rgb(255 255 255 / 14%) 75%, rgb(0 0 0 / 22%)),
+    var(--book-color);
+  transform-origin: left center;
+  transform: rotateY(-90deg) translateX(-3px);
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    writing-mode: vertical-rl;
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (hover: none) {
+  .closedBook {
+    --book-preview-y: -12deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .closedBook {
+    transform: rotateX(4deg) rotateY(-18deg);
+  }
+
+  .closedBook,
+  .paperBlock,
+  .paperSurface,
+  .foreEdge,
+  .topEdge,
+  .bottomEdge {
+    transition: none;
+  }
+}

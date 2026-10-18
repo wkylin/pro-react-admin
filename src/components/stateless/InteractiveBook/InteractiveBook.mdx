@@ -7,13 +7,23 @@ import * as Stories from './InteractiveBook.stories'
 
 应用内部翻页书组件。必需 coverImage 与 pages，可选 bookTitle/bookAuthor、pdfUrl 和 pageImages。显示优先级为 PDF > 图片 > pages JSX，每两面组成一个书页。
 
-mode 支持 single/double/auto；auto 在窄屏使用单页。defaultOpen 设置初始开合，open/onClose 为受控交互；onPageChange 接收页索引。可关闭导航、角落热区和音效。
+mode 支持 single/double/auto；auto 在窄屏或容器放不下完整双页时使用单页，并按可用宽度等比缩放。defaultOpen 设置初始开合，open/onClose 为受控交互；onPageChange 接收页索引。可关闭导航、悬停卷角预览和音效。
+
+封面、封底、书脊和纸张侧面使用 CSS 3D 构成立体书本。合起时保持 24° 侧转，悬停或键盘聚焦时转到 30° 并轻微上移，呈现纸张厚度。封面采用书名、插图和作者分区的精装排版；coverTitle 可传入 React 节点控制标题断行，书脊、内封与无障碍名称仍使用 bookTitle。圆角包边、书脊压痕与高光由共享装帧层渲染。textured 可启用封面纸纹（默认 false），复用本地噪点资源。
+
+内页使用与 react-pageflip 相同的 StPageFlip 引擎：封面与封底按硬板翻动，内页按软纸折叠，书角跟随鼠标或手指移动，折线与投影实时变化，未越过书槽的拖拽会回弹。左右纸叠厚度随阅读进度变化。thickness 设置纸张厚度（默认 28px，范围 6–64px），coverColor 设置封面、书脊和封底的装帧颜色（默认 #17213a）。正文使用独立字号，避免嵌套样式连续缩小。触屏与减少动态效果模式使用静态透视，系统启用减少动态效果时关闭旋转过渡、卷角预览与翻页动画。
+
+展开后以平展双页呈现，书槽渐变、页底纸叠和细纸纹表现装订层次。左侧内封展示书名、作者和章节目录；图片书展示插图扉页。内页统一页眉、正文和外侧页码，较长的正文可独立滚动。滚动区域溢出时保留原生触摸滚动，可通过页角和导航按钮翻页。导航显示实际页面范围和阅读进度。
+
+展开与翻页参考 [react-pageflip](https://nodlik.github.io/react-pageflip/)。透视与纸张侧面参考 [3D Book Image CSS Generator](https://scastiel.dev/3dbook/)，悬停动效和装帧参考 [Spell UI Perspective Book](https://spell.sh/docs/perspective-book)。
 
 PDF worker 由 Vite 资源 URL 解析，异常时回退 CDN，部署需验证 worker/CORS。当前不属于 @w.ui/wui-react 发布组件。
 
 ## 预览
 
 <Canvas of={Stories.Default} />
+
+<Canvas of={Stories.OpenSpread} />
 
 ## 当前参数
 

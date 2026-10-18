@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, X, BookOpen } from 'lucide-react'
 import { pdfjs } from 'react-pdf'
 import pageTurnAudio from '@/assets/audio/page-turn.mp3'
+import { BookCoverArtwork, BookPageBlock } from './BookVolume'
+import PageFlipRenderer, { type FlipPage, type PageFlipHandle } from './PageFlipRenderer'
 import styles from './index.module.less'
 
 // ─── 本地 Worker（Vite 8 asset module） ──────────────────────
@@ -29,6 +31,8 @@ export interface BookPage {
 export interface InteractiveBookProps {
   coverImage: string
   bookTitle?: string
+  /** 自定义封面标题排版；书脊、内封和无障碍名称仍使用 bookTitle */
+  coverTitle?: React.ReactNode
   bookAuthor?: string
   pages: BookPage[]
   /**
@@ -46,11 +50,17 @@ export interface InteractiveBookProps {
   className?: string
   width?: number | string
   height?: number | string
+  /** 合起时的纸张厚度（px），默认 28，范围 6–64 */
+  thickness?: number
+  /** 封面、书脊与封底的装帧颜色，默认 #17213a */
+  coverColor?: string
+  /** 是否显示封面纸纹，默认 false */
+  textured?: boolean
   onPageChange?: (pageIndex: number) => void
   enableKeyboard?: boolean
   /** 是否显示底部导航栏，默认 true */
   showNavigation?: boolean
-  /** 是否显示页角翻页热区（海浪呼吸效果），默认 true */
+  /** 是否启用悬停书角的预卷页效果，默认 true */
   showCornerFlip?: boolean
   /** 是否启用翻页音效，默认 true */
   enableSound?: boolean
@@ -60,11 +70,11 @@ export interface InteractiveBookProps {
    * 翻页模式：
    * - 'double': 双页模式（传统书籍展开，左右各一页）
    * - 'single': 单页模式（每次显示一页，适合移动端）
-   * - 'auto': 自动检测，窄屏（<768px）使用单页模式，宽屏使用双页模式
+   * - 'auto': 窄屏或容器放不下完整双页时使用单页模式
    * 默认 'auto'
    */
   mode?: 'single' | 'double' | 'auto'
-  /** 初始是否打开书籍（跳过封面动画），默认 false */
+  /** 初始是否打开书籍（直接显示内页），默认 false */
   defaultOpen?: boolean
   /** 受控模式：外部控制书籍开合状态。传入后会覆盖内部 isOpen */
   open?: boolean
@@ -295,11 +305,15 @@ function useImagePreloader(images: string[] | undefined, currentPageIndex: numbe
 export default function InteractiveBook({
   coverImage = '',
   bookTitle = 'Book Title',
+  coverTitle,
   bookAuthor = 'Author Name',
   pages = [],
   className,
   width = 350,
   height = 500,
+  thickness = 28,
+  coverColor = '#17213a',
+  textured = false,
   pageImages,
   pdfUrl,
   onPageChange,
@@ -313,1322 +327,450 @@ export default function InteractiveBook({
   open: controlledOpen,
   onClose,
 }: InteractiveBookProps) {
-  const [isOpen, setIsOpen] = useState(controlledOpen ?? defaultOpen)
-
-  // 受控模式：外部 open 变化时同步内部状态
-  useEffect(() => {
-    if (controlledOpen === undefined) return
-    if (controlledOpen !== isOpen) {
-      setIsOpen(controlledOpen)
-      if (!controlledOpen) {
-        setCurrentPageIndex(-1)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [controlledOpen])
-  const [currentPageIndex, setCurrentPageIndex] = useState(-1)
-  const [isHovering, setIsHovering] = useState(false)
-  const [isDragging, setIsDragging] = useState(false)
-  const [isTopHalf, setIsTopHalf] = useState(false)
-  const [dragOffset, setDragOffset] = useState(0)
-  const [dragOffsetY, setDragOffsetY] = useState(0)
-  const [cornerHover, setCornerHover] = useState<'none' | 'next' | 'prev'>('none')
-  const dragStartXRef = useRef(0)
-  const dragStartYRef = useRef(0)
-  const currentDragXRef = useRef(0)
-  const currentDragYRef = useRef(0)
-  const dragStartTimeRef = useRef(0)
-  const rafIdRef = useRef(0)
-  const dragStartRectRef = useRef<DOMRect | null>(null)
+  const reducedMotion = !!useReducedMotion()
+  const bookDepth = Number.isFinite(thickness) ? Math.min(64, Math.max(6, thickness)) : 28
+  const [internalOpen, setInternalOpen] = useState(defaultOpen)
+  const isOpen = controlledOpen ?? internalOpen
+  const [currentFace, setCurrentFace] = useState(0)
+  const [atEnd, setAtEnd] = useState(false)
+  const [isTurning, setIsTurning] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+  const lastReportedPage = useRef(-1)
   const containerRef = useRef<HTMLDivElement>(null)
-  const coverRef = useRef<HTMLDivElement>(null)
-  const pagesRef = useRef<HTMLDivElement>(null)
+  const sizeProbeRef = useRef<HTMLDivElement>(null)
+  const flipRef = useRef<PageFlipHandle>(null)
+  const coverPointerRef = useRef<number | null>(null)
+  const audioRef = useRef<HTMLAudioElement>(null)
+  const [layout, setLayout] = useState({
+    availableWidth: 0,
+    outerWidth: 0,
+    pageWidth: typeof width === 'number' ? width : 350,
+    pageHeight: typeof height === 'number' ? height : 500,
+  })
+  const [mobile, setMobile] = useState(false)
 
-  // ─── 容器尺寸自适应（移动端自动缩放书本大小） ────────
-  const [containerWidth, setContainerWidth] = useState(0)
   useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
-    const ro = new ResizeObserver((entries) => {
-      const entry = entries[0]
-      if (entry) setContainerWidth(entry.contentRect.width)
+    const container = containerRef.current
+    const probe = sizeProbeRef.current
+    if (!container || !probe) return
+    const observer = new ResizeObserver((entries) => {
+      setLayout((previous) => {
+        const entry = entries.find((item) => item.target === container)
+        const next = {
+          availableWidth: entry?.contentRect.width ?? previous.availableWidth,
+          outerWidth: entry?.borderBoxSize[0]?.inlineSize ?? previous.outerWidth,
+          pageWidth: Math.max(1, probe.offsetWidth),
+          pageHeight: Math.max(1, probe.offsetHeight),
+        }
+        return Object.keys(next).every((key) => next[key] === previous[key]) ? previous : next
+      })
     })
-    ro.observe(el)
-    return () => ro.disconnect()
+    observer.observe(container)
+    observer.observe(probe)
+    return () => observer.disconnect()
   }, [])
 
-  // ─── 响应式模式检测 ─────────────────────────────
-  const [isMobileView, setIsMobileView] = useState(false)
   useEffect(() => {
-    if (mode !== 'auto') return
-    const mq = window.matchMedia('(max-width: 768px)')
-    const handler = (e: MediaQueryListEvent | MediaQueryList) => setIsMobileView(e.matches)
-    handler(mq)
-    const listener = (e: MediaQueryListEvent) => handler(e)
-    mq.addEventListener('change', listener)
-    return () => mq.removeEventListener('change', listener)
-  }, [mode])
-  const isSinglePage = mode === 'single' || (mode === 'auto' && isMobileView)
+    const query = window.matchMedia('(max-width: 768px)')
+    const update = () => setMobile(query.matches)
+    update()
+    query.addEventListener('change', update)
+    return () => query.removeEventListener('change', update)
+  }, [])
 
-  // ─── 单页模式自适应尺寸 ────────────────────────────
-  // 在容器足够大时撑满可用宽度，但不超过传入的 width 上限
-  const origW = typeof width === 'number' ? width : 350
-  const origH = typeof height === 'number' ? height : 500
-  const aspectRatio = origH / origW
-
-  const effectiveWidth = (() => {
-    if (!isSinglePage) return width
-    if (typeof width !== 'number') return width
-    // containerWidth 是 ResizeObserver contentRect.width，已排除 CSS padding
-    // 直接作为可用宽度，不再额外扣减
-    if (containerWidth > 0) {
-      return Math.min(width, Math.max(containerWidth, 200))
-    }
-    return width
-  })()
-
-  const effectiveHeight = (() => {
-    if (!isSinglePage) return height
-    if (typeof effectiveWidth !== 'number' || typeof height !== 'number') return height
-    // 按宽度变化等比缩放高度
-    if (effectiveWidth !== origW) {
-      return Math.round(effectiveWidth * aspectRatio)
-    }
-    return height
-  })()
-
-  // ─── 翻页音效 ────────────────────────────────────
-  // 使用 DOM <audio> 元素而非 new Audio()，在 Storybook iframe 中更可靠
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const isSinglePage =
+    mode === 'single' ||
+    (mode === 'auto' && (mobile || (layout.outerWidth > 0 && layout.outerWidth < layout.pageWidth * 2 + 120)))
+  const effectiveWidth = Math.max(
+    1,
+    Math.floor(
+      Math.min(
+        layout.pageWidth,
+        layout.availableWidth > 0 ? layout.availableWidth / (isSinglePage ? 1 : 2) : layout.pageWidth
+      )
+    )
+  )
+  const effectiveHeight = Math.round((effectiveWidth * layout.pageHeight) / layout.pageWidth)
   const playPageTurnSound = useCallback(() => {
-    if (!enableSound) return
-    const audio = audioRef.current
-    if (!audio) return
-    audio.currentTime = 0
-    audio.play().catch(() => {})
+    if (!enableSound || !audioRef.current) return
+    audioRef.current.currentTime = 0
+    audioRef.current.play().catch(() => {})
   }, [enableSound])
 
-  // ─── PDF → 图片 ─────────────────────────────────
-  const pdfRenderWidth = typeof effectiveWidth === 'number' ? effectiveWidth - 24 : undefined
-  const { pdfImages, pdfLoading, pdfError } = usePdfToImages(pdfUrl, pdfRenderWidth)
-  const isPdfMode = !!(pdfUrl && pdfUrl.length > 0)
+  const { pdfImages, pdfLoading, pdfError } = usePdfToImages(pdfUrl, effectiveWidth - 24)
+  const isPdfMode = !!pdfUrl
+  const resolvedImages = isPdfMode ? pdfImages : pageImages
+  const isImageMode = !!resolvedImages?.length
+  const faces: BookPage[] = isImageMode
+    ? resolvedImages!.map((_, index) => ({ pageNumber: index + 1, content: null }))
+    : pages.flatMap((page, index) => [
+        { title: page.title, content: page.content, pageNumber: index * 2 + 1 },
+        { content: page.backContent, pageNumber: index * 2 + 2 },
+      ])
+  const hasContent = faces.length > 0 && (!isPdfMode || isImageMode)
+  const faceCount = faces.length
+  const chapters = isImageMode ? [] : faces.filter((face) => face.title)
+  const firstOpenPage = 1
+  const endPage = faceCount + (isSinglePage ? 1 : 2 + (faceCount % 2))
+  const lastOpenPage = isSinglePage ? endPage : endPage - 1
+  const startPage =
+    isOpen && !isClosing
+      ? atEnd
+        ? lastOpenPage
+        : isSinglePage
+          ? currentFace + 1
+          : currentFace === 0
+            ? 1
+            : Math.floor((currentFace - 1) / 2) * 2 + 3
+      : 0
+  const visibleStartPage = Math.min(faceCount, currentFace + 1)
+  const visibleEndPage = Math.min(faceCount, visibleStartPage + (isSinglePage || currentFace === 0 ? 0 : 1))
+  const readingProgress = faceCount ? Math.round((visibleEndPage / faceCount) * 100) : 0
+  useImagePreloader(resolvedImages, currentFace, true)
 
-  // ─── 统一图片源：PDF 转换后的图片 或 用户传入的图片 ───
-  const resolvedImages = isPdfMode ? (pdfImages.length > 0 ? pdfImages : undefined) : pageImages
-  const isImageMode = !!(resolvedImages && resolvedImages.length > 0)
-
-  // 单页 JSX 模式：将每个 BookPage 的 content + backContent 拆成独立页面
-  const singlePageFlatContent: BookPage[] | null =
-    isSinglePage && !isImageMode
-      ? pages
-          .flatMap((p) => {
-            const entries: BookPage[] = [{ pageNumber: 0, content: p.content, title: p.title }]
-            if (p.backContent) {
-              entries.push({ pageNumber: 0, content: p.backContent })
-            }
-            return entries
-          })
-          .map((entry, i) => ({ ...entry, pageNumber: i + 1 }))
-      : null
-
-  const totalBookPages = isSinglePage
-    ? isImageMode
-      ? resolvedImages!.length
-      : (singlePageFlatContent?.length ?? 0)
-    : isImageMode
-      ? Math.ceil(resolvedImages!.length / 2)
-      : pages.length
-  const bookPages: BookPage[] = isSinglePage
-    ? isImageMode
-      ? new Array(Math.max(totalBookPages, 0)).fill(0).map((_, i) => ({ pageNumber: i + 1 }) as BookPage)
-      : singlePageFlatContent!
-    : isImageMode
-      ? new Array(Math.max(totalBookPages, 0)).fill(0).map((_, i) => ({ pageNumber: i + 1 }) as BookPage)
-      : pages
-
-  // 预加载相邻页图片
-  useImagePreloader(resolvedImages, currentPageIndex, isSinglePage)
-
-  const handleOpenBook = () => {
-    setIsOpen(true)
-    playPageTurnSound()
-  }
-
-  const handleCloseBook = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setIsOpen(false)
-    setCurrentPageIndex(-1)
-    onClose?.()
-  }
-
-  const nextPage = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (currentPageIndex < totalBookPages - 1) {
-      const newIndex = currentPageIndex + 1
-      setCurrentPageIndex(newIndex)
-      onPageChange?.(newIndex)
-      playPageTurnSound()
-    }
-  }
-
-  const prevPage = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (currentPageIndex >= 0) {
-      const newIndex = currentPageIndex - 1
-      setCurrentPageIndex(newIndex)
-      onPageChange?.(newIndex)
-      playPageTurnSound()
-    }
-  }
-
-  const restartBook = (e: React.MouseEvent) => {
-    e.stopPropagation()
-    setCurrentPageIndex(-1)
-    onPageChange?.(-1)
-  }
-
-  // 处理封面拖拽打开
-  const handleCoverMouseDown = (e: React.MouseEvent) => {
-    if (isOpen) return
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(true)
-    dragStartXRef.current = e.clientX
-    currentDragXRef.current = e.clientX
-    setDragOffset(0)
-  }
-
-  const handleCoverTouchStart = (e: TouchEvent) => {
-    if (isOpen) return
-    e.preventDefault()
-    e.stopPropagation()
-    const touch = e.touches[0]
-    setIsDragging(true)
-    dragStartXRef.current = touch.clientX
-    currentDragXRef.current = touch.clientX
-    setDragOffset(0)
-  }
-
-  // 处理拖拽翻页
-
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!isOpen) return
-    e.preventDefault()
-    setIsDragging(true)
-
-    // Determine if drag started in top or bottom half
-    const rect = (e.currentTarget as Element).getBoundingClientRect()
-    const relativeY = e.clientY - rect.top
-    setIsTopHalf(relativeY < rect.height / 2)
-    dragStartRectRef.current = rect
-
-    dragStartXRef.current = e.clientX
-    dragStartYRef.current = e.clientY
-    currentDragXRef.current = e.clientX
-    currentDragYRef.current = e.clientY
-    dragStartTimeRef.current = Date.now()
-    setDragOffset(0)
-    setDragOffsetY(0)
-  }
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging) return
-    currentDragXRef.current = e.clientX
-    currentDragYRef.current = e.clientY
-    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
-    rafIdRef.current = requestAnimationFrame(() => {
-      setDragOffset(currentDragXRef.current - dragStartXRef.current)
-      setDragOffsetY(currentDragYRef.current - dragStartYRef.current)
-    })
-  }
-
-  const handleMouseUp = () => {
-    if (!isDragging) return
-    if (rafIdRef.current) {
-      cancelAnimationFrame(rafIdRef.current)
-      rafIdRef.current = 0
-    }
-
-    const deltaX = currentDragXRef.current - dragStartXRef.current
-    const elapsed = Math.max(Date.now() - dragStartTimeRef.current, 1)
-    const velocity = Math.abs(deltaX) / elapsed // px/ms
-
-    // 统一翻页判断：距离超过50px 或 快速滑动（速度>0.3 px/ms 且距离>25px）
-    const shouldFlip = Math.abs(deltaX) > 50 || (velocity > 0.3 && Math.abs(deltaX) > 25)
-
-    if (!isOpen) {
-      if (deltaX < -25 || (velocity > 0.3 && deltaX < -15)) {
-        setIsOpen(true)
-        playPageTurnSound()
+  const reportPage = (page: number) => {
+    if (page === 0 || page > endPage) {
+      setCurrentFace(0)
+      setAtEnd(false)
+      setIsClosing(false)
+      if (isOpen) {
+        setInternalOpen(false)
+        onClose?.()
       }
-      setIsDragging(false)
-      setDragOffset(0)
-      setDragOffsetY(0)
-      dragStartXRef.current = 0
-      dragStartYRef.current = 0
-      currentDragXRef.current = 0
-      currentDragYRef.current = 0
-      dragStartTimeRef.current = 0
       return
     }
-
-    if (shouldFlip) {
-      if (deltaX < 0 && currentPageIndex < totalBookPages - 1) {
-        const newIndex = currentPageIndex + 1
-        setCurrentPageIndex(newIndex)
-        onPageChange?.(newIndex)
-        playPageTurnSound()
-      } else if (deltaX > 0 && currentPageIndex >= 0) {
-        const newIndex = currentPageIndex - 1
-        setCurrentPageIndex(newIndex)
-        onPageChange?.(newIndex)
-        playPageTurnSound()
-      }
-    } else if (
-      isSinglePage &&
-      Math.abs(deltaX) < 10 &&
-      Math.abs(currentDragYRef.current - dragStartYRef.current) < 10
-    ) {
-      // 单页模式点击翻页（参考 Kindle/Apple Books 交互）
-      const rect = dragStartRectRef.current
-      if (rect) {
-        const tapX = dragStartXRef.current - rect.left
-        if (tapX > rect.width * 0.4 && currentPageIndex < totalBookPages - 1) {
-          // 点击右侧 60% → 下一页
-          const newIndex = currentPageIndex + 1
-          setCurrentPageIndex(newIndex)
-          onPageChange?.(newIndex)
-          playPageTurnSound()
-        } else if (tapX <= rect.width * 0.4 && currentPageIndex >= 0) {
-          // 点击左侧 40% → 上一页
-          const newIndex = currentPageIndex - 1
-          setCurrentPageIndex(newIndex)
-          onPageChange?.(newIndex)
-          playPageTurnSound()
-        }
-      }
+    const face = Math.max(0, Math.min(faceCount - 1, page - (isSinglePage ? 1 : 2)))
+    setCurrentFace(face)
+    setAtEnd(page >= lastOpenPage)
+    const index = isSinglePage ? page - 2 : Math.floor((page - 3) / 2)
+    if (index !== lastReportedPage.current) {
+      lastReportedPage.current = index
+      onPageChange?.(index)
     }
-
-    setIsDragging(false)
-    setDragOffset(0)
-    setDragOffsetY(0)
-    dragStartXRef.current = 0
-    dragStartYRef.current = 0
-    currentDragXRef.current = 0
-    currentDragYRef.current = 0
-    dragStartTimeRef.current = 0
+  }
+  const reportTurning = (turning: boolean) => {
+    setIsTurning(turning)
+    if (turning) playPageTurnSound()
+  }
+  const openBook = () => setInternalOpen(true)
+  const closeBook = () => {
+    setIsClosing(true)
+    flipRef.current?.goTo(0)
+  }
+  const restartBook = () => flipRef.current?.goTo(firstOpenPage)
+  const nextPage = () => {
+    if (!isTurning && !atEnd) flipRef.current?.next()
+  }
+  const previousPage = () => {
+    if (!isTurning && (currentFace > 0 || atEnd)) flipRef.current?.previous()
   }
 
-  // 触摸处理
-  const handleTouchStart = (e: TouchEvent) => {
-    if (!isOpen) return
-    e.preventDefault()
-    const touch = e.touches[0]
-    setIsDragging(true)
+  useEffect(() => {
+    if (!hasContent) return
+    const page = flipRef.current?.getPage() ?? 0
+    if (isOpen && !isClosing && page === 0) flipRef.current?.next()
+    else if (!isOpen && page > 0) flipRef.current?.goTo(0)
+  }, [isOpen, isClosing, hasContent, isSinglePage])
 
-    // Determine if drag started in top or bottom half
-    const target = e.currentTarget as Element | null
-    const rect = target?.getBoundingClientRect() ?? pagesRef.current?.getBoundingClientRect()
-    if (rect) {
-      const relativeY = touch.clientY - rect.top
-      setIsTopHalf(relativeY < rect.height / 2)
-      dragStartRectRef.current = rect
-    }
-
-    dragStartXRef.current = touch.clientX
-    dragStartYRef.current = touch.clientY
-    currentDragXRef.current = touch.clientX
-    currentDragYRef.current = touch.clientY
-    dragStartTimeRef.current = Date.now()
-    setDragOffset(0)
-    setDragOffsetY(0)
-  }
-
-  const handleTouchMove = (e: TouchEvent) => {
-    if (!isDragging) return
-    e.preventDefault()
-    const touch = e.touches[0]
-    currentDragXRef.current = touch.clientX
-    currentDragYRef.current = touch.clientY
-    if (rafIdRef.current) cancelAnimationFrame(rafIdRef.current)
-    rafIdRef.current = requestAnimationFrame(() => {
-      setDragOffset(currentDragXRef.current - dragStartXRef.current)
-      setDragOffsetY(currentDragYRef.current - dragStartYRef.current)
-    })
-  }
-
-  const handleTouchEnd = () => {
-    if (!isDragging) return
-    handleMouseUp()
-  }
-
-  // 用 ref 保存最新的事件处理函数，避免 useEffect 依赖变化
-  const handlersRef = useRef({
-    handleMouseMove,
-    handleMouseUp,
-    handleTouchMove,
-    handleTouchEnd,
-    handleCoverTouchStart,
-    handleTouchStart,
-    nextPage,
-    prevPage,
-    handleCloseBook,
+  const keyboardRef = useRef({ nextPage, previousPage, closeBook, restartBook, lastOpenPage })
+  useEffect(() => {
+    keyboardRef.current = { nextPage, previousPage, closeBook, restartBook, lastOpenPage }
   })
   useEffect(() => {
-    handlersRef.current = {
-      handleMouseMove,
-      handleMouseUp,
-      handleTouchMove,
-      handleTouchEnd,
-      handleCoverTouchStart,
-      handleTouchStart,
-      nextPage,
-      prevPage,
-      handleCloseBook,
-    }
-  })
-
-  // 全局事件监听
-  useEffect(() => {
-    if (isDragging) {
-      const onMouseMove = (e: MouseEvent) => handlersRef.current.handleMouseMove(e)
-      const onMouseUp = () => handlersRef.current.handleMouseUp()
-      const onTouchMove = (e: TouchEvent) => handlersRef.current.handleTouchMove(e)
-      const onTouchEnd = () => handlersRef.current.handleTouchEnd()
-      document.addEventListener('mousemove', onMouseMove)
-      document.addEventListener('mouseup', onMouseUp)
-      document.addEventListener('touchmove', onTouchMove, { passive: false })
-      document.addEventListener('touchend', onTouchEnd)
-      document.body.style.userSelect = 'none'
-
-      return () => {
-        document.removeEventListener('mousemove', onMouseMove)
-        document.removeEventListener('mouseup', onMouseUp)
-        document.removeEventListener('touchmove', onTouchMove)
-        document.removeEventListener('touchend', onTouchEnd)
-        document.body.style.userSelect = ''
-        if (rafIdRef.current) {
-          cancelAnimationFrame(rafIdRef.current)
-          rafIdRef.current = 0
-        }
+    if (!enableKeyboard || !isOpen || !hasContent) return
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        (event.target instanceof Element && event.target.closest('input, textarea, select, [contenteditable="true"]'))
+      )
+        return
+      const dialog = [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
+        .reverse()
+        .find((element) => element.getClientRects().length && getComputedStyle(element).visibility === 'visible')
+      if (dialog && !dialog.contains(containerRef.current)) return
+      const actions: Record<string, () => void> = {
+        ArrowLeft: keyboardRef.current.previousPage,
+        ArrowRight: keyboardRef.current.nextPage,
+        Escape: keyboardRef.current.closeBook,
+        Home: keyboardRef.current.restartBook,
+        End: () => flipRef.current?.goTo(keyboardRef.current.lastOpenPage),
+      }
+      if (actions[event.key]) {
+        event.preventDefault()
+        actions[event.key]()
       }
     }
-  }, [isDragging])
-
-  // 原生 touchstart 注册（passive: false），避免 React 合成事件 passive 限制
-  useEffect(() => {
-    const cover = coverRef.current
-    const pages = pagesRef.current
-    const onCoverTouch = (e: TouchEvent) => handlersRef.current.handleCoverTouchStart(e)
-    const onPagesTouch = (e: TouchEvent) => handlersRef.current.handleTouchStart(e)
-    cover?.addEventListener('touchstart', onCoverTouch, { passive: false })
-    pages?.addEventListener('touchstart', onPagesTouch, { passive: false })
-    return () => {
-      cover?.removeEventListener('touchstart', onCoverTouch)
-      pages?.removeEventListener('touchstart', onPagesTouch)
-    }
-  }, [])
-
-  // 键盘支持
-  useEffect(() => {
-    if (!enableKeyboard || !isOpen) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowLeft':
-          e.preventDefault()
-          handlersRef.current.prevPage(e as unknown as React.MouseEvent)
-          break
-        case 'ArrowRight':
-          e.preventDefault()
-          handlersRef.current.nextPage(e as unknown as React.MouseEvent)
-          break
-        case 'Escape':
-          e.preventDefault()
-          handlersRef.current.handleCloseBook(e as unknown as React.MouseEvent)
-          break
-        case 'Home':
-          e.preventDefault()
-          setCurrentPageIndex(-1)
-          onPageChange?.(-1)
-          playPageTurnSound()
-          break
-        case 'End':
-          e.preventDefault()
-          setCurrentPageIndex(totalBookPages - 1)
-          onPageChange?.(totalBookPages - 1)
-          playPageTurnSound()
-          break
-      }
-    }
-
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [enableKeyboard, isOpen, totalBookPages, onPageChange, playPageTurnSound])
+  }, [enableKeyboard, isOpen, hasContent])
 
-  // 空内容状态
-  if ((!pages || pages.length === 0) && !isImageMode) {
-    // PDF 正在加载 / 转换中
-    if (isPdfMode && (pdfLoading || pdfImages.length === 0)) {
-      return (
-        <div
-          ref={containerRef}
-          className={cn(styles.container, isSinglePage && styles.singlePageContainer, className)}
-          style={{ width: effectiveWidth, height: effectiveHeight }}
-        >
-          <div className={styles.emptyState} style={{ flexDirection: 'column', gap: 8 }}>
-            <div style={{ fontSize: 14, color: 'var(--wui-text-muted)' }}>PDF 加载中…</div>
-          </div>
-        </div>
-      )
-    }
-    // PDF 加载失败
-    if (isPdfMode && pdfError) {
-      return (
-        <div
-          ref={containerRef}
-          className={cn(styles.container, isSinglePage && styles.singlePageContainer, className)}
-          style={{ width: effectiveWidth, height: effectiveHeight }}
-        >
-          <div className={styles.emptyState} style={{ flexDirection: 'column', gap: 8 }}>
-            <div style={{ color: '#ef4444', fontWeight: 500 }}>PDF 加载失败</div>
-            <div style={{ fontSize: 12, color: 'var(--wui-text-muted)' }}>{pdfError}</div>
-          </div>
-        </div>
-      )
-    }
-    return (
-      <div
-        ref={containerRef}
-        className={cn(styles.container, isSinglePage && styles.singlePageContainer, className)}
-        style={{ width: effectiveWidth, height: effectiveHeight }}
-      >
-        <div className={styles.emptyState}>
-          <p>暂无内容</p>
-        </div>
+  const frontMatter = (
+    <div className={styles.innerContent}>
+      <div className={styles.frontMatterHeader}>{chapters.length ? '目录' : '扉页'}</div>
+      <div className={styles.frontMatterIntro}>
+        <h2 className={styles.innerTitle}>{bookTitle}</h2>
+        <p className={styles.innerAuthor}>{bookAuthor}</p>
       </div>
-    )
-  }
-
-  const coverVariants = {
-    closed: {
-      rotateY: 0,
-      zIndex: 100,
-      transition: {
-        rotateY: { duration: 0.6, ease: [0.645, 0.045, 0.355, 1] as const },
-        zIndex: { delay: 0.6 },
-      },
-    },
-    hoverClosed: {
-      rotateY: -15,
-      zIndex: 100,
-      transition: {
-        rotateY: { duration: 0.3, ease: 'easeOut' as const },
-        zIndex: { delay: 0 },
-      },
-    },
-    open: {
-      rotateY: -180,
-      zIndex: 0,
-      transition: {
-        rotateY: { duration: 0.6, ease: [0.645, 0.045, 0.355, 1] as const },
-        zIndex: { delay: 0.6 },
-      },
-    },
-  }
-
-  // 判断某个书页是否在可见范围内，用于图片懒加载
-  const isPageNearby = (bookPageIndex: number) => Math.abs(bookPageIndex - currentPageIndex) <= PRELOAD_RANGE
-
-  const renderPagesContainer = () => (
-    <div
-      className={cn(styles.pages, isDragging && styles.dragging)}
-      style={{
-        transformStyle: 'preserve-3d',
-        cursor: isOpen ? (isDragging ? 'grabbing' : 'pointer') : 'default',
-        userSelect: isDragging ? 'none' : undefined,
-        WebkitUserSelect: isDragging ? 'none' : undefined,
-        touchAction: isDragging ? 'none' : 'pan-y',
-      }}
-      ref={pagesRef}
-      onMouseDown={handleMouseDown}
-    >
-      {bookPages.map((page, index) => {
-        const isFlipped = index <= currentPageIndex
-        const isBuriedLeft = index < currentPageIndex
-        // 单页模式：所有已翻页面立即隐藏（viewport 裁剪掉了它们，只保留动画中的那一页可见）
-        const isDeeplyBuried = isSinglePage ? isFlipped && isBuriedLeft : isFlipped && index < currentPageIndex - 1
-
-        const variants = {
-          flipped: {
-            rotateY: -180,
-            zIndex: isBuriedLeft ? index + 1 : bookPages.length + 10,
-            transition: {
-              rotateY: {
-                duration: 0.6,
-                ease: [0.645, 0.045, 0.355, 1] as const,
-              },
-              // 若是刚翻过去的顶层页，立即提升层级；若是被压住的旧页，延迟层级调整
-              zIndex: { delay: isBuriedLeft ? 0.6 : 0 },
-            },
-          },
-          unflipped: {
-            rotateY: 0,
-            zIndex: bookPages.length - index,
-            transition: {
-              rotateY: {
-                duration: 0.6,
-                ease: [0.645, 0.045, 0.355, 1] as const,
-              },
-              zIndex: { delay: 0.6 },
-            },
-          },
-        }
-
-        // 计算动态样式以模拟纸张弯曲
-        // 单页模式：无论左滑右滑，始终操作当前可见页（currentPageIndex + 1）
-        // 双页模式：左滑操作下一页，右滑操作当前已翻页
-        const isActiveDragPage =
-          isDragging &&
-          isOpen &&
-          (isSinglePage
-            ? index === currentPageIndex + 1 && (dragOffset < 0 || (dragOffset > 0 && currentPageIndex >= 0))
-            : (dragOffset < 0 && index === currentPageIndex + 1) || (dragOffset > 0 && index === currentPageIndex))
-
-        // 计算折角几何 (Turn.js 风格算法)
-        let hx = 0,
-          hy = 0
-        let safeDx = 0,
-          safeDy = 0
-
-        if (isActiveDragPage) {
-          const r2 = dragOffset * dragOffset + dragOffsetY * dragOffsetY
-          // Use a small epsilon to avoid division by zero
-          safeDy = Math.abs(dragOffsetY) < 1 ? (dragOffsetY >= 0 ? 1 : -1) : dragOffsetY
-          safeDx = Math.abs(dragOffset) < 1 ? (dragOffset >= 0 ? 1 : -1) : dragOffset
-          hx = Math.abs(r2 / (2 * safeDx))
-          hy = Math.abs(r2 / (2 * safeDy))
-        }
-
-        const W = typeof effectiveWidth === 'number' ? effectiveWidth : 300
-        const H = typeof effectiveHeight === 'number' ? effectiveHeight : 500
-        const dragProgress = isActiveDragPage ? Math.min(Math.abs(dragOffset) / Math.max(W * 0.92, 1), 1) : 0
-        const stackDepth = Math.min((bookPages.length - index) * 0.65, 14)
-        const frontTurnShadow = isActiveDragPage
-          ? dragOffset < 0
-            ? `linear-gradient(to left, rgba(31, 24, 14, ${0.08 + dragProgress * 0.22}) 0%, rgba(31, 24, 14, ${
-                0.04 + dragProgress * 0.14
-              }) 18%, transparent 46%)`
-            : `linear-gradient(to right, rgba(31, 24, 14, ${0.08 + dragProgress * 0.2}) 0%, rgba(31, 24, 14, ${
-                0.03 + dragProgress * 0.1
-              }) 16%, transparent 44%)`
-          : isFlipped
-            ? 'linear-gradient(to right, rgba(31, 24, 14, 0.08) 0%, transparent 22%)'
-            : 'linear-gradient(to left, rgba(31, 24, 14, 0.06) 0%, transparent 20%)'
-        const backTurnShadow = isActiveDragPage
-          ? dragOffset < 0
-            ? `linear-gradient(to right, rgba(45, 34, 18, ${0.1 + dragProgress * 0.2}) 0%, transparent 34%)`
-            : `linear-gradient(to left, rgba(45, 34, 18, ${0.1 + dragProgress * 0.2}) 0%, transparent 34%)`
-          : isFlipped
-            ? 'linear-gradient(to left, rgba(45, 34, 18, 0.1) 0%, transparent 28%)'
-            : 'linear-gradient(to right, rgba(45, 34, 18, 0.08) 0%, transparent 28%)'
-
-        const getFoldPolygons = (isTR: boolean, isBR: boolean, isTL: boolean, isBL: boolean) => {
-          // 水平不超过页宽（书脊边界），垂直可延伸更多（模拟真实翻页）
-          const chx = Math.min(hx, W)
-          const chy = Math.min(hy, H * 2)
-
-          let body = ''
-          let ear = ''
-          let foldAxis = ''
-          let origin = ''
-
-          if (isTR) {
-            // Top-Right: Peeling towards Left-Bottom
-            body = `polygon(0% 0%, calc(100% - ${chx}px) 0%, 100% ${chy}px, 100% 100%, 0% 100%)`
-            ear = `polygon(100% 0%, calc(100% - ${chx}px) 0%, 100% ${chy}px)`
-            foldAxis = `${chx}, ${chy}, 0`
-            origin = `100% ${chy}px`
-          } else if (isBR) {
-            // Bottom-Right
-            body = `polygon(0% 0%, 100% 0%, 100% calc(100% - ${chy}px), calc(100% - ${chx}px) 100%, 0% 100%)`
-            ear = `polygon(100% 100%, 100% calc(100% - ${chy}px), calc(100% - ${chx}px) 100%)`
-            foldAxis = `${chx}, ${-chy}, 0`
-            origin = `100% calc(100% - ${chy}px)`
-          } else if (isTL) {
-            // Top-Left
-            body = `polygon(${chx}px 0%, 100% 0%, 100% 100%, 0% 100%, 0% ${chy}px)`
-            ear = `polygon(0% 0%, ${chx}px 0%, 0% ${chy}px)`
-            foldAxis = `${-chx}, ${chy}, 0`
-            origin = `0% ${chy}px`
-          } else if (isBL) {
-            // Bottom-Left
-            body = `polygon(0% 0%, 100% 0%, 100% 100%, ${chx}px 100%, 0% calc(100% - ${chy}px))`
-            ear = `polygon(0% 100%, ${chx}px 100%, 0% calc(100% - ${chy}px))`
-            foldAxis = `${-chx}, ${-chy}, 0`
-            origin = `0% calc(100% - ${chy}px)`
-          }
-          return { body, ear, foldAxis, origin }
-        }
-
-        let frontClipPath = undefined
-        let backClipPath = undefined
-        let flapStyle: React.CSSProperties | undefined = undefined
-        let flapContent = null
-
-        // 图片索引：单页模式每 sheet 1张，双页模式每 sheet 2张
-        const frontImgIdx = isSinglePage ? index : index * 2
-        const backImgIdx = isSinglePage ? -1 : index * 2 + 1
-        const shouldLoadImages = isPageNearby(index)
-        const frontPageNum = isSinglePage ? page.pageNumber : page.pageNumber * 2 - 1
-        const backPageNum = isSinglePage ? -1 : page.pageNumber * 2
-
-        // 提取内容渲染逻辑以便在折角（Flap）中复用
-        const renderFrontInner = () => (
-          <>
-            {isImageMode && resolvedImages ? (
-              <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-                <div className={styles.pageNumber}>PAGE {frontImgIdx + 1}</div>
-                {frontImgIdx < resolvedImages.length ? (
-                  <LazyPageImage
-                    src={resolvedImages[frontImgIdx]}
-                    shouldLoad={shouldLoadImages}
-                    alt={`第 ${frontImgIdx + 1} 页`}
-                  />
-                ) : (
-                  <div className={styles.pageNumberOnly}>
-                    <span>{frontImgIdx + 1}</span>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className={styles.pageText}>
-                <div className={styles.pageNumber}>PAGE {frontPageNum}</div>
-                {page.title && <h3 className={styles.pageTitle}>{page.title}</h3>}
-                <div className={styles.pageText}>{page.content}</div>
-              </div>
-            )}
-          </>
-        )
-
-        const renderBackInner = () => {
-          // 单页模式：背面显示纸张纹理
-          if (isSinglePage) {
-            return (
-              <div className={styles.singlePageBack}>
-                <div className={styles.paperTexture} />
-              </div>
-            )
-          }
-          return (
-            <>
-              {isImageMode && resolvedImages ? (
-                <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-                  <div className={styles.backPageNumber}>PAGE {backImgIdx + 1}</div>
-                  {backImgIdx < resolvedImages.length ? (
-                    <LazyPageImage
-                      src={resolvedImages[backImgIdx]}
-                      shouldLoad={shouldLoadImages}
-                      alt={`第 ${backImgIdx + 1} 页`}
-                    />
-                  ) : (
-                    <div className={styles.pageNumberOnly}>
-                      <span>{backImgIdx + 1}</span>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className={styles.backText}>
-                  <div className={styles.backPageNumber}>PAGE {backPageNum}</div>
-                  {page.backContent ? (
-                    <div className={styles.backText}>{page.backContent}</div>
-                  ) : (
-                    <div className={styles.pageNumberOnly}>
-                      <span>{backPageNum}</span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </>
-          )
-        }
-
-        if (isActiveDragPage) {
-          let poly = null
-          if (dragOffset < 0) {
-            // Drag Right -> Left (Peeling Page N, revealing Back)
-            poly = getFoldPolygons(isTopHalf, !isTopHalf, false, false)
-            frontClipPath = poly.body
-
-            flapStyle = {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 50,
-              pointerEvents: 'none',
-              clipPath: poly.ear,
-              transformOrigin: poly.origin,
-              transform: `rotate3d(${poly.foldAxis}, 180deg)`,
-              backfaceVisibility: 'visible',
-              boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
-            }
-
-            // Flap shows the Back Content of the current page
-            flapContent = (
-              <div className={styles.pageBack} style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'visible' }}>
-                <div className={styles.rightShadow} />
-                <div className={styles.rightBorder} />
-                <div className={styles.backContent}>{renderBackInner()}</div>
-              </div>
-            )
-          } else if (isSinglePage) {
-            // ─── 单页模式右滑：从当前可见页的左侧卷起 ───
-            // 当前可见页 = currentPageIndex + 1，从 TL/BL 角折起正面
-            poly = getFoldPolygons(false, false, isTopHalf, !isTopHalf)
-            frontClipPath = poly.body
-
-            flapStyle = {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 50,
-              pointerEvents: 'none',
-              clipPath: poly.ear,
-              transformOrigin: poly.origin,
-              transform: `rotate3d(${poly.foldAxis}, 180deg)`,
-              backfaceVisibility: 'visible',
-              boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
-            }
-
-            // Flap 显示纸张背面纹理
-            flapContent = (
-              <div className={styles.pageBack} style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'visible' }}>
-                <div className={styles.rightShadow} />
-                <div className={styles.rightBorder} />
-                <div className={styles.backContent}>
-                  <div className={styles.singlePageBack}>
-                    <div className={styles.paperTexture} />
-                  </div>
-                </div>
-              </div>
-            )
-          } else {
-            // ─── 双页模式右滑：从已翻页背面的左侧卷起 ───
-            poly = getFoldPolygons(false, false, isTopHalf, !isTopHalf)
-            backClipPath = poly.body
-
-            flapStyle = {
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 50,
-              pointerEvents: 'none',
-              clipPath: poly.ear,
-              transformOrigin: poly.origin,
-              transform: `rotate3d(${poly.foldAxis}, 180deg)`,
-              backfaceVisibility: 'visible',
-              boxShadow: '2px 0 10px rgba(0,0,0,0.1)',
-            }
-
-            // Flap shows the Front Content of the left page
-            flapContent = (
-              <div className={styles.pageFront} style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'visible' }}>
-                <div className={styles.leftShadow} />
-                <div className={styles.leftBorder} />
-                <div className={styles.pageContent}>{renderFrontInner()}</div>
-              </div>
-            )
-          }
-        }
-
-        return (
-          <motion.div
-            key={index}
-            className={cn(styles.page, isDragging && styles.dragging)}
-            style={{
-              transformStyle: 'preserve-3d',
-              transformOrigin: 'left center',
-              visibility: isDeeplyBuried ? 'hidden' : 'visible',
-              marginRight: isSinglePage ? 0 : `${Math.max(0, stackDepth * 0.18)}px`,
-              marginBottom: `${Math.max(0, stackDepth * 0.12)}px`,
-
-              ...(isActiveDragPage ? { zIndex: 200 } : {}),
-            }}
-            initial="unflipped"
-            animate={isOpen && isFlipped ? 'flipped' : 'unflipped'}
-            variants={variants}
-          >
-            {/* ─── 正面 ─── */}
-            <div
-              className={styles.pageFront}
-              style={{
-                transform: 'translateZ(0.5px)',
-                clipPath: frontClipPath,
-              }}
-            >
-              <div
-                className={styles.pageTurnShade}
-                style={{
-                  background: frontTurnShadow,
-                  opacity: isActiveDragPage ? 1 : isFlipped ? 0.7 : 0.55,
-                }}
-              />
-              <div className={styles.pageContent}>
-                {isImageMode && resolvedImages ? (
-                  <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-                    <div className={styles.pageNumber}>PAGE {frontImgIdx + 1}</div>
-                    {frontImgIdx < resolvedImages.length ? (
-                      <LazyPageImage
-                        src={resolvedImages[frontImgIdx]}
-                        shouldLoad={shouldLoadImages}
-                        alt={`第 ${frontImgIdx + 1} 页`}
-                      />
-                    ) : (
-                      <div className={styles.pageNumberOnly}>
-                        <span>{frontImgIdx + 1}</span>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                    className={styles.pageText}
-                  >
-                    <div className={styles.pageNumber}>PAGE {frontPageNum}</div>
-                    {page.title && <h3 className={styles.pageTitle}>{page.title}</h3>}
-                    <div className={styles.pageText}>{page.content}</div>
-                  </motion.div>
-                )}
-              </div>
-              <div className={styles.leftShadow} />
-              <div className={styles.leftBorder} />
-              {/* 右下角翻页热区 */}
-              {showCornerFlip &&
-                isOpen &&
-                !isDragging &&
-                index === currentPageIndex + 1 &&
-                index <= bookPages.length - 1 && (
-                  <div
-                    className={cn(
-                      styles.cornerZone,
-                      styles.cornerBottomRight,
-                      cornerHover === 'next' && styles.cornerActive
-                    )}
-                    onMouseEnter={() => setCornerHover('next')}
-                    onMouseLeave={() => setCornerHover('none')}
-                    onMouseDown={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setCornerHover('none')
-                      nextPage(e)
-                    }}
-                  >
-                    <div className={styles.curlEffect} />
-                    <div className={styles.curlShadow} />
-                    <span className={styles.curlHint}>翻页 →</span>
-                  </div>
-                )}
-              {/* 左下角翻页热区（单页模式放在正面） */}
-              {isSinglePage &&
-                showCornerFlip &&
-                isOpen &&
-                !isDragging &&
-                index === currentPageIndex + 1 &&
-                currentPageIndex >= 0 && (
-                  <div
-                    className={cn(
-                      styles.cornerZone,
-                      styles.cornerBottomLeft,
-                      cornerHover === 'prev' && styles.cornerActive
-                    )}
-                    onMouseEnter={() => setCornerHover('prev')}
-                    onMouseLeave={() => setCornerHover('none')}
-                    onMouseDown={(e) => e.stopPropagation()}
-                    onTouchStart={(e) => e.stopPropagation()}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setCornerHover('none')
-                      prevPage(e)
-                    }}
-                  >
-                    <div className={styles.curlEffect} />
-                    <div className={styles.curlShadow} />
-                    <span className={styles.curlHint}>← 翻页</span>
-                  </div>
-                )}
-            </div>
-
-            {/* ─── 背面 ─── */}
-            <div
-              className={styles.pageBack}
-              style={{
-                transform: 'rotateY(180deg) translateZ(0.5px)',
-                cursor: isOpen && !isDragging && index === currentPageIndex ? 'pointer' : undefined,
-                clipPath: backClipPath,
-              }}
-            >
-              <div
-                className={styles.pageTurnShade}
-                style={{
-                  background: backTurnShadow,
-                  opacity: isActiveDragPage ? 1 : isFlipped ? 0.78 : 0.5,
-                }}
-              />
-              <div className={styles.rightShadow} />
-              <div className={styles.rightBorder} />
-
-              <div className={styles.backContent}>
-                {isSinglePage ? (
-                  <div className={styles.singlePageBack}>
-                    <div className={styles.paperTexture} />
-                  </div>
-                ) : isImageMode && resolvedImages ? (
-                  <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-                    <div className={styles.backPageNumber}>PAGE {backImgIdx + 1}</div>
-                    {backImgIdx < resolvedImages.length ? (
-                      <LazyPageImage
-                        src={resolvedImages[backImgIdx]}
-                        shouldLoad={shouldLoadImages}
-                        alt={`第 ${backImgIdx + 1} 页`}
-                      />
-                    ) : (
-                      <div className={styles.pageNumberOnly}>
-                        <span>{backImgIdx + 1}</span>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className={styles.backText}>
-                    <div className={styles.backPageNumber}>PAGE {backPageNum}</div>
-                    {page.backContent ? (
-                      <div className={styles.backText}>{page.backContent}</div>
-                    ) : (
-                      <div className={styles.pageNumberOnly}>
-                        <span>{backPageNum}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              {/* 左下角翻页热区（双页模式放在背面） */}
-              {!isSinglePage && showCornerFlip && isOpen && !isDragging && index === currentPageIndex && (
-                <div
-                  className={cn(
-                    styles.cornerZone,
-                    styles.cornerBottomLeft,
-                    cornerHover === 'prev' && styles.cornerActive
-                  )}
-                  onMouseEnter={() => setCornerHover('prev')}
-                  onMouseLeave={() => setCornerHover('none')}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onTouchStart={(e) => e.stopPropagation()}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setCornerHover('none')
-                    prevPage(e)
-                  }}
-                >
-                  <div className={styles.curlEffect} />
-                  <div className={styles.curlShadow} />
-                  <span className={styles.curlHint}>← 翻页</span>
-                </div>
-              )}
-            </div>
-
-            {/* ─── 折角翻页效果（独立层，不受 clip-path 影响） ─── */}
-            {/* 右侧拖拽：在正面层上方显示折角 */}
-            {isActiveDragPage && dragOffset < 0 && flapStyle && (
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  transform: 'translateZ(1px)',
-                  pointerEvents: 'none',
-                  zIndex: 300,
-                }}
-              >
-                <div style={flapStyle}>
-                  {flapContent}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      background: isTopHalf
-                        ? 'linear-gradient(45deg, rgba(0,0,0,0.05) 0%, transparent 40%)'
-                        : 'linear-gradient(135deg, rgba(0,0,0,0.05) 0%, transparent 40%)',
-                      pointerEvents: 'none',
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-            {/* 左侧拖拽：在对应层上方显示折角 */}
-            {/* 单页模式：折角在正面层（当前可见页正面卷起） */}
-            {/* 双页模式：折角在背面层（已翻页背面卷起） */}
-            {isActiveDragPage && dragOffset > 0 && flapStyle && (
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  transform: isSinglePage ? 'translateZ(1px)' : 'rotateY(180deg) translateZ(1px)',
-                  pointerEvents: 'none',
-                  zIndex: 300,
-                }}
-              >
-                <div style={flapStyle}>
-                  {flapContent}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      background: isTopHalf
-                        ? 'linear-gradient(-45deg, rgba(0,0,0,0.05) 0%, transparent 40%)'
-                        : 'linear-gradient(225deg, rgba(0,0,0,0.05) 0%, transparent 40%)',
-                      pointerEvents: 'none',
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-          </motion.div>
-        )
-      })}
+      {chapters.length ? (
+        <ol className={styles.contentsList} aria-label="章节目录" data-book-scroll>
+          {chapters.map((chapter) => (
+            <li key={chapter.pageNumber}>
+              <span>{chapter.title}</span>
+              <span className={styles.contentsFolio}>{String(chapter.pageNumber).padStart(2, '0')}</span>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div
+          className={styles.frontispiece}
+          aria-hidden="true"
+          style={coverImage ? { backgroundImage: `url(${coverImage})` } : undefined}
+        />
+      )}
+      <div className={styles.frontMatterFooter}>
+        <span>{chapters.length ? `${chapters.length} 章` : '图文阅读'}</span>
+        <span>{faceCount} 页</span>
+      </div>
     </div>
   )
+  const flipPages: FlipPage[] = [
+    {
+      key: 'cover',
+      density: 'hard',
+      className: cn(styles.sheet, styles.coverSheet),
+      content: (
+        <BookCoverArtwork
+          image={coverImage}
+          title={bookTitle}
+          titleContent={coverTitle}
+          author={bookAuthor}
+          textured={textured}
+        />
+      ),
+    },
+    ...(!isSinglePage
+      ? [
+          {
+            key: 'front-matter',
+            density: 'hard' as const,
+            className: styles.sheet,
+            content: frontMatter,
+          },
+        ]
+      : []),
+    ...faces.map((face, index) => ({
+      key: `page-${index}`,
+      className: styles.sheet,
+      content: (
+        <div className={styles.pageSurface}>
+          <div className={styles.pageLayout}>
+            <div className={styles.runningHead}>{bookTitle}</div>
+            <div className={styles.pageContent}>
+              {isImageMode ? (
+                <div className={styles.pageImage}>
+                  <LazyPageImage
+                    key={resolvedImages![index]}
+                    src={resolvedImages![index]}
+                    shouldLoad={Math.abs(index - currentFace) <= PRELOAD_RANGE * 2}
+                    alt={`第 ${index + 1} 页`}
+                  />
+                </div>
+              ) : (
+                <>
+                  {face.title && <h3 className={styles.pageTitle}>{face.title}</h3>}
+                  <div className={styles.pageText} data-book-scroll>
+                    {face.content}
+                  </div>
+                </>
+              )}
+            </div>
+            <div className={styles.pageFooter}>
+              <span>{bookAuthor}</span>
+              <span className={styles.pageNumber}>{String(index + 1).padStart(2, '0')}</span>
+            </div>
+          </div>
+        </div>
+      ),
+    })),
+    ...(!isSinglePage && faceCount % 2
+      ? [{ key: 'blank', className: styles.sheet, content: <div className={styles.pageSurface} /> }]
+      : []),
+    {
+      key: 'end',
+      density: 'hard',
+      className: styles.sheet,
+      content: (
+        <div className={styles.backCoverInner}>
+          <BookOpen className={styles.endIcon} size={28} aria-hidden="true" />
+          <p className={styles.endText}>读完了</p>
+          <p className={styles.endTitle}>{bookTitle}</p>
+          <button onClick={restartBook} className={styles.restartButton}>
+            <RefreshCcw size={14} />
+            从头阅读
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: 'back-cover',
+      density: 'hard',
+      className: cn(styles.sheet, styles.coverSheet),
+      content: (
+        <div className={styles.backCoverTitle}>
+          <BookOpen size={30} />
+          <span>{bookTitle}</span>
+          <small>{bookAuthor}</small>
+        </div>
+      ),
+    },
+  ]
 
   return (
     <div
       ref={containerRef}
       className={cn(styles.container, isSinglePage && styles.singlePageContainer, className)}
+      data-interactive-book
       style={
-        isSinglePage
-          ? {
-              width: '100%',
-              height: typeof effectiveHeight === 'number' ? effectiveHeight + 100 : 'auto',
-              touchAction: 'pan-y',
-            }
-          : {
-              width: typeof width === 'number' ? width * 2 + 200 : '100%',
-              height: typeof height === 'number' ? height + 140 : 'auto',
-            }
+        {
+          maxWidth: typeof width === 'number' ? width * 2 + 120 : '100%',
+          minHeight: effectiveHeight + (isSinglePage ? 100 : 140),
+          '--book-depth': `${bookDepth}px`,
+          '--book-color': coverColor,
+        } as React.CSSProperties
       }
     >
-      {/* 单页模式：独立视口，overflow:hidden 裁剪翻过去的页面 */}
-      <div
-        className={cn(isSinglePage && styles.singlePageViewport)}
-        style={isSinglePage ? { width: effectiveWidth, height: effectiveHeight } : undefined}
-      >
+      <div ref={sizeProbeRef} className={styles.sizeProbe} style={{ width, height }} aria-hidden="true" />
+      {!hasContent ? (
+        <div className={styles.emptyState} style={{ width: effectiveWidth, height: effectiveHeight }}>
+          {isPdfMode && pdfError ? (
+            <>
+              <strong>PDF 加载失败</strong>
+              <small>{pdfError}</small>
+            </>
+          ) : isPdfMode && (pdfLoading || !pdfImages.length) ? (
+            'PDF 加载中…'
+          ) : (
+            '暂无内容'
+          )}
+        </div>
+      ) : (
         <div
-          className={cn(styles.bookWrapper, isOpen && styles.open, isSinglePage && styles.singlePage)}
-          style={{
-            width: effectiveWidth,
-            height: effectiveHeight,
-          }}
+          className={cn(styles.bookViewport, isSinglePage && styles.singlePageViewport)}
+          style={{ width: effectiveWidth * (isSinglePage ? 1 : 2), height: effectiveHeight }}
         >
-          <div className={styles.spreadShadow} style={{ opacity: isOpen && !isSinglePage ? 1 : 0 }} />
-          <div className={styles.spreadBackdrop} style={{ opacity: isOpen && !isSinglePage ? 1 : 0 }}>
-            <div className={styles.spreadLeftPage} />
-            <div className={styles.spreadRightPage} />
-            <div className={styles.spreadGutter} />
-          </div>
-          {/* ─── 封面 ─── */}
-          <motion.div
-            className={styles.cover}
-            initial="closed"
-            animate={isOpen ? 'open' : isDragging && dragOffset < 0 ? undefined : isHovering ? 'hoverClosed' : 'closed'}
-            variants={coverVariants}
-            style={{
-              transformStyle: 'preserve-3d',
-              ...(!isOpen && isDragging && dragOffset < 0
-                ? {
-                    transform: `rotateY(${Math.max(-180, dragOffset * 0.5)}deg)`,
-                    transition: 'none',
-                  }
-                : {}),
-            }}
-            ref={coverRef}
-            onClick={!isOpen ? handleOpenBook : undefined}
-            onMouseDown={handleCoverMouseDown}
-            onHoverStart={() => !isOpen && !isDragging && setIsHovering(true)}
-            onHoverEnd={() => setIsHovering(false)}
-          >
-            <div className={styles.coverFace} style={{ transform: 'translateZ(0.5px)' }}>
-              <div className={styles.coverImage} style={{ backgroundImage: `url(${coverImage})` }} />
-              <div className={styles.overlay} />
-              <div className={styles.title}>
-                <h1 className={styles.bookTitle}>{bookTitle}</h1>
-                <p className={styles.bookAuthor}>{bookAuthor}</p>
-              </div>
-              <div className={styles.spine} />
-              <div className={styles.spineLine} />
-            </div>
-
-            <div className={styles.innerCover} style={{ transform: 'rotateY(180deg) translateZ(0.5px)' }}>
-              <div className={styles.innerContent}>
-                <h2 className={styles.innerTitle}>{bookTitle}</h2>
-                <div className={styles.spineHighlight} />
-                <p className={styles.edition}>Interactive Edition</p>
-              </div>
-              <motion.button
-                whileHover={{ scale: 1.1, rotate: 90 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={handleCloseBook}
-                className={styles.closeButton}
-                title="Close Book"
-              >
-                <X size={18} />
-              </motion.button>
-            </div>
-          </motion.div>
-
-          {/* ─── 书页 ─── */}
-          {renderPagesContainer()}
-
-          {/* ─── 封底（单页模式：封底在视口内渲染） ─── */}
           <div
-            className={styles.backCover}
-            style={{
-              zIndex: currentPageIndex === totalBookPages - 1 ? 50 : -1,
-            }}
-            onMouseDown={(e) => e.stopPropagation()}
-            onTouchStart={(e) => e.stopPropagation()}
+            className={cn(styles.bookWrapper, isOpen && styles.open, isSinglePage && styles.singlePage)}
+            style={
+              {
+                width: effectiveWidth * (isSinglePage ? 1 : 2),
+                height: effectiveHeight,
+                '--page-width': `${effectiveWidth}px`,
+              } as React.CSSProperties
+            }
           >
-            <div className={styles.backCover}>
-              <p className={styles.endText}>The End</p>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={restartBook}
-                className={styles.restartButton}
-              >
-                <RefreshCcw size={14} /> Read Again
-              </motion.button>
+            <div className={styles.spreadBoards} aria-hidden="true">
+              <div />
+              <div />
             </div>
+            <div className={styles.closedVolume} aria-hidden="true">
+              <div className={styles.volumeBackBoard} />
+              <div className={styles.bindingSpine}>
+                <span>{bookTitle}</span>
+              </div>
+              <BookPageBlock depth={bookDepth} />
+            </div>
+            <PageFlipRenderer
+              key={`${isSinglePage}-${faceCount}`}
+              ref={flipRef}
+              pages={flipPages}
+              width={effectiveWidth}
+              height={effectiveHeight}
+              single={isSinglePage}
+              startPage={startPage}
+              interactive={isOpen}
+              showCorners={showCornerFlip}
+              reducedMotion={reducedMotion}
+              onFlip={reportPage}
+              onTurning={reportTurning}
+            />
+            {!isOpen && (
+              <button
+                className={styles.closedCoverTrigger}
+                aria-label={`打开《${bookTitle}》`}
+                onClick={openBook}
+                onPointerDown={(event) => {
+                  coverPointerRef.current = event.clientX
+                }}
+                onPointerUp={(event) => {
+                  if (coverPointerRef.current !== null && event.clientX < coverPointerRef.current - 25) openBook()
+                  coverPointerRef.current = null
+                }}
+                onPointerCancel={() => {
+                  coverPointerRef.current = null
+                }}
+              />
+            )}
           </div>
         </div>
-        {/* 关闭 singlePageViewport */}
-      </div>
-
-      {/* ─── 导航栏 ─── */}
+      )}
       <AnimatePresence>
-        {showNavigation && isOpen && (
+        {hasContent && showNavigation && isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, x: '-50%' }}
+            initial={{ opacity: 0, y: 12, x: '-50%' }}
             animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 20, x: '-50%' }}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            className={cn(styles.navigation)}
+            exit={{ opacity: 0, y: 12, x: '-50%' }}
+            transition={{ duration: reducedMotion ? 0 : 0.25 }}
+            className={styles.navigation}
+            role="group"
+            aria-label="书籍阅读控制"
           >
-            <motion.button
-              whileHover={{ scale: 1.1, backgroundColor: 'rgba(0,0,0,0.05)' }}
-              whileTap={{ scale: 0.9 }}
-              onClick={prevPage}
-              disabled={currentPageIndex < 0}
+            <button
+              onClick={previousPage}
+              disabled={isTurning || (currentFace === 0 && !atEnd)}
               className={styles.navButton}
-              title="Previous Page"
+              title="上一页"
             >
               <ChevronLeft size={20} />
-            </motion.button>
-
+            </button>
             <div className={styles.navInfo}>
-              <span className={styles.navPage}>
-                {isSinglePage
-                  ? currentPageIndex >= totalBookPages - 1
-                    ? 'END'
-                    : `${currentPageIndex + 2} / ${totalBookPages}`
-                  : currentPageIndex < 0
-                    ? 'START'
-                    : `${Math.min(currentPageIndex + 1, totalBookPages)} / ${totalBookPages}`}
+              <span className={styles.navPage} aria-live="polite" aria-atomic="true">
+                {visibleStartPage === visibleEndPage ? visibleStartPage : `${visibleStartPage}–${visibleEndPage}`}
+                <span className={styles.navTotal}> / {faceCount}</span>
               </span>
-              <span className={styles.navStatus}>
-                {isSinglePage
-                  ? currentPageIndex >= totalBookPages - 1
-                    ? 'Finished'
-                    : 'Reading'
-                  : currentPageIndex < 0
-                    ? 'Cover'
-                    : 'Reading'}
-              </span>
+              <div
+                className={styles.readingProgress}
+                role="progressbar"
+                aria-label="阅读进度"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={readingProgress}
+              >
+                <span style={{ width: `${readingProgress}%` }} />
+              </div>
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.1, backgroundColor: 'rgba(0,0,0,0.05)' }}
-              whileTap={{ scale: 0.9 }}
-              onClick={nextPage}
-              disabled={currentPageIndex >= totalBookPages - 1}
-              className={styles.navButton}
-              title="Next Page"
-            >
+            <button onClick={nextPage} disabled={isTurning || atEnd} className={styles.navButton} title="下一页">
               <ChevronRight size={20} />
-            </motion.button>
-
+            </button>
             <div className={styles.navDivider} />
-
-            <motion.button
-              whileHover={{ scale: 1.1, backgroundColor: 'rgba(255,0,0,0.1)' }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleCloseBook}
-              className={styles.closeNavButton}
-              title="Close Book"
-            >
-              <BookOpen size={18} />
-            </motion.button>
+            <button onClick={closeBook} className={styles.closeNavButton} title="合上书籍">
+              <X size={18} />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* ─── 提示 ─── */}
-      {!isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 1 }}
-          className={styles.hint}
-        >
-          Click or Drag to Open
-        </motion.div>
+      {hasContent && isOpen && !showNavigation && (
+        <button className={styles.closeButton} title="合上书籍" onClick={closeBook}>
+          <X size={18} />
+        </button>
       )}
-
-      {/* ─── 拖拽指示器 ─── */}
-      {isOpen && isDragging && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          className={styles.dragIndicator}
-          style={{
-            left: '50%',
-            x: dragOffset > 0 ? '-100%' : '0%',
-          }}
-        >
-          <div
-            className={styles.dragArrow}
-            style={{
-              transform: dragOffset > 0 ? 'scaleX(-1)' : 'scaleX(1)',
-            }}
-          >
-            →
-          </div>
-          <div className={styles.dragText}>{Math.abs(dragOffset) > 50 ? '松手翻页' : '继续拖拽'}</div>
-        </motion.div>
+      {hasContent && !isOpen && (
+        <div className={styles.hint}>
+          <BookOpen size={15} aria-hidden="true" />
+          点击封面，或拖动书角翻开
+        </div>
       )}
-
-      {/* 翻页音效 — 使用 DOM audio 元素，兼容 Storybook iframe */}
       {enableSound && <audio ref={audioRef} src={soundSrc || pageTurnAudio} preload="auto" />}
     </div>
   )
