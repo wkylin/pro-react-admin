@@ -1,0 +1,1546 @@
+{
+  "project": "projectA",
+  "assets": [
+    {
+      "name": "assets/App-CgH230Yx.js",
+      "size": 3137
+    },
+    {
+      "name": "assets/hostInit-CVU2fAZe.js",
+      "size": 5190
+    },
+    {
+      "name": "assets/index-C-kNNoxd.js",
+      "size": 614553
+    },
+    {
+      "name": "assets/pendingShares-DlWI5FW-.js",
+      "size": 2846
+    },
+    {
+      "name": "remoteEntry.js",
+      "size": 20724
+    },
+    {
+      "name": "assets/AnimInView-D2rs0o8b.js",
+      "size": 1427
+    },
+    {
+      "name": "assets/ArrowLeftOutlined-B-cILZQj.js",
+      "size": 837
+    },
+    {
+      "name": "assets/AuditPage-BgwrpZXS.js",
+      "size": 1901
+    },
+    {
+      "name": "assets/BlendPluginInstance-su4e4vqz.js",
+      "size": 669
+    },
+    {
+      "name": "assets/Constants-SPF2XdRE.js",
+      "size": 304
+    },
+    {
+      "name": "assets/Container-CZkUDKqi.js",
+      "size": 42009
+    },
+    {
+      "name": "assets/CopyOutlined-PbXziwk3.js",
+      "size": 989
+    },
+    {
+      "name": "assets/DownloadOutlined-Crq-4wkp.js",
+      "size": 919
+    },
+    {
+      "name": "assets/DrawLayer-CX1Y7r9Y.js",
+      "size": 334
+    },
+    {
+      "name": "assets/EChart-CRShDk0U.js",
+      "size": 19174
+    },
+    {
+      "name": "assets/EChartsCommon-CXAk09eF.js",
+      "size": 54427
+    },
+    {
+      "name": "assets/EyeOutlined-heSY1XlZ.js",
+      "size": 1090
+    },
+    {
+      "name": "assets/FixTabPanel-m7qjXlYS.js",
+      "size": 2130
+    },
+    {
+      "name": "assets/ImagePreloaderInstance-DWJFmF-D.js",
+      "size": 135
+    },
+    {
+      "name": "assets/InteractivityPluginInstance-CW_xYEiA.js",
+      "size": 7509
+    },
+    {
+      "name": "assets/LinkInstance-vdp3kA_A.js",
+      "size": 2881
+    },
+    {
+      "name": "assets/MagicTrail-CbBFRVOl.js",
+      "size": 3126
+    },
+    {
+      "name": "assets/MathUtils-Bqtix1pt.js",
+      "size": 3708
+    },
+    {
+      "name": "assets/MovePluginInstance-Ci4IAqby.js",
+      "size": 3898
+    },
+    {
+      "name": "assets/NoMatch-sfpB0C4v.js",
+      "size": 2103
+    },
+    {
+      "name": "assets/NotificationDetail-C3eLRNgT.js",
+      "size": 890
+    },
+    {
+      "name": "assets/NotificationsPage-C37UR74h.js",
+      "size": 24099
+    },
+    {
+      "name": "assets/OptionsUtils-DVJof7Kh.js",
+      "size": 364
+    },
+    {
+      "name": "assets/OverlapPluginInstance-BRf8MtMd.js",
+      "size": 440
+    },
+    {
+      "name": "assets/PageContainer-MN-i18Xp.js",
+      "size": 4640
+    },
+    {
+      "name": "assets/PlusOutlined-CEc94uC4.js",
+      "size": 754
+    },
+    {
+      "name": "assets/PointerMove-oA0Z4hRh.js",
+      "size": 846
+    },
+    {
+      "name": "assets/ResourceWorkspace-X-OxhdNM.js",
+      "size": 2225
+    },
+    {
+      "name": "assets/RolesPage-Dfv6mpbH.js",
+      "size": 3696
+    },
+    {
+      "name": "assets/SectionNotFound-CUc1aTM8.js",
+      "size": 1228
+    },
+    {
+      "name": "assets/SessionScope-BA32pNLy.js",
+      "size": 130119
+    },
+    {
+      "name": "assets/SettingDrawer-D3Qjxc1j.js",
+      "size": 7871
+    },
+    {
+      "name": "assets/TableOutlined-OlqiCiHD.js",
+      "size": 940
+    },
+    {
+      "name": "assets/UpOutlined-MpRDgsuW.js",
+      "size": 1394
+    },
+    {
+      "name": "assets/UsersPage-cydWI-Fz.js",
+      "size": 4471
+    },
+    {
+      "name": "assets/Utils-DU4dVkJq.js",
+      "size": 3454
+    },
+    {
+      "name": "assets/VerticalAlignTopOutlined-3fMNlC8z.js",
+      "size": 884
+    },
+    {
+      "name": "assets/_virtual_mf-localSharedImportMap___mfe_internal__projectA__mf_owner__1-B9wHhmfV.js",
+      "size": 9971
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__loadShare__shared-BjUaKS4Q.js",
+      "size": 35510
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__antd__prebuild__-CptguQlE.js",
+      "size": 1321743
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__dayjs__prebuild__-8roNpv92.js",
+      "size": 291
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__immer__prebuild__-BrDkGJWm.js",
+      "size": 19090
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__react__prebuild__-GQ2MDzy4.js",
+      "size": 1855
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__react_mf_1_jsx_mf_2_runtime__prebuild__-CdZEkPAx.js",
+      "size": 526
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__react_mf_2_dom__prebuild__-CXWqmVmv.js",
+      "size": 763
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__react_mf_2_dom_mf_1_client__prebuild__-C70TVNQX.js",
+      "size": 207526
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__react_mf_2_router_mf_2_dom__prebuild__-BX2L08pH.js",
+      "size": 200565
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__zustand__prebuild__-DSv-liro.js",
+      "size": 679
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__zustand_mf_1_middleware__prebuild__-C3-kfU72.js",
+      "size": 6139
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__zustand_mf_1_shallow__prebuild__-B39UcfUz.js",
+      "size": 1126
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__prebuild__zustand_mf_1_vanilla__prebuild__-DsyDcfjs.js",
+      "size": 120
+    },
+    {
+      "name": "assets/abnfDiagram-YUKMZFIV-B2X8EJxO.js",
+      "size": 1857
+    },
+    {
+      "name": "assets/activity-6Jh7Epa-.js",
+      "size": 270
+    },
+    {
+      "name": "assets/aiWorkbench-B6x4OlPZ.js",
+      "size": 36459
+    },
+    {
+      "name": "assets/all-Da3EncDZ.js",
+      "size": 594785
+    },
+    {
+      "name": "assets/angular-CoWipNQO.js",
+      "size": 437
+    },
+    {
+      "name": "assets/arc-B3VwNjuI.js",
+      "size": 3478
+    },
+    {
+      "name": "assets/architecture-WOLXFQ4H-BS_bda0N.js",
+      "size": 116
+    },
+    {
+      "name": "assets/architectureDiagram-47P4ROYG-BQog15Yl.js",
+      "size": 148951
+    },
+    {
+      "name": "assets/autoDeploy-BUApXVhe.js",
+      "size": 12772
+    },
+    {
+      "name": "assets/backend-Bdv1MTJT.js",
+      "size": 574
+    },
+    {
+      "name": "assets/base-80a1f760-B7W4SKBA.js",
+      "size": 612
+    },
+    {
+      "name": "assets/bigScreen-DPw131LK.js",
+      "size": 89180
+    },
+    {
+      "name": "assets/blockDiagram-E7TT5TSB-dJQLLfFm.js",
+      "size": 42527
+    },
+    {
+      "name": "assets/book-open-DIocWYH9.js",
+      "size": 325
+    },
+    {
+      "name": "assets/browser-B9qWqwTE.js",
+      "size": 592610
+    },
+    {
+      "name": "assets/business-CO0WOUlH.js",
+      "size": 2128
+    },
+    {
+      "name": "assets/c4Diagram-CRA5TL53-DeiKdNp7.js",
+      "size": 65154
+    },
+    {
+      "name": "assets/channel-CgIjvbUm.js",
+      "size": 114
+    },
+    {
+      "name": "assets/chatgpt-CX5Ibyiu.js",
+      "size": 178042
+    },
+    {
+      "name": "assets/check-C2xTU1MC.js",
+      "size": 160
+    },
+    {
+      "name": "assets/chevron-right-qR79Rxsj.js",
+      "size": 4299
+    },
+    {
+      "name": "assets/chunk-2BW5OAIV-D-yWi4Zx.js",
+      "size": 37926
+    },
+    {
+      "name": "assets/chunk-2Q5K7J3B-C1jixKkw.js",
+      "size": 191
+    },
+    {
+      "name": "assets/chunk-3YJQHVM4-C1o85kKc.js",
+      "size": 30174
+    },
+    {
+      "name": "assets/chunk-4EA7E6EY-CIeqmlm7.js",
+      "size": 1953
+    },
+    {
+      "name": "assets/chunk-5VM5RSS4-ZNzvKenW.js",
+      "size": 362
+    },
+    {
+      "name": "assets/chunk-7TKQ45FW--tAKFLJ_.js",
+      "size": 1988
+    },
+    {
+      "name": "assets/chunk-AW2ZBBNX-CttI-oFB.js",
+      "size": 15650
+    },
+    {
+      "name": "assets/chunk-DBDB3WZW-jdLtq_1p.js",
+      "size": 1427
+    },
+    {
+      "name": "assets/chunk-DUW6YSOI-Dgx8z5s3.js",
+      "size": 891
+    },
+    {
+      "name": "assets/chunk-E2ZNV5FY-nC1tTu-g.js",
+      "size": 51296
+    },
+    {
+      "name": "assets/chunk-EU5HNXII-Bl47lwAA.js",
+      "size": 62913
+    },
+    {
+      "name": "assets/chunk-FVRAUYC3-DNMbkxY_.js",
+      "size": 10245
+    },
+    {
+      "name": "assets/chunk-HJ2JQQFS-B8p0VxIw.js",
+      "size": 5839
+    },
+    {
+      "name": "assets/chunk-HTAEGDNF-CkGPbdqK.js",
+      "size": 5439
+    },
+    {
+      "name": "assets/chunk-J5ZVWO5B-oDCd-gWO.js",
+      "size": 635
+    },
+    {
+      "name": "assets/chunk-JWPE2WC7-DVXcaiue.js",
+      "size": 223
+    },
+    {
+      "name": "assets/chunk-KQW6MTUR-CX05SLdl.js",
+      "size": 580
+    },
+    {
+      "name": "assets/chunk-NGNAAXSQ-C2Wy9Xmz.js",
+      "size": 629049
+    },
+    {
+      "name": "assets/chunk-NTY3LDVX-D5LYT_wP.js",
+      "size": 14899
+    },
+    {
+      "name": "assets/chunk-VPRB5NB3-BRWoOEMM.js",
+      "size": 212280
+    },
+    {
+      "name": "assets/chunk-X3CZISLH-FYZGKchm.js",
+      "size": 1514
+    },
+    {
+      "name": "assets/chunk-XC4XBNZT-CJJKmqK1.js",
+      "size": 115566
+    },
+    {
+      "name": "assets/chunk-XXDRQBXY-C0kxqUuT.js",
+      "size": 288
+    },
+    {
+      "name": "assets/chunk-Y2CYZVJY-DsF7k-Jl.js",
+      "size": 155
+    },
+    {
+      "name": "assets/classDiagram-v2-K4WV4PDN-acUQUvhD.js",
+      "size": 49813
+    },
+    {
+      "name": "assets/client-BFKhPxVJ.js",
+      "size": 5233
+    },
+    {
+      "name": "assets/clock-V6L8J4eu.js",
+      "size": 205
+    },
+    {
+      "name": "assets/clsx-DB0hHKMi.js",
+      "size": 369
+    },
+    {
+      "name": "assets/colors-Cg5Vh3br.js",
+      "size": 109
+    },
+    {
+      "name": "assets/consoleHook-59e792cb-TTAQe1tw.js",
+      "size": 19643
+    },
+    {
+      "name": "assets/contact-D7bQxshA.js",
+      "size": 5058
+    },
+    {
+      "name": "assets/copy-DoEjOKbp.js",
+      "size": 272
+    },
+    {
+      "name": "assets/cose-bilkent-JH36ORCC-BUisZet-.js",
+      "size": 81301
+    },
+    {
+      "name": "assets/crypto-0Dc2hYaB.js",
+      "size": 18439
+    },
+    {
+      "name": "assets/customParseFormat-sWCAXnDH.js",
+      "size": 4945
+    },
+    {
+      "name": "assets/cynefin-EF2NZ3EQ-CIEMEPwm.js",
+      "size": 111
+    },
+    {
+      "name": "assets/cynefinDiagram-3GCD6N5R-DaPKIaQ7.js",
+      "size": 9949
+    },
+    {
+      "name": "assets/cytoscape.esm-CHBj4VkZ.js",
+      "size": 434616
+    },
+    {
+      "name": "assets/dagre-W4DXFKR2-B0GUmdX0.js",
+      "size": 47836
+    },
+    {
+      "name": "assets/dashboard-DufRMQuN.js",
+      "size": 4131
+    },
+    {
+      "name": "assets/dayjs.min-BHo85-_N.js",
+      "size": 7187
+    },
+    {
+      "name": "assets/default-DMI-Tsal.js",
+      "size": 50
+    },
+    {
+      "name": "assets/defaultLocale-BFoDCU3G.js",
+      "size": 4634
+    },
+    {
+      "name": "assets/defineProperty-BGlq8xxa.js",
+      "size": 515
+    },
+    {
+      "name": "assets/demo-B2xTbjyd.js",
+      "size": 710547
+    },
+    {
+      "name": "assets/dependencies-CcKUrdhu.js",
+      "size": 15434
+    },
+    {
+      "name": "assets/deployFlow-CXgDPpsF.js",
+      "size": 22506
+    },
+    {
+      "name": "assets/diagram-2UJZ2QOL-CR_jl2ps.js",
+      "size": 80565
+    },
+    {
+      "name": "assets/diagram-OVF4WLC6-Bsb2jTPl.js",
+      "size": 15813
+    },
+    {
+      "name": "assets/diagram-PFPMY2P6-jHfgH4gr.js",
+      "size": 8134
+    },
+    {
+      "name": "assets/diagram-UMYRVEAY-CCgUe2RE.js",
+      "size": 4356
+    },
+    {
+      "name": "assets/diagram-YEKJPTXX-CWBvyK3i.js",
+      "size": 6080
+    },
+    {
+      "name": "assets/diagram-ZIFT7M5P-BhKzmtNV.js",
+      "size": 10998
+    },
+    {
+      "name": "assets/dist-62jDTklO.js",
+      "size": 84997
+    },
+    {
+      "name": "assets/dist-BV0MEMZH.js",
+      "size": 298
+    },
+    {
+      "name": "assets/dist-D7Lu8IQ6.js",
+      "size": 5123
+    },
+    {
+      "name": "assets/dist-DGs_yUrP.js",
+      "size": 2173
+    },
+    {
+      "name": "assets/dist-DqCHGeun.js",
+      "size": 20815
+    },
+    {
+      "name": "assets/dist-iY96XzfD.js",
+      "size": 3230
+    },
+    {
+      "name": "assets/download-zzN62yLa.js",
+      "size": 268
+    },
+    {
+      "name": "assets/ebnfDiagram-VR2GEFS7-D7NwSxsH.js",
+      "size": 2070
+    },
+    {
+      "name": "assets/echarts-DFXhpwvS.js",
+      "size": 1680
+    },
+    {
+      "name": "assets/echarts-Drh_w_3C.js",
+      "size": 1116667
+    },
+    {
+      "name": "assets/elk-IJKZMXRS-cTPuFR_H.js",
+      "size": 1462552
+    },
+    {
+      "name": "assets/erDiagram-O2IAPWRE-D-gMW-dR.js",
+      "size": 30725
+    },
+    {
+      "name": "assets/error-Cx4ELWuw.js",
+      "size": 1260
+    },
+    {
+      "name": "assets/es-CKw8rOb-.js",
+      "size": 12506
+    },
+    {
+      "name": "assets/esm-CqHmtYGP.js",
+      "size": 284433
+    },
+    {
+      "name": "assets/eventmodeling-K75KTNOO-q25rVJhf.js",
+      "size": 117
+    },
+    {
+      "name": "assets/exception403-BomgqX7r.js",
+      "size": 476
+    },
+    {
+      "name": "assets/exception404-DaNDCBr3.js",
+      "size": 254
+    },
+    {
+      "name": "assets/external-link-BDPL9Oki.js",
+      "size": 287
+    },
+    {
+      "name": "assets/flowDiagram-OXPTDLAJ-2wQN1Siw.js",
+      "size": 571
+    },
+    {
+      "name": "assets/frontend-xDX9iwQD.js",
+      "size": 696
+    },
+    {
+      "name": "assets/ganttDiagram-R7TSEDQI-B_3prpfV.js",
+      "size": 64869
+    },
+    {
+      "name": "assets/geoChart-RQ4grzz9.js",
+      "size": 93208
+    },
+    {
+      "name": "assets/git-branch-Duq3HfKk.js",
+      "size": 265
+    },
+    {
+      "name": "assets/gitGraph-VSP46ZUC-D3eToSaU.js",
+      "size": 112
+    },
+    {
+      "name": "assets/gitGraphDiagram-XJZIOB7I-RWmKI1_F.js",
+      "size": 29076
+    },
+    {
+      "name": "assets/github-Cjrdy6Bs.js",
+      "size": 1683
+    },
+    {
+      "name": "assets/graphlib-DS17s2tU.js",
+      "size": 23904
+    },
+    {
+      "name": "assets/helpers-B13Y4-vD.js",
+      "size": 88
+    },
+    {
+      "name": "assets/hls-DxJZFmfw.js",
+      "size": 575371
+    },
+    {
+      "name": "assets/home-BlE0nwEu.js",
+      "size": 955368
+    },
+    {
+      "name": "assets/html2canvas-CrPFTz08.js",
+      "size": 199461
+    },
+    {
+      "name": "assets/image-vojrMZGo.js",
+      "size": 305
+    },
+    {
+      "name": "assets/index-599aeaf7-D8E1GFhE.js",
+      "size": 143981
+    },
+    {
+      "name": "assets/index.dom-BPTnsgKR.js",
+      "size": 18467
+    },
+    {
+      "name": "assets/index.es-bPwYz5XN.js",
+      "size": 150966
+    },
+    {
+      "name": "assets/info-OHQRW6UA-DKTeqWVG.js",
+      "size": 108
+    },
+    {
+      "name": "assets/infoDiagram-5W2HQ5XZ-BuMcST11.js",
+      "size": 666
+    },
+    {
+      "name": "assets/init-C-OQMol4.js",
+      "size": 140
+    },
+    {
+      "name": "assets/ishikawaDiagram-K3B6WC7H-Dae5hjc-.js",
+      "size": 17315
+    },
+    {
+      "name": "assets/journeyDiagram-COXZFDF6-BITILLIm.js",
+      "size": 23216
+    },
+    {
+      "name": "assets/kanban-definition-P3RFRI5V-BCr9hXt7.js",
+      "size": 20269
+    },
+    {
+      "name": "assets/katex-Dp5KzNHE.js",
+      "size": 258954
+    },
+    {
+      "name": "assets/layers-BpFzPxrK.js",
+      "size": 478
+    },
+    {
+      "name": "assets/lib-B4J9VQgQ.js",
+      "size": 176495
+    },
+    {
+      "name": "assets/lib-BjD9so7k.js",
+      "size": 2856
+    },
+    {
+      "name": "assets/lib-CS7kniEF.js",
+      "size": 162349
+    },
+    {
+      "name": "assets/lib-kr4e9Fpn.js",
+      "size": 141029
+    },
+    {
+      "name": "assets/line-BV_oBi-m.js",
+      "size": 871
+    },
+    {
+      "name": "assets/linear-UBiWJGF0.js",
+      "size": 4570
+    },
+    {
+      "name": "assets/logger-BCiZulYy.js",
+      "size": 188
+    },
+    {
+      "name": "assets/mermaid-DR9A_Dss.js",
+      "size": 53771
+    },
+    {
+      "name": "assets/mermaid-parser.core-CAleZkql.js",
+      "size": 15661
+    },
+    {
+      "name": "assets/mermaid.core-xKl-c59e.js",
+      "size": 76041
+    },
+    {
+      "name": "assets/message-ofLWqNyd.js",
+      "size": 700
+    },
+    {
+      "name": "assets/min-DKkL9U9e.js",
+      "size": 381
+    },
+    {
+      "name": "assets/mindmap-definition-LZFPQGKD-CvNlxoZZ.js",
+      "size": 23447
+    },
+    {
+      "name": "assets/minus-CUx40qt5.js",
+      "size": 153
+    },
+    {
+      "name": "assets/motion-Cq28Zrwh.js",
+      "size": 10172
+    },
+    {
+      "name": "assets/music-DtIlkxOl.js",
+      "size": 12988
+    },
+    {
+      "name": "assets/myIframe-BWCglTZn.js",
+      "size": 969
+    },
+    {
+      "name": "assets/node-CgFWslBz.js",
+      "size": 512
+    },
+    {
+      "name": "assets/node-o68soTmi.js",
+      "size": 27029
+    },
+    {
+      "name": "assets/objectWithoutProperties-DLNmnX3q.js",
+      "size": 706
+    },
+    {
+      "name": "assets/ordinal-BDEzSJ7C.js",
+      "size": 1174
+    },
+    {
+      "name": "assets/packet-JDAUHWVQ-CHiTve_O.js",
+      "size": 110
+    },
+    {
+      "name": "assets/pegDiagram-BGZESJAR-CY3hn1JA.js",
+      "size": 2022
+    },
+    {
+      "name": "assets/perf-BS7RgmoZ.js",
+      "size": 451
+    },
+    {
+      "name": "assets/permission-C-ZG2o3G.js",
+      "size": 9066
+    },
+    {
+      "name": "assets/permissionService-BFHLSqhQ.js",
+      "size": 18515
+    },
+    {
+      "name": "assets/phbar-CoGfvPB7.js",
+      "size": 8060
+    },
+    {
+      "name": "assets/pie-XZMESJXO-BM-40uEZ.js",
+      "size": 107
+    },
+    {
+      "name": "assets/pieDiagram-CAPJLFHJ-BX_TUbMP.js",
+      "size": 6198
+    },
+    {
+      "name": "assets/plugins-CRfRANI2.js",
+      "size": 465
+    },
+    {
+      "name": "assets/portfilo-BdibOB7g.js",
+      "size": 14568
+    },
+    {
+      "name": "assets/postmessage-r2J47sJA.js",
+      "size": 1816
+    },
+    {
+      "name": "assets/print-B96rZIYI.js",
+      "size": 13457
+    },
+    {
+      "name": "assets/prism-DVdZNj5d.js",
+      "size": 1047
+    },
+    {
+      "name": "assets/privacy-JQ55e6Gx.js",
+      "size": 3315
+    },
+    {
+      "name": "assets/profile-DKKB6Kur.js",
+      "size": 18377
+    },
+    {
+      "name": "assets/purify.es-OQDxUdUH.js",
+      "size": 28090
+    },
+    {
+      "name": "assets/qrGenerate-CHs6q9EW.js",
+      "size": 426789
+    },
+    {
+      "name": "assets/quadrantDiagram-GDMTTRAM-BaJT39tJ.js",
+      "size": 33578
+    },
+    {
+      "name": "assets/quote-C7VGj3Po.js",
+      "size": 425
+    },
+    {
+      "name": "assets/radar-ABXABTNO-DPM3SCvk.js",
+      "size": 109
+    },
+    {
+      "name": "assets/railroad-I3PHUGI6-BbTF_ZlW.js",
+      "size": 112
+    },
+    {
+      "name": "assets/railroad-abnf-LNEFI6M7-D0C9lZjM.js",
+      "size": 116
+    },
+    {
+      "name": "assets/railroad-ebnf-DWYD2UWJ-BoUq3n41.js",
+      "size": 116
+    },
+    {
+      "name": "assets/railroad-peg-JR7BVNR7-B7UG56cA.js",
+      "size": 115
+    },
+    {
+      "name": "assets/railroadDiagram-SM67HX2B-53blxqhm.js",
+      "size": 1670
+    },
+    {
+      "name": "assets/react-BlIEEezU.js",
+      "size": 7876
+    },
+    {
+      "name": "assets/react-C_YtWZua.js",
+      "size": 65
+    },
+    {
+      "name": "assets/react-DC1vOxjs.js",
+      "size": 304
+    },
+    {
+      "name": "assets/react-dom-BRaXhtYr.js",
+      "size": 3897
+    },
+    {
+      "name": "assets/request-CyammqGG.js",
+      "size": 233431
+    },
+    {
+      "name": "assets/requirementDiagram-X7JNWC4A-Ptk_oC2_.js",
+      "size": 31086
+    },
+    {
+      "name": "assets/richTextEditor-DRrCs_yt.js",
+      "size": 545603
+    },
+    {
+      "name": "assets/rocket-BQK9Tj2n.js",
+      "size": 488
+    },
+    {
+      "name": "assets/rolldown-runtime-BCiCTKAo.js",
+      "size": 1301
+    },
+    {
+      "name": "assets/rotate-ccw-BqcoguWz.js",
+      "size": 236
+    },
+    {
+      "name": "assets/rough.esm-Dy-Kn_BL.js",
+      "size": 27109
+    },
+    {
+      "name": "assets/runtime-CvES-rwj.js",
+      "size": 162506
+    },
+    {
+      "name": "assets/sankeyDiagram-UM26HJRW-DEfPJdiR.js",
+      "size": 22797
+    },
+    {
+      "name": "assets/sequenceDiagram-ZO4K6R2Y-uQskkPHg.js",
+      "size": 117751
+    },
+    {
+      "name": "assets/session-B4aRT5HG.js",
+      "size": 3427
+    },
+    {
+      "name": "assets/setPrototypeOf-kEcCTwil.js",
+      "size": 50944
+    },
+    {
+      "name": "assets/shim-B5JWi8O8.js",
+      "size": 958
+    },
+    {
+      "name": "assets/sizeCapture-INFHLROL-3uHXrFqA.js",
+      "size": 872
+    },
+    {
+      "name": "assets/skip-forward-Brf1uu36.js",
+      "size": 842
+    },
+    {
+      "name": "assets/slicedToArray-BXDgpB4v.js",
+      "size": 704
+    },
+    {
+      "name": "assets/song-DMgFl2fF.js",
+      "size": 78
+    },
+    {
+      "name": "assets/src-CKxHRItf.js",
+      "size": 3282
+    },
+    {
+      "name": "assets/src-C_gRsKqw.js",
+      "size": 47067
+    },
+    {
+      "name": "assets/stateDiagram-v2-TBUQTH76-DWa4Qsz1.js",
+      "size": 41655
+    },
+    {
+      "name": "assets/style-DaMSNoZ_.js",
+      "size": 125290
+    },
+    {
+      "name": "assets/svgViewer-DZRPtkAJ.js",
+      "size": 40359
+    },
+    {
+      "name": "assets/swimlanes-N4OXWK64-BUyvRarB.js",
+      "size": 106195
+    },
+    {
+      "name": "assets/swimlanesDiagram-K3J5GTZL-DBAT4I55.js",
+      "size": 841
+    },
+    {
+      "name": "assets/terms-B3qCfLwN.js",
+      "size": 3429
+    },
+    {
+      "name": "assets/tilt-DynneFa0.js",
+      "size": 15284
+    },
+    {
+      "name": "assets/timeline-definition-YOQAKGHF-5-LZhw7U.js",
+      "size": 30532
+    },
+    {
+      "name": "assets/topology-bvrLPM0Q.js",
+      "size": 4916
+    },
+    {
+      "name": "assets/tracking-BOaV-9wE.js",
+      "size": 15417
+    },
+    {
+      "name": "assets/treeView-D4JQ5SDB-BCwxEBtX.js",
+      "size": 112
+    },
+    {
+      "name": "assets/treemap-SAJKECNS-iWKJrgDP.js",
+      "size": 111
+    },
+    {
+      "name": "assets/typeof-DUBzhgdq.js",
+      "size": 660
+    },
+    {
+      "name": "assets/use-animation-HHqoc6kJ.js",
+      "size": 965
+    },
+    {
+      "name": "assets/use-spring-sK_IEIZz.js",
+      "size": 10462
+    },
+    {
+      "name": "assets/usePermission-B3goLDCB.js",
+      "size": 940
+    },
+    {
+      "name": "assets/useSafeNavigate-0EEZ7EZq.js",
+      "size": 2135
+    },
+    {
+      "name": "assets/useTranslation-BWuPvVK0.js",
+      "size": 4966
+    },
+    {
+      "name": "assets/usecaseDiagram-VIAY4XPW-BNE8GwNR.js",
+      "size": 187967
+    },
+    {
+      "name": "assets/utils-BQeXMJ3a.js",
+      "size": 66516
+    },
+    {
+      "name": "assets/value-DRzWgzJE.js",
+      "size": 1040
+    },
+    {
+      "name": "assets/vanilla-B58OruTr.js",
+      "size": 408
+    },
+    {
+      "name": "assets/vennDiagram-BLWOH2XV-BnZl_W46.js",
+      "size": 41238
+    },
+    {
+      "name": "assets/video-DmIV0sHv.js",
+      "size": 40478
+    },
+    {
+      "name": "assets/vite-BfUztgrs.js",
+      "size": 2262
+    },
+    {
+      "name": "assets/vite-preload-helper-Bd5KNyzv.js",
+      "size": 1635
+    },
+    {
+      "name": "assets/volume-x-KQfR7781.js",
+      "size": 755
+    },
+    {
+      "name": "assets/vue-CmiGVOla.js",
+      "size": 665
+    },
+    {
+      "name": "assets/vue3-DEdk4Cas.js",
+      "size": 447
+    },
+    {
+      "name": "assets/w3c-keyname-BOAvb0qz.js",
+      "size": 1487
+    },
+    {
+      "name": "assets/wardley-7MLQ67FV-NqlCvps4.js",
+      "size": 111
+    },
+    {
+      "name": "assets/wardleyDiagram-YMQ3BMBF-CzvxK8ME.js",
+      "size": 25213
+    },
+    {
+      "name": "assets/with-selector-BsPD9eKT.js",
+      "size": 1043
+    },
+    {
+      "name": "assets/x-BgTzn0TW.js",
+      "size": 190
+    },
+    {
+      "name": "assets/xue-CKzT4BRn.js",
+      "size": 209
+    },
+    {
+      "name": "assets/xychartDiagram-TAQBALBS-BR3zHdK-.js",
+      "size": 44557
+    },
+    {
+      "name": "assets/zustand-BjA-roBA.js",
+      "size": 2576
+    },
+    {
+      "name": "assets/2-300x160-CSsWAiy7.jpg",
+      "size": 9692
+    },
+    {
+      "name": "assets/3dchihiro-OqqwucoC.png",
+      "size": 89535
+    },
+    {
+      "name": "assets/88-300x160-CBLQXe14.jpg",
+      "size": 10347
+    },
+    {
+      "name": "assets/KaTeX_AMS-Regular-BQhdFMY1.woff2",
+      "size": 28076
+    },
+    {
+      "name": "assets/KaTeX_AMS-Regular-DMm9YOAa.woff",
+      "size": 33516
+    },
+    {
+      "name": "assets/KaTeX_AMS-Regular-DRggAlZN.ttf",
+      "size": 63632
+    },
+    {
+      "name": "assets/KaTeX_Caligraphic-Bold-ATXxdsX0.ttf",
+      "size": 12368
+    },
+    {
+      "name": "assets/KaTeX_Caligraphic-Bold-BEiXGLvX.woff",
+      "size": 7716
+    },
+    {
+      "name": "assets/KaTeX_Caligraphic-Bold-Dq_IR9rO.woff2",
+      "size": 6912
+    },
+    {
+      "name": "assets/KaTeX_Caligraphic-Regular-CTRA-rTL.woff",
+      "size": 7656
+    },
+    {
+      "name": "assets/KaTeX_Caligraphic-Regular-Di6jR-x-.woff2",
+      "size": 6908
+    },
+    {
+      "name": "assets/KaTeX_Caligraphic-Regular-wX97UBjC.ttf",
+      "size": 12344
+    },
+    {
+      "name": "assets/KaTeX_Fraktur-Bold-BdnERNNW.ttf",
+      "size": 19584
+    },
+    {
+      "name": "assets/KaTeX_Fraktur-Bold-BsDP51OF.woff",
+      "size": 13296
+    },
+    {
+      "name": "assets/KaTeX_Fraktur-Bold-CL6g_b3V.woff2",
+      "size": 11348
+    },
+    {
+      "name": "assets/KaTeX_Fraktur-Regular-CB_wures.ttf",
+      "size": 19572
+    },
+    {
+      "name": "assets/KaTeX_Fraktur-Regular-CTYiF6lA.woff2",
+      "size": 11316
+    },
+    {
+      "name": "assets/KaTeX_Fraktur-Regular-Dxdc4cR9.woff",
+      "size": 13208
+    },
+    {
+      "name": "assets/KaTeX_Main-Bold-Cx986IdX.woff2",
+      "size": 25324
+    },
+    {
+      "name": "assets/KaTeX_Main-Bold-Jm3AIy58.woff",
+      "size": 29912
+    },
+    {
+      "name": "assets/KaTeX_Main-Bold-waoOVXN0.ttf",
+      "size": 51336
+    },
+    {
+      "name": "assets/KaTeX_Main-BoldItalic-DxDJ3AOS.woff2",
+      "size": 16780
+    },
+    {
+      "name": "assets/KaTeX_Main-BoldItalic-DzxPMmG6.ttf",
+      "size": 32968
+    },
+    {
+      "name": "assets/KaTeX_Main-BoldItalic-SpSLRI95.woff",
+      "size": 19412
+    },
+    {
+      "name": "assets/KaTeX_Main-Italic-3WenGoN9.ttf",
+      "size": 33580
+    },
+    {
+      "name": "assets/KaTeX_Main-Italic-BMLOBm91.woff",
+      "size": 19676
+    },
+    {
+      "name": "assets/KaTeX_Main-Italic-NWA7e6Wa.woff2",
+      "size": 16988
+    },
+    {
+      "name": "assets/KaTeX_Main-Regular-B22Nviop.woff2",
+      "size": 26272
+    },
+    {
+      "name": "assets/KaTeX_Main-Regular-Dr94JaBh.woff",
+      "size": 30772
+    },
+    {
+      "name": "assets/KaTeX_Main-Regular-ypZvNtVU.ttf",
+      "size": 53580
+    },
+    {
+      "name": "assets/KaTeX_Math-BoldItalic-B3XSjfu4.ttf",
+      "size": 31196
+    },
+    {
+      "name": "assets/KaTeX_Math-BoldItalic-CZnvNsCZ.woff2",
+      "size": 16400
+    },
+    {
+      "name": "assets/KaTeX_Math-BoldItalic-iY-2wyZ7.woff",
+      "size": 18668
+    },
+    {
+      "name": "assets/KaTeX_Math-Italic-DA0__PXp.woff",
+      "size": 18748
+    },
+    {
+      "name": "assets/KaTeX_Math-Italic-flOr_0UB.ttf",
+      "size": 31308
+    },
+    {
+      "name": "assets/KaTeX_Math-Italic-t53AETM-.woff2",
+      "size": 16440
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Bold-CFMepnvq.ttf",
+      "size": 24504
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Bold-D1sUS0GD.woff2",
+      "size": 12216
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Bold-DbIhKOiC.woff",
+      "size": 14408
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Italic-C3H0VqGB.woff2",
+      "size": 12028
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Italic-DN2j7dab.woff",
+      "size": 14112
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Italic-YYjJ1zSn.ttf",
+      "size": 22364
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Regular-BNo7hRIc.ttf",
+      "size": 19436
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Regular-CS6fqUqJ.woff",
+      "size": 12316
+    },
+    {
+      "name": "assets/KaTeX_SansSerif-Regular-DDBCnlJ7.woff2",
+      "size": 10344
+    },
+    {
+      "name": "assets/KaTeX_Script-Regular-C5JkGWo-.ttf",
+      "size": 16648
+    },
+    {
+      "name": "assets/KaTeX_Script-Regular-D3wIWfF6.woff2",
+      "size": 9644
+    },
+    {
+      "name": "assets/KaTeX_Script-Regular-D5yQViql.woff",
+      "size": 10588
+    },
+    {
+      "name": "assets/KaTeX_Size1-Regular-C195tn64.woff",
+      "size": 6496
+    },
+    {
+      "name": "assets/KaTeX_Size1-Regular-Dbsnue_I.ttf",
+      "size": 12228
+    },
+    {
+      "name": "assets/KaTeX_Size1-Regular-mCD8mA8B.woff2",
+      "size": 5468
+    },
+    {
+      "name": "assets/KaTeX_Size2-Regular-B7gKUWhC.ttf",
+      "size": 11508
+    },
+    {
+      "name": "assets/KaTeX_Size2-Regular-Dy4dx90m.woff2",
+      "size": 5208
+    },
+    {
+      "name": "assets/KaTeX_Size2-Regular-oD1tc_U0.woff",
+      "size": 6188
+    },
+    {
+      "name": "assets/KaTeX_Size3-Regular-CTq5MqoE.woff",
+      "size": 4420
+    },
+    {
+      "name": "assets/KaTeX_Size3-Regular-DgpXs0kz.ttf",
+      "size": 7588
+    },
+    {
+      "name": "assets/KaTeX_Size4-Regular-BF-4gkZK.woff",
+      "size": 5980
+    },
+    {
+      "name": "assets/KaTeX_Size4-Regular-DWFBv043.ttf",
+      "size": 10364
+    },
+    {
+      "name": "assets/KaTeX_Size4-Regular-Dl5lxZxV.woff2",
+      "size": 4928
+    },
+    {
+      "name": "assets/KaTeX_Typewriter-Regular-C0xS9mPB.woff",
+      "size": 16028
+    },
+    {
+      "name": "assets/KaTeX_Typewriter-Regular-CO6r4hn1.woff2",
+      "size": 13568
+    },
+    {
+      "name": "assets/KaTeX_Typewriter-Regular-D3Ib7_Hf.ttf",
+      "size": 27556
+    },
+    {
+      "name": "assets/PointerMove-CJAnVavh.css",
+      "size": 199
+    },
+    {
+      "name": "assets/ResourceWorkspace-BSfOoos8.css",
+      "size": 1420
+    },
+    {
+      "name": "assets/ai-cover-Bk9IsX7T.webp",
+      "size": 93114
+    },
+    {
+      "name": "assets/aiWorkbench-DqJCrggE.css",
+      "size": 12255
+    },
+    {
+      "name": "assets/autoDeploy-BDlqcIxx.css",
+      "size": 4673
+    },
+    {
+      "name": "assets/chatgpt-CGXjFfgx.css",
+      "size": 75516
+    },
+    {
+      "name": "assets/demo-C5rC1Eqp.css",
+      "size": 27891
+    },
+    {
+      "name": "assets/deployFlow-DkPOp_WU.css",
+      "size": 1956
+    },
+    {
+      "name": "assets/github-DdKuH37F.css",
+      "size": 1074
+    },
+    {
+      "name": "assets/he-DE5TkEBl.png",
+      "size": 1112244
+    },
+    {
+      "name": "assets/heart-of-the-sea-Bx_ZYwgH.mp3",
+      "size": 2143960
+    },
+    {
+      "name": "assets/hearty-DkNdfH5i.mp3",
+      "size": 3704038
+    },
+    {
+      "name": "assets/home-AcxJ056o.css",
+      "size": 52627
+    },
+    {
+      "name": "assets/index-B8xNYXDE.css",
+      "size": 130292
+    },
+    {
+      "name": "assets/longnight-C51pySL3.mp3",
+      "size": 4183040
+    },
+    {
+      "name": "assets/motion-jWnZQZWN.css",
+      "size": 5445
+    },
+    {
+      "name": "assets/music00-nJ-HAohp.png",
+      "size": 537760
+    },
+    {
+      "name": "assets/music01-BexM9oF_.png",
+      "size": 665083
+    },
+    {
+      "name": "assets/music02-Cvwzhvo_.png",
+      "size": 511621
+    },
+    {
+      "name": "assets/page-turn-Cts8nhWf.mp3",
+      "size": 24555
+    },
+    {
+      "name": "assets/pdf.worker.min-CjEcRF4W.mjs",
+      "size": 1264342
+    },
+    {
+      "name": "assets/print-HpjMaBGw.css",
+      "size": 99
+    },
+    {
+      "name": "assets/prism-BPupLgE7.css",
+      "size": 351
+    },
+    {
+      "name": "assets/privacy-BmMT4xv0.css",
+      "size": 2301
+    },
+    {
+      "name": "assets/px4T-test_image-b1B1ZOB8.png",
+      "size": 20395
+    },
+    {
+      "name": "assets/richTextEditor-BYOkOuFE.css",
+      "size": 13032
+    },
+    {
+      "name": "assets/song-5kx14wao.png",
+      "size": 1083241
+    },
+    {
+      "name": "assets/spring-Dg-IROeY.png",
+      "size": 1475730
+    },
+    {
+      "name": "assets/style-DLioOiRN.css",
+      "size": 15425
+    },
+    {
+      "name": "assets/svgViewer-v1rROOFv.css",
+      "size": 11898
+    },
+    {
+      "name": "assets/terms-Dlv9Sidt.css",
+      "size": 2297
+    },
+    {
+      "name": "assets/trailer-Dghyr1hJ.mp4",
+      "size": 4372373
+    },
+    {
+      "name": "assets/video-ADs52vPV.css",
+      "size": 15027
+    },
+    {
+      "name": "assets/w-XUj8uhIk.png",
+      "size": 6009
+    },
+    {
+      "name": "assets/xue-Bb02P1FF.png",
+      "size": 930339
+    },
+    {
+      "name": "assets/yesterday-VgIuJYDI.mp3",
+      "size": 4050115
+    },
+    {
+      "name": "version.json",
+      "size": 92
+    }
+  ],
+  "initialAssets": [
+    "assets/App-CgH230Yx.js",
+    "assets/_virtual_mf___mfe_internal__projectA__mf_owner__37529886180404__loadShare__shared-BjUaKS4Q.js",
+    "assets/rolldown-runtime-BCiCTKAo.js",
+    "assets/vite-preload-helper-Bd5KNyzv.js",
+    "assets/SessionScope-BA32pNLy.js",
+    "assets/session-B4aRT5HG.js",
+    "assets/PageContainer-MN-i18Xp.js",
+    "assets/react-C_YtWZua.js",
+    "assets/song-DMgFl2fF.js",
+    "assets/index-C-kNNoxd.js",
+    "assets/setPrototypeOf-kEcCTwil.js",
+    "assets/clsx-DB0hHKMi.js",
+    "assets/useTranslation-BWuPvVK0.js",
+    "assets/shim-B5JWi8O8.js",
+    "assets/dayjs.min-BHo85-_N.js",
+    "assets/request-CyammqGG.js",
+    "assets/message-ofLWqNyd.js",
+    "assets/logger-BCiZulYy.js",
+    "assets/permissionService-BFHLSqhQ.js",
+    "assets/usePermission-B3goLDCB.js",
+    "assets/useSafeNavigate-0EEZ7EZq.js",
+    "assets/client-BFKhPxVJ.js",
+    "assets/index-B8xNYXDE.css"
+  ]
+}

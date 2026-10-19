@@ -1,0 +1,109 @@
+{
+  "project": "shell",
+  "assets": [
+    {
+      "name": "assets/hostInit-CMrnXq6M.js",
+      "size": 5137
+    },
+    {
+      "name": "assets/index-DNcJfjje.js",
+      "size": 503205
+    },
+    {
+      "name": "assets/pendingShares-BcOkdAi_.js",
+      "size": 1374
+    },
+    {
+      "name": "remoteEntry-CDARdkrZ.js",
+      "size": 21276
+    },
+    {
+      "name": "assets/_virtual_mf-localSharedImportMap___mfe_internal__shell__mf_owner__1-DCtLttJx.js",
+      "size": 9794
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__loadRemote__projectA_mf_1_App__mf_consumer__client__mf_owner__1__loadRemote__-B3V5iCvs.js",
+      "size": 2800
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__loadRemote__projectB_mf_1_App__mf_consumer__client__mf_owner__1__loadRemote__-CmJbHICv.js",
+      "size": 2800
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__antd__loadShare__.js-Licl8X5g.js",
+      "size": 1631431
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__react_mf_1_jsx_mf_2_runtime__loadShare__.js-Bu6hyrM6.js",
+      "size": 3142
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__react_mf_2_router_mf_2_dom__loadShare__.js-8jJzusmW.js",
+      "size": 205981
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__zustand__loadShare__.js-3gINL9Ry.js",
+      "size": 3524
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__zustand_mf_1_middleware__loadShare__.js-DDBbxL_X.js",
+      "size": 8816
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__zustand_mf_1_vanilla__loadShare__.js-Dd6ZUtRZ.js",
+      "size": 2819
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__prebuild__immer__prebuild__-BrDkGJWm.js",
+      "size": 19090
+    },
+    {
+      "name": "assets/dist-Dj5P7rF4.js",
+      "size": 298
+    },
+    {
+      "name": "assets/esm-DRwhX8uT.js",
+      "size": 284443
+    },
+    {
+      "name": "assets/helpers-BzMT9iB4.js",
+      "size": 88
+    },
+    {
+      "name": "assets/rolldown-runtime-BCiCTKAo.js",
+      "size": 1301
+    },
+    {
+      "name": "assets/utils-BArKfRix.js",
+      "size": 66473
+    },
+    {
+      "name": "assets/vite-preload-helper-CaUb06OW.js",
+      "size": 1539
+    },
+    {
+      "name": "assets/index-C08Ee3Qk.css",
+      "size": 109661
+    },
+    {
+      "name": "assets/song-5kx14wao.png",
+      "size": 1083241
+    },
+    {
+      "name": "version.json",
+      "size": 89
+    }
+  ],
+  "initialAssets": [
+    "assets/index-DNcJfjje.js",
+    "assets/rolldown-runtime-BCiCTKAo.js",
+    "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__antd__loadShare__.js-Licl8X5g.js",
+    "assets/vite-preload-helper-CaUb06OW.js",
+    "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__react_mf_2_router_mf_2_dom__loadShare__.js-8jJzusmW.js",
+    "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__react_mf_1_jsx_mf_2_runtime__loadShare__.js-Bu6hyrM6.js",
+    "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__zustand__loadShare__.js-3gINL9Ry.js",
+    "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__zustand_mf_1_vanilla__loadShare__.js-Dd6ZUtRZ.js",
+    "assets/_virtual_mf___mfe_internal__shell__mf_owner__277680693868967__loadShare__zustand_mf_1_middleware__loadShare__.js-DDBbxL_X.js",
+    "assets/index-C08Ee3Qk.css"
+  ]
+}

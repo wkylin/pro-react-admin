@@ -64,20 +64,20 @@
   }
 
   &[data-cover-turning] {
-    // Fade the print, keeping an opaque paper surface beneath the closing cover.
+    /* Fade the print, keeping an opaque paper surface beneath the closing cover. */
     .sheet:global(.--simple) .pageLayout {
       opacity: clamp(0, calc((var(--book-openness) - 0.35) / 0.4), 1);
     }
 
-    // Hard-page shadows are rectangular and extend beyond the rotating cover.
-    // The paper's own gutter gradient supplies the contact shading during this fold.
+    /* Hard-page shadows are rectangular and extend beyond the rotating cover. */
+    /* The paper gutter gradient supplies the contact shading during this fold. */
     :global(.stf__hardShadow),
     :global(.stf__hardInnerShadow) {
       visibility: hidden;
     }
 
-    // The engine also draws underlying soft sheets as hard pages during cover folds,
-    // resetting their inline clip-path. Round the corners without cutting a spine gap.
+    /* The engine also draws underlying soft sheets as hard pages during cover folds, */
+    /* resetting their inline clip-path. Round the corners without cutting a spine gap. */
     .sheet:global(.--simple.--left),
     .sheet[data-density='soft']:global(.--left) {
       clip-path: inset(0 round 0 6px 6px 0) !important;
@@ -124,7 +124,7 @@
   height: 100%;
   transform-style: preserve-3d;
   transform: translateZ(calc(-1 * var(--book-depth))) scaleX(calc(1 - 2 * var(--book-side)));
-  // Reveal the volume near closure so its inset edges do not ghost through the paper.
+  /* Reveal the volume near closure so its inset edges do not ghost through the paper. */
   opacity: clamp(0, calc((0.12 - var(--book-openness)) / 0.12), 1);
   pointer-events: none;
 }
@@ -210,8 +210,8 @@
       -1px 8px 12px rgb(19 26 42 / 10%),
       -3px 20px 36px rgb(19 26 42 / 12%);
 
-    // Extend the cover at its outer edges, keeping its rotation axis on the spine.
-    // The rim keeps the same dimensions throughout hover, drag and rebound.
+    /* Extend the cover at its outer edges, keeping its rotation axis on the spine. */
+    /* The rim keeps the same dimensions throughout hover, drag and rebound. */
     &::before {
       content: '';
       position: absolute;
@@ -310,8 +310,8 @@
   border-radius: 0 4px 4px 0;
   overflow: visible;
 
-  // Keep the rim outside the paper so it overlaps the backing's rim at rest,
-  // without doubling its weight or changing the page's content dimensions.
+  /* Keep the rim outside the paper so it overlaps the backing's rim at rest, */
+  /* without doubling its weight or changing the page's content dimensions. */
   &::after {
     content: '';
     position: absolute;

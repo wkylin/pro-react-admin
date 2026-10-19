@@ -1,0 +1,148 @@
+{
+  "project": "projectB",
+  "assets": [
+    {
+      "name": "assets/App-BNs5YFiX.js",
+      "size": 4733
+    },
+    {
+      "name": "assets/hostInit-Dp4VlCPD.js",
+      "size": 5190
+    },
+    {
+      "name": "assets/index-xJZQAkDY.js",
+      "size": 366972
+    },
+    {
+      "name": "assets/pendingShares-B8eysn7b.js",
+      "size": 2844
+    },
+    {
+      "name": "remoteEntry.js",
+      "size": 20659
+    },
+    {
+      "name": "assets/AntdIconLight-d7zc-55z.js",
+      "size": 27576
+    },
+    {
+      "name": "assets/SessionScope-5EC96oj3.js",
+      "size": 137353
+    },
+    {
+      "name": "assets/_virtual_mf-localSharedImportMap___mfe_internal__projectB__mf_owner__1-D70ZtVnE.js",
+      "size": 9256
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__loadShare__shared-QocAJaUb.js",
+      "size": 33352
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__antd__prebuild__-C3H52Xun.js",
+      "size": 1356275
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__dayjs__prebuild__-8roNpv92.js",
+      "size": 291
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__immer__prebuild__-BrDkGJWm.js",
+      "size": 19090
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__react__prebuild__-GQ2MDzy4.js",
+      "size": 1855
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__react_mf_1_jsx_mf_2_runtime__prebuild__-CdZEkPAx.js",
+      "size": 526
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__react_mf_2_dom__prebuild__-CXWqmVmv.js",
+      "size": 763
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__react_mf_2_dom_mf_1_client__prebuild__-C70TVNQX.js",
+      "size": 207526
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__react_mf_2_router_mf_2_dom__prebuild__-B1ECZx8g.js",
+      "size": 200739
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__zustand__prebuild__-BLwIVvnE.js",
+      "size": 679
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__zustand_mf_1_middleware__prebuild__-C3-kfU72.js",
+      "size": 6139
+    },
+    {
+      "name": "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__prebuild__zustand_mf_1_vanilla__prebuild__-DsyDcfjs.js",
+      "size": 120
+    },
+    {
+      "name": "assets/dayjs.min-BHo85-_N.js",
+      "size": 7187
+    },
+    {
+      "name": "assets/dist-DDjagsgm.js",
+      "size": 298
+    },
+    {
+      "name": "assets/esm-BU5CT9qs.js",
+      "size": 284433
+    },
+    {
+      "name": "assets/helpers-CiW4_Ztn.js",
+      "size": 88
+    },
+    {
+      "name": "assets/react-BlIEEezU.js",
+      "size": 7876
+    },
+    {
+      "name": "assets/react-dom-BRaXhtYr.js",
+      "size": 3897
+    },
+    {
+      "name": "assets/rolldown-runtime-BCiCTKAo.js",
+      "size": 1301
+    },
+    {
+      "name": "assets/utils-ZdUl1moC.js",
+      "size": 66698
+    },
+    {
+      "name": "assets/vanilla-B58OruTr.js",
+      "size": 408
+    },
+    {
+      "name": "assets/vite-preload-helper-BtWN8tXe.js",
+      "size": 1635
+    },
+    {
+      "name": "assets/index-C08Ee3Qk.css",
+      "size": 109661
+    },
+    {
+      "name": "assets/song-5kx14wao.png",
+      "size": 1083241
+    },
+    {
+      "name": "version.json",
+      "size": 92
+    }
+  ],
+  "initialAssets": [
+    "assets/App-BNs5YFiX.js",
+    "assets/_virtual_mf___mfe_internal__projectB__mf_owner__68739716852602__loadShare__shared-QocAJaUb.js",
+    "assets/rolldown-runtime-BCiCTKAo.js",
+    "assets/vite-preload-helper-BtWN8tXe.js",
+    "assets/SessionScope-5EC96oj3.js",
+    "assets/index-xJZQAkDY.js",
+    "assets/AntdIconLight-d7zc-55z.js",
+    "assets/dayjs.min-BHo85-_N.js",
+    "assets/index-C08Ee3Qk.css"
+  ]
+}
