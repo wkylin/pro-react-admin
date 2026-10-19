@@ -4,7 +4,16 @@ import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, Rotate3D, X, BookOpen } from 'lucide-react'
 import { pdfjs } from 'react-pdf'
 import pageTurnAudio from '@/assets/audio/page-turn.mp3'
-import { BookBackCoverArtwork, BookCoverArtwork, BookPageBlock, BookTurnover3D } from './BookVolume'
+import {
+  BookBackCoverArtwork,
+  BookCoverArtwork,
+  BookPageBlock,
+  BookSpineCopy,
+  BookTurnover3D,
+  type BookCoverLayout,
+  type BookSpineStyle,
+  type BookCoverStyle,
+} from './BookVolume'
 import PageFlipRenderer, { type FlipPage, type PageFlipHandle } from './PageFlipRenderer'
 import styles from './index.module.less'
 
@@ -21,6 +30,44 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return clsx(inputs)
 }
 
+function normalizeAngle(angle: number) {
+  return ((((angle + 180) % 360) + 360) % 360) - 180
+}
+
+function getCoverBaseColor(style: BookCoverStyle) {
+  if (style === 'classic') return '#17181d'
+  if (style === 'leather') return '#70282d'
+  if (style === 'golden-jacket') return '#e5a21b'
+  if (style === 'editorial-orange') return '#efeee8'
+  return '#17213a'
+}
+
+function getVerticalPagePadding(padding: string | undefined, pageWidth: number) {
+  const defaultTop = 14
+  const defaultBottom = 10
+  if (!padding) return defaultTop + defaultBottom
+
+  const values = padding.split(/\s+/).filter(Boolean)
+  if (!values.length) return defaultTop + defaultBottom
+  const parseLength = (value: string, fallback: number) => {
+    const match = value.match(/^(-?(?:\d+(?:\.\d*)?|\.\d+))(px|rem|em|%)?$/i)
+    if (!match) return fallback
+    const amount = Number(match[1])
+    const unit = match[2]?.toLowerCase()
+    const pixels = unit === 'rem' || unit === 'em' ? amount * 16 : unit === '%' ? (amount * pageWidth) / 100 : amount
+    return Math.max(0, pixels)
+  }
+
+  const top = parseLength(values[0], defaultTop)
+  const bottomValue = values.length === 1 ? values[0] : values.length === 2 ? values[0] : values[2]
+  const bottom = parseLength(bottomValue, defaultBottom)
+  return top + bottom
+}
+
+function scalePagePadding(pageWidth: number, ratio: number, min: number, max: number) {
+  return `${Math.round(Math.min(max, Math.max(min, pageWidth * ratio)))}px`
+}
+
 export interface BookPage {
   title?: string
   content: React.ReactNode
@@ -30,13 +77,61 @@ export interface BookPage {
 
 export interface InteractiveBookProps {
   coverImage: string
+  /** 封面图片裁切位置，CSS object-position 值 */
+  coverImagePosition?: string
+  /** 封面标签、主标题下方简介、作者与出版信息 */
+  coverLabel?: React.ReactNode
+  coverContent?: React.ReactNode
+  coverAuthor?: React.ReactNode
   /** 封底图片 URL，铺满整个封底 */
   backCoverImage?: string
-  /** 封底简介等内容，可与 backCoverImage 叠加显示 */
+  /** 封底图片裁切位置，CSS object-position 值 */
+  backCoverImagePosition?: string
+  /** 封底标签、标题、副标题、简介、作者与出版信息 */
+  backCoverLabel?: React.ReactNode
+  backCoverTitle?: React.ReactNode
+  backCoverSubtitle?: React.ReactNode
   backCoverContent?: React.ReactNode
+  backCoverAuthor?: React.ReactNode
+  backCoverPublisher?: React.ReactNode
+  /** 封底可独立设置装帧、排版与颜色；未设置时沿用封面 */
+  backCoverStyle?: BookCoverStyle
+  backCoverLayout?: BookCoverLayout
+  backCoverColor?: string
+  backCoverFontFamily?: string
+  backCoverTitleColor?: string
+  backCoverTextColor?: string
+  backCoverAccentColor?: string
+  backCoverTextAlign?: 'left' | 'center' | 'right'
+  backCoverTitleStyle?: React.CSSProperties
+  /** 是否单独显示封底纸纹；未设置时沿用 textured */
+  backCoverTextured?: boolean
   bookTitle?: string
   /** 自定义封面标题排版；书脊、内封和无障碍名称仍使用 bookTitle */
   coverTitle?: React.ReactNode
+  /** 封面标题下方的副标题与出版信息 */
+  coverSubtitle?: React.ReactNode
+  coverPublisher?: React.ReactNode
+  /** 封面装帧：插画、黑金精装、酒红皮革、金色书衣或橙白编辑风 */
+  coverStyle?: BookCoverStyle
+  /** 封面排版布局；titleStyle 可进一步覆盖标题字体与位置 */
+  coverLayout?: BookCoverLayout
+  coverFontFamily?: string
+  coverTitleSize?: number | string
+  coverTitleColor?: string
+  coverTextColor?: string
+  coverAccentColor?: string
+  coverTextAlign?: 'left' | 'center' | 'right'
+  coverTitleStyle?: React.CSSProperties
+  /** 书脊文案默认使用 bookTitle，可单独添加副标题和作者 */
+  spineTitle?: React.ReactNode
+  spineSubtitle?: React.ReactNode
+  spineAuthor?: React.ReactNode
+  spineColor?: string
+  spineTextColor?: string
+  spineAccentColor?: string
+  /** 书脊装饰：auto 按装帧匹配，也可选光滑、压纹、横带、古典或极简 */
+  spineStyle?: BookSpineStyle
   bookAuthor?: string
   pages: BookPage[]
   /**
@@ -56,8 +151,28 @@ export interface InteractiveBookProps {
   height?: number | string
   /** 合起时的纸张厚度（px），默认 28，范围 6–64 */
   thickness?: number
-  /** 封面、书脊与封底的装帧颜色，默认 #17213a */
+  /** 封面、书脊与封底的基础装帧颜色；未设置时按 coverStyle 选择 */
   coverColor?: string
+  /** 合起时的垂直倾斜角（deg），默认 4，范围 0–30 */
+  tilt?: number
+  /** 合起时的水平旋转角（deg），默认 24，范围 0–60 */
+  rotation?: number
+  /** 启用合起时的 3D 拖动与视角快捷按钮，默认 true */
+  enable3DViewControls?: boolean
+  /** 内页边距，接受 CSS padding 简写或 px 数值；默认值随书页宽度按比例缩放 */
+  pagePadding?: string | number
+  /** 内页字体，可传 CSS font-family 字体栈 */
+  fontFamily?: string
+  /** 内页纸张颜色 */
+  paperColor?: string
+  /** 内页文字颜色 */
+  textColor?: string
+  /** 页眉、页码等次要文字颜色 */
+  mutedColor?: string
+  /** 内页分隔线和纸张边缘颜色 */
+  ruleColor?: string
+  /** 每张目录页显示的章节数上限，默认 6；页面较矮时会自动减少 */
+  contentsPerPage?: number
   /** 是否显示封面纸纹，默认 false */
   textured?: boolean
   onPageChange?: (pageIndex: number) => void
@@ -91,19 +206,32 @@ export interface InteractiveBookProps {
 const PRELOAD_RANGE = 2 // 预加载当前页 ±2 范围的图片
 
 const LazyPageImage: React.FC<{
-  src: string
+  src?: string
   shouldLoad: boolean
   alt?: string
-}> = ({ src, shouldLoad, alt = '' }) => {
+  loadingText?: string
+  failureMessage?: string
+}> = ({ src, shouldLoad, alt = '', loadingText = '加载中...', failureMessage }) => {
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState(false)
 
-  if (!shouldLoad) {
+  if (!shouldLoad || !src || failureMessage) {
     return (
       <div
         className={styles.imgPlaceholder}
-        style={{ width: '100%', height: '100%', background: 'var(--wui-bg-subtle)' }}
-      />
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--wui-bg-subtle)',
+          color: 'var(--wui-text-muted)',
+          fontSize: 13,
+        }}
+      >
+        {failureMessage ?? (shouldLoad ? loadingText : '')}
+      </div>
     )
   }
 
@@ -123,7 +251,7 @@ const LazyPageImage: React.FC<{
             fontSize: 14,
           }}
         >
-          加载中...
+          {loadingText}
         </div>
       )}
       {error ? (
@@ -163,112 +291,301 @@ const LazyPageImage: React.FC<{
   )
 }
 
-// ─── PDF → 图片 hook：使用 pdfjs 离屏渲染每页，输出 data-URL 数组 ────
-// 完全在 DOM 之外完成，不受任何 CSS 3D transform / backface-visibility 影响
-function usePdfToImages(pdfUrl: string | undefined, renderWidth: number | undefined) {
-  const [state, setState] = useState<{
-    images: string[]
-    loading: boolean
-    error: string | null
-  }>({ images: [], loading: false, error: null })
-  const taskRef = useRef<{ url: string; width: number | undefined } | null>(null)
+type PdfLoadingTask = ReturnType<typeof pdfjs.getDocument>
+type PdfDocumentProxy = Awaited<PdfLoadingTask['promise']>
+type PdfLoadState = {
+  images: Array<string | undefined>
+  pageCount: number
+  loading: boolean
+  error: string | null
+  pageErrors: Record<number, string>
+}
 
-  const imagesCount = state.images.length
+const PDF_PRELOAD_AHEAD = 2
+
+function buildPdfCandidates(originalUrl: string) {
+  const candidates = [originalUrl]
+  try {
+    if (typeof window !== 'undefined') {
+      const origin = window.location.origin || ''
+      const pathname = window.location.pathname || '/'
+      const storybookIndex = pathname.indexOf('/storybook')
+      if (storybookIndex !== -1) {
+        const base = pathname.substring(0, storybookIndex)
+        candidates.push(`${base}/storybook${originalUrl}`)
+        if (origin) candidates.push(`${origin}${base}/storybook${originalUrl}`)
+      } else {
+        const parts = pathname.split('/').filter(Boolean)
+        if (parts.length >= 2) {
+          const repoPrefix = `/${parts[0]}/${parts[1]}`
+          candidates.push(`${repoPrefix}/storybook${originalUrl}`)
+          if (origin) candidates.push(`${origin}${repoPrefix}/storybook${originalUrl}`)
+        }
+      }
+    }
+  } catch {
+    // Keep the original URL if the runtime location is unavailable.
+  }
+  return [...new Set(candidates)]
+}
+
+// Load PDF metadata once, then rasterize the visible pages and the next two pages on demand.
+function usePdfToImages(
+  pdfUrl: string | undefined,
+  renderWidth: number | undefined,
+  currentPageIndex: number,
+  singlePage: boolean
+) {
+  const [state, setState] = useState<PdfLoadState>({
+    images: [],
+    pageCount: 0,
+    loading: false,
+    error: null,
+    pageErrors: {},
+  })
+  const documentRef = useRef<{ url: string; pdf: PdfDocumentProxy; loadingTask: PdfLoadingTask } | null>(null)
+  const imageCacheRef = useRef(new Map<number, { width: number; src: string }>())
+  const renderTasksRef = useRef(new Map<number, { width: number; cancel: () => void }>())
 
   useEffect(() => {
-    if (!pdfUrl) return
-
-    // 相同参数不重复渲染
-    if (taskRef.current?.url === pdfUrl && taskRef.current?.width === renderWidth && imagesCount > 0) return
-    taskRef.current = { url: pdfUrl, width: renderWidth }
-
     let cancelled = false
+    let loadingTask: PdfLoadingTask | null = null
 
-    // 用 microtask 推迟 setState，避免 "set-state-in-effect" 同步调用
+    for (const task of renderTasksRef.current.values()) task.cancel()
+    renderTasksRef.current.clear()
+    for (const cachedImage of imageCacheRef.current.values()) URL.revokeObjectURL(cachedImage.src)
+    imageCacheRef.current.clear()
+    documentRef.current = null
     queueMicrotask(() => {
-      if (!cancelled) setState({ images: [], loading: true, error: null })
+      if (!cancelled) {
+        setState({
+          images: [],
+          pageCount: 0,
+          loading: !!pdfUrl,
+          error: null,
+          pageErrors: {},
+        })
+      }
     })
 
-    const run = async () => {
-      // 给出一组候选 URL，遇到 404 或网络错误时按顺序尝试
-      const buildCandidates = (orig: string) => {
-        const c: string[] = [orig]
-        try {
-          if (typeof window !== 'undefined') {
-            const origin = window.location.origin || ''
-            const p = window.location.pathname || '/'
-            const idx = p.indexOf('/storybook')
-            if (idx !== -1) {
-              const base = p.substring(0, idx)
-              c.push(`${base}/storybook${orig}`)
-              if (origin) c.push(`${origin}${base}/storybook${orig}`)
-            } else {
-              const parts = p.split('/').filter(Boolean)
-              if (parts.length >= 2) {
-                const repoPrefix = `/${parts[0]}/${parts[1]}`
-                c.push(`${repoPrefix}/storybook${orig}`)
-                if (origin) c.push(`${origin}${repoPrefix}/storybook${orig}`)
-              }
-            }
-          }
-        } catch {
-          // ignore
-        }
-        return c
+    if (!pdfUrl) {
+      return () => {
+        cancelled = true
       }
+    }
 
-      const candidates = buildCandidates(pdfUrl)
-
-      let lastErr: any = null
-      for (const candidate of candidates) {
+    const loadDocument = async () => {
+      let lastError: unknown
+      for (const candidate of buildPdfCandidates(pdfUrl)) {
         if (cancelled) return
+        const task = pdfjs.getDocument({ url: candidate })
+        loadingTask = task
         try {
-          const pdf = await pdfjs.getDocument({ url: candidate }).promise
-          const urls: string[] = []
-
-          for (let i = 1; i <= pdf.numPages; i++) {
-            if (cancelled) return
-            const page = await pdf.getPage(i)
-            const baseViewport = page.getViewport({ scale: 1 })
-            // 按容器宽度等比缩放，×2 保证清晰度
-            const scale = renderWidth ? (renderWidth / baseViewport.width) * 2 : 2
-            const viewport = page.getViewport({ scale })
-
-            const canvas = document.createElement('canvas')
-            canvas.width = viewport.width
-            canvas.height = viewport.height
-            const ctx = canvas.getContext('2d')!
-            // 先填充淡黄纸张底色，避免白色背景
-            ctx.fillStyle = '#fdfbf7'
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
-            await page.render({ canvas, canvasContext: ctx, viewport }).promise
-            urls.push(canvas.toDataURL('image/png'))
+          const pdf = await task.promise
+          if (cancelled) {
+            void task.destroy().catch(() => {})
+            return
           }
-
-          if (!cancelled) {
-            setState({ images: urls, loading: false, error: null })
-          }
+          documentRef.current = { url: pdfUrl, pdf, loadingTask: task }
+          setState({
+            images: Array.from({ length: pdf.numPages }),
+            pageCount: pdf.numPages,
+            loading: false,
+            error: null,
+            pageErrors: {},
+          })
           return
-        } catch (err) {
-          lastErr = err
-          // 若是最后一个候选仍失败，则报告错误
-          continue
+        } catch (error) {
+          lastError = error
+          try {
+            await task.destroy()
+          } catch {
+            // The failed loading task may already be destroyed by PDF.js.
+          }
         }
       }
 
       if (!cancelled) {
-        console.error('[InteractiveBook] PDF render error (all candidates failed):', lastErr)
-        setState({ images: [], loading: false, error: lastErr instanceof Error ? lastErr.message : String(lastErr) })
+        console.error('[InteractiveBook] PDF document load failed:', lastError)
+        setState({
+          images: [],
+          pageCount: 0,
+          loading: false,
+          error: lastError instanceof Error ? lastError.message : String(lastError ?? 'Unknown PDF error'),
+          pageErrors: {},
+        })
       }
     }
 
-    run()
+    void loadDocument()
     return () => {
       cancelled = true
+      for (const task of renderTasksRef.current.values()) task.cancel()
+      renderTasksRef.current.clear()
+      for (const cachedImage of imageCacheRef.current.values()) URL.revokeObjectURL(cachedImage.src)
+      imageCacheRef.current.clear()
+      if (documentRef.current?.url === pdfUrl) {
+        const task = documentRef.current.loadingTask
+        documentRef.current = null
+        void task.destroy().catch(() => {})
+      } else if (loadingTask) {
+        void loadingTask.destroy().catch(() => {})
+      }
     }
-  }, [pdfUrl, renderWidth, imagesCount])
+  }, [pdfUrl])
 
-  return { pdfImages: state.images, pdfLoading: state.loading, pdfError: state.error }
+  useEffect(() => {
+    const loadedDocument = documentRef.current
+    if (!pdfUrl || loadedDocument?.url !== pdfUrl || state.pageCount === 0) return
+
+    const pageCount = Math.min(state.pageCount, loadedDocument.pdf.numPages)
+    const startIndex = Math.max(0, Math.min(pageCount - 1, Math.floor(currentPageIndex)))
+    const visibleCount = singlePage ? 1 : 2
+    const requestEnd = Math.min(pageCount, startIndex + visibleCount + PDF_PRELOAD_AHEAD)
+    const requestedIndices = Array.from({ length: requestEnd - startIndex }, (_, offset) => startIndex + offset)
+    const keepStart = Math.max(0, startIndex - PDF_PRELOAD_AHEAD)
+    const keepIndices = new Set(Array.from({ length: requestEnd - keepStart }, (_, offset) => keepStart + offset))
+    const visibleIndices = requestedIndices.slice(0, Math.min(visibleCount, requestedIndices.length))
+    const width = Math.max(1, Math.floor(renderWidth ?? 1))
+    let cancelled = false
+
+    for (const [index, task] of renderTasksRef.current) {
+      if (!keepIndices.has(index) || task.width !== width) {
+        task.cancel()
+        renderTasksRef.current.delete(index)
+      }
+    }
+    for (const [index, cachedImage] of imageCacheRef.current) {
+      if (!keepIndices.has(index) || cachedImage.width !== width) {
+        imageCacheRef.current.delete(index)
+        URL.revokeObjectURL(cachedImage.src)
+      }
+    }
+
+    setState((previous) => {
+      if (previous.pageCount !== pageCount) return previous
+      const images = previous.images.slice()
+      let changed = false
+      for (let index = 0; index < images.length; index += 1) {
+        const cachedImage = keepIndices.has(index) ? imageCacheRef.current.get(index) : undefined
+        const nextImage = cachedImage?.width === width ? cachedImage.src : undefined
+        if (images[index] !== nextImage) {
+          images[index] = nextImage
+          changed = true
+        }
+      }
+      return changed ? { ...previous, images } : previous
+    })
+
+    const renderRequestedPages = async () => {
+      const pendingImages = new Map<number, string>()
+      const pendingErrors = new Map<number, string>()
+      const publishResults = () => {
+        if (cancelled || (pendingImages.size === 0 && pendingErrors.size === 0)) return
+        const renderedImages = [...pendingImages]
+        const renderErrors = [...pendingErrors]
+        pendingImages.clear()
+        pendingErrors.clear()
+        setState((previous) => {
+          if (previous.pageCount !== pageCount) return previous
+          const images = previous.images.slice()
+          const pageErrors = { ...previous.pageErrors }
+          for (const [index, src] of renderedImages) {
+            if (keepIndices.has(index)) images[index] = src
+            delete pageErrors[index]
+          }
+          for (const [index, message] of renderErrors) pageErrors[index] = message
+          return { ...previous, images, pageErrors }
+        })
+      }
+      const publishWhenVisibleReady = () => {
+        if (
+          visibleIndices.every(
+            (visibleIndex) => imageCacheRef.current.has(visibleIndex) || pendingErrors.has(visibleIndex)
+          )
+        ) {
+          publishResults()
+        }
+      }
+
+      for (const index of requestedIndices) {
+        if (cancelled) return
+        const cachedImage = imageCacheRef.current.get(index)
+        if (cachedImage?.width === width) continue
+
+        let page: Awaited<ReturnType<PdfDocumentProxy['getPage']>> | null = null
+        let canvas: HTMLCanvasElement | null = null
+        let renderTask: ReturnType<Awaited<ReturnType<PdfDocumentProxy['getPage']>>['render']> | null = null
+        let taskEntry: { width: number; cancel: () => void } | null = null
+        try {
+          page = await loadedDocument.pdf.getPage(index + 1)
+          if (cancelled) return
+          const baseViewport = page.getViewport({ scale: 1 })
+          const scale = Math.min(3, Math.max(0.25, (width / baseViewport.width) * 2))
+          const viewport = page.getViewport({ scale })
+          canvas = document.createElement('canvas')
+          canvas.width = Math.ceil(viewport.width)
+          canvas.height = Math.ceil(viewport.height)
+          const context = canvas.getContext('2d', { alpha: false })
+          if (!context) throw new Error('无法创建 PDF 页面画布')
+          context.fillStyle = '#fdfbf7'
+          context.fillRect(0, 0, canvas.width, canvas.height)
+          renderTask = page.render({ canvas, canvasContext: context, viewport })
+          taskEntry = { width, cancel: () => renderTask?.cancel() }
+          renderTasksRef.current.set(index, taskEntry)
+          await renderTask.promise
+          if (cancelled) return
+
+          const blob = await new Promise<Blob>((resolve, reject) => {
+            canvas?.toBlob(
+              (result) => (result ? resolve(result) : reject(new Error('PDF 页面图片编码失败'))),
+              'image/webp',
+              0.92
+            )
+          })
+          if (cancelled) return
+          const src = URL.createObjectURL(blob)
+          imageCacheRef.current.set(index, { width, src })
+          pendingImages.set(index, src)
+          pendingErrors.delete(index)
+          publishWhenVisibleReady()
+        } catch (error) {
+          if (!cancelled && !(error instanceof Error && error.name === 'RenderingCancelledException')) {
+            pendingErrors.set(index, error instanceof Error ? error.message : String(error))
+            publishWhenVisibleReady()
+          }
+        } finally {
+          if (taskEntry && renderTasksRef.current.get(index) === taskEntry) renderTasksRef.current.delete(index)
+          page?.cleanup()
+          if (canvas) {
+            canvas.width = 0
+            canvas.height = 0
+          }
+        }
+      }
+      publishResults()
+    }
+
+    void renderRequestedPages()
+    return () => {
+      cancelled = true
+      for (const index of requestedIndices) {
+        const task = renderTasksRef.current.get(index)
+        if (task?.width === width) {
+          task.cancel()
+          renderTasksRef.current.delete(index)
+        }
+      }
+    }
+  }, [pdfUrl, renderWidth, currentPageIndex, singlePage, state.pageCount])
+
+  return {
+    pdfImages: state.images,
+    pdfPageCount: state.pageCount,
+    pdfLoading: state.loading,
+    pdfError: state.error,
+    pdfPageErrors: state.pageErrors,
+  }
 }
 
 // ─── 预加载 hook：提前把相邻页的图片载入浏览器缓存 ──
@@ -308,17 +625,65 @@ function useImagePreloader(images: string[] | undefined, currentPageIndex: numbe
 
 export default function InteractiveBook({
   coverImage = '',
+  coverImagePosition,
+  coverLabel,
+  coverContent,
+  coverAuthor,
   backCoverImage,
+  backCoverImagePosition,
+  backCoverLabel,
+  backCoverTitle,
+  backCoverSubtitle,
   backCoverContent,
+  backCoverAuthor,
+  backCoverPublisher,
+  backCoverStyle,
+  backCoverLayout,
+  backCoverColor,
+  backCoverFontFamily,
+  backCoverTitleColor,
+  backCoverTextColor,
+  backCoverAccentColor,
+  backCoverTextAlign,
+  backCoverTitleStyle,
+  backCoverTextured,
   bookTitle = 'Book Title',
   coverTitle,
+  coverSubtitle,
+  coverPublisher,
+  coverStyle = 'illustrated',
+  coverLayout = 'standard',
+  coverFontFamily,
+  coverTitleSize,
+  coverTitleColor,
+  coverTextColor,
+  coverAccentColor,
+  coverTextAlign,
+  coverTitleStyle,
+  spineTitle,
+  spineSubtitle,
+  spineAuthor,
+  spineColor,
+  spineTextColor,
+  spineAccentColor,
+  spineStyle = 'auto',
   bookAuthor = 'Author Name',
   pages = [],
   className,
   width = 350,
   height = 500,
   thickness = 28,
-  coverColor = '#17213a',
+  coverColor,
+  tilt = 4,
+  rotation = 24,
+  enable3DViewControls = true,
+  pagePadding,
+  fontFamily,
+  paperColor,
+  textColor,
+  mutedColor,
+  ruleColor,
+  contentsPerPage = 6,
   textured = false,
   pageImages,
   pdfUrl,
@@ -335,10 +700,38 @@ export default function InteractiveBook({
 }: InteractiveBookProps) {
   const reducedMotion = !!useReducedMotion()
   const bookDepth = Number.isFinite(thickness) ? Math.min(64, Math.max(6, thickness)) : 28
+  const resolvedCoverColor = coverColor ?? getCoverBaseColor(coverStyle)
+  const resolvedBackCoverColor = backCoverColor ?? coverColor ?? getCoverBaseColor(backCoverStyle ?? coverStyle)
+  const resolvedBackCoverTitle = backCoverTitle === undefined ? bookTitle : backCoverTitle
+  const resolvedBackCoverAuthor = backCoverAuthor === undefined ? bookAuthor : backCoverAuthor
+  const resolvedCoverAuthor = coverAuthor === undefined ? bookAuthor : coverAuthor
+  const resolvedSpineTitle = spineTitle ?? bookTitle
+  const resolvedSpineTextColor =
+    spineTextColor ??
+    (coverStyle === 'illustrated'
+      ? '#f4f7fd'
+      : coverStyle === 'golden-jacket'
+        ? '#842c2e'
+        : coverStyle === 'editorial-orange'
+          ? '#4b2b29'
+          : '#f1e4bc')
+  const resolvedSpineAccentColor =
+    spineAccentColor ??
+    coverAccentColor ??
+    (coverStyle === 'golden-jacket' ? '#8c3030' : coverStyle === 'editorial-orange' ? '#ef5b25' : '#d2ae62')
+  const rawCoverTitleSize = typeof coverTitleSize === 'number' ? `${coverTitleSize}px` : coverTitleSize?.trim()
+  const coverTitleSizeValue =
+    rawCoverTitleSize && /^\d+(?:\.\d+)?$/.test(rawCoverTitleSize) ? `${rawCoverTitleSize}px` : rawCoverTitleSize
+  const bookTilt = Number.isFinite(tilt) ? Math.min(30, Math.max(0, tilt)) : 4
+  const bookRotation = Number.isFinite(rotation) ? Math.min(60, Math.max(0, rotation)) : 24
+  const [previewAngles, setPreviewAngles] = useState(() => ({ pitch: bookTilt, yaw: -bookRotation }))
+  const [isDraggingView, setIsDraggingView] = useState(false)
+  const requestedChapterLimit = Number.isFinite(contentsPerPage) ? Math.max(1, Math.floor(contentsPerPage)) : 6
   const [view, setView] = useState<'front' | 'pages' | 'back'>((controlledOpen ?? defaultOpen) ? 'pages' : 'front')
   const isOpen = view !== 'front'
   const atBackCover = view === 'back'
   const [currentFace, setCurrentFace] = useState(0)
+  const [currentEnginePage, setCurrentEnginePage] = useState(0)
   const [atEnd, setAtEnd] = useState(false)
   const [isTurning, setIsTurning] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
@@ -351,7 +744,15 @@ export default function InteractiveBook({
   const flipRef = useRef<PageFlipHandle>(null)
   const bookWrapperRef = useRef<HTMLDivElement>(null)
   const coverTriggerRef = useRef<HTMLButtonElement>(null)
-  const coverPointerRef = useRef<number | null>(null)
+  const viewDragRef = useRef<{
+    pointerId: number
+    startX: number
+    startY: number
+    startPitch: number
+    startYaw: number
+    moved: boolean
+  } | null>(null)
+  const suppressCoverClickRef = useRef(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [layout, setLayout] = useState({
     availableWidth: 0,
@@ -360,6 +761,10 @@ export default function InteractiveBook({
     pageHeight: typeof height === 'number' ? height : 500,
   })
   const [mobile, setMobile] = useState(false)
+
+  useEffect(() => {
+    setPreviewAngles({ pitch: bookTilt, yaw: -bookRotation })
+  }, [bookTilt, bookRotation])
 
   useEffect(() => () => cancelAnimationFrame(turnoverFrameRef.current), [])
 
@@ -405,27 +810,71 @@ export default function InteractiveBook({
     )
   )
   const effectiveHeight = Math.round((effectiveWidth * layout.pageHeight) / layout.pageWidth)
+  const normalizedPagePadding = typeof pagePadding === 'number' ? `${Math.max(0, pagePadding)}px` : pagePadding?.trim()
+  const pagePaddingTop = scalePagePadding(effectiveWidth, 0.04, 14, 22)
+  const pagePaddingOuter = scalePagePadding(effectiveWidth, 0.05, 18, 28)
+  const pagePaddingBottom = scalePagePadding(effectiveWidth, 0.03, 10, 18)
+  const pagePaddingGutter = scalePagePadding(effectiveWidth, 0.075, 24, 34)
+  const resolvedPagePadding =
+    normalizedPagePadding || `${pagePaddingTop} ${pagePaddingOuter} ${pagePaddingBottom} ${pagePaddingGutter}`
+  const resolvedLeftPagePadding =
+    normalizedPagePadding || `${pagePaddingTop} ${pagePaddingGutter} ${pagePaddingBottom} ${pagePaddingOuter}`
+  const verticalPagePadding = getVerticalPagePadding(resolvedPagePadding, effectiveWidth)
+  const heightBasedChapterLimit = Math.max(1, Math.floor((effectiveHeight - 199 - verticalPagePadding) / 41))
+  const chapterLimit = Math.min(requestedChapterLimit, heightBasedChapterLimit)
   const playPageTurnSound = useCallback(() => {
     if (!enableSound || !audioRef.current) return
     audioRef.current.currentTime = 0
     audioRef.current.play().catch(() => {})
   }, [enableSound])
 
-  const { pdfImages, pdfLoading, pdfError } = usePdfToImages(pdfUrl, effectiveWidth - 24)
+  const { pdfImages, pdfPageCount, pdfLoading, pdfError, pdfPageErrors } = usePdfToImages(
+    pdfUrl,
+    effectiveWidth - 24,
+    currentFace,
+    isSinglePage
+  )
   const isPdfMode = !!pdfUrl
   const resolvedImages = isPdfMode ? pdfImages : pageImages
-  const isImageMode = !!resolvedImages?.length
+  const imageCount = isPdfMode ? pdfPageCount : (pageImages?.length ?? 0)
+  const isImageMode = imageCount > 0
   const faces: BookPage[] = isImageMode
-    ? resolvedImages!.map((_, index) => ({ pageNumber: index + 1, content: null }))
+    ? Array.from({ length: imageCount }, (_, index) => ({ pageNumber: index + 1, content: null }))
     : pages.flatMap((page, index) => [
         { title: page.title, content: page.content, pageNumber: index * 2 + 1 },
         { content: page.backContent, pageNumber: index * 2 + 2 },
       ])
   const hasContent = faces.length > 0 && (!isPdfMode || isImageMode)
   const faceCount = faces.length
-  const chapters = isImageMode ? [] : faces.filter((face) => face.title)
+  const chapters = isImageMode
+    ? []
+    : faces.flatMap((face, faceIndex) =>
+        face.title ? [{ title: face.title, pageNumber: face.pageNumber, faceIndex }] : []
+      )
+  const contentsPages: Array<typeof chapters> = []
+  if (chapters.length === 0) {
+    contentsPages.push([])
+  } else {
+    for (let index = 0; index < chapters.length; index += chapterLimit) {
+      contentsPages.push(chapters.slice(index, index + chapterLimit))
+    }
+  }
+  const contentsPageCount = contentsPages.length
+  const firstFacePage = 1 + contentsPageCount
   const firstOpenPage = 1
-  const endPage = faceCount + (isSinglePage ? 1 : 2 + (faceCount % 2))
+  const previousFirstFacePageRef = useRef(firstFacePage)
+  const contentsLayoutChanged = previousFirstFacePageRef.current !== firstFacePage
+  const currentPageForLayout =
+    contentsLayoutChanged && currentEnginePage > 0
+      ? currentEnginePage < previousFirstFacePageRef.current
+        ? Math.min(currentEnginePage, contentsPageCount)
+        : firstFacePage + currentFace
+      : currentEnginePage || firstOpenPage
+  useEffect(() => {
+    previousFirstFacePageRef.current = firstFacePage
+  }, [firstFacePage])
+  const endBlankPageCount = !isSinglePage && (firstFacePage + faceCount) % 2 === 1 ? 1 : 0
+  const endPage = firstFacePage + faceCount + endBlankPageCount
   const lastOpenPage = isSinglePage ? endPage : endPage - 1
   const backCoverPage = endPage + 1
   const startPage =
@@ -434,18 +883,28 @@ export default function InteractiveBook({
         ? backCoverPage
         : atEnd
           ? lastOpenPage
-          : isSinglePage
-            ? currentFace + 1
-            : currentFace === 0
-              ? 1
-              : Math.floor((currentFace - 1) / 2) * 2 + 3
+          : Math.min(currentPageForLayout, lastOpenPage)
       : 0
   const visibleStartPage = Math.min(faceCount, currentFace + 1)
-  const visibleEndPage = Math.min(faceCount, visibleStartPage + (isSinglePage || currentFace === 0 ? 0 : 1))
-  const readingProgress = faceCount ? Math.round((visibleEndPage / faceCount) * 100) : 0
-  useImagePreloader(resolvedImages, currentFace, true)
+  const visibleFaceStart = Math.max(firstFacePage, currentEnginePage)
+  const visibleFaceEnd = Math.min(firstFacePage + faceCount, currentEnginePage + (isSinglePage ? 1 : 2))
+  const visibleFaceCount = Math.max(0, visibleFaceEnd - visibleFaceStart)
+  const visibleEndPage = Math.min(faceCount, visibleStartPage + Math.max(0, visibleFaceCount - 1))
+  const readingContentsOnly =
+    currentEnginePage > 0 &&
+    currentEnginePage < firstFacePage &&
+    (isSinglePage || currentEnginePage + 1 < firstFacePage)
+  const contentsStartPage = Math.min(contentsPageCount, Math.max(1, currentEnginePage))
+  const contentsEndPage = Math.min(contentsPageCount, contentsStartPage + (isSinglePage ? 0 : 1))
+  const contentsPageLabel =
+    contentsPageCount > 1 && contentsStartPage !== contentsEndPage
+      ? `目录 ${contentsStartPage}–${contentsEndPage}`
+      : `目录 ${contentsStartPage}/${contentsPageCount}`
+  const readingProgress = faceCount && !readingContentsOnly ? Math.round((visibleEndPage / faceCount) * 100) : 0
+  useImagePreloader(isPdfMode ? undefined : pageImages, currentFace, true)
 
   const reportPage = (page: number) => {
+    setCurrentEnginePage(page)
     if (page === 0) {
       setCurrentFace(0)
       setAtEnd(false)
@@ -461,11 +920,11 @@ export default function InteractiveBook({
       return
     }
     setView('pages')
-    const face = Math.max(0, Math.min(faceCount - 1, page - (isSinglePage ? 1 : 2)))
+    const face = Math.max(0, Math.min(faceCount - 1, page - firstFacePage))
     setCurrentFace(face)
     setAtEnd(page >= lastOpenPage)
-    const index = isSinglePage ? page - 2 : Math.floor((page - 3) / 2)
-    if (index !== lastReportedPage.current) {
+    const index = Math.floor(face / 2)
+    if (page >= firstFacePage && index !== lastReportedPage.current) {
       lastReportedPage.current = index
       onPageChange?.(index)
     }
@@ -478,6 +937,56 @@ export default function InteractiveBook({
     if (controlledOpen === false || isTurningBook) return
     setView('pages')
     flipRef.current?.next()
+  }
+  const anglePresets = [
+    { label: '正面', yaw: 0, pitch: bookTilt },
+    { label: '3/4', yaw: -bookRotation, pitch: bookTilt },
+    { label: '书脊', yaw: 90, pitch: bookTilt },
+    { label: '封底', yaw: -180, pitch: bookTilt },
+    { label: '俯视', yaw: -bookRotation, pitch: -48 },
+  ]
+  const handleCoverPointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (!enable3DViewControls || event.button !== 0 || !event.isPrimary) return
+    suppressCoverClickRef.current = false
+    event.currentTarget.setPointerCapture(event.pointerId)
+    viewDragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startPitch: previewAngles.pitch,
+      startYaw: previewAngles.yaw,
+      moved: false,
+    }
+  }
+  const handleCoverPointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const drag = viewDragRef.current
+    if (!enable3DViewControls || !drag || drag.pointerId !== event.pointerId) return
+    const deltaX = event.clientX - drag.startX
+    const deltaY = event.clientY - drag.startY
+    if (!drag.moved && Math.hypot(deltaX, deltaY) < 5) return
+    drag.moved = true
+    setIsDraggingView(true)
+    setPreviewAngles({
+      yaw: normalizeAngle(drag.startYaw + deltaX * 0.75),
+      pitch: Math.max(-65, Math.min(65, drag.startPitch + deltaY * 0.55)),
+    })
+  }
+  const handleCoverPointerUp = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const drag = viewDragRef.current
+    if (!drag || drag.pointerId !== event.pointerId) return
+    if (drag.moved) {
+      suppressCoverClickRef.current = true
+      event.preventDefault()
+    }
+    viewDragRef.current = null
+    setIsDraggingView(false)
+    if (event.currentTarget.hasPointerCapture(event.pointerId))
+      event.currentTarget.releasePointerCapture(event.pointerId)
+  }
+  const handleCoverPointerCancel = (event: React.PointerEvent<HTMLButtonElement>) => {
+    if (viewDragRef.current?.pointerId !== event.pointerId) return
+    viewDragRef.current = null
+    setIsDraggingView(false)
   }
   const finishTurnover = () => {
     if (!turnoverRef.current) return
@@ -516,7 +1025,9 @@ export default function InteractiveBook({
     if (!isTurning && !isTurningBook && !atBackCover) flipRef.current?.next()
   }
   const previousPage = () => {
-    if (!isTurning && !isTurningBook && (currentFace > 0 || atEnd || atBackCover)) flipRef.current?.previous()
+    if (!isTurning && !isTurningBook && (currentEnginePage > firstOpenPage || atEnd || atBackCover)) {
+      flipRef.current?.previous()
+    }
   }
 
   const controlledActionsRef = useRef({ openBook, closeBook })
@@ -566,19 +1077,30 @@ export default function InteractiveBook({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [enableKeyboard, isOpen, hasContent])
 
-  const frontMatter = (
+  const renderContentsPage = (pageChapters: typeof chapters, contentsIndex: number) => (
     <div className={styles.innerContent}>
-      <div className={styles.frontMatterHeader}>{chapters.length ? '目录' : '扉页'}</div>
-      <div className={styles.frontMatterIntro}>
-        <h2 className={styles.innerTitle}>{bookTitle}</h2>
-        <p className={styles.innerAuthor}>{bookAuthor}</p>
+      <div className={styles.frontMatterHeader}>
+        {chapters.length ? (contentsIndex === 0 ? '目录' : `目录（续 ${contentsIndex + 1}）`) : '扉页'}
       </div>
+      {contentsIndex === 0 && (
+        <div className={styles.frontMatterIntro}>
+          <h2 className={styles.innerTitle}>{bookTitle}</h2>
+          <p className={styles.innerAuthor}>{bookAuthor}</p>
+        </div>
+      )}
       {chapters.length ? (
-        <ol className={styles.contentsList} aria-label="章节目录" data-book-scroll>
-          {chapters.map((chapter) => (
+        <ol className={styles.contentsList} aria-label={`章节目录，第 ${contentsIndex + 1} 页`} data-book-scroll>
+          {pageChapters.map((chapter) => (
             <li key={chapter.pageNumber}>
-              <span>{chapter.title}</span>
-              <span className={styles.contentsFolio}>{String(chapter.pageNumber).padStart(2, '0')}</span>
+              <button
+                type="button"
+                className={styles.contentsLink}
+                aria-label={`跳转至第 ${chapter.pageNumber} 页：${chapter.title}`}
+                onClick={() => flipRef.current?.goTo(firstFacePage + chapter.faceIndex, false)}
+              >
+                <span title={chapter.title}>{chapter.title}</span>
+                <span className={styles.contentsFolio}>{String(chapter.pageNumber).padStart(2, '0')}</span>
+              </button>
             </li>
           ))}
         </ol>
@@ -590,27 +1112,57 @@ export default function InteractiveBook({
         />
       )}
       <div className={styles.frontMatterFooter}>
-        <span>{chapters.length ? `${chapters.length} 章` : '图文阅读'}</span>
-        <span>{faceCount} 页</span>
+        <span>{chapters.length ? `目录 第 ${contentsIndex + 1} 页` : '图文阅读'}</span>
       </div>
     </div>
   )
+  const contentsPageElements = contentsPages.map((pageChapters, index) => renderContentsPage(pageChapters, index))
+  const pdfPageRenderStart = Math.max(0, currentFace - PDF_PRELOAD_AHEAD)
+  const pdfPageRenderEnd = currentFace + (isSinglePage ? 1 : 2) + PDF_PRELOAD_AHEAD
   const frontArtwork = (
     <BookCoverArtwork
       image={coverImage}
+      imagePosition={coverImagePosition}
       title={bookTitle}
       titleContent={coverTitle}
-      author={bookAuthor}
+      label={coverLabel}
+      content={coverContent}
+      author={resolvedCoverAuthor}
+      subtitle={coverSubtitle}
+      publisher={coverPublisher}
+      coverStyle={coverStyle}
+      coverLayout={coverLayout}
+      color={resolvedCoverColor}
+      fontFamily={coverFontFamily}
+      titleSize={coverTitleSize}
+      titleColor={coverTitleColor}
+      textColor={coverTextColor}
+      accentColor={coverAccentColor}
+      textAlign={coverTextAlign}
+      titleStyle={coverTitleStyle}
       textured={textured}
     />
   )
   const backArtwork = (
     <BookBackCoverArtwork
       image={backCoverImage}
+      imagePosition={backCoverImagePosition}
+      label={backCoverLabel}
+      title={resolvedBackCoverTitle}
+      subtitle={backCoverSubtitle}
       content={backCoverContent}
-      title={bookTitle}
-      author={bookAuthor}
-      textured={textured}
+      author={resolvedBackCoverAuthor}
+      publisher={backCoverPublisher}
+      coverStyle={backCoverStyle ?? coverStyle}
+      coverLayout={backCoverLayout ?? coverLayout}
+      color={resolvedBackCoverColor}
+      fontFamily={backCoverFontFamily ?? coverFontFamily}
+      titleColor={backCoverTitleColor}
+      textColor={backCoverTextColor}
+      accentColor={backCoverAccentColor}
+      textAlign={backCoverTextAlign}
+      titleStyle={backCoverTitleStyle}
+      textured={backCoverTextured ?? textured}
     />
   )
   const flipPages: FlipPage[] = [
@@ -620,51 +1172,52 @@ export default function InteractiveBook({
       className: cn(styles.sheet, styles.coverSheet),
       content: frontArtwork,
     },
-    ...(!isSinglePage
-      ? [
-          {
-            key: 'front-matter',
-            density: 'hard' as const,
-            className: cn(styles.sheet, styles.innerCoverSheet),
-            content: frontMatter,
-          },
-        ]
-      : []),
+    ...contentsPageElements.map((content, index) => ({
+      key: `front-matter-${index}`,
+      density: index === 0 ? ('hard' as const) : ('soft' as const),
+      className: index === 0 ? cn(styles.sheet, styles.innerCoverSheet) : styles.sheet,
+      content,
+    })),
     ...faces.map((face, index) => ({
       key: `page-${index}`,
       className: styles.sheet,
-      content: (
-        <div className={styles.pageSurface}>
-          <div className={styles.pageLayout}>
-            <div className={styles.runningHead}>{bookTitle}</div>
-            <div className={styles.pageContent}>
-              {isImageMode ? (
-                <div className={styles.pageImage}>
-                  <LazyPageImage
-                    key={resolvedImages![index]}
-                    src={resolvedImages![index]}
-                    shouldLoad={Math.abs(index - currentFace) <= PRELOAD_RANGE * 2}
-                    alt={`第 ${index + 1} 页`}
-                  />
-                </div>
-              ) : (
-                <>
-                  {face.title && <h3 className={styles.pageTitle}>{face.title}</h3>}
-                  <div className={styles.pageText} data-book-scroll>
-                    {face.content}
+      content:
+        isPdfMode && (index < pdfPageRenderStart || index >= pdfPageRenderEnd) ? (
+          <div className={styles.pageSurface} />
+        ) : (
+          <div className={styles.pageSurface}>
+            <div className={styles.pageLayout}>
+              <div className={styles.runningHead}>{bookTitle}</div>
+              <div className={styles.pageContent}>
+                {isImageMode ? (
+                  <div className={styles.pageImage}>
+                    <LazyPageImage
+                      key={`${index}-${resolvedImages?.[index] ?? 'pending'}`}
+                      src={resolvedImages?.[index]}
+                      shouldLoad={isPdfMode || Math.abs(index - currentFace) <= PRELOAD_RANGE * 2}
+                      alt={`第 ${index + 1} 页`}
+                      loadingText={isPdfMode ? 'PDF 页面渲染中…' : '加载中...'}
+                      failureMessage={isPdfMode ? pdfPageErrors[index] : undefined}
+                    />
                   </div>
-                </>
-              )}
-            </div>
-            <div className={styles.pageFooter}>
-              <span>{bookAuthor}</span>
-              <span className={styles.pageNumber}>{String(index + 1).padStart(2, '0')}</span>
+                ) : (
+                  <>
+                    {face.title && <h3 className={styles.pageTitle}>{face.title}</h3>}
+                    <div className={styles.pageText} data-book-scroll>
+                      {face.content}
+                    </div>
+                  </>
+                )}
+              </div>
+              <div className={styles.pageFooter}>
+                <span>{bookAuthor}</span>
+                <span className={styles.pageNumber}>{String(index + 1).padStart(2, '0')}</span>
+              </div>
             </div>
           </div>
-        </div>
-      ),
+        ),
     })),
-    ...(!isSinglePage && faceCount % 2
+    ...(endBlankPageCount
       ? [{ key: 'blank', className: styles.sheet, content: <div className={styles.pageSurface} /> }]
       : []),
     {
@@ -703,7 +1256,23 @@ export default function InteractiveBook({
           maxWidth: typeof width === 'number' ? width * 2 + 120 : '100%',
           minHeight: effectiveHeight + (isSinglePage ? 100 : 140),
           '--book-depth': `${bookDepth}px`,
-          '--book-color': coverColor,
+          '--book-color': resolvedCoverColor,
+          '--spine-color': spineColor ?? resolvedCoverColor,
+          '--spine-text-override': resolvedSpineTextColor,
+          '--spine-accent-override': resolvedSpineAccentColor,
+          ...(coverFontFamily ? { '--cover-font-family': coverFontFamily } : {}),
+          ...(coverTitleSizeValue ? { '--cover-title-size': coverTitleSizeValue } : {}),
+          ...(coverTitleColor ? { '--cover-title-color-override': coverTitleColor } : {}),
+          ...(coverTextColor ? { '--cover-text-color-override': coverTextColor } : {}),
+          ...(coverAccentColor ? { '--cover-accent-override': coverAccentColor } : {}),
+          '--cover-title-align': coverTextAlign ?? (coverLayout === 'standard' ? 'left' : 'center'),
+          ...(paperColor ? { '--reading-paper': paperColor } : {}),
+          ...(textColor ? { '--reading-ink': textColor, '--reading-body': textColor } : {}),
+          ...(mutedColor ? { '--reading-muted': mutedColor } : {}),
+          ...(ruleColor ? { '--reading-rule': ruleColor, '--reading-border': ruleColor } : {}),
+          ...(fontFamily ? { '--book-font-family': fontFamily } : {}),
+          '--book-page-padding': resolvedPagePadding,
+          '--book-left-page-padding': resolvedLeftPagePadding,
         } as React.CSSProperties
       }
     >
@@ -715,7 +1284,7 @@ export default function InteractiveBook({
               <strong>PDF 加载失败</strong>
               <small>{pdfError}</small>
             </>
-          ) : isPdfMode && (pdfLoading || !pdfImages.length) ? (
+          ) : isPdfMode && (pdfLoading || !pdfPageCount) ? (
             'PDF 加载中…'
           ) : (
             '暂无内容'
@@ -724,6 +1293,8 @@ export default function InteractiveBook({
       ) : (
         <div
           className={cn(styles.bookViewport, isSinglePage && styles.singlePageViewport)}
+          data-interactive-book-viewport
+          data-book-open={String(isOpen)}
           style={
             {
               width: effectiveWidth * (isSinglePage ? 1 : 2),
@@ -742,11 +1313,16 @@ export default function InteractiveBook({
             )}
             inert={isTurningBook}
             aria-hidden={isTurningBook || undefined}
+            data-view-dragging={isDraggingView || undefined}
             style={
               {
                 width: effectiveWidth * (isSinglePage ? 1 : 2),
                 height: effectiveHeight,
                 '--page-width': `${effectiveWidth}px`,
+                '--book-tilt': `${bookTilt}deg`,
+                '--book-rotation': `${bookRotation}deg`,
+                '--book-preview-pitch': `${previewAngles.pitch}deg`,
+                '--book-preview-yaw': `${previewAngles.yaw}deg`,
               } as React.CSSProperties
             }
           >
@@ -756,13 +1332,18 @@ export default function InteractiveBook({
             </div>
             <div className={styles.closedVolume} aria-hidden="true">
               <div className={styles.volumeBackBoard} />
-              <div className={styles.bindingSpine}>
-                <span>{bookTitle}</span>
+              <div className={styles.bindingSpine} data-cover-style={coverStyle} data-spine-style={spineStyle}>
+                <BookSpineCopy
+                  title={resolvedSpineTitle}
+                  subtitle={spineSubtitle}
+                  author={spineAuthor}
+                  spineStyle={spineStyle}
+                />
               </div>
               <BookPageBlock depth={bookDepth} />
             </div>
             <PageFlipRenderer
-              key={`${isSinglePage}-${faceCount}`}
+              key={`${isSinglePage}-${faceCount}-${contentsPageCount}`}
               ref={flipRef}
               pages={flipPages}
               width={effectiveWidth}
@@ -778,25 +1359,64 @@ export default function InteractiveBook({
             {!isOpen && (
               <button
                 ref={coverTriggerRef}
-                className={styles.closedCoverTrigger}
-                aria-label={`打开《${bookTitle}》`}
-                onClick={openBook}
-                onPointerDown={(event) => {
-                  coverPointerRef.current = event.clientX
+                className={cn(styles.closedCoverTrigger, enable3DViewControls && styles.rotatableCover)}
+                aria-label={enable3DViewControls ? `拖动旋转封面或点击打开《${bookTitle}》` : `打开《${bookTitle}》`}
+                onClick={(event) => {
+                  if (event.detail > 0 && suppressCoverClickRef.current) {
+                    suppressCoverClickRef.current = false
+                    event.preventDefault()
+                    return
+                  }
+                  suppressCoverClickRef.current = false
+                  openBook()
                 }}
-                onPointerUp={(event) => {
-                  if (coverPointerRef.current !== null && event.clientX < coverPointerRef.current - 25) openBook()
-                  coverPointerRef.current = null
-                }}
-                onPointerCancel={() => {
-                  coverPointerRef.current = null
-                }}
+                onPointerDown={handleCoverPointerDown}
+                onPointerMove={handleCoverPointerMove}
+                onPointerUp={handleCoverPointerUp}
+                onPointerCancel={handleCoverPointerCancel}
               />
             )}
           </div>
           {isTurningBook && (
-            <BookTurnover3D front={frontArtwork} back={backArtwork} title={bookTitle} onComplete={finishTurnover} />
+            <BookTurnover3D
+              front={frontArtwork}
+              back={backArtwork}
+              title={bookTitle}
+              spineTitle={resolvedSpineTitle}
+              spineSubtitle={spineSubtitle}
+              spineAuthor={spineAuthor}
+              spineStyle={spineStyle}
+              coverStyle={coverStyle}
+              tilt={bookTilt}
+              rotation={bookRotation}
+              onComplete={finishTurnover}
+            />
           )}
+        </div>
+      )}
+      {hasContent && !isOpen && enable3DViewControls && (
+        <nav className={styles.angleControls} aria-label="书本 3D 视角">
+          {anglePresets.map((preset) => {
+            const yawDifference = normalizeAngle(previewAngles.yaw - preset.yaw)
+            const isSelected = Math.abs(yawDifference) < 2 && Math.abs(previewAngles.pitch - preset.pitch) < 2
+            return (
+              <button
+                key={preset.label}
+                type="button"
+                className={cn(styles.angleControl, isSelected && styles.angleControlActive)}
+                aria-pressed={isSelected}
+                onClick={() => setPreviewAngles({ pitch: preset.pitch, yaw: preset.yaw })}
+              >
+                {preset.label}
+              </button>
+            )
+          })}
+        </nav>
+      )}
+      {hasContent && !isOpen && (
+        <div className={styles.hint}>
+          <BookOpen size={15} aria-hidden="true" />
+          {enable3DViewControls ? '拖动封面旋转视角，点击封面打开' : '点击封面打开阅读'}
         </div>
       )}
       <AnimatePresence>
@@ -812,7 +1432,7 @@ export default function InteractiveBook({
           >
             <button
               onClick={previousPage}
-              disabled={isTurning || isTurningBook || (currentFace === 0 && !atEnd && !atBackCover)}
+              disabled={isTurning || isTurningBook || (currentEnginePage <= firstOpenPage && !atEnd && !atBackCover)}
               className={styles.navButton}
               title="上一页"
             >
@@ -822,6 +1442,8 @@ export default function InteractiveBook({
               <span className={styles.navPage} aria-live="polite" aria-atomic="true">
                 {atBackCover ? (
                   '封底'
+                ) : readingContentsOnly ? (
+                  contentsPageLabel
                 ) : (
                   <>
                     {visibleStartPage === visibleEndPage ? visibleStartPage : `${visibleStartPage}–${visibleEndPage}`}
@@ -878,12 +1500,6 @@ export default function InteractiveBook({
         <button className={styles.closeButton} title="合上书籍" onClick={closeBook} disabled={isTurningBook}>
           <X size={18} />
         </button>
-      )}
-      {hasContent && !isOpen && (
-        <div className={styles.hint}>
-          <BookOpen size={15} aria-hidden="true" />
-          点击封面，或拖动书角翻开
-        </div>
       )}
       {enableSound && <audio ref={audioRef} src={soundSrc || pageTurnAudio} preload="auto" />}
     </div>

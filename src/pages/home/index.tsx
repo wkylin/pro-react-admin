@@ -103,6 +103,7 @@ import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
 import InteractiveBook from '@stateless/InteractiveBook'
 import BookLibrary from './BookLibrary'
+import HomeBookStage from './HomeBookStage'
 
 const preCode = `
   const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
@@ -714,31 +715,36 @@ const Home = () => {
           重置验证
         </Button>
       </section>
-      <InteractiveBook
-        coverImage={AiCover}
-        backCoverImage={AiCover}
-        backCoverContent={
-          <>
-            <p>从感知、决策到行动，了解 AI Agent 的工作原理，探索智能体如何改变我们的生活。</p>
-            <p>保持好奇，下一次探索从这里开始。</p>
-          </>
-        }
-        bookTitle="AI Agent 完全指南"
-        coverTitle={
-          <>
-            AI Agent
-            <br />
-            完全指南
-          </>
-        }
-        bookAuthor="AI 专家"
-        coverColor="#1d2c4b"
-        pages={bookPages}
-        width={350}
-        height={500}
-        thickness={36}
-        textured
-      />
+      <HomeBookStage>
+        <InteractiveBook
+          coverImage={AiCover}
+          backCoverImage={AiCover}
+          backCoverContent={
+            <>
+              <p>从感知、决策到行动，了解 AI Agent 的工作原理，探索智能体如何改变我们的生活。</p>
+              <p>保持好奇，下一次探索从这里开始。</p>
+            </>
+          }
+          bookTitle="AI Agent 完全指南"
+          coverTitle={
+            <>
+              AI Agent
+              <br />
+              完全指南
+            </>
+          }
+          bookAuthor="AI 专家"
+          coverColor="#1d2c4b"
+          pages={bookPages}
+          width={350}
+          height={500}
+          thickness={36}
+          tilt={0}
+          rotation={0}
+          enable3DViewControls={false}
+          textured
+        />
+      </HomeBookStage>
       {/* ─── 书籍列表 ─── */}
       <BookLibrary />
       <section style={{ marginBottom: 15, fontSize: 20 }}>

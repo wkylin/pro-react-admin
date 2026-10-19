@@ -464,7 +464,7 @@
     "motion": "^14.0.0",
     "motion-dom": "14.0.0",
     "page-flip": "^2.0.7",
-    "pdfjs-dist": "6.4.299",
+    "pdfjs-dist": "6.3.289",
     "pinyin-pro": "^3.29.4",
     "popmotion": "^11.0.5",
     "postcss-less": "^6.0.0",
