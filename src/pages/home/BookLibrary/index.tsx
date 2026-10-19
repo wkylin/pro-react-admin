@@ -1,8 +1,10 @@
-import { useState, useRef, useLayoutEffect, type ChangeEvent, type MouseEvent } from 'react'
+import { useState, useRef, useLayoutEffect, useEffect, type ChangeEvent, type MouseEvent } from 'react'
 import { createPortal } from 'react-dom'
+import { useReducedMotion } from 'framer-motion'
 import { Input, Tag } from 'antd'
 import { BookOutlined, ReadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons'
 import InteractiveBook, { type BookPage } from '@stateless/InteractiveBook'
+import { BookCover3D } from '@stateless/InteractiveBook/BookVolume'
 import styles from './index.module.less'
 
 // ─── 辅助函数：创建书页 ─────────────────────────────
@@ -311,23 +313,32 @@ const OVERLAY_CONFIG = {
 
 // ─── BookLibrary 组件 ────────────────────────────
 export default function BookLibrary() {
+  const reducedMotion = useReducedMotion()
   const [activeCategory, setActiveCategory] = useState('All')
   const [selectedBook, setSelectedBook] = useState<LibraryBook | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [searchText, setSearchText] = useState('')
 
   // ─── 分段关闭动画状态 ─────────────────────────
-  const [bookOpen, setBookOpen] = useState(true)
+  const [bookOpen, setBookOpen] = useState(false)
   const closePhaseRef = useRef<'book' | 'flyback' | null>(null)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // DOM refs
-  const cardRefsMap = useRef<Record<string, HTMLDivElement | null>>({})
+  const cardRefsMap = useRef<Record<string, HTMLButtonElement | null>>({})
   const overlayContentRef = useRef<HTMLDivElement | null>(null)
   const maskRef = useRef<HTMLDivElement | null>(null)
   const flySourceRef = useRef<DOMRect | null>(null)
   const openCleanupRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const selectedBookRef = useRef<LibraryBook | null>(null)
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current)
+      if (openCleanupRef.current) clearTimeout(openCleanupRef.current)
+    },
+    []
+  )
 
   const filteredBooks = bookLibraryData.filter((book) => {
     const matchCategory = activeCategory === 'All' || book.category === activeCategory
@@ -350,12 +361,12 @@ export default function BookLibrary() {
     setSelectedBook(book)
     selectedBookRef.current = book
     setDialogOpen(true)
-    setBookOpen(true)
+    setBookOpen(false)
   }
 
   // ─── 飞出动画：卡片位置 → 屏幕中心（useLayoutEffect 在 paint 前执行） ───
   useLayoutEffect(() => {
-    if (!dialogOpen || !selectedBookRef.current || !flySourceRef.current) return
+    if (!dialogOpen || !selectedBookRef.current || closePhaseRef.current) return
 
     const contentEl = overlayContentRef.current
     const maskEl = maskRef.current
@@ -363,6 +374,24 @@ export default function BookLibrary() {
     flySourceRef.current = null
 
     if (!contentEl) return
+    const finishOpening = () => {
+      contentEl.style.transition = ''
+      contentEl.style.transform = ''
+      contentEl.style.opacity = ''
+      contentEl.style.overflow = ''
+      contentEl.style.borderRadius = ''
+      if (maskEl) {
+        maskEl.style.transition = ''
+        maskEl.style.opacity = ''
+      }
+      if (!closePhaseRef.current) setBookOpen(true)
+    }
+    if (sourceRect) maskEl?.focus({ preventScroll: true })
+    // 偏好在飞出途中改变时，也要完成展开，避免清理定时器后停在封面。
+    if (reducedMotion || !sourceRect) {
+      finishOpening()
+      return
+    }
 
     // 计算卡片中心 → 内容中心 的偏移量
     const contentRect = contentEl.getBoundingClientRect()
@@ -387,7 +416,7 @@ export default function BookLibrary() {
     contentEl.offsetHeight
 
     // ── 第 2 帧：启用过渡，飞向中心（逐渐放大 + 淡入） ──
-    requestAnimationFrame(() => {
+    const openingFrame = requestAnimationFrame(() => {
       contentEl.style.transition =
         'transform 0.55s cubic-bezier(0.22,1,0.36,1), ' + 'opacity 0.4s ease, ' + 'border-radius 0.45s ease'
       contentEl.style.transform = 'translate(0,0) scale(1)'
@@ -410,19 +439,13 @@ export default function BookLibrary() {
     })
 
     // 动画结束后清理内联样式，为飞回做准备
-    openCleanupRef.current = setTimeout(() => {
-      if (!contentEl) return
-      contentEl.style.transition = ''
-      contentEl.style.transform = ''
-      contentEl.style.opacity = ''
-      contentEl.style.overflow = ''
-      contentEl.style.borderRadius = ''
-    }, 620)
+    openCleanupRef.current = setTimeout(finishOpening, 620)
 
     return () => {
+      cancelAnimationFrame(openingFrame)
       if (openCleanupRef.current) clearTimeout(openCleanupRef.current)
     }
-  }, [dialogOpen])
+  }, [dialogOpen, reducedMotion])
 
   // 执行飞回动画（Phase 2）：直接操作 DOM + CSS transition
   const doFlyback = () => {
@@ -431,13 +454,14 @@ export default function BookLibrary() {
     const book = selectedBookRef.current
     const cardEl = book ? cardRefsMap.current[book.id] : null
 
-    if (!contentEl || !cardEl) {
+    if (!contentEl || !cardEl || reducedMotion) {
       // 无法计算目标，直接卸载
       setDialogOpen(false)
       closePhaseRef.current = null
       setSelectedBook(null)
       selectedBookRef.current = null
-      setBookOpen(true)
+      setBookOpen(false)
+      cardEl?.focus({ preventScroll: true })
       return
     }
 
@@ -485,7 +509,8 @@ export default function BookLibrary() {
       closePhaseRef.current = null
       setSelectedBook(null)
       selectedBookRef.current = null
-      setBookOpen(true)
+      setBookOpen(false)
+      cardEl.focus({ preventScroll: true })
     }, 530)
   }
 
@@ -493,27 +518,19 @@ export default function BookLibrary() {
   const startClose = () => {
     if (closePhaseRef.current) return
     closePhaseRef.current = 'book'
+    if (openCleanupRef.current) clearTimeout(openCleanupRef.current)
 
-    // Phase 1：关闭书籍（封面翻回 0.6s）
+    // 封面合上后，再飞回书架。
     setBookOpen(false)
 
     // Phase 2：书关闭后飞回
-    closeTimerRef.current = setTimeout(() => {
-      closePhaseRef.current = 'flyback'
-      doFlyback()
-    }, 650)
-  }
-
-  // InteractiveBook 内部关闭按钮触发（书已自行开始关闭动画）
-  const handleBookInternalClose = () => {
-    if (closePhaseRef.current) return
-    closePhaseRef.current = 'book'
-
-    // 书内部已开始 0.6s 关闭动画，等它完成再飞回
-    closeTimerRef.current = setTimeout(() => {
-      closePhaseRef.current = 'flyback'
-      doFlyback()
-    }, 650)
+    closeTimerRef.current = setTimeout(
+      () => {
+        closePhaseRef.current = 'flyback'
+        doFlyback()
+      },
+      reducedMotion ? 0 : 780
+    )
   }
 
   return (
@@ -550,8 +567,10 @@ export default function BookLibrary() {
       {/* 书籍网格（带过滤动画） */}
       <div className={styles.bookGrid}>
         {filteredBooks.map((book) => (
-          <div
+          <button
             key={book.id}
+            type="button"
+            aria-label={`阅读《${book.title}》`}
             ref={(el) => {
               cardRefsMap.current[book.id] = el
             }}
@@ -559,9 +578,9 @@ export default function BookLibrary() {
             onClick={() => openBook(book)}
           >
             <div className={styles.bookCoverWrap}>
-              <img src={book.cover} alt={book.title} className={styles.bookCoverImg} loading="lazy" />
+              <BookCover3D coverImage={book.cover} title={book.title} author={book.author} textured />
               <div className={styles.bookCoverOverlay}>
-                <BookOutlined style={{ fontSize: 28, color: '#fff' }} />
+                <BookOutlined />
                 <span>阅读</span>
               </div>
             </div>
@@ -572,7 +591,7 @@ export default function BookLibrary() {
                 {book.category}
               </Tag>
             </div>
-          </div>
+          </button>
         ))}
 
         {filteredBooks.length === 0 && (
@@ -590,6 +609,35 @@ export default function BookLibrary() {
           <div
             ref={maskRef}
             className={styles.bookOverlayMask}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`阅读《${selectedBook.title}》`}
+            tabIndex={-1}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                event.preventDefault()
+                event.stopPropagation()
+                startClose()
+              }
+              if (event.key !== 'Tab') return
+              const controls = [
+                ...event.currentTarget.querySelectorAll<HTMLElement>(
+                  'button:not(:disabled):not([tabindex="-1"]), [tabindex="0"]'
+                ),
+              ]
+              const first = controls[0]
+              const last = controls[controls.length - 1]
+              if (
+                event.shiftKey &&
+                (document.activeElement === first || document.activeElement === event.currentTarget)
+              ) {
+                event.preventDefault()
+                last?.focus()
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault()
+                first?.focus()
+              }
+            }}
             onClick={OVERLAY_CONFIG.maskClosable ? startClose : undefined}
           >
             {/* 关闭按钮放在 mask 层，避免被 content 的 overflow:hidden 裁剪 */}
@@ -611,16 +659,17 @@ export default function BookLibrary() {
               </div>
               <InteractiveBook
                 coverImage={selectedBook.cover}
+                backCoverContent={<p>{selectedBook.description}</p>}
                 bookTitle={selectedBook.title}
                 bookAuthor={selectedBook.author}
                 pages={selectedBook.pages || []}
                 pageImages={selectedBook.pageImages}
                 width={350}
                 height={500}
+                textured
                 enableSound
-                defaultOpen
                 open={bookOpen}
-                onClose={handleBookInternalClose}
+                onClose={startClose}
               />
             </div>
           </div>,

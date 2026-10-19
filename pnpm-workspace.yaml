@@ -34,3 +34,6 @@ peerDependencyRules:
 
 overrides:
   '@storybook/addon-webpack5-compiler-babel>@babel/core': '^8.0.7'
+
+patchedDependencies:
+  page-flip@2.0.7: patches/page-flip@2.0.7.patch

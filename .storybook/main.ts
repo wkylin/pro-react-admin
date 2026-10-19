@@ -42,6 +42,13 @@ const config: StorybookConfig = {
 
     webpackConfig.module ??= { rules: [] }
     webpackConfig.module.rules ??= []
+    // InteractiveBook uses the patched TypeScript sources of StPageFlip.
+    webpackConfig.module.rules.push({
+      test: /\.ts$/,
+      include: /node_modules[\\/]page-flip[\\/]src[\\/]/,
+      loader: 'esbuild-loader',
+      options: { target: 'es2022' },
+    })
     // Compile the same Tailwind source used by the application.
     const addPostcss = (rules: NonNullable<NonNullable<typeof webpackConfig.module>['rules']>) => {
       for (const rule of rules) {

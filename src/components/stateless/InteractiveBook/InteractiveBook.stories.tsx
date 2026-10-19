@@ -225,18 +225,24 @@ const meta: Meta<typeof InteractiveBook> = {
   component: InteractiveBook,
   argTypes: {
     coverImage: { control: 'text', description: '封面图片 URL' },
+    backCoverImage: { control: 'text', description: '封底图片 URL，铺满整个封底' },
+    backCoverContent: { control: false, description: '封底简介等 React 内容，可叠加在封底图片上' },
     bookTitle: { control: 'text', description: '书籍标题' },
+    coverTitle: { control: false, description: '自定义封面标题排版，可使用 React 节点控制断行' },
     bookAuthor: { control: 'text', description: '书籍作者' },
     width: { control: 'number', description: '书页宽度（px）' },
     height: { control: 'number', description: '书页高度（px）' },
+    thickness: { control: { type: 'range', min: 6, max: 64, step: 1 }, description: '纸张厚度（px）' },
+    coverColor: { control: 'color', description: '封面、书脊与封底的装帧颜色' },
+    textured: { control: 'boolean', description: '是否显示封面纸纹' },
     mode: {
       control: 'select',
       options: ['auto', 'single', 'double'],
-      description: '翻页模式：auto 自动检测（<768px 切单页） / single 单页 / double 双页',
+      description: '翻页模式：auto 按屏幕和容器宽度切换 / single 单页 / double 双页',
     },
     enableKeyboard: { control: 'boolean', description: '是否启用键盘导航' },
     showNavigation: { control: 'boolean', description: '是否显示底部导航栏' },
-    showCornerFlip: { control: 'boolean', description: '是否显示页角翻页热区（海浪呼吸效果）' },
+    showCornerFlip: { control: 'boolean', description: '是否启用悬停书角的预卷页效果' },
     enableSound: { control: 'boolean', description: '是否启用翻页音效' },
     soundSrc: { control: 'text', description: '自定义音效文件 URL' },
     defaultOpen: { control: 'boolean', description: '初始是否打开书籍（跳过封面动画）' },
@@ -260,12 +266,43 @@ export const Default: Story = {
   ),
   args: {
     coverImage: AiCover,
+    backCoverImage: AiCover,
+    backCoverContent: <p>从感知、决策到行动，探索 AI Agent 的工作原理、应用与未来。</p>,
     bookTitle: 'AI Agent 完全指南',
     bookAuthor: 'AI 专家',
     pages: bookPages,
     width: 350,
     height: 500,
+    thickness: 36,
+    coverColor: '#1d2c4b',
+    textured: true,
     enableKeyboard: true,
+  },
+}
+
+export const OpenSpread: Story = {
+  ...Default,
+  name: '展开阅读',
+  args: {
+    ...Default.args,
+    defaultOpen: true,
+  },
+}
+
+export const BackCover: Story = {
+  ...Default,
+  name: '封底与整书翻转',
+  args: {
+    ...Default.args,
+    pages: bookPages.slice(-1),
+    defaultOpen: true,
+    backCoverImage: '',
+    backCoverContent: (
+      <>
+        <p>一本关于智能体的入门指南，带你了解 AI Agent 如何感知世界、做出决策并采取行动。</p>
+        <p>翻过最后一页，封底会停留；点击“翻到封面”，整本书会翻转回正面。</p>
+      </>
+    ),
   },
 }
 
@@ -274,7 +311,7 @@ export const CornerCurlHint: Story = {
   render: (args: InteractiveBookProps) => (
     <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 400 }}>
-        打开书籍后，将鼠标悬停在页面的右下角或左下角，页角会出现海浪卷起的动画效果。点击页角即可翻页。
+        打开书籍后，将鼠标悬停在页面的右下角或左下角，页角会随指针轻轻卷起。可点击书角翻页，也可按住书角拖动，松手后翻页或回弹。
       </p>
       <InteractiveBook {...args} pdfUrl={new URL('./assets/pdf/sample.pdf', window.location.href).href} />
     </div>
@@ -307,7 +344,7 @@ export const FewPages: Story = {
         title: '唯一的章节',
         content: (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <p>"这本书只有一页正文，翻到最后一页时不再显示拖动手势。"</p>
+            <p>这本短篇手册支持正文、末页与封底之间的连续翻页。</p>
             <p>"将鼠标移到右下角，可以看到页角卷起效果。"</p>
           </div>
         ),
@@ -322,7 +359,7 @@ export const FewPages: Story = {
         title: '结束',
         content: (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <p>"最后一页，拖动手势已禁用，鼠标恢复为普通箭头。"</p>
+            <p>最后一页后继续翻动，即可显示封底；也可以从封底返回阅读。</p>
           </div>
         ),
       },
@@ -485,11 +522,11 @@ export const HideNavigation: Story = {
 
 // ─── 隐藏页角翻页 ─────────────────────────────────────
 export const HideCornerFlip: Story = {
-  name: '隐藏页角翻页热区',
+  name: '关闭悬停卷角预览',
   render: (args: InteractiveBookProps) => (
     <div className="flex h-[800px] w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-10">
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
-        设置 <code>showCornerFlip=false</code> 隐藏页角海浪翻页热区，仅保留拖拽、导航栏和键盘翻页方式。
+        设置 <code>showCornerFlip=false</code> 关闭悬停书角的预卷页效果，仍可拖拽、点击书角，或使用导航栏和键盘翻页。
       </p>
       <InteractiveBook {...args} />
     </div>

@@ -716,11 +716,28 @@ const Home = () => {
       </section>
       <InteractiveBook
         coverImage={AiCover}
+        backCoverImage={AiCover}
+        backCoverContent={
+          <>
+            <p>从感知、决策到行动，了解 AI Agent 的工作原理，探索智能体如何改变我们的生活。</p>
+            <p>保持好奇，下一次探索从这里开始。</p>
+          </>
+        }
         bookTitle="AI Agent 完全指南"
+        coverTitle={
+          <>
+            AI Agent
+            <br />
+            完全指南
+          </>
+        }
         bookAuthor="AI 专家"
+        coverColor="#1d2c4b"
         pages={bookPages}
         width={350}
         height={500}
+        thickness={36}
+        textured
       />
       {/* ─── 书籍列表 ─── */}
       <BookLibrary />

@@ -274,6 +274,13 @@ const config = {
     // 将缺失的导出提示成错误而不是警告
     strictExportPresence: true,
     rules: [
+      // InteractiveBook uses the patched TypeScript sources of StPageFlip.
+      {
+        test: /\.ts$/,
+        include: /node_modules[\\/]page-flip[\\/]src[\\/]/,
+        loader: 'esbuild-loader',
+        options: { target: 'es2022' },
+      },
       {
         test: /\.m?js$/,
         resolve: {

@@ -1,0 +1,52 @@
+diff --git a/src/PageFlip.ts b/src/PageFlip.ts
+index 87fe9f22dc1801d2ad7cf4b369adee602b8dcb79..89cdbe7bf880cb120ad7cc28ae57edbe2270dc1d 100644
+--- a/src/PageFlip.ts
++++ b/src/PageFlip.ts
+@@ -53,6 +53,7 @@ export class PageFlip extends EventObject {
+      * Destructor. Remove a root HTML element and all event handlers
+      */
+     public destroy(): void {
++        this.render.stop();
+         this.ui.destroy();
+         this.block.remove();
+     }
+diff --git a/src/Render/Render.ts b/src/Render/Render.ts
+index 927ee523bd093bde64870cbda728ad0ecd966921..db428f5a038088add78dad04618f1d52a3df8255 100644
+--- a/src/Render/Render.ts
++++ b/src/Render/Render.ts
+@@ -83,6 +83,9 @@ export abstract class Render {
+     /** Timer started from start of rendering */
+     protected timer = 0;
+ 
++    private animationFrame = 0;
++    private running = false;
++
+     /**
+      * Safari browser definitions for resolving a bug with a css property clip-area
+      *
+@@ -137,14 +140,23 @@ export abstract class Render {
+      * Running requestAnimationFrame, and rendering process
+      */
+     public start(): void {
++        if (this.running) return;
++        this.running = true;
+         this.update();
+ 
+         const loop = (timer: number): void => {
++            if (!this.running) return;
+             this.render(timer);
+-            requestAnimationFrame(loop);
++            if (this.running) this.animationFrame = requestAnimationFrame(loop);
+         };
+ 
+-        requestAnimationFrame(loop);
++        this.animationFrame = requestAnimationFrame(loop);
++    }
++
++    /** Stop rendering when a book is disposed or rebuilt. */
++    public stop(): void {
++        this.running = false;
++        cancelAnimationFrame(this.animationFrame);
+     }
+ 
+     /**
