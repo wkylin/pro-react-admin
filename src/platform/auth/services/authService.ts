@@ -175,7 +175,7 @@ class AuthService {
         return
       }
 
-      // 兼容“测试账号登录”：localStorage.token = { token: email }
+      // 演示账号凭据使用当前 JSON token 格式。
       const testTokenData = localStorage.getItem('token')
       const testToken = parseToken(testTokenData)
       if (isDemoPermissionMode() && testToken && isLikelyEmail(testToken)) {

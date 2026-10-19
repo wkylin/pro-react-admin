@@ -262,7 +262,7 @@ const buildMobileMoreItems = ({
 
 const safeLogoutCleanup = () => {
   try {
-    // 兼容“测试账号登录”(仅 token) 的登出路径，确保权限缓存被清理
+    // 登出演示账号时也清理权限缓存和本地角色覆盖。
     permissionService.logoutCleanup()
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
