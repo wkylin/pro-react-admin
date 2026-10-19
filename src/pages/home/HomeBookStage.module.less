@@ -1,23 +1,19 @@
 .stage {
-  --home-book-yaw: -28deg;
-  --home-book-pitch: 8deg;
+  --home-book-yaw: -38deg;
+  --home-book-pitch: 10deg;
 
   position: relative;
-  width: min(100%, 760px);
+  width: min(100%, 900px);
   margin-inline: auto;
-  perspective: 1600px;
-  perspective-origin: 50% 38%;
+  perspective: 1050px;
+  perspective-origin: 50% 42%;
 }
 
 .scene {
   transform-style: preserve-3d;
 
   :global([data-interactive-book-viewport]) {
-    transform: rotateX(var(--home-book-pitch)) rotateY(var(--home-book-yaw));
-    transform-origin: center center;
     transform-style: preserve-3d;
-    transition: transform 420ms cubic-bezier(0.2, 0.75, 0.25, 1);
-    will-change: transform;
   }
 
   :global([data-interactive-book-viewport][data-book-open='false']) {
@@ -33,7 +29,7 @@
 }
 
 .stage[data-dragging='true'] {
-  .scene :global([data-interactive-book-viewport]) {
+  .scene :global([data-book-preview-surface]) {
     transition: none;
   }
 }
@@ -45,7 +41,8 @@
   gap: 5px;
   width: max-content;
   max-width: calc(100% - 32px);
-  margin: 0 auto 4px;
+  /* Reuse the bottom space InteractiveBook reserves for its own reader controls. */
+  margin: -64px auto 4px;
   padding: 5px;
   border: 1px solid rgb(120 132 148 / 18%);
   border-radius: 999px;
@@ -92,14 +89,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene :global([data-interactive-book-viewport]) {
+  .scene :global([data-book-preview-surface]) {
     transition-duration: 0.01ms;
   }
 }
 
 @media (max-width: 600px) {
   .stage {
-    perspective: 1100px;
+    perspective: 900px;
   }
 
   .angleControls {

@@ -51,10 +51,10 @@
   transform-style: preserve-3d;
   transform-origin: calc(75% - 50% * var(--book-side)) center calc(var(--book-depth) / -2);
   transform: translateX(calc(var(--page-width) / -2 * (1 - var(--book-openness)) * (1 - 2 * var(--book-side))))
-    rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) * (1 - var(--book-openness))))
+    rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) * (1 - var(--book-openness))))
     rotateY(
       calc(
-        var(--book-preview-yaw, calc(-1 * var(--book-rotation))) * (1 - var(--book-openness)) *
+        var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))) * (1 - var(--book-openness)) *
           (1 - 2 * var(--book-side))
       )
     );
@@ -63,8 +63,8 @@
   &:not(.open, [data-cover-turning], [data-book-animating]):hover,
   &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
     transform: translateX(calc(var(--page-width) / -2)) translateY(-4px)
-      rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) / 2))
-      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
+      rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) / 2))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
   }
 
   &[data-view-dragging='true'] {
@@ -147,6 +147,14 @@
   border-radius: 6px 4px 4px 6px;
   background: var(--book-color);
   box-shadow: 12px 18px 30px rgb(19 26 42 / 17%);
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+.volumeBackArtwork {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
 }
 
 .bindingSpine {
@@ -476,7 +484,7 @@
   &:global(.--left) {
     .pageSurface,
     .innerContent {
-      padding: var(--book-left-page-padding, 14px 26px 10px 18px);
+      padding: var(--book-left-page-padding, 14px 32px 10px 24px);
       background:
         linear-gradient(270deg, rgb(35 45 56 / 10%), rgb(35 45 56 / 3%) 4%, transparent 14%), var(--reading-paper);
     }
@@ -492,7 +500,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  padding: var(--book-page-padding, 14px 18px 10px 26px);
+  padding: var(--book-page-padding, 14px 24px 10px 32px);
   box-sizing: border-box;
   color: var(--reading-ink);
   font-family: var(--book-font-family, -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif);
@@ -1011,18 +1019,20 @@
 
 .singlePage {
   transform-origin: center center calc(var(--book-depth) / -2);
-  transform: rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) * (1 - var(--book-openness))))
+  transform: rotateX(
+      calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) * (1 - var(--book-openness)))
+    )
     rotateY(
       calc(
-        var(--book-preview-yaw, calc(-1 * var(--book-rotation))) * (1 - var(--book-openness)) *
+        var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))) * (1 - var(--book-openness)) *
           (1 - 2 * var(--book-side))
       )
     );
 
   &:not(.open, [data-cover-turning], [data-book-animating]):hover,
   &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
-    transform: translateY(-4px) rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) / 2))
-      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
+    transform: translateY(-4px) rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) / 2))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
   }
 
   .spreadBoards > div:first-child {
@@ -1052,13 +1062,14 @@
 
 @media (hover: none) {
   .bookWrapper:not(.open, [data-cover-turning], [data-book-animating]) {
-    transform: translateX(calc(var(--page-width) / -2)) rotateX(var(--book-preview-pitch, var(--book-tilt)))
-      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
+    transform: translateX(calc(var(--page-width) / -2))
+      rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
   }
 
   .singlePage:not(.open, [data-cover-turning], [data-book-animating]) {
-    transform: rotateX(var(--book-preview-pitch, var(--book-tilt)))
-      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
+    transform: rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
   }
 }
 
@@ -1071,13 +1082,14 @@
   }
 
   .bookWrapper:not(.open) {
-    transform: translateX(calc(var(--page-width) / -2)) rotateX(var(--book-preview-pitch, var(--book-tilt)))
-      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
+    transform: translateX(calc(var(--page-width) / -2))
+      rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
   }
 
   .singlePage:not(.open) {
-    transform: rotateX(var(--book-preview-pitch, var(--book-tilt)))
-      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
+    transform: rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
   }
 }
 
@@ -1106,12 +1118,12 @@
 
   .pageSurface,
   .innerContent {
-    padding: var(--book-page-padding, 14px 18px 10px 26px);
+    padding: var(--book-page-padding, 14px 24px 10px 32px);
   }
 
   .sheet:global(.--left) .pageSurface,
   .sheet:global(.--left) .innerContent {
-    padding: var(--book-left-page-padding, 14px 26px 10px 18px);
+    padding: var(--book-left-page-padding, 14px 32px 10px 24px);
   }
 
   .pageTitle {
@@ -1144,11 +1156,11 @@
 @media (width <= 400px) {
   .pageSurface,
   .innerContent {
-    padding: var(--book-page-padding, 14px 18px 10px 26px);
+    padding: var(--book-page-padding, 14px 24px 10px 32px);
   }
 
   .sheet:global(.--left) .pageSurface,
   .sheet:global(.--left) .innerContent {
-    padding: var(--book-left-page-padding, 14px 26px 10px 18px);
+    padding: var(--book-left-page-padding, 14px 32px 10px 24px);
   }
 }
