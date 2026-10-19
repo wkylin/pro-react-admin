@@ -1,0 +1,114 @@
+.stage {
+  --home-book-yaw: -28deg;
+  --home-book-pitch: 8deg;
+
+  position: relative;
+  width: min(100%, 760px);
+  margin-inline: auto;
+  perspective: 1600px;
+  perspective-origin: 50% 38%;
+}
+
+.scene {
+  transform-style: preserve-3d;
+
+  :global([data-interactive-book-viewport]) {
+    transform: rotateX(var(--home-book-pitch)) rotateY(var(--home-book-yaw));
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    transition: transform 420ms cubic-bezier(0.2, 0.75, 0.25, 1);
+    will-change: transform;
+  }
+
+  :global([data-interactive-book-viewport][data-book-open='false']) {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  :global([data-interactive-book-viewport][data-book-open='false']:active) {
+    cursor: grabbing;
+  }
+}
+
+.stage[data-dragging='true'] {
+  .scene :global([data-interactive-book-viewport]) {
+    transition: none;
+  }
+}
+
+.angleControls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  margin: 0 auto 4px;
+  padding: 5px;
+  border: 1px solid rgb(120 132 148 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 94%);
+  box-shadow: 0 8px 24px rgb(25 37 55 / 12%);
+  backdrop-filter: blur(12px);
+}
+
+.angleButton {
+  min-width: 48px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #526177;
+  cursor: pointer;
+  font: inherit;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+
+  &:hover {
+    background: #edf1f6;
+  }
+
+  &[aria-pressed='true'] {
+    background: #26354a;
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #778ba7;
+    outline-offset: 2px;
+  }
+}
+
+.dragHint {
+  margin: 9px 0 0;
+  color: #66758a;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene :global([data-interactive-book-viewport]) {
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (max-width: 600px) {
+  .stage {
+    perspective: 1100px;
+  }
+
+  .angleControls {
+    gap: 2px;
+    padding: 4px;
+  }
+
+  .angleButton {
+    min-width: 42px;
+    padding-inline: 9px;
+  }
+}

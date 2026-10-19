@@ -5,25 +5,41 @@ import * as Stories from './InteractiveBook.stories'
 
 # InteractiveBook
 
-应用内部翻页书组件。必需 coverImage 与 pages，可选 bookTitle/bookAuthor、pdfUrl 和 pageImages。显示优先级为 PDF > 图片 > pages JSX，每两面组成一个书页。
+应用内部翻页书组件。必需 coverImage 与 pages，可选 bookTitle/bookAuthor、pdfUrl 和 pageImages。显示优先级为 PDF > 图片 > pages JSX，每两面组成一个书页。目录从 pages 的 title 自动生成；contentsPerPage 控制每张目录页的章节数上限（默认 6，页面较矮时会自动减少），目录超出后会分页，点击目录条目可直接跳转到对应正文页。
 
 mode 支持 single/double/auto；auto 在窄屏或容器放不下完整双页时使用单页，并按可用宽度等比缩放。defaultOpen 设置初始开合，open/onClose 为受控交互；onPageChange 接收页索引。可关闭导航、悬停卷角预览和音效。
 
-封面、封底、书脊和纸张侧面使用 CSS 3D 构成立体书本。合起时保持 24° 侧转，悬停或键盘聚焦时转到 30° 并轻微上移，呈现纸张厚度。封面图片铺满整个封面，书名与作者叠在图片上，渐变遮罩保证文字清晰；coverTitle 可传入 React 节点控制标题断行，书脊、内封与无障碍名称仍使用 bookTitle。圆角包边、书脊压痕与高光由共享装帧层渲染。textured 可启用封面纸纹（默认 false），复用本地噪点资源。
+封面、封底、书脊和纸张侧面使用 CSS 3D 构成立体书本。合起时可水平或垂直拖动封面查看角度，也可用视角快捷按钮切换正面、3/4、书脊、封底和俯视；enable3DViewControls 默认 true，可关闭该交互。tilt 和 rotation 配置初始俯仰与侧转角，默认分别为 4° 和 24°。coverStyle 支持插画、黑金精装、酒红皮革、金色插画书衣和橙白编辑风五种装帧；coverLayout 支持标准、居中和出版物排版。coverImagePosition 可调整封面图片裁切位置；coverLabel、coverTitle、coverSubtitle、coverContent、coverAuthor 和 coverPublisher 可分别设置封面标签、标题、副标题、简介、作者与出版信息。coverFontFamily、coverTitleSize、coverTitleColor、coverTextColor、coverAccentColor、coverTextAlign 和 coverTitleStyle 可继续微调字体、颜色、对齐方式与标题位置。spineTitle 默认使用 bookTitle，可单独设置 spineSubtitle、spineAuthor、spineColor、spineTextColor 和 spineAccentColor；spineStyle 可选 auto、smooth、ribbed、banded、ornate 或 minimal，设置书脊的光滑、压纹、横带、古典装饰或极简效果。textured 可启用封面纸纹（默认 false），复用本地噪点资源。
 
-内页使用与 react-pageflip 相同的 StPageFlip 引擎：封面与封底按硬板翻动，内页按软纸折叠，书角跟随鼠标或手指移动，折线与投影实时变化，未越过书槽的拖拽会回弹。开合时装帧底板与居中位置跟随引擎的封面翻转进度，拖拽回弹时同步复位；展开后左右纸层与底边保持平齐。thickness 设置纸张厚度（默认 28px，范围 6–64px），coverColor 设置封面、书脊和封底的装帧颜色（默认 #17213a）。正文使用独立字号，避免嵌套样式连续缩小。触屏与减少动态效果模式使用静态透视，系统启用减少动态效果时关闭旋转过渡、卷角预览与翻页动画。
+内页使用与 react-pageflip 相同的 StPageFlip 引擎：封面与封底按硬板翻动，内页按软纸折叠，书角跟随鼠标或手指移动，折线与投影实时变化，未越过书槽的拖拽会回弹。开合时装帧底板与居中位置跟随引擎的封面翻转进度，拖拽回弹时同步复位；展开后左右纸层与底边保持平齐。thickness 设置纸张厚度（默认 28px，范围 6–64px），coverColor 设置封面、书脊和封底的基础装帧颜色（未设置时随 coverStyle 变化）。pagePadding 接受数字 px 值或 CSS padding 简写；未设置时，上边距约为书页宽度的 4%、外侧边距约 5%、装订侧约 7.5%、下边距约 3%，并分别限制在 14–22px、18–28px、24–34px、10–18px 范围内。fontFamily 设置内页字体；paperColor、textColor、mutedColor 和 ruleColor 分别设置纸张、正文、辅助文字和分隔线颜色。正文使用独立字号，避免嵌套样式连续缩小。触屏与减少动态效果模式使用静态透视，系统启用减少动态效果时关闭旋转过渡、卷角预览与翻页动画。
 
 展开后以平展双页呈现，书槽渐变、页底纸叠和细纸纹表现装订层次。装帧外缘保留 2px 深色包边，目录与末尾内封的包边随页面翻动，悬停、拖动及回弹时保持相同尺寸。左侧内封展示书名、作者和章节目录；图片书展示插图扉页。目录与扉页的左侧页角在悬停时向右卷起，末尾“读完了”内封的右侧页角向左卷起，书体保持平展；移开鼠标后页角回弹，开始拖动时先结束悬停动画，开始合书时恢复硬质封面的翻动。悬停预览仅在展开的内页启用，回弹结束后才接受下一次预览。末尾内封沿用正文纸面、书槽渐变和纸纹，保持左右装订边衔接。内页统一页眉、正文和外侧页码，较长的正文可独立滚动。滚动区域溢出时保留原生触摸滚动，可通过页角和导航按钮翻页。导航显示实际页面范围和阅读进度。
 
-末页继续翻动会合到封底并停留，不触发 onClose。backCoverImage 设置满幅封底图片，backCoverContent 可传入简介等 React 内容，两者可叠加；未配置时显示书名与作者。封底可以返回末页，点击“翻到封面”则将整本书旋转到正面并停留，随后可重新打开阅读；隐藏导航时也保留此按钮。整书翻转不会触发 onClose，显式关闭仍触发该回调。系统启用减少动态效果时直接切换到封面。
+末页继续翻动会合到封底并停留，不触发 onClose。backCoverImage 设置满幅封底图片，backCoverImagePosition 可调整裁切；backCoverLabel、backCoverTitle、backCoverSubtitle、backCoverContent、backCoverAuthor 和 backCoverPublisher 分别设置封底标签、标题、副标题、简介、作者和出版信息。backCoverStyle 与 backCoverLayout 可独立选择封底装帧和排版，backCoverColor、backCoverFontFamily、backCoverTitleColor、backCoverTextColor、backCoverAccentColor、backCoverTextAlign 和 backCoverTitleStyle 可进一步调整外观；未设置的封底标题和作者沿用书名与作者，装帧和布局沿用封面。backCoverTextured 可单独控制封底纸纹。封底可以返回末页，点击“翻到封面”则将整本书旋转到正面并停留，随后可重新打开阅读；隐藏导航时也保留此按钮。整书翻转不会触发 onClose，显式关闭仍触发该回调。系统启用减少动态效果时直接切换到封面。
 
 展开与翻页参考 [react-pageflip](https://nodlik.github.io/react-pageflip/)。透视与纸张侧面参考 [3D Book Image CSS Generator](https://scastiel.dev/3dbook/)，悬停动效和装帧参考 [Spell UI Perspective Book](https://spell.sh/docs/perspective-book)。
 
-PDF worker 由 Vite 资源 URL 解析，异常时回退 CDN，部署需验证 worker/CORS。当前不属于 @w.ui/wui-react 发布组件。
+PDF 先读取文档信息，再按需渲染当前可见页，并预加载后续两页；相邻页面保留在有限缓存中，降低翻页等待和内存占用。PDF.js API 与 Worker 使用同一版本。Worker 由 Vite 资源 URL 加载，异常时回退 CDN；部署时需验证 Worker/CORS。当前不属于 @w.ui/wui-react 发布组件。
 
 ## 预览
 
 <Canvas of={Stories.Default} />
+
+<Canvas of={Stories.MultiPageContents} />
+
+<Canvas of={Stories.PublisherCoverLayout} />
+
+<Canvas of={Stories.ClassicHardcover} />
+
+<Canvas of={Stories.LeatherHardcover} />
+
+<Canvas of={Stories.GoldenJacket} />
+
+<Canvas of={Stories.EditorialOrange} />
+
+<Canvas of={Stories.CoverAndSpineStyles} />
+
+<Canvas of={Stories.MultiAngle3D} />
 
 <Canvas of={Stories.OpenSpread} />
 
