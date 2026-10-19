@@ -68,6 +68,11 @@ function scalePagePadding(pageWidth: number, ratio: number, min: number, max: nu
   return `${Math.round(Math.min(max, Math.max(min, pageWidth * ratio)))}px`
 }
 
+function normalizePagePaddingValue(value: string | number | undefined, fallback: string) {
+  if (typeof value === 'number') return `${Math.max(0, value)}px`
+  return value?.trim() || fallback
+}
+
 export interface BookPage {
   title?: string
   content: React.ReactNode
@@ -161,6 +166,8 @@ export interface InteractiveBookProps {
   enable3DViewControls?: boolean
   /** 内页边距，接受 CSS padding 简写或 px 数值；默认值随书页宽度按比例缩放 */
   pagePadding?: string | number
+  /** 内页水平边距；外侧与书脊侧可分别设置，支持 px 数值或 CSS 长度。pagePadding 设置后优先使用 pagePadding */
+  pageSidePadding?: { outer?: string | number; gutter?: string | number }
   /** 内页字体，可传 CSS font-family 字体栈 */
   fontFamily?: string
   /** 内页纸张颜色 */
@@ -678,6 +685,7 @@ export default function InteractiveBook({
   rotation = 24,
   enable3DViewControls = true,
   pagePadding,
+  pageSidePadding,
   fontFamily,
   paperColor,
   textColor,
@@ -812,9 +820,11 @@ export default function InteractiveBook({
   const effectiveHeight = Math.round((effectiveWidth * layout.pageHeight) / layout.pageWidth)
   const normalizedPagePadding = typeof pagePadding === 'number' ? `${Math.max(0, pagePadding)}px` : pagePadding?.trim()
   const pagePaddingTop = scalePagePadding(effectiveWidth, 0.04, 14, 22)
-  const pagePaddingOuter = scalePagePadding(effectiveWidth, 0.05, 18, 28)
+  const defaultPagePaddingOuter = scalePagePadding(effectiveWidth, 0.065, 22, 36)
   const pagePaddingBottom = scalePagePadding(effectiveWidth, 0.03, 10, 18)
-  const pagePaddingGutter = scalePagePadding(effectiveWidth, 0.075, 24, 34)
+  const defaultPagePaddingGutter = scalePagePadding(effectiveWidth, 0.09, 30, 46)
+  const pagePaddingOuter = normalizePagePaddingValue(pageSidePadding?.outer, defaultPagePaddingOuter)
+  const pagePaddingGutter = normalizePagePaddingValue(pageSidePadding?.gutter, defaultPagePaddingGutter)
   const resolvedPagePadding =
     normalizedPagePadding || `${pagePaddingTop} ${pagePaddingOuter} ${pagePaddingBottom} ${pagePaddingGutter}`
   const resolvedLeftPagePadding =
@@ -1314,6 +1324,7 @@ export default function InteractiveBook({
             inert={isTurningBook}
             aria-hidden={isTurningBook || undefined}
             data-view-dragging={isDraggingView || undefined}
+            data-book-preview-surface
             style={
               {
                 width: effectiveWidth * (isSinglePage ? 1 : 2),
@@ -1331,7 +1342,9 @@ export default function InteractiveBook({
               <div />
             </div>
             <div className={styles.closedVolume} aria-hidden="true">
-              <div className={styles.volumeBackBoard} />
+              <div className={styles.volumeBackBoard}>
+                <div className={styles.volumeBackArtwork}>{backArtwork}</div>
+              </div>
               <div className={styles.bindingSpine} data-cover-style={coverStyle} data-spine-style={spineStyle}>
                 <BookSpineCopy
                   title={resolvedSpineTitle}

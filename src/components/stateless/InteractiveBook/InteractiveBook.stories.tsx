@@ -297,7 +297,11 @@ const meta: Meta<typeof InteractiveBook> = {
     enable3DViewControls: { control: 'boolean', description: '启用合起时的 3D 拖动与视角快捷按钮' },
     pagePadding: {
       control: 'text',
-      description: '内页边距，CSS padding 简写或 px 数值；默认随页宽按约 3–8% 缩放并限制最大最小值',
+      description: '内页完整边距，CSS padding 简写或 px 数值；优先级高于 pageSidePadding',
+    },
+    pageSidePadding: {
+      control: 'object',
+      description: '自定义内页水平边距：outer 为书页外侧，gutter 为靠近书脊的一侧；支持 px 数值或 CSS 长度',
     },
     fontFamily: { control: 'text', description: '内页字体，可传 CSS 字体栈' },
     paperColor: { control: 'color', description: '内页纸张颜色' },
@@ -367,7 +371,7 @@ export const MultiPageContents: Story = {
     contentsPerPage: 3,
     tilt: 8,
     rotation: 32,
-    pagePadding: '18px 22px 14px',
+    pageSidePadding: { outer: '28px', gutter: '40px' },
     fontFamily: "'Songti SC', 'Noto Serif CJK SC', Georgia, serif",
     paperColor: '#f4f0e6',
     textColor: '#3b352b',

@@ -87,7 +87,6 @@ import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'
 import XuePng from '@assets/images/xue.png'
-import AiCover from '@assets/images/ai-cover.webp'
 
 import {
   oneApiChat,
@@ -101,7 +100,6 @@ import exportSvg from '@shared/lib/svgExport'
 import Zoom from 'react-medium-image-zoom'
 import 'react-medium-image-zoom/dist/styles.css'
 import styles from './index.module.less'
-import InteractiveBook from '@stateless/InteractiveBook'
 import BookLibrary from './BookLibrary'
 import HomeBookStage from './HomeBookStage'
 
@@ -411,223 +409,6 @@ const Home = () => {
     scrollRef.current = instance
   }
 
-  const bookPages = [
-    {
-      pageNumber: 1,
-      title: '第一章：AI Agent 简介',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"AI Agent 是人工智能领域的一个重要概念，它代表着能够自主执行任务的智能实体。"</p>
-          <p>"AI Agent 不仅仅是简单的程序，它们能够感知环境、做出决策并采取行动，就像人类一样。"</p>
-          <p>"在现代科技中，AI Agent 正在改变我们与技术交互的方式，从简单的聊天机器人到复杂的自动化系统。"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
-          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的工作原理</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 2,
-      title: '第二章：AI Agent 的工作原理',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"AI Agent 的核心是感知-决策-行动循环。它首先通过传感器或输入接口感知环境。"</p>
-          <p>"然后使用算法和模型分析信息，做出最佳决策。"</p>
-          <p>"最后，通过执行器或输出接口采取行动。这个循环不断重复，使 Agent 能够适应变化的环境。"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
-          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的类型</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 3,
-      title: '第三章：AI Agent 的类型',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"AI Agent 可以分为多种类型：反应型 Agent、 deliberation Agent、混合型 Agent 等。"</p>
-          <ul
-            style={{ listStyleType: 'disc', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}
-          >
-            <li>反应型 Agent：基于当前感知做出反应</li>
-            <li>Deliberation Agent：具有规划和推理能力</li>
-            <li>学习型 Agent：能够从经验中学习和改进</li>
-            <li>多 Agent 系统：多个 Agent 协同工作</li>
-          </ul>
-          <p>"每种类型的 Agent 都有其独特的优势和应用场景。"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
-          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的应用领域</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 4,
-      title: '第四章：AI Agent 的应用领域',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"AI Agent 在各个领域都有广泛应用，从日常生活到工业生产。"</p>
-          <p>"在医疗领域，AI Agent 可以帮助诊断疾病、制定治疗方案。在金融领域，它们可以进行风险评估和投资建议。"</p>
-          <p>"在交通领域，自动驾驶汽车就是一种复杂的 AI Agent。在娱乐领域，游戏中的 NPC 也越来越智能化。"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
-          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的挑战</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 5,
-      title: '第五章：AI Agent 的挑战',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"尽管 AI Agent 技术发展迅速，但仍面临诸多挑战。"</p>
-          <p>"安全性是首要问题，如何确保 Agent 的行为符合人类价值观？"</p>
-          <p>"可解释性：Agent 的决策过程往往像黑箱，如何让人类理解其推理过程？"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginBottom: '16px', color: '#6b7280' }}>
-            AI Agent 的挑战
-          </h3>
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>继续阅读下一页</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 6,
-      title: '第六章：AI Agent 的未来发展',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"AI Agent 的未来充满无限可能。随着技术的进步，它们将变得更加智能和自主。"</p>
-          <p>"多模态 Agent 将能够处理文本、图像、声音等多种信息。"</p>
-          <p>"通用人工智能 Agent（AGI）可能会实现，能够在各种任务中表现出色。"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af', marginBottom: '8px' }}>翻到下一页，探索更多...</p>
-          <p style={{ fontSize: '0.9rem', color: '#6b7280' }}>下一章：AI Agent 的伦理考虑</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 7,
-      title: '第七章：AI Agent 的伦理考虑',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"随着 AI Agent 的普及，伦理问题变得越来越重要。"</p>
-          <p>"我们需要确保 Agent 的行为符合道德标准，避免偏见和歧视。"</p>
-          <p>"隐私保护、透明度和问责制都是需要重点关注的领域。"</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>AI 时代的伦理思考继续...</p>
-        </div>
-      ),
-    },
-    {
-      pageNumber: 8,
-      title: '结语：拥抱 AI Agent 的时代',
-      content: (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <p>"AI Agent 不仅仅是技术工具，它们正在重塑我们的世界。"</p>
-          <p>"通过理解和正确应用 AI Agent，我们可以创造更美好的未来。"</p>
-          <p style={{ fontStyle: 'italic', textAlign: 'center', marginTop: '24px', color: '#6b7280' }}>— AI 专家</p>
-        </div>
-      ),
-      backContent: (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '100%',
-            textAlign: 'center',
-          }}
-        >
-          <p style={{ fontStyle: 'italic', color: '#9ca3af' }}>书籍结束</p>
-        </div>
-      ),
-    },
-  ]
   return (
     <FixTabPanel ref={setScrollRef}>
       <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
@@ -715,36 +496,7 @@ const Home = () => {
           重置验证
         </Button>
       </section>
-      <HomeBookStage>
-        <InteractiveBook
-          coverImage={AiCover}
-          backCoverImage={AiCover}
-          backCoverContent={
-            <>
-              <p>从感知、决策到行动，了解 AI Agent 的工作原理，探索智能体如何改变我们的生活。</p>
-              <p>保持好奇，下一次探索从这里开始。</p>
-            </>
-          }
-          bookTitle="AI Agent 完全指南"
-          coverTitle={
-            <>
-              AI Agent
-              <br />
-              完全指南
-            </>
-          }
-          bookAuthor="AI 专家"
-          coverColor="#1d2c4b"
-          pages={bookPages}
-          width={350}
-          height={500}
-          thickness={36}
-          tilt={0}
-          rotation={0}
-          enable3DViewControls={false}
-          textured
-        />
-      </HomeBookStage>
+      <HomeBookStage />
       {/* ─── 书籍列表 ─── */}
       <BookLibrary />
       <section style={{ marginBottom: 15, fontSize: 20 }}>
