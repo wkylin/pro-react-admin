@@ -659,6 +659,7 @@ export default function BookLibrary() {
               </div>
               <InteractiveBook
                 coverImage={selectedBook.cover}
+                backCoverContent={<p>{selectedBook.description}</p>}
                 bookTitle={selectedBook.title}
                 bookAuthor={selectedBook.author}
                 pages={selectedBook.pages || []}

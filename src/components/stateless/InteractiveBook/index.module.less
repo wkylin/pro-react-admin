@@ -43,20 +43,55 @@
 }
 
 .bookWrapper {
+  --book-openness: 0;
+  --book-side: 0;
+
   position: relative;
   transform-style: preserve-3d;
-  transform-origin: 75% center calc(var(--book-depth) / -2);
-  transform: translateX(calc(var(--page-width) / -2)) rotateX(4deg) rotateY(-24deg);
+  transform-origin: calc(75% - 50% * var(--book-side)) center calc(var(--book-depth) / -2);
+  transform: translateX(calc(var(--page-width) / -2 * (1 - var(--book-openness)) * (1 - 2 * var(--book-side))))
+    rotateX(calc(4deg * (1 - var(--book-openness))))
+    rotateY(calc(-24deg * (1 - var(--book-openness)) * (1 - 2 * var(--book-side))));
   transition: transform 0.65s cubic-bezier(0.2, 0.75, 0.25, 1);
 
-  &:hover,
-  &:focus-within {
+  &:not(.open, [data-cover-turning], [data-book-animating]):hover,
+  &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
     transform: translateX(calc(var(--page-width) / -2)) translateY(-4px) rotateX(2deg) rotateY(-30deg);
   }
 
-  &.open {
-    transform: none;
-    transition-duration: 0.9s;
+  &[data-book-animating] {
+    transition: none;
+  }
+
+  &[data-cover-turning] {
+    // Fade the print, keeping an opaque paper surface beneath the closing cover.
+    .sheet:global(.--simple) .pageLayout {
+      opacity: clamp(0, calc((var(--book-openness) - 0.35) / 0.4), 1);
+    }
+
+    // Hard-page shadows are rectangular and extend beyond the rotating cover.
+    // The paper's own gutter gradient supplies the contact shading during this fold.
+    :global(.stf__hardShadow),
+    :global(.stf__hardInnerShadow) {
+      visibility: hidden;
+    }
+
+    // The engine also draws underlying soft sheets as hard pages during cover folds,
+    // resetting their inline clip-path. Round the corners without cutting a spine gap.
+    .sheet:global(.--simple.--left),
+    .sheet[data-density='soft']:global(.--left) {
+      clip-path: inset(0 round 0 6px 6px 0) !important;
+    }
+
+    .sheet:global(.--simple.--right),
+    .sheet[data-density='soft']:global(.--right) {
+      clip-path: inset(0 round 6px 0 0 6px) !important;
+    }
+  }
+
+  &.turnoverHidden {
+    visibility: hidden;
+    transition: none;
   }
 }
 
@@ -84,12 +119,13 @@
 .closedVolume {
   position: absolute;
   top: 0;
-  right: 0;
+  right: calc(var(--page-width) * var(--book-side));
   width: var(--page-width);
   height: 100%;
   transform-style: preserve-3d;
-  transform: translateZ(calc(-1 * var(--book-depth)));
-  transition: opacity 0.25s ease;
+  transform: translateZ(calc(-1 * var(--book-depth))) scaleX(calc(1 - 2 * var(--book-side)));
+  // Reveal the volume near closure so its inset edges do not ghost through the paper.
+  opacity: clamp(0, calc((0.12 - var(--book-openness)) / 0.12), 1);
   pointer-events: none;
 }
 
@@ -143,6 +179,7 @@
 .closedCoverTrigger:focus-visible,
 .navButton:focus-visible,
 .closeNavButton:focus-visible,
+.returnCoverButton:focus-visible,
 .closeButton:focus-visible,
 .restartButton:focus-visible {
   outline: 3px solid var(--wui-color-primary, #1677ff);
@@ -150,25 +187,39 @@
 }
 
 .spreadBoards {
-  --stack-depth: 2px;
+  --board-visibility: clamp(0, calc(var(--book-openness) / 0.12), 1);
 
   position: absolute;
-  inset: -3px;
+  inset: 0;
   display: flex;
+  perspective: 2000px;
   z-index: 0;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.25s ease;
 
   > div {
     position: relative;
     flex: 1;
-    height: calc(100% + var(--stack-depth));
+    height: 100%;
+    transform-origin: right center;
+    transform: rotateY(calc(180deg * (1 - var(--book-openness)) * (1 - var(--book-side))));
+    opacity: calc(1 - var(--book-side) * (1 - var(--board-visibility)));
+    backface-visibility: hidden;
     background: var(--book-color);
     border-radius: 3px 0 0 3px;
     box-shadow:
       -1px 8px 12px rgb(19 26 42 / 10%),
       -3px 20px 36px rgb(19 26 42 / 12%);
+
+    // Extend the cover at its outer edges, keeping its rotation axis on the spine.
+    // The rim keeps the same dimensions throughout hover, drag and rebound.
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -2px 0 -2px -2px;
+      border-radius: 5px 0 0 5px;
+      background: var(--book-color);
+    }
 
     &::after {
       content: '';
@@ -180,10 +231,18 @@
     }
 
     + div {
+      transform-origin: left center;
+      transform: rotateY(calc(-180deg * (1 - var(--book-openness)) * var(--book-side)));
+      opacity: calc(1 - (1 - var(--book-side)) * (1 - var(--board-visibility)));
       border-radius: 0 3px 3px 0;
       box-shadow:
         1px 8px 12px rgb(19 26 42 / 10%),
         3px 20px 36px rgb(19 26 42 / 12%);
+
+      &::before {
+        inset: -2px -2px -2px 0;
+        border-radius: 0 5px 5px 0;
+      }
 
       &::after {
         inset: 3px 3px 3px 0;
@@ -193,18 +252,8 @@
   }
 }
 
-.open {
-  .closedVolume {
-    opacity: 0;
-  }
-
-  .spreadBoards {
-    opacity: 1;
-    transition-delay: 0.25s;
-  }
-}
-
 .sheet {
+  box-sizing: border-box;
   background: var(--reading-paper);
   border: 1px solid #e1dfd6;
   overflow: hidden;
@@ -252,31 +301,53 @@
   background: var(--book-color);
 }
 
+.backCoverSheet {
+  border-radius: 4px 6px 6px 4px;
+}
+
+.innerCoverSheet {
+  border: 0;
+  border-radius: 0 4px 4px 0;
+  overflow: visible;
+
+  // Keep the rim outside the paper so it overlaps the backing's rim at rest,
+  // without doubling its weight or changing the page's content dimensions.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -2px -2px -2px 0;
+    border: 2px solid var(--book-color);
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+    pointer-events: none;
+  }
+
+  > div {
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  &:global(.--left) {
+    border-radius: 4px 0 0 4px;
+
+    &::after {
+      inset: -2px 0 -2px -2px;
+      border-right: 0;
+      border-left: 2px solid var(--book-color);
+      border-radius: 6px 0 0 6px;
+    }
+  }
+}
+
 .backCoverInner {
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--reading-paper);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-}
-
-.backCoverTitle {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  height: 100%;
-  padding: 30px;
-  color: #f4f7fd;
-
-  small {
-    color: #c0cde5;
-  }
 }
 
 .closeButton {
@@ -553,6 +624,42 @@
   }
 }
 
+.returnCoverButton {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--wui-text-primary, #374151);
+  background: rgb(62 87 120 / 8%);
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgb(62 87 120 / 15%);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.backCoverActions {
+  position: absolute;
+  bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--wui-border, rgb(0 0 0 / 8%));
+  border-radius: 12px;
+  background: var(--wui-bg-elevated, #fff);
+}
+
 .navInfo {
   display: flex;
   flex-direction: column;
@@ -651,15 +758,12 @@
 
 .singlePage {
   transform-origin: center center calc(var(--book-depth) / -2);
-  transform: rotateX(4deg) rotateY(-24deg);
+  transform: rotateX(calc(4deg * (1 - var(--book-openness))))
+    rotateY(calc(-24deg * (1 - var(--book-openness)) * (1 - 2 * var(--book-side))));
 
-  &:hover,
-  &:focus-within {
+  &:not(.open, [data-cover-turning], [data-book-animating]):hover,
+  &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
     transform: translateY(-4px) rotateX(2deg) rotateY(-30deg);
-  }
-
-  &.open {
-    transform: none;
   }
 
   .spreadBoards > div:first-child {
@@ -667,21 +771,32 @@
   }
 
   .spreadBoards > div:last-child {
+    transform: none;
+    opacity: var(--board-visibility);
     border-radius: 3px;
+
+    &::before {
+      inset: -2px;
+      border-radius: 5px;
+    }
 
     &::after {
       inset: 3px;
       border-radius: 1px;
     }
   }
+
+  .closedVolume {
+    right: 0;
+  }
 }
 
 @media (hover: none) {
-  .bookWrapper:not(.open) {
+  .bookWrapper:not(.open, [data-cover-turning], [data-book-animating]) {
     transform: translateX(calc(var(--page-width) / -2)) rotateX(4deg) rotateY(-24deg);
   }
 
-  .singlePage:not(.open) {
+  .singlePage:not(.open, [data-cover-turning], [data-book-animating]) {
     transform: rotateX(4deg) rotateY(-24deg);
   }
 }

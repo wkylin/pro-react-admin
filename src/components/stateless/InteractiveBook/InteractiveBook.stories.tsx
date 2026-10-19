@@ -225,6 +225,8 @@ const meta: Meta<typeof InteractiveBook> = {
   component: InteractiveBook,
   argTypes: {
     coverImage: { control: 'text', description: '封面图片 URL' },
+    backCoverImage: { control: 'text', description: '封底图片 URL，铺满整个封底' },
+    backCoverContent: { control: false, description: '封底简介等 React 内容，可叠加在封底图片上' },
     bookTitle: { control: 'text', description: '书籍标题' },
     coverTitle: { control: false, description: '自定义封面标题排版，可使用 React 节点控制断行' },
     bookAuthor: { control: 'text', description: '书籍作者' },
@@ -264,6 +266,8 @@ export const Default: Story = {
   ),
   args: {
     coverImage: AiCover,
+    backCoverImage: AiCover,
+    backCoverContent: <p>从感知、决策到行动，探索 AI Agent 的工作原理、应用与未来。</p>,
     bookTitle: 'AI Agent 完全指南',
     bookAuthor: 'AI 专家',
     pages: bookPages,
@@ -282,6 +286,23 @@ export const OpenSpread: Story = {
   args: {
     ...Default.args,
     defaultOpen: true,
+  },
+}
+
+export const BackCover: Story = {
+  ...Default,
+  name: '封底与整书翻转',
+  args: {
+    ...Default.args,
+    pages: bookPages.slice(-1),
+    defaultOpen: true,
+    backCoverImage: '',
+    backCoverContent: (
+      <>
+        <p>一本关于智能体的入门指南，带你了解 AI Agent 如何感知世界、做出决策并采取行动。</p>
+        <p>翻过最后一页，封底会停留；点击“翻到封面”，整本书会翻转回正面。</p>
+      </>
+    ),
   },
 }
 
@@ -323,7 +344,7 @@ export const FewPages: Story = {
         title: '唯一的章节',
         content: (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <p>"这本书只有一页正文，翻到最后一页时不再显示拖动手势。"</p>
+            <p>这本短篇手册支持正文、末页与封底之间的连续翻页。</p>
             <p>"将鼠标移到右下角，可以看到页角卷起效果。"</p>
           </div>
         ),
@@ -338,7 +359,7 @@ export const FewPages: Story = {
         title: '结束',
         content: (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <p>"最后一页，拖动手势已禁用，鼠标恢复为普通箭头。"</p>
+            <p>最后一页后继续翻动，即可显示封底；也可以从封底返回阅读。</p>
           </div>
         ),
       },

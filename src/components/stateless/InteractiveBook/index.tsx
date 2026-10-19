@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { clsx } from 'clsx'
-import { ChevronLeft, ChevronRight, RefreshCcw, X, BookOpen } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RefreshCcw, Rotate3D, X, BookOpen } from 'lucide-react'
 import { pdfjs } from 'react-pdf'
 import pageTurnAudio from '@/assets/audio/page-turn.mp3'
-import { BookCoverArtwork, BookPageBlock } from './BookVolume'
+import { BookBackCoverArtwork, BookCoverArtwork, BookPageBlock, BookTurnover3D } from './BookVolume'
 import PageFlipRenderer, { type FlipPage, type PageFlipHandle } from './PageFlipRenderer'
 import styles from './index.module.less'
 
@@ -30,6 +30,10 @@ export interface BookPage {
 
 export interface InteractiveBookProps {
   coverImage: string
+  /** 封底图片 URL，铺满整个封底 */
+  backCoverImage?: string
+  /** 封底简介等内容，可与 backCoverImage 叠加显示 */
+  backCoverContent?: React.ReactNode
   bookTitle?: string
   /** 自定义封面标题排版；书脊、内封和无障碍名称仍使用 bookTitle */
   coverTitle?: React.ReactNode
@@ -76,7 +80,7 @@ export interface InteractiveBookProps {
   mode?: 'single' | 'double' | 'auto'
   /** 初始是否打开书籍（直接显示内页），默认 false */
   defaultOpen?: boolean
-  /** 受控模式：外部控制书籍开合状态。传入后会覆盖内部 isOpen */
+  /** 外部请求打开内页或合回封面；整书翻到封面后可再次点击封面阅读 */
   open?: boolean
   /** 书籍关闭时的回调（用户点击关闭按钮时触发） */
   onClose?: () => void
@@ -304,6 +308,8 @@ function useImagePreloader(images: string[] | undefined, currentPageIndex: numbe
 
 export default function InteractiveBook({
   coverImage = '',
+  backCoverImage,
+  backCoverContent,
   bookTitle = 'Book Title',
   coverTitle,
   bookAuthor = 'Author Name',
@@ -329,16 +335,22 @@ export default function InteractiveBook({
 }: InteractiveBookProps) {
   const reducedMotion = !!useReducedMotion()
   const bookDepth = Number.isFinite(thickness) ? Math.min(64, Math.max(6, thickness)) : 28
-  const [internalOpen, setInternalOpen] = useState(defaultOpen)
-  const isOpen = controlledOpen ?? internalOpen
+  const [view, setView] = useState<'front' | 'pages' | 'back'>((controlledOpen ?? defaultOpen) ? 'pages' : 'front')
+  const isOpen = view !== 'front'
+  const atBackCover = view === 'back'
   const [currentFace, setCurrentFace] = useState(0)
   const [atEnd, setAtEnd] = useState(false)
   const [isTurning, setIsTurning] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
+  const [isTurningBook, setIsTurningBook] = useState(false)
+  const turnoverRef = useRef(false)
+  const turnoverFrameRef = useRef(0)
   const lastReportedPage = useRef(-1)
   const containerRef = useRef<HTMLDivElement>(null)
   const sizeProbeRef = useRef<HTMLDivElement>(null)
   const flipRef = useRef<PageFlipHandle>(null)
+  const bookWrapperRef = useRef<HTMLDivElement>(null)
+  const coverTriggerRef = useRef<HTMLButtonElement>(null)
   const coverPointerRef = useRef<number | null>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
   const [layout, setLayout] = useState({
@@ -348,6 +360,8 @@ export default function InteractiveBook({
     pageHeight: typeof height === 'number' ? height : 500,
   })
   const [mobile, setMobile] = useState(false)
+
+  useEffect(() => () => cancelAnimationFrame(turnoverFrameRef.current), [])
 
   useEffect(() => {
     const container = containerRef.current
@@ -413,15 +427,18 @@ export default function InteractiveBook({
   const firstOpenPage = 1
   const endPage = faceCount + (isSinglePage ? 1 : 2 + (faceCount % 2))
   const lastOpenPage = isSinglePage ? endPage : endPage - 1
+  const backCoverPage = endPage + 1
   const startPage =
     isOpen && !isClosing
-      ? atEnd
-        ? lastOpenPage
-        : isSinglePage
-          ? currentFace + 1
-          : currentFace === 0
-            ? 1
-            : Math.floor((currentFace - 1) / 2) * 2 + 3
+      ? atBackCover
+        ? backCoverPage
+        : atEnd
+          ? lastOpenPage
+          : isSinglePage
+            ? currentFace + 1
+            : currentFace === 0
+              ? 1
+              : Math.floor((currentFace - 1) / 2) * 2 + 3
       : 0
   const visibleStartPage = Math.min(faceCount, currentFace + 1)
   const visibleEndPage = Math.min(faceCount, visibleStartPage + (isSinglePage || currentFace === 0 ? 0 : 1))
@@ -429,16 +446,21 @@ export default function InteractiveBook({
   useImagePreloader(resolvedImages, currentFace, true)
 
   const reportPage = (page: number) => {
-    if (page === 0 || page > endPage) {
+    if (page === 0) {
       setCurrentFace(0)
       setAtEnd(false)
       setIsClosing(false)
-      if (isOpen) {
-        setInternalOpen(false)
-        onClose?.()
-      }
+      setView('front')
+      if (isOpen && !turnoverRef.current) onClose?.()
       return
     }
+    if (page === backCoverPage) {
+      setView('back')
+      setCurrentFace(Math.max(0, faceCount - 1))
+      setAtEnd(true)
+      return
+    }
+    setView('pages')
     const face = Math.max(0, Math.min(faceCount - 1, page - (isSinglePage ? 1 : 2)))
     setCurrentFace(face)
     setAtEnd(page >= lastOpenPage)
@@ -452,25 +474,61 @@ export default function InteractiveBook({
     setIsTurning(turning)
     if (turning) playPageTurnSound()
   }
-  const openBook = () => setInternalOpen(true)
+  const openBook = () => {
+    if (controlledOpen === false || isTurningBook) return
+    setView('pages')
+    flipRef.current?.next()
+  }
+  const finishTurnover = () => {
+    if (!turnoverRef.current) return
+    // Swap the engine behind the completed 3D book, without turning through the pages.
+    flipRef.current?.goTo(0, false)
+    turnoverRef.current = false
+    // The engine paints its new static page on its next frame. Keep the 3D book
+    // visible until that frame and the wrapper's new pose have both been committed.
+    turnoverFrameRef.current = requestAnimationFrame(() => {
+      bookWrapperRef.current?.getBoundingClientRect()
+      turnoverFrameRef.current = requestAnimationFrame(() => {
+        setIsTurningBook(false)
+        turnoverFrameRef.current = requestAnimationFrame(() => coverTriggerRef.current?.focus({ preventScroll: true }))
+      })
+    })
+  }
+  const turnToFrontCover = () => {
+    if (isTurning || isTurningBook || !atBackCover) return
+    turnoverRef.current = true
+    if (reducedMotion) finishTurnover()
+    else setIsTurningBook(true)
+  }
   const closeBook = () => {
+    if (turnoverRef.current) {
+      finishTurnover()
+      onClose?.()
+      return
+    }
     setIsClosing(true)
     flipRef.current?.goTo(0)
   }
-  const restartBook = () => flipRef.current?.goTo(firstOpenPage)
+  const restartBook = () => {
+    if (!isTurningBook) flipRef.current?.goTo(firstOpenPage)
+  }
   const nextPage = () => {
-    if (!isTurning && !atEnd) flipRef.current?.next()
+    if (!isTurning && !isTurningBook && !atBackCover) flipRef.current?.next()
   }
   const previousPage = () => {
-    if (!isTurning && (currentFace > 0 || atEnd)) flipRef.current?.previous()
+    if (!isTurning && !isTurningBook && (currentFace > 0 || atEnd || atBackCover)) flipRef.current?.previous()
   }
 
+  const controlledActionsRef = useRef({ openBook, closeBook })
   useEffect(() => {
-    if (!hasContent) return
+    controlledActionsRef.current = { openBook, closeBook }
+  })
+  useEffect(() => {
+    if (!hasContent || controlledOpen === undefined) return
     const page = flipRef.current?.getPage() ?? 0
-    if (isOpen && !isClosing && page === 0) flipRef.current?.next()
-    else if (!isOpen && page > 0) flipRef.current?.goTo(0)
-  }, [isOpen, isClosing, hasContent, isSinglePage])
+    if (controlledOpen && page === 0) controlledActionsRef.current.openBook()
+    else if (!controlledOpen && page > 0) controlledActionsRef.current.closeBook()
+  }, [controlledOpen, hasContent])
 
   const keyboardRef = useRef({ nextPage, previousPage, closeBook, restartBook, lastOpenPage })
   useEffect(() => {
@@ -495,7 +553,9 @@ export default function InteractiveBook({
         ArrowRight: keyboardRef.current.nextPage,
         Escape: keyboardRef.current.closeBook,
         Home: keyboardRef.current.restartBook,
-        End: () => flipRef.current?.goTo(keyboardRef.current.lastOpenPage),
+        End: () => {
+          if (!turnoverRef.current) flipRef.current?.goTo(keyboardRef.current.lastOpenPage)
+        },
       }
       if (actions[event.key]) {
         event.preventDefault()
@@ -535,27 +595,37 @@ export default function InteractiveBook({
       </div>
     </div>
   )
+  const frontArtwork = (
+    <BookCoverArtwork
+      image={coverImage}
+      title={bookTitle}
+      titleContent={coverTitle}
+      author={bookAuthor}
+      textured={textured}
+    />
+  )
+  const backArtwork = (
+    <BookBackCoverArtwork
+      image={backCoverImage}
+      content={backCoverContent}
+      title={bookTitle}
+      author={bookAuthor}
+      textured={textured}
+    />
+  )
   const flipPages: FlipPage[] = [
     {
       key: 'cover',
       density: 'hard',
       className: cn(styles.sheet, styles.coverSheet),
-      content: (
-        <BookCoverArtwork
-          image={coverImage}
-          title={bookTitle}
-          titleContent={coverTitle}
-          author={bookAuthor}
-          textured={textured}
-        />
-      ),
+      content: frontArtwork,
     },
     ...(!isSinglePage
       ? [
           {
             key: 'front-matter',
             density: 'hard' as const,
-            className: styles.sheet,
+            className: cn(styles.sheet, styles.innerCoverSheet),
             content: frontMatter,
           },
         ]
@@ -600,9 +670,9 @@ export default function InteractiveBook({
     {
       key: 'end',
       density: 'hard',
-      className: styles.sheet,
+      className: cn(styles.sheet, styles.innerCoverSheet),
       content: (
-        <div className={styles.backCoverInner}>
+        <div className={cn(styles.pageSurface, styles.backCoverInner)}>
           <BookOpen className={styles.endIcon} size={28} aria-hidden="true" />
           <p className={styles.endText}>读完了</p>
           <p className={styles.endTitle}>{bookTitle}</p>
@@ -616,14 +686,8 @@ export default function InteractiveBook({
     {
       key: 'back-cover',
       density: 'hard',
-      className: cn(styles.sheet, styles.coverSheet),
-      content: (
-        <div className={styles.backCoverTitle}>
-          <BookOpen size={30} />
-          <span>{bookTitle}</span>
-          <small>{bookAuthor}</small>
-        </div>
-      ),
+      className: cn(styles.sheet, styles.coverSheet, styles.backCoverSheet),
+      content: backArtwork,
     },
   ]
 
@@ -632,6 +696,8 @@ export default function InteractiveBook({
       ref={containerRef}
       className={cn(styles.container, isSinglePage && styles.singlePageContainer, className)}
       data-interactive-book
+      data-book-view={view}
+      aria-busy={isTurningBook}
       style={
         {
           maxWidth: typeof width === 'number' ? width * 2 + 120 : '100%',
@@ -658,10 +724,24 @@ export default function InteractiveBook({
       ) : (
         <div
           className={cn(styles.bookViewport, isSinglePage && styles.singlePageViewport)}
-          style={{ width: effectiveWidth * (isSinglePage ? 1 : 2), height: effectiveHeight }}
+          style={
+            {
+              width: effectiveWidth * (isSinglePage ? 1 : 2),
+              height: effectiveHeight,
+              '--page-width': `${effectiveWidth}px`,
+            } as React.CSSProperties
+          }
         >
           <div
-            className={cn(styles.bookWrapper, isOpen && styles.open, isSinglePage && styles.singlePage)}
+            ref={bookWrapperRef}
+            className={cn(
+              styles.bookWrapper,
+              isOpen && styles.open,
+              isSinglePage && styles.singlePage,
+              isTurningBook && styles.turnoverHidden
+            )}
+            inert={isTurningBook}
+            aria-hidden={isTurningBook || undefined}
             style={
               {
                 width: effectiveWidth * (isSinglePage ? 1 : 2),
@@ -689,7 +769,7 @@ export default function InteractiveBook({
               height={effectiveHeight}
               single={isSinglePage}
               startPage={startPage}
-              interactive={isOpen}
+              interactive={isOpen && !isTurningBook}
               showCorners={showCornerFlip}
               reducedMotion={reducedMotion}
               onFlip={reportPage}
@@ -697,6 +777,7 @@ export default function InteractiveBook({
             />
             {!isOpen && (
               <button
+                ref={coverTriggerRef}
                 className={styles.closedCoverTrigger}
                 aria-label={`打开《${bookTitle}》`}
                 onClick={openBook}
@@ -713,6 +794,9 @@ export default function InteractiveBook({
               />
             )}
           </div>
+          {isTurningBook && (
+            <BookTurnover3D front={frontArtwork} back={backArtwork} title={bookTitle} onComplete={finishTurnover} />
+          )}
         </div>
       )}
       <AnimatePresence>
@@ -728,7 +812,7 @@ export default function InteractiveBook({
           >
             <button
               onClick={previousPage}
-              disabled={isTurning || (currentFace === 0 && !atEnd)}
+              disabled={isTurning || isTurningBook || (currentFace === 0 && !atEnd && !atBackCover)}
               className={styles.navButton}
               title="上一页"
             >
@@ -736,8 +820,14 @@ export default function InteractiveBook({
             </button>
             <div className={styles.navInfo}>
               <span className={styles.navPage} aria-live="polite" aria-atomic="true">
-                {visibleStartPage === visibleEndPage ? visibleStartPage : `${visibleStartPage}–${visibleEndPage}`}
-                <span className={styles.navTotal}> / {faceCount}</span>
+                {atBackCover ? (
+                  '封底'
+                ) : (
+                  <>
+                    {visibleStartPage === visibleEndPage ? visibleStartPage : `${visibleStartPage}–${visibleEndPage}`}
+                    <span className={styles.navTotal}> / {faceCount}</span>
+                  </>
+                )}
               </span>
               <div
                 className={styles.readingProgress}
@@ -750,18 +840,42 @@ export default function InteractiveBook({
                 <span style={{ width: `${readingProgress}%` }} />
               </div>
             </div>
-            <button onClick={nextPage} disabled={isTurning || atEnd} className={styles.navButton} title="下一页">
-              <ChevronRight size={20} />
-            </button>
+            {atBackCover ? (
+              <button
+                onClick={turnToFrontCover}
+                disabled={isTurning || isTurningBook}
+                className={styles.returnCoverButton}
+              >
+                <Rotate3D size={17} />
+                翻到封面
+              </button>
+            ) : (
+              <button
+                onClick={nextPage}
+                disabled={isTurning || isTurningBook}
+                className={styles.navButton}
+                title={atEnd ? '翻到封底' : '下一页'}
+              >
+                <ChevronRight size={20} />
+              </button>
+            )}
             <div className={styles.navDivider} />
-            <button onClick={closeBook} className={styles.closeNavButton} title="合上书籍">
+            <button onClick={closeBook} disabled={isTurningBook} className={styles.closeNavButton} title="合上书籍">
               <X size={18} />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
+      {hasContent && atBackCover && !showNavigation && (
+        <div className={styles.backCoverActions}>
+          <button className={styles.returnCoverButton} onClick={turnToFrontCover} disabled={isTurning || isTurningBook}>
+            <Rotate3D size={17} />
+            翻到封面
+          </button>
+        </div>
+      )}
       {hasContent && isOpen && !showNavigation && (
-        <button className={styles.closeButton} title="合上书籍" onClick={closeBook}>
+        <button className={styles.closeButton} title="合上书籍" onClick={closeBook} disabled={isTurningBook}>
           <X size={18} />
         </button>
       )}
