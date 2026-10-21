@@ -643,7 +643,7 @@ export const SinglePageMode: Story = {
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 460 }}>
         单页模式（<code>mode="single"</code>）：每次显示一页，适合移动端。
         <br />
-        点击右侧 60% 翻下一页，左侧 40% 翻上一页，支持滑动和角落翻页。
+        使用书角点击或拖拽、横向滑动和底部按钮翻页。
       </p>
       <InteractiveBook {...args} />
     </div>
@@ -884,7 +884,7 @@ export const MobileSimulation: Story = {
     <div className="flex h-200 w-full flex-col items-center justify-center gap-4 bg-neutral-100 p-4">
       <p style={{ color: '#6b7280', fontSize: '0.875rem', textAlign: 'center', maxWidth: 360 }}>
         在 375px 宽容器中模拟移动端效果。<code>mode="auto"</code> 会自动检测窗口宽度，
-        窄屏（&lt;768px）切换为单页模式。拖拽、点击右侧翻下一页，左侧翻上一页。
+        窄屏（&lt;768px）切换为单页模式。可拖拽或点击书角，也可横向滑动翻页。
       </p>
       <div
         style={{
@@ -933,5 +933,20 @@ export const ControlledMode: Story = {
     height: 500,
     enableKeyboard: true,
     defaultOpen: true,
+  },
+}
+
+export const KeyboardScope: Story = {
+  ...Default,
+  name: '多本书键盘导航',
+  render: (args: InteractiveBookProps) => (
+    <div className="flex w-full items-center justify-center gap-4 bg-neutral-100 p-4">
+      <InteractiveBook {...args} bookTitle="书 A" mode="single" width={230} height={330} defaultOpen />
+      <InteractiveBook {...args} bookTitle="书 B" mode="single" width={230} height={330} defaultOpen />
+    </div>
+  ),
+  args: {
+    ...Default.args,
+    pages: bookPages.slice(0, 2),
   },
 }

@@ -30,6 +30,9 @@ function cn(...inputs: (string | undefined | null | false)[]) {
   return clsx(inputs)
 }
 
+const keyboardBooks = new Set<HTMLElement>()
+let activeKeyboardBook: HTMLElement | null = null
+
 function normalizeAngle(angle: number) {
   return ((((angle + 180) % 360) + 360) % 360) - 180
 }
@@ -738,6 +741,7 @@ export default function InteractiveBook({
   const [view, setView] = useState<'front' | 'pages' | 'back'>((controlledOpen ?? defaultOpen) ? 'pages' : 'front')
   const isOpen = view !== 'front'
   const atBackCover = view === 'back'
+  const isClosedCover = view !== 'pages'
   const [currentFace, setCurrentFace] = useState(0)
   const [currentEnginePage, setCurrentEnginePage] = useState(0)
   const [atEnd, setAtEnd] = useState(false)
@@ -948,13 +952,21 @@ export default function InteractiveBook({
     setView('pages')
     flipRef.current?.next()
   }
-  const anglePresets = [
-    { label: '正面', yaw: 0, pitch: bookTilt },
-    { label: '3/4', yaw: -bookRotation, pitch: bookTilt },
-    { label: '书脊', yaw: 90, pitch: bookTilt },
-    { label: '封底', yaw: -180, pitch: bookTilt },
-    { label: '俯视', yaw: -bookRotation, pitch: -48 },
-  ]
+  const anglePresets = atBackCover
+    ? [
+        { label: '封底', yaw: 0, pitch: bookTilt },
+        { label: '3/4', yaw: -bookRotation, pitch: bookTilt },
+        { label: '书脊', yaw: -90, pitch: bookTilt },
+        { label: '封面', yaw: -180, pitch: bookTilt },
+        { label: '俯视', yaw: -bookRotation, pitch: -48 },
+      ]
+    : [
+        { label: '正面', yaw: 0, pitch: bookTilt },
+        { label: '3/4', yaw: -bookRotation, pitch: bookTilt },
+        { label: '书脊', yaw: 90, pitch: bookTilt },
+        { label: '封底', yaw: -180, pitch: bookTilt },
+        { label: '俯视', yaw: -bookRotation, pitch: -48 },
+      ]
   const handleCoverPointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
     if (!enable3DViewControls || event.button !== 0 || !event.isPrimary) return
     suppressCoverClickRef.current = false
@@ -977,7 +989,7 @@ export default function InteractiveBook({
     drag.moved = true
     setIsDraggingView(true)
     setPreviewAngles({
-      yaw: normalizeAngle(drag.startYaw + deltaX * 0.75),
+      yaw: normalizeAngle(drag.startYaw + deltaX * (atBackCover ? -0.75 : 0.75)),
       pitch: Math.max(-65, Math.min(65, drag.startPitch + deltaY * 0.55)),
     })
   }
@@ -1001,6 +1013,7 @@ export default function InteractiveBook({
   const finishTurnover = () => {
     if (!turnoverRef.current) return
     // Swap the engine behind the completed 3D book, without turning through the pages.
+    setPreviewAngles((angles) => ({ ...angles, yaw: -bookRotation }))
     flipRef.current?.goTo(0, false)
     turnoverRef.current = false
     // The engine paints its new static page on its next frame. Keep the 3D book
@@ -1057,6 +1070,9 @@ export default function InteractiveBook({
   })
   useEffect(() => {
     if (!enableKeyboard || !isOpen || !hasContent) return
+    const container = containerRef.current
+    if (!container) return
+    keyboardBooks.add(container)
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
         event.altKey ||
@@ -1068,7 +1084,16 @@ export default function InteractiveBook({
       const dialog = [...document.querySelectorAll('[role="dialog"][aria-modal="true"]')]
         .reverse()
         .find((element) => element.getClientRects().length && getComputedStyle(element).visibility === 'visible')
-      if (dialog && !dialog.contains(containerRef.current)) return
+      const availableBooks = [...keyboardBooks].filter((book) => !dialog || dialog.contains(book))
+      if (!availableBooks.includes(container)) return
+      const focusedBook = availableBooks.find((book) => book.contains(document.activeElement))
+      const selectedBook =
+        availableBooks.length === 1
+          ? availableBooks[0]
+          : activeKeyboardBook && availableBooks.includes(activeKeyboardBook)
+            ? activeKeyboardBook
+            : focusedBook
+      if (selectedBook !== container) return
       const actions: Record<string, () => void> = {
         ArrowLeft: keyboardRef.current.previousPage,
         ArrowRight: keyboardRef.current.nextPage,
@@ -1084,7 +1109,11 @@ export default function InteractiveBook({
       }
     }
     window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      keyboardBooks.delete(container)
+      if (activeKeyboardBook === container) activeKeyboardBook = null
+    }
   }, [enableKeyboard, isOpen, hasContent])
 
   const renderContentsPage = (pageChapters: typeof chapters, contentsIndex: number) => (
@@ -1184,7 +1213,7 @@ export default function InteractiveBook({
     },
     ...contentsPageElements.map((content, index) => ({
       key: `front-matter-${index}`,
-      density: index === 0 ? ('hard' as const) : ('soft' as const),
+      density: 'soft' as const,
       className: index === 0 ? cn(styles.sheet, styles.innerCoverSheet) : styles.sheet,
       content,
     })),
@@ -1232,7 +1261,7 @@ export default function InteractiveBook({
       : []),
     {
       key: 'end',
-      density: 'hard',
+      density: 'soft',
       className: cn(styles.sheet, styles.innerCoverSheet),
       content: (
         <div className={cn(styles.pageSurface, styles.backCoverInner)}>
@@ -1261,6 +1290,12 @@ export default function InteractiveBook({
       data-interactive-book
       data-book-view={view}
       aria-busy={isTurningBook}
+      onPointerDownCapture={(event) => {
+        activeKeyboardBook = event.currentTarget
+      }}
+      onFocusCapture={(event) => {
+        activeKeyboardBook = event.currentTarget
+      }}
       style={
         {
           maxWidth: typeof width === 'number' ? width * 2 + 120 : '100%',
@@ -1343,7 +1378,9 @@ export default function InteractiveBook({
             </div>
             <div className={styles.closedVolume} aria-hidden="true">
               <div className={styles.volumeBackBoard}>
-                <div className={styles.volumeBackArtwork}>{backArtwork}</div>
+                <div className={cn(styles.volumeBackArtwork, atBackCover && styles.volumeBackArtworkFlipped)}>
+                  {atBackCover ? frontArtwork : backArtwork}
+                </div>
               </div>
               <div className={styles.bindingSpine} data-cover-style={coverStyle} data-spine-style={spineStyle}>
                 <BookSpineCopy
@@ -1363,17 +1400,29 @@ export default function InteractiveBook({
               height={effectiveHeight}
               single={isSinglePage}
               startPage={startPage}
-              interactive={isOpen && !isTurningBook}
+              interactive={isOpen && !atBackCover && !isTurningBook}
               showCorners={showCornerFlip}
               reducedMotion={reducedMotion}
               onFlip={reportPage}
               onTurning={reportTurning}
             />
-            {!isOpen && (
+            {isClosedCover && !isTurning && !isTurningBook && (
               <button
                 ref={coverTriggerRef}
-                className={cn(styles.closedCoverTrigger, enable3DViewControls && styles.rotatableCover)}
-                aria-label={enable3DViewControls ? `拖动旋转封面或点击打开《${bookTitle}》` : `打开《${bookTitle}》`}
+                className={cn(
+                  styles.closedCoverTrigger,
+                  atBackCover && styles.backCoverTrigger,
+                  enable3DViewControls && styles.rotatableCover
+                )}
+                aria-label={
+                  atBackCover
+                    ? enable3DViewControls
+                      ? `拖动旋转封底或点击返回《${bookTitle}》末页`
+                      : `返回《${bookTitle}》末页`
+                    : enable3DViewControls
+                      ? `拖动旋转封面或点击打开《${bookTitle}》`
+                      : `打开《${bookTitle}》`
+                }
                 onClick={(event) => {
                   if (event.detail > 0 && suppressCoverClickRef.current) {
                     suppressCoverClickRef.current = false
@@ -1381,7 +1430,8 @@ export default function InteractiveBook({
                     return
                   }
                   suppressCoverClickRef.current = false
-                  openBook()
+                  if (atBackCover) previousPage()
+                  else openBook()
                 }}
                 onPointerDown={handleCoverPointerDown}
                 onPointerMove={handleCoverPointerMove}
@@ -1400,14 +1450,15 @@ export default function InteractiveBook({
               spineAuthor={spineAuthor}
               spineStyle={spineStyle}
               coverStyle={coverStyle}
-              tilt={bookTilt}
-              rotation={bookRotation}
+              tilt={previewAngles.pitch}
+              rotation={-previewAngles.yaw}
+              endRotation={-previewAngles.yaw + normalizeAngle(180 - bookRotation + previewAngles.yaw)}
               onComplete={finishTurnover}
             />
           )}
         </div>
       )}
-      {hasContent && !isOpen && enable3DViewControls && (
+      {hasContent && isClosedCover && !isTurning && !isTurningBook && enable3DViewControls && (
         <nav className={styles.angleControls} aria-label="书本 3D 视角">
           {anglePresets.map((preset) => {
             const yawDifference = normalizeAngle(previewAngles.yaw - preset.yaw)
@@ -1426,10 +1477,16 @@ export default function InteractiveBook({
           })}
         </nav>
       )}
-      {hasContent && !isOpen && (
+      {hasContent && isClosedCover && !isTurning && !isTurningBook && (
         <div className={styles.hint}>
           <BookOpen size={15} aria-hidden="true" />
-          {enable3DViewControls ? '拖动封面旋转视角，点击封面打开' : '点击封面打开阅读'}
+          {atBackCover
+            ? enable3DViewControls
+              ? '拖动封底旋转视角，点击封底返回末页'
+              : '点击封底返回末页'
+            : enable3DViewControls
+              ? '拖动封面旋转视角，点击封面打开'
+              : '点击封面打开阅读'}
         </div>
       )}
       <AnimatePresence>

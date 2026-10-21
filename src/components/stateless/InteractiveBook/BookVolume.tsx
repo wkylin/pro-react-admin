@@ -242,6 +242,7 @@ export function BookTurnover3D({
   coverStyle = 'illustrated',
   tilt = 4,
   rotation = 24,
+  endRotation,
   onComplete,
 }: {
   front: ReactNode
@@ -254,6 +255,7 @@ export function BookTurnover3D({
   coverStyle?: BookCoverStyle
   tilt?: number
   rotation?: number
+  endRotation?: number
   onComplete: () => void
 }) {
   return (
@@ -261,7 +263,7 @@ export function BookTurnover3D({
       className={styles.turnoverBook}
       data-cover-style={coverStyle}
       initial={{ rotateX: tilt, rotateY: rotation, y: 0 }}
-      animate={{ rotateX: tilt, rotateY: 180 - rotation, y: [0, -10, 0] }}
+      animate={{ rotateX: tilt, rotateY: endRotation ?? 180 - rotation, y: [0, -10, 0] }}
       transition={{ duration: 0.85, ease: [0.22, 0.65, 0.3, 1] }}
       onAnimationComplete={onComplete}
       aria-hidden="true"

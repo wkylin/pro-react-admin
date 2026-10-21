@@ -4,11 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  page-flip@2.0.7: 4a0106a54de78ae6be9d22a4553d9893c073340c1203df0873150e4868d57107
-
 importers:
-
   .:
     dependencies:
       '@ant-design/cssinjs':
@@ -368,9 +364,6 @@ importers:
       motion-dom:
         specifier: 14.0.0
         version: 14.0.0
-      page-flip:
-        specifier: ^2.0.7
-        version: 2.0.7(patch_hash=4a0106a54de78ae6be9d22a4553d9893c073340c1203df0873150e4868d57107)
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -9637,9 +9630,6 @@ packages:
 
   package-manager-detector@1.9.0:
     resolution: {integrity: sha512-zAMfbta9nPA8AKkA4WdmNAT8R8s6Dk0/xwPsqNnRidMFcLo1YkLuPDTgs2f64XdzS8vbLNnoJ+uUIkgbz7oRHA==}
-
-  page-flip@2.0.7:
-    resolution: {integrity: sha512-96lQFUUz7r/LZzEUZJ3yBIMEKU9+m8HMFDzTvTdD6P7Ag/wXINjp9n0W7b4wanwnDbQETo4uNUoL3zMqpFxwGA==}
 
   pako@2.2.0:
     resolution: {integrity: sha512-zJq6RP/5q+TO2OpFV3FHzlPnFjmkb7Nc99a5SNjJE+uu/PkpChs+NIZSSzbBoD+6kjiISXjfYdwj1ZRQ81dz/w==}
@@ -22490,8 +22480,6 @@ snapshots:
       semver: 6.3.1
 
   package-manager-detector@1.9.0: {}
-
-  page-flip@2.0.7(patch_hash=4a0106a54de78ae6be9d22a4553d9893c073340c1203df0873150e4868d57107): {}
 
   pako@2.2.0: {}
 
