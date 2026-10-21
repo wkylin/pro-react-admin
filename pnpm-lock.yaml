@@ -7,9 +7,6 @@ settings:
 overrides:
   '@storybook/addon-webpack5-compiler-babel>@babel/core': ^8.0.7
 
-patchedDependencies:
-  page-flip@2.0.7: 4a0106a54de78ae6be9d22a4553d9893c073340c1203df0873150e4868d57107
-
 importers:
 
   .:
@@ -380,9 +377,6 @@ importers:
       motion-dom:
         specifier: 14.0.0
         version: 14.0.0
-      page-flip:
-        specifier: ^2.0.7
-        version: 2.0.7(patch_hash=4a0106a54de78ae6be9d22a4553d9893c073340c1203df0873150e4868d57107)
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -12125,9 +12119,6 @@ packages:
 
   package-manager-detector@1.9.0:
     resolution: {integrity: sha512-zAMfbta9nPA8AKkA4WdmNAT8R8s6Dk0/xwPsqNnRidMFcLo1YkLuPDTgs2f64XdzS8vbLNnoJ+uUIkgbz7oRHA==}
-
-  page-flip@2.0.7:
-    resolution: {integrity: sha512-96lQFUUz7r/LZzEUZJ3yBIMEKU9+m8HMFDzTvTdD6P7Ag/wXINjp9n0W7b4wanwnDbQETo4uNUoL3zMqpFxwGA==}
 
   pako@1.0.11:
     resolution: {integrity: sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==}
@@ -28864,8 +28855,6 @@ snapshots:
       semver: 6.3.1
 
   package-manager-detector@1.9.0: {}
-
-  page-flip@2.0.7(patch_hash=4a0106a54de78ae6be9d22a4553d9893c073340c1203df0873150e4868d57107): {}
 
   pako@1.0.11: {}
 

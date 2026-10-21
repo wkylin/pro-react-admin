@@ -81,15 +81,12 @@
       opacity: clamp(0, calc((var(--book-openness) - 0.35) / 0.4), 1);
     }
 
-    /* Hard-page shadows are rectangular and extend beyond the rotating cover. */
-    /* The paper gutter gradient supplies the contact shading during this fold. */
-    :global(.stf__hardShadow),
-    :global(.stf__hardInnerShadow) {
+    /* The paper gutter gradient supplies contact shading during cover turns. */
+    :global(.bookFlipShadow) {
       visibility: hidden;
     }
 
-    /* The engine also draws underlying soft sheets as hard pages during cover folds, */
-    /* resetting their inline clip-path. Round the corners without cutting a spine gap. */
+    /* Round static sheets under the cover without cutting a spine gap. */
     .sheet:global(.--simple.--left),
     .sheet[data-density='soft']:global(.--left) {
       clip-path: inset(0 round 0 6px 6px 0) !important;
@@ -114,17 +111,40 @@
   height: 100%;
   touch-action: pan-y;
 
-  :global(.stf__wrapper) {
+  :global(.bookFlipStage) {
     position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 2000px;
+    transform-style: preserve-3d;
+  }
+
+  :global(.bookFlipSoftActive) {
+    clip-path: inset(0);
+  }
+
+  :global(.bookFlipShadowMask) {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :global(.bookFlipShadow) {
+    position: absolute;
+    z-index: 8;
+    display: none;
+    pointer-events: none;
+  }
+
+  :global(.bookFlipContent) {
     width: 100%;
     height: 100%;
   }
 
-  :global(.stf__outerShadow),
-  :global(.stf__innerShadow),
-  :global(.stf__hardShadow),
-  :global(.stf__hardInnerShadow) {
-    pointer-events: none;
+  :global(.bookFlipMirrorContent > .bookFlipContent) {
+    transform: scaleX(-1);
   }
 }
 
@@ -136,6 +156,7 @@
   height: 100%;
   transform-style: preserve-3d;
   transform: translateZ(calc(-1 * var(--book-depth))) scaleX(calc(1 - 2 * var(--book-side)));
+
   /* Reveal the volume near closure so its inset edges do not ghost through the paper. */
   opacity: clamp(0, calc((0.12 - var(--book-openness)) / 0.12), 1);
   pointer-events: none;
@@ -146,7 +167,6 @@
   inset: 0;
   border-radius: 6px 4px 4px 6px;
   background: var(--book-color);
-  box-shadow: 12px 18px 30px rgb(19 26 42 / 17%);
   transform: rotateY(180deg);
   backface-visibility: hidden;
 }
@@ -157,10 +177,15 @@
   border-radius: inherit;
 }
 
+.volumeBackArtworkFlipped {
+  transform: scaleX(-1);
+}
+
 .bindingSpine {
   position: absolute;
   top: 0;
   left: 0;
+
   /* The side panel tucks under the front board so the lower corner has no exposed seam. */
   width: calc(var(--book-depth) + 7px);
   height: 100%;
@@ -190,6 +215,7 @@
   &[data-cover-style='golden-jacket'] {
     --spine-ink: #842c2e;
     --spine-accent: #8c3030;
+
     background:
       linear-gradient(
         90deg,
@@ -204,6 +230,7 @@
   &[data-cover-style='editorial-orange'] {
     --spine-ink: #4b2b29;
     --spine-accent: #ef5b25;
+
     background:
       repeating-linear-gradient(90deg, rgb(70 53 50 / 4%) 0 1px, transparent 1px 4px),
       linear-gradient(90deg, rgb(0 0 0 / 12%), transparent 32%, rgb(255 255 255 / 55%) 72%, rgb(0 0 0 / 10%)),
@@ -337,11 +364,15 @@
   touch-action: pan-y;
 }
 
+.backCoverTrigger {
+  right: auto;
+  left: 0;
+}
+
 .rotatableCover {
   cursor: grab;
   user-select: none;
   touch-action: none;
-  -webkit-user-select: none;
 
   &:active {
     cursor: grabbing;
@@ -433,8 +464,8 @@
       -1px 8px 12px rgb(19 26 42 / 10%),
       -3px 20px 36px rgb(19 26 42 / 12%);
 
-    /* Extend the cover at its outer edges, keeping its rotation axis on the spine. */
-    /* The rim keeps the same dimensions throughout hover, drag and rebound. */
+    /* Extend the cover at its outer edges, keeping its rotation axis on the spine.
+       The rim keeps the same dimensions throughout hover, drag and rebound. */
     &::before {
       content: '';
       position: absolute;
@@ -522,6 +553,7 @@
   border: 0;
   border-radius: 6px 4px 4px 6px;
   background: var(--book-color);
+  backface-visibility: hidden;
 }
 
 .backCoverSheet {
@@ -533,8 +565,8 @@
   border-radius: 0 4px 4px 0;
   overflow: visible;
 
-  /* Keep the rim outside the paper so it overlaps the backing's rim at rest, */
-  /* without doubling its weight or changing the page's content dimensions. */
+  /* Keep the rim outside the paper so it overlaps the backing's rim at rest,
+     without doubling its weight or changing the page's content dimensions. */
   &::after {
     content: '';
     position: absolute;
