@@ -432,7 +432,7 @@
     "core-js": "^3.50.0",
     "crypto-js": "^4.2.0",
     "dayjs": "^1.11.23",
-    "dompurify": "^3.4.16",
+    "dompurify": "^3.4.17",
     "echarts": "^6.1.0",
     "es-toolkit": "^1.52.0",
     "esbuild": "^0.28.2",
