@@ -36,7 +36,7 @@ export const administrationModule: ApplicationModule = {
   id: 'administration',
   contractVersion: 2,
   version: '1.0.0',
-  compatibility: { application: '>=5.1.0 <6.0.0' },
+  compatibility: { application: '>=5.1.0 <7.0.0' },
   capabilities: ['routes', 'resources', 'provider'],
   routes: administrationRoutes,
   resources: administrationResources,
@@ -54,7 +54,7 @@ export const administrationModule: ApplicationModule = {
 
 ## 依赖、权限与插槽
 
-模块 id 必须唯一，且 manifest 必须声明 `contractVersion: 2`；旧 v1 和未知版本均直接拒绝。清单至少声明一条路由，并给出模块 SemVer、应用版本范围、与实际编译功能完全一致的 capability 集、数据迁移边界和卸载策略。宿主版本从 package version 注入，范围支持 exact、`^`、`~`、比较符 conjunction 与 `||`；未知语法和不兼容版本失败关闭。当前正式模块范围是 `>=5.1.0 <6.0.0`。
+模块 id 必须唯一，且 manifest 必须声明 `contractVersion: 2`；旧 v1 和未知版本均直接拒绝。清单至少声明一条路由，并给出模块 SemVer、应用版本范围、与实际编译功能完全一致的 capability 集、数据迁移边界和卸载策略。宿主版本从 package version 注入，范围支持 exact、`^`、`~`、比较符 conjunction 与 `||`；未知语法和不兼容版本失败关闭。当前内置模块范围是 `>=5.1.0 <7.0.0`，覆盖应用 6.x，同时保留对 5.1 及后续 5.x 宿主的兼容声明。
 
 依赖通过 `dependencies: ['other-module']` 显式声明，应用须同时选择依赖。注册表按依赖顺序排列 Provider；依赖的 Provider 位于消费者外层。重复 id、缺失依赖、循环依赖和重复页面会在页面装配前失败。当前注册表只接受 v2，应用版本范围不匹配及其它契约版本均失败关闭。
 

@@ -63,8 +63,8 @@ async function main() {
   if (!isDeepStrictEqual(packageJson.engines, libraryEngines)) {
     throw new Error('组件库 engines 与 config/library-contract.mjs 不一致')
   }
-  if (!/^5\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(packageJson.version)) {
-    throw new Error('clean package 架构必须使用 5.x 语义化版本')
+  if (!/^6\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(packageJson.version)) {
+    throw new Error('clean package 架构必须使用 6.x 语义化版本')
   }
   if (!isDeepStrictEqual(packageJson.files, ['dist', 'README.md', 'LICENSE'])) {
     throw new Error('组件库 files 必须且只能包含 dist、README.md 和 LICENSE')

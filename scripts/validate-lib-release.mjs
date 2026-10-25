@@ -10,8 +10,8 @@ const releaseRef = process.env.WUI_RELEASE_REF || ''
 const requestedDistTag = process.env.WUI_DIST_TAG || process.env.npm_config_tag || ''
 const shouldPrintDistTag = process.argv.includes('--print-tag')
 
-if (!/^5\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
-  throw new Error(`无效的 wui-react v5 版本：${version}`)
+if (!/^6\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+  throw new Error(`无效的 wui-react v6 版本：${version}`)
 }
 
 if (releaseRef.startsWith('wui-react-v') && releaseRef !== `wui-react-v${version}`) {

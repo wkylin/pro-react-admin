@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/wkylin/pro-react-admin/compare/v5.1.0...v6.0.0) (2026-10-25)
+
+### Features
+
+- Run the application, Storybook, and the public component library from shared source with either Webpack or Vite.
+- Add a project overview and scenario guide that trace source, tests, build outputs, and deployment.
+- Add GitHub sign-in for demo accounts, improve enterprise operations, and replace the interactive book's page-flip dependency with a local engine.
+
+### Bug Fixes
+
+- Restore scrolling on the public overview and signed-in home at desktop and mobile widths.
+- Exclude application public assets from the Vite component package and reject unexpected package output.
+
+The application Release and npm publication use separate `v6.0.0` and `wui-react-v6.0.0` tags. See [release notes](docs/releases/v6.0.0.md) for upgrade and deployment details.
+
 ## [5.1.0](https://github.com/wkylin/pro-react-admin/compare/v5.0.0...v5.1.0) (2026-10-12)
 
 ### Features

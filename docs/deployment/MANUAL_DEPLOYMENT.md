@@ -2,7 +2,7 @@
 
 本文按当前项目的脚本和配置整理，覆盖应用、Storybook、GitHub Pages、Vercel 和 GitHub Release。所有命令默认在仓库根目录执行，Shell 示例使用 macOS/Linux；Windows 可用 Git Bash，或将环境变量前缀改为 `pnpm exec cross-env`。
 
-当前发布版本为 **5.1.0**，应用标签 `v5.1.0` 指向提交 `09efb4ec`。重新部署已有版本只需选择该版本的代码并部署，**不需要重建标签或再次创建 Release**。后文的新版本示例使用 `5.1.1`，实际发布时替换为你选择的版本。
+本指南保留 **5.1.0** 已发布版本的重部署命令：应用标签 `v5.1.0` 指向提交 `09efb4ec`，重新部署不需要重建标签或 Release。第 6.2 节的 `5.1.1` 是通用新版本示例，不是当前版本；发布 **6.0.0** 请使用[当前 GitHub 标签流程](./GITHUB_DEPLOYMENT.md#创建-v600-标签与-release)和[版本说明](../releases/v6.0.0.md)，并以实际 manifest 为准。
 
 ## 1. 选择部署路径
 
