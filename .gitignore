@@ -12,8 +12,6 @@
 node_modules/
 /.eslintcache
 tsconfig.tsbuildinfo
-compilation-stats.json
-compilation-*-stats.json
 /dist-*/
 /artifacts/
 .yarn/cache
@@ -23,13 +21,14 @@ public-optimized/
 public/bit
 api/node_modules
 /api/data/
-webpack/profiling
-stats.html
+/build/webpack/profiling/
+/.mf/
 /.scannerwork
-# 忽略测试覆盖率输出
-coverage
-# 忽略本地 env
-.env
+/.sonarlint/
+/.sentryclirc
+# 测试报告、覆盖率与浏览器跟踪产物
+/tests/reports/
+# 忽略本地 env 覆盖文件
 .env.local
 .env.dev.local
 .env.development.local
@@ -40,16 +39,12 @@ coverage
 
 *storybook.log
 storybook-static
+storybook-static-vite
 .vite-cache
 /packages/wui-react/dist/
 /packages/wui-react/README.md
 /packages/wui-react/LICENSE
 /dist-zip
-/playwright-report
-/playwright-enterprise-report
-/playwright-enterprise-api-report
-/playwright-mfe-report
-/test-results
 
 # 一次性报告输出（避免误提交）
 /npm-audit*.json

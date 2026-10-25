@@ -14,9 +14,11 @@ import {
 } from '@xyflow/react'
 import { BookOpen, Boxes, ExternalLink, GitBranch, Layers3, Route, ShieldCheck } from 'lucide-react'
 import FixTabPanel from '@shared/ui/FixTabPanel'
+import { getEnv } from '@src/platform/config/env'
 import {
   architectureNodes,
   architectureViews,
+  viteArchitectureNodes,
   type ArchitectureCategory,
   type ArchitectureNodeId,
 } from './architectureData'
@@ -127,6 +129,17 @@ const projectRows = [
   },
 ]
 
+const viteProjectRows = projectRows.map((row) => ({
+  ...row,
+  output: row.name === 'default' ? 'dist-vite/' : `dist-vite-${row.name}/`,
+  command:
+    row.name === 'default'
+      ? 'pnpm dev:vite'
+      : row.name === 'enterprise'
+        ? 'pnpm run project:dev enterprise --bundler=vite'
+        : `pnpm run mfe:dev ${row.name} --bundler=vite`,
+}))
+
 const accessRows = [
   {
     step: '01 身份建立',
@@ -183,6 +196,34 @@ const deliveryRows = [
   },
 ]
 
+const viteDeliveryRows = [
+  {
+    target: '后台与独立项目',
+    pipeline: 'build/vite/app.config.ts + 项目注册表',
+    artifact: 'dist-vite/ · dist-vite-enterprise/ · dist-vite-projectA/B/',
+    delivery: 'Pages / Vercel / Nginx 静态托管',
+  },
+  {
+    target: '联邦应用',
+    pipeline: '@module-federation/vite + manifest 契约校验',
+    artifact: 'dist-vite-shell/ + Remote entry / manifest',
+    delivery: 'Host 与 Remote 按路径组合部署',
+  },
+  {
+    target: 'UI 组件库',
+    pipeline: 'build/vite/lib.config.ts + tsconfig.lib.json',
+    artifact: 'ESM / CJS / CSS / 声明文件',
+    delivery: '独立 npm 发布流程',
+  },
+  {
+    target: '组件文档',
+    pipeline: '.storybook/vite/main.ts + Vite builder',
+    artifact: 'storybook-static-vite/',
+    delivery: '静态预览站点',
+  },
+  deliveryRows[4],
+]
+
 const startPaths = [
   {
     title: '理解项目装配',
@@ -199,20 +240,42 @@ const startPaths = [
   {
     title: '运行真实企业 API',
     command: 'pnpm run api:bootstrap && pnpm run start:enterprise:full',
-    files: 'docs/ENTERPRISE.md → api/enterprise/router.cjs → api/enterprise/service.mts',
+    files: 'docs/operations/ENTERPRISE.md → api/enterprise/router.cjs → api/enterprise/service.mts',
     description: '先按企业文档配置开发环境变量，再初始化租户并启动前后端。',
   },
   {
     title: '查看多项目联邦',
     command: 'pnpm start:mf:shell',
-    files: 'src/projects/shell/routers/index.tsx → webpack/mfe.config.js → src/platform/mfe/bridge.ts',
+    files: 'src/projects/shell/routers/index.tsx → build/webpack/mfe.config.js → src/platform/mfe/bridge.ts',
     description: '再启动 ProjectA / ProjectB 的 Remote 入口，观察 Host 加载链路。',
   },
   {
     title: '维护组件体系',
     command: 'pnpm storybook',
-    files: 'packages/wui-react/src → .storybook/main.ts → webpack/webpack.lib.js',
+    files: 'packages/wui-react/src → .storybook/main.ts → build/webpack/webpack.lib.js',
     description: 'Storybook 直接消费源码；发布包另走库构建与消费校验。',
+  },
+]
+
+const viteStartPaths = [
+  {
+    ...startPaths[0],
+    command: 'pnpm dev:vite',
+  },
+  {
+    ...startPaths[1],
+    command: 'pnpm run project:dev enterprise --bundler=vite',
+  },
+  startPaths[2],
+  {
+    ...startPaths[3],
+    command: 'pnpm run mfe:dev shell --bundler=vite',
+    files: 'src/projects/shell/routers/index.tsx → build/module-federation.ts → src/platform/mfe/bridge.ts',
+  },
+  {
+    ...startPaths[4],
+    command: 'pnpm storybook:vite',
+    files: 'packages/wui-react/src → .storybook/vite/main.ts → build/vite/lib.config.ts',
   },
 ]
 
@@ -259,10 +322,12 @@ const sourceHref = (path: string) => {
 
 const SvgViewer = () => {
   const { token } = theme.useToken()
+  const [buildTool, setBuildTool] = useState<'webpack' | 'vite'>(getEnv('BUILD_TOOL') === 'vite' ? 'vite' : 'webpack')
   const [viewId, setViewId] = useState(architectureViews[0].id)
   const [selectedId, setSelectedId] = useState<ArchitectureNodeId>(architectureViews[0].nodes[0].id)
   const view = architectureViews.find((item) => item.id === viewId) ?? architectureViews[0]
-  const selected = architectureNodes[selectedId]
+  const activeNodes = buildTool === 'vite' ? viteArchitectureNodes : architectureNodes
+  const selected = activeNodes[selectedId]
 
   const colors = {
     '--arch-bg': token.colorBgContainer,
@@ -290,13 +355,13 @@ const SvgViewer = () => {
         type: 'architecture',
         position: { x, y },
         data: {
-          title: architectureNodes[id].title,
-          subtitle: architectureNodes[id].subtitle,
-          category: architectureNodes[id].category,
+          title: activeNodes[id].title,
+          subtitle: activeNodes[id].subtitle,
+          category: activeNodes[id].category,
         },
         selected: id === selectedId,
       })),
-    [view, selectedId]
+    [activeNodes, view, selectedId]
   )
 
   const edges = useMemo<Edge[]>(
@@ -337,10 +402,23 @@ const SvgViewer = () => {
                   五个项目入口共享应用底座和平台能力；企业 API、联邦应用与组件库各有独立的运行和交付边界。
                   这里按实际源码呈现依赖关系、数据路径与扩展位置。
                 </p>
+                <div className={styles.buildSwitch} role="group" aria-label="架构构建工具">
+                  {(['webpack', 'vite'] as const).map((tool) => (
+                    <button
+                      key={tool}
+                      type="button"
+                      aria-pressed={buildTool === tool}
+                      className={buildTool === tool ? styles.activeBuild : ''}
+                      onClick={() => setBuildTool(tool)}
+                    >
+                      {tool === 'webpack' ? 'Webpack 5' : 'Vite 8'}
+                    </button>
+                  ))}
+                </div>
               </div>
               <a
                 className={styles.docLink}
-                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/ARCHITECTURE.md"
+                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/architecture/ARCHITECTURE.md"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -356,7 +434,7 @@ const SvgViewer = () => {
               </div>
               <div>
                 <dt>工程基线</dt>
-                <dd>TypeScript 6 · Webpack 5 · pnpm 11</dd>
+                <dd>TypeScript 6 · {buildTool === 'vite' ? 'Vite 8' : 'Webpack 5'} · pnpm 11</dd>
               </div>
               <div>
                 <dt>产品形态</dt>
@@ -429,7 +507,7 @@ const SvgViewer = () => {
                 </div>
                 <div className={styles.mobileNodes} aria-label={`${view.title}节点列表`}>
                   {view.nodes.map(({ id }, index) => {
-                    const node = architectureNodes[id]
+                    const node = activeNodes[id]
                     return (
                       <button
                         key={id}
@@ -541,7 +619,7 @@ const SvgViewer = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {projectRows.map((row) => (
+                  {(buildTool === 'vite' ? viteProjectRows : projectRows).map((row) => (
                     <tr key={row.name}>
                       <th scope="row">
                         <code>{row.name}</code>
@@ -605,8 +683,8 @@ const SvgViewer = () => {
               </div>
             </div>
             <p className={styles.sectionIntro}>
-              Webpack 5 负责应用及库的不同产物；Storybook 使用自己的 Webpack builder。CI
-              按目标检查契约、类型、构建、预算与浏览器流程。
+              {buildTool === 'vite' ? 'Vite 8' : 'Webpack 5'} 负责应用及库的不同产物；Storybook 使用自己的
+              {buildTool === 'vite' ? ' Vite' : ' Webpack'} builder。CI 按目标检查契约、类型、构建、预算与浏览器流程。
             </p>
             <div className={styles.tableScroll}>
               <table>
@@ -619,7 +697,7 @@ const SvgViewer = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {deliveryRows.map((row) => (
+                  {(buildTool === 'vite' ? viteDeliveryRows : deliveryRows).map((row) => (
                     <tr key={row.target}>
                       <th scope="row">{row.target}</th>
                       <td>
@@ -658,7 +736,7 @@ const SvgViewer = () => {
               </div>
             </div>
             <div className={styles.startGrid}>
-              {startPaths.map((path, index) => (
+              {(buildTool === 'vite' ? viteStartPaths : startPaths).map((path, index) => (
                 <div key={path.title} className={styles.startItem}>
                   <span className={styles.startNumber}>{String(index + 1).padStart(2, '0')}</span>
                   <div>
@@ -704,28 +782,28 @@ const SvgViewer = () => {
             </div>
             <div className={styles.referenceLinks}>
               <a
-                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/MODULES.md"
+                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/architecture/MODULES.md"
                 target="_blank"
                 rel="noreferrer"
               >
                 模块契约 <ExternalLink size={13} aria-hidden="true" />
               </a>
               <a
-                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/ENTERPRISE.md"
+                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/operations/ENTERPRISE.md"
                 target="_blank"
                 rel="noreferrer"
               >
                 企业数据接入 <ExternalLink size={13} aria-hidden="true" />
               </a>
               <a
-                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/DEPLOY.md"
+                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/deployment/DEPLOY.md"
                 target="_blank"
                 rel="noreferrer"
               >
                 部署边界 <ExternalLink size={13} aria-hidden="true" />
               </a>
               <a
-                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/PROJECT_REFERENCE.md"
+                href="https://github.com/wkylin/pro-react-admin/blob/main/docs/reference/PROJECT_REFERENCE.md"
                 target="_blank"
                 rel="noreferrer"
               >

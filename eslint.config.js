@@ -22,6 +22,7 @@ export default [
       'packages/wui-react/dist/',
       'build/',
       'coverage/',
+      'tests/reports/',
       'CHANGELOG.md',
       'package-lock.json',
     ],
@@ -89,6 +90,36 @@ export default [
       // avoid hard failure on empty blocks
       'no-empty': 'warn',
       'no-unused-disable-directive': 'off',
+    },
+  },
+
+  {
+    files: ['src/**/*.{js,jsx,ts,tsx}'],
+    ignores: ['src/platform/config/env.ts', 'src/**/*.test.{js,jsx,ts,tsx}', 'src/**/*.spec.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "MemberExpression[object.name='process'][property.name='env']",
+          message: 'Read browser configuration through @platform/config/env.',
+        },
+        {
+          selector: "MemberExpression[object.type='MetaProperty'][property.name='env']",
+          message: 'Read browser configuration through @platform/config/env.',
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['**/*.stories.{js,jsx,mjs,ts,tsx}'],
+    rules: {
+      // Shared stories use renderer-neutral types so both Storybook builders can compile them.
+      'storybook/no-renderer-packages': 'off',
+      'no-restricted-imports': [
+        'error',
+        { paths: [{ name: '@storybook/react', allowTypeImports: true, message: 'Use this package for types only.' }] },
+      ],
     },
   },
 

@@ -135,7 +135,8 @@ const dataSteps = [
   },
 ]
 
-const Marquee = MarqueeImport
+// Vite can retain react-fast-marquee's CommonJS default wrapper after dependency optimization.
+const Marquee = (MarqueeImport as unknown as { default?: typeof MarqueeImport }).default ?? MarqueeImport
 
 type AiImage = {
   imagePrompt: string
@@ -920,7 +921,7 @@ const Home = () => {
           height={200}
           minScratchPercentage={70}
           onComplete={() => undefined}
-          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-[var(--wui-border-strong)] bg-[var(--wui-bg-subtle)]"
+          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-(--wui-border-strong) bg-(--wui-bg-subtle)"
         >
           <p className="text-9xl">✨</p>
         </ScratchToReveal>

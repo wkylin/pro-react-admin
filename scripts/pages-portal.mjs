@@ -348,7 +348,7 @@ export function renderPortalHtml(version, links, repository = 'wkylin/pro-react-
         <span>Pro React Admin · 用一套工程规范连接更多业务。</span>
         <nav class="footer__links" aria-label="页脚导航">
           <a href="${escapeHtml(repositoryUrl)}" target="_blank" rel="noreferrer">查看源码</a>
-          <a href="${escapeHtml(`${repositoryUrl}/blob/main/docs/MFE_DEPLOYMENT.md`)}" target="_blank" rel="noreferrer">微前端架构说明</a>
+          <a href="${escapeHtml(`${repositoryUrl}/blob/main/docs/deployment/MFE_DEPLOYMENT.md`)}" target="_blank" rel="noreferrer">微前端架构说明</a>
         </nav>
       </footer>
     </div>

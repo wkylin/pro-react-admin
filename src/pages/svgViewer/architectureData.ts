@@ -65,7 +65,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     category: 'workspace',
     description:
       '根应用、企业 API 与可发布 UI 包位于同一工作区。应用使用 React 19、Router 7、Ant Design 6、Zustand 5 和 TypeScript 6。',
-    files: ['pnpm-workspace.yaml', 'package.json', 'docs/PROJECT_REFERENCE.md'],
+    files: ['pnpm-workspace.yaml', 'package.json', 'docs/reference/PROJECT_REFERENCE.md'],
     note: '根应用尚未全仓开启 TypeScript strict；核心边界、API 与 UI 包有独立的严格类型检查。',
   },
   registry: {
@@ -82,7 +82,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: '应用 · 联邦 · 组件库',
     category: 'delivery',
     description: '应用共用 common/dev/prod 规则；项目角色决定入口与输出。组件库和 Storybook 各走独立构建配置。',
-    files: ['webpack/webpack.common.js', 'webpack/webpack.dev.js', 'webpack/webpack.prod.js'],
+    files: ['build/webpack/webpack.common.js', 'build/webpack/webpack.dev.js', 'build/webpack/webpack.prod.js'],
     note: '开发使用 HMR/React Refresh；生产使用内容哈希、分包、压缩、版本文件和 Serwist Service Worker。',
   },
   entry: {
@@ -286,7 +286,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: '独立运行 · Remote 暴露',
     category: 'application',
     description: '两个项目既可单独构建，也可暴露 MFE App 供 Shell 加载；构建生成 remoteEntry.js 与 manifest。',
-    files: ['src/projects/projectA/mfe/App.tsx', 'src/projects/projectB/mfe/App.tsx', 'webpack/mfe.config.js'],
+    files: ['src/projects/projectA/mfe/App.tsx', 'src/projects/projectB/mfe/App.tsx', 'build/webpack/mfe.config.js'],
     note: '这是可运行的联邦示例；不应理解为企业业务已经拆成远程微服务。',
   },
   mfeBridge: {
@@ -295,7 +295,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     category: 'platform',
     description:
       'Loader 验证 Remote manifest 和共享依赖版本后注入入口；宿主与 Remote 的消息桥检查来源，示例共享消息经类型化解析。',
-    files: ['config/mfe-contract.mjs', 'webpack/mfe.config.js', 'src/platform/mfe/bridge.ts'],
+    files: ['config/mfe-contract.mjs', 'build/webpack/mfe.config.js', 'src/platform/mfe/bridge.ts'],
     note: '联邦不提供权限或样式沙箱，不可信子应用需要独立 origin 或 iframe。',
   },
   library: {
@@ -304,7 +304,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     category: 'platform',
     description:
       '独立组件包公开子路径与 CSS，Webpack 输出 ESM/CJS，TypeScript 生成声明；应用开发时通过 @wui 源码别名消费。',
-    files: ['packages/wui-react/package.json', 'webpack/webpack.lib.js', 'config/library-contract.mjs'],
+    files: ['packages/wui-react/package.json', 'build/webpack/webpack.lib.js', 'config/library-contract.mjs'],
     note: '发布前另有包结构、消费者 smoke 与体积校验，不依赖应用 dist。',
   },
   storybook: {
@@ -322,7 +322,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     category: 'delivery',
     description:
       'GitHub Actions 分别覆盖默认应用、企业演示、真实企业 API、微前端、Storybook 和组件库；校验路由/导入/项目契约、类型、构建、预算与浏览器流程。',
-    files: ['.github/workflows/webpack-ci.yml', 'config/bundle-budget.json', 'scripts/check-import-boundaries.mjs'],
+    files: ['.github/workflows/build-ci.yml', 'config/bundle-budget.json', 'scripts/check-import-boundaries.mjs'],
     note: '根应用仍在逐步收紧类型边界；CI 与本地 pnpm run ci:quality 的命令集合并不完全相同。',
   },
   artifacts: {
@@ -331,7 +331,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     category: 'delivery',
     description:
       '项目注册表决定独立 dist 目录；联邦构建还输出 Remote manifest，组件库产出 ESM/CJS/types，Storybook 产出静态站点。',
-    files: ['src/projects/registry.json', 'webpack/paths.js', 'scripts/build-mfe.mjs'],
+    files: ['src/projects/registry.json', 'build/webpack/paths.js', 'scripts/build-mfe.mjs'],
     note: '版本文件、内容哈希资源与 manifest 有不同缓存策略，避免发布后入口引用旧 chunk。',
   },
   staticHosting: {
@@ -348,7 +348,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: 'Caddy · Express · 持久卷',
     category: 'delivery',
     description: '真实企业 API 需单独部署，Compose 示例使用 Caddy 提供 HTTPS、Express 服务和 SQLite 持久卷。',
-    files: ['compose.enterprise.yaml', 'deploy/enterprise/Dockerfile', 'docs/DEPLOY.md'],
+    files: ['compose.enterprise.yaml', 'deploy/enterprise/Dockerfile', 'docs/deployment/DEPLOY.md'],
     note: '这是单实例服务边界；Vercel 静态目标不承载该 SQLite API。',
   },
   observability: {
@@ -359,6 +359,47 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
       '默认入口接入开发态埋点与 PWA；生产 Sentry 需 DSN 才动态加载，Vercel Insights 仅在检测到托管脚本后启用。',
     files: ['src/index.tsx', 'src/app/bootstrap/renderApp.tsx', 'src/platform/tracking', 'src/platform/pwa'],
     note: 'Tracking 服务与企业 API 是两个不同边界；生产埋点存储另需配置 MongoDB。',
+  },
+}
+
+export const viteArchitectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
+  ...architectureNodes,
+  build: {
+    title: 'Vite 8 构建',
+    subtitle: '应用 · 联邦 · 组件库',
+    category: 'delivery',
+    description: '应用使用 build/vite/app.config.ts 和项目注册表选择入口；组件库、Storybook 分别使用独立的 Vite 配置。',
+    files: ['build/vite/app.config.ts', 'build/vite/index.html', 'build/vite/lib.config.ts'],
+    note: '开发使用 Vite HMR 与 React Fast Refresh；生产输出哈希资源、压缩文件、版本文件和 Serwist Service Worker。',
+  },
+  transport: {
+    ...architectureNodes.transport,
+    note: '浏览器 API 地址由 APP_BASE_URL 或同源路径决定，开发环境可通过 Vite 代理接到本地服务。',
+  },
+  remotes: {
+    ...architectureNodes.remotes,
+    files: ['src/projects/projectA/mfe/App.tsx', 'src/projects/projectB/mfe/App.tsx', 'build/module-federation.ts'],
+  },
+  mfeBridge: {
+    ...architectureNodes.mfeBridge,
+    files: ['config/mfe-contract.mjs', 'build/module-federation.ts', 'src/platform/mfe/bridge.ts'],
+  },
+  library: {
+    ...architectureNodes.library,
+    description:
+      '独立组件包公开子路径与 CSS，Vite 输出 ESM/CJS，TypeScript 生成声明；应用开发时通过 @wui 源码别名消费。',
+    files: ['packages/wui-react/package.json', 'build/vite/lib.config.ts', 'config/library-contract.mjs'],
+  },
+  storybook: {
+    ...architectureNodes.storybook,
+    description:
+      'Storybook 10 使用独立 Vite builder，直接编译 src 与 wui-react 邻近 stories/MDX，预览层装配主题与应用上下文。',
+    files: ['.storybook/vite/main.ts', '.storybook/vite.config.ts', 'scripts/validate-stories.mjs'],
+  },
+  artifacts: {
+    ...architectureNodes.artifacts,
+    subtitle: 'dist-vite* · storybook-static-vite',
+    files: ['src/projects/registry.json', 'build/vite/app.config.ts', 'scripts/build-mfe.mjs'],
   },
 }
 

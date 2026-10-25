@@ -46,6 +46,46 @@
   line-height: 1.85;
 }
 
+.buildSwitch {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 18px;
+  padding: 3px;
+  border: 1px solid var(--arch-border);
+  border-radius: 5px;
+  background: var(--arch-soft);
+}
+
+.buildSwitch button {
+  min-width: 104px;
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--arch-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.buildSwitch button:hover,
+.buildSwitch button:focus-visible {
+  color: var(--arch-ink);
+}
+
+.buildSwitch button:focus-visible {
+  outline: 2px solid var(--arch-primary);
+  outline-offset: 2px;
+}
+
+.buildSwitch button.activeBuild {
+  background: var(--arch-bg);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
+  color: var(--arch-ink);
+}
+
 .docLink {
   display: inline-flex;
   flex: 0 0 auto;

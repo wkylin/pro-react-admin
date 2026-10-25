@@ -44,6 +44,31 @@ test('MFE plans preserve explicit URL overrides and default remote public paths'
   assert.throws(() => resolveProject('unknown', registry), /Unknown project/)
 })
 
+test('build plans select either bundler without changing project or MFE contracts', () => {
+  const webpack = createBuildPlan('mfe-build', 'projectA', {}, registry)
+  const vite = createBuildPlan('mfe-build', 'projectA', { BUILD_TOOL: 'vite' }, registry)
+  assert.equal(webpack.bundler, 'webpack')
+  assert.equal(webpack.output, 'dist-projectA')
+  assert.match(webpack.args.join(' '), /webpack\.prod\.js/)
+  assert.equal(vite.bundler, 'vite')
+  assert.equal(vite.output, 'dist-vite-projectA')
+  assert.deepEqual(vite.args, ['build', '--config', './build/vite/app.config.ts'])
+  assert.deepEqual(createBuildPlan('build', 'default', { BUILD_TOOL: 'vite', BUILD_GOAL: 'dev' }, registry).args, [
+    'build',
+    '--config',
+    './build/vite/app.config.ts',
+    '--mode',
+    'dev',
+  ])
+  assert.equal(vite.env.PUBLIC_URL, webpack.env.PUBLIC_URL)
+  assert.equal(vite.env.MFE_ROLE, webpack.env.MFE_ROLE)
+  assert.equal(
+    createBuildPlan('build', 'default', { BUILD_TOOL: 'vite', VITE_OUT_DIR: 'dist-pages' }, registry).output,
+    'dist-pages'
+  )
+  assert.throws(() => createBuildPlan('build', 'default', { BUILD_TOOL: 'rollup' }, registry), /Unknown build tool/)
+})
+
 test('project scaffolding creates a registered standalone and remote without hand edits', async () => {
   const { createProjectDraft } = await import('./create-project.mjs')
   const standalone = createProjectDraft('customer', {}, registry)
@@ -57,7 +82,7 @@ test('project scaffolding creates a registered standalone and remote without han
 })
 
 test('shared application aliases stay fixed when the selected project router changes', async () => {
-  const { createPathAliases } = await import('../webpack/aliases.js')
+  const { createPathAliases } = await import('../build/aliases.js')
   const { workspaceRoot } = await import('../config/project-registry.mjs')
   const aliases = createPathAliases(workspaceRoot, { '@routers': resolveProject('projectB', registry).routers })
   assert.ok(aliases['@app'].endsWith('/src/app'))

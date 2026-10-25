@@ -8,7 +8,7 @@
     "start": "node server.js",
     "dev": "node --watch --env-file-if-exists=../.env.development.local server.js",
     "bootstrap": "node --env-file-if-exists=../.env.development.local enterprise/bootstrap.mjs",
-    "test": "node --test enterprise/*.test.mjs"
+    "test": "node --test *.test.mjs enterprise/*.test.mjs"
   },
   "author": "",
   "license": "ISC",

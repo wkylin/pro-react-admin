@@ -1,6 +1,15 @@
 import { act, render, screen } from '@testing-library/react'
 import type { UserPermission } from '../model/permission'
 
+const previousMockMode = process.env.REACT_APP_USE_MOCK
+beforeAll(() => {
+  process.env.REACT_APP_USE_MOCK = 'true'
+})
+afterAll(() => {
+  if (previousMockMode === undefined) delete process.env.REACT_APP_USE_MOCK
+  else process.env.REACT_APP_USE_MOCK = previousMockMode
+})
+
 const getUserPermissions = jest.fn()
 jest.doMock('../api/permission', () => ({ getUserPermissions }))
 const { permissionService } = require('./permissionService') as typeof import('./permissionService')
@@ -17,7 +26,7 @@ function Consumer({ name }: { name: string }) {
 }
 beforeEach(() => {
   localStorage.clear()
-  localStorage.setItem('token', 'account-a')
+  localStorage.setItem('token', JSON.stringify({ token: 'account-a' }))
   permissionService.clearCache()
   getUserPermissions.mockReset()
 })
@@ -54,7 +63,7 @@ test('cross-tab credential changes refresh all subscribers and listeners are rel
   await screen.findByText('menu:allowed')
   getUserPermissions.mockResolvedValue({ ...admin, permissions: [] })
   await act(async () => {
-    localStorage.setItem('token', 'account-b')
+    localStorage.setItem('token', JSON.stringify({ token: 'account-b' }))
     window.dispatchEvent(new StorageEvent('storage', { key: 'token', newValue: 'account-b' }))
   })
   expect(screen.getByText('menu:denied')).toBeInTheDocument()

@@ -3,6 +3,7 @@ import { useRouteError } from 'react-router-dom'
 import { Button, Result, Typography } from 'antd'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
+import { getEnv } from '@platform/config/env'
 
 const { Paragraph, Text } = Typography
 
@@ -16,7 +17,7 @@ const RouterErrorElement: React.FC = () => {
   const error = useRouteError() as RouteError
   const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
-  const isDevelopment = process.env.NODE_ENV !== 'production'
+  const isDevelopment = getEnv('NODE_ENV', 'production') !== 'production'
 
   const handleBackHome = () => {
     redirectTo('/')

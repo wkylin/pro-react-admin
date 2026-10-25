@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import { getEnv } from '@platform/config/env'
 
 const MyIFrame = () => {
-  const parentOrigin = process.env.IFRAME_ORIGIN
+  const parentOrigin = getEnv('IFRAME_ORIGIN')
   const [message, setMessage] = useState() // string | undefined
 
   const onReceivedMessage = (event) => {

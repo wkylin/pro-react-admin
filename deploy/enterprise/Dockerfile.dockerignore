@@ -1,0 +1,11 @@
+*
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!api/
+!api/**
+!config/
+!config/route-policy.json
+!packages/
+!packages/wui-react/
+!packages/wui-react/package.json

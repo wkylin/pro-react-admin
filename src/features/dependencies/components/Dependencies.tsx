@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { Table, Tabs, Typography, Input, Space } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import dependenciesData from '../data/dependencies.json'
+import packageJson from '../../../../package.json'
 
 const { Title } = Typography
 const { Search } = Input
@@ -11,8 +11,11 @@ interface Dependency {
   version: string
 }
 
-const runtimeDependencies: Dependency[] = dependenciesData.runtime
-const devDependencies: Dependency[] = dependenciesData.dev
+const toDependencies = (dependencies: Record<string, string>): Dependency[] =>
+  Object.entries(dependencies).map(([name, version]) => ({ name, version }))
+
+const runtimeDependencies = toDependencies(packageJson.dependencies)
+const devDependencies = toDependencies(packageJson.devDependencies)
 
 const columns: ColumnsType<Dependency> = [
   {
@@ -25,7 +28,7 @@ const columns: ColumnsType<Dependency> = [
       { text: 'Ant Design 相关', value: 'ant' },
       { text: 'TypeScript 相关', value: 'type' },
       { text: '测试相关', value: 'test' },
-      { text: '构建相关', value: 'webpack|babel' },
+      { text: '构建相关', value: 'vite|webpack|babel' },
     ],
     onFilter: (value, record) => {
       const regex = new RegExp(value as string, 'i')

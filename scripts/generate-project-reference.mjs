@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { format } from 'prettier'
-import { clientEnvKeys } from '../webpack/client-env.js'
+import { clientEnvKeys } from '../build/client-env.js'
 import { libraryComponents } from '../config/library-contract.mjs'
 import { collectRouteDeclarations } from './route-contract.mjs'
 
@@ -27,7 +27,7 @@ Node.js：\`${pkg.engines.node}\`；包管理器：\`${pkg.packageManager}\`；�
 
 | 技术 | 声明版本 |
 | --- | --- |
-${rows(['react', 'react-router-dom', 'antd', 'zustand', 'typescript', 'webpack', '@babel/core', 'storybook', '@playwright/test', 'jest'].map((name) => [name, pkg.dependencies[name] || pkg.devDependencies[name]]))}
+${rows(['react', 'react-router-dom', 'antd', 'zustand', 'typescript', 'webpack', 'vite', '@babel/core', 'storybook', '@playwright/test', 'jest'].map((name) => [name, pkg.dependencies[name] || pkg.devDependencies[name]]))}
 
 ## 项目与构建入口
 
@@ -47,7 +47,7 @@ ${rows(registry.remotes.map((remote) => [remote.name, remote.routePath, remote.d
 
 ${clientEnvKeys.map((key) => `- \`${key}\``).join('\n')}
 
-服务端变量见 [API 与埋点](API.md)，构建变量见 [构建](BUILD.md)。
+服务端变量见 [API 与埋点](../operations/API.md)，构建变量见 [构建](../development/BUILD.md)。
 
 ## 组件库公开组件
 
@@ -77,7 +77,7 @@ ${rows(Object.entries(budget.projects || {}).map(([name, limits]) => [name, limi
 | --- | --- |
 ${rows(Object.entries(pkg.scripts).map(([name, command]) => [`pnpm run ${name}`, command]))}
 `
-const output = path.join(root, 'docs/PROJECT_REFERENCE.md')
+const output = path.join(root, 'docs/reference/PROJECT_REFERENCE.md')
 const generated = await format(markdown, { filepath: output })
 if (process.argv.includes('--check')) {
   if (!fs.existsSync(output) || fs.readFileSync(output, 'utf8') !== generated) {

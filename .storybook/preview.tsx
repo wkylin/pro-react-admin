@@ -1,6 +1,6 @@
 // .storybook/preview.tsx
 import { Suspense } from 'react'
-import type { Preview } from '@storybook/react-webpack5'
+import type { Preview } from '@storybook/react'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 import { App, ConfigProvider } from 'antd'

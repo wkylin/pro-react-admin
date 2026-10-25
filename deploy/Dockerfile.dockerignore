@@ -1,0 +1,7 @@
+*
+!deploy/
+!deploy/nginx.conf
+!dist/
+!dist/**
+!dist-*/
+!dist-*/**

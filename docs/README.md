@@ -1,48 +1,21 @@
 # 项目文档
 
-本文档集按当前源码重建。重复的权限迁移、加密入门和构建优化文章已合并到下面的维护入口；历史版本变化保留在根目录 CHANGELOG.md。
+这套文档按当前 `main` 分支的代码组织。新增业务通常从[快速上手](development/GETTING_STARTED.md)、[源码目录](development/SRC_DIRECTORY_GUIDE.md)和[业务模块](architecture/MODULES.md)开始；构建器选择、测试与报告在 `development/`，部署路径在 `deployment/`。
 
-按任务阅读：初次运行从[快速上手](GETTING_STARTED.md)进入；新增业务从[技术架构](ARCHITECTURE.md)到[业务模块](MODULES.md)、[企业资源](ENTERPRISE.md)；排查跨层问题看[运行时链路](ARCHITECTURE_RUNTIME.md)和[可观测性](OBSERVABILITY.md)；部署真实数据前执行[企业恢复 runbook](runbooks/ENTERPRISE_RECOVERY.md)的门禁。
+| 目录                                                             | 内容                                                             |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [development](development/GETTING_STARTED.md)                    | 本地开发、Webpack/Vite 构建、Storybook、项目注册、测试与质量门禁 |
+| [architecture](architecture/ARCHITECTURE.md)                     | 系统架构、模块、请求层、授权与运行时边界                         |
+| [components](components/UI_COMPONENTS.md)                        | 应用组件、组件库目录和具体组件实现                               |
+| [operations](operations/API.md)                                  | 企业 API、持久化业务服务、Sentry 与运行时观测                    |
+| [deployment](deployment/DEPLOY.md)                               | 静态站点、企业服务、微前端、Pages、Vercel 与 npm 发布            |
+| [reference](reference/PROJECT_REFERENCE.md)                      | 从项目注册表和 `package.json` 生成的版本、变量、路由与命令清单   |
+| [decisions](decisions/ADR-001-oidc-identity-and-tenant-roles.md) | 尚待确认的架构决策                                               |
+| [runbooks](runbooks/ENTERPRISE_RECOVERY.md)                      | 企业数据库升级与恢复门禁                                         |
+| [releases](releases/v5.1.0.md)                                   | 已发布版本的历史记录                                             |
 
-| 主题                                                      | 文档                                                            |
-| --------------------------------------------------------- | --------------------------------------------------------------- |
-| 默认/企业/多项目/微前端预览、lib 构建、真实登录与权限设置 | [快速上手](GETTING_STARTED.md)                                  |
-| 开源产品对标与产品差距                                    | [开源对标](BENCHMARKS.md)                                       |
-| 企业入口、用户/角色/审计与 REST 接入                      | [企业资源](ENTERPRISE.md)                                       |
-| 模块路由、Provider、资源目录与插槽                        | [业务模块](MODULES.md)                                          |
-| 架构与剩余演进工作                                        | [技术架构](ARCHITECTURE.md)                                     |
-| 身份切换、资源事件、Remote 兼容和信任边界                 | [运行时链路](ARCHITECTURE_RUNTIME.md)                           |
-| 目录职责与依赖规则                                        | [源码目录](SRC_DIRECTORY_GUIDE.md)                              |
-| 权限、路由、菜单契约                                      | [身份与授权](USER_ROLE_PERMISSION.md)                           |
-| Axios / Fetch、错误、取消、并发                           | [请求层](REQUESTS.md)                                           |
-| 可选加密协议与兼容限制                                    | [请求加密](REQUEST_ENCRYPTION.md)                               |
-| Express、租户/RBAC、审计、OAuth、埋点                     | [API](API.md)                                                   |
-| 埋点 SDK                                                  | [Tracking](TRACKING_SDK_ARCHITECTURE.md)                        |
-| Webpack、环境、体积预算                                   | [构建](BUILD.md)                                                |
-| 静态部署、缓存、PWA                                       | [部署](DEPLOY.md)                                               |
-| 手动 Actions、本地 Pages、Vercel、Release、核验与回退     | [手动部署](MANUAL_DEPLOYMENT.md)                                |
-| Vercel 演示登录、SQLite 持久 API、Docker 与 HTTPS         | [Vercel / SQLite](VERCEL_SQLITE.md)                             |
-| GitHub Pages 各应用、Storybook 与 v5 标签/Release         | [GitHub 部署](GITHUB_DEPLOYMENT.md)                             |
-| Pages 构建链、聚合产物与自有 Nginx 根/子路径部署            | [Pages 到 Nginx](GITHUB_PAGES_TO_NGINX.md)                      |
-| 构建时项目选择                                            | [多项目](MULTI_PROJECT.md)                                      |
-| Shell、Remote、manifest 与降级                            | [微前端](MFE_DEPLOYMENT.md)                                     |
-| ESLint、类型、单测、浏览器回归                            | [质量门禁](QUALITY.md)                                          |
-| Story 与 MDX                                              | [Storybook](STORYBOOK.md)                                       |
-| 组件库打包与发布                                          | [组件库](LIBRARY_PUBLISH_GUIDE.md)                              |
-| 表格数据接入                                              | [ResponsiveTable](RESPONSIVE_TABLE.md)                          |
-| 编辑器、视频、电子书、SVG、图表                           | [应用组件](UI_COMPONENTS.md)                                    |
-| 媒体预处理                                                | [FFmpeg](FFMPEG_INSTALLATION.md)                                |
-| Sentry 与运行时日志                                       | [可观测性](OBSERVABILITY.md)                                    |
-| 版本、路由、环境变量、全部命令                            | [自动生成参考](PROJECT_REFERENCE.md)                            |
-| 应用组件与 npm 组件边界                                   | [自动生成目录](COMPONENT_CATALOG.md)                            |
-| 本次本地验证结果与范围                                    | [验证记录](VALIDATION.md)                                       |
-| OIDC 身份与角色来源的待签决策                             | [OIDC ADR](decisions/ADR-001-oidc-identity-and-tenant-roles.md) |
-| 真实旧库升级、备份与恢复的上线门禁                        | [企业恢复 runbook](runbooks/ENTERPRISE_RECOVERY.md)             |
+常用入口：[构建与统计](development/BUILD.md)、[测试与报告](development/QUALITY.md)、[根目录职责](development/ROOT_DIRECTORY.md)、[手动部署](deployment/MANUAL_DEPLOYMENT.md)、[可观测性](operations/OBSERVABILITY.md)。
 
 ## 维护约定
 
-`ARCHITECTURE.md` 的能力表与对应专题文档记录当前仓库事实；`VALIDATION.md` 是按时间追加的验证记录，较早段落可能描述当时尚未实现的能力。`BENCHMARKS.md` 的 Star 和外部页面是带日期的证据快照，不能替代当前代码。待签 ADR 与未填写的恢复目标不得写成已交付或已获批。
-
-修改模块、权限、事件、数据库或部署契约时，同次更新架构能力表、对应专题与失效路径；在合并前对照实现复核契约版本、当前行为和未完成边界。历史验证保留形成时的语义，后续变化用新记录或现行文档指明，不悄悄改写旧结论。
-
-修改配置或公开组件后运行 `pnpm run generate:docs`，再运行 `pnpm run check:docs` 和 `pnpm run check:component-catalog`。`check:docs` 检查本地 Markdown 链接、标题锚点及根 `pnpm run` 命令；它不访问外部网站，也不能发现行为描述与代码不符。外部证据、生产门禁和运行时语义需要人工复核。
+修改配置或公开组件后运行 `pnpm run generate:docs`，再运行 `pnpm run check:docs` 和 `pnpm run check:component-catalog`。文档校验检查本地链接、标题锚点与命令名；行为是否与代码一致仍须结合构建和测试结果核对。历史发布记录保留当时语义，不作为当前配置依据。

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Result, Spin } from 'antd'
 import { useLocation } from 'react-router-dom'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
@@ -8,15 +8,17 @@ import { useTranslation } from 'react-i18next'
 
 export const AuthCallback: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
+  const started = useRef(false)
   const { redirectTo } = useSafeNavigate()
   const location = useLocation()
   const { t } = useTranslation()
 
   useEffect(() => {
+    if (started.current) return
+    started.current = true
     const handleCallback = async () => {
       try {
         const urlParams = new URLSearchParams(location.search)
-        const code = urlParams.get('code')
         const errorParam = urlParams.get('error')
 
         if (errorParam) {
@@ -24,20 +26,7 @@ export const AuthCallback: React.FC = () => {
           return
         }
 
-        if (!code) {
-          setError(t('identity.authorizationCodeMissing'))
-          return
-        }
-
-        await authService.handleCallback(code)
-
-        // 登录成功后立即同步权限
-        try {
-          await permissionService.syncPermissions()
-        } catch (error) {
-          console.error('同步权限失败:', error)
-          // 即使权限同步失败，也允许登录，使用默认权限
-        }
+        await authService.handleCallback()
 
         // 获取用户可访问的第一个路由
         try {

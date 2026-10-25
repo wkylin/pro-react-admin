@@ -1,4 +1,3 @@
-import { GITHUB_OAUTH_CONFIG } from '../authConfig'
 import request from '@platform/api/request'
 import logger from '@platform/telemetry/logger'
 import { permissionService } from './permissionService'
@@ -26,19 +25,6 @@ export interface AuthState {
   token: string | null
   isAuthenticated: boolean
   isLoading: boolean
-}
-
-interface GitHubTokenResponse {
-  access_token?: string
-  error?: string
-  error_description?: string
-}
-
-interface GitHubEmailResponse {
-  email: string
-  primary: boolean
-  verified: boolean
-  visibility: string | null
 }
 
 function isLikelyEmail(value: string): boolean {
@@ -69,10 +55,17 @@ function buildTestAccountUser(email: string): GitHubUser {
 }
 
 function parseGitHubUser(jsonLike: unknown): GitHubUser | null {
-  if (typeof jsonLike !== 'string') return null
   try {
-    const obj = JSON.parse(jsonLike) as Partial<GitHubUser>
-    if (obj && typeof obj === 'object' && typeof obj.id === 'number' && typeof obj.login === 'string') {
+    const obj = (typeof jsonLike === 'string' ? JSON.parse(jsonLike) : jsonLike) as Partial<GitHubUser>
+    if (
+      obj &&
+      typeof obj === 'object' &&
+      typeof obj.id === 'number' &&
+      Number.isSafeInteger(obj.id) &&
+      obj.id > 0 &&
+      typeof obj.login === 'string' &&
+      obj.login
+    ) {
       return {
         id: obj.id,
         login: obj.login,
@@ -89,7 +82,6 @@ function parseGitHubUser(jsonLike: unknown): GitHubUser | null {
   }
 }
 
-// ✅ 修复 3: parseToken - 修正存储格式解析逻辑
 function parseToken(jsonLike: unknown): string | null {
   if (typeof jsonLike !== 'string') return null
   try {
@@ -101,15 +93,6 @@ function parseToken(jsonLike: unknown): string | null {
   } catch {
     return null
   }
-}
-
-function extractResponseData<T>(response: unknown): T {
-  // 处理 axios 风格的响应：{ data: T }
-  if (response && typeof response === 'object' && 'data' in response) {
-    return (response as { data: T }).data
-  }
-  // 直接返回响应本身
-  return response as T
 }
 
 class AuthService {
@@ -141,6 +124,8 @@ class AuthService {
 
   private loadFromStorage() {
     try {
+      localStorage.removeItem('github_token')
+      localStorage.removeItem('github_user')
       const enterprise = readEnterpriseSession()
       if (enterprise) {
         this.authState = {
@@ -159,15 +144,10 @@ class AuthService {
         return
       }
       if (localStorage.getItem('enterprise_session') || !isDemoPermissionMode()) return
-      const tokenData = localStorage.getItem('github_token')
-      const userData = localStorage.getItem('github_user')
-
-      const token = parseToken(tokenData)
-      const user = parseGitHubUser(userData)
-
-      if (token && user) {
+      const user = parseGitHubUser(localStorage.getItem('github_demo_user'))
+      if (user) {
         this.authState = {
-          token,
+          token: `github-demo:${user.id}`,
           user,
           isAuthenticated: true,
           isLoading: false,
@@ -191,16 +171,6 @@ class AuthService {
     }
   }
 
-  private saveToStorage() {
-    if (this.authState.token && this.authState.user) {
-      localStorage.setItem('github_token', JSON.stringify({ token: this.authState.token }))
-      localStorage.setItem('github_user', JSON.stringify(this.authState.user))
-    } else {
-      localStorage.removeItem('github_token')
-      localStorage.removeItem('github_user')
-    }
-  }
-
   private notifyListeners() {
     this.listeners.forEach((listener) => listener(this.authState))
   }
@@ -221,45 +191,13 @@ class AuthService {
     await permissionService.syncPermissions()
   }
 
-  async setAuthenticated(isAuthenticated: boolean, user?: GitHubUser | null, token?: string | null): Promise<void> {
-    this.authState.isAuthenticated = isAuthenticated
-
-    if (user !== undefined) {
-      this.authState.user = user
-    }
-
-    if (token !== undefined) {
-      this.authState.token = token
-    }
-
-    if (!isAuthenticated) {
-      this.authState.user = null
-      this.authState.token = null
-    }
-
-    this.saveToStorage()
-    window.dispatchEvent(new Event(SESSION_CHANGED_EVENT))
-    this.notifyListeners()
-
-    // 如果已登录，强制同步权限，保证菜单与路由权限为最新
-    if (isAuthenticated) {
-      try {
-        await permissionService.syncPermissions()
-      } catch (e) {
-        logger.warn('同步权限失败:', e)
-      }
-    }
-
-    // 保持原有的短延迟行为以兼容订阅者
-    return new Promise((resolve) => setTimeout(resolve, 100))
-  }
-
   /**
    * 测试账号登录：将 demo 登录态也纳入 authService（避免 Header/菜单逻辑分裂）。
-   * - 不写入 github_token/github_user，仅依赖 localStorage.token
+   * - 仅依赖 localStorage.token，不复用 GitHub 演示身份
    */
   async setTestAccountAuthenticated(email: string): Promise<void> {
     if (!isDemoPermissionMode()) throw new Error('测试账号仅用于演示环境')
+    if (localStorage.getItem('github_demo_user')) await this.revokeDemoSession()
     this.authState = {
       user: buildTestAccountUser(email),
       token: email,
@@ -272,6 +210,7 @@ class AuthService {
       localStorage.removeItem('enterprise_session')
       localStorage.removeItem('github_token')
       localStorage.removeItem('github_user')
+      localStorage.removeItem('github_demo_user')
     } catch (e) {
       console.warn('移除本地存储键失败:', e)
     }
@@ -296,105 +235,84 @@ class AuthService {
     })
   }
 
-  async login(): Promise<void> {
-    const { clientId, redirectUri, scope, authUrl } = GITHUB_OAUTH_CONFIG
-    const authParams = new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirectUri,
-      scope,
-      response_type: 'code',
-    })
-    window.location.href = `${authUrl}?${authParams.toString()}`
+  login(): void {
+    if (!isDemoPermissionMode()) throw new Error('GitHub 登录仅用于演示环境')
+    window.location.assign('/api/demo/github/start')
   }
 
-  async handleCallback(code: string): Promise<void> {
+  private async fetchDemoUser(): Promise<GitHubUser> {
+    const response = await fetch('/api/demo/github/session', {
+      credentials: 'same-origin',
+      cache: 'no-store',
+      signal: AbortSignal.timeout(5000),
+    })
+    if (!response.ok) throw new Error('GitHub 演示会话已失效')
+    const payload: unknown = await response.json()
+    const user = payload && typeof payload === 'object' && 'user' in payload ? parseGitHubUser(payload.user) : null
+    if (!user) throw new Error('GitHub 演示用户资料无效')
+    return user
+  }
+
+  async restoreDemoSession(): Promise<void> {
+    if (
+      !isDemoPermissionMode() ||
+      !localStorage.getItem('github_demo_user') ||
+      localStorage.getItem('enterprise_session')
+    )
+      return
+    try {
+      const user = await this.fetchDemoUser()
+      localStorage.setItem('github_demo_user', JSON.stringify(user))
+      this.authState = { user, token: `github-demo:${user.id}`, isAuthenticated: true, isLoading: false }
+    } catch {
+      localStorage.removeItem('github_demo_user')
+      this.authState = { user: null, token: null, isAuthenticated: false, isLoading: false }
+      window.dispatchEvent(new Event(SESSION_CHANGED_EVENT))
+    }
+    this.notifyListeners()
+  }
+
+  async handleCallback(): Promise<void> {
+    if (!isDemoPermissionMode()) throw new Error('GitHub 登录仅用于演示环境')
     this.authState.isLoading = true
     this.notifyListeners()
 
     try {
-      // 获取 access token
-      // 注意：不要在浏览器端直接调用 GitHub 的 token 接口（需要 client_secret，且 GitHub token 接口不支持浏览器 CORS）。
-      // 应始终将 code 发到后端，由后端使用 client_secret 与 GitHub 交换 access_token。
-      // 开发模式下使用 webpack dev proxy（/api/github-token）进行本地调试；生产环境也应提供同名后端接口。
-      const tokenResponse = await request.post('/api/github-token', {
-        // 仅将必要信息发送给后端，后端负责与 GitHub 交互并返回统一格式的 { access_token }
-        client_id: GITHUB_OAUTH_CONFIG.clientId,
-        code,
-        redirect_uri: GITHUB_OAUTH_CONFIG.redirectUri,
-      })
-
-      const tokenData = extractResponseData<GitHubTokenResponse>(tokenResponse)
-
-      if (tokenData.error) {
-        throw new Error(tokenData.error_description || 'Failed to get access token')
+      const user = await this.fetchDemoUser()
+      for (const key of ['enterprise_session', 'token', 'github_token', 'github_user', 'user_role'])
+        localStorage.removeItem(key)
+      localStorage.setItem('github_demo_user', JSON.stringify(user))
+      this.authState = { user, token: `github-demo:${user.id}`, isAuthenticated: true, isLoading: false }
+      window.dispatchEvent(new Event(SESSION_CHANGED_EVENT))
+      try {
+        await permissionService.syncPermissions()
+      } catch (error) {
+        logger.warn('GitHub 演示权限同步失败:', error)
       }
-
-      if (!tokenData.access_token) {
-        throw new Error('No access token in response')
-      }
-
-      const accessToken = tokenData.access_token
-
-      // 获取用户信息
-      const userResponse = await request.get(
-        '/api/github-user',
-        {},
-        {
-          headers: {
-            Authorization: `token ${accessToken}`,
-            Accept: 'application/json',
-          },
-        }
-      )
-
-      const userData = extractResponseData<Partial<GitHubUser>>(userResponse)
-
-      // 获取用户邮箱
-      const emailResponse = await request.get(
-        '/api/github-email',
-        {},
-        {
-          headers: {
-            Authorization: `token ${accessToken}`,
-            Accept: 'application/json',
-          },
-        }
-      )
-
-      const emails = extractResponseData<GitHubEmailResponse[]>(emailResponse)
-
-      const primaryEmail =
-        Array.isArray(emails) && emails.length > 0
-          ? emails.find((email) => email.primary)?.email || userData.email || ''
-          : userData.email || ''
-
-      const user: GitHubUser = {
-        id: userData.id || 0,
-        login: userData.login || '',
-        name: userData.name || userData.login || '',
-        email: primaryEmail,
-        avatar_url: userData.avatar_url || '',
-        html_url: userData.html_url || '',
-      }
-
-      this.authState = {
-        user,
-        token: accessToken,
-        isAuthenticated: true,
-        isLoading: false,
-      }
-
-      this.saveToStorage()
       this.notifyListeners()
     } catch (error) {
       this.authState.isLoading = false
       this.notifyListeners()
-      logger.error('GitHub OAuth callback failed:', error)
+      logger.error('GitHub demo callback failed:', error)
       throw error
     }
   }
 
+  private async revokeDemoSession(): Promise<void> {
+    try {
+      await fetch('/api/demo/github/session', {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        keepalive: true,
+        signal: AbortSignal.timeout(5000),
+      })
+    } catch (error) {
+      logger.warn('GitHub 演示会话注销失败:', error)
+    }
+  }
+
   logout(): void {
+    if (localStorage.getItem('github_demo_user')) void this.revokeDemoSession()
     const enterprise = readEnterpriseSession()
     if (enterprise)
       void request
@@ -428,10 +346,10 @@ class AuthService {
       localStorage.removeItem('token') // 测试账号登录的 token
       localStorage.removeItem('github_token') // GitHub OAuth token
       localStorage.removeItem('github_user') // GitHub user info
+      localStorage.removeItem('github_demo_user')
     } catch (e) {
       logger.warn('移除本地存储键失败:', e)
     }
-    this.saveToStorage()
     clearSession()
     this.notifyListeners()
     // SPA 跳转到登录页

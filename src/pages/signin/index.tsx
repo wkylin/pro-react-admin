@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, type CSSProperties } from 'react'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal, type FormProps } from 'antd'
 import { selectIsMobile, useAppStore } from '@app/model'
-import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import { setLocalStorage } from '@shared/lib/publicFn'
 import { useAuth } from '@platform/auth/hooks/useAuth'
 import { authService } from '@platform/auth/services/authService'
@@ -83,6 +83,7 @@ const DemoSignIn = () => {
   const [captchaOpen, setCaptchaOpen] = useState(false)
   const [captchaKey, setCaptchaKey] = useState(() => Date.now())
   const [submitting, setSubmitting] = useState(false)
+  const [githubAvailable, setGithubAvailable] = useState(false)
   const captchaVerifiedRef = useRef(false)
 
   const isLikelyEmail = (value: unknown): value is string => {
@@ -107,6 +108,31 @@ const DemoSignIn = () => {
     const stored = loadOrInitPasswords()
     return stored[email] || ''
   }
+
+  useEffect(() => {
+    let active = true
+    void fetch('/api/demo/github/config', { credentials: 'same-origin', cache: 'no-store' })
+      .then(async (response) => (response.ok ? response.json() : null))
+      .then((config: unknown) => {
+        if (
+          active &&
+          config &&
+          typeof config === 'object' &&
+          'enabled' in config &&
+          config.enabled === true &&
+          'appUrl' in config &&
+          typeof config.appUrl === 'string'
+        ) {
+          const app = new URL(config.appUrl)
+          if (app.origin === window.location.origin && window.location.pathname.startsWith(app.pathname))
+            setGithubAvailable(true)
+        }
+      })
+      .catch(() => {})
+    return () => {
+      active = false
+    }
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -262,21 +288,23 @@ const DemoSignIn = () => {
               <div className={styles.heroInner}>
                 <div className={styles.badgeRow}>
                   <Tag variant="filled" color="processing">
-                    AI-ready Console
+                    角色权限演示
                   </Tag>
                   <Tag variant="filled">Pro React Admin</Tag>
                 </div>
                 <Title level={1} className={styles.heroTitle}>
-                  面向 AI 时代的
+                  按角色探索
                   <br />
-                  企业级控制台
+                  管理工作台
                 </Title>
-                <Paragraph className={styles.heroDesc}>大屏沉浸式视觉 · 权限体系 · 可观测的交互反馈</Paragraph>
+                <Paragraph className={styles.heroDesc}>
+                  使用四种演示账号对比菜单、页面和操作权限；多标签页切换可保留页面状态。
+                </Paragraph>
 
                 <div className={styles.heroPills}>
-                  <span className={styles.pill}>Fast Tabs</span>
-                  <span className={styles.pill}>Role-based Access</span>
-                  <span className={styles.pill}>Webpack 5 Build</span>
+                  <span className={styles.pill}>角色权限</span>
+                  <span className={styles.pill}>KeepAlive 多标签页</span>
+                  <span className={styles.pill}>Webpack 5 / Vite 8</span>
                 </div>
               </div>
             </section>
@@ -421,10 +449,16 @@ const DemoSignIn = () => {
                 </Form.Item>
               </Form>
 
+              {githubAvailable && (
+                <Button block icon={<GithubOutlined />} onClick={() => authService.login()}>
+                  使用 GitHub 登录
+                </Button>
+              )}
+
               <div className={styles.footerRow}>
-                <Text type="secondary">还没有账号？</Text>
+                <Text type="secondary">想体验表单校验？</Text>
                 <Button type="link" className={styles.registerBtn} onClick={() => redirectTo('/signup')}>
-                  去注册
+                  查看注册演示
                 </Button>
               </div>
             </Card>

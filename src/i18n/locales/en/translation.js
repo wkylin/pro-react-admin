@@ -224,7 +224,7 @@ const en = {
     go: 'Go',
 
     buildTools: 'Build Tools',
-    webpack: 'Webpack',
+    webpack: 'Webpack / Vite',
 
     error: 'Error',
     errorBoundary: 'ErrorBoundary',

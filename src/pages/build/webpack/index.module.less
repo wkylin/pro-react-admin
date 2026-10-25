@@ -30,6 +30,46 @@
   line-height: 1.35;
 }
 
+.toolSwitch {
+  display: inline-flex;
+  gap: 2px;
+  margin-top: 20px;
+  padding: 3px;
+  border: 1px solid var(--guide-border);
+  border-radius: 5px;
+  background: var(--guide-subtle);
+}
+
+.toolSwitch button {
+  min-width: 104px;
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--guide-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toolSwitch button:hover,
+.toolSwitch button:focus-visible {
+  color: var(--guide-text);
+}
+
+.toolSwitch button:focus-visible {
+  outline: 2px solid var(--guide-accent);
+  outline-offset: 2px;
+}
+
+.toolSwitch button.activeTool {
+  background: var(--guide-surface);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 12%);
+  color: var(--guide-text);
+}
+
 .intro {
   max-width: 790px;
   margin: 14px 0 0;

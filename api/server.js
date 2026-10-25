@@ -5,6 +5,16 @@ const http = require('node:http')
 
 const app = express()
 app.use(helmet())
+app.use(
+  '/api/demo/github',
+  require('./github-demo.cjs').createRouter({
+    clientId: process.env.GITHUB_CLIENT_ID || '',
+    clientSecret: process.env.GITHUB_CLIENT_SECRET || '',
+    callbackUrl: process.env.GITHUB_DEMO_CALLBACK_URL || '',
+    appUrl: process.env.GITHUB_DEMO_APP_URL || '',
+    sessionSecret: process.env.GITHUB_SESSION_SECRET || '',
+  })
+)
 
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -185,138 +195,6 @@ app.post('/apis', requireAdminToken, async (req, res) => {
   } catch (error) {
     console.error('api record save failed', error)
     return res.status(500).json({ error: 'save_failed' })
-  }
-})
-
-// ==== GitHub OAuth helper endpoints ====
-const https = require('https')
-const querystring = require('querystring')
-
-function postToGitHubToken({ code, redirect_uri, client_id, client_secret }) {
-  return new Promise((resolve, reject) => {
-    const postData = querystring.stringify({ client_id, client_secret, code, redirect_uri })
-
-    const options = {
-      hostname: 'github.com',
-      path: '/login/oauth/access_token',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': Buffer.byteLength(postData),
-        Accept: 'application/json',
-        'User-Agent': 'pro-react-admin-server',
-      },
-    }
-
-    const req = https.request(options, (res) => {
-      let data = ''
-      res.setEncoding('utf8')
-      res.on('data', (chunk) => (data += chunk))
-      res.on('end', () => {
-        try {
-          const parsed = JSON.parse(data)
-          resolve(parsed)
-        } catch (err) {
-          reject(err)
-        }
-      })
-    })
-
-    req.on('error', (e) => reject(e))
-    req.write(postData)
-    req.end()
-  })
-}
-
-function getFromGitHubApi(path, accessToken) {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: 'api.github.com',
-      path,
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'User-Agent': 'pro-react-admin-server',
-      },
-    }
-
-    if (accessToken) {
-      options.headers.Authorization = `token ${accessToken}`
-    }
-
-    const req = https.request(options, (res) => {
-      let data = ''
-      res.setEncoding('utf8')
-      res.on('data', (chunk) => (data += chunk))
-      res.on('end', () => {
-        try {
-          const parsed = JSON.parse(data)
-          resolve(parsed)
-        } catch (err) {
-          reject(err)
-        }
-      })
-    })
-
-    req.on('error', (e) => reject(e))
-    req.end()
-  })
-}
-
-// Exchange code for access_token (server-side)
-app.post('/api/github-token', async (req, res) => {
-  try {
-    const { code, redirect_uri } = req.body || {}
-    if (!code) return res.status(400).json({ error: 'missing_code' })
-
-    const client_id = process.env.GITHUB_CLIENT_ID || ''
-    const client_secret = process.env.GITHUB_CLIENT_SECRET || ''
-    if (!client_id || !client_secret) {
-      return res.status(500).json({ error: 'server_misconfigured', message: 'GITHUB_CLIENT_ID/SECRET not set' })
-    }
-
-    const tokenData = await postToGitHubToken({ code, redirect_uri, client_id, client_secret })
-
-    if (tokenData.error) {
-      return res.status(400).json(tokenData)
-    }
-
-    return res.json(tokenData)
-  } catch (err) {
-    console.error('github-token error', err)
-    return res.status(500).json({ error: 'exchange_failed' })
-  }
-})
-
-// Get user info using access token
-app.get('/api/github-user', async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization || ''
-    let token = ''
-    if (authHeader.startsWith('token ')) token = authHeader.slice(6)
-    if (!token) return res.status(400).json({ error: 'missing_token' })
-
-    const user = await getFromGitHubApi('/user', token)
-    return res.json(user)
-  } catch (err) {
-    console.error('github-user error', err)
-    return res.status(500).json({ error: 'fetch_user_failed' })
-  }
-})
-
-// Get user emails using access token
-app.get('/api/github-email', async (req, res) => {
-  try {
-    const authHeader = req.headers.authorization || ''
-    let token = ''
-    if (authHeader.startsWith('token ')) token = authHeader.slice(6)
-    if (!token) return res.status(400).json({ error: 'missing_token' })
-
-    const emails = await getFromGitHubApi('/user/emails', token)
-    return res.json(emails)
-  } catch (err) {
-    console.error('github-email error', err)
-    return res.status(500).json({ error: 'fetch_emails_failed' })
   }
 })
 

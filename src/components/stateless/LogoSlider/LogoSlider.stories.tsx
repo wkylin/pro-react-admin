@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react'
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'
 import SongPng from '@assets/images/song.png'

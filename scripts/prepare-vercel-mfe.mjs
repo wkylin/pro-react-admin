@@ -22,4 +22,8 @@ for (const item of inputs) {
 }
 fs.rmSync(output, { recursive: true, force: true })
 for (const item of inputs) fs.cpSync(item.source, item.destination, { recursive: true })
+fs.writeFileSync(
+  path.join(output, 'build-metadata.json'),
+  JSON.stringify({ bundler: process.env.BUILD_TOOL || 'webpack' }, null, 2) + '\n'
+)
 console.log(`[mfe] Assembled host and ${registry.remotes.length} remotes in dist-vercel from registry outputs`)

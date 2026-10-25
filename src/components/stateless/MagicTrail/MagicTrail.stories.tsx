@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react'
 import { useRef, useState, type ComponentProps } from 'react'
 import Component from './index'
 

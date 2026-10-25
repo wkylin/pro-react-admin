@@ -20,7 +20,6 @@
     cursor: grab;
     touch-action: none;
     user-select: none;
-    -webkit-user-select: none;
   }
 
   :global([data-interactive-book-viewport][data-book-open='false']:active) {
@@ -41,6 +40,7 @@
   gap: 5px;
   width: max-content;
   max-width: calc(100% - 32px);
+
   /* Reuse the bottom space InteractiveBook reserves for its own reader controls. */
   margin: -64px auto 4px;
   padding: 5px;
@@ -94,7 +94,7 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (width <= 600px) {
   .stage {
     perspective: 900px;
   }

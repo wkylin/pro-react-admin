@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react'
 import trailerSource from '@assets/video/trailer.mp4'
 import trailerPoster from './poster.jpg'
 import Component from './index'

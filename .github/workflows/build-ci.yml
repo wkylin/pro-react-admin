@@ -1,0 +1,396 @@
+name: Build CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate project and client environment configuration
+        run: pnpm run check:project-registry
+
+      - name: Validate shared path aliases
+        run: pnpm run check:aliases
+
+      - name: Validate route, menu and permission contracts
+        run: pnpm run check:route-contract
+
+      - name: Validate documentation against current source
+        run: pnpm run check:docs
+
+      - name: Enforce shared-layer dependency direction
+        run: pnpm run check:import-boundaries
+
+      - name: Validate generated component catalog
+        run: pnpm run check:component-catalog
+
+      - name: Validate generated Module Federation contracts
+        run: pnpm run check:project-contracts
+
+      - name: Validate Vercel build targets and response headers
+        run: pnpm run check:deployment-config
+
+      - name: Type-check the application
+        run: pnpm run typecheck
+
+      - name: Strict type-check core architecture boundaries
+        run: pnpm run typecheck:boundaries
+
+      - name: Strict type-check enterprise business backend
+        run: pnpm run typecheck:api
+
+      - name: Verify persistent enterprise API, tenant isolation and transactional audit
+        run: pnpm run test:api
+
+      - name: Strict type-check the public component library
+        run: pnpm run typecheck:lib
+
+      - name: Type-check browser test cases and configuration
+        run: pnpm run test:e2e:typecheck
+
+      - name: Test project tooling and scaffolding
+        run: pnpm run test:tooling
+
+      - name: Validate generated deployment contracts
+        run: pnpm run check:deployment-contracts
+
+      - name: Run Jest with coverage
+        run: pnpm run test:coverage --runInBand
+
+      - name: Build production application and collect Webpack stats
+        run: pnpm run build:stats
+        env:
+          NODE_ENV: production
+          PUBLIC_URL: /
+
+      - name: Enforce initial bundle budget
+        run: pnpm run check:bundle-budget
+
+      - name: Install Chromium for Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run browser end-to-end checks
+        run: pnpm run test:e2e
+
+      - name: Build test report index
+        if: always()
+        run: pnpm run test:report:build
+
+      - name: Upload validated production application
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-${{ github.sha }}
+          path: dist/
+          retention-days: 14
+
+      - name: Upload current Webpack stats
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webpack-stats-${{ github.run_id }}
+          path: artifacts/build/webpack/default/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload test results and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-test-report-${{ github.run_id }}
+          path: tests/reports/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  vite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Vite application and bundle report
+        run: pnpm run build:stats:vite
+        env:
+          PUBLIC_URL: /
+
+      - name: Install Chromium for Vite browser checks
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Verify Vite application in the browser
+        run: pnpm run test:e2e:vite
+
+      - name: Build and validate Vite Module Federation
+        run: |
+          BUILD_TOOL=vite pnpm run build:mf:vercel
+          pnpm run check:mfe-artifacts
+
+      - name: Build and validate Vite Storybook
+        run: |
+          pnpm run build-storybook:vite
+          node scripts/validate-stories.mjs --built=storybook-static-vite
+
+      - name: Build and validate Vite component library
+        run: BUILD_TOOL=vite pnpm run prepare:lib:release
+
+      - name: Build Vite test report index
+        if: always()
+        run: pnpm run test:report:build
+
+      - name: Upload Vite test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vite-test-report-${{ github.run_id }}
+          path: tests/reports/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Vite bundle report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vite-build-report-${{ github.run_id }}
+          path: artifacts/build/vite/default/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  storybook:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Storybook source coverage and types
+        run: |
+          pnpm run check:stories
+          pnpm run typecheck:storybook
+
+      - name: Build Storybook
+        run: pnpm run build-storybook
+        env:
+          NODE_ENV: production
+
+      - name: Check built Storybook component coverage
+        run: node scripts/validate-stories.mjs --built
+
+  library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build and validate the publishable component library
+        run: pnpm run prepublishOnly
+
+      - name: Preview npm package contents
+        run: npm pack ./packages/wui-react --dry-run
+
+  microfrontends:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Shell and all Remotes
+        run: pnpm run build:mf:vercel
+        env:
+          NODE_ENV: production
+
+      - name: Validate generated Remote contracts
+        run: pnpm run check:mfe-artifacts
+
+      - name: Install Chromium for Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Verify Remote load and fallback in the browser
+        run: pnpm run test:e2e:mfe
+
+      - name: Build MFE test report index
+        if: always()
+        run: pnpm run test:report:build
+
+      - name: Upload MFE test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mfe-test-report-${{ github.run_id }}
+          path: tests/reports/
+          if-no-files-found: ignore
+          retention-days: 14
+
+  enterprise:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build lean enterprise application
+        run: pnpm run build:enterprise:stats
+        env:
+          PUBLIC_URL: /
+      - name: Check enterprise bundle
+        run: node scripts/check-bundle-budget.mjs artifacts/build/webpack/enterprise/stats.json enterprise
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify resource workflows and revocation repeatedly
+        run: pnpm run test:e2e:enterprise --repeat-each=5
+      - name: Build enterprise test report index
+        if: always()
+        run: pnpm run test:report:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: enterprise-${{ github.sha }}
+          path: |
+            dist-enterprise/
+            artifacts/build/webpack/enterprise/
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enterprise-browser-report-${{ github.run_id }}
+          path: tests/reports/
+          if-no-files-found: ignore
+
+  enterprise-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+          run_install: false
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build application with real tenant authentication
+        run: pnpm run build:enterprise:api
+        env:
+          PUBLIC_URL: /
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: Verify real login, durable CRUD, audit and tenant switching
+        run: pnpm run test:e2e:enterprise:api --repeat-each=5
+      - name: Build enterprise API test report index
+        if: always()
+        run: pnpm run test:report:build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enterprise-api-browser-report-${{ github.run_id }}
+          path: tests/reports/
+          if-no-files-found: ignore

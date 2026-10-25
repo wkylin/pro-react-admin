@@ -219,7 +219,7 @@ const applyTimestampSuffix = (config) => {
 const applyAuthorization = (config) => {
   if (config.headers.get?.('Authorization') || config.headers.Authorization || config.needToken === false) return
   const token = readStoredToken()
-  if (!token) return
+  if (!token || token.startsWith('github-demo:')) return
   config.headers.Authorization = `Bearer ${token}`
   const enterprise = readEnterpriseSession()
   if (enterprise) config.headers['X-Tenant-ID'] = enterprise.tenantId

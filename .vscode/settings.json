@@ -1,7 +1,4 @@
 {
-  "jumpToAliasFile.alias": {
-    "@": "d:\\workspace\\promotion-manage-web\\src"
-  },
   "cSpell.ignoreWords": [
     "basicpage",
     "binl",
@@ -31,9 +28,6 @@
   ],
   "css.lint.unknownAtRules": "ignore",
   "files.autoSave": "off",
-  "npm-scripts.showStartNotification": false,
-  "editor.suggest.snippetsPreventQuickSuggestions": false,
-  "aiXcoder.showTrayIcon": true,
   "cSpell.words": [
     "antd",
     "blueimp",
@@ -86,7 +80,6 @@
   "eslint.options": {
     "extensions": [
       ".js",
-      ".vue",
       ".tsx"
     ]
   },
@@ -104,13 +97,6 @@
   "i18n-ally.localesPaths": [
     "public/locales"
   ],
-  "bitoAI.codeCompletion.enableAutoCompletion": false,
   "i18n-ally.sourceLanguage": "zh",
-  "task.autoDetect": "off",
-  "sonarlint.connectedMode.project": {
-    "connectionId": "http-localhost-9000-",
-    "projectKey": "pro-react-admin"
-  },
-  "codegraphy.connectionType": "Interaction",
-  "codegraphy.nodeSize": "Lines"
+  "task.autoDetect": "off"
 }

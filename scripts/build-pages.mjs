@@ -32,9 +32,21 @@ if (process.argv.includes('--dry-run')) {
     const env = { ...process.env, NODE_ENV: 'production', CI: 'true', SENTRY_SOURCE_MAP: 'no', ...task.env }
     // Build plans determine federation roles; keep a parent shell's role out of ordinary builds.
     delete env.MFE_ROLE
-    if (task.kind === 'app') run(['scripts/project-command.mjs', task.action, task.name, '--stats'], env)
-    else {
-      run([localCli('storybook', 'storybook'), 'build', '-o', 'storybook-static', '--disable-telemetry'], env)
+    if (task.kind === 'app') {
+      if (env.BUILD_TOOL === 'vite') env.VITE_OUT_DIR = path.relative(workspaceRoot, task.source)
+      run(['scripts/project-command.mjs', task.action, task.name, '--stats'], env)
+    } else {
+      run(
+        [
+          localCli('storybook', 'storybook'),
+          'build',
+          ...(env.BUILD_TOOL === 'vite' ? ['-c', '.storybook/vite'] : []),
+          '-o',
+          'storybook-static',
+          '--disable-telemetry',
+        ],
+        env
+      )
       run(['scripts/add-storybook-base.cjs'], env)
     }
     const source = task.source
@@ -62,6 +74,7 @@ if (process.argv.includes('--dry-run')) {
     JSON.stringify(
       {
         target: plan.target,
+        bundler: process.env.BUILD_TOOL || 'webpack',
         base: plan.base,
         origin: plan.origin,
         entries: plan.tasks.map(({ name, action, destination }) => ({ name, action, destination })),

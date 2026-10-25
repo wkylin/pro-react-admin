@@ -224,7 +224,7 @@ const zh = {
     go: 'Go',
 
     buildTools: '构建工具',
-    webpack: 'Webpack',
+    webpack: 'Webpack / Vite',
 
     error: '错误',
     errorBoundary: '错误边界',

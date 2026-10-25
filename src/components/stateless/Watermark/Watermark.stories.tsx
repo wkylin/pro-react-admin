@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react'
 import Watermark from './index'
 
 function Demo({ content }: { content: string }) {

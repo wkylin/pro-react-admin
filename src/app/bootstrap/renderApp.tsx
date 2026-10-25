@@ -7,7 +7,9 @@ import { App as AntdApp } from 'antd'
 import ErrorBoundary from '@/platform/errors/ErrorBoundary'
 import GlobalBreakpointListener from '@app/bootstrap/providers/GlobalBreakpointListener'
 import { AppStoreProvider, createAppStore } from '@app/model'
+import { getEnv, getEnvBool, getEnvNumber } from '@platform/config/env'
 import SessionScope from './SessionScope'
+import { authService } from '@platform/auth/services/authService'
 import i18n from '@/i18n/i18n'
 
 const isLocalhostRuntime = () => {
@@ -40,7 +42,7 @@ const canUseVercelInsights = async () => {
 }
 
 const getSentryTraceSampleRate = () => {
-  const value = Number(process.env.SENTRY_TRACES_SAMPLE_RATE)
+  const value = getEnvNumber('SENTRY_TRACES_SAMPLE_RATE', 0.1)
   return Number.isFinite(value) && value >= 0 && value <= 1 ? value : 0.1
 }
 
@@ -56,7 +58,7 @@ const VercelInsights = () => {
   const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') return
+    if (getEnv('NODE_ENV') !== 'production') return
     let cancelled = false
     void (async () => {
       const ok = await canUseVercelInsights()
@@ -83,7 +85,7 @@ export type RenderAppOptions = {
   projectId?: string
 }
 
-export function renderApp(options: RenderAppOptions) {
+export async function renderApp(options: RenderAppOptions) {
   const {
     element = document.getElementById('root'),
     identifierPrefix = 'wui',
@@ -91,55 +93,54 @@ export function renderApp(options: RenderAppOptions) {
     children,
   } = options
 
-  const sentryDsn = process.env.SENTRY_DSN
+  const sentryDsn = getEnv('SENTRY_DSN')
   const shouldEnableSentry =
-    process.env.NODE_ENV === 'production' && !!sentryDsn && !isLocalhostRuntime() && !isSentryDisabledByUser()
-
-  if (shouldEnableSentry) {
-    const replayEnabled = process.env.SENTRY_ENABLE_REPLAY === 'true'
-    const collectDefaultPii = process.env.SENTRY_SEND_DEFAULT_PII === 'true'
-    void import('@sentry/react')
-      .then((Sentry) =>
-        Sentry.init({
-          dsn: sentryDsn,
-          dataCollection: collectDefaultPii
-            ? {}
-            : {
-                userInfo: false,
-                cookies: false,
-                httpHeaders: false,
-                httpBodies: [],
-                urlQueryParams: false,
-                graphQL: { document: false, variables: false },
-                genAI: { inputs: false, outputs: false },
-                databaseQueryData: false,
-                queues: false,
-                stackFrameVariables: false,
-              },
-          integrations: [Sentry.browserTracingIntegration(), ...(replayEnabled ? [Sentry.replayIntegration()] : [])],
-          tracesSampleRate: getSentryTraceSampleRate(),
-          tracePropagationTargets: [/^https:\/\/wkylin\.sentry\.io\/api/],
-          replaysSessionSampleRate: replayEnabled ? 0.1 : 0,
-          replaysOnErrorSampleRate: replayEnabled ? 1.0 : 0,
-        })
-      )
-      .catch((error: unknown) => console.warn('Observability initialization failed', error))
-  }
+    getEnv('NODE_ENV') === 'production' && !!sentryDsn && !isLocalhostRuntime() && !isSentryDisabledByUser()
 
   if (!element) {
     throw new Error('renderApp: #root element not found')
   }
 
+  await authService.restoreDemoSession()
+
+  let sentry: typeof import('@sentry/react') | undefined
+  if (shouldEnableSentry) {
+    const replayEnabled = getEnvBool('SENTRY_ENABLE_REPLAY')
+    const collectDefaultPii = getEnvBool('SENTRY_SEND_DEFAULT_PII')
+    try {
+      sentry = await import('@sentry/react')
+      sentry.init({
+        dsn: sentryDsn,
+        dataCollection: collectDefaultPii
+          ? {}
+          : {
+              userInfo: false,
+              cookies: false,
+              httpHeaders: false,
+              httpBodies: [],
+              urlQueryParams: false,
+              graphQL: { document: false, variables: false },
+              genAI: { inputs: false, outputs: false },
+              databaseQueryData: false,
+              queues: false,
+              stackFrameVariables: false,
+            },
+        integrations: [sentry.browserTracingIntegration(), ...(replayEnabled ? [sentry.replayIntegration()] : [])],
+        tracesSampleRate: getSentryTraceSampleRate(),
+        replaysSessionSampleRate: replayEnabled ? 0.1 : 0,
+        replaysOnErrorSampleRate: replayEnabled ? 1.0 : 0,
+      })
+    } catch (error) {
+      sentry = undefined
+      console.warn('Observability initialization failed', error)
+    }
+  }
+
+  const sentryErrorHandler = sentry?.reactErrorHandler()
   const root = ReactDOM.createRoot(element as HTMLDivElement, {
-    onCaughtError: (error) => {
-      console.log('caught error', error)
-    },
-    onUncaughtError: (error) => {
-      console.log('uncaught error', error)
-    },
-    onRecoverableError: (error) => {
-      console.log('recoverable error', error)
-    },
+    onCaughtError: sentryErrorHandler ?? ((error) => console.warn('caught error', error)),
+    onUncaughtError: sentryErrorHandler ?? ((error) => console.error('uncaught error', error)),
+    onRecoverableError: sentryErrorHandler ?? ((error) => console.warn('recoverable error', error)),
     identifierPrefix,
   })
   const store = createAppStore(projectId)

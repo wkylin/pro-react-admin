@@ -228,17 +228,6 @@ const tryGetManualRolePermission = (): UserPermission | null => {
   return null
 }
 
-const tryGetGithubUserPermission = (): UserPermission | null => {
-  const githubUser = safeGetStorageItem('github_user')
-  const user = safeJsonParse<{ email?: string }>(githubUser)
-  if (!user) return null
-
-  if (user.email) {
-    return { ...mockUserPermissions['super_admin'] }
-  }
-  return null
-}
-
 const tryGetTokenRolePermission = (): UserPermission | null => {
   const tokenData = safeGetStorageItem('token')
   if (!tokenData) return null
@@ -260,19 +249,18 @@ const tryGetTokenRolePermission = (): UserPermission | null => {
 export const mockGetUserPermissions = async (_userId?: string, _roleCode?: string): Promise<UserPermission> => {
   await new Promise((resolve) => setTimeout(resolve, 100))
 
-  // 1. 优先使用手动设置的角色（用于测试切换）
+  // GitHub OAuth only identifies a demo visitor; it never chooses an administrator role.
+  if (safeGetStorageItem('github_demo_user')) return { ...mockUserPermissions['user'] }
+
+  // 仅测试账号可以在演示环境中切换角色。
   const manual = tryGetManualRolePermission()
   if (manual) return manual
 
-  // 2. GitHub 登录用户检查（优先级最高，因为 GitHub 用户总是超级管理员）
-  const github = tryGetGithubUserPermission()
-  if (github) return github
-
-  // 3. 根据测试账号 token 中的邮箱获取角色
+  // 根据测试账号 token 中的邮箱获取角色
   const token = tryGetTokenRolePermission()
   if (token) return token
 
-  // 4. 默认返回普通用户权限
+  // 默认返回普通用户权限
   return { ...mockUserPermissions['user'] }
 }
 

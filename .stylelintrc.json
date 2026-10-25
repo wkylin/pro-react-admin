@@ -24,5 +24,5 @@
       }
     ]
   },
-  "ignoreFiles": ["dist-lib/**", "coverage/**", "node_modules/**"]
+  "ignoreFiles": ["dist*/**", "coverage/**", "node_modules/**"]
 }

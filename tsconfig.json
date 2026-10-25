@@ -28,6 +28,6 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true
   },
-  "include": ["src", "typings"],
+  "include": ["src", "typings", "build/vite/app.config.ts"],
   "exclude": ["node_modules", "dist", "coverage"]
 }

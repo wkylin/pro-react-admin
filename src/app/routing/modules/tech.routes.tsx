@@ -7,7 +7,7 @@ export const techRoutes = [
     path: '/build/webpack',
     element: <WebpackPage />,
     meta: {
-      title: 'Webpack',
+      title: 'Webpack / Vite',
       requiresAuth: true,
     },
   },

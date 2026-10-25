@@ -37,6 +37,7 @@ import { authService } from '@platform/auth/services/authService'
 import { getSessionIdentity, readEnterpriseSession, type EnterpriseSession } from '@platform/auth/model/session'
 import { listEnterpriseTenants, switchEnterpriseTenant, type EnterpriseTenant } from '@platform/auth/api/enterprise'
 import { permissionService } from '@platform/auth/services/permissionService'
+import { getEnv } from '@platform/config/env'
 import { HashRouterUtils } from '@platform/navigation/hashRouter'
 import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
 import styles from './index.module.less'
@@ -111,13 +112,13 @@ const safeNotifyDeniedOnce = async ({
   try {
     await Promise.resolve(messageApi.open({ type: 'error', content: DENIED_TIP }))
   } catch (err) {
-    if (process.env.NODE_ENV === 'development') {
+    if (getEnv('NODE_ENV') === 'development') {
       console.warn('[ProHeader] messageApi.open failed', err)
     }
     try {
       await Promise.resolve(showMessage.error(DENIED_TIP))
     } catch (err2) {
-      if (process.env.NODE_ENV === 'development') {
+      if (getEnv('NODE_ENV') === 'development') {
         console.warn('[ProHeader] notify denied failed', err2)
       }
     }
@@ -265,7 +266,7 @@ const safeLogoutCleanup = () => {
     // 兼容“测试账号登录”(仅 token) 的登出路径，确保权限缓存被清理
     permissionService.logoutCleanup()
   } catch (err) {
-    if (process.env.NODE_ENV === 'development') {
+    if (getEnv('NODE_ENV') === 'development') {
       console.warn('[ProHeader] logoutCleanup failed', err)
     }
   }
@@ -719,7 +720,6 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
         aria-label={t('header.home')}
         style={isMobile ? { flex: '0 0 28px', padding: 0, justifyContent: 'center' } : undefined}
       >
-        {/* Pro React <Tag>{process.env.DEPLOYED_ENV}</Tag> */}
         <img src={Logo} alt="" style={isMobile ? { marginRight: 0 } : undefined} />
         {!isMobile && (
           <GradientAnimationText text="Pro React Admin" surface={isDark || isTopDarkHeader ? 'dark' : 'light'} />

@@ -13,6 +13,7 @@ import {
 
 const output = 'dist-combined'
 const deployment = JSON.parse(fs.readFileSync(path.join(output, 'deployment.json'), 'utf8'))
+const bundler = deployment.bundler || 'webpack'
 const registry = loadProjectRegistry()
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const shared = getMfeSharedDependencies(pkg.dependencies)
@@ -45,21 +46,26 @@ for (const entry of deployment.entries) {
       !hasCompleteMfeSharedDependencies(manifest.sharedDependencies, shared)
     )
       throw new Error(`Invalid Pages Remote manifest: ${remote.name}`)
-    const url = deployment.origin + expectedBase + 'remoteEntry.js'
-    const sandbox = {
-      document: { currentScript: { src: url, tagName: 'SCRIPT' }, baseURI: deployment.origin + expectedBase },
-      URL,
-      setTimeout,
-      clearTimeout,
+    if (bundler === 'vite') {
+      const { validateRemoteEntry } = await import('../build/validate-remote-entry.mjs')
+      await validateRemoteEntry(path.join(directory, 'remoteEntry.js'))
+    } else {
+      const url = deployment.origin + expectedBase + 'remoteEntry.js'
+      const sandbox = {
+        document: { currentScript: { src: url, tagName: 'SCRIPT' }, baseURI: deployment.origin + expectedBase },
+        URL,
+        setTimeout,
+        clearTimeout,
+      }
+      sandbox.window = sandbox
+      sandbox.self = sandbox
+      vm.runInNewContext(fs.readFileSync(path.join(directory, 'remoteEntry.js'), 'utf8'), sandbox, { timeout: 5000 })
+      if (typeof sandbox[remote.name]?.get !== 'function' || typeof sandbox[remote.name]?.init !== 'function')
+        throw new Error(`Missing Pages Remote container: ${remote.name}`)
     }
-    sandbox.window = sandbox
-    sandbox.self = sandbox
-    vm.runInNewContext(fs.readFileSync(path.join(directory, 'remoteEntry.js'), 'utf8'), sandbox, { timeout: 5000 })
-    if (typeof sandbox[remote.name]?.get !== 'function' || typeof sandbox[remote.name]?.init !== 'function')
-      throw new Error(`Missing Pages Remote container: ${remote.name}`)
   }
   if (registry.projects[entry.name]?.mfeHost) {
-    const scripts = path.join(directory, 'static/js')
+    const scripts = path.join(directory, bundler === 'vite' ? 'assets' : 'static/js')
     const code = fs
       .readdirSync(scripts)
       .filter((file) => file.endsWith('.js'))

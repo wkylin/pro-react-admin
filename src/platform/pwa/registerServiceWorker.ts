@@ -1,11 +1,14 @@
 import { emitPwaUpdateReady, type PwaBuildMeta } from './events'
+import { getEnv } from '@platform/config/env'
+
+const publicBase = getEnv('PUBLIC_URL', '/').replace(/\/?$/, '/')
 
 const isServiceWorkerAvailable = async () => {
   if (!('serviceWorker' in navigator)) return false
-  if (process.env.NODE_ENV !== 'production') return false
+  if (getEnv('NODE_ENV') !== 'production') return false
 
   try {
-    const response = await fetch('/sw.js', {
+    const response = await fetch(`${publicBase}sw.js`, {
       method: 'HEAD',
       cache: 'no-store',
     })
@@ -24,7 +27,7 @@ let hasPendingReload = false
 
 const readNextBuildMeta = async (): Promise<PwaBuildMeta | null> => {
   try {
-    const response = await fetch(`/version.json?t=${Date.now()}`, {
+    const response = await fetch(`${publicBase}version.json?t=${Date.now()}`, {
       method: 'GET',
       cache: 'no-store',
     })
@@ -86,7 +89,7 @@ export const registerServiceWorker = () => {
     if (!(await isServiceWorkerAvailable())) return
 
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js')
+      const registration = await navigator.serviceWorker.register(`${publicBase}sw.js`)
       bindServiceWorkerLifecycle(registration)
       void registration.update().catch(() => undefined)
     } catch (error) {

@@ -1,25 +1,28 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
-import { Form, Input, Button, Card, Divider, Checkbox, Typography, Row, Col, Select, Layout, theme, Space } from 'antd'
-import type { FormProps } from 'antd'
+import { Form, Input, Button, Card, Checkbox, Typography, Select, Layout, theme, Space, App } from 'antd'
 import { selectIsMobile, useAppStore } from '@app/model'
+import { Navigate } from 'react-router-dom'
 import {
   UserOutlined,
   LockOutlined,
   EyeInvisibleOutlined,
   EyeTwoTone,
-  GithubOutlined,
-  GoogleOutlined,
   MailOutlined,
   PhoneOutlined,
 } from '@ant-design/icons'
 
 import { setLocalStorage } from '@shared/lib/publicFn'
+import { isDemoPermissionMode } from '@platform/auth/api/permission'
+import { clearSession } from '@platform/auth/model/session'
+import { authService } from '@platform/auth/services/authService'
+import { permissionService } from '@platform/auth/services/permissionService'
 import styles from './index.module.less'
 
 const { Title, Text, Link } = Typography
 const { Content } = Layout
+const DEMO_ACCOUNT = 'user@test.com'
 // responsive handled by global Zustand `isMobile`
 
 interface SignUpFormValues {
@@ -45,19 +48,28 @@ const passwordIconRender = (visible: boolean): React.ReactNode =>
 
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
+  const { message } = App.useApp()
   const { token } = theme.useToken()
   const isMobile = useAppStore(selectIsMobile)
+  const [submitting, setSubmitting] = React.useState(false)
 
   const [form] = Form.useForm<SignUpFormValues>()
 
-  const onFinish: NonNullable<FormProps<SignUpFormValues>['onFinish']> = (values) => {
-    const { email } = values
-    setLocalStorage('token', { token: email })
-    redirectTo('/')
-  }
-
-  const onFinishFailed: NonNullable<FormProps<SignUpFormValues>['onFinishFailed']> = (errorInfo) => {
-    console.log('表单验证失败:', errorInfo)
+  const onFinish = async () => {
+    setSubmitting(true)
+    try {
+      localStorage.removeItem('user_role')
+      setLocalStorage('token', { token: DEMO_ACCOUNT })
+      await authService.setTestAccountAuthenticated(DEMO_ACCOUNT)
+      const routes = await permissionService.getAccessibleRoutes(true)
+      if (!routes.includes('/')) throw new Error('演示权限不可用')
+      redirectTo('/')
+    } catch {
+      clearSession()
+      message.error('暂时无法进入演示工作台，请使用测试账号登录')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const cssVars: React.CSSProperties & { [key: `--signup-${string}`]: string } = {
@@ -73,6 +85,8 @@ const SignUp = () => {
     '--signup-icon': token.colorTextTertiary,
   }
 
+  if (!isDemoPermissionMode()) return <Navigate to="/signin" replace />
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Content className={styles.root} style={cssVars}>
@@ -81,14 +95,14 @@ const SignUp = () => {
           {!isMobile && (
             <section className={styles.hero}>
               <div className={styles.heroInner}>
-                <div className={styles.heroKicker}>PRO REACT ADMIN • SIGN UP</div>
+                <div className={styles.heroKicker}>PRO REACT ADMIN · 表单演示</div>
                 <Title level={1} className={styles.heroTitle}>
-                  加入权限驱动的
+                  从表单演示进入
                   <br />
-                  大屏控制台
+                  管理工作台
                 </Title>
                 <Text type="secondary" className={styles.heroDesc}>
-                  内置权限隔离与登出清理，切号不残留；KeepAlive Tabs 低卡顿；Webpack 5 构建与产物压缩自动化。
+                  提交后以普通用户权限体验工作台；路由和操作按角色展示，应用与组件支持 Webpack 5 或 Vite 8 构建。
                 </Text>
 
                 <div className={styles.heroOrbit} aria-hidden="true">
@@ -104,45 +118,10 @@ const SignUp = () => {
             <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 28 } }}>
               <div className={styles.titleBox}>
                 <Title level={2} className={styles.title}>
-                  创建账户
+                  注册表单演示
                 </Title>
-                <Text type="secondary">完成注册后进入 Pro React Admin 工作台</Text>
+                <Text type="secondary">提交后进入演示工作台，不会创建可再次登录的账号</Text>
               </div>
-
-              <Row gutter={12} className={styles.socialRow}>
-                <Col span={12}>
-                  <Button
-                    block
-                    icon={
-                      <AnimatedIcon variant="spin" mode="hover">
-                        <GithubOutlined />
-                      </AnimatedIcon>
-                    }
-                    className={styles.socialBtn}
-                  >
-                    GitHub
-                  </Button>
-                </Col>
-                <Col span={12}>
-                  <Button
-                    block
-                    icon={
-                      <AnimatedIcon variant="spin" mode="hover">
-                        <GoogleOutlined />
-                      </AnimatedIcon>
-                    }
-                    className={styles.socialBtn}
-                  >
-                    Google
-                  </Button>
-                </Col>
-              </Row>
-
-              <Divider className={styles.divider}>
-                <Text type="secondary" style={{ fontSize: 12 }}>
-                  或者使用邮箱注册
-                </Text>
-              </Divider>
 
               <Form
                 form={form}
@@ -151,7 +130,6 @@ const SignUp = () => {
                   agreement: true,
                 }}
                 onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
                 autoComplete="off"
                 size="large"
                 layout={isMobile ? 'vertical' : 'horizontal'}
@@ -330,6 +308,7 @@ const SignUp = () => {
                     type="primary"
                     htmlType="submit"
                     block
+                    loading={submitting}
                     className={styles.submitBtn}
                     style={{
                       height: 44,
@@ -339,16 +318,16 @@ const SignUp = () => {
                       fontWeight: 600,
                     }}
                   >
-                    立即注册
+                    提交并体验
                   </Button>
                 </Form.Item>
 
                 {/* 登录链接 */}
                 <div style={{ textAlign: 'center' }}>
                   <Text type="secondary" style={{ fontSize: 14 }}>
-                    已有账户？
+                    想使用预置账号？
                     <Link href="#/signin" style={{ fontWeight: 500 }}>
-                      立即登录
+                      前往登录
                     </Link>
                   </Text>
                 </div>

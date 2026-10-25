@@ -54,7 +54,7 @@ class PermissionService {
   }
 
   private onStorage = (event: StorageEvent): void => {
-    if (event.key === null || ['enterprise_session', 'token', 'github_token', 'user_role'].includes(event.key))
+    if (event.key === null || ['enterprise_session', 'token', 'github_demo_user', 'user_role'].includes(event.key))
       this.onSessionChanged()
   }
 
@@ -117,7 +117,7 @@ class PermissionService {
 
   /**
    * Bind cache identity to the credential used by the request layer, plus the
-   * mock role override. A stored GitHub profile is not an active credential.
+   * mock role override. Legacy GitHub profiles are never credentials.
    */
   private safeReadStorage(key: string): string {
     try {

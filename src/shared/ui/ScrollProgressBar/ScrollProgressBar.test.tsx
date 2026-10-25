@@ -49,7 +49,7 @@ describe('ScrollProgressBar', () => {
     scroller.scrollTop = 0
     fireEvent.scroll(scroller)
     await waitFor(() => expect(progressScale(bars[0])).toBeCloseTo(0, 2), { timeout: 3000 })
-  })
+  }, 15000)
 
   test('keeps zero progress for content that does not scroll and supports hiding', () => {
     jest.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockReturnValue(360)

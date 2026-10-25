@@ -1,3 +1,12 @@
+const previousMockMode = process.env.REACT_APP_USE_MOCK
+beforeAll(() => {
+  process.env.REACT_APP_USE_MOCK = 'true'
+})
+afterAll(() => {
+  if (previousMockMode === undefined) delete process.env.REACT_APP_USE_MOCK
+  else process.env.REACT_APP_USE_MOCK = previousMockMode
+})
+
 describe('permission cache revocation', () => {
   const getUserPermissions = jest.fn()
   const authorized = { userId: '1', username: 'admin', roles: [], permissions: ['*:*'], routes: ['/permission'] }
@@ -56,16 +65,15 @@ describe('permission cache revocation', () => {
     expect(getUserPermissions).toHaveBeenCalledTimes(2)
   })
 
-  test('invalidates permissions when the GitHub credential changes for the same profile', async () => {
+  test('invalidates permissions when the GitHub demo identity changes', async () => {
     localStorage.removeItem('token')
-    localStorage.setItem('github_user', JSON.stringify({ id: 1, login: 'same-user' }))
-    localStorage.setItem('github_token', 'github-a')
+    localStorage.setItem('github_demo_user', JSON.stringify({ id: 1, login: 'first-user' }))
     const limited = { ...authorized, permissions: [], routes: [] }
     getUserPermissions.mockResolvedValueOnce(authorized).mockResolvedValueOnce(limited)
     const { permissionService } = require('./permissionService')
     await permissionService.getPermissions()
 
-    localStorage.setItem('github_token', 'github-b')
+    localStorage.setItem('github_demo_user', JSON.stringify({ id: 2, login: 'second-user' }))
     expect(permissionService.peekPermissions()).toBeNull()
     await expect(permissionService.getPermissions()).resolves.toEqual(limited)
     expect(getUserPermissions).toHaveBeenCalledTimes(2)
@@ -76,7 +84,7 @@ describe('permission cache validity', () => {
   test('malformed persisted fetch timestamps never restore grants', () => {
     jest.resetModules()
     localStorage.clear()
-    localStorage.setItem('token', 'account')
+    localStorage.setItem('token', JSON.stringify({ token: 'account' }))
     localStorage.setItem('permissions_auth_key', 'token:account')
     localStorage.setItem(
       'user_permissions',

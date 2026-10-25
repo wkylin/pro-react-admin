@@ -1,5 +1,7 @@
+import { getEnv } from '@platform/config/env'
+
 /* 轻量日志封装：生产环境禁用 log/warn，保留 error */
-const isDev = typeof process !== 'undefined' && process.env && process.env.NODE_ENV === 'development'
+const isDev = getEnv('NODE_ENV') === 'development'
 
 export const logger = {
   log: (...args: unknown[]) => {

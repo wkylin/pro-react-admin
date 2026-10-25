@@ -1,27 +1,15 @@
 import crypto from 'node:crypto'
-import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import dotenv from 'dotenv'
 import concurrently from 'concurrently'
 import portfinder from 'portfinder'
+import { applyWorkspaceEnv } from '../build/load-env.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const providedEnvKeys = new Set(Object.keys(process.env))
 const enterpriseProject = process.env.PROJECT === 'enterprise'
 
-// Share the same local configuration between the API and Webpack processes.
-for (const fileName of ['.env.development', '.env.development.local']) {
-  const filePath = path.join(root, fileName)
-  if (!fs.existsSync(filePath)) continue
-
-  const values = dotenv.parse(fs.readFileSync(filePath))
-  for (const [key, value] of Object.entries(values)) {
-    // Enterprise uses the real tenant sign-in by default; demo mode must be explicit.
-    if (enterpriseProject && key === 'REACT_APP_USE_MOCK' && !providedEnvKeys.has(key)) continue
-    if (!providedEnvKeys.has(key)) process.env[key] = value
-  }
-}
+// Enterprise uses real tenant sign-in by default; demo mode must be explicit.
+applyWorkspaceEnv('development', root, process.env, enterpriseProject ? new Set(['REACT_APP_USE_MOCK']) : new Set())
 
 process.env.NODE_ENV = 'development'
 process.env.TRACKING_STORE ||= 'memory'

@@ -5,9 +5,10 @@ import PageContainer from '@stateless/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
 import { getMfeSharedState, onMfeEvent, parseMfeSharedMessage } from '@platform/mfe/bridge'
 import RemoteScope from '@app/bootstrap/RemoteScope'
+import { getEnv } from '@platform/config/env'
 
 const { Paragraph, Text } = Typography
-const standaloneBaseUrl = (process.env.PROJECTB_STANDALONE_BASE_URL || process.env.PROJECTB_STANDALONE_ORIGIN || '')
+const standaloneBaseUrl = (getEnv('PROJECTB_STANDALONE_BASE_URL') || getEnv('PROJECTB_STANDALONE_ORIGIN'))
   .trim()
   .replace(/\/+$/, '')
 const standaloneAboutUrl = standaloneBaseUrl ? `${standaloneBaseUrl}/#/projectB/about` : undefined

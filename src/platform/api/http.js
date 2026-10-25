@@ -124,7 +124,7 @@ class HttpClient {
       !Object.keys(config.headers).some((key) => key.toLowerCase() === 'authorization')
     ) {
       const token = readStoredToken()
-      if (token) config.headers.Authorization = `Bearer ${token}`
+      if (token && !token.startsWith('github-demo:')) config.headers.Authorization = `Bearer ${token}`
       const enterprise = readEnterpriseSession()
       if (enterprise) config.headers['X-Tenant-ID'] = enterprise.tenantId
     }

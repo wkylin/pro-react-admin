@@ -91,6 +91,8 @@ export function resolveProject(projectName = 'default', registry = loadProjectRe
 export function createBuildPlan(action, name, inherited = {}, registry = loadProjectRegistry()) {
   if (!['dev', 'build', 'mfe-dev', 'mfe-build', 'mfe-build-standalone'].includes(action))
     throw new Error(`Unknown project action: ${action}`)
+  const bundler = inherited.BUILD_TOOL || 'webpack'
+  if (!['webpack', 'vite'].includes(bundler)) throw new Error(`Unknown build tool: ${bundler}`)
   const selected = resolveProject(name, registry)
   const isDev = action === 'dev' || action === 'mfe-dev'
   const isMfe = action.startsWith('mfe-')
@@ -98,10 +100,11 @@ export function createBuildPlan(action, name, inherited = {}, registry = loadPro
   if (isMfe && !host && !selected.remote) throw new Error(`${name} is not a registered federation host/remote`)
   const env = {
     ...inherited,
+    BUILD_TOOL: bundler,
     PROJECT: selected.name,
     NODE_ENV: isDev ? 'development' : 'production',
-    BUILD_GOAL: isDev ? 'development' : 'production',
-    SENTRY_SOURCE_MAP: isDev || isMfe ? 'no' : (inherited.SENTRY_SOURCE_MAP ?? 'map'),
+    ...(bundler === 'webpack' ? { BUILD_GOAL: isDev ? 'development' : 'production' } : {}),
+    SENTRY_SOURCE_MAP: inherited.SENTRY_SOURCE_MAP ?? 'no',
   }
   // Enterprise builds default to tenant-backed auth; demo mode must be explicit.
   if (selected.name === 'enterprise' && env.REACT_APP_USE_MOCK === undefined) env.REACT_APP_USE_MOCK = 'false'
@@ -118,12 +121,31 @@ export function createBuildPlan(action, name, inherited = {}, registry = loadPro
   }
   return {
     selected,
+    bundler,
+    output: path.relative(workspaceRoot, resolveBuildOutput(selected, inherited.VITE_OUT_DIR, bundler)),
     env,
-    args: [
-      ...(isDev ? ['serve'] : []),
-      '--config',
-      `./webpack/webpack.${isDev ? 'dev' : 'prod'}.js`,
-      '--stats-error-details',
-    ],
+    args:
+      bundler === 'vite'
+        ? [
+            ...(isDev ? ['--host'] : ['build']),
+            '--config',
+            './build/vite/app.config.ts',
+            ...(inherited.BUILD_GOAL ? ['--mode', inherited.BUILD_GOAL] : []),
+          ]
+        : [
+            ...(isDev ? ['serve'] : []),
+            '--config',
+            `./build/webpack/webpack.${isDev ? 'dev' : 'prod'}.js`,
+            '--stats-error-details',
+          ],
   }
+}
+
+export function resolveBuildOutput(selected, override, bundler = 'webpack') {
+  if (bundler === 'webpack') return selected.output
+  const relative = override?.trim() || `dist-vite${selected.name === 'default' ? '' : `-${selected.name}`}`
+  const output = resolveInside(workspaceRoot, relative, 'VITE_OUT_DIR')
+  if (!/^(?:dist(?:[-/]|$)|artifacts\/)/.test(path.relative(workspaceRoot, output)))
+    throw new Error('VITE_OUT_DIR must be inside dist*, dist/, or artifacts/')
+  return output
 }

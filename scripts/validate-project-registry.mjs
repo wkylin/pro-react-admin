@@ -2,7 +2,7 @@ import { loadProjectRegistry, resolveInside } from '../config/project-registry.m
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { assertClientEnvKeys, clientEnvKeys } from '../webpack/client-env.js'
+import { assertClientEnvKeys, clientEnvKeys } from '../build/client-env.js'
 import { getMfeSharedDependencies } from '../config/mfe-contract.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')

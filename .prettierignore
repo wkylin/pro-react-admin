@@ -1,9 +1,10 @@
 node_modules/**
 package-lock.json
 yarn.lock
-build/**
-dist/**
+/dist*/**
+/storybook-static*/**
+/artifacts/**
+/tests/reports/**
 .vscode/**
 .yarn/**
-compilation-stats.json
-**/*.css/.npmrc
+compilation-*-stats.json

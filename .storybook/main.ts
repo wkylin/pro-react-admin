@@ -1,7 +1,8 @@
 import type { StorybookConfig } from '@storybook/react-webpack5'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { createPathAliases } from '../webpack/aliases.js'
+import webpack from 'webpack'
+import { createPathAliases } from '../build/aliases.js'
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -34,6 +35,9 @@ const config: StorybookConfig = {
     },
   },
   webpackFinal: async (webpackConfig) => {
+    const storybookEnv = { NODE_ENV: process.env.NODE_ENV || 'development', REACT_APP_USE_MOCK: 'true' }
+    webpackConfig.plugins ??= []
+    webpackConfig.plugins.push(new webpack.DefinePlugin({ __APP_ENV__: JSON.stringify(storybookEnv) }))
     webpackConfig.resolve ??= {}
     webpackConfig.resolve.alias = {
       ...webpackConfig.resolve.alias,

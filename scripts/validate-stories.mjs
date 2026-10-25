@@ -20,8 +20,10 @@ const missing = directories.filter(
   (directory) => !fs.readdirSync(directory).some((file) => /\.stories\.[jt]sx?$/.test(file))
 )
 if (missing.length) throw new Error(`Missing component stories:\n${missing.join('\n')}`)
-if (process.argv.includes('--built')) {
-  const index = JSON.parse(fs.readFileSync('storybook-static/index.json', 'utf8'))
+const builtOption = process.argv.find((arg) => arg === '--built' || arg.startsWith('--built='))
+if (builtOption) {
+  const output = builtOption.startsWith('--built=') ? builtOption.slice('--built='.length) : 'storybook-static'
+  const index = JSON.parse(fs.readFileSync(path.join(output, 'index.json'), 'utf8'))
   const imports = new Set(Object.values(index.entries).map((entry) => entry.importPath.replace(/^\.\//, '')))
   for (const directory of directories) {
     const stories = fs.readdirSync(directory).filter((file) => /\.stories\.[jt]sx?$/.test(file))

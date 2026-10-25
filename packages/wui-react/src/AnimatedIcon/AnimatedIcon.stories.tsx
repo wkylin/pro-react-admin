@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react'
 import AnimatedIcon from './index'
 import { Music, Heart, Play } from 'lucide-react'
 

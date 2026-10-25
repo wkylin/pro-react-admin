@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-webpack5'
+import type { Meta, StoryObj } from '@storybook/react'
 import { useEffect, useRef, type ComponentProps } from 'react'
 import LotusImage from '../../../assets/images/he.png'
 import SnowImage from '../../../assets/images/xue.png'

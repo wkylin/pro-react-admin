@@ -657,7 +657,7 @@ const APIEncryptionPanel = () => {
             </Text>
           </Text>
           <Text type="secondary" style={{ fontSize: 12 }}>
-            💡 提示: 完整文档请查看 <Text code>docs/REQUEST_ENCRYPTION.md</Text>
+            💡 提示: 完整文档请查看 <Text code>docs/architecture/REQUEST_ENCRYPTION.md</Text>
           </Text>
         </Space>
       </Card>

@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons'
 import { useProThemeContext } from '@src/theme/hooks'
 import { useTranslation } from 'react-i18next'
+import { getEnv } from '@platform/config/env'
 
 interface GlobalSearchProps {
   open: boolean
@@ -32,13 +33,7 @@ type StoredRecent = {
   pinyin?: string
 }
 
-const isDev = () => {
-  try {
-    return typeof process !== 'undefined' && process.env?.NODE_ENV !== 'production'
-  } catch {
-    return false
-  }
-}
+const isDev = () => getEnv('NODE_ENV', 'production') !== 'production'
 
 const devWarn = (message: string, error?: unknown) => {
   if (!isDev()) return

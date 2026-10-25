@@ -117,15 +117,17 @@ const buildConfigDeps = () => {
 
   const files = []
   // Common config entry points
-  files.push(path.join(cwd, 'babel.config.js'))
-  files.push(path.join(cwd, 'jest.config.cjs'))
-  files.push(path.join(cwd, 'eslint.config.mjs'))
+  files.push(path.join(cwd, 'babel.config.cjs'))
+  files.push(path.join(cwd, 'tests/unit/config.cjs'))
+  files.push(path.join(cwd, 'eslint.config.js'))
   files.push(path.join(cwd, 'tsconfig.lib.json'))
   files.push(path.join(cwd, 'postcss.config.js'))
 
-  // Directories with build/storybook config
+  // Directories with build and test configuration
   walkFiles(path.join(cwd, '.storybook'), files)
-  walkFiles(path.join(cwd, 'webpack'), files)
+  walkFiles(path.join(cwd, 'build'), files)
+  walkFiles(path.join(cwd, 'tests/unit'), files)
+  walkFiles(path.join(cwd, 'tests/e2e/config'), files)
   walkFiles(path.join(cwd, 'scripts'), files)
 
   const text = files
@@ -266,14 +268,7 @@ const report = await new Promise((resolve, reject) => {
   depcheck(
     cwd,
     {
-      ignoreDirs: [
-        'node_modules',
-        'dist',
-        'storybook-static',
-        'coverage',
-        'playwright-report',
-        'test-results',
-      ],
+      ignoreDirs: ['node_modules', 'dist', 'storybook-static', 'tests/reports'],
       // Avoid the ttypescript special (it reads tsconfig.json as strict JSON and can fail on JSONC).
       specials: [
         depcheck.special.bin,

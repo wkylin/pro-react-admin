@@ -258,10 +258,7 @@
 .coverContent {
   position: absolute;
   z-index: 2;
-  top: 53%;
-  right: 8%;
-  bottom: 23%;
-  left: 13%;
+  inset: 53% 8% 23% 13%;
   overflow: hidden;
   color: var(--cover-text-color-override, var(--cover-copy-ink));
   font-family: var(--cover-font-family, 'Songti SC', Georgia, serif);
@@ -793,6 +790,7 @@
   &[data-cover-style='golden-jacket'] {
     --spine-ink: #842c2e;
     --spine-accent: #8c3030;
+
     background:
       linear-gradient(
         90deg,
@@ -807,6 +805,7 @@
   &[data-cover-style='editorial-orange'] {
     --spine-ink: #4b2b29;
     --spine-accent: #ef5b25;
+
     background:
       repeating-linear-gradient(90deg, rgb(70 53 50 / 4%) 0 1px, transparent 1px 4px),
       linear-gradient(90deg, rgb(0 0 0 / 12%), transparent 32%, rgb(255 255 255 / 55%) 72%, rgb(0 0 0 / 10%)),
@@ -1050,6 +1049,7 @@
   position: absolute;
   top: 0;
   left: 0;
+
   /* Tuck the spine under the cover face to close the visible one-pixel gap. */
   width: calc(var(--book-depth) + 7px);
   height: 100%;
@@ -1079,6 +1079,7 @@
   &[data-cover-style='golden-jacket'] {
     --spine-ink: #842c2e;
     --spine-accent: #8c3030;
+
     background:
       linear-gradient(
         90deg,
@@ -1093,6 +1094,7 @@
   &[data-cover-style='editorial-orange'] {
     --spine-ink: #4b2b29;
     --spine-accent: #ef5b25;
+
     background:
       repeating-linear-gradient(90deg, rgb(70 53 50 / 4%) 0 1px, transparent 1px 4px),
       linear-gradient(90deg, rgb(0 0 0 / 12%), transparent 32%, rgb(255 255 255 / 55%) 72%, rgb(0 0 0 / 10%)),

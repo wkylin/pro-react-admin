@@ -59,7 +59,7 @@
   },
   "/build/webpack": {
     "permission": "build:read",
-    "title": "Webpack",
+    "title": "Webpack / Vite",
     "i18nKey": "menu.webpack",
     "menu": {
       "parent": "/build",

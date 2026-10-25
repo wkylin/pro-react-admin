@@ -161,7 +161,7 @@ ${formatNames(standaloneFolders)}
 ${formatNames(authFiles)}
 `
 
-const outputPath = path.join(root, 'docs', 'COMPONENT_CATALOG.md')
+const outputPath = path.join(root, 'docs', 'components', 'COMPONENT_CATALOG.md')
 const formattedMarkdown = await format(markdown, { filepath: outputPath })
 if (process.argv.includes('--check')) {
   const current = fs.existsSync(outputPath) ? fs.readFileSync(outputPath, 'utf8') : ''

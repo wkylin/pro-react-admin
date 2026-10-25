@@ -5,6 +5,7 @@ const sessionKeys = [
   'token',
   'github_token',
   'github_user',
+  'github_demo_user',
   'user_permissions',
   'permissions_fetch_time',
   'permissions_auth_key',
@@ -109,7 +110,27 @@ export function readStoredToken(): string | null {
   }
   // Legacy demo credentials are never an authentication fallback in tenant mode.
   if (!getEnvBool('REACT_APP_USE_MOCK', false)) return null
-  for (const key of ['token', 'github_token']) {
+  try {
+    const stored = localStorage.getItem('github_demo_user')
+    if (stored) {
+      const user: unknown = JSON.parse(stored)
+      if (
+        user &&
+        typeof user === 'object' &&
+        'id' in user &&
+        typeof user.id === 'number' &&
+        Number.isSafeInteger(user.id) &&
+        user.id > 0 &&
+        'login' in user &&
+        typeof user.login === 'string' &&
+        user.login
+      )
+        return `github-demo:${user.id}`
+    }
+  } catch {
+    return null
+  }
+  for (const key of ['token']) {
     try {
       const raw = localStorage.getItem(key)
       if (!raw) continue

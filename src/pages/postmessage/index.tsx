@@ -1,8 +1,9 @@
 import { useRef, useEffect } from 'react'
+import { getEnv } from '@platform/config/env'
 
 const PostMessage = () => {
-  const origin = process.env.IFRAME_ORIGIN
-  const childOrigin = `${process.env.IFRAME_ORIGIN}/pro-react-admin/#/my-iframe`
+  const origin = getEnv('IFRAME_ORIGIN')
+  const childOrigin = `${origin}/pro-react-admin/#/my-iframe`
   const ref = useRef<HTMLIFrameElement | null>(null)
 
   const onReceivedMessage = (event: MessageEvent<unknown>) => {

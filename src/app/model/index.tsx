@@ -4,6 +4,7 @@ import { createStore } from 'zustand/vanilla'
 import { devtools, persist } from 'zustand/middleware'
 import { createAppSlice } from './modules/appSlice'
 import type { AppState } from './types'
+import { getEnv } from '@platform/config/env'
 
 /** Each application root owns its state; only shell preferences are persisted. */
 export function createAppStore(projectId: string, persistState = true) {
@@ -16,7 +17,7 @@ export function createAppStore(projectId: string, persistState = true) {
         partialize: (state) => ({ isSidebarOpen: state.isSidebarOpen }),
         ...(persistState ? {} : { storage: undefined }),
       }),
-      { name: `${projectId}/shell`, enabled: process.env.NODE_ENV === 'development' }
+      { name: `${projectId}/shell`, enabled: getEnv('NODE_ENV') === 'development' }
     )
   )
 }

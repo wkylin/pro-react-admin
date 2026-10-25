@@ -7,8 +7,8 @@ const { Paragraph, Title } = Typography
 const features = [
   {
     icon: <ToolOutlined />,
-    title: 'Webpack 5 构建',
-    description: '开发、生产、组件库和 Storybook 使用统一的 Webpack 工具链。',
+    title: 'Webpack / Vite 双构建',
+    description: '应用、组件库和 Storybook 可选择 Webpack 或 Vite 构建。',
   },
   {
     icon: <DeploymentUnitOutlined />,
@@ -35,7 +35,7 @@ const AdminLanding = () => {
       <div style={{ maxWidth: 1120, margin: '0 auto' }}>
         <Space orientation="vertical" size="large" style={{ width: '100%' }}>
           <div>
-            <Tag color="blue">REACT 19 · WEBPACK 5</Tag>
+            <Tag color="blue">REACT 19 · WEBPACK 5 / VITE 8</Tag>
             <Title id="admin-landing-title" style={{ marginTop: 12, marginBottom: 8 }}>
               Pro React Admin
             </Title>

@@ -3,7 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const statsPath = path.resolve(root, process.argv[2] || 'compilation-stats.json')
+const statsPath = path.resolve(root, process.argv[2] || 'artifacts/build/webpack/default/stats.json')
 const budgets = JSON.parse(fs.readFileSync(path.join(root, 'config/bundle-budget.json'), 'utf8'))
 const projectName = process.argv[3] || process.env.PROJECT || 'default'
 const budget = { ...budgets, ...budgets.projects?.[projectName] }

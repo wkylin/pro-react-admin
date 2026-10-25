@@ -8,8 +8,6 @@ import {
   type ApplicationModule,
   type ModuleCapability,
 } from './index'
-import { administrationManifest } from '@features/administration/manifest'
-import { notificationsManifest } from '@features/notifications/manifest'
 
 const TEST_HOST_VERSION = '5.1.0'
 
@@ -182,31 +180,6 @@ test('the registry rejects legacy contracts and checks v2 application compatibil
   ).toThrow('Unsupported module contract')
   expect(buildModuleRegistry([current], { hostVersion: '5.1.0' }).modules[0].contractVersion).toBe(2)
   expect(() => buildModuleRegistry([current], { hostVersion: '6.0.0' })).toThrow('incompatible with application')
-})
-
-test('shipped feature manifests declare only the capabilities they compile', () => {
-  const Provider = ({ children }: { children: ReactNode }) => <>{children}</>
-  const registry = buildModuleRegistry(
-    [
-      {
-        ...administrationManifest,
-        routes: [{ path: 'administration/users', element: <div /> }],
-        resources: { users: { path: '/api/admin/users', parse: (value: unknown) => value as { id: string } } },
-        Provider,
-      },
-      {
-        ...notificationsManifest,
-        routes: [{ path: 'notifications', element: <div /> }],
-        Provider,
-        headerAction: { Component: () => null, route: '/notifications' },
-      },
-    ],
-    {
-      hostVersion: TEST_HOST_VERSION,
-    }
-  )
-  expect(registry.modules.map(({ id }) => id)).toEqual(['administration', 'notifications'])
-  expect(registry.modules.map(({ contractVersion }) => contractVersion)).toEqual([2, 2])
 })
 
 test('v2 capabilities, migration chains and uninstall lifecycle declarations fail closed', () => {

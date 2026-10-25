@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { Writable } from 'node:stream'
 import { stripVTControlCharacters } from 'node:util'
 import webpack from 'webpack'
-import { createBuildProgress } from '../webpack/progress.js'
+import { createBuildProgress } from '../build/webpack/progress.js'
 
 let fixtureId = 0
 async function createFixture(t, { isTTY = true, env = { TERM: 'xterm-256color' }, level = 'info' } = {}) {
