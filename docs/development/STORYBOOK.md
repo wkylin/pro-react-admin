@@ -1,38 +1,41 @@
 # Storybook 本地预览与部署
 
-Storybook 10.6 可使用 React Webpack5 或 Vite builder，直接编译同一份源码；不读取旧 npm 包或 `packages/wui-react/dist`。组件 story 与源码同目录，`.storybook` 保存公共 Provider、Webpack 配置和独立的 Vite 配置。查看新版本无需先构建 lib。
+Storybook 10.6 是组件开发与文档站，Webpack5 和 Vite builder 直接编译同一份组件源码与 stories；不读取 `packages/wui-react/dist`。组件 story 与源码同目录，`.storybook/main.ts` 是 Webpack 配置，`.storybook/vite/main.ts` 是 Vite 配置，两者共用 `.storybook/preview.tsx` 的 Provider。查看或修改组件无需先构建 lib。
 
-手动发布完整步骤见 [手动部署指南](../deployment/MANUAL_DEPLOYMENT.md)，包括 Pages 全量上传和独立 Vercel 组件站。
+Storybook 的静态目录用于预览，不是可安装的 npm 包。要构建和发布 `@w.ui/wui-react`，请走[组件包发布指南](../deployment/LIBRARY_PUBLISH_GUIDE.md)；站点的手动发布步骤见[手动部署指南](../deployment/MANUAL_DEPLOYMENT.md)。
 
-## 本地启动
+## 本地开发与预览
 
-在仓库根目录使用 Node.js >=24.15.0 且 <25，先安装仓库锁定的依赖：
+在仓库根目录使用 Node.js >=24.15.0 且 <25、pnpm 11.5.2，先运行 `pnpm install --frozen-lockfile`。选择一套 builder；它们展示相同的 stories，只影响本地编译速度和构建实现。
 
-```bash
-pnpm install --frozen-lockfile
-npm run storybook
-```
+| 任务                   | Webpack（默认）                             | Vite                                                              |
+| ---------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
+| 开发并自动刷新         | `pnpm run storybook:webpack`，端口 6006     | `pnpm run storybook:vite`，端口 6008                              |
+| 构建静态站             | `pnpm run build-storybook:webpack`          | `pnpm run build-storybook:vite`                                   |
+| 构建输出               | `storybook-static/`                         | `storybook-static-vite/`                                          |
+| 本地预览已构建的文件   | `pnpm run serve:storybook`，端口 6007       | `pnpm exec serve storybook-static-vite -p 6009`                   |
+| 检查实际构建的组件索引 | `node scripts/validate-stories.mjs --built` | `node scripts/validate-stories.mjs --built=storybook-static-vite` |
 
-打开 http://localhost:6006。等价命令是 `pnpm run storybook`。已有旧进程时先 Ctrl+C 停止，再重新启动；浏览器刷新后查看 `WUI / Components`、`Shared`、`Components / Stateless` 和 `Components / Stateful`。
+首次使用建议先启动开发服务，在浏览器打开终端输出的地址，从左侧导航进入 `WUI / Components`、`Shared`、`Components / Stateless` 或 `Components / Stateful`。修改同目录的 `*.stories.tsx` 或组件源码后，开发服务自动更新；构建出的静态目录不会自动更新，需重新执行对应构建命令。两个静态输出目录独立，切换 builder 无需清理另一套产物。
 
-选择 Vite builder 时运行 `pnpm run storybook:vite`，打开 http://localhost:6008。静态构建运行 `pnpm run build-storybook:vite`，输出 `storybook-static-vite`；运行 `node scripts/validate-stories.mjs --built=storybook-static-vite` 检查索引。默认 Webpack 静态构建仍输出 `storybook-static`。Story 类型统一从 `@storybook/react` 导入，两套 builder 共用 stories 和 `.storybook/preview.tsx`。
+发布前应预览刚构建的静态目录，而不是把开发服务地址作为部署产物。`serve:storybook` 只预览 Webpack 产物；Vite 产物用上表中的 `pnpm exec serve` 命令。端口被占用时改用 `pnpm exec serve <输出目录> -p <空闲端口>`，以终端实际地址为准。Story 类型统一从 `@storybook/react` 导入。
 
 端口被占用时可以选择另一个端口：
 
 ```bash
-npm run storybook -- --port 6008 --no-open
+pnpm exec cross-env BABEL_ENV=storybook storybook dev -p 6010 --no-open
 ```
 
-`$RefreshSig$ is not defined` 的原因是根 Babel 开发配置注入了 React Refresh，但 Storybook 没有应用的 Refresh runtime。`.storybook/main.ts` 为 Babel loader 指定独立的 `envName: storybook`，`npm run storybook` 也通过 cross-env 显式设置 `BABEL_ENV=storybook`；应用开发构建继续保留 Refresh。
+上例只用于改 Webpack 开发端口；Vite 使用 `pnpm exec storybook dev -c .storybook/vite -p 6010 --no-open`。`$RefreshSig$ is not defined` 的原因是根 Babel 开发配置注入了 React Refresh，但 Storybook 没有应用的 Refresh runtime。`.storybook/main.ts` 为 Babel loader 指定独立的 `envName: storybook`，`storybook:webpack` 也通过 cross-env 显式设置 `BABEL_ENV=storybook`；应用开发构建继续保留 Refresh。
 
 已经运行的进程不会自动采用新的启动环境或主配置。更新配置后，先在旧终端按 Ctrl+C 停止 Storybook，再清理专用缓存并重新启动：
 
 ```bash
-npm run storybook:reset
+pnpm run storybook:reset
 # 打开 http://localhost:6006，并刷新原来的浏览器页面
 ```
 
-单独清理缓存使用 `npm run storybook:clean`。不要在服务运行时清缓存；同一工作区同时启动多个 Storybook 进程会共享开发输出目录，可能引起 HMR 持续重载，应先停止旧进程再改端口。不要给 window 写空的 Refresh 函数来遮蔽异常。生产静态构建不走相同的开发运行时，构建通过还需要验证开发预览。
+单独清理缓存使用 `pnpm run storybook:clean`。不要在服务运行时清缓存；同一工作区同时启动多个 Storybook 进程会共享开发输出目录，可能引起 HMR 持续重载，应先停止旧进程再改端口。不要给 window 写空的 Refresh 函数来遮蔽异常。生产静态构建不走相同的开发运行时，构建通过还需要验证开发预览。
 
 根 Babel 的类型导入应显式使用 `import type`。例如 ECharts 的 GeoJSON 类型没有可执行 `.js` 文件，不能让 Babel 将它保留为运行时 import。
 
@@ -59,18 +62,18 @@ ScrollProgressBar 的 Default / Gradient 使用 ScrollArea，进度条吸附在�
 
 ShootingStars 的 Default 自动在深色区域生成流星，无需鼠标操作；示例使用 500～1000ms 间隔和较长尾迹，Warm Colors 展示暖色效果，Compact 展示 320px 窄容器。组件按自身 SVG 尺寸生成和移除流星，随容器大小变化调整，不使用浏览器窗口尺寸。实际使用时放在有明确尺寸且 `position: relative` 的容器中。
 
-## 构建与检查
+## 修改组件后的检查
 
 ```bash
 pnpm run check:stories
 pnpm run typecheck:storybook
 pnpm run test:tooling
-npm run build-storybook
+pnpm run build-storybook:webpack
 node scripts/validate-stories.mjs --built
-npm run serve:storybook
+pnpm run serve:storybook
 ```
 
-静态输出为 `storybook-static`，预览 http://localhost:6007。`check:stories` 检查每个 UI 入口是否有 story；`--built` 进一步确认每个组件进入实际构建索引。`test:tooling` 包含真实 Storybook Babel compiler addon 与 Webpack 开发转译回归，验证截图报错涉及的 store/theme 模块能够加载。Webpack CI 和 Pages workflow 同时执行源码覆盖、类型及构建索引检查。索引检查不能代替浏览器交互验证。
+这是默认 Webpack 的提交前路径，静态预览地址为 http://localhost:6007。使用 Vite 时将构建、索引检查和预览三步换成上表的 Vite 命令；`check:stories`、`typecheck:storybook` 与 `test:tooling` 不变。`check:stories` 检查每个 UI 入口是否有 story；`--built` 进一步确认每个组件进入实际构建索引。`test:tooling` 包含真实 Storybook Babel compiler addon 与 Webpack 开发转译回归，验证 store/theme 模块能够加载。CI 与 Pages workflow 也会执行源码覆盖、类型及构建索引检查；索引检查不能代替浏览器交互验证。
 
 正常环境优先使用 package scripts；包管理器启动器出现异常时，可以用已安装的 Node CLI 复现：
 
@@ -121,13 +124,14 @@ import * as Stories from './Example.stories'
 
 仓库的 `.github/workflows/deploy-gh-pages.yml` 默认发布全部演示入口和 Storybook。首次启用仓库 Settings → Pages → Source → GitHub Actions，推送 `main` 后自动构建；也可以在 Actions 手动选择 `storybook`，仅发布组件站和入口导航。
 
-[Storybook 预览入口](https://wkylin.github.io/pro-react-admin/storybook/) 是该仓库的 Pages 发布地址。新增示例上线需本次代码推送并等待 workflow 成功；地址本身不代表最新版本已经发布。Fork 使用自己的用户名和仓库名。各应用完整发布命令见 [GitHub 部署指南](../deployment/GITHUB_DEPLOYMENT.md)。
+[Storybook 预览入口](https://wkylin.github.io/pro-react-admin/storybook/) 是该仓库的 Pages 发布地址。当前 Actions 工作流使用默认 Webpack builder；本地可用 `BUILD_TOOL=vite` 构建同一目录结构，但 workflow 没有 builder 选择输入。两种本地产物在聚合构建后都位于 `dist-combined/storybook/`，不会同时部署两份。新增示例上线需推送代码并等待 workflow 成功；地址本身不代表最新版本已经发布。Fork 使用自己的用户名和仓库名。各应用完整发布命令见 [GitHub 部署指南](../deployment/GITHUB_DEPLOYMENT.md)。
 
 ```bash
 PAGES_TARGET=storybook pnpm run build:pages
+pnpm run check:pages
 ```
 
-上述命令只构建到 `dist-combined`，不会上传。Pages 构建将 base 写入 manager 和 iframe HTML；默认值 `/pro-react-admin/storybook/`，实际 Actions 从 Pages 配置读取域名和 base path，支持改名、Fork 与自定义域名。
+上述命令只构建到 `dist-combined`，不会上传；实际发布由 `.github/workflows/deploy-gh-pages.yml` 在 push `main` 或手动触发时完成。Pages 构建将 base 写入 manager 和 iframe HTML；默认值 `/pro-react-admin/storybook/`，实际 Actions 从 Pages 配置读取域名和 base path，支持改名、Fork 与自定义域名。要本地验证 Pages 的 Vite 版本，运行 `BUILD_TOOL=vite PAGES_TARGET=storybook pnpm run build:pages` 后再执行 `pnpm run check:pages`。
 
 ## Vercel 独立组件站
 
@@ -137,8 +141,8 @@ PAGES_TARGET=storybook pnpm run build:pages
 
 ```bash
 # 在域名根部署，不设置 STORYBOOK_BASE_HREF
-npm run build-storybook
-npm run vercel:prepare:storybook
+pnpm run build-storybook:webpack
+pnpm run vercel:prepare:storybook
 
 # CLI 未登录时执行；已登录无需重复
 npx vercel login
@@ -146,6 +150,6 @@ npx vercel link --cwd artifacts/vercel-storybook --project pro-react-admin-story
 npx vercel deploy --cwd artifacts/vercel-storybook --prebuilt --prod
 ```
 
-准备命令只写入 Git 忽略的 `artifacts/vercel-storybook/.vercel/output`，保留根应用关联。若产物包含 Pages base，准备命令会拒绝它，需先取消终端中的 `STORYBOOK_BASE_HREF` 并重建。把部署命令返回的真实 production URL 加入 README；未实际部署前不填猜测域名。
+准备命令固定读取 Webpack 的 `storybook-static/`，只写入 Git 忽略的 `artifacts/vercel-storybook/.vercel/output`，保留根应用关联；`storybook-static-vite/` 目前仅供本地构建与预览。若产物包含 Pages base，准备命令会拒绝它，需先取消终端中的 `STORYBOOK_BASE_HREF` 并重建。把部署命令返回的真实 production URL 加入 README；未实际部署前不填猜测域名。
 
 也可以在独立 checkout 中关联组件站 Vercel 项目，Node 选 24.x，构建与部署时明确指定 `--local-config vercel.storybook.json`。该配置使用 `pnpm install --frozen-lockfile`、`pnpm run build-storybook` 和 `storybook-static`；根 `vercel.json` 默认构建后台应用，不能将其作为组件站配置。静态 Storybook 不需要 API rewrite 或 SPA fallback。

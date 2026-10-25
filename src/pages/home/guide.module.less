@@ -12,6 +12,15 @@
   -webkit-overflow-scrolling: touch;
 }
 
+.workspacePage {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .publicNav {
   display: flex;
   align-items: center;
@@ -238,6 +247,7 @@
 
 .sectionHeading a,
 .evidence a,
+.deliveryIdentity a,
 .directoryRow a {
   color: var(--wui-text-info);
   font-size: 12px;
@@ -434,6 +444,83 @@
   text-align: right;
 }
 
+.deliveryList {
+  margin-top: 22px;
+  border-bottom: 1px solid var(--wui-border);
+}
+
+.deliveryItem {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.36fr) minmax(0, 0.64fr);
+  gap: 34px;
+  padding: 22px 0;
+  border-top: 1px solid var(--wui-border);
+}
+
+.deliveryIdentity h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.deliveryIdentity p {
+  margin: 8px 0 12px;
+  color: var(--wui-text-secondary);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.deliveryIdentity a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.deliverySteps {
+  margin: 0;
+}
+
+.deliverySteps > div {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--wui-border);
+}
+
+.deliverySteps > div:first-child {
+  padding-top: 0;
+}
+
+.deliverySteps > div:last-child {
+  border-bottom: 0;
+}
+
+.deliverySteps dt {
+  color: var(--wui-text-secondary);
+  font-size: 12px;
+}
+
+.deliverySteps dd {
+  min-width: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.deliverySteps code {
+  color: var(--wui-text-info);
+  font-family: SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.deliverySteps dd span {
+  display: block;
+  margin-top: 3px;
+  color: var(--wui-text-secondary);
+}
+
 .workflow {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -529,6 +616,11 @@
   .workflow {
     grid-template-columns: 1fr;
     gap: 18px;
+  }
+
+  .deliveryItem {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
 }
 

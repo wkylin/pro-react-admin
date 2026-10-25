@@ -18,6 +18,9 @@ import styles from './guide.module.less'
 
 const repository = 'https://github.com/wkylin/pro-react-admin'
 const pages = 'https://wkylin.github.io/pro-react-admin'
+const libraryPack = 'npm pack ./packages/wui-react --dry-run --ignore-scripts'
+const libraryReleaseTag = 'wui-react-v*'
+const libraryOutput = 'packages/wui-react/dist/'
 
 type BuildTool = 'webpack' | 'vite'
 
@@ -53,6 +56,7 @@ const directories = [
   ['src/features', 'features'],
   ['src/platform', 'platform'],
   ['src/projects', 'projects'],
+  ['packages/wui-react', 'library'],
   ['build', 'build'],
   ['tests', 'tests'],
   ['deploy', 'deploy'],
@@ -90,6 +94,11 @@ export default function Home() {
   const isPublic = pathname === '/overview'
   const isSignedIn = Boolean(readStoredToken())
   const commands = ['pnpm install --frozen-lockfile', 'pnpm run project:doctor', `pnpm run dev:${buildTool}`]
+  const storybookOutput = buildTool === 'webpack' ? 'storybook-static/' : 'storybook-static-vite/'
+  const storybookPreview =
+    buildTool === 'webpack' ? 'pnpm run serve:storybook' : 'pnpm exec serve storybook-static-vite -p 6009'
+  const libraryVerify =
+    buildTool === 'webpack' ? 'pnpm run prepare:lib:release' : 'BUILD_TOOL=vite pnpm run prepare:lib:release'
 
   const copy = async (command: string) => {
     try {
@@ -101,7 +110,7 @@ export default function Home() {
   }
 
   return (
-    <main className={isPublic ? `${styles.page} ${styles.publicPage}` : styles.page}>
+    <main className={`${styles.page} ${isPublic ? styles.publicPage : styles.workspacePage}`}>
       {isPublic && (
         <header className={styles.publicNav}>
           <a className={styles.brand} href="#/overview" aria-label={t('projectGuide.nav.overviewLabel')}>
@@ -262,6 +271,96 @@ export default function Home() {
                 <span>{t(`projectGuide.structure.directories.${purposeKey}`)}</span>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className={styles.section} aria-labelledby="delivery-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.kicker}>{t('projectGuide.delivery.kicker')}</p>
+              <h2 id="delivery-title">{t('projectGuide.delivery.heading')}</h2>
+            </div>
+          </div>
+          <p className={styles.sectionDescription}>{t('projectGuide.delivery.description')}</p>
+          <div className={styles.deliveryList}>
+            <article className={styles.deliveryItem}>
+              <div className={styles.deliveryIdentity}>
+                <h3>{t('projectGuide.delivery.storybook.title')}</h3>
+                <p>{t('projectGuide.delivery.storybook.summary')}</p>
+                <EvidenceLink path="docs/development/STORYBOOK.md" label={t('projectGuide.delivery.storybook.guide')} />
+              </div>
+              <dl className={styles.deliverySteps}>
+                <div>
+                  <dt>{t('projectGuide.delivery.storybook.develop')}</dt>
+                  <dd>
+                    <code>{`pnpm run storybook:${buildTool}`}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.storybook.build')}</dt>
+                  <dd>
+                    <code>{`pnpm run build-storybook:${buildTool}`}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.storybook.preview')}</dt>
+                  <dd>
+                    <code>{storybookPreview}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.storybook.outputLabel')}</dt>
+                  <dd>
+                    <code>{storybookOutput}</code>
+                    <span>{t('projectGuide.delivery.storybook.output')}</span>
+                  </dd>
+                </div>
+              </dl>
+            </article>
+            <article className={styles.deliveryItem}>
+              <div className={styles.deliveryIdentity}>
+                <h3>{t('projectGuide.delivery.library.title')}</h3>
+                <p>{t('projectGuide.delivery.library.summary')}</p>
+                <EvidenceLink
+                  path="docs/deployment/LIBRARY_PUBLISH_GUIDE.md"
+                  label={t('projectGuide.delivery.library.guide')}
+                />
+              </div>
+              <dl className={styles.deliverySteps}>
+                <div>
+                  <dt>{t('projectGuide.delivery.library.build')}</dt>
+                  <dd>
+                    <code>{`pnpm run build:lib:${buildTool}`}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.library.outputLabel')}</dt>
+                  <dd>
+                    <code>{libraryOutput}</code>
+                    <span>{t('projectGuide.delivery.library.output')}</span>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.library.verify')}</dt>
+                  <dd>
+                    <code>{libraryVerify}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.library.pack')}</dt>
+                  <dd>
+                    <code>{libraryPack}</code>
+                  </dd>
+                </div>
+                <div>
+                  <dt>{t('projectGuide.delivery.library.publish')}</dt>
+                  <dd>
+                    <code>{libraryReleaseTag}</code>
+                    <span>{t('projectGuide.delivery.library.registry')}</span>
+                  </dd>
+                </div>
+              </dl>
+            </article>
           </div>
         </section>
 

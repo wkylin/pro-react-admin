@@ -25,7 +25,7 @@ for (const viewport of [
     await page.goto('/#/overview')
 
     const overview = page.getByRole('main')
-    const footerLink = page.getByRole('link', { name: 'Storybook' })
+    const footerLink = page.getByRole('link', { name: 'Storybook', exact: true })
     await expect(footerLink).toHaveCount(1)
     expect(await overview.evaluate((element) => element.scrollHeight)).toBeGreaterThan(viewport.height)
 

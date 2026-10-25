@@ -2,6 +2,33 @@
 
 本指南从本地构建、登录、打包到 npmjs 发布逐条列出命令。所有操作在**仓库根目录**执行，发布对象是 `packages/wui-react` 中的 `@w.ui/wui-react`；根应用为 private。应用版本和组件包版本独立，以组件包 `package.json` 为准。
 
+## 五分钟路径
+
+组件开发时先用 Storybook 查看源码中的组件；需要验证将交给其它项目安装的包时，再构建 `dist` 并检查实际 npm 打包清单。这些本地命令都不会发布到 npm：
+
+```bash
+pnpm install --frozen-lockfile
+pnpm run storybook:webpack      # http://localhost:6006；Vite 可改用 storybook:vite（6008）
+# 停止 Storybook 后执行以下发布前检查
+pnpm run check:lib-release
+pnpm run prepare:lib:release    # 默认用 Webpack 构建并验证组件包
+npm pack ./packages/wui-react --dry-run --ignore-scripts
+```
+
+要用 Vite 验证**同一份包源码**，将 `prepare:lib:release` 换成 `pnpm exec cross-env BUILD_TOOL=vite pnpm run prepare:lib:release`。该命令依次构建 ESM/CJS/CSS/类型、补齐包文件，并做包契约、独立消费和体积检查。两种构建器共用 `packages/wui-react/dist`，切换时会覆盖上一次产物，发布前只保留并验证最终选用的一种。组件故事的开发与静态预览步骤见 [Storybook 指南](../development/STORYBOOK.md)。
+
+| 操作                                        | 结果与去向                                           | 是否发布到 npm |
+| ------------------------------------------- | ---------------------------------------------------- | -------------- |
+| `storybook:webpack` / `storybook:vite`      | 本地组件开发服务，直接读取源码                       | 否             |
+| `prepare:lib:release`                       | `packages/wui-react/dist`，供本地检查和 npm 打包     | 否             |
+| `npm pack --dry-run`                        | 只列出将进入 npm 包的文件，不生成 tarball            | 否             |
+| `npm pack --pack-destination artifacts/npm` | 生成本地 `.tgz`；`v*` 应用 Release 可附带同类文件    | 否             |
+| `wui-react-v*` 发布工作流或 `npm publish`   | 上传 `@w.ui/wui-react` 到 npm registry               | 是             |
+| GitHub Pages                                | 承载应用和 Storybook 静态预览，不作为 npm 包安装地址 | 否             |
+| 默认 Vercel 站点                            | 承载默认应用与 GitHub 演示登录，不作为组件包发布渠道 | 否             |
+
+GitHub Actions 中 `v*` 标签创建应用 GitHub Release 并附带已验证的 `.tgz`；只有独立的 `wui-react-v*` 工作流会发布到 npm。不要用“Pages 上能看到组件”判断组件包已发布，发布结果以 `npm view @w.ui/wui-react` 为准。
+
 ## 环境与包边界
 
 仓库构建要求 Node.js **>=24.15.0 且 <25**、pnpm **11.5.2**：
@@ -28,11 +55,11 @@ pnpm install --frozen-lockfile
 
 ## 本地构建与验证
 
-只构建 JS、CSS 和类型声明（默认 Webpack，也可选择 Vite）：
+只构建 JS、CSS 和类型声明时，**选择一条**命令：
 
 ```bash
-pnpm run build:lib
-pnpm run build:lib:vite
+pnpm run build:lib        # Webpack
+# 或 pnpm run build:lib:vite
 ```
 
 两条命令写入同一个 `packages/wui-react/dist`，只保留最后一次构建结果。

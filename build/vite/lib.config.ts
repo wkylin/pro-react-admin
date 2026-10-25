@@ -11,6 +11,7 @@ const source = path.join(root, 'packages/wui-react/src')
 
 export default defineConfig({
   root,
+  publicDir: false,
   plugins: [
     react(),
     svgr({ include: '**/*.svg', svgrOptions: { exportType: 'default' } }),

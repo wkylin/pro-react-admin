@@ -156,6 +156,11 @@ async function main() {
   }
 
   const distDir = path.join(packageDir, 'dist')
+  const allowedDistEntries = new Set(['esm', 'cjs', 'types', 'assets', 'style.css'])
+  const unexpectedDistEntries = (await fs.readdir(distDir)).filter((entry) => !allowedDistEntries.has(entry))
+  if (unexpectedDistEntries.length > 0) {
+    throw new Error(`组件库 dist 包含应用静态资源或未知产物：${unexpectedDistEntries.join(', ')}`)
+  }
   const distPaths = (await fs.readdir(distDir, { recursive: true })).map((entry) => `dist/${entry}`)
   const foundLegacyOutputs = distPaths.filter(
     (relativePath) =>
