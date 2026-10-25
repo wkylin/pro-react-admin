@@ -101,7 +101,7 @@ export default function Home() {
   }
 
   return (
-    <main className={styles.page}>
+    <main className={isPublic ? `${styles.page} ${styles.publicPage}` : styles.page}>
       {isPublic && (
         <header className={styles.publicNav}>
           <a className={styles.brand} href="#/overview" aria-label={t('projectGuide.nav.overviewLabel')}>

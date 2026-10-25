@@ -3,7 +3,12 @@ import { browserDefaults, e2eReport, sharedConfig, workspaceRoot } from './share
 
 export default defineConfig({
   ...sharedConfig,
-  testIgnore: ['**/mfe-remote.spec.ts', '**/enterprise.spec.ts', '**/enterprise-api.spec.ts'],
+  testIgnore: [
+    '**/mfe-remote.spec.ts',
+    '**/enterprise.spec.ts',
+    '**/enterprise-public.spec.ts',
+    '**/enterprise-api.spec.ts',
+  ],
   fullyParallel: true,
   ...e2eReport(process.env.BUILD_TOOL === 'vite' ? 'vite' : 'webpack'),
   use: {

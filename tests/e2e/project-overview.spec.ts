@@ -15,3 +15,23 @@ test('visitors can inspect the project before signing in', async ({ page }) => {
   await expect(page).toHaveURL(/#\/signin$/)
   await expect(page.getByRole('heading', { name: '登录', level: 2 })).toBeVisible()
 })
+
+for (const viewport of [
+  { width: 1280, height: 800 },
+  { width: 390, height: 844 },
+]) {
+  test(`visitors can scroll the overview to its footer at ${viewport.width}px`, async ({ page }) => {
+    await page.setViewportSize(viewport)
+    await page.goto('/#/overview')
+
+    const overview = page.getByRole('main')
+    const footerLink = page.getByRole('link', { name: 'Storybook' })
+    await expect(footerLink).toHaveCount(1)
+    expect(await overview.evaluate((element) => element.scrollHeight)).toBeGreaterThan(viewport.height)
+
+    await page.mouse.move(viewport.width / 2, viewport.height / 2)
+    await page.mouse.wheel(0, 5000)
+    await expect.poll(() => overview.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
+    await expect(footerLink).toBeInViewport()
+  })
+}
