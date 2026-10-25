@@ -49,6 +49,7 @@ export const lazyComponents = {
 
   // 业务页面
   Home: lazyLoad(() => import('@pages/home')),
+  ComponentPlayground: lazyLoad(() => import('@pages/home/Playground')),
   Demo: lazyLoad(() => import('@pages/demo')),
   Business: lazyLoad(() => import('@features/business')),
   ZustandDemo: lazyLoad(() => import('@pages/zustand')),

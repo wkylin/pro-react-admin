@@ -13,6 +13,11 @@ export const businessRoutes = [
     element: <lazyComponents.Demo />,
   },
   {
+    path: 'component-playground',
+    name: '组件实验场',
+    element: <lazyComponents.ComponentPlayground />,
+  },
+  {
     path: 'business',
     name: 'Business',
     element: <lazyComponents.Business />,

@@ -85,6 +85,10 @@
       "icon": "RobotOutlined"
     }
   },
+  "/component-playground": {
+    "permission": "demo:read",
+    "title": "组件实验场"
+  },
   "/contact": {
     "permission": "contact:read",
     "title": "Contact",

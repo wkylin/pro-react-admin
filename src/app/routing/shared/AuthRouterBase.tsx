@@ -16,6 +16,12 @@ export default function AuthRouterBase({ children }: PropsWithChildren<{ route?:
   const token = readStoredToken()
   const matched = matchRoutes(rootRouter as RouteObject[], { pathname })?.at(-1)?.route as RouteNode | undefined
   if (token && (pathname === '/signin' || pathname === '/signup')) return <Navigate to="/" replace />
+  const overviewRoute =
+    !token && pathname === '/'
+      ? (matchRoutes(rootRouter as RouteObject[], { pathname: '/overview' })?.at(-1)?.route as RouteNode | undefined)
+      : undefined
+  if (overviewRoute?.path === 'overview' || overviewRoute?.path === '/overview')
+    return <Navigate to="/overview" replace />
   if (isPublicRoute(pathname) || isRouteConfigPublic(matched)) return <>{children}</>
   if (!token) return <Navigate to="/signin" replace />
   if (!current && loading) return <div role="status">{t('identity.checkingPermissions')}</div>

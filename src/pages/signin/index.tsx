@@ -1,9 +1,11 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import SliderCaptcha from '@wui/SliderCaptcha'
 import { useEffect, useState, useRef, type CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal, type FormProps } from 'antd'
-import { selectIsMobile, useAppStore } from '@app/model'
+import { selectIsMobile, useAppStore, useApplicationScope } from '@app/model'
 import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import { setLocalStorage } from '@shared/lib/publicFn'
 import { useAuth } from '@platform/auth/hooks/useAuth'
@@ -73,6 +75,8 @@ const loadOrInitPasswords = (): Record<string, string> => {
 }
 
 const DemoSignIn = () => {
+  const { t } = useTranslation()
+  const { projectId } = useApplicationScope()
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const { token } = theme.useToken()
@@ -461,6 +465,12 @@ const DemoSignIn = () => {
                   查看注册演示
                 </Button>
               </div>
+              {(projectId === 'default' || projectId === 'projectA') && (
+                <div className={styles.footerRow}>
+                  <Text type="secondary">{t('identity.exploreProject')}</Text>
+                  <Link to="/overview">{t('identity.viewOverview')}</Link>
+                </div>
+              )}
             </Card>
           </section>
         </div>

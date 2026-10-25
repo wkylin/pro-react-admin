@@ -93,6 +93,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`5.1.0`；�
 | /build/webpack              | Webpack / Vite | build:read              | src/app/routing/modules/tech.routes.tsx     |
 | /business                   | Business       | business:read           | src/app/routing/modules/business.routes.tsx |
 | /chatgpt                    | ChatGPT        | chatgpt:read            | src/app/routing/modules/ui.routes.tsx       |
+| /component-playground       | 组件实验场     | demo:read               | src/app/routing/modules/business.routes.tsx |
 | /contact                    | Contact        | contact:read            | src/app/routing/modules/ui.routes.tsx       |
 | /crypto                     | Crypto         | crypto:read             | src/app/routing/modules/ui.routes.tsx       |
 | /dashboard/*                | Dashboard      | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |
@@ -108,6 +109,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`5.1.0`；�
 | /my-iframe                  | My Iframe      | ui:read                 | src/app/routing/modules/ui.routes.tsx       |
 | /notification/:id           | 通知详情       | notification:read       | src/features/notifications/routes.tsx       |
 | /notifications              | 通知中心       | notification:read       | src/features/notifications/routes.tsx       |
+| /overview                   | 项目概览       | 继承策略或公共/回退路由 | src/app/routing/modules/auth.routes.tsx     |
 | /permission                 | 权限示例       | permission:read         | src/app/routing/modules/ui.routes.tsx       |
 | /ph-bar                     | PH Bar         | phbar:read              | src/app/routing/modules/ui.routes.tsx       |
 | /portfilo/*                 | My Portfilo    | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |

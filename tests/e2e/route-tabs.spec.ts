@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
   })
 })
 
-test('a deep link can open the lazy home tab and return to its cached form', async ({ page }) => {
+test('a deep link can open the project overview tab and restore a contact draft', async ({ page }) => {
   await page.goto('/#/contact')
   const name = page.getByPlaceholder('Your Name')
   await expect(name).toBeVisible()
@@ -16,7 +16,7 @@ test('a deep link can open the lazy home tab and return to its cached form', asy
 
   await page.getByRole('tab', { name: /^(Home|首页)$/ }).click()
   await expect(page).toHaveURL(/#\/$/)
-  await expect(page.getByPlaceholder('api key')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Pro React Admin', level: 1 })).toBeVisible()
 
   await page.getByRole('tab', { name: /(Contact|联系)/ }).click()
   await expect(page).toHaveURL(/#\/contact$/)

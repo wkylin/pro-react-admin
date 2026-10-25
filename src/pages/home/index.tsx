@@ -1,1207 +1,303 @@
-import AnimatedIcon from '@wui/AnimatedIcon'
-import MoveChecker from '@wui/MoveChecker'
+import { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import {
-  version,
-  useEffect,
-  useState,
-  useRef,
-  type ChangeEvent,
-  type ComponentType,
-  type KeyboardEvent,
-  type MouseEvent,
-  type TouchEvent,
-} from 'react'
-import { Input, Flex, Button } from 'antd'
-import { SendOutlined } from '@ant-design/icons'
-import { Atom, Merge, GitMerge, GitPullRequestArrow } from 'lucide-react'
-// import CountUp from 'react-countup'
-// import { PinInput } from 'react-input-pin-code'
-import SpotlightCard from '@stateless/Spotlight'
-// import Typewriter from 'typewriter-effect'
-import MarqueeImport from 'react-fast-marquee'
-import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
-import useDetectScroll from '@smakss/react-scroll-direction'
-import FixTabPanel from '@shared/ui/FixTabPanel'
-import ReMarkdown from '@stateless/ReMarkdown'
-// import LinearWrap from '@stateless/LinearWrap'
-import AlternatingText from '@stateless/AlternatingText'
-import AutoLink from '@stateless/AutoLink'
-import LazyLoadImage from '@stateless/LazyLoadImage'
-import IsometricCard from '@stateless/IsometricCard'
-import AvatarCard from '@stateless/AvatarCard'
-import LineBordered from '@stateless/LineBordered'
-import GradientTracking from '@stateless/GradientTracking'
-// import ShiftingCard from '@stateless/ShiftingCard'
-import BreatheText from '@stateless/BreatheText'
-import ScrollAnimation from '@stateless/ScrollAnimation'
-import AnimateOnScreen from '@stateless/AnimateOnScreen'
-import AnimateRipple from '@stateless/AnimateRipple'
-// import AnimateWave from '@stateless/AnimateWave'
-import NumberFlowFix from '@stateless/NumberFlowFix'
-import MeshGradientBackground from '@stateless/MeshGradientBackground'
-import useRect from '@hooks/useRect'
-import TagCloud from '@stateless/TagCloud'
-import ShiCode from '@stateless/ShiCode'
-import StaticStepper from '@stateless/StaticStepper'
-import FeatureAny from '@stateless/FeatureAny'
-import UserIP from '@stateless/UserIP'
-import ScratchToReveal from '@stateless/ScratchToReveal'
-// import SlideLinear from '@stateless/SlideLinear'
-import DynamicBackground from '@stateless/DynamicBackground'
-import ContentPlaceholder from '@stateless/ContentPlaceholder'
-import SkeletonFix from '@stateless/SkeletonFix'
-import { ReactSignature } from '@stateless/ReactSignature'
-// import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
-import SquaresGrid from '@stateless/SquaresGrid'
-import ShinyText from '@stateless/ShinyText'
-// import BlurText from '@stateless/BlurText'
-import Meteors from '@stateless/Meteors'
-import CompareAll from '@stateless/CompareAll'
-import TextLoader from '@stateless/TextLoader'
-import BackgroundBoxes from '@stateless/BackgroundBoxes'
-import TypeWriter from '@stateless/TypeWriter'
-import SlideText from '@stateless/SlideText'
-import SparklesCore from '@stateless/Sparkles'
-import SparklesText from '@stateless/SparklesText'
-import ColorfulText from '@stateless/ColorfulText'
-import MemoizedStars from '@stateless/MemoizedStars'
-// import WordRotate from '@stateless/WordRotate'
-import TestimonialCarousel from '@stateless/TestimonialCarousel'
-// import InteractiveGrid from '@stateless/InteractiveGrid'
-import BlurFade from '@stateless/BlurFade'
-import IconCloud from '@stateless/IconCloud'
-import GradualSpacing from '@stateless/GradualSpacing'
-import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
-import InViewBasicMultiple from '@stateless/AnimInViewBasic'
-import DottedStepper from '@stateless/DottedStepper'
-import FlipWords from '@stateless/FlipWords'
-import BorderBeam from '@stateless/BorderBeam'
-import AutoSlider from '@stateless/AutoSlider'
-import AnimText from '@stateless/AnimText'
-import SlideButton from '@stateless/SlideButton'
-import NumberViewCard from '@stateless/NumberViewCard'
-import CubeSpinner from '@stateless/CubeSpinner'
-import firstImage from '@assets/images/88-300x160.jpg'
-import secondImage from '@assets/images/2-300x160.jpg'
-import SpringPng from '@assets/images/spring.png'
-import HePng from '@assets/images/he.png'
-import SongPng from '@assets/images/song.png'
-import XuePng from '@assets/images/xue.png'
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  Check,
+  Copy,
+  GitBranch,
+  Layers3,
+  ShieldCheck,
+  Terminal,
+} from 'lucide-react'
+import { readStoredToken } from '@platform/auth/model/session'
+import logo from '@assets/images/pro-logo.png'
+import styles from './guide.module.less'
 
-import {
-  oneApiChat,
-  prettyObject,
-  // randomNum,
-  getDirection,
-  oneApiImage,
-} from '@shared/lib/aidFn'
-import { fireConfetti } from '@shared/lib/confetti'
-import exportSvg from '@shared/lib/svgExport'
-import Zoom from 'react-medium-image-zoom'
-import 'react-medium-image-zoom/dist/styles.css'
-import styles from './index.module.less'
-import BookLibrary from './BookLibrary'
-import HomeBookStage from './HomeBookStage'
+const repository = 'https://github.com/wkylin/pro-react-admin'
+const pages = 'https://wkylin.github.io/pro-react-admin'
 
-const preCode = `
-  const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
-    return (
-      <div>
-        <h2>{item.name}</h2>
-        <p>Price: {item.price}</p>
-        <p>Quantity: {item.quantity}</p>
-      </div>
-    );
-  };
-`.trim()
-const slugs = ['typescript', 'javascript', 'react', 'html5', 'css', 'prisma', 'nginx', 'vercel', 'docker', 'git']
+type BuildTool = 'webpack' | 'vite'
 
-const dataSteps = [
+const capabilities = [
   {
-    title: 'Step 1',
-    code: 'npx create-react-app my-app',
+    id: 'dualBuild',
+    source: 'config/project-registry.mjs',
+    docs: 'docs/development/BUILD.md',
+    icon: GitBranch,
   },
   {
-    title: 'Step 2',
-    code: 'cd my-app',
+    id: 'projects',
+    source: 'src/projects',
+    docs: 'docs/development/MULTI_PROJECT.md',
+    icon: Layers3,
   },
   {
-    title: 'Step 3',
-    code: 'npm start',
+    id: 'identity',
+    source: 'src/platform/auth',
+    docs: 'docs/architecture/USER_ROLE_PERMISSION.md',
+    icon: ShieldCheck,
   },
   {
-    title: 'Step 4',
-    code: 'npm run build',
+    id: 'quality',
+    source: 'packages/wui-react',
+    docs: 'docs/development/QUALITY.md',
+    icon: BookOpen,
   },
-]
+] as const
 
-// Vite can retain react-fast-marquee's CommonJS default wrapper after dependency optimization.
-const Marquee = (MarqueeImport as unknown as { default?: typeof MarqueeImport }).default ?? MarqueeImport
+const directories = [
+  ['src/app', 'app'],
+  ['src/features', 'features'],
+  ['src/platform', 'platform'],
+  ['src/projects', 'projects'],
+  ['build', 'build'],
+  ['tests', 'tests'],
+  ['deploy', 'deploy'],
+] as const
 
-type AiImage = {
-  imagePrompt: string
-  imageUrl: string
-  url?: string
-}
+const workflow = [
+  {
+    id: 'develop',
+    command: 'pnpm run dev:webpack',
+  },
+  {
+    id: 'verify',
+    command: 'pnpm run ci:quality',
+  },
+  {
+    id: 'deliver',
+    command: 'pnpm run build:pages',
+  },
+] as const
 
-type TextRotationProps = {
-  alternateText?: string[]
-}
-
-type SlideTextProps = {
-  text?: string[]
-}
-
-type Resettable = {
-  reset: () => void
-}
-
-const AlternatingTextWithStrings = AlternatingText as unknown as ComponentType<TextRotationProps>
-const SlideTextWithStrings = SlideText as unknown as ComponentType<SlideTextProps>
-const isResettable = (value: unknown): value is Resettable =>
-  typeof value === 'object' && value !== null && 'reset' in value && typeof value.reset === 'function'
-
-const Home = () => {
-  const [aiText, setAiText] = useState('')
-  const aiTextRef = useRef('')
-  const [isStream, setIsStream] = useState(false)
-  const [dateTime, setDateTime] = useState('')
-  const curController = useRef<AbortController | null>(null)
-
-  const [aiImageList, setAiImageList] = useState<AiImage[]>([])
-
-  const mouseEnterRef = useRef<HTMLButtonElement | null>(null)
-  const [enterDirection, setEnterDirection] = useState('left')
-  const handleMouseEnter = (event: MouseEvent<HTMLButtonElement> | TouchEvent<HTMLButtonElement>) => {
-    if (!mouseEnterRef.current) return
-
-    const direction = getDirection(event, mouseEnterRef.current)
-    switch (direction) {
-      case 0:
-        setEnterDirection('top')
-        break
-      case 1:
-        setEnterDirection('right')
-        break
-      case 2:
-        setEnterDirection('bottom')
-        break
-      case 3:
-        setEnterDirection('left')
-        break
-      default:
-        setEnterDirection('left')
-        break
-    }
-  }
-
-  const [apiKey, setApiKey] = useState(() => '')
-  const [chatText, setChatText] = useState('')
-  const textareaRef = useRef(null)
-
-  const changeApiKey = (event: ChangeEvent<HTMLInputElement>) => {
-    setApiKey(event.target.value)
-  }
-
-  const changeChatText = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setChatText(event.target.value)
-  }
-
-  const onInputKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.metaKey && event.key === 'Enter') {
-      onSubmit()
-      event.preventDefault()
-    }
-  }
-
-  // const [pinValues, setPinValues] = useState(['', '', '', '', '', '', ''])
-
-  const onSubmit = () => {
-    if (chatText.trim() === '') {
-      return
-    }
-    const controller = new AbortController()
-    curController.current = controller
-    fetchAi(chatText, apiKey, controller)
-  }
-  const onSubmitImage = () => {
-    if (chatText.trim() === '') {
-      return
-    }
-    const controller = new AbortController()
-    curController.current = controller
-    fetchAiImage(chatText, apiKey, controller)
-  }
-
-  const onStop = () => {
-    curController.current?.abort()
-    // setLoading(false)
-    setIsStream(false)
-  }
-
-  const fetchAi = (text: string, key: string, controller: AbortController) => {
-    aiTextRef.current = ''
-    setAiText(aiTextRef.current)
-    const { signal } = controller
-    setIsStream(true)
-    oneApiChat(
-      [
-        {
-          content: text,
-          role: 'user',
-        },
-      ],
-      key,
-      signal
-    )
-      .then((response) => {
-        const contentType = response.headers.get('content-type')
-        if (!response.ok || !contentType?.startsWith('text/event-stream') || response.status !== 200) {
-          if (contentType?.startsWith('text/html') || contentType?.startsWith('text/plain')) {
-            const textPlain = response.clone().text()
-            textPlain.then((plainText) => {
-              setAiText(plainText)
-            })
-          } else if (contentType?.startsWith('application/json')) {
-            const resJson = response.clone().json()
-            resJson.then((res) => {
-              setAiText(prettyObject(res))
-            })
-          } else {
-            setAiText(response.statusText)
-          }
-          setIsStream(false)
-        } else {
-          const reader = response.body?.getReader()
-          const delimiter = '\n\n'
-          let buffer = ''
-          let lastText = ''
-          const readStream = () => {
-            if (!reader) return
-            reader
-              .read()
-              .then(({ done, value }) => {
-                if (done) {
-                  setIsStream(false)
-                  return
-                }
-                buffer += new TextDecoder().decode(value)
-                while (buffer.includes(delimiter)) {
-                  const ind = buffer.indexOf(delimiter)
-                  const message = buffer.slice(0, ind)
-
-                  const dataList = message.split('data: ')
-
-                  for (const index in dataList) {
-                    if (dataList[index] !== '' && dataList[index] !== '[DONE]') {
-                      try {
-                        const json = JSON.parse(dataList[index])
-                        const delta = json.choices[0]?.delta?.content ?? ''
-                        lastText += delta
-                        setDateTime(new Date().toLocaleString())
-                        aiTextRef.current = lastText
-                        setAiText(aiTextRef.current)
-                      } catch (error) {
-                        console.log(error)
-                      }
-                    }
-                  }
-                  // 从缓冲区中移除已处理的消息和分隔符
-                  buffer = buffer.slice(ind + delimiter.length)
-                }
-                readStream()
-              })
-              .catch((error) => {
-                console.log('read stream error', error)
-              })
-          }
-          readStream()
-        }
-      })
-      .catch((error) => {
-        setIsStream(false)
-        setAiText(error.message)
-      })
-  }
-  const fetchAiImage = (text: string, key: string, controller: AbortController) => {
-    aiTextRef.current = ''
-    setAiText(aiTextRef.current)
-    setAiImageList([])
-    const { signal } = controller
-    setIsStream(true)
-    oneApiImage(
-      [
-        {
-          content: text,
-          role: 'user',
-        },
-      ],
-      key,
-      signal
-    )
-      .then((response) => {
-        const contentType = response.headers.get('content-type')
-        if (!response.ok || response.status !== 200) {
-          if (contentType?.startsWith('text/html') || contentType?.startsWith('text/plain')) {
-            const textPlain = response.clone().text()
-            textPlain.then((plainText) => {
-              setAiText(plainText)
-            })
-          } else if (contentType?.startsWith('application/json')) {
-            const resJson = response.clone().json()
-            resJson.then((res) => {
-              setAiText(prettyObject(res))
-            })
-          } else {
-            setAiText(response.statusText)
-          }
-          setIsStream(false)
-        } else {
-          const resJson = response.clone().json()
-          resJson.then((res) => {
-            // setAiText(prettyObject(res))
-            console.log('res', res)
-            if (res.error) return
-            setAiImageList(
-              res.data.map((item: { url: string; revised_prompt: string }) => ({
-                imageUrl: item.url,
-                imagePrompt: item.revised_prompt,
-              }))
-            )
-          })
-          setIsStream(false)
-        }
-      })
-      .catch((error) => {
-        setIsStream(false)
-        setAiText(error.message)
-      })
-  }
-
-  const scrollRef = useRef<HTMLDivElement | null>(null)
-  const [customElement, setCustomElement] = useState<HTMLDivElement | null>(null)
-  const { scrollDir, scrollPosition } = useDetectScroll({
-    target: customElement ?? undefined,
-  })
-
-  useEffect(() => {
-    setCustomElement((currentElement) => currentElement || scrollRef.current)
-  }, [])
-
-  const [barRect, barRef] = useRect()
-
-  const images = slugs.map((slug) => `https://cdn.simpleicons.org/${slug}/${slug}`)
-
-  // 使用 useRef 来引用 SVG 元素
-  const svgRef = useRef(null)
-  const [svgFileName, setSvgFileName] = useState('mySvg.svg')
-  const saveSvgAsFile = () => {
-    exportSvg(svgRef.current, svgFileName)
-  }
-
-  const currentYear = new Date().getFullYear()
-  const hopefulText = `${currentYear} 年，是充满希望的一年。让我们放下过去的包袱，轻装上阵。用积极的心态去面对生活，用坚定的信念去追逐梦想。相信自己，只要我们努力奋斗，就一定能创造出属于自己的精彩人生。让我们一起逐光前行，奔赴新程，书写属于我们的辉煌篇章！`
-
-  const mcRef = useRef<Resettable | null>(null)
-  const setMoveCheckerRef = (instance: unknown) => {
-    mcRef.current = isResettable(instance) ? instance : null
-  }
-  const setScrollRef = (instance: HTMLDivElement | null) => {
-    scrollRef.current = instance
-  }
-
+function EvidenceLink({ path, label }: { path: string; label: string }) {
+  const view = /\.[^/]+$/.test(path) ? 'blob' : 'tree'
   return (
-    <FixTabPanel ref={setScrollRef}>
-      <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
-        <ColorfulText text={`React version: ${version}`} />
-      </section>
-      <section style={{ width: '320px', margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
-          <Input.TextArea
-            ref={textareaRef}
-            defaultValue={chatText}
-            placeholder="来，说点什么呗...Meta + Enter发送"
-            onChange={changeChatText}
-            onKeyDown={onInputKeyDown}
-            autoSize
-            style={{ height: 30, caretColor: '#ff0000' }}
-          />
-        </Flex>
-        <Button
-          style={{ margin: '10px' }}
-          icon={
-            <AnimatedIcon variant="spin" mode="hover">
-              <SendOutlined rotate={-60} />
-            </AnimatedIcon>
-          }
-          type="primary"
-          disabled={isStream}
-          onClick={onSubmit}
-        >
-          发送
-        </Button>
-        <Button
-          style={{ margin: '10px' }}
-          icon={
-            <AnimatedIcon variant="spin" mode="hover">
-              <SendOutlined rotate={-60} />
-            </AnimatedIcon>
-          }
-          type="primary"
-          disabled={isStream}
-          onClick={onSubmitImage}
-        >
-          生成图片
-        </Button>
-        <Button
-          icon={
-            <AnimatedIcon variant="spin" mode="hover">
-              <SendOutlined rotate={-60} />
-            </AnimatedIcon>
-          }
-          type="primary"
-          disabled={!isStream}
-          onClick={onStop}
-        >
-          停止
-        </Button>
-      </section>
-      <section className="mb-10">
-        {isStream && <div>正在输入...</div>}
-        <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
-        <ReMarkdown markdownText={aiText} isLoading={isStream} />
-        <section className="aiImage">
-          {aiImageList.length > 0 && (
-            <>
-              {aiImageList.map((item, index) => (
-                <div key={index}>
-                  <div>{item.imagePrompt}</div>
-                  <img src={item.imageUrl} width="100%" alt={item.url} />
-                </div>
-              ))}
-            </>
-          )}
-        </section>
-      </section>
-      <section style={{ margin: '10px 0', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        <MoveChecker
-          ref={setMoveCheckerRef}
-          onResult={(r) => console.log('result', r)}
-          initialText="请按住滑块，拖动到最后"
-          successText="验证通过"
-          bgColor="linear-gradient(to right,#68cd0f,#35cca1)"
-          bgColorS="linear-gradient(to right,#68cd0f,#66e92d)"
-        />
-        <Button type="primary" style={{ margin: '10px' }} onClick={() => mcRef.current && mcRef.current.reset()}>
-          重置验证
-        </Button>
-      </section>
-      <HomeBookStage />
-      {/* ─── 书籍列表 ─── */}
-      <BookLibrary />
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        I love <span className={styles.circledHighlight}>coding</span> in{' '}
-        <AlternatingTextWithStrings alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        X岁的你，正处在一个特殊的位置：
-        <TypeWriter
-          text={['年轻到足以创新, 成熟到懂得坚持', '你既有冒险的勇气, 又有控制风险的智慧', '人生不设限，梦想不过期! ']}
-          speed={70}
-          className="text-gray-500"
-          waitTime={1500}
-          deleteSpeed={40}
-          cursorChar={'_'}
-        />
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 20 }}>
-        <MultiDirectionSlide textLeft="逐光前行，奔赴新程；" textRight="千山过尽，万里星辰！" />
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 20 }}>
-        <AnimText animText="逐光前行，奔赴新程；千山过尽，万里星辰！" />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20, overflow: 'hidden' }}>
-        This is something
-        <SlideTextWithStrings text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <SparklesText className="" text="千山过尽，万里星辰!" sparklesCount={5} />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <ShinyText text="Just some shiny text!" disabled={false} speed={3} />
-      </section>
-      {/* <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <BlurText text="Isn't this so cool?!" delay={50} />
-      </section> */}
-      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
-        <TextLoader
-          messages={[
-            'Preparing your experience',
-            'Loading awesome content',
-            'Almost there',
-            'Just a moment',
-            'Getting things ready',
-          ]}
-        />
-      </section>
-      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
-        <TestimonialCarousel />
-      </section>
-      {/* <section style={{
-        marginBottom: 15,
-        width: 360,
-        height: 200,
-        overflow: 'hidden',
-        position: 'relative',
-        background: '#111827',
-        // transform: 'skew(15deg, 15deg)'
-        // maskComposite: 'intersect',
-        // maskImage: `
-        //   linear-gradient(to right,  transparent, black 5%),
-        //   linear-gradient(to left,   transparent, black 5%),
-        //   linear-gradient(to bottom, transparent, black 5%),
-        //   linear-gradient(to top,    transparent, black 5%)
-        // `,
-      }}>
-        <InteractiveGrid width={12} height={12} squares={[50, 50]} />
-      </section> */}
-      <section
-        style={{
-          marginBottom: 15,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <IconCloud icons={undefined} images={images} />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <NumberViewCard />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          background: '#111827',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <Meteors starCount={30} primaryColor="#6366f1" className="opacity-30" />
-        <Meteors starCount={25} primaryColor="#818cf8" className="opacity-50" />
-        <Meteors starCount={20} primaryColor="#ffffff" className="opacity-70" />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          background: '#111827',
-        }}
-      >
-        <SparklesCore
-          background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={1200}
-          className="h-full w-full"
-          particleColor="#FFFFFF"
-        />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-        className="bg-slate-900"
-      >
-        <BackgroundBoxes className="" />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-        className="bg-slate-900"
-      >
-        <MemoizedStars />
-      </section>
-      <button
-        type="button"
-        onMouseEnter={handleMouseEnter}
-        onTouchStart={(e) => handleMouseEnter(e)}
-        onFocus={() => {
-          // provide some visible/default state when focused
-          setEnterDirection((prev) => prev || 'left')
-        }}
-        ref={mouseEnterRef}
-        style={{
-          marginBottom: 15,
-          height: 200,
-          width: 360,
-          background: '#111827',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#fff',
-          border: 'none',
-          padding: 0,
-        }}
-      >
-        Direction: {enterDirection}
-      </button>
-      <section style={{ margin: '20px 0' }}>
-        <CompareAll
-          firstImage={firstImage}
-          secondImage={secondImage}
-          firstImageClassName="object-cover object-left-top"
-          secondImageClassname="object-cover object-left-top"
-          className="h-50"
-          slideMode="drag"
-        />
-      </section>
-      <section
-        style={{
-          margin: '20px 0',
-          width: 360,
-          height: 200,
-          background: '#999',
-        }}
-      >
-        <SquaresGrid
-          speed={0.5}
-          squareSize={20}
-          direction="diagonal" // up, down, left, right, diagonal
-          borderColor="#222"
-          hoverFillColor="#222"
-        />
-      </section>
-      <section
-        style={{
-          margin: '20px 0',
-          width: 360,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-          <Input value={svgFileName} onChange={(e) => setSvgFileName(e.target.value)} style={{ width: 180 }} />
-          <Button type="primary" onClick={saveSvgAsFile}>
-            保存 SVG
-          </Button>
-        </div>
-        <section className="relative p-4">
-          <div className={styles.itemCircle} />
-          <svg ref={svgRef} style={{ height: '10px', width: '100%' }}>
-            <path d="M 0 0 L 5000 0" fill="none" stroke="#595959">
-              <animate
-                attributeName="stroke-dashoffset"
-                values="100;0"
-                dur="3s"
-                calcMode="linear"
-                repeatCount="indefinite"
-              ></animate>
-            </path>
-          </svg>
-          <div className={styles.itemCircleTail} />
-        </section>
-      </section>
-      <section className={styles.line} />
-      <section className={styles.linear} />
-      {/* <section>
-        <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
-      </section> */}
-      <section>
-        <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
-      </section>
-      <LineBordered text="A line bordered text." />
-      <section
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginTop: 10,
-          marginBottom: 40,
-        }}
-      >
-        <AnimatedIcon variant="spin" mode="hover">
-          <Atom />
-        </AnimatedIcon>{' '}
-        <AnimatedIcon variant="spin" mode="hover">
-          <Merge />
-        </AnimatedIcon>{' '}
-        <AnimatedIcon variant="spin" mode="hover">
-          <GitMerge />
-        </AnimatedIcon>{' '}
-        <AnimatedIcon variant="spin" mode="hover">
-          <GitPullRequestArrow />
-        </AnimatedIcon>
-      </section>
-      <section style={{ marginBottom: 40, fontSize: 16 }}>
-        <h2>Scroll direction: {`${scrollDir}`}</h2>
-        <p>
-          Scroll position - Top: {scrollPosition.top}, Bottom: {scrollPosition.bottom}
-        </p>
-      </section>
-      <section style={{ marginBottom: 40, fontSize: 16 }}>
-        <h3>React Animate On Scroll.</h3>
-        <h3>
-          <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
-        </h3>
-        <h3 style={{ marginBottom: 40 }}>
-          <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
-        </h3>
-        <ScrollAnimation>
-          {/* <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" /> */}
-          <LazyLoadImage className="" src={secondImage} alt="Strawberries" />
-        </ScrollAnimation>
-      </section>
-      {/* <section style={{ marginBottom: 40, fontSize: 36 }}>
-        <Typewriter
-          options={{
-            strings: ['Software Developer.', 'Full Stack Developer.', 'Open Source Contributor.'],
-            autoStart: true,
-            loop: true,
-            deleteSpeed: 50,
-          }}
-        />
-      </section> */}
-      <section>
-        <GradientTracking />
-      </section>
-      <section style={{ margin: 40 }}>
-        <BreatheText />
-      </section>
-      <section style={{ margin: '60px 0 40px 40px' }}>
-        <div className={styles['video-box']}>
-          <div className={styles['video-btn']}>b</div>
-        </div>
-      </section>
-      {/* <section style={{ marginBottom: 40 }}>
-        <ShiftingCard />
-      </section> */}
-      {/* <section style={{ marginBottom: 40 }}>
-        <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
-      </section> */}
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.FadeIn>
-          <AvatarCard avatar={XuePng} text="Hi, I'm a developer." />
-        </AnimateOnScreen.FadeIn>
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.FadeUp>
-          <img
-            src={SongPng}
-            alt=""
-            style={{
-              maskImage: 'linear-gradient(to top, transparent, black 20%, black 80%, transparent)',
-            }}
-          />
-        </AnimateOnScreen.FadeUp>
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.ScaleIn triggerOnce={false}>
-          <>
-            <img src={SpringPng} alt="" />
-            <section className={styles['blend-me']}>Mix Blend Mode</section>
-          </>
-        </AnimateOnScreen.ScaleIn>
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.DiyAnimation
-          from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
-          to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
-        >
-          <Zoom>
-            <img src={HePng} alt="" />
-          </Zoom>
-        </AnimateOnScreen.DiyAnimation>
-      </section>
-      <section style={{ marginBottom: 40, display: 'flex' }}>
-        <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
-          <section />
-        </SpotlightCard>
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 24 }}>
-        <BlurFade className="" variant={undefined} delay={0.25} inView>
-          这一年，以笔为剑，以梦为马，在生活的画布上，绘就属于自己的壮丽史诗。
-        </BlurFade>
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 24 }}>
-        <GradualSpacing text={hopefulText} />
-      </section>
-      <section style={{ margin: '20px 0' }}>
-        <ContentPlaceholder />
-      </section>
-      <section
-        // className={styles.box}
-        style={{
-          marginBottom: 10,
-          width: 360,
-          height: 200,
-          position: 'relative',
-          backgroundColor: 'rgba(0, 0,0, 0.8)',
-          borderRadius: 8,
-        }}
-      >
-        <section className={styles.dotMask} ref={barRef}>
-          dot mask
-        </section>
-        <BorderBeam className="" size={100} transition={{}} style={{}} />
-      </section>
-      <section style={{ marginBottom: 40, fontSize: 18 }}>
-        <section>RectResult.</section>
-        width: {Number.parseInt(String(barRect?.width))} height: {Number.parseInt(String(barRect?.height))} top:{' '}
-        {Number.parseInt(String(barRect?.top))} bottom: {Number.parseInt(String(barRect?.bottom))} right:{' '}
-        {Number.parseInt(String(barRect?.right))} left: {Number.parseInt(String(barRect?.left))}
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          height: 200,
-          width: 360,
-          overflow: 'hidden',
-        }}
-      >
-        <MeshGradientBackground />
-      </section>
-      <section
-        style={{
-          marginBottom: 20,
-        }}
-      >
-        <ScratchToReveal
-          width={360}
-          height={200}
-          minScratchPercentage={70}
-          onComplete={() => undefined}
-          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-(--wui-border-strong) bg-(--wui-bg-subtle)"
-        >
-          <p className="text-9xl">✨</p>
-        </ScratchToReveal>
-      </section>
-      <section style={{ margin: 20 }}>
-        <AnimateRipple onClick={() => undefined}>Click Me</AnimateRipple>
-      </section>
-      <section style={{ margin: 20 }}>
-        <section className={styles.effect}> Hello CSS</section>
-      </section>
-      <section style={{ margin: 20 }} className={styles.maskBox}>
-        <section className={styles.watermark}>water mark</section>
-        mask
-      </section>
-      <section style={{ margin: 20 }}>
-        <button className={styles.button} onClick={fireConfetti}>
-          <span className={styles['button-label']}>Click Me</span>
-        </button>
-      </section>
-      {/* <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
-        <div className={styles['circle-1']}></div>
-        <div className={styles['circle-2']}></div>
-        <div className={styles['circle-3']}></div>
-        <div className={styles['circle-4']}></div>
-      </section> */}
-      <section style={{ margin: 20 }} className={styles.eHElAY}>
-        Hi, React!
-      </section>
-      <section style={{ margin: 20 }} className="z-30 flex w-full items-center justify-start gap-8">
-        <SlideButton
-          backgroundColor="#0c002b"
-          textColor="#1670f0"
-          borderStartColor="rgba(22, 112, 240, 0.1)"
-          borderEndColor="rgba(22, 112, 240, 0.7)"
-          className=""
-          style={{}}
-        >
-          Button
-        </SlideButton>
-        <SlideButton
-          backgroundColor="#1a0b2e"
-          textColor="#ff00ff"
-          borderStartColor="rgba(255, 0, 255, 0.1)"
-          borderEndColor="rgba(0, 255, 255, 0.7)"
-          className=""
-          style={{}}
-        >
-          Button
-        </SlideButton>
-      </section>
-      <section>
-        <CubeSpinner />
-      </section>
-      {/* <section style={{ margin: '20px 0', fontSize: 40 }}>
-        <CountUp start={20} end={10000} duration={10} enableScrollSpy />
-      </section> */}
-      <section style={{ margin: '20px 0', fontSize: 40 }}>
-        <NumberFlowFix />
-      </section>
-      <section style={{ position: 'relative', fontSize: 36 }}>
-        I build
-        <FlipWords
-          className="mx-1 px-4 py-2"
-          words={['creative', 'interactive', 'beautiful', 'modern']}
-          wordClassName="text-blue-500 font-bold"
-        />
-        <span className="block sm:inline">websites and apps.</span>
-      </section>
-      <section style={{ margin: 20 }}>
-        <ReactSignature />
-      </section>
-      <section style={{ margin: 20 }}>
-        {dataSteps.map((step, index) => (
-          <StaticStepper.StaticStep
-            key={step.title}
-            step={index + 1}
-            title={step.title}
-            stepClassName="bg-blue-100 text-blue-600 border-blue-200"
-            titleClassName="text-blue-500 font-bold"
-          >
-            <StaticStepper.CodeContainer>{step.code}</StaticStepper.CodeContainer>
-          </StaticStepper.StaticStep>
-        ))}
-      </section>
-      <section style={{ margin: 20 }}>
-        <FeatureAny />
-      </section>
-      <section style={{ margin: 20 }}>
-        <SkeletonFix />
-      </section>
-      <section style={{ margin: 20 }}>
-        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
-          <Masonry gutter="10px">
-            <section
-              key="masonry-1"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-2"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-3"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-4"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-5"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-6"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-7"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-8"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-9"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-10"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-11"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-12"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-13"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-14"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-          </Masonry>
-        </ResponsiveMasonry>
-      </section>
-      <section style={{ margin: 20 }}>
-        <InViewBasicMultiple />
-      </section>
-      <section style={{ margin: 20 }}>
-        <TagCloud />
-      </section>
-      <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div
-            style={{
-              width: 200,
-              height: 100,
-              lineHeight: '100px',
-              textAlign: 'center',
-              background: '#aaa',
-              margin: '0 10px',
-              borderRadius: 8,
-              // transform: 'rotateX(60deg) rotateY(0deg) rotateZ(45deg)'
-            }}
-          >
-            React
-          </div>
-        </Marquee>
-      </section>
-      <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div
-            style={{
-              width: 200,
-              height: 100,
-              lineHeight: '100px',
-              textAlign: 'center',
-              background: '#aaa',
-              margin: '0 10px',
-              borderRadius: 8,
-            }}
-          >
-            Vue
-          </div>
-        </Marquee>
-      </section>
-      <section style={{ margin: 0 }}>
-        <DottedStepper className="" activeColor={undefined} inactiveBgColor={undefined} />
-      </section>
-      <section style={{ margin: 20 }}>
-        <ShiCode preCode={preCode} />
-      </section>
-      <section style={{ margin: 20 }}>
-        <DynamicBackground />
-      </section>
-      <section style={{ margin: 20 }}>
-        <UserIP />
-      </section>
-      <section style={{ margin: 20 }}>
-        <AutoSlider />
-      </section>
-    </FixTabPanel>
+    <a href={`${repository}/${view}/main/${path}`} target="_blank" rel="noopener noreferrer">
+      {label} <ArrowUpRight size={14} aria-hidden="true" />
+    </a>
   )
 }
 
-export default Home
+export default function Home() {
+  const { t } = useTranslation()
+  const [buildTool, setBuildTool] = useState<BuildTool>('webpack')
+  const [copied, setCopied] = useState('')
+  const { pathname } = useLocation()
+  const isPublic = pathname === '/overview'
+  const isSignedIn = Boolean(readStoredToken())
+  const commands = ['pnpm install --frozen-lockfile', 'pnpm run project:doctor', `pnpm run dev:${buildTool}`]
+
+  const copy = async (command: string) => {
+    try {
+      await navigator.clipboard.writeText(command)
+      setCopied(command)
+    } catch {
+      setCopied('copy-failed')
+    }
+  }
+
+  return (
+    <main className={styles.page}>
+      {isPublic && (
+        <header className={styles.publicNav}>
+          <a className={styles.brand} href="#/overview" aria-label={t('projectGuide.nav.overviewLabel')}>
+            <img src={logo} alt="" />
+            <span>{t('projectGuide.brand')}</span>
+          </a>
+          <div className={styles.navActions}>
+            <a href={`${repository}/tree/main/docs`} target="_blank" rel="noopener noreferrer">
+              {t('projectGuide.nav.docs')} <ArrowUpRight size={15} aria-hidden="true" />
+            </a>
+            <Link className={styles.navPrimary} to={isSignedIn ? '/demo' : '/signin'}>
+              {isSignedIn ? t('projectGuide.nav.openDemo') : t('projectGuide.nav.signIn')}{' '}
+              <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
+        </header>
+      )}
+
+      <div className={styles.content}>
+        <section className={styles.intro} aria-labelledby="guide-title">
+          <div>
+            <p className={styles.kicker}>{t('projectGuide.intro.kicker')}</p>
+            <h1 id="guide-title">{t('projectGuide.brand')}</h1>
+            <p className={styles.lead}>{t('projectGuide.intro.lead')}</p>
+            <p className={styles.introCopy}>{t('projectGuide.intro.description')}</p>
+            <div className={styles.introActions}>
+              <Link className={styles.primaryAction} to={isSignedIn ? '/demo' : '/signin'}>
+                {isSignedIn ? t('projectGuide.intro.viewScenarios') : t('projectGuide.intro.tryDemo')}{' '}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+              <a
+                className={styles.secondaryAction}
+                href={`${repository}/blob/main/docs/README.md`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t('projectGuide.intro.readDocs')} <ArrowUpRight size={17} aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+          <div className={styles.deliveryMap} aria-label={t('projectGuide.intro.deliveryMapLabel')}>
+            <p>{t('projectGuide.intro.deliveryMapTitle')}</p>
+            <ol>
+              <li>
+                <span>{t('projectGuide.intro.business')}</span>
+                <code>{t('projectGuide.intro.businessPaths')}</code>
+              </li>
+              <li>
+                <span>{t('projectGuide.intro.build')}</span>
+                <code>{t('projectGuide.intro.buildPaths')}</code>
+              </li>
+              <li>
+                <span>{t('projectGuide.intro.quality')}</span>
+                <code>{t('projectGuide.intro.qualityPaths')}</code>
+              </li>
+              <li>
+                <span>{t('projectGuide.intro.deploy')}</span>
+                <code>{t('projectGuide.intro.deployPaths')}</code>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section className={styles.section} aria-labelledby="capabilities-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.kicker}>{t('projectGuide.capabilities.kicker')}</p>
+              <h2 id="capabilities-title">{t('projectGuide.capabilities.heading')}</h2>
+            </div>
+            <EvidenceLink
+              path="docs/architecture/ENGINEERING_OVERVIEW.md"
+              label={t('projectGuide.capabilities.fullMap')}
+            />
+          </div>
+          <div className={styles.capabilityList}>
+            {capabilities.map(({ id, source, docs, icon: Icon }) => (
+              <article className={styles.capability} key={id}>
+                <div className={styles.capabilityIcon}>
+                  <Icon size={21} aria-hidden="true" />
+                </div>
+                <div>
+                  <h3>{t(`projectGuide.capabilities.${id}.title`)}</h3>
+                  <p>{t(`projectGuide.capabilities.${id}.detail`)}</p>
+                </div>
+                <div className={styles.evidence}>
+                  <EvidenceLink path={source} label={t('projectGuide.evidence.source')} />
+                  <EvidenceLink path={docs} label={t('projectGuide.evidence.docs')} />
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className={styles.section} aria-labelledby="start-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.kicker}>{t('projectGuide.start.kicker')}</p>
+              <h2 id="start-title">{t('projectGuide.start.heading')}</h2>
+            </div>
+            <EvidenceLink path="docs/development/GETTING_STARTED.md" label={t('projectGuide.start.details')} />
+          </div>
+          <p className={styles.sectionDescription}>{t('projectGuide.start.description')}</p>
+          <div className={styles.toolSelector} role="group" aria-label={t('projectGuide.start.chooseBuildTool')}>
+            {(['webpack', 'vite'] as const).map((tool) => (
+              <button
+                key={tool}
+                type="button"
+                className={buildTool === tool ? styles.selectedTool : ''}
+                aria-pressed={buildTool === tool}
+                onClick={() => setBuildTool(tool)}
+              >
+                {t(`projectGuide.start.tools.${tool}`)}
+              </button>
+            ))}
+          </div>
+          <div className={styles.terminal}>
+            <div className={styles.terminalHeading}>
+              <Terminal size={17} aria-hidden="true" />
+              <span>{t('projectGuide.start.terminal')}</span>
+              <span>{t('projectGuide.start.platform')}</span>
+            </div>
+            {commands.map((command, index) => (
+              <div className={styles.commandRow} key={command}>
+                <span className={styles.commandNumber}>{String(index + 1).padStart(2, '0')}</span>
+                <code>{command}</code>
+                <button
+                  type="button"
+                  onClick={() => void copy(command)}
+                  aria-label={t('projectGuide.start.copyCommand', { command })}
+                  title={t('projectGuide.start.copyCommand', { command })}
+                >
+                  {copied === command ? <Check size={17} aria-hidden="true" /> : <Copy size={17} aria-hidden="true" />}
+                </button>
+              </div>
+            ))}
+          </div>
+          <p className={styles.commandNote} aria-live="polite">
+            {copied === 'copy-failed'
+              ? t('projectGuide.start.copyFailed')
+              : copied
+                ? t('projectGuide.start.copied')
+                : t('projectGuide.start.addressNote')}
+          </p>
+        </section>
+
+        <section className={styles.section} aria-labelledby="structure-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.kicker}>{t('projectGuide.structure.kicker')}</p>
+              <h2 id="structure-title">{t('projectGuide.structure.heading')}</h2>
+            </div>
+            <EvidenceLink path="docs/development/SRC_DIRECTORY_GUIDE.md" label={t('projectGuide.structure.details')} />
+          </div>
+          <div className={styles.directoryList}>
+            {directories.map(([path, purposeKey]) => (
+              <div className={styles.directoryRow} key={path}>
+                <EvidenceLink path={path} label={path} />
+                <span>{t(`projectGuide.structure.directories.${purposeKey}`)}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className={styles.section} aria-labelledby="workflow-title">
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.kicker}>{t('projectGuide.workflow.kicker')}</p>
+              <h2 id="workflow-title">{t('projectGuide.workflow.heading')}</h2>
+            </div>
+            <EvidenceLink path="docs/deployment/DEPLOY.md" label={t('projectGuide.workflow.details')} />
+          </div>
+          <div className={styles.workflow}>
+            {workflow.map(({ id, command }) => (
+              <div className={styles.workflowStep} key={id}>
+                <strong>{t(`projectGuide.workflow.${id}.stage`)}</strong>
+                <code>{id === 'develop' ? `pnpm run dev:${buildTool}` : command}</code>
+                <p>{t(`projectGuide.workflow.${id}.result`)}</p>
+              </div>
+            ))}
+          </div>
+          <p className={styles.boundary}>{t('projectGuide.workflow.boundary')}</p>
+        </section>
+
+        <footer className={styles.footer}>
+          <span>{t('projectGuide.footer.tagline')}</span>
+          <div>
+            <Link to="/demo">{t('projectGuide.footer.scenarios')}</Link>
+            <a href={`${pages}/portal.html`} target="_blank" rel="noopener noreferrer">
+              {t('projectGuide.footer.allApps')} <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
+            <a href={`${pages}/storybook/`} target="_blank" rel="noopener noreferrer">
+              {t('projectGuide.footer.storybook')} <ArrowUpRight size={14} aria-hidden="true" />
+            </a>
+          </div>
+        </footer>
+      </div>
+    </main>
+  )
+}

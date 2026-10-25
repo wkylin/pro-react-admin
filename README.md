@@ -2,6 +2,8 @@
 
 React 企业管理应用与组件工作区，基于 React 19、Ant Design 6、React Router 7、Zustand 5、Webpack 5、Vite 8 和 TypeScript 6。提供完整展示应用、精简企业入口、多项目构建、Module Federation Host/Remote，以及独立 UI 包 @w.ui/wui-react。
 
+先看[线上项目概览](https://pro-react-admin.vercel.app/#/overview)了解能力、目录和交付路径；[工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md)将每项能力对应到源码、验证命令和适用边界。需要进入应用操作时再使用演示账号登录。
+
 ## 线上预览
 
 - [默认后台展示应用](https://pro-react-admin.vercel.app)。

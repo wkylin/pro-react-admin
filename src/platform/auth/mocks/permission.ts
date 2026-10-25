@@ -15,6 +15,7 @@ const adminRoutes = [...allRoutes]
 const managerRoutes = [
   '/',
   '/demo',
+  '/component-playground',
   '/business',
   '/echarts',
   '/geo',
@@ -38,10 +39,29 @@ const managerRoutes = [
 ]
 
 // 业务员：业务相关功能
-const businessRoutes = ['/', '/business', '/dashboard', '/demo', '/echarts', '/profile', '/topology', '/svg-viewer']
+const businessRoutes = [
+  '/',
+  '/business',
+  '/dashboard',
+  '/demo',
+  '/component-playground',
+  '/echarts',
+  '/profile',
+  '/topology',
+  '/svg-viewer',
+]
 
 // 普通用户：基础查看功能
-const userRoutes = ['/', '/demo', '/dashboard', '/motion', '/crypto', '/profile', '/svg-viewer']
+const userRoutes = [
+  '/',
+  '/demo',
+  '/component-playground',
+  '/dashboard',
+  '/motion',
+  '/crypto',
+  '/profile',
+  '/svg-viewer',
+]
 
 /**
  * 预定义角色

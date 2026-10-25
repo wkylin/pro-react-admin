@@ -20,6 +20,8 @@ const en = {
     callbackFailed: 'Sign-in could not be completed. Try again or contact your administrator.',
     retrySignIn: 'Try signing in again',
     processingSignIn: 'Completing sign-in…',
+    exploreProject: 'Explore the project first?',
+    viewOverview: 'View project overview',
   },
   admin: {
     administration: 'Administration',
@@ -81,6 +83,150 @@ const en = {
     bootstrap: 'Initialize workspace',
     tenant_switch_out: 'Switch from workspace',
     tenant_switch_in: 'Switch to workspace',
+  },
+  projectGuide: {
+    brand: 'Pro React Admin',
+    nav: {
+      overviewLabel: 'Pro React Admin project overview',
+      docs: 'Docs',
+      openDemo: 'Explore demos',
+      signIn: 'Sign in to explore',
+    },
+    intro: {
+      kicker: 'React admin engineering workspace',
+      lead: 'Trace every step from a business page to a deployable build.',
+      description:
+        'Built for React teams that need role permissions, multiple projects, and reusable components. Try the workflows, then use the source, tests, and docs to decide whether it fits your project.',
+      viewScenarios: 'Explore scenarios',
+      tryDemo: 'Try a demo account',
+      readDocs: 'Read engineering docs',
+      deliveryMapLabel: 'Project delivery path',
+      deliveryMapTitle: 'A traceable path to delivery',
+      business: 'Features and components',
+      businessPaths: 'src / packages',
+      build: 'Projects and builds',
+      buildPaths: 'config / build',
+      quality: 'Quality checks',
+      qualityPaths: 'tests / scripts',
+      deploy: 'Deployment and telemetry',
+      deployPaths: 'deploy / docs',
+    },
+    evidence: {
+      source: 'Source',
+      docs: 'Docs',
+    },
+    capabilities: {
+      kicker: 'Why use it',
+      heading: 'Capabilities and evidence',
+      fullMap: 'Engineering overview',
+      dualBuild: {
+        title: 'One codebase, two build tools',
+        detail:
+          'The app, component library, and Storybook share source code. Choose Webpack or Vite for development and builds.',
+      },
+      projects: {
+        title: 'Clear project and microfrontend boundaries',
+        detail:
+          'The registry defines the default app, enterprise entry, standalone projects, and host/remotes, each with a deployable output.',
+      },
+      identity: {
+        title: 'Demo permissions and real identity are separate',
+        detail:
+          'Browser demo accounts show role differences; a separate API handles enterprise identity, tenant permissions, and persistence.',
+      },
+      quality: {
+        title: 'Trace components, tests, and reports',
+        detail:
+          'Stories live beside components; unit and end-to-end tests live under tests, with coverage and run reports in one place.',
+      },
+    },
+    start: {
+      kicker: 'Get started in five minutes',
+      heading: 'Choose a build tool and run the same app',
+      details: 'Detailed steps',
+      description:
+        'Requires Node.js 24 and pnpm 11.5.2. Run commands from the repository root; the local API starts with the frontend and needs no separate database installation.',
+      chooseBuildTool: 'Choose a build tool',
+      tools: { webpack: 'Webpack', vite: 'Vite' },
+      terminal: 'Terminal',
+      platform: 'macOS / Linux',
+      copyCommand: 'Copy {{command}}',
+      copyFailed: 'Copy failed. Select the command manually.',
+      copied: 'Command copied.',
+      addressNote: 'Use the local URL shown in the terminal after startup.',
+    },
+    structure: {
+      kicker: 'Where to start reading the code',
+      heading: 'Project directories',
+      details: 'Directory guide',
+      directories: {
+        app: 'Routes, layouts, and app composition',
+        features: 'Self-contained business features',
+        platform: 'Authentication, requests, configuration, and telemetry',
+        projects: 'Entries and modules for each project',
+        build: 'Webpack, Vite, and shared build contracts',
+        tests: 'Unit and browser tests and reports',
+        deploy: 'Static and server deployment resources',
+      },
+    },
+    workflow: {
+      kicker: 'Delivery path',
+      heading: 'Develop, test, and deploy',
+      details: 'Deployment guide',
+      develop: {
+        stage: 'Develop',
+        result: 'Start the frontend and local API together; the terminal shows the actual ports.',
+      },
+      verify: {
+        stage: 'Verify',
+        result: 'Run type checks, static checks, documentation contracts, and unit and API tests.',
+      },
+      deliver: {
+        stage: 'Deliver',
+        result: 'Build the static Pages showcase; Vercel uses a separate prebuilt deployment flow.',
+      },
+      boundary:
+        'GitHub Pages hosts the static showcase. GitHub sign-in needs a same-origin Vercel function, and enterprise data needs a separate API. Follow the deployment docs for environment variables, artifacts, and rollback.',
+    },
+    footer: {
+      tagline: 'Pro React Admin · From scenarios to source',
+      scenarios: 'Scenarios',
+      allApps: 'All apps',
+      storybook: 'Storybook',
+    },
+  },
+  scenarioGuide: {
+    eyebrow: 'DEMO / SCENARIOS',
+    heading: 'Scenario demos',
+    sceneCount: '{{total}} scenarios',
+    enterScene: 'Open scenario',
+    evidenceLabel: 'Implementation evidence for {{title}}',
+    evidence: { source: 'Source', test: 'Test', docs: 'Docs' },
+    scenarios: {
+      crypto: {
+        category: 'Data handling',
+        title: 'Encryption lab',
+        summary: 'AES, RSA, and request wrapping',
+      },
+      motion: {
+        category: 'Interaction feedback',
+        title: 'Motion and scrolling',
+        summary: 'Drag feedback, section scrolling, and animation states',
+      },
+      architecture: {
+        category: 'Engineering structure',
+        title: 'Architecture diagram',
+        summary: 'Project entries, permission and data flow, and build delivery',
+        testNote: 'The diagram currently has a route contract check, but no automated canvas interaction test.',
+      },
+    },
+    storybook: {
+      category: 'Component lab',
+      title: 'Storybook',
+      openLab: 'Open in-app component lab',
+      openExternal: 'Open Storybook',
+      evidenceLabel: 'Storybook implementation evidence',
+    },
   },
   demo: 'Demo',
   lang: 'En',
