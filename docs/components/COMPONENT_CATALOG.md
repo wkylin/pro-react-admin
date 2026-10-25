@@ -6,15 +6,15 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  873 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  696 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `src/` 文件                   |  875 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  697 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
 | `packages/wui-react/src` 文件 |   51 | 组件库源码、stories 与组件文档                                      |
 | 组件库 TS/JS 源文件           |   39 | 组件库自身源码，不含 MDX                                            |
-| 样式文件                      |   94 | Less、CSS、SCSS                                                     |
-| CSS Modules                   |   88 | 文件名含 `.module.`                                                 |
+| 样式文件                      |   95 | Less、CSS、SCSS                                                     |
+| CSS Modules                   |   89 | 文件名含 `.module.`                                                 |
 | Storybook stories             |  157 | `*.stories.*`                                                       |
 | TS/JS 测试文件                |   39 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
-| 根 package scripts            |  170 | `package.json#scripts` 命令数                                       |
+| 根 package scripts            |  171 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    3 | 根应用、API 与组件库                                                |
 
 ## 可复用模块分类
