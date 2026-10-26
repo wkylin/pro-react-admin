@@ -43,7 +43,7 @@ E2E 需要先构建对应应用，再运行 `pnpm run test:e2e` 或 `pnpm run te
 
 ## 6. 深入架构：理解运行时行为
 
-从[技术架构](architecture/ARCHITECTURE.md)阅读依赖方向和项目边界，再看[运行时链路与信任边界](architecture/ARCHITECTURE_RUNTIME.md)、[请求层](architecture/REQUESTS.md)、[用户角色权限](architecture/USER_ROLE_PERMISSION.md)和[可观测性](operations/OBSERVABILITY.md)。仓库顶层配置的用途见[根目录文件职责](development/ROOT_DIRECTORY.md)；组件包发布见[组件库发布指南](deployment/LIBRARY_PUBLISH_GUIDE.md)。[架构决策](decisions/ADR-001-oidc-identity-and-tenant-roles.md)仍有待确认事项，[历史发布记录](releases/v5.1.0.md)不作为当前配置依据。
+从[技术架构](architecture/ARCHITECTURE.md)阅读依赖方向和项目边界，再看[运行时链路与信任边界](architecture/ARCHITECTURE_RUNTIME.md)、[请求层](architecture/REQUESTS.md)、[安全通信实验室](architecture/SECURE_COMMUNICATION.md)、[用户角色权限](architecture/USER_ROLE_PERMISSION.md)和[可观测性](operations/OBSERVABILITY.md)。仓库顶层配置的用途见[根目录文件职责](development/ROOT_DIRECTORY.md)；组件包发布见[组件库发布指南](deployment/LIBRARY_PUBLISH_GUIDE.md)。[架构决策](decisions/ADR-001-oidc-identity-and-tenant-roles.md)仍有待确认事项，[历史发布记录](releases/v5.1.0.md)不作为当前配置依据。
 
 ## 维护约定
 

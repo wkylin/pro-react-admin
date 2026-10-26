@@ -198,7 +198,10 @@ export default defineConfig(({ mode, command }) => {
     cacheDir: path.join(root, 'node_modules/.vite', `${project}-${role || 'standalone'}-${mode}`),
     publicDir: path.join(root, 'public'),
     resolve: {
-      alias: Object.entries(aliases)
+      alias: [
+        ...Object.entries(aliases),
+        ['node:dns', path.join(root, 'src/features/secureCommunication/browserDns.ts')],
+      ]
         .sort(([left], [right]) => right.length - left.length)
         .map(([find, replacement]) => ({ find, replacement })),
       dedupe: ['react', 'react-dom', 'zustand', 'immer'],

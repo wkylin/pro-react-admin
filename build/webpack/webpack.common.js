@@ -171,6 +171,11 @@ const config = {
     symlinks: true,
   },
   plugins: [
+    // @xmpp/resolve includes Node DNS discovery; the browser tool only accepts explicit ws(s) URLs.
+    new webpack.NormalModuleReplacementPlugin(
+      /^node:dns$/,
+      path.join(root, 'src/features/secureCommunication/browserDns.ts')
+    ),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(clientEnv),
       __APP_ENV__: JSON.stringify(clientEnv),

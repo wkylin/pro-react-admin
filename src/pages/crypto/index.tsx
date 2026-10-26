@@ -1,5 +1,5 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import CryptoJS, { AES, enc } from 'crypto-js'
 import JSEncrypt from 'jsencrypt'
@@ -16,6 +16,7 @@ import request from '@platform/api/request'
 
 const { TextArea } = Input
 const { Title, Text, Paragraph } = Typography
+const SecureCommunicationPanel = lazy(() => import('@features/secureCommunication/SecureCommunicationPanel'))
 
 type EncryptionStatus = {
   enabled: boolean
@@ -703,6 +704,15 @@ const MyCrypto = () => {
       ),
       children: <APIEncryptionPanel />,
     },
+    {
+      key: 'secure-communication',
+      label: '安全通信',
+      children: (
+        <Suspense fallback={<div>正在加载安全通信工具...</div>}>
+          <SecureCommunicationPanel />
+        </Suspense>
+      ),
+    },
   ]
 
   return (
@@ -711,7 +721,7 @@ const MyCrypto = () => {
         <Card variant="borderless" style={{ minHeight: '100%' }}>
           <Title level={3}>加密算法实验室</Title>
           <Paragraph type="secondary">
-            提供常用的对称加密 (AES)、非对称加密 (RSA) 在线测试工具，以及 Request.js 接口加密功能测试。
+            提供本地加解密、Request.js 接口加密测试，以及 WebSocket 和 XMPP 安全通信工具。
           </Paragraph>
           <Divider />
           <Tabs defaultActiveKey="aes" items={items} type="card" animated={{ inkBar: true, tabPane: false }} />
