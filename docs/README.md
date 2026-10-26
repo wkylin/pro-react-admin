@@ -37,7 +37,7 @@ E2E 需要先构建对应应用，再运行 `pnpm run test:e2e` 或 `pnpm run te
 
 ## 5. 构建与部署：验证将要发布的产物
 
-[应用构建](development/BUILD.md)说明 Webpack/Vite 配置、共享环境变量、统计图和 Sentry source map 上传。选择平台后阅读[部署与产物](deployment/DEPLOY.md)，再按目标使用[GitHub Pages](deployment/GITHUB_DEPLOYMENT.md)、[Vercel GitHub 登录](deployment/VERCEL_GITHUB_LOGIN.md)、[微前端部署](deployment/MFE_DEPLOYMENT.md)或[手动部署](deployment/MANUAL_DEPLOYMENT.md)。企业 API 的 SQLite 持久化和恢复要求见[Vercel 与 SQLite](deployment/VERCEL_SQLITE.md)及[恢复 runbook](runbooks/ENTERPRISE_RECOVERY.md)。
+[应用构建](development/BUILD.md)说明 Webpack/Vite 配置、共享环境变量、统计图和 Sentry source map 上传。第一次发布可从[GitHub Pages 与 Vercel 部署实操](deployment/PAGES_VERCEL_GUIDE.md)开始；选择平台后阅读[部署与产物](deployment/DEPLOY.md)，再按目标使用[GitHub Pages](deployment/GITHUB_DEPLOYMENT.md)、[Vercel GitHub 登录](deployment/VERCEL_GITHUB_LOGIN.md)、[微前端部署](deployment/MFE_DEPLOYMENT.md)或[手动部署](deployment/MANUAL_DEPLOYMENT.md)。企业 API 的 SQLite 持久化和恢复要求见[Vercel 与 SQLite](deployment/VERCEL_SQLITE.md)及[恢复 runbook](runbooks/ENTERPRISE_RECOVERY.md)。
 
 静态页面发布不会自动部署企业 API；项目应先针对目标构建、测试同一份产物，再上传或组合。构建分析报告写入 `artifacts/build/`，不随应用部署。
 

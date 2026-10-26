@@ -1,0 +1,323 @@
+.page {
+  min-height: 100%;
+  background: var(--wui-bg-base, #f6f8fb);
+  color: var(--wui-text-primary, #172436);
+}
+
+.inner {
+  width: min(100%, 1260px);
+  margin: 0 auto;
+  padding: 32px 36px 80px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 0 28px;
+  border-bottom: 1px solid var(--wui-border, #dfe5ec);
+}
+
+.headerCopy {
+  max-width: 750px;
+}
+
+.eyebrow,
+.contentsLabel,
+.pathNumber {
+  color: var(--wui-text-secondary, #536276);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.header h1 {
+  margin: 10px 0 8px;
+  color: var(--wui-text-primary, #172436);
+  font-size: clamp(27px, 3vw, 38px);
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.header p {
+  margin: 0;
+  color: var(--wui-text-secondary, #536276);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.sourceLink {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid var(--wui-border, #dfe5ec);
+  border-radius: 8px;
+  color: var(--wui-text-primary, #172436);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sourceLink:hover {
+  border-color: #2162b2;
+  color: #2162b2;
+}
+
+.pathCards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 24px 0 32px;
+}
+
+.pathCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 20px 22px;
+  border: 1px solid var(--wui-border, #dfe5ec);
+  border-left: 4px solid #2162b2;
+  border-radius: 10px;
+  background: var(--wui-bg-surface, #fff);
+  color: var(--wui-text-primary, #172436);
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.pathCard:nth-child(2) {
+  border-left-color: #315f88;
+}
+
+.pathCard:hover {
+  border-color: #2162b2;
+  box-shadow: 0 6px 22px rgb(24 50 83 / 9%);
+}
+
+.pathCard strong {
+  margin: 10px 0 4px;
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.pathCard > span:not(.pathNumber) {
+  color: var(--wui-text-secondary, #536276);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pathCard code {
+  max-width: 100%;
+  margin-top: 14px;
+  padding: 5px 8px;
+  overflow-x: auto;
+  border-radius: 5px;
+  background: var(--wui-bg-base, #f6f8fb);
+  color: #225a91;
+  font-size: 12px;
+}
+
+.readingLayout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  align-items: start;
+  gap: 32px;
+}
+
+.contents {
+  position: sticky;
+  top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 0;
+}
+
+.contentsLabel {
+  margin: 0 0 8px 10px;
+}
+
+.contents button {
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--wui-text-secondary, #536276);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+}
+
+.contents button:hover {
+  background: var(--wui-bg-surface, #fff);
+  color: #2162b2;
+}
+
+.document {
+  min-width: 0;
+  padding: 24px 30px 38px;
+  border: 1px solid var(--wui-border, #dfe5ec);
+  border-radius: 10px;
+  background: var(--wui-bg-surface, #fff);
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.document h2,
+.document h3 {
+  color: var(--wui-text-primary, #172436);
+  line-height: 1.4;
+  scroll-margin-top: 24px;
+}
+
+.document h2 {
+  margin: 42px 0 16px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid var(--wui-border, #dfe5ec);
+  font-size: 23px;
+}
+
+.document h2:first-child {
+  margin-top: 0;
+}
+
+.document h3 {
+  margin: 27px 0 12px;
+  font-size: 17px;
+}
+
+.document p,
+.document ul,
+.document ol {
+  margin: 0 0 16px;
+}
+
+.document ul,
+.document ol {
+  padding-left: 23px;
+}
+
+.document li + li {
+  margin-top: 5px;
+}
+
+.document a {
+  color: #2162b2;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.document a:hover {
+  color: #174a89;
+}
+
+.document :not(pre) > code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--wui-bg-base, #f0f3f7);
+  color: #205a91;
+  font-size: 0.92em;
+}
+
+.document pre {
+  max-width: 100%;
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: #192638;
+  color: #e9f0f7;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.document pre code {
+  color: inherit;
+}
+
+.tableScroll {
+  max-width: 100%;
+  margin: 0 0 20px;
+  overflow-x: auto;
+  border: 1px solid var(--wui-border, #dfe5ec);
+  border-radius: 7px;
+}
+
+.tableScroll table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tableScroll th,
+.tableScroll td {
+  min-width: 115px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--wui-border, #dfe5ec);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tableScroll tr:last-child td {
+  border-bottom: 0;
+}
+
+.tableScroll th {
+  background: var(--wui-bg-base, #f6f8fb);
+  font-weight: 700;
+}
+
+.tableScroll code {
+  white-space: nowrap;
+}
+
+.page :is(button, a):focus-visible {
+  outline: 2px solid #2162b2;
+  outline-offset: 3px;
+}
+
+@media (width <= 900px) {
+  .readingLayout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .contents {
+    position: static;
+    flex-flow: row wrap;
+  }
+
+  .contentsLabel {
+    width: 100%;
+    margin-bottom: 2px;
+  }
+}
+
+@media (width <= 640px) {
+  .inner {
+    padding: 22px 16px 52px;
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pathCards {
+    grid-template-columns: 1fr;
+  }
+
+  .document {
+    padding: 20px 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pathCard {
+    transition: none;
+  }
+}

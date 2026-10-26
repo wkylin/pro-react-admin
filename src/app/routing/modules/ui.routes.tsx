@@ -108,6 +108,12 @@ export const uiRoutes = [
     element: <lazyComponents.DeployFlow />,
   },
   {
+    path: 'deployment-guide',
+    name: '部署指南',
+    i18nKey: 'menu.deploymentGuide',
+    element: <lazyComponents.DeploymentGuide />,
+  },
+  {
     path: 'tracking',
     name: '埋点数据看板',
     i18nKey: 'menu.tracking',

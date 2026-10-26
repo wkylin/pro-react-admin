@@ -1,5 +1,7 @@
 # 部署与产物
 
+第一次部署默认后台到 GitHub Pages 或 Vercel，请按[从源码部署到 GitHub Pages 与 Vercel](./PAGES_VERCEL_GUIDE.md)逐步完成环境准备、构建、发布和验收。
+
 按顺序执行的手动发布命令见 [手动部署指南](./MANUAL_DEPLOYMENT.md)，涵盖 Pages、Vercel、Storybook、Release 与回退。
 
 企业业务后端需独立部署在有持久卷的单实例 Node 24 主机，配置 ENTERPRISE_ENABLED=true、ENTERPRISE_DB_PATH、CORS_ORIGINS，经 HTTPS/反向代理服务前端。SQLite 不适用 Vercel 临时文件系统，本实现检测该环境后拒绝开启；Vercel 继续部署静态前端，真实模式通过 APP_BASE_URL 或同源代理接入外部服务。租户初始化、版本化迁移、备份校验和恢复限制见[企业资源](../operations/ENTERPRISE.md)。

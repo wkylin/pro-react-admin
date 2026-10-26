@@ -19,8 +19,8 @@
 
 1. 在 `/crypto` →“安全通信”生成或粘贴会话密钥；可先在本地加密、解密验证。
 2. WebSocket：输入 `wss://` 服务地址并连接。仅当页面和目标都是本机时允许 `ws://`。服务端须转发或回显收到的文本帧。
-3. XMPP →“Chat Platform 示例服务”：生成会话密钥，使用示例账号 `guest` / `guest123!`，或输入自己的账号登录。页面请求 `POST /api/auth/login`、`GET /api/rooms`、`POST /api/im/session`，由返回值获取 JID、WebSocket 地址和短期 SASL 凭据；选房间后发送密文。断开时请求 `DELETE /api/im/session` 撤销本次临时会话。默认 API 地址是 `https://match-chat-server-seven.vercel.app/api`，可替换为自行部署的实例。
-4. XMPP →“通用 XMPP 直连”：输入服务端 WebSocket 地址、账号 JID 和口令，连接后输入接收方 JID 并发送。接收方需要相同会话密钥及兼容的封包处理。
+3. XMPP →“快速体验（默认账号）”：若尚无会话密钥，先点击“生成会话密钥”。默认服务地址及 `guest` / `guest123!` 已填好，点击“登录并连接 XMPP”。连接成功后会自动选择第一个可用房间，输入消息并点击“加密发送”。也可在 [Chat Platform 客户端](https://wkylin.github.io/chat-platform/client/)注册自己的账号后在此登录。页面请求 `POST /api/auth/login`、`GET /api/rooms`、`POST /api/im/session`，由返回值获取 JID、WebSocket 地址和短期 SASL 凭据；断开时请求 `DELETE /api/im/session` 撤销本次临时会话。默认 REST API 地址是 `https://match-chat-server-seven.vercel.app/api`，默认 XMPP WebSocket 地址是 `wss://match-chat-server-seven.vercel.app/api/xmpp-websocket`；连接以会话接口实际返回的地址为准。
+4. XMPP →“自己的服务器”：若已有支持点对点 `chat` stanza 的服务端，输入其 WebSocket 地址、原生 XMPP 账号 JID 和密码并连接，再输入接收方 JID 和消息。接收方需要相同会话密钥及兼容的封包处理。Chat Platform 的注册账号不能直接用于这里的原生 XMPP 登录，其网关也不路由点对点消息。
 
 页面不会把密钥、口令和消息写入浏览器存储。切换传输页签或离开页面会销毁对应连接。WebSocket 最多自动重试三次；Chat Platform 的临时会话有效时，XMPP 断线会自动重连并重新加入房间；通用 XMPP 直连失败后由用户重新连接。URL 中的用户信息、查询参数和片段会被拒绝，避免将凭据放进连接地址。
 

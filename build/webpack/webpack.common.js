@@ -260,6 +260,11 @@ const config = {
         },
       },
       {
+        test: /\.md$/i,
+        resourceQuery: /raw/,
+        type: 'asset/source',
+      },
+      {
         test: /\.module\.css$/,
         use: [
           'style-loader',

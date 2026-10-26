@@ -100,6 +100,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 | /demo                       | demo           | demo:read               | src/app/routing/modules/business.routes.tsx |
 | /dependencies               | 项目依赖分析   | dependencies:read       | src/app/routing/modules/ui.routes.tsx       |
 | /deploy-flow                | Deploy Flow    | deploy-flow:read        | src/app/routing/modules/ui.routes.tsx       |
+| /deployment-guide           | 部署指南       | home:read               | src/app/routing/modules/ui.routes.tsx       |
 | /echarts                    | Echarts        | echarts:read            | src/app/routing/modules/chart.routes.tsx    |
 | /error                      | ErrorBoundary  | error:read              | src/app/routing/modules/error.routes.tsx    |
 | /geo                        | Geo Chart      | geo:read                | src/app/routing/modules/chart.routes.tsx    |

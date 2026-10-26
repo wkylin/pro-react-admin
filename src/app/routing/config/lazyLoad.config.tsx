@@ -56,6 +56,7 @@ export const lazyComponents = {
   AutoDeploy: lazyLoad(() => import('@pages/autoDeploy')),
   RichTextEditor: lazyLoad(() => import('@pages/richTextEditor')),
   DeployFlow: lazyLoad(() => import('@pages/deployFlow')),
+  DeploymentGuide: lazyLoad(() => import('@pages/deploymentGuide')),
 
   // UI 组件页面
   Motion: lazyLoad(() => import('@pages/motion')),

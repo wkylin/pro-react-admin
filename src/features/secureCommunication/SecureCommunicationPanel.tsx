@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Alert, App, Button, Card, Col, Input, Row, Select, Space, Tabs, Tag, Typography, theme } from 'antd'
+import { useTranslation } from 'react-i18next'
 import useWebsocket from '@hooks/useWebsocket'
 import {
   CHAT_PLATFORM_API,
@@ -20,6 +21,7 @@ function errorText(cause: unknown): string {
 }
 
 function MessageLog({ messages }: { messages: MessageItem[] }) {
+  const { t } = useTranslation()
   const { token } = theme.useToken()
   return (
     <div
@@ -33,13 +35,16 @@ function MessageLog({ messages }: { messages: MessageItem[] }) {
       }}
     >
       {messages.length === 0 ? (
-        <Text type="secondary">连接后发送消息，接收到的密文会自动解密并显示在这里。</Text>
+        <Text type="secondary">{t('secureCommunication.messageLog.empty')}</Text>
       ) : (
         <Space orientation="vertical" style={{ width: '100%' }}>
           {messages.map((item, index) => (
             <div key={`${item.at}-${index}`} style={{ overflowWrap: 'anywhere' }}>
               <Text type="secondary">
-                {new Date(item.at).toLocaleTimeString()} · {item.direction}
+                {new Date(item.at).toLocaleTimeString()} ·{' '}
+                {item.direction === '发送'
+                  ? t('secureCommunication.messageLog.sent')
+                  : t('secureCommunication.messageLog.received')}
                 {item.from ? ` · ${item.from}` : ''}
               </Text>
               <div>{item.text}</div>
@@ -52,8 +57,9 @@ function MessageLog({ messages }: { messages: MessageItem[] }) {
 }
 
 function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyChange: (value: string) => void }) {
+  const { t } = useTranslation()
   const { message } = App.useApp()
-  const [plain, setPlain] = useState('这是一条加密测试消息')
+  const [plain, setPlain] = useState(() => t('secureCommunication.local.sample'))
   const [wire, setWire] = useState('')
   const [decoded, setDecoded] = useState('')
 
@@ -62,7 +68,7 @@ function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyCha
       const envelope = await encryptMessage(plain, sessionKey)
       setWire(JSON.stringify(envelope))
       setDecoded('')
-      message.success('消息已加密')
+      message.success(t('secureCommunication.local.encrypted'))
     } catch (cause) {
       message.error(errorText(cause))
     }
@@ -70,7 +76,7 @@ function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyCha
   const decrypt = async () => {
     try {
       setDecoded(await decryptMessage(wire, sessionKey))
-      message.success('消息已解密')
+      message.success(t('secureCommunication.local.decrypted'))
     } catch (cause) {
       setDecoded('')
       message.error(errorText(cause))
@@ -81,17 +87,17 @@ function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyCha
     <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
       <Space.Compact style={{ width: '100%' }}>
         <Input.Password
-          aria-label="256 位会话密钥"
+          aria-label={t('secureCommunication.local.keyLabel')}
           value={sessionKey}
           onChange={(event) => onKeyChange(event.target.value)}
-          placeholder="生成或粘贴 256 位 Base64URL 会话密钥"
+          placeholder={t('secureCommunication.local.keyPlaceholder')}
         />
-        <Button onClick={() => onKeyChange(generateSessionKey())}>生成密钥</Button>
+        <Button onClick={() => onKeyChange(generateSessionKey())}>{t('secureCommunication.local.generateKey')}</Button>
       </Space.Compact>
-      <Text type="secondary">收发双方需使用相同的会话密钥。密钥仅保留在当前页面内存中，刷新后需要重新输入。</Text>
+      <Text type="secondary">{t('secureCommunication.local.keyHint')}</Text>
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
-          <Text strong>原文</Text>
+          <Text strong>{t('secureCommunication.local.plaintext')}</Text>
           <TextArea
             value={plain}
             onChange={(event) => setPlain(event.target.value)}
@@ -100,11 +106,11 @@ function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyCha
             showCount
           />
           <Button type="primary" onClick={() => void encrypt()} style={{ marginTop: 12 }}>
-            加密
+            {t('secureCommunication.local.encrypt')}
           </Button>
         </Col>
         <Col xs={24} lg={12}>
-          <Text strong>密文封包</Text>
+          <Text strong>{t('secureCommunication.local.envelope')}</Text>
           <TextArea
             value={wire}
             onChange={(event) => setWire(event.target.value)}
@@ -113,11 +119,11 @@ function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyCha
             style={{ fontFamily: 'ui-monospace, SFMono-Regular, monospace' }}
           />
           <Button onClick={() => void decrypt()} style={{ marginTop: 12 }}>
-            解密
+            {t('secureCommunication.local.decrypt')}
           </Button>
           {decoded && (
             <Paragraph style={{ marginTop: 12, overflowWrap: 'anywhere' }}>
-              <Text strong>解密结果：</Text>
+              <Text strong>{t('secureCommunication.local.result')}</Text>
               {decoded}
             </Paragraph>
           )}
@@ -128,6 +134,7 @@ function LocalCrypto({ sessionKey, onKeyChange }: { sessionKey: string; onKeyCha
 }
 
 function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
+  const { t } = useTranslation()
   const { message } = App.useApp()
   const [url, setUrl] = useState('')
   const [activeUrl, setActiveUrl] = useState('')
@@ -143,7 +150,7 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
     maxReconnectAttempts: 3,
     onMessage: (body) => {
       if (typeof body !== 'string' || body.length > 12_000) {
-        setReceiveError('收到过大的消息或非文本消息')
+        setReceiveError(t('secureCommunication.websocket.invalidMessage'))
         return
       }
       void decryptMessage(body, keyRef.current)
@@ -151,7 +158,7 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
           setReceiveError('')
           setMessages((previous) => [...previous, { direction: '接收' as const, text, at: Date.now() }].slice(-40))
         })
-        .catch(() => setReceiveError('收到无法用当前会话密钥解密的 WebSocket 消息'))
+        .catch(() => setReceiveError(t('secureCommunication.websocket.decryptFailed')))
     },
   })
 
@@ -166,7 +173,7 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
   const send = async () => {
     try {
       const envelope = await encryptMessage(draft, sessionKey)
-      if (!socket.sendMessage(JSON.stringify(envelope))) throw new Error('连接未就绪，请重新连接')
+      if (!socket.sendMessage(JSON.stringify(envelope))) throw new Error(t('secureCommunication.websocket.notReady'))
       setMessages((previous) => [...previous, { direction: '发送' as const, text: draft, at: Date.now() }].slice(-40))
       setDraft('')
     } catch (cause) {
@@ -177,13 +184,13 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
   const online = socket.readyState.key === 1 && Boolean(activeUrl)
   return (
     <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
-      <Text type="secondary">连接支持文本帧的 WebSocket 服务；服务端需转发或回显收到的 JSON 密文封包。</Text>
+      <Text type="secondary">{t('secureCommunication.websocket.instructions')}</Text>
       <Space.Compact style={{ width: '100%' }}>
         <Input
-          aria-label="WebSocket 地址"
+          aria-label={t('secureCommunication.websocket.address')}
           value={url}
           onChange={(event) => setUrl(event.target.value)}
-          placeholder="wss://example.com/secure-messages"
+          placeholder={t('secureCommunication.websocket.addressPlaceholder')}
         />
         {activeUrl ? (
           <Button
@@ -192,11 +199,11 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
               setActiveUrl('')
             }}
           >
-            断开
+            {t('secureCommunication.common.disconnect')}
           </Button>
         ) : (
           <Button type="primary" onClick={connect} disabled={!sessionKey}>
-            连接
+            {t('secureCommunication.common.connect')}
           </Button>
         )}
       </Space.Compact>
@@ -213,34 +220,34 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
           }
         >
           {online
-            ? '已连接'
+            ? t('secureCommunication.common.connected')
             : activeUrl && socket.readyState.key === 3
-              ? '连接已断开'
+              ? t('secureCommunication.websocket.disconnected')
               : activeUrl
-                ? '连接中或重试中'
-                : '未连接'}
+                ? t('secureCommunication.websocket.connectingOrRetrying')
+                : t('secureCommunication.common.notConnected')}
         </Tag>
         {activeUrl && socket.readyState.key === 3 && (
           <Button size="small" onClick={socket.reconnect}>
-            重新连接
+            {t('secureCommunication.websocket.reconnect')}
           </Button>
         )}
       </Space>
       {receiveError && <Alert type="warning" showIcon title={receiveError} />}
       {Boolean(socket.lastError) && (
-        <Alert type="warning" showIcon title="WebSocket 连接或消息处理失败，请检查地址与服务端状态" />
+        <Alert type="warning" showIcon title={t('secureCommunication.websocket.connectionFailed')} />
       )}
       <Space.Compact style={{ width: '100%' }}>
         <Input
-          aria-label="WebSocket 消息"
+          aria-label={t('secureCommunication.websocket.messageLabel')}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onPressEnter={() => void send()}
           maxLength={4096}
-          placeholder="输入要加密发送的消息"
+          placeholder={t('secureCommunication.common.messagePlaceholder')}
         />
         <Button type="primary" disabled={!online || !sessionKey} onClick={() => void send()}>
-          加密发送
+          {t('secureCommunication.common.sendEncrypted')}
         </Button>
       </Space.Compact>
       <MessageLog messages={messages} />
@@ -248,7 +255,8 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
   )
 }
 
-function DirectXmppChannel({ sessionKey }: { sessionKey: string }) {
+function DirectXmppChannel({ sessionKey, onUseDemo }: { sessionKey: string; onUseDemo: () => void }) {
+  const { t } = useTranslation()
   const { message } = App.useApp()
   const [service, setService] = useState('')
   const [account, setAccount] = useState('')
@@ -269,7 +277,7 @@ function DirectXmppChannel({ sessionKey }: { sessionKey: string }) {
     try {
       await xmpp.send(recipient, draft)
       setDraft('')
-      message.success('加密消息已发送')
+      message.success(t('secureCommunication.common.sentEncrypted'))
     } catch (cause) {
       message.error(errorText(cause))
     }
@@ -277,72 +285,103 @@ function DirectXmppChannel({ sessionKey }: { sessionKey: string }) {
 
   return (
     <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
-      <Text type="secondary">
-        XMPP 服务端需开放 WebSocket 接入。消息以标准 chat stanza 发送，body 中存放 JSON 密文封包。
-      </Text>
-      <Input
-        aria-label="XMPP WebSocket 服务地址"
-        value={service}
-        onChange={(event) => setService(event.target.value)}
-        placeholder="wss://example.com/xmpp-websocket"
-        disabled={xmpp.status === 'online'}
+      <Alert
+        type="info"
+        showIcon
+        title={t('secureCommunication.direct.noServer')}
+        description={
+          <Space orientation="vertical" size={2}>
+            <Text>{t('secureCommunication.direct.tryDemoHint')}</Text>
+            <Button type="link" size="small" style={{ padding: 0, alignSelf: 'flex-start' }} onClick={onUseDemo}>
+              {t('secureCommunication.direct.goToDemo')}
+            </Button>
+          </Space>
+        }
       />
+      <Text strong>{t('secureCommunication.direct.title')}</Text>
+      <Text type="secondary">{t('secureCommunication.direct.instructions')}</Text>
+      <Space orientation="vertical" size={4} style={{ width: '100%' }}>
+        <Text strong>{t('secureCommunication.direct.service')}</Text>
+        <Input
+          aria-label={t('secureCommunication.direct.serviceLabel')}
+          value={service}
+          onChange={(event) => setService(event.target.value)}
+          placeholder={t('secureCommunication.direct.servicePlaceholder')}
+          disabled={xmpp.status === 'online'}
+        />
+      </Space>
       <Row gutter={[12, 12]}>
         <Col xs={24} md={12}>
-          <Input
-            aria-label="XMPP JID"
-            value={account}
-            onChange={(event) => setAccount(event.target.value)}
-            placeholder="你的 JID：name@example.com"
-            disabled={xmpp.status === 'online'}
-          />
+          <Space orientation="vertical" size={4} style={{ width: '100%' }}>
+            <Text strong>{t('secureCommunication.direct.account')}</Text>
+            <Input
+              aria-label={t('secureCommunication.direct.accountLabel')}
+              value={account}
+              onChange={(event) => setAccount(event.target.value)}
+              placeholder={t('secureCommunication.direct.accountPlaceholder')}
+              disabled={xmpp.status === 'online'}
+            />
+          </Space>
         </Col>
         <Col xs={24} md={12}>
-          <Input.Password
-            aria-label="XMPP 口令"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="XMPP 口令"
-            disabled={xmpp.status === 'online'}
-          />
+          <Space orientation="vertical" size={4} style={{ width: '100%' }}>
+            <Text strong>{t('secureCommunication.direct.password')}</Text>
+            <Input.Password
+              aria-label={t('secureCommunication.direct.passwordLabel')}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder={t('secureCommunication.direct.passwordPlaceholder')}
+              disabled={xmpp.status === 'online'}
+            />
+          </Space>
         </Col>
       </Row>
       <Space>
         {xmpp.status === 'online' || xmpp.status === 'connecting' ? (
-          <Button onClick={() => void xmpp.disconnect()}>断开</Button>
+          <Button onClick={() => void xmpp.disconnect()}>{t('secureCommunication.common.disconnect')}</Button>
         ) : (
-          <Button type="primary" onClick={() => void connect()} disabled={!sessionKey}>
-            连接 XMPP
+          <Button
+            type="primary"
+            onClick={() => void connect()}
+            disabled={!sessionKey || !service || !account || !password}
+          >
+            {t('secureCommunication.direct.connect')}
           </Button>
         )}
         <Tag color={xmpp.status === 'online' ? 'success' : xmpp.status === 'error' ? 'error' : 'default'}>
           {xmpp.status === 'online'
-            ? `在线：${xmpp.address}`
+            ? t('secureCommunication.direct.online', { address: xmpp.address })
             : xmpp.status === 'connecting'
-              ? '认证中'
+              ? t('secureCommunication.direct.authenticating')
               : xmpp.status === 'error'
-                ? '连接失败'
-                : '未连接'}
+                ? t('secureCommunication.common.connectionFailed')
+                : t('secureCommunication.common.notConnected')}
         </Tag>
       </Space>
       {xmpp.error && <Alert type="warning" showIcon title={xmpp.error} />}
+      <Text strong>{t('secureCommunication.common.sendMessage')}</Text>
+      <Text>{t('secureCommunication.direct.recipient')}</Text>
       <Input
-        aria-label="接收方 JID"
+        aria-label={t('secureCommunication.direct.recipient')}
         value={recipient}
         onChange={(event) => setRecipient(event.target.value)}
-        placeholder="接收方 JID：name@example.com"
+        placeholder={t('secureCommunication.direct.recipientPlaceholder')}
       />
       <Space.Compact style={{ width: '100%' }}>
         <Input
-          aria-label="XMPP 消息"
+          aria-label={t('secureCommunication.direct.messageLabel')}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onPressEnter={() => void send()}
           maxLength={4096}
-          placeholder="输入要加密发送的消息"
+          placeholder={t('secureCommunication.common.messagePlaceholder')}
         />
-        <Button type="primary" disabled={xmpp.status !== 'online' || !sessionKey} onClick={() => void send()}>
-          加密发送
+        <Button
+          type="primary"
+          disabled={xmpp.status !== 'online' || !sessionKey || !recipient.trim() || !draft.trim()}
+          onClick={() => void send()}
+        >
+          {t('secureCommunication.common.sendEncrypted')}
         </Button>
       </Space.Compact>
       <MessageLog
@@ -358,6 +397,7 @@ function DirectXmppChannel({ sessionKey }: { sessionKey: string }) {
 }
 
 function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
+  const { t } = useTranslation()
   const { message } = App.useApp()
   const [apiAddress, setApiAddress] = useState(CHAT_PLATFORM_API)
   const [username, setUsername] = useState('guest')
@@ -391,7 +431,7 @@ function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
       try {
         await closeChatPlatformSession(connection)
       } catch {
-        setApiError('XMPP 已断开，但示例服务的临时会话注销失败；凭据仍会在服务端过期')
+        setApiError(t('secureCommunication.platform.logoutFailed'))
       }
     }
   }
@@ -418,7 +458,7 @@ function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
       })
       if (disposedRef.current) return
       setRooms(connection.rooms)
-      setPassword('')
+      if (username !== 'guest' || password !== 'guest123!') setPassword('')
       if (connection.rooms[0]) {
         await xmpp.joinRoom(connection.rooms[0].jid)
         setRoomJid(connection.rooms[0].jid)
@@ -460,76 +500,110 @@ function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
   return (
     <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
       <Text type="secondary">
-        使用 Chat Platform 的 REST 接口换取临时 XMPP 凭据，再通过服务端返回的 WebSocket
-        地址加入群聊房间。公开演示账号来自该项目文档；不会保存登录密码或临时凭据。
+        {t('secureCommunication.platform.instructionsBeforeLink')}
+        <Typography.Link
+          href="https://wkylin.github.io/chat-platform/client/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('secureCommunication.platform.clientLink')}
+        </Typography.Link>
+        {t('secureCommunication.platform.instructionsAfterLink')}
       </Text>
-      <Input
-        aria-label="Chat Platform API 地址"
-        value={apiAddress}
-        onChange={(event) => setApiAddress(event.target.value)}
-        disabled={connected || busy}
-      />
+      <Space orientation="vertical" size={4} style={{ width: '100%' }}>
+        <Text strong>{t('secureCommunication.platform.apiAddress')}</Text>
+        <Input
+          aria-label={t('secureCommunication.platform.apiAddress')}
+          value={apiAddress}
+          onChange={(event) => setApiAddress(event.target.value)}
+          disabled={connected || busy}
+        />
+        <Text type="secondary">{t('secureCommunication.platform.websocketHint')}</Text>
+      </Space>
       <Row gutter={[12, 12]}>
         <Col xs={24} md={12}>
-          <Input
-            aria-label="Chat Platform 用户名"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-            disabled={connected || busy}
-            autoComplete="username"
-          />
+          <Space orientation="vertical" size={4} style={{ width: '100%' }}>
+            <Text strong>{t('secureCommunication.platform.username')}</Text>
+            <Input
+              aria-label={t('secureCommunication.platform.usernameLabel')}
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              disabled={connected || busy}
+              autoComplete="username"
+            />
+          </Space>
         </Col>
         <Col xs={24} md={12}>
-          <Input.Password
-            aria-label="Chat Platform 密码"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            disabled={connected || busy}
-            autoComplete="current-password"
-          />
+          <Space orientation="vertical" size={4} style={{ width: '100%' }}>
+            <Text strong>{t('secureCommunication.platform.password')}</Text>
+            <Input.Password
+              aria-label={t('secureCommunication.platform.passwordLabel')}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              disabled={connected || busy}
+              autoComplete="current-password"
+            />
+          </Space>
         </Col>
       </Row>
       <Space wrap>
         {connected || xmpp.status === 'connecting' ? (
           <Button onClick={() => void disconnect()} disabled={busy}>
-            断开并注销临时会话
+            {t('secureCommunication.platform.disconnect')}
           </Button>
         ) : (
           <Button type="primary" onClick={() => void connect()} loading={busy} disabled={!sessionKey}>
-            登录并连接 XMPP
+            {t('secureCommunication.platform.connect')}
           </Button>
         )}
         <Tag color={connected ? 'success' : xmpp.status === 'error' || apiError ? 'error' : 'default'}>
-          {connected ? '已连接' : busy ? '连接中' : apiError || xmpp.status === 'error' ? '连接失败' : '未连接'}
+          {connected
+            ? t('secureCommunication.common.connected')
+            : busy
+              ? t('secureCommunication.platform.connecting')
+              : apiError || xmpp.status === 'error'
+                ? t('secureCommunication.common.connectionFailed')
+                : t('secureCommunication.common.notConnected')}
         </Tag>
       </Space>
       {connected && (
         <Text type="secondary" style={{ overflowWrap: 'anywhere' }}>
-          JID：{xmpp.address} · WebSocket：{connectionRef.current?.session.websocketUrl}
+          {t('secureCommunication.platform.connectionDetails', {
+            address: xmpp.address,
+            websocket: connectionRef.current?.session.websocketUrl,
+          })}
         </Text>
       )}
       {(apiError || xmpp.error) && <Alert type="warning" showIcon title={apiError || xmpp.error} />}
-      {connected && rooms.length === 0 && <Alert type="info" showIcon title="服务端没有可加入的房间" />}
+      {connected && rooms.length === 0 && (
+        <Alert type="info" showIcon title={t('secureCommunication.platform.noRooms')} />
+      )}
+      <Text strong>{t('secureCommunication.platform.rooms')}</Text>
       <Select
-        aria-label="XMPP 房间"
+        aria-label={t('secureCommunication.platform.roomLabel')}
         value={roomJid || undefined}
         onChange={(value) => void selectRoom(value)}
         options={rooms.map((room) => ({ label: `${room.name} · ${room.jid}`, value: room.jid }))}
-        placeholder="选择 XMPP 房间"
+        placeholder={t('secureCommunication.platform.roomPlaceholder')}
         disabled={!connected || rooms.length === 0}
         style={{ width: '100%' }}
       />
+      <Text strong>{t('secureCommunication.common.sendMessage')}</Text>
       <Space.Compact style={{ width: '100%' }}>
         <Input
-          aria-label="Chat Platform 加密消息"
+          aria-label={t('secureCommunication.platform.messageLabel')}
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
           onPressEnter={() => void send()}
           maxLength={2500}
-          placeholder="输入要加密发送的消息"
+          placeholder={t('secureCommunication.common.messagePlaceholder')}
         />
-        <Button type="primary" disabled={!connected || !roomJid || !sessionKey || !draft} onClick={() => void send()}>
-          加密发送
+        <Button
+          type="primary"
+          disabled={!connected || !roomJid || !sessionKey || !draft.trim()}
+          onClick={() => void send()}
+        >
+          {t('secureCommunication.common.sendEncrypted')}
         </Button>
       </Space.Compact>
       <MessageLog
@@ -544,41 +618,79 @@ function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
   )
 }
 
-function XmppChannel({ sessionKey }: { sessionKey: string }) {
+function XmppChannel({ sessionKey, onKeyChange }: { sessionKey: string; onKeyChange: (value: string) => void }) {
+  const { t } = useTranslation()
+  const { message } = App.useApp()
+  const [activeKey, setActiveKey] = useState('chat-platform')
+  const createKey = () => {
+    try {
+      onKeyChange(generateSessionKey())
+      message.success(t('secureCommunication.xmpp.keyGenerated'))
+    } catch (cause) {
+      message.error(errorText(cause))
+    }
+  }
   return (
-    <Tabs
-      destroyOnHidden
-      items={[
-        {
-          key: 'chat-platform',
-          label: 'Chat Platform 示例服务',
-          children: <ChatPlatformXmppChannel sessionKey={sessionKey} />,
-        },
-        { key: 'direct', label: '通用 XMPP 直连', children: <DirectXmppChannel sessionKey={sessionKey} /> },
-      ]}
-    />
+    <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
+      {!sessionKey && (
+        <Alert
+          type="warning"
+          showIcon
+          title={t('secureCommunication.xmpp.keyRequired')}
+          description={t('secureCommunication.xmpp.keyRequiredHint')}
+          action={
+            <Button size="small" type="primary" onClick={createKey}>
+              {t('secureCommunication.xmpp.generateKey')}
+            </Button>
+          }
+        />
+      )}
+      <Tabs
+        activeKey={activeKey}
+        onChange={setActiveKey}
+        destroyOnHidden
+        style={{ width: '100%' }}
+        items={[
+          {
+            key: 'chat-platform',
+            label: t('secureCommunication.xmpp.demoTab'),
+            children: <ChatPlatformXmppChannel sessionKey={sessionKey} />,
+          },
+          {
+            key: 'direct',
+            label: t('secureCommunication.xmpp.directTab'),
+            children: <DirectXmppChannel sessionKey={sessionKey} onUseDemo={() => setActiveKey('chat-platform')} />,
+          },
+        ]}
+      />
+    </Space>
   )
 }
 
 export default function SecureCommunicationPanel() {
+  const { t } = useTranslation()
   const [sessionKey, setSessionKey] = useState('')
   return (
     <Space orientation="vertical" size="large" style={{ width: '100%' }}>
       <Alert
         type="info"
         showIcon
-        title="安全通信实验室"
-        description="在浏览器中生成 AES-GCM 会话密钥，通过 WebSocket 或 XMPP 传送密文。请使用你有权接入的服务端；页面不会保存密钥、口令或消息。"
+        title={t('secureCommunication.title')}
+        description={t('secureCommunication.description')}
       />
-      <Card title="会话密钥与本地加解密" size="small">
+      <Card title={t('secureCommunication.localCard')} size="small">
         <LocalCrypto sessionKey={sessionKey} onKeyChange={setSessionKey} />
       </Card>
-      <Card title="实时传输" size="small">
+      <Card title={t('secureCommunication.transportCard')} size="small">
         <Tabs
           destroyOnHidden
           items={[
             { key: 'websocket', label: 'WebSocket', children: <WebSocketChannel sessionKey={sessionKey} /> },
-            { key: 'xmpp', label: 'XMPP', children: <XmppChannel sessionKey={sessionKey} /> },
+            {
+              key: 'xmpp',
+              label: 'XMPP',
+              children: <XmppChannel sessionKey={sessionKey} onKeyChange={setSessionKey} />,
+            },
           ]}
         />
       </Card>
