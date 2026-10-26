@@ -8,7 +8,10 @@ declare module '@xmpp/client' {
   export interface XmppClient {
     readonly status: string
     readonly reconnect: { stop(): void }
-    on(event: string, listener: (...args: unknown[]) => void): XmppClient
+    on(event: 'online', listener: (address: { toString(): string }) => void): XmppClient
+    on(event: 'stanza', listener: (stanza: XmppElement) => void): XmppClient
+    on(event: 'offline', listener: () => void): XmppClient
+    on(event: 'error', listener: (cause: unknown) => void): XmppClient
     start(): Promise<void>
     stop(): Promise<unknown>
     send(element: XmppElement): Promise<void>

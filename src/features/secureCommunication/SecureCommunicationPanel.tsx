@@ -227,7 +227,7 @@ function WebSocketChannel({ sessionKey }: { sessionKey: string }) {
         )}
       </Space>
       {receiveError && <Alert type="warning" showIcon title={receiveError} />}
-      {socket.lastError && (
+      {Boolean(socket.lastError) && (
         <Alert type="warning" showIcon title="WebSocket 连接或消息处理失败，请检查地址与服务端状态" />
       )}
       <Space.Compact style={{ width: '100%' }}>

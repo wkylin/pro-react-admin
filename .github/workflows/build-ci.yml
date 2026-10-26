@@ -268,7 +268,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build and validate the publishable component library
-        run: pnpm run prepublishOnly
+        run: pnpm --dir packages/wui-react run prepublishOnly
 
       - name: Preview npm package contents
         run: npm pack ./packages/wui-react --dry-run
@@ -342,6 +342,7 @@ jobs:
         run: pnpm run build:enterprise:stats
         env:
           PUBLIC_URL: /
+          REACT_APP_USE_MOCK: 'true'
       - name: Check enterprise bundle
         run: node scripts/check-bundle-budget.mjs artifacts/build/webpack/enterprise/stats.json enterprise
       - run: pnpm exec playwright install --with-deps chromium
