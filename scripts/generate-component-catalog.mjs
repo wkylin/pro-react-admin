@@ -20,7 +20,10 @@ const collectFiles = (directory) =>
   })
 
 const relative = (filePath) => path.relative(root, filePath).split(path.sep).join('/')
-const srcFiles = collectFiles(src)
+// The media optimizer writes ignored build output into src/assets-optimized.
+// Keep the catalog stable before and after a local production build.
+const generatedMediaRoot = path.join(src, 'assets-optimized') + path.sep
+const srcFiles = collectFiles(src).filter((filePath) => !filePath.startsWith(generatedMediaRoot))
 const wuiSourceFiles = collectFiles(wuiSource)
 const indexFiles = (directory) =>
   collectFiles(directory).filter((filePath) => indexFilePattern.test(path.basename(filePath)))
