@@ -64,7 +64,7 @@ export const VideoJS = Object.assign(
         if (options.fluid !== undefined) player.fluid(options.fluid)
         if (options.poster !== undefined) player.poster(options.poster)
       }
-    }, [options, videoRef])
+    }, [options, onReady])
 
     React.useEffect(() => {
       const player = playerRef.current

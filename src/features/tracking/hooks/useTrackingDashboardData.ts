@@ -82,7 +82,7 @@ const useTrackingDashboardData = () => {
 
   useEffect(() => {
     pollingStateRef.current = { fetchStats, fetchEvents, currentPage: pagination.current }
-  }, [fetchEvents, fetchStats, pagination.current])
+  }, [fetchEvents, fetchStats, pagination])
 
   useEffect(() => {
     pollingStateRef.current.fetchStats()
@@ -101,7 +101,7 @@ const useTrackingDashboardData = () => {
     void fetchStats()
     void fetchEvents(pagination.current, pagination.pageSize)
     message.success('已刷新')
-  }, [fetchEvents, fetchStats, message, pagination.current, pagination.pageSize])
+  }, [fetchEvents, fetchStats, message, pagination])
 
   const handleClearAll = useCallback(async () => {
     try {

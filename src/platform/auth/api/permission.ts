@@ -1,7 +1,7 @@
 /** Service permissions fail closed. Demo permissions require an explicit build flag. */
 import type { UserPermission, Role, PermissionCode } from '../model/permission'
 import { mockGetUserPermissions, mockGetRoles } from '../mocks/permission'
-import { matchesPermission } from '../model/policy'
+import { hasEffectivePermission } from '../model/policy'
 import request from '@platform/api/request'
 import { getEnvBool } from '@platform/config/env'
 import { isRecord, unwrapPayload } from '@platform/api/core/response'
@@ -17,7 +17,17 @@ const isRole = (value: unknown): value is Role =>
   typeof value.id === 'string' &&
   typeof value.name === 'string' &&
   typeof value.code === 'string' &&
-  isStringList(value.permissions)
+  isStringList(value.permissions) &&
+  (value.scopes === undefined ||
+    (isRecord(value.scopes) &&
+      Object.entries(value.scopes).every(
+        ([resource, scope]) =>
+          (resource === 'user' || resource === 'role') &&
+          isRecord(scope) &&
+          (scope.mode === 'global' || scope.mode === 'restricted' || scope.mode === 'deny') &&
+          isStringList(scope.ids) &&
+          (scope.mode === 'restricted' || scope.ids.length === 0)
+      )))
 
 export function parseUserPermissions(value: unknown): UserPermission {
   if (
@@ -55,17 +65,17 @@ export async function getRoles(): Promise<Role[]> {
 }
 
 export async function checkPermission(permission: PermissionCode, userId?: string): Promise<boolean> {
-  return matchesPermission(permission, (await getUserPermissions(userId)).permissions)
+  return hasEffectivePermission(await getUserPermissions(userId), permission)
 }
 
 export async function checkAllPermissions(permissions: PermissionCode[], userId?: string): Promise<boolean> {
   const current = await getUserPermissions(userId)
-  return permissions.every((permission) => matchesPermission(permission, current.permissions))
+  return permissions.every((permission) => hasEffectivePermission(current, permission))
 }
 
 export async function checkAnyPermission(permissions: PermissionCode[], userId?: string): Promise<boolean> {
   const current = await getUserPermissions(userId)
-  return permissions.some((permission) => matchesPermission(permission, current.permissions))
+  return permissions.some((permission) => hasEffectivePermission(current, permission))
 }
 
 export async function getUserRoutes(userId?: string): Promise<string[]> {

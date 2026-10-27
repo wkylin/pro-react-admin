@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
+import { administrationRoutes } from '@features/administration/routes'
 import {
   ApplicationModules,
   createModuleRegistry as buildModuleRegistry,
@@ -46,6 +47,12 @@ test('selected features supply permissioned routes and namespaced data definitio
   expect(registry.routes[0].meta?.access).toBe('permissioned')
   expect(registry.resources.members.users.path).toBe('/api/admin/users')
   expect(registry.routes.some((route) => route.handle?.routePath === '/notifications')).toBe(false)
+})
+
+test('the shipped administration routes register before sign-in renders', () => {
+  const definition = moduleWith('administration', 'administration/users')
+  definition.routes = administrationRoutes
+  expect(() => createModuleRegistry([definition])).not.toThrow()
 })
 
 test('dependency providers wrap consumers even when modules are declared in reverse order', () => {
@@ -129,6 +136,7 @@ test('ambiguous case-insensitive and renamed-parameter routes fail before render
 
 test('unmapped pages and conflicting permission requirements fail closed', () => {
   expect(() => createModuleRegistry([moduleWith('unknown', 'unknown-page')])).toThrow('explicit permission policy')
+  expect(() => createModuleRegistry([moduleWith('account', 'account/security')])).toThrow('explicit permission policy')
   const conflicting = moduleWith('conflicting', 'administration/users')
   conflicting.routes = [{ path: 'administration/users', element: <div />, meta: { permission: 'home:read' } }]
   expect(() => createModuleRegistry([conflicting])).toThrow('permission conflicts')

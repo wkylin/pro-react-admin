@@ -6,7 +6,7 @@ import { withTimeout } from '@platform/api/core/async'
 
 import type { UserPermission, PermissionCode, Role, PermissionCheckResult } from '../model/permission'
 import * as permissionAPI from '../api/permission'
-import { canAccessPath, matchesPermission } from '../model/policy'
+import { canAccessPath, hasEffectivePermission } from '../model/policy'
 import { readStoredToken, readEnterpriseSession, SESSION_CHANGED_EVENT } from '../model/session'
 
 export interface PermissionSnapshot {
@@ -34,7 +34,7 @@ class PermissionService {
     PERMISSIONS: 'user_permissions',
     FETCH_TIME: 'permissions_fetch_time',
     AUTH_KEY: 'permissions_auth_key',
-    // 用于开发/演示的本地覆盖（不应污染真实登录态）
+    // 清理早期演示版本遗留的本地覆盖键。
     ROLE_OVERRIDE: 'user_role',
     FORCE_DEMO_SWITCH: 'force_demo_switch',
   } as const
@@ -54,7 +54,7 @@ class PermissionService {
   }
 
   private onStorage = (event: StorageEvent): void => {
-    if (event.key === null || ['enterprise_session', 'token', 'github_demo_user', 'user_role'].includes(event.key))
+    if (event.key === null || ['enterprise_session', 'token', 'github_demo_user'].includes(event.key))
       this.onSessionChanged()
   }
 
@@ -117,7 +117,7 @@ class PermissionService {
 
   /**
    * Bind cache identity to the credential used by the request layer, plus the
-   * mock role override. Legacy GitHub profiles are never credentials.
+   * Legacy GitHub profiles and role overrides are never credentials.
    */
   private safeReadStorage(key: string): string {
     try {
@@ -128,15 +128,13 @@ class PermissionService {
   }
 
   private getCurrentAuthKey(): string {
-    const roleOverride = this.safeReadStorage(this.STORAGE_KEYS.ROLE_OVERRIDE)
-    const suffix = roleOverride ? `|role:${roleOverride}` : ''
     const token = readStoredToken()
     const enterprise = readEnterpriseSession()
     return enterprise
       ? `tenant:${enterprise.tenantId}|token:${enterprise.token}`
       : token
-        ? `token:${token}${suffix}`
-        : `anonymous${suffix}`
+        ? `token:${token}`
+        : 'anonymous'
   }
 
   static getInstance(): PermissionService {
@@ -309,7 +307,7 @@ class PermissionService {
   async hasPermission(permission: PermissionCode, forceRefresh: boolean = false): Promise<boolean> {
     const permissions = await this.getPermissions(forceRefresh)
 
-    return matchesPermission(permission, permissions.permissions)
+    return hasEffectivePermission(permissions, permission)
   }
 
   /**

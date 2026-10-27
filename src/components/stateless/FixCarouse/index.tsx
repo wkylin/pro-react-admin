@@ -9,7 +9,7 @@ const mockData = Array.from({ length: 30 }, (_, i) => ({
 }))
 
 const FixCarousel = ({ tradeList = [] }) => {
-  const [data, setData] = useState([...tradeList, ...mockData])
+  const [data] = useState([...tradeList, ...mockData])
   const [selectedFilter, setSelectedFilter] = useState('all')
   const [currentPage, setCurrentPage] = useState(0)
   const filters = [
@@ -23,10 +23,6 @@ const FixCarousel = ({ tradeList = [] }) => {
     if (selectedFilter === 'all') return [...data]
     return data.filter((item) => selectedFilter.includes(item.category))
   }, [data, selectedFilter])
-
-  const handleClear = () => {
-    setSelectedFilter('all')
-  }
 
   const itemsPerPage = 6
   const paginatedData = React.useMemo(() => {

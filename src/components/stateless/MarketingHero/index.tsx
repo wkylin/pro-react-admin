@@ -1,4 +1,3 @@
-import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import FloatingIcon, { SocialIcon } from '@stateless/FloatingIcon'
 import { Command, Cannabis, Beer, Mail } from 'lucide-react'

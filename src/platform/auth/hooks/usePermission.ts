@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useSyncExternalStore } from 'react'
 import type { PermissionCode } from '../model/permission'
 import { permissionService } from '../services/permissionService'
-import { matchesPermission, canAccessPath } from '../model/policy'
+import { hasEffectivePermission, canAccessPath } from '../model/policy'
 
 const emptyList: string[] = []
 const actions = {
@@ -36,7 +36,7 @@ export function usePermission() {
 
 export function useCheckPermission(permission: PermissionCode) {
   const { current, loading } = usePermission()
-  return { hasPermission: Boolean(current && matchesPermission(permission, current.permissions)), loading }
+  return { hasPermission: Boolean(current && hasEffectivePermission(current, permission)), loading }
 }
 
 export function useCheckRoute(routePath: string) {

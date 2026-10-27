@@ -116,7 +116,9 @@ export function createModuleRegistry(
           if (paths.has(canonical)) throw new Error(`Duplicate module route: ${fullPath}`)
           paths.set(canonical, definition.id)
           const policy = routePolicies[fullPath]
-          if (!policy?.permission) throw new Error(`Module route requires an explicit permission policy: ${fullPath}`)
+          const authenticatedSelfService = policy?.access === 'authenticated' && route.meta?.access === 'authenticated'
+          if (!policy?.permission && !authenticatedSelfService)
+            throw new Error(`Module route requires an explicit permission policy: ${fullPath}`)
           if (route.meta?.permission && route.meta.permission !== policy.permission)
             throw new Error(`Module route permission conflicts with policy: ${fullPath}`)
         }

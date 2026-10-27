@@ -10,7 +10,19 @@
 | 演示真实租户登录、持久化和服务端权限 | 企业静态前端，mock 关闭  | 外部单实例 Node API + 持久卷上的 SQLite       |
 | 前端和 API 都运行在 Vercel           | 需要增加远程数据库适配器 | 当前实现不支持；不能直接填写 Turso/libSQL URL |
 
-**不能将当前 SQLite 文件数据库直接部署到 Vercel Functions 并保存业务写入。** Vercel 官方说明：函数文件系统是临时的，多实例也没有共享的持久文件。上传 `.sqlite` 或放到 `/tmp` 都不能满足账号、会话和审计的持久化要求。当前 `EnterpriseStore` 使用 Node `DatabaseSync` 和同步事务；远程 SQLite 服务需要单独实现异步存储及事务适配，不是替换文件路径即可使用。
+**不能将当前 SQLite 文件数据库直接部署到 Vercel Functions 并保存业务写入。** Vercel 官方说明：函数文件系统是临时的，多实例也没有共享的持久文件。上传 `.sqlite` 或放到 `/tmp` 都不能满足账号、会话和审计的持久化要求。当前 `EnterpriseStore` 使用 Node `DatabaseSync` 和同步事务；远程数据库需要单独实现异步存储及事务适配，不是替换文件路径即可使用。
+
+### 如果希望前端、API 都部署在 Vercel
+
+可以改用 Vercel Marketplace 中的托管 PostgreSQL，例如 Neon 或 Supabase。新的 Vercel 项目不能再创建旧版“Vercel Postgres”；数据库由 Marketplace 提供，Vercel 负责关联项目与注入连接配置。当前仓库尚无 PostgreSQL adapter 或企业业务 Vercel Function，所以下列步骤是**迁移方案，不是已实现的部署命令**：
+
+1. 在 Marketplace 创建 PostgreSQL 并关联 Vercel 项目，设置生产、预览环境连接变量。连接串仅放服务端环境，前端只访问 HTTPS API。
+2. 把 SQLite v5 的 `tenants`、`principals`、`users`、`roles`、`tenant_memberships`、`sessions`、`audit`、`role_scopes`、`access_requests`、TOTP 表和 `platform_admins` 转成 PostgreSQL migration。保留外键、唯一约束、租户过滤、审计只追加规则和事务边界；JSON 列可使用 `jsonb`，会话到期毫秒值使用 `bigint`。
+3. 将 `EnterpriseStore` 的 `DatabaseSync`、同步 `BEGIN IMMEDIATE` 和所有同步 service 调用改为异步 PostgreSQL pool/transaction，并逐一验证 RBAC、跨租户拒绝、独立审批和 TOTP 的原子性。不能仅把 `ENTERPRISE_DB_PATH` 改成 PostgreSQL URL。
+4. 将目前调用 `listen()` 的 `api/server.js` 改为 Vercel Functions 请求处理程序。登录限速和资源 WebSocket 事件目前依赖单进程内存；多实例下需要共享限速存储与独立实时通道，或先禁用实时功能并保留手动刷新。
+5. 通过经校验的离线导出/导入迁移 SQLite 现有数据，保留 principal、角色、租户 ID、密码哈希、会话失效策略及审计。若使用 TOTP，安全迁移同一 `ENTERPRISE_TOTP_KEY`；完成 API 回归、权限隔离与备份恢复演练后再切流。
+
+Vercel 官方依据：[SQLite 不适用于 Vercel Functions](https://vercel.com/kb/guide/is-sqlite-supported-in-vercel)、[Marketplace PostgreSQL 连接方式](https://vercel.com/docs/postgres)、[Functions 运行模型](https://vercel.com/docs/functions)。在完成上述后端改造前，使用下方“Vercel 静态前端 + 独立 Node API + 持久卷 SQLite”方案。
 
 真实登录采用下面的部署结构：
 
@@ -75,6 +87,7 @@ CORS_ORIGINS=https://your-enterprise-project.vercel.app
 NODE_ENV=production
 ENTERPRISE_ENABLED=true
 ENTERPRISE_DB_PATH=/data/enterprise.sqlite
+ENTERPRISE_TOTP_KEY=
 TRACKING_STORE=memory
 TRACKING_API_PORT=5200
 ENTERPRISE_BOOTSTRAP_TENANT=acme
@@ -85,6 +98,8 @@ ENTERPRISE_BOOTSTRAP_PASSWORD="替换为你自己的12至256字符密码"
 ```
 
 `CORS_ORIGINS` 必须包含真实访问前端的精确 origin，不含路径或末尾 `/`；多个可信域名用逗号分隔。Vercel 的 Preview 域名与 Production 域名不同，需要预览环境登录时显式加入对应域名。SQLite 配置始终是 API 容器内的文件路径，不能填写 HTTPS/libSQL 地址。
+
+如需启用企业账号的登录验证器，运行 `openssl rand -hex 32`，将输出的 64 位十六进制值填入 API 主机的 `ENTERPRISE_TOTP_KEY`。部署后必须保留同一密钥，并与数据库备份分别安全保存；前端 Vercel 环境变量中不要放此密钥。留空时密码登录仍可用，但不能绑定验证器。已有绑定时丢失或更换密钥会导致企业 API 拒绝启动。操作流程见[企业账号登录验证器](../operations/ENTERPRISE.md#企业账号登录验证器-totp)。
 
 ### 构建、初始化、启动
 
@@ -100,6 +115,9 @@ docker compose --env-file .env.enterprise.production.local -f compose.enterprise
 
 # 首次初始化该租户，数据写入同一持久卷
 docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/bootstrap.mjs
+
+# 将初始化的租户管理员设为平台管理员，才能使用租户管理菜单
+docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/platform-admin.mjs grant --tenant acme --email admin@example.com
 ```
 
 看到 `Tenant provisioned` 后，用编辑器删除配置文件中的五项 `ENTERPRISE_BOOTSTRAP_*`，保留其它配置，并记住初始化密码。已有租户返回冲突，后续升级和重启不再初始化。

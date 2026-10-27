@@ -40,31 +40,34 @@ const DonutChart: React.FC<DonutChartProps> = ({ height = '100%', eOptions }) =>
   const chartInstance = useRef<EChartsType | null>(null)
   const chartHandleRef = useRef<EChartHandle | null>(null)
 
-  const colors: readonly (readonly [string, string])[] = [
-    ['#2878FF', '#73B9FF'],
-    ['#ABF1FF', '#39D3FF'],
-    ['#ECC6FF', '#BA86FF'],
-    ['#ACFFDC', '#72D592'],
-    ['#FFE6A5', '#FFBD4A'],
-    ['#FD80F1', '#FFADF6'],
-    ['#5657E8', '#B9BAFF'],
-    ['#E85B89', '#FFB8CF'],
-    ['#38A047', '#ADDFB5'],
-    ['#F2FA8B', '#BCC81C'],
-    ['#B0CEFF', '#346FD3'],
-    ['#FFD3AD', '#E08230'],
-    ['#9CE9FF', '#29A1C3'],
-    ['#4442CA', '#D6D5FF'],
-    ['#C02D56', '#FFA8C0'],
-    ['#C84FD1', '#FCD3FF'],
-    ['#9FDE47', '#CEF19E'],
-    ['#AAC6FF', '#3A7AFF'],
-    ['#CF8E29', '#FFCF84'],
-    ['#98E4FB', '#23C1F0'],
-    ['#FFE0D6', '#E57450'],
-    ['#B465FF', '#E8D0FF'],
-    ['#F8C106', '#FFEAA4'],
-  ]
+  const colors = useMemo<readonly (readonly [string, string])[]>(
+    () => [
+      ['#2878FF', '#73B9FF'],
+      ['#ABF1FF', '#39D3FF'],
+      ['#ECC6FF', '#BA86FF'],
+      ['#ACFFDC', '#72D592'],
+      ['#FFE6A5', '#FFBD4A'],
+      ['#FD80F1', '#FFADF6'],
+      ['#5657E8', '#B9BAFF'],
+      ['#E85B89', '#FFB8CF'],
+      ['#38A047', '#ADDFB5'],
+      ['#F2FA8B', '#BCC81C'],
+      ['#B0CEFF', '#346FD3'],
+      ['#FFD3AD', '#E08230'],
+      ['#9CE9FF', '#29A1C3'],
+      ['#4442CA', '#D6D5FF'],
+      ['#C02D56', '#FFA8C0'],
+      ['#C84FD1', '#FCD3FF'],
+      ['#9FDE47', '#CEF19E'],
+      ['#AAC6FF', '#3A7AFF'],
+      ['#CF8E29', '#FFCF84'],
+      ['#98E4FB', '#23C1F0'],
+      ['#FFE0D6', '#E57450'],
+      ['#B465FF', '#E8D0FF'],
+      ['#F8C106', '#FFEAA4'],
+    ],
+    []
+  )
 
   const handleChartInit = useCallback((chart: EChartsType) => {
     chartInstance.current = chart

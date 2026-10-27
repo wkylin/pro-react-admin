@@ -114,15 +114,18 @@ const MyVideo = () => {
     }
   }, [currentMovieId])
 
-  const handleSelectMovie = useCallback((id: Movie['id']) => {
-    // Ensure DOM commits the new src within this click gesture.
-    flushSync(() => setCurrentMovieId(id))
+  const handleSelectMovie = useCallback(
+    (id: Movie['id']) => {
+      // Ensure DOM commits the new src within this click gesture.
+      flushSync(() => setCurrentMovieId(id))
 
-    const next = movies.find((m) => m.id === id)
-    if (next?.provider === 'html5') {
-      playerRef.current?.playFromUserGesture(true)
-    }
-  }, [])
+      const next = movies.find((m) => m.id === id)
+      if (next?.provider === 'html5') {
+        playerRef.current?.playFromUserGesture(true)
+      }
+    },
+    [movies]
+  )
 
   const reviews = [
     {

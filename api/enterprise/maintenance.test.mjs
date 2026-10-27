@@ -1,21 +1,49 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { appendFileSync, copyFileSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { appendFileSync, copyFileSync, existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { URL } from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
 import { randomBytes } from 'node:crypto'
+import { spawnSync } from 'node:child_process'
 import { DatabaseSync } from 'node:sqlite'
 import { hashPassword, tokenHash } from './domain.mts'
+import { ENTERPRISE_SCHEMA_VERSION } from './migrations.mts'
 import {
   createEnterpriseBackup,
   enterpriseLogicalFingerprint,
   migrateEnterpriseDatabase,
   restoreEnterpriseBackup,
   verifyEnterpriseDatabase,
+  verifyEnterpriseMigrationStatus,
 } from './database-ops.mts'
 import { EnterpriseStore } from './store.mts'
 import { EnterpriseService } from './service.mts'
+
+test('an uninitialized database reports the current schema and the documented status command runs', async (t) => {
+  const directory = mkdtempSync(path.join(tmpdir(), 'pro-admin-db-status-'))
+  t.after(() => rmSync(directory, { recursive: true, force: true }))
+  const database = path.join(directory, 'enterprise.sqlite')
+
+  const status = await verifyEnterpriseMigrationStatus(database)
+  assert.equal(status.latestSchemaVersion, ENTERPRISE_SCHEMA_VERSION)
+  assert.deepEqual(
+    status.pendingMigrations,
+    Array.from({ length: ENTERPRISE_SCHEMA_VERSION }, (_, index) => index + 1)
+  )
+  assert.equal(status.initialized, false)
+  assert.equal(existsSync(database), false)
+
+  const command = spawnSync(
+    process.execPath,
+    [fileURLToPath(new URL('./db-admin.mjs', import.meta.url)), '--', 'status', '--db', database],
+    {
+      encoding: 'utf8',
+    }
+  )
+  assert.equal(command.status, 0, command.stderr)
+  assert.equal(JSON.parse(command.stdout).latestSchemaVersion, ENTERPRISE_SCHEMA_VERSION)
+})
 
 async function createLegacyV1Database(file) {
   const alphaPassword = 'Legacy-alpha-password-42'
@@ -107,7 +135,7 @@ test('legacy v1 migration preserves credentials, per-tenant authorization, sessi
   }
 
   const migrated = await migrateEnterpriseDatabase(database)
-  assert.deepEqual(migrated.applied, [2])
+  assert.deepEqual(migrated.applied, [2, 3, 4, 5])
   assert.ok(migrated.preMigrationBackup)
   const oldBackup = await verifyEnterpriseDatabase(migrated.preMigrationBackup, { requireManifest: true })
   assert.equal(oldBackup.schemaVersion, 1)
@@ -117,7 +145,7 @@ test('legacy v1 migration preserves credentials, per-tenant authorization, sessi
   let currentFingerprint
   try {
     const status = db.prepare('PRAGMA user_version').get()
-    assert.equal(status.user_version, 2)
+    assert.equal(status.user_version, ENTERPRISE_SCHEMA_VERSION)
     assert.deepEqual(
       db
         .prepare('SELECT tenant_id,principal_id,user_id FROM tenant_memberships ORDER BY tenant_id')
@@ -203,7 +231,7 @@ test('legacy v1 migration preserves credentials, per-tenant authorization, sessi
     (await verifyEnterpriseDatabase(restored.previousBackup, { requireManifest: true })).manifestPresent,
     true
   )
-  assert.equal((await verifyEnterpriseDatabase(database)).schemaVersion, 2)
+  assert.equal((await verifyEnterpriseDatabase(database)).schemaVersion, ENTERPRISE_SCHEMA_VERSION)
 
   const restoredStore = new EnterpriseStore(database, { migrationMode: 'verify' })
   try {
@@ -216,7 +244,7 @@ test('legacy v1 migration preserves credentials, per-tenant authorization, sessi
     migrated.preMigrationBackup,
     path.join(directory, 'restored-from-v1.sqlite')
   )
-  assert.equal(upgradedFromV1.schemaVersion, 2)
+  assert.equal(upgradedFromV1.schemaVersion, ENTERPRISE_SCHEMA_VERSION)
   assert.equal(upgradedFromV1.logicalFingerprint, legacyFingerprint)
 
   const rollback = await restoreEnterpriseBackup(
@@ -225,7 +253,10 @@ test('legacy v1 migration preserves credentials, per-tenant authorization, sessi
     { migrateToLatest: false }
   )
   assert.equal(rollback.schemaVersion, 1)
-  assert.deepEqual(rollback.pendingMigrations, [2])
+  assert.deepEqual(
+    rollback.pendingMigrations,
+    Array.from({ length: ENTERPRISE_SCHEMA_VERSION - 1 }, (_, index) => index + 2)
+  )
   assert.equal(rollback.logicalFingerprint, legacyFingerprint)
 })
 

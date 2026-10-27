@@ -6,7 +6,7 @@ api/ 是独立 workspace package，保留 CommonJS Express 5、Helmet、CORS、b
 pnpm --filter api dev
 ```
 
-该命令读取根 .env.development.local，默认固定监听 127.0.0.1:5200；根目录 `pnpm start`、`pnpm run dev:webpack`、`pnpm run dev:vite` 和 `pnpm run start:enterprise:full` 会从配置端口起寻找空闲端口并同步所选前端的代理。生产监听 0.0.0.0，端口依次取 TRACKING_API_PORT、PORT、5200。
+该命令读取根 .env.development.local，默认固定监听 127.0.0.1:5200；根目录 `pnpm start`、`pnpm run dev:webpack`、`pnpm run dev:vite`、`pnpm run start:enterprise` 和 `pnpm run start:enterprise:full` 会从配置端口起寻找空闲端口并同步所选前端的代理。Enterprise 启动器在没有自定义业务库或外部 API 时启用隔离的 SQLite 演示租户；生产监听 0.0.0.0，端口依次取 TRACKING_API_PORT、PORT、5200。
 
 ## 接口
 
@@ -44,12 +44,13 @@ CORS 只允许配置的可信 origin（开发额外允许 loopback），允许 c
 | GITHUB_DEMO_CALLBACK_URL                | GitHub OAuth App 中注册的精确回调 URL                   |
 | GITHUB_DEMO_APP_URL                     | 同源演示前端根 URL，可包含部署子路径                    |
 | GITHUB_SESSION_SECRET                   | 至少 32 字节的随机签名密钥，仅服务端使用                |
-| ENTERPRISE_ENABLED                      | true 才启用真实业务 API；默认关闭并返回 503             |
+| ENTERPRISE_ENABLED                      | true 才启用真实业务 API；通用 API 默认关闭，两个 Enterprise 开发启动命令自动启用本地真实模式 |
 | ENTERPRISE_DB_PATH                      | 开发默认 api/data/enterprise.sqlite；生产必填持久卷路径 |
 | ENTERPRISE_SESSION_TTL_MS               | 默认 28800000；范围 300000..604800000                   |
+| ENTERPRISE_TOTP_KEY                     | 32 字节随机密钥的 64 位十六进制，仅服务端保存           |
 | ENTERPRISE_API_TARGET                   | Webpack 开发企业 API 代理目标，默认本地 API 端口        |
 
-内存存储重启丢失，限速也是进程内实现。MongoDB tracking_events 有查询索引与 90 天 _receivedAt TTL。反向代理须正确处理身份、来源与 API 路径；不要将 TRACKING_ADMIN_TOKEN、client secret 注入浏览器包。
+内存存储重启丢失；埋点与登录 IP 限速在进程内，TOTP 账号限次在 SQLite 中持久保存。MongoDB tracking_events 有查询索引与 90 天 _receivedAt TTL。反向代理须正确处理身份、来源与 API 路径；不要将 TRACKING_ADMIN_TOKEN、client secret 注入浏览器包。
 
 开发 Webpack 的 /api/tracking 代理在服务端注入管理 header，仅用于本地开发。静态部署不会继承该代理；生产管理页面需要真实身份鉴权和服务端代理。Webpack 与 Vite 都将 `/api/demo/github` 同源代理到配套 API。GitHub OAuth App 的 Authorization callback URL 必须与 `GITHUB_DEMO_CALLBACK_URL` 完全一致，例如 `http://localhost:8080/api/demo/github/callback`；`GITHUB_DEMO_APP_URL` 对应 `http://localhost:8080/`。五项配置缺一或前后端不同源时，演示登录入口不显示。Vercel 默认站点使用单独打包的同源函数，配置和发布流程见 [Vercel GitHub 登录](../deployment/VERCEL_GITHUB_LOGIN.md)。纯静态 GitHub Pages 没有 API，不能启用此入口。
 
@@ -57,11 +58,11 @@ CORS 只允许配置的可信 origin（开发额外允许 loopback），允许 c
 
 ## 企业业务接口边界
 
-用户、角色与审计页面通过 DataProvider 接入 `/api/admin/...`，接口与资源结构、初始化配置见[企业资源](./ENTERPRISE.md)。企业登录使用 POST /api/auth/login，当前会话 GET/DELETE /api/auth/session；GET /api/auth/session/tenants 列出当前身份可用组织，POST /api/auth/session/tenant 在已有成员关系间切换。授权使用 GET /api/permissions/current，角色目录使用 GET /api/roles。其它企业 API 要求 Bearer 会话；X-Tenant-ID 可选但必须与会话一致。Tracking 管理 token、GitHub token、演示邮箱均不能访问企业服务。
+用户、角色、租户与审计页面通过 DataProvider 接入 `/api/admin/...`，接口与资源结构、初始化配置见[企业资源](./ENTERPRISE.md)。企业登录使用 POST /api/auth/login；启用验证器的账号在密码正确后还需动态码或一次性恢复码，签发会话前由服务端校验。`/api/auth/totp` 提供当前身份的绑定、启用、恢复码更新与停用，完整流程见[企业登录验证器](./ENTERPRISE.md#企业账号登录验证器-totp)。当前会话 GET/DELETE /api/auth/session；GET /api/auth/session/tenants 仅列出当前身份可用组织，POST /api/auth/session/tenant 在已有成员关系间切换。平台管理员的 `GET/POST /api/admin/tenants`、`GET/PATCH/DELETE /api/admin/tenants/:id` 用于跨租户管理；DELETE 停用租户并撤销会话，保留数据。授权使用 GET /api/permissions/current，角色目录使用 GET /api/roles。其它企业 API 要求 Bearer 会话；X-Tenant-ID 可选但必须与会话一致。Tracking 管理 token、GitHub token、浏览器演示邮箱均不能访问企业服务。
 
 HTTP adapter 管理鉴权入口、no-store 和每 IP 登录限速；service.mts 负责租户过滤、角色授予边界、最后管理员保护和事务审计；store.mts 负责表、外键、索引、WAL、schema 版本。业务核心执行 `pnpm run typecheck:api`，真实 HTTP 回归执行 `pnpm run test:api`。
 
-SQLite 数据库和日志需要同一主机持久卷；生产配置缺失、未知/待迁移 schema 或 Vercel 环境拒绝开启。schema v2 分离 principal 与组织成员关系；迁移不会按邮箱合并旧账号。首次初始化显式运行 `pnpm run api:bootstrap`（先迁移，再创建管理员），不会在启动时创建默认密码。离线迁移、带 manifest 的备份校验和恢复命令见[企业 SQLite 运维](./ENTERPRISE.md#sqlite-迁移备份与恢复)。业务与会话持久化不依赖 TRACKING_STORE。停用/重置密码等撤销与审计同事务，数据库触发器限制审计为追加；数据库管理员仍有修改权限，不是外部防篡改存储。OIDC/组织账号关联策略和租户管理 UI 仍需产品策略及后续实现。
+SQLite 数据库和日志需要同一主机持久卷；生产配置缺失、未知/待迁移 schema 或 Vercel 环境拒绝开启。schema v2 分离 principal 与组织成员关系；v5 单独保存平台管理员授权。首次初始化显式运行 `pnpm run api:bootstrap`（先迁移，再创建管理员），不会在启动时创建默认密码；生产平台身份需运维人员执行 `api:platform-admin grant`。离线迁移、带 manifest 的备份校验和恢复命令见[企业 SQLite 运维](./ENTERPRISE.md#sqlite-迁移备份与恢复)。业务与会话持久化不依赖 TRACKING_STORE。停用/重置密码等撤销与审计同事务，数据库触发器限制审计为追加；数据库管理员仍有修改权限，不是外部防篡改存储。OIDC/跨组织身份关联策略仍需单独确定。
 
 ### 企业资源 WebSocket
 
@@ -73,7 +74,7 @@ SQLite 数据库和日志需要同一主机持久卷；生产配置缺失、未�
 
 服务端对 Origin 使用与 CORS 相同的精确 allowlist。握手后 5 秒未认证、重复/过期票据、越权租户或错误消息会关闭连接。票据申请按 session 限速；服务端限制 pending/active 连接与消息大小。
 
-v1 只发送无业务数据的租户资源失效：`resource.invalidate` 的 `resource` 是 `users`、`roles` 或 `audit`。管理写入成功提交后才发布主资源与审计失效；读取权限分别要求 `user:read`、`role:read`、`audit:read`，由服务端当前 session/role 再检查。事件 ID 使用租户独立 epoch 与单调序号，不包含 tenant ID 或记录 ID。
+v1 只发送无业务数据的租户资源失效：`resource.invalidate` 的 `resource` 是 `users`、`roles`、`audit` 或 `access_requests`。管理写入成功提交后才发布主资源与审计失效；读取权限分别要求 `user:read`、`role:read`、`audit:read`、`access:read`，由服务端当前 session/role 和资源范围再检查。事件 ID 使用租户独立 epoch 与单调序号，不包含 tenant ID 或记录 ID。
 
 初次连接、进程重启、游标超出最近 1000 条进程内保留窗口或窗口内事件已被淘汰时，服务端发 `reset`；客户端必须失效该会话下全部资源后再记下最新 cursor。可续接时只重放 cursor 之后、同租户且当前角色可读的事件，完成后发 `ready`。session 每 15 秒重新验证，停用/注销/切换组织会关闭连接；浏览器断线采用有上限的指数退避并重新申请票据。
 

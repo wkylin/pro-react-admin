@@ -1,5 +1,5 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { ArrowRight, ArrowLeft, Quote } from 'lucide-react'
 import styles from './index.module.less'
 
@@ -40,7 +40,7 @@ const data = [
 ]
 
 const AutoSlider = () => {
-  const [people, setPeople] = useState(data)
+  const people = data
   const [index, setIndex] = React.useState(0)
 
   useEffect(() => {

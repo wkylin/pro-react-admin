@@ -28,7 +28,9 @@ export const SafeLink = ({ to, children, onClick, target, replace = false, ...re
       if (!ok) {
         try {
           message.error('您没有权限访问该页面')
-        } catch (e) {}
+        } catch {
+          // Notification failure must not permit the navigation.
+        }
         return
       }
       if (replace) navigate(normalizedTo, { replace: true })
@@ -37,7 +39,9 @@ export const SafeLink = ({ to, children, onClick, target, replace = false, ...re
       console.error('SafeLink navigation failed', err)
       try {
         message.error('您没有权限访问该页面')
-      } catch (e) {}
+      } catch {
+        // Notification failure must not hide the rejected navigation.
+      }
     }
   }
 
@@ -61,7 +65,9 @@ export const SafeNavLink = ({ to, children, className, activeClassName, ...rest 
       if (!ok) {
         try {
           message.error('您没有权限访问该页面')
-        } catch (e) {}
+        } catch {
+          // Notification failure must not permit the navigation.
+        }
         return
       }
       navigate(normalizedTo)

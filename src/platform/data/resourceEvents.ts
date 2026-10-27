@@ -3,10 +3,10 @@ import { isRecord } from '@platform/api/core/response'
 import { getEnv } from '@platform/config/env'
 import { getSessionIdentity, handleAuthenticationFailure, readEnterpriseSession } from '@platform/auth/model/session'
 
-export type InvalidatedResource = 'users' | 'roles' | 'audit'
+export type InvalidatedResource = 'users' | 'roles' | 'audit' | 'access_requests'
 
 const isResource = (value: unknown): value is InvalidatedResource =>
-  value === 'users' || value === 'roles' || value === 'audit'
+  value === 'users' || value === 'roles' || value === 'audit' || value === 'access_requests'
 
 function getEventsUrl(): string {
   const configuredBase = getEnv('APP_BASE_URL', '').replace(/\/+$/, '')

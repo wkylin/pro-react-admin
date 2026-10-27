@@ -6,6 +6,28 @@ export default [
     target: process.env.ENTERPRISE_API_TARGET || localApiTarget,
     changeOrigin: true,
     ws: true,
+    on: {
+      error: (_error, _request, response) => {
+        if (typeof response.writeHead !== 'function') {
+          response.destroy?.()
+          return
+        }
+        if (response.headersSent) {
+          response.end()
+          return
+        }
+        response.writeHead(502, {
+          'Cache-Control': 'no-store',
+          'Content-Type': 'application/json; charset=utf-8',
+        })
+        response.end(
+          JSON.stringify({
+            error: 'enterprise_api_unavailable',
+            message: '企业 API 未响应。请运行 pnpm start:enterprise，并打开终端输出的 Enterprise 地址。',
+          })
+        )
+      },
+    },
   },
   {
     // Keep the admin token in the dev-server process; it is never injected into the browser bundle.

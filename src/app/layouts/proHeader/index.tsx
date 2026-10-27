@@ -21,6 +21,7 @@ import {
   ApartmentOutlined,
   CheckOutlined,
   ReloadOutlined,
+  SafetyCertificateOutlined,
 } from '@ant-design/icons'
 import { useNavigate, type NavigateFunction } from 'react-router-dom'
 import { removeLocalStorage, getLocalStorage } from '@shared/lib/publicFn'
@@ -166,6 +167,11 @@ const buildUserMenuItems = ({
     { type: 'divider' },
     ...(enterpriseSession
       ? [
+          {
+            key: 'authenticator',
+            label: t('menu.authenticator'),
+            icon: <SafetyCertificateOutlined />,
+          } as HeaderMenuItems[number],
           {
             key: 'tenants',
             label: t('identity.switchTenant'),
@@ -646,6 +652,10 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
       }
       if (key === '1') {
         redirectTo('/profile')
+        return
+      }
+      if (key === 'authenticator') {
+        redirectTo('/account/security')
         return
       }
       if (key === '2') {

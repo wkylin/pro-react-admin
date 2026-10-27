@@ -62,6 +62,10 @@ test('build plans select either bundler without changing project or MFE contract
   ])
   assert.equal(vite.env.PUBLIC_URL, webpack.env.PUBLIC_URL)
   assert.equal(vite.env.MFE_ROLE, webpack.env.MFE_ROLE)
+  assert.deepEqual(
+    createBuildPlan('dev', 'enterprise', { BUILD_TOOL: 'vite', HOST: '127.0.0.1' }, registry).args.slice(0, 2),
+    ['--host', '127.0.0.1']
+  )
   assert.equal(
     createBuildPlan('build', 'default', { BUILD_TOOL: 'vite', VITE_OUT_DIR: 'dist-pages' }, registry).output,
     'dist-pages'

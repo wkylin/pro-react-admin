@@ -24,7 +24,12 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { tmpdir } from 'node:os'
 import { fileURLToPath } from 'node:url'
 import { acquireDatabaseLease } from './database-lock.mts'
-import { applyEnterpriseMigrations, getEnterpriseMigrationStatus } from './migrations.mts'
+import {
+  applyEnterpriseMigrations,
+  getEnterpriseMigrationStatus,
+  ENTERPRISE_MIGRATIONS,
+  ENTERPRISE_SCHEMA_VERSION,
+} from './migrations.mts'
 import type { EnterpriseMigrationStatus } from './migrations.mts'
 
 const defaultDatabasePath = resolve(dirname(fileURLToPath(import.meta.url)), '../data/enterprise.sqlite')
@@ -129,6 +134,51 @@ export function enterpriseLogicalFingerprint(db: DatabaseSync) {
     'audit',
     'SELECT id,tenant_id,actor,action,resource,recordId,at FROM audit ORDER BY tenant_id,at,id'
   )
+  // Empty new tables do not change the digest of an upgraded v1/v2 database.
+  if (version >= 3) {
+    if (oneNumber(db, 'SELECT COUNT(*) AS count FROM role_scopes'))
+      hashRows(
+        db,
+        hash,
+        'role_scopes',
+        'SELECT tenant_id,role_code,scopes FROM role_scopes ORDER BY tenant_id,role_code'
+      )
+    if (oneNumber(db, 'SELECT COUNT(*) AS count FROM access_requests'))
+      hashRows(
+        db,
+        hash,
+        'access_requests',
+        `SELECT id,tenant_id,kind,target_id,actor_id,actor_email,before_json,after_json,affected_json,reason,fingerprint,
+                status,reviewer_id,decision_reason,created_at,decided_at
+         FROM access_requests ORDER BY tenant_id,created_at,id`
+      )
+  }
+  if (version >= 4) {
+    if (oneNumber(db, 'SELECT COUNT(*) AS count FROM totp_credentials'))
+      hashRows(
+        db,
+        hash,
+        'totp_credentials',
+        `SELECT principal_id,secret_ciphertext,enabled,pending_expires_at,last_used_step,created_at,enabled_at
+         FROM totp_credentials ORDER BY principal_id`
+      )
+    if (oneNumber(db, 'SELECT COUNT(*) AS count FROM totp_recovery_codes'))
+      hashRows(
+        db,
+        hash,
+        'totp_recovery_codes',
+        'SELECT principal_id,code_hash,created_at FROM totp_recovery_codes ORDER BY principal_id,code_hash'
+      )
+    if (oneNumber(db, 'SELECT COUNT(*) AS count FROM totp_rate_limits'))
+      hashRows(
+        db,
+        hash,
+        'totp_rate_limits',
+        'SELECT principal_id,window_started_at,attempts FROM totp_rate_limits ORDER BY principal_id'
+      )
+  }
+  if (version >= 5 && oneNumber(db, 'SELECT COUNT(*) AS count FROM platform_admins'))
+    hashRows(db, hash, 'platform_admins', 'SELECT principal_id,granted_at FROM platform_admins ORDER BY principal_id')
   return hash.digest('hex')
 }
 
@@ -404,8 +454,8 @@ export async function verifyEnterpriseMigrationStatus(file: string) {
     return {
       path: databasePath,
       schemaVersion: 0,
-      latestSchemaVersion: 2,
-      pendingMigrations: [1, 2],
+      latestSchemaVersion: ENTERPRISE_SCHEMA_VERSION,
+      pendingMigrations: ENTERPRISE_MIGRATIONS.map(({ version }) => version),
       initialized: false,
       historyExists: false,
     }
@@ -618,7 +668,10 @@ export async function drillEnterpriseRecovery(
     const verified = await verifyEnterpriseDatabase(drillDatabase)
     restoreAndVerifyMs = Date.now() - restoreStartedAt
     restoredFingerprint = verified.logicalFingerprint
-    if (restored.logicalFingerprint !== verifiedBackup.logicalFingerprint || restoredFingerprint !== verifiedBackup.logicalFingerprint) {
+    if (
+      restored.logicalFingerprint !== verifiedBackup.logicalFingerprint ||
+      restoredFingerprint !== verifiedBackup.logicalFingerprint
+    ) {
       throw new Error('Recovery drill changed authorization, membership, session, credential, or audit contents')
     }
   } finally {

@@ -13,6 +13,7 @@ const RESOURCE_PERMISSION = Object.freeze({
   users: 'user:read',
   roles: 'role:read',
   audit: 'audit:read',
+  access_requests: 'access:read',
 })
 
 const hash = (value) => createHash('sha256').update(value).digest('hex')
@@ -134,9 +135,7 @@ function createEnterpriseEvents(service, { isAllowedOrigin = () => false } = {})
     if (record.tenantId !== client.tenantId) return false
     try {
       const principal = service.authenticateSession(client.sessionHash, client.tenantId, client.principalId)
-      return principal.role.permissions.includes('*:*') ||
-        principal.role.permissions.includes(RESOURCE_PERMISSION[record.event.resource]) ||
-        principal.role.permissions.includes(`${RESOURCE_PERMISSION[record.event.resource].split(':')[0]}:*`)
+      return service.canReadEvent(principal, record.event.resource)
     } catch {
       return false
     }
@@ -161,7 +160,9 @@ function createEnterpriseEvents(service, { isAllowedOrigin = () => false } = {})
 
   wss.on('connection', (socket, request) => {
     const address = request.socket.remoteAddress || 'unknown'
-    const pendingCount = [...clients.values()].filter((client) => !client.authenticated && client.address === address).length
+    const pendingCount = [...clients.values()].filter(
+      (client) => !client.authenticated && client.address === address
+    ).length
     if (clients.size >= MAX_PENDING_CONNECTIONS || pendingCount >= 5) {
       socket.close(4429, 'connection_limit')
       return
@@ -304,7 +305,12 @@ function createEnterpriseEvents(service, { isAllowedOrigin = () => false } = {})
         return
       }
       const protocolHeader = request.headers['sec-websocket-protocol'] || ''
-      if (!protocolHeader.split(',').map((value) => value.trim()).includes(PROTOCOL)) {
+      if (
+        !protocolHeader
+          .split(',')
+          .map((value) => value.trim())
+          .includes(PROTOCOL)
+      ) {
         socket.write('HTTP/1.1 400 Bad Request\r\nConnection: close\r\nCache-Control: no-store\r\n\r\n')
         socket.destroy()
         return

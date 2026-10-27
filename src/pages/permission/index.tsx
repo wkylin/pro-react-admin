@@ -1,431 +1,169 @@
-import { useState, useEffect } from 'react'
-import { Card, Button, Space, Tag, Divider, Row, Col, Switch, Alert } from 'antd'
-import { message } from '@platform/feedback/message'
-import { useAppStore } from '@app/model'
-import { usePermission } from '@platform/auth/hooks/usePermission'
-import PermissionGuard from '@platform/auth/components/PermissionGuard'
-import AuthButton from '@platform/auth/components/AuthButton'
-import { permissionService } from '@platform/auth/services/permissionService'
+import { useMemo, useState } from 'react'
+import { Alert, Card, Descriptions, Input, Select, Space, Table, Tag, Typography } from 'antd'
+import { useTranslation } from 'react-i18next'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import { getEnv } from '@platform/config/env'
-import { readStoredToken } from '@platform/auth/model/session'
+import { usePermission } from '@platform/auth/hooks/usePermission'
+import { canAccessPath, hasEffectivePermission, routePolicies } from '@platform/auth/model/policy'
+import { scopedDecision, scopeFor } from '@platform/auth/model/accessDecision'
+import type { PermissionCode } from '@platform/auth/model/permission'
 
-const PermissionExample = () => {
-  const screens = useAppStore((s) => s.screens)
-  const {
-    permissions,
-    roles,
-    routes,
-    loading,
-    hasPermission,
-    hasAllPermissions,
-    hasAnyPermission,
-    hasRole,
-    canAccessRoute,
-    refreshPermissions,
-  } = usePermission()
+const permissions = [
+  'user:read',
+  'user:create',
+  'user:update',
+  'user:delete',
+  'role:read',
+  'role:create',
+  'role:update',
+  'role:delete',
+  'audit:read',
+  'access:read',
+  'access:approve',
+] as const
 
-  // 角色切换（开发测试用）
-  const switchRole = async (roleCode: string) => {
-    // 如果已登录且未强制启用示例切换，则阻止切换，以免与真实登录权限冲突
-    const token = readStoredToken()
-    const force = localStorage.getItem('force_demo_switch') === '1'
-    if (token && !force) {
-      message.warning('当前为已登录状态，示例内角色切换已被禁用。如需测试切换，请先登出或在本页面启用开发强制开关。')
-      return
-    }
-
-    localStorage.setItem('user_role', roleCode)
-    await permissionService.syncPermissions()
-    await refreshPermissions()
-    message.success(`已切换到 ${roleCode} 角色`)
-  }
-
-  // 本地控制：开发时可强制启用示例切换（仅页面级别）
-  const [forceDemoSwitch, setForceDemoSwitch] = useState<boolean>(false)
-  useEffect(() => {
-    // 延迟设置 state 以避免在 effect 中同步 setState
-    if (typeof requestAnimationFrame !== 'undefined') {
-      requestAnimationFrame(() => setForceDemoSwitch(localStorage.getItem('force_demo_switch') === '1'))
-    } else {
-      setTimeout(() => setForceDemoSwitch(localStorage.getItem('force_demo_switch') === '1'), 0)
-    }
-  }, [])
-
-  const toggleForceDemoSwitch = (checked: boolean) => {
-    setForceDemoSwitch(checked)
-    if (checked) localStorage.setItem('force_demo_switch', '1')
-    else localStorage.removeItem('force_demo_switch')
-    message.info(`开发强制切换已${checked ? '启用' : '禁用'}`)
-  }
-
-  if (loading) {
-    return <div>加载权限中...</div>
-  }
-
+export default function PermissionExample() {
+  const { t } = useTranslation()
+  const { current, loading } = usePermission()
+  const [permission, setPermission] = useState<PermissionCode>('user:read')
+  const [recordId, setRecordId] = useState('')
+  const menuRoutes = useMemo(
+    () => Object.entries(routePolicies).filter(([, policy]) => policy.menu && !policy.menuGroup),
+    []
+  )
+  if (loading)
+    return (
+      <FixTabPanel>
+        <div style={{ padding: 24 }}>{t('identity.checkingPermissions')}</div>
+      </FixTabPanel>
+    )
+  if (!current)
+    return (
+      <FixTabPanel>
+        <div style={{ padding: 24 }}>
+          <Alert type="warning" showIcon title={t('permissionInspector.unavailable')} />
+        </div>
+      </FixTabPanel>
+    )
+  const resource = permission.split(':', 1)[0]
+  const recordScoped = resource === 'user' || resource === 'role'
+  const allowed =
+    recordScoped && !recordId.trim()
+      ? false
+      : hasEffectivePermission(current, permission, recordScoped ? recordId.trim() : undefined)
+  const routeAllowed = hasEffectivePermission(current, permission)
+  const roleDecisions = current.roles.map((role) => ({
+    code: role.code,
+    grant: role.permissions.join(', '),
+    userScope: scopeFor(role.scopes, 'user'),
+    roleScope: scopeFor(role.scopes, 'role'),
+    result: scopedDecision(role.permissions, role.scopes, permission, recordId.trim() || undefined),
+  }))
   return (
     <FixTabPanel>
-      <div style={{ padding: screens.xs ? 16 : 24 }}>
-        <Row gutter={[16, 16]}>
-          <Col xs={24} lg={18}>
-            <h1
-              style={{
-                fontSize: screens.xs ? '20px' : '24px',
-                marginBottom: '8px',
-              }}
-            >
-              权限系统示例
-            </h1>
-            <p style={{ marginBottom: '16px' }}>系统为四个角色随机分配了路由权限，您可以切换不同角色查看权限差异。</p>
-          </Col>
-        </Row>
-        <Divider />
-        {/* 登录时提示：已使用登录账户权限，示例切换已禁用 */}
-        {readStoredToken() && !forceDemoSwitch && (
-          <Alert
-            title="已使用登录账户权限，示例切换已禁用"
-            description={
-              <div>
-                如需临时启用示例切换（仅用于开发），可在下方启用“开发强制开关”。启用后示例切换会覆盖当前页面权限视图，但不会修改后端用户数据。
-              </div>
-            }
-            type="warning"
-            showIcon
-            style={{ marginBottom: 16 }}
-          />
-        )}
-
-        {/* 开发强制开关，仅在非生产或 localhost 显示 */}
-        {(getEnv('NODE_ENV') !== 'production' || window.location.hostname.includes('localhost')) && (
-          <div
-            style={{
-              marginBottom: 16,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-            }}
-          >
-            <Switch checked={forceDemoSwitch} onChange={toggleForceDemoSwitch} />
-            <span style={{ color: 'var(--wui-text-secondary)' }}>开发：强制启用示例切换（仅页面级别）</span>
-          </div>
-        )}
-
-        {/* 权限说明 */}
-        <Card title="权限说明" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
-          <Row gutter={[16, 8]}>
-            <Col xs={24} sm={12} lg={6}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>超级管理员</strong>
-                <br />
-                <small>拥有所有路由访问权限（100%）</small>
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>管理员</strong>
-                <br />
-                <small>随机分配约 75% 的路由</small>
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>业务员</strong>
-                <br />
-                <small>随机分配约 50% 的路由</small>
-              </div>
-            </Col>
-            <Col xs={24} sm={12} lg={6}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>普通用户</strong>
-                <br />
-                <small>随机分配约 25% 的路由</small>
-              </div>
-            </Col>
-          </Row>
-        </Card>
-
-        {/* 当前权限信息 */}
-        <Card title="当前权限信息" style={{ marginBottom: 16 }}>
-          <Row gutter={16}>
-            <Col span={12}>
-              <p>
-                <strong>当前角色:</strong> {roles.join(', ') || '无'}
-              </p>
-              <p>
-                <strong>权限列表:</strong>
-              </p>
-              <Space wrap>
-                {permissions.map((perm) => (
-                  <Tag key={perm} color="blue">
-                    {perm}
-                  </Tag>
-                ))}
-              </Space>
-            </Col>
-            <Col span={12}>
-              <p>
-                <strong>可访问路由 ({routes.length} 个):</strong>
-              </p>
-              <Space wrap>
-                {routes.slice(0, 10).map((route) => (
-                  <Tag key={route} color="green">
-                    {route}
-                  </Tag>
-                ))}
-                {routes.length > 10 && <Tag>...等</Tag>}
-              </Space>
-            </Col>
-          </Row>
-        </Card>
-
-        {/* 角色切换 */}
-        <Card title="角色列表" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
-          <Row gutter={[16, 16]}>
-            {[
-              {
-                code: 'super_admin',
-                name: '超级管理员',
-                desc: '拥有所有权限',
-                routes: 29,
-              },
-              {
-                code: 'admin',
-                name: '管理员',
-                desc: '拥有大部分权限',
-                routes: 16,
-              },
-              {
-                code: 'business_user',
-                name: '业务员',
-                desc: '拥有业务相关权限',
-                routes: 10,
-              },
-              {
-                code: 'user',
-                name: '普通用户',
-                desc: '仅拥有基本权限',
-                routes: 7,
-              },
-            ].map((role) => (
-              <Col xs={24} sm={12} key={role.code}>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '8px',
-                    border: '1px solid var(--wui-border)',
-                    borderRadius: '4px',
-                  }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <strong>{role.name}</strong>
-                    <br />
-                    <small>
-                      {role.desc} - {role.routes} 个路由
-                    </small>
-                    {roles.includes(role.code) && (
-                      <Tag color="red" style={{ marginLeft: 8 }}>
-                        当前
-                      </Tag>
-                    )}
-                  </div>
-                  {/* 如果当前为已登录状态，禁用示例内切换按钮以避免覆盖真实用户权限 */}
-                  <Button
-                    type={roles.includes(role.code) ? 'primary' : 'default'}
-                    onClick={() => switchRole(role.code)}
-                    size={screens.xs ? 'small' : 'middle'}
-                    disabled={!!readStoredToken()}
-                  >
-                    切换
-                  </Button>
-                </div>
-              </Col>
+      <div style={{ padding: 24, display: 'grid', gap: 16 }}>
+        <div>
+          <Typography.Title level={2}>{t('permissionInspector.title')}</Typography.Title>
+          <Typography.Paragraph type="secondary">{t('permissionInspector.description')}</Typography.Paragraph>
+        </div>
+        <Alert type="info" showIcon title={t('permissionInspector.source')} />
+        <Card title={t('permissionInspector.currentIdentity')}>
+          <Descriptions column={{ xs: 1, sm: 2 }}>
+            <Descriptions.Item label={t('admin.member')}>{current.username}</Descriptions.Item>
+            <Descriptions.Item label={t('admin.role')}>
+              {current.roles.map((role) => role.name).join(', ') || '—'}
+            </Descriptions.Item>
+          </Descriptions>
+          <Space wrap>
+            {current.roles.map((role) => (
+              <Tag key={role.code}>{role.code}</Tag>
             ))}
-          </Row>
+          </Space>
         </Card>
-
-        {/* 权限组件示例 */}
-        <Card title="PermissionGuard 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} sm={24} md={8}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>单个权限检查：</strong>
-                <br />
-                <PermissionGuard permission="user:read" fallback={<span style={{ color: 'red' }}>无权限查看</span>}>
-                  <span style={{ color: 'green' }}>您有 user:read 权限，可以看到这个内容</span>
-                </PermissionGuard>
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={8}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>多个权限检查（任一即可）：</strong>
-                <br />
-                <PermissionGuard
-                  permissions={['user:create', 'role:create']}
-                  fallback={<span style={{ color: 'red' }}>无权限查看</span>}
-                >
-                  <span style={{ color: 'green' }}>您有 user:create 或 role:create 权限之一</span>
-                </PermissionGuard>
-              </div>
-            </Col>
-            <Col xs={24} sm={24} md={8}>
-              <div
-                style={{
-                  padding: '8px',
-                  border: '1px solid var(--wui-border)',
-                  borderRadius: '4px',
-                }}
-              >
-                <strong>角色检查：</strong>
-                <br />
-                <PermissionGuard
-                  roles={['admin', 'super_admin']}
-                  fallback={<span style={{ color: 'red' }}>非管理员</span>}
-                >
-                  <span style={{ color: 'green' }}>您是管理员（含超级管理员）</span>
-                </PermissionGuard>
-              </div>
-            </Col>
-          </Row>
+        <Card title={t('permissionInspector.check')}>
+          <Space wrap style={{ marginBottom: 16 }}>
+            <Select
+              aria-label={t('admin.permissions')}
+              value={permission}
+              style={{ minWidth: 190 }}
+              onChange={setPermission}
+              options={permissions.map((value) => ({ value, label: value }))}
+            />
+            {recordScoped && (
+              <Input
+                aria-label={t('permissionInspector.recordId')}
+                placeholder={t('permissionInspector.recordId')}
+                value={recordId}
+                onChange={(event) => setRecordId(event.target.value)}
+                style={{ width: 280 }}
+              />
+            )}
+            <Tag color={allowed ? 'success' : 'error'}>
+              {t(allowed ? 'permissionInspector.allowed' : 'permissionInspector.denied')}
+            </Tag>
+          </Space>
+          {recordScoped && !recordId.trim() && (
+            <Alert type="warning" showIcon title={t('permissionInspector.enterRecord')} />
+          )}
+          {recordScoped && (
+            <Typography.Paragraph type="secondary" style={{ marginTop: 12 }}>
+              {t('permissionInspector.routeResult')}:{' '}
+              {t(routeAllowed ? 'permissionInspector.allowed' : 'permissionInspector.denied')}
+            </Typography.Paragraph>
+          )}
+          <Table
+            rowKey="code"
+            pagination={false}
+            size="small"
+            dataSource={roleDecisions}
+            columns={[
+              { title: t('admin.role'), dataIndex: 'code' },
+              { title: t('admin.permissions'), dataIndex: 'grant', ellipsis: true },
+              {
+                title: t('admin.resourceScope'),
+                key: 'scope',
+                render: (_, row) =>
+                  recordScoped ? (
+                    <span>{t(`admin.scopeMode.${resource === 'user' ? row.userScope.mode : row.roleScope.mode}`)}</span>
+                  ) : (
+                    '—'
+                  ),
+              },
+              {
+                title: t('permissionInspector.reason'),
+                dataIndex: ['result', 'reason'],
+                render: (reason: string) => t(`permissionInspector.decision.${reason}`),
+              },
+            ]}
+            scroll={{ x: 620 }}
+          />
         </Card>
-
-        {/* 按钮权限示例 */}
-        <Card title="AuthButton 组件" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
-          <Row gutter={[8, 8]}>
-            <Col xs={24} sm={8}>
-              <AuthButton permission="user:create" onClick={() => message.success('创建用户')} block>
-                创建用户
-              </AuthButton>
-            </Col>
-            <Col xs={24} sm={8}>
-              <AuthButton
-                permission="user:delete"
-                hideWhenNoPermission={false}
-                onClick={() => message.success('删除用户')}
-                block
-              >
-                删除用户（禁用状态）
-              </AuthButton>
-            </Col>
-            <Col xs={24} sm={8}>
-              <AuthButton
-                permissions={['user:update', 'role:update']}
-                onClick={() => message.success('更新操作')}
-                block
-              >
-                更新操作（需任一权限）
-              </AuthButton>
-            </Col>
-          </Row>
-        </Card>
-
-        {/* Hook 检查示例 */}
-        <Card title="usePermission Hook 检查" style={{ marginBottom: 16 }} size={screens.xs ? 'small' : 'medium'}>
-          <Row gutter={[8, 8]}>
-            <Col xs={24} sm={12} md={6}>
-              <Button
-                onClick={async () => {
-                  const canEdit = await hasPermission('user:update')
-                  message.info(canEdit ? '有 user:update 权限' : '无 user:update 权限')
-                }}
-                block
-              >
-                检查单个权限 (user:update)
-              </Button>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Button
-                onClick={async () => {
-                  const canAccess = await canAccessRoute('/business')
-                  message.info(canAccess ? '可访问 /business' : '不可访问 /business')
-                }}
-                block
-              >
-                检查路由权限 (/business)
-              </Button>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Button
-                onClick={async () => {
-                  const hasAll = await hasAllPermissions(['user:read', 'user:create'])
-                  message.info(hasAll ? '同时拥有 user:read 和 user:create' : '缺少至少一个权限')
-                }}
-                block
-              >
-                检查多个权限（全部需要）
-              </Button>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Button
-                onClick={async () => {
-                  const hasAny = await hasAnyPermission(['user:read', 'role:read'])
-                  message.info(hasAny ? '有 user:read 或 role:read 权限之一' : '都没有这些权限')
-                }}
-                block
-              >
-                检查多个权限（任一即可）
-              </Button>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Button
-                onClick={async () => {
-                  const isAdmin = (await hasRole('admin')) || (await hasRole('super_admin'))
-                  message.info(isAdmin ? '是管理员（admin / super_admin）' : '不是管理员')
-                }}
-                block
-              >
-                检查角色 (admin/super_admin)
-              </Button>
-            </Col>
-          </Row>
-        </Card>
-
-        {/* 刷新权限 */}
-        <Card title="权限操作" size={screens.xs ? 'small' : 'medium'}>
-          <Button onClick={refreshPermissions} block={!!screens.xs}>
-            刷新权限
-          </Button>
+        <Card title={t('permissionInspector.routes')}>
+          <Table
+            rowKey="path"
+            size="small"
+            pagination={{ pageSize: 10 }}
+            dataSource={menuRoutes.map(([path, policy]) => ({
+              path,
+              permission: policy.permission,
+              allowed: canAccessPath(current, path),
+            }))}
+            columns={[
+              { title: t('permissionInspector.path'), dataIndex: 'path' },
+              { title: t('admin.permissions'), dataIndex: 'permission' },
+              {
+                title: t('permissionInspector.result'),
+                dataIndex: 'allowed',
+                render: (value: boolean) => (
+                  <Tag color={value ? 'success' : 'default'}>
+                    {t(value ? 'permissionInspector.allowed' : 'permissionInspector.denied')}
+                  </Tag>
+                ),
+              },
+            ]}
+            scroll={{ x: 520 }}
+          />
         </Card>
       </div>
     </FixTabPanel>
   )
 }
-
-export default PermissionExample

@@ -7,7 +7,7 @@ interface StickyCardProps {
   children?: ReactNode
 }
 
-const StickyCard = ({ cards, children }: StickyCardProps) => {
+const StickyCard = ({ cards }: StickyCardProps) => {
   return (
     <section className="flex flex-col gap-4 pt-[30px] pb-[20px]">
       {cards.map((card, index) => {

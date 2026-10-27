@@ -22,8 +22,6 @@ interface DiyAnimationProps extends AnimationProps {
 
 const useElementOnScreen = (ref: RefObject<Element | null>, rootMargin = '0px', threshold = 0, triggerOnce = false) => {
   const [isIntersecting, setIsIntersecting] = useState(true)
-  const observer = useRef<IntersectionObserver | null>(null)
-
   // const { position } = useElementViewportPosition(ref)
 
   useEffect(() => {
@@ -40,14 +38,12 @@ const useElementOnScreen = (ref: RefObject<Element | null>, rootMargin = '0px', 
       },
       { rootMargin, threshold }
     )
-    observer.current = intersectionObserver
-    if (ref.current) {
-      intersectionObserver.observe(ref.current)
+    const node = ref.current
+    if (node) {
+      intersectionObserver.observe(node)
     }
     return () => {
-      if (ref.current) {
-        intersectionObserver.unobserve(ref.current)
-      }
+      intersectionObserver.disconnect()
     }
   }, [ref, rootMargin, threshold, triggerOnce])
   return isIntersecting

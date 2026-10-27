@@ -9,6 +9,7 @@ const FloatingIcon = ({ children, initialX }) => {
   const isMounted = useRef(true) // 添加ref来跟踪组件挂载状态
 
   useEffect(() => {
+    isMounted.current = true
     const id = setTimeout(() => setIsClient(true), 0)
 
     // 添加清理函数，组件卸载时设置isMounted为false
@@ -17,7 +18,7 @@ const FloatingIcon = ({ children, initialX }) => {
       isMounted.current = false
       controls.stop() // 停止所有动画
     }
-  }, [])
+  }, [controls])
 
   useEffect(() => {
     if (!isClient) return

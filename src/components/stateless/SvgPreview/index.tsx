@@ -101,7 +101,7 @@ function SvgPreview({
       setContent(svgSource)
     }
     return () => (mounted = false)
-  }, [svgUrl, svgSource])
+  }, [svgUrl, svgSource, SvgComponent])
 
   // center on mount / when content changes
   useEffect(() => {
@@ -170,7 +170,7 @@ function SvgPreview({
       const rect = el.getBoundingClientRect()
       const mx = e.clientX - rect.left
       const my = e.clientY - rect.top
-      const curScale = positionRef.current?.__scale || scaleRef.current || scale
+      const curScale = positionRef.current?.__scale || scaleRef.current
       const factor = e.deltaY < 0 ? 1.12 : 0.88
       const ns = Math.min(5, Math.max(0.1, curScale * factor))
       const ratio = ns / curScale

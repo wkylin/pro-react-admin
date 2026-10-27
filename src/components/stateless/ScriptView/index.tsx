@@ -29,7 +29,7 @@ const ScriptView = ({ showMultiplePackageOptions = true, codeLanguage = 'bash', 
         {showMultiplePackageOptions && (
           <div className={styles.header}>
             <div className={styles.tabs}>
-              {packageManagers.map((pm, index) => (
+              {packageManagers.map((pm) => (
                 <div key={pm} className={styles.tabItem}>
                   <button
                     className={`${styles.tabButton} ${packageManager === pm ? styles.active : ''}`}

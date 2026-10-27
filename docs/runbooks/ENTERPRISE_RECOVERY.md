@@ -4,31 +4,32 @@
 
 ## 上线前必须由部署 owner 填写
 
-| 字段     | 需要给出的值                                                    |
-| -------- | --------------------------------------------------------------- |
-| 数据库   | 目标主机上的旧库副本路径、schema 版本、文件大小和最近写入时间   |
-| RPO      | 允许丢失的最大业务写入时间，单位分钟                            |
-| RTO      | 从恢复开始到 API 可服务的最长时间，单位分钟                     |
-| 备份     | 频率、保留期、异地/独立持久位置、加密和访问责任人               |
-| 恢复演练 | 可写临时卷、目标 Node 24 版本、API 停机窗口、验收人             |
-| 回滚     | 旧 artifact、兼容 schema、写入冻结/切换方案和明确的回滚截止时间 |
+| 字段       | 需要给出的值                                                    |
+| ---------- | --------------------------------------------------------------- |
+| 数据库     | 目标主机上的旧库副本路径、schema 版本、文件大小和最近写入时间   |
+| RPO        | 允许丢失的最大业务写入时间，单位分钟                            |
+| RTO        | 从恢复开始到 API 可服务的最长时间，单位分钟                     |
+| 备份       | 频率、保留期、异地/独立持久位置、加密和访问责任人               |
+| 验证器密钥 | `ENTERPRISE_TOTP_KEY` 的独立保管、恢复责任人与可用性验证        |
+| 恢复演练   | 可写临时卷、目标 Node 24 版本、API 停机窗口、验收人             |
+| 回滚       | 旧 artifact、兼容 schema、写入冻结/切换方案和明确的回滚截止时间 |
 
 任一项未填写，或没有真实部署库副本时，生产迁移门禁保持未通过。不得以默认值推定业务可接受的数据损失或恢复时间。
 
 ## 快速备份与校验
 
 ```bash
-pnpm run api:db -- backup /secure/backup/enterprise-before-upgrade.sqlite
-pnpm run api:db -- verify-backup /secure/backup/enterprise-before-upgrade.sqlite
-pnpm run api:db -- status --db /data/enterprise.sqlite
+pnpm run api:db backup /secure/backup/enterprise-before-upgrade.sqlite
+pnpm run api:db verify-backup /secure/backup/enterprise-before-upgrade.sqlite
+pnpm run api:db status --db /data/enterprise.sqlite
 ```
 
-将 SQLite 文件和 `.manifest.json` 一并复制到独立持久位置。manifest 校验 SHA-256、schema 版本和权限/成员/凭据/会话/审计逻辑指纹；它提供损坏检测，不是签名、加密或防数据库管理员篡改的证明。
+将 SQLite 文件和 `.manifest.json` 一并复制到独立持久位置。manifest 校验 SHA-256、schema 版本和权限/成员/凭据/会话/审计/验证器逻辑指纹；它提供损坏检测，不是签名、加密或防数据库管理员篡改的证明。schema v4 若已有验证器，恢复 API 还需要原 `ENTERPRISE_TOTP_KEY`；丢失密钥会使服务拒绝启动，数据库备份不能代替密钥备份。
 
 ## 在目标卷测量恢复预算
 
 ```bash
-pnpm run api:db -- drill /secure/backup/enterprise-before-upgrade.sqlite \
+pnpm run api:db drill /secure/backup/enterprise-before-upgrade.sqlite \
   --db /data/enterprise.sqlite --rpo-minutes <owner-approved-value> --rto-minutes <owner-approved-value>
 ```
 

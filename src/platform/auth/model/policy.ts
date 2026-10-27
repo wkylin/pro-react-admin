@@ -1,11 +1,15 @@
 import policies from '../../../../config/route-policy.json'
 import type { PermissionCode, UserPermission } from './permission'
 import { matchPath } from 'react-router-dom'
+import { getEnvBool } from '@platform/config/env'
+import { permits, scopeFor, canUseScope } from './accessDecision'
 
 export interface RoutePolicy {
   permission?: PermissionCode
   title?: string
   i18nKey?: string
+  availability?: 'enterprise'
+  access?: 'authenticated'
   menuGroup?: boolean
   menu?: { parent?: string; order: number; icon?: string }
 }
@@ -28,13 +32,23 @@ export function getRoutePolicy(path: string): RoutePolicy | undefined {
 }
 
 export function matchesPermission(permission: PermissionCode, granted: readonly PermissionCode[]): boolean {
-  const [resource, action] = permission.split(':')
-  return (
-    granted.includes('*:*') ||
-    granted.includes(permission) ||
-    granted.includes(resource as PermissionCode) ||
-    Boolean(action && granted.includes(`${resource}:*` as PermissionCode))
-  )
+  return permits(granted, permission)
+}
+
+/** Keep one role's grant and scope together; never combine them across roles. */
+export function hasEffectivePermission(
+  current: UserPermission,
+  permission: PermissionCode,
+  recordId?: string
+): boolean {
+  if (!current.roles.length) return matchesPermission(permission, current.permissions)
+  const resource = permission.split(':', 1)[0]
+  return current.roles.some((role) => {
+    if (!permits(role.permissions, permission)) return false
+    if (resource !== 'user' && resource !== 'role') return true
+    const scope = scopeFor(role.scopes, resource)
+    return scope.mode !== 'deny' && (!recordId || canUseScope(scope, recordId))
+  })
 }
 
 export interface AccessRequirements {
@@ -52,8 +66,8 @@ export function evaluateAccessRequirements(current: UserPermission, required: Ac
   const permissionAllowed =
     !permissions ||
     (Array.isArray(permissions)
-      ? combine(permissions.map((permission) => matchesPermission(permission, current.permissions)))
-      : matchesPermission(permissions, current.permissions))
+      ? combine(permissions.map((permission) => hasEffectivePermission(current, permission)))
+      : hasEffectivePermission(current, permissions))
   const roleCodes = current.roles.map((role) => role.code)
   const roleAllowed =
     !roles ||
@@ -64,7 +78,8 @@ export function evaluateAccessRequirements(current: UserPermission, required: Ac
 /** Route policies override broad route grants; unmapped pages need an explicit whitelist. */
 export function canAccessPath(current: UserPermission, pathname: string): boolean {
   const policy = getRoutePolicy(pathname)
-  if (policy?.permission) return matchesPermission(policy.permission, current.permissions)
+  if (policy?.availability === 'enterprise' && getEnvBool('REACT_APP_USE_MOCK', false)) return false
+  if (policy?.permission) return hasEffectivePermission(current, policy.permission)
   return (
     current.permissions.includes('*:*') ||
     current.routes.some((path) => path === '*' || Boolean(matchPath({ path, end: true }, pathname)))

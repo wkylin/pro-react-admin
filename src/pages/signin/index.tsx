@@ -1,10 +1,10 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import SliderCaptcha from '@wui/SliderCaptcha'
-import { useEffect, useState, useRef, type CSSProperties } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
-import { Form, Input, Button, Typography, Layout, Card, theme, App, Tag, Popover, Modal, type FormProps } from 'antd'
+import { Form, Input, Button, Typography, Layout, App, Popover, Modal, type FormProps } from 'antd'
 import { selectIsMobile, useAppStore, useApplicationScope } from '@app/model'
 import { UserOutlined, LockOutlined, GithubOutlined } from '@ant-design/icons'
 import { setLocalStorage } from '@shared/lib/publicFn'
@@ -14,10 +14,11 @@ import { permissionService } from '@platform/auth/services/permissionService'
 import { testAccounts } from '@platform/auth/mocks/permission'
 import { isDemoPermissionMode } from '@platform/auth/api/permission'
 import EnterpriseSignIn from '@platform/auth/components/EnterpriseSignIn'
+import AuthShowcase, { AuthBackdrop } from '@platform/auth/components/AuthShowcase'
 
 import styles from './index.module.less'
 
-const { Title, Text, Paragraph } = Typography
+const { Title, Text } = Typography
 const { Content } = Layout
 
 const TEST_ACCOUNT_EMAILS = Object.keys(testAccounts)
@@ -79,7 +80,6 @@ const DemoSignIn = () => {
   const { projectId } = useApplicationScope()
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
-  const { token } = theme.useToken()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm<SignInFormValues>()
   const isMobile = useAppStore(selectIsMobile)
@@ -222,8 +222,6 @@ const DemoSignIn = () => {
       await authService.setTestAccountAuthenticated(email)
       const routes = await permissionService.getAccessibleRoutes(true)
 
-      message.success(`登录成功！欢迎 ${testAccounts[email].name}`)
-
       captchaVerifiedRef.current = false
       setCaptchaKey(Date.now())
 
@@ -235,7 +233,8 @@ const DemoSignIn = () => {
         redirectTo('/403')
       }
     } catch (error) {
-      message.error(`权限同步失败：${getErrorMessage(error)}`)
+      // A successful identity switch remounts AntdApp, invalidating this page's message instance.
+      if (!authService.isAuthenticated()) message.error(`权限同步失败：${getErrorMessage(error)}`)
       redirectTo('/')
     } finally {
       setSubmitting(false)
@@ -269,53 +268,18 @@ const DemoSignIn = () => {
     }
   }
 
-  const cssVars: CSSProperties & Record<`--${string}`, string> = {
-    '--signin-bg': token.colorBgBase,
-    '--signin-panel': token.colorBgContainer,
-    '--signin-panel-2': token.colorBgLayout,
-    '--signin-border': token.colorBorderSecondary,
-    '--signin-text': token.colorText,
-    '--signin-text-2': token.colorTextSecondary,
-    '--signin-primary': token.colorPrimary,
-    '--signin-primary-2': token.colorInfo,
-    '--signin-shadow': token.boxShadowSecondary,
-  }
-
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Content className={styles.root} style={cssVars}>
-        <div className={styles.bg} aria-hidden="true" />
+      <Content className={styles.root}>
+        <AuthBackdrop variant="demo" />
 
-        <div className={styles.grid} style={{ padding: isMobile ? 16 : 24 }}>
-          {!isMobile && (
-            <section className={styles.hero}>
-              <div className={styles.heroInner}>
-                <div className={styles.badgeRow}>
-                  <Tag variant="filled" color="processing">
-                    角色权限演示
-                  </Tag>
-                  <Tag variant="filled">Pro React Admin</Tag>
-                </div>
-                <Title level={1} className={styles.heroTitle}>
-                  按角色探索
-                  <br />
-                  管理工作台
-                </Title>
-                <Paragraph className={styles.heroDesc}>
-                  使用四种演示账号对比菜单、页面和操作权限；多标签页切换可保留页面状态。
-                </Paragraph>
-
-                <div className={styles.heroPills}>
-                  <span className={styles.pill}>角色权限</span>
-                  <span className={styles.pill}>KeepAlive 多标签页</span>
-                  <span className={styles.pill}>Webpack 5 / Vite 8</span>
-                </div>
-              </div>
-            </section>
-          )}
+        <div className={styles.grid}>
+          <div className={styles.hero}>
+            <AuthShowcase variant="demo" headingLevel={1} />
+          </div>
 
           <section className={styles.panel}>
-            <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 24 } }}>
+            <div className={styles.card}>
               <div className={styles.titleBox}>
                 <Title level={2} className={styles.title}>
                   登录
@@ -454,7 +418,12 @@ const DemoSignIn = () => {
               </Form>
 
               {githubAvailable && (
-                <Button block icon={<GithubOutlined />} onClick={() => authService.login()}>
+                <Button
+                  block
+                  className={styles.githubButton}
+                  icon={<GithubOutlined />}
+                  onClick={() => authService.login()}
+                >
                   使用 GitHub 登录
                 </Button>
               )}
@@ -471,7 +440,7 @@ const DemoSignIn = () => {
                   <Link to="/overview">{t('identity.viewOverview')}</Link>
                 </div>
               )}
-            </Card>
+            </div>
           </section>
         </div>
       </Content>

@@ -69,7 +69,7 @@ const Sidebar = ({
 
   useEffect(() => {
     form.setFieldsValue(config)
-  }, [config])
+  }, [config, form])
 
   return (
     <aside className={styles.sidebar}>
@@ -199,9 +199,13 @@ export default function AutoDeploy() {
         })
         try {
           sessionStorage.setItem('autodeploy_config_loaded', '1')
-        } catch {}
+        } catch {
+          // Session storage may be unavailable in a private browser context.
+        }
       }
-    } catch {}
+    } catch {
+      // Keep the default log when session storage is unavailable.
+    }
     return base
   })
 
@@ -226,7 +230,9 @@ export default function AutoDeploy() {
           }
         }
       }
-    } catch {}
+    } catch {
+      // Invalid or unavailable local storage falls back to the defaults.
+    }
     return defaults
   })
   const [currentJobId, setCurrentJobId] = useState<string | null>(null)
@@ -263,13 +269,17 @@ export default function AutoDeploy() {
   useEffect(() => {
     try {
       localStorage.setItem('autodeploy_config', JSON.stringify(config))
-    } catch {}
+    } catch {
+      // The current form remains usable without local storage.
+    }
   }, [config])
 
   useEffect(() => {
     try {
       localStorage.setItem('autodeploy_history', JSON.stringify(history))
-    } catch {}
+    } catch {
+      // Deployment history remains available for this session.
+    }
   }, [history])
 
   const startDeployment = async () => {

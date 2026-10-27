@@ -1,9 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 
-const SlideText = ({ text = [] }) => {
+const emptyTitles: string[] = []
+
+const SlideText = ({ text = emptyTitles }) => {
   const [titleNumber, setTitleNumber] = useState(0)
-  const titles = useMemo(() => text, [])
+  const titles = text
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {

@@ -47,6 +47,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 - `APP_BASE_URL`
 - `IFRAME_ORIGIN`
 - `REACT_APP_USE_MOCK`
+- `REACT_APP_ENTERPRISE_LOCAL_DEMO`
 - `REACT_APP_ENCRYPTION_MODE`
 - `REACT_APP_RSA_PUBLIC_KEY`
 - `PROJECTB_STANDALONE_BASE_URL`
@@ -77,74 +78,78 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 
 ## 路由
 
-| 路径模式                    | 标题           | 权限（精确策略）        | 声明文件                                    |
-| --------------------------- | -------------- | ----------------------- | ------------------------------------------- |
-| /                           | home           | home:read               | src/app/routing/modules/layout.routes.tsx   |
-| /*                          | No Match       | 继承策略或公共/回退路由 | src/app/routing/modules/error.routes.tsx    |
-| /403                        | 403            | error:read              | src/app/routing/modules/error.routes.tsx    |
-| /404                        | 404            | error:read              | src/app/routing/modules/error.routes.tsx    |
-| /administration/audit       | 审计日志       | audit:read              | src/features/administration/routes.tsx      |
-| /administration/roles       | 角色管理       | role:read               | src/features/administration/routes.tsx      |
-| /administration/users       | 用户管理       | user:read               | src/features/administration/routes.tsx      |
-| /ai-workbench               | AI Workbench   | ai-workbench:read       | src/app/routing/modules/ui.routes.tsx       |
-| /auth/callback              | OAuth Callback | system:read             | src/app/routing/modules/auth.routes.tsx     |
-| /auto-deploy                | 自动部署       | auto-deploy:read        | src/app/routing/modules/ui.routes.tsx       |
-| /big-screen                 | Big Screen     | bigscreen:read          | src/app/routing/modules/chart.routes.tsx    |
-| /build/webpack              | Webpack / Vite | build:read              | src/app/routing/modules/tech.routes.tsx     |
-| /business                   | Business       | business:read           | src/app/routing/modules/business.routes.tsx |
-| /chatgpt                    | ChatGPT        | chatgpt:read            | src/app/routing/modules/ui.routes.tsx       |
-| /component-playground       | 组件实验场     | demo:read               | src/app/routing/modules/business.routes.tsx |
-| /contact                    | Contact        | contact:read            | src/app/routing/modules/ui.routes.tsx       |
-| /crypto                     | Crypto         | crypto:read             | src/app/routing/modules/ui.routes.tsx       |
-| /dashboard/*                | Dashboard      | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |
-| /demo                       | demo           | demo:read               | src/app/routing/modules/business.routes.tsx |
-| /dependencies               | 项目依赖分析   | dependencies:read       | src/app/routing/modules/ui.routes.tsx       |
-| /deploy-flow                | Deploy Flow    | deploy-flow:read        | src/app/routing/modules/ui.routes.tsx       |
-| /deployment-guide           | 部署指南       | home:read               | src/app/routing/modules/ui.routes.tsx       |
-| /echarts                    | Echarts        | echarts:read            | src/app/routing/modules/chart.routes.tsx    |
-| /error                      | ErrorBoundary  | error:read              | src/app/routing/modules/error.routes.tsx    |
-| /geo                        | Geo Chart      | geo:read                | src/app/routing/modules/chart.routes.tsx    |
-| /mermaid                    | Mermaid        | mermaid:read            | src/app/routing/modules/chart.routes.tsx    |
-| /motion                     | Motion         | motion:read             | src/app/routing/modules/ui.routes.tsx       |
-| /music                      | Music          | music:read              | src/app/routing/modules/ui.routes.tsx       |
-| /my-iframe                  | My Iframe      | ui:read                 | src/app/routing/modules/ui.routes.tsx       |
-| /notification/:id           | 通知详情       | notification:read       | src/features/notifications/routes.tsx       |
-| /notifications              | 通知中心       | notification:read       | src/features/notifications/routes.tsx       |
-| /overview                   | 项目概览       | 继承策略或公共/回退路由 | src/app/routing/modules/auth.routes.tsx     |
-| /permission                 | 权限示例       | permission:read         | src/app/routing/modules/ui.routes.tsx       |
-| /ph-bar                     | PH Bar         | phbar:read              | src/app/routing/modules/ui.routes.tsx       |
-| /portfilo/*                 | My Portfilo    | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |
-| /postmessage                | Post Message   | postmessage:read        | src/app/routing/modules/ui.routes.tsx       |
-| /print                      | Print          | print:read              | src/app/routing/modules/ui.routes.tsx       |
-| /prism                      | Prism Render   | prism:read              | src/app/routing/modules/ui.routes.tsx       |
-| /privacy                    | 隐私政策       | system:read             | src/app/routing/modules/auth.routes.tsx     |
-| /profile                    | Profile        | profile:read            | src/app/routing/modules/ui.routes.tsx       |
-| /qrcode                     | Qr Generate    | qrcode:read             | src/app/routing/modules/ui.routes.tsx       |
-| /signin                     | 登录           | system:read             | src/app/routing/modules/auth.routes.tsx     |
-| /signup                     | 注册           | system:read             | src/app/routing/modules/auth.routes.tsx     |
-| /svg-viewer                 | SVG Viewer     | svg-viewer:read         | src/app/routing/modules/chart.routes.tsx    |
-| /tech/backend               | 后端技术栈     | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/backend/*             | 后端页面未找到 | 继承策略或公共/回退路由 | src/app/routing/modules/nested.routes.tsx   |
-| /tech/backend/go            | Go             | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/backend/java          | Java           | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/backend/node          | Node           | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend              | 前端技术栈     | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/*            | 前端页面未找到 | 继承策略或公共/回退路由 | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/angular      | Angular        | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/node         | Node           | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/plugins      | Vue 插件       | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/plugins/*    | 插件页面未找到 | 继承策略或公共/回退路由 | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/plugins/perf | 性能优化       | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/plugins/vue3 | Vue3 API       | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/react        | React          | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /tech/frontend/vue          | Vue            | tech:read               | src/app/routing/modules/nested.routes.tsx   |
-| /terms                      | 用户协议       | system:read             | src/app/routing/modules/auth.routes.tsx     |
-| /text-editor                | Text Editor    | text-editor:read        | src/app/routing/modules/ui.routes.tsx       |
-| /tilt                       | React Tilt     | tilt:read               | src/app/routing/modules/ui.routes.tsx       |
-| /topology                   | Topology       | topology:read           | src/app/routing/modules/chart.routes.tsx    |
-| /tracking                   | 埋点数据看板   | tracking:read           | src/app/routing/modules/ui.routes.tsx       |
-| /video                      | Video          | video:read              | src/app/routing/modules/ui.routes.tsx       |
-| /zustand                    | Zustand演示    | zustand:read            | src/app/routing/modules/zustand.routes.tsx  |
+| 路径模式                        | 标题           | 权限（精确策略）        | 声明文件                                    |
+| ------------------------------- | -------------- | ----------------------- | ------------------------------------------- |
+| /                               | home           | home:read               | src/app/routing/modules/layout.routes.tsx   |
+| /*                              | No Match       | 继承策略或公共/回退路由 | src/app/routing/modules/error.routes.tsx    |
+| /403                            | 403            | error:read              | src/app/routing/modules/error.routes.tsx    |
+| /404                            | 404            | error:read              | src/app/routing/modules/error.routes.tsx    |
+| /account/security               | 登录验证器     | 继承策略或公共/回退路由 | src/features/administration/routes.tsx      |
+| /administration/access-requests | 访问审批       | access:read             | src/features/administration/routes.tsx      |
+| /administration/audit           | 审计日志       | audit:read              | src/features/administration/routes.tsx      |
+| /administration/permissions     | 权限管理       | role:read               | src/features/administration/routes.tsx      |
+| /administration/roles           | 角色管理       | role:read               | src/features/administration/routes.tsx      |
+| /administration/tenants         | 租户管理       | tenant:read             | src/features/administration/routes.tsx      |
+| /administration/users           | 用户管理       | user:read               | src/features/administration/routes.tsx      |
+| /ai-workbench                   | AI Workbench   | ai-workbench:read       | src/app/routing/modules/ui.routes.tsx       |
+| /auth/callback                  | OAuth Callback | system:read             | src/app/routing/modules/auth.routes.tsx     |
+| /auto-deploy                    | 自动部署       | auto-deploy:read        | src/app/routing/modules/ui.routes.tsx       |
+| /big-screen                     | Big Screen     | bigscreen:read          | src/app/routing/modules/chart.routes.tsx    |
+| /build/webpack                  | Webpack / Vite | build:read              | src/app/routing/modules/tech.routes.tsx     |
+| /business                       | Business       | business:read           | src/app/routing/modules/business.routes.tsx |
+| /chatgpt                        | ChatGPT        | chatgpt:read            | src/app/routing/modules/ui.routes.tsx       |
+| /component-playground           | 组件实验场     | demo:read               | src/app/routing/modules/business.routes.tsx |
+| /contact                        | Contact        | contact:read            | src/app/routing/modules/ui.routes.tsx       |
+| /crypto                         | Crypto         | crypto:read             | src/app/routing/modules/ui.routes.tsx       |
+| /dashboard/*                    | Dashboard      | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |
+| /demo                           | demo           | demo:read               | src/app/routing/modules/business.routes.tsx |
+| /dependencies                   | 项目依赖分析   | dependencies:read       | src/app/routing/modules/ui.routes.tsx       |
+| /deploy-flow                    | Deploy Flow    | deploy-flow:read        | src/app/routing/modules/ui.routes.tsx       |
+| /deployment-guide               | 部署指南       | home:read               | src/app/routing/modules/ui.routes.tsx       |
+| /echarts                        | Echarts        | echarts:read            | src/app/routing/modules/chart.routes.tsx    |
+| /error                          | ErrorBoundary  | error:read              | src/app/routing/modules/error.routes.tsx    |
+| /geo                            | Geo Chart      | geo:read                | src/app/routing/modules/chart.routes.tsx    |
+| /mermaid                        | Mermaid        | mermaid:read            | src/app/routing/modules/chart.routes.tsx    |
+| /motion                         | Motion         | motion:read             | src/app/routing/modules/ui.routes.tsx       |
+| /music                          | Music          | music:read              | src/app/routing/modules/ui.routes.tsx       |
+| /my-iframe                      | My Iframe      | ui:read                 | src/app/routing/modules/ui.routes.tsx       |
+| /notification/:id               | 通知详情       | notification:read       | src/features/notifications/routes.tsx       |
+| /notifications                  | 通知中心       | notification:read       | src/features/notifications/routes.tsx       |
+| /overview                       | 项目概览       | 继承策略或公共/回退路由 | src/app/routing/modules/auth.routes.tsx     |
+| /permission                     | 权限示例       | permission:read         | src/app/routing/modules/ui.routes.tsx       |
+| /ph-bar                         | PH Bar         | phbar:read              | src/app/routing/modules/ui.routes.tsx       |
+| /portfilo/*                     | My Portfilo    | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |
+| /postmessage                    | Post Message   | postmessage:read        | src/app/routing/modules/ui.routes.tsx       |
+| /print                          | Print          | print:read              | src/app/routing/modules/ui.routes.tsx       |
+| /prism                          | Prism Render   | prism:read              | src/app/routing/modules/ui.routes.tsx       |
+| /privacy                        | 隐私政策       | system:read             | src/app/routing/modules/auth.routes.tsx     |
+| /profile                        | Profile        | profile:read            | src/app/routing/modules/ui.routes.tsx       |
+| /qrcode                         | Qr Generate    | qrcode:read             | src/app/routing/modules/ui.routes.tsx       |
+| /signin                         | 登录           | system:read             | src/app/routing/modules/auth.routes.tsx     |
+| /signup                         | 注册           | system:read             | src/app/routing/modules/auth.routes.tsx     |
+| /svg-viewer                     | SVG Viewer     | svg-viewer:read         | src/app/routing/modules/chart.routes.tsx    |
+| /tech/backend                   | 后端技术栈     | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/backend/*                 | 后端页面未找到 | 继承策略或公共/回退路由 | src/app/routing/modules/nested.routes.tsx   |
+| /tech/backend/go                | Go             | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/backend/java              | Java           | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/backend/node              | Node           | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend                  | 前端技术栈     | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/*                | 前端页面未找到 | 继承策略或公共/回退路由 | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/angular          | Angular        | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/node             | Node           | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/plugins          | Vue 插件       | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/plugins/*        | 插件页面未找到 | 继承策略或公共/回退路由 | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/plugins/perf     | 性能优化       | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/plugins/vue3     | Vue3 API       | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/react            | React          | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /tech/frontend/vue              | Vue            | tech:read               | src/app/routing/modules/nested.routes.tsx   |
+| /terms                          | 用户协议       | system:read             | src/app/routing/modules/auth.routes.tsx     |
+| /text-editor                    | Text Editor    | text-editor:read        | src/app/routing/modules/ui.routes.tsx       |
+| /tilt                           | React Tilt     | tilt:read               | src/app/routing/modules/ui.routes.tsx       |
+| /topology                       | Topology       | topology:read           | src/app/routing/modules/chart.routes.tsx    |
+| /tracking                       | 埋点数据看板   | tracking:read           | src/app/routing/modules/ui.routes.tsx       |
+| /video                          | Video          | video:read              | src/app/routing/modules/ui.routes.tsx       |
+| /zustand                        | Zustand演示    | zustand:read            | src/app/routing/modules/zustand.routes.tsx  |
 
 ## 应用体积门禁
 
@@ -183,7 +188,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 | pnpm run project:list                  | node scripts/project-command.mjs list                                                                                                                                                                                                                                                                                                                                                                                  |
 | pnpm run project:doctor                | node scripts/project-command.mjs doctor                                                                                                                                                                                                                                                                                                                                                                                |
 | pnpm run project:create                | node scripts/create-project.mjs                                                                                                                                                                                                                                                                                                                                                                                        |
-| pnpm run start:enterprise              | node scripts/project-command.mjs dev enterprise                                                                                                                                                                                                                                                                                                                                                                        |
+| pnpm run start:enterprise              | cross-env PROJECT=enterprise node scripts/dev-tracking.mjs                                                                                                                                                                                                                                                                                                                                                             |
 | pnpm run project:build                 | node scripts/project-command.mjs build                                                                                                                                                                                                                                                                                                                                                                                 |
 | pnpm run mfe:build                     | node scripts/project-command.mjs mfe-build                                                                                                                                                                                                                                                                                                                                                                             |
 | pnpm run mfe:build:standalone          | node scripts/project-command.mjs mfe-build-standalone                                                                                                                                                                                                                                                                                                                                                                  |
@@ -317,6 +322,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 | pnpm run vercel:prepare:default        | node scripts/prepare-vercel-default.mjs                                                                                                                                                                                                                                                                                                                                                                                |
 | pnpm run api:db                        | node --env-file-if-exists=.env.development.local api/enterprise/db-admin.mjs                                                                                                                                                                                                                                                                                                                                           |
 | pnpm run api:bootstrap                 | node --env-file-if-exists=.env.development.local api/enterprise/db-admin.mjs migrate && node --env-file-if-exists=.env.development.local api/enterprise/bootstrap.mjs                                                                                                                                                                                                                                                  |
+| pnpm run api:platform-admin            | node --env-file-if-exists=.env.development.local api/enterprise/platform-admin.mjs                                                                                                                                                                                                                                                                                                                                     |
 | pnpm run optimize:media                | node scripts/optimize-media.mjs                                                                                                                                                                                                                                                                                                                                                                                        |
 | pnpm run clean:dist:current            | node scripts/dist-tools.mjs clean                                                                                                                                                                                                                                                                                                                                                                                      |
 | pnpm run changelog                     | conventional-changelog -p angular -i CHANGELOG.md -s                                                                                                                                                                                                                                                                                                                                                                   |

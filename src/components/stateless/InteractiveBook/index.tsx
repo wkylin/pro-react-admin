@@ -360,6 +360,8 @@ function usePdfToImages(
   useEffect(() => {
     let cancelled = false
     let loadingTask: PdfLoadingTask | null = null
+    const renderTasks = renderTasksRef.current
+    const imageCache = imageCacheRef.current
 
     for (const task of renderTasksRef.current.values()) task.cancel()
     renderTasksRef.current.clear()
@@ -430,10 +432,10 @@ function usePdfToImages(
     void loadDocument()
     return () => {
       cancelled = true
-      for (const task of renderTasksRef.current.values()) task.cancel()
-      renderTasksRef.current.clear()
-      for (const cachedImage of imageCacheRef.current.values()) URL.revokeObjectURL(cachedImage.src)
-      imageCacheRef.current.clear()
+      for (const task of renderTasks.values()) task.cancel()
+      renderTasks.clear()
+      for (const cachedImage of imageCache.values()) URL.revokeObjectURL(cachedImage.src)
+      imageCache.clear()
       if (documentRef.current?.url === pdfUrl) {
         const task = documentRef.current.loadingTask
         documentRef.current = null
@@ -577,13 +579,14 @@ function usePdfToImages(
     }
 
     void renderRequestedPages()
+    const renderTasks = renderTasksRef.current
     return () => {
       cancelled = true
       for (const index of requestedIndices) {
-        const task = renderTasksRef.current.get(index)
+        const task = renderTasks.get(index)
         if (task?.width === width) {
           task.cancel()
-          renderTasksRef.current.delete(index)
+          renderTasks.delete(index)
         }
       }
     }

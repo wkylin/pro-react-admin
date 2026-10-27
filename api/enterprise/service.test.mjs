@@ -8,10 +8,12 @@ import { EnterpriseStore } from './store.mts'
 import { EnterpriseService } from './service.mts'
 import { createEnterpriseRouter } from './router.cjs'
 import { openEnterpriseService } from './runtime.cjs'
+import { base32, decryptTotpSecret, totpAtStep } from './totp.mts'
 
 const require = createRequire(import.meta.url)
 const express = require('express')
 const adminPassword = 'Integration-password-42'
+const totpKey = Buffer.alloc(32, 42)
 async function fixture(t) {
   const directory = await mkdtemp(path.join(tmpdir(), 'pro-admin-api-'))
   let store = new EnterpriseStore(path.join(directory, 'business.sqlite'))
@@ -22,7 +24,7 @@ async function fixture(t) {
     await rm(directory, { recursive: true, force: true })
   })
   let now = Date.now()
-  const service = new EnterpriseService(store, { now: () => now })
+  const service = new EnterpriseService(store, { now: () => now, totpKey })
   await service.bootstrap({
     tenantId: 'alpha',
     tenantName: 'Alpha',
@@ -90,6 +92,7 @@ async function fixture(t) {
     advance: (elapsed) => {
       now += elapsed
     },
+    currentTime: () => now,
     reopen: () => {
       store.close()
       store = new EnterpriseStore(path.join(directory, 'business.sqlite'))
@@ -115,6 +118,286 @@ test('tenant-bound sessions isolate list, record, write, audit and spoofed heade
   const audit = await f.request('GET', '/admin/audit', beta.token)
   assert.deepEqual(new Set(audit.body.items.map((row) => row.recordId)), new Set(['beta', beta.user.id]))
   assert.equal(alphaUsers.headers.get('cache-control'), 'no-store')
+})
+
+test('only a designated platform administrator can manage tenant records', async (t) => {
+  const f = await fixture(t)
+  assert.equal((await f.request('GET', '/admin/tenants', f.admin.token)).status, 403)
+  f.service.grantPlatformAdmin('alpha', 'admin@example.com')
+  const grants = await f.request('GET', '/permissions/current', f.admin.token)
+  assert.ok(grants.body.roles.some((role) => role.code === 'platform-admin' && role.permissions.includes('tenant:*')))
+
+  const initial = await f.request('GET', '/admin/tenants?page=1&pageSize=10', f.admin.token)
+  assert.equal(initial.status, 200)
+  assert.deepEqual(
+    initial.body.items.map((row) => row.id),
+    ['alpha', 'beta']
+  )
+  assert.equal((await f.request('GET', '/admin/tenants/beta', f.admin.token)).body.name, 'Beta')
+  assert.equal((await f.request('GET', '/admin/tenants?sort=name%3BDROP', f.admin.token)).status, 400)
+
+  const created = await f.request('POST', '/admin/tenants', f.admin.token, {
+    tenantId: 'gamma',
+    name: 'Gamma',
+    adminName: 'Admin G',
+    adminEmail: 'gamma@example.com',
+    adminPassword,
+  })
+  assert.equal(created.status, 201)
+  assert.equal(created.body.id, 'gamma')
+  assert.equal(created.body.adminEmail, 'gamma@example.com')
+  assert.equal(JSON.stringify(created.body).includes(adminPassword), false)
+  assert.equal(
+    (await f.request('POST', '/admin/tenants', f.admin.token, { tenantId: 'gamma', name: 'Duplicate' })).status,
+    400
+  )
+  const gamma = await f.login('gamma', 'gamma@example.com')
+  assert.equal((await f.request('GET', '/admin/tenants', gamma.token)).status, 403)
+  assert.equal((await f.request('PATCH', '/admin/tenants/beta', gamma.token, { name: 'No' })).status, 403)
+  assert.equal((await f.request('POST', '/admin/tenants', gamma.token, {})).status, 403)
+  assert.equal(
+    (
+      await f.request('POST', '/admin/roles', f.admin.token, {
+        name: 'Platform',
+        code: 'platform',
+        permissions: ['tenant:read'],
+      })
+    ).status,
+    403
+  )
+  assert.throws(
+    () => f.service.revokePlatformAdmin('alpha', 'admin@example.com'),
+    (error) => error.status === 409
+  )
+
+  const updated = await f.request('PATCH', '/admin/tenants/gamma', f.admin.token, { name: 'Gamma Team' })
+  assert.equal(updated.status, 200)
+  assert.equal(updated.body.name, 'Gamma Team')
+  assert.equal((await f.request('DELETE', '/admin/tenants/alpha', f.admin.token)).status, 409)
+  assert.equal((await f.request('DELETE', '/admin/tenants/gamma', f.admin.token)).status, 204)
+  assert.equal((await f.request('GET', '/auth/session', gamma.token)).status, 401)
+  assert.equal((await f.request('GET', '/admin/tenants/gamma', f.admin.token)).body.status, 'disabled')
+  assert.equal((await f.request('PATCH', '/admin/tenants/gamma', f.admin.token, { status: 'active' })).status, 200)
+  assert.equal((await f.login('gamma', 'gamma@example.com')).tenantId, 'gamma')
+  f.service.grantPlatformAdmin('gamma', 'gamma@example.com')
+  assert.ok(f.service.revokePlatformAdmin('gamma', 'gamma@example.com'))
+  f.service.grantPlatformAdmin('gamma', 'gamma@example.com')
+  assert.equal((await f.request('DELETE', '/admin/tenants/gamma', f.admin.token)).status, 204)
+  assert.throws(
+    () => f.service.revokePlatformAdmin('alpha', 'admin@example.com'),
+    (error) => error.status === 409
+  )
+})
+
+test('enterprise TOTP requires password, encrypted enrollment, one-time login codes and recovery', async (t) => {
+  const f = await fixture(t)
+  const endpoint = '/auth/totp'
+  assert.deepEqual((await f.request('GET', endpoint, f.admin.token)).body, {
+    enabled: false,
+    available: true,
+    recoveryCodesRemaining: 0,
+  })
+  assert.equal((await f.request('POST', `${endpoint}/setup`, f.admin.token, { password: 'wrong' })).status, 401)
+  const setup = await f.request('POST', `${endpoint}/setup`, f.admin.token, { password: adminPassword })
+  assert.equal(setup.status, 200)
+  assert.match(setup.body.uri, /^otpauth:\/\/totp\//)
+  const principal = f.service.store.one(
+    'SELECT principal_id FROM users WHERE tenant_id=? AND id=?',
+    'alpha',
+    f.admin.user.id
+  )
+  const row = f.service.store.one('SELECT * FROM totp_credentials WHERE principal_id=?', principal.principal_id)
+  assert.ok(row)
+  const secret = decryptTotpSecret(row.secret_ciphertext, totpKey, principal.principal_id)
+  assert.equal(setup.body.secret, base32(secret))
+  assert.ok(!row.secret_ciphertext.includes(setup.body.secret))
+  assert.throws(() => new EnterpriseService(f.service.store), /ENTERPRISE_TOTP_KEY/)
+  assert.throws(() => new EnterpriseService(f.service.store, { totpKey: Buffer.alloc(32, 1) }), /cannot decrypt/)
+  assert.equal((await f.request('POST', `${endpoint}/confirm`, f.admin.token, { code: 'not-a-code' })).status, 401)
+  const code = () => totpAtStep(secret, Math.floor(f.currentTime() / 30000))
+  const confirmed = await f.request('POST', `${endpoint}/confirm`, f.admin.token, { code: code() })
+  assert.equal(confirmed.status, 200)
+  assert.equal(confirmed.body.recoveryCodes.length, 10)
+  assert.equal((await f.request('GET', endpoint, f.admin.token)).body.recoveryCodesRemaining, 10)
+
+  const passwordOnly = await f.request('POST', '/auth/login', undefined, {
+    tenantId: 'alpha',
+    email: 'admin@example.com',
+    password: adminPassword,
+  })
+  assert.deepEqual(passwordOnly.body, { totpRequired: true })
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+        totpCode: code(),
+      })
+    ).status,
+    401
+  )
+  f.advance(31_000)
+  const nextCode = code()
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+        totpCode: nextCode,
+      })
+    ).status,
+    200
+  )
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+        totpCode: nextCode,
+      })
+    ).status,
+    401
+  )
+
+  const firstRecovery = confirmed.body.recoveryCodes[0]
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+        recoveryCode: firstRecovery,
+      })
+    ).status,
+    200
+  )
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+        recoveryCode: firstRecovery,
+      })
+    ).status,
+    401
+  )
+  assert.equal((await f.request('GET', endpoint, f.admin.token)).body.recoveryCodesRemaining, 9)
+
+  f.advance(31_000)
+  const rotated = await f.request('POST', `${endpoint}/recovery`, f.admin.token, {
+    password: adminPassword,
+    totpCode: code(),
+  })
+  assert.equal(rotated.status, 200)
+  assert.equal(rotated.body.recoveryCodes.length, 10)
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+        recoveryCode: confirmed.body.recoveryCodes[1],
+      })
+    ).status,
+    401
+  )
+  assert.equal(
+    (
+      await f.request('POST', `${endpoint}/disable`, f.admin.token, {
+        password: 'wrong',
+        recoveryCode: rotated.body.recoveryCodes[0],
+      })
+    ).status,
+    401
+  )
+  assert.equal(
+    (
+      await f.request('POST', `${endpoint}/disable`, f.admin.token, {
+        password: adminPassword,
+        recoveryCode: rotated.body.recoveryCodes[0],
+      })
+    ).status,
+    200
+  )
+  assert.equal((await f.request('GET', endpoint, f.admin.token)).body.enabled, false)
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'admin@example.com',
+        password: adminPassword,
+      })
+    ).status,
+    200
+  )
+})
+
+test('one enterprise principal shares TOTP across linked tenants and second-factor attempts are limited', async (t) => {
+  const f = await fixture(t)
+  const alpha = f.service.store.one(
+    'SELECT principal_id FROM users WHERE tenant_id=? AND id=?',
+    'alpha',
+    f.admin.user.id
+  )
+  f.service.store.run('UPDATE users SET principal_id=? WHERE tenant_id=?', alpha.principal_id, 'beta')
+  const beta = await f.login('beta')
+  const setup = await f.request('POST', '/auth/totp/setup', f.admin.token, { password: adminPassword })
+  assert.equal(setup.status, 200)
+  const row = f.service.store.one('SELECT * FROM totp_credentials WHERE principal_id=?', alpha.principal_id)
+  const secret = decryptTotpSecret(row.secret_ciphertext, totpKey, alpha.principal_id)
+  const code = () => totpAtStep(secret, Math.floor(f.currentTime() / 30000))
+  assert.equal((await f.request('POST', '/auth/totp/confirm', f.admin.token, { code: code() })).status, 200)
+  assert.equal((await f.request('GET', '/auth/session', beta.token)).status, 401)
+  assert.deepEqual(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'beta',
+        email: 'admin@example.com',
+        password: adminPassword,
+      })
+    ).body,
+    { totpRequired: true }
+  )
+  for (let attempt = 0; attempt < 10; attempt++) {
+    assert.equal(
+      (
+        await f.request('POST', '/auth/login', undefined, {
+          tenantId: 'beta',
+          email: 'admin@example.com',
+          password: adminPassword,
+          totpCode: 'xxxxxx',
+        })
+      ).status,
+      401
+    )
+  }
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'beta',
+        email: 'admin@example.com',
+        password: adminPassword,
+        totpCode: code(),
+      })
+    ).status,
+    429
+  )
+  f.advance(10 * 60_000 + 30_000)
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'beta',
+        email: 'admin@example.com',
+        password: adminPassword,
+        totpCode: code(),
+      })
+    ).status,
+    200
+  )
 })
 test('an authenticated identity can switch only to an active linked tenant membership', async (t) => {
   const f = await fixture(t)
@@ -164,6 +447,46 @@ test('RBAC enforces direct requests; client roles and GitHub/demo tokens cannot 
   for (const token of [undefined, 'admin@test.com', 'gho_unknown', 'x'.repeat(43)])
     assert.equal((await f.request('GET', '/admin/users', token)).status, 401)
 })
+test('role resource scopes filter lists and reject records outside the selected set', async (t) => {
+  const f = await fixture(t)
+  const role = await f.request('POST', '/admin/roles', f.admin.token, {
+    name: 'Selected user reader',
+    code: 'selected-user-reader',
+    permissions: ['home:read', 'user:read'],
+    scopes: { user: { mode: 'restricted', ids: [f.admin.user.id] }, role: { mode: 'deny', ids: [] } },
+  })
+  assert.equal(role.status, 201)
+  const user = await f.request('POST', '/admin/users', f.admin.token, {
+    name: 'Scoped reader',
+    email: 'scoped@example.com',
+    role: role.body.code,
+    status: 'active',
+    password: adminPassword,
+  })
+  assert.equal(user.status, 201)
+  const session = await f.login('alpha', 'scoped@example.com')
+  const list = await f.request('GET', '/admin/users', session.token)
+  assert.equal(list.status, 200)
+  assert.deepEqual(
+    list.body.items.map(({ id }) => id),
+    [f.admin.user.id]
+  )
+  assert.equal((await f.request('GET', `/admin/users/${f.admin.user.id}`, session.token)).status, 200)
+  assert.equal((await f.request('GET', `/admin/users/${user.body.id}`, session.token)).status, 403)
+  assert.equal((await f.request('GET', '/admin/roles', session.token)).status, 403)
+  assert.ok(
+    (await f.request('GET', '/permissions/current', session.token)).body.routes.includes('/administration/users')
+  )
+
+  const denied = await f.request('PATCH', `/admin/roles/${role.body.id}`, f.admin.token, {
+    scopes: { user: { mode: 'deny', ids: [] }, role: { mode: 'deny', ids: [] } },
+  })
+  assert.equal(denied.status, 200)
+  assert.equal((await f.request('GET', '/admin/users', session.token)).status, 403)
+  assert.ok(
+    !(await f.request('GET', '/permissions/current', session.token)).body.routes.includes('/administration/users')
+  )
+})
 test('a delegated operator cannot manufacture stronger roles, assign admins or modify stronger users', async (t) => {
   const f = await fixture(t),
     member = await f.createMember(['home:read', 'role:*', 'user:*'])
@@ -186,7 +509,172 @@ test('a delegated operator cannot manufacture stronger roles, assign admins or m
     code: 'other-reader',
     permissions: ['user:read'],
   })
+  assert.equal(role.status, 409)
+  const empty = await f.request('POST', '/admin/roles', member.session.token, {
+    name: 'Other reader',
+    code: 'other-reader',
+    permissions: [],
+  })
+  assert.equal(empty.status, 201)
+  const change = { kind: 'role', targetId: empty.body.id, change: { permissions: ['user:read'] } }
+  const preview = await f.request('POST', '/admin/access-requests/preview', member.session.token, change)
+  assert.equal(preview.status, 200)
+  const proposal = await f.request('POST', '/admin/access-requests', member.session.token, {
+    ...change,
+    reason: 'Give the reader access to users',
+    fingerprint: preview.body.fingerprint,
+  })
+  assert.equal(proposal.status, 201)
+  assert.equal(
+    (
+      await f.request('POST', `/admin/access-requests/${proposal.body.id}/decision`, member.session.token, {
+        decision: 'approve',
+        reason: 'Self approval is not permitted',
+      })
+    ).status,
+    403
+  )
+  const approved = await f.request('POST', `/admin/access-requests/${proposal.body.id}/decision`, f.admin.token, {
+    decision: 'approve',
+    reason: 'Reviewed delegated grant',
+  })
+  assert.equal(approved.status, 200)
+  assert.equal(approved.body.status, 'approved')
+  assert.deepEqual((await f.request('GET', `/admin/roles/${empty.body.id}`, f.admin.token)).body.permissions, [
+    'user:read',
+  ])
+})
+test('access requests are tenant isolated and stale previews cannot apply', async (t) => {
+  const f = await fixture(t)
+  const operator = await f.createMember(['home:read', 'role:*', 'user:read', 'access:read', 'access:approve'])
+  const role = await f.request('POST', '/admin/roles', operator.session.token, {
+    name: 'Pending role',
+    code: 'pending-role',
+    permissions: [],
+  })
   assert.equal(role.status, 201)
+  const change = { kind: 'role', targetId: role.body.id, change: { permissions: ['user:read'] } }
+  const preview = await f.request('POST', '/admin/access-requests/preview', operator.session.token, change)
+  assert.equal(preview.status, 200)
+  assert.equal(
+    (
+      await f.request('POST', '/admin/access-requests', operator.session.token, {
+        ...change,
+        reason: 'Old preview',
+        fingerprint: 'x'.repeat(64),
+      })
+    ).status,
+    409
+  )
+  const proposal = await f.request('POST', '/admin/access-requests', operator.session.token, {
+    ...change,
+    reason: 'Let the role list users',
+    fingerprint: preview.body.fingerprint,
+  })
+  assert.equal(proposal.status, 201)
+  const beta = await f.login('beta')
+  assert.equal((await f.request('GET', '/admin/access-requests', beta.token)).body.total, 0)
+  assert.equal(
+    (
+      await f.request('POST', `/admin/access-requests/${proposal.body.id}/decision`, beta.token, {
+        decision: 'approve',
+        reason: 'Other tenant',
+      })
+    ).status,
+    404
+  )
+  assert.equal(
+    (
+      await f.request('PATCH', `/admin/roles/${role.body.id}`, f.admin.token, {
+        permissions: ['home:read'],
+      })
+    ).status,
+    409
+  )
+  assert.equal(
+    (
+      await f.request('PATCH', `/admin/roles/${role.body.id}`, f.admin.token, {
+        name: 'Renamed while pending',
+      })
+    ).status,
+    200
+  )
+  const stale = await f.request('POST', `/admin/access-requests/${proposal.body.id}/decision`, f.admin.token, {
+    decision: 'approve',
+    reason: 'Checked',
+  })
+  assert.equal(stale.status, 200)
+  assert.equal(stale.body.status, 'stale')
+  assert.deepEqual((await f.request('GET', `/admin/roles/${role.body.id}`, f.admin.token)).body.permissions, [])
+  assert.equal(
+    (
+      await f.request('POST', `/admin/access-requests/${proposal.body.id}/decision`, f.admin.token, {
+        decision: 'approve',
+        reason: 'Again',
+      })
+    ).status,
+    409
+  )
+})
+test('an independent reviewer can activate a user while direct activation is blocked', async (t) => {
+  const f = await fixture(t)
+  const reviewer = await f.createMember(['home:read', 'user:read', 'access:read', 'access:approve'])
+  const target = await f.request('POST', '/admin/users', f.admin.token, {
+    name: 'Pending member',
+    email: 'pending@example.com',
+    role: reviewer.role.code,
+    status: 'disabled',
+    password: adminPassword,
+  })
+  assert.equal(target.status, 201)
+  assert.equal(
+    (
+      await f.request('PATCH', `/admin/users/${target.body.id}`, f.admin.token, {
+        status: 'active',
+      })
+    ).status,
+    409
+  )
+  const change = { kind: 'user', targetId: target.body.id, change: { role: reviewer.role.code, status: 'active' } }
+  const preview = await f.request('POST', '/admin/access-requests/preview', f.admin.token, change)
+  assert.equal(preview.status, 200)
+  const proposal = await f.request('POST', '/admin/access-requests', f.admin.token, {
+    ...change,
+    reason: 'Onboard new team member',
+    fingerprint: preview.body.fingerprint,
+  })
+  assert.equal(proposal.status, 201)
+  assert.equal(
+    (
+      await f.request('POST', `/admin/access-requests/${proposal.body.id}/decision`, f.admin.token, {
+        decision: 'approve',
+        reason: 'Self review',
+      })
+    ).status,
+    403
+  )
+  const approved = await f.request(
+    'POST',
+    `/admin/access-requests/${proposal.body.id}/decision`,
+    reviewer.session.token,
+    {
+      decision: 'approve',
+      reason: 'Account verified',
+    }
+  )
+  assert.equal(approved.status, 200)
+  assert.equal(approved.body.status, 'approved')
+  assert.equal((await f.request('GET', `/admin/users/${target.body.id}`, f.admin.token)).body.status, 'active')
+  assert.equal(
+    (
+      await f.request('POST', '/auth/login', undefined, {
+        tenantId: 'alpha',
+        email: 'pending@example.com',
+        password: adminPassword,
+      })
+    ).status,
+    200
+  )
 })
 test('role revocation is effective on the next server request, with an already-issued session', async (t) => {
   const f = await fixture(t),

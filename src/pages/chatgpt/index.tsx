@@ -5,7 +5,6 @@ import {
   useState,
   useEffect,
   type ChangeEvent,
-  type ComponentType,
   type CSSProperties,
   type Dispatch,
   type PointerEvent,

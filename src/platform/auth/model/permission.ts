@@ -2,6 +2,7 @@
  * 权限系统类型定义
  * RBAC (Role-Based Access Control) 权限模型
  */
+import type { ResourceScopes } from './accessDecision'
 
 /**
  * 权限操作类型
@@ -13,8 +14,10 @@ export type PermissionAction = 'create' | 'read' | 'update' | 'delete' | 'export
  */
 export type Resource =
   | 'user'
+  | 'tenant'
   | 'role'
   | 'audit'
+  | 'access'
   | 'dashboard'
   | 'system'
   | 'business'
@@ -76,6 +79,7 @@ export interface Role {
   code: string
   description?: string
   permissions: PermissionCode[]
+  scopes?: ResourceScopes
   isDefault?: boolean
 }
 

@@ -23,12 +23,13 @@ import { useResourceList } from '../model/useResourceList'
 import { useAdministration } from '../model/AdministrationProvider'
 import type { ManagedRole, ManagedUser } from '../model/resources'
 import styles from './workspace.module.less'
+import AccessProposalModal, { type PendingProposal } from './AccessProposalModal'
 
 type UserInput = Omit<ManagedUser, 'id'> & { password?: string }
 export default function UsersPage() {
   const { t } = useTranslation()
   const screens = Grid.useBreakpoint()
-  const { provider, demo } = useAdministration()
+  const { provider, access, demo } = useAdministration()
   const { message } = App.useApp()
   const list = useResourceList('users')
   const createAllowed = useCheckPermission('user:create').hasPermission
@@ -40,6 +41,7 @@ export default function UsersPage() {
   const [roleRevision, setRoleRevision] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
+  const [pending, setPending] = useState<PendingProposal | null>(null)
   useEffect(() => provider.subscribe?.('roles', () => setRoleRevision((value) => value + 1)), [provider])
   useEffect(() => {
     if (!createAllowed && !updateAllowed) return
@@ -65,11 +67,33 @@ export default function UsersPage() {
     if (input.password === '') delete input.password
     setBusy(true)
     try {
-      if (editing === 'new') await provider.create('users', input)
+      const role = roles.find((item) => item.code === input.role)
+      const accessChanged =
+        editing === 'new'
+          ? input.status === 'active' && !!role?.permissions.length
+          : input.role !== editing.role || input.status !== editing.status
+      const governed = accessChanged && (await access.governance()).requiresApproval
+      if (governed) {
+        const target =
+          editing === 'new'
+            ? await provider.create('users', { ...input, status: 'disabled' })
+            : await provider.update('users', editing.id, {
+                name: input.name,
+                email: input.email,
+                ...(input.password ? { password: input.password } : {}),
+              })
+        const change = {
+          kind: 'user' as const,
+          targetId: target.id,
+          change: { role: input.role, status: input.status },
+        }
+        const preview = await access.preview(change)
+        setPending({ change, preview })
+      } else if (editing === 'new') await provider.create('users', input)
       else await provider.update('users', editing.id, input)
       setEditing(null)
       list.reload()
-      void message.success(t('admin.saved'))
+      if (!governed) void message.success(t('admin.saved'))
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : t('admin.saveFailed'))
     } finally {
@@ -236,6 +260,7 @@ export default function UsersPage() {
           </Form.Item>
         </Form>
       </Modal>
+      <AccessProposalModal pending={pending} onClose={() => setPending(null)} />
     </ResourceWorkspace>
   )
 }

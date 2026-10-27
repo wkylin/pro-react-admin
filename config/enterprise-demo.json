@@ -1,0 +1,7 @@
+{
+  "tenantId": "demo",
+  "tenantName": "Local Demo",
+  "name": "Demo Administrator",
+  "email": "admin@demo.local",
+  "password": "DemoAdmin123!"
+}

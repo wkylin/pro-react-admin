@@ -79,20 +79,25 @@ node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.
 | -------------- | ----------------------------------------------------------------------- | ------------------------------ | --------------------------------------------- |
 | 默认应用与 API | `pnpm start`                                                            | Web 从 8080 起、API 从 5200 起 | `admin@test.com` 等演示账号，密码由浏览器生成 |
 | 仅默认前端     | `pnpm run start:web`                                                    | 8080                           | 同上                                          |
-| 企业演示       | `pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise` | 8080                           | 同上                                          |
+| 企业本地全栈   | `pnpm run start:enterprise` 或 `pnpm run start:enterprise:full`         | Web 从 8080 起、API 从 5200 起 | `demo` / `admin@demo.local` / `DemoAdmin123!` |
+| 企业浏览器演示 | `pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise` | Web 从 8080 起、API 从 5200 起 | `admin@test.com` 等浏览器演示账号             |
 | 多项目         | `pnpm run project:dev projectA` / `projectB`                            | 默认 8080，可设置 `PORT`       | projectA 使用演示账号；projectB 无需登录      |
 | 微前端         | 分别启动三个 `start:mf:*`，见下文                                       | Shell 8080、Remote 8081/8082   | 公开通信示例，无需登录                        |
 | 本地 lib       | `pnpm run prepare:lib:release`                                          | `packages/wui-react/dist`      | 不适用                                        |
-| 真实租户登录   | 配置并初始化后 `pnpm run start:enterprise:full`                         | Web 从 8080 起、API 从 5200 起 | 初始化时设置的租户 ID、邮箱和自选密码         |
+| 自建租户登录   | 配置并初始化后 `pnpm run start:enterprise`                              | Web 从 8080 起、API 从 5200 起 | 初始化时设置的租户 ID、邮箱和自选密码         |
 
 当前开发机的隔离预览账户另记在 Git 忽略的 `docs/LOCAL_PREVIEW.local.md`；该文件不随仓库分发，预览账号也不是项目默认账号。
 
 ### 默认应用和企业演示
 
-默认应用使用共享 `.env` 中的 `REACT_APP_USE_MOCK=true`；Enterprise 入口需在命令中显式开启 Mock。企业入口包含工作台、用户、角色和审计管理；完整体验使用 `admin@test.com`。其它演示账号为 `manager@test.com`、`business@test.com`、`user@test.com`，可退出登录后切换，对比权限。点击登录页账号会填入该浏览器生成的密码，没有统一固定密码。
+默认应用使用共享 `.env` 中的 `REACT_APP_USE_MOCK=true`。Enterprise 开发入口默认使用仓库内的真实 Node API 和隔离的 SQLite 演示库 `api/data/enterprise-demo.sqlite`；首次本地启动自动创建租户 `demo`、邮箱 `admin@demo.local`、密码 `DemoAdmin123!`，登录页可一键填入。数据会在重启后保留，修改密码后应使用新密码。该演示库和验证器密钥被 Git 忽略；默认演示库被另一实例占用时，新实例会按 API 端口使用独立的 `enterprise-demo-<端口>.sqlite`，终端显示实际路径。配置自建数据库、引导租户或外部 API 时不会自动创建或切换数据库。两个企业启动命令等效，都从 5200 开始寻找 API 空闲端口。前端端口也会自动选择；访问终端打印的 `Open Enterprise` 地址，不要继续使用被其它项目占用的旧标签页。
+
+本地 `demo` 管理员还可使用左侧“租户管理”查看租户 ID 和管理租户，“权限管理”按角色分配权限。自建数据库的平台管理员须由运维人员显式授权，普通租户管理员不能跨租户操作；删除租户采用可恢复的停用方式。配置和权限边界见[企业资源指南](./docs/operations/ENTERPRISE.md#平台租户与权限管理)。
+
+Enterprise 入口若显式开启 Mock，则使用浏览器演示账号。企业入口包含工作台、用户、角色和审计管理；浏览器演示完整体验使用 `admin@test.com`。其它账号为 `manager@test.com`、`business@test.com`、`user@test.com`，可退出登录后切换，对比权限。点击登录页账号会填入该浏览器生成的密码，没有统一固定密码。
 
 ```bash
-# 企业演示：仅前端
+# 企业浏览器演示：同时启动前端和 Node API，企业登录使用 Mock
 pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise
 ```
 
@@ -261,7 +266,7 @@ pnpm run api:bootstrap
 pnpm run start:enterprise:full
 ```
 
-访问 http://localhost:8080/#/signin，填租户 `acme`、邮箱 `admin@example.com` 和初始化密码。业务数据库默认 `api/data/enterprise.sqlite`，刷新和重启保留数据。演示账号不能用于真实登录。
+访问 http://localhost:8080/#/signin，填租户 `acme`、邮箱 `admin@example.com` 和初始化密码。业务数据库默认 `api/data/enterprise.sqlite`，刷新和重启保留数据。浏览器 Mock 账号和本地 `demo` 租户账号都不属于这个自建租户。
 
 1. 管理员在角色管理添加 `viewer`，授予 `home:read`、`user:read`。
 2. 在用户管理添加真实邮箱和 12..256 字符密码，分配 `viewer`，状态设为启用。

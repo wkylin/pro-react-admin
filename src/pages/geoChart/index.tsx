@@ -24,7 +24,6 @@ const GeoChart = () => {
 
   const [geoJson, setGeoJson] = useState<GeoJSON>(fengxianGeoJson)
   const [name, setName] = useState('奉贤')
-  const [region, setRegion] = useState('310120')
 
   const buildOption = useCallback((geoName: string, isDark: boolean): EChartsOption => {
     const next: EChartsOption = {
@@ -116,7 +115,6 @@ const GeoChart = () => {
       if (!event?.target) {
         setName('奉贤')
         setGeoJson(fengxianGeoJson)
-        setRegion('310120')
       }
     }
     zrClickHandlerRef.current = handler
@@ -141,14 +139,13 @@ const GeoChart = () => {
       }
       setName(newName)
       setGeoJson(newGeoJSON)
-      setRegion(String(feature.id))
     }
   }, [])
 
   const option = useMemo(() => {
     echarts.registerMap(name, geoJson)
     return buildOption(name, resolvedTheme === 'dark')
-  }, [name, geoJson, buildOption, region, resolvedTheme])
+  }, [name, geoJson, buildOption, resolvedTheme])
 
   return (
     <FixTabPanel style={{ backgroundColor: 'var(--wui-bg-page)' }}>

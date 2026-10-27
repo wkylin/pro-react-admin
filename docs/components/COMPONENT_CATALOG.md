@@ -6,14 +6,14 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  879 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  707 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `src/` 文件                   |  887 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  714 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
 | `packages/wui-react/src` 文件 |   51 | 组件库源码、stories 与组件文档                                      |
 | 组件库 TS/JS 源文件           |   39 | 组件库自身源码，不含 MDX                                            |
-| 样式文件                      |   95 | Less、CSS、SCSS                                                     |
-| CSS Modules                   |   89 | 文件名含 `.module.`                                                 |
+| 样式文件                      |   96 | Less、CSS、SCSS                                                     |
+| CSS Modules                   |   90 | 文件名含 `.module.`                                                 |
 | Storybook stories             |  157 | `*.stories.*`                                                       |
-| TS/JS 测试文件                |   42 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
+| TS/JS 测试文件                |   43 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
 | 根 package scripts            |  171 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    3 | 根应用、API 与组件库                                                |
 
@@ -24,12 +24,12 @@
 | `src/components/stateless`              |  155 | 含 `index.*` 的模块目录（直接子目录 139，嵌套入口 16）；目录名不保证组件无状态 |
 | `src/components/stateful`               |    4 | 含 `index.*` 的直接子目录                                                      |
 | `src/components` 独立目录               |    0 | 未归入现有分类目录的直接子目录                                                 |
-| `src/platform/auth/components` TSX 文件 |    5 | 认证、鉴权和权限守卫相关模块                                                   |
+| `src/platform/auth/components` TSX 文件 |    6 | 认证、鉴权和权限守卫相关模块                                                   |
 | `src/components/hooks`                  |   48 | 含入口文件的直接 Hook 模块目录，不含聚合入口                                   |
 | `src/shared/ui`                         |    2 | 应用级共享 UI 模块入口                                                         |
 | `packages/wui-react/src`                |   12 | 已进入独立源码边界的组件库模块                                                 |
 | `src/app/layouts`                       |    9 | 应用壳与直接布局组件入口                                                       |
-| `src/pages` 页面入口                    |   56 | 含 `index.*` 的页面模块目录（直接子目录 38）                                   |
+| `src/pages` 页面入口                    |   57 | 含 `index.*` 的页面模块目录（直接子目录 39）                                   |
 | `src/features` 业务域                   |    4 | 已建立 feature-first 入口的业务域                                              |
 | `src/projects` 项目入口                 |    8 | 含 `index.*` 的项目模块目录                                                    |
 
@@ -130,7 +130,7 @@
 
 ## 鉴权与权限组件文件
 
-| 模块             | 模块           | 模块               | 模块              |
-| ---------------- | -------------- | ------------------ | ----------------- |
-| `AuthButton`     | `AuthCallback` | `EnterpriseSignIn` | `PermissionGuard` |
-| `ProtectedRoute` |                |                    |                   |
+| 模块              | 模块             | 模块                | 模块               |
+| ----------------- | ---------------- | ------------------- | ------------------ |
+| `AuthButton`      | `AuthCallback`   | `AuthenticatorPage` | `EnterpriseSignIn` |
+| `PermissionGuard` | `ProtectedRoute` |                     |                    |

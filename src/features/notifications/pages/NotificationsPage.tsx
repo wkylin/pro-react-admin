@@ -6,6 +6,8 @@ import type { ColumnType } from 'antd/es/table'
 import ResponsiveTable from '@wui/ResponsiveTable'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import { usePermission } from '@platform/auth/hooks/usePermission'
+import { hasEffectivePermission } from '@platform/auth/model/policy'
+import type { PermissionCode } from '@platform/auth/model/permission'
 import { useNotificationsStore } from '../model/notificationsStore'
 import type { Notification, NotificationDateValue, NotificationSearchValues } from '../model/types'
 
@@ -32,7 +34,7 @@ const NotificationsPage = () => {
 
   const items = useNotificationsStore((state) => state.notifications)
   const removeNotification = useNotificationsStore((state) => state.remove)
-  const { permissions = [] } = usePermission()
+  const { current } = usePermission()
   // 用于演示从父组件/外部控制 toolbar 表单的 apiRef
   const tableApiRef = useRef<NotificationTableApi | null>(null)
   const navigate = useNavigate()
@@ -117,20 +119,19 @@ const NotificationsPage = () => {
           minBodyHeight={120}
           minWidth={800}
           onPaginationChange={(p) => setPagination(p)}
-          // permissions: 这里示例全部允许，替换为项目权限检查函数
           permissionChecker={(actionKey) => {
-            // 将 actionKey 映射为权限码（根据项目实际权限码调整）
-            const map: Record<string, string> = {
-              view: 'notifications:view',
-              edit: 'notifications:edit',
-              delete: 'notifications:delete',
+            const map: Record<string, PermissionCode> = {
+              view: 'notification:read',
+              edit: 'notification:update',
+              delete: 'notification:delete',
+              open_tab: 'notification:read',
+              open_tab_with_query: 'notification:read',
+              add: 'notification:create',
+              export: 'notification:export',
+              'set-from-ref': 'notification:read',
             }
             const perm = map[actionKey]
-            if (!perm) return true
-            // 使用 usePermission 提供的 permissions 列表进行同步判断
-            return permissions && permissions.length > 0
-              ? permissions.includes(perm) || permissions.includes('*:*')
-              : true
+            return Boolean(current && perm && hasEffectivePermission(current, perm))
           }}
           // actions: 自定义回调
           actions={[

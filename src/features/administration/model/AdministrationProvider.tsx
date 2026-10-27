@@ -4,6 +4,7 @@ import { createRestDataProvider, type DataProvider } from '@platform/data/provid
 import { isDemoPermissionMode } from '@platform/auth/api/permission'
 import { permissionService } from '@platform/auth/services/permissionService'
 import { createDemoAdministrationProvider } from '../api/demoProvider'
+import { createDemoAccessClient, enterpriseAccessClient, type AccessClient } from '../api/accessRequests'
 import { administrationResources, type AdministrationSchema } from './resources'
 import { createCachedDataProvider } from '@platform/data/cache'
 import { getSessionIdentity } from '@platform/auth/model/session'
@@ -11,8 +12,19 @@ import { useSessionIdentity } from '@platform/auth/hooks/useSessionIdentity'
 import { usePermission } from '@platform/auth/hooks/usePermission'
 import { subscribeResourceEvents } from '@platform/data/resourceEvents'
 
-type AdministrationContextValue = { provider: DataProvider<AdministrationSchema>; demo: boolean; realtime: boolean }
+type AdministrationContextValue = {
+  provider: DataProvider<AdministrationSchema>
+  access: AccessClient
+  demo: boolean
+  realtime: boolean
+  accessRevision: number
+}
 const Context = createContext<AdministrationContextValue | null>(null)
+const demoProvider = createDemoAdministrationProvider(
+  () => permissionService.peekPermissions()?.username || 'demo',
+  true
+)
+const demoAccess = createDemoAccessClient(demoProvider, () => permissionService.peekPermissions())
 export function AdministrationProvider({
   children,
   provider,
@@ -22,7 +34,7 @@ export function AdministrationProvider({
 }) {
   const identity = useSessionIdentity()
   const { current } = usePermission()
-  const permissions = JSON.stringify(current?.permissions ?? [])
+  const permissions = JSON.stringify(current?.roles ?? [])
   return (
     <ScopedAdministration key={`${identity}|${permissions}`} provider={provider}>
       {children}
@@ -37,16 +49,15 @@ function ScopedAdministration({
   provider?: DataProvider<AdministrationSchema>
 }) {
   const lifetime = useRef(0)
+  const [accessRevision, setAccessRevision] = useState(0)
   const [value] = useState(() => {
     const demo = !provider && isDemoPermissionMode()
     return {
       demo,
       realtime: !provider && !demo,
+      access: demo ? demoAccess : enterpriseAccessClient,
       provider: createCachedDataProvider(
-        provider ??
-          (demo
-            ? createDemoAdministrationProvider(() => permissionService.peekPermissions()?.username || 'demo')
-            : createRestDataProvider(apiClient, administrationResources)),
+        provider ?? (demo ? demoProvider : createRestDataProvider(apiClient, administrationResources)),
         {
           scope: getSessionIdentity(),
           getScope: getSessionIdentity,
@@ -67,9 +78,14 @@ function ScopedAdministration({
   }, [value])
   useEffect(() => {
     if (!value.realtime) return
-    return subscribeResourceEvents((resource) => value.provider.invalidate?.(resource))
+    return subscribeResourceEvents((resource) => {
+      if (resource === 'access_requests' || resource === undefined) setAccessRevision((revision) => revision + 1)
+      if (resource !== 'access_requests') value.provider.invalidate?.(resource)
+      if (resource === 'roles' || resource === 'users' || resource === undefined)
+        void permissionService.getPermissions(true)
+    })
   }, [value])
-  return <Context.Provider value={value}>{children}</Context.Provider>
+  return <Context.Provider value={{ ...value, accessRevision }}>{children}</Context.Provider>
 }
 export function useAdministration() {
   const value = useContext(Context)

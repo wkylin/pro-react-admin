@@ -1,7 +1,7 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import React from 'react'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
-import { Form, Input, Button, Card, Checkbox, Typography, Select, Layout, theme, Space, App } from 'antd'
+import { Form, Input, Button, Checkbox, Typography, Select, Layout, Space, App } from 'antd'
 import { selectIsMobile, useAppStore } from '@app/model'
 import { Navigate } from 'react-router-dom'
 import {
@@ -18,6 +18,7 @@ import { isDemoPermissionMode } from '@platform/auth/api/permission'
 import { clearSession } from '@platform/auth/model/session'
 import { authService } from '@platform/auth/services/authService'
 import { permissionService } from '@platform/auth/services/permissionService'
+import AuthShowcase, { AuthBackdrop } from '@platform/auth/components/AuthShowcase'
 import styles from './index.module.less'
 
 const { Title, Text, Link } = Typography
@@ -49,7 +50,6 @@ const passwordIconRender = (visible: boolean): React.ReactNode =>
 const SignUp = () => {
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
-  const { token } = theme.useToken()
   const isMobile = useAppStore(selectIsMobile)
   const [submitting, setSubmitting] = React.useState(false)
 
@@ -72,50 +72,19 @@ const SignUp = () => {
     }
   }
 
-  const cssVars: React.CSSProperties & { [key: `--signup-${string}`]: string } = {
-    '--signup-bg': token.colorBgBase,
-    '--signup-panel': token.colorBgContainer,
-    '--signup-panel-2': token.colorBgLayout,
-    '--signup-border': token.colorBorderSecondary,
-    '--signup-text': token.colorText,
-    '--signup-text-2': token.colorTextSecondary,
-    '--signup-primary': token.colorPrimary,
-    '--signup-primary-2': token.colorInfo,
-    '--signup-shadow': token.boxShadowSecondary,
-    '--signup-icon': token.colorTextTertiary,
-  }
-
   if (!isDemoPermissionMode()) return <Navigate to="/signin" replace />
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Content className={styles.root} style={cssVars}>
-        <div className={styles.bg} aria-hidden="true" />
-        <div className={styles.grid} style={{ padding: isMobile ? 16 : 24 }}>
-          {!isMobile && (
-            <section className={styles.hero}>
-              <div className={styles.heroInner}>
-                <div className={styles.heroKicker}>PRO REACT ADMIN · 表单演示</div>
-                <Title level={1} className={styles.heroTitle}>
-                  从表单演示进入
-                  <br />
-                  管理工作台
-                </Title>
-                <Text type="secondary" className={styles.heroDesc}>
-                  提交后以普通用户权限体验工作台；路由和操作按角色展示，应用与组件支持 Webpack 5 或 Vite 8 构建。
-                </Text>
-
-                <div className={styles.heroOrbit} aria-hidden="true">
-                  <div className={styles.orbitRing} />
-                  <div className={styles.orbitRing2} />
-                  <div className={styles.orbitDot} />
-                </div>
-              </div>
-            </section>
-          )}
+      <Content className={styles.root}>
+        <AuthBackdrop variant="signup" />
+        <div className={styles.grid}>
+          <div className={styles.hero}>
+            <AuthShowcase variant="signup" headingLevel={1} />
+          </div>
 
           <section className={styles.panel}>
-            <Card className={styles.card} variant="borderless" styles={{ body: { padding: isMobile ? 16 : 28 } }}>
+            <div className={styles.card}>
               <div className={styles.titleBox}>
                 <Title level={2} className={styles.title}>
                   注册表单演示
@@ -154,7 +123,7 @@ const SignUp = () => {
                   <Input
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
-                        <UserOutlined style={{ color: token.colorTextTertiary }} />
+                        <UserOutlined />
                       </AnimatedIcon>
                     }
                     placeholder="请输入用户名"
@@ -174,7 +143,7 @@ const SignUp = () => {
                   <Input
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
-                        <MailOutlined style={{ color: token.colorTextTertiary }} />
+                        <MailOutlined />
                       </AnimatedIcon>
                     }
                     placeholder="请输入邮箱地址"
@@ -189,6 +158,7 @@ const SignUp = () => {
                       <Select
                         style={{ width: 90, height: 44 }}
                         size="large"
+                        classNames={{ popup: { root: styles.countryPopup } }}
                         options={[
                           { value: '86', label: '+86' },
                           { value: '44', label: '+44' },
@@ -209,7 +179,7 @@ const SignUp = () => {
                       <Input
                         prefix={
                           <AnimatedIcon variant="spin" mode="hover">
-                            <PhoneOutlined style={{ color: token.colorTextTertiary }} />
+                            <PhoneOutlined />
                           </AnimatedIcon>
                         }
                         placeholder="请输入手机号码"
@@ -238,7 +208,7 @@ const SignUp = () => {
                   <Input.Password
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
-                        <LockOutlined style={{ color: token.colorTextTertiary }} />
+                        <LockOutlined />
                       </AnimatedIcon>
                     }
                     placeholder="请输入密码"
@@ -268,7 +238,7 @@ const SignUp = () => {
                   <Input.Password
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
-                        <LockOutlined style={{ color: token.colorTextTertiary }} />
+                        <LockOutlined />
                       </AnimatedIcon>
                     }
                     placeholder="请再次输入密码"
@@ -332,7 +302,7 @@ const SignUp = () => {
                   </Text>
                 </div>
               </Form>
-            </Card>
+            </div>
           </section>
         </div>
       </Content>

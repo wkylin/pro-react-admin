@@ -6,12 +6,14 @@ type LazyLoadImageProps = React.ComponentPropsWithoutRef<'img'> & {
   observerOptions?: IntersectionObserverInit
 }
 
+const defaultObserverOptions: IntersectionObserverInit = { root: null, rootMargin: '200px 0px' }
+
 const LazyLoadImage = ({
   alt,
   src,
   className,
   loadInitially = false,
-  observerOptions = { root: null, rootMargin: '200px 0px' },
+  observerOptions = defaultObserverOptions,
   ...props
 }: LazyLoadImageProps) => {
   const observerRef = React.useRef<IntersectionObserver | null>(null)
@@ -29,7 +31,10 @@ const LazyLoadImage = ({
   )
 
   React.useEffect(() => {
-    if (loadInitially) return
+    if (loadInitially) {
+      setIsLoaded(true)
+      return
+    }
 
     if ('loading' in HTMLImageElement.prototype) {
       setIsLoaded(true)
@@ -45,7 +50,7 @@ const LazyLoadImage = ({
     return () => {
       observer.disconnect()
     }
-  }, [])
+  }, [loadInitially, observerCallback, observerOptions])
 
   return (
     <figure className={styles.hoverRotate}>

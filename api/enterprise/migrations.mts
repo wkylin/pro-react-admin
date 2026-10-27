@@ -98,6 +98,65 @@ BEGIN
 END;
 `
 
+const ACCESS_CONTROL_V3_SQL = `
+CREATE TABLE role_scopes (
+  tenant_id TEXT NOT NULL, role_code TEXT NOT NULL, scopes TEXT NOT NULL,
+  PRIMARY KEY (tenant_id, role_code),
+  FOREIGN KEY (tenant_id, role_code) REFERENCES roles(tenant_id, code) ON UPDATE CASCADE ON DELETE CASCADE
+);
+CREATE TABLE access_requests (
+  id TEXT PRIMARY KEY,
+  tenant_id TEXT NOT NULL REFERENCES tenants(id),
+  kind TEXT NOT NULL CHECK(kind IN ('role', 'user')),
+  target_id TEXT NOT NULL,
+  actor_id TEXT NOT NULL,
+  actor_email TEXT NOT NULL,
+  before_json TEXT NOT NULL,
+  after_json TEXT NOT NULL,
+  affected_json TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  fingerprint TEXT NOT NULL,
+  status TEXT NOT NULL CHECK(status IN ('pending', 'approved', 'rejected', 'stale')),
+  reviewer_id TEXT,
+  decision_reason TEXT,
+  created_at TEXT NOT NULL,
+  decided_at TEXT
+);
+CREATE INDEX access_requests_tenant_date ON access_requests(tenant_id, created_at DESC, id);
+`
+
+const TOTP_V4_SQL = `
+CREATE TABLE totp_credentials (
+  principal_id TEXT PRIMARY KEY REFERENCES principals(id) ON DELETE CASCADE,
+  secret_ciphertext TEXT NOT NULL,
+  enabled INTEGER NOT NULL CHECK(enabled IN (0,1)),
+  pending_expires_at INTEGER,
+  last_used_step INTEGER,
+  created_at TEXT NOT NULL,
+  enabled_at TEXT,
+  CHECK((enabled=0 AND pending_expires_at IS NOT NULL AND enabled_at IS NULL)
+     OR (enabled=1 AND pending_expires_at IS NULL AND enabled_at IS NOT NULL))
+);
+CREATE TABLE totp_recovery_codes (
+  principal_id TEXT NOT NULL REFERENCES principals(id) ON DELETE CASCADE,
+  code_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (principal_id, code_hash)
+);
+CREATE TABLE totp_rate_limits (
+  principal_id TEXT PRIMARY KEY REFERENCES principals(id) ON DELETE CASCADE,
+  window_started_at INTEGER NOT NULL,
+  attempts INTEGER NOT NULL
+);
+`
+
+const PLATFORM_ADMINS_V5_SQL = `
+CREATE TABLE platform_admins (
+  principal_id TEXT PRIMARY KEY REFERENCES principals(id) ON DELETE CASCADE,
+  granted_at TEXT NOT NULL
+);
+`
+
 function checksum(version: number, name: string, sql: string) {
   return createHash('sha256').update(`${version}\0${name}\0${sql}`).digest('hex')
 }
@@ -109,6 +168,9 @@ function defineMigration(version: number, name: string, sql: string): Migration 
 export const ENTERPRISE_MIGRATIONS = [
   defineMigration(1, 'single-tenant-baseline', BASELINE_V1_SQL),
   defineMigration(2, 'principals-and-tenant-memberships', PRINCIPALS_AND_MEMBERSHIPS_V2_SQL),
+  defineMigration(3, 'role-scopes-and-access-requests', ACCESS_CONTROL_V3_SQL),
+  defineMigration(4, 'totp-authenticators-and-recovery-codes', TOTP_V4_SQL),
+  defineMigration(5, 'platform-admins', PLATFORM_ADMINS_V5_SQL),
 ] as const
 
 export const ENTERPRISE_SCHEMA_VERSION = ENTERPRISE_MIGRATIONS.at(-1)!.version
@@ -504,6 +566,116 @@ function validateVersion2Structure(db: DatabaseSync) {
   }
 }
 
+function validateVersion3Structure(db: DatabaseSync) {
+  validateVersion2Structure(db)
+  assertTableColumns(db, 'role_scopes', [
+    { name: 'tenant_id', type: 'TEXT', notnull: 1, pk: 1 },
+    { name: 'role_code', type: 'TEXT', notnull: 1, pk: 2 },
+    { name: 'scopes', type: 'TEXT', notnull: 1, pk: 0 },
+  ])
+  assertTableColumns(db, 'access_requests', [
+    { name: 'id', type: 'TEXT', notnull: 0, pk: 1 },
+    { name: 'tenant_id', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'kind', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'target_id', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'actor_id', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'actor_email', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'before_json', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'after_json', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'affected_json', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'reason', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'fingerprint', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'status', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'reviewer_id', type: 'TEXT', notnull: 0, pk: 0 },
+    { name: 'decision_reason', type: 'TEXT', notnull: 0, pk: 0 },
+    { name: 'created_at', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'decided_at', type: 'TEXT', notnull: 0, pk: 0 },
+  ])
+  if (JSON.stringify(uniqueKeys(db, 'role_scopes')) !== JSON.stringify(['tenant_id,role_code'])) {
+    throw new Error('Enterprise role_scopes primary key is unsupported')
+  }
+  if (
+    JSON.stringify(foreignKeys(db, 'role_scopes')) !==
+    JSON.stringify(['roles(tenant_id,role_code)->(tenant_id,code)/update:CASCADE/delete:CASCADE'])
+  ) {
+    throw new Error('Enterprise role_scopes foreign key is unsupported')
+  }
+  const index = db.prepare('PRAGMA index_info("access_requests_tenant_date")').all() as { name: string | null }[]
+  if (JSON.stringify(index.map(({ name }) => name)) !== JSON.stringify(['tenant_id', 'created_at', 'id'])) {
+    throw new Error('Enterprise access_requests index is unsupported')
+  }
+}
+
+function validateVersion4Structure(db: DatabaseSync) {
+  validateVersion3Structure(db)
+  assertTableColumns(db, 'totp_credentials', [
+    { name: 'principal_id', type: 'TEXT', notnull: 0, pk: 1 },
+    { name: 'secret_ciphertext', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'enabled', type: 'INTEGER', notnull: 1, pk: 0 },
+    { name: 'pending_expires_at', type: 'INTEGER', notnull: 0, pk: 0 },
+    { name: 'last_used_step', type: 'INTEGER', notnull: 0, pk: 0 },
+    { name: 'created_at', type: 'TEXT', notnull: 1, pk: 0 },
+    { name: 'enabled_at', type: 'TEXT', notnull: 0, pk: 0 },
+  ])
+  assertTableColumns(db, 'totp_recovery_codes', [
+    { name: 'principal_id', type: 'TEXT', notnull: 1, pk: 1 },
+    { name: 'code_hash', type: 'TEXT', notnull: 1, pk: 2 },
+    { name: 'created_at', type: 'TEXT', notnull: 1, pk: 0 },
+  ])
+  assertTableColumns(db, 'totp_rate_limits', [
+    { name: 'principal_id', type: 'TEXT', notnull: 0, pk: 1 },
+    { name: 'window_started_at', type: 'INTEGER', notnull: 1, pk: 0 },
+    { name: 'attempts', type: 'INTEGER', notnull: 1, pk: 0 },
+  ])
+  if (JSON.stringify(uniqueKeys(db, 'totp_credentials')) !== JSON.stringify(['principal_id']))
+    throw new Error('Enterprise TOTP credential key is unsupported')
+  if (JSON.stringify(uniqueKeys(db, 'totp_recovery_codes')) !== JSON.stringify(['principal_id,code_hash']))
+    throw new Error('Enterprise TOTP recovery key is unsupported')
+  if (JSON.stringify(uniqueKeys(db, 'totp_rate_limits')) !== JSON.stringify(['principal_id']))
+    throw new Error('Enterprise TOTP rate-limit key is unsupported')
+  if (
+    JSON.stringify(foreignKeys(db, 'totp_credentials')) !==
+    JSON.stringify(['principals(principal_id)->(id)/update:NO ACTION/delete:CASCADE'])
+  )
+    throw new Error('Enterprise TOTP credential foreign key is unsupported')
+  if (
+    JSON.stringify(foreignKeys(db, 'totp_recovery_codes')) !==
+    JSON.stringify(['principals(principal_id)->(id)/update:NO ACTION/delete:CASCADE'])
+  )
+    throw new Error('Enterprise TOTP recovery foreign key is unsupported')
+  if (
+    JSON.stringify(foreignKeys(db, 'totp_rate_limits')) !==
+    JSON.stringify(['principals(principal_id)->(id)/update:NO ACTION/delete:CASCADE'])
+  )
+    throw new Error('Enterprise TOTP rate-limit foreign key is unsupported')
+  const credentialSchema = db
+    .prepare("SELECT sql FROM sqlite_schema WHERE type='table' AND name='totp_credentials'")
+    .get() as { sql: string } | undefined
+  const normalizedCredentialSchema = normalizeSql(credentialSchema?.sql ?? '')
+  if (
+    !normalizedCredentialSchema.includes('check(enabledin(0,1))') ||
+    !normalizedCredentialSchema.includes(
+      'check((enabled=0andpending_expires_atisnotnullandenabled_atisnull)or(enabled=1andpending_expires_atisnullandenabled_atisnotnull))'
+    )
+  )
+    throw new Error('Enterprise TOTP credential state constraint is unsupported')
+}
+
+function validateVersion5Structure(db: DatabaseSync) {
+  validateVersion4Structure(db)
+  assertTableColumns(db, 'platform_admins', [
+    { name: 'principal_id', type: 'TEXT', notnull: 0, pk: 1 },
+    { name: 'granted_at', type: 'TEXT', notnull: 1, pk: 0 },
+  ])
+  if (JSON.stringify(uniqueKeys(db, 'platform_admins')) !== JSON.stringify(['principal_id']))
+    throw new Error('Enterprise platform administrator key is unsupported')
+  if (
+    JSON.stringify(foreignKeys(db, 'platform_admins')) !==
+    JSON.stringify(['principals(principal_id)->(id)/update:NO ACTION/delete:CASCADE'])
+  )
+    throw new Error('Enterprise platform administrator foreign key is unsupported')
+}
+
 function validateLegacyV1(db: DatabaseSync) {
   const requiredTables = ['tenants', 'roles', 'users', 'sessions', 'audit']
   const names = new Set(tableNames(db))
@@ -607,6 +779,9 @@ export function getEnterpriseMigrationStatus(db: DatabaseSync): EnterpriseMigrat
 
   if (userVersion === 1) validateLegacyV1(db)
   else if (userVersion === 2) validateVersion2Structure(db)
+  else if (userVersion === 3) validateVersion3Structure(db)
+  else if (userVersion === 4) validateVersion4Structure(db)
+  else if (userVersion === 5) validateVersion5Structure(db)
 
   return {
     userVersion,

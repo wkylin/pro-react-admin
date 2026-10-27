@@ -4,6 +4,7 @@ import { Button, Result, Typography } from 'antd'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { useTranslation } from 'react-i18next'
 import { getEnv } from '@platform/config/env'
+import { recoverModuleLoadFailure } from '@platform/errors/moduleLoadRecovery'
 
 const { Paragraph, Text } = Typography
 
@@ -18,6 +19,10 @@ const RouterErrorElement: React.FC = () => {
   const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
   const isDevelopment = getEnv('NODE_ENV', 'production') !== 'production'
+
+  React.useEffect(() => {
+    recoverModuleLoadFailure(error)
+  }, [error])
 
   const handleBackHome = () => {
     redirectTo('/')

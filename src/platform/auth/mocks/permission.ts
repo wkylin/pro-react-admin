@@ -63,6 +63,8 @@ const userRoutes = [
   '/svg-viewer',
 ]
 
+const reviewerRoutes = ['/', '/profile', '/permission', '/administration/access-requests']
+
 /**
  * 预定义角色
  */
@@ -109,10 +111,18 @@ export const mockRoles: Role[] = [
     permissions: ['home:read', 'dashboard:read'],
     isDefault: true,
   },
+  {
+    id: '5',
+    name: '独立审批人',
+    code: 'reviewer',
+    description: '审核其他成员提交的访问权限变更',
+    permissions: ['home:read', 'profile:read', 'permission:read', 'access:read', 'access:approve'],
+    isDefault: false,
+  },
 ]
 
 /**
- * 固定的测试账号（四个角色对应四个账号）
+ * 固定的演示账号，包含独立审批人。
  */
 export const testAccounts: Record<string, { role: string; name: string }> = {
   'admin@test.com': {
@@ -130,6 +140,10 @@ export const testAccounts: Record<string, { role: string; name: string }> = {
   'user@test.com': {
     role: 'user',
     name: '普通用户',
+  },
+  'reviewer@test.com': {
+    role: 'reviewer',
+    name: '独立审批人',
   },
 }
 
@@ -183,7 +197,7 @@ const makeUserPermission = ({
   return {
     userId,
     username,
-    roles: [role],
+    roles: [{ ...role, permissions: Array.from(perms) as PermissionCode[] }],
     permissions: Array.from(perms) as PermissionCode[],
     routes,
   }
@@ -221,6 +235,13 @@ export const mockUserPermissions: Record<string, UserPermission> = {
     basePermissions: ['home:read', 'dashboard:read'],
     routes: userRoutes,
   }),
+  reviewer: makeUserPermission({
+    userId: '5',
+    username: '独立审批人',
+    role: mockRoles[4],
+    basePermissions: ['home:read', 'profile:read', 'permission:read', 'access:read', 'access:approve'],
+    routes: reviewerRoutes,
+  }),
 }
 
 const safeJsonParse = <T>(text: string | null): T | null => {
@@ -238,14 +259,6 @@ const safeGetStorageItem = (key: string): string | null => {
   } catch {
     return null
   }
-}
-
-const tryGetManualRolePermission = (): UserPermission | null => {
-  const storedRoleCode = safeGetStorageItem('user_role')
-  if (storedRoleCode && mockUserPermissions[storedRoleCode]) {
-    return { ...mockUserPermissions[storedRoleCode] }
-  }
-  return null
 }
 
 const tryGetTokenRolePermission = (): UserPermission | null => {
@@ -271,10 +284,6 @@ export const mockGetUserPermissions = async (_userId?: string, _roleCode?: strin
 
   // GitHub OAuth only identifies a demo visitor; it never chooses an administrator role.
   if (safeGetStorageItem('github_demo_user')) return { ...mockUserPermissions['user'] }
-
-  // 仅测试账号可以在演示环境中切换角色。
-  const manual = tryGetManualRolePermission()
-  if (manual) return manual
 
   // 根据测试账号 token 中的邮箱获取角色
   const token = tryGetTokenRolePermission()

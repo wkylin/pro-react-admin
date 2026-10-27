@@ -1,5 +1,8 @@
 import { randomBytes, scrypt, timingSafeEqual, createHash } from 'node:crypto'
 import { promisify } from 'node:util'
+import { permits, canDelegate, type ResourceScopes } from '../../src/platform/auth/model/accessDecision.ts'
+
+export { permits, canDelegate }
 
 export class BusinessError extends Error {
   status: number
@@ -38,12 +41,6 @@ export function password(value: unknown): string {
 export function onlyFields(input: Record<string, unknown>, fields: readonly string[]): void {
   if (Object.keys(input).some((key) => !fields.includes(key))) fail(400, 'unknown_field')
 }
-export function permits(grants: readonly string[], permission: string): boolean {
-  return grants.includes('*:*') || grants.includes(permission) || grants.includes(`${permission.split(':')[0]}:*`)
-}
-export function canDelegate(grants: readonly string[], requested: readonly string[]): boolean {
-  return requested.every((permission) => permits(grants, permission))
-}
 const derive = promisify(scrypt)
 export async function hashPassword(value: string): Promise<string> {
   const salt = randomBytes(16).toString('hex')
@@ -71,6 +68,7 @@ export interface Role {
   name: string
   code: string
   permissions: string[]
+  scopes?: ResourceScopes
 }
 export interface Audit {
   id: string

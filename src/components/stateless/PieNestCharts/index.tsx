@@ -28,10 +28,10 @@ const colorizeData = (data: PieSeriesOption['data'], colors: readonly string[]) 
     itemStyle: { color: colors[index % colors.length] },
   }))
 
-const PieNestChart = ({ data: _data = [], height = '100%', eOptions = {} }: PieNestChartProps) => {
-  const innerColors = ['#3B70FD', '#0EC374', '#F57A43']
-  const outerColors = ['#6A93FF', '#98B5FF', '#2CCD97', '#2BE79E', '#95FBB1', '#FF9440', '#FFB860']
+const innerColors = ['#3B70FD', '#0EC374', '#F57A43']
+const outerColors = ['#6A93FF', '#98B5FF', '#2CCD97', '#2BE79E', '#95FBB1', '#FF9440', '#FFB860']
 
+const PieNestChart = ({ data: _data = [], height = '100%', eOptions = {} }: PieNestChartProps) => {
   const chartHandleRef = useRef<EChartHandle | null>(null)
 
   const option = useMemo(() => {
@@ -130,7 +130,7 @@ const PieNestChart = ({ data: _data = [], height = '100%', eOptions = {} }: PieN
       }),
     }
     return defaultOption
-  }, [eOptions, innerColors, outerColors])
+  }, [eOptions])
 
   useBigScreenChartsReinit(chartHandleRef)
 

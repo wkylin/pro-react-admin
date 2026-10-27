@@ -60,7 +60,7 @@ test('REST rejects malformed data and safely encodes record IDs', async () => {
   expect(get).toHaveBeenCalledWith(
     '/api/admin/users',
     query,
-    expect.objectContaining({ signal: controller.signal, cancelDuplicate: false })
+    expect.objectContaining({ signal: controller.signal, cancelDuplicate: false, addTimestamp: false })
   )
   await provider.update('users', 'u/a', { status: 'disabled' })
   expect(patch).toHaveBeenCalledWith('/api/admin/users/u%2Fa', { status: 'disabled' }, undefined)

@@ -2,6 +2,7 @@ import {
   useRef,
   useEffect,
   useState,
+  useCallback,
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
   type TouchEvent as ReactTouchEvent,
@@ -48,7 +49,7 @@ const ScratchToReveal = ({
     }
   }, [])
 
-  const scratch = (clientX: number, clientY: number) => {
+  const scratch = useCallback((clientX: number, clientY: number) => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
     if (canvas && ctx) {
@@ -60,9 +61,9 @@ const ScratchToReveal = ({
       ctx.arc(x, y, 30, 0, Math.PI * 2)
       ctx.fill()
     }
-  }
+  }, [])
 
-  const checkCompletion = () => {
+  const checkCompletion = useCallback(() => {
     if (isComplete) return // Check if already completed
 
     const canvas = canvasRef.current
@@ -82,21 +83,17 @@ const ScratchToReveal = ({
       if (percentage >= minScratchPercentage) {
         setIsComplete(true)
         ctx.clearRect(0, 0, canvas.width, canvas.height)
-        startAnimation()
+        controls.start({
+          scale: [1, 1.5, 1],
+          rotate: [0, 10, -10, 10, -10, 0],
+          transition: { duration: 0.5 },
+        })
         if (onComplete) {
           onComplete()
         }
       }
     }
-  }
-
-  const startAnimation = () => {
-    controls.start({
-      scale: [1, 1.5, 1],
-      rotate: [0, 10, -10, 10, -10, 0],
-      transition: { duration: 0.5 },
-    })
-  }
+  }, [isComplete, minScratchPercentage, controls, onComplete])
 
   useEffect(() => {
     const handleDocumentMouseMove = (event: MouseEvent) => {
@@ -137,7 +134,7 @@ const ScratchToReveal = ({
       document.removeEventListener('touchend', handleDocumentTouchEnd)
       document.removeEventListener('touchcancel', handleDocumentTouchEnd)
     }
-  }, [isScratching])
+  }, [isScratching, scratch, checkCompletion])
 
   // 鼠标 / 触摸按下处理器：开始 scratch 并立即进行一次擦除
   const handleMouseDown = (event: ReactMouseEvent<HTMLCanvasElement>) => {

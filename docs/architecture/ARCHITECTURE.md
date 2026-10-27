@@ -4,7 +4,7 @@
 
 Pro React Admin 是 React 管理应用工作区，包含组件展示应用、精简企业入口、多个独立项目、Module Federation Host/Remote 和独立 UI 包。它采用 React 19、Ant Design 6、React Router 7 Hash Router、Zustand 5、Webpack 5、TypeScript 6。声明版本见[自动生成参考](../reference/PROJECT_REFERENCE.md)，安装版本以 lockfile 为准。
 
-`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、审计、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。`api/enterprise` 提供可选的真实业务后端：租户账号、RBAC、持久化用户/角色、会话撤销与事务审计。它适合单实例自托管；前端仍可通过 Provider 接入其它业务服务。
+`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、访问审批、审计、登录验证器、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。`api/enterprise` 提供可选的真实业务后端：租户账号、RBAC、TOTP、持久化用户/角色、会话撤销与事务审计。它适合单实例自托管；前端仍可通过 Provider 接入其它业务服务。
 
 ```mermaid
 flowchart TD
@@ -95,7 +95,7 @@ Sentry 在启用时动态加载；设置抽屉、鼠标效果、轨迹按需加�
 以下只列尚未完成的工作，按依赖顺序推进：
 
 1. **生产数据门禁**：在真实旧库副本和目标卷复演升级、备份、恢复及兼容旧 artifact 的回滚；由部署 owner 确认 RPO/RTO、备份位置和写入冻结/重放方案。`db-admin drill` 仅测单机 SQLite 恢复与校验时间，不代替主机和网络恢复。
-2. **身份运营决策**：由产品与部署 owner 确认 OIDC issuer、账号关联责任、组织角色来源和恢复方式后，实施 SSO、邀请/找回、成员管理及必要的 MFA。当前[OIDC ADR](../decisions/ADR-001-oidc-identity-and-tenant-roles.md)待签；验收需覆盖跨组织撤权、解绑和账号恢复。
+2. **身份运营决策**：由产品与部署 owner 确认 OIDC issuer、账号关联责任、组织角色来源和恢复方式后，实施 SSO、邀请/找回、成员管理及可能需要的其他认证方式。当前[OIDC ADR](../decisions/ADR-001-oidc-identity-and-tenant-roles.md)待签；企业本地账号已有自助 TOTP，但没有管理员线上重置验证器的绕过路径。验收需覆盖跨组织撤权、解绑和账号恢复。
 3. **规模与更新**：先取得单实例负载、断线和恢复证据，再决定持久 outbox、跨实例顺序/广播、后台刷新、乐观更新及数据库迁移路径。当前单实例 WS 不能作为多实例一致性保证。
 4. **插件信任与兼容**：若需要运行期第三方模块，另行设计来源验证、隔离、服务端扩展和版本协商；对宿主/模块/数据版本建立发布兼容矩阵，不能把静态 v2 清单当作动态插件机制。
 5. **工程收紧**：按领域迁移遗留 JS 和展示页面，逐步扩展根 strict 与 i18n 覆盖；验证同一 artifact 的 API/Remote 环境切换和密钥边界。SSR/路由 loader、Tracking 插件页面生命周期仍需结合真实业务评估。

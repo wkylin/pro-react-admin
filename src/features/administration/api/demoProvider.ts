@@ -3,7 +3,8 @@ import { administrationResources, type AdministrationSchema } from '../model/res
 
 /** An isolated in-memory example. No credentials, production access policy, or server audit are changed. */
 export function createDemoAdministrationProvider(
-  actor: () => string = () => 'demo'
+  actor: () => string = () => 'demo',
+  showcase = false
 ): DataProvider<AdministrationSchema> {
   const state: { [K in keyof AdministrationSchema]: AdministrationSchema[K][] } = {
     users: [
@@ -14,7 +15,23 @@ export function createDemoAdministrationProvider(
       { id: 'r-1', name: '管理员', code: 'admin', permissions: ['home:read', 'user:*', 'role:*', 'audit:read'] },
       { id: 'r-2', name: '只读成员', code: 'viewer', permissions: ['home:read', 'user:read'] },
     ],
+    tenants: [],
     audit: [],
+  }
+  if (showcase) {
+    state.users.push(
+      { id: '1', name: '超级管理员', email: 'admin@test.com', role: 'super_admin', status: 'active' },
+      { id: '5', name: '独立审批人', email: 'reviewer@test.com', role: 'reviewer', status: 'active' }
+    )
+    state.roles.push(
+      { id: 'r-super-admin', name: '超级管理员', code: 'super_admin', permissions: ['*:*'] },
+      {
+        id: 'r-reviewer',
+        name: '独立审批人',
+        code: 'reviewer',
+        permissions: ['home:read', 'access:read', 'access:approve'],
+      }
+    )
   }
   const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T
   const check = (signal?: AbortSignal) => {
@@ -48,6 +65,12 @@ export function createDemoAdministrationProvider(
     }
     if (resource === 'roles') {
       const role = parsed as AdministrationSchema['roles']
+      if (
+        showcase &&
+        (role.code === 'super_admin' || role.code === 'tenant-admin') &&
+        (!exceptId || state.roles.find((entry) => entry.id === exceptId)?.code !== role.code)
+      )
+        throw new Error('内置管理员角色不可修改')
       if (state.roles.some((entry) => entry.id !== exceptId && entry.code === role.code))
         throw new Error('角色代码已存在')
       const previous = state.roles.find((entry) => entry.id === exceptId)
@@ -95,6 +118,8 @@ export function createDemoAdministrationProvider(
       write(resource)
       const index = state[resource].findIndex((row) => row.id === id)
       if (index < 0) throw new Error('记录不存在')
+      if (showcase && resource === 'roles' && state.roles[index].code === 'super_admin')
+        throw new Error('内置管理员角色不可修改')
       const record = validate(resource, { ...state[resource][index], ...input, id }, id)
       state[resource][index] = record
       recordAudit('update', resource, id)
@@ -103,6 +128,8 @@ export function createDemoAdministrationProvider(
     async remove(resource, id, options) {
       check(options?.signal)
       write(resource)
+      if (showcase && resource === 'roles' && state.roles.find((role) => role.id === id)?.code === 'super_admin')
+        throw new Error('内置管理员角色不可删除')
       if (resource === 'roles') {
         const role = state.roles.find((row) => row.id === id)
         if (role && state.users.some((user) => user.role === role.code)) throw new Error('该角色仍有成员，不能删除')

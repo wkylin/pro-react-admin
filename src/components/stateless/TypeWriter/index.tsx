@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 import { motion, type Variants } from 'motion/react'
 import clsx from 'clsx'
@@ -48,7 +48,7 @@ const TypeWriter = ({
   const [isDeleting, setIsDeleting] = useState<boolean>(false)
   const [currentTextIndex, setCurrentTextIndex] = useState<number>(0)
 
-  const texts = Array.isArray(text) ? text : [text]
+  const texts = useMemo(() => (Array.isArray(text) ? text : [text]), [text])
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined
@@ -91,7 +91,7 @@ const TypeWriter = ({
     return () => {
       if (timeout !== undefined) clearTimeout(timeout)
     }
-  }, [currentIndex, displayText, isDeleting, speed, deleteSpeed, waitTime, texts, currentTextIndex, loop])
+  }, [currentIndex, displayText, isDeleting, speed, deleteSpeed, waitTime, texts, currentTextIndex, loop, initialDelay])
 
   return (
     <div className={`inline tracking-tight whitespace-pre-wrap ${className}`}>

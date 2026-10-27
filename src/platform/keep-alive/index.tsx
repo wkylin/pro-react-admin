@@ -118,15 +118,23 @@ export function KeepAliveProvider({ children, options }: { children: ReactNode; 
 
 export function useActivate(callback: () => void) {
   const active = useKeepAliveContext()
+  const callbackRef = useRef(callback)
   useEffect(() => {
-    if (active) callback()
+    callbackRef.current = callback
+  }, [callback])
+  useEffect(() => {
+    if (active) callbackRef.current()
   }, [active])
 }
 export function useUnactivate(callback: () => void) {
   const active = useKeepAliveContext()
   const mounted = useRef(false)
+  const callbackRef = useRef(callback)
   useEffect(() => {
-    if (mounted.current && !active) callback()
+    callbackRef.current = callback
+  }, [callback])
+  useEffect(() => {
+    if (mounted.current && !active) callbackRef.current()
     mounted.current = true
   }, [active])
 }

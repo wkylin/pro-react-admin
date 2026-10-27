@@ -34,4 +34,3 @@ Playground.argTypes = {
   readOnly: { control: 'boolean' },
   initialMarkdown: { control: 'text' },
 }
-Playground.storyName = 'Playground'

@@ -9,11 +9,17 @@
 | GET  | /api/permissions/current | 当前身份 UserPermission   |
 | GET  | /api/roles               | Role 数组（授权系统接口） |
 
-响应可直接返回对象，或 `{code:0,data:...}` / `{code:200,data:...}`。其它 code 失败。UserPermission 包含 userId、username、roles、permissions、routes；Role 包含 id、name、code、permissions。接口 parser 检查必需结构，运行时权限字符串尚未逐项限定 Resource 枚举。管理页的数据接口是独立 `/api/admin/...`，见[企业资源](../operations/ENTERPRISE.md)。
+响应可直接返回对象，或 `{code:0,data:...}` / `{code:200,data:...}`。其它 code 失败。UserPermission 包含 userId、username、roles、permissions、routes；Role 包含 id、name、code、permissions 和可选 scopes。接口 parser 检查必需结构，运行时权限字符串尚未逐项限定 Resource 枚举。管理页的数据接口是独立 `/api/admin/...`，见[企业资源](../operations/ENTERPRISE.md)。
+
+`/account/security` 是所有已认证企业身份可进入的自助安全页，由服务端放入当前身份的明确 routes 白名单；它不授予用户、角色或审计管理权限。TOTP 的密钥、恢复码和登录验证由企业 API 管理，见[登录验证器](../operations/ENTERPRISE.md#企业账号登录验证器-totp)。
 
 ## 单一策略
 
 `config/route-policy.json` 保存 permission、title、i18nKey、menuGroup、menu.parent/order/icon。策略按精确路径、动态参数、最长已登记父路径匹配。权限支持精确点、资源名、`resource:*`、`*:*`。已映射页面必须满足 permission，宽泛 routes grant 不覆盖页面策略；未映射页面需明确 routes 模式或超级权限。
+
+组织资源 `user`、`role` 还要求角色的资源范围允许访问目标。权限与范围必须在同一个角色内同时满足；不能用一个角色的授权拼接另一个角色的全局范围。`restricted` 允许打开列表页，但列表和单条记录只返回指定 ID；`deny` 不允许进入对应页面。规则、预览、审批与迁移见[RBAC 与独立审批](./RBAC_RESOURCE_APPROVAL.md)。
+
+跨租户资源 `tenant` 有独立边界：租户角色的 `*:*` 不满足 `tenant:*`。服务端只根据 `platform_admins` 中当前 principal 的身份允许租户列表和写入，权限响应增加只用于导航的虚拟 `platform-admin` 角色。前端展示不会替代 API 的身份校验。平台身份只能由数据库主机上的运维命令授予，普通角色编辑不能授予该权限。租户删除是可恢复的停用并撤销会话，成员和审计仍保留。
 
 路由模块表达结构；平台 normalize/annotate 工具生成统一 metadata。AuthRouterBase 按 React Router 实际叶子路由判定；permission 和 role 同时声明时二者均需满足。公共身份和错误页仍由路由配置明确维护。
 
@@ -25,7 +31,7 @@
 
 PermissionService 保存稳定快照，usePermission、ProtectedRoute、PermissionGuard、路由和菜单通过 `useSyncExternalStore` 订阅。刷新结果、刷新失败和清理会话同时更新所有已挂载消费者，不需要重新进页面。订阅时安装 storage、session-changed、focus 监听，最后一个消费者卸载时移除并取消到期计时器。
 
-演示权限缓存有效期 30 分钟，真实权限为 60 秒。企业缓存按 tenant/token 绑定，演示按 active token/role override 绑定；GitHub token 更新也会失效。订阅期间到期重新同步，真实企业会话在 focus 强制刷新。清缓存提升 generation，在途旧响应在退出或切号后不可提交。服务端每次请求重新读取角色，UI 没有外部撤权推送，展示同步与服务端强制授权的时效不同。
+演示权限缓存有效期 30 分钟，真实权限为 60 秒。企业缓存按 tenant/token 绑定，演示按 active token 绑定；GitHub token 更新也会失效。订阅期间到期重新同步，真实企业会话在 focus 强制刷新，角色/用户 WebSocket 失效通知也会刷新权限快照。清缓存提升 generation，在途旧响应在退出或切号后不可提交。服务端每次请求重新读取角色，即使 WebSocket 断开仍会强制授权。
 
 真实租户模式只接受有效的 `enterprise_session`；过期或无效会话不会回退到演示身份。测试账号 `token` 仅在显式 `REACT_APP_USE_MOCK=true` 的演示模式读取，且只接受当前 JSON `{ token }` 格式；旧的裸字符串格式已移除。GitHub 演示身份由 API 的 HttpOnly cookie 验证，浏览器仅保存公开展示资料，刷新时重新向 API 核验，并始终使用普通演示角色。旧 `github_token`、`github_user` 不再用于登录或授权。企业登录保存经 parser 验证的会话并清理演示身份；到期自动清除。登录/切换后调用 syncPermissions，同页退出使用 clearSession 通知消费者；跨标签页通过 storage 同步。
 

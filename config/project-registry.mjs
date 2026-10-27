@@ -127,7 +127,7 @@ export function createBuildPlan(action, name, inherited = {}, registry = loadPro
     args:
       bundler === 'vite'
         ? [
-            ...(isDev ? ['--host'] : ['build']),
+            ...(isDev ? ['--host', inherited.HOST || '0.0.0.0'] : ['build']),
             '--config',
             './build/vite/app.config.ts',
             ...(inherited.BUILD_GOAL ? ['--mode', inherited.BUILD_GOAL] : []),

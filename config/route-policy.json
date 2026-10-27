@@ -21,7 +21,7 @@
     "title": "AI Workbench",
     "i18nKey": "menu.aiWorkbench",
     "menu": {
-      "order": 17,
+      "order": 18,
       "icon": "RobotOutlined"
     }
   },
@@ -34,7 +34,7 @@
     "title": "自动部署",
     "i18nKey": "menu.autoDeploy",
     "menu": {
-      "order": 6,
+      "order": 7,
       "icon": "CloudUploadOutlined"
     }
   },
@@ -43,7 +43,7 @@
     "title": "Big Screen",
     "i18nKey": "menu.bigScreen",
     "menu": {
-      "order": 21,
+      "order": 22,
       "icon": "FundProjectionScreenOutlined"
     }
   },
@@ -53,7 +53,7 @@
     "i18nKey": "menu.buildTools",
     "menuGroup": true,
     "menu": {
-      "order": 3,
+      "order": 4,
       "icon": "ApartmentOutlined"
     }
   },
@@ -72,7 +72,7 @@
     "title": "Business",
     "i18nKey": "menu.business",
     "menu": {
-      "order": 24,
+      "order": 25,
       "icon": "BankOutlined"
     }
   },
@@ -81,7 +81,7 @@
     "title": "ChatGPT",
     "i18nKey": "menu.chatgpt",
     "menu": {
-      "order": 16,
+      "order": 17,
       "icon": "RobotOutlined"
     }
   },
@@ -94,7 +94,7 @@
     "title": "Contact",
     "i18nKey": "menu.contact",
     "menu": {
-      "order": 30,
+      "order": 31,
       "icon": "ContactsOutlined"
     }
   },
@@ -103,7 +103,7 @@
     "title": "Crypto",
     "i18nKey": "menu.crypto",
     "menu": {
-      "order": 4,
+      "order": 5,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -124,7 +124,7 @@
     "title": "项目依赖分析",
     "i18nKey": "menu.dependencies",
     "menu": {
-      "order": 7,
+      "order": 8,
       "icon": "CloudUploadOutlined"
     }
   },
@@ -133,7 +133,7 @@
     "title": "Deploy Flow",
     "i18nKey": "menu.deployFlow",
     "menu": {
-      "order": 10,
+      "order": 11,
       "icon": "RocketOutlined"
     }
   },
@@ -142,7 +142,7 @@
     "title": "部署指南",
     "i18nKey": "menu.deploymentGuide",
     "menu": {
-      "order": 5,
+      "order": 6,
       "icon": "FileTextOutlined"
     }
   },
@@ -151,7 +151,7 @@
     "title": "Echarts",
     "i18nKey": "menu.echarts",
     "menu": {
-      "order": 22,
+      "order": 23,
       "icon": "PieChartOutlined"
     }
   },
@@ -169,7 +169,7 @@
     "title": "Geo Chart",
     "i18nKey": "menu.geoChart",
     "menu": {
-      "order": 27,
+      "order": 28,
       "icon": "EnvironmentOutlined"
     }
   },
@@ -178,7 +178,7 @@
     "i18nKey": "menu.mermaid",
     "permission": "mermaid:read",
     "menu": {
-      "order": 12,
+      "order": 13,
       "icon": "ProjectOutlined"
     }
   },
@@ -187,7 +187,7 @@
     "title": "Motion",
     "i18nKey": "menu.motion",
     "menu": {
-      "order": 11,
+      "order": 12,
       "icon": "PlayCircleOutlined"
     }
   },
@@ -196,7 +196,7 @@
     "title": "Music",
     "i18nKey": "menu.music",
     "menu": {
-      "order": 19,
+      "order": 20,
       "icon": "SoundOutlined"
     }
   },
@@ -217,7 +217,7 @@
     "title": "权限示例",
     "i18nKey": "menu.permissionExample",
     "menu": {
-      "order": 14,
+      "order": 15,
       "icon": "LockOutlined"
     }
   },
@@ -226,7 +226,7 @@
     "title": "PH Bar",
     "i18nKey": "menu.phBar",
     "menu": {
-      "order": 15,
+      "order": 16,
       "icon": "BarChartOutlined"
     }
   },
@@ -238,7 +238,7 @@
     "title": "Post Message",
     "i18nKey": "menu.postMessage",
     "menu": {
-      "order": 26,
+      "order": 27,
       "icon": "SendOutlined"
     }
   },
@@ -247,7 +247,7 @@
     "title": "Print",
     "i18nKey": "menu.print",
     "menu": {
-      "order": 28,
+      "order": 29,
       "icon": "PrinterOutlined"
     }
   },
@@ -256,7 +256,7 @@
     "title": "Prism Render",
     "i18nKey": "menu.prismRender",
     "menu": {
-      "order": 25,
+      "order": 26,
       "icon": "HighlightOutlined"
     }
   },
@@ -269,8 +269,18 @@
     "title": "Profile",
     "i18nKey": "menu.profile",
     "menu": {
-      "order": 29,
+      "order": 30,
       "icon": "UserOutlined"
+    }
+  },
+  "/account/security": {
+    "title": "登录验证器",
+    "i18nKey": "menu.authenticator",
+    "availability": "enterprise",
+    "access": "authenticated",
+    "menu": {
+      "order": 36,
+      "icon": "SafetyCertificateOutlined"
     }
   },
   "/qrcode": {
@@ -278,7 +288,7 @@
     "title": "Qr Generate",
     "i18nKey": "menu.qrGenerate",
     "menu": {
-      "order": 23,
+      "order": 24,
       "icon": "QrcodeOutlined"
     }
   },
@@ -296,7 +306,7 @@
     "i18nKey": "menu.error",
     "menuGroup": true,
     "menu": {
-      "order": 34,
+      "order": 35,
       "icon": "QuestionCircleOutlined"
     }
   },
@@ -315,7 +325,7 @@
     "i18nKey": "menu.backendTechStack",
     "menuGroup": true,
     "menu": {
-      "order": 32,
+      "order": 33,
       "icon": "CloudServerOutlined"
     }
   },
@@ -355,7 +365,7 @@
     "i18nKey": "menu.frontendTechStack",
     "menuGroup": true,
     "menu": {
-      "order": 31,
+      "order": 32,
       "icon": "NodeIndexOutlined"
     }
   },
@@ -440,7 +450,7 @@
     "title": "Text Editor",
     "i18nKey": "menu.textEditor",
     "menu": {
-      "order": 8,
+      "order": 9,
       "icon": "FileTextOutlined"
     }
   },
@@ -449,7 +459,7 @@
     "title": "React Tilt",
     "i18nKey": "menu.reactTilt",
     "menu": {
-      "order": 18,
+      "order": 19,
       "icon": "ExperimentOutlined"
     }
   },
@@ -458,7 +468,7 @@
     "title": "Topology",
     "i18nKey": "menu.topology",
     "menu": {
-      "order": 13,
+      "order": 14,
       "icon": "DeploymentUnitOutlined"
     }
   },
@@ -467,7 +477,7 @@
     "title": "埋点数据看板",
     "i18nKey": "menu.tracking",
     "menu": {
-      "order": 33,
+      "order": 34,
       "icon": "RadarChartOutlined"
     }
   },
@@ -476,7 +486,7 @@
     "title": "Video",
     "i18nKey": "menu.video",
     "menu": {
-      "order": 20,
+      "order": 21,
       "icon": "VideoCameraOutlined"
     }
   },
@@ -485,7 +495,7 @@
     "title": "Zustand演示",
     "i18nKey": "menu.zustand",
     "menu": {
-      "order": 9,
+      "order": 10,
       "icon": "DatabaseOutlined"
     }
   },
@@ -494,7 +504,7 @@
     "i18nKey": "admin.administration",
     "menuGroup": true,
     "menu": {
-      "order": 40,
+      "order": 3,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -518,14 +528,45 @@
       "icon": "LockOutlined"
     }
   },
+  "/administration/permissions": {
+    "title": "权限管理",
+    "i18nKey": "admin.permissionManagement",
+    "permission": "role:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 2,
+      "icon": "SafetyCertificateOutlined"
+    }
+  },
+  "/administration/tenants": {
+    "title": "租户管理",
+    "i18nKey": "admin.tenants",
+    "permission": "tenant:read",
+    "availability": "enterprise",
+    "menu": {
+      "parent": "/administration",
+      "order": 3,
+      "icon": "ApartmentOutlined"
+    }
+  },
   "/administration/audit": {
     "title": "审计日志",
     "i18nKey": "admin.audit",
     "permission": "audit:read",
     "menu": {
       "parent": "/administration",
-      "order": 2,
+      "order": 5,
       "icon": "FileTextOutlined"
+    }
+  },
+  "/administration/access-requests": {
+    "title": "访问审批",
+    "i18nKey": "admin.accessRequests",
+    "permission": "access:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 4,
+      "icon": "SafetyCertificateOutlined"
     }
   }
 }

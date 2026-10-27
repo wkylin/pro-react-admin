@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button, Result, Typography } from 'antd'
 import logger from '@platform/telemetry/logger'
+import { isModuleLoadFailure, recoverModuleLoadFailure } from './moduleLoadRecovery'
 
 const { Paragraph, Text } = Typography
 
@@ -29,11 +30,16 @@ export default class ErrorBoundary extends React.Component<Props, State> {
 
   componentDidCatch(error: unknown, info: unknown) {
     logger.error('ErrorBoundary caught', error, info)
+    recoverModuleLoadFailure(error)
   }
 
   handleReset = () => {
     this.setState({ hasError: false, error: undefined })
     this.props.onReset?.()
+  }
+
+  handleReload = () => {
+    window.location.reload()
   }
 
   handleBackHome = () => {
@@ -50,17 +56,18 @@ export default class ErrorBoundary extends React.Component<Props, State> {
         return this.props.fallback
       }
 
+      const moduleLoadFailure = isModuleLoadFailure(this.state.error)
       return (
         <div className="h-full w-full overflow-y-auto">
           <div className="flex min-h-full w-full items-center justify-center p-4">
             <Result
               status="500"
               title="出错了"
-              subTitle="抱歉，系统发生了一些意外错误。"
+              subTitle={moduleLoadFailure ? '页面模块加载失败，请重新加载。' : '抱歉，系统发生了一些意外错误。'}
               extra={
                 <div className="flex justify-center gap-4">
-                  <Button type="primary" onClick={this.handleReset}>
-                    重试
+                  <Button type="primary" onClick={moduleLoadFailure ? this.handleReload : this.handleReset}>
+                    {moduleLoadFailure ? '重新加载' : '重试'}
                   </Button>
                   <Button onClick={this.handleBackHome}>返回首页</Button>
                 </div>

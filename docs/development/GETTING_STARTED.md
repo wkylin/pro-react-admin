@@ -37,16 +37,16 @@ pnpm exec cross-env PROJECT=enterprise pnpm run serve:dist
 node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.development.local')) fs.copyFileSync('.env.development.local.example', '.env.development.local')"
 ```
 
-用编辑器打开 `.env.development.local`。共享 `.env` 默认开启浏览器演示登录，本地模板只补 API 配置，不需要数据库。Enterprise 项目的开发/构建命令默认使用真实租户登录；本地演示需显式设置 `REACT_APP_USE_MOCK=true`，真实登录按[真实用户登录](#真实用户登录)配置并初始化管理员。
+用编辑器打开 `.env.development.local`。共享 `.env` 默认开启浏览器演示登录，本地模板只补 API 配置。Enterprise 两个启动命令默认同时启动前端和 Node API；没有自定义后端配置时，它们会创建隔离的本地 SQLite 演示租户。浏览器 Mock 演示需显式设置 `REACT_APP_USE_MOCK=true`，自建租户按[真实用户登录](#真实用户登录)配置。
 
-| 配置                     | 默认值与作用                                        |
-| ------------------------ | --------------------------------------------------- |
-| `REACT_APP_USE_MOCK`     | `true`：演示账号；`false`：真实租户登录和 REST 数据 |
-| `APP_BASE_URL`           | 空：前端请求走同源开发代理；外部 API 可填完整地址   |
-| `ENTERPRISE_ENABLED`     | `false`：不开启业务数据库；真实后端需设置 `true`    |
-| `TRACKING_STORE`         | `memory`：埋点使用内存，与企业 SQLite 持久化独立    |
-| `TRACKING_API_PORT`      | `5200`：全栈启动时本地 API 的起始端口，占用时递增   |
-| `ENTERPRISE_BOOTSTRAP_*` | 默认注释；仅首次创建真实租户时填写，完成后删除      |
+| 配置                     | 默认值与作用                                                       |
+| ------------------------ | ------------------------------------------------------------------ |
+| `REACT_APP_USE_MOCK`     | `true`：演示账号；`false`：真实租户登录和 REST 数据                |
+| `APP_BASE_URL`           | 空：前端请求走同源开发代理；外部 API 可填完整地址                  |
+| `ENTERPRISE_ENABLED`     | 通用 API 默认 `false`；Enterprise 启动命令在本地真实模式会自动启用 |
+| `TRACKING_STORE`         | `memory`：埋点使用内存，与企业 SQLite 持久化独立                   |
+| `TRACKING_API_PORT`      | `5200`：全栈启动时本地 API 的起始端口，占用时递增                  |
+| `ENTERPRISE_BOOTSTRAP_*` | 默认注释；仅首次创建真实租户时填写，完成后删除                     |
 
 `.env.development.local` 已被 Git 忽略，模板可以提交，实际凭据只保留在本机。不要直接覆盖已有配置。Webpack 开发入口和全栈启动读取此文件；`api:bootstrap` 与 `pnpm --filter api dev` 也会读取它。外部命令环境变量优先于文件；配置修改后重启服务。
 
@@ -57,7 +57,7 @@ node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.
 | 场景                                      | 启动命令                                     | 默认访问地址                    | 构建产物                                  |
 | ----------------------------------------- | -------------------------------------------- | ------------------------------- | ----------------------------------------- |
 | [默认展示应用](#默认应用)                 | `pnpm start`                                 | http://localhost:8080/#/signin  | `dist`                                    |
-| [Enterprise 登录](#enterprise-登录与演示) | `pnpm run start:enterprise`                  | http://localhost:8080/#/signin  | `dist-enterprise`                         |
+| [Enterprise 登录](#enterprise-登录与演示) | `pnpm run start:enterprise`                  | Web 从 8080 起，API 从 5200 起  | `dist-enterprise` + 本地 SQLite           |
 | [多项目独立应用](#多项目)                 | `pnpm run project:dev projectA` / `projectB` | 默认 8080，可指定 `PORT`        | `dist-projectA` / `dist-projectB`         |
 | [微前端](#微前端)                         | 三个 `start:mf:*` 命令，分别运行             | Shell 8080，Remote 8081/8082    | 聚合目录 `dist-vercel`                    |
 | [组件库](#本地构建-lib)                   | `pnpm run prepare:lib:release`               | 无应用服务；Storybook 使用 6006 | `packages/wui-react/dist`                 |
@@ -67,7 +67,7 @@ node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.
 
 ## 演示配置与账号
 
-仓库共享 `.env` 默认设置 `REACT_APP_USE_MOCK=true`，用于默认展示、多项目及显式的 Enterprise 演示。Enterprise 项目命令默认覆盖为真实租户登录；只有命令环境显式传入 `REACT_APP_USE_MOCK=true` 时才启用演示账号。演示流程无需创建真实用户或安装 MongoDB。
+仓库共享 `.env` 默认设置 `REACT_APP_USE_MOCK=true`，用于默认展示、多项目及显式的 Enterprise 浏览器演示。Enterprise 项目命令默认覆盖为真实租户登录；没有自定义配置时，本地启动器会自动创建可用的 SQLite 演示租户。只有命令环境显式传入 `REACT_APP_USE_MOCK=true` 时才启用浏览器 Mock 账号。两种本地演示都无需安装 MongoDB。
 
 需要本地覆盖时，用编辑器创建或修改根 `.env.development.local`，保留已有的其它配置：
 
@@ -86,6 +86,7 @@ TRACKING_API_PORT=5200
 | `manager@test.com`  | `admin`         | 查看部分页面及用户操作             |
 | `business@test.com` | `business_user` | 业务页面权限演示                   |
 | `user@test.com`     | `user`          | 基础页面及无权限场景               |
+| `reviewer@test.com` | `reviewer`      | 独立查看和审批访问变更             |
 
 完整体验企业管理请使用 `admin@test.com`。这些账号只用于浏览器演示，不会创建后端用户。演示角色和数据与真实模式的 `tenant-admin`、SQLite 数据独立。
 
@@ -95,7 +96,7 @@ TRACKING_API_PORT=5200
 pnpm start
 ```
 
-访问 http://localhost:8080/#/signin，登录后进入完整后台。`pnpm start` 和 `pnpm run dev:webpack` 同时启动 Webpack 前端与本地 Express API；`pnpm run dev:vite` 启动 Vite 前端与同一 API。API 从 `127.0.0.1:5200` 起寻找空闲端口，所选前端的企业、埋点和 GitHub 演示登录代理跟随实际端口，终端会显示选用端口。默认埋点存储为内存，不需要 MongoDB；使用 Ctrl+C 同时停止前端和 API。GitHub 演示登录需在 `.env.development.local` 配置 OAuth App 凭据和精确回调 URL，参见 [API 文档](../operations/API.md)。
+访问 http://localhost:8080/#/signin，登录后进入完整后台。`pnpm start`和`pnpm run dev:webpack` 同时启动 Webpack 前端与本地 Express API；`pnpm run dev:vite`启动 Vite 前端与同一 API。API 从`127.0.0.1:5200`起寻找空闲端口，所选前端的企业、埋点和 GitHub 演示登录代理跟随实际端口，终端会显示选用端口。默认埋点存储为内存，不需要 MongoDB；使用 Ctrl+C 同时停止前端和 API。GitHub 演示登录需在`.env.development.local` 配置 OAuth App 凭据和精确回调 URL，参见 [API 文档](../operations/API.md)。
 
 只预览前端页面：
 
@@ -120,7 +121,17 @@ pnpm run serve:dist
 pnpm run start:enterprise
 ```
 
-访问 http://localhost:8080/#/signin。Enterprise 开发默认显示真实租户登录页；企业入口仅装配工作台和组织管理模块，便于从业务骨架开始开发。没有连接 API 时，登录请求会提示服务未配置。
+启动后打开终端打印的 `Open Enterprise` 地址，通常是 http://localhost:8080/#/signin；若 8080 已被其它项目占用，企业版会使用 8081 等空闲端口，继续访问旧的 8080 页面会请求到错误的 API。`start:enterprise` 与 `start:enterprise:full` 都启动 Web 和 Node API；API 默认从 `127.0.0.1:5200` 开始寻找空闲端口，代理自动跟随。首次启动自动创建 Git 忽略的 `api/data/enterprise-demo.sqlite` 和 `api/data/enterprise-demo-totp.key`。如果该演示库正由另一实例使用，新实例会改用 `enterprise-demo-<实际 API 端口>.sqlite`；各实例的数据独立，终端会打印选中的数据库路径。登录页显示以下账号，并提供“填入演示账号”按钮：
+
+| 字段    | 本地默认值         |
+| ------- | ------------------ |
+| 租户 ID | `demo`             |
+| 邮箱    | `admin@demo.local` |
+| 密码    | `DemoAdmin123!`    |
+
+这是具有真实 SQLite 持久化和服务端 RBAC 的本地开发账号。重启后数据保留；修改密码或启用 TOTP 后，使用新密码和动态码登录。启动器只在开发环境、未配置 `ENTERPRISE_DB_PATH`、`ENTERPRISE_BOOTSTRAP_*`、外部 API，且默认 `api/data/enterprise.sqlite` 不存在时创建演示库；不会向自建或生产数据库写入演示账号。浏览器服务绑定回环地址以限制固定演示凭据的本地访问。
+
+本地 `demo` 管理员可以在左侧“租户管理”查看租户 ID 列表，创建租户并设置初始管理员，编辑名称/状态，以及停用租户；“权限管理”提供按角色授权的编辑入口。平台身份只自动授予隔离的本地演示账号。自建租户管理员默认没有跨租户权限，需要运维人员在迁移数据库后显式运行 `pnpm run api:platform-admin grant --tenant acme --email admin@example.com`；详见[平台租户与权限管理](../operations/ENTERPRISE.md#平台租户与权限管理)。
 
 需要本地演示账号时显式打开 Mock：
 
@@ -137,7 +148,7 @@ Pages 展示构建也会显式打开 Mock，公开演示仍保留 `admin@test.co
 | 角色管理 | http://localhost:8080/#/administration/roles |
 | 审计日志 | http://localhost:8080/#/administration/audit |
 
-在显式 Mock 模式下，可演示用户添加、编辑、停用、删除，角色权限编辑及只读审计。演示数据保存在当前应用实例的内存中，刷新后重置；**编辑演示角色不会修改测试账号的登录权限，也不会创建可登录的新账号**。需要持久化和实际授权时使用[真实用户登录](#真实用户登录)。
+在显式 Mock 模式下，可演示用户添加、编辑、停用、删除，角色权限/范围编辑、独立审批及只读审计。演示数据保存在当前页面运行期间的内存中，账号切换后保留，刷新后重置；**编辑演示角色不会修改固定测试账号的登录权限，也不会创建可登录的新账号**。操作步骤见[RBAC 与独立审批](../architecture/RBAC_RESOURCE_APPROVAL.md)。需要持久化和实际授权时使用[真实用户登录](#真实用户登录)。
 
 构建并预览：
 
@@ -146,7 +157,7 @@ pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run build:enterprise:stats
 PROJECT=enterprise pnpm run serve:dist
 ```
 
-访问 http://localhost:5000/#/signin。产物为 `dist-enterprise`，统计文件为 `artifacts/build/webpack/enterprise/stats.json`。真实业务开发可同时启动 API：`pnpm run start:enterprise:full`；要以全栈方式演示，显式运行 `pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise:full`。
+访问 http://localhost:5000/#/signin。产物为 `dist-enterprise`，统计文件为 `artifacts/build/webpack/enterprise/stats.json`。静态产物不包含开发启动器的演示租户或 Node API；需单独部署 API。两个 Enterprise 开发启动命令均运行本地 Node API，显式 `REACT_APP_USE_MOCK=true` 时浏览器使用 Mock 登录。
 
 ## 多项目
 
@@ -306,9 +317,10 @@ ENTERPRISE_BOOTSTRAP_TENANT_NAME=Acme
 ENTERPRISE_BOOTSTRAP_NAME=Administrator
 ENTERPRISE_BOOTSTRAP_EMAIL=admin@example.com
 ENTERPRISE_BOOTSTRAP_PASSWORD="替换为你自己的12至256字符密码"
+ENTERPRISE_TOTP_KEY=<64位十六进制密钥>
 ```
 
-将示例密码替换为自己的值，租户 ID 使用小写字母开头的字母、数字、`_` 或 `-`。本地配置文件已被 Git 忽略；初始化变量只在 API 端读取。
+将示例密码替换为自己的值，租户 ID 使用小写字母开头的字母、数字、`_` 或 `-`。先运行 `openssl rand -hex 32`，把输出的 64 位十六进制字符串填入 `ENTERPRISE_TOTP_KEY`；此密钥只供 API 读取，应长期保留。本地配置文件已被 Git 忽略；初始化变量只在 API 端读取。
 
 ```bash
 # 首次初始化：创建租户和 tenant-admin 管理员
@@ -318,8 +330,8 @@ pnpm run api:bootstrap
 看到 `Tenant provisioned` 后，从文件中删除五项 `ENTERPRISE_BOOTSTRAP_*`，保留 mock、API 和存储配置；记住刚才设置的密码。初始化**每个租户只执行一次**，已有租户会返回冲突，不能用它重置密码。
 
 ```bash
-# 后续启动均使用这条命令
-pnpm run start:enterprise:full
+# 后续启动；start:enterprise:full 与此等效
+pnpm run start:enterprise
 ```
 
 访问 http://localhost:8080/#/signin，填写：
@@ -330,7 +342,7 @@ pnpm run start:enterprise:full
 | 邮箱    | `admin@example.com`    |
 | 密码    | 初始化时设置的自选密码 |
 
-真实登录界面没有测试账号快捷列表和演示滑块。默认数据库是 `api/data/enterprise.sqlite`，刷新和重启后保留用户、角色及审计；内存埋点配置不会把业务数据库变成内存数据库。前端的同源 `/api/auth`、`/api/admin`、`/api/permissions`、`/api/roles` 由开发代理转发到全栈启动器选定的 API 端口。
+自建租户登录界面不显示本地演示凭据。登录后可从左侧**登录验证器**绑定 TOTP，之后登录要再输入当前动态码或一次性恢复码；详见[绑定与恢复步骤](../operations/ENTERPRISE.md#企业账号登录验证器-totp)。自建租户的默认数据库是 `api/data/enterprise.sqlite`，刷新和重启后保留用户、角色、验证器状态及审计；内存埋点配置不会把业务数据库变成内存数据库。前端的同源 `/api/auth`、`/api/admin`、`/api/permissions`、`/api/roles` 由开发代理转发到全栈启动器选定的 API 端口。
 
 ### 真实模式构建后的本地预览
 
@@ -355,7 +367,7 @@ PROJECT=enterprise pnpm run serve:dist
 
 ### 演示权限
 
-在默认应用登录 `admin@test.com` 后访问 `http://localhost:8080/#/permission`，体验路由、菜单和按钮权限；退出后登录其它测试账号，对比可见功能。企业精简入口没有此展示页面。
+在默认应用登录 `admin@test.com` 后访问 `http://localhost:8080/#/permission`，检查当前身份的角色授权、资源范围和菜单路由；退出后登录其它测试账号，对比可见功能。企业精简入口没有此展示页面。
 
 演示账号权限来自 `src/platform/auth/mocks/permission.ts`，企业演示的角色编辑仅演示 CRUD。如要让新建角色决定真实账号权限，先完成上面的真实登录流程。
 
@@ -388,19 +400,19 @@ PROJECT=enterprise pnpm run serve:dist
 
 配置优先级为外部进程环境 > `.env.<mode>.local` > `.env.<mode>` > `.env.local` > `.env`。修改浏览器变量后必须重启开发服务或重新构建，不能只刷新页面。`api:bootstrap` 和 `pnpm --filter api dev` 只读取根 `.env.development.local`；全栈启动脚本读取整套 development 文件。
 
-| 现象                              | 检查与处理                                                                                                                           |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| Enterprise 默认显示租户登录       | 这是 Enterprise 项目的默认模式。临时演示可运行 `pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise`，然后重启服务 |
-| 真实登录提示服务未配置 / 503      | 确认 `ENTERPRISE_ENABLED=true`，使用 `start:enterprise:full`，检查 API 终端是否启动成功                                              |
-| 真实登录失败 / 401                | 核对租户、邮箱、自选密码以及账号启用状态；演示账号不适用于真实模式                                                                   |
-| 初始化冲突 / 409                  | 租户已存在，直接启动并登录；密码重置使用已有管理员的用户管理操作                                                                     |
-| 静态预览返回 HTML 而不是 API JSON | `serve:dist` 没有 API 代理；按真实构建预览步骤配置 `APP_BASE_URL` 并启动独立 API                                                     |
-| 用户表单没有可选角色 / 403        | 操作者需要 `role:read`，同时只能分配自己可授予的角色                                                                                 |
-| Remote 不可用                     | 确认两个 Remote 已编译完成、端口与注册表一致、manifest/remoteEntry 可访问，再刷新 Shell 重试                                         |
-| 埋点页 502 / 503                  | 使用 `pnpm start` 或 `pnpm run dev:vite` 启动配套 API；检查 `TRACKING_API_PORT`、`TRACKING_API_TARGET`，不要将管理 token 注入浏览器 |
-| 预览了错误项目                    | 构建后用匹配的 `PROJECT` 选择目录；默认 `serve:dist` 使用 `dist`，微前端组合使用 `dist-vercel`                                       |
-| 浏览器显示旧版本                  | 检查 Service Worker 更新提示及站点缓存，确认当前端口和产物目录                                                                       |
-| 安装或构建失败                    | 核对 Node/pnpm 版本，重新执行 frozen lockfile 安装，并先处理首个类型、ESLint 或模块错误                                              |
+| 现象                              | 检查与处理                                                                                                                                                                                |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Enterprise 默认显示租户登录       | 默认本地演示账号见登录页；浏览器 Mock 演示运行 `pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise`，然后重启服务                                                      |
+| 企业接口返回 502 / 503 / 504      | 使用 `start:enterprise` 或 `start:enterprise:full` 启动，并打开终端输出的 `Open Enterprise` 地址；确认该实例的 API 已启动。8080 被占用时不要继续使用旧标签页；外部 API 需自行开启企业服务 |
+| 真实登录失败 / 401                | 核对租户、邮箱、自选密码以及账号启用状态；演示账号不适用于真实模式                                                                                                                        |
+| 初始化冲突 / 409                  | 租户已存在，直接启动并登录；密码重置使用已有管理员的用户管理操作                                                                                                                          |
+| 静态预览返回 HTML 而不是 API JSON | `serve:dist` 没有 API 代理；按真实构建预览步骤配置 `APP_BASE_URL` 并启动独立 API                                                                                                          |
+| 用户表单没有可选角色 / 403        | 操作者需要 `role:read`，同时只能分配自己可授予的角色                                                                                                                                      |
+| Remote 不可用                     | 确认两个 Remote 已编译完成、端口与注册表一致、manifest/remoteEntry 可访问，再刷新 Shell 重试                                                                                              |
+| 埋点页 502 / 503                  | 使用 `pnpm start` 或 `pnpm run dev:vite` 启动配套 API；检查 `TRACKING_API_PORT`、`TRACKING_API_TARGET`，不要将管理 token 注入浏览器                                                       |
+| 预览了错误项目                    | 构建后用匹配的 `PROJECT` 选择目录；默认 `serve:dist` 使用 `dist`，微前端组合使用 `dist-vercel`                                                                                            |
+| 浏览器显示旧版本                  | 检查 Service Worker 更新提示及站点缓存，确认当前端口和产物目录                                                                                                                            |
+| 安装或构建失败                    | 核对 Node/pnpm 版本，重新执行 frozen lockfile 安装，并先处理首个类型、ESLint 或模块错误                                                                                                   |
 
 需要运行工程检查时参阅[质量门禁](./QUALITY.md)；完整命令和环境变量清单见[自动生成参考](../reference/PROJECT_REFERENCE.md)。
 

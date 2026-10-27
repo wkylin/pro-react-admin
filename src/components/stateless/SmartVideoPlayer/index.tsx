@@ -176,8 +176,6 @@ const IconButton = React.memo(function IconButton({
     tooltipPlacementClass = styles.tooltipBottomLeft
   } else if (tooltipPlacement === 'bottomRight') {
     tooltipPlacementClass = styles.tooltipBottomRight
-  } else {
-    tooltipPlacementClass = ''
   }
 
   return (
@@ -295,7 +293,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       if (typeof fn !== 'function') return
       try {
         fn(name, detail)
-      } catch (_) {
+      } catch {
         // ignore
       }
     }, [])
@@ -350,14 +348,14 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
               embedUrl: ctx.embedUrl,
               ...extra,
             })
-          } catch (_) {
+          } catch {
             // ignore
           }
         }
 
         emitEvent('error', { message: safeMessage, ...extra })
       },
-      [emitEvent]
+      [emitEvent, t]
     )
 
     const [bufferedEnd, setBufferedEnd] = useState(0)
@@ -469,7 +467,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
         if (!isHlsSrc && videoEl.readyState === 0) {
           try {
             videoEl.load()
-          } catch (_) {
+          } catch {
             // ignore
           }
         }
@@ -546,7 +544,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
         if (videoEl && !isHlsSrc) {
           try {
             videoEl.load()
-          } catch (_) {
+          } catch {
             // ignore
           }
         }
@@ -562,7 +560,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       if (!videoEl) return
       try {
         videoEl.load()
-      } catch (_) {
+      } catch {
         // ignore
       }
     }, [isEmbed, isHlsSrc, src, trackSrc, trackLang])
@@ -579,7 +577,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
         if (!hls) return
         try {
           hls.destroy()
-        } catch (_) {
+        } catch {
           // ignore
         }
         hlsRef.current = null
@@ -593,12 +591,12 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
           if (videoEl.getAttribute('src')) videoEl.removeAttribute('src')
           // Also clear the property for good measure.
           if (videoEl.src) videoEl.src = ''
-        } catch (_) {
+        } catch {
           // ignore
         }
         try {
           videoEl.load()
-        } catch (_) {
+        } catch {
           // ignore
         }
         return
@@ -639,7 +637,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
               videoEl.src = src ?? ''
               videoEl.load()
               emitEvent('hlsFallback', { reason: 'hls_not_supported' })
-            } catch (_) {
+            } catch {
               // ignore
             }
             reportError(t('svp.hlsNotSupported'), {
@@ -683,7 +681,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
             // Best-effort: destroy to stop retry loops
             try {
               hls.destroy()
-            } catch (_) {
+            } catch {
               // ignore
             }
             if (hlsRef.current === hls) hlsRef.current = null
@@ -712,7 +710,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
             videoEl.src = src ?? ''
             videoEl.load()
             emitEvent('hlsFallback', { reason: 'hls_init_failed' })
-          } catch (_) {
+          } catch {
             // ignore
           }
           reportError(t('svp.hlsInitFailed'), {
@@ -727,7 +725,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
         cancelled = true
         destroyHls()
       }
-    }, [emitEvent, isEmbed, isHlsSrc, kickAutoPlayNow, reportError, src])
+    }, [emitEvent, isEmbed, isHlsSrc, kickAutoPlayNow, reportError, src, t])
 
     useEffect(() => {
       if (isEmbed) return
@@ -755,7 +753,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
         videoEl.removeEventListener('playing', onPlaying)
         videoEl.removeEventListener('error', onError)
       }
-    }, [isEmbed, isHlsSrc, src])
+    }, [isEmbed, isHlsSrc, src, t])
 
     useEffect(() => {
       if (isEmbed) return
@@ -796,7 +794,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       return () => {
         videoEl.removeEventListener('loadedmetadata', onMeta)
       }
-    }, [captionTrackIndex, isEmbed, src, trackLang, trackSrc])
+    }, [captionTrackIndex, isEmbed, src, trackLang, trackSrc, t])
 
     useEffect(() => {
       if (isEmbed) return
@@ -944,12 +942,12 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       if (!videoEl) return
       const rate = Number(config.playbackRate)
       videoEl.playbackRate = Number.isFinite(rate) && rate > 0 ? rate : 1
-    }, [config.playbackRate])
+    }, [config.playbackRate, isEmbed])
 
     useEffect(() => {
       if (isEmbed) return
       autoPlayAttemptedRef.current = false
-    }, [src])
+    }, [src, isEmbed])
 
     useEffect(() => {
       if (isEmbed) return
@@ -1020,7 +1018,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
         videoEl.removeEventListener('durationchange', handleLoadedMeta)
         videoEl.removeEventListener('canplay', maybeAutoPlayOnReady)
       }
-    }, [safePlay])
+    }, [safePlay, isEmbed])
 
     const updateSettingsPanelPosition = useCallback(() => {
       const buttonWrapEl = settingsRef.current
@@ -1107,7 +1105,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       if (btn && btn instanceof HTMLElement) {
         try {
           btn.focus()
-        } catch (_) {
+        } catch {
           // ignore
         }
       }
@@ -1326,7 +1324,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       try {
         window.open(externalOpenUrl, '_blank', 'noopener,noreferrer')
         emitEvent('openExternal', { url: externalOpenUrl })
-      } catch (_) {
+      } catch {
         // ignore
       }
     }, [emitEvent, externalOpenUrl])
@@ -1372,7 +1370,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
           await videoEl.requestPictureInPicture()
         }
         emitEvent('pipToggle', {})
-      } catch (_) {
+      } catch {
         // ignore
       }
     }, [emitEvent])

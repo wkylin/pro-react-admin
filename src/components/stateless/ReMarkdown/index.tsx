@@ -30,7 +30,7 @@ const copyTextToClipboard = async (copyText: string) => {
       await navigator.clipboard.writeText(copyText)
       message.success('已成功复制到剪贴板')
     }
-  } catch (err) {
+  } catch {
     const textArea = document.createElement('textarea')
     textArea.value = copyText
     document.body.appendChild(textArea)
@@ -39,7 +39,7 @@ const copyTextToClipboard = async (copyText: string) => {
     try {
       document.execCommand('copy')
       message.success('已成功复制到剪贴板')
-    } catch (error) {
+    } catch {
       message.success('复制到剪贴板失败')
     }
     document.body.removeChild(textArea)
@@ -66,7 +66,7 @@ const PreCode = ({ children }: PreCodeProps) => {
     return () => {
       clearTimeout(t)
     }
-  }, [children])
+  }, [children, renderMermaid])
 
   return (
     <section>

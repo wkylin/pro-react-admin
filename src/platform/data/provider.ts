@@ -65,7 +65,11 @@ export function createRestDataProvider<Schema extends { [K in keyof Schema]: Dat
     async list(resource, query, options) {
       assertListQuery(query)
       const value = unwrapPayload(
-        await client.get(resources[resource].path, { ...query }, { cancelDuplicate: false, ...options })
+        await client.get(
+          resources[resource].path,
+          { ...query },
+          { cancelDuplicate: false, addTimestamp: false, ...options }
+        )
       )
       if (!isRecord(value) || !Array.isArray(value.items) || !Number.isInteger(value.total) || Number(value.total) < 0)
         throw new Error(`Invalid list response: ${resource}`)

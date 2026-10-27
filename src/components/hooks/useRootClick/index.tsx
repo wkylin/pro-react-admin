@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 
-const useRootClick = (cb = () => {}) => {
+const noop = () => {}
+
+const useRootClick = (cb = noop) => {
   useEffect(() => {
     const controller = new AbortController()
     document.documentElement.addEventListener(
@@ -22,7 +24,7 @@ const useRootClick = (cb = () => {}) => {
     return () => {
       controller.abort()
     }
-  }, [])
+  }, [cb])
 }
 
 export default useRootClick

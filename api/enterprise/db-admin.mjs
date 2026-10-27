@@ -8,7 +8,8 @@ import {
   drillEnterpriseRecovery,
 } from './database-ops.mts'
 
-const [command, ...args] = process.argv.slice(2)
+const cliArgs = process.argv.slice(2)
+const [command, ...args] = cliArgs[0] === '--' ? cliArgs.slice(1) : cliArgs
 const usage = `Usage:
   node api/enterprise/db-admin.mjs status [--db <database>]
   node api/enterprise/db-admin.mjs migrate [--db <database>]

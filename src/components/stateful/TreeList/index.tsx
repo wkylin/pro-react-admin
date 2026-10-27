@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useState, forwardRef } from 'react'
+import { useEffect, useImperativeHandle, useRef, useState, forwardRef } from 'react'
 import { Input, Tree } from 'antd'
 import type { TreeProps } from 'antd/es/tree'
 import Loading from '@stateless/Loading'
@@ -105,14 +105,12 @@ const Index = forwardRef<TreeListRef, TreeListProps>(
     }
 
     const treeInit = (resData: TreeListItem[], isReset = false) => {
-      let selected: TreeKey[] = []
+      let selected: TreeKey[] = selectedKeys ?? []
       let expanded: TreeKey[] = []
 
       try {
         if (selectedKeys?.length && !isReset) {
           resData.some((item) => item.id === selectedKeys[0])
-          selected = selectedKeys
-
           const findSelectedNode = (nodes: TreeListNode[]): boolean =>
             nodes.some((item) => {
               if (item.realId === selectedKeys[0]) {
@@ -161,13 +159,11 @@ const Index = forwardRef<TreeListRef, TreeListProps>(
 
           if (!type) {
             treeInit(resp.data)
-            let selected: TreeKey[] = []
+            let selected: TreeKey[] = selectedKeys ?? []
             let expanded: TreeKey[] = []
             try {
               if (selectedKeys?.length) {
                 resp.data.some((item) => item.id === selectedKeys[0])
-                selected = selectedKeys
-
                 const findSelectedNode = (nodes: TreeListNode[]): boolean =>
                   nodes.some((item) => {
                     if (item.realId === selectedKeys[0]) {
@@ -202,8 +198,9 @@ const Index = forwardRef<TreeListRef, TreeListProps>(
       getTreeListData()
     }
 
+    const initialLoad = useRef(getTreeListData)
     useEffect(() => {
-      const id = setTimeout(() => getTreeListData(), 0)
+      const id = setTimeout(() => initialLoad.current(), 0)
       return () => {
         clearTimeout(id)
         setTreeList([])

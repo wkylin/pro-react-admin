@@ -157,12 +157,17 @@ function useTable<
     })
   }
 
+  const loadCurrentTable = React.useEffectEvent(() => {
+    getTableList(dataInterface, { ...payload })
+  })
+  const payloadKey = JSON.stringify(payload)
+
   useEffect(() => {
     if (implemented) {
       // 避免在 effect 中同步触发大量 setState，初始化 state 已在 useState 时完成。
-      getTableList(dataInterface, { ...payload })
+      loadCurrentTable()
     }
-  }, [JSON.stringify(payload), dataInterface, implemented])
+  }, [payloadKey, dataInterface, implemented])
 
   return {
     tableConfig: {

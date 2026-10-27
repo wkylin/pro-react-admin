@@ -50,12 +50,7 @@ export default function useSafeNavigate() {
         return
       }
 
-      let allowed = false
-      try {
-        allowed = await permissionService.canAccessRoute(normalizedPath, false)
-      } catch {
-        allowed = false
-      }
+      const allowed = await permissionService.canAccessRoute(normalizedPath, false).catch(() => false)
 
       if (!allowed) {
         denyOnce(normalizedPath)
