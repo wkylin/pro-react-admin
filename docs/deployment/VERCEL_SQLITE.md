@@ -1,28 +1,20 @@
 # Vercel 演示登录与 SQLite 部署
 
-本指南给出两条可执行路径：纯前端演示登录，以及 Vercel 前端连接持久化 SQLite API 的真实登录。所有命令从仓库根目录执行；API 主机上的步骤需在该主机的仓库目录执行。
+本指南给出纯前端演示登录，以及 Vercel 前端连接持久化 SQLite API 的部署步骤。若选择独立的 Vercel Enterprise API 项目和 Neon PostgreSQL，请使用 [Vercel + Neon 部署指南](./VERCEL_NEON_ENTERPRISE.md)。所有命令从仓库根目录执行；API 主机上的步骤需在该主机的仓库目录执行。
 
 ## 选择部署方式
 
-| 目标                                 | Vercel 部署内容          | 数据和登录来源                                |
-| ------------------------------------ | ------------------------ | --------------------------------------------- |
-| 快速在线展示用户、角色、审计界面     | 企业静态前端，mock 开启  | 浏览器演示账号；业务数据刷新后重置            |
-| 演示真实租户登录、持久化和服务端权限 | 企业静态前端，mock 关闭  | 外部单实例 Node API + 持久卷上的 SQLite       |
-| 前端和 API 都运行在 Vercel           | 需要增加远程数据库适配器 | 当前实现不支持；不能直接填写 Turso/libSQL URL |
+| 目标                                 | Vercel 部署内容                 | 数据和登录来源                          |
+| ------------------------------------ | ------------------------------- | --------------------------------------- |
+| 快速在线展示用户、角色、审计界面     | 企业静态前端，mock 开启         | 浏览器演示账号；业务数据刷新后重置      |
+| 真实租户登录、持久化和服务端权限     | 企业静态前端，mock 关闭         | 外部单实例 Node API + 持久卷上的 SQLite |
+| 前端和 API 都运行在 Vercel           | 独立前端和 Enterprise API 项目 | Neon PostgreSQL；见新部署指南           |
 
-**不能将当前 SQLite 文件数据库直接部署到 Vercel Functions 并保存业务写入。** Vercel 官方说明：函数文件系统是临时的，多实例也没有共享的持久文件。上传 `.sqlite` 或放到 `/tmp` 都不能满足账号、会话和审计的持久化要求。当前 `EnterpriseStore` 使用 Node `DatabaseSync` 和同步事务；远程数据库需要单独实现异步存储及事务适配，不是替换文件路径即可使用。
+**不能将 SQLite 文件数据库直接部署到 Vercel Functions 并保存业务写入。** Vercel 官方说明：函数文件系统是临时的，多实例也没有共享的持久文件。上传 `.sqlite` 或放到 `/tmp` 都不能满足账号、会话和审计的持久化要求。文件型 `EnterpriseStore` 继续用于本地和持久 API 主机；Vercel API 使用独立的 PostgreSQL Store。[Vercel 对 SQLite 的说明](https://vercel.com/kb/guide/is-sqlite-supported-in-vercel)
 
 ### 如果希望前端、API 都部署在 Vercel
 
-可以改用 Vercel Marketplace 中的托管 PostgreSQL，例如 Neon 或 Supabase。新的 Vercel 项目不能再创建旧版“Vercel Postgres”；数据库由 Marketplace 提供，Vercel 负责关联项目与注入连接配置。当前仓库尚无 PostgreSQL adapter 或企业业务 Vercel Function，所以下列步骤是**迁移方案，不是已实现的部署命令**：
-
-1. 在 Marketplace 创建 PostgreSQL 并关联 Vercel 项目，设置生产、预览环境连接变量。连接串仅放服务端环境，前端只访问 HTTPS API。
-2. 把 SQLite v5 的 `tenants`、`principals`、`users`、`roles`、`tenant_memberships`、`sessions`、`audit`、`role_scopes`、`access_requests`、TOTP 表和 `platform_admins` 转成 PostgreSQL migration。保留外键、唯一约束、租户过滤、审计只追加规则和事务边界；JSON 列可使用 `jsonb`，会话到期毫秒值使用 `bigint`。
-3. 将 `EnterpriseStore` 的 `DatabaseSync`、同步 `BEGIN IMMEDIATE` 和所有同步 service 调用改为异步 PostgreSQL pool/transaction，并逐一验证 RBAC、跨租户拒绝、独立审批和 TOTP 的原子性。不能仅把 `ENTERPRISE_DB_PATH` 改成 PostgreSQL URL。
-4. 将目前调用 `listen()` 的 `api/server.js` 改为 Vercel Functions 请求处理程序。登录限速和资源 WebSocket 事件目前依赖单进程内存；多实例下需要共享限速存储与独立实时通道，或先禁用实时功能并保留手动刷新。
-5. 通过经校验的离线导出/导入迁移 SQLite 现有数据，保留 principal、角色、租户 ID、密码哈希、会话失效策略及审计。若使用 TOTP，安全迁移同一 `ENTERPRISE_TOTP_KEY`；完成 API 回归、权限隔离与备份恢复演练后再切流。
-
-Vercel 官方依据：[SQLite 不适用于 Vercel Functions](https://vercel.com/kb/guide/is-sqlite-supported-in-vercel)、[Marketplace PostgreSQL 连接方式](https://vercel.com/docs/postgres)、[Functions 运行模型](https://vercel.com/docs/functions)。在完成上述后端改造前，使用下方“Vercel 静态前端 + 独立 Node API + 持久卷 SQLite”方案。
+使用已实现的 [独立 Enterprise API + Neon PostgreSQL](./VERCEL_NEON_ENTERPRISE.md) 路径。新建 API 项目、关联 Neon、运行显式迁移与初始化，再重新构建前端指向 API 域名。当前指南以下内容只针对 SQLite API 主机。
 
 真实登录采用下面的部署结构：
 

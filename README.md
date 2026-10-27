@@ -289,7 +289,7 @@ PROJECT=enterprise pnpm run serve:dist
 
 访问 http://localhost:5000/#/signin。此构建会覆盖企业演示的 `dist-enterprise`；API 需要一直运行。开发和生产本地环境文件分别是 `.env.development.local`、`.env.production.local`，修改后需重启或重新构建。更多配置见[真实模式构建预览](./docs/development/GETTING_STARTED.md#真实模式构建后的本地预览)和[企业资源接入](./docs/operations/ENTERPRISE.md)。
 
-### Vercel 演示登录与 SQLite
+### Vercel 企业登录与数据库
 
 默认站点 `https://pro-react-admin.vercel.app` 的 GitHub 登录接受任意 GitHub 账号，登录后固定为普通演示用户，不关联企业租户。部署需在 Vercel Production 配置 OAuth 凭据和签名密钥，再构建静态应用与一个同源函数：
 
@@ -309,7 +309,7 @@ pnpm run vercel:prepare:enterprise
 vercel deploy --prebuilt --prod
 ```
 
-当前文件型 SQLite 无法持久运行在 Vercel Functions；真实登录使用 **Vercel 前端 + 带持久卷的 SQLite API 主机**。仓库提供 `compose.enterprise.yaml`、API 镜像与 Caddy HTTPS 配置，生产环境模板为 `.env.enterprise.production.local.example`。
+真实登录有两种部署方式：**独立 Vercel Enterprise API + Neon PostgreSQL**（[完整部署指南](./docs/deployment/VERCEL_NEON_ENTERPRISE.md)），或 **Vercel 前端 + 带持久卷的 SQLite API 主机**（[SQLite 部署指南](./docs/deployment/VERCEL_SQLITE.md)）。文件型 SQLite 不放在 Vercel Functions 中。PostgreSQL 路径提供显式建表、连接池、完整 Enterprise API、数据库登录限速和资源轮询；SQLite 路径继续提供单实例 WebSocket 事件。
 
 API 主机初始化并启动后，在开发机部署真实前端：
 
@@ -319,7 +319,7 @@ pnpm run vercel:prepare:enterprise
 vercel deploy --prebuilt --prod
 ```
 
-将示例 API 地址换为自己的 HTTPS 域名，使用真实租户、邮箱和密码登录。CLI 登录/项目关联、服务器完整命令及只读演示用户创建见[Vercel 与 SQLite 部署指南](./docs/deployment/VERCEL_SQLITE.md)。
+将示例 API 地址换为自己的 HTTPS 域名，使用真实租户、邮箱和密码登录。选择 Neon 时，先按 [Vercel + Neon 指南](./docs/deployment/VERCEL_NEON_ENTERPRISE.md)创建独立 API 项目、数据库与表；选择 SQLite 时，服务器完整命令及只读演示用户创建见 [Vercel 与 SQLite 指南](./docs/deployment/VERCEL_SQLITE.md)。
 
 ## 工程能力
 

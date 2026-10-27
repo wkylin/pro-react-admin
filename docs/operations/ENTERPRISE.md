@@ -190,11 +190,11 @@ POST/PATCH 用户额外接受 `password?: string`（12..256 字符，仅写入�
 
 ## 数据缓存与部署限制
 
-管理 Provider 装饰浏览器内存缓存，15 秒 TTL、最多 100 项，以会话实例和资源/查询/ID 隔离；相同查询共享请求，一个消费者取消不会中断其它消费者。成功写入通知列表和相关审计失效，角色修改同时刷新用户及角色目录；手动刷新绕过缓存。缓存不保存失败、旧身份结果或失效后的在途结果，卸载销毁；不使用 localStorage 保存业务记录。真实会话已有 WS 资源失效通知；尚未提供记录内容的实时订阅、后台刷新、乐观更新或服务端/分布式查询缓存。
+管理 Provider 装饰浏览器内存缓存，15 秒 TTL、最多 100 项，以会话实例和资源/查询/ID 隔离；相同查询共享请求，一个消费者取消不会中断其它消费者。成功写入通知列表和相关审计失效，角色修改同时刷新用户及角色目录；手动刷新绕过缓存。缓存不保存失败、旧身份结果或失效后的在途结果，卸载销毁；不使用 localStorage 保存业务记录。本地 SQLite API 提供 WS 资源失效通知，Vercel PostgreSQL API 通过数据库审计游标约每 10 秒轮询失效；尚未提供记录内容的实时订阅、乐观更新或服务端/分布式查询缓存。
 
-真实后端适合单实例、持久卷自托管。生产显式配置 ENTERPRISE_ENABLED=true、持久卷中的 ENTERPRISE_DB_PATH、CORS_ORIGINS；如不部署 MongoDB，显式 TRACKING_STORE=memory（仅埋点会重启丢失）。业务数据库不会因此变成内存。SQLite 不能部署到 Vercel 临时文件系统，本实现检测 VERCEL 后拒绝开启；静态前端可继续在 Vercel，通过 APP_BASE_URL 或同源代理接入独立后端。
+SQLite 后端适合单实例、持久卷自托管。生产显式配置 ENTERPRISE_ENABLED=true、持久卷中的 ENTERPRISE_DB_PATH、CORS_ORIGINS；如不部署 MongoDB，显式 TRACKING_STORE=memory（仅埋点会重启丢失）。业务数据库不会因此变成内存。SQLite 不能部署到 Vercel 临时文件系统，本实现检测 VERCEL 后拒绝开启。需要全 Vercel 部署时使用独立 Enterprise API 项目和 Neon PostgreSQL，后端入口为 `apps/enterprise-api/api/[...path].mjs`，不复用 SQLite 运行时。
 
-生产配置模板为根 `.env.enterprise.production.local.example`，API 镜像与持久卷由 `compose.enterprise.yaml` 管理。包含域名、HTTPS、初始化和只读演示账号的部署命令见[Vercel 与 SQLite 部署](../deployment/VERCEL_SQLITE.md)。需要 Vercel Functions 直接访问远程 SQLite/libSQL 时，须另行实现异步存储和事务适配；当前文件型 Store 不接受远程数据库 URL。
+SQLite 生产配置模板为根 `.env.enterprise.production.local.example`，API 镜像与持久卷由 `compose.enterprise.yaml` 管理。包含域名、HTTPS、初始化和只读演示账号的部署命令见[Vercel 与 SQLite 部署](../deployment/VERCEL_SQLITE.md)。PostgreSQL 配置、显式迁移、首个租户和独立 API 项目发布见 [Vercel + Neon 部署](../deployment/VERCEL_NEON_ENTERPRISE.md)。当前文件型 Store 不接受远程数据库 URL；PostgreSQL 使用独立连接层和服务实现。
 
 ## SQLite 迁移、备份与恢复
 

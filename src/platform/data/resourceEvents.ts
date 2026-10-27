@@ -22,7 +22,7 @@ function getEventsUrl(): string {
  * a lost replay window causes a full cache invalidation before the cursor advances.
  */
 export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedResource) => void): () => void {
-  if (typeof window === 'undefined' || typeof WebSocket === 'undefined') return () => undefined
+  if (typeof window === 'undefined') return () => undefined
   const initialSession = readEnterpriseSession()
   if (!initialSession) return () => undefined
   const identity = getSessionIdentity()
@@ -31,6 +31,9 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
   let lastEventId: string | undefined
   let socket: WebSocket | undefined
   let reconnectTimer: ReturnType<typeof setTimeout> | undefined
+  let pollTimer: ReturnType<typeof setInterval> | undefined
+  let polling = false
+  let pollCursor: string | undefined
 
   const clearReconnect = () => {
     if (reconnectTimer) clearTimeout(reconnectTimer)
@@ -39,6 +42,8 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
   const stop = () => {
     stopped = true
     clearReconnect()
+    if (pollTimer) clearInterval(pollTimer)
+    pollTimer = undefined
     const activeSocket = socket
     socket = undefined
     if (activeSocket && activeSocket.readyState < WebSocket.CLOSING) activeSocket.close(1000, 'provider_disposed')
@@ -53,6 +58,29 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
       void connect()
     }, delay)
   }
+  const poll = async () => {
+    if (polling || stopped) return
+    if (getSessionIdentity() !== identity || !readEnterpriseSession()) return stop()
+    polling = true
+    try {
+      const value: unknown = await apiClient.get(
+        '/api/events/poll',
+        pollCursor === undefined ? {} : { cursor: pollCursor },
+        { showError: false, cancelDuplicate: false }
+      )
+      if (!isRecord(value) || typeof value.cursor !== 'string' || !Array.isArray(value.resources))
+        throw new Error('Invalid event poll response')
+      if (stopped || getSessionIdentity() !== identity) return stop()
+      pollCursor = value.cursor
+      if (value.reset === true) onInvalidate()
+      else for (const resource of value.resources) if (isResource(resource)) onInvalidate(resource)
+      if (!pollTimer) pollTimer = setInterval(() => void poll(), 10_000)
+    } catch {
+      if (!pollTimer) scheduleReconnect()
+    } finally {
+      polling = false
+    }
+  }
   const connect = async () => {
     if (stopped || getSessionIdentity() !== identity || !readEnterpriseSession()) return stop()
     try {
@@ -63,7 +91,7 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
       )
       if (stopped || getSessionIdentity() !== identity || !readEnterpriseSession()) return stop()
       if (!isRecord(issued) || typeof issued.ticket !== 'string' || typeof issued.expiresAt !== 'number') {
-        scheduleReconnect()
+        void poll()
         return
       }
 
@@ -111,10 +139,11 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
         // Close owns retries; errors are intentionally not logged with session identifiers.
       })
     } catch {
-      scheduleReconnect()
+      void poll()
     }
   }
 
-  void connect()
+  if (typeof WebSocket === 'undefined') void poll()
+  else void connect()
   return stop
 }

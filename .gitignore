@@ -34,6 +34,7 @@ api/node_modules
 .env.development.local
 .env.production.local
 .env.enterprise.production.local
+.env.enterprise.postgres.local
 .env.test.local
 /docs/LOCAL_PREVIEW.local.md
 
@@ -63,3 +64,4 @@ NUL
 
 # Vercel 项目关联、环境变量与本地构建产物
 /.vercel/
+apps/enterprise-api/.vercel/

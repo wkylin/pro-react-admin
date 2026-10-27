@@ -1,6 +1,7 @@
 packages:
   - .
   - api
+  - apps/enterprise-api
   - packages/wui-react
 
 onlyBuiltDependencies:
