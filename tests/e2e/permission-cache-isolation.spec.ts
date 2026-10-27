@@ -40,7 +40,8 @@ test('permission cache is isolated by authKey across account changes', async ({ 
   // 触发应用按 localStorage 恢复权限
   await page.reload()
   await page.goto('/#/permission')
-  await expect(page.locator('text=权限系统示例')).toHaveCount(1)
+  const inspector = page.getByRole('heading', { name: 'Access inspector', level: 2 })
+  await expect(inspector).toBeVisible()
 
   // 2) 切换账号：只改 token，不清旧 user_permissions（模拟“登出清理不彻底/切号残留”）
   await page.evaluate(() => {
@@ -63,5 +64,5 @@ test('permission cache is isolated by authKey across account changes', async ({ 
   expect(Array.isArray(perms?.routes) ? perms.routes.includes('/permission') : false).toBe(false)
 
   // UI 层面不应再显示权限示例页内容（无权限会被路由守卫拦截）
-  await expect(page.locator('text=权限系统示例')).toHaveCount(0)
+  await expect(inspector).toHaveCount(0)
 })

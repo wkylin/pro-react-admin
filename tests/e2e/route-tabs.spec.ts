@@ -47,13 +47,15 @@ for (const viewport of [
 test('home delivery steps follow the selected build tool', async ({ page }) => {
   await page.goto('/#/')
   const delivery = page.locator('section[aria-labelledby="delivery-title"]')
+  const buildTools = page.getByRole('group', { name: 'Choose a development build tool' })
 
+  await buildTools.getByRole('button', { name: 'Webpack' }).click()
   await expect(delivery.getByText('pnpm run storybook:webpack', { exact: true })).toBeVisible()
   await expect(delivery.getByText('pnpm run build:lib:webpack', { exact: true })).toBeVisible()
   await expect(delivery.getByText('storybook-static/', { exact: true })).toBeVisible()
   await expect(delivery.getByText('wui-react-v*', { exact: true })).toBeVisible()
 
-  await page.getByRole('group', { name: 'Choose a build tool' }).getByRole('button', { name: 'Vite' }).click()
+  await buildTools.getByRole('button', { name: 'Vite' }).click()
   await expect(delivery.getByText('pnpm run storybook:vite', { exact: true })).toBeVisible()
   await expect(delivery.getByText('pnpm run build-storybook:vite', { exact: true })).toBeVisible()
   await expect(delivery.getByText('pnpm exec serve storybook-static-vite -p 6009', { exact: true })).toBeVisible()

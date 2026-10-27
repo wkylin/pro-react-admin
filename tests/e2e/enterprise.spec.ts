@@ -152,16 +152,21 @@ test('the active closable tab has an accessible close action outside the tablist
   await expect(page.getByRole('tab', { name: 'Users', exact: true })).toHaveCount(0)
 })
 
-test('creates a user, preserves the shared resource session, and records an audit event', async ({ page }) => {
+test('creates a disabled user, requests access approval, and preserves the resource session', async ({ page }) => {
   await page.goto('/#/administration/users')
   await expect(page.getByRole('heading', { name: 'Users', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Add user', exact: true }).click()
-  const dialog = page.getByRole('dialog')
+  const dialog = page.getByRole('dialog', { name: 'Add user' })
   await dialog.getByLabel('Name', { exact: true }).fill('Enterprise member')
   await dialog.getByLabel('Email', { exact: true }).fill('member@example.com')
   await dialog.getByRole('button', { name: 'Save changes', exact: true }).click()
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole('row').filter({ hasText: 'member@example.com' })).toBeVisible()
+  const preview = page.getByRole('dialog', { name: 'Preview access change' })
+  await expect(preview).toBeVisible()
+  await preview.getByRole('textbox', { name: 'Reason for request' }).fill('Grant workspace access')
+  await preview.getByRole('button', { name: 'Submit for review' }).click()
+  await expect(preview).toBeHidden()
+  await expect(page.getByRole('row').filter({ hasText: 'member@example.com' })).toContainText('Disabled')
   await page.getByRole('menuitem', { name: 'Audit log', exact: true }).click()
   await expect(page.getByRole('heading', { name: 'Audit log', exact: true })).toBeVisible()
   await expect(page.getByRole('row').filter({ hasText: 'users' })).toContainText('Create')
@@ -186,13 +191,14 @@ test('role creation and filtering work, and an assigned role cannot be deleted',
   await expect(page.getByRole('row').filter({ hasText: 'viewer' })).toHaveCount(0)
   await search.fill('admin')
   await search.press('Enter')
-  await page.getByRole('row').filter({ hasText: 'admin' }).getByRole('button', { name: 'Delete', exact: true }).click()
+  const assignedAdmin = page.getByRole('row').filter({ has: page.getByRole('cell', { name: 'admin', exact: true }) })
+  await assignedAdmin.getByRole('button', { name: 'Delete', exact: true }).click()
   await page.getByRole('button', { name: 'Delete', exact: true }).last().click()
   await expect(page.getByText('该角色仍有成员，不能删除', { exact: true })).toBeVisible()
-  await expect(page.getByRole('row').filter({ hasText: 'admin' })).toBeVisible()
+  await expect(assignedAdmin).toBeVisible()
 })
 
-test('live cross-tab revocation removes protected content and navigation without reloading', async ({
+test('cross-tab account switch removes protected content and navigation without reloading', async ({
   page,
   context,
 }) => {
@@ -200,7 +206,7 @@ test('live cross-tab revocation removes protected content and navigation without
   await expect(page.getByRole('button', { name: 'Add user', exact: true })).toBeVisible()
   const other = await context.newPage()
   await other.goto('/#/')
-  await other.evaluate(() => localStorage.setItem('user_role', 'user'))
+  await other.evaluate(() => localStorage.setItem('token', JSON.stringify({ token: 'user@test.com' })))
   await expect(page).toHaveURL(/#\/403$/)
   await expect(page.getByRole('heading', { name: 'Users', exact: true })).toHaveCount(0)
   await other.close()
@@ -227,10 +233,7 @@ test('a project that omits the notifications module exposes neither its header a
   await expect(page.getByRole('heading', { name: 'Users', exact: true })).toHaveCount(0)
 })
 
-test('revocation also removes previously cached tabs while an authorized page stays open', async ({
-  page,
-  context,
-}) => {
+test('cross-tab account switch removes cached tabs while an authorized page stays open', async ({ page, context }) => {
   await page.goto('/#/administration/roles')
   await expect(page.getByRole('heading', { name: 'Roles', exact: true })).toBeVisible()
   await page.getByRole('menuitem', { name: 'Users', exact: true }).click()
@@ -238,7 +241,7 @@ test('revocation also removes previously cached tabs while an authorized page st
   await expect(page.getByRole('tab', { name: 'Roles', exact: true })).toBeVisible()
   const other = await context.newPage()
   await other.goto('/#/')
-  await other.evaluate(() => localStorage.setItem('user_role', 'admin'))
+  await other.evaluate(() => localStorage.setItem('token', JSON.stringify({ token: 'manager@test.com' })))
   await expect(page.getByRole('heading', { name: 'Users', exact: true })).toBeVisible()
   await expect(page.getByRole('tab', { name: 'Roles', exact: true })).toHaveCount(0)
   await expect(page.getByRole('menuitem', { name: 'Roles', exact: true })).toHaveCount(0)

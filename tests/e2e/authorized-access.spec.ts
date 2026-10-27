@@ -8,5 +8,5 @@ test('allows access for authorized user', async ({ page }) => {
   })
 
   await page.goto('/#/permission')
-  await expect(page.getByText('权限系统示例', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Access inspector', level: 2 })).toBeVisible()
 })

@@ -47,7 +47,7 @@ const hookEntries = directEntryDirectories(path.join(componentRoot, 'hooks')).fi
 const componentGroups = new Set(['hooks', 'stateful', 'stateless'])
 const standaloneFolders = directFolders(componentRoot).filter((name) => !componentGroups.has(name))
 const authFiles = collectFiles(path.join(src, 'platform', 'auth', 'components'))
-  .filter((filePath) => /\.(?:tsx|jsx)$/.test(filePath))
+  .filter((filePath) => /\.(?:tsx|jsx)$/.test(filePath) && !/\.(?:test|spec)\.(?:tsx|jsx)$/.test(filePath))
   .map((filePath) => path.basename(filePath, path.extname(filePath)))
   .sort()
 const pageEntries = entryDirectories(path.join(src, 'pages'))
@@ -111,7 +111,7 @@ const markdown = `# 组件与源码清单
 | Storybook stories | ${storyFiles.length} | \`*.stories.*\` |
 | TS/JS 测试文件 | ${sourceTestFiles.length} | 应用源码与组件库 package 下的 \`*.test.*\`/\`*.spec.*\`；不含仓库级 E2E |
 | 根 package scripts | ${Object.keys(packageJson.scripts || {}).length} | \`package.json#scripts\` 命令数 |
-| pnpm workspace 项目 | ${workspacePackageCount} | 根应用、API 与组件库 |
+| pnpm workspace 项目 | ${workspacePackageCount} | \`pnpm-workspace.yaml\` 中的工作区条目 |
 
 ## 可复用模块分类
 

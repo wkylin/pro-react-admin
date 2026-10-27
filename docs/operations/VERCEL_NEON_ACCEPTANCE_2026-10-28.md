@@ -4,10 +4,10 @@
 
 | 检查项 | 本次结果 | 证据 / 待办 |
 | --- | --- | --- |
-| API 部署 | 轮换凭据后的部署 `dpl_2iuoCJT3HSZG1fnTFJZGwM5UCY27` 已提升到生产别名 | `https://pro-react-admin-enterprise-api.vercel.app`；候选地址先验收再执行 `vercel promote` |
+| API 部署 | 轮换凭据后的手动部署 `dpl_2iuoCJT3HSZG1fnTFJZGwM5UCY27` 验收通过；源码推送后由 Git 自动部署接管生产别名 | `https://pro-react-admin-enterprise-api.vercel.app`；推送后健康端点和真实租户登录均返回 200 |
 | API/数据库健康 | 生产别名 `/api/health` 返回 200、`{"status":"ok","database":"postgresql"}`；Neon schema 版本 2 | 用户报告删除演练分支后，于 `2026-10-28 01:22 CST` 再次对生产健康端点执行只读请求，仍返回 200；本地受保护连接执行只读 `api:pg status` |
 | 企业前端部署 | 独立项目 `pro-react-admin-enterprise` 的修复部署 `dpl_ysXotK1ZtdAbg9UhMdBPQR9WYTx4` 已在生产别名 Ready | `https://pro-react-admin-enterprise-wkylins-projects.vercel.app` 受 Vercel Authentication 保护；Vercel CLI 核验候选 `version.json` 为 `enterprise`、版本 `6.0.0`。生产现有独立 `wkylin` 租户管理员；真实浏览器管理流程仍待验收 |
-| 展示前端 | 原线上代码经环境清理后重部署为 `dpl_HGVBiKNyYvCtygDnKJz83M2bS94n`；`https://pro-react-admin.vercel.app/version.json` 返回 `default`、版本 `6.0.0` | 生产别名已指向新的 Ready 部署，展示站继续独立 |
+| 展示前端 | 原线上代码经环境清理后重部署为 `dpl_HGVBiKNyYvCtygDnKJz83M2bS94n`；源码推送后由 Git 自动部署接管生产别名 | `https://pro-react-admin.vercel.app/version.json` 返回 `default`、版本 `6.0.0`，展示站继续独立 |
 | 企业前端产物 | 编译目标 API 为现有独立 API 域名，真实模式将 demo 权限与默认页面剔除 | 扫描 36 个文本产物，未发现 Neon 主机名、数据库密码或演示账号邮箱；专用 `vercel.enterprise.json` 不包含展示站的 OAuth 和 MFE 路由 |
 | 生产租户初始化 | 按用户追加授权创建独立租户 `wkylin` 与启用的管理员 `wkylin.w@gmail.com`，角色为 `tenant-admin` | 初始密码仅在受保护的 0600 临时文件中交付；生产 API 登录、会话、权限接口均返回 200，测试会话退出返回 204；原 `acme` 的用户/角色/审计计数保持 `1/1/14` |
 | CORS 与权限拒绝 | 企业前端 origin 的 OPTIONS 返回 204；无凭据访问 `/api/admin/users` 返回 401 | `Access-Control-Allow-Origin` 精确回显企业前端 origin；原展示站 origin 仍在允许列表；真实账号的浏览器管理流程待验收 |
@@ -20,7 +20,7 @@
 
 ## 上线验收顺序
 
-1. [已完成] 本地质量门禁、安全预设产物检查和前端密钥扫描；本次线上产物尚未对应 Git 提交，部署 ID 见上表。
+1. [已完成] 本地质量门禁、安全预设产物检查和前端密钥扫描；源码已提交并推送到 `main`；独立企业前端为受保护的手动预构建部署，三个线上别名已核对。
 2. [已完成] 建立受保护 Enterprise 前端项目，配置真实 API origin，API CORS 加入其精确 origin。企业前端项目没有 Neon 变量。
 3. [部分完成] 发布 API 与企业前端；隔离分支上的本地浏览器登录、工作台、用户与角色、审批、审计、权限矩阵和越权拒绝均已验收。用户随后追加授权创建生产 `wkylin` 租户管理员，线上 API 登录、会话、权限和退出已验收；生产浏览器管理流程仍待验收。隔离分支不得接到未受保护的 Preview API。
 4. [部分完成] 已在生产 API 响应头和 Function 脱敏日志核对请求 ID；浏览器端流程待完成。
