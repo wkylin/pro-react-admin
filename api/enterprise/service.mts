@@ -715,8 +715,9 @@ export class EnterpriseService {
     onlyFields(input, ['name', 'status'])
     if (!Object.keys(input).length) return fail(400, 'empty_update')
     const name = input.name === undefined ? undefined : text(input.name, 'name')
-    const status = input.status
-    if (status !== undefined && status !== 'active' && status !== 'disabled') return fail(400, 'invalid_status')
+    if (input.status !== undefined && input.status !== 'active' && input.status !== 'disabled')
+      return fail(400, 'invalid_status')
+    const status = input.status as 'active' | 'disabled' | undefined
     return this.store.transaction(() => {
       const actor = this.requirePlatformAdmin(principal)
       const current = this.tenantRecord(id)
