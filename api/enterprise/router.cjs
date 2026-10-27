@@ -1,5 +1,7 @@
 const express = require('express')
-const { BusinessError } = require('./domain.mts')
+const { BusinessError } = process.env.VERCEL
+  ? require('./domain.mjs')
+  : require('./domain.mts')
 
 /**
  * HTTP owns transport/rate limits. Domain code owns authorization and transactions.
