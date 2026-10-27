@@ -249,7 +249,7 @@ export default function UsersPage() {
               label={t(editing === 'new' ? 'identity.password' : 'identity.resetPassword')}
               rules={[{ required: editing === 'new', min: 12, max: 256 }]}
             >
-              <Input.Password autoComplete="new-password" />
+              <Input.Password />
             </Form.Item>
           )}
           <Form.Item name="role" label={t('admin.role')} rules={[{ required: true }]}>

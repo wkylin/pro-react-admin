@@ -101,6 +101,7 @@ export default function EnterpriseSignIn() {
           {error && <Alert type="error" title={error} showIcon className={styles.error} />}
           <Form<Credentials>
             form={form}
+            autoComplete="off"
             layout="vertical"
             size="large"
             noValidate
@@ -114,7 +115,7 @@ export default function EnterpriseSignIn() {
                 { pattern: /^[a-z][a-z0-9_-]*$/, max: 64, message: t('identity.invalidTenant') },
               ]}
             >
-              <Input autoComplete="organization" disabled={busy || needsTotp} />
+              <Input disabled={busy || needsTotp} />
             </Form.Item>
             <Form.Item
               name="email"
@@ -125,7 +126,7 @@ export default function EnterpriseSignIn() {
                 { max: 254, message: t('identity.emailTooLong') },
               ]}
             >
-              <Input autoComplete="username" type="email" disabled={busy || needsTotp} />
+              <Input type="email" disabled={busy || needsTotp} />
             </Form.Item>
             <Form.Item
               name="password"
@@ -135,7 +136,7 @@ export default function EnterpriseSignIn() {
                 { max: 256, message: t('identity.passwordTooLong') },
               ]}
             >
-              <Input.Password autoComplete="current-password" disabled={busy || needsTotp} />
+              <Input.Password disabled={busy || needsTotp} />
             </Form.Item>
             {needsTotp && (
               <>
@@ -146,7 +147,7 @@ export default function EnterpriseSignIn() {
                     label={t('identity.recoveryCode')}
                     rules={[{ required: true, message: t('identity.enterRecoveryCode') }]}
                   >
-                    <Input autoComplete="one-time-code" maxLength={19} disabled={busy} />
+                    <Input maxLength={19} disabled={busy} />
                   </Form.Item>
                 ) : (
                   <Form.Item
@@ -154,7 +155,7 @@ export default function EnterpriseSignIn() {
                     label={t('identity.totpCode')}
                     rules={[{ required: true, pattern: /^\d{6}$/, message: t('identity.enterTotpCode') }]}
                   >
-                    <Input autoComplete="one-time-code" inputMode="numeric" maxLength={6} disabled={busy} />
+                    <Input inputMode="numeric" maxLength={6} disabled={busy} />
                   </Form.Item>
                 )}
                 <Space style={{ marginBottom: 16 }}>

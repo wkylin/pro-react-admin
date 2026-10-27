@@ -22,6 +22,7 @@ const FixFooter = () => {
             <div className="relative">
               <input
                 type="email"
+                autoComplete="off"
                 placeholder="Your email"
                 className="w-full rounded-full border-2 px-4 py-2 pr-12 text-sm transition-all duration-300 outline-none sm:text-base"
               />

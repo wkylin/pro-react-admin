@@ -307,7 +307,6 @@ const DemoSignIn = () => {
               <Form
                 form={form}
                 name="signin"
-                data-dark-autofill="true"
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"

@@ -529,7 +529,6 @@ function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               disabled={connected || busy}
-              autoComplete="username"
             />
           </Space>
         </Col>
@@ -541,7 +540,6 @@ function ChatPlatformXmppChannel({ sessionKey }: { sessionKey: string }) {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               disabled={connected || busy}
-              autoComplete="current-password"
             />
           </Space>
         </Col>

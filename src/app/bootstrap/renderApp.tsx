@@ -9,6 +9,7 @@ import GlobalBreakpointListener from '@app/bootstrap/providers/GlobalBreakpointL
 import { AppStoreProvider, createAppStore } from '@app/model'
 import { getEnv, getEnvBool, getEnvNumber } from '@platform/config/env'
 import SessionScope from './SessionScope'
+import { disableBrowserAutocomplete } from './disableBrowserAutocomplete'
 import { authService } from '@platform/auth/services/authService'
 import i18n from '@/i18n/i18n'
 
@@ -144,6 +145,7 @@ export async function renderApp(options: RenderAppOptions) {
     identifierPrefix,
   })
   const store = createAppStore(projectId)
+  const stopBrowserAutocomplete = disableBrowserAutocomplete()
 
   root.render(
     <StrictMode>
@@ -164,5 +166,12 @@ export async function renderApp(options: RenderAppOptions) {
       </AppStoreProvider>
     </StrictMode>
   )
-  return { root, store, unmount: () => root.unmount() }
+  return {
+    root,
+    store,
+    unmount: () => {
+      root.unmount()
+      stopBrowserAutocomplete()
+    },
+  }
 }
