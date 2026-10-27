@@ -49,7 +49,7 @@ sequenceDiagram
 
 写事务失败不会发布失效。WS 连接先用现有 Bearer 向 `/api/events/ticket` 申请 30 秒一次性票据，再经 `pro-admin-events-v1` 子协议认证；URL 与子协议不携带 bearer。服务端不发送记录值、用户 ID 或租户 ID。客户端断线后退避重连并带上游标；首次连接、进程重启或回放窗口丢失时收到 `reset`，清理当前身份下全部资源缓存。事件日志只在单个 API 进程内，不能跨实例同步。
 
-WS 断开期间，已渲染的列表可能继续显示旧值。缓存 15 秒 TTL 仅在下一次读取时生效，不会自行触发页面刷新；手动刷新、后续读取或重连后的失效通知才会更新可见内容。角色或用户失效事件还会触发权限快照刷新；断线期间由权限 TTL 和窗口聚焦补偿。来源：[缓存实现](../../src/platform/data/cache.ts)、[事件客户端](../../src/platform/data/resourceEvents.ts)、[HTTP 发布](../../api/enterprise/router.cjs)、[事件服务](../../api/enterprise/events.cjs)。
+WS 断开期间，已渲染的列表可能继续显示旧值。缓存 15 秒 TTL 仅在下一次读取时生效，不会自行触发页面刷新；手动刷新、后续读取或重连后的失效通知才会更新可见内容。角色或用户失效事件还会触发权限快照刷新；断线期间由权限 TTL 和窗口聚焦补偿。来源：[缓存实现](../../src/platform/data/cache.ts)、[事件客户端](../../src/platform/data/resourceEvents.ts)、[HTTP 发布](../../server/enterprise/router.cjs)、[事件服务](../../server/enterprise/events.cjs)。
 
 ## Remote 加载与兼容
 

@@ -56,16 +56,16 @@ app.use(bodyParser.json({ limit: '1mb' }))
 
 // Business services are explicit opt-in; static deployments and demos do not open a local database.
 const enterpriseService =
-  process.env.ENTERPRISE_ENABLED === 'true' ? require('./enterprise/runtime.cjs').openEnterpriseService() : null
+  process.env.ENTERPRISE_ENABLED === 'true' ? require('../server/enterprise/runtime.cjs').openEnterpriseService() : null
 const enterpriseEvents = enterpriseService
-  ? require('./enterprise/events.cjs').createEnterpriseEvents(enterpriseService, {
+  ? require('../server/enterprise/events.cjs').createEnterpriseEvents(enterpriseService, {
       isAllowedOrigin(origin) {
         return configuredOrigins.has(origin) || (process.env.NODE_ENV !== 'production' && isLoopbackOrigin(origin))
       },
     })
   : null
 if (enterpriseService) {
-  app.use('/api', require('./enterprise/router.cjs').createEnterpriseRouter(enterpriseService, { events: enterpriseEvents }))
+  app.use('/api', require('../server/enterprise/router.cjs').createEnterpriseRouter(enterpriseService, { events: enterpriseEvents }))
 } else {
   app.use(['/api/auth', '/api/admin', '/api/permissions/current', '/api/roles'], (_req, res) => {
     res.setHeader('Cache-Control', 'no-store')

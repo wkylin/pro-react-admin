@@ -17,7 +17,7 @@
 
 **两种构建器，一份业务实现。** Webpack 和 Vite 共用项目注册、源码入口、浏览器变量白名单与业务代码。应用、Storybook 和 UI 包均有各自的构建器命令；输出目录、插件和统计格式仍按构建器区分。[构建指南](../development/BUILD.md)列出命令、产物和分析图。默认发布脚本仍按其目标选择构建方式，切换发布构建器需要核对目标产物。
 
-**从演示到真实业务有明确边界。** 默认展示应用提供浏览器演示账号与内存演示数据，适合体验界面和权限；精简企业入口可对接 `api/enterprise/` 的租户身份、服务端授权、SQLite 持久化和事务审计。演示角色编辑不会改变测试账号的登录权限。真实服务当前面向单实例，跨实例事件一致性、OIDC/SSO 和完整账号运营仍待实现。参见[企业资源](../operations/ENTERPRISE.md)与[当前能力和边界](./ARCHITECTURE.md#当前能力与边界)。
+**从演示到真实业务有明确边界。** 默认展示应用提供浏览器演示账号与内存演示数据，适合体验界面和权限；精简企业入口可对接 `server/enterprise/` 的租户身份、服务端授权、SQLite 持久化和事务审计。演示角色编辑不会改变测试账号的登录权限。真实服务当前面向单实例，跨实例事件一致性、OIDC/SSO 和完整账号运营仍待实现。参见[企业资源](../operations/ENTERPRISE.md)与[当前能力和边界](./ARCHITECTURE.md#当前能力与边界)。
 
 **扩展点与检查同处一条开发路径。** 新业务通常先建 `src/features/<领域>/`，声明模块路由、资源和 Provider，再由目标应用选择模块；菜单、标题和权限元数据进入 `config/route-policy.json`。`check:import-boundaries`、`check:route-contract`、类型检查与对应测试约束依赖方向和访问策略。完整步骤分别见[源码职责](../development/SRC_DIRECTORY_GUIDE.md)、[模块契约](./MODULES.md)和[质量门禁](../development/QUALITY.md)。
 

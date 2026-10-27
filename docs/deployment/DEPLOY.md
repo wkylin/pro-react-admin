@@ -22,7 +22,7 @@ pnpm run test:e2e:enterprise
 
 ## 平台与组合
 
-根 `vercel.json` 的 Git 构建发布默认演示后台及 `/api/github` OAuth 函数；`.vercelignore` 只保留 OAuth 文件及 `api/package.json`，将独立 Enterprise API 的源码排除在根项目函数清单之外。Preview 无 Sentry 令牌时跳过 source map 上传，Production 有令牌时保留上传。也可运行 `pnpm run build:production`、`pnpm run vercel:prepare:default`、`vercel deploy --prebuilt --prod` 手动发布。GitHub App 回调、Production 环境变量和验收见 [Vercel GitHub 登录](./VERCEL_GITHUB_LOGIN.md)。Vercel 项目关联、下载的环境变量和构建产物保存在 Git 忽略的 `.vercel/` 中。
+Vercel 项目 `pro-react-admin` 的 Build Command 设为 `node scripts/build-vercel-default.mjs`，Output Directory 设为 `dist`，Git 构建发布默认演示后台及 `/api/github` OAuth 函数。根 `vercel.json` 只配置共用路由和缓存规则，不覆盖连接同一仓库的 Shell、Project A/B 的构建命令与产物目录；`.vercelignore` 只保留根 `api/` 中的 OAuth 文件及 `api/package.json`，企业服务实现位于 `server/enterprise/`，供独立 Enterprise API 项目使用。Preview 无 Sentry 令牌时跳过 source map 上传，Production 有令牌时保留上传。也可运行 `pnpm run build:production`、`pnpm run vercel:prepare:default`、`vercel deploy --prebuilt --prod` 手动发布。GitHub App 回调、Production 环境变量和验收见 [Vercel GitHub 登录](./VERCEL_GITHUB_LOGIN.md)。Vercel 项目关联、下载的环境变量和构建产物保存在 Git 忽略的 `.vercel/` 中。
 
 Vercel 聚合使用 `pnpm run build:mf:vercel`，依次构建登记的 Host/Remote，再按 registry.output 与 prodPath 组合到 dist-vercel，并检查容器/manifest。`sync:deployment` 从注册表生成聚合 headers；`check:deployment-contracts` 检测漂移，`check:deployment-config` 验证目标和缓存策略。Standalone Vercel 示例仍保留对应项目配置。
 

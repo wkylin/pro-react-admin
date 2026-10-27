@@ -211,7 +211,7 @@ gh workflow run deploy-gh-pages.yml --ref main -f target=all
 
 ### 5.1 默认后台
 
-根 `vercel.json` 明确构建默认后台，输出 `dist`：
+在 `pro-react-admin` 项目设置中，将 Build Command 设为 `node scripts/build-vercel-default.mjs`，Output Directory 设为 `dist`。根 `vercel.json` 保留共用路由和缓存规则：
 
 ```bash
 vercel link --project pro-react-admin
@@ -222,9 +222,9 @@ pnpm exec cross-env PROJECT=default MFE_ROLE= PUBLIC_URL=/ REACT_APP_USE_MOCK=tr
 vercel deploy --prebuilt --prod --local-config vercel.json
 ```
 
-项目名替换为自己账号中的实际名称。`vercel build` 生成 `.vercel/output`，部署命令返回的 production URL 是本次实际访问地址，应用入口为 `/#/signin`。根源码构建还可能发现 `api/` 中的 Vercel Functions；持久化企业 API 按第 5.6 节独立部署。
+项目名替换为自己账号中的实际名称。`vercel build` 生成 `.vercel/output`，部署命令返回的 production URL 是本次实际访问地址，应用入口为 `/#/signin`。根源码构建只发布 `api/github.js`；持久化企业 API 按第 5.6 节独立部署。
 
-根脚本 `vercel-build` 是**微前端聚合**构建，不能作为默认后台的替代命令。默认后台使用 `vercel.json`；不要在同一次上传前再执行企业产物准备，后者会替换 `.vercel/output`。
+根脚本 `vercel-build` 是**微前端聚合**构建，不能作为默认后台的替代命令。默认后台使用 `pro-react-admin` 项目的 Build Command；不要在同一次上传前再执行企业产物准备，后者会替换 `.vercel/output`。
 
 ### 5.2 企业演示前端
 
@@ -301,7 +301,7 @@ vercel deploy --cwd artifacts/vercel-storybook --prebuilt --prod
 
 将项目名替换为自己创建的组件站项目，访问 CLI 返回域名的 `/`。不能将含 `/pro-react-admin/storybook/` base 的 Pages 产物直接部署到 Vercel 根路径；准备脚本遇到这种产物会拒绝发布。
 
-若选择从源码构建，使用独立 checkout 关联 Storybook 项目，并明确指定 `--local-config vercel.storybook.json`。根 `vercel.json` 的构建目标是后台，不能只依赖后台项目的默认设置来构建组件站。
+若选择从源码构建，使用独立 checkout 关联 Storybook 项目，并明确指定 `--local-config vercel.storybook.json`。根 `vercel.json` 提供共用路由规则；Storybook 应使用自身项目设置及独立配置构建。
 
 ### 5.6 真实登录与持久 API
 

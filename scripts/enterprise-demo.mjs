@@ -2,8 +2,8 @@ import { randomBytes } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import demoAccount from '../config/enterprise-demo.json' with { type: 'json' }
-import { migrateEnterpriseDatabase, verifyEnterpriseMigrationStatus } from '../api/enterprise/database-ops.mts'
-import { openEnterpriseService } from '../api/enterprise/runtime.cjs'
+import { migrateEnterpriseDatabase, verifyEnterpriseMigrationStatus } from '../server/enterprise/database-ops.mts'
+import { openEnterpriseService } from '../server/enterprise/runtime.cjs'
 
 const bootstrapKeys = [
   'ENTERPRISE_BOOTSTRAP_TENANT',

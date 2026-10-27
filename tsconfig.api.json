@@ -11,5 +11,5 @@
     "erasableSyntaxOnly": true,
     "skipLibCheck": true
   },
-  "include": ["api/enterprise/**/*.mts"]
+  "include": ["server/enterprise/**/*.mts"]
 }

@@ -12,7 +12,7 @@ function openEnterpriseService(env = process.env) {
   const totpKey = env.ENTERPRISE_TOTP_KEY ? Buffer.from(env.ENTERPRISE_TOTP_KEY, 'hex') : undefined
   const { EnterpriseStore } = require('./store.mts')
   const { EnterpriseService } = require('./service.mts')
-  const store = new EnterpriseStore(env.ENTERPRISE_DB_PATH || path.join(__dirname, '../data/enterprise.sqlite'), {
+  const store = new EnterpriseStore(env.ENTERPRISE_DB_PATH || path.join(__dirname, '../../api/data/enterprise.sqlite'), {
     migrationMode: 'verify',
   })
   try {

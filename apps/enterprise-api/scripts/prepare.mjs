@@ -18,13 +18,13 @@ if (diagnostics.length) {
   process.exit(1)
 }
 const sources = [
-  'api/enterprise/postgres-runtime.mts',
-  'api/enterprise/postgres-store.mts',
-  'api/enterprise/postgres-schema.mts',
-  'api/enterprise/postgres-service.mts',
-  'api/enterprise/postgres-events.mts',
-  'api/enterprise/domain.mts',
-  'api/enterprise/totp.mts',
+  'server/enterprise/postgres-runtime.mts',
+  'server/enterprise/postgres-store.mts',
+  'server/enterprise/postgres-schema.mts',
+  'server/enterprise/postgres-service.mts',
+  'server/enterprise/postgres-events.mts',
+  'server/enterprise/domain.mts',
+  'server/enterprise/totp.mts',
   'src/platform/auth/model/accessDecision.ts',
 ]
 

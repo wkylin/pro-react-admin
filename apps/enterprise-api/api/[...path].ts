@@ -2,9 +2,9 @@ import express from 'express'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import helmet from 'helmet'
 import cors from 'cors'
-import { createEnterpriseRouter } from '../../../api/enterprise/router.cjs'
-import { BusinessError } from '../../../api/enterprise/domain.mts'
-import { openPostgresEnterpriseService } from '../../../api/enterprise/postgres-runtime.mts'
+import { createEnterpriseRouter } from '../../../server/enterprise/router.cjs'
+import { BusinessError } from '../../../server/enterprise/domain.mts'
+import { openPostgresEnterpriseService } from '../../../server/enterprise/postgres-runtime.mts'
 
 function createApp(
   service: Awaited<ReturnType<typeof openPostgresEnterpriseService>>,

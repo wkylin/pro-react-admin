@@ -103,13 +103,13 @@ docker compose --env-file .env.enterprise.production.local -f compose.enterprise
 docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml build api
 
 # 建立或升级 schema；正式迁移前先按运维流程验证离机备份
-docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/db-admin.mjs migrate
+docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node server/enterprise/db-admin.mjs migrate
 
 # 首次初始化该租户，数据写入同一持久卷
-docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/bootstrap.mjs
+docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node server/enterprise/bootstrap.mjs
 
 # 将初始化的租户管理员设为平台管理员，才能使用租户管理菜单
-docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node api/enterprise/platform-admin.mjs grant --tenant acme --email admin@example.com
+docker compose --env-file .env.enterprise.production.local -f compose.enterprise.yaml run --rm api node server/enterprise/platform-admin.mjs grant --tenant acme --email admin@example.com
 ```
 
 看到 `Tenant provisioned` 后，用编辑器删除配置文件中的五项 `ENTERPRISE_BOOTSTRAP_*`，保留其它配置，并记住初始化密码。已有租户返回冲突，后续升级和重启不再初始化。

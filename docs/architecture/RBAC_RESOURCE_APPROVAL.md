@@ -47,4 +47,4 @@ Pro React Admin 已有租户账号、角色、路由策略、权限快照、用�
 
 `role` 的 `change` 只包含 `permissions`、`scopes`；`user` 的 `change` 只包含 `role`、`status`。客户端预览不授权批准：API 在事务里重新认证申请人和审批人、核对影响指纹并应用变更。`approval_required`（HTTP 409）表示有独立审批人时不能绕过流程直接修改访问字段。申请和资源范围由 schema v3 保存；旧库需要按[SQLite 迁移流程](../operations/ENTERPRISE.md#sqlite-迁移备份与恢复)离线升级并先验证备份。
 
-权限代码与范围的纯函数在 [`accessDecision.ts`](../../src/platform/auth/model/accessDecision.ts)，服务端校验在 [`service.mts`](../../api/enterprise/service.mts)，路由/菜单声明在 [`route-policy.json`](../../config/route-policy.json)。该共享函数只统一授权判定规则；可信身份、租户范围、事务和审计仍由企业 API 执行。
+权限代码与范围的纯函数在 [`accessDecision.ts`](../../src/platform/auth/model/accessDecision.ts)，服务端校验在 [`service.mts`](../../server/enterprise/service.mts)，路由/菜单声明在 [`route-policy.json`](../../config/route-policy.json)。该共享函数只统一授权判定规则；可信身份、租户范围、事务和审计仍由企业 API 执行。

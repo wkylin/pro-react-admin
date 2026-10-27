@@ -8,12 +8,13 @@
     "server": "nodemon server",
     "start": "node server.js",
     "dev": "node --watch --env-file-if-exists=../.env.development.local server.js",
-    "bootstrap": "node --env-file-if-exists=../.env.development.local enterprise/bootstrap.mjs",
-    "test": "node --test *.test.mjs enterprise/*.test.mjs"
+    "bootstrap": "node --env-file-if-exists=../.env.development.local ../server/enterprise/bootstrap.mjs",
+    "test": "node --test *.test.mjs ../server/enterprise/*.test.mjs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pro-react-admin/server": "workspace:*",
     "body-parser": "^2.3.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",

@@ -47,4 +47,4 @@ pnpm run api:db drill /secure/backup/enterprise-before-upgrade.sqlite \
 6. 执行旧 artifact 回滚演练：`restore <backup> --keep-schema`，随后只启动兼容该 schema 的旧 artifact。回滚会丢弃快照之后的写入，必须按批准的写入冻结/重放方案处置。
 7. owner 签字后，才在维护窗口对真实库执行同一流程；保留命令输出、校验结果、备份位置、升级/回滚耗时和最终审批记录。
 
-仓库内 `api/enterprise/fixtures/` 的旧 v1 fixture 用于代码回归；它没有真实部署数据量、损坏形态、文件系统或恢复限制，不能替代以上步骤。
+仓库内 `server/enterprise/fixtures/` 的旧 v1 fixture 用于代码回归；它没有真实部署数据量、损坏形态、文件系统或恢复限制，不能替代以上步骤。

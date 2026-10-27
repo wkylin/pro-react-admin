@@ -65,11 +65,11 @@ NUL
 # Vercel 项目关联、环境变量与本地构建产物
 /.vercel/
 apps/enterprise-api/.vercel/
-/api/enterprise/postgres-runtime.mjs
-/api/enterprise/postgres-store.mjs
-/api/enterprise/postgres-schema.mjs
-/api/enterprise/postgres-service.mjs
-/api/enterprise/postgres-events.mjs
-/api/enterprise/domain.mjs
-/api/enterprise/totp.mjs
+/server/enterprise/postgres-runtime.mjs
+/server/enterprise/postgres-store.mjs
+/server/enterprise/postgres-schema.mjs
+/server/enterprise/postgres-service.mjs
+/server/enterprise/postgres-events.mjs
+/server/enterprise/domain.mjs
+/server/enterprise/totp.mjs
 /src/platform/auth/model/accessDecision.js

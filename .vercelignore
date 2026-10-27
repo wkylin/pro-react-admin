@@ -1,5 +1,5 @@
-# The repository-root Vercel project serves the default frontend and GitHub OAuth.
-# Enterprise code belongs to the separate apps/enterprise-api Vercel project.
+# Frontend Vercel projects expose only the demo GitHub OAuth Function.
+# Enterprise service modules live under server/enterprise and remain available to its API project.
 api/*
 !api/github.js
 !api/package.json

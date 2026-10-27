@@ -27,7 +27,7 @@ export class EnterpriseStore {
         const status = verifyEnterpriseDatabaseConnection(db)
         if (status.pendingVersions.length || status.adoptLegacyBaseline) {
           throw new Error(
-            `Enterprise database schema ${status.userVersion} needs an offline migration; run api/enterprise/db-admin.mjs migrate after taking a backup`
+            `Enterprise database schema ${status.userVersion} needs an offline migration; run server/enterprise/db-admin.mjs migrate after taking a backup`
           )
         }
       }

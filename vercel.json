@@ -1,8 +1,6 @@
 {
   "version": 2,
   "installCommand": "corepack enable && corepack pnpm@11.5.2 install --frozen-lockfile",
-  "buildCommand": "node scripts/build-vercel-default.mjs",
-  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/api/demo/github/config", "destination": "/api/github?oauth_action=config" },
     { "source": "/api/demo/github/start", "destination": "/api/github?oauth_action=start" },

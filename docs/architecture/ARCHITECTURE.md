@@ -4,7 +4,7 @@
 
 Pro React Admin 是 React 管理应用工作区，包含组件展示应用、精简企业入口、多个独立项目、Module Federation Host/Remote 和独立 UI 包。它采用 React 19、Ant Design 6、React Router 7 Hash Router、Zustand 5、Webpack 5、TypeScript 6。声明版本见[自动生成参考](../reference/PROJECT_REFERENCE.md)，安装版本以 lockfile 为准。
 
-`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、访问审批、审计、登录验证器、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。`api/enterprise` 提供可选的真实业务后端：租户账号、RBAC、TOTP、持久化用户/角色、会话撤销与事务审计。它适合单实例自托管；前端仍可通过 Provider 接入其它业务服务。
+`default` 保留展示功能；`enterprise` 仅注册工作台、用户、角色、访问审批、审计、登录验证器、认证和错误页。两者复用应用壳，但具有独立入口、路由、状态命名空间与产物。`server/enterprise` 提供可选的真实业务后端：租户账号、RBAC、TOTP、持久化用户/角色、会话撤销与事务审计。它适合单实例自托管；前端仍可通过 Provider 接入其它业务服务。
 
 ```mermaid
 flowchart TD
@@ -38,7 +38,7 @@ flowchart TD
 | src/shared             | 通用组件和纯工具                                         | 不反向依赖平台或业务                      |
 | src/projects           | 项目入口与路由差异                                       | 复用装配与平台，不复制基础算法            |
 | packages/wui-react     | 可发布 UI 组件                                           | 自包含，禁止导入应用 src                  |
-| api/enterprise         | HTTP adapter、业务服务、SQLite 存储、显式租户初始化      | 业务核心 strict；授权和审计在服务端执行   |
+| server/enterprise         | HTTP adapter、业务服务、SQLite 存储、显式租户初始化      | 业务核心 strict；授权和审计在服务端执行   |
 | src/pages / components | 展示页面和待迁移组件                                     | 新业务优先进入 features；按业务变化迁移   |
 
 `config/path-aliases.json` 派生 TS/Jest/Webpack 别名。`@routers` 是构建时项目路由别名；`@app/routing` 明确指共享装配与展示路由，不等于当前项目。导入方向由 `check:import-boundaries` 强制检查。

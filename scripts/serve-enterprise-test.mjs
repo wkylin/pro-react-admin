@@ -3,9 +3,9 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { createRequire } from 'node:module'
-import { EnterpriseStore } from '../api/enterprise/store.mts'
-import { EnterpriseService } from '../api/enterprise/service.mts'
-import { createEnterpriseRouter } from '../api/enterprise/router.cjs'
+import { EnterpriseStore } from '../server/enterprise/store.mts'
+import { EnterpriseService } from '../server/enterprise/service.mts'
+import { createEnterpriseRouter } from '../server/enterprise/router.cjs'
 
 const require = createRequire(new URL('../api/package.json', import.meta.url))
 const express = require('express')
