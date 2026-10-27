@@ -37,12 +37,19 @@ function createApp(
 
 let appPromise: Promise<ReturnType<typeof express>> | undefined
 function stripVercelRouteParameter(req: IncomingMessage) {
-  // The catch-all rewrite adds ...path to the query string before business validation.
-  if (!req.url?.includes('...path=')) return
-  const url = new URL(req.url, 'http://internal')
-  if (!url.searchParams.has('...path')) return
-  url.searchParams.delete('...path')
-  req.url = `${url.pathname}${url.search}`
+  // Vercel may populate req.query before Express sees the catch-all rewrite.
+  const url = new URL(req.url ?? '/', 'http://internal')
+  if (url.searchParams.has('...path')) {
+    url.searchParams.delete('...path')
+    req.url = `${url.pathname}${url.search}`
+  }
+  const query = (req as IncomingMessage & { query?: Record<string, unknown> }).query
+  if (query) {
+    // Keep client query keys and discard dynamic route captures already inserted by Vercel.
+    for (const key of Object.keys(query)) {
+      if (!url.searchParams.has(key)) delete query[key]
+    }
+  }
 }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
