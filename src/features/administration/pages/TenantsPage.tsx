@@ -228,7 +228,7 @@ export default function TenantsPage() {
                 label={t('admin.tenantAdminPassword')}
                 rules={[{ required: true, min: 12, max: 256 }]}
               >
-                <Input.Password autoComplete="new-password" />
+                <Input.Password />
               </Form.Item>
             </>
           ) : (

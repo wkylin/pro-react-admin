@@ -138,7 +138,6 @@ export default function AuthenticatorPage() {
                   <Input.Password
                     aria-label={t('identity.password')}
                     placeholder={t('identity.password')}
-                    autoComplete="current-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     disabled={busy}
@@ -146,7 +145,6 @@ export default function AuthenticatorPage() {
                   <Input
                     aria-label={t('authenticator.currentFactor')}
                     placeholder={t('authenticator.currentFactor')}
-                    autoComplete="one-time-code"
                     value={code}
                     onChange={(event) => setCode(event.target.value)}
                     disabled={busy}
@@ -167,7 +165,6 @@ export default function AuthenticatorPage() {
                 <Input.Password
                   aria-label={t('identity.password')}
                   placeholder={t('identity.password')}
-                  autoComplete="current-password"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   disabled={busy}
@@ -195,7 +192,6 @@ export default function AuthenticatorPage() {
               aria-label={t('identity.totpCode')}
               placeholder={t('identity.totpCode')}
               inputMode="numeric"
-              autoComplete="one-time-code"
               maxLength={6}
               value={code}
               onChange={(event) => setCode(event.target.value)}

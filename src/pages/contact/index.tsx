@@ -137,7 +137,7 @@ const Contact = () => {
           <h2 className="mb-4 bg-linear-to-r from-blue-400 to-purple-600 bg-clip-text text-center text-3xl font-bold text-transparent md:text-5xl">
             Get in Touch
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
             <div className="grid grid-cols-1 gap-6">
               <div>
                 <input
