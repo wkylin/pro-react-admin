@@ -158,7 +158,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     files: [
       'src/platform/auth/model/session.ts',
       'src/platform/auth/services/authService.ts',
-      'api/enterprise/service.mts',
+      'server/enterprise/service.mts',
     ],
     note: '同源仍只支持一个活动身份，不提供多身份并行工作区。',
   },
@@ -241,7 +241,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     category: 'service',
     description:
       'ENTERPRISE_ENABLED=true 时挂载登录、会话、权限、用户、角色、只读审计与资源失效 WebSocket；未启用时不把演示数据冒充真实服务。',
-    files: ['api/server.js', 'api/enterprise/router.cjs', 'api/enterprise/events.cjs'],
+    files: ['api/server.js', 'server/enterprise/router.cjs', 'server/enterprise/events.cjs'],
     note: '服务端执行租户过滤、RBAC 和事务审计；WebSocket 事件日志保存在单实例进程内。',
   },
   database: {
@@ -249,7 +249,7 @@ export const architectureNodes: Record<ArchitectureNodeId, ArchitectureNode> = {
     subtitle: 'Node 24 SQLite',
     category: 'service',
     description: '企业服务使用 node:sqlite 保存租户账号、用户、角色和会话，业务写入与追加式审计在事务中提交。',
-    files: ['api/enterprise/store.mts', 'api/enterprise/runtime.cjs'],
+    files: ['server/enterprise/store.mts', 'server/enterprise/runtime.cjs'],
     note: '生产要求持久化 ENTERPRISE_DB_PATH；SQLite 当前定位于单实例部署。',
   },
   default: {

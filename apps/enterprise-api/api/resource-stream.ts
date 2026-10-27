@@ -1,6 +1,6 @@
 import { createServer } from 'node:http'
-import { createPostgresEnterpriseEventsServer, postgresAuditListener } from '../../../api/enterprise/postgres-events.mts'
-import { openPostgresEnterpriseService } from '../../../api/enterprise/postgres-runtime.mts'
+import { createPostgresEnterpriseEventsServer, postgresAuditListener } from '../../../server/enterprise/postgres-events.mts'
+import { openPostgresEnterpriseService } from '../../../server/enterprise/postgres-runtime.mts'
 
 const origins = new Set((process.env.CORS_ORIGINS || '').split(',').map((value) => value.trim()).filter(Boolean))
 const directUrl = process.env.DATABASE_URL_UNPOOLED || process.env.ENTERPRISE_DATABASE_URL_UNPOOLED

@@ -85,7 +85,7 @@ const layerRows = [
   },
   {
     name: '企业后端',
-    path: 'api/enterprise',
+    path: 'server/enterprise',
     responsibility: 'HTTP 路由、业务授权、租户隔离、SQLite 和审计。',
     boundary: '显式启用并独立部署；静态前端不包含此服务。',
   },
@@ -240,7 +240,7 @@ const startPaths = [
   {
     title: '运行真实企业 API',
     command: 'pnpm run api:bootstrap && pnpm run start:enterprise:full',
-    files: 'docs/operations/ENTERPRISE.md → api/enterprise/router.cjs → api/enterprise/service.mts',
+    files: 'docs/operations/ENTERPRISE.md → server/enterprise/router.cjs → server/enterprise/service.mts',
     description: '先按企业文档配置开发环境变量，再初始化租户并启动前后端。',
   },
   {

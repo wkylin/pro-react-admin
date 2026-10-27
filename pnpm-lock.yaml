@@ -930,6 +930,9 @@ importers:
 
   api:
     dependencies:
+      '@pro-react-admin/server':
+        specifier: workspace:*
+        version: link:../server
       body-parser:
         specifier: ^2.3.0
         version: 2.3.0
@@ -961,6 +964,9 @@ importers:
 
   apps/enterprise-api:
     dependencies:
+      '@pro-react-admin/server':
+        specifier: workspace:*
+        version: link:../../server
       api:
         specifier: workspace:*
         version: link:../../api
@@ -1022,6 +1028,25 @@ importers:
       react-dom:
         specifier: '>=19.0.0 <20.0.0'
         version: 19.3.0(react@19.3.0)
+
+  server:
+    dependencies:
+      express:
+        specifier: ^5.2.1
+        version: 5.2.1
+      pg:
+        specifier: ^8.23.1
+        version: 8.23.1
+      ws:
+        specifier: 8.22.0
+        version: 8.22.0
+    devDependencies:
+      '@types/pg':
+        specifier: ^8.23.1
+        version: 8.23.1
+      '@types/ws':
+        specifier: ^8.18.2
+        version: 8.18.2
 
 packages:
 

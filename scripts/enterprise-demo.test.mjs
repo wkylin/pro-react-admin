@@ -4,8 +4,8 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import demoAccount from '../config/enterprise-demo.json' with { type: 'json' }
-import { openEnterpriseService } from '../api/enterprise/runtime.cjs'
-import { migrateEnterpriseDatabase } from '../api/enterprise/database-ops.mts'
+import { openEnterpriseService } from '../server/enterprise/runtime.cjs'
+import { migrateEnterpriseDatabase } from '../server/enterprise/database-ops.mts'
 import { prepareLocalEnterpriseDemo, shouldUseLocalEnterpriseDemo } from './enterprise-demo.mjs'
 
 test('local Enterprise starter provisions a persistent demo tenant and authenticator key', async (t) => {

@@ -12,6 +12,17 @@ const configs = Object.fromEntries(
 )
 const packageJson = readConfig('package.json')
 const registry = loadProjectRegistry()
+const rootVercel = configs['vercel.json']
+if ('buildCommand' in rootVercel || 'outputDirectory' in rootVercel) {
+  throw new Error('vercel.json must not override the build and output settings shared by multiple Vercel projects')
+}
+const ignored = new Set(fs.readFileSync(path.join(root, '.vercelignore'), 'utf8').split(/\r?\n/))
+for (const rule of ['api/*', '!api/github.js', '!api/package.json']) {
+  if (!ignored.has(rule)) throw new Error(`.vercelignore must contain ${rule}`)
+}
+if (fs.existsSync(path.join(root, 'api/enterprise'))) {
+  throw new Error('Enterprise service modules must stay outside root api/ to avoid Vercel Function discovery')
+}
 
 function headersFor(config, source) {
   return config.headers?.find((rule) => rule.source === source)?.headers || []

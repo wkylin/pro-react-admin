@@ -23,7 +23,7 @@ Enterprise 开发和构建默认使用真实租户登录。`start:enterprise` �
 pnpm run api:platform-admin grant --tenant acme --email admin@example.com
 ```
 
-命令读取 `.env.development.local` 中的数据库路径；生产主机应在相同服务端环境下直接执行 `node api/enterprise/platform-admin.mjs grant --tenant acme --email admin@example.com`。移除平台身份可使用 `revoke`，但最后一位平台管理员不能被移除。平台身份绑定到不可复用的 principal ID，改动立即在后端生效。版本 5 的 `platform_admins` 表需先迁移；现有自建库按下方离线迁移流程操作，本地隔离演示库由启动器自动备份并迁移。
+命令读取 `.env.development.local` 中的数据库路径；生产主机应在相同服务端环境下直接执行 `node server/enterprise/platform-admin.mjs grant --tenant acme --email admin@example.com`。移除平台身份可使用 `revoke`，但最后一位平台管理员不能被移除。平台身份绑定到不可复用的 principal ID，改动立即在后端生效。版本 5 的 `platform_admins` 表需先迁移；现有自建库按下方离线迁移流程操作，本地隔离演示库由启动器自动备份并迁移。
 
 “权限管理”菜单使用已有角色授权编辑器。权限通过角色分配给租户成员，用户和角色的资源范围及独立审批继续由服务端检查；`tenant:*` 是平台专用授权，不在普通角色编辑选项中。该页面不允许租户管理员扩大自己的平台权限。
 
@@ -33,7 +33,7 @@ pnpm run api:platform-admin grant --tenant acme --email admin@example.com
 
 每次成功演示写操作生成只读审计，最多保留 500 条。列表在卸载或查询变化时取消旧请求，失败展示重试；分页会在删除导致页码失效后调整。修改失败保留表单输入。页面与操作分别检查 user/role/audit 权限，支持中英文与移动端。
 
-浏览器演示审计用于功能验证，不具备服务端不可篡改性。下面的真实模式由 `api/enterprise` 执行账号停用、会话撤销、授权与事务审计。
+浏览器演示审计用于功能验证，不具备服务端不可篡改性。下面的真实模式由 `server/enterprise` 执行账号停用、会话撤销、授权与事务审计。
 
 ## 启动真实业务模式
 

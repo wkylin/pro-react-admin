@@ -1,6 +1,7 @@
 packages:
   - .
   - api
+  - server
   - apps/enterprise-api
   - packages/wui-react
 

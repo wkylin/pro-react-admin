@@ -6,9 +6,9 @@
 
 | 部分 | 文件 | 作用 |
 | --- | --- | --- |
-| 数据库连接、事务 | `api/enterprise/postgres-store.mts` | 参数绑定、同连接事务、序列化冲突重试 |
-| 版本化建表 | `api/enterprise/postgres-schema.mts` | 17 张表（含迁移表）、外键、唯一约束、审计只追加、事件通知触发器 |
-| 业务接口 | `api/enterprise/postgres-service.mts` | 账号、会话、租户、角色、用户、权限、审批、TOTP、审计 |
+| 数据库连接、事务 | `server/enterprise/postgres-store.mts` | 参数绑定、同连接事务、序列化冲突重试 |
+| 版本化建表 | `server/enterprise/postgres-schema.mts` | 17 张表（含迁移表）、外键、唯一约束、审计只追加、事件通知触发器 |
+| 业务接口 | `server/enterprise/postgres-service.mts` | 账号、会话、租户、角色、用户、权限、审批、TOTP、审计 |
 | Vercel Function | `apps/enterprise-api/api/[...path].ts` | `/api/*` 路由、健康检查、CORS、数据库登录限速 |
 | 跨实例更新 | `/api/resource-stream` + `/api/events/poll` | WebSocket 实时推送，连接故障时按审计游标轮询 |
 | 运维入口 | `pnpm run api:pg` | 显式迁移、状态、首个租户、平台管理员授权 |
@@ -95,7 +95,7 @@ vercel deploy --prebuilt --prod
 ```bash
 pnpm run api:pg status
 pnpm run typecheck:api
-node --test api/enterprise/postgres.test.mjs
+node --test server/enterprise/postgres.test.mjs
 ```
 
 集成测试使用内存 PostgreSQL 兼容引擎，覆盖建表、登录、租户、RBAC、独立审批、TOTP 恢复码、审计约束、限速、一次性票据、WebSocket 事件和轮询；上线前还须在目标 Neon 数据库运行 `status` 并用真实前端完成一次登录与管理页验收。对 Neon 数据库启用项目所需的备份 / 恢复策略，并在独立分支或副本验证恢复。数据库迁移是显式操作，按本节顺序升级旧库。

@@ -26,7 +26,7 @@ pnpm start
 
 已有仓库只需在根目录安装并启动。访问 http://localhost:8080/#/signin，点击 `admin@test.com` 自动填充当前浏览器生成的演示密码，再点击登录并完成滑块验证；没有统一固定密码。`pnpm start` 同时启动完整展示应用和本地 API（从 5200 起，占用时递增并同步前端代理），开发埋点使用内存，无需 MongoDB。实际端口以终端输出为准。
 
-演示账号和管理数据由应用内的权限 mock 与 `src/features/administration/api/demoProvider.ts` 提供，不需要额外启动假接口服务；真实租户模式则调用 `api/enterprise/`。
+演示账号和管理数据由应用内的权限 mock 与 `src/features/administration/api/demoProvider.ts` 提供，不需要额外启动假接口服务；真实租户模式则调用 `server/enterprise/`。
 
 ### Webpack / Vite 构建选择
 

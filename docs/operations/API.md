@@ -1,6 +1,6 @@
 # API 与埋点 helper
 
-api/ 是独立 workspace package，保留 CommonJS Express 5、Helmet、CORS、body-parser、Mongoose 埋点与 GitHub 演示 OAuth。可选 api/enterprise 增加租户身份、RBAC、持久化用户/角色与事务审计；业务核心使用 Node 24 原生 TypeScript、SQLite，HTTP adapter 使用 CommonJS。公司资质等其它业务接口仍需独立接入。
+api/ 是独立 workspace package，保留 CommonJS Express 5、Helmet、CORS、body-parser、Mongoose 埋点与 GitHub 演示 OAuth。可选 server/enterprise 增加租户身份、RBAC、持久化用户/角色与事务审计；业务核心使用 Node 24 原生 TypeScript、SQLite，HTTP adapter 使用 CommonJS。公司资质等其它业务接口仍需独立接入。
 
 ```bash
 pnpm --filter api dev

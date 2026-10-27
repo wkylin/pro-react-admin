@@ -10,6 +10,7 @@
     "vercel-build": "node scripts/prepare.mjs"
   },
   "dependencies": {
+    "@pro-react-admin/server": "workspace:*",
     "api": "workspace:*",
     "cors": "^2.8.6",
     "express": "^5.2.1",

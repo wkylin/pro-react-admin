@@ -11,13 +11,13 @@ import {
 const cliArgs = process.argv.slice(2)
 const [command, ...args] = cliArgs[0] === '--' ? cliArgs.slice(1) : cliArgs
 const usage = `Usage:
-  node api/enterprise/db-admin.mjs status [--db <database>]
-  node api/enterprise/db-admin.mjs migrate [--db <database>]
-  node api/enterprise/db-admin.mjs backup [<output.sqlite>] [--db <database>]
-  node api/enterprise/db-admin.mjs verify-db <database.sqlite>
-  node api/enterprise/db-admin.mjs verify-backup <backup.sqlite>
-  node api/enterprise/db-admin.mjs drill <backup.sqlite> --rpo-minutes <minutes> --rto-minutes <minutes> [--db <volume-database-path>]
-  node api/enterprise/db-admin.mjs restore <verified-backup.sqlite> [--db <database>] [--keep-schema]`
+  node server/enterprise/db-admin.mjs status [--db <database>]
+  node server/enterprise/db-admin.mjs migrate [--db <database>]
+  node server/enterprise/db-admin.mjs backup [<output.sqlite>] [--db <database>]
+  node server/enterprise/db-admin.mjs verify-db <database.sqlite>
+  node server/enterprise/db-admin.mjs verify-backup <backup.sqlite>
+  node server/enterprise/db-admin.mjs drill <backup.sqlite> --rpo-minutes <minutes> --rto-minutes <minutes> [--db <volume-database-path>]
+  node server/enterprise/db-admin.mjs restore <verified-backup.sqlite> [--db <database>] [--keep-schema]`
 
 function parseArgs(values) {
   const positional = []

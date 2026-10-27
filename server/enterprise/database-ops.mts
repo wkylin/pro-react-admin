@@ -32,7 +32,7 @@ import {
 } from './migrations.mts'
 import type { EnterpriseMigrationStatus } from './migrations.mts'
 
-const defaultDatabasePath = resolve(dirname(fileURLToPath(import.meta.url)), '../data/enterprise.sqlite')
+const defaultDatabasePath = resolve(dirname(fileURLToPath(import.meta.url)), '../../api/data/enterprise.sqlite')
 const BACKUP_FORMAT_VERSION = 1
 
 export interface EnterpriseBackupManifest {

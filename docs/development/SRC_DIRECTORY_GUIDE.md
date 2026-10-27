@@ -20,7 +20,7 @@ src/
   projects/           注册表和项目专有 entry/router/page/remote
   pages/ components/  展示与历史组件，逐步按业务迁移
 packages/wui-react/   独立可发布 UI 包
-api/enterprise/       租户身份、RBAC、SQLite 持久化与事务审计；独立 strict 核心
+server/enterprise/       租户身份、RBAC、SQLite 持久化与事务审计；独立 strict 核心
 config/               项目、路由菜单、别名、预算、MFE 与组件库契约
 scripts/              契约检查、生成、工程 CLI、产物组合
 ```
@@ -39,6 +39,6 @@ UI 包以 config/library-contract.mjs 管理公开组件，应用组件目录自
 
 ## 类型边界
 
-根 tsconfig strict=false 兼容历史页面；平台、共享层、新业务、应用壳 Store、renderApp/断点 Provider、布局契约与 UI 包执行 strict 检查。api/enterprise 的 .mts 业务核心通过独立 tsconfig.api.json strict 门禁；CommonJS HTTP adapter 和其它 API helper 尚未全部类型化。Application 装配会引用所有旧展示页面，暂通过根类型检查；没有为通过检查而关闭核心 strict。
+根 tsconfig strict=false 兼容历史页面；平台、共享层、新业务、应用壳 Store、renderApp/断点 Provider、布局契约与 UI 包执行 strict 检查。server/enterprise 的 .mts 业务核心通过独立 tsconfig.api.json strict 门禁；CommonJS HTTP adapter 和其它 API helper 尚未全部类型化。Application 装配会引用所有旧展示页面，暂通过根类型检查；没有为通过检查而关闭核心 strict。
 
 详细 public 组件和项目接口见[实现参考](../reference/PROJECT_REFERENCE.md)与[组件目录](../components/COMPONENT_CATALOG.md)。
