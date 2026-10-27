@@ -39,7 +39,7 @@ vercel deploy --prebuilt --prod
 
 ### Git 自动部署
 
-根目录 `vercel.json` 使用 `scripts/build-vercel-default.mjs` 构建默认演示后台，输出 `dist`。Git 源码部署由 `.vercelignore` 仅保留 `/api/github` 作为 Vercel Function，`vercel.json` 将四条 `/api/demo/github/*` 路径转发给它。Production 配有 Sentry 令牌时上传 source map；Preview 没有令牌时仍正常构建。独立 Enterprise API 位于 `apps/enterprise-api` 项目，不由根项目前端部署。
+根目录 `vercel.json` 使用 `scripts/build-vercel-default.mjs` 构建默认演示后台，输出 `dist`。Git 源码部署由 `.vercelignore` 保留 `/api/github` 及 `api/package.json`，后者提供 OAuth Function 的独立构建步骤；`vercel.json` 将四条 `/api/demo/github/*` 路径转发给它。Production 配有 Sentry 令牌时上传 source map；Preview 没有令牌时仍正常构建。独立 Enterprise API 位于 `apps/enterprise-api` 项目，不由根项目前端部署。
 
 Preview 部署需要从非生产分支推送或手动运行 `vercel deploy`；仅推送 `main` 会触发 Production。上线前在 Preview 核验静态页面、函数、路由及 OAuth 回调的 `code`/`state` 查询参数。手动 `--prebuilt` 仍可用于发布相同的默认演示后台；自动 Git 部署和手动部署应保持同一前端目标。[Vercel 构建配置](https://vercel.com/docs/builds/configure-a-build)
 

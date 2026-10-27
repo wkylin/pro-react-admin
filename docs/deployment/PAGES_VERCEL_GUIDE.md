@@ -162,7 +162,7 @@ CLI 返回本次生产 URL。打开 `https://YOUR_PROJECT.vercel.app/#/signin`�
 
 在 Vercel 的 **Add New → Project** 中导入 GitHub 仓库，Root Directory 选仓库根目录，Production Branch 选 `main`，Node.js 选 24.x。本仓库根 `vercel.json` 使用 `scripts/build-vercel-default.mjs` 构建默认演示后台到 `dist/`，并配置页面及 GitHub OAuth 路由。脚本设置 `REACT_APP_USE_MOCK=true`、`PUBLIC_URL=/`；Production 有 Sentry 令牌时上传 source map，Preview 无令牌时直接构建。推送到连接的分支后，Vercel 会从 Git 中拉取**已提交**的源码并重新构建。
 
-根 `.vercelignore` 只保留 `api/github.js` 作为前端项目的 Function；独立 Enterprise API 由 `apps/enterprise-api` 项目部署。Preview 来自非生产分支或手动部署，推送 `main` 只更新 Production。首次导入后核对 Functions 清单和 `/api/demo/github/config` 路由。[GitHub 演示登录配置](./VERCEL_GITHUB_LOGIN.md)
+根 `.vercelignore` 只保留 `api/github.js` 及它的 `api/package.json` 构建清单；独立 Enterprise API 由 `apps/enterprise-api` 项目部署。Preview 来自非生产分支或手动部署，推送 `main` 只更新 Production。首次导入后核对 Functions 清单和 `/api/demo/github/config` 路由。[GitHub 演示登录配置](./VERCEL_GITHUB_LOGIN.md)
 
 ## 其他目标与必要边界
 

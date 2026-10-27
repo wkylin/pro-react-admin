@@ -2,3 +2,4 @@
 # Enterprise code belongs to the separate apps/enterprise-api Vercel project.
 api/*
 !api/github.js
+!api/package.json

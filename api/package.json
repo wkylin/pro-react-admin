@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "vercel-build": "node -e \"console.log('GitHub OAuth function ready')\"",
     "server": "nodemon server",
     "start": "node server.js",
     "dev": "node --watch --env-file-if-exists=../.env.development.local server.js",
