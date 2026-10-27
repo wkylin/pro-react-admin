@@ -14,6 +14,7 @@ import { permissionService } from '@platform/auth/services/permissionService'
 import { testAccounts } from '@platform/auth/mocks/permission'
 import { isDemoPermissionMode } from '@platform/auth/api/permission'
 import EnterpriseSignIn from '@platform/auth/components/EnterpriseSignIn'
+import { useCredentialAutofillGuard } from '@platform/auth/hooks/useCredentialAutofillGuard'
 import AuthShowcase, { AuthBackdrop } from '@platform/auth/components/AuthShowcase'
 
 import styles from './index.module.less'
@@ -82,6 +83,7 @@ const DemoSignIn = () => {
   const { message } = App.useApp()
   const { isAuthenticated } = useAuth()
   const [form] = Form.useForm<SignInFormValues>()
+  const credentialGuard = useCredentialAutofillGuard<keyof SignInFormValues>()
   const isMobile = useAppStore(selectIsMobile)
   const [accountPasswords, setAccountPasswords] = useState<Record<string, string>>({})
   const [captchaOpen, setCaptchaOpen] = useState(false)
@@ -321,6 +323,8 @@ const DemoSignIn = () => {
                   ]}
                 >
                   <Input
+                    autoComplete="off"
+                    {...credentialGuard('email')}
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
                         <UserOutlined />
@@ -332,6 +336,8 @@ const DemoSignIn = () => {
 
                 <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
                   <Input.Password
+                    autoComplete="new-password"
+                    {...credentialGuard('password')}
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
                         <LockOutlined />

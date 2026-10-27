@@ -482,6 +482,30 @@ Global scrollbar styling
   background: transparent;
 }
 
+/* Chromium keeps its own autofill background even when autocomplete is off.
+   Paint an inset layer over it so filled controls match light and dark forms. */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-background-clip: text;
+  background-clip: text;
+  box-shadow: inset 0 0 0 1000px var(--wui-autofill-bg, var(--wui-bg-surface)) !important;
+  -webkit-text-fill-color: var(--wui-autofill-text, var(--wui-text-primary)) !important;
+  caret-color: var(--wui-autofill-text, var(--wui-text-primary));
+}
+
+:is(.wui-ant-input-affix-wrapper, .ant-input-affix-wrapper):has(input:-webkit-autofill) {
+  background: var(--wui-autofill-bg, var(--wui-bg-surface)) !important;
+}
+
+input:-webkit-autofill:focus-visible,
+textarea:-webkit-autofill:focus-visible,
+select:-webkit-autofill:focus-visible {
+  outline: 2px solid var(--wui-autofill-focus, #1677ff);
+  outline-offset: 2px;
+}
+
 /*
 -------------------------------------------------------------------------------
 App root / layout scaffolding

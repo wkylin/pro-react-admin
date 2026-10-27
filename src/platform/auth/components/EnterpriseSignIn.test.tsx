@@ -49,8 +49,17 @@ test('requires a second factor before creating an enterprise session and retains
   loginEnterprise.mockResolvedValueOnce({ totpRequired: true }).mockResolvedValueOnce(session)
   render(<EnterpriseSignIn />)
 
+  expect(screen.getByLabelText('identity.tenant')).toHaveValue('')
+  expect(screen.getByLabelText('identity.tenant')).toHaveAttribute('readonly')
+  expect(screen.getByLabelText('admin.email')).toHaveAttribute('readonly')
+  expect(screen.getByLabelText('identity.password')).toHaveAttribute('readonly')
+
+  fireEvent.focus(screen.getByLabelText('identity.tenant'))
+  expect(screen.getByLabelText('identity.tenant')).not.toHaveAttribute('readonly')
   fireEvent.change(screen.getByLabelText('identity.tenant'), { target: { value: 'acme' } })
+  fireEvent.focus(screen.getByLabelText('admin.email'))
   fireEvent.change(screen.getByLabelText('admin.email'), { target: { value: 'alice@example.com' } })
+  fireEvent.focus(screen.getByLabelText('identity.password'))
   fireEvent.change(screen.getByLabelText('identity.password'), { target: { value: 'secret-password' } })
   fireEvent.click(screen.getByRole('button', { name: 'identity.signIn' }))
 

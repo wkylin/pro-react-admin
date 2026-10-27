@@ -206,6 +206,7 @@ const SignUp = () => {
                   hasFeedback
                 >
                   <Input.Password
+                    autoComplete="new-password"
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
                         <LockOutlined />
@@ -236,6 +237,7 @@ const SignUp = () => {
                   ]}
                 >
                   <Input.Password
+                    autoComplete="new-password"
                     prefix={
                       <AnimatedIcon variant="spin" mode="hover">
                         <LockOutlined />

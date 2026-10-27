@@ -5,6 +5,7 @@
     "moduleResolution": "NodeNext",
     "strict": true,
     "allowJs": true,
+    "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowImportingTsExtensions": true,

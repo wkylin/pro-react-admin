@@ -319,7 +319,7 @@ pnpm run vercel:prepare:enterprise
 vercel deploy --prebuilt --prod
 ```
 
-将示例 API 地址换为自己的 HTTPS 域名，使用真实租户、邮箱和密码登录。选择 Neon 时，先按 [Vercel + Neon 指南](./docs/deployment/VERCEL_NEON_ENTERPRISE.md)创建独立 API 项目、数据库与表；选择 SQLite 时，服务器完整命令及只读演示用户创建见 [Vercel 与 SQLite 指南](./docs/deployment/VERCEL_SQLITE.md)。
+将示例 API 地址换为自己的 HTTPS 域名，使用真实租户、邮箱和密码登录。选择 Neon 时，先按 [Vercel + Neon 指南](./docs/deployment/VERCEL_NEON_ENTERPRISE.md)创建独立 API 项目、数据库与表；桌面客户端连接见 [DBeaver 连接指南](./docs/deployment/DBEAVER_NEON_CONNECTION.md)。选择 SQLite 时，服务器完整命令及只读演示用户创建见 [Vercel 与 SQLite 指南](./docs/deployment/VERCEL_SQLITE.md)。
 
 ## 工程能力
 

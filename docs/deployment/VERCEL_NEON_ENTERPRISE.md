@@ -45,6 +45,8 @@ API 项目的 `vercel-build` 会先检查类型，再把共享的 TypeScript 模
 
 如集成生成的连接变量名称不同，将**池化连接 URL**复制到 API 项目的 `DATABASE_URL`，直连 URL 复制到 `DATABASE_URL_UNPOOLED`。Neon 的事务池不支持 `LISTEN/NOTIFY`，事件订阅必须使用直连；Function 实例没有活跃 WebSocket 连接时会关闭此直连。[Neon 连接池限制](https://neon.com/docs/connect/connection-pooling) 预览环境若也要连接真实数据，应使用独立 Neon 分支或数据库，并显式设置对应环境变量；不要让预览写入生产租户。数据库 URL 不放进前端 Vercel 项目。Vercel 的环境变量更新后需重新部署对应版本。
 
+需要在桌面客户端查看数据库时，按 [DBeaver 连接 Neon 指南](./DBEAVER_NEON_CONNECTION.md)配置 PostgreSQL 主机、端口、账号和 SSL。
+
 ## 3. 显式建表和初始化
 
 在有数据库访问权限的运维终端，从仓库根目录执行：

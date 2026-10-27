@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { loginEnterprise } from '../api/enterprise'
 import { authService } from '../services/authService'
+import { useCredentialAutofillGuard } from '../hooks/useCredentialAutofillGuard'
 import { isRecord } from '@platform/api/core/response'
 import { getEnv, getEnvBool } from '@platform/config/env'
 import demoAccount from '../../../../config/enterprise-demo.json'
@@ -20,6 +21,7 @@ export default function EnterpriseSignIn() {
   const [useRecovery, setUseRecovery] = useState(false)
   const [pendingCredentials, setPendingCredentials] = useState<Pick<Credentials, 'tenantId' | 'email' | 'password'>>()
   const [form] = Form.useForm<Credentials>()
+  const credentialGuard = useCredentialAutofillGuard<'tenantId' | 'email' | 'password'>()
   const showLocalDemo = getEnv('NODE_ENV') === 'development' && getEnvBool('REACT_APP_ENTERPRISE_LOCAL_DEMO')
   const submit = async (credentials: Credentials) => {
     setBusy(true)
@@ -115,7 +117,7 @@ export default function EnterpriseSignIn() {
                 { pattern: /^[a-z][a-z0-9_-]*$/, max: 64, message: t('identity.invalidTenant') },
               ]}
             >
-              <Input disabled={busy || needsTotp} />
+              <Input autoComplete="off" {...credentialGuard('tenantId')} disabled={busy || needsTotp} />
             </Form.Item>
             <Form.Item
               name="email"
@@ -126,7 +128,7 @@ export default function EnterpriseSignIn() {
                 { max: 254, message: t('identity.emailTooLong') },
               ]}
             >
-              <Input type="email" disabled={busy || needsTotp} />
+              <Input type="email" autoComplete="off" {...credentialGuard('email')} disabled={busy || needsTotp} />
             </Form.Item>
             <Form.Item
               name="password"
@@ -136,7 +138,11 @@ export default function EnterpriseSignIn() {
                 { max: 256, message: t('identity.passwordTooLong') },
               ]}
             >
-              <Input.Password disabled={busy || needsTotp} />
+              <Input.Password
+                autoComplete="new-password"
+                {...credentialGuard('password')}
+                disabled={busy || needsTotp}
+              />
             </Form.Item>
             {needsTotp && (
               <>
