@@ -58,11 +58,14 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
   )
   router.get('/permissions/current', async (req, res) => res.json(await service.permissions(req.principal)))
   router.get('/roles', async (req, res) => res.json((await service.list(req.principal, 'roles', { page: 1, pageSize: 200 })).items))
-  router.post('/events/ticket', (req, res) => {
-    if (!events) return res.status(503).json({ error: 'events_not_configured' })
+  router.post('/events/ticket', async (req, res) => {
+    if (!events && !service.issueEventTicket) return res.status(503).json({ error: 'events_not_configured' })
+    // Older browser bundles still connect to /api/events; keep them on polling during rollout.
+    if (!events && req.headers['x-event-transport'] !== 'resource-stream-v1')
+      return res.status(503).json({ error: 'events_not_configured' })
     res.setHeader('Pragma', 'no-cache')
     res.setHeader('Expires', '0')
-    res.status(201).json(events.issueTicket(req.principal))
+    res.status(201).json(events ? events.issueTicket(req.principal) : await service.issueEventTicket(req.principal))
   })
   router.get('/events/poll', async (req, res) => {
     if (!service.pollEvents) return res.status(503).json({ error: 'events_not_configured' })

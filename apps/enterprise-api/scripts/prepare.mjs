@@ -22,6 +22,7 @@ const sources = [
   'api/enterprise/postgres-store.mts',
   'api/enterprise/postgres-schema.mts',
   'api/enterprise/postgres-service.mts',
+  'api/enterprise/postgres-events.mts',
   'api/enterprise/domain.mts',
   'api/enterprise/totp.mts',
   'src/platform/auth/model/accessDecision.ts',

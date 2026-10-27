@@ -5,6 +5,9 @@
   "functions": {
     "api/[...path].ts": {
       "maxDuration": 30
+    },
+    "api/resource-stream.ts": {
+      "maxDuration": 300
     }
   },
   "rewrites": [

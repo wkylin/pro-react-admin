@@ -12,7 +12,8 @@ export async function openPostgresEnterpriseService(env: NodeJS.ProcessEnv = pro
     throw new Error('ENTERPRISE_TOTP_KEY must contain 64 hexadecimal characters')
   const store = new PostgresEnterpriseStore(connectionString)
   try {
-    await verifyPostgresEnterpriseDatabase(store)
+    // Allow the new API build to serve existing REST traffic before the explicit v2 migration.
+    await verifyPostgresEnterpriseDatabase(store, { allowVersionOne: true })
     const service = new PostgresEnterpriseService(store, {
       sessionTtlMs,
       totpKey: env.ENTERPRISE_TOTP_KEY ? Buffer.from(env.ENTERPRISE_TOTP_KEY, 'hex') : undefined,

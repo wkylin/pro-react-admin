@@ -162,8 +162,35 @@ const SCHEMA_SQL = [
   )`,
 ] as const
 
-export const POSTGRES_SCHEMA_VERSION = 1
-const checksum = createHash('sha256').update(SCHEMA_SQL.join('\n')).digest('hex')
+const EVENT_SCHEMA_SQL = [
+  `CREATE TABLE event_tickets (
+    hash text PRIMARY KEY,
+    session_hash text NOT NULL REFERENCES sessions(hash) ON DELETE CASCADE,
+    tenant_id text NOT NULL,
+    principal_id text NOT NULL,
+    expires_at double precision NOT NULL
+  )`,
+  `CREATE INDEX event_tickets_expiry ON event_tickets(expires_at)`,
+  `CREATE TABLE event_ticket_limits (
+    session_hash text PRIMARY KEY REFERENCES sessions(hash) ON DELETE CASCADE,
+    window_started_at double precision NOT NULL,
+    attempts integer NOT NULL
+  )`,
+  `CREATE FUNCTION enterprise_notify_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      PERFORM pg_notify('enterprise_resource_events',
+        json_build_object('tenantId', NEW.tenant_id, 'seq', NEW.seq::text,
+          'resource', NEW.resource, 'action', NEW.action)::text);
+      RETURN NEW;
+    END
+  $$`,
+  `CREATE TRIGGER audit_notify_insert AFTER INSERT ON audit
+    FOR EACH ROW EXECUTE FUNCTION enterprise_notify_audit()`,
+] as const
+
+export const POSTGRES_SCHEMA_VERSION = 2
+const migrations = [SCHEMA_SQL, EVENT_SCHEMA_SQL] as const
+const checksums = migrations.map((statements) => createHash('sha256').update(statements.join('\n')).digest('hex'))
 
 export async function migratePostgresEnterpriseDatabase(store: PostgresEnterpriseStore) {
   return store.transaction(async () => {
@@ -171,27 +198,28 @@ export async function migratePostgresEnterpriseDatabase(store: PostgresEnterpris
     await store.query(`CREATE TABLE IF NOT EXISTS enterprise_schema_migrations (
       version integer PRIMARY KEY, checksum text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now()
     )`)
-    const existing = await store.one<{ version: number; checksum: string }>(
-      'SELECT version, checksum FROM enterprise_schema_migrations ORDER BY version DESC LIMIT 1'
+    const existing = await store.all<{ version: number; checksum: string }>(
+      'SELECT version, checksum FROM enterprise_schema_migrations ORDER BY version ASC'
     )
-    if (existing) {
-      if (existing.version !== POSTGRES_SCHEMA_VERSION || existing.checksum !== checksum)
-        throw new Error('Unsupported Enterprise PostgreSQL schema; review migrations before deployment')
-      return { version: existing.version, applied: false }
+    if (existing.some((row, index) => row.version !== index + 1 || row.checksum !== checksums[index]))
+      throw new Error('Unsupported Enterprise PostgreSQL schema; review migrations before deployment')
+    if (!existing.length) {
+      // Do not adopt an unknown existing schema as an empty database.
+      const foreignTables = await store.all<{ name: string }>(
+        `SELECT tablename AS name FROM pg_tables WHERE schemaname = current_schema()
+         AND tablename <> 'enterprise_schema_migrations'`
+      )
+      if (foreignTables.length) throw new Error('PostgreSQL schema is not empty; refusing to replace existing tables')
     }
-    // Do not adopt an unknown existing schema as an empty database.
-    const foreignTables = await store.all<{ name: string }>(
-      `SELECT tablename AS name FROM pg_tables WHERE schemaname = current_schema()
-       AND tablename <> 'enterprise_schema_migrations'`
-    )
-    if (foreignTables.length) throw new Error('PostgreSQL schema is not empty; refusing to replace existing tables')
-    for (const statement of SCHEMA_SQL) await store.query(statement)
-    await store.run('INSERT INTO enterprise_schema_migrations (version, checksum) VALUES (?, ?)', 1, checksum)
-    return { version: POSTGRES_SCHEMA_VERSION, applied: true }
+    for (let index = existing.length; index < migrations.length; index += 1) {
+      for (const statement of migrations[index]) await store.query(statement)
+      await store.run('INSERT INTO enterprise_schema_migrations (version, checksum) VALUES (?, ?)', index + 1, checksums[index])
+    }
+    return { version: POSTGRES_SCHEMA_VERSION, applied: existing.length < migrations.length }
   })
 }
 
-export async function verifyPostgresEnterpriseDatabase(store: PostgresEnterpriseStore) {
+export async function verifyPostgresEnterpriseDatabase(store: PostgresEnterpriseStore, { allowVersionOne = false } = {}) {
   let row
   try {
     row = await store.one<{ version: number; checksum: string }>(
@@ -202,7 +230,8 @@ export async function verifyPostgresEnterpriseDatabase(store: PostgresEnterprise
       throw new Error('Enterprise PostgreSQL schema needs migration; run api:pg migrate')
     throw error
   }
-  if (!row || row.version !== POSTGRES_SCHEMA_VERSION || row.checksum !== checksum)
+  if (!row || row.checksum !== checksums[row.version - 1] ||
+      (row.version !== POSTGRES_SCHEMA_VERSION && !(allowVersionOne && row.version === 1)))
     throw new Error('Enterprise PostgreSQL schema needs migration; run api:pg migrate')
   return { version: row.version }
 }

@@ -13,11 +13,14 @@
     "api": "workspace:*",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "helmet": "^8.3.0"
+    "helmet": "^8.3.0",
+    "pg": "^8.23.1",
+    "ws": "8.22.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
+    "@types/ws": "^8.18.2",
     "typescript": "^6.0.3"
   }
 }

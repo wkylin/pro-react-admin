@@ -8,9 +8,9 @@ export type InvalidatedResource = 'users' | 'roles' | 'audit' | 'access_requests
 const isResource = (value: unknown): value is InvalidatedResource =>
   value === 'users' || value === 'roles' || value === 'audit' || value === 'access_requests'
 
-function getEventsUrl(): string {
+function getEventsUrl(path = '/api/events'): string {
   const configuredBase = getEnv('APP_BASE_URL', '').replace(/\/+$/, '')
-  const url = new URL(`${configuredBase}/api/events`, window.location.href)
+  const url = new URL(`${configuredBase}${path}`, window.location.href)
   if (url.protocol === 'https:') url.protocol = 'wss:'
   else if (url.protocol === 'http:') url.protocol = 'ws:'
   else throw new Error('Unsupported WebSocket URL protocol')
@@ -49,10 +49,11 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
     if (activeSocket && activeSocket.readyState < WebSocket.CLOSING) activeSocket.close(1000, 'provider_disposed')
   }
   const scheduleReconnect = () => {
-    if (stopped || reconnectTimer) return
+    if (stopped || reconnectTimer || typeof WebSocket === 'undefined') return
     if (getSessionIdentity() !== identity || !readEnterpriseSession()) return stop()
     attempt += 1
-    const delay = Math.min(30_000, 500 * 2 ** Math.min(attempt - 1, 6)) + Math.floor(Math.random() * 250)
+    const delay =
+      (pollTimer ? 60_000 : Math.min(30_000, 500 * 2 ** Math.min(attempt - 1, 6))) + Math.floor(Math.random() * 250)
     reconnectTimer = setTimeout(() => {
       reconnectTimer = undefined
       void connect()
@@ -74,12 +75,19 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
       pollCursor = value.cursor
       if (value.reset === true) onInvalidate()
       else for (const resource of value.resources) if (isResource(resource)) onInvalidate(resource)
-      if (!pollTimer) pollTimer = setInterval(() => void poll(), 10_000)
     } catch {
-      if (!pollTimer) scheduleReconnect()
+      scheduleReconnect()
     } finally {
       polling = false
     }
+  }
+  const startPolling = () => {
+    if (stopped || pollTimer) return
+    // A transport switch may have missed a notification. Refresh once before advancing the cursor.
+    onInvalidate()
+    pollCursor = lastEventId && /^\d+$/.test(lastEventId) ? lastEventId : undefined
+    pollTimer = setInterval(() => void poll(), 10_000)
+    void poll()
   }
   const connect = async () => {
     if (stopped || getSessionIdentity() !== identity || !readEnterpriseSession()) return stop()
@@ -87,15 +95,19 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
       const issued: unknown = await apiClient.post(
         '/api/events/ticket',
         {},
-        { showError: false, cancelDuplicate: false }
+        { showError: false, cancelDuplicate: false, headers: { 'X-Event-Transport': 'resource-stream-v1' } }
       )
       if (stopped || getSessionIdentity() !== identity || !readEnterpriseSession()) return stop()
       if (!isRecord(issued) || typeof issued.ticket !== 'string' || typeof issued.expiresAt !== 'number') {
-        void poll()
+        startPolling()
+        scheduleReconnect()
         return
       }
 
-      const activeSocket = new WebSocket(getEventsUrl(), 'pro-admin-events-v1')
+      const activeSocket = new WebSocket(
+        getEventsUrl(issued.path === '/api/resource-stream' ? issued.path : '/api/events'),
+        'pro-admin-events-v1'
+      )
       socket = activeSocket
       activeSocket.addEventListener('open', () => {
         if (stopped || socket !== activeSocket) return activeSocket.close(1000, 'provider_disposed')
@@ -120,6 +132,9 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
         } else if (event.type === 'ready') {
           attempt = 0
           if (typeof event.latestEventId === 'string') lastEventId = event.latestEventId
+          pollCursor = lastEventId && /^\d+$/.test(lastEventId) ? lastEventId : undefined
+          if (pollTimer) clearInterval(pollTimer)
+          pollTimer = undefined
         } else if (event.type === 'session.revoked') {
           handleAuthenticationFailure(401, undefined, identity)
           stop()
@@ -133,17 +148,19 @@ export function subscribeResourceEvents(onInvalidate: (resource?: InvalidatedRes
           stop()
           return
         }
+        if (attempt >= 2 || event.code === 1013) startPolling()
         scheduleReconnect()
       })
       activeSocket.addEventListener('error', () => {
         // Close owns retries; errors are intentionally not logged with session identifiers.
       })
     } catch {
-      void poll()
+      startPolling()
+      scheduleReconnect()
     }
   }
 
-  if (typeof WebSocket === 'undefined') void poll()
+  if (typeof WebSocket === 'undefined') startPolling()
   else void connect()
   return stop
 }

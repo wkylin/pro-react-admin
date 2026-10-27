@@ -69,6 +69,7 @@ apps/enterprise-api/.vercel/
 /api/enterprise/postgres-store.mjs
 /api/enterprise/postgres-schema.mjs
 /api/enterprise/postgres-service.mjs
+/api/enterprise/postgres-events.mjs
 /api/enterprise/domain.mjs
 /api/enterprise/totp.mjs
 /src/platform/auth/model/accessDecision.js

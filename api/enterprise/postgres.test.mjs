@@ -3,9 +3,11 @@ import { Buffer } from 'node:buffer'
 import { after, before, test } from 'node:test'
 import { PGlite } from '@electric-sql/pglite'
 import express from 'express'
+import WebSocket from 'ws'
 import { PostgresEnterpriseStore } from './postgres-store.mts'
 import { migratePostgresEnterpriseDatabase, verifyPostgresEnterpriseDatabase } from './postgres-schema.mts'
 import { PostgresEnterpriseService } from './postgres-service.mts'
+import { createPostgresEnterpriseEventsServer } from './postgres-events.mts'
 import { createEnterpriseRouter } from './router.cjs'
 import { totpAtStep } from './totp.mts'
 
@@ -41,12 +43,13 @@ after(async () => {
   await store.close()
 })
 
-async function request(path, { method = 'GET', token, tenant = 'acme', body } = {}) {
+async function request(path, { method = 'GET', token, tenant = 'acme', body, headers = {} } = {}) {
   const response = await fetch(base + path, {
     method,
     headers: {
       ...(body ? { 'content-type': 'application/json' } : {}),
       ...(token ? { authorization: `Bearer ${token}`, 'x-tenant-id': tenant } : {}),
+      ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
   })
@@ -54,13 +57,65 @@ async function request(path, { method = 'GET', token, tenant = 'acme', body } = 
 }
 
 test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and audit data', async () => {
-  assert.deepEqual(await migratePostgresEnterpriseDatabase(store), { version: 1, applied: false })
+  assert.deepEqual(await migratePostgresEnterpriseDatabase(store), { version: 2, applied: false })
   await service.bootstrap({ tenantId: 'acme', tenantName: 'Acme', name: 'Admin', email: 'admin@acme.test', password: 'StrongPassword123!' })
   await service.grantPlatformAdmin('acme', 'admin@acme.test')
   const login = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!' } })
   assert.equal(login.status, 200)
   assert.ok(login.body.token)
   const token = login.body.token
+  const oldClientTicket = await request('/events/ticket', { method: 'POST', token })
+  assert.equal(oldClientTicket.status, 503)
+  const firstTicket = await request('/events/ticket', { method: 'POST', token,
+    headers: { 'x-event-transport': 'resource-stream-v1' } })
+  assert.equal(firstTicket.status, 201)
+  assert.equal(firstTicket.body.path, '/api/resource-stream')
+  assert.ok(firstTicket.body.expiresAt > Date.now())
+  assert.equal((await service.consumeEventTicket(firstTicket.body.ticket))?.tenantId, 'acme')
+  assert.equal(await service.consumeEventTicket(firstTicket.body.ticket), null)
+
+  let notify
+  const stream = createPostgresEnterpriseEventsServer(service, {
+    origins: new Set(['http://localhost']),
+    listen: async (callback) => {
+      notify = callback
+      return { close: async () => undefined }
+    },
+  })
+  await new Promise((resolve) => stream.listen(0, resolve))
+  const streamTicket = await request('/events/ticket', { method: 'POST', token,
+    headers: { 'x-event-transport': 'resource-stream-v1' } })
+  const socket = new WebSocket(`ws://127.0.0.1:${stream.address().port}/api/resource-stream`,
+    'pro-admin-events-v1', { origin: 'http://localhost' })
+  const messages = []
+  const ready = new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('WebSocket did not become ready')), 5_000)
+    socket.on('message', (payload) => {
+      const message = JSON.parse(payload.toString())
+      messages.push(message)
+      if (message.type === 'ready') { clearTimeout(timeout); resolve() }
+    })
+  })
+  socket.on('open', () => socket.send(JSON.stringify({ type: 'authenticate', ticket: streamTicket.body.ticket })))
+  await ready
+  assert.ok(messages.some((message) => message.type === 'reset'))
+  const nextSeq = String(Number(messages.find((message) => message.type === 'ready').latestEventId) + 1)
+  notify({ tenantId: 'acme', seq: nextSeq, resource: 'roles', action: 'create' })
+  await new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('WebSocket did not deliver role event')), 5_000)
+    const check = () => {
+      if (messages.some((message) => message.type === 'resource.invalidate' && message.resource === 'roles')) {
+        clearTimeout(timeout)
+        resolve()
+      }
+    }
+    socket.on('message', check)
+    check()
+  })
+  assert.ok(messages.some((message) => message.type === 'resource.invalidate' && message.resource === 'audit'))
+  socket.close()
+  await new Promise((resolve) => socket.once('close', resolve))
+  await new Promise((resolve) => stream.close(resolve))
   const current = await request('/permissions/current', { token })
   assert.equal(current.status, 200)
   assert.ok(current.body.permissions.includes('tenant:*'))
@@ -139,4 +194,28 @@ test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and
   await assert.rejects(store.run('DELETE FROM audit'), /audit_append_only/)
   for (let index = 0; index < 20; index += 1) await service.chargeLoginLimit('test-client', 20)
   await assert.rejects(service.chargeLoginLimit('test-client', 20), /login_rate_limited/)
+})
+
+test('schema v1 upgrades to v2 without changing existing tables', async () => {
+  const isolated = new PGlite()
+  const testPool = {
+    query: (sql, values) => isolated.query(sql, values),
+    connect: async () => ({ query: (sql, values) => isolated.query(sql, values), release() {} }),
+    end: () => isolated.close(),
+  }
+  const testStore = new PostgresEnterpriseStore('', testPool)
+  try {
+    await migratePostgresEnterpriseDatabase(testStore)
+    await testStore.query('DROP TRIGGER audit_notify_insert ON audit')
+    await testStore.query('DROP FUNCTION enterprise_notify_audit()')
+    await testStore.query('DROP TABLE event_ticket_limits')
+    await testStore.query('DROP TABLE event_tickets')
+    await testStore.run('DELETE FROM enterprise_schema_migrations WHERE version=2')
+    assert.deepEqual(await verifyPostgresEnterpriseDatabase(testStore, { allowVersionOne: true }), { version: 1 })
+    await assert.rejects(verifyPostgresEnterpriseDatabase(testStore), /needs migration/)
+    assert.deepEqual(await migratePostgresEnterpriseDatabase(testStore), { version: 2, applied: true })
+    assert.deepEqual(await verifyPostgresEnterpriseDatabase(testStore), { version: 2 })
+  } finally {
+    await testStore.close()
+  }
 })

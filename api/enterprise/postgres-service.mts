@@ -615,6 +615,52 @@ export class PostgresEnterpriseService {
       return fail(401, 'session_identity_changed')
     return principal
   }
+  async issueEventTicket(principal: Principal) {
+    const now = this.now()
+    const ticket = randomBytes(32).toString('base64url')
+    const expiresAt = now + 30_000
+    return this.store.transaction(async () => {
+      const available = await this.store.one<{ name: string | null }>(
+        "SELECT to_regclass('event_tickets')::text AS name"
+      )
+      if (!available?.name) return fail(503, 'events_not_configured')
+      const session = await this.store.one<{ hash: string }>(
+        'SELECT hash FROM sessions WHERE hash=? AND expires_at>? FOR UPDATE', principal.sessionHash, now
+      )
+      if (!session) return fail(401, 'session_expired')
+      const limit = await this.store.one<{ window_started_at: number; attempts: number }>(
+        'SELECT window_started_at,attempts FROM event_ticket_limits WHERE session_hash=?', principal.sessionHash
+      )
+      if (limit && now - limit.window_started_at < 60_000 && limit.attempts >= 30)
+        return fail(429, 'event_ticket_rate_limited')
+      if (!limit || now - limit.window_started_at >= 60_000) {
+        await this.store.run(
+          `INSERT INTO event_ticket_limits (session_hash,window_started_at,attempts) VALUES (?,?,1)
+           ON CONFLICT(session_hash) DO UPDATE SET window_started_at=excluded.window_started_at,attempts=1`,
+          principal.sessionHash, now
+        )
+      } else {
+        await this.store.run('UPDATE event_ticket_limits SET attempts=attempts+1 WHERE session_hash=?', principal.sessionHash)
+      }
+      await this.store.run('DELETE FROM event_tickets WHERE expires_at<=?', now)
+      await this.store.run(
+        'INSERT INTO event_tickets (hash,session_hash,tenant_id,principal_id,expires_at) VALUES (?,?,?,?,?)',
+        createHash('sha256').update(ticket).digest('hex'), principal.sessionHash, principal.tenantId,
+        principal.principalId, expiresAt
+      )
+      return { ticket, expiresAt, path: '/api/resource-stream' }
+    })
+  }
+  async consumeEventTicket(ticket: unknown) {
+    if (typeof ticket !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(ticket)) return null
+    const row = await this.store.one<{ session_hash: string; tenant_id: string; principal_id: string }>(
+      `DELETE FROM event_tickets WHERE hash=? AND expires_at>? RETURNING session_hash,tenant_id,principal_id`,
+      createHash('sha256').update(ticket).digest('hex'), this.now()
+    )
+    if (!row) return null
+    const principal = await this.authenticateSession(row.session_hash, row.tenant_id, row.principal_id)
+    return principal
+  }
   async listTenants(principal: Principal) {
     return await this.store.all<{ id: string; name: string }>(
       `SELECT t.id,t.name FROM tenant_memberships m
