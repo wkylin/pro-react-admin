@@ -6,10 +6,18 @@
   "engines": {
     "node": "24.x"
   },
+  "scripts": {
+    "vercel-build": "node scripts/prepare.mjs"
+  },
   "dependencies": {
     "api": "workspace:*",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "helmet": "^8.3.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "typescript": "^6.0.3"
   }
 }

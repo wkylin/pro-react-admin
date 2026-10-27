@@ -1,7 +1,11 @@
 const express = require('express')
 const { BusinessError } = require('./domain.mts')
 
-/** HTTP owns transport/rate limits. Domain code owns authorization and transactions. */
+/**
+ * HTTP owns transport/rate limits. Domain code owns authorization and transactions.
+ * @param {any} service
+ * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any }} [options]
+ */
 function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events } = {}) {
   if (!Number.isInteger(loginLimit) || loginLimit < 1) throw new Error('Invalid login limit')
   const router = express.Router()

@@ -19,4 +19,4 @@ pnpm start
 
 SQLite 运维入口是 `pnpm run api:db status`；同一入口也提供 `migrate`、`backup`、`verify-db`、`verify-backup` 和 `restore` 子命令。API 运行时只校验 schema，离线迁移前会自动留存旧库快照。迁移、备份/恢复和旧版本回滚边界见[企业 SQLite 运维](../docs/operations/ENTERPRISE.md#sqlite-迁移备份与恢复)。
 
-PostgreSQL 运维入口是 `pnpm run api:pg status`；首次运行 `pnpm run api:pg migrate` 建表，再用 `bootstrap` 显式创建首个租户。Vercel Function 位于 `apps/enterprise-api/api/[...path].mjs`，运行时只验证 schema。完整环境变量和发布流程见 [Vercel + Neon 指南](../docs/deployment/VERCEL_NEON_ENTERPRISE.md)。
+PostgreSQL 运维入口是 `pnpm run api:pg status`；首次运行 `pnpm run api:pg migrate` 建表，再用 `bootstrap` 显式创建首个租户。Vercel Function 位于 `apps/enterprise-api/api/[...path].ts`，运行时只验证 schema。完整环境变量和发布流程见 [Vercel + Neon 指南](../docs/deployment/VERCEL_NEON_ENTERPRISE.md)。

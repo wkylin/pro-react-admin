@@ -3,7 +3,7 @@
   "framework": null,
   "regions": ["sin1"],
   "functions": {
-    "api/[...path].mjs": {
+    "api/[...path].ts": {
       "maxDuration": 30
     }
   },

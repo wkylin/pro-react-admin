@@ -9,11 +9,13 @@
 | 数据库连接、事务 | `api/enterprise/postgres-store.mts` | 参数绑定、同连接事务、序列化冲突重试 |
 | 版本化建表 | `api/enterprise/postgres-schema.mts` | 15 张表（含迁移表）、外键、唯一约束、审计只追加、成员关系触发器 |
 | 业务接口 | `api/enterprise/postgres-service.mts` | 账号、会话、租户、角色、用户、权限、审批、TOTP、审计 |
-| Vercel Function | `apps/enterprise-api/api/[...path].mjs` | `/api/*` 路由、健康检查、CORS、数据库登录限速 |
+| Vercel Function | `apps/enterprise-api/api/[...path].ts` | `/api/*` 路由、健康检查、CORS、数据库登录限速 |
 | 跨实例更新 | `/api/events/poll` | 读取数据库审计游标，通知管理页刷新资源 |
 | 运维入口 | `pnpm run api:pg` | 显式迁移、状态、首个租户、平台管理员授权 |
 
 API 启动只校验数据库版本，不在流量请求中建表或创建默认账号。旧的 SQLite API 与本地演示仍可独立使用。数据库实时轮询不依赖单个 Function 的内存；本地 SQLite API 仍提供原有 WebSocket。Neon 的连接 URL、TOTP 密钥和初始化密码只放服务端或受保护的本地运维环境，不写入前端构建变量。
+
+API 项目的 `vercel-build` 会先检查类型，再把共享的 TypeScript 模块编译成供 Vercel 打包的 ESM 文件；生成文件已被 Git 忽略，不需手动维护或提交。
 
 ## 1. 新建独立 Vercel 项目
 
