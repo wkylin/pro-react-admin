@@ -3,6 +3,8 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { createRequire } from 'node:module'
+import process from 'node:process'
+import { URL } from 'node:url'
 import { EnterpriseStore } from '../server/enterprise/store.mts'
 import { EnterpriseService } from '../server/enterprise/service.mts'
 import { createEnterpriseRouter } from '../server/enterprise/router.cjs'
@@ -14,14 +16,29 @@ const store = new EnterpriseStore(path.join(directory, 'browser.sqlite'))
 const service = new EnterpriseService(store)
 const app = express()
 try {
-  for (const tenantId of ['alpha', 'beta'])
-    await service.bootstrap({
+  for (const tenantId of ['alpha', 'beta']) {
+    const admin = await service.bootstrap({
       tenantId,
       tenantName: tenantId,
       name: `Admin ${tenantId}`,
       email: 'admin@example.com',
       password: 'Browser-test-password-42',
     })
+    if (tenantId === 'alpha') {
+      const session = await service.login({
+        tenantId,
+        email: 'admin@example.com',
+        password: 'Browser-test-password-42',
+      })
+      await service.write(service.authenticate(session.token), 'users', 'create', undefined, {
+        name: 'Reviewer alpha',
+        email: 'reviewer@example.com',
+        password: 'Browser-reviewer-password-42',
+        role: admin.role,
+        status: 'active',
+      })
+    }
+  }
   app.use(express.json())
   // Repeated browser runs share a fixture IP; domain authorization and persistence stay real.
   app.use('/api', createEnterpriseRouter(service, { loginLimit: 200 }))

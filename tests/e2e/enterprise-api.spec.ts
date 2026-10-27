@@ -3,11 +3,16 @@ import { expect, test, type Page } from '@playwright/test'
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('i18nextLng', 'en'))
 })
+async function fillCredential(page: Page, label: 'Tenant ID' | 'Email' | 'Password', value: string) {
+  const input = page.getByLabel(label, { exact: true })
+  await input.click()
+  await input.fill(value)
+}
 async function signIn(page: Page, tenant = 'alpha') {
   await page.goto('/#/signin')
-  await page.getByLabel('Tenant ID', { exact: true }).fill(tenant)
-  await page.getByLabel('Email', { exact: true }).fill('admin@example.com')
-  await page.getByLabel('Password', { exact: true }).fill('Browser-test-password-42')
+  await fillCredential(page, 'Tenant ID', tenant)
+  await fillCredential(page, 'Email', 'admin@example.com')
+  await fillCredential(page, 'Password', 'Browser-test-password-42')
   await page.getByRole('button', { name: 'Sign in', exact: true }).click()
   await expect(page).toHaveURL(/#\/$/)
 }
@@ -26,18 +31,26 @@ test('enterprise sign-in exposes a named main landmark, page heading, and labele
   await expect(page.getByLabel('Password', { exact: true })).toBeVisible()
 })
 
-test('real user creation survives a reload and generates server audit', async ({ page }) => {
+test('real user creation remains disabled for independent review and survives a reload with server audit', async ({
+  page,
+}) => {
   await signIn(page)
-  await page.getByRole('button', { name: 'Users', exact: true }).click()
+  await page.goto('/#/administration/users')
+  await expect(page.getByRole('heading', { name: 'Users', exact: true })).toBeVisible()
   await page.getByRole('button', { name: 'Add user', exact: true }).click()
-  const dialog = page.getByRole('dialog'),
+  const dialog = page.getByRole('dialog', { name: 'Add user' }),
     address = `browser-${test.info().testId}-${test.info().repeatEachIndex}@example.com`
   await dialog.getByLabel('Name', { exact: true }).fill('Persistent browser member')
   await dialog.getByLabel('Email', { exact: true }).fill(address)
   await dialog.getByLabel('Password', { exact: true }).fill('Member-password-42')
   await dialog.getByRole('button', { name: 'Save changes', exact: true }).click()
   await expect(dialog).toBeHidden()
-  await expect(page.getByRole('row').filter({ hasText: address })).toBeVisible()
+  const preview = page.getByRole('dialog', { name: 'Preview access change' })
+  await expect(preview).toBeVisible()
+  await preview.getByRole('textbox', { name: 'Reason for request' }).fill('Grant workspace access')
+  await preview.getByRole('button', { name: 'Submit for review' }).click()
+  await expect(preview).toBeHidden()
+  await expect(page.getByRole('row').filter({ hasText: address })).toContainText('Disabled')
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Users', exact: true })).toBeVisible()
   // Later repetitions may have more than one page of data; search verifies persistent access.
@@ -46,19 +59,19 @@ test('real user creation survives a reload and generates server audit', async ({
     .or(page.getByRole('textbox', { name: 'Search records' }))
   await search.fill(address)
   await search.press('Enter')
-  await expect(page.getByRole('row').filter({ hasText: address })).toBeVisible()
+  await expect(page.getByRole('row').filter({ hasText: address })).toContainText('Disabled')
   await page.getByRole('menuitem', { name: 'Audit log', exact: true }).click()
   await expect(page.getByRole('row').filter({ hasText: 'users' }).first()).toContainText('Create')
 })
 test('logout and another tenant login clear cached data and previously opened tabs', async ({ page }) => {
   await signIn(page)
-  await page.getByRole('button', { name: 'Users', exact: true }).click()
+  await page.goto('/#/administration/users')
   await expect(page.getByRole('row').filter({ hasText: 'Admin alpha' })).toBeVisible()
   const oldSession = await page.evaluate(() => JSON.parse(localStorage.getItem('enterprise_session') || '{}'))
   await signOut(page)
   await signIn(page, 'beta')
   await expect(page.getByRole('tab', { name: 'Users', exact: true })).toHaveCount(0)
-  await page.getByRole('button', { name: 'Users', exact: true }).click()
+  await page.goto('/#/administration/users')
   await expect(page.getByRole('row').filter({ hasText: 'Admin beta' })).toBeVisible()
   await expect(page.getByRole('row').filter({ hasText: 'Admin alpha' })).toHaveCount(0)
   const response = await page.request.get('/api/auth/session', {
@@ -68,9 +81,9 @@ test('logout and another tenant login clear cached data and previously opened ta
 })
 test('invalid credentials preserve the form and never create a browser session', async ({ page }) => {
   await page.goto('/#/signin')
-  await page.getByLabel('Tenant ID', { exact: true }).fill('alpha')
-  await page.getByLabel('Email', { exact: true }).fill('admin@example.com')
-  await page.getByLabel('Password', { exact: true }).fill('Incorrect-password-42')
+  await fillCredential(page, 'Tenant ID', 'alpha')
+  await fillCredential(page, 'Email', 'admin@example.com')
+  await fillCredential(page, 'Password', 'Incorrect-password-42')
   await page.getByRole('button', { name: 'Sign in', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('Check your tenant, email and password.')
   await expect(page.getByLabel('Tenant ID')).toHaveValue('alpha')
