@@ -20,10 +20,12 @@ const collectFiles = (directory) =>
   })
 
 const relative = (filePath) => path.relative(root, filePath).split(path.sep).join('/')
-// The media optimizer writes ignored build output into src/assets-optimized.
-// Keep the catalog stable before and after a local production build.
+// Local builds write ignored output into src; keep the catalog identical to a clean checkout.
 const generatedMediaRoot = path.join(src, 'assets-optimized') + path.sep
-const srcFiles = collectFiles(src).filter((filePath) => !filePath.startsWith(generatedMediaRoot))
+const generatedAuthModule = path.join(src, 'platform/auth/model/accessDecision.js')
+const srcFiles = collectFiles(src).filter(
+  (filePath) => !filePath.startsWith(generatedMediaRoot) && filePath !== generatedAuthModule
+)
 const wuiSourceFiles = collectFiles(wuiSource)
 const indexFiles = (directory) =>
   collectFiles(directory).filter((filePath) => indexFilePattern.test(path.basename(filePath)))
