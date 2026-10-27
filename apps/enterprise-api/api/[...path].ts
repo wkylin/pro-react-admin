@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http'
 import helmet from 'helmet'
 import cors from 'cors'
 import { createEnterpriseRouter } from '../../../api/enterprise/router.cjs'
+import { BusinessError } from '../../../api/enterprise/domain.mts'
 import { openPostgresEnterpriseService } from '../../../api/enterprise/postgres-runtime.mts'
 
 function createApp(
@@ -28,6 +29,7 @@ function createApp(
     res.end(JSON.stringify({ status: 'ok', database: 'postgresql' }))
   })
   app.use('/api', createEnterpriseRouter(service, {
+    businessErrorClass: BusinessError,
     loginLimiter: (clientKey: string, limit: number) => service.chargeLoginLimit(clientKey, limit),
   }))
   return app

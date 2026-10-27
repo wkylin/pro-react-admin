@@ -1,14 +1,12 @@
 const express = require('express')
-const { BusinessError } = process.env.VERCEL
-  ? require('./domain.mjs')
-  : require('./domain.mts')
 
 /**
  * HTTP owns transport/rate limits. Domain code owns authorization and transactions.
  * @param {any} service
- * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any }} [options]
+ * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError }} [options]
  */
-function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events } = {}) {
+function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events, businessErrorClass } = {}) {
+  const BusinessError = businessErrorClass ?? require('./domain.mts').BusinessError
   if (!Number.isInteger(loginLimit) || loginLimit < 1) throw new Error('Invalid login limit')
   const router = express.Router()
   const buckets = new Map()
