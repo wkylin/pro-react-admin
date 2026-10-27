@@ -39,9 +39,9 @@ vercel deploy --prebuilt --prod
 
 ### Git 自动部署
 
-当前根目录 `vercel.json` 的 `buildCommand` 只运行 `pnpm run build:production`，`outputDirectory` 为 `dist`。因此，连接 GitHub 后触发的普通源码部署只有静态应用，不包含上述 OAuth 函数；它可能覆盖手动发布的生产站点。使用本节的 `--prebuilt` 发布时，应在 Vercel 项目设置中停止同一项目的 Git 自动生产部署，并确认没有排队中的自动部署。
+根目录 `vercel.json` 使用 `scripts/build-vercel-default.mjs` 构建默认演示后台，输出 `dist`。Git 源码部署由 `.vercelignore` 仅保留 `/api/github` 作为 Vercel Function，`vercel.json` 将四条 `/api/demo/github/*` 路径转发给它。Production 配有 Sentry 令牌时上传 source map；Preview 没有令牌时仍正常构建。独立 Enterprise API 位于 `apps/enterprise-api` 项目，不由根项目前端部署。
 
-若以后恢复 Git 自动生产部署，应先让其构建命令同时运行 `build:production` 和 `vercel:prepare:default`，以 `.vercel/output` 作为 Build Output API 产物，并移除指向 `dist` 的输出目录覆盖。先在 Preview 部署核验静态页面、函数、路由及 OAuth 回调的 `code`/`state` 查询参数，再切换生产部署；不能仅以本地单元测试代替该验收。Vercel 的 [Build Output API](https://vercel.com/docs/build-output-api) 允许构建命令生成 `.vercel/output`，[构建配置](https://vercel.com/docs/builds/configure-a-build) 说明了 Build Command 与 Output Directory 的设置。
+Preview 部署需要从非生产分支推送或手动运行 `vercel deploy`；仅推送 `main` 会触发 Production。上线前在 Preview 核验静态页面、函数、路由及 OAuth 回调的 `code`/`state` 查询参数。手动 `--prebuilt` 仍可用于发布相同的默认演示后台；自动 Git 部署和手动部署应保持同一前端目标。[Vercel 构建配置](https://vercel.com/docs/builds/configure-a-build)
 
 ## 验收
 

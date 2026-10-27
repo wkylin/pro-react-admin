@@ -22,7 +22,7 @@ pnpm run test:e2e:enterprise
 
 ## 平台与组合
 
-根 `vercel.json` 的源码构建只覆盖默认应用静态产物。需要 GitHub 线上登录时，运行 `pnpm run build:production`、`pnpm run vercel:prepare:default`，再用 `vercel deploy --prebuilt --prod` 发布静态文件和单独的 OAuth 函数；不要用普通源码部署覆盖它。GitHub App 回调、Production 环境变量和验收见 [Vercel GitHub 登录](./VERCEL_GITHUB_LOGIN.md)。Vercel 项目关联、下载的环境变量和构建产物保存在 Git 忽略的 `.vercel/` 中。
+根 `vercel.json` 的 Git 构建发布默认演示后台及 `/api/github` OAuth 函数；`.vercelignore` 将独立 Enterprise API 的源码排除在根项目函数清单之外。Preview 无 Sentry 令牌时跳过 source map 上传，Production 有令牌时保留上传。也可运行 `pnpm run build:production`、`pnpm run vercel:prepare:default`、`vercel deploy --prebuilt --prod` 手动发布。GitHub App 回调、Production 环境变量和验收见 [Vercel GitHub 登录](./VERCEL_GITHUB_LOGIN.md)。Vercel 项目关联、下载的环境变量和构建产物保存在 Git 忽略的 `.vercel/` 中。
 
 Vercel 聚合使用 `pnpm run build:mf:vercel`，依次构建登记的 Host/Remote，再按 registry.output 与 prodPath 组合到 dist-vercel，并检查容器/manifest。`sync:deployment` 从注册表生成聚合 headers；`check:deployment-contracts` 检测漂移，`check:deployment-config` 验证目标和缓存策略。Standalone Vercel 示例仍保留对应项目配置。
 

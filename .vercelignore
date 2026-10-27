@@ -1,0 +1,4 @@
+# The repository-root Vercel project serves the default frontend and GitHub OAuth.
+# Enterprise code belongs to the separate apps/enterprise-api Vercel project.
+api/*
+!api/github.js

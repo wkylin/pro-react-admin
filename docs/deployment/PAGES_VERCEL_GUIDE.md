@@ -5,7 +5,7 @@
 | 平台         | 谁构建                                | 本项目的入口                                                              | 构建产物                                | 适合做什么                                 |
 | ------------ | ------------------------------------- | ------------------------------------------------------------------------- | --------------------------------------- | ------------------------------------------ |
 | GitHub Pages | GitHub Actions                        | `.github/workflows/deploy-gh-pages.yml` → `build:pages`                   | `dist-combined/`                        | 展示默认应用、企业演示、微前端和 Storybook |
-| Vercel       | 本机 CLI，或连接 Git 后由 Vercel 构建 | `build:production` → `vercel:prepare:default`；Git 构建使用 `vercel.json` | `.vercel/output/`；Git 构建使用 `dist/` | 部署默认后台，可另配 GitHub 演示登录       |
+| Vercel       | 本机 CLI，或连接 Git 后由 Vercel 构建 | `build:production` → `vercel:prepare:default`；Git 构建使用 `vercel.json` | `.vercel/output/`；Git 构建使用 `dist/` | 部署默认后台及 GitHub 演示登录             |
 
 GitHub Pages 是静态托管，不能运行本项目的企业 API 或持久化 SQLite。Vercel 的默认后台也只是演示前端；真实租户数据需要独立的持久化 API。先按本文完成静态演示，再看[企业 API 与 SQLite 部署](./VERCEL_SQLITE.md)。
 
@@ -160,9 +160,9 @@ CLI 返回本次生产 URL。打开 `https://YOUR_PROJECT.vercel.app/#/signin`�
 
 ### 4. 若想改用 Git 推送自动部署
 
-在 Vercel 的 **Add New → Project** 中导入 GitHub 仓库，Root Directory 选仓库根目录，Production Branch 选 `main`，Node.js 选 24.x。本仓库根 `vercel.json` 已声明安装命令、`buildCommand: pnpm run build:production`、`outputDirectory: dist` 和静态页面 rewrite。公开演示需要在 Production 与 Preview 构建环境设置 `REACT_APP_USE_MOCK=true`、`PUBLIC_URL=/`，然后触发一次部署。推送到连接的分支后，Vercel 会从 Git 中拉取**已提交**的源码并重新构建。
+在 Vercel 的 **Add New → Project** 中导入 GitHub 仓库，Root Directory 选仓库根目录，Production Branch 选 `main`，Node.js 选 24.x。本仓库根 `vercel.json` 使用 `scripts/build-vercel-default.mjs` 构建默认演示后台到 `dist/`，并配置页面及 GitHub OAuth 路由。脚本设置 `REACT_APP_USE_MOCK=true`、`PUBLIC_URL=/`；Production 有 Sentry 令牌时上传 source map，Preview 无令牌时直接构建。推送到连接的分支后，Vercel 会从 Git 中拉取**已提交**的源码并重新构建。
 
-这条 Git 构建路径使用 `dist/`，**不执行** `vercel:prepare:default`，因此不会得到上面手工产物中的 GitHub OAuth 函数。根目录还有 `api/`，首次导入后请检查 Vercel 的构建日志及 Functions 清单，确认只部署了你需要的接口；本项目的持久化企业 API 不能靠这次前端构建上线。要启用 GitHub 演示登录，按照[专门的 OAuth 指南](./VERCEL_GITHUB_LOGIN.md)配置服务器变量并使用其预构建发布流程。
+根 `.vercelignore` 只保留 `api/github.js` 作为前端项目的 Function；独立 Enterprise API 由 `apps/enterprise-api` 项目部署。Preview 来自非生产分支或手动部署，推送 `main` 只更新 Production。首次导入后核对 Functions 清单和 `/api/demo/github/config` 路由。[GitHub 演示登录配置](./VERCEL_GITHUB_LOGIN.md)
 
 ## 其他目标与必要边界
 
