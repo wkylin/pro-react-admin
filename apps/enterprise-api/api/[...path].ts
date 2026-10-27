@@ -36,10 +36,20 @@ function createApp(
 }
 
 let appPromise: Promise<ReturnType<typeof express>> | undefined
+function stripVercelRouteParameter(req: IncomingMessage) {
+  // The catch-all rewrite adds ...path to the query string before business validation.
+  if (!req.url?.includes('...path=')) return
+  const url = new URL(req.url, 'http://internal')
+  if (!url.searchParams.has('...path')) return
+  url.searchParams.delete('...path')
+  req.url = `${url.pathname}${url.search}`
+}
+
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
     appPromise ??= openPostgresEnterpriseService().then((service) => createApp(service))
     const app = await appPromise
+    stripVercelRouteParameter(req)
     return (app as unknown as (request: IncomingMessage, response: ServerResponse) => void)(req, res)
   } catch (error) {
     appPromise = undefined
