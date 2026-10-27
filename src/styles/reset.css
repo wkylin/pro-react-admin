@@ -505,6 +505,15 @@ select:-webkit-autofill:active {
     color 600000s ease-in-out 0s;
 }
 
+/* Keep browser autofill inside the transparent inputs of the dark demo auth forms. */
+[data-dark-autofill] .wui-ant-input-affix-wrapper input:-webkit-autofill {
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: #f2f9ff;
+  caret-color: #f2f9ff;
+}
+
 /*
 -------------------------------------------------------------------------------
 App root / layout scaffolding
