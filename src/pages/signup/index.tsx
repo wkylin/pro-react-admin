@@ -95,6 +95,7 @@ const SignUp = () => {
               <Form
                 form={form}
                 name="register"
+                data-dark-autofill="true"
                 initialValues={{
                   agreement: true,
                 }}
