@@ -20,10 +20,24 @@ PROJECT=enterprise pnpm run serve:dist
 ```bash
 pnpm run project:create customer --dry-run
 pnpm run project:create customer
+pnpm run project:create customerAdmin --preset enterprise --dry-run
+pnpm run project:create customerAdmin --preset enterprise
 pnpm run project:create billing --remote --port 8083
 ```
 
-脚手架生成 entry/Home/router；Remote 额外生成暴露组件与本地状态/缓存 Provider。随后更新注册表、静态 Remote imports、类型声明、聚合部署 headers 和项目参考。拒绝覆盖已存在项目或目录，检测 Remote 端口、路径、环境键重复。生成的新项目是公开空白入口，正式业务需显式增加认证和页面权限。
+默认脚手架生成公开的 entry/Home/router；Remote 额外生成暴露组件与本地状态/缓存 Provider。`--preset enterprise` 生成受保护的独立项目：复用租户登录、组织管理模块、类型化数据 Provider、服务端权限和审计，默认使用 Vite 与真实 Enterprise API。这个预设不能与 `--remote` 合用，也不会加入公开 Pages 多项目演示。生成器随后更新注册表、静态 Remote imports、类型声明、聚合部署 headers 和项目参考。它拒绝覆盖已存在项目或目录，并检测 Remote 端口、路径、环境键重复。
+
+安全预设生成后，从仓库根目录运行：
+
+```bash
+PROJECT=customerAdmin pnpm start
+pnpm run project:build customerAdmin
+PROJECT=customerAdmin pnpm run preview:vite
+```
+
+开发命令同时启动前端和本地 Enterprise API，首次创建隔离的 SQLite 演示租户，并在终端显示地址与登录凭据。默认构建不注入浏览器 Mock；静态预览只运行前端，需保持独立 API 可用。登录后以生成的 `modules.ts` 和 `routers/index.tsx` 为入口增删业务模块，在 `config/route-policy.json` 中登记菜单与权限；现有 `src/features/administration/` 是可运行的参考实现。新项目的 `README.md` 保留这些命令。Windows 下用 `pnpm exec cross-env PROJECT=customerAdmin pnpm start` 设置变量。
+
+需要沿用 Webpack 的团队可显式运行 `BUILD_TOOL=webpack PROJECT=customerAdmin pnpm start` 与 `pnpm run project:build customerAdmin --bundler=webpack`。
 
 ```bash
 pnpm run check:project-registry

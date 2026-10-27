@@ -5,6 +5,7 @@ import { getEnv } from '@platform/config/env'
 import { EncryptionConfig, EncryptionHandler, isFormData } from './core/encryption'
 import { retry, runWithConcurrency } from './core/async'
 import { assertSuccessfulPayload, RequestError, getHttpErrorMessage } from './core/response'
+import { requestIdForApi } from './core/requestId'
 import {
   readStoredToken,
   readEnterpriseSession,
@@ -128,10 +129,17 @@ class HttpClient {
       const enterprise = readEnterpriseSession()
       if (enterprise) config.headers['X-Tenant-ID'] = enterprise.tenantId
     }
-
     // 1. 执行请求拦截器
     for (const interceptor of this.interceptors.request) {
       config = await interceptor(config)
+    }
+    const existingRequestIdEntry = Object.entries(config.headers).find(([key]) => key.toLowerCase() === 'x-request-id')
+    const requestId = requestIdForApi(config.url, config.requestId ?? existingRequestIdEntry?.[1])
+    if (requestId) {
+      config.requestId = requestId
+      for (const key of Object.keys(config.headers))
+        if (key.toLowerCase() === 'x-request-id') delete config.headers[key]
+      config.headers['X-Request-ID'] = requestId
     }
     config._sessionIdentity = getRequestIdentity(
       Object.entries(config.headers).find(([key]) => key.toLowerCase() === 'authorization')?.[1]
@@ -148,6 +156,7 @@ class HttpClient {
 
     try {
       const response = await fetch(fullUrl, { ...fetchOptions, signal })
+      config._responseRequestId = response.headers?.get?.('x-request-id') || undefined
       // 4. 处理响应数据
       let result = await this._handleResponseData(response, config)
 
@@ -240,6 +249,7 @@ class HttpClient {
   }
 
   _handleError(error, config) {
+    error.requestId = config._responseRequestId || error.response?.headers?.get?.('x-request-id') || config.requestId
     if (config.needToken !== false) handleAuthenticationFailure(error.status, error.code, config._sessionIdentity)
     const isShowError = config.isShowError !== false && config.showError !== false
     let errorMsg = error.message

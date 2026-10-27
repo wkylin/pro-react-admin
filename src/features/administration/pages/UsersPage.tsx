@@ -115,6 +115,7 @@ export default function UsersPage() {
       title: t('admin.member'),
       dataIndex: 'name',
       sorter: true,
+      sortOrder: list.query.sort === 'name' ? (list.query.order === 'desc' ? 'descend' : 'ascend') : null,
       render: (_, user) => (
         <div className={styles.identity}>
           <Typography.Text strong>{user.name}</Typography.Text>
@@ -177,6 +178,7 @@ export default function UsersPage() {
       title={t('admin.users')}
       description={t('admin.usersDescription')}
       onSearch={list.search}
+      searchValue={list.query.search}
       onReload={list.reload}
       error={list.error}
       actions={

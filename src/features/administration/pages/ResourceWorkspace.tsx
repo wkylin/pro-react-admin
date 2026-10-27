@@ -11,6 +11,7 @@ export default function ResourceWorkspace({
   description,
   actions,
   searchPlaceholder,
+  searchValue,
   onSearch,
   onReload,
   error,
@@ -20,6 +21,7 @@ export default function ResourceWorkspace({
   description: string
   actions?: ReactNode
   searchPlaceholder?: string
+  searchValue?: string
   onSearch?: (value: string) => void
   onReload: () => void
   error?: string
@@ -44,8 +46,10 @@ export default function ResourceWorkspace({
         <div className={styles.toolbar}>
           {onSearch && (
             <Input.Search
+              key={searchValue ?? ''}
               aria-label={t('admin.search')}
               placeholder={searchPlaceholder ?? t('admin.searchPlaceholder')}
+              defaultValue={searchValue}
               allowClear
               onSearch={onSearch}
             />

@@ -7,7 +7,7 @@ import { authService } from '../services/authService'
 import { useCredentialAutofillGuard } from '../hooks/useCredentialAutofillGuard'
 import { isRecord } from '@platform/api/core/response'
 import { getEnv, getEnvBool } from '@platform/config/env'
-import demoAccount from '../../../../config/enterprise-demo.json'
+import demoAccount from '@platform/auth/mocks/enterpriseDemo'
 import AuthShowcase, { AuthBackdrop } from './AuthShowcase'
 import styles from './EnterpriseSignIn.module.less'
 
@@ -22,7 +22,10 @@ export default function EnterpriseSignIn() {
   const [pendingCredentials, setPendingCredentials] = useState<Pick<Credentials, 'tenantId' | 'email' | 'password'>>()
   const [form] = Form.useForm<Credentials>()
   const credentialGuard = useCredentialAutofillGuard<'tenantId' | 'email' | 'password'>()
-  const showLocalDemo = getEnv('NODE_ENV') === 'development' && getEnvBool('REACT_APP_ENTERPRISE_LOCAL_DEMO')
+  const showLocalDemo =
+    (typeof __APP_DEMO__ === 'undefined' || __APP_DEMO__) &&
+    getEnv('NODE_ENV') === 'development' &&
+    getEnvBool('REACT_APP_ENTERPRISE_LOCAL_DEMO')
   const submit = async (credentials: Credentials) => {
     setBusy(true)
     setError(undefined)
@@ -68,7 +71,7 @@ export default function EnterpriseSignIn() {
       <section className={styles.formSide}>
         <div className={styles.formWrap}>
           <div className={styles.formHeading}>
-            <span className={styles.formKicker}>PRO REACT ADMIN / ENTERPRISE</span>
+            <span className={styles.formKicker}>{t('identity.enterpriseBrand')}</span>
             <Typography.Title id="enterprise-sign-in-title" level={1} className={styles.title}>
               {t('identity.title')}
             </Typography.Title>

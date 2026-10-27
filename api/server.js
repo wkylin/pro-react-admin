@@ -43,6 +43,7 @@ app.use(
   cors({
     // Axios uses credentials:include; trusted origins must receive the matching CORS flag.
     credentials: true,
+    exposedHeaders: ['X-Request-ID'],
     origin(origin, callback) {
       if (!origin) return callback(null, true)
       const isDevelopmentLoopback = process.env.NODE_ENV !== 'production' && isLoopbackOrigin(origin)
@@ -65,7 +66,10 @@ const enterpriseEvents = enterpriseService
     })
   : null
 if (enterpriseService) {
-  app.use('/api', require('../server/enterprise/router.cjs').createEnterpriseRouter(enterpriseService, { events: enterpriseEvents }))
+  app.use(
+    '/api',
+    require('../server/enterprise/router.cjs').createEnterpriseRouter(enterpriseService, { events: enterpriseEvents })
+  )
 } else {
   app.use(['/api/auth', '/api/admin', '/api/permissions/current', '/api/roles'], (_req, res) => {
     res.setHeader('Cache-Control', 'no-store')

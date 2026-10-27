@@ -6,15 +6,29 @@ import { fileURLToPath } from 'node:url'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const readConfig = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'))
 const configs = Object.fromEntries(
-  ['vercel.json', 'vercel.mfe.json', 'vercel.shell.json', 'vercel.projectA.json', 'vercel.projectB.json'].map(
-    (file) => [file, readConfig(file)]
-  )
+  [
+    'vercel.json',
+    'vercel.enterprise.json',
+    'vercel.mfe.json',
+    'vercel.shell.json',
+    'vercel.projectA.json',
+    'vercel.projectB.json',
+  ].map((file) => [file, readConfig(file)])
 )
 const packageJson = readConfig('package.json')
 const registry = loadProjectRegistry()
 const rootVercel = configs['vercel.json']
 if ('buildCommand' in rootVercel || 'outputDirectory' in rootVercel) {
   throw new Error('vercel.json must not override the build and output settings shared by multiple Vercel projects')
+}
+const enterpriseVercel = configs['vercel.enterprise.json']
+if (
+  enterpriseVercel.version !== 2 ||
+  enterpriseVercel.framework !== null ||
+  enterpriseVercel.rewrites ||
+  enterpriseVercel.headers
+) {
+  throw new Error('vercel.enterprise.json must leave routes and headers to the prepared Enterprise output')
 }
 const ignored = new Set(fs.readFileSync(path.join(root, '.vercelignore'), 'utf8').split(/\r?\n/))
 for (const rule of ['api/*', '!api/github.js', '!api/package.json']) {

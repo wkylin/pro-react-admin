@@ -30,6 +30,12 @@ test('rejects traversal, source output, overlapping output and duplicate remote 
   ports.remotes[1].devPort = ports.remotes[0].devPort
   ports.remotes[1].devUrl = ports.remotes[0].devUrl
   assert.throws(() => validateProjectRegistry(ports), /Duplicate/)
+  const unsupportedAuthentication = structuredClone(registry)
+  unsupportedAuthentication.projects.projectB.authentication = 'demo'
+  assert.throws(() => validateProjectRegistry(unsupportedAuthentication), /Unsupported authentication/)
+  const unsupportedBuildTool = structuredClone(registry)
+  unsupportedBuildTool.projects.projectB.defaultBuildTool = 'rollup'
+  assert.throws(() => validateProjectRegistry(unsupportedBuildTool), /Unsupported default build tool/)
 })
 test('MFE plans preserve explicit URL overrides and default remote public paths', () => {
   assert.equal(createBuildPlan('mfe-build', 'projectB', {}, registry).env.PUBLIC_URL, '/projectB/')
@@ -83,6 +89,35 @@ test('project scaffolding creates a registered standalone and remote without han
   assert.equal(remote.registry.remotes.at(-1).envKey, 'MFE_BILLING_URL')
   assert.throws(() => createProjectDraft('billing', { remote: true, port: 8081 }, registry), /Duplicate/)
   assert.throws(() => createProjectDraft('../escape', {}, registry))
+})
+
+test('enterprise preset creates a protected, tenant-backed Vite starter', async () => {
+  const { createProjectDraft } = await import('./create-project.mjs')
+  const builtIn = createBuildPlan('build', 'enterprise', {}, registry)
+  assert.equal(builtIn.bundler, 'webpack')
+  assert.equal(builtIn.env.REACT_APP_USE_MOCK, 'false')
+  const starter = createProjectDraft('customerAdmin', { preset: 'enterprise' }, registry)
+  const project = starter.registry.projects.customerAdmin
+  assert.equal(project.authentication, 'enterprise')
+  assert.equal(project.defaultBuildTool, 'vite')
+  assert.match(starter.files['routers/index.tsx'], /<ProtectedRoute>/)
+  assert.match(starter.files['routers/index.tsx'], /administrationModules\.routes/)
+  assert.match(starter.files['routers/authRouter.tsx'], /AuthRouterBase/)
+  assert.match(starter.files['modules.ts'], /administrationModule/)
+  assert.match(starter.files['routers/index.tsx'], /path: 'signin', name: 'Sign in', auth: false/)
+  const dev = createBuildPlan('dev', 'customerAdmin', {}, starter.registry)
+  assert.equal(dev.bundler, 'vite')
+  assert.equal(dev.env.REACT_APP_USE_MOCK, 'false')
+  assert.equal(createBuildPlan('build', 'customerAdmin', {}, starter.registry).env.REACT_APP_USE_MOCK, 'false')
+  assert.equal(
+    createBuildPlan('dev', 'customerAdmin', { REACT_APP_USE_MOCK: 'true' }, starter.registry).env.REACT_APP_USE_MOCK,
+    'true'
+  )
+  assert.throws(() => createProjectDraft('invalidPreset', { preset: 'unknown' }, registry), /preset/i)
+  assert.throws(
+    () => createProjectDraft('invalidRemote', { preset: 'enterprise', remote: true, port: 8083 }, registry),
+    /remote/i
+  )
 })
 
 test('shared application aliases stay fixed when the selected project router changes', async () => {

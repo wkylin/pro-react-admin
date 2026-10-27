@@ -7,6 +7,7 @@ import { getEnv } from '@platform/config/env'
 import { EncryptionConfig, EncryptionHandler } from './core/encryption'
 import { delay, retry, runWithConcurrency, withTimeout } from './core/async'
 import { assertSuccessfulPayload, getHttpErrorMessage } from './core/response'
+import { requestIdForApi } from './core/requestId'
 import {
   readStoredToken,
   readEnterpriseSession,
@@ -284,10 +285,21 @@ const applyRequestMetadata = (config) => {
 }
 
 const applyRequestId = (config) => {
-  if (config.requestId) {
-    config.headers['X-Request-ID'] = config.requestId
+  const existing =
+    config.headers.get?.('X-Request-ID') || config.headers['X-Request-ID'] || config.headers['x-request-id']
+  const requestId = requestIdForApi(config.url || '', config.requestId ?? existing)
+  if (!requestId) return
+  config._requestId = requestId
+  if (typeof config.headers.set === 'function') {
+    config.headers.set('X-Request-ID', requestId)
+  } else {
+    for (const key of Object.keys(config.headers)) if (key.toLowerCase() === 'x-request-id') delete config.headers[key]
+    config.headers['X-Request-ID'] = requestId
   }
 }
+
+const responseRequestId = (response) =>
+  response?.headers?.get?.('x-request-id') || response?.headers?.['x-request-id'] || response?.config?._requestId
 
 // ==================== 9. 请求拦截器 ====================
 const configuredInstances = new WeakSet()
@@ -342,6 +354,7 @@ function installInterceptors(instance) {
     } catch (error) {
       if (config.needToken !== false) handleAuthenticationFailure(error.status, error.code, config._sessionIdentity)
       error.response = { ...response, data }
+      error.requestId = responseRequestId(response)
       RequestUtils.handleShowError(error.message, config.showError !== false)
       throw error
     }
@@ -401,6 +414,7 @@ function installInterceptors(instance) {
         const customError = new Error(errorMessage)
         customError.status = status
         customError.response = error.response
+        customError.requestId = responseRequestId(error.response) || error.config?._requestId
         return Promise.reject(customError)
       }
 
@@ -408,7 +422,9 @@ function installInterceptors(instance) {
       if (error.request) {
         const errorMessage = RequestUtils.getNetworkErrorMessage(error.code)
         RequestUtils.handleShowError(errorMessage, error.config?.showError !== false)
-        return Promise.reject(new Error(errorMessage))
+        const networkError = new Error(errorMessage)
+        networkError.requestId = error.config?._requestId
+        return Promise.reject(networkError)
       }
 
       // 5. 其他错误

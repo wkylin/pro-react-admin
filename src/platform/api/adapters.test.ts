@@ -1,12 +1,13 @@
 import axios from 'axios'
 import request from './request'
 import { HttpClient, encryptionConfig } from './http'
+import { requestIdForApi } from './core/requestId'
 
 const jsonResponse = (payload: unknown, status = 200) => ({
   ok: status >= 200 && status < 300,
   status,
   statusText: '',
-  headers: { get: () => 'application/json' },
+  headers: { get: (name: string) => (name.toLowerCase() === 'content-type' ? 'application/json' : null) },
   json: async () => payload,
 })
 const originalFetch = globalThis.fetch
@@ -49,6 +50,122 @@ test('Axios replacement instances retain business response checks', async () => 
   localStorage.setItem('token', JSON.stringify({ token: 'reader' }))
   await expect(request.get('/api/private', {}, { showError: false })).rejects.toThrow('forbidden')
   expect(localStorage.getItem('token')).not.toBeNull()
+})
+
+test('API adapters attach correlation IDs and expose the server ID on errors', async () => {
+  let axiosRequestId: string | undefined
+  request.setAxiosInstance(
+    axios.create({
+      adapter: async (config) => {
+        axiosRequestId = config.headers.get('X-Request-ID') as string
+        return {
+          data: { code: 403, message: 'forbidden' },
+          status: 200,
+          statusText: 'OK',
+          headers: { 'x-request-id': 'server-axios-123' },
+          config,
+        }
+      },
+    })
+  )
+  await expect(request.get('/api/private', {}, { showError: false })).rejects.toHaveProperty(
+    'requestId',
+    'server-axios-123'
+  )
+  expect(axiosRequestId).toMatch(/^[A-Za-z0-9._-]{8,}$/)
+
+  const fetchMock = jest.fn().mockResolvedValue({
+    ok: false,
+    status: 503,
+    headers: { get: (name: string) => (name.toLowerCase() === 'x-request-id' ? 'server-fetch-123' : null) },
+  })
+  globalThis.fetch = fetchMock
+  await expect(new HttpClient().get('/api/private', {}, { showError: false })).rejects.toHaveProperty(
+    'requestId',
+    'server-fetch-123'
+  )
+  expect(fetchMock.mock.calls[0][1].headers['X-Request-ID']).toMatch(/^[A-Za-z0-9._-]{8,}$/)
+})
+
+test('Fetch business errors use the response ID when the server replaces a caller ID', async () => {
+  const fetchMock = jest.fn().mockResolvedValue({
+    ok: true,
+    status: 200,
+    headers: {
+      get: (name: string) =>
+        name.toLowerCase() === 'content-type'
+          ? 'application/json'
+          : name.toLowerCase() === 'x-request-id'
+            ? 'server-rewritten-123'
+            : null,
+    },
+    json: async () => ({ code: 403, message: 'forbidden' }),
+  })
+  globalThis.fetch = fetchMock
+  await expect(
+    new HttpClient().get('/api/private', {}, { requestId: 'bad id!', showError: false })
+  ).rejects.toHaveProperty('requestId', 'server-rewritten-123')
+})
+
+test('Axios uses one valid request ID for the header and error fallback', async () => {
+  const sentIds: string[] = []
+  request.setAxiosInstance(
+    axios.create({
+      adapter: async (config) => {
+        sentIds.push(config.headers.get('X-Request-ID') as string)
+        return {
+          data: { code: 403, message: 'forbidden' },
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        }
+      },
+    })
+  )
+  await expect(
+    request.get(
+      '/api/private',
+      {},
+      {
+        headers: { 'x-request-id': 'header-id-456' },
+        requestId: 'option-id-123',
+        showError: false,
+      }
+    )
+  ).rejects.toHaveProperty('requestId', 'option-id-123')
+  expect(sentIds[0]).toBe('option-id-123')
+
+  const badIdError = await request.get('/api/private', {}, { requestId: 'bad id!', showError: false }).catch((e) => e)
+  expect(badIdError.requestId).toBe(sentIds[1])
+  expect(sentIds[1]).toMatch(/^[A-Za-z0-9._-]{8,128}$/)
+})
+
+test('Fetch sends one valid ID when the option and header conflict', async () => {
+  const fetchMock = jest.fn().mockResolvedValue(jsonResponse({ code: 403, message: 'forbidden' }))
+  globalThis.fetch = fetchMock
+  const failure = await new HttpClient()
+    .get(
+      '/api/private',
+      {},
+      {
+        headers: { 'x-request-id': 'header-id-456', 'X-Request-ID': 'other-id-789' },
+        requestId: 'option-id-123',
+        showError: false,
+      }
+    )
+    .catch((error: { requestId?: string }) => error)
+  expect(fetchMock.mock.calls[0][1].headers['X-Request-ID']).toBe('option-id-123')
+  expect(Object.keys(fetchMock.mock.calls[0][1].headers).filter((key) => key.toLowerCase() === 'x-request-id')).toEqual(
+    ['X-Request-ID']
+  )
+  expect(failure.requestId).toBe('option-id-123')
+})
+
+test('request ID validation rejects a trailing newline', () => {
+  const id = requestIdForApi('/api/private', 'client-id-123\n')
+  expect(id).not.toBe('client-id-123\n')
+  expect(id).toMatch(/^[A-Za-z0-9._-]{8,128}$/)
 })
 
 test('Fetch joins existing query parameters and removes multipart content headers', async () => {

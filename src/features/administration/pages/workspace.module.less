@@ -28,7 +28,7 @@
   display: flex;
   gap: 12px;
 
-  > :first-child {
+  > :first-child:not(button) {
     flex: 1;
     min-width: 0;
     max-width: 420px;
@@ -60,7 +60,99 @@
   overflow-wrap: anywhere;
 }
 
+.overviewGrid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.8fr) minmax(320px, 1.2fr);
+  gap: 16px;
+}
+
+.overviewCard {
+  min-width: 0;
+  height: 100%;
+}
+
+.overviewCount:global(.wui-ant-typography) {
+  margin: 0 0 8px;
+  font-size: clamp(34px, 5vw, 48px);
+  line-height: 1.1;
+}
+
+.recentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--wui-border);
+  }
+
+  li:last-child {
+    border-bottom: 0;
+  }
+
+  time {
+    flex: none;
+    color: var(--wui-text-muted);
+    font-size: 12px;
+  }
+}
+
+.flowSection {
+  margin-top: 8px;
+
+  :global(h2.wui-ant-typography) {
+    margin-bottom: 4px;
+    font-size: 21px;
+  }
+}
+
+.flowGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.flowCard {
+  min-width: 0;
+
+  :global(h3.wui-ant-typography) {
+    margin: 8px 0;
+    font-size: 16px;
+  }
+
+  :global(.wui-ant-btn-link) {
+    padding-inline: 0;
+  }
+}
+
+.flowNumber {
+  color: var(--wui-text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+@media (width < 1100px) {
+  .flowGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (width < 768px) {
+  .overviewGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .recentList li {
+    flex-direction: column;
+    gap: 2px;
+  }
+
   .desktopTime {
     display: none;
   }
@@ -104,6 +196,10 @@
 }
 
 @media (width <= 640px) {
+  .flowGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .workspace {
     padding: 16px;
   }

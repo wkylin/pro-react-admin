@@ -5,9 +5,11 @@ import concurrently from 'concurrently'
 import portfinder from 'portfinder'
 import { applyWorkspaceEnv } from '../build/load-env.js'
 import { prepareLocalEnterpriseDemo } from './enterprise-demo.mjs'
+import { resolveProject } from '../config/project-registry.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const enterpriseProject = process.env.PROJECT === 'enterprise'
+const projectName = process.env.PROJECT || 'default'
+const enterpriseProject = resolveProject(projectName).project.authentication === 'enterprise'
 
 // Enterprise uses the tenant-backed login by default; browser-only mock remains opt-in.
 applyWorkspaceEnv('development', root, process.env, enterpriseProject ? new Set(['REACT_APP_USE_MOCK']) : new Set())
@@ -49,7 +51,7 @@ if (enterpriseProject) {
   }
   process.env.PORT = String(webPort)
   if (webPort !== requestedWebPort) console.log(`Web port ${requestedWebPort} is in use; using ${webPort} instead.`)
-  console.log(`Open Enterprise: http://localhost:${webPort}/#/signin (API: http://127.0.0.1:${apiPort})`)
+  console.log(`Open ${projectName}: http://localhost:${webPort}/#/signin (API: http://127.0.0.1:${apiPort})`)
 }
 
 const { result } = concurrently(

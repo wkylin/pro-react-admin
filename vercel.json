@@ -2,10 +2,22 @@
   "version": 2,
   "installCommand": "corepack enable && corepack pnpm@11.5.2 install --frozen-lockfile",
   "rewrites": [
-    { "source": "/api/demo/github/config", "destination": "/api/github?oauth_action=config" },
-    { "source": "/api/demo/github/start", "destination": "/api/github?oauth_action=start" },
-    { "source": "/api/demo/github/callback", "destination": "/api/github?oauth_action=callback" },
-    { "source": "/api/demo/github/session", "destination": "/api/github?oauth_action=session" },
+    {
+      "source": "/api/demo/github/config",
+      "destination": "/api/github?oauth_action=config"
+    },
+    {
+      "source": "/api/demo/github/start",
+      "destination": "/api/github?oauth_action=start"
+    },
+    {
+      "source": "/api/demo/github/callback",
+      "destination": "/api/github?oauth_action=callback"
+    },
+    {
+      "source": "/api/demo/github/session",
+      "destination": "/api/github?oauth_action=session"
+    },
     {
       "source": "/:path((?!.*\\.[a-z0-9]+$).*)",
       "destination": "/index.html"

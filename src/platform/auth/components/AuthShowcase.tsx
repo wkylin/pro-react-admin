@@ -31,7 +31,7 @@ export default function AuthShowcase({ variant, headingLevel = 2 }: { variant: V
             <i />
             <i />
           </span>
-          <span>PRO REACT ADMIN</span>
+          <span>{t('identity.brand')}</span>
           <span className={styles.brandCaption}>{t('identity.showcase.brandCaption')}</span>
         </div>
 

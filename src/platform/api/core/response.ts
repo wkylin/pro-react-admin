@@ -18,6 +18,8 @@ const statusMessages: Record<number, string> = {
 export const getHttpErrorMessage = (status: number): string => statusMessages[status] || `请求失败 (${status})`
 
 export class RequestError extends Error {
+  requestId?: string
+
   constructor(
     message: string,
     public status?: number,

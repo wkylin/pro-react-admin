@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Alert,
   App,
@@ -17,11 +17,13 @@ import {
 } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import { getEnv } from '@platform/config/env'
+import { useApplicationModules } from '@platform/modules'
 import { useCheckPermission } from '@platform/auth/hooks/usePermission'
-import { routePolicies } from '@platform/auth/model/policy'
 import { useAdministration } from '../model/AdministrationProvider'
 import { useResourceList } from '../model/useResourceList'
 import type { ManagedRole } from '../model/resources'
+import { assignablePermissionCodes, groupPermissionCodes } from '../model/permissionCatalog'
 import ResourceWorkspace from './ResourceWorkspace'
 import styles from './workspace.module.less'
 import { permissionService } from '@platform/auth/services/permissionService'
@@ -36,23 +38,14 @@ const normalizeScopes = (scopes: ResourceScopes | undefined): ResourceScopes =>
       return [resource, { mode, ids: mode === 'restricted' ? (scopes?.[resource]?.ids ?? []) : [] }]
     })
   ) as ResourceScopes
-const permissionOptions = [
-  ...new Set([
-    ...Object.values(routePolicies).flatMap((policy) => (policy.permission ? [policy.permission] : [])),
-    'user:create',
-    'user:update',
-    'user:delete',
-    'role:create',
-    'role:update',
-    'role:delete',
-    'access:read',
-    'access:approve',
-  ]),
-]
-  .filter((value) => !value.startsWith('tenant:'))
-  .map((value) => ({ value, label: value }))
-export default function RolesPage({ mode = 'roles' }: { mode?: 'roles' | 'permissions' }) {
+export default function RolesPage() {
   const { t } = useTranslation()
+  const projectId = getEnv('PROJECT')
+  const { routes } = useApplicationModules()
+  const permissionLabel = (code: string) => {
+    const [resource, action] = code.split(':')
+    return `${t(`admin.permissionResource.${resource}`, { defaultValue: resource })} · ${t(`admin.permissionAction.${action}`, { defaultValue: action })}`
+  }
   const screens = Grid.useBreakpoint()
   const { provider, access, demo } = useAdministration()
   const { message } = App.useApp()
@@ -62,6 +55,18 @@ export default function RolesPage({ mode = 'roles' }: { mode?: 'roles' | 'permis
   const deleteAllowed = useCheckPermission('role:delete').hasPermission
   const [form] = Form.useForm<RoleInput>()
   const [editing, setEditing] = useState<ManagedRole | 'new' | null>(null)
+  const permissionOptions = useMemo(() => {
+    const existing = editing && editing !== 'new' ? editing.permissions : []
+    return groupPermissionCodes(assignablePermissionCodes(projectId, existing, routes)).map(
+      ({ resource, permissions }) => ({
+        label: t(`admin.permissionResource.${resource}`, { defaultValue: resource }),
+        options: permissions.map((value) => ({
+          value,
+          label: `${t(`admin.permissionAction.${value.split(':')[1]}`, { defaultValue: value.split(':')[1] })} · ${value}`,
+        })),
+      })
+    )
+  }, [editing, projectId, routes, t])
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string>()
   const [pending, setPending] = useState<PendingProposal | null>(null)
@@ -153,7 +158,9 @@ export default function RolesPage({ mode = 'roles' }: { mode?: 'roles' | 'permis
           <div className={styles.mobileMeta}>
             <span className={styles.code}>{role.code}</span>
             {role.permissions.map((permission) => (
-              <Tag key={permission}>{permission}</Tag>
+              <Tag key={permission} title={permission}>
+                {permissionLabel(permission)}
+              </Tag>
             ))}
           </div>
         </div>
@@ -172,7 +179,9 @@ export default function RolesPage({ mode = 'roles' }: { mode?: 'roles' | 'permis
       render: (permissions: string[]) => (
         <Space wrap>
           {permissions.map((permission) => (
-            <Tag key={permission}>{permission}</Tag>
+            <Tag key={permission} title={permission}>
+              {permissionLabel(permission)}
+            </Tag>
           ))}
         </Space>
       ),
@@ -221,9 +230,10 @@ export default function RolesPage({ mode = 'roles' }: { mode?: 'roles' | 'permis
   ]
   return (
     <ResourceWorkspace
-      title={t(mode === 'permissions' ? 'admin.permissionManagement' : 'admin.roles')}
-      description={t(mode === 'permissions' ? 'admin.permissionManagementDescription' : 'admin.rolesDescription')}
+      title={t('admin.roles')}
+      description={t('admin.rolesDescription')}
       onSearch={list.search}
+      searchValue={list.query.search}
       onReload={list.reload}
       error={list.error}
       actions={
@@ -290,8 +300,8 @@ export default function RolesPage({ mode = 'roles' }: { mode?: 'roles' | 'permis
           <Form.Item name="code" label={t('admin.code')} rules={[{ required: true, pattern: /^[a-z][a-z0-9_-]*$/ }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="permissions" label={t('admin.permissions')}>
-            <Select mode="tags" options={permissionOptions} tokenSeparators={[',']} />
+          <Form.Item name="permissions" label={t('admin.permissions')} extra={t('admin.permissionSelectionHelp')}>
+            <Select mode="multiple" options={permissionOptions} optionFilterProp="label" showSearch />
           </Form.Item>
           <Typography.Title level={5}>{t('admin.resourceScope')}</Typography.Title>
           <Typography.Paragraph type="secondary">{t('admin.resourceScopeHelp')}</Typography.Paragraph>

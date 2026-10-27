@@ -143,6 +143,7 @@ export default function TenantsPage() {
       title={t('admin.tenants')}
       description={t('admin.tenantsDescription')}
       onSearch={list.search}
+      searchValue={list.query.search}
       onReload={list.reload}
       error={list.error}
       actions={

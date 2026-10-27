@@ -18,6 +18,8 @@ import styles from './guide.module.less'
 
 const repository = 'https://github.com/wkylin/pro-react-admin'
 const pages = 'https://wkylin.github.io/pro-react-admin'
+const referenceRoute = '/administration/users'
+const referenceSignInRoute = `/signin?next=${encodeURIComponent(referenceRoute)}`
 const libraryPack = 'npm pack ./packages/wui-react --dry-run --ignore-scripts'
 const libraryReleaseTag = 'wui-react-v*'
 const libraryOutput = 'packages/wui-react/dist/'
@@ -88,12 +90,17 @@ function EvidenceLink({ path, label }: { path: string; label: string }) {
 
 export default function Home() {
   const { t } = useTranslation()
-  const [buildTool, setBuildTool] = useState<BuildTool>('webpack')
+  const [buildTool, setBuildTool] = useState<BuildTool>('vite')
   const [copied, setCopied] = useState('')
   const { pathname } = useLocation()
   const isPublic = pathname === '/overview'
   const isSignedIn = Boolean(readStoredToken())
-  const commands = ['pnpm install --frozen-lockfile', 'pnpm run project:doctor', `pnpm run dev:${buildTool}`]
+  const commands = [
+    'pnpm install --frozen-lockfile',
+    'pnpm run project:create myApp --preset enterprise',
+    'pnpm run project:doctor',
+    `${buildTool === 'vite' ? '' : 'BUILD_TOOL=webpack '}PROJECT=myApp pnpm start`,
+  ]
   const storybookOutput = buildTool === 'webpack' ? 'storybook-static/' : 'storybook-static-vite/'
   const storybookPreview =
     buildTool === 'webpack' ? 'pnpm run serve:storybook' : 'pnpm exec serve storybook-static-vite -p 6009'
@@ -121,7 +128,7 @@ export default function Home() {
             <a href={`${repository}/tree/main/docs`} target="_blank" rel="noopener noreferrer">
               {t('projectGuide.nav.docs')} <ArrowUpRight size={15} aria-hidden="true" />
             </a>
-            <Link className={styles.navPrimary} to={isSignedIn ? '/demo' : '/signin'}>
+            <Link className={styles.navPrimary} to={isSignedIn ? referenceRoute : referenceSignInRoute}>
               {isSignedIn ? t('projectGuide.nav.openDemo') : t('projectGuide.nav.signIn')}{' '}
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
@@ -137,7 +144,7 @@ export default function Home() {
             <p className={styles.lead}>{t('projectGuide.intro.lead')}</p>
             <p className={styles.introCopy}>{t('projectGuide.intro.description')}</p>
             <div className={styles.introActions}>
-              <Link className={styles.primaryAction} to={isSignedIn ? '/demo' : '/signin'}>
+              <Link className={styles.primaryAction} to={isSignedIn ? referenceRoute : referenceSignInRoute}>
                 {isSignedIn ? t('projectGuide.intro.viewScenarios') : t('projectGuide.intro.tryDemo')}{' '}
                 <ArrowRight size={17} aria-hidden="true" />
               </Link>

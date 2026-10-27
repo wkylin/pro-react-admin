@@ -2,6 +2,7 @@ import request from './request'
 import { http } from './http'
 
 export interface RequestOptions {
+  requestId?: string
   signal?: AbortSignal
   timeout?: number
   headers?: Record<string, string>

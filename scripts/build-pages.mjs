@@ -3,7 +3,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { log } from 'node:console'
 import { spawnSync } from 'node:child_process'
-import { createPagesPlan } from '../config/pages-plan.mjs'
+import { createPagesPlan, createPagesTaskEnv } from '../config/pages-plan.mjs'
 import { renderPortalHtml } from './pages-portal.mjs'
 import { workspaceRoot, resolveInside } from '../config/project-registry.mjs'
 import { localCli } from './local-cli.mjs'
@@ -16,6 +16,7 @@ const plan = createPagesPlan({
   target: process.env.PAGES_TARGET || 'all',
   basePath: process.env.PAGES_BASE_PATH ?? (repo.endsWith('.github.io') ? '/' : `/${repo}/`),
   siteUrl: process.env.PAGES_SITE_URL || `https://${owner}.github.io`,
+  buildTool: process.env.BUILD_TOOL,
 })
 if (process.argv.includes('--dry-run')) {
   log(JSON.stringify(plan, null, 2))
@@ -29,11 +30,8 @@ if (process.argv.includes('--dry-run')) {
     if (result.status !== 0) throw new Error(`Pages build failed: ${args[0]} (exit ${result.status})`)
   }
   for (const task of plan.tasks) {
-    const env = { ...process.env, NODE_ENV: 'production', CI: 'true', SENTRY_SOURCE_MAP: 'no', ...task.env }
-    // Build plans determine federation roles; keep a parent shell's role out of ordinary builds.
-    delete env.MFE_ROLE
+    const env = createPagesTaskEnv(task, process.env)
     if (task.kind === 'app') {
-      if (env.BUILD_TOOL === 'vite') env.VITE_OUT_DIR = path.relative(workspaceRoot, task.source)
       run(['scripts/project-command.mjs', task.action, task.name, '--stats'], env)
     } else {
       run(
@@ -69,15 +67,16 @@ if (process.argv.includes('--dry-run')) {
   fs.writeFileSync(path.join(output, 'portal.html'), html)
   if (!fs.existsSync(path.join(output, 'index.html'))) fs.writeFileSync(path.join(output, 'index.html'), html)
   fs.writeFileSync(path.join(output, '.nojekyll'), '')
+  const bundlers = [...new Set(plan.tasks.map((task) => task.bundler))]
   fs.writeFileSync(
     path.join(output, 'deployment.json'),
     JSON.stringify(
       {
         target: plan.target,
-        bundler: process.env.BUILD_TOOL || 'webpack',
+        bundler: bundlers.length === 1 ? bundlers[0] : 'mixed',
         base: plan.base,
         origin: plan.origin,
-        entries: plan.tasks.map(({ name, action, destination }) => ({ name, action, destination })),
+        entries: plan.tasks.map(({ name, action, destination, bundler }) => ({ name, action, destination, bundler })),
       },
       null,
       2

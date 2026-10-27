@@ -14,6 +14,7 @@ pnpm run check:import-boundaries
 pnpm run check:route-contract
 pnpm run generate:docs
 pnpm run check:docs
+pnpm run check:i18n
 pnpm run check:component-catalog
 pnpm run typecheck
 pnpm run typecheck:boundaries
@@ -36,7 +37,7 @@ pnpm run test:report
 
 单测文件贴近 `src/` 或 `packages/wui-react/src/` 的对应源码。`tests/unit/config.cjs` 使用 `config/path-aliases.json` 派生映射；`tests/unit/transform.cjs` 使用 esbuild 与 automatic JSX。`test:jest` 和 `test:watch` 不采集覆盖率，`test:coverage` 使用 V8 对应用与组件库源码统计，排除测试、Storybook stories 和声明文件。依赖 mock 使用 jest.doMock 与延迟 require；不要依赖该 transformer 自动提升 jest.mock。
 
-每次 Jest 运行会更新 `tests/reports/unit/index.html` 和 `summary.json`。覆盖率运行还会写入 `tests/reports/unit/coverage/`：总览 JSON、逐文件 HTML、LCOV。`pnpm run test:report` 构建总览并在本地 8765 端口展示；`pnpm run test:report:build` 只生成静态总览。`test` 只运行一次 Jest 覆盖率；`test:tooling` 与 `test:api` 仍各自运行 Node test runner。
+每次 Jest 运行会更新 `tests/reports/unit/index.html` 和 `summary.json`。覆盖率运行还会写入 `tests/reports/unit/coverage/`：总览 JSON、逐文件 HTML、LCOV。`tests/unit/config.cjs` 对认证策略、会话、授权决策、管理资源解析和数据缓存等核心文件设置逐文件行覆盖率下限；全仓展示页覆盖率仍作为观察值。`pnpm run test:report` 构建总览并在本地 8765 端口展示；`pnpm run test:report:build` 只生成静态总览。`test` 只运行一次 Jest 覆盖率；`test:tooling` 与 `test:api` 仍各自运行 Node test runner。
 
 核心单测覆盖权限失败关闭、身份切换竞态、共享异步策略、业务 envelope、加密隔离、Axios instance 替换与幂等安装、浏览器环境变量注入、Fetch multipart/query、重复取消 cleanup 与领域解码。根 test 仅调用一次 coverage，不再重复执行整套 Jest。Jest 串行运行测试文件，避免动画和输入事件测试在 worker 竞争下超时。
 
@@ -67,7 +68,7 @@ pnpm run test:e2e:mfe
 
 Playwright 用例位于 `tests/e2e/`，配置位于 `tests/e2e/config/`：`app.config.ts` 验证 Webpack/Vite 默认应用，`enterprise-demo.config.ts` 验证企业演示，`enterprise-api.config.ts` 验证真实企业 API，`mfe.config.ts` 验证微前端；`shared.ts` 统一测试根路径、Chromium 默认项和报告输出。四套配置分别服务 dist:5000（Vite 时为 dist-vite）、dist-enterprise:5090、dist-enterprise:5091、dist-vercel:5080。真实企业配置启动临时数据库/Express 和静态资源，验证完整登录/持久化 CRUD/审计/注销/租户切换，不 mock 业务 API。它要求先 build:enterprise:api；同一个 dist-enterprise 目录不能在两种模式的测试运行期间重新构建。各场景的 JSON、HTML、截图和 trace 分别位于 `tests/reports/e2e/<场景>/`；总览可跳转到 Playwright 原生 HTML 报告。浏览器测试结果不并入 Jest 代码覆盖率。关键权限与 Tab 流程重复验证；locator 使用可见角色与 label，不以固定 sleep 或 networkidle 代替就绪信号。
 
-.github/workflows/build-ci.yml 分 quality、vite、enterprise、enterprise-api、storybook、library、microfrontends jobs；quality 包含 Webpack、strict API、真实 HTTP 集成测试及 Jest 覆盖率，vite 验证应用、微前端、Storybook 和组件库的另一套构建，enterprise-api 构建真实模式并重复浏览器回归。运行后上传 `tests/reports/` 作为各 job 的测试报告工件；Webpack 的 `artifacts/build/webpack/default/` 也单独上传。CI 配置不是本地执行结果，以对应 workflow 的实际状态和报告为准。
+.github/workflows/build-ci.yml 分 quality、vite、enterprise、enterprise-api、storybook、library、microfrontends jobs；quality 包含脚本、Markdown、源码格式、国际化检查、Webpack、strict API、真实 HTTP 集成测试及 Jest 覆盖率，vite 验证应用、微前端、Storybook 和组件库的另一套构建，enterprise-api 构建真实模式并重复浏览器回归。运行后上传 `tests/reports/` 作为各 job 的测试报告工件；Webpack 的 `artifacts/build/webpack/default/` 也单独上传。CI 配置不是本地执行结果，以对应 workflow 的实际状态和报告为准。
 
 ## 新架构回归
 

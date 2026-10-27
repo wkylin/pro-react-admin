@@ -10,28 +10,39 @@ function createApp(
   service: Awaited<ReturnType<typeof openPostgresEnterpriseService>>,
   env: NodeJS.ProcessEnv = process.env
 ): ReturnType<typeof express> {
-  const origins = new Set((env.CORS_ORIGINS || '').split(',').map((item) => item.trim()).filter(Boolean))
+  const origins = new Set(
+    (env.CORS_ORIGINS || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+  )
   if (!origins.size) throw new Error('CORS_ORIGINS must list at least one trusted frontend origin')
   const app = express()
   app.set('trust proxy', 1)
   app.disable('x-powered-by')
   app.use(helmet())
-  app.use(cors({
-    credentials: true,
-    origin(origin, callback) {
-      callback(null, !origin || origins.has(origin))
-    },
-    maxAge: 600,
-  }))
+  app.use(
+    cors({
+      credentials: true,
+      exposedHeaders: ['X-Request-ID'],
+      origin(origin, callback) {
+        callback(null, !origin || origins.has(origin))
+      },
+      maxAge: 600,
+    })
+  )
   app.use(express.json({ limit: '1mb' }))
   app.get('/api/health', (_req: IncomingMessage, res: ServerResponse) => {
     res.setHeader('Content-Type', 'application/json; charset=utf-8')
     res.end(JSON.stringify({ status: 'ok', database: 'postgresql' }))
   })
-  app.use('/api', createEnterpriseRouter(service, {
-    businessErrorClass: BusinessError,
-    loginLimiter: (clientKey: string, limit: number) => service.chargeLoginLimit(clientKey, limit),
-  }))
+  app.use(
+    '/api',
+    createEnterpriseRouter(service, {
+      businessErrorClass: BusinessError,
+      loginLimiter: (clientKey: string, limit: number) => service.chargeLoginLimit(clientKey, limit),
+    })
+  )
   return app
 }
 

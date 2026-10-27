@@ -1,7 +1,9 @@
 import fs from 'node:fs'
+import { isDeepStrictEqual } from 'node:util'
 import { collectRouteDeclarations, collectMenuDeclarations, root } from './route-contract.mjs'
 
 const policies = JSON.parse(fs.readFileSync(`${root}/config/route-policy.json`, 'utf8'))
+const enterprisePolicies = JSON.parse(fs.readFileSync(`${root}/config/route-policy.enterprise.json`, 'utf8'))
 const routes = collectRouteDeclarations()
 const menus = collectMenuDeclarations()
 const declarations = new Map()
@@ -50,6 +52,18 @@ for (const [routePath, policy] of Object.entries(policies)) {
     issues.push(`Invalid permission code: ${routePath}`)
   if (!declarations.has(routePath) && !declarations.has(`${routePath}/*`) && !policy.menuGroup)
     issues.push(`Policy has no route or explicit menu group: ${routePath}`)
+}
+for (const [routePath, policy] of Object.entries(enterprisePolicies)) {
+  if (!policies[routePath]) issues.push(`Enterprise policy has no canonical entry: ${routePath}`)
+  else if (!isDeepStrictEqual(policy, policies[routePath]))
+    issues.push(`Enterprise policy differs from canonical entry: ${routePath}`)
+  if (policy.menu?.parent && !enterprisePolicies[policy.menu.parent]?.menu)
+    issues.push(`Enterprise navigation parent is missing: ${policy.menu.parent} (from ${routePath})`)
+}
+for (const routePath of Object.keys(policies).filter(
+  (path) => path.startsWith('/administration') || path === '/account/security'
+)) {
+  if (!enterprisePolicies[routePath]) issues.push(`Enterprise policy is missing a management route: ${routePath}`)
 }
 if (issues.length) {
   console.error('[route-contract]\n' + issues.join('\n'))

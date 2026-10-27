@@ -39,7 +39,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 
 ## 浏览器环境变量白名单
 
-只有下列变量会注入应用。`APP_BASE_URL` 为空表示同源 API；`REACT_APP_USE_MOCK=true` 才启用演示授权。通用环境模板供公开演示使用；Enterprise 项目命令默认注入 false，Pages 演示构建显式注入 true。Remote URL 变量由构建侧读取，不是浏览器凭据。
+只有下列变量会注入应用。`APP_BASE_URL` 为空表示同源 API；`REACT_APP_USE_MOCK=true` 才启用演示授权。通用环境模板供公开演示使用；注册为 Enterprise 认证的项目命令默认注入 false，Pages 演示构建显式注入 true。Remote URL 变量由构建侧读取，不是浏览器凭据。
 
 - `NODE_ENV`
 - `BUILD_TOOL`

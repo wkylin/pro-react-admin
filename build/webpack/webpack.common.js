@@ -118,6 +118,7 @@ const clientEnv = Object.fromEntries(
   clientEnvKeys.filter((key) => process.env[key] !== undefined).map((key) => [key, process.env[key]])
 )
 clientEnv.BUILD_TOOL = 'webpack'
+const isDemoBuild = ['true', '1', 'yes', 'y', 'on'].includes((clientEnv.REACT_APP_USE_MOCK || '').toLowerCase())
 
 const config = {
   // Module Federation 的 remote script loader 可能生成 async/await。
@@ -159,6 +160,19 @@ const config = {
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.tsx', '...'],
     alias: {
+      ...(paths.projectName === 'enterprise' && !isDemoBuild
+        ? {
+            '@pages/signin$': path.resolve(root, 'src/platform/auth/components/EnterpriseSignIn.tsx'),
+            '@platform/auth/mocks/permission$': path.resolve(root, 'src/platform/auth/mocks/permission.enterprise.ts'),
+            '@platform/auth/mocks/enterpriseDemo$': path.resolve(
+              root,
+              'src/platform/auth/mocks/enterpriseDemo.empty.ts'
+            ),
+          }
+        : {}),
+      ...(paths.project.authentication === 'enterprise'
+        ? { '@stateless/SoundBar$': path.resolve(root, 'src/app/layouts/proHeader/NoSoundBar.tsx') }
+        : {}),
       ...createPathAliases(root, {
         '@routers': paths.routersDir,
       }),
@@ -180,6 +194,8 @@ const config = {
       'process.env': JSON.stringify(clientEnv),
       __APP_ENV__: JSON.stringify(clientEnv),
       __APP_VERSION__: JSON.stringify(packageJson.version || '0.0.0'),
+      __APP_DEMO__: isDemoBuild,
+      __APP_ENTERPRISE__: paths.projectName === 'enterprise',
     }),
     new WebpackCodeInspectorPlugin({
       bundler: 'webpack',

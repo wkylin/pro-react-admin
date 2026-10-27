@@ -63,6 +63,7 @@ export default function AuditPage() {
       description={t('admin.auditDescription')}
       searchPlaceholder={t('admin.auditSearchPlaceholder')}
       onSearch={list.search}
+      searchValue={list.query.search}
       onReload={list.reload}
       error={list.error}
     >

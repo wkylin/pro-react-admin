@@ -1,0 +1,111 @@
+{
+  "/": {
+    "permission": "home:read",
+    "title": "home",
+    "i18nKey": "home",
+    "menu": {
+      "order": 0,
+      "icon": "HomeOutlined"
+    }
+  },
+  "/403": {
+    "permission": "error:read",
+    "title": "403"
+  },
+  "/404": {
+    "permission": "error:read",
+    "title": "404"
+  },
+  "/privacy": {
+    "permission": "system:read",
+    "title": "隐私政策"
+  },
+  "/account/security": {
+    "title": "登录验证器",
+    "i18nKey": "menu.authenticator",
+    "availability": "enterprise",
+    "access": "authenticated",
+    "menu": {
+      "order": 36,
+      "icon": "SafetyCertificateOutlined"
+    }
+  },
+  "/signin": {
+    "permission": "system:read",
+    "title": "登录"
+  },
+  "/terms": {
+    "permission": "system:read",
+    "title": "用户协议"
+  },
+  "/administration": {
+    "title": "组织管理",
+    "i18nKey": "admin.administration",
+    "menuGroup": true,
+    "menu": {
+      "order": 3,
+      "icon": "SafetyCertificateOutlined"
+    }
+  },
+  "/administration/users": {
+    "title": "用户管理",
+    "i18nKey": "admin.users",
+    "permission": "user:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 0,
+      "icon": "UserOutlined"
+    }
+  },
+  "/administration/roles": {
+    "title": "角色管理",
+    "i18nKey": "admin.roles",
+    "permission": "role:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 1,
+      "icon": "LockOutlined"
+    }
+  },
+  "/administration/permissions": {
+    "title": "权限管理",
+    "i18nKey": "admin.permissionManagement",
+    "permission": "role:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 2,
+      "icon": "SafetyCertificateOutlined"
+    }
+  },
+  "/administration/tenants": {
+    "title": "租户管理",
+    "i18nKey": "admin.tenants",
+    "permission": "tenant:read",
+    "availability": "enterprise",
+    "menu": {
+      "parent": "/administration",
+      "order": 3,
+      "icon": "ApartmentOutlined"
+    }
+  },
+  "/administration/audit": {
+    "title": "审计日志",
+    "i18nKey": "admin.audit",
+    "permission": "audit:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 5,
+      "icon": "FileTextOutlined"
+    }
+  },
+  "/administration/access-requests": {
+    "title": "访问审批",
+    "i18nKey": "admin.accessRequests",
+    "permission": "access:read",
+    "menu": {
+      "parent": "/administration",
+      "order": 4,
+      "icon": "SafetyCertificateOutlined"
+    }
+  }
+}

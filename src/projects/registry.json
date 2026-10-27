@@ -31,7 +31,8 @@
       "sourceRoot": "projects/enterprise",
       "entry": "index.tsx",
       "routers": "routers",
-      "output": "dist-enterprise"
+      "output": "dist-enterprise",
+      "authentication": "enterprise"
     }
   },
   "remotes": [

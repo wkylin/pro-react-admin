@@ -1,7 +1,7 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import SliderCaptcha from '@wui/SliderCaptcha'
 import { useEffect, useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Form, Input, Button, Typography, Layout, App, Popover, Modal, type FormProps } from 'antd'
@@ -16,6 +16,7 @@ import { isDemoPermissionMode } from '@platform/auth/api/permission'
 import EnterpriseSignIn from '@platform/auth/components/EnterpriseSignIn'
 import { useCredentialAutofillGuard } from '@platform/auth/hooks/useCredentialAutofillGuard'
 import AuthShowcase, { AuthBackdrop } from '@platform/auth/components/AuthShowcase'
+import { chooseDemoLandingRoute } from './landingRoute'
 
 import styles from './index.module.less'
 
@@ -79,6 +80,8 @@ const loadOrInitPasswords = (): Record<string, string> => {
 const DemoSignIn = () => {
   const { t } = useTranslation()
   const { projectId } = useApplicationScope()
+  const { search } = useLocation()
+  const requestedRoute = new URLSearchParams(search).get('next')
   const { redirectTo } = useSafeNavigate()
   const { message } = App.useApp()
   const { isAuthenticated } = useAuth()
@@ -156,17 +159,14 @@ const DemoSignIn = () => {
       if (!isAuthenticated) return
       try {
         const routes = await permissionService.getAccessibleRoutes()
-        let target = '/'
-        if (Array.isArray(routes) && routes.length > 0) {
-          target = (routes || []).includes('/') ? '/' : routes[0]
-        }
+        const target = chooseDemoLandingRoute(Array.isArray(routes) ? routes : [], requestedRoute)
         redirectTo(target, { replace: true })
       } catch {
         redirectTo('/', { replace: true })
       }
     }
     redirectIfLoggedIn()
-  }, [isAuthenticated, redirectTo])
+  }, [isAuthenticated, redirectTo, requestedRoute])
 
   useEffect(() => {
     try {
@@ -229,7 +229,7 @@ const DemoSignIn = () => {
 
       if (routes && routes.length > 0) {
         const safeRoutes = Array.isArray(routes) ? routes : []
-        const targetRoute = safeRoutes.includes('/') ? '/' : safeRoutes[0]
+        const targetRoute = chooseDemoLandingRoute(safeRoutes, requestedRoute)
         redirectTo(targetRoute)
       } else {
         redirectTo('/403')

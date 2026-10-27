@@ -1,6 +1,6 @@
 /** Service permissions fail closed. Demo permissions require an explicit build flag. */
 import type { UserPermission, Role, PermissionCode } from '../model/permission'
-import { mockGetUserPermissions, mockGetRoles } from '../mocks/permission'
+import { mockGetUserPermissions, mockGetRoles } from '@platform/auth/mocks/permission'
 import { hasEffectivePermission } from '../model/policy'
 import request from '@platform/api/request'
 import { getEnvBool } from '@platform/config/env'
@@ -51,13 +51,17 @@ export function parseUserPermissions(value: unknown): UserPermission {
 }
 
 export async function getUserPermissions(userId?: string): Promise<UserPermission> {
-  if (isDemoPermissionMode()) return parseUserPermissions(await mockGetUserPermissions(userId))
+  if (typeof __APP_DEMO__ !== 'undefined' ? __APP_DEMO__ : isDemoPermissionMode()) {
+    return parseUserPermissions(await mockGetUserPermissions(userId))
+  }
   const response: unknown = await request.get('/api/permissions/current', {}, { showError: false })
   return parseUserPermissions(unwrapPayload(response))
 }
 
 export async function getRoles(): Promise<Role[]> {
-  if (isDemoPermissionMode()) return mockGetRoles()
+  if (typeof __APP_DEMO__ !== 'undefined' ? __APP_DEMO__ : isDemoPermissionMode()) {
+    return mockGetRoles()
+  }
   const response: unknown = await request.get('/api/roles', {}, { showError: false })
   const roles = unwrapPayload(response)
   if (!Array.isArray(roles) || !roles.every(isRole)) throw new Error('角色响应格式无效')

@@ -1,8 +1,8 @@
 # Pro React Admin
 
-React 企业管理应用与组件工作区，基于 React 19、Ant Design 6、React Router 7、Zustand 5、Webpack 5、Vite 8 和 TypeScript 6。提供完整展示应用、精简企业入口、多项目构建、Module Federation Host/Remote，以及独立 UI 包 @w.ui/wui-react。
+供团队复用的 React 管理后台脚手架。安全项目预设提供受保护路由、租户身份、服务端授权、持久化资源与审计；展示应用、双构建器、微前端示例和独立 UI 包可按需选用。基于 React 19、Ant Design 6、React Router 7、Zustand 5 和 TypeScript 6。
 
-先看[线上项目概览](https://pro-react-admin.vercel.app/#/overview)了解能力、目录和交付路径；[工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md)将每项能力对应到源码、验证命令和适用边界。需要进入应用操作时再使用演示账号登录。
+第一次使用建议从下方的安全项目预设开始。[线上项目概览](https://pro-react-admin.vercel.app/#/overview)和[工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md)展示源码、验证命令与交付边界；公开站点使用浏览器演示数据。
 
 ## 线上预览
 
@@ -21,16 +21,21 @@ Pages 的新增示例和全部应用入口以本次 Actions 部署成功为准�
 git clone https://github.com/wkylin/pro-react-admin.git
 cd pro-react-admin
 pnpm install --frozen-lockfile
-pnpm start
+pnpm run project:create myApp --preset enterprise
+PROJECT=myApp pnpm start
 ```
 
-已有仓库只需在根目录安装并启动。访问 http://localhost:8080/#/signin，点击 `admin@test.com` 自动填充当前浏览器生成的演示密码，再点击登录并完成滑块验证；没有统一固定密码。`pnpm start` 同时启动完整展示应用和本地 API（从 5200 起，占用时递增并同步前端代理），开发埋点使用内存，无需 MongoDB。实际端口以终端输出为准。
+安全预设默认使用 Vite，生成独立项目并启动前端与 Enterprise API。首次启动会创建隔离的本地 SQLite 演示租户；访问终端打印的地址，使用登录页提供的本地演示账号。创建结果、可修改范围和生产配置见[多项目与脚手架](./docs/development/MULTI_PROJECT.md)。
+
+### 浏览展示应用
+
+只想查看全部演示场景时，在仓库根目录运行 `pnpm start`。访问终端打印的 `/#/signin` 地址，点击 `admin@test.com` 自动填充当前浏览器生成的演示密码，再登录并完成滑块验证；没有统一固定密码。展示应用和本地 API 一起启动，开发埋点使用内存，无需 MongoDB。
 
 演示账号和管理数据由应用内的权限 mock 与 `src/features/administration/api/demoProvider.ts` 提供，不需要额外启动假接口服务；真实租户模式则调用 `server/enterprise/`。
 
 ### Webpack / Vite 构建选择
 
-同一份应用与组件源码支持两套构建器。默认命令仍使用 Webpack；设置 `BUILD_TOOL=vite` 后，`start`、`project:dev`、`project:build`、`mfe:*` 和 `build:pages` 使用 Vite。应用也可在命令后传 `--bundler=vite`，该参数优先于环境变量。
+同一份应用与组件源码支持两套构建器。展示应用与既有示例默认使用 Webpack；新建的安全项目预设默认使用 Vite。设置 `BUILD_TOOL=vite` 后，`start`、`project:dev`、`project:build`、`mfe:*` 和 `build:pages` 使用 Vite。应用也可在命令后传 `--bundler=vite`，该参数优先于环境变量。
 
 ```bash
 pnpm run dev:webpack                 # Webpack 应用与本地 API

@@ -1,6 +1,7 @@
 import { createNavigationTree, filterNavigationTree, filterNavigationByRoutes, findNavigationChain } from './menu'
 import { canAccessPath, type RoutePolicy } from '@platform/auth/model/policy'
 import type { UserPermission } from '@platform/auth/model/permission'
+import enterprisePolicies from '../../../config/route-policy.enterprise.json'
 
 const manifest: Record<string, RoutePolicy> = {
   '/administration': { title: 'Administration', menuGroup: true, menu: { order: 0 } },
@@ -35,4 +36,9 @@ test('rejects missing parents and parent cycles before rendering navigation', ()
   expect(() =>
     createNavigationTree({ '/a': { menu: { parent: '/b', order: 0 } }, '/b': { menu: { parent: '/a', order: 0 } } })
   ).toThrow('cycle')
+})
+test('Enterprise navigation has valid parents and excludes the shared error menu', () => {
+  const tree = createNavigationTree(enterprisePolicies as unknown as Readonly<Record<string, RoutePolicy>>)
+  expect(tree.some((item) => item.path === '/error')).toBe(false)
+  expect(tree.find((item) => item.path === '/administration')?.children?.length).toBeGreaterThan(0)
 })

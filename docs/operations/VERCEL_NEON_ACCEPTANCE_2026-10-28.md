@@ -1,0 +1,42 @@
+# Vercel + Neon 验收记录：2026-10-28
+
+目标为展示前端 `pro-react-admin`、独立企业前端 `pro-react-admin-enterprise`、`pro-react-admin-enterprise-api` API 和 Neon PostgreSQL。本记录区分已验证的线上事实与仍待完成的演练；生产 Neon 分支不执行回退。
+
+| 检查项 | 本次结果 | 证据 / 待办 |
+| --- | --- | --- |
+| API 部署 | 轮换凭据后的部署 `dpl_2iuoCJT3HSZG1fnTFJZGwM5UCY27` 已提升到生产别名 | `https://pro-react-admin-enterprise-api.vercel.app`；候选地址先验收再执行 `vercel promote` |
+| API/数据库健康 | 生产别名 `/api/health` 返回 200、`{"status":"ok","database":"postgresql"}`；Neon schema 版本 2 | 用户报告删除演练分支后，于 `2026-10-28 01:22 CST` 再次对生产健康端点执行只读请求，仍返回 200；本地受保护连接执行只读 `api:pg status` |
+| 企业前端部署 | 独立项目 `pro-react-admin-enterprise` 的修复部署 `dpl_ysXotK1ZtdAbg9UhMdBPQR9WYTx4` 已在生产别名 Ready | `https://pro-react-admin-enterprise-wkylins-projects.vercel.app` 受 Vercel Authentication 保护；Vercel CLI 核验候选 `version.json` 为 `enterprise`、版本 `6.0.0`。生产现有独立 `wkylin` 租户管理员；真实浏览器管理流程仍待验收 |
+| 展示前端 | 原线上代码经环境清理后重部署为 `dpl_HGVBiKNyYvCtygDnKJz83M2bS94n`；`https://pro-react-admin.vercel.app/version.json` 返回 `default`、版本 `6.0.0` | 生产别名已指向新的 Ready 部署，展示站继续独立 |
+| 企业前端产物 | 编译目标 API 为现有独立 API 域名，真实模式将 demo 权限与默认页面剔除 | 扫描 36 个文本产物，未发现 Neon 主机名、数据库密码或演示账号邮箱；专用 `vercel.enterprise.json` 不包含展示站的 OAuth 和 MFE 路由 |
+| 生产租户初始化 | 按用户追加授权创建独立租户 `wkylin` 与启用的管理员 `wkylin.w@gmail.com`，角色为 `tenant-admin` | 初始密码仅在受保护的 0600 临时文件中交付；生产 API 登录、会话、权限接口均返回 200，测试会话退出返回 204；原 `acme` 的用户/角色/审计计数保持 `1/1/14` |
+| CORS 与权限拒绝 | 企业前端 origin 的 OPTIONS 返回 204；无凭据访问 `/api/admin/users` 返回 401 | `Access-Control-Allow-Origin` 精确回显企业前端 origin；原展示站 origin 仍在允许列表；真实账号的浏览器管理流程待验收 |
+| 请求关联 | 生产 401 响应原样回传合法 `X-Request-ID: release-prod-123` 并暴露该响应头；非法 ID 被替换为 UUID | 已从生产部署 `dpl_6Lhoao2Q74GC3V9VRzXA5GcVBA15` 的 Function 脱敏 JSON 日志检索到同一请求 ID、`GET /api/admin/users` 与 401；浏览器端抽样待完成 |
+| API Preview 隔离 | 演练中发现临时 Preview 部署没有 Vercel 登录保护，已立即删除该部署并清空 Preview 的全部临时分支变量 | 临时地址复查返回 404、Preview 变量列表为空；后续分支业务核验改由受保护的本地 API 进行，生产 API 不受影响 |
+| 告警 | Vercel Hobby 不支持自定义低阈值 Monitor；UptimeRobot 邮件监控已由收件人激活 | 生产请求日志于 `2026-10-27T16:33:30Z`、`16:38:34Z` 记录 UptimeRobot 对 `/api/health` 的 HEAD 200，符合约 5 分钟探测；收件人确认 `Test Notification` 的模拟 DOWN 和 UP 邮件均送达；真实故障判定未演练 |
+| 数据恢复 | Neon 项目 `cold-hill-38392082` 的生产分支为 `main`，Free 套餐历史恢复窗口 6 小时，无快照或计划；从 `2026-10-28 00:30 Asia/Shanghai` 创建隔离分支 `recovery-drill-20261028-0030`（`br-calm-glitter-b3lj0jd4`），并仅恢复该分支至 00:44 | 分叉耗时 0.82 秒；创建到读库核验约 2 分 09 秒；分支自恢复操作约 12 秒。标记表恢复后消失，17 张表与初始计数 `1/1/1/0/14` 保留；生产 `main` 未执行恢复，RPO 目标与生产切流 RTO 未测量 |
+| 密钥边界 | `neon-coffee-ocean` 已从展示项目断开；展示项目 16 个数据库变量归零、余 6 个非数据库变量；随后重部署原线上代码 | API 的独立 Neon 资源及 16 个数据库变量保留，API 健康仍为 200；旧的历史部署 URL 可能仍持有旧环境快照，应按保留策略清理并轮换凭据 |
+| 凭据轮换 | 本地检查错误输出意外显示旧 Enterprise Neon 连接串；用户单独批准并亲手重置生产默认角色密码 | Vercel 原生集成同步了 pooled/direct URL；新 API 候选与主域名健康 200、401/CORS/请求 ID 正常；本地 0600 运维文件已更新，schema v2 和 direct 连接均通过。UptimeRobot 在新部署上于 `2026-10-27T17:03:57Z` 探测 200。用户报告已手动删除仍接受旧密码的演练分支，本地旧临时连接文件已删除；Neon 列表独立复核被浏览器自动权限审核拒绝 |
+
+## 上线验收顺序
+
+1. [已完成] 本地质量门禁、安全预设产物检查和前端密钥扫描；本次线上产物尚未对应 Git 提交，部署 ID 见上表。
+2. [已完成] 建立受保护 Enterprise 前端项目，配置真实 API origin，API CORS 加入其精确 origin。企业前端项目没有 Neon 变量。
+3. [部分完成] 发布 API 与企业前端；隔离分支上的本地浏览器登录、工作台、用户与角色、审批、审计、权限矩阵和越权拒绝均已验收。用户随后追加授权创建生产 `wkylin` 租户管理员，线上 API 登录、会话、权限和退出已验收；生产浏览器管理流程仍待验收。隔离分支不得接到未受保护的 Preview API。
+4. [部分完成] 已在生产 API 响应头和 Function 脱敏日志核对请求 ID；浏览器端流程待完成。
+5. [部分完成] 邮件监控已激活且持续探测到达 API，模拟 DOWN/UP 通知均被收件人确认；真实故障判定、处置与解除待演练。
+6. [部分完成] Neon 6 小时窗口内的指定时间分支、自恢复和业务数据核验已完成；生产切流 RTO 与业务 RPO 目标未测量。自恢复自动生成的永久备份分支 `br-long-term-b3xpnz0z` 已在用户当次确认后删除，当时列表只剩 `main` 与演练分支。之后用户报告又手动删除了演练分支 `br-calm-glitter-b3lj0jd4`；只读 CUA 复核因自动权限审核的重试次数限制被拒绝，最终列表状态未独立确认。
+
+## 隔离分支业务核验
+
+分支自恢复后，使用本地 API 进程和该分支的受保护连接初始化临时租户 `acceptance-20261028`。23 项 HTTP 检查全部通过，包括匿名 401、管理员登录、权限与资源列表、跨租户 403、角色和用户创建、只读角色 403、访问申请预览、独立审批人批准、授权立即生效、审计及退出后 401。测试密码和数据库 URL 只写入 0600 临时文件，没有进入仓库或前端产物。
+
+隔离演练当时，分支的租户/用户/角色/访问申请/审计计数为 `2/4/3/1/24`，生产 `main` 为 `1/1/1/0/14`；随后按用户追加授权在生产新建了 `wkylin` 租户。这验证了隔离分支上的真实 PostgreSQL 工作流与生产数据边界。本地浏览器连接仅指向隔离分支的本地 API，走通登录、工作台、用户/角色弹窗、权限矩阵和跳转、已批准审批记录与详情、审计；该轮没有 API 4xx/5xx 或浏览器异常，截图保存在受保护的临时目录 `/private/tmp/pro-react-admin-recovery-browser/`。此时用户暂不在生产创建管理员；之后用户追加授权创建 `wkylin` 管理员，生产 API 登录已另行验收，浏览器管理流程仍未计入通过项。
+
+## 质量与发布处置
+
+最终 Webpack Enterprise 真实模式构建成功；扫描 36 个文本产物，Neon 主机名、数据库密码以及本地演示邮箱/密码均零命中。完整单元测试为 53 个套件、219 个测试通过；脚本、部署配置、路由契约、导入边界、文档链接、Markdown 格式与 `git diff --check` 均通过。
+
+本次本地浏览器验收曾发现企业精简路由策略的 `/error` 菜单指向已移除的父节点，导致首屏初始化异常。先将线上企业别名回切到上一版，再移除悬空菜单并加入企业菜单父节点的构建校验，浏览器验收通过后发布 `dpl_ysXotK1ZtdAbg9UhMdBPQR9WYTx4`。API 和数据库在前端回切期间未受影响。
+
+上述未完成项关闭前，不能把本次改动标记为线上验收通过。

@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Alert, App, Button, Descriptions, Input, Modal, Select, Space, Table, Tag, Typography } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 import { useCheckPermission } from '@platform/auth/hooks/usePermission'
 import { usePermission } from '@platform/auth/hooks/usePermission'
 import { permissionService } from '@platform/auth/services/permissionService'
 import type { AccessRequest, AccessStatus } from '../api/accessRequests'
 import { useAdministration } from '../model/AdministrationProvider'
+import { readAccessRequestQuery, writeAccessRequestQuery } from '../model/accessRequestQuery'
 import type { ManagedRole, ManagedUser } from '../model/resources'
 import ResourceWorkspace from './ResourceWorkspace'
 
@@ -15,8 +17,13 @@ export default function AccessRequestsPage() {
   const { access, provider, demo, accessRevision } = useAdministration()
   const canApprove = useCheckPermission('access:approve').hasPermission
   const { current } = usePermission()
-  const [status, setStatus] = useState<AccessStatus | undefined>('pending')
-  const [page, setPage] = useState(1)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { page, status } = readAccessRequestQuery(searchParams)
+  const updateView = useCallback(
+    ({ nextPage, nextStatus }: { nextPage?: number; nextStatus?: AccessStatus | 'all' }) =>
+      setSearchParams((previous) => writeAccessRequestQuery(previous, { nextPage, nextStatus }), { replace: true }),
+    [setSearchParams]
+  )
   const [items, setItems] = useState<AccessRequest[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -87,8 +94,7 @@ export default function AccessRequestsPage() {
           value={status ?? 'all'}
           style={{ minWidth: 150 }}
           onChange={(value) => {
-            setStatus(value === 'all' ? undefined : (value as AccessStatus))
-            setPage(1)
+            updateView({ nextStatus: value as AccessStatus | 'all', nextPage: 1 })
           }}
           options={['pending', 'approved', 'rejected', 'stale', 'all'].map((value) => ({
             value,
@@ -159,7 +165,13 @@ export default function AccessRequestsPage() {
             ),
           },
         ]}
-        pagination={{ current: page, pageSize: 20, total, onChange: setPage, showSizeChanger: false }}
+        pagination={{
+          current: page,
+          pageSize: 20,
+          total,
+          onChange: (nextPage) => updateView({ nextPage }),
+          showSizeChanger: false,
+        }}
         locale={{ emptyText: t('admin.accessEmpty') }}
         scroll={{ x: 640 }}
       />

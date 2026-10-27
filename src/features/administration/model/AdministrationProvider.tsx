@@ -20,11 +20,15 @@ type AdministrationContextValue = {
   accessRevision: number
 }
 const Context = createContext<AdministrationContextValue | null>(null)
-const demoProvider = createDemoAdministrationProvider(
-  () => permissionService.peekPermissions()?.username || 'demo',
-  true
-)
-const demoAccess = createDemoAccessClient(demoProvider, () => permissionService.peekPermissions())
+const demoAdapters = (typeof __APP_DEMO__ !== 'undefined' ? __APP_DEMO__ : isDemoPermissionMode())
+  ? (() => {
+      const provider = createDemoAdministrationProvider(
+        () => permissionService.peekPermissions()?.username || 'demo',
+        true
+      )
+      return { provider, access: createDemoAccessClient(provider, () => permissionService.peekPermissions()) }
+    })()
+  : null
 export function AdministrationProvider({
   children,
   provider,
@@ -52,12 +56,13 @@ function ScopedAdministration({
   const [accessRevision, setAccessRevision] = useState(0)
   const [value] = useState(() => {
     const demo = !provider && isDemoPermissionMode()
+    if (demo && !demoAdapters) throw new Error('Demo administration requires a demo build')
     return {
       demo,
       realtime: !provider && !demo,
-      access: demo ? demoAccess : enterpriseAccessClient,
+      access: demo ? demoAdapters!.access : enterpriseAccessClient,
       provider: createCachedDataProvider(
-        provider ?? (demo ? demoProvider : createRestDataProvider(apiClient, administrationResources)),
+        provider ?? (demo ? demoAdapters!.provider : createRestDataProvider(apiClient, administrationResources)),
         {
           scope: getSessionIdentity(),
           getScope: getSessionIdentity,

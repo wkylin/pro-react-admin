@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, theme } from 'antd'
-import { ArrowRight, ArrowUpRight, Blocks, ExternalLink, GitBranch, LockKeyhole, Move } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Blocks, ExternalLink, GitBranch, LockKeyhole, Move, ShieldCheck } from 'lucide-react'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import styles from './index.module.less'
@@ -9,6 +9,14 @@ import styles from './index.module.less'
 const repositoryFile = (path: string) => `https://github.com/wkylin/pro-react-admin/blob/main/${path}`
 
 const scenarios = [
+  {
+    id: 'access',
+    path: '/administration/users',
+    Icon: ShieldCheck,
+    source: { path: 'src/features/administration/pages/UsersPage.tsx', label: 'UsersPage.tsx' },
+    test: { path: 'tests/e2e/enterprise.spec.ts', label: 'enterprise.spec.ts' },
+    docs: { path: 'docs/architecture/RBAC_RESOURCE_APPROVAL.md', label: 'RBAC_RESOURCE_APPROVAL.md' },
+  },
   {
     id: 'crypto',
     path: '/crypto',

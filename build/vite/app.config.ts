@@ -41,6 +41,7 @@ export default defineConfig(({ mode, command }) => {
   if (role && role !== 'host' && role !== 'remote') throw new Error('MFE_ROLE must be host or remote')
   const port = Number(env.PORT || (selected.remote ? selected.remote.devPort : 8080))
   const clientEnv = createPublicEnv({ mode, project, source: { ...env, PUBLIC_URL: base, BUILD_TOOL: 'vite' } })
+  const isDemoBuild = ['true', '1', 'yes', 'y', 'on'].includes((clientEnv.REACT_APP_USE_MOCK || '').toLowerCase())
   const useSentry = env.SENTRY_SOURCE_MAP === 'map'
   if (isBuild && useSentry && !env.SENTRY_AUTH_TOKEN) {
     throw new Error('SENTRY_SOURCE_MAP=map requires SENTRY_AUTH_TOKEN for the release upload')
@@ -49,6 +50,13 @@ export default defineConfig(({ mode, command }) => {
   const debug = env.DEBUG_PROD === '1'
   const projectPublicDir = path.join(selected.sourceRoot, 'public')
   const aliases = createPathAliases(root, { '@routers': selected.routers })
+  if (project === 'enterprise' && !isDemoBuild) {
+    aliases['@pages/signin'] = path.join(root, 'src/platform/auth/components/EnterpriseSignIn.tsx')
+    aliases['@platform/auth/mocks/permission'] = path.join(root, 'src/platform/auth/mocks/permission.enterprise.ts')
+    aliases['@platform/auth/mocks/enterpriseDemo'] = path.join(root, 'src/platform/auth/mocks/enterpriseDemo.empty.ts')
+  }
+  if (selected.project.authentication === 'enterprise')
+    aliases['@stateless/SoundBar'] = path.join(root, 'src/app/layouts/proHeader/NoSoundBar.tsx')
   for (const kind of ['audio', 'video']) {
     const optimized = path.join(root, 'src/assets-optimized', kind)
     if (isBuild && fs.existsSync(optimized)) aliases[`@assets/${kind}`] = optimized
@@ -191,6 +199,8 @@ export default defineConfig(({ mode, command }) => {
       'process.env': JSON.stringify(clientEnv),
       __APP_ENV__: JSON.stringify(clientEnv),
       __APP_VERSION__: JSON.stringify(packageJson.version),
+      __APP_DEMO__: isDemoBuild,
+      __APP_ENTERPRISE__: project === 'enterprise',
       __APP_BUILD_TIME__: JSON.stringify(buildTime),
     },
     envPrefix: 'VITE_',

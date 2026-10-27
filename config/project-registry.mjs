@@ -22,6 +22,12 @@ export function validateProjectRegistry(registry) {
   const outputs = []
   for (const [name, project] of Object.entries(registry.projects)) {
     if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(name)) throw new Error(`Invalid project name: ${name}`)
+    if (project.authentication !== undefined && project.authentication !== 'enterprise')
+      throw new Error(`Unsupported authentication mode for ${name}: ${project.authentication}`)
+    if (project.defaultBuildTool !== undefined && !['webpack', 'vite'].includes(project.defaultBuildTool))
+      throw new Error(`Unsupported default build tool for ${name}: ${project.defaultBuildTool}`)
+    if (project.authentication === 'enterprise' && (project.mfeExpose || project.mfeHost))
+      throw new Error(`Enterprise authentication requires a standalone project: ${name}`)
     const source = resolveInside(path.join(workspaceRoot, 'src'), project.sourceRoot, `${name}.sourceRoot`)
     for (const key of ['entry', 'routers', ...(project.mfeExpose ? ['mfeExpose'] : [])])
       resolveInside(source, project[key], `${name}.${key}`)
@@ -91,9 +97,9 @@ export function resolveProject(projectName = 'default', registry = loadProjectRe
 export function createBuildPlan(action, name, inherited = {}, registry = loadProjectRegistry()) {
   if (!['dev', 'build', 'mfe-dev', 'mfe-build', 'mfe-build-standalone'].includes(action))
     throw new Error(`Unknown project action: ${action}`)
-  const bundler = inherited.BUILD_TOOL || 'webpack'
-  if (!['webpack', 'vite'].includes(bundler)) throw new Error(`Unknown build tool: ${bundler}`)
   const selected = resolveProject(name, registry)
+  const bundler = inherited.BUILD_TOOL || selected.project.defaultBuildTool || 'webpack'
+  if (!['webpack', 'vite'].includes(bundler)) throw new Error(`Unknown build tool: ${bundler}`)
   const isDev = action === 'dev' || action === 'mfe-dev'
   const isMfe = action.startsWith('mfe-')
   const host = selected.project.mfeHost === true
@@ -106,8 +112,9 @@ export function createBuildPlan(action, name, inherited = {}, registry = loadPro
     ...(bundler === 'webpack' ? { BUILD_GOAL: isDev ? 'development' : 'production' } : {}),
     SENTRY_SOURCE_MAP: inherited.SENTRY_SOURCE_MAP ?? 'no',
   }
-  // Enterprise builds default to tenant-backed auth; demo mode must be explicit.
-  if (selected.name === 'enterprise' && env.REACT_APP_USE_MOCK === undefined) env.REACT_APP_USE_MOCK = 'false'
+  // Tenant-backed projects default to real authorization; demo mode must be explicit.
+  if (selected.project.authentication === 'enterprise' && env.REACT_APP_USE_MOCK === undefined)
+    env.REACT_APP_USE_MOCK = 'false'
   delete env.MFE_ROLE
   if (isMfe) {
     env.MFE_ROLE = host ? 'host' : 'remote'

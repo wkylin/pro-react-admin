@@ -1,17 +1,44 @@
 const express = require('express')
+const { randomUUID } = require('node:crypto')
 
 /**
  * HTTP owns transport/rate limits. Domain code owns authorization and transactions.
  * @param {any} service
- * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError }} [options]
+ * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError, requestLogger?: { info: (entry: string) => void, error: (entry: string) => void } }} [options]
  */
-function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events, businessErrorClass } = {}) {
+function createEnterpriseRouter(
+  service,
+  { loginLimit = 20, loginLimiter, events, businessErrorClass, requestLogger = globalThis.console } = {}
+) {
   const BusinessError = businessErrorClass ?? require('./domain.mts').BusinessError
   if (!Number.isInteger(loginLimit) || loginLimit < 1) throw new Error('Invalid login limit')
   const router = express.Router()
   const buckets = new Map()
-  router.use((_req, res, next) => {
+  router.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store')
+    const suppliedId = req.headers['x-request-id']
+    const validId =
+      typeof suppliedId === 'string' &&
+      suppliedId.length >= 8 &&
+      suppliedId.length <= 128 &&
+      !/[^A-Za-z0-9._-]/.test(suppliedId)
+    const requestId = validId ? suppliedId : randomUUID()
+    req.requestId = requestId
+    res.setHeader('X-Request-ID', requestId)
+    const startedAt = Date.now()
+    const baseUrl = req.baseUrl
+    res.once('finish', () => {
+      requestLogger.info(
+        JSON.stringify({
+          event: 'enterprise_http',
+          requestId,
+          method: req.method,
+          route: typeof req.route?.path === 'string' ? `${baseUrl}${req.route.path}` : `${baseUrl}/unmatched`,
+          status: res.statusCode,
+          durationMs: Date.now() - startedAt,
+        })
+      )
+    })
     next()
   })
   router.post('/auth/login', async (req, res) => {
@@ -57,7 +84,9 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
     res.json(await service.rotateTotpRecoveryCodes(req.principal, req.body))
   )
   router.get('/permissions/current', async (req, res) => res.json(await service.permissions(req.principal)))
-  router.get('/roles', async (req, res) => res.json((await service.list(req.principal, 'roles', { page: 1, pageSize: 200 })).items))
+  router.get('/roles', async (req, res) =>
+    res.json((await service.list(req.principal, 'roles', { page: 1, pageSize: 200 })).items)
+  )
   router.post('/events/ticket', async (req, res) => {
     if (!events && !service.issueEventTicket) return res.status(503).json({ error: 'events_not_configured' })
     // Older browser bundles still connect to /api/events; keep them on polling during rollout.
@@ -77,7 +106,9 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
     events.publish(principal.tenantId, 'audit')
   }
   router.get('/admin/tenants', async (req, res) => res.json(await service.listManagedTenants(req.principal, req.query)))
-  router.get('/admin/tenants/:id', async (req, res) => res.json(await service.getManagedTenant(req.principal, req.params.id)))
+  router.get('/admin/tenants/:id', async (req, res) =>
+    res.json(await service.getManagedTenant(req.principal, req.params.id))
+  )
   router.post('/admin/tenants', async (req, res) => {
     const result = await service.createManagedTenant(req.principal, req.body)
     if (events) events.publish(req.principal.tenantId, 'audit')
@@ -94,8 +125,12 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
     res.status(204).end()
   })
   router.get('/admin/access-governance', async (req, res) => res.json(await service.governance(req.principal)))
-  router.post('/admin/access-requests/preview', async (req, res) => res.json(await service.previewAccess(req.principal, req.body)))
-  router.get('/admin/access-requests', async (req, res) => res.json(await service.listAccessRequests(req.principal, req.query)))
+  router.post('/admin/access-requests/preview', async (req, res) =>
+    res.json(await service.previewAccess(req.principal, req.body))
+  )
+  router.get('/admin/access-requests', async (req, res) =>
+    res.json(await service.listAccessRequests(req.principal, req.query))
+  )
   router.post('/admin/access-requests', async (req, res) => {
     const result = await service.proposeAccess(req.principal, req.body)
     if (events) {
@@ -114,7 +149,9 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
   for (const resource of ['users', 'roles', 'audit']) {
     const path = `/admin/${resource}`
     router.get(path, async (req, res) => res.json(await service.list(req.principal, resource, req.query)))
-    router.get(`${path}/:id`, async (req, res) => res.json(await service.getOne(req.principal, resource, req.params.id)))
+    router.get(`${path}/:id`, async (req, res) =>
+      res.json(await service.getOne(req.principal, resource, req.params.id))
+    )
     if (resource === 'audit') continue
     router.post(path, async (req, res) => {
       const result = await service.write(req.principal, resource, 'create', undefined, req.body)
@@ -132,7 +169,8 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
       res.status(204).end()
     })
   }
-  router.use((error, _req, res, _next) => {
+  router.use((error, req, res, _next) => {
+    void _next
     if (error instanceof BusinessError) {
       if (error.code === 'totp_rate_limited') res.setHeader('Retry-After', '600')
       return res.status(error.status).json({ error: error.code, message: error.message })
@@ -141,7 +179,13 @@ function createEnterpriseRouter(service, { loginLimit = 20, loginLimiter, events
       res.setHeader('Retry-After', '60')
       return res.status(error.status).json({ error: error.code })
     }
-    console.error('Enterprise API request failed:', error)
+    requestLogger.error(
+      JSON.stringify({
+        event: 'enterprise_http_error',
+        requestId: req.requestId,
+        errorName: typeof error?.name === 'string' ? error.name : 'Error',
+      })
+    )
     res.status(500).json({ error: 'internal_error', message: '服务端处理失败' })
   })
   return router

@@ -213,9 +213,11 @@ PROJECT=projectB pnpm run serve:dist
 pnpm run project:create customer --dry-run
 pnpm run project:create customer
 pnpm run project:dev customer
+pnpm run project:create customerAdmin --preset enterprise --dry-run
+pnpm run project:create customerAdmin --preset enterprise
 ```
 
-第一条不写文件；第二条生成源码并更新项目契约。新项目为公开空白入口，业务认证和权限需自行注册。更多配置见[多项目与脚手架](./MULTI_PROJECT.md)。
+`--dry-run` 不写文件。默认预设生成公开空白入口，业务认证和权限需自行注册；`--preset enterprise` 生成受保护的租户业务入口，默认使用 Vite 和真实 Enterprise API。启动新项目使用 `PROJECT=customerAdmin pnpm start`，浏览器访问终端输出的登录地址。更多配置见[多项目与脚手架](./MULTI_PROJECT.md)。
 
 ## 微前端
 

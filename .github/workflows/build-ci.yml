@@ -41,6 +41,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Validate package scripts
+        run: pnpm run check:scripts
+
+      - name: Lint Markdown documentation
+        run: pnpm run markdownlint
+
+      - name: Lint source and formatting
+        run: pnpm run lint
+
       - name: Validate project and client environment configuration
         run: pnpm run check:project-registry
 
@@ -52,6 +61,9 @@ jobs:
 
       - name: Validate documentation against current source
         run: pnpm run check:docs
+
+      - name: Validate translated interface copy
+        run: pnpm run check:i18n
 
       - name: Enforce shared-layer dependency direction
         run: pnpm run check:import-boundaries

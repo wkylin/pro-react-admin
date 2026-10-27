@@ -5,6 +5,7 @@ import vm from 'node:vm'
 import { log } from 'node:console'
 import { URL } from 'node:url'
 import { loadProjectRegistry } from '../config/project-registry.mjs'
+import { getPagesEntryBundler } from '../config/pages-plan.mjs'
 import {
   MFE_MANIFEST_SCHEMA_VERSION,
   getMfeSharedDependencies,
@@ -13,12 +14,12 @@ import {
 
 const output = 'dist-combined'
 const deployment = JSON.parse(fs.readFileSync(path.join(output, 'deployment.json'), 'utf8'))
-const bundler = deployment.bundler || 'webpack'
 const registry = loadProjectRegistry()
 const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const shared = getMfeSharedDependencies(pkg.dependencies)
 const protocol = JSON.parse(fs.readFileSync('config/mfe-protocol.json', 'utf8'))
 for (const entry of deployment.entries) {
+  const bundler = getPagesEntryBundler(entry, deployment)
   const directory = path.join(output, entry.destination)
   const html = fs.readFileSync(path.join(directory, 'index.html'), 'utf8')
   const expectedBase = deployment.base + (entry.destination ? entry.destination + '/' : '')

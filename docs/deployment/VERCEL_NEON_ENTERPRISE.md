@@ -87,12 +87,14 @@ API 健康检查：`https://<api-project-domain>/api/health` 应返回 `{"status
 ```bash
 pnpm exec cross-env APP_BASE_URL=https://<api-project-domain> PUBLIC_URL=/ pnpm run build:enterprise:api
 pnpm run vercel:prepare:enterprise
-vercel deploy --prebuilt --prod
+vercel deploy --prebuilt --prod --local-config vercel.enterprise.json --project <enterprise-frontend-project>
 ```
 
 在执行最后一条命令前，确认当前根目录 `.vercel/project.json` 关联的是**前端项目**。如果前端由 Git 自动部署，则在前端项目构建变量中设置 `APP_BASE_URL` 并触发一次新构建。API 的 `CORS_ORIGINS` 必须包含前端实际打开的 origin。浏览器带 `Bearer` token 和 `X-Tenant-ID` 调用 API；前端不会收到数据库凭据。
 
 ## 验收与运维
+
+本环境的部署、告警和隔离分支恢复结果应保存在[验收记录](../operations/VERCEL_NEON_ACCEPTANCE_2026-10-28.md)；恢复操作步骤见 [Vercel + Neon 恢复演练](../runbooks/VERCEL_NEON_RECOVERY.md)。
 
 ```bash
 pnpm run api:pg status

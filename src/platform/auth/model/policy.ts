@@ -1,4 +1,5 @@
-import policies from '../../../../config/route-policy.json'
+import defaultPolicies from '../../../../config/route-policy.json'
+import enterprisePolicies from '../../../../config/route-policy.enterprise.json'
 import type { PermissionCode, UserPermission } from './permission'
 import { matchPath } from 'react-router-dom'
 import { getEnvBool } from '@platform/config/env'
@@ -13,7 +14,9 @@ export interface RoutePolicy {
   menuGroup?: boolean
   menu?: { parent?: string; order: number; icon?: string }
 }
-export const routePolicies: Readonly<Record<string, RoutePolicy>> = policies as Record<string, RoutePolicy>
+export const routePolicies: Readonly<Record<string, RoutePolicy>> = (
+  typeof __APP_ENTERPRISE__ !== 'undefined' && __APP_ENTERPRISE__ ? enterprisePolicies : defaultPolicies
+) as Record<string, RoutePolicy>
 export const routePermissionMap: Readonly<Record<string, PermissionCode>> = Object.fromEntries(
   Object.entries(routePolicies).flatMap(([path, policy]) => (policy.permission ? [[path, policy.permission]] : []))
 )

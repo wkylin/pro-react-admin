@@ -30,7 +30,6 @@ import LanguageSwitcher from '@stateless/LanguageSwitcher'
 import GradientAnimationText from '@stateless/GradientAnimation'
 
 import Logo from '@assets/images/pro-logo.png'
-import SoundBar from '@stateless/SoundBar'
 import { ModuleAction, ModuleActions, useModuleActions } from '@platform/modules'
 
 import { useAuth } from '@platform/auth/hooks/useAuth'
@@ -49,6 +48,10 @@ import type { TFunction } from 'i18next'
 import type { LayoutSlots } from '../types'
 
 type HeaderLayout = string
+// Only showcase apps compile the optional audio control and its media asset.
+const showcaseSoundBar =
+  typeof __APP_ENV__ !== 'undefined' && (__APP_ENV__.PROJECT === 'default' || __APP_ENV__.PROJECT === 'projectA')
+const SoundBar = showcaseSoundBar ? React.lazy(() => import('@stateless/SoundBar')) : null
 type HeaderMenuItems = NonNullable<MenuProps['items']>
 type LastDeniedRef = { current: string | null }
 type SearchOpenSetter = Dispatch<SetStateAction<boolean>>
@@ -378,7 +381,11 @@ const renderDesktopActions = ({
   setSearchOpen,
 }: HeaderActionsProps) => (
   <Space className={styles.headerActions} orientation="horizontal" align="center" size={8} style={{ paddingRight: 8 }}>
-    {!isEnterpriseProject && <SoundBar iconColor={undefined} buttonStyle={{ ...iconButtonStyle, border: 'none' }} />}
+    {!isEnterpriseProject && SoundBar && (
+      <React.Suspense fallback={null}>
+        <SoundBar iconColor={undefined} buttonStyle={{ ...iconButtonStyle, border: 'none' }} />
+      </React.Suspense>
+    )}
     <Tooltip title={t('header.searchTooltip')} placement="bottom">
       <Button
         aria-label={t('header.searchTooltip')}
@@ -532,7 +539,7 @@ const renderUserTrigger = (t: TFunction, isAuthenticated: boolean, user: GitHubU
 const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick }: ProHeaderProps) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const isEnterpriseProject = useApplicationScope().projectId === 'enterprise'
+  const isBuiltInEnterpriseProject = useApplicationScope().projectId === 'enterprise'
   const [messageApi, contextHolder] = message.useMessage()
   const lastDeniedRef = React.useRef<string | null>(null)
   const primaryNavItems = usePrimaryNavItems()
@@ -556,6 +563,7 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
 
   const { isAuthenticated, user } = useAuth()
   const enterpriseSession = isAuthenticated ? readEnterpriseSession() : null
+  const isEnterpriseProject = isBuiltInEnterpriseProject || Boolean(enterpriseSession)
   const sessionIdentity = enterpriseSession
     ? `tenant:${enterpriseSession.tenantId}|token:${enterpriseSession.token}`
     : ''
