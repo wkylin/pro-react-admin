@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: { text: 'React', words: ['React', 'Vue', 'Angular', 'Remix!'], children: 'Design and code ' },
 } satisfies Meta<typeof Component>
 
 export default meta

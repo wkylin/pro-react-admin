@@ -24,7 +24,7 @@ import useDetectScroll from '@smakss/react-scroll-direction'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import ReMarkdown from '@stateless/ReMarkdown'
 // import LinearWrap from '@wui/layout/LinearWrap'
-import AlternatingText from '@stateless/AlternatingText'
+import AlternatingText from '@wui/animation/AlternatingText'
 import AutoLink from '@wui/data-display/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
 import IsometricCard from '@stateless/IsometricCard'
@@ -32,11 +32,11 @@ import AvatarCard from '@wui/data-display/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
 // import ShiftingCard from '@stateless/ShiftingCard'
-import BreatheText from '@stateless/BreatheText'
+import BreatheText from '@wui/animation/BreatheText'
 import ScrollAnimation from '@stateless/ScrollAnimation'
-import AnimateOnScreen from '@stateless/AnimateOnScreen'
-import AnimateRipple from '@stateless/AnimateRipple'
-// import AnimateWave from '@stateless/AnimateWave'
+import AnimateOnScreen from '@wui/animation/AnimateOnScreen'
+import AnimateRipple from '@wui/animation/AnimateRipple'
+// import AnimateWave from '@wui/animation/AnimateWave'
 import NumberFlowFix from '@stateless/NumberFlowFix'
 import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import useRect from '@hooks/useRect'
@@ -48,40 +48,40 @@ import { featureDemoData } from './feature-demo'
 import UserIP from '@wui/data-display/UserIP'
 import ScratchToReveal from '@stateless/ScratchToReveal'
 // import SlideLinear from '@stateless/SlideLinear'
-import DynamicBackground from '@stateless/DynamicBackground'
+import DynamicBackground from '@wui/animation/DynamicBackground'
 import ContentPlaceholder from '@wui/data-display/ContentPlaceholder'
 import SkeletonFix from '@wui/data-display/SkeletonFix'
 import { ReactSignature } from '@wui/forms/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
 import SquaresGrid from '@stateless/SquaresGrid'
 import ShinyText from '@stateless/ShinyText'
-// import BlurText from '@stateless/BlurText'
+// import BlurText from '@wui/animation/BlurText'
 import Meteors from '@stateless/Meteors'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
-import BackgroundBoxes from '@stateless/BackgroundBoxes'
+import BackgroundBoxes from '@wui/animation/BackgroundBoxes'
 import TypeWriter from '@stateless/TypeWriter'
 import SlideText from '@stateless/SlideText'
 import SparklesCore from '@stateless/Sparkles'
 import SparklesText from '@stateless/SparklesText'
-import ColorfulText from '@stateless/ColorfulText'
+import ColorfulText from '@wui/animation/ColorfulText'
 import MemoizedStars from '@stateless/MemoizedStars'
 // import WordRotate from '@stateless/WordRotate'
 import TestimonialCarousel from '@stateless/TestimonialCarousel'
 // import InteractiveGrid from '@stateless/InteractiveGrid'
-import BlurFade from '@stateless/BlurFade'
+import BlurFade from '@wui/animation/BlurFade'
 import IconCloud from '@stateless/IconCloud'
 import GradualSpacing from '@stateless/GradualSpacing'
 import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
 import InViewBasicMultiple from '@stateless/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
 import FlipWords from '@stateless/FlipWords'
-import BorderBeam from '@stateless/BorderBeam'
+import BorderBeam from '@wui/animation/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
-import AnimText from '@stateless/AnimText'
+import AnimText from '@wui/animation/AnimText'
 import SlideButton from '@stateless/SlideButton'
 import NumberViewCard from '@wui/data-display/NumberViewCard'
-import CubeSpinner from '@stateless/CubeSpinner'
+import CubeSpinner from '@wui/animation/CubeSpinner'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
 import SpringPng from '@assets/images/spring.png'
@@ -788,7 +788,7 @@ const Home = () => {
         <GradientTracking />
       </section>
       <section style={{ margin: 40 }}>
-        <BreatheText />
+        <BreatheText text="Breathe" />
       </section>
       <section style={{ margin: '60px 0 40px 40px' }}>
         <div className={styles['video-box']}>
@@ -974,7 +974,7 @@ const Home = () => {
         </SlideButton>
       </section>
       <section>
-        <CubeSpinner />
+        <CubeSpinner items={['Face Front', 'Face Top', 'Face Bottom']} />
       </section>
       {/* <section style={{ margin: '20px 0', fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy />
@@ -1193,7 +1193,19 @@ const Home = () => {
         <ShiCode preCode={preCode} />
       </section>
       <section style={{ margin: 20 }}>
-        <DynamicBackground />
+        <DynamicBackground
+          items={[
+            { icon: '⚛', size: 'lg' },
+            { icon: 'JS', size: 'sm' },
+            { icon: 'TS', size: 'md' },
+          ]}
+        >
+          <h1>
+            Grow your <br />
+            <span>Frontend Skills</span>
+          </h1>
+          <h3>with React, Angular, Vue, TypeScript and JavaScript</h3>
+        </DynamicBackground>
       </section>
       <section style={{ margin: 20 }}>
         <UserIP

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/CubeSpinner',
+  title: 'Components/Stateless/BreatheText',
   component: Component,
   tags: ['autodocs'],
   decorators: [
@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: { text: 'Breathe', secondaryText: 'Loop' },
 } satisfies Meta<typeof Component>
 
 export default meta

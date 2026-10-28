@@ -1,5 +1,5 @@
 import React from 'react'
-import AnimationInView from '@stateless/AnimInView'
+import AnimationInView from '@wui/animation/AnimInView'
 import { CardContainer } from '../../shared/CardContainer'
 
 const Step: React.FC<{ title: string; desc: string; type: 'ci' | 'cd' }> = ({ title, desc, type }) => (

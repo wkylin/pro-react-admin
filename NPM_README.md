@@ -183,3 +183,36 @@ Its returned disposer removes the watermark and disconnects its observer. Callin
 it outside a browser returns a no-op disposer. Copy helpers expose failure callbacks
 and cancel pending copied-state timers when unmounted. CopyToClipboard invokes
 the supplied native `onClick` first; `event.preventDefault()` cancels copying.
+
+### Animation group
+
+Import the named animation components and public props from
+`@w.ui/wui-react/animation`. This group includes `FloatingIcon`, `SocialIcon`,
+`AlternatingText`, `AnimatedList`, `AnimateOnScreen`, `AnimateRipple`, `AnimateWave`,
+`AnimBackground` (`AnimatedBackground`), `AnimGroup` (`AnimatedGroup`), `AnimInView`
+(`AnimationInView`), `AnimText`, `BackgroundBeams`, `BackgroundBoxes`, `BlurFade`,
+`BlurText`, `BorderBeam`, `BreatheText`, `ColorfulText`, `ContactSection`,
+`CubeSpinner`, `DynamicBackground` and `FlipLink`.
+
+Install the animation entry's optional peers before importing it:
+
+```sh
+npm install motion@'>=12 <15' @react-spring/web@^10
+```
+
+The group also uses the existing `framer-motion` peer (`>=12 <15`). `motion`
+and `@react-spring/web` are optional for other entries; the root entry remains
+separate. Import `@w.ui/wui-react/style.css` for CSS effects. Animation layout
+styles are packaged and do not require Tailwind.
+
+Supply content through props and children: `AnimateWave` accepts `text` and
+`words`, `BreatheText` accepts `text`/`secondaryText`, `CubeSpinner` accepts `items`,
+`ContactSection` accepts `text` and an optional scroll container ref, and
+`DynamicBackground` accepts icon `items` and foreground `children`. Technology
+icons, hero copy and example links live in stories. `AlternatingText` accepts an
+interval in milliseconds and an optional placeholder for empty lists.
+
+Selection backgrounds preserve caller handlers and select on focus, Enter and
+Space; consumers should supply native interactive children. `FlipLink` forwards
+link attributes and animates on focus. Decorative duplicates are hidden from
+assistive technology. Timers, observers and pointer listeners are cleaned up.

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout, theme } from 'antd'
-import FlipLink from '@stateless/FlipLink'
+import FlipLink from '@wui/animation/FlipLink'
 
 const { Header, Content } = Layout
 
@@ -26,7 +26,13 @@ const FixLayout = ({ children }) => {
       >
         <div style={{ fontWeight: 'bold', fontSize: 16, padding: '0 10px' }}>Pro React Admin</div>
         <div style={{ padding: '0 10px' }}>
-          <FlipLink href={`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`}>SkyLine</FlipLink>
+          <FlipLink
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`https://skyline.github.com/wkylin/${new Date().getFullYear() - 1}`}
+          >
+            SkyLine
+          </FlipLink>
         </div>
       </Header>
       <Content style={{ overflow: 'auto', position: 'relative' }}>{children}</Content>

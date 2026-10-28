@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
+import icons from './story-icons'
 
 const meta = {
   title: 'Components/Stateless/DynamicBackground',
@@ -12,7 +13,15 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: {
+    items: icons.map((item) => ({ ...item, size: item.size as 'sm' | 'md' | 'lg' })),
+    children: (
+      <>
+        <h1>Grow your Frontend Skills</h1>
+        <p>with React, Angular, Vue and TypeScript</p>
+      </>
+    ),
+  },
 } satisfies Meta<typeof Component>
 
 export default meta

@@ -3,7 +3,7 @@ import { motion, useAnimationControls } from 'motion/react'
 import ScrollableSections from '@wui/ScrollableSections'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import AboutSection from '@wui/layout/AboutSection'
-import ContactSection from '@stateless/ContactSection'
+import ContactSection from '@wui/animation/ContactSection'
 
 const ParallaxVert = () => {
   const controller = useAnimationControls()
@@ -110,7 +110,12 @@ const ParallaxVert = () => {
     {
       title: 'Contact',
       content: '联系我们：如果您有任何问题或建议，请随时与我们取得联系。',
-      component: <ContactSection scrollContainerRef={scrollContainerRef} />,
+      component: (
+        <ContactSection
+          scrollContainerRef={scrollContainerRef}
+          text="新的一年，愿你的生活充满阳光，每一天都被幸福环绕。工作上顺顺利利，所有的努力都能得到丰厚的回报，每一个目标都能成功实现。"
+        />
+      ),
     },
   ]
 

@@ -80,6 +80,14 @@ async function assertConsumerTypes() {
       `const cards: import('${libraryPackageName}/layout').HorizontalScrollProps = { cards: [{id: 'one', url: '/image.png', alt: 'Image', href: '/details'}] }; void cards`
     )
   }
+  if (libraryGroups.find((entry) => entry.subpath === 'animation')?.runtimeExports.includes('FlipLink')) {
+    source.push(
+      `const selection: import('${libraryPackageName}/animation').AnimatedBackgroundProps = {defaultValue: 'one', onValueChange: value => {const id: string | null = value; void id}}; void selection`,
+      `const icons: import('${libraryPackageName}/animation').DynamicBackgroundProps = {items: [{icon: '★', size: 'sm'}], children: 'Foreground'}; void icons`,
+      `const flip: import('${libraryPackageName}/animation').FlipLinkProps = {href: '/next', target: '_self', children: 'Next', onClick: event => {const anchor: HTMLAnchorElement = event.currentTarget; void anchor}}; void flip`,
+      `const blur: import('${libraryPackageName}/animation').BlurFadeProps = {direction: 'left', inViewMargin: '-20px', once: true}; void blur`
+    )
+  }
   if (libraryGroups.find((entry) => entry.subpath === 'forms')?.runtimeExports.includes('SmartChat')) {
     source.push(
       `const chat: import('${libraryPackageName}/forms').SmartChatProps = { apiUrl: '/chat', buildRequestBody: ({messages, input, systemPrompt}) => ({messages, input, systemPrompt}), onMessagesChange: messages => { const role: import('${libraryPackageName}/forms').ChatRole = messages[0].role; void role } }; void chat`
@@ -203,6 +211,24 @@ try {
     if (!markup.includes('Panel content') || !markup.includes('Consumer brand') || !markup.includes('Consumer image') || !markup.includes('role="tab"')) throw new Error('Independent layout SSR lost caller content or accessibility')
   `
     : ''
+  const animationRender = libraryGroups
+    .find((entry) => entry.subpath === 'animation')
+    ?.runtimeExports.includes('FlipLink')
+    ? `
+    const animation = entryModules.animation
+    const animationMarkup = renderToStaticMarkup(createElement('div', null,
+      createElement(animation.AnimateRipple, {className: 'consumer-button'}, 'Independent action'),
+      createElement(animation.AnimateWave, {text: 'Wave', words: ['One', 'Two']}),
+      createElement(animation.BreatheText, {text: 'Breathe caller text'}),
+      createElement(animation.CubeSpinner, {items: ['Caller face']}),
+      createElement(animation.DynamicBackground, {items: [{icon: '★', size: 'sm'}]}, 'Consumer foreground'),
+      createElement(animation.FlipLink, {href: '/next', target: '_self'}, 'Consumer link')
+    ))
+    for (const content of ['Independent action', 'consumer-button', 'Breathe caller text', 'Caller face', 'Consumer foreground', 'aria-label="Consumer link"', 'target="_self"']) {
+      if (!animationMarkup.includes(content)) throw new Error('Independent animation SSR lost ' + content)
+    }
+    `
+    : ''
   const formsRender = libraryGroups.find((entry) => entry.subpath === 'forms')?.runtimeExports.includes('SmartChat')
     ? `
     const forms = entryModules.forms
@@ -259,6 +285,7 @@ try {
       entryModules[subpath] = component
     }
     ${layoutRender}
+    ${animationRender}
     ${formsRender}
     ${dataDisplayRender}
     process.stdout.write(JSON.stringify({
@@ -287,6 +314,7 @@ try {
       entryModules[subpath] = component
     }
     ${layoutRender}
+    ${animationRender}
     ${formsRender}
     ${dataDisplayRender}
     process.stdout.write(JSON.stringify({

@@ -1,5 +1,5 @@
 import React from 'react'
-import AnimationInView from '@stateless/AnimInView'
+import AnimationInView from '@wui/animation/AnimInView'
 import { CardContainer } from '../../shared/CardContainer'
 
 const Phase03: React.FC<{ isLeft: boolean; scrollContainerRef?: React.RefObject<HTMLElement> }> = ({
