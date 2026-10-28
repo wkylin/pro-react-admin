@@ -3,7 +3,7 @@ import loadable, {
   type LoadableComponent,
   type OptionsWithoutResolver,
 } from '@loadable/component'
-import Loading from '@stateless/Loading'
+import Loading from '@wui/data-display/Loading'
 
 import Layout from '@layouts'
 
@@ -114,8 +114,8 @@ export const lazyComponents = {
   WebpackList: lazyLoad(() => import('@pages/tech/demos/webpack')),
   // 异常页面
   ErrorPage: lazyLoad(() => import('@pages/error')),
-  Exception403: lazyLoad(() => import('@stateless/Exception/exception403')),
-  Exception404: lazyLoad(() => import('@stateless/Exception/exception404')),
+  Exception403: lazyLoad(() => import('@pages/error/Forbidden')),
+  Exception404: lazyLoad(() => import('@wui/data-display/Exception/exception404')),
   NoMatch: lazyLoad(() => import('@stateless/NoMatch')),
   SectionNotFound: lazyLoad(() => import('@stateless/SectionNotFound')),
 }

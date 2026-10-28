@@ -91,6 +91,20 @@ async function assertConsumerTypes() {
       `const tags: import('${libraryPackageName}/forms').CheckableTagsProps = { dataSource: [], onChange: event => { const selected: import('${libraryPackageName}/forms').SelectedTags = event.checkedKeys; void selected } }; void tags`
     )
   }
+  if (libraryGroups.find((entry) => entry.subpath === 'data-display')?.runtimeExports.includes('TreeList')) {
+    source.push(
+      `const tree: import('${libraryPackageName}/data-display').TreeListProps = {getTreeList: async (_params, signal) => {signal?.throwIfAborted(); return {status: 1, data: [{id: 'root', pid: null, name: 'Root'}]}}, setSelectedKeys: keys => {const key: string | undefined = keys[0]; void key}}; void tree`
+    )
+    source.push(
+      `const network: import('${libraryPackageName}/data-display').UserIPProps = {loadInfo: async signal => {signal.throwIfAborted(); return {ip:'192.0.2.1'}}}; void network`
+    )
+    source.push(
+      `const history: import('${libraryPackageName}/data-display').TransferHistoryProps = {groups: [{id:'g',name:'History',children:[]}], renderTitle: group => group.name}; void history`
+    )
+    source.push(
+      `const pdf: import('${libraryPackageName}/data-display').PDFExportProps = {fileName:'test.pdf',pdfOptions:{orientation:'landscape'},onError: error => {void error}}; void pdf`
+    )
+  }
   const consumerFile = path.join(consumerDir, 'consumer.mts')
   await fs.writeFile(consumerFile, source.join('\n'))
   const program = ts.createProgram([consumerFile], {
@@ -156,6 +170,26 @@ try {
     }
   `
     : ''
+  const dataDisplayRender = libraryGroups
+    .find((entry) => entry.subpath === 'data-display')
+    ?.runtimeExports.includes('TreeList')
+    ? `
+    const display = entryModules['data-display']
+    const displayMarkup = renderToStaticMarkup(createElement('div', null,
+      createElement(display.NumberViewCard, {value: 42, label: 'Consumer metric'}),
+      createElement(display.UserIP, {data: {ip:'192.0.2.42'}}),
+      createElement(display.TransferHistory, {groups:[{id:'g',name:'Consumer history',children:[]}]}),
+      createElement(display.PDFExport, null, 'Consumer PDF'),
+      createElement(display.TagCard, {tagCardList:[{id:'c',name:'Consumer card',tags:[]}]}),
+      createElement(display.SvgPreview, {}),
+      createElement(display.TreeList, {getTreeList: async () => ({status:1,data:[]}),setSelectedKeys: () => {}})
+    ))
+    for(const content of ['Consumer metric','192.0.2.42','Consumer history','Consumer PDF','Consumer card','SVG viewer']) {
+      if(!displayMarkup.includes(content)) throw new Error('Independent data-display SSR lost ' + content)
+    }
+    display.Watermark()()
+  `
+    : ''
   const esmScript = `
     const packageName = ${JSON.stringify(libraryPackageName)}
     const entryModules = {}
@@ -174,6 +208,7 @@ try {
     }
     ${layoutRender}
     ${formsRender}
+    ${dataDisplayRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
       entryExports,
@@ -201,6 +236,7 @@ try {
     }
     ${layoutRender}
     ${formsRender}
+    ${dataDisplayRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
       entryExports,
@@ -226,6 +262,13 @@ try {
     const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
     for (const token of ['.hljs', 'container-type:inline-size', '--radio-primary-color']) {
       if (!css.replace(/\s+/g, '').includes(token)) throw new Error(`Independent forms stylesheet is missing ${token}`)
+    }
+  }
+
+  if (dataDisplayRender) {
+    const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
+    for (const token of ['numberCard', 'networkFields', 'stepTrack', 'transferHistoryContainer']) {
+      if (!css.includes(token)) throw new Error('Independent data-display stylesheet is missing ' + token)
     }
   }
 

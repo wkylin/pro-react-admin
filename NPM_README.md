@@ -47,7 +47,7 @@ Props types are exported from the root and corresponding subpaths. ResponsiveTab
 The migration provides seven named-only subpaths: `@w.ui/wui-react/layout`,
 `@w.ui/wui-react/animation`, `@w.ui/wui-react/data-display`, `@w.ui/wui-react/forms`,
 `@w.ui/wui-react/media`, `@w.ui/wui-react/visualization`, and `@w.ui/wui-react/editor`.
-Layout currently exports AboutSection, AlignCenter, AnimationTabs, FadeInDiv, AutoScrollSection, FeatureAny, FixTabs, Footer, HorizontalScroll, LinearWrap, MarketingHero, PageContainer, ScrollToTop, StickyCard, StickyFooter and TrapezoidTabs. Animation exports FloatingIcon and SocialIcon; data-display exports TextComponent. Other groups gain components as their migration is completed.
+Layout currently exports AboutSection, AlignCenter, AnimationTabs, FadeInDiv, AutoScrollSection, FeatureAny, FixTabs, Footer, HorizontalScroll, LinearWrap, MarketingHero, PageContainer, ScrollToTop, StickyCard, StickyFooter and TrapezoidTabs. Animation exports FloatingIcon and SocialIcon; data-display exports the components documented below. Other groups gain components as their migration is completed.
 Group components and their prop types are exported by name; groups have no default
 export and are not re-exported from the root. The existing 12 component subpaths and
 root exports remain available.
@@ -121,3 +121,59 @@ the response. Stop, initial-message replacement and unmount abort the request an
 cancel the stream reader. Request option/transformer signals also cancel the request.
 Markdown is rendered without raw HTML. Clipboard feedback timers and signature
 image resources are released on unmount.
+
+### Data display consumption
+
+`@w.ui/wui-react/data-display` exports TreeList, ApiStateHandler, AutoLink,
+AvatarCard, ClockFace, ContentPlaceholder, CopyToClipboard, Exception, GradientStats,
+Loading, NumberViewCard, PDFExport, SkeletonFix, StaticStepper, StatisticCard,
+SvgPreview, TagCard, TextComponent, TransferHistory, UserIP and Watermark, with their
+public prop/data types. ExceptionView and the four Exception status variants,
+StaticStep/CodeContainer, Word and useCopyToClipboard are also named exports.
+Import `@w.ui/wui-react/style.css` once. No application theme or Tailwind is required.
+
+```tsx
+import { NumberViewCard, UserIP, TransferHistory } from '@w.ui/wui-react/data-display'
+import '@w.ui/wui-react/style.css'
+
+<NumberViewCard value={750000} label="Views" formatValue={value => Number(value).toLocaleString()} />
+<UserIP loadInfo={signal => fetch('/api/network', { signal }).then(response => response.json())} />
+<TransferHistory groups={[]} theme="light" />
+```
+
+TreeList calls `getTreeList(params, signal)` and aborts/ignores replaced or unmounted
+requests; existing one-argument loaders remain supported. UserIP takes `data` or
+`loadInfo(signal)`, plus caller labels, and never contacts a built-in endpoint.
+TransferHistory takes typed groups, companies and records; `renderTitle`,
+`renderLabel` and `renderRatio` customize content. TagCard takes theme/tokens, icons
+and expand/collapse labels. ApiStateHandler accepts loading/error fallback slots.
+ClockFace accepts `locale`, `hour12` or `formatTime`; placeholders are deterministic.
+Exception variants expose action/children slots; routing belongs to the caller.
+
+PDFExport takes children or a `contentRef`, `fileName`, `pdfOptions`, `scale`,
+`onComplete` and `onError`. Install its lazy optional peers before exporting:
+
+```sh
+npm install html2canvas@^1.4.1 jspdf@^4.2.1
+```
+
+They are loaded only when export is requested, not when the group is imported.
+Capture excludes remote image elements and embedded frames; supply data/blob image
+sources. Canvas resources are released on completion/failure; export is suppressed
+after unmount. Exports are limited to 100 PDF pages.
+
+SvgPreview sanitizes SVG strings and remote responses to static primitives before
+display/download, removing scripts, embedded HTML, links, animation and external
+resource references. `SvgComponent` is trusted caller React code. Keyboard arrows
+pan, +/- zoom; controls have accessible labels. `onError` and `onStatus` replace
+application feedback services. Remote loads are aborted and object URLs revoked.
+
+Watermark is an imperative function, not a React component:
+
+```tsx
+useEffect(() => Watermark({ container: element, content: 'Confidential' }), [element])
+```
+
+Its returned disposer removes the watermark and disconnects its observer. Calling
+it outside a browser returns a no-op disposer. Copy helpers expose failure callbacks
+and cancel pending copied-state timers when unmounted.

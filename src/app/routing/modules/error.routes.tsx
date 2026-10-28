@@ -1,6 +1,6 @@
 import React from 'react'
-const Exception403 = React.lazy(() => import('@stateless/Exception/exception403'))
-const Exception404 = React.lazy(() => import('@stateless/Exception/exception404'))
+const Exception403 = React.lazy(() => import('@pages/error/Forbidden'))
+const Exception404 = React.lazy(() => import('@wui/data-display/Exception/exception404'))
 const ErrorPage = React.lazy(() => import('@pages/error'))
 const NoMatch = React.lazy(() => import('@stateless/NoMatch'))
 

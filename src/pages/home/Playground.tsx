@@ -25,10 +25,10 @@ import FixTabPanel from '@shared/ui/FixTabPanel'
 import ReMarkdown from '@stateless/ReMarkdown'
 // import LinearWrap from '@wui/layout/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
-import AutoLink from '@stateless/AutoLink'
+import AutoLink from '@wui/data-display/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
 import IsometricCard from '@stateless/IsometricCard'
-import AvatarCard from '@stateless/AvatarCard'
+import AvatarCard from '@wui/data-display/AvatarCard'
 import LineBordered from '@stateless/LineBordered'
 import GradientTracking from '@stateless/GradientTracking'
 // import ShiftingCard from '@stateless/ShiftingCard'
@@ -42,15 +42,15 @@ import MeshGradientBackground from '@stateless/MeshGradientBackground'
 import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
-import StaticStepper from '@stateless/StaticStepper'
+import StaticStepper from '@wui/data-display/StaticStepper'
 import FeatureAny from '@wui/layout/FeatureAny'
 import { featureDemoData } from './feature-demo'
-import UserIP from '@stateless/UserIP'
+import UserIP from '@wui/data-display/UserIP'
 import ScratchToReveal from '@stateless/ScratchToReveal'
 // import SlideLinear from '@stateless/SlideLinear'
 import DynamicBackground from '@stateless/DynamicBackground'
-import ContentPlaceholder from '@stateless/ContentPlaceholder'
-import SkeletonFix from '@stateless/SkeletonFix'
+import ContentPlaceholder from '@wui/data-display/ContentPlaceholder'
+import SkeletonFix from '@wui/data-display/SkeletonFix'
 import { ReactSignature } from '@wui/forms/ReactSignature'
 // import AdvancedCodeBlock from '@stateless/AdvancedCodeBlock'
 import SquaresGrid from '@stateless/SquaresGrid'
@@ -80,7 +80,7 @@ import BorderBeam from '@stateless/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@stateless/AnimText'
 import SlideButton from '@stateless/SlideButton'
-import NumberViewCard from '@stateless/NumberViewCard'
+import NumberViewCard from '@wui/data-display/NumberViewCard'
 import CubeSpinner from '@stateless/CubeSpinner'
 import firstImage from '@assets/images/88-300x160.jpg'
 import secondImage from '@assets/images/2-300x160.jpg'
@@ -586,7 +586,7 @@ const Home = () => {
           overflow: 'hidden',
         }}
       >
-        <NumberViewCard />
+        <NumberViewCard value="750k" label="浏览量" />
       </section>
       <section
         style={{
@@ -1196,7 +1196,9 @@ const Home = () => {
         <DynamicBackground />
       </section>
       <section style={{ margin: 20 }}>
-        <UserIP />
+        <UserIP
+          data={{ ip: '192.0.2.1', country_name: 'Example country', city: 'Example city', org: 'Example network' }}
+        />
       </section>
       <section style={{ margin: 20 }}>
         <AutoSlider />

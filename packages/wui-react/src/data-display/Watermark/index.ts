@@ -1,6 +1,17 @@
+export interface WatermarkOptions {
+  container?: HTMLElement
+  width?: string
+  height?: string
+  textAlign?: CanvasTextAlign
+  font?: string
+  fillStyle?: string
+  content?: string
+  rotate?: number
+}
+export type WatermarkDisposer = () => void
 /** Install a watermark in one container; return a disposer for effect cleanup. */
 const Watermark = ({
-  container = document.body,
+  container,
   width = '300px',
   height = '240px',
   textAlign = 'center',
@@ -8,7 +19,9 @@ const Watermark = ({
   fillStyle = 'rgba(100, 100, 100, 0.2)',
   content = 'water mark',
   rotate = -20,
-} = {}) => {
+}: WatermarkOptions = {}): WatermarkDisposer => {
+  if (typeof document === 'undefined') return () => {}
+  container ??= document.body
   const canvas = document.createElement('canvas')
   canvas.width = parseFloat(width)
   canvas.height = parseFloat(height)

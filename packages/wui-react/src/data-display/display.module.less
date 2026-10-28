@@ -1,0 +1,191 @@
+.clock {
+  display: flex;
+  justify-content: center;
+  font: 700 2.25rem monospace;
+  color: var(--wui-text-primary, #171717);
+}
+.copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: var(--wui-text-secondary, #71717a);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.copy:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+}
+.stat {
+  border: 1px solid #a78bfa;
+  border-radius: 12px;
+  padding: 10px 16px;
+  background: var(--wui-bg-surface, white);
+  color: var(--wui-text-primary, #171717);
+}
+.stat strong {
+  font-size: clamp(2rem, 4vw, 3rem);
+  background: linear-gradient(135deg, #2563eb, #c084fc);
+  background-clip: text;
+  color: transparent;
+}
+.numberCard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  box-sizing: border-box;
+  width: 360px;
+  max-width: 100%;
+  min-height: 150px;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #737373;
+  background: radial-gradient(ellipse at top left, #737373, #111827);
+  color: white;
+  text-align: center;
+}
+.numberCard strong {
+  display: block;
+  font-size: 3.75rem;
+  font-weight: 800;
+}
+.numberCard i {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: 10%;
+  right: 10%;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 12px white;
+  animation: move-dot 8s linear infinite;
+}
+@keyframes move-dot {
+  25% {
+    top: 90%;
+    right: 10%;
+  }
+  50% {
+    top: 90%;
+    right: 90%;
+  }
+  75% {
+    top: 10%;
+    right: 90%;
+  }
+}
+.step {
+  display: flex;
+  gap: 24px;
+  color: var(--wui-text-primary, #171717);
+}
+.stepTrack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stepTrack i {
+  flex: 1;
+  width: 1px;
+  background: #d4d4d4;
+  margin: 8px 0;
+}
+.stepNumber {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid #d4d4d4;
+  margin: 0;
+}
+.stepContent {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 16px;
+}
+.stepContent h6 {
+  font-size: 18px;
+  margin: 0 0 16px;
+}
+.code {
+  position: relative;
+  padding: 12px 40px 12px 20px;
+  background: var(--wui-bg-elevated, #f5f5f5);
+  color: var(--wui-text-primary, #171717);
+  border: 1px solid #d4d4d4;
+  border-radius: 8px;
+}
+.code code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.code > button {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.network {
+  padding: 24px;
+  border: 1px solid var(--wui-border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--wui-bg-surface, #fff);
+  color: var(--wui-text-primary, #171717);
+}
+.network h2 {
+  margin: 0 0 24px;
+  font-size: 18px;
+}
+.networkFields {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  margin: 0;
+}
+.network dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--wui-text-secondary, #737373);
+}
+.network dd {
+  margin: 8px 0 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.network button,
+.pdf > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid #d4d4d4;
+  background: var(--wui-bg-surface, #fff);
+  color: var(--wui-text-primary, #171717);
+}
+.pdf > button {
+  margin-bottom: 16px;
+}
+.pdf > button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+@media (prefers-reduced-motion: reduce) {
+  .numberCard i {
+    animation: none;
+  }
+}

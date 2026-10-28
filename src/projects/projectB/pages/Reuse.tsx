@@ -1,8 +1,8 @@
 import { Card, Space, Typography, Button, message } from 'antd'
 import { Link } from 'react-router-dom'
 import PageContainer from '@wui/layout/PageContainer'
-import CopyToClipboard from '@stateless/CopyToClipboard'
-import GradientStats from '@stateless/GradientStats'
+import CopyToClipboard from '@wui/data-display/CopyToClipboard'
+import GradientStats from '@wui/data-display/GradientStats'
 
 const { Paragraph, Text } = Typography
 
@@ -17,7 +17,7 @@ export default function ProjectBReuse() {
         <Card title="复用主项目的组件（@stateless/*）">
           <Space orientation="vertical" size={10} style={{ width: '100%' }}>
             <Paragraph style={{ marginBottom: 0 }}>
-              这里直接复用 <Text code>@stateless/CopyToClipboard</Text> 和 <Text code>@stateless/GradientStats</Text>。
+              这里直接复用 <Text code>@wui/data-display/CopyToClipboard</Text> 和 <Text code>@wui/data-display/GradientStats</Text>。
             </Paragraph>
 
             <Space align="center">

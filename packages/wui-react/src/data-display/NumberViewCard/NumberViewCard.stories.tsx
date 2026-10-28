@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/TransferHistory',
+  title: 'Components/Stateless/NumberViewCard',
   component: Component,
   tags: ['autodocs'],
   decorators: [
@@ -12,21 +12,10 @@ const meta = {
       </div>
     ),
   ],
-  args: { defaultDisplayCount: 3 },
-  argTypes: {
-    defaultDisplayCount: { control: { type: 'range', min: 1, max: 5, step: 1 } },
-  },
+  args: { value: '750k', label: '浏览量' },
 } satisfies Meta<typeof Component>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
-
-export const SingleCompany: Story = {
-  args: { defaultDisplayCount: 1 },
-}
-
-export const AllCompanies: Story = {
-  args: { defaultDisplayCount: 5 },
-}

@@ -19,7 +19,7 @@ import { SyncOutlined, FireOutlined, EllipsisOutlined, CloseOutlined } from '@an
 import ErrorBoundary from '@/platform/errors/ErrorBoundary'
 import { useTranslation } from 'react-i18next'
 import { useProTabContext, type Pane } from '@layouts/proTabs/context'
-import Loading from '@src/components/stateless/Loading'
+import Loading from '@wui/data-display/Loading'
 import Fullscreen from '../fullscreen'
 import KeepAlive from '@platform/keep-alive'
 import styles from './index.module.less'

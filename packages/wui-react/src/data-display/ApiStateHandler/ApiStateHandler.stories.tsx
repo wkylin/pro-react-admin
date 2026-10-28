@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/UserIP',
+  title: 'Components/Stateless/ApiStateHandler',
   component: Component,
   tags: ['autodocs'],
   decorators: [
@@ -12,10 +12,19 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: {
+    loading: false,
+    error: null,
+    loadingFallback: 'Loading…',
+    errorFallback: 'Unable to load data',
+    children: <p>数据加载成功</p>,
+  },
 } satisfies Meta<typeof Component>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
+
+export const Loading: Story = { args: { loading: true } }
+export const Failure: Story = { args: { error: new Error('加载失败') } }

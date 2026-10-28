@@ -2,7 +2,7 @@ import QRCode from 'qrcode'
 import React, { useState } from 'react'
 import { Button, Input, Space } from 'antd'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import PDFExportDemo from '@stateless/PDFExport'
+import PDFExport from '@wui/data-display/PDFExport'
 
 const QrCode = () => {
   const [url, setUrl] = useState('')
@@ -48,7 +48,7 @@ const QrCode = () => {
           </Space>
         )}
       </section>
-      <PDFExportDemo />
+      <PDFExport fileName="qrcode.pdf">{qr && <img src={qr} width="300" alt="QR code" />}</PDFExport>
     </FixTabPanel>
   )
 }

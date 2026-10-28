@@ -72,12 +72,12 @@
   }
 }
 
-/* Mobile styles applied via root class `.is-mobile` */
-:global(.is-mobile) .statisticCard {
-  grid-template-columns: 1fr;
-  padding: 0.5rem;
-}
-
-:global(.is-mobile) .statisticCardItem {
-  padding: 1.25rem;
+@media (max-width: 640px) {
+  .statisticCard {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+  .statisticCardItem {
+    padding: 1.25rem;
+  }
 }

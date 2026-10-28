@@ -1,6 +1,6 @@
 import React from 'react'
 import ShikiCode from '@stateless/CodeHighlighter'
-import CopyToClipboard from '@stateless/CopyToClipboard'
+import CopyToClipboard from '@wui/data-display/CopyToClipboard'
 import clsx from 'clsx'
 
 const AdvancedCodeBlock = ({ code, fileName, lang = 'typescript', theme = 'github-light', className, ...props }) => {

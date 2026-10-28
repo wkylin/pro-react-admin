@@ -184,7 +184,9 @@
     "antd": ">=6.0.0 <7.0.0",
     "framer-motion": ">=12.0.0 <15.0.0",
     "react": ">=19.0.0 <20.0.0",
-    "react-dom": ">=19.0.0 <20.0.0"
+    "react-dom": ">=19.0.0 <20.0.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1"
   },
   "peerDependenciesMeta": {
     "@uiw/react-signature": {
@@ -203,6 +205,12 @@
       "optional": true
     },
     "remark-gfm": {
+      "optional": true
+    },
+    "html2canvas": {
+      "optional": true
+    },
+    "jspdf": {
       "optional": true
     }
   }
