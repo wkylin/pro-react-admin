@@ -70,7 +70,13 @@ function resolveLocalImport(specifier, importerPath) {
 const violations = []
 
 for (const rule of layerRules) {
-  const layerFiles = collectFiles(rule.directory).filter((filePath) => sourceExtensions.has(path.extname(filePath)))
+  // Package stories are repository-only demonstrations and may use app fixtures/assets.
+  // Runtime implementations (including their helpers) retain the strict source boundary.
+  const layerFiles = collectFiles(rule.directory).filter(
+    (filePath) =>
+      sourceExtensions.has(path.extname(filePath)) &&
+      !(rule.directory === packageSourceRoot && /\.stories\.[cm]?[jt]sx?$/.test(filePath))
+  )
   for (const importerPath of layerFiles) {
     const source = fs.readFileSync(importerPath, 'utf8')
     for (const match of source.matchAll(importPattern)) {

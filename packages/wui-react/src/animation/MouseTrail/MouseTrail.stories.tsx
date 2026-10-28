@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useEffect, useRef, type ComponentProps } from 'react'
-import LotusImage from '../../../assets/images/he.png'
-import SnowImage from '../../../assets/images/xue.png'
-import MoonImage from '../../../assets/images/song.png'
+import LotusImage from '@assets/images/he.png'
+import SnowImage from '@assets/images/xue.png'
+import MoonImage from '@assets/images/song.png'
 import Component from './index'
 
 function MouseTrailPreview(args: ComponentProps<typeof Component>) {

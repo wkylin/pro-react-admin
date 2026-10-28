@@ -1,6 +1,6 @@
 # @w.ui/wui-react
 
-React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package preserves 12 root components and adds named component groups; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
+Version 6.1.0 provides React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package preserves 12 root components and adds named component groups; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
 
 ## Install
 
@@ -47,7 +47,7 @@ Props types are exported from the root and corresponding subpaths. ResponsiveTab
 The migration provides seven named-only subpaths: `@w.ui/wui-react/layout`,
 `@w.ui/wui-react/animation`, `@w.ui/wui-react/data-display`, `@w.ui/wui-react/forms`,
 `@w.ui/wui-react/media`, `@w.ui/wui-react/visualization`, and `@w.ui/wui-react/editor`.
-Layout currently exports AboutSection, AlignCenter, AnimationTabs, FadeInDiv, AutoScrollSection, FeatureAny, FixTabs, Footer, HorizontalScroll, LinearWrap, MarketingHero, PageContainer, ScrollToTop, StickyCard, StickyFooter and TrapezoidTabs. Animation exports FloatingIcon and SocialIcon; data-display exports the components documented below. Other groups gain components as their migration is completed.
+All 133 accepted migration implementations are available across these seven groups; the 10 application-specific modules remain outside the package. The complete roster and reasons are in the repository migration audit.
 Group components and their prop types are exported by name; groups have no default
 export and are not re-exported from the root. The existing 12 component subpaths and
 root exports remain available.
@@ -57,7 +57,7 @@ bundling preserves public prop types while keeping the published file count
 independent of the number of internal component files. The same declaration build
 runs after both Webpack and Vite builds.
 
-Group-specific optional peers will be documented alongside migrated components.
+Group-specific optional peers are documented below.
 Importing a group loads its static runtime imports, so consumers must install all
 peers listed for that group. Importing the root does not load the new group entries.
 
@@ -79,7 +79,7 @@ export function Workspace() {
 ```
 
 Layout uses the existing React, React DOM, Ant Design and Framer Motion peers;
-animation uses React and Framer Motion. No Tailwind setup or application theme is
+animation uses React, Framer Motion and the optional peers listed below. No Tailwind setup or application theme is
 required. Motion imports use the existing `framer-motion` peer. `FeatureAny` requires
 caller data; `HorizontalScroll` and `AboutSection` accept cards with image alt text
 or children. `MarketingHero` accepts a decoration slot. `Footer` accepts brand,
@@ -264,13 +264,13 @@ This group exports `AutoSlider`, `CompareAll`, `FixCarouse`, `FixMusicPlayer`,
 The media peers below are optional for consumers of the root or other groups.
 Install these compatible versions when using the media group:
 
-| Peer | Compatible range |
-| --- | --- |
-| `react-pdf` | `>=11.0.0 <12.0.0` |
-| `pdfjs-dist` | `>=6.3.289 <7.0.0` |
-| `video.js` | `>=8.24.1 <9.0.0` |
-| `hls.js` | `>=1.7.3 <2.0.0` |
-| `i18next` | `>=26.0.0 <27.0.0` |
+| Peer            | Compatible range   |
+| --------------- | ------------------ |
+| `react-pdf`     | `>=11.0.0 <12.0.0` |
+| `pdfjs-dist`    | `>=6.3.289 <7.0.0` |
+| `video.js`      | `>=8.24.1 <9.0.0`  |
+| `hls.js`        | `>=1.7.3 <2.0.0`   |
+| `i18next`       | `>=26.0.0 <27.0.0` |
 | `react-i18next` | `>=17.0.0 <18.0.0` |
 
 Import the package stylesheet once. `Video` additionally requires its peer's
@@ -289,6 +289,7 @@ carousels, `{ src, alt }` companies to `LogoSlider`, and `src` to `SoundBar`.
 `MusicPlayer` and `FixMusicPlayer` accept `theme`, `labels`, playback callbacks,
 and `active`; temporarily setting `active={false}` pauses playback and restores
 previously playing audio on reactivation, while respecting explicit user pauses.
+`FixMusicPlayer` restores close-player control (`closeLabel`, `onClose`) and starts playback on previous/next navigation; set `playOnNavigate={false}` to retain paused navigation. Shuffle chooses a different track when multiple tracks exist. Closing unmounts and releases its audio.
 `SmartVideoPlayer` provides scoped English/Chinese messages plus `language` and
 `labels` overrides, and loads HLS only for the corresponding media source.
 
@@ -305,10 +306,7 @@ import { pdfjs } from 'react-pdf'
 import { InteractiveBook } from '@w.ui/wui-react/media'
 
 // Browser setup; keep these resources alive while their books are mounted.
-const port = new Worker(
-  new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
-  { type: 'module' }
-)
+const port = new Worker(new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url), { type: 'module' })
 const pdfWorker = new pdfjs.PDFWorker({ port })
 
 const book = (

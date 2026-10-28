@@ -1010,6 +1010,60 @@ importers:
       '@ant-design/icons':
         specifier: ^6.3.4
         version: 6.3.4(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@codesandbox/sandpack-react':
+        specifier: ^2.20.0
+        version: 2.20.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@react-spring/web':
+        specifier: '>=10.0.0 <11.0.0'
+        version: 10.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@tiptap/core':
+        specifier: 3.31.4
+        version: 3.31.4(@tiptap/pm@3.31.4)
+      '@tiptap/extension-code-block-lowlight':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/extension-code-block@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4)(highlight.js@11.12.0)(lowlight@3.3.0)
+      '@tiptap/extension-image':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))
+      '@tiptap/extension-link':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4)
+      '@tiptap/extension-placeholder':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/extensions@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))
+      '@tiptap/extension-table':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4)
+      '@tiptap/extension-task-item':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/extension-list@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))
+      '@tiptap/extension-task-list':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/extension-list@3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4))
+      '@tiptap/extension-text-align':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))
+      '@tiptap/extension-underline':
+        specifier: ^3.31.4
+        version: 3.31.4(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))
+      '@tiptap/react':
+        specifier: ^3.31.4
+        version: 3.31.4(@floating-ui/dom@1.8.0)(@tiptap/core@3.31.4(@tiptap/pm@3.31.4))(@tiptap/pm@3.31.4)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@tiptap/starter-kit':
+        specifier: ^3.31.4
+        version: 3.31.4
+      '@tsparticles/engine':
+        specifier: '>=4.4.0 <5.0.0'
+        version: 4.4.0
+      '@tsparticles/react':
+        specifier: '>=4.4.0 <5.0.0'
+        version: 4.4.0(@tsparticles/engine@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      '@tsparticles/slim':
+        specifier: '>=4.4.0 <5.0.0'
+        version: 4.4.0
+      '@uiw/react-signature':
+        specifier: '>=1.3.5 <2.0.0'
+        version: 1.3.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       antd:
         specifier: '>=6.0.0 <7.0.0'
         version: 6.6.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -1019,39 +1073,99 @@ importers:
       dompurify:
         specifier: ^3.4.16
         version: 3.4.16
+      echarts:
+        specifier: '>=6.1.0 <7.0.0'
+        version: 6.1.0
       framer-motion:
         specifier: '>=12.0.0 <15.0.0'
         version: 14.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      highlight.js:
+        specifier: '>=11.0.0 <12.0.0'
+        version: 11.12.0
+      hls.js:
+        specifier: '>=1.7.3 <2.0.0'
+        version: 1.7.3
+      html2canvas:
+        specifier: ^1.4.1
+        version: 1.4.1
+      i18next:
+        specifier: '>=26.0.0 <27.0.0'
+        version: 26.4.2(typescript@6.0.3)
       isomorphic-dompurify:
         specifier: ^4.5.0
         version: 4.5.0(@noble/hashes@1.8.0)
+      jspdf:
+        specifier: ^4.2.1
+        version: 4.2.1
+      katex:
+        specifier: ^0.19.0
+        version: 0.19.0
+      lowlight:
+        specifier: ^3.3.0
+        version: 3.3.0
       lucide-react:
         specifier: ^1.54.0
         version: 1.54.0(@types/react@19.3.0)(react@19.3.0)
+      marked:
+        specifier: ^18.1.0
+        version: 18.1.0
+      markmap-lib:
+        specifier: '>=0.18.12 <0.19.0'
+        version: 0.18.12(markmap-common@0.18.9)
+      markmap-view:
+        specifier: '>=0.18.12 <0.19.0'
+        version: 0.18.12(markmap-common@0.18.9)
+      mermaid:
+        specifier: '>=12.1.0 <13.0.0'
+        version: 12.1.0
+      motion:
+        specifier: '>=12.0.0 <15.0.0'
+        version: 14.0.0(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      pdfjs-dist:
+        specifier: '>=6.3.289 <7.0.0'
+        version: 6.3.289
+      prism-react-renderer:
+        specifier: ^2.4.1
+        version: 2.4.1(react@19.3.0)
       react:
         specifier: '>=19.0.0 <20.0.0'
         version: 19.3.0
       react-dom:
         specifier: '>=19.0.0 <20.0.0'
         version: 19.3.0(react@19.3.0)
-      '@uiw/react-signature':
-        specifier: '>=1.3.5 <2.0.0'
-        version: 1.3.5(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      highlight.js:
-        specifier: '>=11.0.0 <12.0.0'
-        version: 11.12.0
+      react-i18next:
+        specifier: '>=17.0.0 <18.0.0'
+        version: 17.0.16(i18next@26.4.2(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3)
       react-markdown:
         specifier: '>=10.0.0 <11.0.0'
         version: 10.1.0(@types/react@19.3.0)(react@19.3.0)
+      react-pdf:
+        specifier: '>=11.0.0 <12.0.0'
+        version: 11.0.0(@types/react@19.3.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       rehype-highlight:
         specifier: '>=7.0.0 <8.0.0'
         version: 7.0.2
+      rehype-katex:
+        specifier: ^7.0.1
+        version: 7.0.1
       remark-breaks:
         specifier: '>=4.0.0 <5.0.0'
         version: 4.0.0
       remark-gfm:
         specifier: '>=4.0.0 <5.0.0'
         version: 4.0.1
+      remark-math:
+        specifier: ^6.0.0
+        version: 6.0.0
+      shiki:
+        specifier: ^4.5.0
+        version: 4.5.0
+      turndown:
+        specifier: ^7.2.4
+        version: 7.2.4
+      video.js:
+        specifier: '>=8.24.1 <9.0.0'
+        version: 8.24.1
 
   server:
     dependencies:
@@ -26954,6 +27068,10 @@ snapshots:
     optionalDependencies:
       typescript: '@typescript/typescript6@6.0.2'
 
+  i18next@26.4.2(typescript@6.0.3):
+    optionalDependencies:
+      typescript: 6.0.3
+
   iconv-lite@0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -30835,6 +30953,17 @@ snapshots:
     optionalDependencies:
       react-dom: 19.3.0(react@19.3.0)
       typescript: '@typescript/typescript6@6.0.2'
+
+  react-i18next@17.0.16(i18next@26.4.2(typescript@6.0.3))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(typescript@6.0.3):
+    dependencies:
+      '@babel/runtime': 7.29.10
+      html-parse-stringify: 4.0.1
+      i18next: 26.4.2(typescript@6.0.3)
+      react: 19.3.0
+      use-sync-external-store: 1.7.0(react@19.3.0)
+    optionalDependencies:
+      react-dom: 19.3.0(react@19.3.0)
+      typescript: 6.0.3
 
   react-is@16.13.1: {}
 

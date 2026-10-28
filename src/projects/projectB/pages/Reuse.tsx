@@ -17,7 +17,8 @@ export default function ProjectBReuse() {
         <Card title="复用主项目的组件（@stateless/*）">
           <Space orientation="vertical" size={10} style={{ width: '100%' }}>
             <Paragraph style={{ marginBottom: 0 }}>
-              这里直接复用 <Text code>@wui/data-display/CopyToClipboard</Text> 和 <Text code>@wui/data-display/GradientStats</Text>。
+              这里直接复用 <Text code>@wui/data-display/CopyToClipboard</Text> 和{' '}
+              <Text code>@wui/data-display/GradientStats</Text>。
             </Paragraph>
 
             <Space align="center">

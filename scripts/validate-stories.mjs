@@ -29,7 +29,8 @@ directories = directories.map((directory) => {
     (entry) =>
       entry.source === directory &&
       entry.destination &&
-      source.includes(`@wui/${entry.destination.group}/${entry.name}`)
+      (source.includes(`@wui/${entry.destination.group}/${entry.name}`) ||
+        (source.includes(`from '@wui/${entry.destination.group}'`) && source.includes(`${entry.name} as default`)))
   )
   return migrated?.destination.source ?? directory
 })

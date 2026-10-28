@@ -1,6 +1,6 @@
 {
   "name": "@w.ui/wui-react",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "description": "Reusable React UI components from Pro React Admin.",
   "type": "module",
   "private": false,

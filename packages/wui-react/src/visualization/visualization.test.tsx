@@ -11,6 +11,7 @@ const chart = {
   setOption: jest.fn(),
   clear: jest.fn(),
   dispose: jest.fn(),
+  isDisposed: jest.fn(() => false),
   resize: jest.fn(),
   on: jest.fn(),
   off: jest.fn(),
@@ -173,4 +174,12 @@ test('BaseChart preserves caller events and gives onClick precedence over onEven
   expect(mouseover).toHaveBeenCalledTimes(2)
   expect(click).toHaveBeenCalledTimes(1)
   expect(alias).toHaveBeenCalledWith({ name: 'alias' }, chart)
+})
+
+test('event cleanup skips already-disposed chart instances', () => {
+  const view = render(<EChart initOptions={{ width: 300, height: 200 }} onEvents={{ click: jest.fn() }} />)
+  chart.isDisposed.mockReturnValue(true)
+  view.unmount()
+  expect(chart.off).not.toHaveBeenCalled()
+  chart.isDisposed.mockReturnValue(false)
 })

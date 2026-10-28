@@ -8,6 +8,9 @@
       "coveragePercent": 7.05,
       "generatedAt": "2026-10-17T10:14:14.153Z",
       "note": "Initial inventory before conditional JSX expression traversal; not directly comparable to scanner v2."
+    },
+    {
+      "note": "WUI 6.1.0 moves six existing animation demo text nodes and the pH demo title out of reusable implementations into app callers; adjust only these destination-file allowances, with no new user-facing copy."
     }
   ],
   "generatedAt": "2026-10-25T07:51:33.387Z",
@@ -97,7 +100,7 @@
     "src/pages/error/index.tsx": 5,
     "src/pages/home/BookLibrary/index.tsx": 5,
     "src/pages/home/HomeBookStage.tsx": 41,
-    "src/pages/home/Playground.tsx": 41,
+    "src/pages/home/Playground.tsx": 47,
     "src/pages/mermaid/index.tsx": 5,
     "src/pages/motion/index.tsx": 5,
     "src/pages/parallax/index.tsx": 1,
@@ -153,6 +156,7 @@
     "src/projects/projectB/pages/Reuse.tsx": 8,
     "src/projects/shell/pages/Portal.tsx": 4,
     "src/shared/ui/FixTabPanel/examples.tsx": 4,
-    "src/shared/ui/ScrollProgressBar/examples.tsx": 2
+    "src/shared/ui/ScrollProgressBar/examples.tsx": 2,
+    "src/pages/phbar/index.tsx": 1
   }
 }

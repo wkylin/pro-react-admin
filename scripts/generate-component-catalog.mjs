@@ -4,6 +4,7 @@ import process from 'node:process'
 import { error, log } from 'node:console'
 import { fileURLToPath } from 'node:url'
 import { format } from 'prettier'
+import { libraryGroups } from '../config/library-contract.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const src = path.join(root, 'src')
@@ -152,6 +153,20 @@ ${formatNames(sharedUiNames)}
 ## WUI 组件库模块
 
 ${formatNames(wuiComponentNames)}
+
+## WUI 分组导出
+
+七个分组提供 133 个审核通过的迁移实现；原有 12 个根组件及子路径保持兼容。分组不从根入口再导出，安装可选 peers 见 [npm 使用说明](../../NPM_README.md)。
+
+${libraryGroups
+  .map(
+    (group) => `### ${group.subpath}
+
+入口：\`@w.ui/wui-react/${group.subpath}\`
+
+${formatNames(group.runtimeExports)}`
+  )
+  .join('\n\n')}
 
 ## Layout 模块
 

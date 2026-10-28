@@ -147,7 +147,7 @@ const EChart = forwardRef<EChartHandle, EChartProps>(
       )
       bindings.forEach(({ name, handler }) => chart.on(name, handler))
       return () => {
-        bindings.forEach(({ name, handler }) => chart.off(name, handler))
+        if (!chart.isDisposed()) bindings.forEach(({ name, handler }) => chart.off(name, handler))
       }
     }, [chart, onEvents])
     useEffect(() => {

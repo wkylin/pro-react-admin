@@ -55,6 +55,7 @@ export default function FixTabs({
       <div className={styles.content}>
         {tabs.map((tab, index) => (
           <div
+            className={`${styles.tabContent} ${selected === tab.id ? styles.active : ''}`}
             role="tabpanel"
             id={`${id}-panel-${index}`}
             aria-labelledby={`${id}-tab-${index}`}

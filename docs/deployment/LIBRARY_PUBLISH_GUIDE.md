@@ -39,7 +39,7 @@ pnpm --version
 pnpm install --frozen-lockfile
 ```
 
-源码位于 `packages/wui-react/src`。`config/library-contract.mjs` 定义 12 个公开组件、子路径、类型、peer、externals 与体积预算。根应用通过 `@wui` 消费源码，启动后台不能代替对 npm 包产物的验证。
+源码位于 `packages/wui-react/src`。`config/library-contract.mjs` 定义原有 12 个公开组件与七个分组（layout、animation、data-display、forms、media、visualization、editor）、子路径、类型、peer、externals 与体积预算。根应用通过 `@wui` 消费源码，启动后台不能代替对 npm 包产物的验证。
 
 | 产物                      | 路径                                       |
 | ------------------------- | ------------------------------------------ |
@@ -83,7 +83,7 @@ pnpm run check:lib-size
 
 Vite 分步构建将第一行换成 `pnpm run build:lib:vite`。Windows 可通过 `pnpm exec cross-env BUILD_TOOL=vite pnpm run prepare:lib:release` 选择构建器。
 
-`build:lib` 会清理旧 dist。组件和根入口分别导出；`check:lib-smoke` 在临时消费目录验证根导出、12 个组件子路径、样式和 manifest 解析。`check:lib-size` 使用实际 npm 打包清单检查文件、体积及禁止发布的路径。上述步骤均不向 npmjs 发布。
+`build:lib` 会清理旧 dist。组件和根入口分别导出；`check:lib-smoke` 在临时消费目录验证根导出、12 个组件子路径、七个分组命名导出、样式和 manifest 解析。`check:lib-size` 使用实际 npm 打包清单检查文件、体积及禁止发布的路径。上述步骤均不向 npmjs 发布。
 
 查看组件示例：
 
@@ -258,3 +258,19 @@ git push origin wui-react-v6.0.0
 | 安装后缺少 peer / 样式      | 安装兼容的 React、Ant Design、Framer Motion，并导入 style.css   |
 
 完整组件列表见[实现参考](../reference/PROJECT_REFERENCE.md)，源码边界见[组件目录](../components/COMPONENT_CATALOG.md)，快速预览见[快速上手](../development/GETTING_STARTED.md#本地构建-lib)。
+
+## 6.1.0 迁移核对与固定产物
+
+143 个目录的冻结审核保留在 `config/wui-migration-roster.json`；133 个迁移实现进入七个分组，10 个保留在应用。`node scripts/check-wui-migration-implementation.mjs` 核对目标源码、分组契约与已构建的 ESM/CJS 导出。各组可选 peers 的精确安装范围见 [NPM_README](../../NPM_README.md)，根入口无需安装重依赖组。先在独立干净 checkout 执行 `pnpm install --frozen-lockfile`，避免共享 node_modules 掩盖 lockfile 漂移。
+
+Webpack 与 Vite 验证后固定最终构建器的产物，再执行：
+
+```sh
+mkdir -p artifacts/npm
+npm pack ./packages/wui-react --ignore-scripts --dry-run
+npm pack ./packages/wui-react --ignore-scripts --pack-destination artifacts/npm
+shasum -a 256 artifacts/npm/w.ui-wui-react-6.1.0.tgz
+tar -tzf artifacts/npm/w.ui-wui-react-6.1.0.tgz
+```
+
+将这个固定 tarball 安装到独立消费者，验证新增分组和样式。文件数不得超过 250、压缩体积不得超过 5 MiB、解包体积不得超过 15 MiB。源码提交与 `wui-react-v6.1.0` 标签必须可追溯；本地构建或打包成功不代表已发布，必须继续核验工作流和 npm 的 version/latest。

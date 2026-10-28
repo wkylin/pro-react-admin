@@ -147,7 +147,9 @@ test('star and meteor server markup hydrates without recoverable errors', async 
 
 test('mouse trail styles leave caller foreground images and nested articles untouched', async () => {
   const { readFileSync } = require('node:fs')
+  const log = jest.spyOn(console, 'log').mockImplementation(() => {})
   const less = require('less')
+  log.mockRestore()
   const source = readFileSync('packages/wui-react/src/animation/batch-b.module.less', 'utf8')
   const compiled = await less.render(source)
   const css = (compiled.css.match(/:global \.wui-mouse-trail[^{}]*\{[^{}]*\}/g) ?? [])

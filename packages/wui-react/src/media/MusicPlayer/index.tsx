@@ -23,6 +23,8 @@ export interface MusicPlayerLabels {
 export interface MusicPlayerProps {
   tracks: readonly MusicTrack[]
   initialTrack?: number
+  /** Start playback when navigating even if currently paused. */
+  playOnNavigate?: boolean
   labels?: Partial<MusicPlayerLabels>
   active?: boolean
   theme?: 'light' | 'dark'
@@ -45,6 +47,7 @@ const defaults: MusicPlayerLabels = {
 export default function MusicPlayer({
   tracks,
   initialTrack = 0,
+  playOnNavigate = false,
   labels,
   active = true,
   theme = 'light',
@@ -125,7 +128,14 @@ export default function MusicPlayer({
     setIndex(target)
     onTrackChange?.(tracks[target], target)
   }
-  const next = () => select(shuffle ? Math.floor(Math.random() * tracks.length) : selected + 1)
+  const navigate = (direction: number) => {
+    const target =
+      shuffle && tracks.length > 1
+        ? selected + 1 + Math.floor(Math.random() * (tracks.length - 1))
+        : selected + direction
+    select(target, playOnNavigate || playIntent.current)
+  }
+  const next = () => navigate(1)
   const playback = (value: boolean) => {
     setPlaying(value)
     callbacks.current.onPlaybackChange?.(value)
@@ -167,7 +177,7 @@ export default function MusicPlayer({
             }}
           />
           <div className={styles.controls}>
-            <button type="button" onClick={() => select(selected - 1)}>
+            <button type="button" onClick={() => navigate(-1)}>
               {text.previous}
             </button>
             <button type="button" disabled={!active} onClick={play}>

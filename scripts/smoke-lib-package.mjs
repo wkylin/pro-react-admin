@@ -277,11 +277,11 @@ try {
       createElement(forms.LanguageSwitcher, {language: 'en', options: [{value:'en', label:'English'}, {value:'de', label:'Deutsch'}], onLanguageChange: () => {}}),
       createElement(forms.PromptOptimizer, {value: {role: 'Reviewer'}}),
       createElement(forms.RadioInput, {text: 'Read-only choice', checked: true}),
-      createElement(forms.ReactSignature, {}),
+      createElement(forms.ReactSignature, {labels: {canvas: 'CJS default interop signature fixture'}}),
       createElement(forms.SmartChat, {apiUrl: '/chat', initialMessages: [{content: '**Markdown rendered**'}]}),
       createElement(forms.StarRating, {value: 2})
     ))
-    for (const content of ['Choice A', 'Caller content', 'Deutsch', 'Reviewer', 'aria-readonly', '<svg', '<strong>Markdown rendered</strong>', 'radiogroup']) {
+    for (const content of ['Choice A', 'Caller content', 'Deutsch', 'Reviewer', 'aria-readonly', 'CJS default interop signature fixture', '<svg', '<strong>Markdown rendered</strong>', 'radiogroup']) {
       if (!formMarkup.includes(content)) throw new Error('Independent forms SSR lost ' + content)
     }
   `

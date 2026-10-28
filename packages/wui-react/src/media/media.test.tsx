@@ -126,3 +126,17 @@ test('playlist selection starts playback and ended advances playback', () => {
   expect(audio).toHaveAttribute('src', '/one.mp3')
   expect(play).toHaveBeenCalledTimes(2)
 })
+
+test('fixed player starts paused navigation, shuffles away from current track and closes', () => {
+  const FixMusicPlayer = require('./FixMusicPlayer').default
+  const onClose = jest.fn()
+  jest.spyOn(Math, 'random').mockReturnValue(0)
+  const view = render(<FixMusicPlayer tracks={tracks} onClose={onClose} />)
+  fireEvent.click(screen.getByRole('button', { name: 'Shuffle' }))
+  fireEvent.click(screen.getByRole('button', { name: 'Previous track' }))
+  expect(view.container.querySelector('audio')).toHaveAttribute('src', '/two.mp3')
+  expect(HTMLMediaElement.prototype.play).toHaveBeenCalled()
+  fireEvent.click(screen.getByRole('button', { name: 'Close player' }))
+  expect(view.container.querySelector('audio')).toBeNull()
+  expect(onClose).toHaveBeenCalledTimes(1)
+})

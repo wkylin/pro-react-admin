@@ -34,11 +34,11 @@
 
 ## 仓库内实现
 
-[bookCurlGeometry.ts](../../src/components/stateless/InteractiveBook/bookCurlGeometry.ts) 是独立计算模块。它把原外角和拖动角点的垂直平分线作为折线，按折线两侧裁剪矩形页面，并对折出的部分施加平面反射矩阵。输入是页宽、高、上下角及局部指针；输出包含约束后的角点、0–1 进度、页面裁剪路径、反射变换和阴影线段。无有效折角时，阴影允许为 `null`。这套几何与上游的旋转及交点实现不同，便于用纯函数验证边界和对称性。
+[bookCurlGeometry.ts](../../packages/wui-react/src/media/InteractiveBook/bookCurlGeometry.ts) 是独立计算模块。它把原外角和拖动角点的垂直平分线作为折线，按折线两侧裁剪矩形页面，并对折出的部分施加平面反射矩阵。输入是页宽、高、上下角及局部指针；输出包含约束后的角点、0–1 进度、页面裁剪路径、反射变换和阴影线段。无有效折角时，阴影允许为 `null`。这套几何与上游的旋转及交点实现不同，便于用纯函数验证边界和对称性。
 
-[BookFlipEngine.ts](../../src/components/stateless/InteractiveBook/BookFlipEngine.ts) 负责 DOM 页壳、spread、软硬页绘制、角预览、PointerEvent、RAF 动画和生命周期。它接收 React 创建的页面节点，在舞台内定位页面；公开 `next()`、`previous()`、`goTo()`、`getPage()`、`setInteraction()` 与 `destroy()`。`onPage` 汇报完成后的当前页，`onTurning` 汇报正式翻动状态，`onFrame` 汇报方向、进度及是否为预览。`destroy()` 取消 RAF、移除监听器和舞台，并释放指针捕获。
+[BookFlipEngine.ts](../../packages/wui-react/src/media/InteractiveBook/BookFlipEngine.ts) 负责 DOM 页壳、spread、软硬页绘制、角预览、PointerEvent、RAF 动画和生命周期。它接收 React 创建的页面节点，在舞台内定位页面；公开 `next()`、`previous()`、`goTo()`、`getPage()`、`setInteraction()` 与 `destroy()`。`onPage` 汇报完成后的当前页，`onTurning` 汇报正式翻动状态，`onFrame` 汇报方向、进度及是否为预览。`destroy()` 取消 RAF、移除监听器和舞台，并释放指针捕获。
 
-[PageFlipRenderer.tsx](../../src/components/stateless/InteractiveBook/PageFlipRenderer.tsx) 继续用 React portal 持有页面内容，将原有 `PageFlipHandle` 映射到新引擎。它利用 `onFrame` 更新 `--book-openness`、`--book-side`、`data-cover-turning` 和 `data-book-animating`，让封面装帧跟随翻页。页壳使用 `data.density` 区分软页与硬页；目录朝硬封面、末尾内封朝硬封底的页角均不启动悬停预览。具体的书本尺寸和透视样式位于 [index.module.less](../../src/components/stateless/InteractiveBook/index.module.less)。
+[PageFlipRenderer.tsx](../../packages/wui-react/src/media/InteractiveBook/PageFlipRenderer.tsx) 继续用 React portal 持有页面内容，将原有 `PageFlipHandle` 映射到新引擎。它利用 `onFrame` 更新 `--book-openness`、`--book-side`、`data-cover-turning` 和 `data-book-animating`，让封面装帧跟随翻页。页壳使用 `data.density` 区分软页与硬页；目录朝硬封面、末尾内封朝硬封底的页角均不启动悬停预览。具体的书本尺寸和透视样式位于 [index.module.less](../../packages/wui-react/src/media/InteractiveBook/index.module.less)。
 
 ### 与上游对照后的交互优化
 
@@ -57,7 +57,7 @@
 
 ## 验证清单
 
-1. 运行 `pnpm exec jest src/components/stateless/InteractiveBook/bookCurlGeometry.test.ts src/components/stateless/InteractiveBook/BookFlipEngine.test.ts --runInBand --coverage=false`，覆盖几何边界、单页与双页 spread、卷角渐入和阴影、触屏手势、硬封底开合及引擎销毁。
+1. 运行 `pnpm exec jest packages/wui-react/src/media/InteractiveBook/bookCurlGeometry.test.ts packages/wui-react/src/media/InteractiveBook/BookFlipEngine.test.ts --runInBand --coverage=false`，覆盖几何边界、单页与双页 spread、卷角渐入和阴影、触屏手势、硬封底开合及引擎销毁。
 2. 运行 `pnpm run typecheck`，确认页壳、几何和组件接口一致。文档变更运行 `pnpm run check:docs`。
 3. 在 Storybook 中检查单页/双页、封面开合、封底、硬页和软页的按钮翻页、书角拖动、未越书脊回弹、悬停预览及远距离目录跳转。
 4. 在触屏设备或移动视口检查水平滑动、正文纵向滚动和交互控件；检查系统减少动态效果设置下的直接切页。

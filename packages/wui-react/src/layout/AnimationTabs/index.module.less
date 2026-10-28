@@ -21,7 +21,6 @@
   inset: 0;
   border-radius: inherit;
   background: var(--wui-tab-active-bg, #e5e7eb);
-  color: var(--wui-tab-active-text, #111827);
 }
 .tab:focus-visible {
   outline: 2px solid #1677ff;
@@ -42,4 +41,8 @@
 
 .label {
   position: relative;
+}
+
+.tab[aria-selected='true'] .label {
+  color: var(--wui-tab-active-text, #111827);
 }
