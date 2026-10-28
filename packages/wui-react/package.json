@@ -201,7 +201,28 @@
     "echarts": ">=6.1.0 <7.0.0",
     "markmap-lib": ">=0.18.12 <0.19.0",
     "markmap-view": ">=0.18.12 <0.19.0",
-    "mermaid": ">=12.1.0 <13.0.0"
+    "mermaid": ">=12.1.0 <13.0.0",
+    "@codesandbox/sandpack-react": "^2.20.0",
+    "@tiptap/core": "3.31.4",
+    "@tiptap/extension-code-block-lowlight": "^3.31.4",
+    "@tiptap/extension-image": "^3.31.4",
+    "@tiptap/extension-link": "^3.31.4",
+    "@tiptap/extension-placeholder": "^3.31.4",
+    "@tiptap/extension-table": "^3.31.4",
+    "@tiptap/extension-task-item": "^3.31.4",
+    "@tiptap/extension-task-list": "^3.31.4",
+    "@tiptap/extension-text-align": "^3.31.4",
+    "@tiptap/extension-underline": "^3.31.4",
+    "@tiptap/react": "^3.31.4",
+    "@tiptap/starter-kit": "^3.31.4",
+    "katex": "^0.19.0",
+    "lowlight": "^3.3.0",
+    "marked": "^18.1.0",
+    "prism-react-renderer": "^2.4.1",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
+    "shiki": "^4.5.0",
+    "turndown": "^7.2.4"
   },
   "peerDependenciesMeta": {
     "@tsparticles/react": {
@@ -271,6 +292,69 @@
       "optional": true
     },
     "mermaid": {
+      "optional": true
+    },
+    "@codesandbox/sandpack-react": {
+      "optional": true
+    },
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/extension-code-block-lowlight": {
+      "optional": true
+    },
+    "@tiptap/extension-image": {
+      "optional": true
+    },
+    "@tiptap/extension-link": {
+      "optional": true
+    },
+    "@tiptap/extension-placeholder": {
+      "optional": true
+    },
+    "@tiptap/extension-table": {
+      "optional": true
+    },
+    "@tiptap/extension-task-item": {
+      "optional": true
+    },
+    "@tiptap/extension-task-list": {
+      "optional": true
+    },
+    "@tiptap/extension-text-align": {
+      "optional": true
+    },
+    "@tiptap/extension-underline": {
+      "optional": true
+    },
+    "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "katex": {
+      "optional": true
+    },
+    "lowlight": {
+      "optional": true
+    },
+    "marked": {
+      "optional": true
+    },
+    "prism-react-renderer": {
+      "optional": true
+    },
+    "rehype-katex": {
+      "optional": true
+    },
+    "remark-math": {
+      "optional": true
+    },
+    "shiki": {
+      "optional": true
+    },
+    "turndown": {
       "optional": true
     }
   }

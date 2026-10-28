@@ -341,3 +341,38 @@ Optional peers: `echarts >=6.1.0 <7.0.0` for charts, `markmap-lib >=0.18.12 <0.1
 Chart options/data, themes, map registrations (`maps: [{ name, data, specialAreas? }]`) and accessible `ariaLabel` text are caller-owned. Map names use ECharts' global registry; use distinct names for different datasets. `PHBarChart` requires `ranges: [{name, values}]`, with optional markers and title. `PieNestCharts.data` provides the inner series when no explicit series are supplied. OrgChart takes a caller tree, including IDs equal to zero.
 
 Diagram markup is always sanitized: Mermaid uses strict security by default and static SVG primitives; scripts, styles, external SVG resources and embedded HTML are removed even in loose mode. Flowchart HTML labels are disabled to preserve text. Markmap permits safe inline HTML but never loads plugin scripts/styles. Mermaid configuration/rendering is serialized within this package; external Mermaid users should avoid changing the same global configuration during a render. IconCloud renders caller icons/images and accepts an accessible text alternative plus arrow-key rotation.
+
+### Editor (`@w.ui/wui-react/editor`)
+
+Named exports: `AdvancedCodeBlock`, `CodeHighlighter`, `MdxEditor`, `ReMarkdown`, `SandpackBasic`, `ScriptView`, `ShiCode`. Import `@w.ui/wui-react/style.css` for independent styles. The root and original component subpaths do not load editor peers. Install the editor group peers before importing this group:
+
+- `@codesandbox/sandpack-react ^2.20.0`
+- `@tiptap/core 3.31.4`
+- `@tiptap/extension-code-block-lowlight ^3.31.4`
+- `@tiptap/extension-image ^3.31.4`
+- `@tiptap/extension-link ^3.31.4`
+- `@tiptap/extension-placeholder ^3.31.4`
+- `@tiptap/extension-table ^3.31.4`
+- `@tiptap/extension-task-item ^3.31.4`
+- `@tiptap/extension-task-list ^3.31.4`
+- `@tiptap/extension-text-align ^3.31.4`
+- `@tiptap/extension-underline ^3.31.4`
+- `@tiptap/react ^3.31.4`
+- `@tiptap/starter-kit ^3.31.4`
+- `highlight.js >=11.0.0 <12.0.0`
+- `katex ^0.19.0`
+- `lowlight ^3.3.0`
+- `marked ^18.1.0`
+- `prism-react-renderer ^2.4.1`
+- `react-markdown >=10.0.0 <11.0.0`
+- `rehype-highlight >=7.0.0 <8.0.0`
+- `rehype-katex ^7.0.1`
+- `remark-breaks >=4.0.0 <5.0.0`
+- `remark-gfm >=4.0.0 <5.0.0`
+- `remark-math ^6.0.0`
+- `shiki ^4.5.0`
+- `turndown ^7.2.4`
+
+All peers above are optional for other groups. SandpackBasic forwards typed Sandpack files, template, options and theme; supply your own files. MdxEditor accepts `value`/`onChange` or `initialMarkdown`, `readOnly`, `theme`/`onThemeChange`, `title`, `labels`, and `downloadFileName`. It parses Markdown (not executable MDX) and sanitizes HTML before inserting it into Tiptap. ReMarkdown ignores raw HTML, rejects unsafe URL protocols through react-markdown, and supports trusted caller `components` and `renderLoading`; `onCopy`/`onCopyError` provide feedback. CodeHighlighter exposes typed Shiki languages/themes, falls back to escaped source on failure, and discards stale/unmounted async results. AdvancedCodeBlock accepts figure attributes and filename. ScriptView accepts commandMap, language, theme and copy labels; ShiCode accepts preCode, filename, language and copy label.
+
+Math is rendered as native MathML, avoiding global KaTeX font CSS and embedded font payloads.

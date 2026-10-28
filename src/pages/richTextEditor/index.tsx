@@ -1,5 +1,5 @@
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import ProMdxEditor from '@stateless/MdxEditor'
+import ProMdxEditor from '@wui/editor/MdxEditor'
 
 const RichTextEditor = () => {
   return (

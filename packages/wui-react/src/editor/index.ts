@@ -1,2 +1,14 @@
-// Named exports for migrated components are added here; this group has no default export.
-export {}
+export { default as AdvancedCodeBlock } from './AdvancedCodeBlock'
+export * from './AdvancedCodeBlock'
+export { default as CodeHighlighter } from './CodeHighlighter'
+export * from './CodeHighlighter'
+export { default as MdxEditor } from './MdxEditor'
+export * from './MdxEditor'
+export { default as ReMarkdown } from './ReMarkdown'
+export * from './ReMarkdown'
+export { default as SandpackBasic } from './SandpackBasic'
+export * from './SandpackBasic'
+export { default as ScriptView } from './ScriptView'
+export * from './ScriptView'
+export { default as ShiCode } from './ShiCode'
+export * from './ShiCode'
