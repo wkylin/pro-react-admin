@@ -1,11 +1,34 @@
 import { AnimatePresence, motion, type Transition } from 'motion/react'
 import { Children, cloneElement, isValidElement, useState, useId, type ReactElement, type HTMLAttributes } from 'react'
 import clsx from 'clsx'
+
+// These elements cannot contain the animation spans. Preserve them unchanged.
+const passthroughTags = new Set([
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+  'select',
+  'textarea',
+  'option',
+  'optgroup',
+])
 export interface AnimatedBackgroundChildProps extends HTMLAttributes<HTMLElement> {
   'data-id'?: string
   'data-checked'?: string
 }
 export interface AnimatedBackgroundProps {
+  /** Animated children must accept nested spans. Native void elements and form controls pass through unchanged. */
   children?: ReactElement<AnimatedBackgroundChildProps> | readonly ReactElement<AnimatedBackgroundChildProps>[] | null
   defaultValue?: string | null
   onValueChange?: (value: string | null) => void
@@ -29,10 +52,10 @@ export default function AnimatedBackground({
   }
   return Children.map(children, (node, index) => {
     if (!isValidElement<AnimatedBackgroundChildProps>(node)) return node
+    if (typeof node.type === 'string' && passthroughTags.has(node.type)) return node
     const child: ReactElement<AnimatedBackgroundChildProps> = node
     const id = child.props['data-id'] ?? String(index)
-    const nativeInteractive =
-      typeof child.type === 'string' && ['button', 'a', 'input', 'select', 'textarea'].includes(child.type)
+    const nativeInteractive = typeof child.type === 'string' && ['button', 'a'].includes(child.type)
     return cloneElement(
       child,
       {

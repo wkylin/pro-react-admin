@@ -1,5 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import AlternatingText from './AlternatingText'
+import AnimatedList from './AnimatedList'
+import { RevealLinks } from './FlipLink/FlipLink.stories'
 import AnimateRipple from './AnimateRipple'
 import AnimateOnScreen from './AnimateOnScreen'
 import AnimText from './AnimText'
@@ -167,4 +169,58 @@ test('selection makes generic elements keyboard reachable without cancelling nat
   fireEvent.keyDown(custom, { key: ' ' })
   expect(onValueChange).toHaveBeenLastCalledWith('custom')
   expect(fireEvent.keyDown(screen.getByRole('link'), { key: 'Enter' })).toBe(true)
+})
+
+test('animated list merges caller styles without losing its packaged layout', () => {
+  const view = render(
+    <AnimatedList data-testid="styled-list" style={{ color: 'red' }}>
+      Item
+    </AnimatedList>
+  )
+  expect(screen.getByTestId('styled-list')).toHaveStyle({
+    color: 'rgb(255, 0, 0)',
+    display: 'flex',
+    'flex-direction': 'column',
+    'align-items': 'center',
+    gap: '16px',
+  })
+  view.rerender(
+    <AnimatedList data-testid="styled-list" style={{ gap: 24 }}>
+      Item
+    </AnimatedList>
+  )
+  expect(screen.getByTestId('styled-list')).toHaveStyle({ display: 'flex', 'flex-direction': 'column', gap: '24px' })
+})
+
+test('selection background leaves native form controls intact instead of injecting animation children', () => {
+  const onChange = jest.fn()
+  const onFocus = jest.fn()
+  const onValueChange = jest.fn()
+  render(
+    <AnimatedBackground defaultValue="input" onValueChange={onValueChange}>
+      <input data-id="input" aria-label="Name" defaultValue="Before" onChange={onChange} onFocus={onFocus} />
+      <select aria-label="Choice" defaultValue="one">
+        <option value="one">One</option>
+      </select>
+      <textarea aria-label="Details" defaultValue="Details text" />
+    </AnimatedBackground>
+  )
+  const input = screen.getByRole('textbox', { name: 'Name' })
+  expect(input).toHaveValue('Before')
+  fireEvent.change(input, { target: { value: 'After' } })
+  fireEvent.focus(input)
+  expect(onChange).toHaveBeenCalledTimes(1)
+  expect(onFocus).toHaveBeenCalledTimes(1)
+  expect(onValueChange).not.toHaveBeenCalled()
+  expect(screen.getByRole('combobox')).toHaveValue('one')
+  expect(screen.getByRole('textbox', { name: 'Details' })).toHaveValue('Details text')
+})
+
+test('RevealLinks story preserves the GitHub and Medium composition', () => {
+  render(<RevealLinks.render />)
+  expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+    'href',
+    'https://github.com/wkylin/pro-react-admin'
+  )
+  expect(screen.getByRole('link', { name: 'Medium' })).toHaveAttribute('href', 'https://medium.com/@wkylin.w')
 })

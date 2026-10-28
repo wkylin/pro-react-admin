@@ -23,7 +23,7 @@ export type AnimatedListProps = ComponentPropsWithoutRef<'div'> & {
   delay?: number
 }
 
-const AnimatedList = React.memo(({ children, className, delay = 1000, ...props }: AnimatedListProps) => {
+const AnimatedList = React.memo(({ children, className, style, delay = 1000, ...props }: AnimatedListProps) => {
   const [index, setIndex] = useState(0)
   const childrenArray = useMemo(() => React.Children.toArray(children), [children])
 
@@ -44,7 +44,7 @@ const AnimatedList = React.memo(({ children, className, delay = 1000, ...props }
 
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, ...style }}
       className={clsx(className)}
       {...props}
     >

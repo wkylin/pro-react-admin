@@ -213,6 +213,8 @@ icons, hero copy and example links live in stories. `AlternatingText` accepts an
 interval in milliseconds and an optional placeholder for empty lists.
 
 Selection backgrounds preserve caller handlers and select on focus, Enter and
-Space; consumers should supply native interactive children. `FlipLink` forwards
+Space; consumers should supply native interactive children that accept nested spans.
+Native void elements (including inputs), selects and textareas pass through
+unchanged; they retain their original content/events and receive no selection background. `FlipLink` forwards
 link attributes and animates on focus. Decorative duplicates are hidden from
 assistive technology. Timers, observers and pointer listeners are cleaned up.
