@@ -6,7 +6,7 @@ const meta = {
   component: Component,
   tags: ['autodocs'],
   args: {
-    content: 'Pro React Admin 5.0',
+    content: 'Pro React Admin 6.0',
     containerId: 'storybook-watermark',
     children: <div style={{ height: 320, padding: 24 }}>带水印的业务内容</div>,
   },

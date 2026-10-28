@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { markmap: '# Pro React Admin 5.0\n## 企业管理\n- 用户\n- 角色\n## 工程化\n- 多项目\n- 微前端' },
+  args: { markmap: '# Pro React Admin 6.0\n## 企业管理\n- 用户\n- 角色\n## 工程化\n- 多项目\n- 微前端' },
 } satisfies Meta<typeof Component>
 
 export default meta

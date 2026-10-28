@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { text: 'Pro React Admin 5.0' },
+  args: { text: 'Pro React Admin 6.0' },
 } satisfies Meta<typeof Component>
 
 export default meta

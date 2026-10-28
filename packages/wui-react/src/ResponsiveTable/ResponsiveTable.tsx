@@ -98,6 +98,14 @@ export type ResponsiveTableProps<T = any> = {
   showUrlAppliedTag?: boolean
   indexWidth?: number
   actionsWidth?: number
+  uiLabels?: {
+    index?: string
+    actions?: string
+    columnSettings?: string
+    allColumns?: string
+    firstColumns?: string
+    total?: (count: number) => string
+  }
   toolbar?: any
   apiRef?: any
   onToolbarReady?: (api: any) => void
@@ -150,6 +158,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
     showUrlAppliedTag = false,
     indexWidth = 80,
     actionsWidth = 180,
+    uiLabels = {},
     toolbar = null,
     apiRef = null,
     onToolbarReady = null,
@@ -426,13 +435,13 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           onClick={() => setVisibleKeys((columns || []).map((c) => (c as any).dataIndex || (c as any).key))}
           style={{ marginRight: 8 }}
         >
-          全部
+          {uiLabels.allColumns ?? '全部'}
         </Button>
         <Button
           size="small"
           onClick={() => setVisibleKeys((columns || []).slice(0, 3).map((c) => (c as any).dataIndex || (c as any).key))}
         >
-          恢复默认
+          {uiLabels.firstColumns ?? '恢复默认'}
         </Button>
       </div>
     </div>
@@ -458,9 +467,9 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           justifyContent: 'space-between',
         }}
       >
-        <span>操作</span>
+        <span>{uiLabels.actions ?? '操作'}</span>
         {showColumnSettings && (
-          <Popover content={popContent} title="列设置">
+          <Popover content={popContent} title={uiLabels.columnSettings ?? '列设置'}>
             <Button
               icon={
                 <AnimatedIcon variant="spin" mode="hover">
@@ -468,8 +477,8 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
                 </AnimatedIcon>
               }
               size="small"
-              aria-label="列设置"
-              title="列设置"
+              aria-label={uiLabels.columnSettings ?? '列设置'}
+              title={uiLabels.columnSettings ?? '列设置'}
             />
           </Popover>
         )}
@@ -518,7 +527,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
     ? indexColumnFromColumns
     : showIndex
       ? {
-          title: '序号',
+          title: uiLabels.index ?? '序号',
           key: '__index',
           width: typeof indexWidth !== 'undefined' ? indexWidth : 80,
           align: 'center',
@@ -966,7 +975,7 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           total={typeof total === 'number' && total > 0 ? total : dataSource.length}
           showSizeChanger
           showQuickJumper
-          showTotal={(totalVal) => `共 ${totalVal} 条`}
+          showTotal={(totalVal) => uiLabels.total?.(totalVal) ?? `共 ${totalVal} 条`}
           onChange={async (current, pageSize) => {
             setPagination({ current, pageSize })
             if (typeof fetchData === 'function' || typeof reloadPage === 'function') {

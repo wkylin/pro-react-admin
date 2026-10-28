@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { markdownText: '# Pro React Admin 5.0\n\n- 默认应用\n- 企业管理\n- 多项目与微前端', isLoading: false },
+  args: { markdownText: '# Pro React Admin 6.0\n\n- 默认应用\n- 企业管理\n- 多项目与微前端', isLoading: false },
 } satisfies Meta<typeof Component>
 
 export default meta

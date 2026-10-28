@@ -148,17 +148,6 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       />
       {activePane && actionPosition?.key === visibleActiveKey ? (
         <div className={styles.activeTabActions} style={{ left: actionPosition.left, top: actionPosition.top }}>
-          {activePane.closable ? (
-            <button
-              type="button"
-              className={styles.tabActionButton}
-              aria-label={t('admin.closeCurrentTab')}
-              title={t('admin.closeCurrentTab')}
-              onClick={() => removeTab(visibleActiveKey)}
-            >
-              <CloseOutlined aria-hidden />
-            </button>
-          ) : null}
           <button
             type="button"
             className={styles.tabActionButton}
@@ -172,6 +161,17 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
               aria-hidden
             />
           </button>
+          {activePane.closable ? (
+            <button
+              type="button"
+              className={styles.tabActionButton}
+              aria-label={t('admin.closeCurrentTab')}
+              title={t('admin.closeCurrentTab')}
+              onClick={() => removeTab(visibleActiveKey)}
+            >
+              <CloseOutlined aria-hidden />
+            </button>
+          ) : null}
         </div>
       ) : null}
       <div className={styles.tabBarActions} ref={tabBarRef} role="group" aria-label={t('admin.pageActions')}>

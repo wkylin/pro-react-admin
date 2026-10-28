@@ -14,7 +14,7 @@ const meta = {
   ],
   args: {
     svgSource:
-      '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect x="20" y="20" width="360" height="160" rx="16" fill="#1677ff"/><text x="70" y="110" fill="white" font-size="24">Pro React Admin 5.0</text></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200"><rect x="20" y="20" width="360" height="160" rx="16" fill="#1677ff"/><text x="70" y="110" fill="white" font-size="24">Pro React Admin 6.0</text></svg>',
   },
 } satisfies Meta<typeof Component>
 

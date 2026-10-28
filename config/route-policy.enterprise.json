@@ -26,7 +26,7 @@
     "availability": "enterprise",
     "access": "authenticated",
     "menu": {
-      "order": 36,
+      "order": 37,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -43,7 +43,7 @@
     "i18nKey": "admin.administration",
     "menuGroup": true,
     "menu": {
-      "order": 3,
+      "order": 4,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -107,5 +107,54 @@
       "order": 4,
       "icon": "SafetyCertificateOutlined"
     }
+  },
+  "/patterns": {
+    "title": "业务页面模板",
+    "i18nKey": "patterns.menu",
+    "menuGroup": true,
+    "menu": {
+      "order": 2,
+      "icon": "AppstoreOutlined"
+    }
+  },
+  "/patterns/requests": {
+    "permission": "home:read",
+    "title": "查询表格",
+    "i18nKey": "patterns.listTitle",
+    "menu": {
+      "parent": "/patterns",
+      "order": 0,
+      "icon": "FileTextOutlined"
+    }
+  },
+  "/patterns/basic-form": {
+    "permission": "home:read",
+    "title": "基础表单",
+    "i18nKey": "patterns.basicForm",
+    "menu": {
+      "parent": "/patterns",
+      "order": 1,
+      "icon": "FileTextOutlined"
+    }
+  },
+  "/patterns/step-form": {
+    "permission": "home:read",
+    "title": "分步表单",
+    "i18nKey": "patterns.stepForm",
+    "menu": {
+      "parent": "/patterns",
+      "order": 2,
+      "icon": "ProjectOutlined"
+    }
+  },
+  "/patterns/requests/:id": {
+    "permission": "home:read",
+    "title": "申请详情",
+    "i18nKey": "patterns.detailTitle"
+  },
+  "/patterns/result/:id": {
+    "permission": "home:read",
+    "title": "提交结果",
+    "i18nKey": "patterns.resultTitle"
   }
 }

@@ -4,7 +4,7 @@ Pro React Admin 是一个 React 管理应用工作区：同一份业务源码可
 
 ## 1. 选型：确认能力与边界
 
-[工程导览](architecture/ENGINEERING_OVERVIEW.md)把项目、模块、构建、测试和部署连成一条链，并标出各项能力的源码与验证入口。[技术架构](architecture/ARCHITECTURE.md#当前能力与边界)列出已实现行为和仍需建设的部分。默认应用适合体验完整界面；企业入口用于从较小的业务骨架开发，真实企业 API 当前采用单实例 SQLite 部署。[企业资源与数据接入](operations/ENTERPRISE.md)说明演示数据和持久化业务数据的区别。
+[工程导览](architecture/ENGINEERING_OVERVIEW.md)把项目、模块、构建、测试和部署连成一条链，并标出各项能力的源码与验证入口。[技术架构](architecture/ARCHITECTURE.md#当前能力与边界)列出已实现行为和仍需建设的部分；[Ant Design Pro 对标设计](superpowers/specs/2026-10-28-ant-design-pro-benchmark-upgrade-design.md)记录 GitHub 项目比较、第一批取舍和后续路线。默认应用适合体验完整界面；Enterprise 入口提供真实租户管理与同一组业务页面模板。企业 API 可用单实例 SQLite 持久卷自托管，或用[独立 Vercel API + Neon PostgreSQL](deployment/VERCEL_NEON_ENTERPRISE.md)部署；本地默认 SQLite 演示库与这两种生产路径的验收边界不同。[企业资源与数据接入](operations/ENTERPRISE.md)说明演示数据和持久化业务数据的区别。
 
 ## 2. 上手：先运行一个应用
 
@@ -20,7 +20,7 @@ pnpm run dev:webpack
 
 ## 3. 开发：找到业务扩展点
 
-按[源码职责与扩展入口](development/SRC_DIRECTORY_GUIDE.md)定位 `app`、`features`、`platform`、`projects` 和 `api`。新增业务先看[业务模块](architecture/MODULES.md)与[路由、菜单和授权](architecture/USER_ROLE_PERMISSION.md)；跨项目复用或新建独立项目看[多项目与脚手架](development/MULTI_PROJECT.md)。组件开发看[Storybook](development/STORYBOOK.md)和[组件目录](components/COMPONENT_CATALOG.md)。项目、环境变量、路由和命令的当前清单见[生成参考](reference/PROJECT_REFERENCE.md)。
+先用[业务页面模板](development/PAGE_PATTERNS.md)走通查询表格、表单、详情和结果，再按[源码职责与扩展入口](development/SRC_DIRECTORY_GUIDE.md)定位 `app`、`features`、`platform`、`projects` 和 `api`。新增业务看[业务模块](architecture/MODULES.md)与[路由、菜单和授权](architecture/USER_ROLE_PERMISSION.md)；跨项目复用或新建独立项目看[多项目与脚手架](development/MULTI_PROJECT.md)。组件开发看[Storybook](development/STORYBOOK.md)和[组件目录](components/COMPONENT_CATALOG.md)。项目、环境变量、路由和命令的当前清单见[生成参考](reference/PROJECT_REFERENCE.md)。
 
 ## 4. 测试：验证功能和工程契约
 
@@ -37,7 +37,7 @@ E2E 需要先构建对应应用，再运行 `pnpm run test:e2e` 或 `pnpm run te
 
 ## 5. 构建与部署：验证将要发布的产物
 
-[应用构建](development/BUILD.md)说明 Webpack/Vite 配置、共享环境变量、统计图和 Sentry source map 上传。第一次发布可从[GitHub Pages 与 Vercel 部署实操](deployment/PAGES_VERCEL_GUIDE.md)开始；选择平台后阅读[部署与产物](deployment/DEPLOY.md)，再按目标使用[GitHub Pages](deployment/GITHUB_DEPLOYMENT.md)、[Vercel GitHub 登录](deployment/VERCEL_GITHUB_LOGIN.md)、[微前端部署](deployment/MFE_DEPLOYMENT.md)或[手动部署](deployment/MANUAL_DEPLOYMENT.md)。企业 API 的 SQLite 持久化和恢复要求见[Vercel 与 SQLite](deployment/VERCEL_SQLITE.md)及[恢复 runbook](runbooks/ENTERPRISE_RECOVERY.md)。
+[应用构建](development/BUILD.md)说明 Webpack/Vite 配置、共享环境变量、统计图和 Sentry source map 上传。第一次发布可从[GitHub Pages 与 Vercel 部署实操](deployment/PAGES_VERCEL_GUIDE.md)开始；选择平台后阅读[部署与产物](deployment/DEPLOY.md)，再按目标使用[GitHub Pages](deployment/GITHUB_DEPLOYMENT.md)、[Vercel GitHub 登录](deployment/VERCEL_GITHUB_LOGIN.md)、[微前端部署](deployment/MFE_DEPLOYMENT.md)或[手动部署](deployment/MANUAL_DEPLOYMENT.md)。企业 API 的 SQLite 持久化和恢复要求见[Vercel 与 SQLite](deployment/VERCEL_SQLITE.md)及[恢复 runbook](runbooks/ENTERPRISE_RECOVERY.md)；独立 PostgreSQL 路径见[Vercel + Neon](deployment/VERCEL_NEON_ENTERPRISE.md)及其[恢复 runbook](runbooks/VERCEL_NEON_RECOVERY.md)。
 
 静态页面发布不会自动部署企业 API；项目应先针对目标构建、测试同一份产物，再上传或组合。构建分析报告写入 `artifacts/build/`，不随应用部署。
 

@@ -3,7 +3,7 @@ import { browserDefaults, e2eReport, sharedConfig, workspaceRoot } from './share
 
 export default defineConfig({
   ...sharedConfig,
-  testMatch: ['enterprise.spec.ts', 'enterprise-public.spec.ts'],
+  testMatch: ['enterprise.spec.ts', 'enterprise-public.spec.ts', 'page-patterns.spec.ts'],
   fullyParallel: true,
   ...e2eReport('enterprise-demo'),
   forbidOnly: !!process.env.CI,

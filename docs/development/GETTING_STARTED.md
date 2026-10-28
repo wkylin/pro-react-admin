@@ -141,12 +141,15 @@ pnpm exec cross-env REACT_APP_USE_MOCK=true pnpm run start:enterprise
 
 Pages 展示构建也会显式打开 Mock，公开演示仍保留 `admin@test.com` 等演示账号。
 
-| 页面     | 地址                                         |
-| -------- | -------------------------------------------- |
-| 工作台   | http://localhost:8080/#/                     |
-| 用户管理 | http://localhost:8080/#/administration/users |
-| 角色管理 | http://localhost:8080/#/administration/roles |
-| 审计日志 | http://localhost:8080/#/administration/audit |
+| 页面         | 地址                                         |
+| ------------ | -------------------------------------------- |
+| 工作台       | http://localhost:8080/#/                     |
+| 业务页面模板 | http://localhost:8080/#/patterns/requests    |
+| 用户管理     | http://localhost:8080/#/administration/users |
+| 角色管理     | http://localhost:8080/#/administration/roles |
+| 审计日志     | http://localhost:8080/#/administration/audit |
+
+业务页面模板在真实租户和 Mock 模式下均可浏览，但其中申请记录只在当前模块实例的内存中，不写入企业 API 或审计。按[模板指南](./PAGE_PATTERNS.md)可完成一次列表、创建、详情和结果流程，再查看如何接入真实业务。
 
 在显式 Mock 模式下，可演示用户添加、编辑、停用、删除，角色权限/范围编辑、独立审批及只读审计。演示数据保存在当前页面运行期间的内存中，账号切换后保留，刷新后重置；**编辑演示角色不会修改固定测试账号的登录权限，也不会创建可登录的新账号**。操作步骤见[RBAC 与独立审批](../architecture/RBAC_RESOURCE_APPROVAL.md)。需要持久化和实际授权时使用[真实用户登录](#真实用户登录)。
 

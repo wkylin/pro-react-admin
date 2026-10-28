@@ -4,6 +4,8 @@
 
 第一次使用建议从下方的安全项目预设开始。[线上项目概览](https://pro-react-admin.vercel.app/#/overview)和[工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md)展示源码、验证命令与交付边界；公开站点使用浏览器演示数据。
 
+要直接体验类似 Ant Design Pro 的常见管理页，登录后打开“业务页面模板”：查询表格、基础表单、分步表单、详情和提交结果在默认应用与 Enterprise 入口均可运行。按[业务页面模板指南](./docs/development/PAGE_PATTERNS.md)可从页面走到源码、数据 Provider、权限策略和验证命令。模板记录只属于当前工作区会话。
+
 ## 线上预览
 
 - [默认后台展示应用](https://pro-react-admin.vercel.app)。
@@ -99,7 +101,7 @@ node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.
 
 本地 `demo` 管理员还可使用左侧“租户管理”查看租户 ID 和管理租户，“权限管理”按角色分配权限。自建数据库的平台管理员须由运维人员显式授权，普通租户管理员不能跨租户操作；删除租户采用可恢复的停用方式。配置和权限边界见[企业资源指南](./docs/operations/ENTERPRISE.md#平台租户与权限管理)。
 
-Enterprise 入口若显式开启 Mock，则使用浏览器演示账号。企业入口包含工作台、用户、角色和审计管理；浏览器演示完整体验使用 `admin@test.com`。其它账号为 `manager@test.com`、`business@test.com`、`user@test.com`，可退出登录后切换，对比权限。点击登录页账号会填入该浏览器生成的密码，没有统一固定密码。
+Enterprise 入口若显式开启 Mock，则使用浏览器演示账号。企业入口包含工作台、用户、角色、审计管理及业务页面模板；浏览器演示完整体验使用 `admin@test.com`。其它账号为 `manager@test.com`、`business@test.com`、`user@test.com`，可退出登录后切换，对比权限。点击登录页账号会填入该浏览器生成的密码，没有统一固定密码。页面模板的申请记录只在浏览器会话内，不写企业 API。
 
 ```bash
 # 企业浏览器演示：同时启动前端和 Node API，企业登录使用 Mock

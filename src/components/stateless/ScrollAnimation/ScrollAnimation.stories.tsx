@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { children: <div style={{ padding: 24 }}>Pro React Admin 5.0 · 当前源码示例</div> },
+  args: { children: <div style={{ padding: 24 }}>Pro React Admin 6.0 · 当前源码示例</div> },
 } satisfies Meta<typeof Component>
 
 export default meta

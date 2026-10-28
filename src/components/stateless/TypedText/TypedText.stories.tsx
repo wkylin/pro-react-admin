@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { children: 'Pro React Admin 5.0', delay: 80 },
+  args: { children: 'Pro React Admin 6.0', delay: 80 },
 } satisfies Meta<typeof Component>
 
 export default meta

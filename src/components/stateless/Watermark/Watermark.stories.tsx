@@ -17,7 +17,7 @@ const meta = {
   title: 'Components/Stateless/Watermark',
   component: Demo,
   tags: ['autodocs'],
-  args: { content: 'Pro React Admin 5.0' },
+  args: { content: 'Pro React Admin 6.0' },
 } satisfies Meta<typeof Demo>
 export default meta
 export const Default: StoryObj<typeof meta> = {}

@@ -145,6 +145,9 @@ test('the active closable tab has an accessible close action outside the tablist
   await expect(page.getByRole('tab', { name: 'Users', exact: true })).toBeVisible()
   const closeCurrentTab = page.getByRole('button', { name: 'Close current tab', exact: true })
   await expect(closeCurrentTab).toBeVisible()
+  expect(await closeCurrentTab.evaluate((element) => element.previousElementSibling?.getAttribute('aria-label'))).toBe(
+    'Refresh'
+  )
   await expect(page.locator('[role="tablist"] .wui-ant-tabs-tab-remove')).toHaveCount(0)
   await expect(page.locator('[role="tablist"] button[aria-label]')).toHaveCount(0)
   await closeCurrentTab.click()

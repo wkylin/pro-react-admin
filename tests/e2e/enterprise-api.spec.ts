@@ -31,6 +31,20 @@ test('enterprise sign-in exposes a named main landmark, page heading, and labele
   await expect(page.getByLabel('Password', { exact: true })).toBeVisible()
 })
 
+test('real enterprise login can use page patterns while example requests remain session-only', async ({ page }) => {
+  await signIn(page)
+  await page.goto('/#/patterns/basic-form')
+  await expect(page.getByRole('menuitem', { name: 'Page patterns' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Basic form', level: 1 })).toBeVisible()
+  await expect(page.getByRole('alert')).toContainText('They never reach Enterprise API')
+  await page.getByRole('textbox', { name: /Request title/ }).fill('Example in a real enterprise session')
+  await page.getByRole('textbox', { name: /Owner/ }).fill('Admin alpha')
+  await page.getByRole('button', { name: 'Submit request' }).click()
+  await expect(page.getByText('Request created', { exact: true })).toBeVisible()
+  await page.reload()
+  await expect(page.getByText('Request not found', { exact: true })).toBeVisible()
+})
+
 test('real user creation remains disabled for independent review and survives a reload with server audit', async ({
   page,
 }) => {

@@ -14,7 +14,7 @@ const meta = {
     ),
   ],
   args: {
-    children: <Route path="/" element={<div style={{ padding: 24 }}>Pro React Admin 5.0 · 当前源码示例</div>} />,
+    children: <Route path="/" element={<div style={{ padding: 24 }}>Pro React Admin 6.0 · 当前源码示例</div>} />,
   },
 } satisfies Meta<typeof Component>
 

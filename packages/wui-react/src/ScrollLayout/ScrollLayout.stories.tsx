@@ -14,7 +14,7 @@ const meta = {
   ],
   args: {
     header: <h3>工作台导航</h3>,
-    footer: <p>Pro React Admin 5.0</p>,
+    footer: <p>Pro React Admin 6.0</p>,
     children: <div style={{ height: 900, padding: 24 }}>滚动内容区域，头部和底部保持固定。</div>,
   },
 } satisfies Meta<typeof Component>

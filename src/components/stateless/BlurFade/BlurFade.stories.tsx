@@ -15,7 +15,7 @@ const meta = {
   args: {
     className: '',
     variant: undefined,
-    children: <div style={{ padding: 24 }}>Pro React Admin 5.0 · 当前源码示例</div>,
+    children: <div style={{ padding: 24 }}>Pro React Admin 6.0 · 当前源码示例</div>,
   },
 } satisfies Meta<typeof Component>
 

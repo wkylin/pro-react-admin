@@ -116,6 +116,11 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@11.5.2`；应用：`6.0.0`；�
 | /notification/:id               | 通知详情       | notification:read       | src/features/notifications/routes.tsx       |
 | /notifications                  | 通知中心       | notification:read       | src/features/notifications/routes.tsx       |
 | /overview                       | 项目概览       | 继承策略或公共/回退路由 | src/app/routing/modules/auth.routes.tsx     |
+| /patterns/basic-form            | 基础表单       | home:read               | src/features/pagePatterns/routes.tsx        |
+| /patterns/requests              | 查询表格       | home:read               | src/features/pagePatterns/routes.tsx        |
+| /patterns/requests/:id          | 申请详情       | home:read               | src/features/pagePatterns/routes.tsx        |
+| /patterns/result/:id            | 提交结果       | home:read               | src/features/pagePatterns/routes.tsx        |
+| /patterns/step-form             | 分步表单       | home:read               | src/features/pagePatterns/routes.tsx        |
 | /permission                     | 权限示例       | permission:read         | src/app/routing/modules/ui.routes.tsx       |
 | /ph-bar                         | PH Bar         | phbar:read              | src/app/routing/modules/ui.routes.tsx       |
 | /portfilo/*                     | My Portfilo    | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |

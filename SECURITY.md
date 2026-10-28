@@ -4,7 +4,7 @@
 
 提供受影响版本/commit、配置、最小复现、影响范围和脱敏日志。维护者确认后协调修复与披露；项目目前不承诺固定安全响应 SLA 或商业支持。
 
-仓库环境模板开启演示模式。正式构建关闭 REACT_APP_USE_MOCK，并显式启用 server/enterprise 或接入其它真实身份与授权服务；前端菜单、按钮和 localStorage 缓存不代替服务端 RBAC/tenant 校验。企业服务使用租户绑定的随机会话、scrypt 密码、逐次数据库授权及事务审计；演示审计和角色编辑仍不提供生产持久化。SQLite 版本适合持久卷上的单实例，不能部署到临时文件系统；数据库管理者可绕过审计触发器。初始化、账号生命周期与 SSO/MFA 等尚未实现的边界见[企业资源](./docs/operations/ENTERPRISE.md)。
+仓库环境模板开启演示模式。正式构建关闭 REACT_APP_USE_MOCK，并显式启用 server/enterprise、独立 PostgreSQL Enterprise API 或其它真实身份与授权服务；前端菜单、按钮和 localStorage 缓存不代替服务端 RBAC/tenant 校验。企业服务使用租户绑定的随机会话、scrypt 密码、逐次数据库授权及事务审计；演示审计、角色编辑和业务页面模板申请记录均不提供生产持久化。SQLite 版本适合持久卷上的单实例，不能部署到临时文件系统；数据库管理者可绕过审计触发器。PostgreSQL 生产路径见[Vercel + Neon 指南](./docs/deployment/VERCEL_NEON_ENTERPRISE.md)。初始化、账号生命周期与 OIDC/SSO 等边界见[企业资源](./docs/operations/ENTERPRISE.md)。
 
 Module Federation Remote 是在 Host 页执行的代码，须来自受信任来源。manifest 版本校验不是来源验证；跨 origin 配置应限制允许来源并维护 CSP。需要隔离不可信应用时使用独立 origin/iframe。
 

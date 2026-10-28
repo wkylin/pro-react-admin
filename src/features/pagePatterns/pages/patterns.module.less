@@ -1,0 +1,112 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: min(100%, 1240px);
+  min-width: 0;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.heading {
+  min-width: 0;
+
+  :global(h1.wui-ant-typography) {
+    margin: 12px 0 4px;
+    font-size: clamp(27px, 4vw, 34px);
+    line-height: 1.2;
+  }
+
+  :global(p.wui-ant-typography) {
+    margin-bottom: 0;
+  }
+}
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.tableShell {
+  height: clamp(620px, 78vh, 800px);
+  min-width: 0;
+
+  :global(.responsive-table-toolbar) {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  :global(.responsive-table-toolbar > div:last-child) {
+    flex: 1 1 520px;
+    min-width: 0;
+  }
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.7fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.formCard {
+  min-width: 0;
+}
+
+.formActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.helpList {
+  margin: 0;
+  padding-left: 18px;
+
+  li + li {
+    margin-top: 10px;
+  }
+}
+
+.steps {
+  margin-bottom: 30px;
+}
+
+.detailCard {
+  min-width: 0;
+}
+
+.result {
+  padding: 18px 0;
+}
+
+@media (width < 860px) {
+  .formGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (width < 640px) {
+  .page {
+    padding: 16px;
+  }
+
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .headerActions {
+    justify-content: flex-start;
+  }
+}

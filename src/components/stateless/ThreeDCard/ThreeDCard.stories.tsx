@@ -17,7 +17,7 @@ const meta = {
     imageUrl:
       'data:image/svg+xml,' +
       encodeURIComponent(
-        '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="320"><rect width="480" height="320" fill="#1677ff"/><text x="60" y="160" fill="white" font-size="36">Pro React Admin 5.0</text></svg>'
+        '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="320"><rect width="480" height="320" fill="#1677ff"/><text x="60" y="160" fill="white" font-size="36">Pro React Admin 6.0</text></svg>'
       ),
     children: <p>移动鼠标查看倾斜效果</p>,
   },

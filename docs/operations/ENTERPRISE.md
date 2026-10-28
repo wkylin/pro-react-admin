@@ -9,7 +9,7 @@ PROJECT=enterprise pnpm run serve:dist
 pnpm run test:e2e:enterprise
 ```
 
-企业入口包含工作台、用户管理、角色管理、访问审批、审计日志、登录验证器、认证和错误页；完整展示应用也注册这些管理页。显式 Mock 模式使用 `admin@test.com` 超级管理员账号和 `reviewer@test.com` 独立审批人账号，账号登录说明见[快速上手](../development/GETTING_STARTED.md#演示配置与账号)。演示 Provider 在同一页面运行期间保留数据，账号切换后可继续审批，刷新页面后重置；演示角色编辑不改变固定测试账号的登录权限。登录验证器只用于真实企业账号，公开演示账号不提供浏览器内的伪安全绑定。
+企业入口包含工作台、用户管理、角色管理、访问审批、审计日志、登录验证器、认证和错误页；完整展示应用也注册这些管理页。两个入口还默认提供[业务页面模板](../development/PAGE_PATTERNS.md)，模板申请记录是当前模块实例的内存示例，不写企业 API 或审计。显式 Mock 模式使用 `admin@test.com` 超级管理员账号和 `reviewer@test.com` 独立审批人账号，账号登录说明见[快速上手](../development/GETTING_STARTED.md#演示配置与账号)。演示 Provider 在同一页面运行期间保留数据，账号切换后可继续审批，刷新页面后重置；演示角色编辑不改变固定测试账号的登录权限。登录验证器只用于真实企业账号，公开演示账号不提供浏览器内的伪安全绑定。
 
 Enterprise 开发和构建默认使用真实租户登录。`start:enterprise` 和 `start:enterprise:full` 等效，同时启动 Web 与 Node API；没有自定义数据库或远端 API 时，本地启动器创建隔离的 SQLite 演示租户 `demo` / `admin@demo.local` / `DemoAdmin123!`，登录页可一键填入，重启后仍保留数据。开发 Web 绑定回环地址。需要查看浏览器演示 Provider 时，显式传入 `REACT_APP_USE_MOCK=true`；公开展示项目及 Pages 演示构建仍保留 Mock 登录和数据。
 
