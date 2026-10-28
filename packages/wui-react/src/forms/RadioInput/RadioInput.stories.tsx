@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/PromptOptimizer',
+  title: 'WUI/Forms/RadioInput',
   component: Component,
   tags: ['autodocs'],
   decorators: [

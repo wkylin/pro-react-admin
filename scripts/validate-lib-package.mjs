@@ -12,6 +12,7 @@ import {
   libraryExports,
   libraryPackageName,
   libraryPeerDependencies,
+  libraryPeerDependenciesMeta,
   libraryRuntimeDependencies,
 } from '../config/library-contract.mjs'
 
@@ -92,6 +93,9 @@ async function main() {
   }
   if (!isDeepStrictEqual(packageJson.dependencies, libraryRuntimeDependencies)) {
     throw new Error('组件库 dependencies 与 config/library-contract.mjs 不一致')
+  }
+  if (!isDeepStrictEqual(packageJson.peerDependenciesMeta, libraryPeerDependenciesMeta)) {
+    throw new Error('Optional peer metadata must match config/library-contract.mjs')
   }
   assertConditionalExports(packageJson.exports, libraryExports)
   if (

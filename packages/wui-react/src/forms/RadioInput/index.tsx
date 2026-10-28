@@ -1,0 +1,49 @@
+import React from 'react'
+import { theme, Tooltip } from 'antd'
+import clsx from 'clsx'
+import styles from './index.module.less'
+
+export interface RadioInputProps {
+  text?: string
+  checked?: boolean
+  type?: 'radio' | 'checkbox'
+  className?: string
+  wrapText?: boolean
+}
+
+const RadioInput = ({ text = '', checked = false, type = 'radio', className, wrapText = false }: RadioInputProps) => {
+  const { token } = theme.useToken()
+  const isChecked = checked
+
+  const cssVars = {
+    '--radio-text-color': token.colorText,
+    '--radio-bg-color': token.colorBgContainer,
+    '--radio-border-color': token.colorBorder,
+    '--radio-primary-color': token.colorPrimary,
+    '--radio-disabled-bg': token.colorBgContainerDisabled,
+  }
+
+  return (
+    <div
+      className={clsx(styles.radioContainer, { [styles.wrapText]: wrapText }, className)}
+      style={cssVars}
+      role={type}
+      aria-checked={checked}
+      aria-readonly="true"
+      aria-label={text}
+    >
+      <span
+        className={clsx(styles.indicator, {
+          [styles.checked]: isChecked,
+          [styles.checkbox]: type === 'checkbox',
+          [styles.radio]: type === 'radio',
+        })}
+      />
+      <Tooltip title={text} placement="topLeft" mouseEnterDelay={0.5}>
+        <span className={styles.label}>{text}</span>
+      </Tooltip>
+    </div>
+  )
+}
+
+export default RadioInput

@@ -20,8 +20,8 @@ import {
 } from 'antd'
 import { Activity, Bot, BrainCircuit, DatabaseZap, Gauge, Layers3, Rocket, WandSparkles, Workflow } from 'lucide-react'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import PromptOptimizer from '@stateless/PromptOptimizer'
-import SmartChat from '@stateless/SmartChat'
+import PromptOptimizer from '@wui/forms/PromptOptimizer'
+import SmartChat from '@wui/forms/SmartChat'
 
 import styles from './index.module.less'
 

@@ -89,3 +89,35 @@ pass a router pathname as `resetKey` in your application. `StickyFooter.bottom`
 defaults to zero. Tab components support arrow keys, Home/End and controlled values
 (`activeId`, `activeValue`, or `activeTab`). `FixTabs.theme` selects light/dark styling.
 `SocialIcon.color` accepts a CSS color and `label` supplies its accessible name.
+
+### Forms consumption
+
+`@w.ui/wui-react/forms` exports CheckableTags, DottedStepper, IntervalInput,
+LanguageSwitcher, PromptOptimizer, RadioInput, ReactSignature, SmartChat and
+StarRating, with their public props, events, request/value and ref types.
+Install the forms entry's optional peers before importing it:
+
+```sh
+npm install @uiw/react-signature@^1.3.5 highlight.js@^11 react-markdown@^10 rehype-highlight@^7 remark-breaks@^4 remark-gfm@^4
+```
+
+These dependencies are optional for other entries. The forms group uses the existing
+React, React DOM, Ant Design and Framer Motion peers. Import `@w.ui/wui-react/style.css`
+for standalone styles, including the Markdown code highlighting theme.
+
+CheckableTags, IntervalInput, PromptOptimizer, DottedStepper and StarRating support
+controlled values and change callbacks, or defaults for uncontrolled usage.
+IntervalInput has no implicit numeric bounds. RadioInput is a read-only visual
+radio/checkbox indicator; use an interactive input when users must change it.
+LanguageSwitcher accepts language/options/onLanguageChange; application i18n context
+is not required. DottedStepper accepts caller steps/content, navigation labels and
+a light/dark theme and uses responsive container CSS.
+
+ReactSignature exposes a typed ref, labels and validation/copy/download callbacks.
+SmartChat accepts an endpoint or fetcher, typed request transformers, optional system
+prompt and configurable labels. Its fetcher must return a Response containing SSE
+`data:` records (plain text or OpenAI-compatible JSON deltas); `[DONE]` terminates
+the response. Stop, initial-message replacement and unmount abort the request and
+cancel the stream reader. Request option/transformer signals also cancel the request.
+Markdown is rendered without raw HTML. Clipboard feedback timers and signature
+image resources are released on unmount.

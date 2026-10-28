@@ -1,0 +1,40 @@
+.signature {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 100%;
+  color: var(--wui-text-primary, #172033);
+  p {
+    margin: 0;
+  }
+}
+.canvas {
+  width: 320px;
+  max-width: 100%;
+  height: 112px;
+  border: 1px solid var(--wui-border, #cbd5e1);
+  border-radius: 8px;
+  background: var(--wui-bg-subtle, #f6f8fb);
+  fill: currentColor;
+  touch-action: none;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid var(--wui-border, #cbd5e1);
+    border-radius: 4px;
+    background: transparent;
+    color: inherit;
+    padding: 6px;
+    cursor: pointer;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}

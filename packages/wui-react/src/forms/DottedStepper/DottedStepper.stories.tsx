@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/RadioInput',
+  title: 'WUI/Forms/DottedStepper',
   component: Component,
   tags: ['autodocs'],
   decorators: [
@@ -12,7 +12,13 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: {
+    steps: [
+      { label: 'Introduction', content: 'Pro React Admin 6.0' },
+      { label: 'Personal information', fields: [{ name: 'name', type: 'text', placeholder: 'Name' }] },
+      { label: 'Review', content: 'Review your information.' },
+    ],
+  },
 } satisfies Meta<typeof Component>
 
 export default meta

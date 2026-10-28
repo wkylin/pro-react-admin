@@ -3,7 +3,7 @@ import { fn } from 'storybook/test'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateful/CheckableTags',
+  title: 'WUI/Forms/CheckableTags',
   component: Component,
   tags: ['autodocs'],
   decorators: [

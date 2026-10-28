@@ -1,5 +1,5 @@
 import { theme } from 'antd'
-import RadioInput from '@stateless/RadioInput'
+import RadioInput from '@wui/forms/RadioInput'
 import styles from './index.module.less'
 
 const customerTypes = [

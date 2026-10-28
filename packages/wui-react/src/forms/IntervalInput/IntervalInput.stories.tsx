@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ReactSignature as Component } from './index'
+import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/ReactSignature',
+  title: 'WUI/Forms/IntervalInput',
   component: Component,
   tags: ['autodocs'],
   decorators: [

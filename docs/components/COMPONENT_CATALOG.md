@@ -6,14 +6,14 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  906 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  734 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
-| `packages/wui-react/src` 文件 |  104 | 组件库源码、stories 与组件文档                                      |
-| 组件库 TS/JS 源文件           |   84 | 组件库自身源码，不含 MDX                                            |
-| 样式文件                      |   95 | Less、CSS、SCSS                                                     |
-| CSS Modules                   |   89 | 文件名含 `.module.`                                                 |
+| `src/` 文件                   |  892 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  725 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `packages/wui-react/src` 文件 |  132 | 组件库源码、stories 与组件文档                                      |
+| 组件库 TS/JS 源文件           |  104 | 组件库自身源码，不含 MDX                                            |
+| 样式文件                      |   90 | Less、CSS、SCSS                                                     |
+| CSS Modules                   |   84 | 文件名含 `.module.`                                                 |
 | Storybook stories             |  157 | `*.stories.*`                                                       |
-| TS/JS 测试文件                |   56 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
+| TS/JS 测试文件                |   57 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
 | 根 package scripts            |  173 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    5 | `pnpm-workspace.yaml` 中的工作区条目                                |
 

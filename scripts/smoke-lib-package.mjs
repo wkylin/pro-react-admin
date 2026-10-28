@@ -80,6 +80,17 @@ async function assertConsumerTypes() {
       `const cards: import('${libraryPackageName}/layout').HorizontalScrollProps = { cards: [{id: 'one', url: '/image.png', alt: 'Image', href: '/details'}] }; void cards`
     )
   }
+  if (libraryGroups.find((entry) => entry.subpath === 'forms')?.runtimeExports.includes('SmartChat')) {
+    source.push(
+      `const chat: import('${libraryPackageName}/forms').SmartChatProps = { apiUrl: '/chat', buildRequestBody: ({messages, input, systemPrompt}) => ({messages, input, systemPrompt}), onMessagesChange: messages => { const role: import('${libraryPackageName}/forms').ChatRole = messages[0].role; void role } }; void chat`
+    )
+    source.push(
+      `const interval: import('${libraryPackageName}/forms').IntervalInputProps = { value: {minValue: null, maxValue: 900}, onChange: value => { const max: number | null | undefined = value.maxValue; void max } }; void interval`
+    )
+    source.push(
+      `const tags: import('${libraryPackageName}/forms').CheckableTagsProps = { dataSource: [], onChange: event => { const selected: import('${libraryPackageName}/forms').SelectedTags = event.checkedKeys; void selected } }; void tags`
+    )
+  }
   const consumerFile = path.join(consumerDir, 'consumer.mts')
   await fs.writeFile(consumerFile, source.join('\n'))
   const program = ts.createProgram([consumerFile], {
@@ -126,6 +137,25 @@ try {
     if (!markup.includes('Panel content') || !markup.includes('Consumer brand') || !markup.includes('Consumer image') || !markup.includes('role="tab"')) throw new Error('Independent layout SSR lost caller content or accessibility')
   `
     : ''
+  const formsRender = libraryGroups.find((entry) => entry.subpath === 'forms')?.runtimeExports.includes('SmartChat')
+    ? `
+    const forms = entryModules.forms
+    const formMarkup = renderToStaticMarkup(createElement('div', null,
+      createElement(forms.CheckableTags, {dataSource: [{key: 'tags', title: 'Choices', data: [{key: 'a', name: 'Choice A'}]}]}),
+      createElement(forms.DottedStepper, {steps: [{label: 'Caller step', content: 'Caller content'}]}),
+      createElement(forms.IntervalInput, {value: {minValue: -200, maxValue: 900}}),
+      createElement(forms.LanguageSwitcher, {language: 'en', options: [{value:'en', label:'English'}, {value:'de', label:'Deutsch'}], onLanguageChange: () => {}}),
+      createElement(forms.PromptOptimizer, {value: {role: 'Reviewer'}}),
+      createElement(forms.RadioInput, {text: 'Read-only choice', checked: true}),
+      createElement(forms.ReactSignature, {}),
+      createElement(forms.SmartChat, {apiUrl: '/chat', initialMessages: [{content: '**Markdown rendered**'}]}),
+      createElement(forms.StarRating, {value: 2})
+    ))
+    for (const content of ['Choice A', 'Caller content', 'Deutsch', 'Reviewer', 'aria-readonly', '<svg', '<strong>Markdown rendered</strong>', 'radiogroup']) {
+      if (!formMarkup.includes(content)) throw new Error('Independent forms SSR lost ' + content)
+    }
+  `
+    : ''
   const esmScript = `
     const packageName = ${JSON.stringify(libraryPackageName)}
     const entryModules = {}
@@ -143,6 +173,7 @@ try {
       entryModules[subpath] = component
     }
     ${layoutRender}
+    ${formsRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
       entryExports,
@@ -169,6 +200,7 @@ try {
       entryModules[subpath] = component
     }
     ${layoutRender}
+    ${formsRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
       entryExports,
@@ -187,6 +219,13 @@ try {
     const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
     for (const token of ['--wui-footer-bg', '--wui-tab-active-bg', '--wui-hero-bg']) {
       if (!css.includes(token)) throw new Error(`Independent layout stylesheet is missing ${token}`)
+    }
+  }
+
+  if (formsRender) {
+    const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
+    for (const token of ['.hljs', 'container-type:inline-size', '--radio-primary-color']) {
+      if (!css.replace(/\s+/g, '').includes(token)) throw new Error(`Independent forms stylesheet is missing ${token}`)
     }
   }
 

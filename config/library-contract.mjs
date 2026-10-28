@@ -172,8 +172,50 @@ export const libraryGroups = Object.freeze([
     subpath: 'forms',
     source: 'forms/index.ts',
     types: 'forms/index.d.ts',
-    runtimeExports: [],
-    typeExports: [],
+    runtimeExports: [
+      'CheckableTags',
+      'DottedStepper',
+      'IntervalInput',
+      'LanguageSwitcher',
+      'PromptOptimizer',
+      'RadioInput',
+      'ReactSignature',
+      'SmartChat',
+      'StarRating',
+    ],
+    typeExports: [
+      'TagKey',
+      'TagSelection',
+      'SelectedTags',
+      'CheckableTagItem',
+      'CheckableTagGroup',
+      'CheckableTagsChangeEvent',
+      'CheckableTagsProps',
+      'CheckableTagsHandle',
+      'StepField',
+      'Step',
+      'DottedStepperProps',
+      'IntervalInputValue',
+      'IntervalInputProps',
+      'LanguageOption',
+      'LanguageSwitcherProps',
+      'PromptFormValue',
+      'PromptOptimizerProps',
+      'RadioInputProps',
+      'ReactSignatureHandle',
+      'ReactSignatureLabels',
+      'ReactSignatureProps',
+      'ChatRole',
+      'ChatMessageStatus',
+      'ChatMessage',
+      'ChatMessageInput',
+      'ChatStreamEvent',
+      'ChatRequest',
+      'ChatResponse',
+      'SmartChatLabels',
+      'SmartChatProps',
+      'StarRatingProps',
+    ],
   },
   {
     subpath: 'media',
@@ -201,10 +243,38 @@ export const libraryGroups = Object.freeze([
 export const libraryEntries = Object.freeze([...libraryComponents, ...libraryGroups])
 
 export const libraryPeerDependencies = Object.freeze({
+  '@uiw/react-signature': '>=1.3.5 <2.0.0',
+  'highlight.js': '>=11.0.0 <12.0.0',
+  'react-markdown': '>=10.0.0 <11.0.0',
+  'rehype-highlight': '>=7.0.0 <8.0.0',
+  'remark-breaks': '>=4.0.0 <5.0.0',
+  'remark-gfm': '>=4.0.0 <5.0.0',
+
   antd: '>=6.0.0 <7.0.0',
   'framer-motion': '>=12.0.0 <15.0.0',
   react: '>=19.0.0 <20.0.0',
   'react-dom': '>=19.0.0 <20.0.0',
+})
+
+export const libraryPeerDependenciesMeta = Object.freeze({
+  '@uiw/react-signature': {
+    optional: true,
+  },
+  'highlight.js': {
+    optional: true,
+  },
+  'react-markdown': {
+    optional: true,
+  },
+  'rehype-highlight': {
+    optional: true,
+  },
+  'remark-breaks': {
+    optional: true,
+  },
+  'remark-gfm': {
+    optional: true,
+  },
 })
 
 export const libraryRuntimeDependencies = Object.freeze({
