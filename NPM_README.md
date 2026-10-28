@@ -42,6 +42,23 @@ Named root imports are also available: `import { OneTimePasscode } from '@w.ui/w
 
 Props types are exported from the root and corresponding subpaths. ResponsiveTable accepts a requestLib or fetchData integration; its default client does not inherit the admin application's authorization. SliderCaptcha is a UI challenge and requires server validation for security decisions. SafeHtml sanitizes content according to its implementation and props; review allowed content for your use case.
 
-MdxEditor, SmartVideoPlayer and InteractiveBook remain application components and are not package exports.
+## Group entries
+
+The migration provides seven named-only subpaths: `@w.ui/wui-react/layout`,
+`@w.ui/wui-react/animation`, `@w.ui/wui-react/data-display`, `@w.ui/wui-react/forms`,
+`@w.ui/wui-react/media`, `@w.ui/wui-react/visualization`, and `@w.ui/wui-react/editor`.
+These entries are initially empty and gain components as their migration is completed.
+Group components and their prop types are exported by name; groups have no default
+export and are not re-exported from the root. The existing 12 component subpaths and
+root exports remain available.
+
+Each public entry includes a consolidated TypeScript declaration. Declaration
+bundling preserves public prop types while keeping the published file count
+independent of the number of internal component files. The same declaration build
+runs after both Webpack and Vite builds.
+
+Group-specific optional peers will be documented alongside migrated components.
+Importing a group loads its static runtime imports, so consumers must install all
+peers listed for that group. Importing the root does not load the new group entries.
 
 Source, Storybook and development documentation: [GitHub](https://github.com/wkylin/pro-react-admin). Build and publishing instructions: [release guide](https://github.com/wkylin/pro-react-admin/blob/main/docs/deployment/LIBRARY_PUBLISH_GUIDE.md). Published package: [npm](https://www.npmjs.com/package/@w.ui/wui-react).

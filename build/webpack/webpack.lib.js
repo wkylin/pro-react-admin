@@ -3,7 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import { libraryComponents, libraryExternalPackages } from '../../config/library-contract.mjs'
+import { libraryEntries, libraryExternalPackages } from '../../config/library-contract.mjs'
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const packageSourceDir = path.join(rootDir, 'packages/wui-react/src')
@@ -11,7 +11,7 @@ const outputPath = path.join(rootDir, 'packages/wui-react/dist')
 const useAnalyze = process.env.USE_ANALYZE === '1'
 
 const componentEntries = Object.fromEntries(
-  libraryComponents.map(({ subpath, source }) => [subpath, path.join(packageSourceDir, source)])
+  libraryEntries.map(({ subpath, source }) => [subpath, path.join(packageSourceDir, source)])
 )
 const styleEntries = fs
   .readdirSync(packageSourceDir, { recursive: true, withFileTypes: true })

@@ -3,9 +3,12 @@ import os from 'node:os'
 import path from 'node:path'
 import process from 'node:process'
 import { spawnSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 import { log } from 'node:console'
 import { fileURLToPath } from 'node:url'
-import { libraryComponents, libraryPackageName } from '../config/library-contract.mjs'
+import { libraryComponents, libraryEntries, libraryGroups, libraryPackageName } from '../config/library-contract.mjs'
+
+import { assertEntryExports } from './lib-package-contract.mjs'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const packageDir = path.join(repoRoot, 'packages/wui-react')
@@ -14,7 +17,7 @@ const packageLink = path.join(consumerDir, 'node_modules', ...libraryPackageName
 const expectedRootExports = libraryComponents
   .flatMap(({ name, runtimeExports = [] }) => [name, ...runtimeExports])
   .sort()
-const subpaths = libraryComponents.map(({ subpath }) => subpath)
+const subpaths = libraryEntries.map(({ subpath }) => subpath)
 
 const runNode = (label, args) => {
   const result = spawnSync(process.execPath, args, {
@@ -39,13 +42,57 @@ const assertResult = (label, result) => {
     )
   }
 
-  const missingDefaults = subpaths.filter((subpath) => !result.componentDefaults.includes(subpath))
-  if (missingDefaults.length > 0) {
-    throw new Error(`${label} 子路径缺少 default export：${missingDefaults.join(', ')}`)
+  for (const entry of libraryEntries) {
+    assertEntryExports(label, entry, result.entryExports[entry.subpath])
+    const resolved = result.resolvedEntries[entry.subpath]
+    const suffix = label === 'ESM' ? `/dist/esm/${entry.subpath}.js` : `/dist/cjs/${entry.subpath}.cjs`
+    if (!resolved.replaceAll(path.sep, '/').endsWith(suffix))
+      throw new Error(`${label} resolved the wrong condition for ${entry.subpath}: ${resolved}`)
   }
 
   if (!result.styleResolved || !result.packageJsonResolved) {
     throw new Error(`${label} 未能解析 style.css 或 package.json export`)
+  }
+}
+
+async function assertConsumerTypes() {
+  const require = createRequire(import.meta.url)
+  const ts = require('typescript')
+  const source = []
+  for (const [index, entry] of libraryEntries.entries()) {
+    const specifier = JSON.stringify(`${libraryPackageName}/${entry.subpath}`)
+    if (entry.name) source.push(`import Default${index} from ${specifier}; void Default${index}`)
+    for (const name of entry.runtimeExports ?? []) {
+      source.push(`import { ${name} as Runtime${index}_${name} } from ${specifier}; void Runtime${index}_${name}`)
+    }
+    for (const name of entry.typeExports ?? []) {
+      source.push(`import type { ${name} as Type${index}_${name} } from ${specifier}`)
+      if (entry.name) source.push(`import type { ${name} as Root${index}_${name} } from '${libraryPackageName}'`)
+    }
+    // Resolves empty groups too; their declarations must be external modules.
+    source.push(`import type * as Entry${index} from ${specifier}`)
+  }
+  const consumerFile = path.join(consumerDir, 'consumer.mts')
+  await fs.writeFile(consumerFile, source.join('\n'))
+  const program = ts.createProgram([consumerFile], {
+    strict: true,
+    noEmit: true,
+    skipLibCheck: true,
+    types: [],
+    module: ts.ModuleKind.Preserve,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    target: ts.ScriptTarget.ES2022,
+    jsx: ts.JsxEmit.ReactJSX,
+  })
+  const diagnostics = ts.getPreEmitDiagnostics(program)
+  if (diagnostics.length) {
+    throw new Error(
+      ts.formatDiagnosticsWithColorAndContext(diagnostics, {
+        getCanonicalFileName: (name) => name,
+        getCurrentDirectory: () => consumerDir,
+        getNewLine: () => '\n',
+      })
+    )
   }
 }
 
@@ -57,14 +104,18 @@ try {
     const packageName = ${JSON.stringify(libraryPackageName)}
     const subpaths = ${JSON.stringify(subpaths)}
     const root = await import(packageName)
-    const componentDefaults = []
+    const entryExports = {}
+    const resolvedEntries = {}
     for (const subpath of subpaths) {
       const component = await import(packageName + '/' + subpath)
-      if ('default' in component && component.default != null) componentDefaults.push(subpath)
+      resolvedEntries[subpath] = import.meta.resolve(packageName + '/' + subpath)
+      if ('default' in component && component.default == null) throw new Error('Invalid default export for ' + subpath)
+      entryExports[subpath] = Object.keys(component)
     }
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
-      componentDefaults,
+      entryExports,
+      resolvedEntries,
       styleResolved: Boolean(import.meta.resolve(packageName + '/style.css')),
       packageJsonResolved: Boolean(import.meta.resolve(packageName + '/package.json')),
     }))
@@ -74,14 +125,18 @@ try {
     const packageName = ${JSON.stringify(libraryPackageName)}
     const subpaths = ${JSON.stringify(subpaths)}
     const root = require(packageName)
-    const componentDefaults = []
+    const entryExports = {}
+    const resolvedEntries = {}
     for (const subpath of subpaths) {
       const component = require(packageName + '/' + subpath)
-      if ('default' in component && component.default != null) componentDefaults.push(subpath)
+      resolvedEntries[subpath] = require.resolve(packageName + '/' + subpath)
+      if ('default' in component && component.default == null) throw new Error('Invalid default export for ' + subpath)
+      entryExports[subpath] = Object.keys(component)
     }
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
-      componentDefaults,
+      entryExports,
+      resolvedEntries,
       styleResolved: Boolean(require.resolve(packageName + '/style.css')),
       packageJsonResolved: Boolean(require.resolve(packageName + '/package.json')),
     }))
@@ -91,8 +146,11 @@ try {
   const cjsResult = runNode('CJS', ['--eval', cjsScript])
   assertResult('ESM', esmResult)
   assertResult('CJS', cjsResult)
+  await assertConsumerTypes()
 
-  log(`Consumer smoke passed for ESM/CJS root exports and ${libraryComponents.length} component subpaths.`)
+  log(
+    `Consumer smoke passed for public types, ESM/CJS root exports and ${libraryComponents.length} component subpaths and ${libraryGroups.length} named groups.`
+  )
 } finally {
   await fs.rm(consumerDir, { recursive: true, force: true })
 }

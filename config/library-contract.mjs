@@ -101,6 +101,62 @@ export const libraryComponents = Object.freeze([
   },
 ])
 
+// Groups are deliberately excluded from libraryComponents and the root entry.
+// Add migrated runtime/type names here together with their named source exports.
+export const libraryGroups = Object.freeze([
+  {
+    subpath: 'layout',
+    source: 'layout/index.ts',
+    types: 'layout/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+  {
+    subpath: 'animation',
+    source: 'animation/index.ts',
+    types: 'animation/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+  {
+    subpath: 'data-display',
+    source: 'data-display/index.ts',
+    types: 'data-display/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+  {
+    subpath: 'forms',
+    source: 'forms/index.ts',
+    types: 'forms/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+  {
+    subpath: 'media',
+    source: 'media/index.ts',
+    types: 'media/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+  {
+    subpath: 'visualization',
+    source: 'visualization/index.ts',
+    types: 'visualization/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+  {
+    subpath: 'editor',
+    source: 'editor/index.ts',
+    types: 'editor/index.d.ts',
+    runtimeExports: [],
+    typeExports: [],
+  },
+])
+
+export const libraryEntries = Object.freeze([...libraryComponents, ...libraryGroups])
+
 export const libraryPeerDependencies = Object.freeze({
   antd: '>=6.0.0 <7.0.0',
   'framer-motion': '>=12.0.0 <15.0.0',
@@ -122,7 +178,7 @@ export const libraryExternalPackages = Object.freeze([
 ])
 
 const componentExports = Object.fromEntries(
-  libraryComponents.map(({ subpath, types }) => [
+  libraryEntries.map(({ subpath, types }) => [
     `./${subpath}`,
     {
       types: `./dist/types/${types}`,

@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { log } from 'node:console'
 import { fileURLToPath } from 'node:url'
-import { libraryComponents } from '../config/library-contract.mjs'
+import { libraryComponents, libraryGroups } from '../config/library-contract.mjs'
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const distDir = path.join(rootDir, 'packages/wui-react/dist')
@@ -35,4 +35,4 @@ await Promise.all([
   fs.rm(path.join(distDir, 'cjs-styles'), { recursive: true, force: true }),
 ])
 
-log(`Finalized ${libraryComponents.length} public component entries.`)
+log(`Finalized ${libraryComponents.length} root components and ${libraryGroups.length} named group entries.`)

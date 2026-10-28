@@ -4,7 +4,7 @@ import svgr from 'vite-plugin-svgr'
 import { visualizer } from 'rollup-plugin-visualizer'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { libraryComponents, libraryExternalPackages } from '../../config/library-contract.mjs'
+import { libraryEntries, libraryExternalPackages } from '../../config/library-contract.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const source = path.join(root, 'packages/wui-react/src')
@@ -30,7 +30,7 @@ export default defineConfig({
     target: 'es2022',
     lib: {
       entry: Object.fromEntries(
-        libraryComponents.map(({ subpath, source: entry }) => [subpath, path.join(source, entry)])
+        libraryEntries.map(({ subpath, source: entry }) => [subpath, path.join(source, entry)])
       ),
       cssFileName: 'style',
     },

@@ -91,6 +91,48 @@
       "require": "./dist/cjs/watermark-provider.cjs",
       "default": "./dist/esm/watermark-provider.js"
     },
+    "./layout": {
+      "types": "./dist/types/layout/index.d.ts",
+      "import": "./dist/esm/layout.js",
+      "require": "./dist/cjs/layout.cjs",
+      "default": "./dist/esm/layout.js"
+    },
+    "./animation": {
+      "types": "./dist/types/animation/index.d.ts",
+      "import": "./dist/esm/animation.js",
+      "require": "./dist/cjs/animation.cjs",
+      "default": "./dist/esm/animation.js"
+    },
+    "./data-display": {
+      "types": "./dist/types/data-display/index.d.ts",
+      "import": "./dist/esm/data-display.js",
+      "require": "./dist/cjs/data-display.cjs",
+      "default": "./dist/esm/data-display.js"
+    },
+    "./forms": {
+      "types": "./dist/types/forms/index.d.ts",
+      "import": "./dist/esm/forms.js",
+      "require": "./dist/cjs/forms.cjs",
+      "default": "./dist/esm/forms.js"
+    },
+    "./media": {
+      "types": "./dist/types/media/index.d.ts",
+      "import": "./dist/esm/media.js",
+      "require": "./dist/cjs/media.cjs",
+      "default": "./dist/esm/media.js"
+    },
+    "./visualization": {
+      "types": "./dist/types/visualization/index.d.ts",
+      "import": "./dist/esm/visualization.js",
+      "require": "./dist/cjs/visualization.cjs",
+      "default": "./dist/esm/visualization.js"
+    },
+    "./editor": {
+      "types": "./dist/types/editor/index.d.ts",
+      "import": "./dist/esm/editor.js",
+      "require": "./dist/cjs/editor.cjs",
+      "default": "./dist/esm/editor.js"
+    },
     "./style.css": "./dist/style.css",
     "./package.json": "./package.json"
   },

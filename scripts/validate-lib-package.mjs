@@ -6,6 +6,7 @@ import { isDeepStrictEqual } from 'node:util'
 import { fileURLToPath } from 'node:url'
 import {
   libraryComponents,
+  libraryEntries,
   libraryEngines,
   libraryEntrypoints,
   libraryExports,
@@ -13,6 +14,8 @@ import {
   libraryPeerDependencies,
   libraryRuntimeDependencies,
 } from '../config/library-contract.mjs'
+
+import { assertConditionalExports } from './lib-package-contract.mjs'
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const packageDir = path.join(repoRoot, 'packages/wui-react')
@@ -90,9 +93,7 @@ async function main() {
   if (!isDeepStrictEqual(packageJson.dependencies, libraryRuntimeDependencies)) {
     throw new Error('组件库 dependencies 与 config/library-contract.mjs 不一致')
   }
-  if (!isDeepStrictEqual(packageJson.exports, libraryExports)) {
-    throw new Error('组件库 exports 与 config/library-contract.mjs 不一致')
-  }
+  assertConditionalExports(packageJson.exports, libraryExports)
   if (
     packageJson.main !== libraryEntrypoints.main ||
     packageJson.module !== libraryEntrypoints.module ||
@@ -102,7 +103,7 @@ async function main() {
   }
 
   const sourceRoot = path.join(packageDir, 'src')
-  const declaredSourceDirectories = new Set(libraryComponents.map(({ source }) => source.split('/')[0]))
+  const declaredSourceDirectories = new Set(libraryEntries.map(({ source }) => source.split('/')[0]))
   const actualSourceDirectories = new Set(
     (await fs.readdir(sourceRoot, { withFileTypes: true }))
       .filter((entry) => entry.isDirectory())
@@ -119,7 +120,7 @@ async function main() {
   }
 
   const missingSources = []
-  for (const component of libraryComponents) {
+  for (const component of libraryEntries) {
     if (!(await fileExists(path.join(sourceRoot, component.source)))) {
       missingSources.push(component.source)
     }
