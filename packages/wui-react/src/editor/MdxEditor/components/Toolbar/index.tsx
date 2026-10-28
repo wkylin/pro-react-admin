@@ -59,10 +59,12 @@ function Toolbar({
   viewMode,
   onChangeViewMode,
   editorKey,
+  readOnly = false,
 }: {
   editor: Editor | null
   viewMode: ViewMode
   onChangeViewMode?: (mode: ViewMode) => void
+  readOnly?: boolean
   editorKey: number
 }) {
   const focusTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -84,7 +86,7 @@ function Toolbar({
   void editorKey
 
   const handleLinkSubmit = () => {
-    if (linkUrl && linkUrl !== 'https://') {
+    if (!readOnly && editor?.isEditable && linkUrl && linkUrl !== 'https://') {
       editor?.chain().focus().setLink({ href: linkUrl }).run()
     }
     setShowLinkModal(false)
@@ -98,7 +100,7 @@ function Toolbar({
   }
 
   const handleAction = (cmd: ToolbarCommand, opt?: ToolbarOption) => {
-    if (!editor) return
+    if (!editor || readOnly || !editor.isEditable) return
     switch (cmd) {
       case 'image':
         fileInputRef.current?.click()
@@ -226,11 +228,12 @@ function Toolbar({
       <input
         ref={fileInputRef}
         type="file"
+        disabled={readOnly}
         className={styles.mdxFileInput}
         accept="image/*"
         onChange={(event: ChangeEvent<HTMLInputElement>) => {
           const file = event.target.files?.[0]
-          if (!file) return
+          if (!file || readOnly || !editor.isEditable) return
           readerRef.current?.abort()
           const reader = new FileReader()
           readerRef.current = reader
@@ -254,6 +257,7 @@ function Toolbar({
               key={`${btn.cmd}-${idx}`}
               className={`${styles.mdxToolBtn} ${isActive ? styles.active : ''}`}
               onClick={() => handleAction(btn.cmd, btn.opt)}
+              disabled={readOnly}
               title={btn.tooltip}
               type="button"
             >
@@ -290,7 +294,7 @@ function Toolbar({
       </div>
 
       {/* 链接输入弹窗 */}
-      {showLinkModal && (
+      {showLinkModal && !readOnly && (
         <div className={styles.linkModalOverlay} onClick={handleLinkCancel}>
           <div className={styles.linkModal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.linkModalHeader}>

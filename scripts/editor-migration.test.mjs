@@ -32,6 +32,11 @@ test('real Markdown renderer drops hostile raw HTML and dangerous URLs but retai
   assert.doesNotMatch(output, /<script|onerror|javascript:/)
   assert.match(output, /<table>/)
   assert.match(output, /noopener noreferrer/)
+  const links = renderToStaticMarkup(
+    React.createElement(ReMarkdown, { markdownText: '[Internal](/#section) [External](https://example.test)' })
+  )
+  assert.match(links, /href="\/#section" target="_self"/)
+  assert.match(links, /href="https:\/\/example.test" target="_blank" rel="noopener noreferrer"/)
 })
 test('real marked parsing sanitizes raw HTML and preserves Markdown structure', async () => {
   const { markdownToHtml } = await load('packages/wui-react/src/editor/MdxEditor/utils/markdownHelper.ts')
@@ -119,6 +124,86 @@ test('rich editor updates controlled Markdown and enforces readOnly in both view
     })
     assert.equal(document.querySelector('textarea').readOnly, true)
     assert.equal(document.querySelector('textarea').value, '# Second')
+    const button = (text) => [...document.querySelectorAll('button')].find((node) => node.textContent === text)
+    assert.ok(button('编辑'), 'readOnly keeps mode controls')
+    assert.equal(document.querySelector('button[title="加粗"]').disabled, true)
+    await React.act(async () => button('编辑').click())
+    assert.equal(document.querySelector('textarea'), null)
+    await React.act(async () => button('分屏').click())
+    assert.equal(document.querySelector('textarea').readOnly, true)
+    // Remount initially readOnly: viewing remains possible without enabling editing.
+    await React.act(async () =>
+      root.render(React.createElement(MdxEditor, { key: 'readonly', value: '# Readonly', readOnly: true }))
+    )
+    await React.act(async () => {
+      await new Promise((r) => setTimeout(r, 20))
+    })
+    await React.act(async () => button('源码').click())
+    assert.equal(document.querySelector('textarea').readOnly, true)
+
+    let accepted = '# Original'
+    let proposed = ''
+    let accept = false
+    const changed = (next) => {
+      proposed = next
+      if (accept) accepted = next
+      renderControlled()
+    }
+    const renderControlled = () =>
+      root.render(React.createElement(MdxEditor, { key: 'controlled', value: accepted, onChange: changed }))
+    await React.act(async () => renderControlled())
+    await React.act(async () => {
+      await new Promise((r) => setTimeout(r, 20))
+    })
+    const editRich = async (text) => {
+      await React.act(async () => {
+        const content = document.querySelector('.ProseMirror h1')
+        content.textContent = text
+        content.dispatchEvent(
+          new dom.window.InputEvent('input', { bubbles: true, inputType: 'insertText', data: text })
+        )
+        await new Promise((r) => setTimeout(r, 20))
+      })
+    }
+    await editRich('Rejected')
+    assert.match(proposed, /Rejected/)
+    assert.match(document.querySelector('.ProseMirror').textContent, /Original/)
+    accept = true
+    await editRich('Accepted')
+    assert.match(document.querySelector('.ProseMirror').textContent, /Accepted/)
+    accepted = '# Original'
+    await React.act(async () => renderControlled())
+    assert.match(document.querySelector('.ProseMirror').textContent, /Original/)
+    await React.act(async () => button('源码').click())
+    const editSource = async (text) => {
+      await React.act(async () => {
+        const textarea = document.querySelector('textarea')
+        // React's native value setter observes a real DOM input event.
+        Object.getOwnPropertyDescriptor(dom.window.HTMLTextAreaElement.prototype, 'value').set.call(textarea, text)
+        textarea.dispatchEvent(new dom.window.Event('input', { bubbles: true }))
+      })
+    }
+    accept = false
+    await editSource('# Rejected source')
+    assert.equal(proposed, '# Rejected source')
+    assert.equal(document.querySelector('textarea').value, '# Original')
+    let copied
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: {
+        writeText: async (text) => {
+          copied = text
+        },
+      },
+    })
+    await React.act(async () => document.querySelector('button[aria-label="Copy Markdown"]').click())
+    assert.equal(copied, '# Original')
+    accept = true
+    await editSource('# Accepted source')
+    assert.equal(document.querySelector('textarea').value, '# Accepted source')
+    accepted = '# Original'
+    await React.act(async () => renderControlled())
+    assert.equal(document.querySelector('textarea').value, '# Original')
   } finally {
     if (root) await React.act(async () => root.unmount())
     await new Promise((r) => setTimeout(r, 50))

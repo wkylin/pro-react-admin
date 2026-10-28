@@ -58,7 +58,8 @@ export default function ProMdxEditor({
   downloadFileName = 'document.md',
 }: MdxEditorProps = {}) {
   const [viewMode, setViewMode] = useState<ViewMode>('normal')
-  const [markdown, setMarkdown] = useState(value ?? initialMarkdownProp ?? '')
+  const [localMarkdown, setMarkdown] = useState(initialMarkdownProp ?? '')
+  const markdown = value ?? localMarkdown
   const [stats, setStats] = useState<Stats>({ cursorPos: '行 1, 列 1', stats: '0 字符 / 0 词' })
   const [toast, setToast] = useState<Toast | null>(null)
   const [localTheme, setLocalTheme] = useState<'light' | 'dark'>('light')
@@ -104,7 +105,7 @@ export default function ProMdxEditor({
       const html = editor.getHTML()
       const md = htmlToMarkdown(html)
       lastMarkdownFromEditorRef.current = md
-      setMarkdown(md)
+      if (value === undefined) setMarkdown(md)
       if (typeof onChange === 'function') onChange(md)
     },
     onSelectionUpdate: () => {
@@ -125,7 +126,7 @@ export default function ProMdxEditor({
     const newHtml = markdownToHtml(markdown)
     editor.commands.setContent(newHtml, { emitUpdate: false })
     lastMarkdownFromEditorRef.current = markdown
-  }, [markdown, editor])
+  }, [markdown, editor, editorKey])
 
   const showToast = useCallback((message: string, type: Toast['type'] = 'info') => {
     setToast({ message, type })
@@ -139,9 +140,6 @@ export default function ProMdxEditor({
     onThemeChange?.(next)
   }, [activeTheme, theme, onThemeChange])
   useEffect(() => {
-    if (value !== undefined) setMarkdown(value)
-  }, [value])
-  useEffect(() => {
     editor?.setEditable(!readOnly, false)
   }, [editor, readOnly])
 
@@ -152,7 +150,7 @@ export default function ProMdxEditor({
   }, [])
 
   const handleMarkdownChange = (newMarkdown: string) => {
-    setMarkdown(newMarkdown)
+    if (value === undefined) setMarkdown(newMarkdown)
     if (typeof onChange === 'function') onChange(newMarkdown)
   }
 
@@ -240,7 +238,8 @@ export default function ProMdxEditor({
         onDownload={handleDownload}
       />
       <Toolbar
-        editor={readOnly ? null : editor}
+        editor={editor}
+        readOnly={readOnly}
         viewMode={viewMode}
         onChangeViewMode={setViewMode}
         editorKey={editorKey}

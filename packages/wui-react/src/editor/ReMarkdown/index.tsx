@@ -70,7 +70,9 @@ export default function ReMarkdown({
               {children}
             </PreCode>
           ),
-          a: ({ node: _node, ...props }) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+          a: ({ node: _node, ...props }) => (
+            <a {...props} target={/^\/#/i.test(props.href ?? '') ? '_self' : '_blank'} rel="noopener noreferrer" />
+          ),
           ...components,
         }}
       >
