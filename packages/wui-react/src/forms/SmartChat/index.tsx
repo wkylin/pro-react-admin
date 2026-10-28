@@ -16,7 +16,20 @@ export interface ChatMessage {
   createdAt: string
 }
 export type ChatMessageInput = Partial<ChatMessage>
-export type ChatStreamEvent = { type: string; timestamp: string } & Record<string, unknown>
+export interface ChatStreamEvent {
+  type: 'start' | 'chunk' | 'done' | 'abort' | 'error'
+  timestamp: string
+  requestId: string
+  assistantMessageId: string
+  /** Elapsed milliseconds since this request started, including fetch and streaming. */
+  durationMs: number
+  input?: string
+  contentSize?: number
+  reasoningSize?: number
+  done?: boolean
+  raw?: unknown
+  message?: string
+}
 export interface ChatRequest {
   input: string
   messages: ChatMessage[]
@@ -267,9 +280,21 @@ export default function SmartChat({
   const [error, setError] = useState('')
   const controllerRef = useRef<AbortController | null>(null)
   const readerRef = useRef<ReadableStreamDefaultReader<Uint8Array> | null>(null)
+  const requestMetaRef = useRef<{ requestId: string; startedAt: number; assistantMessageId: string } | null>(null)
   const mounted = useRef(false)
   const listRef = useRef<HTMLDivElement>(null)
   const cancel = () => {
+    const metadata = requestMetaRef.current
+    requestMetaRef.current = null
+    if (metadata && mounted.current) {
+      onStreamEvent?.({
+        type: 'abort',
+        timestamp: new Date().toISOString(),
+        requestId: metadata.requestId,
+        assistantMessageId: metadata.assistantMessageId,
+        durationMs: Math.max(0, Date.now() - metadata.startedAt),
+      })
+    }
     controllerRef.current?.abort()
     controllerRef.current = null
     const reader = readerRef.current
@@ -300,7 +325,6 @@ export default function SmartChat({
     setMessages((previous) =>
       previous.map((message) => (message.status === 'streaming' ? { ...message, status: 'done' } : message))
     )
-    onStreamEvent?.({ type: 'abort', timestamp: new Date().toISOString() })
   }
   const send = async () => {
     const userInput = input.trim()
@@ -310,10 +334,24 @@ export default function SmartChat({
     const requestMessages = [...messages, user]
     const controller = new AbortController()
     controllerRef.current = controller
+    const startedAt = Date.now()
+    const requestId = `stream-${startedAt}-${Math.random().toString(16).slice(2)}`
+    requestMetaRef.current = { requestId, startedAt, assistantMessageId: assistant.id }
     const active = () => mounted.current && controllerRef.current === controller && !controller.signal.aborted
-    const emit = (type: string, detail: Record<string, unknown> = {}) => {
-      if (active())
-        onStreamEvent?.({ type, timestamp: new Date().toISOString(), assistantMessageId: assistant.id, ...detail })
+    const emit = (
+      type: ChatStreamEvent['type'],
+      detail: Pick<ChatStreamEvent, 'input' | 'contentSize' | 'reasoningSize' | 'done' | 'raw' | 'message'> = {}
+    ) => {
+      if (!active()) return
+      if (type === 'done' || type === 'error' || type === 'abort') requestMetaRef.current = null
+      onStreamEvent?.({
+        ...detail,
+        type,
+        timestamp: new Date().toISOString(),
+        requestId,
+        assistantMessageId: assistant.id,
+        durationMs: Math.max(0, Date.now() - startedAt),
+      })
     }
     const update = (patch: Partial<ChatMessage>) => {
       if (active())
@@ -353,6 +391,7 @@ export default function SmartChat({
       const externalSignal = transformed.signal ?? requestOptions?.signal
       if (externalSignal) {
         const abort = () => {
+          emit('abort')
           controller.abort()
           if (reader) void reader.cancel().catch(() => {})
           if (mounted.current && controllerRef.current === controller) {
@@ -451,6 +490,7 @@ export default function SmartChat({
       }
       if (readerRef.current === reader) readerRef.current = null
       if (controllerRef.current === controller) {
+        requestMetaRef.current = null
         controllerRef.current = null
         if (mounted.current) setStreaming(false)
       }

@@ -340,3 +340,79 @@ test('chat handles errors, unmount during read and initial-message replacement',
   await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('Network unavailable'))
   expect(onError).toHaveBeenCalledTimes(1)
 })
+
+test('chat lifecycle events preserve typed request IDs, chunk sizes and completion latency', async () => {
+  let now = 1000
+  jest.spyOn(Date, 'now').mockImplementation(() => now)
+  const events: import('./SmartChat').ChatStreamEvent[] = []
+  const latencies: number[] = []
+  const chunkSizes: number[] = []
+  const fetcher = async () => {
+    now += 275
+    return response(['data: {"content":"Hi"}\n\ndata: [DONE]\n\n'])
+  }
+  render(
+    <SmartChat
+      apiUrl="/chat"
+      fetcher={fetcher}
+      onStreamEvent={(event) => {
+        const requestId: string = event.requestId
+        expect(requestId).toMatch(/^stream-/)
+        if (event.type === 'done') latencies.push(event.durationMs)
+        if (event.type === 'chunk') chunkSizes.push(event.contentSize ?? 0)
+        events.push(event)
+      }}
+    />
+  )
+  submit()
+  await waitFor(() => expect(latencies).toEqual([275]))
+  expect(events.map((event) => event.type)).toEqual(['start', 'chunk', 'chunk', 'done'])
+  expect(new Set(events.map((event) => event.requestId)).size).toBe(1)
+  expect(new Set(events.map((event) => event.assistantMessageId)).size).toBe(1)
+  expect(events[0].durationMs).toBe(0)
+  expect(chunkSizes).toEqual([2, 0])
+  expect(events.every((event) => typeof event.timestamp === 'string')).toBe(true)
+  now = 2000
+  submit()
+  await waitFor(() => expect(events.filter((event) => event.type === 'done')).toHaveLength(2))
+  expect(events[4].requestId).not.toBe(events[0].requestId)
+  expect(latencies).toEqual([275, 275])
+})
+
+test.each(['stop', 'external', 'error'] as const)(
+  'chat %s events retain the request identity and elapsed duration',
+  async (kind) => {
+    let now = 3000
+    jest.spyOn(Date, 'now').mockImplementation(() => now)
+    const external = new AbortController()
+    const events: import('./SmartChat').ChatStreamEvent[] = []
+    let reject!: (error: Error) => void
+    render(
+      <SmartChat
+        apiUrl="/chat"
+        requestOptions={{ signal: external.signal }}
+        onStreamEvent={(event) => events.push(event)}
+        fetcher={() =>
+          new Promise<Response>((_resolve, fail) => {
+            reject = fail
+          })
+        }
+      />
+    )
+    submit()
+    now = 3450
+    await act(async () => {
+      if (kind === 'stop') fireEvent.click(screen.getByRole('button', { name: 'Stop' }))
+      else if (kind === 'external') external.abort()
+      else reject(new Error('Failed'))
+    })
+    expect(events.map((event) => event.type)).toEqual(['start', kind === 'error' ? 'error' : 'abort'])
+    expect(events[1]).toEqual(
+      expect.objectContaining({
+        requestId: events[0].requestId,
+        assistantMessageId: events[0].assistantMessageId,
+        durationMs: 450,
+      })
+    )
+  }
+)
