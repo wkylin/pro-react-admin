@@ -10,6 +10,7 @@ import Meteors from './Meteors'
 import MouseTrail from './MouseTrail'
 import ScratchToReveal from './ScratchToReveal'
 import PointerMove from './PointerMove'
+import OrbitingCircles from './OrbitingCircles'
 
 afterEach(() => {
   cleanup()
@@ -142,4 +143,70 @@ test('star and meteor server markup hydrates without recoverable errors', async 
   expect(error).not.toHaveBeenCalled()
   act(() => root.unmount())
   container.remove()
+})
+
+test('mouse trail styles leave caller foreground images and nested articles untouched', async () => {
+  const { readFileSync } = require('node:fs')
+  const less = require('less')
+  const source = readFileSync('packages/wui-react/src/animation/batch-b.module.less', 'utf8')
+  const compiled = await less.render(source)
+  const css = (compiled.css.match(/:global \.wui-mouse-trail[^{}]*\{[^{}]*\}/g) ?? [])
+    .join('\n')
+    .replace(/:global /g, '')
+  const style = document.createElement('style')
+  style.textContent = css
+  document.head.append(style)
+  try {
+    const view = render(
+      <MouseTrail items={['trail.png']}>
+        <article data-testid="caller-article">
+          <img src="foreground.png" alt="Caller foreground" />
+        </article>
+      </MouseTrail>
+    )
+    const foreground = screen.getByRole('img', { name: 'Caller foreground' })
+    const trail = view.container.querySelector('.wui-mouse-trail-image')!
+    expect(getComputedStyle(trail).position).toBe('absolute')
+    expect(getComputedStyle(trail).opacity).toBe('0')
+    expect(getComputedStyle(foreground).position).not.toBe('absolute')
+    expect(getComputedStyle(foreground).opacity).not.toBe('0')
+    expect(getComputedStyle(foreground).pointerEvents).not.toBe('none')
+    expect(getComputedStyle(screen.getByTestId('caller-article')).position).not.toBe('relative')
+    expect(getComputedStyle(foreground.closest('article')!.parentElement!).position).toBe('relative')
+  } finally {
+    style.remove()
+  }
+})
+
+test.each([
+  ['equivalent', 'one.png'],
+  ['replacement', 'two.png'],
+])('mouse trail deactivates canceled fades for a newly allocated %s items array', (_, nextItem) => {
+  jest.useFakeTimers()
+  const view = render(
+    <MouseTrail items={['one.png']} fadeAnimation>
+      Content
+    </MouseTrail>
+  )
+  fireEvent.mouseMove(view.container.firstChild!, { clientX: 500, clientY: 500 })
+  expect(view.container.querySelector('img')).toHaveAttribute('data-status', 'active')
+  view.rerender(
+    <MouseTrail items={[nextItem]} fadeAnimation>
+      Content
+    </MouseTrail>
+  )
+  expect(view.container.querySelector('img')).toHaveAttribute('data-status', 'inactive')
+  expect(jest.getTimerCount()).toBe(0)
+  fireEvent.mouseMove(view.container.firstChild!, { clientX: 700, clientY: 700 })
+  expect(view.container.querySelector('img')).toHaveAttribute('data-status', 'active')
+  act(() => jest.advanceTimersByTime(1500))
+  expect(view.container.querySelector('img')).toHaveAttribute('data-status', 'inactive')
+  view.unmount()
+  expect(jest.getTimerCount()).toBe(0)
+})
+
+test('orbit paths declare native stroke width without utility classes', () => {
+  const markup = renderToString(<OrbitingCircles items={[{ content: 'Caller item' }]} />)
+  expect(markup).toContain('stroke-width="1"')
+  expect(markup).not.toContain('stroke-1')
 })

@@ -85,7 +85,7 @@
     place-content: center;
     overflow: hidden;
   }
-  .wui-mouse-trail img {
+  .wui-mouse-trail > .wui-mouse-trail-image {
     pointer-events: none;
     position: absolute;
     width: 10rem;
@@ -97,12 +97,12 @@
       transform 0.3s,
       opacity 0.3s;
   }
-  .wui-mouse-trail img[data-status='active'] {
+  .wui-mouse-trail > .wui-mouse-trail-image[data-status='active'] {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
     transition-duration: 0.5s;
   }
-  .wui-mouse-trail article {
+  .wui-mouse-trail > .wui-mouse-trail-foreground {
     position: relative;
     z-index: 40;
   }

@@ -35,7 +35,10 @@ const ImageMouseTrail = ({
   useEffect(() => {
     const pending = timers.current
     return () => {
-      pending.forEach(clearTimeout)
+      pending.forEach((timer, image) => {
+        clearTimeout(timer)
+        image.dataset.status = 'inactive'
+      })
       pending.clear()
     }
   }, [items])
@@ -108,7 +111,7 @@ const ImageMouseTrail = ({
           ref={refs.current[index]}
         />
       ))}
-      <article>{children}</article>
+      <article className="wui-mouse-trail-foreground">{children}</article>
     </section>
   )
 }

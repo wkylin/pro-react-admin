@@ -93,7 +93,7 @@ const OrbitingCircles = ({
           {calculatedItems.map((item, index) => (
             <circle
               key={index}
-              className="stroke-1"
+              strokeWidth={1}
               cx="50%"
               cy="50%"
               r={item.radius}
