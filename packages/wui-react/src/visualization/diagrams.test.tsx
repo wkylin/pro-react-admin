@@ -61,11 +61,15 @@ test('Mermaid serializes global config, ignores stale results, sanitizes and cle
   expect(screen.getByRole('img')).toBeEmptyDOMElement()
 })
 test('Markmap sanitizes node HTML and destroys the renderer on input change/unmount', async () => {
-  const instance = { fit: jest.fn().mockResolvedValue(undefined), destroy: jest.fn() }
+  const instance = {
+    setData: jest.fn().mockResolvedValue(undefined),
+    fit: jest.fn().mockResolvedValue(undefined),
+    destroy: jest.fn(),
+  }
   Markmap.create.mockReturnValue(instance)
   const view = render(<MarkmapHooks markmap="# first" debounceDelay={0} />)
   await tick()
-  expect(Markmap.create.mock.calls[0][2].content).toBe('<b>safe</b>')
+  expect(instance.setData.mock.calls[0][0].content).toBe('<b>safe</b>')
   view.rerender(<MarkmapHooks markmap="# second" debounceDelay={0} />)
   expect(instance.destroy).toHaveBeenCalledTimes(1)
   await tick()
@@ -77,4 +81,125 @@ test('unmounted diagram input cancels pending rendering', async () => {
   view.unmount()
   await tick()
   expect(mermaid.render).not.toHaveBeenCalled()
+})
+test('Markmap awaits setData and isolates deferred stale writes from the replacement SVG', async () => {
+  let finish!: () => void
+  let staleSvg!: SVGSVGElement
+  const stale = {
+    setData: jest.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = () => {
+            staleSvg.innerHTML = '<text>stale</text>'
+            resolve()
+          }
+        })
+    ),
+    fit: jest.fn().mockResolvedValue(undefined),
+    destroy: jest.fn(),
+  }
+  const next = {
+    setData: jest.fn().mockResolvedValue(undefined),
+    fit: jest.fn().mockResolvedValue(undefined),
+    destroy: jest.fn(),
+  }
+  Markmap.create
+    .mockImplementationOnce((svg: SVGSVGElement) => {
+      staleSvg = svg
+      return stale
+    })
+    .mockReturnValueOnce(next)
+  const view = render(<MarkmapHooks markmap="old" debounceDelay={0} />)
+  await tick()
+  expect(Markmap.create.mock.calls[0]).toHaveLength(2)
+  expect(stale.setData).toHaveBeenCalled()
+  expect(stale.fit).not.toHaveBeenCalled()
+  view.rerender(<MarkmapHooks markmap="new" debounceDelay={0} />)
+  await tick()
+  expect(staleSvg.isConnected).toBe(false)
+  expect(Markmap.create.mock.calls[1][0]).not.toBe(staleSvg)
+  await act(async () => {
+    finish()
+    await Promise.resolve()
+  })
+  expect(stale.fit).not.toHaveBeenCalled()
+  expect(view.container).not.toHaveTextContent('stale')
+  expect(stale.destroy).toHaveBeenCalledTimes(1)
+  view.unmount()
+  expect(next.destroy).toHaveBeenCalledTimes(1)
+})
+test('Markmap owns deferred setData rejection and suppresses errors after teardown', async () => {
+  let reject!: (reason: Error) => void
+  const instance = {
+    setData: jest.fn(
+      () =>
+        new Promise<void>((_, fail) => {
+          reject = fail
+        })
+    ),
+    fit: jest.fn(),
+    destroy: jest.fn(),
+  }
+  Markmap.create.mockReturnValue(instance)
+  const onError = jest.fn()
+  const error = new Error('render failed')
+  const view = render(<MarkmapHooks markmap="first" debounceDelay={0} onError={onError} />)
+  await tick()
+  expect(instance.setData).toHaveBeenCalled()
+  await act(async () => {
+    reject(error)
+    await Promise.resolve()
+  })
+  expect(onError).toHaveBeenCalledWith(error)
+  view.rerender(<MarkmapHooks markmap="second" debounceDelay={0} onError={onError} />)
+  await tick()
+  view.unmount()
+  await act(async () => {
+    reject(error)
+    await Promise.resolve()
+  })
+  expect(onError).toHaveBeenCalledTimes(1)
+  expect(instance.fit).not.toHaveBeenCalled()
+})
+test('Mermaid rejection removes owned temporary DOM and suppresses error diagrams', async () => {
+  let container!: HTMLElement
+  mermaid.render.mockImplementationOnce(async (_id: string, _chart: string, host?: HTMLElement) => {
+    container = host ?? document.body
+    const error = document.createElement('div')
+    error.dataset.mermaidError = ''
+    container.append(error)
+    throw new Error('invalid')
+  })
+  const view = render(<MermaidHooks chart="invalid" debounceDelay={0} />)
+  await tick()
+  expect(mermaid.initialize).toHaveBeenCalledWith(expect.objectContaining({ suppressErrorRendering: true }))
+  expect(container).not.toBe(document.body)
+  expect(container.isConnected).toBe(false)
+  expect(document.querySelector('[data-mermaid-error]')).toBeNull()
+  expect(screen.getByRole('alert')).toHaveTextContent('invalid')
+  view.unmount()
+})
+test('Mermaid pending render container is detached on unmount and cleared after settlement', async () => {
+  let container!: HTMLElement
+  let finish!: () => void
+  mermaid.render.mockImplementationOnce((_id: string, _chart: string, host?: HTMLElement) => {
+    container = host ?? document.body
+    return new Promise((resolve) => {
+      finish = () => {
+        container.append(document.createElement('svg'))
+        resolve({ svg: '<svg/>' })
+      }
+    })
+  })
+  const view = render(<MermaidHooks chart="pending" debounceDelay={0} />)
+  await tick()
+  expect(container).not.toBe(document.body)
+  expect(container.isConnected).toBe(true)
+  view.unmount()
+  expect(container.isConnected).toBe(false)
+  await act(async () => {
+    finish()
+    await Promise.resolve()
+  })
+  expect(container.childNodes).toHaveLength(0)
 })

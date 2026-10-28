@@ -155,3 +155,22 @@ test('nested pie uses caller numeric data and reacts to data replacement', () =>
     5,
   ])
 })
+test('BaseChart preserves caller events and gives onClick precedence over onEvents.click', () => {
+  const BaseChart = require('./EChartsCommon/BaseChart').default
+  const mouseover = jest.fn(),
+    click = jest.fn(),
+    alias = jest.fn()
+  const initOptions = { width: 300, height: 200 }
+  const view = render(<BaseChart initOptions={initOptions} onEvents={{ mouseover, click }} />)
+  const handler = (name: string) => chart.on.mock.calls.filter(([event]) => event === name).at(-1)?.[1]
+  handler('mouseover')({ name: 'hover' })
+  handler('click')({ name: 'first' })
+  expect(mouseover).toHaveBeenCalledWith({ name: 'hover' }, chart)
+  expect(click).toHaveBeenCalledWith({ name: 'first' }, chart)
+  view.rerender(<BaseChart initOptions={initOptions} onEvents={{ mouseover, click }} onClick={alias} />)
+  handler('mouseover')({ name: 'again' })
+  handler('click')({ name: 'alias' })
+  expect(mouseover).toHaveBeenCalledTimes(2)
+  expect(click).toHaveBeenCalledTimes(1)
+  expect(alias).toHaveBeenCalledWith({ name: 'alias' }, chart)
+})

@@ -18,16 +18,17 @@ export default function MarkmapHooks({
   style,
   onError,
 }: MarkmapHooksProps) {
-  const svg = useRef<SVGSVGElement>(null)
+  const host = useRef<HTMLDivElement>(null)
   useEffect(() => {
     let cancelled = false
     let instance: Markmap | undefined
     let observer: ResizeObserver | undefined
+    let svg: SVGSVGElement | undefined
     const timer = setTimeout(
       async () => {
         try {
           const [{ Transformer }, { Markmap }] = await loadMarkmap()
-          if (cancelled || !svg.current) return
+          if (cancelled || !host.current) return
           // Disable asset-loading plugins: caller content must never fetch scripts or styles.
           const transformer = new Transformer([])
           const { root } = transformer.transform(markmap)
@@ -36,7 +37,15 @@ export default function MarkmapHooks({
             node.children?.forEach(clean)
           }
           clean(root)
-          instance = Markmap.create(svg.current, { ...options, duration: 0 }, root)
+          // Each effect owns a separate SVG: late renderer work can only touch its detached tree.
+          svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+          svg.style.width = '100%'
+          svg.style.height = '100%'
+          svg.setAttribute('aria-hidden', 'true')
+          host.current.append(svg)
+          instance = Markmap.create(svg, { ...options, duration: 0, autoFit: false })
+          await instance.setData(root)
+          if (cancelled) return
           await instance.fit()
           if (cancelled) return
           if (typeof ResizeObserver !== 'undefined') {
@@ -46,10 +55,12 @@ export default function MarkmapHooks({
                   if (!cancelled) onError?.(error)
                 })
             })
-            observer.observe(svg.current)
+            observer.observe(svg)
           }
         } catch (error) {
           if (!cancelled) onError?.(error)
+        } finally {
+          if (cancelled) svg?.replaceChildren()
         }
       },
       Math.max(0, debounceDelay)
@@ -58,8 +69,9 @@ export default function MarkmapHooks({
       cancelled = true
       clearTimeout(timer)
       observer?.disconnect()
+      svg?.remove()
       instance?.destroy()
     }
   }, [markmap, debounceDelay, options, onError])
-  return <svg role="img" aria-label={ariaLabel} ref={svg} style={{ width: '100%', height: 400, ...style }} />
+  return <div role="img" aria-label={ariaLabel} ref={host} style={{ width: '100%', height: 400, ...style }} />
 }
