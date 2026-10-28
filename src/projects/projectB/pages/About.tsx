@@ -1,6 +1,6 @@
 import { Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
-import PageContainer from '@stateless/PageContainer'
+import PageContainer from '@wui/layout/PageContainer'
 
 const { Title, Paragraph, Text } = Typography
 

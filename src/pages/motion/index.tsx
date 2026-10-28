@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { motion, useAnimationControls } from 'motion/react'
 import ScrollableSections from '@wui/ScrollableSections'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import AboutSection from '@stateless/AboutSection'
+import AboutSection from '@wui/layout/AboutSection'
 import ContactSection from '@stateless/ContactSection'
 
 const ParallaxVert = () => {
@@ -95,7 +95,17 @@ const ParallaxVert = () => {
     {
       title: 'About',
       content: '关于我们：我们致力于创造优秀的用户体验，通过现代化的技术栈和设计理念。',
-      component: <AboutSection scrollContainerRef={scrollContainerRef} />,
+      component: (
+        <AboutSection
+          scrollContainerRef={scrollContainerRef}
+          cards={[1, 2, 3, 4, 5].map((id) => ({
+            id,
+            url: `https://picsum.photos/id/${27 + id}/400/267`,
+            alt: `Landscape ${id}`,
+            title: `Title ${id}`,
+          }))}
+        />
+      ),
     },
     {
       title: 'Contact',

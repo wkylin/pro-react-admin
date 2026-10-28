@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/StickyCard',
+  title: 'Components/Stateless/HorizontalScroll',
   component: Component,
   tags: ['autodocs'],
   decorators: [
@@ -12,7 +12,14 @@ const meta = {
       </div>
     ),
   ],
-  args: { cards: [{ id: 'a' }, { id: 'b' }, { id: 'c' }] },
+  args: {
+    cards: [1, 2, 3, 4, 5].map((id) => ({
+      id,
+      url: `https://picsum.photos/id/${27 + id}/400/267`,
+      alt: `Landscape ${id}`,
+      title: `Title ${id}`,
+    })),
+  },
 } satisfies Meta<typeof Component>
 
 export default meta

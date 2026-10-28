@@ -72,6 +72,14 @@ async function assertConsumerTypes() {
     // Resolves empty groups too; their declarations must be external modules.
     source.push(`import type * as Entry${index} from ${specifier}`)
   }
+  if (libraryGroups.find((entry) => entry.subpath === 'layout')?.runtimeExports.includes('FixTabs')) {
+    source.push(
+      `const tabs: import('${libraryPackageName}/layout').FixTabsProps = { tabs: [{id: 0, label: 'One', content: 'Panel'}], activeId: 0, onActiveIdChange: id => { const key: string | number = id; void key } }; void tabs`
+    )
+    source.push(
+      `const cards: import('${libraryPackageName}/layout').HorizontalScrollProps = { cards: [{id: 'one', url: '/image.png', alt: 'Image', href: '/details'}] }; void cards`
+    )
+  }
   const consumerFile = path.join(consumerDir, 'consumer.mts')
   await fs.writeFile(consumerFile, source.join('\n'))
   const program = ts.createProgram([consumerFile], {
@@ -100,9 +108,30 @@ try {
   await fs.mkdir(path.dirname(packageLink), { recursive: true })
   await fs.symlink(packageDir, packageLink, process.platform === 'win32' ? 'junction' : 'dir')
 
+  for (const peer of ['react', 'react-dom']) {
+    await fs.symlink(
+      path.join(repoRoot, 'node_modules', peer),
+      path.join(consumerDir, 'node_modules', peer),
+      process.platform === 'win32' ? 'junction' : 'dir'
+    )
+  }
+  const layoutRender = libraryGroups.find((entry) => entry.subpath === 'layout')?.runtimeExports.includes('FixTabs')
+    ? `
+    const layout = entryModules.layout
+    const markup = renderToStaticMarkup(createElement(layout.PageContainer, {title: 'Independent layout', footer: createElement(layout.Footer, {brand: 'Consumer brand'})},
+      createElement(layout.FixTabs, {tabs: [{id: 0, label: 'First', content: 'Panel content'}]}),
+      createElement(layout.HorizontalScroll, {cards: [{id: 1, url: '/photo.png', alt: 'Consumer image'}]}),
+      createElement(layout.FeatureAny, {data: [{title: 'Feature', content: 'Description', srcImage: '/feature.png'}]})
+    ))
+    if (!markup.includes('Panel content') || !markup.includes('Consumer brand') || !markup.includes('Consumer image') || !markup.includes('role="tab"')) throw new Error('Independent layout SSR lost caller content or accessibility')
+  `
+    : ''
   const esmScript = `
     const packageName = ${JSON.stringify(libraryPackageName)}
+    const entryModules = {}
     const subpaths = ${JSON.stringify(subpaths)}
+    const {createElement} = await import('react')
+    const {renderToStaticMarkup} = await import('react-dom/server')
     const root = await import(packageName)
     const entryExports = {}
     const resolvedEntries = {}
@@ -111,7 +140,9 @@ try {
       resolvedEntries[subpath] = import.meta.resolve(packageName + '/' + subpath)
       if ('default' in component && component.default == null) throw new Error('Invalid default export for ' + subpath)
       entryExports[subpath] = Object.keys(component)
+      entryModules[subpath] = component
     }
+    ${layoutRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
       entryExports,
@@ -123,7 +154,10 @@ try {
 
   const cjsScript = `
     const packageName = ${JSON.stringify(libraryPackageName)}
+    const entryModules = {}
     const subpaths = ${JSON.stringify(subpaths)}
+    const {createElement} = require('react')
+    const {renderToStaticMarkup} = require('react-dom/server')
     const root = require(packageName)
     const entryExports = {}
     const resolvedEntries = {}
@@ -132,7 +166,9 @@ try {
       resolvedEntries[subpath] = require.resolve(packageName + '/' + subpath)
       if ('default' in component && component.default == null) throw new Error('Invalid default export for ' + subpath)
       entryExports[subpath] = Object.keys(component)
+      entryModules[subpath] = component
     }
+    ${layoutRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
       entryExports,
@@ -147,6 +183,12 @@ try {
   assertResult('ESM', esmResult)
   assertResult('CJS', cjsResult)
   await assertConsumerTypes()
+  if (layoutRender) {
+    const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
+    for (const token of ['--wui-footer-bg', '--wui-tab-active-bg', '--wui-hero-bg']) {
+      if (!css.includes(token)) throw new Error(`Independent layout stylesheet is missing ${token}`)
+    }
+  }
 
   log(
     `Consumer smoke passed for public types, ESM/CJS root exports and ${libraryComponents.length} component subpaths and ${libraryGroups.length} named groups.`

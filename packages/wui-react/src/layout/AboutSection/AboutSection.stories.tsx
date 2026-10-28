@@ -12,7 +12,14 @@ const meta = {
       </div>
     ),
   ],
-  args: { scrollContainerRef: undefined },
+  args: {
+    cards: [1, 2, 3, 4, 5].map((id) => ({
+      id,
+      url: `https://picsum.photos/id/${27 + id}/400/267`,
+      alt: `Landscape ${id}`,
+      title: `Title ${id}`,
+    })),
+  },
 } satisfies Meta<typeof Component>
 
 export default meta

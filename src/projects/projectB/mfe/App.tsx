@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Card, Space, Typography, Button } from 'antd'
 import { Link } from 'react-router-dom'
-import PageContainer from '@stateless/PageContainer'
+import PageContainer from '@wui/layout/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
 import { getMfeSharedState, onMfeEvent, parseMfeSharedMessage } from '@platform/mfe/bridge'
 import RemoteScope from '@app/bootstrap/RemoteScope'

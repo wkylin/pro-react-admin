@@ -1,0 +1,45 @@
+.tabs {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  overflow: auto;
+  position: relative;
+  gap: 0.25rem;
+}
+.tab {
+  position: relative;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  border-radius: 999px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font: inherit;
+}
+.active {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--wui-tab-active-bg, #e5e7eb);
+  color: var(--wui-tab-active-text, #111827);
+}
+.tab:focus-visible {
+  outline: 2px solid #1677ff;
+  outline-offset: -2px;
+}
+.stack {
+  position: relative;
+  margin-top: 5rem;
+  display: grid;
+  width: 100%;
+}
+.card {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.label {
+  position: relative;
+}

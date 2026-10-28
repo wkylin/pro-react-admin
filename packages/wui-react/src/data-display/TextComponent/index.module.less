@@ -1,0 +1,53 @@
+.text {
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  opacity: 0.65;
+  transform: scale(0.95);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+  text-align: left;
+}
+.open {
+  border-color: var(--wui-border, #e5e7eb);
+  background: var(--wui-surface, #fff);
+  color: var(--wui-text, #171717);
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 1px 3px #0001;
+}
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: var(--wui-number-bg, #171717);
+  color: var(--wui-number-text, #fff);
+}
+.content {
+  padding: 0 1rem 1rem;
+}
+.content p {
+  margin: 0 0 1rem;
+}
+.progress {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e5e7eb;
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: currentColor;
+  transition: width 0.3s;
+}

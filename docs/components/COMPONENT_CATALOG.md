@@ -6,14 +6,14 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  927 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  751 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
-| `packages/wui-react/src` 文件 |   51 | 组件库源码、stories 与组件文档                                      |
-| 组件库 TS/JS 源文件           |   39 | 组件库自身源码，不含 MDX                                            |
-| 样式文件                      |   99 | Less、CSS、SCSS                                                     |
-| CSS Modules                   |   93 | 文件名含 `.module.`                                                 |
+| `src/` 文件                   |  906 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  734 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `packages/wui-react/src` 文件 |  104 | 组件库源码、stories 与组件文档                                      |
+| 组件库 TS/JS 源文件           |   84 | 组件库自身源码，不含 MDX                                            |
+| 样式文件                      |   95 | Less、CSS、SCSS                                                     |
+| CSS Modules                   |   89 | 文件名含 `.module.`                                                 |
 | Storybook stories             |  157 | `*.stories.*`                                                       |
-| TS/JS 测试文件                |   54 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
+| TS/JS 测试文件                |   56 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
 | 根 package scripts            |  173 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    5 | `pnpm-workspace.yaml` 中的工作区条目                                |
 
@@ -27,7 +27,7 @@
 | `src/platform/auth/components` TSX 文件 |    7 | 认证、鉴权和权限守卫相关模块                                                   |
 | `src/components/hooks`                  |   48 | 含入口文件的直接 Hook 模块目录，不含聚合入口                                   |
 | `src/shared/ui`                         |    2 | 应用级共享 UI 模块入口                                                         |
-| `packages/wui-react/src`                |   12 | 已进入独立源码边界的组件库模块                                                 |
+| `packages/wui-react/src`                |   19 | 已进入独立源码边界的组件库模块                                                 |
 | `src/app/layouts`                       |    9 | 应用壳与直接布局组件入口                                                       |
 | `src/pages` 页面入口                    |   57 | 含 `index.*` 的页面模块目录（直接子目录 39）                                   |
 | `src/features` 业务域                   |    4 | 已建立 feature-first 入口的业务域                                              |
@@ -115,6 +115,8 @@
 | `AnimatedIcon` | `IconFrame`          | `MoveChecker`     | `OneTimePasscode`   |
 | `OverflowText` | `PortalTooltip`      | `ResponsiveTable` | `SafeHtml`          |
 | `ScrollLayout` | `ScrollableSections` | `SliderCaptcha`   | `WatermarkProvider` |
+| `animation`    | `data-display`       | `editor`          | `forms`             |
+| `layout`       | `media`              | `visualization`   |                     |
 
 ## Layout 模块
 

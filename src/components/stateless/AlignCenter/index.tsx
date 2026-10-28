@@ -1,6 +1,2 @@
-import React from 'react'
-import styles from './index.module.less'
-
-const AlignCenter = ({ children }) => <div className={styles.alignCenter}>{children}</div>
-
-export default AlignCenter
+export { default } from '@wui/layout/AlignCenter'
+export * from '@wui/layout/AlignCenter'

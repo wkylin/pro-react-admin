@@ -1,16 +1,9 @@
-import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import ScrollToTop, { type ScrollToTopProps } from '@wui/layout/ScrollToTop'
+export type { ScrollToTopProps } from '@wui/layout/ScrollToTop'
 
-const ScrollToTop = (props) => {
+// Preserve pathname wiring for existing application imports.
+export default function RouteScrollToTop(props: ScrollToTopProps) {
   const { pathname } = useLocation()
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'smooth',
-    })
-  }, [pathname])
-  return props.children
+  return <ScrollToTop {...props} resetKey={props.resetKey ?? pathname} />
 }
-
-export default ScrollToTop

@@ -1,5 +1,5 @@
 import React from 'react'
-import AutoScrollSection from '@stateless/AutoScrollSection'
+import AutoScrollSection from '@wui/layout/AutoScrollSection'
 
 // 使用示例
 export default function Demo() {

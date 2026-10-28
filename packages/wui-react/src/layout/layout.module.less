@@ -1,0 +1,223 @@
+.horizontal {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+}
+.card {
+  position: relative;
+  flex: none;
+  width: 400px;
+  height: 267px;
+  overflow: hidden;
+  color: white;
+}
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+.card:hover img {
+  transform: scale(1.1);
+}
+.card span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  font-size: 3rem;
+  font-weight: 900;
+  text-shadow: 0 1px 4px #000;
+}
+.about {
+  position: relative;
+  height: 300vh;
+  padding-top: 1rem;
+}
+.aboutSticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+.stickyFooter {
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
+.fixedFooter {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+}
+.stickyCards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 30px 0 20px;
+}
+.stickyCard {
+  position: sticky;
+  z-index: 10;
+  width: 50vw;
+  margin: auto;
+  min-height: 30vh;
+  display: flex;
+  justify-content: center;
+  border-radius: 1rem;
+  background: var(--wui-card-bg, #0a192f);
+  color: var(--wui-card-text, #fff);
+  padding: 1rem 2rem;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.hero {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--wui-hero-bg, #0a192f);
+  color: var(--wui-hero-text, #fff);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 0 50%;
+  background: linear-gradient(135deg, #a855f733, #3b82f633);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.heroContent {
+  position: relative;
+  max-width: 80rem;
+  margin: auto;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+.heroContent h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 1.5rem;
+}
+.heroContent p {
+  max-width: 48rem;
+  margin: auto;
+  font-size: 1.125rem;
+}
+.heroDecoration {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+.footer {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--wui-footer-bg, #0a192f);
+  color: var(--wui-footer-text, #fff);
+  padding: 3rem max(1rem, calc((100% - 72rem) / 2));
+}
+.footerColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 2.5rem;
+}
+.footer ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer li {
+  margin: 0.5rem 0;
+}
+.footer a {
+  color: inherit;
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.footerLegal {
+  margin-top: 3rem;
+  border-top: 1px solid #ffffff30;
+  padding-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.footerLegal nav {
+  display: flex;
+  gap: 1rem;
+}
+.feature {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--wui-border, #e5e7eb);
+  border-radius: 0.25rem;
+}
+.featureButton {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+  width: 100%;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+}
+.featureImages {
+  min-height: 300px;
+  position: relative;
+}
+.featureImages img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+@media (min-width: 768px) {
+  .feature {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card img {
+    transition: none;
+  }
+}
+
+.stickyCard {
+  outline: 2px solid #ffffff33;
+  outline-offset: -2px;
+}
+.stickyCard:nth-child(odd) {
+  animation: slideLeft 1s;
+}
+.stickyCard:nth-child(even) {
+  animation: slideRight 1s;
+}
+@keyframes slideLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes slideRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stickyCard {
+    animation: none;
+  }
+}

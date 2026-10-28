@@ -6,6 +6,7 @@
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     /* 模块解析 */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

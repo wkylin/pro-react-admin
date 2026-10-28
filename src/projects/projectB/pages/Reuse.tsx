@@ -1,6 +1,6 @@
 import { Card, Space, Typography, Button, message } from 'antd'
 import { Link } from 'react-router-dom'
-import PageContainer from '@stateless/PageContainer'
+import PageContainer from '@wui/layout/PageContainer'
 import CopyToClipboard from '@stateless/CopyToClipboard'
 import GradientStats from '@stateless/GradientStats'
 

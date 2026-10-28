@@ -1,2 +1,2 @@
-// Named exports for migrated components are added here; this group has no default export.
-export {}
+export { default as FloatingIcon, SocialIcon } from './FloatingIcon'
+export type { FloatingIconProps, SocialIconProps } from './FloatingIcon'

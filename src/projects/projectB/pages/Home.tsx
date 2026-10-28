@@ -1,6 +1,6 @@
 import { Space, Typography, Button, Divider } from 'antd'
 import { Link } from 'react-router-dom'
-import PageContainer from '@stateless/PageContainer'
+import PageContainer from '@wui/layout/PageContainer'
 import ProjectBHero from '../components/ProjectBHero'
 
 const { Paragraph, Text } = Typography

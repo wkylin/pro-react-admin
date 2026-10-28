@@ -1,6 +1,6 @@
 # @w.ui/wui-react
 
-React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package contains 12 public components; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
+React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package preserves 12 root components and adds named component groups; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
 
 ## Install
 
@@ -47,7 +47,7 @@ Props types are exported from the root and corresponding subpaths. ResponsiveTab
 The migration provides seven named-only subpaths: `@w.ui/wui-react/layout`,
 `@w.ui/wui-react/animation`, `@w.ui/wui-react/data-display`, `@w.ui/wui-react/forms`,
 `@w.ui/wui-react/media`, `@w.ui/wui-react/visualization`, and `@w.ui/wui-react/editor`.
-These entries are initially empty and gain components as their migration is completed.
+Layout currently exports AboutSection, AlignCenter, AnimationTabs, FadeInDiv, AutoScrollSection, FeatureAny, FixTabs, Footer, HorizontalScroll, LinearWrap, MarketingHero, PageContainer, ScrollToTop, StickyCard, StickyFooter and TrapezoidTabs. Animation exports FloatingIcon and SocialIcon; data-display exports TextComponent. Other groups gain components as their migration is completed.
 Group components and their prop types are exported by name; groups have no default
 export and are not re-exported from the root. The existing 12 component subpaths and
 root exports remain available.
@@ -62,3 +62,30 @@ Importing a group loads its static runtime imports, so consumers must install al
 peers listed for that group. Importing the root does not load the new group entries.
 
 Source, Storybook and development documentation: [GitHub](https://github.com/wkylin/pro-react-admin). Build and publishing instructions: [release guide](https://github.com/wkylin/pro-react-admin/blob/main/docs/deployment/LIBRARY_PUBLISH_GUIDE.md). Published package: [npm](https://www.npmjs.com/package/@w.ui/wui-react).
+
+### Layout consumption
+
+```tsx
+import { FixTabs, PageContainer } from '@w.ui/wui-react/layout'
+import '@w.ui/wui-react/style.css'
+
+export function Workspace() {
+  return (
+    <PageContainer title="Workspace" footer={<small>Your footer</small>}>
+      <FixTabs tabs={[{ id: 'overview', label: 'Overview', content: 'Ready' }]} />
+    </PageContainer>
+  )
+}
+```
+
+Layout uses the existing React, React DOM, Ant Design and Framer Motion peers;
+animation uses React and Framer Motion. No Tailwind setup or application theme is
+required. Motion imports use the existing `framer-motion` peer. `FeatureAny` requires
+caller data; `HorizontalScroll` and `AboutSection` accept cards with image alt text
+or children. `MarketingHero` accepts a decoration slot. `Footer` accepts brand,
+navigation, social and legal content; `PageContainer` has no default footer.
+`ScrollToTop` accepts `resetKey`, `behavior` and an optional element ref `target`:
+pass a router pathname as `resetKey` in your application. `StickyFooter.bottom`
+defaults to zero. Tab components support arrow keys, Home/End and controlled values
+(`activeId`, `activeValue`, or `activeTab`). `FixTabs.theme` selects light/dark styling.
+`SocialIcon.color` accepts a CSS color and `label` supplies its accessible name.

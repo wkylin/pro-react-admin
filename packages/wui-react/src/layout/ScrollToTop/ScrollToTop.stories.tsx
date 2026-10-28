@@ -60,7 +60,15 @@ const meta = {
       </div>
     ),
   ],
-  args: { children: <ScrollToTopDemo /> },
+  render: (args) => {
+    const { pathname } = useLocation()
+    return (
+      <Component {...args} resetKey={pathname}>
+        <ScrollToTopDemo />
+      </Component>
+    )
+  },
+  args: {},
 } satisfies Meta<typeof Component>
 
 export default meta

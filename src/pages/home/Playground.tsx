@@ -23,7 +23,7 @@ import Masonry, { ResponsiveMasonry } from 'react-responsive-masonry'
 import useDetectScroll from '@smakss/react-scroll-direction'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import ReMarkdown from '@stateless/ReMarkdown'
-// import LinearWrap from '@stateless/LinearWrap'
+// import LinearWrap from '@wui/layout/LinearWrap'
 import AlternatingText from '@stateless/AlternatingText'
 import AutoLink from '@stateless/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
@@ -43,7 +43,8 @@ import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
 import StaticStepper from '@stateless/StaticStepper'
-import FeatureAny from '@stateless/FeatureAny'
+import FeatureAny from '@wui/layout/FeatureAny'
+import { featureDemoData } from './feature-demo'
 import UserIP from '@stateless/UserIP'
 import ScratchToReveal from '@stateless/ScratchToReveal'
 // import SlideLinear from '@stateless/SlideLinear'
@@ -1007,7 +1008,7 @@ const Home = () => {
         ))}
       </section>
       <section style={{ margin: 20 }}>
-        <FeatureAny />
+        <FeatureAny data={featureDemoData} />
       </section>
       <section style={{ margin: 20 }}>
         <SkeletonFix />
