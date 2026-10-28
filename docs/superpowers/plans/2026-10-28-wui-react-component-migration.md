@@ -23,25 +23,61 @@ Extend `config/library-contract.mjs` with group entries for `layout`, `animation
 
 Verification: `pnpm run prepare:lib:release` and `pnpm exec cross-env BUILD_TOOL=vite pnpm run prepare:lib:release` pass with empty or initial groups, and existing 12 subpaths still resolve. Commit the infrastructure.
 
-## Task 3: Migrate generic layout, form, utility and data-display components
+## Task 3: Migrate the layout group
 
-Move every Task 1 roster item assigned to these groups into `packages/wui-react/src/<Group>/<Component>` with actual implementation and styles in the package. Remove fixed demo content from runtime and place examples in stories. Export typed props through each group entry; replace application use sites with the package source alias and keep thin compatibility forwarding only where needed. Include stateful candidates such as `CheckableTags` and `TreeList` if the audit marks them reusable, including their shared dependencies. Ensure CSS works without application Tailwind/theme. Add focused behavior tests for nontrivial interactions and test at least one independent package consumer of each group.
+Migrate all 15 roster items in `layout`: AboutSection, AlignCenter, AnimationTabs, AutoScrollSection, FeatureAny, FixTabs, Footer, HorizontalScroll, LinearWrap, MarketingHero, PageContainer, ScrollToTop, StickyCard, StickyFooter and TrapezoidTabs. Follow each roster adaptation, move implementation/styles/stories to `packages/wui-react/src/layout/<Component>`, expose typed named exports, replace application use sites with `@wui` source imports and retain thin legacy forwarders only where needed. Remove fixed demo content and app theme/router imports. Package utility-class styling. Add meaningful tests for interactive behavior and the independent layout group consumer.
 
-Verification: app and library typechecks, relevant unit tests, Storybook typecheck, and Webpack library release preparation pass. Commit the group migration.
+Verification: relevant unit tests, app/lib/Storybook typechecks, Webpack release preparation, and `check:docs` pass. Commit the group migration.
 
-## Task 4: Migrate reusable animation and visual effect components
+## Task 4: Migrate the forms group
 
-Move every Task 1 animation roster item, including those using `motion` or `framer-motion`, into the package animation group. Declare any newly needed dependency or optional peer consistently in the contract and package manifest; do not make optional animation dependencies required by the core root entry. Convert application-only utility classes to package-owned styles, type public props, and verify cleanup for timers, pointer listeners and animation frames. Keep stories adjacent to the package source, and update application imports.
+Migrate all nine roster items in `forms`: CheckableTags, DottedStepper, IntervalInput, LanguageSwitcher, PromptOptimizer, RadioInput, ReactSignature, SmartChat and StarRating. Apply every item-specific adaptation, type props/events/refs, replace app context, i18n and feedback dependencies with public props or package-local behavior, and ensure accessible keyboard interaction. Move source/styles/stories to the package forms group and update app imports/forwarders. Declare newly required optional peers at the group entry, leaving the root light. Add behavior tests for stateful form controls and request/stream cleanup.
 
-Verification: focused animation behavior/cleanup checks, Storybook typecheck, both library build tools, smoke and size gates. Commit the animation migration.
+Verification: focused tests, app/lib/Storybook typechecks, Webpack release preparation and independent group consumer pass. Commit the forms migration.
 
-## Task 5: Migrate reusable visualization, editor and media components
+## Task 5: Migrate the data-display group
 
-Move every Task 1 roster item assigned to these groups, including reusable chart, markmap, mermaid, editor, image/video/audio and export components after removing application service imports and fixed demo assets. Use optional peer dependencies and group subpaths so a consumer needs a heavy runtime only for the group it imports. Preserve current application behavior through explicit adapters at application call sites. Ensure security-sensitive renderers retain content sanitization and safe defaults. Add targeted tests for data-driven APIs, resource cleanup and package consumer imports.
+Migrate all 21 roster items in `data-display`: TreeList, ApiStateHandler, AutoLink, AvatarCard, ClockFace, ContentPlaceholder, CopyToClipboard, Exception, GradientStats, Loading, NumberViewCard, PDFExport, SkeletonFix, StaticStepper, StatisticCard, SvgPreview, TagCard, TextComponent, TransferHistory, UserIP and Watermark. Apply the audit's item-specific extraction, including replacing old component imports, app navigation/feedback/theme and fixed network/demo data. Keep PDF/export/SVG handling safe, type public props, package styles and update app call sites. Add targeted tests for async tree/network lifecycle, SVG/PDF security behavior and public data props.
 
-Verification: focused unit tests, app and Storybook typechecks, both app and library builds, ESM/CJS group smoke, package size and docs checks. Commit the heavy-module migration.
+Verification: focused tests, app/lib/Storybook typechecks, Webpack release preparation and group consumer pass. Commit the data-display migration.
 
-## Task 6: Final package documentation, integration and release
+## Task 6: Migrate animation group A
+
+Migrate the first 20 animation roster items: AlternatingText, AnimatedList, AnimateOnScreen, AnimateRipple, AnimateWave, AnimBackground, AnimGroup, AnimInView, AnimText, BackgroundBeams, BackgroundBoxes, BlurFade, BlurText, BorderBeam, BreatheText, ColorfulText, ContactSection, CubeSpinner, DynamicBackground and FlipLink. Follow per-item adaptations for typed props, package styles, optional motion/spring peers and cleanup. Move source and stories into the package animation group, update app imports and group exports without touching later animation items.
+
+Verification: focused interaction/cleanup tests, app/lib/Storybook typechecks, Webpack release preparation and group consumer pass. Commit this batch.
+
+## Task 7: Migrate animation group B
+
+Migrate the next 20 animation roster items: FlipWords, FloatAny, FloatingIcon, GradientAnimation, GradientTracking, GradualSpacing, InteractiveGrid, IsometricCard, LineBordered, MagicTrail, MemoizedStars, MeshGradientBackground, Meteors, MouseTrail, MultiColorBorder, MultiDirectionSlide, OrbitingCircles, PointerMove, ScratchToReveal and ScrollAnimation. Follow roster adaptations, package styles/dependencies, type public props, keep timer/RAF/listener cleanup and update app imports and stories.
+
+Verification: focused interaction/cleanup tests, app/lib/Storybook typechecks, Webpack release preparation and group consumer pass. Commit this batch.
+
+## Task 8: Migrate animation group C
+
+Migrate the final 20 animation roster items: ScrollVelocity, ShiftingCard, ShinyText, ShootingStars, SlideButton, SlideLinear, SlideText, Sparkles, SparklesText, Spotlight, SquaresGrid, StarBackground, TagCloud, TextClip, TextLoader, TextReveal, ThreeDCard, TypedText, TypeWriter and WordRotate. Follow roster adaptations, package styles/dependencies, type public props, preserve accessible text/keyboard behavior and lifecycle cleanup, and update app imports and stories.
+
+Verification: focused interaction/cleanup tests, app/lib/Storybook typechecks, both library build tools, smoke and size gates. Commit this batch.
+
+## Task 9: Migrate the media group
+
+Migrate all 12 media roster items: AutoSlider, CompareAll, FixCarouse, FixMusicPlayer, InteractiveBook, LazyLoadImage, LogoSlider, MusicPlayer, SmartVideoPlayer, SoundBar, TestimonialCarousel and Video. Move fixed audio/images/tracks to stories, expose caller data and labels as typed props, isolate optional media peers, and preserve audio/video/player/RAF/observer disposal. Keep application adapters and document required media CSS. Move source/styles/stories into the package group and update imports.
+
+Verification: focused media and book-engine tests, app/lib/Storybook typechecks, both library build tools, smoke and size gates. Commit the media migration.
+
+## Task 10: Migrate the visualization group
+
+Migrate all nine visualization roster items: markmap, mermaidHooks, DonutCharts, EChart, EChartsCommon, IconCloud, OrgChart, PHBarChart and PieNestCharts. Move fixed datasets/maps and theme hooks to stories/app adapters, expose typed data/config props, isolate optional diagram/chart peers, sanitize externally supplied SVG/HTML, and preserve renderer/observer cleanup. Move source/styles/stories and update app imports.
+
+Verification: focused visualizer behavior/security tests, app/lib/Storybook typechecks, both library builds, smoke and size gates. Commit the visualization migration.
+
+## Task 11: Migrate the editor group
+
+Migrate all seven editor roster items: AdvancedCodeBlock, CodeHighlighter, MdxEditor, ReMarkdown, SandpackBasic, ScriptView and ShiCode. Move app theme/feedback/clipboard integrations to props or package-local behavior, expose typed value/change/render APIs, maintain safe Markdown/HTML handling and document optional editor/highlighter peers. Move source/styles/stories, update app imports and preserve existing editor behavior through focused tests.
+
+Verification: focused editor/Markdown tests, app/lib/Storybook typechecks, both library builds, smoke and size gates. Commit the editor migration.
+
+## Task 12: Final package documentation, integration and release
 
 Reconcile the Task 1 roster against actual package implementations and exports; every migrate/adapt item must resolve from its group or have its decision corrected with evidence. Update `NPM_README.md`, package README source, component catalog/reference generation and publishing docs with all group entry paths and optional peer installation instructions. Set package version to `6.1.0` and update the lockfile. Run full `prepare:lib:release` with Webpack and Vite, Storybook checks, app quality gates, `npm pack --dry-run`, and relevant browser flows. Package a fixed tarball and review its file list. Commit final source and docs. Push the release source branch and exact `wui-react-v6.1.0` tag, follow the trusted publish workflow, then query npm for `6.1.0` and `latest`; if remote publication is blocked, report the specific condition and retain the verified tarball.
 
