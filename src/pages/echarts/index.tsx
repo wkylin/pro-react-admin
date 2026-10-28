@@ -1,9 +1,10 @@
 import React from 'react'
+import type { EChartsOption } from 'echarts'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import EChartsCommon from '@stateless/EChartsCommon'
+import EChartsCommon from '@/components/adapters/AppEChartsCommon'
 
 const Echarts = () => {
-  const option = {
+  const option: EChartsOption = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {

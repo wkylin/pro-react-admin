@@ -197,7 +197,11 @@
     "video.js": ">=8.24.1 <9.0.0",
     "hls.js": ">=1.7.3 <2.0.0",
     "i18next": ">=26.0.0 <27.0.0",
-    "react-i18next": ">=17.0.0 <18.0.0"
+    "react-i18next": ">=17.0.0 <18.0.0",
+    "echarts": ">=6.1.0 <7.0.0",
+    "markmap-lib": ">=0.18.12 <0.19.0",
+    "markmap-view": ">=0.18.12 <0.19.0",
+    "mermaid": ">=12.1.0 <13.0.0"
   },
   "peerDependenciesMeta": {
     "@tsparticles/react": {
@@ -255,6 +259,18 @@
       "optional": true
     },
     "react-i18next": {
+      "optional": true
+    },
+    "echarts": {
+      "optional": true
+    },
+    "markmap-lib": {
+      "optional": true
+    },
+    "markmap-view": {
+      "optional": true
+    },
+    "mermaid": {
       "optional": true
     }
   }

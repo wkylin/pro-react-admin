@@ -1,3 +1,4 @@
+import type { EChartsOption } from 'echarts'
 //  地图数据
 const mapData = {
   citys: [
@@ -1300,7 +1301,7 @@ const mapData = {
   ],
 }
 
-const mapOptions = (params: any) => ({
+const mapOptions = (params: any): EChartsOption => ({
   title: {
     show: false,
     text: '全国物流输送图',
@@ -1366,7 +1367,6 @@ const mapOptions = (params: any) => ({
       type: 'lines',
       coordinateSystem: 'geo',
       zlevel: 2,
-      zoom: 1,
       large: true,
       effect: {
         show: true,

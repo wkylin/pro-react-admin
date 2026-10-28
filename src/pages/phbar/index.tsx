@@ -1,19 +1,25 @@
-import React from 'react'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import PHBarChart from '@stateless/PHBarChart'
-import { useActivate } from '@platform/keep-alive'
-
-const PHBar = () => {
-  // 当页面被激活时，通知 PHBarChart 组件重新初始化
-  useActivate(() => {
-    // 通过自定义事件通知图表组件重新初始化
-    window.dispatchEvent(new CustomEvent('phbar-activate'))
-  })
-
+import PHBarChart from '@wui/visualization/PHBarChart'
+import { useOptionalProThemeContext } from '@/theme/hooks'
+const ranges = ['pH范围1', 'pH范围2', 'pH范围3'].map((name) => ({
+  name,
+  values: Array.from({ length: 15 }, (_, i) => i),
+}))
+const markers = [
+  { value: 7, label: '中性点 (pH=7)', color: '#ff0000' },
+  { value: 3.5, label: '弱酸性 (pH=3.5)', color: '#ff9900' },
+  { value: 10.5, label: '弱碱性 (pH=10.5)', color: '#0066ff' },
+]
+export default function PHBar() {
+  const theme = useOptionalProThemeContext()
   return (
     <FixTabPanel>
-      <PHBarChart />
+      <PHBarChart
+        ranges={ranges}
+        markers={markers}
+        title="pH值堆叠柱状图（0-14）"
+        theme={theme?.resolvedTheme === 'dark' ? 'dark' : null}
+      />
     </FixTabPanel>
   )
 }
-export default PHBar

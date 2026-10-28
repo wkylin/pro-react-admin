@@ -484,8 +484,41 @@ export const libraryGroups = Object.freeze([
     subpath: 'visualization',
     source: 'visualization/index.ts',
     types: 'visualization/index.d.ts',
-    runtimeExports: [],
-    typeExports: [],
+    runtimeExports: [
+      'EChart',
+      'EChartsCommon',
+      'BaseChart',
+      'DonutCharts',
+      'PieNestCharts',
+      'PHBarChart',
+      'OrgChart',
+      'IconCloud',
+      'MarkmapHooks',
+      'MermaidHooks',
+      'getPHColor',
+    ],
+    typeExports: [
+      'EChartProps',
+      'EChartHandle',
+      'EChartMap',
+      'EChartsCommonProps',
+      'BaseChartProps',
+      'DonutChartProps',
+      'PieNestChartProps',
+      'PieNestChartOptions',
+      'PHBarChartProps',
+      'PHRange',
+      'PHMarker',
+      'OrgChartProps',
+      'OrgChartNode',
+      'FlatOrgChartNode',
+      'OrgChartCustomStyles',
+      'NodeId',
+      'IconCloudProps',
+      'MarkmapHooksProps',
+      'MermaidHooksProps',
+      'MermaidConfig',
+    ],
   },
   {
     subpath: 'editor',
@@ -499,6 +532,11 @@ export const libraryGroups = Object.freeze([
 export const libraryEntries = Object.freeze([...libraryComponents, ...libraryGroups])
 
 export const libraryPeerDependencies = Object.freeze({
+  echarts: '>=6.1.0 <7.0.0',
+  'markmap-lib': '>=0.18.12 <0.19.0',
+  'markmap-view': '>=0.18.12 <0.19.0',
+  mermaid: '>=12.1.0 <13.0.0',
+
   'react-pdf': '>=11.0.0 <12.0.0',
   'pdfjs-dist': '>=6.3.289 <7.0.0',
   'video.js': '>=8.24.1 <9.0.0',
@@ -527,6 +565,11 @@ export const libraryPeerDependencies = Object.freeze({
 })
 
 export const libraryPeerDependenciesMeta = Object.freeze({
+  echarts: { optional: true },
+  'markmap-lib': { optional: true },
+  'markmap-view': { optional: true },
+  mermaid: { optional: true },
+
   'react-pdf': { optional: true },
   'pdfjs-dist': { optional: true },
   'video.js': { optional: true },

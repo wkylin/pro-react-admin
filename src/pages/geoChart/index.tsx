@@ -4,7 +4,7 @@ import type { EChartsOption, EChartsType } from 'echarts'
 import type { GeoJSON } from 'echarts/types/src/coord/geo/geoTypes.js'
 import type { ElementEvent } from 'zrender'
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import EChart from '@stateless/EChart'
+import EChart from '@wui/visualization/EChart'
 import { useProThemeContext } from '@/theme/hooks'
 import fengxianGeo from './geo/fengxian.json'
 
@@ -150,6 +150,8 @@ const GeoChart = () => {
   return (
     <FixTabPanel style={{ backgroundColor: 'var(--wui-bg-page)' }}>
       <EChart
+        theme={resolvedTheme === 'dark' ? 'dark' : null}
+        ariaLabel="区域地图"
         option={option}
         onInit={handleChartInit}
         onEvents={{ click: handleChartClick }}

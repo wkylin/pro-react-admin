@@ -11,7 +11,7 @@ import {
   type ReactNode,
   type SetStateAction,
 } from 'react'
-import MarkmapHooks from '@stateful/markmap'
+import MarkmapHooks from '@wui/visualization/markmap'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import MDEditor from '@uiw/react-md-editor'
 import { toPng, toSvg } from 'html-to-image'

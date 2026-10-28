@@ -1,6 +1,6 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import { useState, useRef, useCallback, type ReactNode } from 'react'
-import MermaidHooks from '@stateful/mermaidHooks'
+import MermaidHooks from '@wui/visualization/mermaidHooks'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import PageContainer from '@wui/layout/PageContainer'
 import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch'

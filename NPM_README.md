@@ -331,3 +331,13 @@ not own an injected worker. It makes no worker CDN choice and supplies no privat
 audio. `pageTurnSound` is optional (`soundSrc` remains supported). The component
 requests exactly the supplied `pdfUrl`; applications and Storybook stories must
 resolve deployment base paths themselves, without relying on speculative retries.
+
+### Visualization (`@w.ui/wui-react/visualization`)
+
+Named exports: EChart, EChartsCommon, BaseChart, DonutCharts, PieNestCharts, PHBarChart, OrgChart, IconCloud, MarkmapHooks, MermaidHooks, getPHColor. Import the package stylesheet for OrgChart. This group stays outside the lightweight root.
+
+Optional peers: `echarts >=6.1.0 <7.0.0` for charts, `markmap-lib >=0.18.12 <0.19.0` and `markmap-view >=0.18.12 <0.19.0` for mind maps, `mermaid >=12.1.0 <13.0.0` for diagrams. ECharts is required when importing the visualization group; diagram peers load only when their components mount.
+
+Chart options/data, themes, map registrations (`maps: [{ name, data, specialAreas? }]`) and accessible `ariaLabel` text are caller-owned. Map names use ECharts' global registry; use distinct names for different datasets. `PHBarChart` requires `ranges: [{name, values}]`, with optional markers and title. `PieNestCharts.data` provides the inner series when no explicit series are supplied. OrgChart takes a caller tree, including IDs equal to zero.
+
+Diagram markup is always sanitized: Mermaid uses strict security by default and static SVG primitives; scripts, styles, external SVG resources and embedded HTML are removed even in loose mode. Flowchart HTML labels are disabled to preserve text. Markmap permits safe inline HTML but never loads plugin scripts/styles. Mermaid configuration/rendering is serialized within this package; external Mermaid users should avoid changing the same global configuration during a render. IconCloud renders caller icons/images and accepts an accessible text alternative plus arrow-key rotation.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import EChartsCommon from '@stateless/EChartsCommon'
+import EChartsCommon from '@/components/adapters/AppEChartsCommon'
 import mapOptions from './options'
 
 const ChinaMap = () => {

@@ -297,32 +297,21 @@
   }
 }
 
-/* Mobile styles applied via root class `.is-mobile` */
-:global(.is-mobile) .currentBox {
-  padding: 0 8px;
-  font-size: 12px;
-  height: 24px;
-  line-height: 24px;
+@media (max-width: 600px) {
+  .currentBox {
+    padding: 0 8px;
+  }
+  .childWrapper {
+    min-width: 80px;
+    padding: 0 4px;
+  }
 }
-
-:global(.is-mobile) .rootBox {
-  height: 28px;
-  line-height: 28px;
-  font-size: 14px;
-}
-
-:global(.is-mobile) .childWrapper {
-  padding: 0 4px;
-  min-width: 80px;
-}
-
-:global(.is-mobile) .horizontal .childWrapper {
-  padding: 8px 0;
-  min-width: 0;
-}
-
-:global(.is-mobile) .expandIcon {
-  width: 14px;
-  height: 14px;
-  font-size: 8px;
+@media (prefers-reduced-motion: reduce) {
+  .animated {
+    animation: none;
+  }
+  .currentBox,
+  .expandIcon {
+    transition: none;
+  }
 }
