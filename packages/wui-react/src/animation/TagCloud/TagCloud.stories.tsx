@@ -12,7 +12,18 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: {
+    items: [
+      'use server',
+      'useOptimistic',
+      'React Server Components',
+      'Concurrent Rendering',
+      'useActionState',
+      'Suspense',
+      'use client',
+      'React Compiler',
+    ],
+  },
 } satisfies Meta<typeof Component>
 
 export default meta

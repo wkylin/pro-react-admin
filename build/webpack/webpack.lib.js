@@ -24,6 +24,11 @@ const isExternalRequest = (request = '') =>
 
 const createExternals = (type) =>
   function externalizeLibraryDependencies({ request }, callback) {
+    // Slim 4.x's require condition contains ESM; keep its lazy initializer native.
+    if (request === '@tsparticles/slim') {
+      callback(null, `import ${request}`)
+      return
+    }
     if (isExternalRequest(request)) {
       callback(null, `${type} ${request}`)
       return

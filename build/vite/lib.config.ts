@@ -12,8 +12,21 @@ const source = path.join(root, 'packages/wui-react/src')
 export default defineConfig({
   root,
   publicDir: false,
+  // Preserve established external CJS default semantics (e.g. @uiw/react-signature).
+  legacy: { inconsistentCjsInterop: true },
   plugins: [
     react(),
+    {
+      name: 'wui-global-animation-styles',
+      enforce: 'post',
+      transform(code, id) {
+        // These CSS modules intentionally contain global selectors only.
+        // Keep their CSS even when their empty/default binding is unused.
+        if (/\/animation\/batch-[bc]\.module\.less(?:\?|$)/.test(id)) {
+          return { code, map: null, moduleSideEffects: 'no-treeshake' }
+        }
+      },
+    },
     svgr({ include: '**/*.svg', svgrOptions: { exportType: 'default' } }),
     ...(process.env.USE_ANALYZE === '1'
       ? [visualizer({ filename: 'artifacts/build/vite/library/report.html', open: false })]

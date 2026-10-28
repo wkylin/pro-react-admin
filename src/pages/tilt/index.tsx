@@ -1,7 +1,7 @@
 import React from 'react'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import Tilt from 'react-parallax-tilt'
-import ThreeDCard from '@stateless/ThreeDCard'
+import { ThreeDCard } from '@wui/animation'
 
 import SpringPng from '@assets/images/spring.png'
 import HePng from '@assets/images/he.png'

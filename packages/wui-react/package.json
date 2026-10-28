@@ -175,6 +175,13 @@
     "lucide-react": "^1.54.0"
   },
   "peerDependencies": {
+    "@tsparticles/react": ">=4.4.0 <5.0.0",
+    "@tsparticles/engine": ">=4.4.0 <5.0.0",
+    "@tsparticles/slim": ">=4.4.0 <5.0.0",
+    "motion": ">=12.0.0 <15.0.0",
+    "@react-spring/web": ">=10.0.0 <11.0.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "@uiw/react-signature": ">=1.3.5 <2.0.0",
     "highlight.js": ">=11.0.0 <12.0.0",
     "react-markdown": ">=10.0.0 <11.0.0",
@@ -184,13 +191,30 @@
     "antd": ">=6.0.0 <7.0.0",
     "framer-motion": ">=12.0.0 <15.0.0",
     "react": ">=19.0.0 <20.0.0",
-    "react-dom": ">=19.0.0 <20.0.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^4.2.1",
-    "motion": ">=12.0.0 <15.0.0",
-    "@react-spring/web": ">=10.0.0 <11.0.0"
+    "react-dom": ">=19.0.0 <20.0.0"
   },
   "peerDependenciesMeta": {
+    "@tsparticles/react": {
+      "optional": true
+    },
+    "@tsparticles/engine": {
+      "optional": true
+    },
+    "@tsparticles/slim": {
+      "optional": true
+    },
+    "motion": {
+      "optional": true
+    },
+    "@react-spring/web": {
+      "optional": true
+    },
+    "html2canvas": {
+      "optional": true
+    },
+    "jspdf": {
+      "optional": true
+    },
     "@uiw/react-signature": {
       "optional": true
     },
@@ -207,18 +231,6 @@
       "optional": true
     },
     "remark-gfm": {
-      "optional": true
-    },
-    "html2canvas": {
-      "optional": true
-    },
-    "jspdf": {
-      "optional": true
-    },
-    "motion": {
-      "optional": true
-    },
-    "@react-spring/web": {
       "optional": true
     }
   }

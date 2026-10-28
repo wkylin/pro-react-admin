@@ -197,16 +197,19 @@ Import the named animation components and public props from
 `IsometricCard`, `LineBordered`, `MagicTrail`, `MemoizedStars`,
 `MeshGradientBackground`, `Meteors`, `MouseTrail`, `MultiColorBorder`,
 `MultiDirectionSlide`, `OrbitingCircles`, `PointerMove`, `ScratchToReveal` and
-`ScrollAnimation`.
+`ScrollAnimation`, `ScrollVelocity`, `ShiftingCard`, `ShinyText`, `ShootingStars`,
+`SlideButton`, `SlideLinear`, `SlideText`, `Sparkles`, `SparklesText`, `Spotlight`,
+`SquaresGrid`, `StarBackground`, `TagCloud`, `TextClip`, `TextLoader`, `TextReveal`,
+`ThreeDCard`, `TypedText`, `TypeWriter` and `WordRotate`.
 
 Install the animation entry's optional peers before importing it:
 
 ```sh
-npm install motion@'>=12 <15' @react-spring/web@^10
+npm install motion@'>=12 <15' @react-spring/web@^10 @tsparticles/react@^4.4 @tsparticles/engine@^4.4 @tsparticles/slim@^4.4
 ```
 
 The group also uses the existing `framer-motion` peer (`>=12 <15`). `motion`
-and `@react-spring/web` are optional for other entries; the root entry remains
+and `@react-spring/web` plus the three `@tsparticles` peers are optional for other entries; the root entry remains
 separate. Import `@w.ui/wui-react/style.css` for CSS effects. Animation layout
 styles are packaged and do not require Tailwind.
 
@@ -235,3 +238,18 @@ and always provides a native button (`revealLabel`) for keyboard and reduced-mot
 users; reduced-motion users reveal without the completion animation. `MagicTrail`
 uses a canvas overlay, observes its size and DPR, and cancels listeners/frames on
 unmount. Its optional `containerRef` selects the pointer event owner.
+
+`TagCloud` accepts `items` and children; `TextClip` accepts `items`, `prefix`,
+`suffix` and children. Example labels are provided in stories. `SlideButton` uses
+native button attributes and keyboard behavior. `TypedText` and `TypeWriter`
+expose complete text to assistive technology while typing. `StarBackground`
+accepts count/color/container options and initializes random geometry after mount.
+`Sparkles` initializes its particle provider within the animation group and uses
+caller colors (transparent background and white particles by default).
+
+The animation entry uses a native dynamic import for `@tsparticles/slim` when
+`Sparkles` mounts. This avoids the upstream 4.4 CommonJS wrapper; Node 22+/24+
+and modern browsers support this import form. Application bundlers resolve the
+optional package when bundling the animation entry. Server rendering does not
+initialize particles. The provider catches initialization failures, and ignores
+completion after unmount; its particle container is destroyed on teardown.

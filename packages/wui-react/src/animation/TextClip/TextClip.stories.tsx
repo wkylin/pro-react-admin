@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import Component from './index'
 
 const meta = {
-  title: 'Components/Stateless/ShiftingCard',
+  title: 'Components/Stateless/TextClip',
   component: Component,
   tags: ['autodocs'],
   decorators: [
@@ -12,7 +12,11 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: {
+    prefix: 'Trending',
+    items: ['Bootstrap', 'React', 'Vue', 'Angular', 'Django', 'Flask', 'Laravel', 'UI Kit', 'Freebies'],
+    suffix: 'Templates',
+  },
 } satisfies Meta<typeof Component>
 
 export default meta
