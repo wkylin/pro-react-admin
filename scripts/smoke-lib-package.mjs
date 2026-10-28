@@ -129,6 +129,58 @@ async function assertConsumerTypes() {
   }
 }
 
+async function assertPdfPeerFreeTypes() {
+  const require = createRequire(import.meta.url)
+  const ts = require('typescript')
+  const fixture = path.join(consumerDir, 'without-pdf-peers.mts')
+  await fs.writeFile(
+    fixture,
+    `import {NumberViewCard} from '${libraryPackageName}/data-display'\nNumberViewCard({value: 42, label: 'Independent metric'})`
+  )
+  const options = {
+    strict: true,
+    noEmit: true,
+    skipLibCheck: false,
+    types: [],
+    module: ts.ModuleKind.Preserve,
+    moduleResolution: ts.ModuleResolutionKind.Bundler,
+    target: ts.ScriptTarget.ES2022,
+    jsx: ts.JsxEmit.ReactJSX,
+  }
+  const host = ts.createCompilerHost(options)
+  host.resolveModuleNames = (names, containingFile) =>
+    names.map((name) =>
+      /^(jspdf|html2canvas)(\/|$)/.test(name)
+        ? undefined
+        : ts.resolveModuleName(name, containingFile, options, host).resolvedModule
+    )
+  const program = ts.createProgram([fixture], options, host)
+  // These two pre-existing Ant Design dependency declarations fail strict checking
+  // independently of this package. Do not suppress other codes/files or package diagnostics.
+  const upstreamFiles = [
+    '/node_modules/@rc-component/image/es/PreviewGroup.d.ts',
+    '/node_modules/@rc-component/picker/es/PickerPanel/index.d.ts',
+  ]
+  const allDiagnostics = ts.getPreEmitDiagnostics(program)
+  const diagnostics = allDiagnostics.filter(
+    (diagnostic) =>
+      !(
+        diagnostic.code === 2430 &&
+        upstreamFiles.some((file) => diagnostic.file?.fileName.replaceAll(path.sep, '/').endsWith(file))
+      )
+  )
+  const baselineCount = allDiagnostics.length - diagnostics.length
+  log(`Strict PDF-peer-free declaration consumer: ${baselineCount} known upstream TS2430 diagnostics baselined.`)
+  if (diagnostics.length)
+    throw new Error(
+      ts.formatDiagnosticsWithColorAndContext(diagnostics, {
+        getCanonicalFileName: (name) => name,
+        getCurrentDirectory: () => consumerDir,
+        getNewLine: () => '\n',
+      })
+    )
+}
+
 try {
   await fs.mkdir(path.dirname(packageLink), { recursive: true })
   await fs.symlink(packageDir, packageLink, process.platform === 'win32' ? 'junction' : 'dir')
@@ -250,6 +302,7 @@ try {
   const cjsResult = runNode('CJS', ['--eval', cjsScript])
   assertResult('ESM', esmResult)
   assertResult('CJS', cjsResult)
+  await assertPdfPeerFreeTypes()
   await assertConsumerTypes()
   if (layoutRender) {
     const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')

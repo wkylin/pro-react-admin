@@ -142,7 +142,10 @@ import '@w.ui/wui-react/style.css'
 ```
 
 TreeList calls `getTreeList(params, signal)` and aborts/ignores replaced or unmounted
-requests; existing one-argument loaders remain supported. UserIP takes `data` or
+requests; existing one-argument loaders remain supported. Plain `params` objects
+and arrays are compared by value, so inline loader/params props do not reload on
+parent renders. Change `queryKey` (or call the ref's `updateTree`) to reload when
+query context outside `params` changes. UserIP takes `data` or
 `loadInfo(signal)`, plus caller labels, and never contacts a built-in endpoint.
 TransferHistory takes typed groups, companies and records; `renderTitle`,
 `renderLabel` and `renderRatio` customize content. TagCard takes theme/tokens, icons
@@ -151,7 +154,9 @@ ClockFace accepts `locale`, `hour12` or `formatTime`; placeholders are determini
 Exception variants expose action/children slots; routing belongs to the caller.
 
 PDFExport takes children or a `contentRef`, `fileName`, `pdfOptions`, `scale`,
-`onComplete` and `onError`. Install its lazy optional peers before exporting:
+`onComplete` and `onError`. `pdfOptions` uses the package-owned `PDFDocumentOptions`
+type, so other data-display consumers do not need PDF peers for typechecking.
+Install its lazy optional peers before exporting:
 
 ```sh
 npm install html2canvas@^1.4.1 jspdf@^4.2.1
@@ -176,4 +181,5 @@ useEffect(() => Watermark({ container: element, content: 'Confidential' }), [ele
 
 Its returned disposer removes the watermark and disconnects its observer. Calling
 it outside a browser returns a no-op disposer. Copy helpers expose failure callbacks
-and cancel pending copied-state timers when unmounted.
+and cancel pending copied-state timers when unmounted. CopyToClipboard invokes
+the supplied native `onClick` first; `event.preventDefault()` cancels copying.

@@ -214,6 +214,7 @@ export const libraryGroups = Object.freeze([
       'LoadingProps',
       'NumberViewCardProps',
       'PDFExportProps',
+      'PDFDocumentOptions',
       'SkeletonFixProps',
       'StaticStepProps',
       'CodeContainerProps',

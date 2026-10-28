@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
-import { createRef } from 'react'
+import { createRef, useState } from 'react'
 import TreeList, { type TreeListRef, type TreeListResponse } from './TreeList'
 import UserIP, { type UserIPData } from './UserIP'
 import SvgPreview from './SvgPreview'
@@ -184,4 +184,72 @@ test('ClockFace formats midnight and noon in 12-hour mode', () => {
   expect(screen.getByText('12:00:01')).toBeInTheDocument()
   unmount()
   expect(jest.getTimerCount()).toBe(0)
+})
+
+test('TreeList ignores inline loader/params identities in a controlled parent but reloads changed query values', async () => {
+  const requests = jest.fn(async (_params: Record<string, unknown>, _signal: AbortSignal) => {
+    // Keep the old implementation's reload loop bounded so this regression fails promptly.
+    if (requests.mock.calls.length > 5) return new Promise<TreeListResponse>(() => {})
+    return { status: 1, data: [{ id: 'root', pid: null, name: 'Root' }] }
+  })
+  function Controlled({ region }: { region: string }) {
+    const [keys, setKeys] = useState<string[]>([])
+    const [count, setCount] = useState(0)
+    return (
+      <>
+        <button onClick={() => setCount((value) => value + 1)}>Parent render {count}</button>
+        <TreeList
+          selectedKeys={keys}
+          setSelectedKeys={(next) => setKeys(next)}
+          selectable
+          params={{ filter: { region }, ids: [1, 2] }}
+          getTreeList={(params, signal) => requests(params, signal)}
+        />
+      </>
+    )
+  }
+  const { rerender } = render(<Controlled region="north" />)
+  await act(async () => {})
+  expect(requests).toHaveBeenCalledTimes(1)
+  await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Parent render 0' })))
+  expect(requests).toHaveBeenCalledTimes(1)
+  rerender(<Controlled region="south" />)
+  await act(async () => {})
+  expect(requests).toHaveBeenCalledTimes(2)
+  expect(requests.mock.calls[1][0]).toEqual({ filter: { region: 'south' }, ids: [1, 2] })
+})
+
+test('CopyToClipboard composes the native click handler and respects preventDefault', async () => {
+  const writeText = jest.fn().mockResolvedValue(undefined)
+  Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
+  const onClick = jest.fn()
+  const onCopy = jest.fn()
+  const { rerender } = render(<CopyToClipboard code="copy me" onClick={onClick} onCopy={onCopy} />)
+  await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Copy' })))
+  expect(onClick).toHaveBeenCalledTimes(1)
+  expect(writeText).toHaveBeenCalledWith('copy me')
+  expect(onCopy).toHaveBeenCalledTimes(1)
+  rerender(<CopyToClipboard code="cancelled" onClick={(event) => event.preventDefault()} />)
+  await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Copied' })))
+  expect(writeText).toHaveBeenCalledTimes(1)
+})
+
+test('TreeList refresh uses the current loader and explicit queryKey invalidation', async () => {
+  const ref = createRef<TreeListRef>()
+  const first = jest.fn().mockResolvedValue({ status: 1, data: [] })
+  const second = jest.fn().mockResolvedValue({ status: 1, data: [] })
+  const selected = jest.fn()
+  const { rerender } = render(
+    <TreeList ref={ref} getTreeList={first} setSelectedKeys={selected} params={{}} queryKey="one" />
+  )
+  await act(async () => {})
+  expect(first).toHaveBeenCalledTimes(1)
+  rerender(<TreeList ref={ref} getTreeList={second} setSelectedKeys={selected} params={{}} queryKey="one" />)
+  await act(async () => {})
+  expect(second).not.toHaveBeenCalled()
+  await act(async () => ref.current!.updateTree())
+  expect(second).toHaveBeenCalledTimes(1)
+  rerender(<TreeList ref={ref} getTreeList={second} setSelectedKeys={selected} params={{}} queryKey="two" />)
+  await act(async () => {})
+  expect(second).toHaveBeenCalledTimes(2)
 })

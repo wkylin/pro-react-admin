@@ -1,14 +1,31 @@
 import { loadPdfTools } from './load'
 import { useEffect, useRef, useState, type ReactNode, type RefObject } from 'react'
-import type { jsPDFOptions } from 'jspdf'
 import AnimatedIcon from '../../AnimatedIcon'
 import { Download } from 'lucide-react'
 import styles from '../display.module.less'
+/** Package-owned options keep unrelated group consumers independent of PDF peer types. */
+export interface PDFDocumentOptions {
+  orientation?: 'p' | 'portrait' | 'l' | 'landscape'
+  unit?: 'pt' | 'px' | 'in' | 'mm' | 'cm' | 'ex' | 'em' | 'pc'
+  format?: string | number[]
+  compress?: boolean
+  precision?: number
+  filters?: string[]
+  userUnit?: number
+  encryption?: {
+    userPassword?: string
+    ownerPassword?: string
+    userPermissions?: ('print' | 'modify' | 'copy' | 'annot-forms')[]
+  }
+  putOnlyUsedFonts?: boolean
+  hotfixes?: string[]
+  floatPrecision?: number | 'smart'
+}
 export interface PDFExportProps {
   children?: ReactNode
   contentRef?: RefObject<HTMLElement | null>
   fileName?: string
-  pdfOptions?: jsPDFOptions
+  pdfOptions?: PDFDocumentOptions
   scale?: number
   label?: string
   onError?: (error: unknown) => void

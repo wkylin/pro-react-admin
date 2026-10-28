@@ -18,6 +18,31 @@ const { Search } = Input
 const EMPTY_PARAMS: Record<string, unknown> = {}
 export type { TreeListItem, TreeListNode, TreeDisplayNode, TreeKey, DefaultTreeKeys } from './utils'
 
+// Inline plain query data is common in controlled parents. Compare its values,
+// while non-data instances retain identity semantics. The map also handles cycles.
+function equalQueryValue(left: unknown, right: unknown, seen = new WeakMap<object, object>()): boolean {
+  if (Object.is(left, right)) return true
+  if (!left || !right || typeof left !== 'object' || typeof right !== 'object') return false
+  if (left instanceof Date && right instanceof Date) return left.getTime() === right.getTime()
+  if (Object.getPrototypeOf(left) !== Object.getPrototypeOf(right)) return false
+  if (!Array.isArray(left) && Object.getPrototypeOf(left) !== Object.prototype && Object.getPrototypeOf(left) !== null)
+    return false
+  if (seen.has(left)) return seen.get(left) === right
+  seen.set(left, right)
+  if (Array.isArray(left) && Array.isArray(right) && left.length !== right.length) return false
+  const leftRecord = left as Record<string, unknown>
+  const rightRecord = right as Record<string, unknown>
+  const keys = Object.keys(leftRecord)
+  return (
+    keys.length === Object.keys(rightRecord).length &&
+    keys.every(
+      (key) =>
+        Object.prototype.hasOwnProperty.call(rightRecord, key) &&
+        equalQueryValue(leftRecord[key], rightRecord[key], seen)
+    )
+  )
+}
+
 type TreeSelectHandler = NonNullable<TreeProps<TreeDisplayNode>['onSelect']>
 type TreeExpandHandler = NonNullable<TreeProps<TreeDisplayNode>['onExpand']>
 export type TreeSelectInfo = Parameters<TreeSelectHandler>[1]
@@ -35,7 +60,10 @@ export interface TreeListProps {
   selectedKeys?: TreeKey[]
   setSelectedKeys: (keys: TreeKey[], info?: TreeSelectInfo) => void
   selectable?: boolean
+  /** Plain objects/arrays are compared by value before reloading. */
   params?: Record<string, unknown>
+  /** Change to reload when query context outside params changes. */
+  queryKey?: string | number
 }
 
 export interface TreeListRef {
@@ -57,6 +85,7 @@ const Index = forwardRef<TreeListRef, TreeListProps>(
       setSelectedKeys,
       selectable = false,
       params = EMPTY_PARAMS,
+      queryKey,
       onError,
       searchLabel = 'Search',
     },
@@ -173,12 +202,15 @@ const Index = forwardRef<TreeListRef, TreeListProps>(
         })
     }
     const updateTree = () => getTreeListData()
+    const stableParams = useRef(params)
+    if (!equalQueryValue(stableParams.current, params)) stableParams.current = params
+    const queryParams = stableParams.current
     const loader = useRef(getTreeListData)
     loader.current = getTreeListData
     useEffect(() => {
       loader.current()
       return () => activeRequest.current?.abort()
-    }, [getTreeList, params])
+    }, [queryParams, queryKey])
 
     useImperativeHandle(ref, () => ({
       reset,

@@ -17,6 +17,7 @@ export default function CopyToClipboard({
   isCopiedDelay,
   onError,
   onCopy,
+  onClick,
   className = '',
   ...props
 }: CopyToClipboardProps) {
@@ -28,7 +29,9 @@ export default function CopyToClipboard({
       aria-label={copied ? copiedLabel : label}
       title={copied ? copiedLabel : label}
       className={`${styles.copy} ${className}`}
-      onClick={async () => {
+      onClick={async (event) => {
+        onClick?.(event)
+        if (event.defaultPrevented) return
         if (await copy(code)) onCopy?.()
       }}
     >
