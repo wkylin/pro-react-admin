@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { children: 'Shifting Card' },
+  args: { children: 'Shifting Card', style: { backgroundImage: 'url(https://picsum.photos/id/1018/480/720)' } },
 } satisfies Meta<typeof Component>
 
 export default meta

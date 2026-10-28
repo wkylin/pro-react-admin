@@ -1,6 +1,6 @@
 import styles from './index.module.less'
 import React, { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export interface Testimonial {
   text: string

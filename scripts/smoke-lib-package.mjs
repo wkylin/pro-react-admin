@@ -393,11 +393,43 @@ try {
     }
   }
 
+  // A media-only consumer installs documented media peers, not animation's motion package.
   if (mediaRender) {
+    const blocker = path.join(consumerDir, 'without-motion.mjs')
+    await fs.writeFile(
+      blocker,
+      `import { registerHooks } from 'node:module'
+registerHooks({ resolve(specifier, context, nextResolve) {
+  if (specifier === 'motion' || specifier.startsWith('motion/')) throw new Error('Undocumented media peer: ' + specifier)
+  return nextResolve(specifier, context)
+} })
+`
+    )
+    for (const format of ['module', 'commonjs']) {
+      const load =
+        format === 'module'
+          ? `import { TestimonialCarousel } from '${libraryPackageName}/media'; import { createElement } from 'react'; import { renderToStaticMarkup } from 'react-dom/server';`
+          : `const { TestimonialCarousel } = require('${libraryPackageName}/media'); const { createElement } = require('react'); const { renderToStaticMarkup } = require('react-dom/server');`
+      runNode(`media without motion (${format})`, [
+        '--import',
+        blocker,
+        '--input-type=' + format,
+        '-e',
+        load +
+          `
+const html = renderToStaticMarkup(createElement(TestimonialCarousel, {items:[{text:'Media peer contract',author:'Caller'}]}))
+if (!html.includes('Media peer contract')) throw new Error('Media SSR lost caller content')
+console.log(JSON.stringify({ok:true}))`,
+      ])
+    }
     const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
     for (const token of ['playlist', 'compare', '--svp-settings-top', 'repeating-radial-gradient']) {
       if (!css.includes(token)) throw new Error('Independent media stylesheet is missing ' + token)
     }
+  }
+
+  if ((await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')).includes('picsum.photos')) {
+    throw new Error('Published stylesheet contains a fixed ShiftingCard demo image')
   }
 
   if (formsRender) {

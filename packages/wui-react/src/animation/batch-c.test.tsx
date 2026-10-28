@@ -134,12 +134,15 @@ test('ThreeDCard uses synchronous batched events without queued frames', () => {
 })
 
 test('ShiftingCard cleans listeners and uses viewport coordinates', () => {
-  const view = render(<ShiftingCard>Custom content</ShiftingCard>)
+  const view = render(
+    <ShiftingCard style={{ backgroundImage: 'url("/caller-card.png")' }}>Custom content</ShiftingCard>
+  )
   const card = view.container.firstElementChild as HTMLElement
   const remove = jest.spyOn(card, 'removeEventListener')
   fireEvent.mouseMove(card, { clientX: 120, clientY: 180 })
   expect(card.style.getPropertyValue('--dx')).toBe('0')
   expect(card.textContent).toBe('Custom content')
+  expect(card.style.backgroundImage).toBe('url("/caller-card.png")')
   view.unmount()
   expect(remove).toHaveBeenCalledWith('mousemove', expect.any(Function))
   expect(remove).toHaveBeenCalledWith('mouseleave', expect.any(Function))

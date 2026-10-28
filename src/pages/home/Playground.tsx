@@ -796,7 +796,7 @@ const Home = () => {
         </div>
       </section>
       {/* <section style={{ marginBottom: 40 }}>
-        <ShiftingCard />
+        <ShiftingCard style={{ backgroundImage: 'url(https://picsum.photos/id/1018/480/720)' }} />
       </section> */}
       {/* <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
