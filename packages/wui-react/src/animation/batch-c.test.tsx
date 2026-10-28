@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
 import { hydrateRoot } from 'react-dom/client'
 import TypedText from './TypedText'
+import TextReveal from './TextReveal'
+import Spotlight from './Spotlight'
 import TypeWriter from './TypeWriter'
 import SlideButton from './SlideButton'
 import SparklesText from './SparklesText'
@@ -24,11 +26,13 @@ afterEach(() => {
 test('TypedText resets on input changes, completes and clears timers', () => {
   jest.useFakeTimers()
   const view = render(<TypedText delay={10}>Hello</TypedText>)
-  expect(screen.getByLabelText('Hello')).toBeInTheDocument()
+  expect(screen.getByText('Hello').closest('[aria-hidden]')).toBeNull()
+  expect(screen.getByText('Hello')).toHaveClass('wui-animation-complete-text')
+  expect(screen.getByText('Hello').firstChild?.nodeType).toBe(Node.TEXT_NODE)
   act(() => jest.advanceTimersByTime(20))
   expect(view.container.textContent).toContain('He')
   view.rerender(<TypedText delay={10}>New</TypedText>)
-  expect(view.container.textContent).toBe('|')
+  expect(view.container.querySelector('[aria-hidden="true"]')?.textContent).toBe('|')
   act(() => jest.advanceTimersByTime(30))
   expect(view.container.textContent).toContain('New')
   expect(jest.getTimerCount()).toBe(0)
@@ -63,10 +67,12 @@ test('empty animation lists do not create timers and changed lists stay valid', 
 test('TypeWriter exposes complete text and resets when text changes', () => {
   jest.useFakeTimers()
   const view = render(<TypeWriter text="Complete sentence" speed={10} showCursor={false} />)
-  expect(screen.getByLabelText('Complete sentence')).toBeInTheDocument()
+  expect(screen.getByText('Complete sentence').closest('[aria-hidden]')).toBeNull()
+  expect(screen.getByText('Complete sentence')).toHaveClass('wui-animation-complete-text')
+  expect(screen.getByText('Complete sentence').firstChild?.nodeType).toBe(Node.TEXT_NODE)
   act(() => jest.advanceTimersByTime(10))
   view.rerender(<TypeWriter text="Replacement" speed={10} showCursor={false} />)
-  expect(screen.getByLabelText('Replacement')).toBeInTheDocument()
+  expect(screen.getByText('Replacement').closest('[aria-hidden]')).toBeNull()
   view.unmount()
   act(() => jest.runOnlyPendingTimers())
   expect(jest.getTimerCount()).toBe(0)
@@ -159,4 +165,45 @@ test('SquaresGrid cancels canvas frame and resize observer on unmount', () => {
   expect(disconnect).toHaveBeenCalledTimes(1)
   expect(cancel).toHaveBeenCalledWith(123)
   globalThis.ResizeObserver = original
+})
+
+test('TextReveal exposes one complete ordinary text node before hidden visual words', () => {
+  const view = render(<TextReveal text="A complete readable sentence" />)
+  const text = screen.getByText('A complete readable sentence')
+  expect(text.closest('[aria-hidden]')).toBeNull()
+  expect(text).toHaveClass('wui-animation-complete-text')
+  expect(text.firstChild?.nodeType).toBe(Node.TEXT_NODE)
+  expect(text.parentElement?.firstElementChild).toBe(text)
+  expect(view.container.querySelectorAll('[aria-label]')).toHaveLength(0)
+  expect(view.container.querySelector('[class*="xl:lg-3"]')).toBeNull()
+  expect(view.container.querySelectorAll('p > [aria-hidden="true"]')).toHaveLength(4)
+})
+
+test('Spotlight composes all caller mouse and focus handlers with its effect', () => {
+  const handlers = {
+    onMouseMove: jest.fn(),
+    onFocus: jest.fn(),
+    onBlur: jest.fn(),
+    onMouseEnter: jest.fn(),
+    onMouseLeave: jest.fn(),
+  }
+  const view = render(
+    <Spotlight {...handlers} data-testid="spotlight">
+      <button>Child</button>
+    </Spotlight>
+  )
+  const card = screen.getByTestId('spotlight')
+  jest.spyOn(card, 'getBoundingClientRect').mockReturnValue({ left: 10, top: 20 } as DOMRect)
+  const layer = card.firstElementChild as HTMLElement
+  fireEvent.mouseEnter(card)
+  expect(layer.style.opacity).toBe('1')
+  fireEvent.mouseMove(card, { clientX: 40, clientY: 70 })
+  expect(layer.style.background).toContain('30px 50px')
+  fireEvent.focus(screen.getByRole('button'))
+  expect(layer.style.opacity).toBe('1')
+  fireEvent.blur(screen.getByRole('button'))
+  expect(layer.style.opacity).toBe('0')
+  fireEvent.mouseLeave(card)
+  for (const handler of Object.values(handlers)) expect(handler).toHaveBeenCalledTimes(1)
+  expect(view.container.textContent).toBe('Child')
 })

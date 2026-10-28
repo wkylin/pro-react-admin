@@ -244,6 +244,7 @@ export const libraryGroups = Object.freeze([
       'TagCloudProps',
       'TextClipProps',
       'TextLoaderProps',
+      'LoadingTextProps',
       'TextRevealProps',
       'ThreeDCardProps',
       'TypedTextProps',

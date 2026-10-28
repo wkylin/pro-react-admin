@@ -26,6 +26,9 @@ const ruleHas = (selector, property, value) => {
 }
 ruleHas('.wui-scroll-strip', 'display', 'inline-block')
 ruleHas('.wui-slide-button', 'position', 'relative')
+ruleHas('.wui-animation-complete-text', 'position', 'absolute')
+ruleHas('.wui-animation-complete-text', 'width', '1px')
+ruleHas('.wui-animation-complete-text', 'overflow', 'hidden')
 ruleHas('.wui-magic-trail', 'pointer-events', 'none')
 ruleHas('.wui-meteors', 'transform', 'rotate(-45deg)')
 ruleHas('.wui-mouse-trail > .wui-mouse-trail-image', 'object-fit', 'cover')
@@ -66,6 +69,11 @@ const html = renderToString(
   )
 )
 assert.match(html, /Standalone/)
+assert.ok(
+  html.includes('<span class="wui-animation-complete-text">Accessible complete text</span>'),
+  'SSR must expose a complete ordinary text node'
+)
+assert.ok(!html.includes('aria-label="Accessible complete text"'))
 assert.equal(resolves, 0, 'SSR must not load slim')
 const { JSDOM } = createRequire(require.resolve('jest-environment-jsdom'))('jsdom')
 const dom = new JSDOM('<!doctype html><html><body><div id="root"></div></body></html>', { url: 'http://localhost/' })

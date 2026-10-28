@@ -6,7 +6,17 @@ import styles from './index.module.less'
 export type SpotlightProps = React.HTMLAttributes<HTMLElement> & {
   style?: React.CSSProperties & Record<`--${string}`, string | number>
 }
-const SpotlightCard = ({ className, style, children, ...props }: SpotlightProps) => {
+const SpotlightCard = ({
+  className,
+  style,
+  children,
+  onMouseMove,
+  onFocus,
+  onBlur,
+  onMouseEnter,
+  onMouseLeave,
+  ...props
+}: SpotlightProps) => {
   const divRef = useRef<HTMLElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -43,11 +53,26 @@ const SpotlightCard = ({ className, style, children, ...props }: SpotlightProps)
     <section
       {...props}
       ref={divRef}
-      onMouseMove={handleMouseMove}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={(event) => {
+        handleMouseMove(event)
+        onMouseMove?.(event)
+      }}
+      onFocus={(event) => {
+        handleFocus()
+        onFocus?.(event)
+      }}
+      onBlur={(event) => {
+        handleBlur()
+        onBlur?.(event)
+      }}
+      onMouseEnter={(event) => {
+        handleMouseEnter()
+        onMouseEnter?.(event)
+      }}
+      onMouseLeave={(event) => {
+        handleMouseLeave()
+        onMouseLeave?.(event)
+      }}
       className={`${styles.cardEffect} ${className}`}
       style={{
         ...style,

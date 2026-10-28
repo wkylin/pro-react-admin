@@ -23,7 +23,8 @@ const TypedText = ({ children, delay = 110 }: TypedTextProps) => {
     return () => clearInterval(timer)
   }, [children, delay])
   return (
-    <span aria-label={children}>
+    <span>
+      <span className="wui-animation-complete-text">{children}</span>
       <span aria-hidden="true">
         {children.substring(0, revealedLetters)}
         <span className={styles.typedCursorBlink}>|</span>

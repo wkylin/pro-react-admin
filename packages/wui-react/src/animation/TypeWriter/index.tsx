@@ -103,7 +103,8 @@ const TypeWriter = ({
   }, [currentIndex, displayText, isDeleting, speed, deleteSpeed, waitTime, texts, currentTextIndex, loop, initialDelay])
 
   return (
-    <div aria-label={texts.join(' ')} className={`wui-type-writer ${className || ''}`}>
+    <div className={`wui-type-writer ${className || ''}`}>
+      <span className="wui-animation-complete-text">{texts.join(' ')}</span>
       <span aria-hidden="true">{displayText}</span>
       {showCursor && (
         <motion.span

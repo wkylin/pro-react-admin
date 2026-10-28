@@ -34,11 +34,11 @@ const TextReveal = forwardRef<HTMLElement, TextRevealProps>(({ text, className }
         }
       >
         <p
-          aria-label={text}
           className={
             'wui-c-60fbb771 wui-c-1eb5c6df wui-c-c07e54fd wui-c-3febee09 wui-c-69450ef1 wui-c-bb71c00c wui-c-0e69a2e2 wui-c-c58992ca wui-c-00a16e4f wui-c-0c5d3369 wui-c-4adefb10 wui-c-6d6c81fa'
           }
         >
+          <span className="wui-animation-complete-text">{text}</span>
           {words.map((word, i) => {
             const start = i / words.length
             const end = start + 1 / words.length
@@ -57,7 +57,7 @@ const TextReveal = forwardRef<HTMLElement, TextRevealProps>(({ text, className }
 const Word = ({ children, progress, range }: WordProps) => {
   const opacity = useTransform(progress, range, [0, 1])
   return (
-    <span aria-hidden="true" className="xl:lg-3 wui-c-d89972fe wui-c-0da48290 wui-c-49319c4e">
+    <span aria-hidden="true" className="wui-c-d89972fe wui-c-0da48290 wui-c-49319c4e">
       <span className="wui-c-da4dbfbc wui-c-78e6d0eb">{children}</span>
       <motion.span style={{ opacity: opacity }} className={'wui-c-d2a412c3 wui-c-889e4e87'}>
         {children}
