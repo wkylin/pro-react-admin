@@ -253,3 +253,81 @@ and modern browsers support this import form. Application bundlers resolve the
 optional package when bundling the animation entry. Server rendering does not
 initialize particles. The provider catches initialization failures, and ignores
 completion after unmount; its particle container is destroyed on teardown.
+
+### Media group
+
+Import media components and their prop types from `@w.ui/wui-react/media`.
+This group exports `AutoSlider`, `CompareAll`, `FixCarouse`, `FixMusicPlayer`,
+`InteractiveBook`, `LazyLoadImage`, `LogoSlider`, `MusicPlayer`,
+`SmartVideoPlayer`, `SoundBar`, `TestimonialCarousel` and `Video`.
+
+The media peers below are optional for consumers of the root or other groups.
+Install these compatible versions when using the media group:
+
+| Peer | Compatible range |
+| --- | --- |
+| `react-pdf` | `>=11.0.0 <12.0.0` |
+| `pdfjs-dist` | `>=6.3.289 <7.0.0` |
+| `video.js` | `>=8.24.1 <9.0.0` |
+| `hls.js` | `>=1.7.3 <2.0.0` |
+| `i18next` | `>=26.0.0 <27.0.0` |
+| `react-i18next` | `>=17.0.0 <18.0.0` |
+
+Import the package stylesheet once. `Video` additionally requires its peer's
+stylesheet in your **browser entry**; the media runtime deliberately does not
+import external CSS, so Node ESM/CJS and SSR imports remain valid:
+
+```tsx
+import '@w.ui/wui-react/style.css'
+import 'video.js/dist/video-js.css'
+import { Video, MusicPlayer } from '@w.ui/wui-react/media'
+```
+
+The layouts work without application Tailwind or theme styles. Supply your own
+`tracks` to the music players, `slides` to `AutoSlider`, `items` to the generic
+carousels, `{ src, alt }` companies to `LogoSlider`, and `src` to `SoundBar`.
+`MusicPlayer` and `FixMusicPlayer` accept `theme`, `labels`, playback callbacks,
+and `active`; temporarily setting `active={false}` pauses playback and restores
+previously playing audio on reactivation, while respecting explicit user pauses.
+`SmartVideoPlayer` provides scoped English/Chinese messages plus `language` and
+`labels` overrides, and loads HLS only for the corresponding media source.
+
+#### InteractiveBook PDF worker ownership
+
+`InteractiveBook` accepts `pdfWorker`, a caller-owned `pdfjs.PDFWorker` instance,
+or uses the host's existing PDF.js worker configuration. Create browser resources
+only in the browser (for example in an application effect), and use a worker file
+whose PDF.js version matches the runtime exported by `react-pdf`. A bundler that
+supports worker URLs can configure an explicit worker as follows:
+
+```tsx
+import { pdfjs } from 'react-pdf'
+import { InteractiveBook } from '@w.ui/wui-react/media'
+
+// Browser setup; keep these resources alive while their books are mounted.
+const port = new Worker(
+  new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url),
+  { type: 'module' }
+)
+const pdfWorker = new pdfjs.PDFWorker({ port })
+
+const book = (
+  <InteractiveBook
+    coverImage="/covers/manual.jpg"
+    pages={[]}
+    pdfUrl="/documents/manual.pdf"
+    pdfWorker={pdfWorker}
+    pageTurnSound="/audio/page-turn.mp3"
+  />
+)
+
+// Owner teardown after unmounting every book that uses this worker:
+pdfWorker.destroy()
+port.terminate()
+```
+
+The book cancels its render tasks and destroys document loading tasks; it does
+not own an injected worker. It makes no worker CDN choice and supplies no private
+audio. `pageTurnSound` is optional (`soundSrc` remains supported). The component
+requests exactly the supplied `pdfUrl`; applications and Storybook stories must
+resolve deployment base paths themselves, without relying on speculative retries.

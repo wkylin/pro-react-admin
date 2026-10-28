@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { clsx } from 'clsx'
 import { ChevronLeft, ChevronRight, RefreshCcw, Rotate3D, X, BookOpen } from 'lucide-react'
 import type { pdfjs } from 'react-pdf'
+import { loadPdfEngine } from './pdfEngine'
 import {
   BookBackCoverArtwork,
   BookCoverArtwork,
@@ -306,32 +307,6 @@ type PdfLoadState = {
 
 const PDF_PRELOAD_AHEAD = 2
 
-function buildPdfCandidates(originalUrl: string) {
-  const candidates = [originalUrl]
-  try {
-    if (typeof window !== 'undefined') {
-      const origin = window.location.origin || ''
-      const pathname = window.location.pathname || '/'
-      const storybookIndex = pathname.indexOf('/storybook')
-      if (storybookIndex !== -1) {
-        const base = pathname.substring(0, storybookIndex)
-        candidates.push(`${base}/storybook${originalUrl}`)
-        if (origin) candidates.push(`${origin}${base}/storybook${originalUrl}`)
-      } else {
-        const parts = pathname.split('/').filter(Boolean)
-        if (parts.length >= 2) {
-          const repoPrefix = `/${parts[0]}/${parts[1]}`
-          candidates.push(`${repoPrefix}/storybook${originalUrl}`)
-          if (origin) candidates.push(`${origin}${repoPrefix}/storybook${originalUrl}`)
-        }
-      }
-    }
-  } catch {
-    // Keep the original URL if the runtime location is unavailable.
-  }
-  return [...new Set(candidates)]
-}
-
 // Load PDF metadata once, then rasterize the visible pages and the next two pages on demand.
 function usePdfToImages(
   pdfUrl: string | undefined,
@@ -382,9 +357,9 @@ function usePdfToImages(
 
     const loadDocument = async () => {
       let lastError: unknown
-      for (const candidate of buildPdfCandidates(pdfUrl)) {
+      for (const candidate of [pdfUrl]) {
         if (cancelled) return
-        const { pdfjs: engine } = await import('react-pdf')
+        const engine = await loadPdfEngine()
         if (cancelled) return
         const task = engine.getDocument({ url: candidate, worker: pdfWorker })
         loadingTask = task
@@ -764,6 +739,11 @@ export default function InteractiveBook({
   const audioRef = useRef<HTMLAudioElement>(null)
   useEffect(() => {
     const audio = audioRef.current
+    const source = pageTurnSound || soundSrc
+    if (audio && source) {
+      audio.src = source
+      audio.load()
+    }
     return () => {
       audio?.pause()
       audio?.removeAttribute('src')

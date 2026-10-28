@@ -66,6 +66,7 @@ export default function MusicPlayer({
   callbacks.current = { onPlaybackChange, onError }
   const generation = useRef(0)
   const playIntent = useRef(false)
+  const pausedByDeactivate = useRef(false)
   const requestPlay = () => {
     const element = audio.current
     if (!element) return
@@ -97,8 +98,12 @@ export default function MusicPlayer({
   }, [track?.src])
   useEffect(() => {
     if (!active) {
-      playIntent.current = false
+      pausedByDeactivate.current = playIntent.current
+      // Keep the user intent separate from the pause event caused by hiding a tab.
       audio.current?.pause()
+    } else if (pausedByDeactivate.current) {
+      pausedByDeactivate.current = false
+      if (playIntent.current) requestPlay()
     }
   }, [active])
   const play = () => {

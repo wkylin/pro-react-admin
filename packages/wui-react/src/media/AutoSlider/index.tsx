@@ -50,8 +50,7 @@ const AutoSlider = ({
           let position = styles['nextSlide']
           if (personIndex === selected) {
             position = styles['activeSlide']
-          }
-          if (personIndex === selected - 1 || (selected === 0 && personIndex === people.length - 1)) {
+          } else if (personIndex === selected - 1 || (selected === 0 && personIndex === people.length - 1)) {
             position = styles['lastSlide']
           }
 
