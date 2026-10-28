@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom'
 import { useReducedMotion } from 'framer-motion'
 import { Input, Tag } from 'antd'
 import { BookOutlined, ReadOutlined, SearchOutlined, CloseOutlined } from '@ant-design/icons'
-import InteractiveBook, { type BookPage } from '@stateless/InteractiveBook'
-import { BookCover3D } from '@stateless/InteractiveBook/BookVolume'
+import InteractiveBook, { type BookPage } from '@/pages/mediaAdapters/InteractiveBook'
+import { BookCover3D } from '@wui/media/InteractiveBook/BookVolume'
 import styles from './index.module.less'
 
 // ─── 辅助函数：创建书页 ─────────────────────────────

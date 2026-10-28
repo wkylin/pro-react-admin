@@ -191,7 +191,13 @@
     "antd": ">=6.0.0 <7.0.0",
     "framer-motion": ">=12.0.0 <15.0.0",
     "react": ">=19.0.0 <20.0.0",
-    "react-dom": ">=19.0.0 <20.0.0"
+    "react-dom": ">=19.0.0 <20.0.0",
+    "react-pdf": ">=11.0.0 <12.0.0",
+    "pdfjs-dist": ">=6.3.289 <7.0.0",
+    "video.js": ">=8.24.1 <9.0.0",
+    "hls.js": ">=1.7.3 <2.0.0",
+    "i18next": ">=26.0.0 <27.0.0",
+    "react-i18next": ">=17.0.0 <18.0.0"
   },
   "peerDependenciesMeta": {
     "@tsparticles/react": {
@@ -231,6 +237,24 @@
       "optional": true
     },
     "remark-gfm": {
+      "optional": true
+    },
+    "react-pdf": {
+      "optional": true
+    },
+    "pdfjs-dist": {
+      "optional": true
+    },
+    "video.js": {
+      "optional": true
+    },
+    "hls.js": {
+      "optional": true
+    },
+    "i18next": {
+      "optional": true
+    },
+    "react-i18next": {
       "optional": true
     }
   }

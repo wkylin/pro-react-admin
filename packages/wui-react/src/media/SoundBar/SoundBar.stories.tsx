@@ -1,0 +1,22 @@
+import src from '@assets/audio/heart-of-the-sea.mp3'
+import type { Meta, StoryObj } from '@storybook/react'
+import Component from './index'
+
+const meta = {
+  title: 'Components/Stateless/SoundBar',
+  component: Component,
+  tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div style={{ position: 'relative', minHeight: 360, padding: 24, overflow: 'hidden' }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: { src },
+} satisfies Meta<typeof Component>
+
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const Default: Story = {}

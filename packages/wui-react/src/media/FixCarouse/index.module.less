@@ -1,0 +1,22 @@
+.carousel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  button {
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+}
+.items {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1rem;
+}
+.pages {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}

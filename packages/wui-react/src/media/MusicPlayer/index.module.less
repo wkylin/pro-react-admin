@@ -1,0 +1,54 @@
+.player {
+  max-width: 32rem;
+  padding: 1.5rem;
+  color: #17213a;
+  background: #f8fafc;
+  border-radius: 1rem;
+  font-family: sans-serif;
+  &[data-theme='dark'] {
+    color: #f8fafc;
+    background: #17213a;
+  }
+  input {
+    width: 100%;
+  }
+  button {
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    border: 1px solid #94a3b8;
+    border-radius: 0.5rem;
+    color: inherit;
+    background: transparent;
+  }
+  button:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+  button[aria-pressed='true'],
+  button[aria-current='true'] {
+    background: #2563eb;
+    color: white;
+  }
+}
+.cover {
+  width: 12rem;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: auto;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.playlist {
+  max-height: 20rem;
+  overflow: auto;
+  padding-left: 1.5rem;
+  li {
+    margin: 0.5rem 0;
+  }
+}

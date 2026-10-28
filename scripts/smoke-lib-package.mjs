@@ -245,6 +245,28 @@ try {
     }
     `
     : ''
+  const mediaRender = libraryGroups.find((entry) => entry.subpath === 'media')?.runtimeExports.includes('MusicPlayer')
+    ? `
+    const media = entryModules.media
+    const mediaMarkup = renderToStaticMarkup(createElement('div', null,
+      createElement(media.AutoSlider, {slides:[{id:'a',name:'Caller slide',image:'/slide.png'}]}),
+      createElement(media.CompareAll, {firstImage:'/first.png',secondImage:'/second.png',label:'Consumer comparison'}),
+      createElement(media.FixCarouse, {items:['Caller item'],renderItem:item=>item}),
+      createElement(media.FixMusicPlayer, {tracks:[]}),
+      createElement(media.InteractiveBook, {coverImage:'/cover.png',pages:[],bookTitle:'Consumer book'}),
+      createElement(media.LazyLoadImage, {src:'/photo.png',alt:'Consumer photograph',caption:'Caller caption'}),
+      createElement(media.LogoSlider, {companies:[]}),
+      createElement(media.MusicPlayer, {tracks:[{id:'a',title:'Caller song',src:'/song.mp3'}]}),
+      createElement(media.SmartVideoPlayer, {src:'/video.mp4',initialConfig:{autoPlay:false}}),
+      createElement(media.SoundBar, {src:'/sound.mp3',playLabel:'Consumer sound'}),
+      createElement(media.TestimonialCarousel, {items:[{text:'Caller quotation',author:'Caller author'}]}),
+      createElement(media.Video, {options:{sources:[]}})
+    ))
+    for (const content of ['Caller slide','Consumer comparison','Caller item','Caller caption','Caller song','Consumer sound','Caller quotation']) {
+      if (!mediaMarkup.includes(content)) throw new Error('Independent media SSR lost ' + content)
+    }
+  `
+    : ''
   const formsRender = libraryGroups.find((entry) => entry.subpath === 'forms')?.runtimeExports.includes('SmartChat')
     ? `
     const forms = entryModules.forms
@@ -303,6 +325,7 @@ try {
     ${layoutRender}
     ${animationRender}
     ${formsRender}
+    ${mediaRender}
     ${dataDisplayRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
@@ -332,6 +355,7 @@ try {
     ${layoutRender}
     ${animationRender}
     ${formsRender}
+    ${mediaRender}
     ${dataDisplayRender}
     process.stdout.write(JSON.stringify({
       rootExports: Object.keys(root),
@@ -357,8 +381,22 @@ try {
 
   if (libraryGroups.find((entry) => entry.subpath === 'animation')?.runtimeExports.includes('ScratchToReveal')) {
     const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
-    for (const token of ['.wui-magic-trail', '.wui-meteors', '.wui-scratch', '.wui-mouse-trail', '@keyframes wui-orbit', '@keyframes wui-meteor-blink']) {
+    for (const token of [
+      '.wui-magic-trail',
+      '.wui-meteors',
+      '.wui-scratch',
+      '.wui-mouse-trail',
+      '@keyframes wui-orbit',
+      '@keyframes wui-meteor-blink',
+    ]) {
       if (!css.includes(token)) throw new Error('Independent animation stylesheet is missing ' + token)
+    }
+  }
+
+  if (mediaRender) {
+    const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
+    for (const token of ['playlist', 'compare', '--svp-settings-top', 'repeating-radial-gradient']) {
+      if (!css.includes(token)) throw new Error('Independent media stylesheet is missing ' + token)
     }
   }
 

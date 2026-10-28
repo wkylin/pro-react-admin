@@ -3,7 +3,7 @@ import { flushSync } from 'react-dom'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import styles from './index.module.less'
 
-import SmartVideoPlayer, { type SmartVideoPlayerProps, type SmartVideoPlayerRef } from '@stateless/SmartVideoPlayer'
+import SmartVideoPlayer, { type SmartVideoPlayerProps, type SmartVideoPlayerRef } from '@wui/media/SmartVideoPlayer'
 
 import trailerSource from '@assets/video/trailer.mp4'
 

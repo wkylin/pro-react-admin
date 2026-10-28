@@ -51,7 +51,7 @@ type HeaderLayout = string
 // Only showcase apps compile the optional audio control and its media asset.
 const showcaseSoundBar =
   typeof __APP_ENV__ !== 'undefined' && (__APP_ENV__.PROJECT === 'default' || __APP_ENV__.PROJECT === 'projectA')
-const SoundBar = showcaseSoundBar ? React.lazy(() => import('@stateless/SoundBar')) : null
+const SoundBar = showcaseSoundBar ? React.lazy(() => import('@/pages/mediaAdapters/SoundBar')) : null
 type HeaderMenuItems = NonNullable<MenuProps['items']>
 type LastDeniedRef = { current: string | null }
 type SearchOpenSetter = Dispatch<SetStateAction<boolean>>

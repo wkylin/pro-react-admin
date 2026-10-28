@@ -1,5 +1,5 @@
 import FixTabPanel from '@shared/ui/FixTabPanel'
-import FixMusicPlayer from '@stateless/FixMusicPlayer'
+import FixMusicPlayer from '@/pages/mediaAdapters/FixMusicPlayer'
 
 const Music = () => {
   return (

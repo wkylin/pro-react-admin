@@ -1,0 +1,1198 @@
+.container {
+  --reading-paper: #faf9f5;
+  --reading-ink: #26354a;
+  --reading-muted: #7b8793;
+  --reading-rule: #dedfd9;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-inline: auto;
+  padding: 32px 60px 100px;
+  box-sizing: border-box;
+}
+
+.sizeProbe {
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--wui-bg-subtle);
+  border: 1px dashed var(--wui-border-strong);
+  border-radius: 8px;
+  color: var(--wui-text-secondary);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.bookViewport {
+  position: relative;
+  flex: none;
+  perspective: 1800px;
+  perspective-origin: 50% 40%;
+}
+
+.bookWrapper {
+  --book-openness: 0;
+  --book-side: 0;
+
+  position: relative;
+  transform-style: preserve-3d;
+  transform-origin: calc(75% - 50% * var(--book-side)) center calc(var(--book-depth) / -2);
+  transform: translateX(calc(var(--page-width) / -2 * (1 - var(--book-openness)) * (1 - 2 * var(--book-side))))
+    rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) * (1 - var(--book-openness))))
+    rotateY(
+      calc(
+        var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))) * (1 - var(--book-openness)) *
+          (1 - 2 * var(--book-side))
+      )
+    );
+  transition: transform 0.65s cubic-bezier(0.2, 0.75, 0.25, 1);
+
+  &:not(.open, [data-cover-turning], [data-book-animating]):hover,
+  &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
+    transform: translateX(calc(var(--page-width) / -2)) translateY(-4px)
+      rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) / 2))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+  }
+
+  &[data-view-dragging='true'] {
+    transition: none;
+  }
+
+  &[data-book-animating] {
+    transition: none;
+  }
+
+  &[data-cover-turning] {
+    /* Fade the print, keeping an opaque paper surface beneath the closing cover. */
+    .sheet:global(.--simple) .pageLayout {
+      opacity: clamp(0, calc((var(--book-openness) - 0.35) / 0.4), 1);
+    }
+
+    /* The paper gutter gradient supplies contact shading during cover turns. */
+    :global(.bookFlipShadow) {
+      visibility: hidden;
+    }
+
+    /* Round static sheets under the cover without cutting a spine gap. */
+    .sheet:global(.--simple.--left),
+    .sheet[data-density='soft']:global(.--left) {
+      clip-path: inset(0 round 0 6px 6px 0) !important;
+    }
+
+    .sheet:global(.--simple.--right),
+    .sheet[data-density='soft']:global(.--right) {
+      clip-path: inset(0 round 6px 0 0 6px) !important;
+    }
+  }
+
+  &.turnoverHidden {
+    visibility: hidden;
+    transition: none;
+  }
+}
+
+.flipHost {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+
+  :global(.bookFlipStage) {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 2000px;
+    transform-style: preserve-3d;
+  }
+
+  :global(.bookFlipSoftActive) {
+    clip-path: inset(0);
+  }
+
+  :global(.bookFlipShadowMask) {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :global(.bookFlipShadow) {
+    position: absolute;
+    z-index: 8;
+    display: none;
+    pointer-events: none;
+  }
+
+  :global(.bookFlipContent) {
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.bookFlipMirrorContent > .bookFlipContent) {
+    transform: scaleX(-1);
+  }
+}
+
+.closedVolume {
+  position: absolute;
+  top: 0;
+  right: calc(var(--page-width) * var(--book-side));
+  width: var(--page-width);
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: translateZ(calc(-1 * var(--book-depth))) scaleX(calc(1 - 2 * var(--book-side)));
+
+  /* Reveal the volume near closure so its inset edges do not ghost through the paper. */
+  opacity: clamp(0, calc((0.12 - var(--book-openness)) / 0.12), 1);
+  pointer-events: none;
+}
+
+.volumeBackBoard {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px 4px 4px 6px;
+  background: var(--book-color);
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+.volumeBackArtwork {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.volumeBackArtworkFlipped {
+  transform: scaleX(-1);
+}
+
+.bindingSpine {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  /* The side panel tucks under the front board so the lower corner has no exposed seam. */
+  width: calc(var(--book-depth) + 7px);
+  height: 100%;
+  transform-origin: left center;
+  transform: rotateY(-90deg) translateX(-3px);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px rgb(255 255 255 / 18%),
+    inset 1px 0 4px rgb(255 255 255 / 16%),
+    inset -2px 0 5px rgb(0 0 0 / 30%),
+    inset 0 -1px rgb(0 0 0 / 28%);
+  backface-visibility: hidden;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 28%), transparent 35%, rgb(255 255 255 / 14%) 75%, rgb(0 0 0 / 22%)),
+    var(--spine-color, var(--book-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &[data-cover-style='classic'],
+  &[data-cover-style='leather'] {
+    --spine-ink: #f1e4bc;
+    --spine-accent: #d2ae62;
+  }
+
+  &[data-cover-style='golden-jacket'] {
+    --spine-ink: #842c2e;
+    --spine-accent: #8c3030;
+
+    background:
+      linear-gradient(
+        90deg,
+        rgb(111 55 0 / 24%),
+        rgb(255 230 133 / 48%) 34%,
+        rgb(255 230 133 / 20%) 66%,
+        rgb(111 55 0 / 28%)
+      ),
+      var(--spine-color, var(--book-color));
+  }
+
+  &[data-cover-style='editorial-orange'] {
+    --spine-ink: #4b2b29;
+    --spine-accent: #ef5b25;
+
+    background:
+      repeating-linear-gradient(90deg, rgb(70 53 50 / 4%) 0 1px, transparent 1px 4px),
+      linear-gradient(90deg, rgb(0 0 0 / 12%), transparent 32%, rgb(255 255 255 / 55%) 72%, rgb(0 0 0 / 10%)),
+      var(--spine-color, var(--book-color));
+  }
+
+  &[data-cover-style='classic']::before,
+  &[data-cover-style='classic']::after,
+  &[data-cover-style='leather']::before,
+  &[data-cover-style='leather']::after,
+  &[data-cover-style='golden-jacket']::before,
+  &[data-cover-style='golden-jacket']::after,
+  &[data-cover-style='editorial-orange']::before,
+  &[data-cover-style='editorial-orange']::after {
+    content: '';
+    position: absolute;
+    right: 3px;
+    left: 3px;
+    height: 8px;
+    border-block: 1px solid var(--spine-accent-override, var(--spine-accent));
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 12%), transparent);
+  }
+
+  &[data-cover-style='classic']::before,
+  &[data-cover-style='leather']::before,
+  &[data-cover-style='golden-jacket']::before {
+    top: 9%;
+  }
+
+  &[data-cover-style='editorial-orange']::before {
+    top: 14%;
+  }
+
+  &[data-cover-style='classic']::after,
+  &[data-cover-style='leather']::after,
+  &[data-cover-style='golden-jacket']::after {
+    bottom: 9%;
+  }
+
+  &[data-cover-style='editorial-orange']::after {
+    bottom: 14%;
+  }
+}
+
+.bindingSpine[data-spine-style='smooth'] {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 24%), transparent 28%, rgb(255 255 255 / 12%) 72%, rgb(0 0 0 / 18%)),
+    var(--spine-color, var(--book-color));
+}
+
+.bindingSpine[data-spine-style='ribbed'] {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0 22px,
+      rgb(255 255 255 / 19%) 22px 23px,
+      rgb(0 0 0 / 18%) 24px 26px,
+      transparent 27px 34px
+    ),
+    linear-gradient(90deg, rgb(0 0 0 / 24%), transparent 30%, rgb(255 255 255 / 14%) 72%, rgb(0 0 0 / 20%)),
+    var(--spine-color, var(--book-color));
+}
+
+.bindingSpine[data-spine-style='banded'] {
+  background:
+    linear-gradient(
+      180deg,
+      transparent 0 10%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 10.3% 10.8%,
+      transparent 11.1% 43%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 43.3% 44.1%,
+      transparent 44.4% 55.6%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 55.9% 56.7%,
+      transparent 57% 89%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 89.3% 89.8%,
+      transparent 90.1% 100%
+    ),
+    linear-gradient(90deg, rgb(0 0 0 / 25%), transparent 30%, rgb(255 255 255 / 14%) 72%, rgb(0 0 0 / 20%)),
+    var(--spine-color, var(--book-color));
+}
+
+.bindingSpine[data-spine-style='ornate'] {
+  background:
+    radial-gradient(
+      ellipse 25% 2% at 50% 50%,
+      transparent 44%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 47% 51%,
+      transparent 54%
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0 15%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 15.2% 15.45%,
+      transparent 15.7% 84.3%,
+      var(--spine-accent-override, var(--spine-accent, #d6b765)) 84.55% 84.8%,
+      transparent 85% 100%
+    ),
+    linear-gradient(90deg, rgb(0 0 0 / 28%), transparent 35%, rgb(255 255 255 / 14%) 75%, rgb(0 0 0 / 22%)),
+    var(--spine-color, var(--book-color));
+}
+
+.bindingSpine[data-spine-style='minimal'] {
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / 16%), transparent 42%, rgb(255 255 255 / 10%) 76%, rgb(0 0 0 / 15%)),
+    var(--spine-color, var(--book-color));
+}
+
+.bindingSpine[data-spine-style='smooth']::before,
+.bindingSpine[data-spine-style='smooth']::after,
+.bindingSpine[data-spine-style='ribbed']::before,
+.bindingSpine[data-spine-style='ribbed']::after,
+.bindingSpine[data-spine-style='banded']::before,
+.bindingSpine[data-spine-style='banded']::after,
+.bindingSpine[data-spine-style='minimal']::before,
+.bindingSpine[data-spine-style='minimal']::after {
+  display: none;
+}
+
+.closedCoverTrigger {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  width: var(--page-width);
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+
+.backCoverTrigger {
+  right: auto;
+  left: 0;
+}
+
+.rotatableCover {
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.angleControls {
+  position: relative;
+  z-index: 12;
+  flex: none;
+  align-self: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 5px;
+  border: 1px solid rgb(120 132 148 / 18%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 4px 16px rgb(25 37 55 / 10%);
+  margin-top: 14px;
+}
+
+.angleControl {
+  min-width: 42px;
+  min-height: 28px;
+  padding: 4px 9px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #526174;
+  cursor: pointer;
+  font-size: 11px;
+  line-height: 1;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+
+  &:hover {
+    background: #edf1f6;
+    color: #26354a;
+  }
+}
+
+.angleControlActive {
+  background: #26354a;
+  color: #fff;
+
+  &:hover {
+    background: #26354a;
+    color: #fff;
+  }
+}
+
+.closedCoverTrigger:focus-visible,
+.angleControl:focus-visible,
+.navButton:focus-visible,
+.closeNavButton:focus-visible,
+.returnCoverButton:focus-visible,
+.closeButton:focus-visible,
+.restartButton:focus-visible {
+  outline: 3px solid var(--wui-color-primary, #1677ff);
+  outline-offset: 4px;
+}
+
+.spreadBoards {
+  --board-visibility: clamp(0, calc(var(--book-openness) / 0.12), 1);
+
+  position: absolute;
+  inset: 0;
+  display: flex;
+  perspective: 2000px;
+  z-index: 0;
+  pointer-events: none;
+
+  > div {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    transform-origin: right center;
+    transform: rotateY(calc(180deg * (1 - var(--book-openness)) * (1 - var(--book-side))));
+    opacity: calc(1 - var(--book-side) * (1 - var(--board-visibility)));
+    backface-visibility: hidden;
+    background: var(--book-color);
+    border-radius: 3px 0 0 3px;
+    box-shadow:
+      -1px 8px 12px rgb(19 26 42 / 10%),
+      -3px 20px 36px rgb(19 26 42 / 12%);
+
+    /* Extend the cover at its outer edges, keeping its rotation axis on the spine.
+       The rim keeps the same dimensions throughout hover, drag and rebound. */
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: -2px 0 -2px -2px;
+      border-radius: 5px 0 0 5px;
+      background: var(--book-color);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 3px 0 3px 3px;
+      border-radius: 1px 0 0 1px;
+      background: repeating-linear-gradient(0deg, var(--reading-border, #e4e1d8) 0 1px, var(--reading-paper) 1px 2px);
+      box-shadow: inset 0 -1px 0 rgb(87 78 60 / 10%);
+    }
+
+    + div {
+      transform-origin: left center;
+      transform: rotateY(calc(-180deg * (1 - var(--book-openness)) * var(--book-side)));
+      opacity: calc(1 - (1 - var(--book-side)) * (1 - var(--board-visibility)));
+      border-radius: 0 3px 3px 0;
+      box-shadow:
+        1px 8px 12px rgb(19 26 42 / 10%),
+        3px 20px 36px rgb(19 26 42 / 12%);
+
+      &::before {
+        inset: -2px -2px -2px 0;
+        border-radius: 0 5px 5px 0;
+      }
+
+      &::after {
+        inset: 3px 3px 3px 0;
+        border-radius: 0 1px 1px 0;
+      }
+    }
+  }
+}
+
+.sheet {
+  box-sizing: border-box;
+  background: var(--reading-paper);
+  border: 1px solid var(--reading-border, #e1dfd6);
+  overflow: hidden;
+
+  &:global(.--left) {
+    .pageSurface,
+    .innerContent {
+      padding: var(--book-left-page-padding, 14px 32px 10px 24px);
+      background:
+        linear-gradient(270deg, rgb(35 45 56 / 10%), rgb(35 45 56 / 3%) 4%, transparent 14%), var(--reading-paper);
+    }
+
+    .pageFooter {
+      flex-direction: row-reverse;
+    }
+  }
+}
+
+.pageSurface,
+.innerContent {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: var(--book-page-padding, 14px 24px 10px 32px);
+  box-sizing: border-box;
+  color: var(--reading-ink);
+  font-family: var(--book-font-family, -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif);
+  background: linear-gradient(90deg, rgb(35 45 56 / 10%), rgb(35 45 56 / 3%) 4%, transparent 14%), var(--reading-paper);
+}
+
+.pageSurface::before,
+.innerContent::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-radial-gradient(circle at 30% 20%, #0002 0 0.5px, transparent 0.5px 3px);
+  background-size: 180px 180px;
+  opacity: 0.035;
+}
+
+.coverSheet {
+  border: 0;
+  border-radius: 6px 4px 4px 6px;
+  background: var(--book-color);
+  backface-visibility: hidden;
+}
+
+.backCoverSheet {
+  border-radius: 4px 6px 6px 4px;
+}
+
+.innerCoverSheet {
+  border: 0;
+  border-radius: 0 4px 4px 0;
+  overflow: visible;
+
+  /* Keep the rim outside the paper so it overlaps the backing's rim at rest,
+     without doubling its weight or changing the page's content dimensions. */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -2px -2px -2px 0;
+    border: 2px solid var(--book-color);
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+    pointer-events: none;
+  }
+
+  > div {
+    border-radius: inherit;
+    overflow: hidden;
+  }
+
+  &:global(.--left) {
+    border-radius: 4px 0 0 4px;
+
+    &::after {
+      inset: -2px 0 -2px -2px;
+      border-right: 0;
+      border-left: 2px solid var(--book-color);
+      border-radius: 6px 0 0 6px;
+    }
+  }
+}
+
+.backCoverInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--wui-text-secondary);
+  background: var(--wui-bg-elevated);
+  cursor: pointer;
+}
+
+.innerContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.frontMatterHeader,
+.runningHead {
+  flex-shrink: 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--reading-rule);
+  color: var(--reading-muted);
+  font-family: var(--book-font-family, -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+}
+
+.frontMatterIntro {
+  margin-top: 22px;
+}
+
+.innerTitle {
+  margin: 0;
+  color: var(--reading-ink);
+  font-family: var(--book-font-family, 'Avenir Next', 'PingFang SC', 'Microsoft YaHei', sans-serif);
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.innerAuthor {
+  margin: 10px 0 0;
+  color: var(--reading-muted);
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0.08em;
+}
+
+.contentsList {
+  flex: 1;
+  min-height: 0;
+  margin: 20px 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+
+  li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px dotted var(--reading-rule);
+    color: var(--reading-body, #435264);
+    font-size: 12px;
+    line-height: 1.65;
+  }
+}
+
+.contentsLink {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 16px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  > span:first-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &:hover span:first-child {
+    color: var(--reading-ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--book-color);
+    outline-offset: 3px;
+  }
+}
+
+.contentsFolio {
+  color: var(--reading-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.frontMatterFooter,
+.pageFooter {
+  display: flex;
+  flex-shrink: 0;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 10px;
+  border-top: 1px solid var(--reading-rule);
+  color: var(--reading-muted);
+  font-family: var(--book-font-family, -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif);
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.frontMatterFooter {
+  justify-content: center;
+}
+
+.frontispiece {
+  flex: 1;
+  min-height: 0;
+  margin: 18px 0;
+  background-color: var(--book-color);
+  background-position: center;
+  background-size: cover;
+  border: 1px solid var(--reading-border, rgb(35 45 56 / 12%));
+}
+
+.pageLayout {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.runningHead {
+  margin-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pageContent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pageNumber {
+  color: var(--reading-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pageTitle {
+  flex-shrink: 0;
+  margin: 0 0 18px;
+  font-family: var(--book-font-family, 'Avenir Next', 'PingFang SC', 'Microsoft YaHei', sans-serif);
+  font-size: 19px;
+  font-weight: 600;
+  text-align: left;
+  color: var(--reading-ink);
+  letter-spacing: -0.025em;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.pageText {
+  flex: 1;
+  min-height: 0;
+  font-family: var(--book-font-family, 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', Georgia, serif);
+  color: var(--reading-body, #3d4650);
+  line-height: 1.9;
+  font-size: 0.875rem;
+  max-width: none;
+  overflow-wrap: break-word;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #c6cbd0 transparent;
+  touch-action: pan-y;
+
+  p {
+    margin: 0;
+  }
+
+  ul,
+  ol {
+    margin-block: 0;
+  }
+}
+
+.pageFooter {
+  margin-top: 12px;
+}
+
+.pageImage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.endIcon {
+  margin-bottom: 22px;
+  color: var(--reading-muted);
+}
+
+.endText {
+  margin: 0;
+  color: var(--reading-ink);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.endTitle {
+  margin: 12px 28px 20px;
+  color: var(--reading-muted);
+  font-size: 12px;
+}
+
+.restartButton {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--reading-rule);
+  border-radius: 6px;
+  background-color: #f0f1ee;
+  color: var(--reading-ink);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  z-index: 50;
+  position: relative;
+
+  &:hover {
+    background-color: var(--wui-bg-elevated, #e5e7eb);
+  }
+}
+
+.navigation {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--wui-bg-elevated, rgb(255 255 255 / 95%));
+  backdrop-filter: blur(12px);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--wui-border, rgb(0 0 0 / 8%));
+  z-index: 10;
+  box-shadow: 0 6px 18px rgb(19 26 42 / 5%);
+}
+
+.navButton {
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  color: var(--wui-text-primary, #374151);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 0;
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: rgb(38 53 74 / 7%);
+  }
+}
+
+.returnCoverButton {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--wui-text-primary, #374151);
+  background: rgb(62 87 120 / 8%);
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgb(62 87 120 / 15%);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.backCoverActions {
+  position: absolute;
+  bottom: 12px;
+  padding: 10px;
+  border: 1px solid var(--wui-border, rgb(0 0 0 / 8%));
+  border-radius: 12px;
+  background: var(--wui-bg-elevated, #fff);
+}
+
+.navInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 88px;
+}
+
+.navPage {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  color: var(--wui-text-primary, #374151);
+}
+
+.navTotal {
+  color: var(--wui-text-muted, #6b7280);
+  font-weight: 400;
+}
+
+.readingProgress {
+  width: 78px;
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #e0e4e8;
+
+  span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: #3e5778;
+    transition: width 0.3s ease;
+  }
+}
+
+.navDivider {
+  width: 1px;
+  height: 22px;
+  background-color: var(--wui-border-strong, #e5e7eb);
+  margin: 0 4px;
+}
+
+.closeNavButton {
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: 6px;
+  color: var(--wui-text-secondary, #6b7280);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 0;
+
+  &:hover {
+    background-color: rgb(38 53 74 / 7%);
+  }
+}
+
+.hint {
+  position: relative;
+  flex: none;
+  align-self: center;
+  margin-top: 12px;
+  color: var(--wui-text-secondary, #6b7280);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+  pointer-events: none;
+  text-align: center;
+}
+
+.imgPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--wui-bg-subtle, #f5f5f5);
+  color: var(--wui-text-muted, #bbb);
+  font-size: 14px;
+}
+
+.singlePageContainer {
+  padding: 24px 16px 76px;
+}
+
+.singlePageViewport {
+  overflow: clip;
+  overflow-clip-margin: 45px;
+}
+
+.singlePage {
+  transform-origin: center center calc(var(--book-depth) / -2);
+  transform: rotateX(
+      calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) * (1 - var(--book-openness)))
+    )
+    rotateY(
+      calc(
+        var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))) * (1 - var(--book-openness)) *
+          (1 - 2 * var(--book-side))
+      )
+    );
+
+  &:not(.open, [data-cover-turning], [data-book-animating]):hover,
+  &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
+    transform: translateY(-4px) rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) / 2))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+  }
+
+  .spreadBoards > div:first-child {
+    display: none;
+  }
+
+  .spreadBoards > div:last-child {
+    transform: none;
+    opacity: var(--board-visibility);
+    border-radius: 3px;
+
+    &::before {
+      inset: -2px;
+      border-radius: 5px;
+    }
+
+    &::after {
+      inset: 3px;
+      border-radius: 1px;
+    }
+  }
+
+  .closedVolume {
+    right: 0;
+  }
+}
+
+@media (hover: none) {
+  .bookWrapper:not(.open, [data-cover-turning], [data-book-animating]) {
+    transform: translateX(calc(var(--page-width) / -2))
+      rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+  }
+
+  .singlePage:not(.open, [data-cover-turning], [data-book-animating]) {
+    transform: rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bookWrapper,
+  .closedVolume,
+  .spreadBoards,
+  .readingProgress span {
+    transition: none;
+  }
+
+  .bookWrapper:not(.open) {
+    transform: translateX(calc(var(--page-width) / -2))
+      rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+  }
+
+  .singlePage:not(.open) {
+    transform: rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
+      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+  }
+}
+
+@media (width <= 768px) {
+  .container {
+    padding: 16px 8px max(84px, env(safe-area-inset-bottom, 84px));
+  }
+
+  .navigation {
+    bottom: 8px;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .navButton,
+  .closeNavButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .navInfo {
+    min-width: 64px;
+  }
+
+  .pageSurface,
+  .innerContent {
+    padding: var(--book-page-padding, 14px 24px 10px 32px);
+  }
+
+  .sheet:global(.--left) .pageSurface,
+  .sheet:global(.--left) .innerContent {
+    padding: var(--book-left-page-padding, 14px 32px 10px 24px);
+  }
+
+  .pageTitle {
+    margin-bottom: 18px;
+    font-size: 17px;
+  }
+
+  .pageText {
+    line-height: 1.85;
+  }
+
+  .hint {
+    font-size: 11px;
+    max-width: calc(100vw - 32px);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .angleControls {
+    margin-top: 12px;
+    gap: 3px;
+  }
+
+  .angleControl {
+    min-width: 38px;
+    padding-inline: 7px;
+  }
+}
+
+@media (width <= 400px) {
+  .pageSurface,
+  .innerContent {
+    padding: var(--book-page-padding, 14px 24px 10px 32px);
+  }
+
+  .sheet:global(.--left) .pageSurface,
+  .sheet:global(.--left) .innerContent {
+    padding: var(--book-left-page-padding, 14px 32px 10px 24px);
+  }
+}

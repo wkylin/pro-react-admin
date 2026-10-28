@@ -6,7 +6,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from 'react'
 import AiCover from '@assets/images/ai-cover.webp'
-import InteractiveBook from '@stateless/InteractiveBook'
+import InteractiveBook from '@/pages/mediaAdapters/InteractiveBook'
 import styles from './HomeBookStage.module.less'
 
 const bookPages = [

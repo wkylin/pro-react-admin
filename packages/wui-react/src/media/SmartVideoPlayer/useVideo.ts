@@ -1,0 +1,260 @@
+import { useCallback, useEffect, useState, useRef, type RefObject } from 'react'
+
+type UseVideoOptions = {
+  enabled?: boolean
+}
+
+const useVideo = (ref: RefObject<HTMLVideoElement | null>, options: UseVideoOptions = {}) => {
+  const { enabled = true } = options
+  const [videoState, setVideoState] = useState({
+    isPaused: true,
+    isMuted: false,
+    currentVolume: 100,
+    currentTime: 0,
+  })
+
+  // 首次挂载后，同步一次真实 video 初始值（ref.current 在 effect 阶段已可用）
+  useEffect(() => {
+    if (!enabled) return
+    const video = ref.current
+    if (!video) return
+    setVideoState((prev) => ({
+      ...prev,
+      isPaused: video.paused,
+      isMuted: video.muted,
+      currentVolume: video.volume * 100,
+      currentTime: video.currentTime,
+    }))
+  }, [enabled, ref])
+
+  const play = useCallback(() => {
+    const video = ref.current
+    if (!video) return
+    const p = video.play()
+    Promise.resolve(p).catch(() => {
+      // ignore autoplay/policy errors
+    })
+  }, [ref])
+
+  const pause = useCallback(() => {
+    const video = ref.current
+    video?.pause()
+  }, [ref])
+
+  const handlePlayPauseControl = useCallback((e: Event) => {
+    const target = e.target as HTMLVideoElement
+    setVideoState((prev) => ({
+      ...prev,
+      isPaused: target.paused,
+    }))
+  }, [])
+
+  const togglePause = useCallback(() => {
+    const video = ref.current
+    if (!video) return
+    return video.paused ? play() : pause()
+  }, [pause, play, ref])
+
+  const handleVolume = useCallback(
+    (delta: number) => {
+      const deltaDecimal = delta / 100
+
+      const video = ref.current
+      if (video) {
+        let newVolume = video.volume + deltaDecimal
+
+        if (newVolume >= 1) {
+          newVolume = 1
+        } else if (newVolume <= 0) {
+          newVolume = 0
+        }
+
+        video.volume = newVolume
+      }
+    },
+    [ref]
+  )
+
+  const handleVolumeControl = useCallback((e: Event) => {
+    const target = e.target as HTMLVideoElement
+    setVideoState((prev) => ({
+      ...prev,
+      currentVolume: target.volume * 100,
+      isMuted: target.muted,
+    }))
+  }, [])
+
+  const handleMute = useCallback(
+    (mute: boolean) => {
+      const video = ref.current
+      if (!video) return
+      video.muted = mute
+      setVideoState((prev) => ({
+        ...prev,
+        isMuted: video.muted,
+      }))
+    },
+    [ref]
+  )
+
+  const handleTime = useCallback(
+    (delta = 5) => {
+      const video = ref.current
+      if (video) {
+        let newTime = video.currentTime + delta
+
+        if (newTime >= video.duration) {
+          newTime = video.duration
+        } else if (newTime <= 0) {
+          newTime = 0
+        }
+
+        video.currentTime = newTime
+      }
+    },
+    [ref]
+  )
+
+  const lastTsRef = useRef<number>(0)
+
+  const handleTimeControl = useCallback((e: Event) => {
+    const target = e.target as HTMLVideoElement
+    const nextTime = target.currentTime
+    // Throttle frequent timeupdate to reduce re-render pressure
+    // (especially noticeable in fullscreen with heavy UI around the video)
+    const now = typeof performance !== 'undefined' ? performance.now() : Date.now()
+    const lastTs = lastTsRef.current || 0
+    if (now - lastTs < 120) return
+    lastTsRef.current = now
+
+    setVideoState((prev) => {
+      if (Math.abs(prev.currentTime - nextTime) < 0.05) return prev
+      return {
+        ...prev,
+        currentTime: nextTime,
+      }
+    })
+  }, [])
+
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    } else {
+      const video = ref.current
+      video?.requestFullscreen().catch((err) => {
+        console.log(err)
+      })
+    }
+  }, [ref])
+
+  useEffect(() => {
+    if (!enabled) return
+    return () => {
+      pause()
+    }
+  }, [enabled, pause])
+
+  useEffect(() => {
+    if (!enabled) return
+    let disposed = false
+    let pendingFrame = 0
+    let pendingTimeout: ReturnType<typeof setTimeout> | undefined
+    let attachedTo: HTMLVideoElement | null = null
+
+    const schedule = (cb: (time: number) => void) => {
+      if (typeof requestAnimationFrame === 'function') {
+        const id = (pendingFrame = requestAnimationFrame(cb as (time: number) => void))
+        return id
+      }
+      pendingTimeout = setTimeout(() => cb(performance.now()), 0)
+      return 0
+    }
+
+    const attach = () => {
+      if (disposed) return
+      const video = ref.current
+      if (!video) {
+        // ref.current 理论上在 effect 时已就绪，但 KeepAlive/条件渲染下可能会延后，做一次轻量重试
+        schedule(attach)
+        return
+      }
+
+      attachedTo = video
+      video.addEventListener('volumechange', handleVolumeControl)
+      video.addEventListener('play', handlePlayPauseControl)
+      video.addEventListener('pause', handlePlayPauseControl)
+      video.addEventListener('timeupdate', handleTimeControl)
+    }
+
+    attach()
+
+    return () => {
+      disposed = true
+      cancelAnimationFrame(pendingFrame)
+      clearTimeout(pendingTimeout)
+      attachedTo?.pause()
+      if (!attachedTo) return
+      attachedTo.removeEventListener('volumechange', handleVolumeControl)
+      attachedTo.removeEventListener('play', handlePlayPauseControl)
+      attachedTo.removeEventListener('pause', handlePlayPauseControl)
+      attachedTo.removeEventListener('timeupdate', handleTimeControl)
+    }
+  }, [enabled, handlePlayPauseControl, handleTimeControl, handleVolumeControl, ref])
+
+  const increaseVolume = useCallback(
+    (increase = 5) => {
+      handleVolume(increase)
+    },
+    [handleVolume]
+  )
+
+  const decreaseVolume = useCallback(
+    (decrease = 5) => {
+      handleVolume(decrease * -1)
+    },
+    [handleVolume]
+  )
+
+  const mute = useCallback(() => {
+    handleMute(true)
+  }, [handleMute])
+
+  const unmute = useCallback(() => {
+    handleMute(false)
+  }, [handleMute])
+
+  const toggleMute = useCallback(() => {
+    handleMute(!ref.current?.muted)
+  }, [handleMute, ref])
+
+  const forward = useCallback(
+    (increase = 5) => {
+      handleTime(increase)
+    },
+    [handleTime]
+  )
+
+  const back = useCallback(
+    (decrease = 5) => {
+      handleTime(decrease * -1)
+    },
+    [handleTime]
+  )
+
+  return {
+    ...videoState,
+    play,
+    pause,
+    togglePause,
+    increaseVolume,
+    decreaseVolume,
+    mute,
+    unmute,
+    toggleMute,
+    forward,
+    back,
+    toggleFullscreen,
+  }
+}
+
+export default useVideo
