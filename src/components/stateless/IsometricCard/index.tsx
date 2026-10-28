@@ -1,11 +1,2 @@
-import React from 'react'
-import styles from './index.module.less'
-const IsometricCard = ({ text }) => {
-  return (
-    <div className={styles.isometricCard}>
-      <p>{text}</p>
-    </div>
-  )
-}
-
-export default IsometricCard
+export { IsometricCard as default } from '@wui/animation'
+export * from '@wui/animation/IsometricCard'

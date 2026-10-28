@@ -88,6 +88,15 @@ async function assertConsumerTypes() {
       `const blur: import('${libraryPackageName}/animation').BlurFadeProps = {direction: 'left', inViewMargin: '-20px', once: true}; void blur`
     )
   }
+  if (libraryGroups.find((entry) => entry.subpath === 'animation')?.runtimeExports.includes('ScratchToReveal')) {
+    source.push(
+      `const tracking: import('${libraryPackageName}/animation').GradientTrackingProps = {children: 'Track', onMouseMove: event => {const button: HTMLButtonElement = event.currentTarget; void button}}; void tracking`,
+      `const scratch: import('${libraryPackageName}/animation').ScratchToRevealProps = {width: 200, height: 100, children: 'Prize', revealLabel: 'Show prize', onComplete: () => {}}; void scratch`,
+      `const stars: import('${libraryPackageName}/animation').MemoizedStarsProps = {count: 3, color: 'red', size: 4}; void stars`,
+      `const trail: import('${libraryPackageName}/animation').ImageMouseTrailProps = {items: ['one.png'], children: 'Content', imageAlt: (src, index) => src + index}; void trail`,
+      `const floating: import('${libraryPackageName}/animation').FloatAnyProps = {amplitude: [1,2,3], children: 'Floating'}; void floating`
+    )
+  }
   if (libraryGroups.find((entry) => entry.subpath === 'forms')?.runtimeExports.includes('SmartChat')) {
     source.push(
       `const chat: import('${libraryPackageName}/forms').SmartChatProps = { apiUrl: '/chat', buildRequestBody: ({messages, input, systemPrompt}) => ({messages, input, systemPrompt}), onMessagesChange: messages => { const role: import('${libraryPackageName}/forms').ChatRole = messages[0].role; void role } }; void chat`
@@ -222,9 +231,16 @@ try {
       createElement(animation.BreatheText, {text: 'Breathe caller text'}),
       createElement(animation.CubeSpinner, {items: ['Caller face']}),
       createElement(animation.DynamicBackground, {items: [{icon: '★', size: 'sm'}]}, 'Consumer foreground'),
-      createElement(animation.FlipLink, {href: '/next', target: '_self'}, 'Consumer link')
+      createElement(animation.FlipLink, {href: '/next', target: '_self'}, 'Consumer link'),
+      createElement(animation.GradientTracking, {type: 'button'}, 'Consumer tracking'),
+      createElement(animation.ScratchToReveal, {width: 200, height: 100, revealLabel: 'Consumer reveal'}, 'Consumer prize'),
+      createElement(animation.MeshGradientBackground, {}, 'Consumer mesh'),
+      createElement(animation.MemoizedStars, {count: 3, color: 'red', size: 4}),
+      createElement(animation.Meteors, {starCount: 2}),
+      createElement(animation.MagicTrail, {}),
+      createElement(animation.MouseTrail, {items: []}, 'Consumer trail')
     ))
-    for (const content of ['Independent action', 'consumer-button', 'Breathe caller text', 'Caller face', 'Consumer foreground', 'aria-label="Consumer link"', 'target="_self"']) {
+    for (const content of ['Independent action', 'consumer-button', 'Breathe caller text', 'Caller face', 'Consumer foreground', 'aria-label="Consumer link"', 'target="_self"', 'Consumer tracking', 'Consumer reveal', 'Consumer mesh', 'Consumer trail', 'background-color:red']) {
       if (!animationMarkup.includes(content)) throw new Error('Independent animation SSR lost ' + content)
     }
     `
@@ -336,6 +352,13 @@ try {
     const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
     for (const token of ['--wui-footer-bg', '--wui-tab-active-bg', '--wui-hero-bg']) {
       if (!css.includes(token)) throw new Error(`Independent layout stylesheet is missing ${token}`)
+    }
+  }
+
+  if (libraryGroups.find((entry) => entry.subpath === 'animation')?.runtimeExports.includes('ScratchToReveal')) {
+    const css = await fs.readFile(path.join(packageDir, 'dist/style.css'), 'utf8')
+    for (const token of ['.wui-magic-trail', '.wui-meteors', '.wui-scratch', '.wui-mouse-trail', '@keyframes wui-orbit', '@keyframes wui-meteor-blink']) {
+      if (!css.includes(token)) throw new Error('Independent animation stylesheet is missing ' + token)
     }
   }
 

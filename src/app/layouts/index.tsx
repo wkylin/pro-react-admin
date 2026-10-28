@@ -15,8 +15,8 @@ import type { LayoutRegistry } from './types'
 interface ProLayoutProps {
   registry?: LayoutRegistry
 }
-const PointerMove = lazy(() => import('@stateless/PointerMove'))
-const MagicTrail = lazy(() => import('@stateless/MagicTrail'))
+const PointerMove = lazy(() => import('@wui/animation').then((module) => ({ default: module.PointerMove })))
+const MagicTrail = lazy(() => import('@wui/animation').then((module) => ({ default: module.MagicTrail })))
 const SettingDrawer = lazy(() => import('@stateless/SettingDrawer'))
 
 const ProLayout = ({ registry = defaultLayoutRegistry }: ProLayoutProps) => {

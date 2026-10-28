@@ -1,20 +1,2 @@
-import React from 'react'
-
-import styles from './index.module.less'
-
-const MultiColorBorder = ({ text, wrapperStyles = {}, contentStyles = {} }) => (
-  <>
-    <section
-      className={styles.multiWrapper}
-      style={{
-        ...wrapperStyles,
-      }}
-    >
-      <section className={styles.multiContent} style={{ ...contentStyles }}>
-        {text}
-      </section>
-    </section>
-  </>
-)
-
-export default MultiColorBorder
+export { MultiColorBorder as default } from '@wui/animation'
+export * from '@wui/animation/MultiColorBorder'

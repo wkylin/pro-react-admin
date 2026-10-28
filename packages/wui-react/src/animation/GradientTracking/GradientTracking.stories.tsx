@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: { children: 'Hover me' },
 } satisfies Meta<typeof Component>
 
 export default meta

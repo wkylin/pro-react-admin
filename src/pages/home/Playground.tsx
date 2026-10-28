@@ -27,18 +27,18 @@ import ReMarkdown from '@stateless/ReMarkdown'
 import AlternatingText from '@wui/animation/AlternatingText'
 import AutoLink from '@wui/data-display/AutoLink'
 import LazyLoadImage from '@stateless/LazyLoadImage'
-import IsometricCard from '@stateless/IsometricCard'
+import { IsometricCard } from '@wui/animation'
 import AvatarCard from '@wui/data-display/AvatarCard'
-import LineBordered from '@stateless/LineBordered'
-import GradientTracking from '@stateless/GradientTracking'
+import { LineBordered } from '@wui/animation'
+import { GradientTracking } from '@wui/animation'
 // import ShiftingCard from '@stateless/ShiftingCard'
 import BreatheText from '@wui/animation/BreatheText'
-import ScrollAnimation from '@stateless/ScrollAnimation'
+import { ScrollAnimation } from '@wui/animation'
 import AnimateOnScreen from '@wui/animation/AnimateOnScreen'
 import AnimateRipple from '@wui/animation/AnimateRipple'
 // import AnimateWave from '@wui/animation/AnimateWave'
 import NumberFlowFix from '@stateless/NumberFlowFix'
-import MeshGradientBackground from '@stateless/MeshGradientBackground'
+import { MeshGradientBackground } from '@wui/animation'
 import useRect from '@hooks/useRect'
 import TagCloud from '@stateless/TagCloud'
 import ShiCode from '@stateless/ShiCode'
@@ -46,7 +46,7 @@ import StaticStepper from '@wui/data-display/StaticStepper'
 import FeatureAny from '@wui/layout/FeatureAny'
 import { featureDemoData } from './feature-demo'
 import UserIP from '@wui/data-display/UserIP'
-import ScratchToReveal from '@stateless/ScratchToReveal'
+import { ScratchToReveal } from '@wui/animation'
 // import SlideLinear from '@stateless/SlideLinear'
 import DynamicBackground from '@wui/animation/DynamicBackground'
 import ContentPlaceholder from '@wui/data-display/ContentPlaceholder'
@@ -56,7 +56,7 @@ import { ReactSignature } from '@wui/forms/ReactSignature'
 import SquaresGrid from '@stateless/SquaresGrid'
 import ShinyText from '@stateless/ShinyText'
 // import BlurText from '@wui/animation/BlurText'
-import Meteors from '@stateless/Meteors'
+import { Meteors } from '@wui/animation'
 import CompareAll from '@stateless/CompareAll'
 import TextLoader from '@stateless/TextLoader'
 import BackgroundBoxes from '@wui/animation/BackgroundBoxes'
@@ -65,17 +65,17 @@ import SlideText from '@stateless/SlideText'
 import SparklesCore from '@stateless/Sparkles'
 import SparklesText from '@stateless/SparklesText'
 import ColorfulText from '@wui/animation/ColorfulText'
-import MemoizedStars from '@stateless/MemoizedStars'
+import { MemoizedStars } from '@wui/animation'
 // import WordRotate from '@stateless/WordRotate'
 import TestimonialCarousel from '@stateless/TestimonialCarousel'
-// import InteractiveGrid from '@stateless/InteractiveGrid'
+// import { InteractiveGrid } from '@wui/animation'
 import BlurFade from '@wui/animation/BlurFade'
 import IconCloud from '@stateless/IconCloud'
-import GradualSpacing from '@stateless/GradualSpacing'
-import MultiDirectionSlide from '@stateless/MultiDirectionSlide'
+import { GradualSpacing } from '@wui/animation'
+import { MultiDirectionSlide } from '@wui/animation'
 import InViewBasicMultiple from '@stateless/AnimInViewBasic'
 import DottedStepper from '@stateless/DottedStepper'
-import FlipWords from '@stateless/FlipWords'
+import { FlipWords } from '@wui/animation'
 import BorderBeam from '@wui/animation/BorderBeam'
 import AutoSlider from '@stateless/AutoSlider'
 import AnimText from '@wui/animation/AnimText'
@@ -785,7 +785,7 @@ const Home = () => {
         />
       </section> */}
       <section>
-        <GradientTracking />
+        <GradientTracking>Hover me</GradientTracking>
       </section>
       <section style={{ margin: 40 }}>
         <BreatheText text="Breathe" />
@@ -910,7 +910,7 @@ const Home = () => {
           overflow: 'hidden',
         }}
       >
-        <MeshGradientBackground />
+        <MeshGradientBackground>Mesh Gradient Background</MeshGradientBackground>
       </section>
       <section
         style={{

@@ -1,4 +1,6 @@
 .gradientTracking {
+  --x: 50%;
+  --y: 50%;
   position: relative;
   margin: 10px 0;
   background: #7983ff;
@@ -34,5 +36,13 @@
 }
 
 .gradientTracking:hover::before {
+  --size: 200px;
+}
+
+.gradientTracking:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.gradientTracking:focus-visible::before {
   --size: 200px;
 }

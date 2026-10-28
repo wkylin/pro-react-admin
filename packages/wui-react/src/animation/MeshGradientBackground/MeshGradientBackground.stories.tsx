@@ -12,7 +12,7 @@ const meta = {
       </div>
     ),
   ],
-  args: {},
+  args: { children: 'Mesh Gradient Background' },
 } satisfies Meta<typeof Component>
 
 export default meta

@@ -1,0 +1,167 @@
+:global {
+  .wui-flip-words {
+    position: relative;
+    display: inline-block;
+    padding: 0 8px;
+  }
+  .wui-flip-word {
+    position: relative;
+    z-index: 10;
+    display: inline-block;
+    text-align: left;
+    color: var(--wui-text-primary, inherit);
+  }
+  .wui-float-any {
+    will-change: transform;
+  }
+  .wui-magic-trail,
+  .wui-magic-trail-canvas {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .wui-multi-direction-slide {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .wui-meteors {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-45deg);
+  }
+  .wui-meteor {
+    position: absolute;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(to right, currentColor, transparent);
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+  .wui-meteor-core {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .wui-meteor-flare {
+    position: absolute;
+    top: 0;
+    left: -1em;
+    height: 100%;
+    width: 1em;
+    border-radius: inherit;
+    background: linear-gradient(to right, transparent, currentColor, transparent);
+    animation: wui-meteor-blink 1s infinite;
+  }
+  .wui-meteor-flare:nth-child(2) {
+    transform: rotate(45deg);
+  }
+  .wui-meteor-flare:nth-child(3) {
+    transform: rotate(-45deg);
+  }
+  @keyframes ~":global(wui-meteor-blink)" {
+    50% {
+      opacity: 0.3;
+    }
+  }
+  .wui-scratch {
+    position: relative;
+    user-select: none;
+  }
+  .wui-scratch canvas {
+    position: absolute;
+    inset: 0;
+    touch-action: none;
+  }
+  .wui-mouse-trail {
+    position: relative;
+    display: grid;
+    min-height: 100vh;
+    width: 100%;
+    place-content: center;
+    overflow: hidden;
+  }
+  .wui-mouse-trail img {
+    pointer-events: none;
+    position: absolute;
+    width: 10rem;
+    height: 12rem;
+    object-fit: cover;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+    transition:
+      transform 0.3s,
+      opacity 0.3s;
+  }
+  .wui-mouse-trail img[data-status='active'] {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition-duration: 0.5s;
+  }
+  .wui-mouse-trail article {
+    position: relative;
+    z-index: 40;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wui-meteor-flare {
+      animation: none;
+    }
+  }
+
+  .wui-orbiting-circles {
+    position: relative;
+    display: flex;
+    height: 500px;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  .wui-orbit-center {
+    pointer-events: none;
+    background-clip: text;
+    text-align: center;
+    font-size: 2.25rem;
+    line-height: 1;
+    font-weight: bold;
+    white-space: pre-wrap;
+    color: transparent;
+  }
+  .wui-orbit-path,
+  .wui-orbit-items {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .wui-orbit-path {
+    pointer-events: none;
+  }
+  .wui-orbit-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px #0001;
+    backdrop-filter: blur(4px);
+  }
+  @keyframes ~":global(wui-orbit)" {
+    from {
+      transform: rotate(0deg) translateY(calc(var(--radius) * 1px)) rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg) translateY(calc(var(--radius) * 1px)) rotate(-360deg);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wui-orbit-item {
+      animation: none !important;
+    }
+  }
+}

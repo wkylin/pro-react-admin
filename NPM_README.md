@@ -192,7 +192,12 @@ Import the named animation components and public props from
 `AnimBackground` (`AnimatedBackground`), `AnimGroup` (`AnimatedGroup`), `AnimInView`
 (`AnimationInView`), `AnimText`, `BackgroundBeams`, `BackgroundBoxes`, `BlurFade`,
 `BlurText`, `BorderBeam`, `BreatheText`, `ColorfulText`, `ContactSection`,
-`CubeSpinner`, `DynamicBackground` and `FlipLink`.
+`CubeSpinner`, `DynamicBackground`, `FlipLink`, `FlipWords`, `FloatAny`,
+`GradientAnimation`, `GradientTracking`, `GradualSpacing`, `InteractiveGrid`,
+`IsometricCard`, `LineBordered`, `MagicTrail`, `MemoizedStars`,
+`MeshGradientBackground`, `Meteors`, `MouseTrail`, `MultiColorBorder`,
+`MultiDirectionSlide`, `OrbitingCircles`, `PointerMove`, `ScratchToReveal` and
+`ScrollAnimation`.
 
 Install the animation entry's optional peers before importing it:
 
@@ -218,3 +223,15 @@ Native void elements (including inputs), selects and textareas pass through
 unchanged; they retain their original content/events and receive no selection background. `FlipLink` forwards
 link attributes and animates on focus. Decorative duplicates are hidden from
 assistive technology. Timers, observers and pointer listeners are cleaned up.
+
+`GradientTracking` accepts native button attributes and caller `children`.
+`MeshGradientBackground` accepts foreground children and optional `gradient` and
+`backgroundColor`. `MemoizedStars` accepts `count`, `color` and `size`; star and
+meteor geometry is deterministic during server rendering and hydration.
+`MouseTrail` images are decorative (`alt=""`) unless `imageAlt(src, index)` supplies
+meaningful alternatives. Its fade timers are canceled when items change or the
+component unmounts. `ScratchToReveal` keeps covered content inert until revealed
+and always provides a native button (`revealLabel`) for keyboard and reduced-motion
+users; reduced-motion users reveal without the completion animation. `MagicTrail`
+uses a canvas overlay, observes its size and DPR, and cancels listeners/frames on
+unmount. Its optional `containerRef` selects the pointer event owner.

@@ -27,7 +27,7 @@ import { useNavigate, type NavigateFunction } from 'react-router-dom'
 import { removeLocalStorage, getLocalStorage } from '@shared/lib/publicFn'
 import { useTranslation } from 'react-i18next'
 import LanguageSwitcher from '@stateless/LanguageSwitcher'
-import GradientAnimationText from '@stateless/GradientAnimation'
+import { GradientAnimation as GradientAnimationText } from '@wui/animation'
 
 import Logo from '@assets/images/pro-logo.png'
 import { ModuleAction, ModuleActions, useModuleActions } from '@platform/modules'
