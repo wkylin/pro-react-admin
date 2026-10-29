@@ -1,6 +1,6 @@
 {
   "name": "pro-react-admin",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "type": "module",
   "private": true,
   "description": "Multi-project React admin framework and microfrontend examples.",
@@ -171,7 +171,7 @@
     "check:docs": "node scripts/generate-project-reference.mjs --check && node scripts/validate-docs.mjs",
     "check:scripts": "node scripts/check-package-scripts.mjs",
     "check:deployment-contracts": "node scripts/sync-deployment-config.mjs --check",
-    "check:stories": "node scripts/validate-stories.mjs",
+    "check:stories": "node scripts/generate-storybook-props.mjs --check && node scripts/validate-stories.mjs",
     "check:pages": "node scripts/validate-pages.mjs",
     "generate:component-catalog": "node scripts/generate-component-catalog.mjs",
     "sync:aliases": "node scripts/sync-path-aliases.mjs",

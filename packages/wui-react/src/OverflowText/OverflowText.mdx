@@ -1,20 +1,140 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
 import * as Stories from './OverflowText.stories'
 
 <Meta of={Stories} />
 
-# OverflowText
+<div className="wui-doc-page">
 
-文字截断与溢出提示组件。text 为 ReactNode，lines 大于 0 时使用多行截断，否则为单行；maxWidth/minWidth、style 和 className 控制尺寸。ResizeObserver、窗口 resize 与字体加载触发重新检测。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / TEXT</span>
+  <h1>OverflowText</h1>
+  <p>让长文本在固定宽度内截断，只在真实溢出时显示完整内容提示。适合表格单元格、卡片标题和紧凑列表。</p>
+  <div className="wui-doc-badges">
+    <span>单行 / 多行</span>
+    <span>自动测量</span>
+    <span>按需提示</span>
+  </div>
+</header>
 
-默认仅溢出时显示 PortalTooltip，alwaysShow 强制显示；tooltipProps 注入提示属性，onOverflowChange 接收状态变化。父容器必须有可计算宽度。
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>表格单元格、卡片标题或列表文字宽度受限时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>比较单行、多行和未溢出状态；只在真正溢出时观察提示层。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>父容器必须有可计算宽度，溢出状态才有确定结果。</p>
+  </div>
+</div>
 
-安装后从 @w.ui/wui-react/overflow-text 导入，并导入 style.css。
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
 
-## 预览
+### 比较三种状态
+
+先将鼠标移到被截断的文字上，再试一个不会溢出的短文本。
 
 <Canvas of={Stories.Default} />
 
-## 当前参数
+<Canvas of={Stories.MultiLine} />
+
+<Canvas of={Stories.NoOverflow} />
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>状态</th>
+      <th>设置</th>
+      <th>提示层</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>单行截断</td>
+      <td>
+        <code>lines</code> 省略或设为 <code>0</code>
+      </td>
+      <td>溢出时显示</td>
+    </tr>
+    <tr>
+      <td>多行截断</td>
+      <td>
+        <code>lines</code> 大于 <code>0</code>
+      </td>
+      <td>溢出时显示</td>
+    </tr>
+    <tr>
+      <td>始终显示</td>
+      <td>
+        <code>alwaysShow</code>
+      </td>
+      <td>无论是否溢出都显示</td>
+    </tr>
+  </tbody>
+</table>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 快速接入
+
+```tsx
+import OverflowText from '@w.ui/wui-react/overflow-text'
+import '@w.ui/wui-react/style.css'
+
+export function Example() {
+  return <OverflowText text="一段可能超出容器的标题" maxWidth={240} lines={2} />
+}
+```
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>尺寸</strong>
+    <p>使用 maxWidth、minWidth 或父容器宽度确定可用空间。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>提示层</strong>
+    <p>用 tooltipProps 调整 PortalTooltip 的位置与样式。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>状态回调</strong>
+    <p>onOverflowChange 可在溢出状态变化时更新外围 UI。</p>
+  </div>
+</div>
+
+<Canvas of={Stories.CustomTooltipWidth} />
+
+<div className="wui-doc-callout">
+  <strong>布局提示：</strong>父容器需要有可计算的宽度。组件会在 ResizeObserver、窗口尺寸或字体加载变化时重新检测溢出。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="OverflowText" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

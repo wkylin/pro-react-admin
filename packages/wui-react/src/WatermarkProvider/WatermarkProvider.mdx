@@ -1,0 +1,138 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './WatermarkProvider.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / CONTENT LAYER</span>
+  <h1>WatermarkProvider</h1>
+  <p>在指定容器中添加重复文字水印，同时原样渲染子内容。可调整透明度与旋转角度。</p>
+  <div className="wui-doc-badges">
+    <span>文字水印</span>
+    <span>不阻断点击</span>
+    <span>自动清理</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>预览内容需要重复文字水印并保留原有子内容时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>观察水印与前景内容的层级，再调整透明度和旋转角度。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>水印是视觉标记，不拦截点击，也不阻止截图和复制。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 观察水印层
+
+示例使用自己的容器 ID。卸载组件时会移除生成的水印层。
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 快速接入
+
+```tsx
+import WatermarkProvider from '@w.ui/wui-react/watermark-provider'
+
+export function Example() {
+  return (
+    <div id="report-panel">
+      <WatermarkProvider content="仅供内部使用" containerId="report-panel" opacity={0.08}>
+        <div>报表内容</div>
+      </WatermarkProvider>
+    </div>
+  )
+}
+```
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>属性</th>
+      <th>默认值</th>
+      <th>用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>content</code>
+      </td>
+      <td>必填</td>
+      <td>重复显示的文字</td>
+    </tr>
+    <tr>
+      <td>
+        <code>containerId</code>
+      </td>
+      <td>
+        <code>root</code>
+      </td>
+      <td>查找水印挂载容器；找不到时挂到 body</td>
+    </tr>
+    <tr>
+      <td>
+        <code>opacity</code>
+      </td>
+      <td>
+        <code>0.06</code>
+      </td>
+      <td>水印透明度</td>
+    </tr>
+    <tr>
+      <td>
+        <code>rotate</code>
+      </td>
+      <td>
+        <code>-22</code>
+      </td>
+      <td>文字旋转角度</td>
+    </tr>
+  </tbody>
+</table>
+
+<div className="wui-doc-callout">
+  <strong>呈现方式：</strong>水印层使用 fixed 定位和 <code>pointer-events: none</code>
+  ，不会拦截底层点击。它只提供视觉标记，不阻止截图或内容复制。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="WatermarkProvider" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

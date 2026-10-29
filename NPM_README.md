@@ -1,376 +1,176 @@
 # @w.ui/wui-react
 
-Version 6.1.0 provides React 19 UI components, built as ESM and CommonJS with TypeScript declarations and a shared stylesheet. The package preserves 12 root components and adds named component groups; it does not include the admin application, authentication, request infrastructure, or tracking SDK.
+面向 React 19 的 UI 组件库：12 个可直接使用的基础组件，以及布局、表单、数据展示等 7 个按场景导入的组件组。提供 TypeScript 类型、ESM / CommonJS 入口和统一样式。
 
-## Install
+[在线预览与组件说明](https://wkylin.github.io/pro-react-admin/storybook/) · [完整组件目录](https://github.com/wkylin/pro-react-admin/blob/main/docs/components/COMPONENT_CATALOG.md) · [源码](https://github.com/wkylin/pro-react-admin) · [反馈问题](https://github.com/wkylin/pro-react-admin/issues)
+
+## 快速开始
+
+项目需要 React 19、Ant Design 6 和 Framer Motion 12～14。安装组件库及基础 peer 依赖：
 
 ```bash
-pnpm add @w.ui/wui-react react react-dom antd framer-motion
+pnpm add @w.ui/wui-react react@^19 react-dom@^19 antd@^6 framer-motion@^12
 ```
 
-Peer ranges: React/React DOM >=19 <20, Ant Design >=6 <7, Framer Motion >=12 <15. Package Node support is ^22.22.2 || ^24.15.0 || >=26.0.0; the repository tooling has its own Node 24 constraint.
+使用 npm 时，将 `pnpm add` 换成 `npm install`。
 
-## Usage
+在应用入口引入一次样式：
 
 ```tsx
-import OneTimePasscode from '@w.ui/wui-react/one-time-passcode'
+// main.tsx
 import '@w.ui/wui-react/style.css'
+```
+
+然后在组件中使用：
+
+```tsx
+import { useState } from 'react'
+import { OneTimePasscode } from '@w.ui/wui-react'
 
 export function CodeInput() {
-  return <OneTimePasscode length={6} onChange={(value) => console.log(value)} />
+  const [code, setCode] = useState('')
+
+  return <OneTimePasscode length={6} value={code} onChange={setCode} />
 }
 ```
 
-Named root imports are also available: `import { OneTimePasscode } from '@w.ui/wui-react'`. CommonJS consumers use `require('@w.ui/wui-react')`. Import the stylesheet once at your application entry.
+包支持的 Node.js 版本为 `^22.22.2 || ^24.15.0 || >=26.0.0`。组件库不包含后台应用、业务鉴权或请求客户端；涉及业务数据的组件由使用方接入自己的服务。
 
-## Public components
+## 从哪里导入
 
-| Export                     | Subpath             |
-| -------------------------- | ------------------- |
-| AnimatedIcon               | animated-icon       |
-| IconFrame                  | icon-frame          |
-| MoveChecker                | move-checker        |
-| OneTimePasscode            | one-time-passcode   |
-| OverflowText               | overflow-text       |
-| PortalTooltip              | portal-tooltip      |
-| ResponsiveTable / useTable | responsive-table    |
-| SafeHtml                   | safe-html           |
-| ScrollLayout               | scroll-layout       |
-| ScrollableSections         | scrollable-sections |
-| SliderCaptcha              | slider-captcha      |
-| WatermarkProvider          | watermark-provider  |
+| 需求                 | 导入方式             | 示例                                                              |
+| -------------------- | -------------------- | ----------------------------------------------------------------- |
+| 使用基础组件         | 从包根路径按名称导入 | `import { OneTimePasscode } from '@w.ui/wui-react'`               |
+| 单独导入一个基础组件 | 从组件子路径默认导入 | `import OneTimePasscode from '@w.ui/wui-react/one-time-passcode'` |
+| 使用扩展组件组       | 从组路径按名称导入   | `import { PageContainer } from '@w.ui/wui-react/layout'`          |
 
-Props types are exported from the root and corresponding subpaths. ResponsiveTable accepts a requestLib or fetchData integration; its default client does not inherit the admin application's authorization. SliderCaptcha is a UI challenge and requires server validation for security decisions. SafeHtml sanitizes content according to its implementation and props; review allowed content for your use case.
+扩展组件组不从包根路径导出，也没有默认导出。组件 Props 类型从对应入口导入；`ResponsiveTable` 的 `useTable` 同时从包根路径和 `responsive-table` 子路径导出。
 
-## Group entries
+### 12 个基础组件
 
-The migration provides seven named-only subpaths: `@w.ui/wui-react/layout`,
-`@w.ui/wui-react/animation`, `@w.ui/wui-react/data-display`, `@w.ui/wui-react/forms`,
-`@w.ui/wui-react/media`, `@w.ui/wui-react/visualization`, and `@w.ui/wui-react/editor`.
-All 133 accepted migration implementations are available across these seven groups; the 10 application-specific modules remain outside the package. The complete roster and reasons are in the repository migration audit.
-Group components and their prop types are exported by name; groups have no default
-export and are not re-exported from the root. The existing 12 component subpaths and
-root exports remain available.
+| 组件                 | 适合做什么                         | 单组件子路径          |
+| -------------------- | ---------------------------------- | --------------------- |
+| `AnimatedIcon`       | 给现有图标添加轻量动效             | `animated-icon`       |
+| `IconFrame`          | 统一图标与文字并排时的对齐         | `icon-frame`          |
+| `MoveChecker`        | 拖动滑块完成可见的确认步骤         | `move-checker`        |
+| `OneTimePasscode`    | 输入一次性验证码或 PIN             | `one-time-passcode`   |
+| `OverflowText`       | 截断溢出文字并按需显示完整内容     | `overflow-text`       |
+| `PortalTooltip`      | 在可能裁剪内容的容器上显示提示层   | `portal-tooltip`      |
+| `ResponsiveTable`    | 展示本地或远程数据，支持分页与选择 | `responsive-table`    |
+| `SafeHtml`           | 清理 HTML 字符串后显示内容         | `safe-html`           |
+| `ScrollLayout`       | 组合固定头部、滚动内容与底部       | `scroll-layout`       |
+| `ScrollableSections` | 让区块导航与滚动位置同步           | `scrollable-sections` |
+| `SliderCaptcha`      | 提供拼图滑块的前端验证交互         | `slider-captcha`      |
+| `WatermarkProvider`  | 为指定容器的内容添加文字水印       | `watermark-provider`  |
 
-Each public entry includes a consolidated TypeScript declaration. Declaration
-bundling preserves public prop types while keeping the published file count
-independent of the number of internal component files. The same declaration build
-runs after both Webpack and Vite builds.
+组件的可交互示例、Props 含义和使用注意见 [Storybook](https://wkylin.github.io/pro-react-admin/storybook/)。
 
-Group-specific optional peers are documented below.
-Importing a group loads its static runtime imports, so consumers must install all
-peers listed for that group. Importing the root does not load the new group entries.
+### 7 个扩展组件组
 
-Source, Storybook and development documentation: [GitHub](https://github.com/wkylin/pro-react-admin). Build and publishing instructions: [release guide](https://github.com/wkylin/pro-react-admin/blob/main/docs/deployment/LIBRARY_PUBLISH_GUIDE.md). Published package: [npm](https://www.npmjs.com/package/@w.ui/wui-react).
-
-### Layout consumption
-
-```tsx
-import { FixTabs, PageContainer } from '@w.ui/wui-react/layout'
-import '@w.ui/wui-react/style.css'
-
-export function Workspace() {
-  return (
-    <PageContainer title="Workspace" footer={<small>Your footer</small>}>
-      <FixTabs tabs={[{ id: 'overview', label: 'Overview', content: 'Ready' }]} />
-    </PageContainer>
-  )
-}
-```
-
-Layout uses the existing React, React DOM, Ant Design and Framer Motion peers;
-animation uses React, Framer Motion and the optional peers listed below. No Tailwind setup or application theme is
-required. Motion imports use the existing `framer-motion` peer. `FeatureAny` requires
-caller data; `HorizontalScroll` and `AboutSection` accept cards with image alt text
-or children. `MarketingHero` accepts a decoration slot. `Footer` accepts brand,
-navigation, social and legal content; `PageContainer` has no default footer.
-`ScrollToTop` accepts `resetKey`, `behavior` and an optional element ref `target`:
-pass a router pathname as `resetKey` in your application. `StickyFooter.bottom`
-defaults to zero. Tab components support arrow keys, Home/End and controlled values
-(`activeId`, `activeValue`, or `activeTab`). `FixTabs.theme` selects light/dark styling.
-`SocialIcon.color` accepts a CSS color and `label` supplies its accessible name.
-
-### Forms consumption
-
-`@w.ui/wui-react/forms` exports CheckableTags, DottedStepper, IntervalInput,
-LanguageSwitcher, PromptOptimizer, RadioInput, ReactSignature, SmartChat and
-StarRating, with their public props, events, request/value and ref types.
-Install the forms entry's optional peers before importing it:
-
-```sh
-npm install @uiw/react-signature@^1.3.5 highlight.js@^11 react-markdown@^10 rehype-highlight@^7 remark-breaks@^4 remark-gfm@^4
-```
-
-These dependencies are optional for other entries. The forms group uses the existing
-React, React DOM, Ant Design and Framer Motion peers. Import `@w.ui/wui-react/style.css`
-for standalone styles, including the Markdown code highlighting theme.
-
-CheckableTags, IntervalInput, PromptOptimizer, DottedStepper and StarRating support
-controlled values and change callbacks, or defaults for uncontrolled usage.
-IntervalInput has no implicit numeric bounds. RadioInput is a read-only visual
-radio/checkbox indicator; use an interactive input when users must change it.
-LanguageSwitcher accepts language/options/onLanguageChange; application i18n context
-is not required. DottedStepper accepts caller steps/content, navigation labels and
-a light/dark theme and uses responsive container CSS.
-
-ReactSignature exposes a typed ref, labels and validation/copy/download callbacks.
-SmartChat accepts an endpoint or fetcher, typed request transformers, optional system
-prompt and configurable labels. Its fetcher must return a Response containing SSE
-`data:` records (plain text or OpenAI-compatible JSON deltas); `[DONE]` terminates
-the response. Stop, initial-message replacement and unmount abort the request and
-cancel the stream reader. Request option/transformer signals also cancel the request.
-Markdown is rendered without raw HTML. Clipboard feedback timers and signature
-image resources are released on unmount.
-
-### Data display consumption
-
-`@w.ui/wui-react/data-display` exports TreeList, ApiStateHandler, AutoLink,
-AvatarCard, ClockFace, ContentPlaceholder, CopyToClipboard, Exception, GradientStats,
-Loading, NumberViewCard, PDFExport, SkeletonFix, StaticStepper, StatisticCard,
-SvgPreview, TagCard, TextComponent, TransferHistory, UserIP and Watermark, with their
-public prop/data types. ExceptionView and the four Exception status variants,
-StaticStep/CodeContainer, Word and useCopyToClipboard are also named exports.
-Import `@w.ui/wui-react/style.css` once. No application theme or Tailwind is required.
+| 组路径：`@w.ui/wui-react/…` | 用途                        | 示例导出                                        |
+| --------------------------- | --------------------------- | ----------------------------------------------- |
+| `layout`                    | 页面结构、导航与标签页      | `PageContainer`、`FixTabs`、`Footer`            |
+| `forms`                     | 输入、签名与聊天交互        | `IntervalInput`、`ReactSignature`、`SmartChat`  |
+| `data-display`              | 列表、状态、导出与水印      | `TreeList`、`PDFExport`、`Watermark`            |
+| `animation`                 | 文字、背景与交互动效        | `FlipLink`、`MagicTrail`、`TypeWriter`          |
+| `media`                     | 音乐、视频、轮播与 PDF 阅读 | `MusicPlayer`、`Video`、`InteractiveBook`       |
+| `visualization`             | 图表、思维导图与 Mermaid    | `EChart`、`MarkmapHooks`、`MermaidHooks`        |
+| `editor`                    | Markdown、代码与在线编辑    | `MdxEditor`、`CodeHighlighter`、`SandpackBasic` |
 
 ```tsx
-import { NumberViewCard, UserIP, TransferHistory } from '@w.ui/wui-react/data-display'
-import '@w.ui/wui-react/style.css'
-
-<NumberViewCard value={750000} label="Views" formatValue={value => Number(value).toLocaleString()} />
-<UserIP loadInfo={signal => fetch('/api/network', { signal }).then(response => response.json())} />
-<TransferHistory groups={[]} theme="light" />
+import { PageContainer } from '@w.ui/wui-react/layout'
+import { TreeList } from '@w.ui/wui-react/data-display'
 ```
 
-TreeList calls `getTreeList(params, signal)` and aborts/ignores replaced or unmounted
-requests; existing one-argument loaders remain supported. Plain `params` objects
-and arrays are compared by value, so inline loader/params props do not reload on
-parent renders. Change `queryKey` (or call the ref's `updateTree`) to reload when
-query context outside `params` changes. UserIP takes `data` or
-`loadInfo(signal)`, plus caller labels, and never contacts a built-in endpoint.
-TransferHistory takes typed groups, companies and records; `renderTitle`,
-`renderLabel` and `renderRatio` customize content. TagCard takes theme/tokens, icons
-and expand/collapse labels. ApiStateHandler accepts loading/error fallback slots.
-ClockFace accepts `locale`, `hour12` or `formatTime`; placeholders are deterministic.
-Exception variants expose action/children slots; routing belongs to the caller.
+上表仅列出代表组件；所有导出见 [完整组件目录](https://github.com/wkylin/pro-react-admin/blob/main/docs/components/COMPONENT_CATALOG.md)。按组导入时需要安装该组使用的可选 peer 依赖，见下节。
 
-PDFExport takes children or a `contentRef`, `fileName`, `pdfOptions`, `scale`,
-`onComplete` and `onError`. `pdfOptions` uses the package-owned `PDFDocumentOptions`
-type, so other data-display consumers do not need PDF peers for typechecking.
-Install its lazy optional peers before exporting:
+## 按需安装扩展依赖
 
-```sh
-npm install html2canvas@^1.4.1 jspdf@^4.2.1
+只用基础组件或 `layout` 时，无需安装本节的依赖。导入其他组件组前，安装对应组的 peer；`data-display` 的 PDF 导出，以及 `visualization` 的思维导图和 Mermaid，按实际使用场景安装。
+
+| 使用范围                        | 需要额外安装                                                                                                |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `animation`                     | `motion`、`@react-spring/web`、`@tsparticles/react`、`@tsparticles/engine`、`@tsparticles/slim`             |
+| `forms`                         | `@uiw/react-signature`、`highlight.js`、`react-markdown`、`rehype-highlight`、`remark-breaks`、`remark-gfm` |
+| `media`                         | `react-pdf`、`pdfjs-dist`、`video.js`、`hls.js`、`i18next`、`react-i18next`                                 |
+| `visualization`                 | 导入组时需要 `echarts`；使用思维导图需加 `markmap-lib`、`markmap-view`，使用 Mermaid 需加 `mermaid`         |
+| `editor`                        | Tiptap、Sandpack、Markdown、代码高亮相关依赖，安装命令见下方                                                |
+| `data-display` 中的 `PDFExport` | 执行 PDF 导出时需要 `html2canvas`、`jspdf`                                                                  |
+
+以下命令使用与包声明兼容的版本；项目已有符合范围的依赖时无需重复安装。
+
+### 动画组
+
+```bash
+pnpm add motion@^12 @react-spring/web@^10 \
+  @tsparticles/react@^4.4 @tsparticles/engine@^4.4 @tsparticles/slim@^4.4
 ```
 
-They are loaded only when export is requested, not when the group is imported.
-Capture excludes remote image elements and embedded frames; supply data/blob image
-sources. Canvas resources are released on completion/failure; export is suppressed
-after unmount. Exports are limited to 100 PDF pages.
+### 表单组
 
-SvgPreview sanitizes SVG strings and remote responses to static primitives before
-display/download, removing scripts, embedded HTML, links, animation and external
-resource references. `SvgComponent` is trusted caller React code. Keyboard arrows
-pan, +/- zoom; controls have accessible labels. `onError` and `onStatus` replace
-application feedback services. Remote loads are aborted and object URLs revoked.
+```bash
+pnpm add @uiw/react-signature@^1.3.5 highlight.js@^11 react-markdown@^10 \
+  rehype-highlight@^7 remark-breaks@^4 remark-gfm@^4
+```
 
-Watermark is an imperative function, not a React component:
+### 媒体组
+
+```bash
+pnpm add react-pdf@^11 pdfjs-dist@^6.3.289 video.js@^8.24.1 \
+  hls.js@^1.7.3 i18next@^26 react-i18next@^17
+```
+
+使用 `Video` 时，还需在浏览器入口引入播放器样式：
 
 ```tsx
-useEffect(() => Watermark({ container: element, content: 'Confidential' }), [element])
-```
-
-Its returned disposer removes the watermark and disconnects its observer. Calling
-it outside a browser returns a no-op disposer. Copy helpers expose failure callbacks
-and cancel pending copied-state timers when unmounted. CopyToClipboard invokes
-the supplied native `onClick` first; `event.preventDefault()` cancels copying.
-
-### Animation group
-
-Import the named animation components and public props from
-`@w.ui/wui-react/animation`. This group includes `FloatingIcon`, `SocialIcon`,
-`AlternatingText`, `AnimatedList`, `AnimateOnScreen`, `AnimateRipple`, `AnimateWave`,
-`AnimBackground` (`AnimatedBackground`), `AnimGroup` (`AnimatedGroup`), `AnimInView`
-(`AnimationInView`), `AnimText`, `BackgroundBeams`, `BackgroundBoxes`, `BlurFade`,
-`BlurText`, `BorderBeam`, `BreatheText`, `ColorfulText`, `ContactSection`,
-`CubeSpinner`, `DynamicBackground`, `FlipLink`, `FlipWords`, `FloatAny`,
-`GradientAnimation`, `GradientTracking`, `GradualSpacing`, `InteractiveGrid`,
-`IsometricCard`, `LineBordered`, `MagicTrail`, `MemoizedStars`,
-`MeshGradientBackground`, `Meteors`, `MouseTrail`, `MultiColorBorder`,
-`MultiDirectionSlide`, `OrbitingCircles`, `PointerMove`, `ScratchToReveal` and
-`ScrollAnimation`, `ScrollVelocity`, `ShiftingCard`, `ShinyText`, `ShootingStars`,
-`SlideButton`, `SlideLinear`, `SlideText`, `Sparkles`, `SparklesText`, `Spotlight`,
-`SquaresGrid`, `StarBackground`, `TagCloud`, `TextClip`, `TextLoader`, `TextReveal`,
-`ThreeDCard`, `TypedText`, `TypeWriter` and `WordRotate`.
-
-Install the animation entry's optional peers before importing it:
-
-```sh
-npm install motion@'>=12 <15' @react-spring/web@^10 @tsparticles/react@^4.4 @tsparticles/engine@^4.4 @tsparticles/slim@^4.4
-```
-
-The group also uses the existing `framer-motion` peer (`>=12 <15`). `motion`
-and `@react-spring/web` plus the three `@tsparticles` peers are optional for other entries; the root entry remains
-separate. Import `@w.ui/wui-react/style.css` for CSS effects. Animation layout
-styles are packaged and do not require Tailwind.
-
-Supply content through props and children: `AnimateWave` accepts `text` and
-`words`, `BreatheText` accepts `text`/`secondaryText`, `CubeSpinner` accepts `items`,
-`ContactSection` accepts `text` and an optional scroll container ref, and
-`DynamicBackground` accepts icon `items` and foreground `children`. Technology
-icons, hero copy and example links live in stories. `AlternatingText` accepts an
-interval in milliseconds and an optional placeholder for empty lists.
-
-Selection backgrounds preserve caller handlers and select on focus, Enter and
-Space; consumers should supply native interactive children that accept nested spans.
-Native void elements (including inputs), selects and textareas pass through
-unchanged; they retain their original content/events and receive no selection background. `FlipLink` forwards
-link attributes and animates on focus. Decorative duplicates are hidden from
-assistive technology. Timers, observers and pointer listeners are cleaned up.
-
-`GradientTracking` accepts native button attributes and caller `children`.
-`MeshGradientBackground` accepts foreground children and optional `gradient` and
-`backgroundColor`. `MemoizedStars` accepts `count`, `color` and `size`; star and
-meteor geometry is deterministic during server rendering and hydration.
-`MouseTrail` images are decorative (`alt=""`) unless `imageAlt(src, index)` supplies
-meaningful alternatives. Its fade timers are canceled when items change or the
-component unmounts. `ScratchToReveal` keeps covered content inert until revealed
-and always provides a native button (`revealLabel`) for keyboard and reduced-motion
-users; reduced-motion users reveal without the completion animation. `MagicTrail`
-uses a canvas overlay, observes its size and DPR, and cancels listeners/frames on
-unmount. Its optional `containerRef` selects the pointer event owner.
-
-`TagCloud` accepts `items` and children; `TextClip` accepts `items`, `prefix`,
-`suffix` and children. Example labels are provided in stories. `SlideButton` uses
-native button attributes and keyboard behavior. `TypedText` and `TypeWriter`
-expose complete text to assistive technology while typing. `StarBackground`
-accepts count/color/container options and initializes random geometry after mount.
-`Sparkles` initializes its particle provider within the animation group and uses
-caller colors (transparent background and white particles by default).
-
-The animation entry uses a native dynamic import for `@tsparticles/slim` when
-`Sparkles` mounts. This avoids the upstream 4.4 CommonJS wrapper; Node 22+/24+
-and modern browsers support this import form. Application bundlers resolve the
-optional package when bundling the animation entry. Server rendering does not
-initialize particles. The provider catches initialization failures, and ignores
-completion after unmount; its particle container is destroyed on teardown.
-
-### Media group
-
-Import media components and their prop types from `@w.ui/wui-react/media`.
-This group exports `AutoSlider`, `CompareAll`, `FixCarouse`, `FixMusicPlayer`,
-`InteractiveBook`, `LazyLoadImage`, `LogoSlider`, `MusicPlayer`,
-`SmartVideoPlayer`, `SoundBar`, `TestimonialCarousel` and `Video`.
-
-The media peers below are optional for consumers of the root or other groups.
-Install these compatible versions when using the media group:
-
-| Peer            | Compatible range   |
-| --------------- | ------------------ |
-| `react-pdf`     | `>=11.0.0 <12.0.0` |
-| `pdfjs-dist`    | `>=6.3.289 <7.0.0` |
-| `video.js`      | `>=8.24.1 <9.0.0`  |
-| `hls.js`        | `>=1.7.3 <2.0.0`   |
-| `i18next`       | `>=26.0.0 <27.0.0` |
-| `react-i18next` | `>=17.0.0 <18.0.0` |
-
-Import the package stylesheet once. `Video` additionally requires its peer's
-stylesheet in your **browser entry**; the media runtime deliberately does not
-import external CSS, so Node ESM/CJS and SSR imports remain valid:
-
-```tsx
-import '@w.ui/wui-react/style.css'
 import 'video.js/dist/video-js.css'
-import { Video, MusicPlayer } from '@w.ui/wui-react/media'
 ```
 
-The layouts work without application Tailwind or theme styles. Supply your own
-`tracks` to the music players, `slides` to `AutoSlider`, `items` to the generic
-carousels, `{ src, alt }` companies to `LogoSlider`, and `src` to `SoundBar`.
-`MusicPlayer` and `FixMusicPlayer` accept `theme`, `labels`, playback callbacks,
-and `active`; temporarily setting `active={false}` pauses playback and restores
-previously playing audio on reactivation, while respecting explicit user pauses.
-`FixMusicPlayer` restores close-player control (`closeLabel`, `onClose`) and starts playback on previous/next navigation; set `playOnNavigate={false}` to retain paused navigation. Shuffle chooses a different track when multiple tracks exist. Closing unmounts and releases its audio.
-`SmartVideoPlayer` provides scoped English/Chinese messages plus `language` and
-`labels` overrides, and loads HLS only for the corresponding media source.
+### 可视化组
 
-#### InteractiveBook PDF worker ownership
-
-`InteractiveBook` accepts `pdfWorker`, a caller-owned `pdfjs.PDFWorker` instance,
-or uses the host's existing PDF.js worker configuration. Create browser resources
-only in the browser (for example in an application effect), and use a worker file
-whose PDF.js version matches the runtime exported by `react-pdf`. A bundler that
-supports worker URLs can configure an explicit worker as follows:
-
-```tsx
-import { pdfjs } from 'react-pdf'
-import { InteractiveBook } from '@w.ui/wui-react/media'
-
-// Browser setup; keep these resources alive while their books are mounted.
-const port = new Worker(new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url), { type: 'module' })
-const pdfWorker = new pdfjs.PDFWorker({ port })
-
-const book = (
-  <InteractiveBook
-    coverImage="/covers/manual.jpg"
-    pages={[]}
-    pdfUrl="/documents/manual.pdf"
-    pdfWorker={pdfWorker}
-    pageTurnSound="/audio/page-turn.mp3"
-  />
-)
-
-// Owner teardown after unmounting every book that uses this worker:
-pdfWorker.destroy()
-port.terminate()
+```bash
+pnpm add echarts@^6.1.0
+# 使用 MarkmapHooks 时
+pnpm add markmap-lib@^0.18.12 markmap-view@^0.18.12
+# 使用 MermaidHooks 时
+pnpm add mermaid@^12.1.0
 ```
 
-The book cancels its render tasks and destroys document loading tasks; it does
-not own an injected worker. It makes no worker CDN choice and supplies no private
-audio. `pageTurnSound` is optional (`soundSrc` remains supported). The component
-requests exactly the supplied `pdfUrl`; applications and Storybook stories must
-resolve deployment base paths themselves, without relying on speculative retries.
+### PDF 导出
 
-### Visualization (`@w.ui/wui-react/visualization`)
+```bash
+pnpm add html2canvas@^1.4.1 jspdf@^4.2.1
+```
 
-Named exports: EChart, EChartsCommon, BaseChart, DonutCharts, PieNestCharts, PHBarChart, OrgChart, IconCloud, MarkmapHooks, MermaidHooks, getPHColor. Import the package stylesheet for OrgChart. This group stays outside the lightweight root.
+`PDFExport` 在发起导出时才加载这两个依赖；仅使用 `data-display` 的其他组件无需安装它们。
 
-Optional peers: `echarts >=6.1.0 <7.0.0` for charts, `markmap-lib >=0.18.12 <0.19.0` and `markmap-view >=0.18.12 <0.19.0` for mind maps, `mermaid >=12.1.0 <13.0.0` for diagrams. ECharts is required when importing the visualization group; diagram peers load only when their components mount.
+### 编辑器组
 
-Chart options/data, themes, map registrations (`maps: [{ name, data, specialAreas? }]`) and accessible `ariaLabel` text are caller-owned. Map names use ECharts' global registry; use distinct names for different datasets. `PHBarChart` requires `ranges: [{name, values}]`, with optional markers and title. `PieNestCharts.data` provides the inner series when no explicit series are supplied. OrgChart takes a caller tree, including IDs equal to zero.
+```bash
+pnpm add @codesandbox/sandpack-react@^2.20.0 \
+  @tiptap/core@3.31.4 @tiptap/react@^3.31.4 @tiptap/starter-kit@^3.31.4 \
+  @tiptap/extension-code-block-lowlight@^3.31.4 @tiptap/extension-image@^3.31.4 \
+  @tiptap/extension-link@^3.31.4 @tiptap/extension-placeholder@^3.31.4 \
+  @tiptap/extension-table@^3.31.4 @tiptap/extension-task-item@^3.31.4 \
+  @tiptap/extension-task-list@^3.31.4 @tiptap/extension-text-align@^3.31.4 \
+  @tiptap/extension-underline@^3.31.4 highlight.js@^11 katex@^0.19.0 \
+  lowlight@^3.3.0 marked@^18.1.0 prism-react-renderer@^2.4.1 \
+  react-markdown@^10 rehype-highlight@^7 rehype-katex@^7.0.1 \
+  remark-breaks@^4 remark-gfm@^4 remark-math@^6.0.0 shiki@^4.5.0 turndown@^7.2.4
+```
 
-Diagram markup is always sanitized: Mermaid uses strict security by default and static SVG primitives; scripts, styles, external SVG resources and embedded HTML are removed even in loose mode. Flowchart HTML labels are disabled to preserve text. Markmap permits safe inline HTML but never loads plugin scripts/styles. Mermaid configuration/rendering is serialized within this package; external Mermaid users should avoid changing the same global configuration during a render. IconCloud renders caller icons/images and accepts an accessible text alternative plus arrow-key rotation.
+## 使用前留意
 
-### Editor (`@w.ui/wui-react/editor`)
+- **远程数据与鉴权：**`ResponsiveTable` 的远程请求应通过 `requestLib` 或 `fetchData` 接入业务客户端；`autoLoad` 默认关闭。`TreeList` 和 `UserIP` 也由调用方提供加载函数或数据。
+- **验证结果：**`MoveChecker` 和 `SliderCaptcha` 提供前端交互；需要做安全判断时，由服务端验证结果。
+- **交互语义：**`RadioInput` 是只读的视觉指示器；需要用户选择时使用可交互的表单控件。
+- **内容与资源：**`SafeHtml` 会清理 HTML，但仍需按业务检查允许的标签、属性和 URL。`Watermark` 是会返回清理函数的命令式 API，使用后应调用该函数移除水印。
+- **PDF 阅读：**`InteractiveBook` 的 PDF worker 由应用创建或沿用宿主配置，worker 文件版本应与 `react-pdf` 使用的 PDF.js 版本一致；卸载后由创建方销毁。配置示例见 [InteractiveBook 文档](https://github.com/wkylin/pro-react-admin/blob/main/packages/wui-react/src/media/InteractiveBook/InteractiveBook.mdx)。
+- **编辑器内容：**`MdxEditor` 编辑的是 Markdown，并不执行 MDX 组件代码。示例和更多边界见 [MdxEditor 文档](https://github.com/wkylin/pro-react-admin/blob/main/packages/wui-react/src/editor/MdxEditor/MdxEditor.mdx)。
 
-Named exports: `AdvancedCodeBlock`, `CodeHighlighter`, `MdxEditor`, `ReMarkdown`, `SandpackBasic`, `ScriptView`, `ShiCode`. Import `@w.ui/wui-react/style.css` for independent styles. The root and original component subpaths do not load editor peers. Install the editor group peers before importing this group:
+## 更多资料
 
-- `@codesandbox/sandpack-react ^2.20.0`
-- `@tiptap/core 3.31.4`
-- `@tiptap/extension-code-block-lowlight ^3.31.4`
-- `@tiptap/extension-image ^3.31.4`
-- `@tiptap/extension-link ^3.31.4`
-- `@tiptap/extension-placeholder ^3.31.4`
-- `@tiptap/extension-table ^3.31.4`
-- `@tiptap/extension-task-item ^3.31.4`
-- `@tiptap/extension-task-list ^3.31.4`
-- `@tiptap/extension-text-align ^3.31.4`
-- `@tiptap/extension-underline ^3.31.4`
-- `@tiptap/react ^3.31.4`
-- `@tiptap/starter-kit ^3.31.4`
-- `highlight.js >=11.0.0 <12.0.0`
-- `katex ^0.19.0`
-- `lowlight ^3.3.0`
-- `marked ^18.1.0`
-- `prism-react-renderer ^2.4.1`
-- `react-markdown >=10.0.0 <11.0.0`
-- `rehype-highlight >=7.0.0 <8.0.0`
-- `rehype-katex ^7.0.1`
-- `remark-breaks >=4.0.0 <5.0.0`
-- `remark-gfm >=4.0.0 <5.0.0`
-- `remark-math ^6.0.0`
-- `shiki ^4.5.0`
-- `turndown ^7.2.4`
-
-All peers above are optional for other groups. SandpackBasic forwards typed Sandpack files, template, options and theme; supply your own files. MdxEditor accepts `value`/`onChange` or `initialMarkdown`, `readOnly`, `theme`/`onThemeChange`, `title`, `labels`, and `downloadFileName`. It parses Markdown (not executable MDX) and sanitizes HTML before inserting it into Tiptap. ReMarkdown ignores raw HTML, rejects unsafe URL protocols through react-markdown, and supports trusted caller `components` and `renderLoading`; `onCopy`/`onCopyError` provide feedback. CodeHighlighter exposes typed Shiki languages/themes, falls back to escaped source on failure, and discards stale/unmounted async results. AdvancedCodeBlock accepts figure attributes and filename. ScriptView accepts commandMap, language, theme and copy labels; ShiCode accepts preCode, filename, language and copy label.
-
-Math is rendered as native MathML, avoiding global KaTeX font CSS and embedded font payloads.
+- [Storybook：可交互示例、Props 说明和注意事项](https://wkylin.github.io/pro-react-admin/storybook/)
+- [完整组件与分组导出目录](https://github.com/wkylin/pro-react-admin/blob/main/docs/components/COMPONENT_CATALOG.md)
+- [包声明：准确的 peer 版本范围](https://github.com/wkylin/pro-react-admin/blob/main/packages/wui-react/package.json)
+- [MIT 许可证](https://github.com/wkylin/pro-react-admin/blob/main/LICENSE)

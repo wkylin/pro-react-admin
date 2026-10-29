@@ -1,9 +1,165 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../../.storybook/PropReference'
 import * as Stories from './InteractiveBook.stories'
 
 <Meta of={Stories} />
 
-# InteractiveBook
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">APPLICATION / READING EXPERIENCE</span>
+  <h1>InteractiveBook</h1>
+  <p>以立体封面、柔性翻页和阅读进度呈现的交互书。内容可以来自 JSX、图片或 PDF；窄屏时可切换成单页。</p>
+  <div className="wui-doc-badges">
+    <span>3 种内容来源</span>
+    <span>单页 / 双页</span>
+    <span>装帧与翻页</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>图片、JSX 或 PDF 内容需要用翻页书形式展示时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>先翻动默认书页，再比较单页、装帧和封底等示例。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>PDF 版本依赖 Worker、跨域与内容安全策略；部署时需单独验证。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 打开一本书
+
+点击封面进入阅读，使用页角、导航按钮或拖动翻页。
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 内容与模式
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>内容来源</th>
+      <th>设置</th>
+      <th>读取优先级</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PDF</td>
+      <td>
+        <code>pdfUrl</code>
+      </td>
+      <td>最高</td>
+    </tr>
+    <tr>
+      <td>图片页</td>
+      <td>
+        <code>pageImages</code>
+      </td>
+      <td>其次</td>
+    </tr>
+    <tr>
+      <td>React 内容</td>
+      <td>
+        <code>pages</code>
+      </td>
+      <td>默认；每两面组成一个书页</td>
+    </tr>
+  </tbody>
+</table>
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>mode</th>
+      <th>展示方式</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>double</code>
+      </td>
+      <td>平展双页</td>
+    </tr>
+    <tr>
+      <td>
+        <code>single</code>
+      </td>
+      <td>单页阅读</td>
+    </tr>
+    <tr>
+      <td>
+        <code>auto</code>
+      </td>
+      <td>容器不足以容纳双页时切换单页，并按宽度缩放</td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.SinglePageMode} />
+
+### 装帧与视角
+
+封面排版、材质、书脊与封底可以分别配置；下面的示例展示出版物排版与立体视角。
+
+<Canvas of={Stories.PublisherCoverLayout} />
+
+<Canvas of={Stories.MultiAngle3D} />
+
+### 阅读中的交互
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>目录</strong>
+    <p>从 pages 的 title 生成，目录过长时分页；点击章节可跳转。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>翻页</strong>
+    <p>硬封面与柔性内页采用不同几何效果，拖动未越过书槽时回弹。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>导航</strong>
+    <p>展示实际页码与阅读进度；末页可翻到封底。</p>
+  </div>
+</div>
+
+<Canvas of={Stories.OpenSpread} />
+
+<Canvas of={Stories.BackCover} />
+
+<div className="wui-doc-callout">
+  <strong>组件范围：</strong>InteractiveBook 目前是应用内部组件，不属于 <code>@w.ui/wui-react</code> 发布包。PDF
+  示例依赖 Worker、跨域与内容安全策略配置，部署时需要单独验证。
+</div>
+
+### 行为与实现细节
+
+<details>
+  <summary>展开装帧、翻页、PDF 与移动端说明</summary>
+
+#### 组件概览
 
 应用内部翻页书组件。必需 coverImage 与 pages，可选 bookTitle/bookAuthor、pdfUrl 和 pageImages。显示优先级为 PDF > 图片 > pages JSX，每两面组成一个书页。目录从 pages 的 title 自动生成；contentsPerPage 控制每张目录页的章节数上限（默认 6，页面较矮时会自动减少），目录超出后会分页，点击目录条目可直接跳转到对应正文页。
 
@@ -21,30 +177,20 @@ mode 支持 single/double/auto；auto 在窄屏或容器放不下完整双页时
 
 PDF 先读取文档信息，再按需渲染当前可见页，并预加载后续两页；相邻页面保留在有限缓存中，降低翻页等待和内存占用。PDF.js API 与 Worker 使用同一版本。Worker 由 Webpack 资源 URL 加载，异常时回退 CDN；部署时需验证 Worker/CORS。当前不属于 @w.ui/wui-react 发布组件。
 
-## 预览
+</details>
 
-<Canvas of={Stories.Default} />
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
 
-<Canvas of={Stories.MultiPageContents} />
+<PropReference name="InteractiveBook" />
 
-<Canvas of={Stories.PublisherCoverLayout} />
-
-<Canvas of={Stories.ClassicHardcover} />
-
-<Canvas of={Stories.LeatherHardcover} />
-
-<Canvas of={Stories.GoldenJacket} />
-
-<Canvas of={Stories.EditorialOrange} />
-
-<Canvas of={Stories.CoverAndSpineStyles} />
-
-<Canvas of={Stories.MultiAngle3D} />
-
-<Canvas of={Stories.OpenSpread} />
-
-<Canvas of={Stories.BackCover} />
-
-## 当前参数
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

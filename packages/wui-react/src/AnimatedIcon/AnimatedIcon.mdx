@@ -1,18 +1,153 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
 import * as Stories from './AnimatedIcon.stories'
 
 <Meta of={Stories} />
 
-# AnimatedIcon
+<div className="wui-doc-page">
 
-轻量图标动画包装组件，公开类型是 AnimatedIconProps、AnimatedIconVariant、AnimatedIconMode。variant 支持 spin/pulse/bounce/draw，mode 支持 hover/auto/idle，默认 hover；children 需要单个 ReactElement。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / MOTION</span>
+  <h1>AnimatedIcon</h1>
+  <p>给已有图标加上轻量动效。先选动画形态，再决定由悬停、自动播放还是静态模式呈现。</p>
+  <div className="wui-doc-badges">
+    <span>4 种动画</span>
+    <span>3 种播放模式</span>
+    <span>减少动态效果</span>
+  </div>
+</header>
 
-动画尊重 prefers-reduced-motion。装饰图标设置 aria-hidden，交互按钮仍需可访问名称。安装后从 @w.ui/wui-react/animated-icon 导入，并在应用入口导入 style.css。
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>按钮、状态提示或导航里已有图标，需要用轻量动效强化反馈时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>在 Playground 切换动画形态和触发模式，悬停图标，再比较自动播放示例。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>children 需要是单个 React 元素；装饰图标设为 aria-hidden，交互图标由外层操作提供可访问名称。</p>
+  </div>
+</div>
 
-## 预览
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 图标动效与触发模式
+
+将鼠标移到图标上；点击 Canvas 下方的源码可查看对应示例。
 
 <Canvas of={Stories.Playground} />
 
-## 当前参数
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 选择动画
+
+<Canvas of={Stories.Variants} />
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>variant</th>
+      <th>视觉效果</th>
+      <th>适合场景</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>spin</code>
+      </td>
+      <td>持续旋转</td>
+      <td>刷新、加载中的图标</td>
+    </tr>
+    <tr>
+      <td>
+        <code>pulse</code>
+      </td>
+      <td>呼吸缩放</td>
+      <td>状态提醒、强调操作</td>
+    </tr>
+    <tr>
+      <td>
+        <code>bounce</code>
+      </td>
+      <td>弹跳</td>
+      <td>轻量提示</td>
+    </tr>
+    <tr>
+      <td>
+        <code>draw</code>
+      </td>
+      <td>描绘图形</td>
+      <td>线条图标的入场效果</td>
+    </tr>
+  </tbody>
+</table>
+
+### 快速接入
+
+```tsx
+import AnimatedIcon from '@w.ui/wui-react/animated-icon'
+import '@w.ui/wui-react/style.css'
+import { Heart } from 'lucide-react'
+
+export function Example() {
+  return (
+    <AnimatedIcon variant="pulse" mode="hover">
+      <Heart size={24} aria-hidden="true" />
+    </AnimatedIcon>
+  )
+}
+```
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>hover</strong>
+    <p>默认模式，用户移入时播放，适合可点击区域旁的提示图标。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>auto</strong>
+    <p>自动播放；用于需要持续提示的状态，注意页面上同时播放的数量。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>idle</strong>
+    <p>停留在静态状态，适合暂时关闭动效。</p>
+  </div>
+</div>
+
+<Canvas of={Stories.AutoMode} />
+
+<div className="wui-doc-callout">
+  <strong>无障碍：</strong>组件尊重系统的 <code>prefers-reduced-motion</code>。纯装饰图标可设置 <code>aria-hidden</code>
+  ；如果图标是按钮内容，请在按钮上提供可访问名称。<code>children</code> 需要是单个 React 元素。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="AnimatedIcon" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

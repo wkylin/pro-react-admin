@@ -5,7 +5,6 @@ import Component from './index'
 const meta = {
   title: 'WUI/Components/SliderCaptcha',
   component: Component,
-  tags: ['autodocs'],
   args: { difficulty: 'easy', onSuccess: fn(), onFail: fn(), onRefresh: fn() },
 } satisfies Meta<typeof Component>
 export default meta

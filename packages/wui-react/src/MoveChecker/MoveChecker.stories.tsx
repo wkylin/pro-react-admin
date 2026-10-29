@@ -5,7 +5,6 @@ import Component from './index'
 const meta = {
   title: 'WUI/Components/MoveChecker',
   component: Component,
-  tags: ['autodocs'],
   args: { initialText: '向右拖动完成验证', successText: '验证成功', onResult: fn() },
 } satisfies Meta<typeof Component>
 export default meta

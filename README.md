@@ -195,22 +195,16 @@ npm pack ./packages/wui-react --dry-run --ignore-scripts
 
 输出为 `packages/wui-react/dist`，以上命令不会发布到 npm。查看组件示例运行 `pnpm run storybook`，访问 http://localhost:6006。逐步构建命令见[快速上手](./docs/development/GETTING_STARTED.md#本地构建-lib)，包安装和导入见[组件包用法](NPM_README.md)。
 
-发布到 npmjs，先确认版本未发布并完成完整准备。组件包 6.0.0 可以通过 `wui-react-v6.0.0` 标签触发 Trusted Publishing；在本机手动发布时，先登录、打包，再上传同一份已验证产物。两种方式只选一种：
+发布到 npmjs 时，先确认新版本尚未发布并完成完整准备。提交版本变更后，推送 `wui-react-v<版本>` 标签可触发 Trusted Publishing；需要手动发布时，按[组件库发布指南](./docs/deployment/LIBRARY_PUBLISH_GUIDE.md)上传同一份已验证产物。
 
 ```bash
 pnpm run check:lib-release
 pnpm run prepare:lib:release
-npm login --registry=https://registry.npmjs.org/ --auth-type=web
-npm whoami --registry=https://registry.npmjs.org/
-node --input-type=module -e "import fs from 'node:fs'; fs.mkdirSync('artifacts/npm', {recursive:true})"
-npm pack ./packages/wui-react --pack-destination artifacts/npm --ignore-scripts
-npm publish ./artifacts/npm/w.ui-wui-react-6.0.0.tgz --access public --tag latest --registry=https://registry.npmjs.org/ --ignore-scripts
-npm view @w.ui/wui-react@6.0.0 version --registry=https://registry.npmjs.org/
+npm pack ./packages/wui-react --dry-run --ignore-scripts
+npm view @w.ui/wui-react versions dist-tags --json --registry=https://registry.npmjs.org/
 ```
 
-已发布版本不能覆盖；更新时升级组件包版本并使用对应 tarball 文件名。`--ignore-scripts` 仅用于上传已完整验证的固定产物。Node 工具构建替代命令、beta 通道、发布核验、GitHub Trusted Publishing 和常见问题见[组件库构建与 npmjs 发布指南](./docs/deployment/LIBRARY_PUBLISH_GUIDE.md)。
-
-如果登录成功后发布仍提示需要两步验证，在自己的终端运行 `npm profile enable-2fa auth-and-writes` 完成设置，或按现有 2FA 提示认证，再重试同一 tarball。具体命令见[发布 2FA](./docs/deployment/LIBRARY_PUBLISH_GUIDE.md#npmjs-要求发布两步验证)。
+已发布版本不能覆盖。手动发布、beta 通道、npm 认证和发布后核验见[组件库构建与 npmjs 发布指南](./docs/deployment/LIBRARY_PUBLISH_GUIDE.md)。
 
 ### Storybook 当前源码预览
 
@@ -243,7 +237,7 @@ pnpm run check:pages
 gh workflow run deploy-gh-pages.yml --ref main -f target=all
 ```
 
-输出 `dist-combined`：默认应用在根，企业演示在 `/enterprise/`，普通项目在 `/projects/projectA/` 与 `/projects/projectB/`，微前端在 `/mfe/`，组件站在 `/storybook/`。这些路径相对于实际 Pages base，Fork 和自定义域名从 Pages 配置推断。完整命令与 v6.0.0 标签/Release 流程见 [GitHub 部署指南](./docs/deployment/GITHUB_DEPLOYMENT.md)。
+输出 `dist-combined`：默认应用在根，企业演示在 `/enterprise/`，普通项目在 `/projects/projectA/` 与 `/projects/projectB/`，微前端在 `/mfe/`，组件站在 `/storybook/`。这些路径相对于实际 Pages base，Fork 和自定义域名从 Pages 配置推断。部署命令见 [GitHub 部署指南](./docs/deployment/GITHUB_DEPLOYMENT.md)，本次版本变化见 [v6.1.1 发布说明](./docs/releases/v6.1.1.md)。
 
 ### 真实用户登录和权限设置
 

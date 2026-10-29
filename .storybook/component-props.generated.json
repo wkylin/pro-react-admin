@@ -1,0 +1,6381 @@
+{
+  "AnimatedIcon": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "mode",
+      "type": "AnimatedIconMode",
+      "required": false,
+      "description": "图标切换的交互模式。"
+    },
+    {
+      "name": "children",
+      "type": "React.ReactElement",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "variant",
+      "type": "AnimatedIconVariant",
+      "required": false,
+      "description": "图标的视觉样式。"
+    }
+  ],
+  "IconFrame": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "MoveChecker": [
+    {
+      "name": "onResult",
+      "type": "(result: boolean) => void",
+      "required": false,
+      "description": "校验产生布尔结果时调用的回调。"
+    },
+    {
+      "name": "initialText",
+      "type": "string",
+      "required": false,
+      "description": "滑块校验前显示的提示文字。"
+    },
+    {
+      "name": "successText",
+      "type": "string",
+      "required": false,
+      "description": "滑块校验成功后显示的文字。"
+    },
+    {
+      "name": "initialTextColor",
+      "type": "string",
+      "required": false,
+      "description": "文字颜色的初始值。"
+    },
+    {
+      "name": "successTextColor",
+      "type": "string",
+      "required": false,
+      "description": "成功文字使用的颜色。"
+    },
+    {
+      "name": "boxBg",
+      "type": "string",
+      "required": false,
+      "description": "校验区域底板的背景色。"
+    },
+    {
+      "name": "bgColor",
+      "type": "MoveCheckerColor",
+      "required": false,
+      "description": "滑动轨道的背景色。"
+    },
+    {
+      "name": "bgColorS",
+      "type": "MoveCheckerColor",
+      "required": false,
+      "description": "校验成功时轨道的背景色。"
+    },
+    {
+      "name": "sliderBg",
+      "type": "MoveCheckerColor",
+      "required": false,
+      "description": "滑块的背景色。"
+    },
+    {
+      "name": "sliderSuccessBg",
+      "type": "MoveCheckerColor",
+      "required": false,
+      "description": "滑块校验成功后的背景色。"
+    }
+  ],
+  "OneTimePasscode": [
+    {
+      "name": "length",
+      "type": "number",
+      "required": false,
+      "description": "一次性验证码的字符位数。"
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "当前值；受控使用时由父组件更新。"
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "当前值变化时调用的回调；按类型签名接收新值。"
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "required": false,
+      "description": "组件挂载后是否自动聚焦输入区域。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "inputClassName",
+      "type": "string",
+      "required": false,
+      "description": "输入框元素的 CSS 类名。"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "HTML 元素标识，供关联标签或外部引用。"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "表单字段名称。"
+    },
+    {
+      "name": "validateChar",
+      "type": "(character: string) => boolean",
+      "required": false,
+      "sourceDescription": "Allows custom single-character validation, for example digits only.",
+      "description": "判断单个输入字符是否有效的函数。"
+    },
+    {
+      "name": "variant",
+      "type": "'modern' | 'compact' | 'classic'",
+      "required": false,
+      "description": "组件的外观或行为变体；可选值见类型列。"
+    }
+  ],
+  "OverflowText": [
+    {
+      "name": "text",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件显示的主要文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "minWidth",
+      "type": "CSSProperties['minWidth']",
+      "required": false,
+      "description": "布局允许的最小宽度。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "maxWidth",
+      "type": "CSSProperties['maxWidth']",
+      "required": false,
+      "description": "布局允许的最大宽度。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。",
+      "defaultValue": "EMPTY_STYLE"
+    },
+    {
+      "name": "tooltipProps",
+      "type": "OverflowTextTooltipProps",
+      "required": false,
+      "description": "文字溢出时提示框的配置。",
+      "defaultValue": "EMPTY_TOOLTIP_PROPS"
+    },
+    {
+      "name": "alwaysShow",
+      "type": "boolean",
+      "required": false,
+      "description": "不论是否溢出都显示完整内容提示。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "lines",
+      "type": "number",
+      "required": false,
+      "description": "允许的显示行数或各行配置。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "onOverflowChange",
+      "type": "(isOverflow: boolean) => void",
+      "required": false,
+      "description": "内容溢出状态变化时调用的回调。"
+    }
+  ],
+  "PortalTooltip": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "title",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "visible",
+      "type": "boolean",
+      "required": false,
+      "description": "弹层是否显示；传入时由父组件控制。"
+    },
+    {
+      "name": "defaultVisible",
+      "type": "boolean",
+      "required": false,
+      "description": "弹层非受控模式下的初始显示状态。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "placement",
+      "type": "PortalTooltipPlacement",
+      "required": false,
+      "description": "弹层相对触发元素的位置。",
+      "defaultValue": "'top'"
+    },
+    {
+      "name": "overlayStyle",
+      "type": "React.CSSProperties",
+      "required": false,
+      "description": "浮层区域的样式配置。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "overlayClassName",
+      "type": "string",
+      "required": false,
+      "description": "浮层元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "zIndex",
+      "type": "number",
+      "required": false,
+      "description": "弹层与其他浮层的层叠顺序。",
+      "defaultValue": "1060"
+    },
+    {
+      "name": "trigger",
+      "type": "'hover' | 'click'",
+      "required": false,
+      "description": "打开弹层的交互方式。",
+      "defaultValue": "'hover'"
+    }
+  ],
+  "ResponsiveTable": [
+    {
+      "name": "columns",
+      "type": "ColumnsType<T>",
+      "required": false,
+      "description": "表格列定义，决定标题、字段与单元格呈现。"
+    },
+    {
+      "name": "dataSource",
+      "type": "T[]",
+      "required": false,
+      "description": "列表或表格的数据项数组。"
+    },
+    {
+      "name": "rowKey",
+      "type": "string | ((record: T) => React.Key)",
+      "required": false,
+      "description": "每行的稳定标识；可传字段名或取值函数。"
+    },
+    {
+      "name": "initialPagination",
+      "type": "TablePagination",
+      "required": false,
+      "description": "表格初次显示时的分页状态。"
+    },
+    {
+      "name": "minBodyHeight",
+      "type": "number",
+      "required": false,
+      "description": "主体内容区域的最小高度。"
+    },
+    {
+      "name": "minWidth",
+      "type": "number",
+      "required": false,
+      "description": "布局允许的最小宽度。"
+    },
+    {
+      "name": "showColumnSettings",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示列设置入口。"
+    },
+    {
+      "name": "pageSyncToUrl",
+      "type": "boolean",
+      "required": false,
+      "description": "是否把分页状态同步到浏览器地址。"
+    },
+    {
+      "name": "locationSearch",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "Query string used to initialize search state. Defaults to the current browser URL.",
+      "description": "提供要读取的 URL 查询字符串。"
+    },
+    {
+      "name": "onPaginationChange",
+      "type": "(pagination: TablePagination) => void",
+      "required": false,
+      "description": "分页状态变化时调用的回调。"
+    },
+    {
+      "name": "onChange",
+      "type": "(...args: any[]) => any",
+      "required": false,
+      "description": "表格分页、筛选或排序变化时调用的 Ant Design Table 回调。"
+    },
+    {
+      "name": "actions",
+      "type": "Array<'view' | 'edit' | 'delete' | ActionConfig<T>>",
+      "required": false,
+      "description": "行操作配置，如查看、编辑和删除。"
+    },
+    {
+      "name": "permissionChecker",
+      "type": "(actionKey: string, record: T) => boolean",
+      "required": false,
+      "description": "按操作名称和当前记录判断操作权限。"
+    },
+    {
+      "name": "onView",
+      "type": "(record: T) => any",
+      "required": false,
+      "description": "点击查看行操作时调用，接收当前记录。"
+    },
+    {
+      "name": "onEdit",
+      "type": "(record: T) => any",
+      "required": false,
+      "description": "点击编辑行操作时调用，接收当前记录。"
+    },
+    {
+      "name": "onDelete",
+      "type": "(record: T) => any",
+      "required": false,
+      "description": "点击删除行操作时调用，接收当前记录。"
+    },
+    {
+      "name": "reloadPage",
+      "type": "((page: number, pageSize: number) => Promise<any>) | null",
+      "required": false,
+      "description": "从外部重新加载表格指定页的函数。"
+    },
+    {
+      "name": "showIndex",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示序号列。"
+    },
+    {
+      "name": "indexMode",
+      "type": "'global' | 'page' | 'custom'",
+      "required": false,
+      "description": "序号列显示当前页序号、全局序号或自定义值的模式。"
+    },
+    {
+      "name": "indexFixed",
+      "type": "false | 'left' | 'right'",
+      "required": false,
+      "description": "序号列固定在左侧、右侧或不固定。"
+    },
+    {
+      "name": "actionsFixed",
+      "type": "false | 'left' | 'right'",
+      "required": false,
+      "description": "操作列固定在左侧、右侧或不固定。"
+    },
+    {
+      "name": "customIndexRender",
+      "type": "(record: T, index: number, pagination: TablePagination) => ReactNode",
+      "required": false,
+      "description": "自定义表格序号单元格的渲染函数。"
+    },
+    {
+      "name": "rowSelection",
+      "type": "null | 'multiple' | 'single'",
+      "required": false,
+      "description": "表格行选择模式：单选、多选或关闭。"
+    },
+    {
+      "name": "rowSelectable",
+      "type": "((record: T) => boolean) | string | null",
+      "required": false,
+      "description": "限制哪些行允许选中。"
+    },
+    {
+      "name": "fetchData",
+      "type": "((page: number, pageSize: number, sort?: any, extraParams?: any) => Promise<any>) | null",
+      "required": false,
+      "description": "自定义远程数据请求函数，参数包括分页和排序。"
+    },
+    {
+      "name": "autoLoad",
+      "type": "boolean",
+      "required": false,
+      "description": "挂载后是否自动触发远程数据加载。"
+    },
+    {
+      "name": "fetchUrl",
+      "type": "string | null",
+      "required": false,
+      "description": "远程数据接口地址。"
+    },
+    {
+      "name": "requestLib",
+      "type": "RequestClient",
+      "required": false,
+      "description": "注入业务请求客户端，以沿用鉴权和拦截器。"
+    },
+    {
+      "name": "requestParamMap",
+      "type": "{\n    pageField: string\n    pageSizeField: string\n    sortField: string\n    orderField: string\n  }",
+      "required": false,
+      "description": "远程请求中分页、排序等字段名的映射。"
+    },
+    {
+      "name": "responseFieldMap",
+      "type": "{ listField: string; totalField: string }",
+      "required": false,
+      "description": "远程响应中列表和总数字段名的映射。"
+    },
+    {
+      "name": "serverSort",
+      "type": "boolean",
+      "required": false,
+      "description": "是否由服务端完成排序。"
+    },
+    {
+      "name": "defaultSort",
+      "type": "any",
+      "required": false,
+      "description": "表格初次展示时的排序配置。"
+    },
+    {
+      "name": "virtualized",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用表格虚拟滚动。"
+    },
+    {
+      "name": "mergeSearchToFetch",
+      "type": "boolean",
+      "required": false,
+      "description": "是否把 URL 搜索条件合并进远程请求。"
+    },
+    {
+      "name": "mergeSearchToFetchOnce",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只在首次请求时合并 URL 搜索条件。"
+    },
+    {
+      "name": "requestMethod",
+      "type": "string",
+      "required": false,
+      "description": "远程数据请求使用的 HTTP 方法。"
+    },
+    {
+      "name": "clearUrlAfterInitialMerge",
+      "type": "boolean",
+      "required": false,
+      "description": "首次合并搜索条件后是否清除地址中的查询字段。"
+    },
+    {
+      "name": "showUrlAppliedTag",
+      "type": "boolean",
+      "required": false,
+      "description": "是否展示 URL 条件已生效的提示标签。"
+    },
+    {
+      "name": "indexWidth",
+      "type": "number",
+      "required": false,
+      "description": "序号列的宽度。"
+    },
+    {
+      "name": "actionsWidth",
+      "type": "number",
+      "required": false,
+      "description": "操作列的宽度。"
+    },
+    {
+      "name": "uiLabels",
+      "type": "{\n    index?: string\n    actions?: string\n    columnSettings?: string\n    allColumns?: string\n    firstColumns?: string\n    total?: (count: number) => string\n  }",
+      "required": false,
+      "description": "表格的序号、操作、列设置等界面文案。"
+    },
+    {
+      "name": "toolbar",
+      "type": "any",
+      "required": false,
+      "description": "表格工具栏配置。"
+    },
+    {
+      "name": "apiRef",
+      "type": "any",
+      "required": false,
+      "description": "向外暴露表格操作 API 的 ref。"
+    },
+    {
+      "name": "onToolbarReady",
+      "type": "(api: any) => void",
+      "required": false,
+      "description": "工具栏 API 准备就绪时调用的回调。"
+    },
+    {
+      "name": "scroll",
+      "type": "any",
+      "required": false,
+      "description": "传给底层 Ant Design Table 的滚动配置。"
+    }
+  ],
+  "SafeHtml": [
+    {
+      "name": "html",
+      "type": "string",
+      "required": true,
+      "description": "准备净化后渲染的 HTML 字符串。"
+    },
+    {
+      "name": "config",
+      "type": "Partial<DOMPurifyConfig>",
+      "required": false,
+      "description": "组件行为配置；字段结构见类型列。"
+    },
+    {
+      "name": "tag",
+      "type": "React.ElementType",
+      "required": false,
+      "description": "净化后 HTML 外层使用的元素类型。"
+    },
+    {
+      "name": "fallback",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "主内容不可用时展示的替代内容。"
+    }
+  ],
+  "ScrollLayout": [
+    {
+      "name": "header",
+      "type": "ReactNode",
+      "required": false,
+      "description": "滚动布局顶部显示的内容。"
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "required": false,
+      "description": "滚动布局或页面底部显示的内容。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "headerHeight",
+      "type": "number",
+      "required": false,
+      "description": "页头的高度。",
+      "defaultValue": "60"
+    },
+    {
+      "name": "footerHeight",
+      "type": "number",
+      "required": false,
+      "description": "页脚的高度。",
+      "defaultValue": "60"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "headerClassName",
+      "type": "string",
+      "required": false,
+      "description": "页头元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "footerClassName",
+      "type": "string",
+      "required": false,
+      "description": "页脚元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "contentClassName",
+      "type": "string",
+      "required": false,
+      "description": "内容元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "headerStyle",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "页头区域的样式配置。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "footerStyle",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "页脚区域的样式配置。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "contentStyle",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "内容区域的样式配置。",
+      "defaultValue": "{}"
+    }
+  ],
+  "ScrollableSections": [
+    {
+      "name": "sections",
+      "type": "ScrollableSection[]",
+      "required": false,
+      "description": "区块导航及对应内容的数据列表。",
+      "defaultValue": "EMPTY_SECTIONS"
+    },
+    {
+      "name": "scrollContainerRef",
+      "type": "RefObject<HTMLElement | null>",
+      "required": false,
+      "description": "指定要监听的滚动容器；嵌套滚动时传入对应元素 ref。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "navUlClassName",
+      "type": "string",
+      "required": false,
+      "description": "导航列表容器的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "navLiClassName",
+      "type": "string",
+      "required": false,
+      "description": "单个导航项的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "titleClassName",
+      "type": "string",
+      "required": false,
+      "description": "标题元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "contentClassName",
+      "type": "string",
+      "required": false,
+      "description": "内容元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "componentClassName",
+      "type": "string",
+      "required": false,
+      "description": "整体组件容器的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "SliderCaptcha": [
+    {
+      "name": "onSuccess",
+      "type": "() => void",
+      "required": false,
+      "description": "操作成功时调用的回调。"
+    },
+    {
+      "name": "onFail",
+      "type": "() => void",
+      "required": false,
+      "description": "操作失败时调用的回调。"
+    },
+    {
+      "name": "onRefresh",
+      "type": "() => void",
+      "required": false,
+      "description": "请求刷新或重试时调用的回调。"
+    },
+    {
+      "name": "difficulty",
+      "type": "Difficulty",
+      "required": false,
+      "description": "滑块验证的难度等级；可选值见类型列。",
+      "defaultValue": "'medium'"
+    }
+  ],
+  "WatermarkProvider": [
+    {
+      "name": "content",
+      "type": "string",
+      "required": true,
+      "description": "覆盖子内容的水印文字。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "containerId",
+      "type": "string",
+      "required": false,
+      "description": "用来查找组件挂载容器的 DOM id。"
+    },
+    {
+      "name": "opacity",
+      "type": "number",
+      "required": false,
+      "description": "透明度，通常取 0 到 1。"
+    },
+    {
+      "name": "rotate",
+      "type": "number",
+      "required": false,
+      "description": "旋转角度；单位由组件实现决定。"
+    }
+  ],
+  "AlternatingText": [
+    {
+      "name": "alternateText",
+      "type": "readonly React.ReactNode[]",
+      "required": false,
+      "description": "按顺序轮换展示的文字或 React 内容。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "placeholder",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "没有内容或等待输入时显示的占位文字。",
+      "defaultValue": "null"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "文字轮换的间隔，单位毫秒。"
+    }
+  ],
+  "AnimBackground": [
+    {
+      "name": "children",
+      "type": "ReactElement<AnimatedBackgroundChildProps> | readonly ReactElement<AnimatedBackgroundChildProps>[] | null",
+      "required": false,
+      "sourceDescription": "Animated children must accept nested spans. Native void elements and form controls pass through unchanged.",
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "defaultValue",
+      "type": "string | null",
+      "required": false,
+      "description": "初次选中的子项值；之后的选择由组件管理。"
+    },
+    {
+      "name": "onValueChange",
+      "type": "(value: string | null) => void",
+      "required": false,
+      "description": "选中值变化时调用的回调。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "transition",
+      "type": "Transition",
+      "required": false,
+      "description": "动效的过渡参数，如速度和缓动。"
+    },
+    {
+      "name": "enableHover",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用悬停。",
+      "defaultValue": "false"
+    }
+  ],
+  "AnimGroup": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "variants",
+      "type": "{\n    container?: AnimationVariants\n    item?: AnimationVariants\n  }",
+      "required": false,
+      "description": "各动画状态的定义，可覆盖预设效果。"
+    },
+    {
+      "name": "preset",
+      "type": "Preset",
+      "required": false,
+      "description": "要使用的预设动画方案。"
+    },
+    {
+      "name": "asParent",
+      "type": "keyof DOMMotionComponents",
+      "required": false,
+      "description": "动画容器渲染时使用的元素标签。",
+      "defaultValue": "'div'"
+    },
+    {
+      "name": "asChild",
+      "type": "keyof DOMMotionComponents",
+      "required": false,
+      "description": "动画子项渲染时使用的元素标签。",
+      "defaultValue": "'div'"
+    }
+  ],
+  "AnimInView": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "variants",
+      "type": "Variants",
+      "required": false,
+      "description": "各动画状态的定义，可覆盖预设效果。",
+      "defaultValue": "defaultVariants"
+    },
+    {
+      "name": "transition",
+      "type": "Transition",
+      "required": false,
+      "description": "动效的过渡参数，如速度和缓动。"
+    },
+    {
+      "name": "viewOptions",
+      "type": "UseInViewOptions",
+      "required": false,
+      "description": "进入视口检测的观察器配置。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "as",
+      "type": "keyof DOMMotionComponents",
+      "required": false,
+      "description": "组件渲染时使用的元素标签。",
+      "defaultValue": "'div'"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "MotionStyle",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "once",
+      "type": "boolean",
+      "required": false,
+      "description": "进入视口动画是否只播放一次。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "amount",
+      "type": "UseInViewOptions['amount']",
+      "required": false,
+      "description": "触发进入视口事件所需的可见范围。",
+      "defaultValue": "0.2"
+    },
+    {
+      "name": "margin",
+      "type": "UseInViewOptions['margin']",
+      "required": false,
+      "description": "进入视口检测的边界偏移。"
+    },
+    {
+      "name": "scrollContainerRef",
+      "type": "UseInViewOptions['root']",
+      "required": false,
+      "description": "指定要监听的滚动容器；嵌套滚动时传入对应元素 ref。"
+    }
+  ],
+  "AnimText": [
+    {
+      "name": "animText",
+      "type": "string",
+      "required": false,
+      "description": "需要逐字播放动画的文字。",
+      "defaultValue": "''"
+    }
+  ],
+  "AnimateOnScreen": [
+    {
+      "name": "rootMargin",
+      "type": "string",
+      "required": false,
+      "description": "视口观察器根区域的扩展距离。",
+      "defaultValue": "'0px'"
+    },
+    {
+      "name": "threshold",
+      "type": "number",
+      "required": false,
+      "description": "视口观察器判定进入区域的可见比例。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "triggerOnce",
+      "type": "boolean",
+      "required": false,
+      "description": "进入视口触发后是否停止再次触发。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "AnimateRipple": [
+    {
+      "name": "disabled",
+      "type": "boolean | undefined",
+      "required": false,
+      "description": "是否禁止组件的交互操作。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "点击时调用的回调。"
+    }
+  ],
+  "AnimateWave": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的主要文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "words",
+      "type": "readonly string[]",
+      "required": false,
+      "description": "轮换或波浪动画使用的词语列表。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "AnimatedList": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "相邻列表项开始显示的间隔，单位毫秒。"
+    }
+  ],
+  "BackgroundBeams": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    }
+  ],
+  "BackgroundBoxes": [
+    {
+      "name": "rowsCount",
+      "type": "number",
+      "required": false,
+      "description": "背景网格的行数。"
+    },
+    {
+      "name": "colsCount",
+      "type": "number",
+      "required": false,
+      "description": "背景网格的列数。"
+    },
+    {
+      "name": "colors",
+      "type": "readonly string[]",
+      "required": false,
+      "description": "依次使用的颜色列表。"
+    }
+  ],
+  "BlurFade": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "variant",
+      "type": "import('motion/react').Variants",
+      "required": false,
+      "description": "组件的外观或行为变体；可选值见类型列。"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "模糊入场动画的时长，单位秒。",
+      "defaultValue": "0.4"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "动画开始前的等待时间，单位秒。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "offset",
+      "type": "number",
+      "required": false,
+      "description": "内容入场时的位移距离。",
+      "defaultValue": "6"
+    },
+    {
+      "name": "direction",
+      "type": "'up' | 'down' | 'left' | 'right'",
+      "required": false,
+      "description": "内容移动或排列的方向；可选值见类型列。",
+      "defaultValue": "'down'"
+    },
+    {
+      "name": "inView",
+      "type": "boolean",
+      "required": false,
+      "description": "是否以进入视口作为动画启动条件。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "inViewMargin",
+      "type": "InViewMargin",
+      "required": false,
+      "description": "视口检测边界的偏移范围。",
+      "defaultValue": "'-50px' as InViewMargin"
+    },
+    {
+      "name": "blur",
+      "type": "string",
+      "required": false,
+      "description": "入场效果使用的模糊值。",
+      "defaultValue": "'6px'"
+    },
+    {
+      "name": "once",
+      "type": "boolean",
+      "required": false,
+      "description": "进入视口动画是否只播放一次。",
+      "defaultValue": "false"
+    }
+  ],
+  "BlurText": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "相邻文字片段开始动画的间隔，单位毫秒。",
+      "defaultValue": "200"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "BorderBeam": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "元素尺寸；具体单位由对应组件定义。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "光带动画的时间偏移，单位秒。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "光带完成一圈运动的时间，单位秒。",
+      "defaultValue": "6"
+    },
+    {
+      "name": "colorFrom",
+      "type": "string",
+      "required": false,
+      "description": "边框光带起始端的颜色。",
+      "defaultValue": "'#ffaa40'"
+    },
+    {
+      "name": "colorTo",
+      "type": "string",
+      "required": false,
+      "description": "边框光带结束端的颜色。",
+      "defaultValue": "'#9c40ff'"
+    },
+    {
+      "name": "transition",
+      "type": "import('motion/react').Transition",
+      "required": false,
+      "description": "动效的过渡参数，如速度和缓动。"
+    },
+    {
+      "name": "style",
+      "type": "import('motion/react').MotionStyle",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "reverse",
+      "type": "boolean",
+      "required": false,
+      "description": "是否反向播放光带或动画。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "initialOffset",
+      "type": "number",
+      "required": false,
+      "description": "偏移量的初始值。",
+      "defaultValue": "0"
+    }
+  ],
+  "BreatheText": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "secondaryText",
+      "type": "string",
+      "required": false,
+      "description": "与主文字一起显示的辅助文字。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "ColorfulText": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "colors",
+      "type": "readonly string[]",
+      "required": false,
+      "description": "依次使用的颜色列表。"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "文字颜色轮换的间隔，单位毫秒。"
+    }
+  ],
+  "ContactSection": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的主要文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "scrollContainerRef",
+      "type": "React.RefObject<HTMLElement | null>",
+      "required": false,
+      "description": "指定要监听的滚动容器；嵌套滚动时传入对应元素 ref。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "CubeSpinner": [
+    {
+      "name": "items",
+      "type": "readonly CubeSpinnerItem[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "[]"
+    }
+  ],
+  "DynamicBackground": [
+    {
+      "name": "items",
+      "type": "readonly DynamicBackgroundItem[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "emptyItems"
+    }
+  ],
+  "FlipLink": [
+    {
+      "name": "children",
+      "type": "string",
+      "required": false,
+      "description": "链接可见文字；翻转动画会逐字符拆分该字符串。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "MotionStyle",
+      "required": false,
+      "sourceDescription": "The React DOM `style` prop, enhanced with support for `MotionValue`s and separate `transform` values.\n\n```jsx\nexport const MyComponent = () => {\n  const x = useMotionValue(0)\n\n  return <motion.div style={{ x, opacity: 1, scale: 0.5 }} />\n}\n```",
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<HTMLAnchorElement>",
+      "required": false,
+      "description": "点击时调用的回调。"
+    },
+    {
+      "name": "rel",
+      "type": "string",
+      "required": false,
+      "description": "链接目标与当前页面的关系；新窗口链接可配置 noreferrer、noopener。"
+    },
+    {
+      "name": "aria-label",
+      "type": "string",
+      "required": false,
+      "description": "没有可见文字时供辅助技术识别的名称。"
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "链接点击后前往的 URL 地址。"
+    },
+    {
+      "name": "target",
+      "type": "HTMLAttributeAnchorTarget",
+      "required": false,
+      "description": "链接打开的位置，例如新窗口。"
+    }
+  ],
+  "FlipWords": [
+    {
+      "name": "words",
+      "type": "string[]",
+      "required": true,
+      "description": "轮换或波浪动画使用的词语列表。"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "切换到下一个词的间隔，单位毫秒。",
+      "defaultValue": "3000"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "wordClassName",
+      "type": "string",
+      "required": false,
+      "description": "轮换文字元素的 CSS 类名。"
+    }
+  ],
+  "FloatAny": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "运动或输入的速度；数值含义由当前组件定义。",
+      "defaultValue": "0.5"
+    },
+    {
+      "name": "amplitude",
+      "type": "[number, number, number]",
+      "required": false,
+      "description": "三个轴向的漂浮位移幅度。",
+      "defaultValue": "[10, 30, 30]"
+    },
+    {
+      "name": "rotationRange",
+      "type": "[number, number, number]",
+      "required": false,
+      "description": "三个轴向允许的旋转幅度。",
+      "defaultValue": "[15, 15, 7.5]"
+    },
+    {
+      "name": "timeOffset",
+      "type": "number",
+      "required": false,
+      "description": "动画时间轴的起始偏移。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    }
+  ],
+  "FloatingIcon": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "initialX",
+      "type": "number",
+      "required": false,
+      "description": "x的初始值。",
+      "defaultValue": "0"
+    }
+  ],
+  "GradientAnimation": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "surface",
+      "type": "keyof typeof accessibleGradientPalettes",
+      "required": false,
+      "description": "文字渐变使用的预设配色。",
+      "defaultValue": "'light'"
+    }
+  ],
+  "GradientTracking": [
+    {
+      "name": "disabled",
+      "type": "boolean | undefined",
+      "required": false,
+      "description": "是否禁止组件的交互操作。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "点击时调用的回调。"
+    }
+  ],
+  "GradualSpacing": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的主要文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "单个字符间距动画的时长，单位秒。",
+      "defaultValue": "0.5"
+    },
+    {
+      "name": "stagger",
+      "type": "number",
+      "required": false,
+      "description": "相邻字符开始动画的间隔，单位秒。",
+      "defaultValue": "0.1"
+    }
+  ],
+  "InteractiveGrid": [
+    {
+      "name": "width",
+      "type": "number",
+      "required": false,
+      "description": "组件或绘制区域的宽度。",
+      "defaultValue": "40"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "description": "组件或绘制区域的高度。",
+      "defaultValue": "40"
+    },
+    {
+      "name": "squares",
+      "type": "[number, number]",
+      "required": false,
+      "description": "网格横向与纵向的方格数量。",
+      "defaultValue": "[24, 24]"
+    },
+    {
+      "name": "squaresClassName",
+      "type": "string",
+      "required": false,
+      "description": "网格方格元素的 CSS 类名。"
+    },
+    {
+      "name": "cellProps",
+      "type": "React.SVGProps<SVGRectElement>",
+      "required": false,
+      "description": "传给单个 SVG 方格的属性。"
+    }
+  ],
+  "IsometricCard": [
+    {
+      "name": "text",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件显示的主要文字。"
+    }
+  ],
+  "LineBordered": [
+    {
+      "name": "text",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件显示的主要文字。"
+    }
+  ],
+  "MagicTrail": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "colors",
+      "type": "string[]",
+      "required": false,
+      "description": "依次使用的颜色列表。",
+      "defaultValue": "DEFAULT_COLORS"
+    },
+    {
+      "name": "particleCount",
+      "type": "number",
+      "required": false,
+      "description": "粒子的数量。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "trailLength",
+      "type": "number",
+      "required": false,
+      "description": "鼠标轨迹保留的长度。",
+      "defaultValue": "35"
+    },
+    {
+      "name": "decay",
+      "type": "number",
+      "required": false,
+      "description": "粒子或轨迹逐渐消失的速度。",
+      "defaultValue": "0.03"
+    },
+    {
+      "name": "smoothing",
+      "type": "number",
+      "required": false,
+      "description": "指针轨迹的平滑程度。",
+      "defaultValue": "0.65"
+    },
+    {
+      "name": "containerRef",
+      "type": "RefObject<HTMLElement | null>",
+      "required": false,
+      "description": "指定组件绘制或监听所依附的容器 ref。"
+    }
+  ],
+  "MemoizedStars": [
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "要生成或显示的元素数量。"
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "主要显示颜色。"
+    },
+    {
+      "name": "size",
+      "type": "number",
+      "required": false,
+      "description": "元素尺寸；具体单位由对应组件定义。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    }
+  ],
+  "MeshGradientBackground": [
+    {
+      "name": "gradient",
+      "type": "string",
+      "required": false,
+      "description": "设置渐变文字或取值。"
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "背景颜色。"
+    }
+  ],
+  "Meteors": [
+    {
+      "name": "starCount",
+      "type": "number",
+      "required": false,
+      "description": "星点的数量。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "primaryColor",
+      "type": "string",
+      "required": false,
+      "description": "主使用的颜色。",
+      "defaultValue": "'#ffffff'"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "MouseTrail": [
+    {
+      "name": "items",
+      "type": "string[]",
+      "required": true,
+      "description": "需要展示的条目数组；条目结构见类型列。"
+    },
+    {
+      "name": "imageAlt",
+      "type": "(src: string, index: number) => string",
+      "required": false,
+      "description": "为尾迹中的图片生成替代文字的函数。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "maxNumberOfImages",
+      "type": "number",
+      "required": false,
+      "description": "鼠标尾迹中同时显示的最多图片数。",
+      "defaultValue": "5"
+    },
+    {
+      "name": "imgClass",
+      "type": "string",
+      "required": false,
+      "description": "尾迹图片的 CSS 类名。"
+    },
+    {
+      "name": "distance",
+      "type": "number",
+      "required": false,
+      "description": "尾迹项之间的移动距离。",
+      "defaultValue": "20"
+    },
+    {
+      "name": "fadeAnimation",
+      "type": "boolean",
+      "required": false,
+      "description": "是否使用渐隐动画。",
+      "defaultValue": "false"
+    }
+  ],
+  "MultiColorBorder": [
+    {
+      "name": "text",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "wrapperStyles",
+      "type": "MultiColorBorderStyle",
+      "required": false,
+      "description": "多色边框外层容器的样式配置。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "contentStyles",
+      "type": "MultiColorBorderStyle",
+      "required": false,
+      "description": "内容区域的样式配置。",
+      "defaultValue": "{}"
+    }
+  ],
+  "MultiDirectionSlide": [
+    {
+      "name": "textLeft",
+      "type": "string",
+      "required": false,
+      "description": "从左侧入场的文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "textRight",
+      "type": "string",
+      "required": false,
+      "description": "从右侧入场的文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "OrbitingCircles": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "items",
+      "type": "OrbitingItem[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "showPath",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示元素绕中心运动的轨道。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "centerText",
+      "type": "string",
+      "required": false,
+      "description": "中心显示的文字内容。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "centerTextStyle",
+      "type": "React.CSSProperties",
+      "required": false,
+      "description": "中心文字区域的样式配置。"
+    },
+    {
+      "name": "centerTextClassName",
+      "type": "string",
+      "required": false,
+      "description": "中心文字元素的 CSS 类名。"
+    }
+  ],
+  "PointerMove": [
+    {
+      "name": "style",
+      "type": "PointerMoveStyle",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    }
+  ],
+  "ScratchToReveal": [
+    {
+      "name": "width",
+      "type": "number",
+      "required": true,
+      "description": "组件或绘制区域的宽度。"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": true,
+      "description": "组件或绘制区域的高度。"
+    },
+    {
+      "name": "minScratchPercentage",
+      "type": "number",
+      "required": false,
+      "description": "判定擦除完成所需的最小百分比。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "onComplete",
+      "type": "() => void",
+      "required": false,
+      "description": "交互或流程完成时调用的回调。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "revealLabel",
+      "type": "string",
+      "required": false,
+      "description": "揭示控件显示的文案。",
+      "defaultValue": "'Reveal content'"
+    }
+  ],
+  "ScrollAnimation": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "once",
+      "type": "boolean",
+      "required": false,
+      "description": "进入视口动画是否只播放一次。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "amount",
+      "type": "number | 'some' | 'all'",
+      "required": false,
+      "description": "触发进入视口事件所需的可见范围。",
+      "defaultValue": "'some'"
+    }
+  ],
+  "ScrollVelocity": [
+    {
+      "name": "text",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "velocity",
+      "type": "number",
+      "required": false,
+      "description": "滚动文字的基础移动速度。"
+    }
+  ],
+  "ShiftingCard": [
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties | undefined",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "ShinyText": [
+    {
+      "name": "text",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "一次扫光动画的时长，单位秒。",
+      "defaultValue": "5"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "ShootingStars": [
+    {
+      "name": "minSpeed",
+      "type": "number",
+      "required": false,
+      "description": "最小的速度。"
+    },
+    {
+      "name": "maxSpeed",
+      "type": "number",
+      "required": false,
+      "description": "最大的速度。"
+    },
+    {
+      "name": "minDelay",
+      "type": "number",
+      "required": false,
+      "description": "最小前的等待时间。"
+    },
+    {
+      "name": "maxDelay",
+      "type": "number",
+      "required": false,
+      "description": "最大前的等待时间。"
+    },
+    {
+      "name": "starColor",
+      "type": "string",
+      "required": false,
+      "description": "星点使用的颜色。"
+    },
+    {
+      "name": "trailColor",
+      "type": "string",
+      "required": false,
+      "description": "轨迹使用的颜色。"
+    },
+    {
+      "name": "starWidth",
+      "type": "number",
+      "required": false,
+      "description": "星点的宽度。"
+    },
+    {
+      "name": "starHeight",
+      "type": "number",
+      "required": false,
+      "description": "星点的高度。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    }
+  ],
+  "SlideButton": [
+    {
+      "name": "style",
+      "type": "SlideButtonStyle",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "required": false,
+      "description": "文字使用的颜色。",
+      "defaultValue": "'#1670f0'"
+    },
+    {
+      "name": "borderStartColor",
+      "type": "string",
+      "required": false,
+      "description": "按钮边框渐变的起始颜色。",
+      "defaultValue": "'#0c002b'"
+    },
+    {
+      "name": "borderEndColor",
+      "type": "string",
+      "required": false,
+      "description": "按钮边框渐变的结束颜色。",
+      "defaultValue": "'#1779ff'"
+    },
+    {
+      "name": "backgroundColor",
+      "type": "string",
+      "required": false,
+      "description": "背景颜色。",
+      "defaultValue": "'transparent'"
+    }
+  ],
+  "SlideLinear": [
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties | undefined",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "SlideText": [
+    {
+      "name": "text",
+      "type": "string[]",
+      "required": false,
+      "description": "依次上下滑动轮换的短句数组。",
+      "defaultValue": "emptyTitles"
+    }
+  ],
+  "Sparkles": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "HTML 元素标识，供关联标签或外部引用。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "背景颜色或背景值。"
+    },
+    {
+      "name": "minSize",
+      "type": "number",
+      "required": false,
+      "description": "最小的尺寸。"
+    },
+    {
+      "name": "maxSize",
+      "type": "number",
+      "required": false,
+      "description": "最大的尺寸。"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "运动或输入的速度；数值含义由当前组件定义。"
+    },
+    {
+      "name": "particleColor",
+      "type": "string",
+      "required": false,
+      "description": "粒子使用的颜色。"
+    },
+    {
+      "name": "particleDensity",
+      "type": "number",
+      "required": false,
+      "description": "单位区域内粒子的密度。"
+    }
+  ],
+  "SparklesText": [
+    {
+      "name": "text",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "colors",
+      "type": "SparkleColors",
+      "required": false,
+      "description": "依次使用的颜色列表。",
+      "defaultValue": "{ first: '#9E7AFF', second: '#FE8BBB' }"
+    },
+    {
+      "name": "sparklesCount",
+      "type": "number",
+      "required": false,
+      "description": "标题周围生成的闪光粒子数量。",
+      "defaultValue": "10"
+    }
+  ],
+  "Spotlight": [
+    {
+      "name": "style",
+      "type": "React.CSSProperties & Record<`--${string}`, string | number>",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    }
+  ],
+  "SquaresGrid": [
+    {
+      "name": "direction",
+      "type": "Direction",
+      "required": false,
+      "description": "内容移动或排列的方向；可选值见类型列。",
+      "defaultValue": "'right'"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "网格运动的速度系数。",
+      "defaultValue": "1"
+    },
+    {
+      "name": "borderColor",
+      "type": "string",
+      "required": false,
+      "description": "边框使用的颜色。",
+      "defaultValue": "'#999'"
+    },
+    {
+      "name": "squareSize",
+      "type": "number",
+      "required": false,
+      "description": "方格的尺寸。"
+    },
+    {
+      "name": "hoverFillColor",
+      "type": "string",
+      "required": false,
+      "description": "指针悬停时网格方块的填充色。",
+      "defaultValue": "'#222'"
+    }
+  ],
+  "StarBackground": [
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "主要显示颜色。",
+      "defaultValue": "'#333'"
+    },
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "要生成或显示的元素数量。",
+      "defaultValue": "1400"
+    },
+    {
+      "name": "mediumCount",
+      "type": "number",
+      "required": false,
+      "description": "中等尺寸星点的数量。",
+      "defaultValue": "400"
+    },
+    {
+      "name": "bigCount",
+      "type": "number",
+      "required": false,
+      "description": "大尺寸星点的数量。",
+      "defaultValue": "200"
+    }
+  ],
+  "TagCloud": [
+    {
+      "name": "items",
+      "type": "readonly React.ReactNode[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "[]"
+    }
+  ],
+  "TextClip": [
+    {
+      "name": "items",
+      "type": "readonly string[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "prefix",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "轮换内容前固定显示的内容。"
+    },
+    {
+      "name": "suffix",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "轮换内容后固定显示的内容。"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "文字项轮换的间隔，单位毫秒。",
+      "defaultValue": "2000"
+    }
+  ],
+  "TextLoader": [
+    {
+      "name": "messages",
+      "type": "string[]",
+      "required": true,
+      "description": "用于消息的条目列表；每项结构见类型列。"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "加载提示消息轮换的间隔，单位毫秒。",
+      "defaultValue": "2000"
+    },
+    {
+      "name": "dotCount",
+      "type": "number",
+      "required": false,
+      "description": "加载提示后显示的点数。",
+      "defaultValue": "3"
+    },
+    {
+      "name": "direction",
+      "type": "'vertical' | 'horizontal'",
+      "required": false,
+      "description": "内容移动或排列的方向；可选值见类型列。",
+      "defaultValue": "'vertical'"
+    }
+  ],
+  "TextReveal": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    }
+  ],
+  "ThreeDCard": [
+    {
+      "name": "imageUrl",
+      "type": "string",
+      "required": false,
+      "description": "图片地址使用的资源地址。"
+    },
+    {
+      "name": "backgroundUrl",
+      "type": "string",
+      "required": false,
+      "description": "背景地址使用的资源地址。"
+    },
+    {
+      "name": "variant",
+      "type": "'default' | 'border' | 'shine'",
+      "required": false,
+      "description": "组件的外观或行为变体；可选值见类型列。",
+      "defaultValue": "'default'"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "卡片主体内容。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties | undefined",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "title",
+      "type": "string | undefined",
+      "required": false,
+      "description": "立体卡片显示的标题。"
+    },
+    {
+      "name": "onMouseEnter",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "指针进入元素时调用的回调。"
+    },
+    {
+      "name": "onMouseLeave",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "指针离开元素时调用的回调。"
+    },
+    {
+      "name": "onMouseMove",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "指针在元素上移动时调用的回调。"
+    }
+  ],
+  "TypeWriter": [
+    {
+      "name": "text",
+      "type": "string | string[]",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "speed",
+      "type": "number",
+      "required": false,
+      "description": "输入相邻字符的间隔，单位毫秒。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "initialDelay",
+      "type": "number",
+      "required": false,
+      "description": "开始输入前的等待时间，单位毫秒。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "waitTime",
+      "type": "number",
+      "required": false,
+      "description": "输入完成后开始删除或切换前的等待时间，单位毫秒。",
+      "defaultValue": "2000"
+    },
+    {
+      "name": "deleteSpeed",
+      "type": "number",
+      "required": false,
+      "description": "删除相邻字符的间隔，单位毫秒。",
+      "defaultValue": "30"
+    },
+    {
+      "name": "loop",
+      "type": "boolean",
+      "required": false,
+      "description": "播放或输入效果结束后是否重新开始。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "showCursor",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示光标。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "hideCursorOnType",
+      "type": "boolean",
+      "required": false,
+      "description": "输入文字过程中是否隐藏光标。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "cursorChar",
+      "type": "string",
+      "required": false,
+      "description": "用于显示打字光标的字符。",
+      "defaultValue": "'|'"
+    },
+    {
+      "name": "cursorClassName",
+      "type": "string",
+      "required": false,
+      "description": "光标元素的 CSS 类名。",
+      "defaultValue": "'wui-type-cursor'"
+    },
+    {
+      "name": "cursorAnimationVariants",
+      "type": "Variants",
+      "required": false,
+      "description": "打字光标的动画状态定义。"
+    }
+  ],
+  "TypedText": [
+    {
+      "name": "children",
+      "type": "string",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "delay",
+      "type": "number",
+      "required": false,
+      "description": "显示下一个字符的间隔，单位毫秒。"
+    }
+  ],
+  "WordRotate": [
+    {
+      "name": "words",
+      "type": "string[]",
+      "required": true,
+      "description": "轮换或波浪动画使用的词语列表。"
+    },
+    {
+      "name": "duration",
+      "type": "number",
+      "required": false,
+      "description": "切换到下一个词的间隔，单位毫秒。",
+      "defaultValue": "2500"
+    },
+    {
+      "name": "motionProps",
+      "type": "HTMLMotionProps<'span'>",
+      "required": false,
+      "description": "传给底层 Motion 文字元素的属性。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    }
+  ],
+  "ApiStateHandler": [
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示加载状态，或传入加载效果配置。"
+    },
+    {
+      "name": "error",
+      "type": "unknown",
+      "required": false,
+      "description": "待展示的错误对象或错误状态。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "loadingFallback",
+      "type": "ReactNode",
+      "required": false,
+      "description": "加载过程中展示的替代内容。",
+      "defaultValue": "null"
+    },
+    {
+      "name": "errorFallback",
+      "type": "ReactNode",
+      "required": false,
+      "description": "加载失败时展示的替代内容。",
+      "defaultValue": "null"
+    }
+  ],
+  "AutoLink": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    }
+  ],
+  "AvatarCard": [
+    {
+      "name": "avatar",
+      "type": "string",
+      "required": true,
+      "description": "头像图片的资源地址。"
+    },
+    {
+      "name": "text",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件显示的主要文字。"
+    },
+    {
+      "name": "alt",
+      "type": "string",
+      "required": false,
+      "description": "图片无法显示时的替代文字，也供屏幕阅读器读取。",
+      "defaultValue": "''"
+    }
+  ],
+  "ClockFace": [
+    {
+      "name": "hour12",
+      "type": "boolean",
+      "required": false,
+      "description": "时间是否使用 12 小时制。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "locale",
+      "type": "string",
+      "required": false,
+      "description": "设置本地化语言文字或取值。",
+      "defaultValue": "'en-US'"
+    },
+    {
+      "name": "formatTime",
+      "type": "(date: Date) => string",
+      "required": false,
+      "description": "把日期转换成显示文字的格式化函数。"
+    }
+  ],
+  "ContentPlaceholder": [
+    {
+      "name": "lines",
+      "type": "readonly (readonly number[])[]",
+      "required": false,
+      "description": "允许的显示行数或各行配置。",
+      "defaultValue": "defaultLines"
+    },
+    {
+      "name": "headingWidths",
+      "type": "readonly number[]",
+      "required": false,
+      "description": "骨架屏标题占位条的宽度列表。",
+      "defaultValue": "[75, 245, 120]"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Loading'"
+    }
+  ],
+  "CopyToClipboard": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "要展示或复制的代码字符串。"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Copy'"
+    },
+    {
+      "name": "copiedLabel",
+      "type": "string",
+      "required": false,
+      "description": "已复制控件显示的文案。",
+      "defaultValue": "'Copied'"
+    },
+    {
+      "name": "onCopy",
+      "type": "() => void",
+      "required": false,
+      "description": "完成复制操作时调用的回调。"
+    },
+    {
+      "name": "isCopiedDelay",
+      "type": "number",
+      "required": false,
+      "description": "is已复制前的等待时间。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "Exception": [
+    {
+      "name": "action",
+      "type": "ReactNode",
+      "required": false,
+      "description": "异常状态下展示的可执行操作。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "title",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "异常结果页的主标题。"
+    },
+    {
+      "name": "status",
+      "type": "ResultStatusType",
+      "required": false,
+      "description": "传给 Ant Design Result 的异常状态。"
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "异常结果页标题上方显示的图标。"
+    },
+    {
+      "name": "subTitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "异常结果页的补充说明。"
+    }
+  ],
+  "GradientStats": [
+    {
+      "name": "items",
+      "type": "readonly (GradientStatItem | string)[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "[]"
+    }
+  ],
+  "Loading": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Loading'"
+    }
+  ],
+  "NumberViewCard": [
+    {
+      "name": "value",
+      "type": "number | string",
+      "required": false,
+      "description": "当前值；受控使用时由父组件更新。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "label",
+      "type": "ReactNode",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。"
+    },
+    {
+      "name": "formatValue",
+      "type": "(value: number | string) => ReactNode",
+      "required": false,
+      "description": "将数值转换为卡片显示内容的函数。"
+    }
+  ],
+  "PDFExport": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "contentRef",
+      "type": "RefObject<HTMLElement | null>",
+      "required": false,
+      "description": "指定要读取或导出的内容容器 ref。"
+    },
+    {
+      "name": "fileName",
+      "type": "string",
+      "required": false,
+      "description": "下载或显示时使用的文件名。",
+      "defaultValue": "'document.pdf'"
+    },
+    {
+      "name": "pdfOptions",
+      "type": "PDFDocumentOptions",
+      "required": false,
+      "description": "PDF的选项配置；字段见类型列。"
+    },
+    {
+      "name": "scale",
+      "type": "number",
+      "required": false,
+      "description": "导出 PDF 时使用的缩放比例。",
+      "defaultValue": "2"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Export PDF'"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "onComplete",
+      "type": "() => void",
+      "required": false,
+      "description": "交互或流程完成时调用的回调。"
+    }
+  ],
+  "SkeletonFix": [
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "要生成或显示的元素数量。",
+      "defaultValue": "3"
+    },
+    {
+      "name": "image",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用图片。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "shape",
+      "type": "'circle' | 'square'",
+      "required": false,
+      "description": "骨架占位元素的形状。",
+      "defaultValue": "'square'"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Loading'"
+    }
+  ],
+  "StaticStepper": [
+    {
+      "name": "step",
+      "type": "number",
+      "required": true,
+      "description": "当前步骤的序号或位置。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "titleClassName",
+      "type": "string",
+      "required": false,
+      "description": "标题元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "stepClassName",
+      "type": "string",
+      "required": false,
+      "description": "步骤元素的 CSS 类名。",
+      "defaultValue": "''"
+    }
+  ],
+  "StatisticCard": [
+    {
+      "name": "items",
+      "type": "StatisticCardItem[]",
+      "required": false,
+      "description": "需要展示的条目数组；条目结构见类型列。",
+      "defaultValue": "[]"
+    }
+  ],
+  "SvgPreview": [
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "onStatus",
+      "type": "(message: string) => void",
+      "required": false,
+      "description": "组件状态文字变化时调用的回调。"
+    },
+    {
+      "name": "svgSource",
+      "type": "string",
+      "required": false,
+      "description": "直接传入的 SVG 源码字符串。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "svgUrl",
+      "type": "string",
+      "required": false,
+      "description": "从远程加载 SVG 的地址。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "SvgComponent",
+      "type": "ComponentType<SVGProps<SVGSVGElement>> | null",
+      "required": false,
+      "description": "直接传入的 SVG React 组件。",
+      "defaultValue": "null"
+    },
+    {
+      "name": "downloadName",
+      "type": "string",
+      "required": false,
+      "description": "下载 SVG 时使用的文件名。",
+      "defaultValue": "'diagram.svg'"
+    },
+    {
+      "name": "background",
+      "type": "string",
+      "required": false,
+      "description": "背景颜色或背景值。",
+      "defaultValue": "defaultBg"
+    }
+  ],
+  "TagCard": [
+    {
+      "name": "tagCardList",
+      "type": "TagCardItem[]",
+      "required": false,
+      "description": "标签卡片的数据列表。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "showMax",
+      "type": "number",
+      "required": false,
+      "description": "是否显示最大。",
+      "defaultValue": "Infinity"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。",
+      "defaultValue": "'light'"
+    },
+    {
+      "name": "expandLabel",
+      "type": "string",
+      "required": false,
+      "description": "展开按钮显示的文字。",
+      "defaultValue": "'Show all tags'"
+    },
+    {
+      "name": "collapseLabel",
+      "type": "string",
+      "required": false,
+      "description": "收起按钮显示的文字。",
+      "defaultValue": "'Show fewer tags'"
+    },
+    {
+      "name": "tokens",
+      "type": "{ colorBgElevated?: string; colorText?: string; colorTextHeading?: string }",
+      "required": false,
+      "description": "组件局部使用的主题颜色变量。"
+    }
+  ],
+  "TextComponent": [
+    {
+      "name": "number",
+      "type": "ReactNode",
+      "required": false,
+      "description": "卡片主要展示的数值内容。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "content",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件展示的主体内容。"
+    },
+    {
+      "name": "isOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "详情或展示区域是否处于展开状态。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "loadingWidthPercent",
+      "type": "number",
+      "required": false,
+      "description": "加载占位条的宽度百分比。",
+      "defaultValue": "0"
+    }
+  ],
+  "TransferHistory": [
+    {
+      "name": "defaultDisplayCount",
+      "type": "number",
+      "required": false,
+      "description": "首次显示的公司或记录数量。"
+    },
+    {
+      "name": "groups",
+      "type": "readonly TransferHistoryGroup[]",
+      "required": false,
+      "description": "分组展示的数据列表。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "expandLabel",
+      "type": "string",
+      "required": false,
+      "description": "展开按钮显示的文字。"
+    },
+    {
+      "name": "collapseLabel",
+      "type": "string",
+      "required": false,
+      "description": "收起按钮显示的文字。"
+    },
+    {
+      "name": "renderTitle",
+      "type": "(group: TransferHistoryGroup) => ReactNode",
+      "required": false,
+      "description": "自定义标题的渲染函数。"
+    },
+    {
+      "name": "renderLabel",
+      "type": "(record: TransferRecord | TransferCompany) => ReactNode",
+      "required": false,
+      "description": "自定义标签的渲染函数。"
+    },
+    {
+      "name": "renderRatio",
+      "type": "(company: TransferCompany) => ReactNode",
+      "required": false,
+      "description": "自定义比例内容的渲染函数。"
+    }
+  ],
+  "TreeList": [
+    {
+      "name": "getTreeList",
+      "type": "(params: Record<string, unknown>, signal: AbortSignal) => Promise<TreeListResponse>",
+      "required": true,
+      "description": "获取树节点数据的异步函数。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "searchLabel",
+      "type": "string",
+      "required": false,
+      "description": "搜索控件显示的文案。"
+    },
+    {
+      "name": "search",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用搜索功能。"
+    },
+    {
+      "name": "selectedKeys",
+      "type": "TreeKey[]",
+      "required": false,
+      "description": "受控模式下当前选中的树节点 key。"
+    },
+    {
+      "name": "setSelectedKeys",
+      "type": "(keys: TreeKey[], info?: TreeSelectInfo) => void",
+      "required": true,
+      "description": "更新树节点选中 key 的回调。"
+    },
+    {
+      "name": "selectable",
+      "type": "boolean",
+      "required": false,
+      "description": "树节点是否允许选择。"
+    },
+    {
+      "name": "params",
+      "type": "Record<string, unknown>",
+      "required": false,
+      "sourceDescription": "Plain objects/arrays are compared by value before reloading.",
+      "description": "调用数据加载函数时附带的查询参数。"
+    },
+    {
+      "name": "queryKey",
+      "type": "string | number",
+      "required": false,
+      "sourceDescription": "Change to reload when query context outside params changes.",
+      "description": "区分缓存或请求状态的查询 key。"
+    }
+  ],
+  "UserIP": [
+    {
+      "name": "data",
+      "type": "UserIPData",
+      "required": false,
+      "description": "组件消费的数据；结构见类型列。"
+    },
+    {
+      "name": "loadInfo",
+      "type": "(signal: AbortSignal) => Promise<UserIPData>",
+      "required": false,
+      "description": "异步获取 IP 信息的函数，支持取消信号。"
+    },
+    {
+      "name": "labels",
+      "type": "UserIPLabels",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "Watermark": [
+    {
+      "name": "container",
+      "type": "HTMLElement",
+      "required": false,
+      "description": "水印绘制或组件挂载的目标 DOM 元素。"
+    },
+    {
+      "name": "width",
+      "type": "string",
+      "required": false,
+      "description": "组件或绘制区域的宽度。"
+    },
+    {
+      "name": "height",
+      "type": "string",
+      "required": false,
+      "description": "组件或绘制区域的高度。"
+    },
+    {
+      "name": "textAlign",
+      "type": "CanvasTextAlign",
+      "required": false,
+      "description": "文字的对齐方式。"
+    },
+    {
+      "name": "font",
+      "type": "string",
+      "required": false,
+      "description": "文字绘制使用的 CSS 字体值。"
+    },
+    {
+      "name": "fillStyle",
+      "type": "string",
+      "required": false,
+      "description": "Canvas 水印文字的填充样式。"
+    },
+    {
+      "name": "content",
+      "type": "string",
+      "required": false,
+      "description": "绘制在目标容器上的水印文字或内容。"
+    },
+    {
+      "name": "rotate",
+      "type": "number",
+      "required": false,
+      "description": "旋转角度；单位由组件实现决定。"
+    }
+  ],
+  "AdvancedCodeBlock": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "要展示或复制的代码字符串。"
+    },
+    {
+      "name": "fileName",
+      "type": "string",
+      "required": false,
+      "description": "下载或显示时使用的文件名。"
+    },
+    {
+      "name": "lang",
+      "type": "CodeHighlighterProps['lang']",
+      "required": false,
+      "description": "代码高亮使用的语言。"
+    },
+    {
+      "name": "theme",
+      "type": "CodeHighlighterProps['theme']",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "copyLabel",
+      "type": "string",
+      "required": false,
+      "description": "复制控件显示的文案。"
+    }
+  ],
+  "CodeHighlighter": [
+    {
+      "name": "code",
+      "type": "string",
+      "required": true,
+      "description": "要展示或复制的代码字符串。"
+    },
+    {
+      "name": "lang",
+      "type": "BundledLanguage | 'text' | 'plaintext'",
+      "required": false,
+      "description": "代码高亮使用的语言。",
+      "defaultValue": "'typescript'"
+    },
+    {
+      "name": "theme",
+      "type": "BundledTheme",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。",
+      "defaultValue": "'github-light'"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "MdxEditor": [
+    {
+      "name": "initialMarkdown",
+      "type": "string",
+      "required": false,
+      "description": "编辑器非受控模式下的初始 Markdown。"
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": false,
+      "description": "受控模式下编辑器的 Markdown 内容。"
+    },
+    {
+      "name": "onChange",
+      "type": "(markdown: string) => void",
+      "required": false,
+      "description": "编辑内容变化时调用，并传出 Markdown 字符串。"
+    },
+    {
+      "name": "readOnly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只读；保留展示但不允许编辑。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "onThemeChange",
+      "type": "(theme: 'light' | 'dark') => void",
+      "required": false,
+      "description": "主题变化时调用的回调。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "labels",
+      "type": "{ theme?: string; copy?: string; download?: string; placeholder?: string; source?: string }",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "downloadFileName",
+      "type": "string",
+      "required": false,
+      "description": "下载内容时使用的文件名。",
+      "defaultValue": "'document.md'"
+    }
+  ],
+  "ReMarkdown": [
+    {
+      "name": "markdownText",
+      "type": "string",
+      "required": false,
+      "description": "要解析并渲染的 Markdown 内容。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "isLoading",
+      "type": "boolean",
+      "required": false,
+      "description": "是否启用is加载。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "loadingLabel",
+      "type": "string",
+      "required": false,
+      "description": "加载控件显示的文案。",
+      "defaultValue": "'Loading'"
+    },
+    {
+      "name": "copyLabel",
+      "type": "string",
+      "required": false,
+      "description": "复制控件显示的文案。"
+    },
+    {
+      "name": "onCopy",
+      "type": "() => void",
+      "required": false,
+      "description": "完成复制操作时调用的回调。"
+    },
+    {
+      "name": "onCopyError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "复制失败时调用的回调。"
+    },
+    {
+      "name": "components",
+      "type": "Components",
+      "required": false,
+      "sourceDescription": "Trusted caller renderers; raw HTML in Markdown is always ignored.",
+      "description": "覆盖 Markdown 元素渲染方式的组件映射。"
+    },
+    {
+      "name": "renderLoading",
+      "type": "() => ReactNode",
+      "required": false,
+      "description": "自定义加载状态的渲染函数。"
+    }
+  ],
+  "SandpackBasic": [
+    {
+      "name": "files",
+      "type": "SandpackFiles",
+      "required": false,
+      "sourceDescription": "It accepts an object, where each key is the relative\npath of that file in the sandbox folder structure. Files passed in\nthrough the files prop override those in the template structure.\n\nSince each template uses the same type to define the files, you can\noverwrite the contents of any of the template files.\n\nExample:\n```js\n{\n \"/App.js\": \"export default () => 'foo'\"\n}\n```",
+      "description": "代码沙箱中的文件映射。"
+    },
+    {
+      "name": "template",
+      "type": "SandpackPredefinedTemplate",
+      "required": false,
+      "sourceDescription": "Set of presets to easily initialize sandboxes. Each template contains\nits files, environment and dependencies, and you can overwrite it\nusing `customSetup` or `dependencies`.",
+      "description": "代码沙箱使用的预设运行模板。"
+    },
+    {
+      "name": "options",
+      "type": "SandpackOptions",
+      "required": false,
+      "sourceDescription": "Pass custom properties to customize the interface and the behavior\nof the sandbox, such as initialization mode, recompile mode, files resolver, etc.",
+      "description": "组件可用选项或第三方配置对象；结构见类型列。"
+    }
+  ],
+  "ScriptView": [
+    {
+      "name": "showMultiplePackageOptions",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示多个包管理器的命令选项。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "codeLanguage",
+      "type": "string",
+      "required": false,
+      "description": "示例代码使用的语言名称。",
+      "defaultValue": "'bash'"
+    },
+    {
+      "name": "commandMap",
+      "type": "Record<string, string>",
+      "required": true,
+      "description": "包管理器名称到安装命令的映射。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。",
+      "defaultValue": "'light'"
+    },
+    {
+      "name": "copyLabel",
+      "type": "string",
+      "required": false,
+      "description": "复制控件显示的文案。",
+      "defaultValue": "'Copy command'"
+    },
+    {
+      "name": "onCopyError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "复制失败时调用的回调。"
+    }
+  ],
+  "ShiCode": [
+    {
+      "name": "preCode",
+      "type": "string",
+      "required": true,
+      "description": "准备高亮和复制的原始代码。"
+    },
+    {
+      "name": "fileName",
+      "type": "string",
+      "required": false,
+      "description": "下载或显示时使用的文件名。"
+    },
+    {
+      "name": "language",
+      "type": "string",
+      "required": false,
+      "description": "设置语言文字或取值。",
+      "defaultValue": "'jsx'"
+    },
+    {
+      "name": "copyLabel",
+      "type": "string",
+      "required": false,
+      "description": "复制控件显示的文案。",
+      "defaultValue": "'Copy code'"
+    }
+  ],
+  "CheckableTags": [
+    {
+      "name": "dataSource",
+      "type": "CheckableTagGroup[]",
+      "required": true,
+      "description": "列表或表格的数据项数组。"
+    },
+    {
+      "name": "onChange",
+      "type": "(event: CheckableTagsChangeEvent) => void",
+      "required": false,
+      "description": "当前值变化时调用的回调；按类型签名接收新值。"
+    },
+    {
+      "name": "checkedKeys",
+      "type": "SelectedTags",
+      "required": false,
+      "description": "受控模式下当前选中的标签 key。"
+    },
+    {
+      "name": "defaultCheckedKeys",
+      "type": "SelectedTags",
+      "required": false,
+      "description": "非受控模式下初次选中的标签 key。"
+    },
+    {
+      "name": "single",
+      "type": "boolean",
+      "required": false,
+      "description": "是否限制为单选。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。"
+    }
+  ],
+  "DottedStepper": [
+    {
+      "name": "steps",
+      "type": "Step[]",
+      "required": false,
+      "description": "步骤条中依次显示的步骤数据。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "currentStep",
+      "type": "number",
+      "required": false,
+      "description": "受控模式下当前步骤索引。"
+    },
+    {
+      "name": "defaultCurrentStep",
+      "type": "number",
+      "required": false,
+      "description": "非受控模式下当前步骤的初始值。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "onStepChange",
+      "type": "(index: number) => void",
+      "required": false,
+      "description": "用户切换步骤时调用的回调。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "activeColor",
+      "type": "string",
+      "required": false,
+      "description": "激活使用的颜色。",
+      "defaultValue": "'#1677ff'"
+    },
+    {
+      "name": "inactiveBgColor",
+      "type": "string",
+      "required": false,
+      "description": "未激活背景使用的颜色。"
+    },
+    {
+      "name": "circleSize",
+      "type": "number",
+      "required": false,
+      "description": "步骤节点圆点的尺寸。",
+      "defaultValue": "44"
+    },
+    {
+      "name": "gradientColors",
+      "type": "string[]",
+      "required": false,
+      "description": "进度条渐变使用的颜色列表。",
+      "defaultValue": "['#ff7a18', '#af002d', '#319197']"
+    },
+    {
+      "name": "showPercent",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示百分比。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。",
+      "defaultValue": "'light'"
+    },
+    {
+      "name": "previousLabel",
+      "type": "string",
+      "required": false,
+      "description": "上一项控件显示的文案。",
+      "defaultValue": "'Previous'"
+    },
+    {
+      "name": "nextLabel",
+      "type": "string",
+      "required": false,
+      "description": "下一项控件显示的文案。",
+      "defaultValue": "'Next'"
+    },
+    {
+      "name": "progressLabel",
+      "type": "string",
+      "required": false,
+      "description": "进度控件显示的文案。",
+      "defaultValue": "'Progress'"
+    },
+    {
+      "name": "renderStep",
+      "type": "(step: Step, index: number) => ReactNode",
+      "required": false,
+      "description": "自定义单个步骤的渲染函数。"
+    }
+  ],
+  "IntervalInput": [
+    {
+      "name": "value",
+      "type": "IntervalInputValue",
+      "required": false,
+      "description": "当前值；受控使用时由父组件更新。"
+    },
+    {
+      "name": "defaultValue",
+      "type": "IntervalInputValue",
+      "required": false,
+      "description": "非受控使用时的初始值。",
+      "defaultValue": "{}"
+    },
+    {
+      "name": "onChange",
+      "type": "(value: IntervalInputValue) => void",
+      "required": false,
+      "description": "当前值变化时调用的回调；按类型签名接收新值。"
+    },
+    {
+      "name": "min",
+      "type": "number",
+      "required": false,
+      "description": "允许输入或选择的最小值。"
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": false,
+      "description": "允许输入或选择的最大值。"
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "required": false,
+      "description": "当前步骤的位置或滚动卡片的步进距离。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。"
+    },
+    {
+      "name": "minLabel",
+      "type": "string",
+      "required": false,
+      "description": "最小控件显示的文案。",
+      "defaultValue": "'Minimum'"
+    },
+    {
+      "name": "maxLabel",
+      "type": "string",
+      "required": false,
+      "description": "最大控件显示的文案。",
+      "defaultValue": "'Maximum'"
+    }
+  ],
+  "LanguageSwitcher": [
+    {
+      "name": "language",
+      "type": "string",
+      "required": true,
+      "description": "设置语言文字或取值。"
+    },
+    {
+      "name": "options",
+      "type": "LanguageOption[]",
+      "required": true,
+      "description": "组件可用选项或第三方配置对象；结构见类型列。"
+    },
+    {
+      "name": "onLanguageChange",
+      "type": "(language: string) => void",
+      "required": true,
+      "description": "语言切换时调用的回调。"
+    },
+    {
+      "name": "buttonStyle",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "按钮区域的样式配置。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。"
+    }
+  ],
+  "PromptOptimizer": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "value",
+      "type": "Partial<PromptFormValue> | null",
+      "required": false,
+      "description": "当前值；受控使用时由父组件更新。"
+    },
+    {
+      "name": "defaultValue",
+      "type": "Partial<PromptFormValue>",
+      "required": false,
+      "description": "非受控使用时的初始值。"
+    },
+    {
+      "name": "onChange",
+      "type": "(value: PromptFormValue) => void",
+      "required": false,
+      "description": "当前值变化时调用的回调；按类型签名接收新值。"
+    },
+    {
+      "name": "onPromptChange",
+      "type": "(promptText: string, value: PromptFormValue) => void",
+      "required": false,
+      "description": "优化后的提示词变化时调用的回调。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的标题。",
+      "defaultValue": "'Prompt editor'"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "标题下方的说明内容。"
+    },
+    {
+      "name": "copyLabel",
+      "type": "string",
+      "required": false,
+      "description": "复制控件显示的文案。",
+      "defaultValue": "'Copy prompt'"
+    },
+    {
+      "name": "resetLabel",
+      "type": "string",
+      "required": false,
+      "description": "重置控件显示的文案。",
+      "defaultValue": "'Reset'"
+    },
+    {
+      "name": "copiedLabel",
+      "type": "string",
+      "required": false,
+      "description": "已复制控件显示的文案。",
+      "defaultValue": "'Copied'"
+    },
+    {
+      "name": "previewLabel",
+      "type": "string",
+      "required": false,
+      "description": "预览按钮显示的文字。",
+      "defaultValue": "'Prompt preview'"
+    },
+    {
+      "name": "emptyLabel",
+      "type": "string",
+      "required": false,
+      "description": "空状态控件显示的文案。",
+      "defaultValue": "'Complete the fields to build a prompt.'"
+    },
+    {
+      "name": "sectionLabels",
+      "type": "Partial<Record<keyof PromptFormValue, string>>",
+      "required": false,
+      "description": "提示词表单各区块标题的文案映射。"
+    },
+    {
+      "name": "placeholders",
+      "type": "Partial<Record<keyof PromptFormValue, string>>",
+      "required": false,
+      "description": "提示词表单各字段的占位文案映射。"
+    },
+    {
+      "name": "onCopy",
+      "type": "(success: boolean) => void",
+      "required": false,
+      "description": "完成复制操作时调用的回调。"
+    }
+  ],
+  "RadioInput": [
+    {
+      "name": "text",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的主要文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false,
+      "description": "只控制选中外观；这个组件本身不会响应点击更改状态。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "type",
+      "type": "'radio' | 'checkbox'",
+      "required": false,
+      "description": "选择标记显示为单选圆点或复选方框。",
+      "defaultValue": "'radio'"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "wrapText",
+      "type": "boolean",
+      "required": false,
+      "description": "较长标签是否允许换行显示。",
+      "defaultValue": "false"
+    }
+  ],
+  "ReactSignature": [
+    {
+      "name": "labels",
+      "type": "Partial<ReactSignatureLabels>",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+    },
+    {
+      "name": "fileName",
+      "type": "string",
+      "required": false,
+      "description": "下载或显示时使用的文件名。"
+    },
+    {
+      "name": "onValidate",
+      "type": "(svg: string) => void",
+      "required": false,
+      "description": "校验完成时调用的回调。"
+    },
+    {
+      "name": "onClear",
+      "type": "() => void",
+      "required": false,
+      "description": "清除内容时调用的回调。"
+    },
+    {
+      "name": "onCopy",
+      "type": "(success: boolean) => void",
+      "required": false,
+      "description": "完成复制操作时调用的回调。"
+    },
+    {
+      "name": "onDownload",
+      "type": "() => void",
+      "required": false,
+      "description": "触发下载时调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "aria-label",
+      "type": "string | undefined",
+      "required": false,
+      "sourceDescription": "Defines a string value that labels the current element.",
+      "description": "没有可见文字时供辅助技术识别的名称。"
+    },
+    {
+      "name": "options",
+      "type": "StrokeOptions",
+      "required": false,
+      "description": "签名笔画的平滑、粗细等绘制参数。"
+    },
+    {
+      "name": "readonly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止继续在签名画布上绘制。"
+    }
+  ],
+  "SmartChat": [
+    {
+      "name": "apiUrl",
+      "type": "string",
+      "required": true,
+      "description": "聊天请求发送到的接口地址。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "headers",
+      "type": "Record<string, string>",
+      "required": false,
+      "description": "聊天请求附带的 HTTP 请求头。"
+    },
+    {
+      "name": "method",
+      "type": "string",
+      "required": false,
+      "description": "聊天请求使用的 HTTP 方法。",
+      "defaultValue": "'POST'"
+    },
+    {
+      "name": "initialMessages",
+      "type": "ChatMessageInput[]",
+      "required": false,
+      "description": "消息的初始值。",
+      "defaultValue": "EMPTY_MESSAGES"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "没有内容或等待输入时显示的占位文字。",
+      "defaultValue": "'Write a message'"
+    },
+    {
+      "name": "requestOptions",
+      "type": "RequestInit",
+      "required": false,
+      "description": "请求的选项配置；字段见类型列。"
+    },
+    {
+      "name": "buildRequestBody",
+      "type": "(input: ChatRequest) => unknown",
+      "required": false,
+      "description": "将聊天输入转换为请求体的函数。"
+    },
+    {
+      "name": "requestTransformer",
+      "type": "(request: RequestInit, body: unknown) => RequestInit",
+      "required": false,
+      "description": "发送前修改请求选项与请求体的函数。"
+    },
+    {
+      "name": "systemPrompt",
+      "type": "string",
+      "required": false,
+      "description": "随聊天请求提供的系统提示词。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "welcomeTitle",
+      "type": "string",
+      "required": false,
+      "description": "空会话时欢迎区显示的标题。",
+      "defaultValue": "'Chat'"
+    },
+    {
+      "name": "welcomeDescription",
+      "type": "string",
+      "required": false,
+      "description": "空会话时欢迎区显示的说明。"
+    },
+    {
+      "name": "thoughtProcessLabel",
+      "type": "string",
+      "required": false,
+      "description": "思考过程区域显示的标题。",
+      "defaultValue": "'Thought process'"
+    },
+    {
+      "name": "submitLabel",
+      "type": "string",
+      "required": false,
+      "description": "提交控件显示的文案。",
+      "defaultValue": "'Send'"
+    },
+    {
+      "name": "stopLabel",
+      "type": "string",
+      "required": false,
+      "description": "停止控件显示的文案。",
+      "defaultValue": "'Stop'"
+    },
+    {
+      "name": "labels",
+      "type": "Partial<SmartChatLabels>",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "fetcher",
+      "type": "(url: string, request?: RequestInit, body?: unknown) => Response | Promise<Response>",
+      "required": false,
+      "description": "替换默认 fetch 行为的请求函数。"
+    },
+    {
+      "name": "onStreamEvent",
+      "type": "(event: ChatStreamEvent) => void",
+      "required": false,
+      "description": "聊天流收到事件时调用，事件结构见类型列。"
+    },
+    {
+      "name": "onMessagesChange",
+      "type": "(messages: ChatMessage[]) => void",
+      "required": false,
+      "description": "聊天消息列表变化时调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "StarRating": [
+    {
+      "name": "value",
+      "type": "number | string",
+      "required": false,
+      "description": "当前值；受控使用时由父组件更新。"
+    },
+    {
+      "name": "defaultValue",
+      "type": "number",
+      "required": false,
+      "description": "非受控使用时的初始值。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "max",
+      "type": "number",
+      "required": false,
+      "description": "允许输入或选择的最大值。",
+      "defaultValue": "5"
+    },
+    {
+      "name": "onChange",
+      "type": "(value: number) => void",
+      "required": false,
+      "description": "当前值变化时调用的回调；按类型签名接收新值。"
+    },
+    {
+      "name": "readOnly",
+      "type": "boolean",
+      "required": false,
+      "description": "是否只读；保留展示但不允许编辑。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "是否禁止组件的交互操作。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Rating'"
+    },
+    {
+      "name": "getStarLabel",
+      "type": "(value: number, max: number) => string",
+      "required": false,
+      "description": "返回星点标签的函数。"
+    }
+  ],
+  "AboutSection": [
+    {
+      "name": "scrollContainerRef",
+      "type": "RefObject<HTMLElement | null>",
+      "required": false,
+      "description": "指定要监听的滚动容器；嵌套滚动时传入对应元素 ref。"
+    },
+    {
+      "name": "cards",
+      "type": "HorizontalScrollCard[]",
+      "required": false,
+      "description": "卡片内容的数据列表；字段见类型列。"
+    }
+  ],
+  "AlignCenter": [
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties | undefined",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "AnimationTabs": [
+    {
+      "name": "tabs",
+      "type": "AnimationTab[]",
+      "required": true,
+      "description": "选项卡标题、值和内容的列表。"
+    },
+    {
+      "name": "containerClassName",
+      "type": "string",
+      "required": false,
+      "description": "选项卡容器的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "activeTabClassName",
+      "type": "string",
+      "required": false,
+      "description": "激活标签页元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "tabClassName",
+      "type": "string",
+      "required": false,
+      "description": "标签页元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "contentClassName",
+      "type": "string",
+      "required": false,
+      "description": "内容元素的 CSS 类名。"
+    },
+    {
+      "name": "activeValue",
+      "type": "string",
+      "required": false,
+      "description": "受控模式下当前激活的选项值。"
+    },
+    {
+      "name": "defaultActiveValue",
+      "type": "string",
+      "required": false,
+      "description": "非受控模式下初次激活的选项值。"
+    },
+    {
+      "name": "onValueChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "选中值变化时调用的回调。"
+    },
+    {
+      "name": "tabListLabel",
+      "type": "string",
+      "required": false,
+      "description": "选项卡列表的无障碍名称。",
+      "defaultValue": "'Tabs'"
+    }
+  ],
+  "AutoScrollSection": [
+    {
+      "name": "messages",
+      "type": "ReactNode[]",
+      "required": false,
+      "description": "用于消息的条目列表；每项结构见类型列。"
+    },
+    {
+      "name": "height",
+      "type": "CSSProperties['height']",
+      "required": false,
+      "description": "组件或绘制区域的高度。",
+      "defaultValue": "200"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "renderItem",
+      "type": "(message: ReactNode, index: number) => ReactNode",
+      "required": false,
+      "description": "自定义单个条目的渲染函数。"
+    }
+  ],
+  "FeatureAny": [
+    {
+      "name": "data",
+      "type": "FeatureItem[]",
+      "required": true,
+      "description": "组件消费的数据；结构见类型列。"
+    },
+    {
+      "name": "autoPlay",
+      "type": "boolean",
+      "required": false,
+      "description": "挂载后是否自动播放。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "intervalDuration",
+      "type": "number",
+      "required": false,
+      "description": "自动切换功能卡片的间隔，单位毫秒。",
+      "defaultValue": "5000"
+    }
+  ],
+  "FixTabs": [
+    {
+      "name": "tabs",
+      "type": "FixTab[]",
+      "required": false,
+      "description": "选项卡标题、值和内容的列表。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "defaultActiveId",
+      "type": "FixTabId",
+      "required": false,
+      "description": "非受控模式下激活id的初始值。"
+    },
+    {
+      "name": "activeId",
+      "type": "FixTabId",
+      "required": false,
+      "description": "受控模式下当前激活的选项 ID。"
+    },
+    {
+      "name": "onActiveIdChange",
+      "type": "(id: FixTabId) => void",
+      "required": false,
+      "description": "激活的选项 ID 改变时调用的回调。"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。",
+      "defaultValue": "'light'"
+    },
+    {
+      "name": "tabListLabel",
+      "type": "string",
+      "required": false,
+      "description": "选项卡列表的无障碍名称。",
+      "defaultValue": "'Tabs'"
+    }
+  ],
+  "Footer": [
+    {
+      "name": "brand",
+      "type": "ReactNode",
+      "required": false,
+      "description": "页脚品牌标识或品牌内容。"
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "required": false,
+      "description": "标题下方的说明内容。"
+    },
+    {
+      "name": "navigation",
+      "type": "FooterNavigation[]",
+      "required": false,
+      "description": "页脚中的导航链接分组。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "socialLinks",
+      "type": "FooterLink[]",
+      "required": false,
+      "description": "页脚中的社交平台链接。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "socialLabel",
+      "type": "string",
+      "required": false,
+      "description": "社交链接组的无障碍名称。",
+      "defaultValue": "'Social links'"
+    },
+    {
+      "name": "legalItems",
+      "type": "FooterLink[]",
+      "required": false,
+      "description": "页脚中的法律信息链接。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "copyright",
+      "type": "ReactNode",
+      "required": false,
+      "description": "页脚显示的版权文字。"
+    }
+  ],
+  "HorizontalScroll": [
+    {
+      "name": "cards",
+      "type": "HorizontalScrollCard[]",
+      "required": false,
+      "description": "卡片内容的数据列表；字段见类型列。",
+      "defaultValue": "[]"
+    }
+  ],
+  "LinearWrap": [
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties | undefined",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "MarketingHero": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "description",
+      "type": "ReactNode",
+      "required": false,
+      "description": "标题下方的说明内容。"
+    },
+    {
+      "name": "decoration",
+      "type": "ReactNode",
+      "required": false,
+      "description": "头图中的装饰性内容。"
+    }
+  ],
+  "PageContainer": [
+    {
+      "name": "title",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "footer",
+      "type": "ReactNode",
+      "required": false,
+      "description": "滚动布局或页面底部显示的内容。"
+    }
+  ],
+  "ScrollToTop": [
+    {
+      "name": "resetKey",
+      "type": "unknown",
+      "required": false,
+      "description": "变化后触发滚回顶部的标识值。"
+    },
+    {
+      "name": "behavior",
+      "type": "ScrollBehavior",
+      "required": false,
+      "description": "滚动到顶部时使用的平滑或即时行为。",
+      "defaultValue": "'smooth'"
+    },
+    {
+      "name": "target",
+      "type": "RefObject<HTMLElement | null>",
+      "required": false,
+      "description": "链接打开的位置，例如新窗口。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "StickyCard": [
+    {
+      "name": "cards",
+      "type": "StickyCardItem[]",
+      "required": true,
+      "description": "卡片内容的数据列表；字段见类型列。"
+    },
+    {
+      "name": "renderCard",
+      "type": "(card: StickyCardItem, index: number) => ReactNode",
+      "required": false,
+      "description": "自定义卡片内容的渲染函数。"
+    },
+    {
+      "name": "topOffset",
+      "type": "number",
+      "required": false,
+      "description": "吸顶卡片距离容器顶部的偏移。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "step",
+      "type": "number",
+      "required": false,
+      "description": "相邻吸顶卡片之间的滚动距离。",
+      "defaultValue": "30"
+    }
+  ],
+  "StickyFooter": [
+    {
+      "name": "heightValue",
+      "type": "CSSProperties['height']",
+      "required": false,
+      "description": "悬浮页脚使用的高度值。",
+      "defaultValue": "'100dvh'"
+    },
+    {
+      "name": "bottom",
+      "type": "CSSProperties['bottom']",
+      "required": false,
+      "description": "悬浮页脚距底部的位置。",
+      "defaultValue": "0"
+    }
+  ],
+  "TrapezoidTabs": [
+    {
+      "name": "tabs",
+      "type": "TrapezoidTab[]",
+      "required": false,
+      "description": "选项卡标题、值和内容的列表。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "defaultActiveTab",
+      "type": "string",
+      "required": false,
+      "description": "非受控模式下激活标签页的初始值。"
+    },
+    {
+      "name": "activeTab",
+      "type": "string",
+      "required": false,
+      "description": "受控模式下当前激活的标签页。"
+    },
+    {
+      "name": "onTabChange",
+      "type": "(code: string) => void",
+      "required": false,
+      "description": "标签页变化时调用的回调。"
+    },
+    {
+      "name": "tabListLabel",
+      "type": "string",
+      "required": false,
+      "description": "选项卡列表的无障碍名称。",
+      "defaultValue": "'Tabs'"
+    }
+  ],
+  "AutoSlider": [
+    {
+      "name": "slides",
+      "type": "AutoSlide[]",
+      "required": true,
+      "description": "轮播中按顺序显示的幻灯片数据。"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "自动切换幻灯片的间隔，单位毫秒。",
+      "defaultValue": "5000"
+    },
+    {
+      "name": "previousLabel",
+      "type": "string",
+      "required": false,
+      "description": "上一项控件显示的文案。",
+      "defaultValue": "'Previous slide'"
+    },
+    {
+      "name": "nextLabel",
+      "type": "string",
+      "required": false,
+      "description": "下一项控件显示的文案。",
+      "defaultValue": "'Next slide'"
+    },
+    {
+      "name": "onSelectionChange",
+      "type": "(index: number) => void",
+      "required": false,
+      "description": "轮播选中项变化时调用的回调。"
+    }
+  ],
+  "CompareAll": [
+    {
+      "name": "firstImage",
+      "type": "string",
+      "required": false,
+      "description": "对比视图中的第一张图片地址。"
+    },
+    {
+      "name": "secondImage",
+      "type": "string",
+      "required": false,
+      "description": "对比视图中的第二张图片地址。"
+    },
+    {
+      "name": "firstImageAlt",
+      "type": "string",
+      "required": false,
+      "description": "第一张对比图片的替代文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "secondImageAlt",
+      "type": "string",
+      "required": false,
+      "description": "第二张对比图片的替代文字。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "description": "控件或数据项旁显示的文字标签。",
+      "defaultValue": "'Image comparison'"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "firstImageClassName",
+      "type": "string",
+      "required": false,
+      "description": "第一张图片元素的 CSS 类名。"
+    },
+    {
+      "name": "secondImageClassname",
+      "type": "string",
+      "required": false,
+      "description": "第二张对比图片的 CSS 类名。"
+    },
+    {
+      "name": "initialSliderPercentage",
+      "type": "number",
+      "required": false,
+      "description": "滑块百分比的初始值。",
+      "defaultValue": "50"
+    },
+    {
+      "name": "slideMode",
+      "type": "'hover' | 'drag'",
+      "required": false,
+      "description": "图片对比线通过悬停还是拖动移动。",
+      "defaultValue": "'hover'"
+    },
+    {
+      "name": "showHandlebar",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示图片对比拖拽手柄。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "autoplay",
+      "type": "boolean",
+      "required": false,
+      "description": "挂载后是否自动播放。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "autoplayDuration",
+      "type": "number",
+      "required": false,
+      "description": "自动播放图片对比动画的时长，单位毫秒。",
+      "defaultValue": "5000"
+    },
+    {
+      "name": "onChange",
+      "type": "(percentage: number) => void",
+      "required": false,
+      "description": "对比分割位置变化时调用，接收新的百分比。"
+    }
+  ],
+  "FixCarouse": [
+    {
+      "name": "items",
+      "type": "readonly T[]",
+      "required": true,
+      "description": "需要展示的条目数组；条目结构见类型列。"
+    },
+    {
+      "name": "renderItem",
+      "type": "(item: T, index: number) => ReactNode",
+      "required": true,
+      "description": "自定义单个条目的渲染函数。"
+    },
+    {
+      "name": "getKey",
+      "type": "(item: T, index: number) => string | number",
+      "required": false,
+      "description": "返回标识的函数。"
+    },
+    {
+      "name": "itemsPerPage",
+      "type": "number",
+      "required": false,
+      "description": "轮播每页显示的条目数。",
+      "defaultValue": "6"
+    },
+    {
+      "name": "emptyLabel",
+      "type": "ReactNode",
+      "required": false,
+      "description": "空状态控件显示的文案。",
+      "defaultValue": "'No items'"
+    },
+    {
+      "name": "previousLabel",
+      "type": "string",
+      "required": false,
+      "description": "上一项控件显示的文案。",
+      "defaultValue": "'Previous page'"
+    },
+    {
+      "name": "nextLabel",
+      "type": "string",
+      "required": false,
+      "description": "下一项控件显示的文案。",
+      "defaultValue": "'Next page'"
+    },
+    {
+      "name": "pageLabel",
+      "type": "(page: number) => string",
+      "required": false,
+      "description": "页面控件显示的文案。"
+    }
+  ],
+  "FixMusicPlayer": [
+    {
+      "name": "closeLabel",
+      "type": "string",
+      "required": false,
+      "description": "关闭控件显示的文案。",
+      "defaultValue": "'Close player'"
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "description": "关闭组件时调用的回调。"
+    },
+    {
+      "name": "tracks",
+      "type": "readonly MusicTrack[]",
+      "required": true,
+      "description": "播放器可选择的音轨列表。"
+    },
+    {
+      "name": "initialTrack",
+      "type": "number",
+      "required": false,
+      "description": "初次选中的音轨索引。"
+    },
+    {
+      "name": "playOnNavigate",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "Start playback when navigating even if currently paused.",
+      "description": "切换音轨或页面时是否继续播放。"
+    },
+    {
+      "name": "labels",
+      "type": "Partial<MusicPlayerLabels>",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "description": "组件当前是否处于激活状态。"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "onTrackChange",
+      "type": "(track: MusicTrack, index: number) => void",
+      "required": false,
+      "description": "当前音轨变化时调用的回调。"
+    },
+    {
+      "name": "onPlaybackChange",
+      "type": "(playing: boolean) => void",
+      "required": false,
+      "description": "播放状态变化时调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "InteractiveBook": [
+    {
+      "name": "pdfWorker",
+      "type": "InstanceType<typeof pdfjs.PDFWorker>",
+      "required": false,
+      "sourceDescription": "Caller-owned PDF worker; or configure PDF.js globally before mounting.",
+      "description": "PDF.js 使用的 worker 实例。"
+    },
+    {
+      "name": "pageTurnSound",
+      "type": "string",
+      "required": false,
+      "description": "翻页音效资源地址。"
+    },
+    {
+      "name": "coverImage",
+      "type": "string",
+      "required": true,
+      "description": "书籍封面的背景图片地址。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "coverImagePosition",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "封面图片裁切位置，CSS object-position 值",
+      "description": "封面图片的位置配置。"
+    },
+    {
+      "name": "coverLabel",
+      "type": "React.ReactNode",
+      "required": false,
+      "sourceDescription": "封面标签、主标题下方简介、作者与出版信息",
+      "description": "封面控件显示的文案。"
+    },
+    {
+      "name": "coverContent",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封面自定义内容。"
+    },
+    {
+      "name": "coverAuthor",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封面显示的作者内容。"
+    },
+    {
+      "name": "backCoverImage",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "封底图片 URL，铺满整个封底",
+      "description": "书籍封底的背景图片地址。"
+    },
+    {
+      "name": "backCoverImagePosition",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "封底图片裁切位置，CSS object-position 值",
+      "description": "封底图片的位置配置。"
+    },
+    {
+      "name": "backCoverLabel",
+      "type": "React.ReactNode",
+      "required": false,
+      "sourceDescription": "封底标签、标题、副标题、简介、作者与出版信息",
+      "description": "封底控件显示的文案。"
+    },
+    {
+      "name": "backCoverTitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封底显示的标题内容。"
+    },
+    {
+      "name": "backCoverSubtitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封底显示的副标题内容。"
+    },
+    {
+      "name": "backCoverContent",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封底自定义内容。"
+    },
+    {
+      "name": "backCoverAuthor",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封底显示的作者内容。"
+    },
+    {
+      "name": "backCoverPublisher",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封底显示的出版方内容。"
+    },
+    {
+      "name": "backCoverStyle",
+      "type": "BookCoverStyle",
+      "required": false,
+      "sourceDescription": "封底可独立设置装帧、排版与颜色；未设置时沿用封面",
+      "description": "封底区域的样式配置。"
+    },
+    {
+      "name": "backCoverLayout",
+      "type": "BookCoverLayout",
+      "required": false,
+      "description": "封底使用的版式。"
+    },
+    {
+      "name": "backCoverColor",
+      "type": "string",
+      "required": false,
+      "description": "封底使用的颜色。"
+    },
+    {
+      "name": "backCoverFontFamily",
+      "type": "string",
+      "required": false,
+      "description": "设置封底字体字体族文字或取值。"
+    },
+    {
+      "name": "backCoverTitleColor",
+      "type": "string",
+      "required": false,
+      "description": "封底标题使用的颜色。"
+    },
+    {
+      "name": "backCoverTextColor",
+      "type": "string",
+      "required": false,
+      "description": "封底文字使用的颜色。"
+    },
+    {
+      "name": "backCoverAccentColor",
+      "type": "string",
+      "required": false,
+      "description": "封底强调使用的颜色。"
+    },
+    {
+      "name": "backCoverTextAlign",
+      "type": "'left' | 'center' | 'right'",
+      "required": false,
+      "description": "封底文字左对齐、居中或右对齐。"
+    },
+    {
+      "name": "backCoverTitleStyle",
+      "type": "React.CSSProperties",
+      "required": false,
+      "description": "封底标题区域的样式配置。"
+    },
+    {
+      "name": "backCoverTextured",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否单独显示封底纸纹；未设置时沿用 textured",
+      "description": "是否启用封底纹理效果。"
+    },
+    {
+      "name": "bookTitle",
+      "type": "string",
+      "required": false,
+      "description": "书籍显示的标题内容。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "coverTitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "sourceDescription": "自定义封面标题排版；书脊、内封和无障碍名称仍使用 bookTitle",
+      "description": "封面显示的标题内容。"
+    },
+    {
+      "name": "coverSubtitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "sourceDescription": "封面标题下方的副标题与出版信息",
+      "description": "封面显示的副标题内容。"
+    },
+    {
+      "name": "coverPublisher",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "封面显示的出版方内容。"
+    },
+    {
+      "name": "coverStyle",
+      "type": "BookCoverStyle",
+      "required": false,
+      "sourceDescription": "封面装帧：插画、黑金精装、酒红皮革、金色书衣或橙白编辑风",
+      "description": "封面区域的样式配置。",
+      "defaultValue": "'illustrated'"
+    },
+    {
+      "name": "coverLayout",
+      "type": "BookCoverLayout",
+      "required": false,
+      "sourceDescription": "封面排版布局；titleStyle 可进一步覆盖标题字体与位置",
+      "description": "封面使用的版式。",
+      "defaultValue": "'standard'"
+    },
+    {
+      "name": "coverFontFamily",
+      "type": "string",
+      "required": false,
+      "description": "设置封面字体字体族文字或取值。"
+    },
+    {
+      "name": "coverTitleSize",
+      "type": "number | string",
+      "required": false,
+      "description": "封面标题的尺寸。"
+    },
+    {
+      "name": "coverTitleColor",
+      "type": "string",
+      "required": false,
+      "description": "封面标题使用的颜色。"
+    },
+    {
+      "name": "coverTextColor",
+      "type": "string",
+      "required": false,
+      "description": "封面文字使用的颜色。"
+    },
+    {
+      "name": "coverAccentColor",
+      "type": "string",
+      "required": false,
+      "description": "封面强调使用的颜色。"
+    },
+    {
+      "name": "coverTextAlign",
+      "type": "'left' | 'center' | 'right'",
+      "required": false,
+      "description": "封面文字左对齐、居中或右对齐。"
+    },
+    {
+      "name": "coverTitleStyle",
+      "type": "React.CSSProperties",
+      "required": false,
+      "description": "封面标题区域的样式配置。"
+    },
+    {
+      "name": "spineTitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "sourceDescription": "书脊文案默认使用 bookTitle，可单独添加副标题和作者",
+      "description": "书脊显示的标题内容。"
+    },
+    {
+      "name": "spineSubtitle",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "书脊显示的副标题内容。"
+    },
+    {
+      "name": "spineAuthor",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "书脊显示的作者内容。"
+    },
+    {
+      "name": "spineColor",
+      "type": "string",
+      "required": false,
+      "description": "书脊使用的颜色。"
+    },
+    {
+      "name": "spineTextColor",
+      "type": "string",
+      "required": false,
+      "description": "书脊文字使用的颜色。"
+    },
+    {
+      "name": "spineAccentColor",
+      "type": "string",
+      "required": false,
+      "description": "书脊强调使用的颜色。"
+    },
+    {
+      "name": "spineStyle",
+      "type": "BookSpineStyle",
+      "required": false,
+      "sourceDescription": "书脊装饰：auto 按装帧匹配，也可选光滑、压纹、横带、古典或极简",
+      "description": "书脊区域的样式配置。",
+      "defaultValue": "'auto'"
+    },
+    {
+      "name": "bookAuthor",
+      "type": "string",
+      "required": false,
+      "description": "书籍显示的作者内容。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "pages",
+      "type": "BookPage[]",
+      "required": true,
+      "description": "传入自定义页内容；也可从 pageImages 或 pdfUrl 构建页面。",
+      "defaultValue": "[]"
+    },
+    {
+      "name": "pageImages",
+      "type": "string[]",
+      "required": false,
+      "sourceDescription": "图片模式：传入图片 URL 数组，每张图片对应书的一面。\n两张图片组成一个书页（正面 + 背面），即 pageImages[0] 和 pageImages[1] 是第一个书页，以此类推。\n传入后会忽略 pages 中的 content/backContent，改为渲染图片。",
+      "description": "交互书籍中依次显示的页面图片地址。"
+    },
+    {
+      "name": "pdfUrl",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "PDF 模式：传入 PDF 文件的 URL。\n使用 react-pdf 渲染，每两页 PDF 组成一个书页（正面 + 背面）。\n优先级：pdfUrl > pageImages > pages（JSX 内容）。",
+      "description": "要加载为书页的 PDF 文件地址。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "width",
+      "type": "number | string",
+      "required": false,
+      "description": "组件或绘制区域的宽度。",
+      "defaultValue": "350"
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "required": false,
+      "description": "组件或绘制区域的高度。",
+      "defaultValue": "500"
+    },
+    {
+      "name": "thickness",
+      "type": "number",
+      "required": false,
+      "sourceDescription": "合起时的纸张厚度（px），默认 28，范围 6–64",
+      "description": "书籍立体展示时的厚度。",
+      "defaultValue": "28"
+    },
+    {
+      "name": "coverColor",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "封面、书脊与封底的基础装帧颜色；未设置时按 coverStyle 选择",
+      "description": "封面使用的颜色。"
+    },
+    {
+      "name": "tilt",
+      "type": "number",
+      "required": false,
+      "sourceDescription": "合起时的垂直倾斜角（deg），默认 4，范围 0–30",
+      "description": "书籍立体展示时的倾斜角度。",
+      "defaultValue": "4"
+    },
+    {
+      "name": "rotation",
+      "type": "number",
+      "required": false,
+      "sourceDescription": "合起时的水平旋转角（deg），默认 24，范围 0–60",
+      "description": "初始或当前旋转角度。",
+      "defaultValue": "24"
+    },
+    {
+      "name": "enable3DViewControls",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "启用合起时的 3D 拖动与视角快捷按钮，默认 true",
+      "description": "是否显示三维视角控制。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "pagePadding",
+      "type": "string | number",
+      "required": false,
+      "sourceDescription": "内页边距，接受 CSS padding 简写或 px 数值；默认值随书页宽度按比例缩放",
+      "description": "书页内容四周的内边距。"
+    },
+    {
+      "name": "pageSidePadding",
+      "type": "{ outer?: string | number; gutter?: string | number }",
+      "required": false,
+      "sourceDescription": "内页水平边距；外侧与书脊侧可分别设置，支持 px 数值或 CSS 长度。pagePadding 设置后优先使用 pagePadding",
+      "description": "书页外侧和装订侧的内边距。"
+    },
+    {
+      "name": "fontFamily",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "内页字体，可传 CSS font-family 字体栈",
+      "description": "文字使用的字体族。"
+    },
+    {
+      "name": "paperColor",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "内页纸张颜色",
+      "description": "纸张使用的颜色。"
+    },
+    {
+      "name": "textColor",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "内页文字颜色",
+      "description": "文字使用的颜色。"
+    },
+    {
+      "name": "mutedColor",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "页眉、页码等次要文字颜色",
+      "description": "弱化使用的颜色。"
+    },
+    {
+      "name": "ruleColor",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "内页分隔线和纸张边缘颜色",
+      "description": "分隔线使用的颜色。"
+    },
+    {
+      "name": "contentsPerPage",
+      "type": "number",
+      "required": false,
+      "sourceDescription": "每张目录页显示的章节数上限，默认 6；页面较矮时会自动减少",
+      "description": "目录页中每页显示的目录项数。",
+      "defaultValue": "6"
+    },
+    {
+      "name": "textured",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否显示封面纸纹，默认 false",
+      "description": "是否启用纹理效果。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "onPageChange",
+      "type": "(pageIndex: number) => void",
+      "required": false,
+      "description": "当前书页变化时调用的回调。"
+    },
+    {
+      "name": "enableKeyboard",
+      "type": "boolean",
+      "required": false,
+      "description": "是否允许使用键盘翻页。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "showNavigation",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否显示底部导航栏，默认 true",
+      "description": "是否显示页面导航控件。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "showCornerFlip",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否启用悬停书角的预卷页效果，默认 true",
+      "description": "是否允许从页面角落触发翻页。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "enableSound",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否启用翻页音效，默认 true",
+      "description": "是否启用声音。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "soundSrc",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "自定义音效文件 URL；未提供时无音效",
+      "description": "播放音效时使用的音频地址。"
+    },
+    {
+      "name": "mode",
+      "type": "'single' | 'double' | 'auto'",
+      "required": false,
+      "sourceDescription": "翻页模式：\n- 'double': 双页模式（传统书籍展开，左右各一页）\n- 'single': 单页模式（每次显示一页，适合移动端）\n- 'auto': 窄屏或容器放不下完整双页时使用单页模式\n默认 'auto'",
+      "description": "书籍展示与翻页模式。",
+      "defaultValue": "'auto'"
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "初始是否打开书籍（直接显示内页），默认 false",
+      "description": "非受控模式下的初始打开状态。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "外部请求打开内页或合回封面；整书翻到封面后可再次点击封面阅读",
+      "description": "受控模式下书籍是否打开。"
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "sourceDescription": "书籍关闭时的回调（用户点击关闭按钮时触发）",
+      "description": "关闭组件时调用的回调。"
+    }
+  ],
+  "LazyLoadImage": [
+    {
+      "name": "caption",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "图片下方显示的说明文字。"
+    },
+    {
+      "name": "loadInitially",
+      "type": "boolean",
+      "required": false,
+      "description": "图片是否在首次渲染时立即加载。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "observerOptions",
+      "type": "IntersectionObserverInit",
+      "required": false,
+      "description": "延迟加载使用的 IntersectionObserver 配置。",
+      "defaultValue": "defaultObserverOptions"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "onLoad",
+      "type": "ReactEventHandler<T> | undefined",
+      "required": false,
+      "description": "图片或资源加载完成时调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "ReactEventHandler<T> | undefined",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "height",
+      "type": "number | string | undefined",
+      "required": false,
+      "description": "组件或绘制区域的高度。"
+    },
+    {
+      "name": "width",
+      "type": "number | string | undefined",
+      "required": false,
+      "description": "组件或绘制区域的宽度。"
+    },
+    {
+      "name": "alt",
+      "type": "string | undefined",
+      "required": false,
+      "description": "图片的替代文字。"
+    },
+    {
+      "name": "loading",
+      "type": "\"eager\" | \"lazy\" | undefined",
+      "required": false,
+      "description": "传给原生 img 的加载策略；组件也会处理可见性加载。"
+    },
+    {
+      "name": "src",
+      "type": "React.ImgHTMLAttributes<HTMLImageElement>['src']",
+      "required": false,
+      "description": "延迟加载的图片地址。"
+    }
+  ],
+  "LogoSlider": [
+    {
+      "name": "companies",
+      "type": "LogoCompany[]",
+      "required": true,
+      "description": "徽标轮播中展示的公司数据。"
+    },
+    {
+      "name": "autorotateTiming",
+      "type": "number",
+      "required": false,
+      "description": "自动轮换徽标的间隔，单位毫秒。",
+      "defaultValue": "3000"
+    },
+    {
+      "name": "direction",
+      "type": "SlideDirection",
+      "required": false,
+      "description": "内容移动或排列的方向；可选值见类型列。",
+      "defaultValue": "'right'"
+    },
+    {
+      "name": "radius",
+      "type": "number",
+      "required": false,
+      "description": "设置半径数值。",
+      "defaultValue": "180"
+    }
+  ],
+  "MusicPlayer": [
+    {
+      "name": "tracks",
+      "type": "readonly MusicTrack[]",
+      "required": true,
+      "description": "播放器可选择的音轨列表。"
+    },
+    {
+      "name": "initialTrack",
+      "type": "number",
+      "required": false,
+      "description": "初次选中的音轨索引。",
+      "defaultValue": "0"
+    },
+    {
+      "name": "playOnNavigate",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "Start playback when navigating even if currently paused.",
+      "description": "切换音轨或页面时是否继续播放。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "labels",
+      "type": "Partial<MusicPlayerLabels>",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+    },
+    {
+      "name": "active",
+      "type": "boolean",
+      "required": false,
+      "description": "组件当前是否处于激活状态。",
+      "defaultValue": "true"
+    },
+    {
+      "name": "theme",
+      "type": "'light' | 'dark'",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。",
+      "defaultValue": "'light'"
+    },
+    {
+      "name": "onTrackChange",
+      "type": "(track: MusicTrack, index: number) => void",
+      "required": false,
+      "description": "当前音轨变化时调用的回调。"
+    },
+    {
+      "name": "onPlaybackChange",
+      "type": "(playing: boolean) => void",
+      "required": false,
+      "description": "播放状态变化时调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "SmartVideoPlayer": [
+    {
+      "name": "language",
+      "type": "string",
+      "required": false,
+      "description": "设置语言文字或取值。"
+    },
+    {
+      "name": "labels",
+      "type": "Record<string, string>",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+    },
+    {
+      "name": "src",
+      "type": "string",
+      "required": false,
+      "description": "媒体或图片资源地址。"
+    },
+    {
+      "name": "provider",
+      "type": "PlayerProvider",
+      "required": false,
+      "description": "视频来源类型。"
+    },
+    {
+      "name": "youtubeId",
+      "type": "string",
+      "required": false,
+      "description": "YouTube 视频标识。"
+    },
+    {
+      "name": "embedUrl",
+      "type": "string",
+      "required": false,
+      "description": "嵌入播放器使用的地址。"
+    },
+    {
+      "name": "getEmbedUrl",
+      "type": "(config: PlayerConfig) => string",
+      "required": false,
+      "description": "根据播放器配置生成嵌入地址的函数。"
+    },
+    {
+      "name": "externalUrl",
+      "type": "string",
+      "required": false,
+      "description": "跳转到站外播放器的地址。"
+    },
+    {
+      "name": "sourceUrl",
+      "type": "string",
+      "required": false,
+      "description": "视频原始资源地址。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "trackSrc",
+      "type": "string",
+      "required": false,
+      "description": "字幕轨道文件地址。"
+    },
+    {
+      "name": "trackLang",
+      "type": "string",
+      "required": false,
+      "description": "字幕轨道的语言代码。"
+    },
+    {
+      "name": "config",
+      "type": "PlayerConfig",
+      "required": false,
+      "description": "组件行为配置；字段结构见类型列。"
+    },
+    {
+      "name": "onConfigChange",
+      "type": "(config: PlayerConfig) => void",
+      "required": false,
+      "description": "播放器配置变化时调用的回调。"
+    },
+    {
+      "name": "initialConfig",
+      "type": "Partial<PlayerConfig>",
+      "required": false,
+      "description": "播放器初次使用的配置。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: PlayerError) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "onEvent",
+      "type": "(name: string, detail: PlayerEventDetail) => void",
+      "required": false,
+      "description": "播放器发出事件时调用的回调。"
+    }
+  ],
+  "SoundBar": [
+    {
+      "name": "src",
+      "type": "string",
+      "required": true,
+      "description": "媒体或图片资源地址。"
+    },
+    {
+      "name": "playLabel",
+      "type": "string",
+      "required": false,
+      "description": "播放控件显示的文案。",
+      "defaultValue": "'Play music'"
+    },
+    {
+      "name": "pauseLabel",
+      "type": "string",
+      "required": false,
+      "description": "暂停控件显示的文案。",
+      "defaultValue": "'Pause music'"
+    },
+    {
+      "name": "onPlaybackChange",
+      "type": "(playing: boolean) => void",
+      "required": false,
+      "description": "播放状态变化时调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "iconColor",
+      "type": "string",
+      "required": false,
+      "description": "图标使用的颜色。"
+    },
+    {
+      "name": "buttonStyle",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "按钮区域的样式配置。"
+    },
+    {
+      "name": "ghost",
+      "type": "boolean",
+      "required": false,
+      "description": "按钮是否使用透明背景样式。",
+      "defaultValue": "false"
+    }
+  ],
+  "TestimonialCarousel": [
+    {
+      "name": "items",
+      "type": "Testimonial[]",
+      "required": true,
+      "description": "需要展示的条目数组；条目结构见类型列。"
+    },
+    {
+      "name": "interval",
+      "type": "number",
+      "required": false,
+      "description": "自动切换评价的间隔，单位毫秒。",
+      "defaultValue": "3000"
+    },
+    {
+      "name": "slideLabel",
+      "type": "(index: number) => string",
+      "required": false,
+      "description": "根据轮播索引生成幻灯片标签的函数。"
+    }
+  ],
+  "Video": [
+    {
+      "name": "options",
+      "type": "VideoOptions",
+      "required": false,
+      "description": "组件可用选项或第三方配置对象；结构见类型列。"
+    },
+    {
+      "name": "onReady",
+      "type": "(player: VideoPlayer) => void",
+      "required": false,
+      "description": "播放器或实例准备就绪时调用的回调。"
+    }
+  ],
+  "DonutCharts": [
+    {
+      "name": "theme",
+      "type": "import('../EChart').EChartProps['theme']",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。"
+    },
+    {
+      "name": "height",
+      "type": "string",
+      "required": false,
+      "description": "组件或绘制区域的高度。"
+    },
+    {
+      "name": "eOptions",
+      "type": "{\n    data?: PieSeriesOption['data']\n    options?: {\n      title?: DonutComponentOption<EChartsOption['title']>\n      tooltip?: DonutTooltipOption\n      legend?: DonutComponentOption<EChartsOption['legend']>\n    } & Partial<Pick<PieSeriesOption, 'label' | 'labelLine'>> & {\n        series?: PieSeriesOption[]\n      }\n  }",
+      "required": false,
+      "description": "e的选项配置；字段见类型列。"
+    }
+  ],
+  "EChart": [
+    {
+      "name": "option",
+      "type": "TOption",
+      "required": false,
+      "description": "ECharts 的图表配置对象。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。"
+    },
+    {
+      "name": "renderer",
+      "type": "'canvas' | 'svg'",
+      "required": false,
+      "description": "图表使用 Canvas 或 SVG 渲染。"
+    },
+    {
+      "name": "theme",
+      "type": "Parameters<typeof echarts.init>[1]",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "initOptions",
+      "type": "Parameters<typeof echarts.init>[2]",
+      "required": false,
+      "description": "创建 ECharts 实例时传给底层库的选项。"
+    },
+    {
+      "name": "maps",
+      "type": "readonly EChartMap[]",
+      "required": false,
+      "description": "图表使用的地图数据及注册信息。"
+    },
+    {
+      "name": "notMerge",
+      "type": "boolean",
+      "required": false,
+      "description": "更新图表时是否替换旧配置。"
+    },
+    {
+      "name": "lazyUpdate",
+      "type": "boolean",
+      "required": false,
+      "description": "是否延后应用图表配置更新。"
+    },
+    {
+      "name": "silent",
+      "type": "boolean",
+      "required": false,
+      "description": "更新图表时是否抑制相关事件。"
+    },
+    {
+      "name": "autoResize",
+      "type": "boolean",
+      "required": false,
+      "description": "容器大小变化时是否自动重绘图表。"
+    },
+    {
+      "name": "resizeDebounceMs",
+      "type": "number",
+      "required": false,
+      "description": "容器缩放后延迟重绘的毫秒数。"
+    },
+    {
+      "name": "onEvents",
+      "type": "Partial<Record<string, (params: unknown, chart: EChartsType) => void>>",
+      "required": false,
+      "description": "底层图表事件名称到事件处理函数的映射。"
+    },
+    {
+      "name": "onInit",
+      "type": "(chart: EChartsType) => void",
+      "required": false,
+      "description": "底层实例创建后调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "loading",
+      "type": "boolean | Parameters<EChartsType['showLoading']>[1]",
+      "required": false,
+      "description": "是否显示加载状态，或传入加载效果配置。"
+    }
+  ],
+  "EChartsCommon": [
+    {
+      "name": "option",
+      "type": "TOption",
+      "required": false,
+      "description": "ECharts 的图表配置对象。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。"
+    },
+    {
+      "name": "renderer",
+      "type": "'canvas' | 'svg'",
+      "required": false,
+      "description": "图表使用 Canvas 或 SVG 渲染。"
+    },
+    {
+      "name": "theme",
+      "type": "Parameters<typeof echarts.init>[1]",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "initOptions",
+      "type": "Parameters<typeof echarts.init>[2]",
+      "required": false,
+      "description": "创建 ECharts 实例时传给底层库的选项。"
+    },
+    {
+      "name": "maps",
+      "type": "readonly EChartMap[]",
+      "required": false,
+      "description": "图表使用的地图数据及注册信息。"
+    },
+    {
+      "name": "notMerge",
+      "type": "boolean",
+      "required": false,
+      "description": "更新图表时是否替换旧配置。"
+    },
+    {
+      "name": "lazyUpdate",
+      "type": "boolean",
+      "required": false,
+      "description": "是否延后应用图表配置更新。"
+    },
+    {
+      "name": "silent",
+      "type": "boolean",
+      "required": false,
+      "description": "更新图表时是否抑制相关事件。"
+    },
+    {
+      "name": "autoResize",
+      "type": "boolean",
+      "required": false,
+      "description": "容器大小变化时是否自动重绘图表。"
+    },
+    {
+      "name": "resizeDebounceMs",
+      "type": "number",
+      "required": false,
+      "description": "容器缩放后延迟重绘的毫秒数。"
+    },
+    {
+      "name": "onEvents",
+      "type": "Partial<Record<string, (params: unknown, chart: EChartsType) => void>>",
+      "required": false,
+      "description": "底层图表事件名称到事件处理函数的映射。"
+    },
+    {
+      "name": "onInit",
+      "type": "(chart: EChartsType) => void",
+      "required": false,
+      "description": "底层实例创建后调用的回调。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "loading",
+      "type": "boolean | Parameters<EChartsType['showLoading']>[1]",
+      "required": false,
+      "description": "是否显示加载状态，或传入加载效果配置。"
+    },
+    {
+      "name": "instanceHandle",
+      "type": "EChartProps['onInit']",
+      "required": false,
+      "description": "获取或操作 ECharts 实例的句柄。"
+    }
+  ],
+  "IconCloud": [
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。",
+      "defaultValue": "'Icon cloud'"
+    },
+    {
+      "name": "icons",
+      "type": "React.ReactElement[]",
+      "required": false,
+      "description": "图标云中展示的 React 图标列表。"
+    },
+    {
+      "name": "images",
+      "type": "string[]",
+      "required": false,
+      "description": "用于图片的条目列表；每项结构见类型列。"
+    }
+  ],
+  "OrgChart": [
+    {
+      "name": "data",
+      "type": "OrgChartNode",
+      "required": true,
+      "description": "组件消费的数据；结构见类型列。"
+    },
+    {
+      "name": "orientation",
+      "type": "'vertical' | 'horizontal'",
+      "required": false,
+      "description": "组织图水平或垂直布局的方向。"
+    },
+    {
+      "name": "onNodeClick",
+      "type": "(node: FlatOrgChartNode, event: MouseEvent<HTMLButtonElement>) => void",
+      "required": false,
+      "description": "点击组织图节点时调用的回调。"
+    },
+    {
+      "name": "onNodeExpand",
+      "type": "(node: FlatOrgChartNode, isExpanded: boolean) => void",
+      "required": false,
+      "description": "展开或收起组织图节点时调用的回调。"
+    },
+    {
+      "name": "defaultExpanded",
+      "type": "boolean",
+      "required": false,
+      "description": "组织图节点初次是否展开。"
+    },
+    {
+      "name": "highlightOnHover",
+      "type": "boolean",
+      "required": false,
+      "description": "悬停节点时是否突出显示。"
+    },
+    {
+      "name": "nodeClassName",
+      "type": "string",
+      "required": false,
+      "description": "节点元素的 CSS 类名。"
+    },
+    {
+      "name": "rootNodeClassName",
+      "type": "string",
+      "required": false,
+      "description": "根节点元素的 CSS 类名。"
+    },
+    {
+      "name": "animated",
+      "type": "boolean",
+      "required": false,
+      "description": "组织图节点是否使用动画过渡。"
+    },
+    {
+      "name": "expandIcon",
+      "type": "ReactNode",
+      "required": false,
+      "description": "节点展开操作显示的图标。"
+    },
+    {
+      "name": "collapseIcon",
+      "type": "ReactNode",
+      "required": false,
+      "description": "节点收起操作显示的图标。"
+    },
+    {
+      "name": "showExpandIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示节点展开与收起图标。"
+    },
+    {
+      "name": "customStyles",
+      "type": "OrgChartCustomStyles",
+      "required": false,
+      "description": "自定义区域的样式配置。"
+    }
+  ],
+  "PHBarChart": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    },
+    {
+      "name": "theme",
+      "type": "Parameters<typeof echarts.init>[1]",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "loading",
+      "type": "boolean | Parameters<EChartsType['showLoading']>[1]",
+      "required": false,
+      "description": "是否显示加载状态，或传入加载效果配置。"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。",
+      "defaultValue": "title ?? 'pH chart'"
+    },
+    {
+      "name": "renderer",
+      "type": "'canvas' | 'svg'",
+      "required": false,
+      "description": "图表使用 Canvas 或 SVG 渲染。"
+    },
+    {
+      "name": "initOptions",
+      "type": "Parameters<typeof echarts.init>[2]",
+      "required": false,
+      "description": "创建 ECharts 实例时传给底层库的选项。"
+    },
+    {
+      "name": "maps",
+      "type": "readonly EChartMap[]",
+      "required": false,
+      "description": "图表使用的地图数据及注册信息。"
+    },
+    {
+      "name": "notMerge",
+      "type": "boolean",
+      "required": false,
+      "description": "更新图表时是否替换旧配置。"
+    },
+    {
+      "name": "lazyUpdate",
+      "type": "boolean",
+      "required": false,
+      "description": "是否延后应用图表配置更新。"
+    },
+    {
+      "name": "silent",
+      "type": "boolean",
+      "required": false,
+      "description": "更新图表时是否抑制相关事件。"
+    },
+    {
+      "name": "autoResize",
+      "type": "boolean",
+      "required": false,
+      "description": "容器大小变化时是否自动重绘图表。"
+    },
+    {
+      "name": "resizeDebounceMs",
+      "type": "number",
+      "required": false,
+      "description": "容器缩放后延迟重绘的毫秒数。"
+    },
+    {
+      "name": "onEvents",
+      "type": "Partial<Record<string, (params: unknown, chart: EChartsType) => void>>",
+      "required": false,
+      "description": "底层图表事件名称到事件处理函数的映射。"
+    },
+    {
+      "name": "onInit",
+      "type": "(chart: EChartsType) => void",
+      "required": false,
+      "description": "底层实例创建后调用的回调。"
+    },
+    {
+      "name": "ranges",
+      "type": "readonly PHRange[]",
+      "required": true,
+      "description": "横向柱状图中的数值区间数据。"
+    },
+    {
+      "name": "markers",
+      "type": "readonly PHMarker[]",
+      "required": false,
+      "description": "横向柱状图中的标记点数据。"
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "axisLabel",
+      "type": "string",
+      "required": false,
+      "description": "图表数值轴旁显示的文字。",
+      "defaultValue": "'pH'"
+    },
+    {
+      "name": "getColor",
+      "type": "(value: number) => string",
+      "required": false,
+      "description": "返回颜色的函数。",
+      "defaultValue": "getPHColor"
+    }
+  ],
+  "PieNestCharts": [
+    {
+      "name": "data",
+      "type": "PieSeriesOption['data']",
+      "required": false,
+      "description": "组件消费的数据；结构见类型列。"
+    },
+    {
+      "name": "theme",
+      "type": "import('../EChart').EChartProps['theme']",
+      "required": false,
+      "description": "组件使用的颜色主题；可选值见类型列。"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。",
+      "defaultValue": "'Nested pie chart'"
+    },
+    {
+      "name": "height",
+      "type": "string",
+      "required": false,
+      "description": "组件或绘制区域的高度。",
+      "defaultValue": "'400px'"
+    },
+    {
+      "name": "eOptions",
+      "type": "{\n    options?: PieNestChartOptions\n  }",
+      "required": false,
+      "description": "e的选项配置；字段见类型列。"
+    }
+  ],
+  "markmap": [
+    {
+      "name": "markmap",
+      "type": "string",
+      "required": true,
+      "description": "要转换为思维导图的 Markdown 文本。"
+    },
+    {
+      "name": "debounceDelay",
+      "type": "number",
+      "required": false,
+      "description": "连续输入后延迟重新渲染的时间。",
+      "defaultValue": "200"
+    },
+    {
+      "name": "options",
+      "type": "Partial<IMarkmapOptions>",
+      "required": false,
+      "description": "组件可用选项或第三方配置对象；结构见类型列。"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。",
+      "defaultValue": "'Mind map'"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "mermaidHooks": [
+    {
+      "name": "chart",
+      "type": "string",
+      "required": true,
+      "description": "要解析并展示的 Mermaid 图表源码。"
+    },
+    {
+      "name": "config",
+      "type": "MermaidConfig",
+      "required": false,
+      "description": "组件行为配置；字段结构见类型列。"
+    },
+    {
+      "name": "debounceDelay",
+      "type": "number",
+      "required": false,
+      "description": "连续输入后延迟重新渲染的时间。",
+      "defaultValue": "200"
+    },
+    {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。",
+      "defaultValue": "'Diagram'"
+    },
+    {
+      "name": "style",
+      "type": "CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "onError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+    }
+  ],
+  "AnimInViewBasic": [],
+  "CustomSwitch": [
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "交给 React Router Routes 匹配的 Route 子元素。"
+    }
+  ],
+  "DeploymentFlow": [
+    {
+      "name": "scrollContainerRef",
+      "type": "React.RefObject<HTMLElement>",
+      "required": false,
+      "description": "指定要监听的滚动容器；嵌套滚动时传入对应元素 ref。"
+    }
+  ],
+  "DescBox": [],
+  "LandingPage": [],
+  "NoMatch": [],
+  "NumberFlowFix": [],
+  "SafeLink": [
+    {
+      "name": "replace",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "Replaces the current entry in the [`History`](https://developer.mozilla.org/en-US/docs/Web/API/History)\nstack instead of pushing a new one onto it.\n\n```tsx\n<Link replace />\n```\n\n```\n# with a history stack like this\nA -> B\n\n# normal link click pushes a new entry\nA -> B -> C\n\n# but with `replace`, B is replaced by C\nA -> C\n```",
+      "description": "导航时是否替换当前历史记录。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "to",
+      "type": "To",
+      "required": true,
+      "sourceDescription": "Can be a string or a partial {@link Path }:\n\n```tsx\n<Link to=\"/some/path\" />\n\n<Link\n  to={{\n    pathname: \"/some/path\",\n    search: \"?query=string\",\n    hash: \"#hash\",\n  }}\n/>\n```",
+      "description": "目标路由地址，遵循 React Router 的 To 类型。"
+    },
+    {
+      "name": "children",
+      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "required": false,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "导航点击回调；权限和外链处理仍由 SafeLink 执行。"
+    },
+    {
+      "name": "rel",
+      "type": "string | undefined",
+      "required": false,
+      "description": "链接目标与当前页面的关系；新窗口链接可配置 noreferrer、noopener。"
+    },
+    {
+      "name": "aria-label",
+      "type": "string | undefined",
+      "required": false,
+      "sourceDescription": "Defines a string value that labels the current element.",
+      "description": "没有可见文字时供辅助技术识别的名称。"
+    },
+    {
+      "name": "target",
+      "type": "HTMLAttributeAnchorTarget | undefined",
+      "required": false,
+      "description": "链接打开的位置，例如新窗口。"
+    }
+  ],
+  "SectionNotFound": [],
+  "SettingDrawer": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true,
+      "description": "组件当前是否打开；传入时由父组件控制。"
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": true,
+      "description": "关闭组件时调用的回调。"
+    }
+  ],
+  "FixTabPanel": [
+    {
+      "name": "showScrollProgress",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示滚动进度。"
+    },
+    {
+      "name": "scrollProgressProps",
+      "type": "ScrollProgressBarProps",
+      "required": false,
+      "description": "传给滚动进度的属性配置。"
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "required": false,
+      "description": "是否让内容填满可用区域。"
+    }
+  ],
+  "ScrollProgressBar": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "附加 CSS 类名。",
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "style",
+      "type": "React.CSSProperties",
+      "required": false,
+      "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "支持 CSS 颜色或渐变。",
+      "description": "主要显示颜色。"
+    },
+    {
+      "name": "show",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否显示进度条，默认 true。",
+      "description": "是否显示滚动进度条。"
+    },
+    {
+      "name": "height",
+      "type": "number",
+      "required": false,
+      "sourceDescription": "进度条高度，默认 3px。",
+      "description": "进度条的厚度。"
+    },
+    {
+      "name": "position",
+      "type": "'fixed' | 'relative' | 'absolute' | 'sticky'",
+      "required": false,
+      "sourceDescription": "定位方式；独立使用默认 fixed，ScrollArea 默认 sticky。",
+      "description": "进度条相对于容器的定位方式。"
+    },
+    {
+      "name": "springConfig",
+      "type": "{\n    stiffness?: number\n    damping?: number\n    restDelta?: number\n  }",
+      "required": false,
+      "sourceDescription": "进度动画配置。",
+      "description": "进度动画的弹簧参数配置。"
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './SafeHtml.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / CONTENT</span>
+  <h1>SafeHtml</h1>
+  <p>在渲染 HTML 字符串前使用 DOMPurify 清理内容。默认允许常见排版标签，并过滤脚本与事件属性。</p>
+  <div className="wui-doc-badges">
+    <span>HTML 清理</span>
+    <span>可定制规则</span>
+    <span>空内容回退</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>要展示来自字符串的 HTML，同时限制脚本和事件属性时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>比较清理后的富文本与纯文本示例，观察危险内容的处理。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>外部 HTML 的允许标签、属性和 URL 来源需要与 config 一起审核。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 清理前后
+
+Default 示例包含格式标签、<code>script</code> 和事件属性；预览中只保留经过清理的内容。
+
+<Canvas of={Stories.Default} />
+
+<Canvas of={Stories.PlainText} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 快速接入
+
+```tsx
+import SafeHtml from '@w.ui/wui-react/safe-html'
+
+export function Example() {
+  const articleHtml = '<p><strong>重点</strong>内容</p>'
+  return <SafeHtml html={articleHtml} fallback={<p>暂无内容</p>} />
+}
+```
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>属性</th>
+      <th>用途</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>html</code>
+      </td>
+      <td>要清理并显示的 HTML 字符串</td>
+    </tr>
+    <tr>
+      <td>
+        <code>config</code>
+      </td>
+      <td>覆盖默认 DOMPurify 配置；应根据内容来源审查</td>
+    </tr>
+    <tr>
+      <td>
+        <code>tag</code>
+      </td>
+      <td>更换外层 HTML 标签</td>
+    </tr>
+    <tr>
+      <td>
+        <code>fallback</code>
+      </td>
+      <td>清理后为空时显示的内容</td>
+    </tr>
+  </tbody>
+</table>
+
+<div className="wui-doc-callout">
+  <strong>内容边界：</strong>自定义 <code>config</code> 可以改变默认允许规则。接入外部内容时，先确认需要哪些标签、属性和
+  URL 来源。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="SafeHtml" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

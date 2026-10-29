@@ -4,7 +4,6 @@ import Component from './index'
 const meta = {
   title: 'WUI/Components/SafeHtml',
   component: Component,
-  tags: ['autodocs'],
   args: {
     html: '<h2>安全 HTML</h2><p><strong>允许的格式</strong>会保留。</p><script>alert(1)</script><img src=x onerror=alert(1)>',
   },

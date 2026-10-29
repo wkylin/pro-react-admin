@@ -1,0 +1,117 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './MoveChecker.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / INTERACTION</span>
+  <h1>MoveChecker</h1>
+  <p>通过拖动滑块完成一个可见的确认步骤。文案、颜色和结果回调都可以配置。</p>
+  <div className="wui-doc-badges">
+    <span>拖动交互</span>
+    <span>结果回调</span>
+    <span>可重置</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>需要用户通过拖动明确完成确认步骤时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>从左向右拖动滑块，比较默认和自定义文案示例的完成反馈。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>拖动完成只代表前端交互，不能替代服务端验证。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 拖动体验
+
+按住滑块拖到末端，再查看 Actions 中的 <code>onResult</code> 回调。
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 文案与接入
+
+<Canvas of={Stories.CustomText} />
+
+```tsx
+import MoveChecker from '@w.ui/wui-react/move-checker'
+import '@w.ui/wui-react/style.css'
+
+export function Example() {
+  return <MoveChecker initialText="向右拖动确认" successText="已确认" onResult={(passed) => console.log(passed)} />
+}
+```
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>控制点</th>
+      <th>对应属性</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>初始与成功文案</td>
+      <td>
+        <code>initialText</code>、<code>successText</code>
+      </td>
+    </tr>
+    <tr>
+      <td>背景和滑块颜色</td>
+      <td>
+        <code>bgColor</code>、<code>bgColorS</code>、<code>sliderBg</code>、<code>sliderSuccessBg</code>
+      </td>
+    </tr>
+    <tr>
+      <td>重置状态</td>
+      <td>
+        通过组件 ref 调用 <code>reset()</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div className="wui-doc-callout">
+  <strong>安全边界：</strong>拖动完成是前端交互结果，不能代替服务器端验证或反机器人校验。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="MoveChecker" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

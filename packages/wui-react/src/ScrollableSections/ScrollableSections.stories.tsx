@@ -14,7 +14,6 @@ function WithContainerRef(args: ComponentProps<typeof Component>) {
 const meta = {
   title: 'WUI/Components/ScrollableSections',
   component: Component,
-  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {

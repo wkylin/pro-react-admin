@@ -1,20 +1,156 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
 import * as Stories from './ResponsiveTable.stories'
 
 <Meta of={Stories} />
 
-# ResponsiveTable
+<div className="wui-doc-page">
 
-基于 Ant Design Table 的容器自适应表格，公开入口同时导出 useTable 与请求/分页类型。支持本地 dataSource、远程 fetchUrl 或 fetchData，以及 requestLib 注入。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / DATA DISPLAY</span>
+  <h1>ResponsiveTable</h1>
+  <p>以 Ant Design Table 为基础的容器自适应表格。可以直接显示本地数据，也能接入远程分页、选择、操作列与工具栏。</p>
+  <div className="wui-doc-badges">
+    <span>本地 / 远程</span>
+    <span>分页与选择</span>
+    <span>useTable</span>
+  </div>
+</header>
 
-远程请求默认客户端属于组件包，不共享管理应用的 token 与拦截器。autoLoad 默认 false；响应映射默认 data/total，请求映射默认 page/pageSize/sort/order。业务校验、取消和授权应由注入的请求层定义。
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>同一张表需要兼容本地数据、远程分页、筛选和行操作时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>先查看本地数据表，再切换远程、选择操作和工具栏示例。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>远程请求涉及业务鉴权时注入 requestLib 或 fetchData；autoLoad 默认关闭。</p>
+  </div>
+</div>
 
-pageSyncToUrl 默认 false，selectionMode 支持 multiple/single/none。完整接入说明见仓库 docs/components/RESPONSIVE_TABLE.md。安装后从 @w.ui/wui-react/responsive-table 导入，并导入 style.css。
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
 
-## 预览
+### 从本地数据开始
+
+调整示例宽度，观察表格在容器内的布局。演示数据与组件实现分离。
 
 <Canvas of={Stories.Index} />
 
-## 当前参数
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 按数据来源接入
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>数据来源</th>
+      <th>关键属性</th>
+      <th>何时使用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>本地数组</td>
+      <td>
+        <code>dataSource</code>、<code>columns</code>
+      </td>
+      <td>数据已在页面中，或数据量较小</td>
+    </tr>
+    <tr>
+      <td>自定义函数</td>
+      <td>
+        <code>fetchData</code>、<code>autoLoad</code>
+      </td>
+      <td>业务已有请求函数，需要远程分页</td>
+    </tr>
+    <tr>
+      <td>请求地址</td>
+      <td>
+        <code>fetchUrl</code>、<code>requestLib</code>
+      </td>
+      <td>通过指定客户端请求，并控制鉴权与拦截器</td>
+    </tr>
+  </tbody>
+</table>
+
+```tsx
+import ResponsiveTable from '@w.ui/wui-react/responsive-table'
+import '@w.ui/wui-react/style.css'
+
+export function Example() {
+  return (
+    <ResponsiveTable
+      rowKey="id"
+      columns={[{ title: '名称', dataIndex: 'name' }]}
+      dataSource={[{ id: 1, name: '示例记录' }]}
+    />
+  )
+}
+```
+
+<Canvas of={Stories.ServerMode} />
+
+<div className="wui-doc-callout">
+  <strong>请求边界：</strong>组件包的默认请求客户端不共享管理应用的 token 或拦截器。远程数据需要业务鉴权时，通过{' '}
+  <code>requestLib</code> 或 <code>fetchData</code> 接入。<code>autoLoad</code> 默认关闭。
+</div>
+
+### 常见组合
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>多行与分页</strong>
+    <p>用 Multiple Rows 观察超出一页时的分页行为。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>选择与操作</strong>
+    <p>用 Selection And Actions 查看行选择、操作列和确认步骤。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>工具栏搜索</strong>
+    <p>用 Toolbar Search 查看筛选字段与工具栏操作。</p>
+  </div>
+</div>
+
+<Canvas of={Stories.SelectionAndActions} />
+
+<Canvas of={Stories.ToolbarSearch} />
+
+<details>
+  <summary>请求与分页默认值</summary>
+
+`pageSyncToUrl` 默认是 `false`；`rowSelection` 可设为 `multiple`、`single` 或不选择。默认请求字段是 `page`、`pageSize`、`sort`、`order`，默认响应字段是 `data`、`total`，可以分别通过 `requestParamMap`、`responseFieldMap` 修改。业务校验、取消请求与授权由注入的请求层定义。
+
+</details>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="ResponsiveTable" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

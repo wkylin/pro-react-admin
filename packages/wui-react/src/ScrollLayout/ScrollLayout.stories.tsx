@@ -4,7 +4,6 @@ import Component from './index'
 const meta = {
   title: 'WUI/Components/ScrollLayout',
   component: Component,
-  tags: ['autodocs'],
   decorators: [
     (Story) => (
       <div style={{ height: 420, overflow: 'auto', position: 'relative' }}>

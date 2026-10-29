@@ -1,0 +1,566 @@
+{
+  "AlternatingText": {
+    "purpose": "在同一位置轮换短句或关键词，适合标题中的动态强调。",
+    "preview": "等待文字自动切换；用 Controls 调整 alternateText、interval 和空列表时的 placeholder。"
+  },
+  "AnimBackground": {
+    "purpose": "给一组可选子项添加随选中项移动的背景，适合选项卡和筛选器。",
+    "preview": "点击“概览”和“设置”，观察高亮位置与 data-checked；也可用键盘聚焦并选择。"
+  },
+  "AnimGroup": {
+    "purpose": "让一组子元素按预设节奏依次入场，减少逐项编写动画的重复代码。",
+    "preview": "观察各子项的入场顺序，并在 Controls 中切换 preset 查看不同动效。"
+  },
+  "AnimInView": {
+    "purpose": "元素进入视口时播放入场动画，适合滚动页面中的内容区块。",
+    "preview": "滚动预览区域，让示例进入视口，观察动画何时触发。"
+  },
+  "AnimText": {
+    "purpose": "按字符拆分文本并错峰播放动效，适合短标题的视觉强调。",
+    "preview": "观察字符依次出现，约三秒后再悬停文字查看后续状态。"
+  },
+  "AnimateOnScreen": {
+    "purpose": "在内容进入屏幕时启动动画，适合需要延迟呈现的页面片段。",
+    "preview": "滚动到示例附近，观察内容出现时的过渡；可在 Controls 中替换 children。"
+  },
+  "AnimateRipple": {
+    "purpose": "点击按钮时从指针位置扩散波纹，适合操作反馈。",
+    "preview": "在按钮的不同位置点击，观察波纹从点击点向外扩散。"
+  },
+  "AnimateWave": {
+    "purpose": "让词语或文字呈现波浪式运动，适合标题和提示语。",
+    "preview": "观察波峰沿文字传播的方向和节奏，比较 text、words 与 children 的呈现方式。"
+  },
+  "AnimatedList": {
+    "purpose": "将列表项的出现过程串成连续动画，适合通知和动态条目。",
+    "preview": "观察列表内容逐项进入的顺序，重点留意容器与子项的间隔。"
+  },
+  "BackgroundBeams": {
+    "purpose": "在内容背后绘制流动光束，适合深色展示区的背景点缀。",
+    "preview": "观察光束的运动与内容层级；作为背景使用时给容器留出明确高度。"
+  },
+  "BackgroundBoxes": {
+    "purpose": "用网格方块构成动态背景，适合展示区或首页头图。",
+    "preview": "在预览区移动鼠标，观察方块响应与背景对比度。"
+  },
+  "BlurFade": {
+    "purpose": "结合模糊与位移显示内容，适合轻量的入场过渡。",
+    "preview": "查看内容从模糊到清晰的过程，并在 Controls 中尝试 variant。"
+  },
+  "BlurText": {
+    "purpose": "把一句话拆成带模糊过渡的文字片段，适合短标题。",
+    "preview": "观察文字逐步清晰的顺序；修改 text 查看长度变化后的节奏。"
+  },
+  "BorderBeam": {
+    "purpose": "在容器边缘绘制移动光带，突出卡片或操作区。",
+    "preview": "观察光带沿边框运动的路径；通过 transition 调整速度与时长。"
+  },
+  "BreatheText": {
+    "purpose": "用呼吸式明暗变化强调主副文字，适合提示和展示标题。",
+    "preview": "比较 text 与 secondaryText 的层次，观察循环动画是否影响阅读。"
+  },
+  "ColorfulText": {
+    "purpose": "为文字叠加多色变化效果，适合简短品牌语和装饰标题。",
+    "preview": "修改 text 查看不同长度下的色彩过渡和可读性。"
+  },
+  "ContactSection": {
+    "purpose": "随滚动逐字点亮联系区域文案，适合长页面收尾段落。",
+    "preview": "滚动预览区，观察 sticky 文案按进度显现；嵌套滚动时可传 scrollContainerRef。"
+  },
+  "CubeSpinner": {
+    "purpose": "把一组短内容排成旋转立方体，适合紧凑的展示或加载装饰。",
+    "preview": "观察不同面上的 items 如何轮换；调整条目数量检查布局。"
+  },
+  "DynamicBackground": {
+    "purpose": "让分布在展示区内的图标随鼠标产生轻微位移，增强背景层次。",
+    "preview": "在区域内移动鼠标，对比不同 size 的图标位移幅度。"
+  },
+  "FlipLink": {
+    "purpose": "链接在悬停时翻转显示另一层文字，适合少量醒目的导航入口。",
+    "preview": "依次悬停 Default、Medium 和 Reveal Links，观察翻转方向与多链接排布。"
+  },
+  "FlipWords": {
+    "purpose": "在固定位置循环切换关键词，适合一句话中的动态角色或功能名。",
+    "preview": "等待 words 轮换，并用 duration 调整停留时间。"
+  },
+  "FloatAny": {
+    "purpose": "让任意子内容在三维空间轻微漂浮，适合插画与展示卡片。",
+    "preview": "观察内容的位移和旋转；可调整 speed、amplitude 与 rotationRange。"
+  },
+  "FloatingIcon": {
+    "purpose": "给单个图标添加漂浮位移，适合页面插画中的装饰元素。",
+    "preview": "观察图标的初始位置和运动范围；调整 initialX 比较起点。"
+  },
+  "GradientAnimation": {
+    "purpose": "给标题文字添加流动渐变，适合展示型页面的主视觉。",
+    "preview": "观察渐变在字符间移动的速度，并替换 text 检查较长文案。"
+  },
+  "GradientTracking": {
+    "purpose": "按钮内的渐变高光跟随指针移动，用于强调可点击操作。",
+    "preview": "在按钮内移动鼠标，观察高光是否跟随位置变化；尝试点击确认按钮行为。"
+  },
+  "GradualSpacing": {
+    "purpose": "逐步拉开文字间距形成入场动画，适合短句或标签标题。",
+    "preview": "观察字间距变化和最终排版；修改 text 比较长度对效果的影响。"
+  },
+  "InteractiveGrid": {
+    "purpose": "用可响应指针的网格作为展示区背景。",
+    "preview": "在网格上移动鼠标，观察方格响应；调整 className 检查容器尺寸。"
+  },
+  "IsometricCard": {
+    "purpose": "用等距透视样式呈现短内容，适合展示型卡片。",
+    "preview": "观察卡片的透视层次与文字位置；替换 text 查看内容适配。"
+  },
+  "LineBordered": {
+    "purpose": "为行内文字添加线框强调，适合标题中的重点词。",
+    "preview": "观察边线与文字的间距；比较 text 和 children 的传入方式。"
+  },
+  "MagicTrail": {
+    "purpose": "在指定容器内绘制鼠标尾迹与粒子，适合局部互动背景。",
+    "preview": "移动和停下鼠标，比较 Default、Explicit Container、Trail Only 的粒子与轨迹。"
+  },
+  "MemoizedStars": {
+    "purpose": "绘制星点背景，适合深色展示区的低干扰装饰。",
+    "preview": "观察星点分布与页面内容的对比，留意背景不会遮挡前景操作。"
+  },
+  "MeshGradientBackground": {
+    "purpose": "用网格渐变铺设内容背景，适合海报式展示区。",
+    "preview": "观察渐变色块的层次与 children 的可读性。"
+  },
+  "Meteors": {
+    "purpose": "在背景中绘制掠过的流星，适合深色区域的氛围装饰。",
+    "preview": "等待流星出现，再用 starCount 比较密度与遮挡情况。"
+  },
+  "MouseTrail": {
+    "purpose": "指针经过时展示跟随的内容或轨迹，适合可探索的展示区。",
+    "preview": "在预览容器内移动鼠标，观察 items 跟随的位置与消失过程。"
+  },
+  "MultiColorBorder": {
+    "purpose": "为文字或内容添加多色边框，适合小面积视觉强调。",
+    "preview": "观察边框色彩与内部 text 的对比度。"
+  },
+  "MultiDirectionSlide": {
+    "purpose": "让两段文字从不同方向滑入，适合成对的短标题。",
+    "preview": "观察 textLeft 与 textRight 的进入方向和相对位置。"
+  },
+  "OrbitingCircles": {
+    "purpose": "让元素围绕中心内容环绕，适合能力关系或品牌图标展示。",
+    "preview": "观察 items 与 centerText 的层次，检查环绕元素是否碰到容器边缘。"
+  },
+  "PointerMove": {
+    "purpose": "让装饰元素通过弹簧动画跟随指针坐标。",
+    "preview": "在页面内移动指针，观察星点的跟随速度和回弹。"
+  },
+  "ScratchToReveal": {
+    "purpose": "通过擦除遮罩逐步揭示隐藏内容，适合互动式信息展示。",
+    "preview": "按住鼠标拖动擦开遮罩；调整 width、height 并观察 onComplete 的触发时机。"
+  },
+  "ScrollAnimation": {
+    "purpose": "为滚动进入视口的内容提供可配置的入场过渡。",
+    "preview": "上下滚动示例，比较 once 与 amount 对触发位置和重复播放的影响。"
+  },
+  "ScrollVelocity": {
+    "purpose": "让横向滚动文字随页面滚动速度变化，适合章节过渡。",
+    "preview": "滚动预览区，观察文字速度与方向变化；调整 velocity 比较基准速度。"
+  },
+  "ShiftingCard": {
+    "purpose": "卡片随指针产生轻微位移，适合需要立体反馈的展示卡片。",
+    "preview": "在卡片内移动鼠标，观察卡片倾移和离开后的复位。"
+  },
+  "ShinyText": {
+    "purpose": "为文字添加扫过式高光，适合短促的视觉强调。",
+    "preview": "等待高光经过文字，检查文字在动画间隙是否仍易读。"
+  },
+  "ShootingStars": {
+    "purpose": "在容器内持续生成流星，适合深色背景的动态点缀。",
+    "preview": "等待流星生成，比较 Warm Colors 与 Compact 的颜色和窄容器表现。"
+  },
+  "SlideButton": {
+    "purpose": "带滑动过渡的操作按钮，适合醒目的单个操作入口。",
+    "preview": "悬停和点击按钮，观察前后状态及文字可读性。"
+  },
+  "SlideLinear": {
+    "purpose": "让子内容沿直线滑动，适合小范围的展示动效。",
+    "preview": "观察 children 的滑动方向、距离与容器边界。"
+  },
+  "SlideText": {
+    "purpose": "让多个短句按顺序上下滑动切换，适合动态标题。",
+    "preview": "等待 text 数组轮换，观察当前短句离场和下一句入场的方向。"
+  },
+  "Sparkles": {
+    "purpose": "绘制闪烁粒子，为局部内容增加轻量装饰。",
+    "preview": "观察粒子的出现密度和与前景内容的层次。"
+  },
+  "SparklesText": {
+    "purpose": "在文字周围加入闪烁粒子，适合短标题的点缀。",
+    "preview": "修改 text，观察粒子覆盖范围随文字长度变化。"
+  },
+  "Spotlight": {
+    "purpose": "用聚光灯式光斑衬托前景内容，适合展示区域。",
+    "preview": "观察光斑位置、容器裁切与 children 的可读性。"
+  },
+  "SquaresGrid": {
+    "purpose": "以方格阵列构成装饰背景，适合有明确尺寸的展示区。",
+    "preview": "观察网格密度与边界，检查背景不会盖住内容。"
+  },
+  "StarBackground": {
+    "purpose": "提供星空式背景，适合深色标题区或全屏展示。",
+    "preview": "观察星点运动、背景亮度与前景文本的对比。"
+  },
+  "TagCloud": {
+    "purpose": "将多个标签集中展示成词云，适合技能或主题集合。",
+    "preview": "观察 items 的排列与拥挤程度；改变条目数量检查换行。"
+  },
+  "TextClip": {
+    "purpose": "在固定前后缀之间循环切换关键词，适合动态句式。",
+    "preview": "等待 items 自动轮换，比较 prefix、suffix 和 interval 对句子节奏的影响。"
+  },
+  "TextLoader": {
+    "purpose": "在加载期间轮播状态文案并显示动态省略号。",
+    "preview": "观察 messages 的切换与点号动画；调整 interval 比较停留时间。"
+  },
+  "TextReveal": {
+    "purpose": "让文字随滚动逐步显现，适合长页面的叙事段落。",
+    "preview": "滚动到文案区域，观察文字显现进度与阅读节奏。"
+  },
+  "ThreeDCard": {
+    "purpose": "把图片、标题和子内容组合成立体卡片，适合展示入口。",
+    "preview": "在卡片上移动鼠标，观察透视反馈及 title、imageUrl 的层次。"
+  },
+  "TypeWriter": {
+    "purpose": "按设定速度逐字输出文本，适合短句提示或演示。",
+    "preview": "观察逐字输出过程；调整 speed 与 text 比较完成时间。"
+  },
+  "TypedText": {
+    "purpose": "将子内容按打字节奏显示，适合短标题的入场。",
+    "preview": "观察字符逐个出现；调整 delay 比较每个字符之间的间隔。"
+  },
+  "WordRotate": {
+    "purpose": "轮换一组词语作为动态标题片段。",
+    "preview": "等待 words 切换，观察不同长度词语的布局稳定性。"
+  },
+  "ApiStateHandler": {
+    "purpose": "集中处理请求的加载、失败与成功三种视图。",
+    "preview": "依次查看 Default、Loading、Failure，比较 children 与 fallback 的优先级。"
+  },
+  "AutoLink": {
+    "purpose": "识别文本中的链接并转换为可点击内容。",
+    "preview": "查看示例中的 URL 如何呈现，比较普通文字与链接的边界。"
+  },
+  "AvatarCard": {
+    "purpose": "把头像与身份文字组合成简洁卡片，适合用户或角色摘要。",
+    "preview": "观察头像裁切、文字间距；替换 avatar 和 text 查看不同内容。"
+  },
+  "ClockFace": {
+    "purpose": "展示持续更新的时钟表盘，适合时间信息区。",
+    "preview": "等待时间变化，观察表盘刻度和指针是否同步。"
+  },
+  "ContentPlaceholder": {
+    "purpose": "在真实内容到达前显示文字占位形状，减少页面跳动。",
+    "preview": "观察占位行的长度与间距，和实际内容布局对照使用。"
+  },
+  "CopyToClipboard": {
+    "purpose": "展示可复制文本并提供复制操作，适合代码或链接片段。",
+    "preview": "点击复制按钮，检查反馈状态；修改 code 比较长文本的布局。"
+  },
+  "Exception": {
+    "purpose": "统一呈现 401、403、404、500 等异常页面。",
+    "preview": "查看当前异常视图的图标、标题和返回操作；按需要选对应状态组件。"
+  },
+  "GradientStats": {
+    "purpose": "以渐变色块汇总多项统计信息，适合概览面板。",
+    "preview": "观察 items 的数值、标签与背景对比；改变条目数量检查排布。"
+  },
+  "Loading": {
+    "purpose": "为等待状态提供旋转指示和文字说明。",
+    "preview": "观察加载图标与 label 的间距，调整文字检查不同宽度。"
+  },
+  "NumberViewCard": {
+    "purpose": "用单张卡片突出一个关键数值及其说明。",
+    "preview": "修改 value 和 label，检查长数值与短标题的视觉层级。"
+  },
+  "PDFExport": {
+    "purpose": "把指定内容导出为 PDF 文件，适合可下载的报表区。",
+    "preview": "点击导出按钮检查生成流程；用 fileName 调整下载文件名。"
+  },
+  "SkeletonFix": {
+    "purpose": "在内容加载期间显示稳定的骨架布局。",
+    "preview": "观察占位块的尺寸和节奏，确认它与目标内容结构接近。"
+  },
+  "StaticStepper": {
+    "purpose": "将步骤编号、标题和内容排成静态流程说明。",
+    "preview": "修改 step 与 title，观察编号和内容区的对应；代码内容可配合 CodeContainer 复制。"
+  },
+  "StatisticCard": {
+    "purpose": "将多项统计值整合到卡片中，适合仪表盘概览。",
+    "preview": "观察 items 的布局、标题与数值层级，检查多项数据的对齐。"
+  },
+  "SvgPreview": {
+    "purpose": "预览 SVG 源码并提供缩放、重置、全屏与下载操作。",
+    "preview": "依次使用工具栏按钮，观察缩放范围和重置后的画面位置。"
+  },
+  "TagCard": {
+    "purpose": "在卡片中展示有限数量的标签，适合属性摘要。",
+    "preview": "修改 tagCardList 和 showMax，观察超出数量时的收纳方式。"
+  },
+  "TextComponent": {
+    "purpose": "把序号、标题、正文和进度组合成由外部状态控制的区块。",
+    "preview": "切换 isOpen 查看正文显隐，再调整 loadingWidthPercent 观察进度条。"
+  },
+  "TransferHistory": {
+    "purpose": "按时间线展示多家公司或主体之间的流转记录。",
+    "preview": "比较 Default、Single Company、All Companies，并点击展开按钮查看连接线。"
+  },
+  "TreeList": {
+    "purpose": "用可搜索、可选择的树结构展示层级数据。",
+    "preview": "在 Default 中搜索和选择节点，再查看 Empty 的空数据状态。"
+  },
+  "UserIP": {
+    "purpose": "显示 IP 及地理信息，并提供加载失败时的重试入口。",
+    "preview": "查看 data 字段的呈现方式；触发失败时观察重试操作。"
+  },
+  "Watermark": {
+    "purpose": "在展示区叠加文字水印，适合预览和资料标记。",
+    "preview": "修改 content，观察水印重复密度和前景内容的可读性。"
+  },
+  "AdvancedCodeBlock": {
+    "purpose": "为代码片段提供语言高亮、文件名与主题选择。",
+    "preview": "切换 lang、theme，观察代码行及 fileName 的显示。"
+  },
+  "CodeHighlighter": {
+    "purpose": "对只读代码进行语法高亮，适合文档和结果展示。",
+    "preview": "修改 code、lang 和 theme，比较高亮规则及暗色背景。"
+  },
+  "ReMarkdown": {
+    "purpose": "将 Markdown 文本渲染为可阅读的富内容。",
+    "preview": "修改 markdownText，检查标题、列表和代码段；切换 isLoading 查看加载态。"
+  },
+  "SandpackBasic": {
+    "purpose": "嵌入可编辑运行的代码示例，适合互动教程。",
+    "preview": "尝试修改示例文件并运行；比较 template 和 files 对编辑器内容的影响。"
+  },
+  "ScriptView": {
+    "purpose": "分组展示可复制的终端命令，适合安装和部署步骤。",
+    "preview": "查看 commandMap 的分组与命令排版，尝试复制操作。"
+  },
+  "ShiCode": {
+    "purpose": "把预格式化代码内容展示为可阅读的片段。",
+    "preview": "修改 preCode，观察换行、空格和长代码的显示。"
+  },
+  "CheckableTags": {
+    "purpose": "用标签完成单选或多选，适合轻量筛选条件。",
+    "preview": "比较 Default、Single Selection、Preselected，并点击标签查看选中状态。"
+  },
+  "DottedStepper": {
+    "purpose": "用圆点和连线概括分步流程，适合进度导航。",
+    "preview": "观察 steps 的排列与当前状态；改变步骤数检查间距。"
+  },
+  "IntervalInput": {
+    "purpose": "输入一个起止区间，适合时间或数值范围条件。",
+    "preview": "分别填写区间两端，观察输入约束和两侧值的联动。"
+  },
+  "LanguageSwitcher": {
+    "purpose": "在多个语言选项间切换，适合应用内语言设置。",
+    "preview": "选择不同 options，观察 language 与 onLanguageChange 的对应。"
+  },
+  "PromptOptimizer": {
+    "purpose": "按角色、目标、约束等字段组合结构化提示词。",
+    "preview": "填写几个字段，观察右侧预览实时拼接；再试复制和重置。"
+  },
+  "RadioInput": {
+    "purpose": "以只读的单选或复选外观展示一个状态值。",
+    "preview": "在 Controls 中切换 checked、type 和 text，比较指示符与长文案换行。"
+  },
+  "ReactSignature": {
+    "purpose": "提供手写签名画布，适合确认或签署流程。",
+    "preview": "在画布上拖动书写，尝试清除和重新签名。"
+  },
+  "SmartChat": {
+    "purpose": "将消息输入、会话列表与流式回复整合为聊天界面。",
+    "preview": "发送一条消息体验本地模拟回复；示例不需要真实 API 密钥。"
+  },
+  "StarRating": {
+    "purpose": "通过星级选择表达评分，适合评价表单。",
+    "preview": "悬停并点击不同星级，观察预览态与最终选中态。"
+  },
+  "AboutSection": {
+    "purpose": "把介绍内容与卡片信息组合成关于区块。",
+    "preview": "观察 cards 的数量变化、文字层次和不同宽度下的排布。"
+  },
+  "AlignCenter": {
+    "purpose": "将子内容在可用区域内居中，适合空状态或焦点内容。",
+    "preview": "观察 children 在水平和垂直方向的位置；改变容器尺寸检查对齐。"
+  },
+  "AnimationTabs": {
+    "purpose": "在标签切换时提供内容过渡，适合少量并列栏目。",
+    "preview": "依次点击 tabs，观察激活指示和内容切换动画。"
+  },
+  "AutoScrollSection": {
+    "purpose": "让消息列表在受限高度内自动滚动，适合实时信息流。",
+    "preview": "观察 messages 增加后的滚动位置；调整 height 比较视口尺寸。"
+  },
+  "FeatureAny": {
+    "purpose": "将功能条目组合成展示区，适合产品能力介绍。",
+    "preview": "观察 data 中图文内容的对应关系，以及多条目换行。"
+  },
+  "FixTabs": {
+    "purpose": "提供固定区域内的标签导航与内容切换。",
+    "preview": "点击不同 tabs，观察 defaultActiveId 与当前内容的对应。"
+  },
+  "Footer": {
+    "purpose": "组合品牌、导航、社交与法律链接，形成站点页脚。",
+    "preview": "查看 navigation、socialLinks、legalItems 的分组和窄屏折行。"
+  },
+  "HorizontalScroll": {
+    "purpose": "把一组卡片排列为横向滚动内容，适合作品或功能列表。",
+    "preview": "横向滚动 cards，检查首尾卡片和溢出边界。"
+  },
+  "LinearWrap": {
+    "purpose": "用多条装饰线包裹内容，适合强调单个展示区。",
+    "preview": "观察装饰线与 children 的层级，以及内容区的边缘留白。"
+  },
+  "MarketingHero": {
+    "purpose": "将主标题、说明和装饰内容排成营销首屏。",
+    "preview": "比较 title 与 description 的层级，查看 decoration 对窄屏布局的影响。"
+  },
+  "PageContainer": {
+    "purpose": "统一页面标题、主体与底部操作区的布局。",
+    "preview": "观察 title、children、footer 三个区域的位置与间距。"
+  },
+  "ScrollToTop": {
+    "purpose": "在组件挂载或 resetKey 变化时将窗口或目标容器滚回顶部。",
+    "preview": "向下滚动示例页面，再点击 Overview 或 Activity 切换路由，观察页面回到顶部。"
+  },
+  "StickyCard": {
+    "purpose": "让多张卡片在滚动过程中依次吸附，适合叙事展示。",
+    "preview": "向下滚动 cards，观察卡片叠放顺序和释放位置。"
+  },
+  "StickyFooter": {
+    "purpose": "让底部内容在滚动或视口变化时保持可见。",
+    "preview": "滚动预览并调整 heightValue，观察页脚粘附范围。"
+  },
+  "TrapezoidTabs": {
+    "purpose": "用梯形标签切换内容，适合强调层叠外观的导航。",
+    "preview": "点击不同 tabs，观察激活轮廓和 onTabChange 的触发。"
+  },
+  "AutoSlider": {
+    "purpose": "自动轮播多张幻灯片，适合图片或内容展示。",
+    "preview": "等待 slides 轮换，观察切换节奏及手动操作。"
+  },
+  "CompareAll": {
+    "purpose": "并排叠放两张图片，通过滑块比较前后差异。",
+    "preview": "拖动分割线对比 firstImage 与 secondImage；切换 slideMode 观察交互。"
+  },
+  "FixCarouse": {
+    "purpose": "把一组内容按页分组展示，适合有限空间的多项列表。",
+    "preview": "点击上一页、下一页和页码，观察 itemsPerPage 对每页数量的影响。"
+  },
+  "FixMusicPlayer": {
+    "purpose": "提供带播放列表的音乐播放器界面。",
+    "preview": "切换 tracks 并尝试播放、暂停，观察当前曲目信息。"
+  },
+  "LazyLoadImage": {
+    "purpose": "图片进入可见区域后再加载，减少首屏资源消耗。",
+    "preview": "滚动到图片位置，观察加载时机；用 loadInitially 比较立即加载。"
+  },
+  "LogoSlider": {
+    "purpose": "横向展示一组品牌标识，适合合作方或客户墙。",
+    "preview": "观察 companies 的循环排列，调整 radius 查看轨道形状。"
+  },
+  "MusicPlayer": {
+    "purpose": "提供曲目列表与播放控制，适合页面内音频展示。",
+    "preview": "切换 tracks，尝试播放与暂停，观察进度和当前曲目。"
+  },
+  "SoundBar": {
+    "purpose": "以简洁控制条播放音频资源。",
+    "preview": "尝试播放和暂停，观察 src 变化后的加载与控制状态。"
+  },
+  "TestimonialCarousel": {
+    "purpose": "轮播用户评价卡片，适合营销页中的社会证明。",
+    "preview": "切换 items，检查引语、署名和轮播控制的布局。"
+  },
+  "Video": {
+    "purpose": "以统一播放器选项展示视频内容。",
+    "preview": "尝试播放、暂停和进度控制；修改 options 比较播放器配置。"
+  },
+  "DonutCharts": {
+    "purpose": "用环形图展示各部分占比，适合概览中的组成分析。",
+    "preview": "观察图例、扇区和中心区域；改变 eOptions 检查数据标签。"
+  },
+  "EChart": {
+    "purpose": "将 ECharts option 渲染成通用图表容器。",
+    "preview": "修改 option 和 style，观察图表如何随尺寸与数据变化。"
+  },
+  "EChartsCommon": {
+    "purpose": "封装常用 ECharts 容器与 option 渲染。",
+    "preview": "调整 option、style，检查图表在不同容器尺寸下的显示。"
+  },
+  "IconCloud": {
+    "purpose": "把图标排成可视化云团，适合技能或工具集合展示。",
+    "preview": "观察 icons 的分布与移动，改变图标数量检查密度。"
+  },
+  "OrgChart": {
+    "purpose": "按层级连接组织节点，适合汇报关系和团队结构。",
+    "preview": "查看节点间的父子关系、连接线和溢出滚动。"
+  },
+  "PHBarChart": {
+    "purpose": "在条形区间上标注范围与指标位置。",
+    "preview": "比较 ranges 与 markers 的位置，检查标记是否落在对应区间。"
+  },
+  "PieNestCharts": {
+    "purpose": "用嵌套饼图表达多层组成关系。",
+    "preview": "查看内外圈与图例的对应；调整 eOptions 比较数据变化。"
+  },
+  "markmap": {
+    "purpose": "把 Markdown 标题和列表转换为可探索的思维导图。",
+    "preview": "修改 markmap 文本，查看节点层级和布局如何变化。"
+  },
+  "mermaidHooks": {
+    "purpose": "将 Mermaid 语法渲染成流程或关系图。",
+    "preview": "修改 chart 语法，观察节点与连线；调整 config 比较样式。"
+  },
+  "AnimInViewBasic": {
+    "purpose": "展示最基础的视口进入动画接入方式。",
+    "preview": "滚动到示例区域，观察内容进入视口时的出现过程。"
+  },
+  "CustomSwitch": {
+    "purpose": "根据当前路由渲染 children 中的 Route；未匹配的路径会重定向到 /404。",
+    "preview": "查看 Default 如何在根路径渲染 Route；要验证兜底行为，可在业务路由中访问未匹配路径。"
+  },
+  "DeploymentFlow": {
+    "purpose": "将部署过程拆成可阅读的阶段视图。",
+    "preview": "按顺序查看阶段卡片，观察流程状态与连接关系。"
+  },
+  "LandingPage": {
+    "purpose": "播放本地视频作为全屏欢迎页背景，并提供返回首页的操作。",
+    "preview": "查看视频背景和 Roll Back 按钮；点击按钮会跳转到根路径。"
+  },
+  "NoMatch": {
+    "purpose": "路由未匹配时显示当前 URL 的 404 页面，并提供返回上一页和首页的入口。",
+    "preview": "查看当前路径如何显示在错误说明中，并试用“返回上一页”和“返回首页”。"
+  },
+  "NumberFlowFix": {
+    "purpose": "展示数值切换时的数字过渡效果。",
+    "preview": "点击示例页面依次切换预置数值，观察正负数和长数字的过渡。"
+  },
+  "SafeLink": {
+    "purpose": "对站内路由点击执行权限校验；外链或新标签沿用链接默认跳转。",
+    "preview": "Default 是新标签外链；在 Controls 把 to 改为站内路径并清空 target，比较站内权限校验。"
+  },
+  "SectionNotFound": {
+    "purpose": "模块子路由不存在时显示当前路径，并提供返回模块首页和全局首页的入口。",
+    "preview": "查看 404 说明和两个返回按钮；模块首页地址由当前路径计算。"
+  },
+  "SettingDrawer": {
+    "purpose": "在侧边抽屉中承载设置项与关闭操作。",
+    "preview": "查看 open 状态的抽屉位置，点击关闭入口观察 onClose。"
+  },
+  "FixTabPanel": {
+    "purpose": "把固定标签面板与滚动进度组合在同一滚动容器。",
+    "preview": "滚动 Default 和 Custom Progress，再比较 Without Progress 的顶部区域。"
+  },
+  "ScrollProgressBar": {
+    "purpose": "将滚动位置映射为容器顶部的进度条。",
+    "preview": "滚动 Default、Gradient，比较 Empty 无可滚内容时的进度。"
+  }
+}

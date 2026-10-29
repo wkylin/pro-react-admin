@@ -1,0 +1,90 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './IconFrame.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / FOUNDATION</span>
+  <h1>IconFrame</h1>
+  <p>给图标一个固定的 16 × 16 对齐框，减少文字和图标并排时的基线跳动。</p>
+  <div className="wui-doc-badges">
+    <span>固定尺寸</span>
+    <span>任意 ReactNode</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>图标与文字并排时，用固定占位框统一尺寸和基线。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>观察默认示例里图标的占位尺寸，再比较相邻文字是否保持对齐。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>只负责 16 × 16 的图标占位；图标表达操作时由外层按钮提供可访问名称。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 图标与文字对齐
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 接入方式
+
+```tsx
+import IconFrame from '@w.ui/wui-react/icon-frame'
+
+export function Example() {
+  return (
+    <span>
+      <IconFrame>
+        <span aria-hidden="true">⚙</span>
+      </IconFrame>
+      设置
+    </span>
+  )
+}
+```
+
+<div className="wui-doc-callout">
+  <strong>使用提示：</strong>IconFrame
+  只负责对齐与尺寸；图标的语义由外层元素提供。如果图标本身表达操作，请给操作元素添加可访问名称。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="IconFrame" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

@@ -4,7 +4,6 @@ import Component from './index'
 const meta = {
   title: 'Components/Stateless/DescBox',
   component: Component,
-  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {

@@ -1,0 +1,126 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './SliderCaptcha.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / DATA ENTRY</span>
+  <h1>SliderCaptcha</h1>
+  <p>拖动拼图块完成前端验证交互。可选难度，并通过成功、失败、刷新回调连接业务流程。</p>
+  <div className="wui-doc-badges">
+    <span>拼图交互</span>
+    <span>3 种难度</span>
+    <span>事件回调</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>需要拼图式拖动验证，并把结果接入业务流程时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>拖动拼图块完成验证，再比较高难度示例与刷新反馈。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>前端成功回调不能作为高风险操作的唯一校验依据。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 拖动拼图块
+
+拖动滑块使拼图对齐。刷新后会重新生成图形。
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 难度与事件
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>属性</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>difficulty</code>
+      </td>
+      <td>
+        <code>easy</code>、<code>medium</code> 或 <code>hard</code>，默认 <code>medium</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>onSuccess</code>
+      </td>
+      <td>拼图在客户端判定成功时触发</td>
+    </tr>
+    <tr>
+      <td>
+        <code>onFail</code>
+      </td>
+      <td>拼图在客户端判定失败时触发</td>
+    </tr>
+    <tr>
+      <td>
+        <code>onRefresh</code>
+      </td>
+      <td>生成新拼图后触发</td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.Hard} />
+
+```tsx
+import SliderCaptcha from '@w.ui/wui-react/slider-captcha'
+import '@w.ui/wui-react/style.css'
+
+export function Example() {
+  return <SliderCaptcha difficulty="easy" onSuccess={() => console.log('完成交互')} />
+}
+```
+
+<div className="wui-doc-callout">
+  <strong>安全边界：</strong>这是 UI
+  挑战，客户端成功回调不能作为账号登录或高风险操作的唯一验证依据。需要在服务端完成安全决策。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="SliderCaptcha" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

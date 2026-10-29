@@ -1,20 +1,140 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../../.storybook/PropReference'
 import * as Stories from './SmartVideoPlayer.stories'
 
 <Meta of={Stories} />
 
-# SmartVideoPlayer
+<div className="wui-doc-page">
 
-应用内部播放器，provider 支持 html5/youtube/embed。HTML5 用 src，YouTube 用 youtubeId，嵌入用 embedUrl 或 getEmbedUrl。可传字幕 trackSrc/trackLang、标题及外部来源链接。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">APPLICATION / MEDIA</span>
+  <h1>SmartVideoPlayer</h1>
+  <p>用同一套播放界面接入 HTML5、YouTube 或嵌入式视频。不同来源有不同的地址字段与浏览器能力。</p>
+  <div className="wui-doc-badges">
+    <span>3 种来源</span>
+    <span>字幕</span>
+    <span>播放事件</span>
+  </div>
+</header>
 
-initialConfig 设置初始配置，config/onConfigChange 提供受控配置；onError/onEvent 回调接收播放反馈。公开 ref 提供 play 与 playFromUserGesture。自动播放、全屏、画中画与跨域限制依赖浏览器和 provider，不能假定一致。
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>需要用统一界面接入 HTML5、YouTube 或嵌入视频时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>先试 HTML5 播放，再比较其他来源与错误反馈。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>自动播放、全屏及跨域媒体能力依赖浏览器和视频来源。</p>
+  </div>
+</div>
 
-当前不属于 @w.ui/wui-react 发布组件。
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
 
-## 预览
+### HTML5 播放示例
+
+预览使用公开 MP4 资源；离线环境下视频可能无法加载。
 
 <Canvas of={Stories.Html5Mp4} />
 
-## 当前参数
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 选择视频来源
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>provider</th>
+      <th>主要输入</th>
+      <th>说明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>html5</code>
+      </td>
+      <td>
+        <code>src</code>
+      </td>
+      <td>
+        MP4 或 HLS，可设置 <code>trackSrc</code>、<code>trackLang</code> 字幕
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>youtube</code>
+      </td>
+      <td>
+        <code>youtubeId</code>
+      </td>
+      <td>由 YouTube iframe 播放</td>
+    </tr>
+    <tr>
+      <td>
+        <code>embed</code>
+      </td>
+      <td>
+        <code>embedUrl</code> 或 <code>getEmbedUrl</code>
+      </td>
+      <td>接入其他允许嵌入的来源</td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.YouTube} />
+
+<Canvas of={Stories.Embed} />
+
+### 状态与反馈
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>初始设置</strong>
+    <p>initialConfig 只设置初始状态。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>受控设置</strong>
+    <p>config 与 onConfigChange 共同管理播放配置。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>播放反馈</strong>
+    <p>onError 与 onEvent 提供错误和行为事件；ref 暴露 play 与 playFromUserGesture。</p>
+  </div>
+</div>
+
+<div className="wui-doc-callout">
+  <strong>浏览器边界：</strong>自动播放、全屏、画中画及跨域媒体能力取决于浏览器和
+  provider。各来源不保证行为一致。此组件属于应用内部，不是 <code>@w.ui/wui-react</code> 的公开导出。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="SmartVideoPlayer" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

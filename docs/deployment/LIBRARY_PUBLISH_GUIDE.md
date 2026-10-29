@@ -131,7 +131,7 @@ pnpm run check:lib-release
 
 当前门禁只接受 `6.x`。稳定版本发布到 `latest`；含 `-beta.` 的预发布版本使用 `beta`，其它预发布使用 `next`。`WUI_DIST_TAG` / `npm_config_tag` 与版本通道不符会被拒绝。进入新的主版本前需要同步修改发布契约和迁移说明。
 
-版本修改后必须重新构建、验证和打包，不能上传旧版本产物。v6 的公开入口、12 个组件及 peer 范围见[包用法](../../NPM_README.md)；应用组件 MdxEditor、SmartVideoPlayer、InteractiveBook 未加入此包。
+版本修改后必须重新构建、验证和打包，不能上传旧版本产物。v6 的公开入口、12 个基础组件及 peer 范围见[包用法](../../NPM_README.md)；MdxEditor、SmartVideoPlayer 和 InteractiveBook 从 editor/media 分组导入，使用前需安装对应的可选 peer。
 
 ## 登录 npmjs
 

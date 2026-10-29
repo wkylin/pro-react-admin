@@ -4,7 +4,6 @@ import Component from './index'
 const meta = {
   title: 'WUI/Components/WatermarkProvider',
   component: Component,
-  tags: ['autodocs'],
   args: {
     content: 'Pro React Admin 6.0',
     containerId: 'storybook-watermark',

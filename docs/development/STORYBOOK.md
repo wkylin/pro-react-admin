@@ -13,12 +13,12 @@ Storybook 的静态目录用于预览，不是可安装的 npm 包。要构建�
 | 开发并自动刷新         | `pnpm run storybook:webpack`，端口 6006     | `pnpm run storybook:vite`，端口 6008                              |
 | 构建静态站             | `pnpm run build-storybook:webpack`          | `pnpm run build-storybook:vite`                                   |
 | 构建输出               | `storybook-static/`                         | `storybook-static-vite/`                                          |
-| 本地预览已构建的文件   | `pnpm run serve:storybook`，端口 6007       | `pnpm exec serve storybook-static-vite -p 6009`                   |
+| 本地预览已构建的文件   | `pnpm run serve:storybook`，端口 6007       | `python3 -m http.server -p HTTP/1.1 6009 -d storybook-static-vite`                   |
 | 检查实际构建的组件索引 | `node scripts/validate-stories.mjs --built` | `node scripts/validate-stories.mjs --built=storybook-static-vite` |
 
 首次使用建议先启动开发服务，在浏览器打开终端输出的地址，从左侧导航进入 `WUI / Components`、`Shared`、`Components / Stateless` 或 `Components / Stateful`。修改同目录的 `*.stories.tsx` 或组件源码后，开发服务自动更新；构建出的静态目录不会自动更新，需重新执行对应构建命令。两个静态输出目录独立，切换 builder 无需清理另一套产物。
 
-发布前应预览刚构建的静态目录，而不是把开发服务地址作为部署产物。`serve:storybook` 只预览 Webpack 产物；Vite 产物用上表中的 `pnpm exec serve` 命令。端口被占用时改用 `pnpm exec serve <输出目录> -p <空闲端口>`，以终端实际地址为准。Story 类型统一从 `@storybook/react` 导入。
+发布前应预览刚构建的静态目录，而不是把开发服务地址作为部署产物。`serve:storybook` 只预览 Webpack 产物；Vite 产物用上表中的 HTTP/1.1 静态服务命令；其模块资源较多，HTTP/1.0 本地服务可能停留在加载占位。端口被占用时替换命令中的端口号。Story 类型统一从 `@storybook/react` 导入。
 
 端口被占用时可以选择另一个端口：
 
@@ -48,7 +48,7 @@ pnpm run storybook:reset
 | Components / Stateless | `src/components/stateless` | 139 个直接 UI 入口，包括图表、动画、代码、编辑器、媒体、页面片段和命令式 Watermark |
 | Components / Stateful  | `src/components/stateful`  | CheckableTags、TreeList、markmap、mermaidHooks                                     |
 
-合计 157 个 UI 入口都有 stories。Hooks 不是独立可渲染的组件，通过使用它们的示例展示；编辑器内部 Header/Toolbar、部署流程的阶段卡片等私有实现由父组件示例覆盖，不将内部辅助组件作为独立公开 API。
+合计 157 个 UI 入口都有 stories 和对应 Docs：141 个使用组件专属 Autodocs 指南，16 个使用同目录的手写 MDX。编辑器示例内容目录中的 MDX 是测试数据，不进入 Storybook 导航。Hooks 不是独立可渲染的组件，通过使用它们的示例展示；编辑器内部 Header/Toolbar、部署流程的阶段卡片等私有实现由父组件示例覆盖，不将内部辅助组件作为独立公开 API。
 
 Storybook 全局提供应用 store、翻译、MemoryRouter、主题、Ant Design ConfigProvider/App。样式使用应用 Tailwind 源文件，Less 的 CSS Modules 保留默认导出，SVG 组件按应用规则转译。示例不启动企业 API；TreeList 和 SmartChat 提供本地模拟响应。外部视频、图片、IP 和 Sandpack 示例仍可能访问第三方服务，离线浏览不保证这些资源可用。
 
@@ -73,7 +73,7 @@ node scripts/validate-stories.mjs --built
 pnpm run serve:storybook
 ```
 
-这是默认 Webpack 的提交前路径，静态预览地址为 http://localhost:6007。使用 Vite 时将构建、索引检查和预览三步换成上表的 Vite 命令；`check:stories`、`typecheck:storybook` 与 `test:tooling` 不变。`check:stories` 检查每个 UI 入口是否有 story；`--built` 进一步确认每个组件进入实际构建索引。`test:tooling` 包含真实 Storybook Babel compiler addon 与 Webpack 开发转译回归，验证 store/theme 模块能够加载。CI 与 Pages workflow 也会执行源码覆盖、类型及构建索引检查；索引检查不能代替浏览器交互验证。
+这是默认 Webpack 的提交前路径，静态预览地址为 http://localhost:6007。使用 Vite 时将构建、索引检查和预览三步换成上表的 Vite 命令；`check:stories`、`typecheck:storybook` 与 `test:tooling` 不变。`check:stories` 从组件类型检查 Props 索引是否过期，并核对每个 UI 入口的 Story、自动文档指南与注意事项或手写 MDX；`--built` 进一步确认每个组件的 Story 和 Docs 都进入实际构建索引。`test:tooling` 包含真实 Storybook Babel compiler addon 与 Webpack 开发转译回归，验证 store/theme 模块能够加载。CI 与 Pages workflow 也会执行源码覆盖、类型及构建索引检查；索引检查不能代替浏览器交互验证。
 
 正常环境优先使用 package scripts；包管理器启动器出现异常时，可以用已安装的 Node CLI 复现：
 
@@ -104,19 +104,73 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 ```
 
-MDX 使用 `@storybook/addon-docs/blocks` 的 Meta、Canvas、ArgTypes，绑定同目录导出的 Story；已有手写 MDX 的组件沿用该文档入口，无需重复生成 autodocs。
+未单独编写 MDX 的 Story 使用 `.storybook/preview.tsx` 的统一 Autodocs 模板，按“适用场景 → 在示例中试试 → 使用注意 → 交互预览 → Props 说明 → 示例参数 → 更多示例”展示。新增此类 Story 时，在 `.storybook/component-docs.json` 填写 `purpose` 和 `preview`，在 `.storybook/component-cautions.json` 填写使用边界。`scripts/generate-storybook-props.mjs` 从 Story 绑定的组件类型生成 `.storybook/component-props.generated.json`：修改 Props 后运行 `node scripts/generate-storybook-props.mjs`，并在 `.storybook/prop-meanings.mjs` 补充中文解释。源码默认值仅在能从组件参数直接确认时显示；`check:stories` 会检查索引和说明是否齐全。手写 MDX 使用 `@storybook/addon-docs/blocks` 的 Meta、Canvas、ArgTypes 和共享的 `PropReference`，绑定同目录导出的 Story；写了 MDX 后移除该 Story 的 `autodocs` tag，避免出现两份 Docs。手写页沿用相同的标题区和三张指南卡，再按“01 交互预览 → 02 详细示例与接入 → 03 Props 说明”编排，保留组件特有的多个 Canvas、最短接入代码、选型表、状态对照、交互边界与无障碍说明。页面卡片、提示块和响应式表格样式统一放在 `.storybook/preview.css`。MDX 中的对照表使用 JSX `<table className="wui-doc-table">`，当前编译器会把管道式 Markdown 表格显示为普通文字。
 
 ```mdx
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
 import * as Stories from './Example.stories'
 
 <Meta of={Stories} />
 
-# Example
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / CATEGORY</span>
+  <h1>Example</h1>
+  <p>一句话说明组件解决什么问题。</p>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>说明何时使用这个组件。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>给读者一项具体可操作的体验。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>说明当前组件真实的使用边界。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+  </div>
+</div>
 
 <Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+  </div>
+</div>
+
+### 快速接入
+
+把可以复制的最短用法放在这里，再按实际行为写选型或注意事项。
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>Props 说明</h2>
+  </div>
+</div>
+
+<PropReference name="Example" />
+
 <ArgTypes of={Stories} />
+
+</div>
 ```
+
+文档编排参考了 [MUI Button](https://mui.com/material-ui/react-button/) 的变体示例与代码、[Ant Design Table](https://ant.design/components/table/) 的适用场景与 API 分层、[Radix Dialog](https://www.radix-ui.com/primitives/docs/components/dialog) 的交互及无障碍章节。统一 Autodocs 模板使用 [Storybook 官方 Doc blocks](https://storybook.js.org/docs/writing-docs/doc-blocks) 提供的 Title、Primary、Controls 和 Stories。
 
 资源可以直接 import，或用 `new URL('./assets/example.pdf', window.location.href).href` 指向 Storybook 静态资源目录。避免 `/assets/...` 的域名根路径写法，它在 GitHub Pages 仓库子路径下会返回 404。命令式组件示例需要在 effect 返回清理函数，防止切换示例后残留 DOM/观察器。
 

@@ -1,20 +1,131 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
 import * as Stories from './OneTimePasscode.stories'
 
 <Meta of={Stories} />
 
-# OneTimePasscode
+<div className="wui-doc-page">
 
-OTP/PIN 输入组件，length 默认 6。value/onChange 控制输入，也可不传 value 使用内部状态；支持 autoFocus、disabled、validateChar、className 与 inputClassName。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / DATA ENTRY</span>
+  <h1>OneTimePasscode</h1>
+  <p>用于一次性验证码或 PIN 的分格输入。支持受控值、字符校验和三种密度；默认长度为 6。</p>
+  <div className="wui-doc-badges">
+    <span>受控 / 非受控</span>
+    <span>数字过滤</span>
+    <span>3 种外观</span>
+  </div>
+</header>
 
-variant 支持 modern/compact/classic。validateChar 对单字符校验，数字示例为 `(ch) => ch === '' || /^[0-9]$/.test(ch)`。组件只管理输入，不验证一次性密码的有效性；校验由业务服务完成。
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>短信验证码、一次性口令或 PIN 需要逐格输入时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>输入或粘贴验证码，比较三种密度，再试受控输入示例。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>validateChar 只过滤输入字符；验证码是否有效仍需服务端校验。</p>
+  </div>
+</div>
 
-安装后从 @w.ui/wui-react/one-time-passcode 导入，并导入 style.css。
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
 
-## 预览
+### 分格输入验证码
+
+键入或粘贴验证码，再通过 Controls 切换长度和禁用状态。
 
 <Canvas of={Stories.Modern} />
 
-## 当前参数
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 外观与状态
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>示例</th>
+      <th>作用</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Modern</td>
+      <td>默认外观，适合独立验证步骤</td>
+    </tr>
+    <tr>
+      <td>Compact</td>
+      <td>紧凑表单中的验证码输入</td>
+    </tr>
+    <tr>
+      <td>Classic</td>
+      <td>传统分格视觉</td>
+    </tr>
+    <tr>
+      <td>Controlled / Uncontrolled</td>
+      <td>比较外部状态与组件内部状态的接法</td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.Compact} />
+
+<Canvas of={Stories.Classic} />
+
+### 快速接入
+
+```tsx
+import { useState } from 'react'
+import OneTimePasscode from '@w.ui/wui-react/one-time-passcode'
+import '@w.ui/wui-react/style.css'
+
+function VerificationCode() {
+  const [code, setCode] = useState('')
+  return (
+    <OneTimePasscode
+      length={6}
+      value={code}
+      onChange={setCode}
+      validateChar={(ch) => ch === '' || /^[0-9]$/.test(ch)}
+    />
+  )
+}
+```
+
+<Canvas of={Stories.Controlled} />
+
+<div className="wui-doc-callout">
+  <strong>校验边界：</strong>
+  <code>validateChar</code> 只决定单个字符能否输入；组件不验证验证码是否有效。提交与有效性校验应由业务服务完成。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="OneTimePasscode" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

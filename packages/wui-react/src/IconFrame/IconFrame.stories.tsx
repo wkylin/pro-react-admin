@@ -4,7 +4,6 @@ import Component from './index'
 const meta = {
   title: 'WUI/Components/IconFrame',
   component: Component,
-  tags: ['autodocs'],
   args: { children: <span aria-label="设置">⚙</span> },
 } satisfies Meta<typeof Component>
 export default meta

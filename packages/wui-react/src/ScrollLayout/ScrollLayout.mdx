@@ -1,0 +1,127 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './ScrollLayout.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / LAYOUT</span>
+  <h1>ScrollLayout</h1>
+  <p>把头部、可滚动内容和底部分成三个区域，适合需要固定操作区的页面或面板。</p>
+  <div className="wui-doc-badges">
+    <span>独立滚动区</span>
+    <span>可选头尾</span>
+    <span>高度可调</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>面板需要固定头部与底部，同时让中间内容独立滚动时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>滚动默认示例的内容区，再比较只保留内容区的结构。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>外层需要明确高度，组件内部才能形成独立滚动区。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 滚动示例
+
+在预览内部滚动；头部和底部留在面板中，内容区独立滚动。
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 结构
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>区域</th>
+      <th>属性</th>
+      <th>行为</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>头部</td>
+      <td>
+        <code>header</code>、<code>headerHeight</code>
+      </td>
+      <td>可选，默认高度 60px</td>
+    </tr>
+    <tr>
+      <td>内容</td>
+      <td>
+        <code>children</code>
+      </td>
+      <td>占据剩余空间并独立滚动</td>
+    </tr>
+    <tr>
+      <td>底部</td>
+      <td>
+        <code>footer</code>、<code>footerHeight</code>
+      </td>
+      <td>可选，默认高度 60px</td>
+    </tr>
+  </tbody>
+</table>
+
+```tsx
+import ScrollLayout from '@w.ui/wui-react/scroll-layout'
+import '@w.ui/wui-react/style.css'
+
+export function Example() {
+  return (
+    <div style={{ height: 420 }}>
+      <ScrollLayout header={<h2>列表</h2>} footer={<button type="button">保存</button>}>
+        <div style={{ height: 900, padding: 24 }}>可滚动内容</div>
+      </ScrollLayout>
+    </div>
+  )
+}
+```
+
+<Canvas of={Stories.ContentOnly} />
+
+<div className="wui-doc-callout">
+  <strong>布局条件：</strong>组件高度是容器高度的 100%。外层需要明确高度，才能形成独立的内容滚动区。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="ScrollLayout" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

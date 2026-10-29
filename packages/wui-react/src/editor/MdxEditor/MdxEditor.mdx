@@ -1,18 +1,112 @@
 import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../../.storybook/PropReference'
 import * as Stories from './MdxEditor.stories'
 
 <Meta of={Stories} />
 
-# MdxEditor
+<div className="wui-doc-page">
 
-应用内部的 Tiptap Markdown 编辑器，提供编辑、源码与分栏视图。props 为 initialMarkdown、onChange(markdown)、readOnly，示例与主题 decorators 在同目录 stories。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">APPLICATION / EDITOR</span>
+  <h1>MdxEditor</h1>
+  <p>在可视化编辑、Markdown 源码和分栏视图之间切换。示例内容随同目录 Story 提供。</p>
+  <div className="wui-doc-badges">
+    <span>Tiptap</span>
+    <span>Markdown</span>
+    <span>分栏视图</span>
+  </div>
+</header>
 
-它通过 Markdown/HTML 转换编辑内容，不执行任意 MDX JSX。转换范围取决于启用的 Tiptap 扩展，不能保证所有格式无损往返。当前不属于 @w.ui/wui-react 发布组件。
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>需要在可视化编辑、源码和分栏视图间切换时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>在默认示例编辑内容并切换视图，再打开高级文件示例。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>Markdown 与 HTML 转换取决于已启用扩展，复杂格式不保证无损往返。</p>
+  </div>
+</div>
 
-## 预览
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 开始编辑
+
+在预览中切换编辑模式，修改内容并查看输出。
 
 <Canvas of={Stories.Default} />
 
-## 当前参数
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 编辑流程
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>输入</th>
+      <th>编辑</th>
+      <th>输出</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>initialMarkdown</code> 提供初始内容
+      </td>
+      <td>可视化、源码或分栏视图</td>
+      <td>
+        <code>onChange(markdown)</code> 接收变更
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.FromFileAdvanced} />
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>可编辑</strong>
+    <p>readOnly 为 false 时，用户可修改内容并触发 onChange。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>只读</strong>
+    <p>readOnly 为 true 时，可作为内容查看器使用。</p>
+  </div>
+</div>
+
+<div className="wui-doc-callout">
+  <strong>格式边界：</strong>组件通过 Markdown 与 HTML 转换编辑内容，不执行任意 MDX JSX。往返转换取决于已启用的 Tiptap
+  扩展，不能保证所有格式无损。它是应用内部组件，不属于 <code>@w.ui/wui-react</code> 公开导出。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="MdxEditor" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
 
 <ArgTypes of={Stories} />
+
+</div>

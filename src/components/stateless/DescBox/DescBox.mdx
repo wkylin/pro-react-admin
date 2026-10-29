@@ -1,0 +1,115 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './DescBox.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">COMPONENTS / STATELESS</span>
+  <h1>DescBox</h1>
+  <p>展示一份固定的客户详情样例：字段标签与值对齐，客户性质和企业规模用只读选中标记呈现，容器变窄时自动调整排版。</p>
+  <div className="wui-doc-badges">
+    <span>容器查询布局</span>
+    <span>只读详情</span>
+    <span>无公开 Props</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>查看固定的客户详情排版、长选项换行和不同容器宽度的布局效果。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>比较 Default、Compact、Narrow；重点看字段标签、选中标记和较长客户性质文本的对齐。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>客户名称、地址、客户性质和选中状态写在组件源码里；Story 的宽度参数只控制外层示例容器。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>这是一块只读详情展示，可通过切换 Story 比较宽度；选中标记不响应点击。</p>
+  </div>
+</div>
+
+### 默认宽度
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>布局与接入边界</h2>
+    <p>按容器宽度检查排版，并区分组件行为与 Storybook 演示设置。</p>
+  </div>
+</div>
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>宽度条件</th>
+      <th>呈现方式</th>
+      <th>检查重点</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>容器宽度至少 960px</td>
+      <td>详情分为两列</td>
+      <td>两组字段与选项区域的视觉平衡</td>
+    </tr>
+    <tr>
+      <td>容器宽度低于 960px</td>
+      <td>详情改为一列</td>
+      <td>标签 6em 定宽、内容换行和长选项完整显示</td>
+    </tr>
+    <tr>
+      <td>Story 的 Compact / Narrow</td>
+      <td>外层容器分别设为 720px / 360px</td>
+      <td>这两个宽度不是 DescBox 的 Props</td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.Compact} />
+
+<Canvas of={Stories.Narrow} />
+
+```tsx
+// 在当前目录引用固定详情样例；组件本身没有可传入的客户数据 Props。
+import DescBox from './index'
+
+export function Example() {
+  return <DescBox />
+}
+```
+
+<div className="wui-doc-callout">
+  <strong>数据与交互边界：</strong>客户信息与选中项在源码中固定。内部 RadioInput 使用 checked
+  呈现只读状态，点击不会切换。 如果业务页面需要根据接口数据展示不同客户，应先为 DescBox 设计数据 Props
+  或另建数据驱动的详情组件。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>Props 说明</h2>
+    <p>当前公开 API 与 Storybook 示例参数的区别。</p>
+  </div>
+</div>
+
+<PropReference name="DescBox" />
+
+<p>Storybook 下方的参数表只对应示例，布局宽度由各 Story 的 decorator 设置。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

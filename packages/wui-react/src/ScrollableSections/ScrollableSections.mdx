@@ -1,0 +1,118 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './ScrollableSections.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / NAVIGATION</span>
+  <h1>ScrollableSections</h1>
+  <p>滚动内容时同步高亮导航，点击导航则平滑定位到对应区块。支持自动寻找滚动容器或显式指定容器。</p>
+  <div className="wui-doc-badges">
+    <span>滚动定位</span>
+    <span>导航高亮</span>
+    <span>空状态</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>长页面需要导航跟随滚动高亮并支持点击定位时。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>在示例中试试</strong>
+    <p>在默认示例中滚动和点击导航，再比较显式滚动容器。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用注意</strong>
+    <p>导航定位会预留吸顶间距；空 sections 列表会显示空状态。</p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验组件，再查看下方示例与接入方式。</p>
+  </div>
+</div>
+
+### 先滚动，再点击
+
+在示例内部滚动到不同区块，观察导航状态；点击导航可返回目标区块。
+
+<Canvas of={Stories.Default} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>详细示例与接入</h2>
+    <p>按场景比较交互、代码和使用边界。</p>
+  </div>
+</div>
+
+### 选择滚动容器
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>接入方式</th>
+      <th>行为</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        省略 <code>scrollContainerRef</code>
+      </td>
+      <td>自动使用最近的可滚动祖先；没有时监听窗口</td>
+    </tr>
+    <tr>
+      <td>
+        传入 <code>scrollContainerRef</code>
+      </td>
+      <td>使用指定的嵌套容器</td>
+    </tr>
+  </tbody>
+</table>
+
+<Canvas of={Stories.ExplicitContainer} />
+
+```tsx
+import ScrollableSections from '@w.ui/wui-react/scrollable-sections'
+import '@w.ui/wui-react/style.css'
+
+export function Example() {
+  return (
+    <ScrollableSections
+      sections={[
+        { title: '概览', content: '第一部分内容' },
+        { title: '设置', content: '第二部分内容' },
+      ]}
+    />
+  )
+}
+```
+
+<div className="wui-doc-callout">
+  <strong>定位细节：</strong>点击导航后会在吸顶导航下方留出约 20px 间距。空数组会显示空状态；可在 Empty 示例中查看。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数与控制</h2>
+    <p>这里列出组件可配置的属性；具体行为可结合上方示例查看。</p>
+  </div>
+</div>
+
+<PropReference name="ScrollableSections" />
+
+<p>下方 Storybook 参数表用于查看当前示例的控件和默认值；完整 Props 以源码属性表为准。</p>
+
+<ArgTypes of={Stories} />
+
+</div>

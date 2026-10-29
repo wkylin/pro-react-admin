@@ -2,24 +2,115 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 <Meta title="Project/开发指南" />
 
-# Pro React Admin Storybook
+<div className="wui-doc-page">
 
-当前 Storybook 使用 React Webpack5 builder，扫描应用 src 与 packages/wui-react/src 的组件 Story 和 MDX。组件源码、Story、文档放在同一目录，根 .storybook 提供 preview decorators、资源与 Less 规则。
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">PRO REACT ADMIN / COMPONENT WORKBENCH</span>
+  <h1>从组件开始探索</h1>
+  <p>这里同时展示可发布的 WUI 组件和应用内部组件。打开左侧目录中的 Docs 看用法与边界，进入具体 Story 动手调整参数。</p>
+  <div className="wui-doc-badges">
+    <span>实时预览</span>
+    <span>源码示例</span>
+    <span>参数参考</span>
+  </div>
+</header>
+
+## 找到需要的组件
+
+<div className="wui-doc-grid">
+  <div className="wui-doc-card">
+    <strong>WUI / Components</strong>
+    <p>可作为 npm 包使用的公开组件。优先从独立 Docs 页了解安装、示例和 API。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>Components / Stateless</strong>
+    <p>动画、图表、媒体、编辑器和页面片段等应用示例。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>Components / Stateful</strong>
+    <p>带有本地状态或数据交互的应用组件。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>Shared</strong>
+    <p>跨页面复用的 UI，例如滚动进度与 Tab 面板。</p>
+  </div>
+</div>
+
+## 如何阅读文档
+
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>位置</th>
+      <th>可以做什么</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>实时预览</td>
+      <td>直接操作组件，观察默认行为</td>
+    </tr>
+    <tr>
+      <td>Controls / 参数</td>
+      <td>修改当前示例的属性，查看可用参数</td>
+    </tr>
+    <tr>
+      <td>Source / 源码</td>
+      <td>对照 Story 了解接入方式</td>
+    </tr>
+    <tr>
+      <td>更多示例</td>
+      <td>比较空状态、交互、尺寸与不同数据来源</td>
+    </tr>
+  </tbody>
+</table>
+
+<div className="wui-doc-callout">
+  <strong>导出范围：</strong>左侧目录中的组件并不全部属于 npm 包。公开组件以 <code>config/library-contract.mjs</code>{' '}
+  为准；应用内部组件会在文档中明确标注。
+</div>
 
 ## 本地运行
 
-```bash
-pnpm run storybook
-pnpm run build-storybook
-pnpm run serve:storybook
-```
+<table className="wui-doc-table">
+  <thead>
+    <tr>
+      <th>操作</th>
+      <th>命令</th>
+      <th>结果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>开发预览</td>
+      <td>
+        <code>pnpm run storybook</code>
+      </td>
+      <td>Webpack builder，默认 6006 端口</td>
+    </tr>
+    <tr>
+      <td>静态构建</td>
+      <td>
+        <code>pnpm run build-storybook</code>
+      </td>
+      <td>
+        输出到 <code>storybook-static/</code>
+      </td>
+    </tr>
+    <tr>
+      <td>预览构建</td>
+      <td>
+        <code>pnpm run serve:storybook</code>
+      </td>
+      <td>查看已生成的静态站</td>
+    </tr>
+  </tbody>
+</table>
 
-开发端口 6006，静态输出 storybook-static。安装需要 Node 24 与仓库指定 pnpm；依赖版本由 lockfile 固定。
+安装需要 Node 24 与仓库指定的 pnpm。组件源码、Story 和 MDX 位于同一目录；Webpack 与 Vite builder 共用这些内容。
 
-## 两类组件
+## 更新文档
 
-WUI 组件在 packages/wui-react/src，是发布包的源码；应用组件在 src/components 或 src/shared，不会自动成为 npm 导出。公开组件以 config/library-contract.mjs 为准，发布检查包含严格声明编译和 ESM/CJS 消费 smoke。
+修改组件时同步更新 Story、Props 中文含义、使用注意和相关 MDX；文档的 Canvas 直接绑定 Story，Props 表展示源码属性，ArgTypes 展示当前示例参数。仓库的 `docs/development/STORYBOOK.md` 记录完整的检查与部署步骤。
 
-## 更新方式
-
-props 用类型声明维护，文档用 ArgTypes 展示，Canvas 直接绑定同目录导出的 Story。修改组件契约后生成目录，再检查文档和静态构建。完整维护指南位于仓库 docs/development/STORYBOOK.md 与 docs/deployment/LIBRARY_PUBLISH_GUIDE.md。
+</div>
