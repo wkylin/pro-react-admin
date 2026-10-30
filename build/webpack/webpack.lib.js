@@ -23,7 +23,12 @@ const isExternalRequest = (request = '') =>
   libraryExternalPackages.some((packageName) => request === packageName || request.startsWith(`${packageName}/`))
 
 const createExternals = (type) =>
-  function externalizeLibraryDependencies({ request }, callback) {
+  function externalizeLibraryDependencies({ request, dependencyType }, callback) {
+    // A worker URL must emit a file, not import the module's exports as a URL.
+    if (dependencyType === 'url') {
+      callback()
+      return
+    }
     // Slim 4.x's require condition contains ESM; keep its lazy initializer native.
     if (request === '@tsparticles/slim') {
       callback(null, `import ${request}`)
@@ -37,6 +42,12 @@ const createExternals = (type) =>
   }
 
 const sharedRules = [
+  {
+    test: /pdf\.worker(?:\.min)?\.mjs$/,
+    dependency: 'url',
+    type: 'asset/resource',
+    generator: { filename: 'assets/[name].[contenthash:8][ext]' },
+  },
   {
     test: /\.m?js$/,
     resolve: { fullySpecified: false },
@@ -162,6 +173,8 @@ const createConfig = ({ format, entries, includeStyleEntry = false, analyze = fa
     },
     performance: {
       hints: 'error',
+      // PDF.js runs separately on demand; it is not part of an entrypoint's JS budget.
+      assetFilter: (name) => !/^assets\/pdf\.worker(?:\.min)?\.[\da-f]+\.mjs$/.test(name),
       maxAssetSize: 512 * 1024,
       maxEntrypointSize: 512 * 1024,
     },

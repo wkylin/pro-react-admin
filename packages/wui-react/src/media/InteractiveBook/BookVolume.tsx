@@ -2,6 +2,7 @@ import { useState, type CSSProperties, type ReactNode } from 'react'
 import { clsx } from 'clsx'
 import { motion } from 'framer-motion'
 import styles from './volume.module.less'
+import { bookTitleParts } from './bookTitle'
 
 export type BookCoverStyle = 'illustrated' | 'classic' | 'leather' | 'golden-jacket' | 'editorial-orange'
 export type BookCoverLayout = 'standard' | 'centered' | 'publisher'
@@ -9,7 +10,9 @@ export type BookSpineStyle = 'auto' | 'smooth' | 'ribbed' | 'banded' | 'ornate' 
 
 /** 封面装帧：书脊压痕、包边高光，以及可选的纸面颗粒。 */
 export function BookCoverFinish({ textured = false }: { textured?: boolean }) {
-  return <div aria-hidden="true" className={clsx(styles.coverFinish, textured && styles.textured)} />
+  return (
+    <div aria-hidden="true" data-book-cover-finish className={clsx(styles.coverFinish, textured && styles.textured)} />
+  )
 }
 
 /** 阅读器与书架共用满幅封面，书名与作者叠在图片上。 */
@@ -57,12 +60,15 @@ export function BookCoverArtwork({
   textured?: boolean
 }) {
   const [failedImage, setFailedImage] = useState<string | null>(null)
+  const heading = bookTitleParts(titleContent ?? title, subtitle)
+  const headingLength = typeof heading.title === 'string' ? Array.from(heading.title).length : 0
   const normalizedTitleSize = typeof titleSize === 'number' ? `${titleSize}px` : titleSize
   return (
     <div
       className={styles.coverArtwork}
       data-cover-style={coverStyle}
       data-cover-layout={coverLayout}
+      data-long-title={headingLength > 18 ? 'true' : undefined}
       data-has-cover-label={label != null ? 'true' : undefined}
       style={
         {
@@ -91,21 +97,13 @@ export function BookCoverArtwork({
       </div>
       <div className={styles.coverDecoration} aria-hidden="true" />
       {label != null && <div className={styles.coverLabel}>{label}</div>}
-      <div className={styles.coverHeading} style={titleStyle}>
-        {titleContent === undefined
-          ? title.split(/(\s+)/).map((part, index) =>
-              part.trim() ? (
-                <span className={styles.titleWord} key={index}>
-                  {part}
-                </span>
-              ) : (
-                part
-              )
-            )
-          : titleContent}
+      <div className={styles.coverTitleGroup}>
+        <div className={styles.coverHeading} style={titleStyle}>
+          {heading.title}
+        </div>
+        {heading.subtitle != null && <div className={styles.coverSubtitle}>{heading.subtitle}</div>}
+        {content != null && <div className={styles.coverContent}>{content}</div>}
       </div>
-      {subtitle != null && <div className={styles.coverSubtitle}>{subtitle}</div>}
-      {content != null && <div className={styles.coverContent}>{content}</div>}
       {author != null && <div className={styles.coverAuthor}>{author}</div>}
       {publisher != null && <div className={styles.coverPublisher}>{publisher}</div>}
       <BookCoverFinish textured={textured} />
@@ -217,11 +215,19 @@ export function BookSpineCopy({
   return (
     <>
       {spineStyle === 'ornate' && <span aria-hidden="true" className={styles.spineOrnament} />}
-      {!hideEndCaps && <span aria-hidden="true" className={clsx(styles.spineEndCap, styles.spineEndCapTop)} />}
-      {!hideEndCaps && <span aria-hidden="true" className={clsx(styles.spineEndCap, styles.spineEndCapBottom)} />}
+      {!hideEndCaps && (
+        <span aria-hidden="true" data-book-spine-end-cap className={clsx(styles.spineEndCap, styles.spineEndCapTop)} />
+      )}
+      {!hideEndCaps && (
+        <span
+          aria-hidden="true"
+          data-book-spine-end-cap
+          className={clsx(styles.spineEndCap, styles.spineEndCapBottom)}
+        />
+      )}
       {!hideSpineRidges && <span aria-hidden="true" className={clsx(styles.spineRidge, styles.spineRidgeInner)} />}
       {!hideSpineRidges && <span aria-hidden="true" className={clsx(styles.spineRidge, styles.spineRidgeOuter)} />}
-      <span className={styles.spineCopy}>
+      <span data-book-spine-copy className={styles.spineCopy}>
         {title != null && <span className={styles.spineTitle}>{title}</span>}
         {subtitle != null && <span className={styles.spineSubtitle}>{subtitle}</span>}
         {author != null && <span className={styles.spineAuthor}>{author}</span>}

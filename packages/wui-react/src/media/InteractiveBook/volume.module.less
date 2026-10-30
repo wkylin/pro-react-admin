@@ -584,6 +584,59 @@
   }
 }
 
+/* Title, subtitle and introduction share one flow, so wrapping never crosses fixed anchors. */
+.coverTitleGroup {
+  position: absolute;
+  z-index: 2;
+  inset: 8% 8% 23% 13%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 4cqi, 22px);
+
+  .coverHeading,
+  .coverSubtitle,
+  .coverContent {
+    position: static;
+    inset: auto;
+    transform: none;
+    margin: 0;
+    width: 100%;
+  }
+
+  .coverHeading {
+    font-size: var(--cover-title-size, clamp(18px, 10cqi, 44px));
+    line-height: 1.3;
+  }
+
+  .coverSubtitle {
+    font-size: clamp(11px, 4.1cqi, 18px);
+    line-height: 1.65;
+    text-wrap: balance;
+  }
+}
+
+.coverArtwork[data-long-title='true'] .coverHeading {
+  font-size: var(--cover-title-size, clamp(16px, 7cqi, 30px));
+  line-height: 1.45;
+}
+
+.coverArtwork[data-cover-layout='standard'][data-has-cover-label='true'] .coverTitleGroup {
+  top: 15%;
+}
+
+.coverArtwork[data-cover-layout='centered'] .coverTitleGroup {
+  inset: 22% 10% 25%;
+  justify-content: center;
+  text-align: center;
+}
+
+.coverArtwork[data-cover-layout='publisher'] .coverTitleGroup {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  flex-shrink: 0;
+}
+
 .backCoverArtwork {
   font-family: var(--cover-font-family, var(--cover-default-font, 'Avenir Next', 'PingFang SC', sans-serif));
 

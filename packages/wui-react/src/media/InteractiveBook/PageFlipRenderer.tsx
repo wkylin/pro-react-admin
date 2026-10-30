@@ -1,7 +1,7 @@
 import { useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type Ref } from 'react'
 import { createPortal } from 'react-dom'
 import { flushSync } from 'react-dom'
-import { BookFlipEngine, type TurnFrame } from './BookFlipEngine'
+import { BookFlipEngine, type TurnFrame, type BookTurnSoundEvent } from './BookFlipEngine'
 import styles from './index.module.less'
 
 export interface FlipPage {
@@ -16,6 +16,8 @@ export interface PageFlipHandle {
   previous: () => void
   goTo: (page: number, animate?: boolean) => void
   getPage: () => number
+  close: () => void
+  stop: () => void
 }
 
 interface PageFlipRendererProps {
@@ -30,6 +32,7 @@ interface PageFlipRendererProps {
   reducedMotion: boolean
   onFlip: (page: number) => void
   onTurning: (turning: boolean) => void
+  onTurnStart?: (event: BookTurnSoundEvent) => void
 }
 
 /** Keeps React page content mounted while the local engine moves its page shells. */
@@ -45,10 +48,11 @@ export default function PageFlipRenderer({
   reducedMotion,
   onFlip,
   onTurning,
+  onTurnStart,
 }: PageFlipRendererProps) {
   const hostRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<BookFlipEngine | null>(null)
-  const eventsRef = useRef({ onFlip, onTurning })
+  const eventsRef = useRef({ onFlip, onTurning, onTurnStart })
   const startPageRef = useRef(startPage)
   const interactionRef = useRef({ interactive, showCorners })
   const [activePage, setActivePage] = useState(startPage)
@@ -67,7 +71,7 @@ export default function PageFlipRenderer({
   )
 
   useLayoutEffect(() => {
-    eventsRef.current = { onFlip, onTurning }
+    eventsRef.current = { onFlip, onTurning, onTurnStart }
     engineRef.current?.setInteraction(interactive, showCorners && !reducedMotion)
   })
 
@@ -76,14 +80,18 @@ export default function PageFlipRenderer({
     () => ({
       next: () => engineRef.current?.next(),
       previous: () => engineRef.current?.previous(),
+      close: () => engineRef.current?.close(),
+      stop: () => engineRef.current?.stop(),
       goTo: (page, animate = true) => {
-        // A distant chapter jump must mount the destination before the engine paints it.
-        if (Math.abs(page - (engineRef.current?.getPage() ?? 0)) > 8) flushSync(() => setActivePage(page))
+        // Animated routes render around each committed page; only instant jumps prepare the destination here.
+        if ((!animate || reducedMotion) && Math.abs(page - (engineRef.current?.getPage() ?? 0)) > 8) {
+          flushSync(() => setActivePage(page))
+        }
         engineRef.current?.goTo(page, animate)
       },
       getPage: () => engineRef.current?.getPage() ?? 0,
     }),
-    []
+    [reducedMotion]
   )
 
   useLayoutEffect(() => {
@@ -98,14 +106,19 @@ export default function PageFlipRenderer({
       book?.style.setProperty('--book-side', back ? '1' : '0')
       book?.toggleAttribute('data-cover-turning', moving)
     }
+    const positionPages = (page: number) => {
+      book?.style.setProperty('--book-read-progress', String(Math.max(0, Math.min(1, page / Math.max(1, lastPage)))))
+    }
     const syncFrame = (frame: TurnFrame | null) => {
       book?.toggleAttribute('data-book-animating', !!frame)
       if (!frame) {
         const page = engine?.getPage() ?? startPageRef.current
+        positionPages(page)
         positionCover(page > 0 && page < lastPage ? 1 : 0, page === lastPage)
         return
       }
       const { from, to, progress, preview } = frame
+      positionPages(from + (to - from) * progress)
       if (preview) {
         positionCover(1, to === lastPage || from === lastPage)
       } else if (from === 0 && to > 0) {
@@ -131,9 +144,13 @@ export default function PageFlipRenderer({
       interactive: interactionRef.current.interactive,
       showCorners: interactionRef.current.showCorners && !reducedMotion,
       reducedMotion,
-      onPage: (page) => { setActivePage(page); eventsRef.current.onFlip(page) },
+      onPage: (page) => {
+        setActivePage(page)
+        eventsRef.current.onFlip(page)
+      },
       onTurning: (turning) => eventsRef.current.onTurning(turning),
       onFrame: syncFrame,
+      onTurnStart: (event) => eventsRef.current.onTurnStart?.(event),
     })
     engineRef.current = engine
     syncFrame(null)
@@ -150,7 +167,7 @@ export default function PageFlipRenderer({
     <>
       <div ref={hostRef} className={styles.flipHost} />
       {pages.map((page, index) =>
-        (index < 2 || index >= pages.length - 2 || Math.abs(index - activePage) <= 8)
+        index < 2 || index >= pages.length - 2 || Math.abs(index - activePage) <= 8
           ? createPortal(page.content, pageElements[index].firstElementChild!, page.key)
           : null
       )}

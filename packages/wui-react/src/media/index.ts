@@ -15,7 +15,13 @@ export type { Testimonial, TestimonialCarouselProps } from './TestimonialCarouse
 export { default as MusicPlayer } from './MusicPlayer'
 export type { MusicTrack, MusicPlayerLabels, MusicPlayerProps } from './MusicPlayer'
 export { default as InteractiveBook } from './InteractiveBook'
-export type { BookPage, InteractiveBookProps } from './InteractiveBook'
+export type {
+  BookPage,
+  InteractiveBookProps,
+  BookPublicationInfo,
+  BookFrontMatterOptions,
+  BookBackMatterOptions,
+} from './InteractiveBook'
 export { default as SoundBar } from './SoundBar'
 export type { SoundBarProps } from './SoundBar'
 export { default as CompareAll } from './CompareAll'

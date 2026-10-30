@@ -1,4 +1,3 @@
-import '@/pages/mediaAdapters/pdfWorker'
 import pageTurnSound from '@assets/audio/page-turn.mp3'
 import type { Meta, StoryObj } from '@storybook/react'
 import InteractiveBook, { type InteractiveBookProps } from './index'
@@ -314,6 +313,9 @@ const meta: Meta<typeof InteractiveBook> = {
       control: { type: 'range', min: 1, max: 16, step: 1 },
       description: '每张目录页显示的章节数上限，页面较矮时会自动减少',
     },
+    publication: { control: 'object', description: '出版者、日期、版次、ISBN、版权声明与附加信息；缺失字段不显示' },
+    frontMatter: { control: 'object', description: '献词 dedication、卷首语 preface；false 关闭六张前置页' },
+    backMatter: { control: 'object', description: '后记 title/content、致谢 acknowledgments；false 使用简略末页' },
     textured: { control: 'boolean', description: '是否显示封面纸纹' },
     mode: {
       control: 'select',
@@ -403,6 +405,62 @@ export const PublisherCoverLayout: Story = {
     spineColor: '#284b52',
     spineTextColor: '#f5f0dc',
     spineAccentColor: '#e4a26b',
+  },
+}
+
+export const BookMatterDesign: Story = {
+  ...Default,
+  name: '完整开卷与卷末设计',
+  args: {
+    ...Default.args,
+    defaultOpen: true,
+    coverSubtitle: '从感知、决策到行动',
+    coverPublisher: '技术阅读系列',
+    publication: { edition: '阅读示例版', details: [{ label: '内容形式', value: '数字交互阅读' }] },
+    frontMatter: {
+      dedication: (
+        <p>
+          献给每一位
+          <br />
+          愿意追问「为什么」的读者。
+        </p>
+      ),
+    },
+    backMatter: {
+      title: '从阅读到实践',
+      content: (
+        <>
+          <p>认识 Agent 的意义，不止于了解一个新名词。</p>
+          <p>当你再次面对一个任务，试着把它拆成感知、决策与行动：哪些步骤适合自动完成，哪些判断仍应由人来做？</p>
+          <p>带着这个问题，回到自己的工作与生活中。</p>
+        </>
+      ),
+      acknowledgments: <p>感谢每一次认真阅读、提问与讨论。</p>,
+    },
+  },
+}
+
+export const LongBookMatter: Story = {
+  ...BookMatterDesign,
+  name: '长标题与长篇后记',
+  args: {
+    ...BookMatterDesign.args,
+    bookTitle: '从感知到行动：理解人工智能代理的工作方式与实践路径',
+    coverTitle: '从感知到行动',
+    coverSubtitle: '理解人工智能代理的工作方式与实践路径',
+    frontMatter: { preface: <p>一本书可以慢慢读，也可以带着问题反复读。目录中的每个章节都可以直接打开。</p> },
+    backMatter: {
+      title: '把问题带回日常工作',
+      content: (
+        <>
+          {Array.from({ length: 12 }, (_, index) => (
+            <p key={index}>
+              阅读之后，可以从一个熟悉的任务开始：记录输入信息、判断依据与行动结果，再检查哪些环节需要人的确认。这些具体的问题，比抽象的答案更能帮助我们理解工具。
+            </p>
+          ))}
+        </>
+      ),
+    },
   },
 }
 

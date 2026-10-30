@@ -1,19 +1,37 @@
-import { paginateChapter } from './pagination'
+import { renderToStaticMarkup } from 'react-dom/server'
+import type { ReadingText } from './books'
 
-describe('reading pagination', () => {
-  it('keeps every non-whitespace character while splitting a long chapter into book-sized pages', () => {
-    Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', { configurable: true, value: () => null })
-    const text = `詩曰：天地玄黃，宇宙洪荒。\n\n${'山川草木，星月風雲。'.repeat(240)}`
-    const pages = paginateChapter(text, { width: 340, height: 480 })
+jest.mock('@assets/reading/journey.png', () => '/journey.png')
+jest.mock('@assets/reading/three-kingdoms.png', () => '/three-kingdoms.png')
+jest.mock('@assets/reading/liaozhai.png', () => '/liaozhai.png')
+jest.mock('@assets/reading/art-of-war.png', () => '/art-of-war.png')
+const { createReadingPages, readingBooks, getReadingBookAppearance } = require('./books') as typeof import('./books')
 
-    expect(pages.length).toBeGreaterThan(8)
-    expect(pages.join('').replace(/\s/g, '')).toBe(text.replace(/\s/g, ''))
-    expect(pages.every((page) => page.split('\n').length <= 13)).toBe(true)
-    expect(
-      pages
-        .flatMap((page) => page.split('\n'))
-        .filter(Boolean)
-        .every((line) => !/^[，。！？；：、]/.test(line))
-    ).toBe(true)
-  })
+function plainText(content: Parameters<typeof renderToStaticMarkup>[0]) {
+  const container = document.createElement('div')
+  container.innerHTML = renderToStaticMarkup(content)
+  return container.textContent
+}
+
+test.each(['journey', 'three-kingdoms', 'liaozhai', 'art-of-war'])(
+  '%s retains every chapter and character for shared pagination',
+  (id) => {
+    const text = require(`./texts/${id}.json`) as ReadingText
+    const pages = createReadingPages(text)
+    expect(pages).toHaveLength(text.chapters.length)
+    pages.forEach((page, index) => {
+      expect(page.title).toBe(text.chapters[index].title)
+      expect(plainText(page.content) + plainText(page.backContent)).toBe(text.chapters[index].text)
+    })
+  }
+)
+
+test('the shelf and reader share each book’s artwork, title and binding colors', () => {
+  for (const book of readingBooks) {
+    const appearance = getReadingBookAppearance(book)
+    expect(appearance.coverImage).toBe(book.cover)
+    expect(appearance.bookTitle).toBe(book.title)
+    expect(appearance.spineColor).toBe(appearance.coverColor)
+    expect(appearance.spineTextColor).toBe(book.titleColor)
+  }
 })

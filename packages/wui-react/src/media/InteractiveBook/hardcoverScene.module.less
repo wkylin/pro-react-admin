@@ -1,0 +1,49 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: visible;
+  pointer-events: none;
+
+  &[data-book-mesh-ready='false'],
+  &[data-book-mesh-active='false'] {
+    opacity: 0;
+  }
+}
+
+.canvas {
+  position: absolute !important;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+}
+
+.textureSources {
+  position: absolute;
+  top: 0;
+  left: -10000px;
+  pointer-events: none;
+
+  [data-book-cover-finish]::before {
+    display: none;
+  }
+
+  [data-book-spine-texture] > * {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  [data-book-spine-end-cap] {
+    display: none;
+  }
+
+  [data-book-thin-spine] [data-book-spine-copy] {
+    display: none;
+  }
+}
+
+.textureFace {
+  position: relative;
+  overflow: hidden;
+  background: var(--book-color);
+}

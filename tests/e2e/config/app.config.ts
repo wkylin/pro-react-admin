@@ -4,6 +4,7 @@ import { browserDefaults, e2eReport, sharedConfig, workspaceRoot } from './share
 export default defineConfig({
   ...sharedConfig,
   testIgnore: [
+    '**/storybook-book.spec.ts',
     '**/mfe-remote.spec.ts',
     '**/enterprise.spec.ts',
     '**/enterprise-public.spec.ts',

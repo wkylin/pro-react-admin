@@ -881,7 +881,9 @@ const zh = {
     takeYourTime: 'TAKE YOUR TIME',
     dialogTitle: '阅读《{{title}}》',
     close: '关闭阅读器',
-    hint: '拖动封面旋转 · 点击书角翻页 · Esc 退出阅读',
+    hint: '点击页边或左右滑动翻页 · 目录可跳转章节 · Esc 合书退出',
+    closingNote:
+      '《{{title}}》全书完。感谢阅读，愿书中的故事与思考在日常生活中继续回响。你可以重读，也可以返回目录寻找喜欢的篇章。',
     end: '完',
   },
   cinemaRoom: {

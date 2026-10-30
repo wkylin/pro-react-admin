@@ -16,6 +16,12 @@ export interface TurnFrame {
   preview: boolean
 }
 
+export interface BookTurnSoundEvent {
+  kind: 'page' | 'cover'
+  sequence: boolean
+  duration: number
+}
+
 export interface BookFlipEngineOptions {
   host: HTMLElement
   pages: HTMLElement[]
@@ -29,6 +35,7 @@ export interface BookFlipEngineOptions {
   onPage: (page: number) => void
   onTurning: (turning: boolean) => void
   onFrame: (frame: TurnFrame | null) => void
+  onTurnStart?: (event: BookTurnSoundEvent) => void
 }
 
 interface Turn {
@@ -52,6 +59,7 @@ interface PointerTrack {
   direction: Direction
   corner: Corner
   cornerHit: boolean
+  tapEligible: boolean
   startedAt: number
   dragging: boolean
   verticalGesture: boolean
@@ -75,6 +83,9 @@ export class BookFlipEngine {
   private previewAnimating = false
   private previewTarget: { progress: number; pointerY: number } | null = null
   private turning = false
+  private destinationSpread: number | null = null
+  private navigationDuration = 900
+  private sequential = false
   private destroyed = false
   private interactive: boolean
   private showCorners: boolean
@@ -125,9 +136,11 @@ export class BookFlipEngine {
   }
 
   goTo(page: number, animate = true): void {
-    if (!Number.isFinite(page)) return
+    if (!Number.isFinite(page) || this.destroyed) return
+    this.releasePointer()
     const target = this.findSpread(page)
     if (this.turn) this.cancelTurn()
+    this.destinationSpread = null
     if (target === this.spread) return
     if (!animate || this.options.reducedMotion) {
       this.spread = target
@@ -135,27 +148,56 @@ export class BookFlipEngine {
       this.options.onPage(this.getPage())
       return
     }
-    // A distant jump presents its final sheet turn, as the old engine did.
-    if (Math.abs(target - this.spread) > 1) {
-      this.spread = target + (target > this.spread ? -1 : 1)
-      this.paintStatic()
+    const distance = Math.abs(target - this.spread)
+    this.sequential = distance > 1
+    this.destinationSpread = target
+    this.navigationDuration = distance === 1 ? 900 : clamp(2400 / distance, 140, 520)
+    this.advanceToDestination()
+  }
+
+  stop(): void {
+    if (!this.destroyed) {
+      this.releasePointer()
+      this.cancelTurn()
     }
-    this.navigate(target, true)
+  }
+
+  /** Fold the current spread shut without visiting any intervening pages. */
+  close(): void {
+    if (this.destroyed) return
+    this.releasePointer()
+    if (this.spread === 0 && this.turn && !this.options.reducedMotion) {
+      this.destinationSpread = null
+      this.sequential = false
+      this.animateTo(0, false, 600, () => this.options.onPage(0))
+      return
+    }
+    this.cancelTurn()
+    if (this.spread === 0) {
+      this.options.onPage(0)
+      return
+    }
+    if (this.options.reducedMotion) {
+      this.goTo(0, false)
+      return
+    }
+    if (this.startTurn('back', 'bottom', false, 0)) this.animateTo(1, true, 800)
   }
 
   destroy(): void {
     if (this.destroyed) return
     this.destroyed = true
+    this.destinationSpread = null
     this.cancelAnimation()
     this.stage.removeEventListener('pointerdown', this.onPointerDown)
     this.stage.removeEventListener('pointermove', this.onPointerMove)
     this.stage.removeEventListener('pointerup', this.onPointerUp)
     this.stage.removeEventListener('pointercancel', this.onPointerCancel)
     this.stage.removeEventListener('pointerleave', this.onPointerLeave)
-    if (this.pointer && this.stage.hasPointerCapture(this.pointer.id)) this.stage.releasePointerCapture(this.pointer.id)
-    this.pointer = null
+    this.releasePointer()
     this.turn = null
     this.stage.remove()
+    this.setTurning(false)
     this.options.onFrame(null)
   }
 
@@ -177,7 +219,10 @@ export class BookFlipEngine {
 
   private navigate(target: number, animate: boolean, corner: Corner = 'bottom'): void {
     if (target < 0 || target >= this.spreads.length || target === this.spread || this.destroyed) return
+    this.releasePointer()
     if (this.turn) this.cancelTurn()
+    this.destinationSpread = null
+    this.sequential = false
     if (!animate || this.options.reducedMotion) {
       this.spread = target
       this.paintStatic()
@@ -190,8 +235,26 @@ export class BookFlipEngine {
     this.animateTo(1, true, 900)
   }
 
-  private startTurn(direction: Direction, corner: Corner, preview: boolean): Turn | null {
-    const toSpread = this.spread + (direction === 'forward' ? 1 : -1)
+  private advanceToDestination(): void {
+    const target = this.destinationSpread
+    if (target === null || this.destroyed) return
+    if (target === this.spread) {
+      this.destinationSpread = null
+      this.setTurning(false)
+      return
+    }
+    const turn = this.startTurn(target > this.spread ? 'forward' : 'back', 'bottom', false)
+    if (!turn) {
+      this.destinationSpread = null
+      this.setTurning(false)
+      return
+    }
+    const settlingDuration = turn.hard ? 600 : turn.toSpread === target ? 420 : 0
+    this.animateTo(1, true, Math.max(this.navigationDuration, settlingDuration))
+  }
+
+  private startTurn(direction: Direction, corner: Corner, preview: boolean, target?: number): Turn | null {
+    const toSpread = target ?? this.spread + (direction === 'forward' ? 1 : -1)
     if (toSpread < 0 || toSpread >= this.spreads.length) return null
     if (this.turn) this.cancelTurn()
     const current = this.spreads[this.spread]
@@ -338,6 +401,7 @@ export class BookFlipEngine {
       this.shadow.style.top = '0'
       this.shadow.style.width = `${Math.max(2, width * 0.1)}px`
       this.shadow.style.height = `${height}px`
+      this.shadow.style.maskImage = ''
       this.shadow.style.transform = `translateX(${turn.direction === 'forward' ? -p * width : p * width}px)`
       this.shadow.style.background = `linear-gradient(${turn.direction === 'forward' && !closingBackCover ? 'to right' : 'to left'}, rgb(0 0 0 / ${0.18 * Math.sin(Math.PI * p)}), transparent)`
     } else {
@@ -376,10 +440,12 @@ export class BookFlipEngine {
     if (!geometry.shadow) return false
     this.shadow.style.left = `${geometry.shadow.center.x + (single ? 0 : turn.direction === 'forward' ? width : 0)}px`
     this.shadow.style.top = `${geometry.shadow.center.y}px`
-    this.shadow.style.width = `${Math.max(16, width * 0.16)}px`
+    this.shadow.style.width = `${clamp(geometry.shadow.length * 0.16, 6, Math.min(28, width * 0.07))}px`
     this.shadow.style.height = `${geometry.shadow.length + 2}px`
     this.shadow.style.transform = `translate(-50%, -50%) rotate(${geometry.shadow.angle - Math.PI / 2}rad)`
-    this.shadow.style.background = `linear-gradient(90deg, transparent, rgb(0 0 0 / ${0.22 * Math.sin(Math.PI * turn.progress)}), transparent)`
+    const shade = 0.18 * Math.sin(Math.PI * geometry.progress) ** 0.4
+    this.shadow.style.background = `linear-gradient(90deg, transparent, rgb(40 36 30 / ${shade * 0.25}) 28%, rgb(40 36 30 / ${shade}) 48%, rgb(40 36 30 / ${shade * 0.35}) 68%, transparent)`
+    this.shadow.style.maskImage = 'linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent)'
     return true
   }
 
@@ -422,7 +488,7 @@ export class BookFlipEngine {
     page.classList.toggle('--right', side === 'right')
   }
 
-  private animateTo(target: number, commit: boolean, duration: number): void {
+  private animateTo(target: number, commit: boolean, duration: number, onCancel?: () => void): void {
     const turn = this.turn
     if (!turn) return
     this.cancelAnimation()
@@ -432,6 +498,12 @@ export class BookFlipEngine {
     const startY = turn.pointerY
     const cornerY = turn.corner === 'top' ? 0 : this.options.height
     const actualDuration = Math.max(80, duration * Math.abs(target - start))
+    if (commit)
+      this.options.onTurnStart?.({
+        kind: turn.hard ? 'cover' : 'page',
+        sequence: this.sequential,
+        duration: actualDuration,
+      })
     const tick = (now: number) => {
       if (this.destroyed || token !== this.animationToken || this.turn !== turn) return
       const t = clamp((now - begin) / actualDuration, 0, 1)
@@ -445,6 +517,7 @@ export class BookFlipEngine {
         this.finishTurn()
       } else {
         this.cancelTurn()
+        onCancel?.()
       }
     }
     this.animationFrame = requestAnimationFrame(tick)
@@ -459,15 +532,24 @@ export class BookFlipEngine {
     this.turn = null
     this.paintStatic()
     this.options.onPage(this.getPage())
-    this.setTurning(false)
+    if (this.destinationSpread !== null) this.advanceToDestination()
+    else this.setTurning(false)
   }
 
   private cancelTurn(): void {
+    this.destinationSpread = null
+    this.sequential = false
     this.cancelAnimation()
     this.turn?.temporaryFace?.remove()
     this.turn = null
     this.paintStatic()
     this.setTurning(false)
+  }
+
+  private releasePointer(): void {
+    const pointer = this.pointer
+    this.pointer = null
+    if (pointer && this.stage.hasPointerCapture(pointer.id)) this.stage.releasePointerCapture(pointer.id)
   }
 
   private cancelPreview(): void {
@@ -486,11 +568,11 @@ export class BookFlipEngine {
     const { width, height, single } = this.options
     const outerEdge = width * (single ? 1 : 2)
     const distanceFromEdge = turn.direction === 'forward' ? outerEdge - point.x : point.x
-    const minPull = Math.min(50, width * 0.24)
-    const maxPull = Math.min(85, width * 0.4)
-    const pull = clamp(minPull + distanceFromEdge * 0.3, minPull, maxPull)
-    const minCornerInset = Math.min(50, height * 0.15)
-    const maxCornerInset = Math.min(75, height / 3)
+    const minPull = Math.min(18, width * 0.06)
+    const maxPull = Math.min(28, width * 0.09)
+    const pull = clamp(minPull + distanceFromEdge * 0.12, minPull, maxPull)
+    const minCornerInset = Math.min(20, height * 0.06)
+    const maxCornerInset = Math.min(28, height * 0.08)
     const verticalDistance = turn.corner === 'top' ? point.y : height - point.y
     const cornerInset = clamp(verticalDistance, minCornerInset, maxCornerInset)
     const target = {
@@ -541,6 +623,7 @@ export class BookFlipEngine {
   }
 
   private setTurning(turning: boolean): void {
+    if (!turning) this.sequential = false
     if (this.turning === turning) return
     this.turning = turning
     this.options.onTurning(turning)
@@ -554,7 +637,7 @@ export class BookFlipEngine {
   private hitCorner(point: Point): { direction: Direction; corner: Corner } | null {
     const { width, height, single } = this.options
     const totalWidth = width * (single ? 1 : 2)
-    const reach = Math.hypot(width, height) / 5
+    const reach = clamp(width * 0.16, 36, 64)
     if (point.x < 0 || point.x > totalWidth || point.y < 0 || point.y > height) return null
     if (point.y > reach && point.y < height - reach) return null
     const direction = point.x < reach ? 'back' : point.x > totalWidth - reach ? 'forward' : null
@@ -564,11 +647,26 @@ export class BookFlipEngine {
     return { direction, corner: point.y < height / 2 ? 'top' : 'bottom' }
   }
 
+  private hitTurnArea(point: Point): Direction | null {
+    const { width, height, single } = this.options
+    const totalWidth = width * (single ? 1 : 2)
+    if (point.x < 0 || point.x > totalWidth || point.y < 0 || point.y > height) return null
+    const reach = width / 3
+    const direction = point.x <= reach ? 'back' : point.x >= totalWidth - reach ? 'forward' : null
+    if (!direction) return null
+    const target = this.spread + (direction === 'forward' ? 1 : -1)
+    return target >= 0 && target < this.spreads.length ? direction : null
+  }
+
   private excludedTarget(event: PointerEvent): boolean {
     const target = event.target
     if (!(target instanceof Element)) return false
     if (target.closest('button, a, input, textarea, select, [contenteditable="true"]')) return true
-    const scroller = target.closest<HTMLElement>('[data-book-scroll]')
+    return event.pointerType !== 'touch' && this.scrollableTarget(event.target)
+  }
+
+  private scrollableTarget(target: EventTarget | null): boolean {
+    const scroller = target instanceof Element ? target.closest<HTMLElement>('[data-book-scroll]') : null
     return !!scroller && scroller.scrollHeight > scroller.clientHeight + 1
   }
 
@@ -577,9 +675,12 @@ export class BookFlipEngine {
     if (this.excludedTarget(event)) return
     const point = this.point(event)
     const corner = this.hitCorner(point)
-    if (!corner && event.pointerType !== 'touch') return
+    const tapDirection = this.hitTurnArea(point)
+    if (!corner && !tapDirection && event.pointerType !== 'touch') return
     const direction =
-      corner?.direction ?? (point.x < this.options.width * (this.options.single ? 0.5 : 1) ? 'back' : 'forward')
+      corner?.direction ??
+      tapDirection ??
+      (point.x < this.options.width * (this.options.single ? 0.5 : 1) ? 'back' : 'forward')
     this.pointer = {
       id: event.pointerId,
       kind: event.pointerType,
@@ -587,12 +688,13 @@ export class BookFlipEngine {
       direction,
       corner: corner?.corner ?? (point.y < this.options.height / 2 ? 'top' : 'bottom'),
       cornerHit: !!corner,
+      tapEligible: (!!corner || !!tapDirection) && !this.scrollableTarget(event.target),
       startedAt: performance.now(),
       dragging: false,
       verticalGesture: false,
     }
-    this.stage.setPointerCapture(event.pointerId)
-    if (corner) event.preventDefault()
+    if (corner || event.pointerType === 'touch') this.stage.setPointerCapture(event.pointerId)
+    if (corner && event.pointerType !== 'touch') event.preventDefault()
   }
 
   private onPointerMove = (event: PointerEvent): void => {
@@ -603,14 +705,16 @@ export class BookFlipEngine {
       const dx = point.x - pointer.start.x
       const dy = point.y - pointer.start.y
       if (!pointer.dragging && Math.hypot(dx, dy) > 5) {
+        pointer.tapEligible = false
+        // Outside the corners, mouse drags remain text selection rather than paper grabs.
+        if (pointer.kind !== 'touch' && !pointer.cornerHit) return
         if (pointer.kind === 'touch' && Math.abs(dy) > Math.abs(dx)) {
           pointer.verticalGesture = true
           this.cancelPreview()
           return
         }
-        // A touch starting away from a corner is a swipe, not a paper grab.
-        // Wait for the same distance required to commit it before showing a fold.
-        if (!pointer.cornerHit && Math.abs(dx) < 35) return
+        // Lock horizontal intent without taking native vertical scrolling away.
+        if (!pointer.cornerHit && (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy) * 1.25)) return
         const direction = pointer.cornerHit ? pointer.direction : dx < 0 ? 'forward' : 'back'
         pointer.direction = direction
         if (!this.startTurn(direction, pointer.corner, false)) return
@@ -618,14 +722,23 @@ export class BookFlipEngine {
       }
       if (pointer.dragging && this.turn) {
         event.preventDefault()
-        const totalWidth = this.options.width * (this.options.single ? 1 : 2)
-        const startEdge = pointer.direction === 'forward' ? totalWidth : 0
-        this.turn.progress = clamp(
-          (pointer.direction === 'forward' ? startEdge - point.x : point.x - startEdge) / totalWidth,
-          0,
-          1
-        )
-        this.turn.pointerY = clamp(point.y, 0, this.options.height)
+        if (!pointer.cornerHit) {
+          // A swipe starts where the finger lands, not at the book's outer edge.
+          const distance = pointer.direction === 'forward' ? -dx : dx
+          this.turn.progress = clamp(distance / (2 * this.options.width), 0, 1)
+          const lift = Math.min(24, Math.max(0, distance) * 0.4)
+          const cornerY = pointer.corner === 'top' ? lift : this.options.height - lift
+          this.turn.pointerY = clamp(cornerY + dy * 0.2, 0, this.options.height)
+        } else {
+          const totalWidth = this.options.width * (this.options.single ? 1 : 2)
+          const startEdge = pointer.direction === 'forward' ? totalWidth : 0
+          this.turn.progress = clamp(
+            (pointer.direction === 'forward' ? startEdge - point.x : point.x - startEdge) / totalWidth,
+            0,
+            1
+          )
+          this.turn.pointerY = clamp(point.y, 0, this.options.height)
+        }
         this.paintTurn(this.turn)
       }
       return
@@ -676,14 +789,18 @@ export class BookFlipEngine {
       (pointer.verticalGesture || (pointer.kind === 'touch' && Math.abs(dy) > 5 && Math.abs(dy) > Math.abs(dx)))
     )
       return
+    const distanceToTurn = clamp(this.options.width * 0.18, 36, 64)
+    const flick = Math.abs(dx) >= 35 && performance.now() - pointer.startedAt < 300
     const swipe =
-      pointer.kind === 'touch' && Math.abs(dx) >= 35 && Math.abs(dy) < 70 && performance.now() - pointer.startedAt < 250
+      pointer.kind === 'touch' && Math.abs(dx) > Math.abs(dy) * 1.25 && (Math.abs(dx) >= distanceToTurn || flick)
     if (pointer.dragging && this.turn) {
-      const movedEnough = pointer.kind !== 'touch' || pointer.cornerHit || Math.abs(dx) >= 35
+      const swipeMatchesTurn = swipe && (dx < 0 ? 'forward' : 'back') === this.turn.direction
       const commit =
-        movedEnough && (this.turn.progress >= 0.5 || (swipe && (dx < 0 ? 'forward' : 'back') === this.turn.direction))
+        pointer.kind === 'touch' && !pointer.cornerHit
+          ? swipeMatchesTurn
+          : this.turn.progress >= 0.5 || swipeMatchesTurn
       this.animateTo(commit ? 1 : 0, commit, 900)
-    } else if (pointer.cornerHit) {
+    } else if (pointer.tapEligible && Math.hypot(dx, dy) <= 5 && !window.getSelection()?.toString()) {
       this.navigate(this.spread + (pointer.direction === 'forward' ? 1 : -1), true, pointer.corner)
     } else if (swipe) {
       const direction = dx < 0 ? 'forward' : 'back'
@@ -694,10 +811,12 @@ export class BookFlipEngine {
   private onPointerCancel = (event: PointerEvent): void => {
     if (this.pointer?.id !== event.pointerId) return
     this.pointer = null
+    if (this.stage.hasPointerCapture(event.pointerId)) this.stage.releasePointerCapture(event.pointerId)
     if (this.turn) this.animateTo(0, false, 180)
   }
 
   private onPointerLeave = (): void => {
+    if (this.pointer?.kind === 'mouse' && !this.pointer.cornerHit) this.pointer = null
     if (!this.pointer) this.cancelPreview()
   }
 }

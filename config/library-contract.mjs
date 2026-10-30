@@ -584,6 +584,8 @@ export const libraryPeerDependencies = Object.freeze({
   '@tsparticles/slim': '>=4.4.0 <5.0.0',
   motion: '>=12.0.0 <15.0.0',
   '@react-spring/web': '>=10.0.0 <11.0.0',
+  '@react-three/fiber': '>=9.0.0 <10.0.0',
+  three: '>=0.180.0 <0.190.0',
   html2canvas: '^1.4.1',
   jspdf: '^4.2.1',
   '@uiw/react-signature': '>=1.3.5 <2.0.0',
@@ -638,6 +640,8 @@ export const libraryPeerDependenciesMeta = Object.freeze({
   '@tsparticles/slim': { optional: true },
   motion: { optional: true },
   '@react-spring/web': { optional: true },
+  '@react-three/fiber': { optional: true },
+  three: { optional: true },
   html2canvas: { optional: true },
   jspdf: { optional: true },
   '@uiw/react-signature': {
@@ -664,6 +668,7 @@ export const libraryRuntimeDependencies = Object.freeze({
   '@ant-design/icons': '^6.3.4',
   clsx: '^2.1.1',
   dompurify: '^3.4.16',
+  'html-to-image': '^1.11.13',
   'isomorphic-dompurify': '^4.5.0',
   'lucide-react': '^1.54.0',
 })

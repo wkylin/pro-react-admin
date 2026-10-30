@@ -171,10 +171,12 @@
     "@ant-design/icons": "^6.3.4",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.16",
+    "html-to-image": "^1.11.13",
     "isomorphic-dompurify": "^4.5.0",
     "lucide-react": "^1.54.0"
   },
   "peerDependencies": {
+    "@react-three/fiber": ">=9.0.0 <10.0.0",
     "@tsparticles/react": ">=4.4.0 <5.0.0",
     "@tsparticles/engine": ">=4.4.0 <5.0.0",
     "@tsparticles/slim": ">=4.4.0 <5.0.0",
@@ -222,9 +224,13 @@
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "shiki": "^4.5.0",
+    "three": ">=0.180.0 <0.190.0",
     "turndown": "^7.2.4"
   },
   "peerDependenciesMeta": {
+    "@react-three/fiber": {
+      "optional": true
+    },
     "@tsparticles/react": {
       "optional": true
     },
@@ -352,6 +358,9 @@
       "optional": true
     },
     "shiki": {
+      "optional": true
+    },
+    "three": {
       "optional": true
     },
     "turndown": {

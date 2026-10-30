@@ -927,7 +927,9 @@ const en = {
     takeYourTime: 'TAKE YOUR TIME',
     dialogTitle: 'Read {{title}}',
     close: 'Close reader',
-    hint: 'Drag the cover to rotate · Turn pages at the corners · Esc to leave',
+    hint: 'Click page edges or swipe to turn · Choose chapters in Contents · Esc to close',
+    closingNote:
+      'You have reached the end of {{title}}. Thank you for reading. May its stories and ideas stay with you. Read again, or return to the contents to revisit a chapter.',
     end: 'The End',
   },
   cinemaRoom: {

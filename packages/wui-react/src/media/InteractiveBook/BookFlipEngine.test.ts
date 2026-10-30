@@ -1,5 +1,4 @@
 import { BookFlipEngine, type BookFlipEngineOptions } from './BookFlipEngine'
-import { calculateBookCurl } from './bookCurlGeometry'
 
 const PAGE_COUNT = 8
 const WIDTH = 400
@@ -70,9 +69,238 @@ describe('BookFlipEngine', () => {
     const pending = [...frames.values()]
     frames.clear()
     expect(pending).toHaveLength(1)
-    pending[0](2000)
+    pending[0](performance.now() + 1000)
     expect(frames.size).toBe(0)
   }
+
+  function finishQueuedTurn() {
+    const pending = [...frames.values()]
+    frames.clear()
+    expect(pending).toHaveLength(1)
+    pending[0](performance.now() + 1000)
+  }
+
+  test('closing during opening reverses the partial cover and reports the front once', () => {
+    const book = createBook()
+    book.engine.next()
+    const tick = [...frames.values()][0]
+    frames.clear()
+    tick(1300)
+    book.onPage.mockClear()
+    const progress = book.onFrame.mock.calls.at(-1)![0].progress
+    book.engine.close()
+    expect(book.onFrame.mock.calls.at(-1)![0].progress).toBeCloseTo(progress)
+    finishAnimation()
+    expect(book.onPage.mock.calls).toEqual([[0]])
+    expect(book.visibleFaces()).toEqual([0])
+    book.engine.destroy()
+  })
+
+  test('programmatic closing releases a drag so its remaining pointer events cannot interrupt closure', () => {
+    const book = createBook({ startPage: 3 })
+    const send = pointerInput(book.host)
+    const stage = book.host.firstElementChild as HTMLElement
+    send('pointerdown', 790, 590)
+    send('pointermove', 600, 560)
+    book.engine.close()
+    expect(stage.releasePointerCapture).toHaveBeenCalled()
+    const frame = book.onFrame.mock.calls.at(-1)![0]
+    send('pointermove', 750, 590)
+    send('pointercancel', 750, 590)
+    expect(book.onFrame.mock.calls.at(-1)![0]).toEqual(frame)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(0)
+    book.engine.destroy()
+  })
+
+  test.each([true, false])('close folds the current spread directly to the cover (single: %s)', (single) => {
+    const book = createBook({ single, startPage: 5 })
+    book.onPage.mockClear()
+    book.engine.close()
+    expect(book.engine.getPage()).toBe(5)
+    const firstFrame = book.onFrame.mock.calls.at(-1)![0]
+    expect(firstFrame).toMatchObject({ from: 5, to: 0, progress: 0 })
+    expect(book.pages[5].style.display).toBe('block')
+    finishAnimation()
+    expect(book.onPage.mock.calls).toEqual([[0]])
+    expect(book.visibleFaces()).toEqual([0])
+    book.engine.destroy()
+  })
+
+  test('close cancels a pending journey and reduced motion closes instantly', () => {
+    const book = createBook({ single: true, startPage: 2 })
+    book.engine.goTo(6)
+    finishQueuedTurn()
+    book.onPage.mockClear()
+    book.engine.close()
+    finishAnimation()
+    expect(book.onPage.mock.calls).toEqual([[0]])
+    book.engine.destroy()
+    const reduced = createBook({ startPage: 5, reducedMotion: true })
+    reduced.engine.close()
+    expect(reduced.engine.getPage()).toBe(0)
+    expect(frames.size).toBe(0)
+    reduced.engine.destroy()
+  })
+
+  test('sequential navigation reports each actual turn for continuous audio', () => {
+    const onTurnStart = jest.fn()
+    const book = createBook({ single: true, startPage: 1, onTurnStart })
+    book.engine.goTo(4)
+    for (let page = 2; page <= 4; page++) finishQueuedTurn()
+    expect(onTurnStart).toHaveBeenCalledTimes(3)
+    expect(onTurnStart.mock.calls.every(([turn]) => turn.sequence && turn.kind === 'page')).toBe(true)
+    onTurnStart.mockClear()
+    book.engine.close()
+    expect(onTurnStart).toHaveBeenCalledWith({ kind: 'cover', sequence: false, duration: 800 })
+    finishAnimation()
+    book.engine.destroy()
+  })
+
+  test.each([true, false])(
+    'goTo visits every intermediate face or spread without releasing the turning lock (single: %s)',
+    (single) => {
+      const book = createBook({ single, startPage: 1 })
+      book.onPage.mockClear()
+      book.onTurning.mockClear()
+      book.engine.goTo(6)
+      expect(book.engine.getPage()).toBe(1)
+      const expected = single ? [2, 3, 4, 5, 6] : [3, 5]
+      for (const page of expected) {
+        finishQueuedTurn()
+        expect(book.engine.getPage()).toBe(page)
+      }
+      expect(book.onPage.mock.calls.map(([page]) => page)).toEqual(expected)
+      expect(book.onTurning.mock.calls).toEqual([[true], [false]])
+      expect(frames.size).toBe(0)
+      book.onPage.mockClear()
+      book.engine.goTo(1)
+      for (const page of single ? [5, 4, 3, 2, 1] : [3, 1]) {
+        finishQueuedTurn()
+        expect(book.engine.getPage()).toBe(page)
+      }
+      expect(frames.size).toBe(0)
+      book.engine.destroy()
+    }
+  )
+
+  test('a new destination replaces a running journey and an immediate jump clears its remaining turns', () => {
+    const book = createBook({ single: true, startPage: 1 })
+    book.engine.goTo(6)
+    finishQueuedTurn()
+    expect(book.engine.getPage()).toBe(2)
+    book.engine.goTo(0)
+    finishQueuedTurn()
+    expect(book.engine.getPage()).toBe(1)
+    book.engine.goTo(4, false)
+    expect(book.engine.getPage()).toBe(4)
+    expect(frames.size).toBe(0)
+    book.engine.goTo(7)
+    book.engine.destroy()
+    expect(frames.size).toBe(0)
+  })
+
+  function pointerInput(host: HTMLElement, kind = 'mouse') {
+    const stage = host.firstElementChild as HTMLElement
+    stage.setPointerCapture = jest.fn()
+    stage.hasPointerCapture = jest.fn().mockReturnValue(true)
+    stage.releasePointerCapture = jest.fn()
+    return (type: string, x: number, y: number, target: HTMLElement = stage) => {
+      const event = new MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0 })
+      Object.defineProperties(event, {
+        pointerId: { value: 1 },
+        pointerType: { value: kind },
+        isPrimary: { value: true },
+      })
+      target.dispatchEvent(event)
+      return event
+    }
+  }
+
+  test.each([true, false])('the full-height outer page regions turn pages (single: %s)', (single) => {
+    const book = createBook({ single, startPage: 3 })
+    const input = pointerInput(book.host)
+    const right = WIDTH * (single ? 1 : 2) - WIDTH * 0.25
+    input('pointerdown', right, HEIGHT / 2)
+    input('pointerup', right, HEIGHT / 2)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(single ? 4 : 5)
+    input('pointerdown', WIDTH * 0.25, HEIGHT / 2)
+    input('pointerup', WIDTH * 0.25, HEIGHT / 2)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(3)
+    book.engine.destroy()
+  })
+
+  test('expanded click regions leave controls, text-selection drags and the page center alone', () => {
+    const book = createBook({ single: true, startPage: 3 })
+    const input = pointerInput(book.host)
+    const button = document.createElement('button')
+    book.pages[3].appendChild(button)
+    input('pointerdown', 350, 300, button)
+    input('pointerup', 350, 300, button)
+    input('pointerdown', 350, 300)
+    input('pointermove', 300, 300)
+    input('pointerup', 300, 300)
+    input('pointerdown', 200, 300)
+    input('pointerup', 200, 300)
+    expect(book.engine.getPage()).toBe(3)
+    expect(frames.size).toBe(0)
+    book.engine.destroy()
+  })
+
+  test('slow swipes turn in both directions from scrollable text without a position jump', () => {
+    const book = createBook({ single: true, startPage: 3 })
+    const input = pointerInput(book.host, 'touch')
+    const text = document.createElement('div')
+    text.dataset.bookScroll = ''
+    Object.defineProperties(text, { scrollHeight: { value: 900 }, clientHeight: { value: 300 } })
+    book.pages[3].appendChild(text)
+
+    input('pointerdown', 200, 300, text)
+    input('pointermove', 182, 301, text)
+    expect(book.onFrame).toHaveBeenLastCalledWith(
+      expect.objectContaining({ direction: 'forward', preview: false, progress: expect.any(Number) })
+    )
+    expect(book.onFrame.mock.calls.at(-1)?.[0].progress).toBeLessThan(0.08)
+    jest.spyOn(performance, 'now').mockReturnValue(1600)
+    input('pointermove', 120, 305)
+    input('pointerup', 120, 305)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(4)
+
+    input('pointerdown', 200, 300)
+    jest.spyOn(performance, 'now').mockReturnValue(2300)
+    input('pointermove', 285, 304)
+    input('pointerup', 285, 304)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(3)
+    book.engine.destroy()
+  })
+
+  test('vertical scrolling and cancelled or reversed touch swipes do not change the page', () => {
+    const book = createBook({ single: true, startPage: 3 })
+    const input = pointerInput(book.host, 'touch')
+    input('pointerdown', 200, 300)
+    input('pointermove', 198, 380)
+    input('pointerup', 198, 380)
+    expect(book.engine.getPage()).toBe(3)
+    expect(frames.size).toBe(0)
+
+    input('pointerdown', 200, 300)
+    input('pointermove', 120, 300)
+    input('pointercancel', 120, 300)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(3)
+
+    input('pointerdown', 200, 300)
+    input('pointermove', 120, 300)
+    input('pointermove', 205, 300)
+    input('pointerup', 205, 300)
+    finishAnimation()
+    expect(book.engine.getPage()).toBe(3)
+    book.engine.destroy()
+  })
 
   test('opens the cover into the first double-page spread, then advances and returns by spread', () => {
     const book = createBook()
@@ -339,22 +567,16 @@ describe('BookFlipEngine', () => {
       Number(match[1])
     )
     expect(yCoordinates.length).toBeGreaterThanOrEqual(3)
-    expect(Math.max(...yCoordinates) - Math.min(...yCoordinates)).toBeLessThan(HEIGHT / 2)
+    expect(Math.max(...yCoordinates) - Math.min(...yCoordinates)).toBeLessThan(32)
 
     const settledProgress = book.onFrame.mock.calls.at(-1)?.[0]?.progress as number
-    const expectedShadow = calculateBookCurl({
-      pageWidth: WIDTH,
-      pageHeight: HEIGHT,
-      corner,
-      pointer: { x: WIDTH * (1 - 2 * settledProgress), y: corner === 'top' ? 50 : HEIGHT - 50 },
-    }).shadow
     const shadow = stage.querySelector<HTMLElement>('.bookFlipShadow')!
-    expect(Number.parseFloat(shadow.style.height)).toBeCloseTo(expectedShadow!.length + 2)
-    expect(Number.parseFloat(shadow.style.height)).toBeLessThan(HEIGHT / 2)
+    expect(Number.parseFloat(shadow.style.height)).toBeLessThan(46)
+    expect(Number.parseFloat(shadow.style.width)).toBeLessThan(12)
 
     const firstClip = flap!.style.clipPath
     stage.dispatchEvent(
-      new MouseEvent('pointermove', { bubbles: true, clientX: 330, clientY: corner === 'top' ? 70 : 530 })
+      new MouseEvent('pointermove', { bubbles: true, clientX: 370, clientY: corner === 'top' ? 22 : 578 })
     )
     expect(frames.size).toBe(1)
     const followFrame = [...frames.values()][0]
@@ -381,12 +603,16 @@ describe('BookFlipEngine', () => {
     book.engine.destroy()
   })
 
-  test('far navigation animates its final turn, while immediate navigation reports the destination at once', () => {
+  test('far navigation crosses all intervening spreads, while immediate navigation reports the destination at once', () => {
     const book = createBook()
     book.engine.goTo(6)
     expect(book.onTurning).toHaveBeenLastCalledWith(true)
     expect(book.onPage).toHaveBeenCalledTimes(1)
     expect(frames.size).toBe(1)
+    finishQueuedTurn()
+    expect(book.engine.getPage()).toBe(1)
+    finishQueuedTurn()
+    expect(book.engine.getPage()).toBe(3)
     finishAnimation()
     expect(book.engine.getPage()).toBe(5)
     expect(book.visibleFaces()).toEqual([5, 6])

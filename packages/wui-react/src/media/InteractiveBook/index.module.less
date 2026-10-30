@@ -11,7 +11,7 @@
   justify-content: center;
   width: 100%;
   margin-inline: auto;
-  padding: 32px 60px 100px;
+  padding: 32px 60px 128px;
   box-sizing: border-box;
 }
 
@@ -39,6 +39,9 @@
 .bookViewport {
   position: relative;
   flex: none;
+
+  /* Include the paper/cover overhang in intrinsic sizing as well as fitting. */
+  margin-inline: calc(var(--book-edge-space) / 2);
   perspective: 1800px;
   perspective-origin: 50% 40%;
 }
@@ -46,15 +49,27 @@
 .bookWrapper {
   --book-openness: 0;
   --book-side: 0;
+  --book-read-progress: 0;
+  --book-left-stack: calc(var(--book-layer-depth) * var(--book-read-progress));
+  --book-right-stack: calc(var(--book-layer-depth) * (1 - var(--book-read-progress)));
+  --book-reading-visibility: clamp(0, calc((var(--book-openness) - 0.65) / 0.3), 1);
+  --book-left-gutter: linear-gradient(
+    270deg,
+    rgb(35 45 56 / 22%),
+    rgb(35 45 56 / 9%) 3%,
+    rgb(35 45 56 / 2%) 9%,
+    transparent 18%
+  );
+  --book-right-gutter: linear-gradient(90deg, rgb(35 45 56 / 14%), rgb(35 45 56 / 5%) 3%, transparent 13%);
 
   position: relative;
   transform-style: preserve-3d;
   transform-origin: calc(75% - 50% * var(--book-side)) center calc(var(--book-depth) / -2);
   transform: translateX(calc(var(--page-width) / -2 * (1 - var(--book-openness)) * (1 - 2 * var(--book-side))))
-    rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) * (1 - var(--book-openness))))
+    rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) * (1 - var(--book-openness))))
     rotateY(
       calc(
-        var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))) * (1 - var(--book-openness)) *
+        var(--book-preview-yaw, calc(-1 * var(--book-rotation))) * (1 - var(--book-openness)) *
           (1 - 2 * var(--book-side))
       )
     );
@@ -63,8 +78,8 @@
   &:not(.open, [data-cover-turning], [data-book-animating]):hover,
   &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
     transform: translateX(calc(var(--page-width) / -2)) translateY(-4px)
-      rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) / 2))
-      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+      rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) / 2))
+      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
   }
 
   &[data-view-dragging='true'] {
@@ -85,22 +100,20 @@
     :global(.bookFlipShadow) {
       visibility: hidden;
     }
-
-    /* Round static sheets under the cover without cutting a spine gap. */
-    .sheet:global(.--simple.--left),
-    .sheet[data-density='soft']:global(.--left) {
-      clip-path: inset(0 round 0 6px 6px 0) !important;
-    }
-
-    .sheet:global(.--simple.--right),
-    .sheet[data-density='soft']:global(.--right) {
-      clip-path: inset(0 round 6px 0 0 6px) !important;
-    }
   }
 
   &.turnoverHidden {
     visibility: hidden;
     transition: none;
+  }
+}
+
+.bookWrapper[data-mesh-closed='true'] {
+  .spreadBoards,
+  .readingPageLayers,
+  .closedVolume,
+  .flipHost {
+    visibility: hidden;
   }
 }
 
@@ -352,7 +365,7 @@
 .closedCoverTrigger {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 50%;
   z-index: 10;
   width: var(--page-width);
   height: 100%;
@@ -362,11 +375,7 @@
   background: transparent;
   cursor: pointer;
   touch-action: pan-y;
-}
-
-.backCoverTrigger {
-  right: auto;
-  left: 0;
+  transform: translateX(-50%);
 }
 
 .rotatableCover {
@@ -380,7 +389,10 @@
 }
 
 .angleControls {
-  position: relative;
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 12;
   flex: none;
   align-self: center;
@@ -395,7 +407,10 @@
   border-radius: 999px;
   background: rgb(255 255 255 / 92%);
   box-shadow: 0 4px 16px rgb(25 37 55 / 10%);
-  margin-top: 14px;
+}
+
+.container[data-book-view='back'] .angleControls {
+  bottom: 76px;
 }
 
 .angleControl {
@@ -449,6 +464,7 @@
   perspective: 2000px;
   z-index: 0;
   pointer-events: none;
+  opacity: var(--book-reading-visibility);
 
   > div {
     position: relative;
@@ -460,28 +476,23 @@
     backface-visibility: hidden;
     background: var(--book-color);
     border-radius: 3px 0 0 3px;
-    box-shadow:
-      -1px 8px 12px rgb(19 26 42 / 10%),
-      -3px 20px 36px rgb(19 26 42 / 12%);
 
-    /* Extend the cover at its outer edges, keeping its rotation axis on the spine.
-       The rim keeps the same dimensions throughout hover, drag and rebound. */
+    /* Symmetric 2px inner overhang and 2px cover rim; paper depth changes only the outer edge. */
     &::before {
       content: '';
       position: absolute;
       z-index: -1;
-      inset: -2px 0 -2px -2px;
-      border-radius: 5px 0 0 5px;
+      inset: -4px 0 -4px calc(-4px - var(--book-left-stack));
+      border-radius: 3px 0 0 3px;
       background: var(--book-color);
     }
 
     &::after {
       content: '';
       position: absolute;
-      inset: 3px 0 3px 3px;
-      border-radius: 1px 0 0 1px;
-      background: repeating-linear-gradient(0deg, var(--reading-border, #e4e1d8) 0 1px, var(--reading-paper) 1px 2px);
-      box-shadow: inset 0 -1px 0 rgb(87 78 60 / 10%);
+      inset: -2px 0 -2px calc(-2px - var(--book-left-stack));
+      border-radius: 2px 0 0 2px;
+      background: var(--book-left-gutter), var(--reading-paper);
     }
 
     + div {
@@ -489,18 +500,68 @@
       transform: rotateY(calc(-180deg * (1 - var(--book-openness)) * var(--book-side)));
       opacity: calc(1 - (1 - var(--book-side)) * (1 - var(--board-visibility)));
       border-radius: 0 3px 3px 0;
-      box-shadow:
-        1px 8px 12px rgb(19 26 42 / 10%),
-        3px 20px 36px rgb(19 26 42 / 12%);
 
       &::before {
-        inset: -2px -2px -2px 0;
-        border-radius: 0 5px 5px 0;
+        inset: -4px calc(-4px - var(--book-right-stack)) -4px 0;
+        border-radius: 0 3px 3px 0;
       }
 
       &::after {
-        inset: 3px 3px 3px 0;
-        border-radius: 0 1px 1px 0;
+        inset: -2px calc(-2px - var(--book-right-stack)) -2px 0;
+        border-radius: 0 2px 2px 0;
+        background: var(--book-right-gutter), var(--reading-paper);
+      }
+    }
+  }
+}
+
+.readingPageLayers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: var(--book-reading-visibility);
+  pointer-events: none;
+
+  > div {
+    --stack-depth: var(--book-left-stack);
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+
+    > span {
+      --layer-offset: calc(var(--stack-depth) * var(--layer-fraction));
+
+      position: absolute;
+      inset: 0 0 0 calc(-1 * var(--layer-offset));
+
+      /* All sheets meet the same top and bottom trim; the stack fans out only at the fore-edge. */
+      border-radius: 2px 0 0 2px;
+      background: var(--book-left-gutter), var(--reading-paper);
+
+      /* Fine paper edges, not stripes or a cast shadow. The binding edge stays fixed. */
+      box-shadow:
+        inset 0 -0.5px color-mix(in srgb, var(--reading-rule) 50%, var(--reading-paper)),
+        inset 0 0.5px color-mix(in srgb, var(--reading-rule) 25%, var(--reading-paper)),
+        inset 0.5px 0 color-mix(in srgb, var(--reading-rule) 65%, var(--reading-paper));
+    }
+
+    + div {
+      --stack-depth: var(--book-right-stack);
+
+      right: 0;
+      left: auto;
+
+      > span {
+        inset: 0 calc(-1 * var(--layer-offset)) 0 0;
+        border-radius: 0 2px 2px 0;
+        background: var(--book-right-gutter), var(--reading-paper);
+        box-shadow:
+          inset 0 -0.5px color-mix(in srgb, var(--reading-rule) 50%, var(--reading-paper)),
+          inset 0 0.5px color-mix(in srgb, var(--reading-rule) 25%, var(--reading-paper)),
+          inset -0.5px 0 color-mix(in srgb, var(--reading-rule) 65%, var(--reading-paper));
       }
     }
   }
@@ -513,16 +574,21 @@
   overflow: hidden;
 
   &:global(.--left) {
+    border-right-width: 0;
+
     .pageSurface,
     .innerContent {
       padding: var(--book-left-page-padding, 14px 32px 10px 24px);
-      background:
-        linear-gradient(270deg, rgb(35 45 56 / 10%), rgb(35 45 56 / 3%) 4%, transparent 14%), var(--reading-paper);
+      background: var(--book-left-gutter), var(--reading-paper);
     }
 
     .pageFooter {
       flex-direction: row-reverse;
     }
+  }
+
+  &:global(.--right) {
+    border-left-width: 0;
   }
 }
 
@@ -535,7 +601,7 @@
   box-sizing: border-box;
   color: var(--reading-ink);
   font-family: var(--book-font-family, -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif);
-  background: linear-gradient(90deg, rgb(35 45 56 / 10%), rgb(35 45 56 / 3%) 4%, transparent 14%), var(--reading-paper);
+  background: var(--book-right-gutter), var(--reading-paper);
 }
 
 .pageSurface::before,
@@ -554,28 +620,27 @@
   border-radius: 6px 4px 4px 6px;
   background: var(--book-color);
   backface-visibility: hidden;
+
+  &:has([data-book-front-snapshot]) {
+    overflow: visible;
+    background: transparent;
+  }
 }
 
 .backCoverSheet {
   border-radius: 4px 6px 6px 4px;
+  overflow: visible;
+  background: transparent;
+}
+
+.backCoverSnapshot {
+  position: absolute;
+  max-width: none;
+  pointer-events: none;
 }
 
 .innerCoverSheet {
-  border: 0;
   border-radius: 0 4px 4px 0;
-  overflow: visible;
-
-  /* Keep the rim outside the paper so it overlaps the backing's rim at rest,
-     without doubling its weight or changing the page's content dimensions. */
-  &::after {
-    content: '';
-    position: absolute;
-    inset: -2px -2px -2px 0;
-    border: 2px solid var(--book-color);
-    border-left: 0;
-    border-radius: 0 6px 6px 0;
-    pointer-events: none;
-  }
 
   > div {
     border-radius: inherit;
@@ -584,13 +649,6 @@
 
   &:global(.--left) {
     border-radius: 4px 0 0 4px;
-
-    &::after {
-      inset: -2px 0 -2px -2px;
-      border-right: 0;
-      border-left: 2px solid var(--book-color);
-      border-radius: 6px 0 0 6px;
-    }
   }
 }
 
@@ -806,11 +864,7 @@
   font-size: 0.875rem;
   max-width: none;
   overflow-wrap: break-word;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #c6cbd0 transparent;
-  touch-action: pan-y;
+  overflow: hidden;
 
   p {
     margin: 0;
@@ -1016,10 +1070,14 @@
 }
 
 .hint {
-  position: relative;
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
   flex: none;
   align-self: center;
-  margin-top: 12px;
+  width: max-content;
+  max-width: calc(100% - 32px);
   color: var(--wui-text-secondary, #6b7280);
   display: flex;
   align-items: center;
@@ -1041,7 +1099,7 @@
 }
 
 .singlePageContainer {
-  padding: 24px 16px 76px;
+  padding: 24px 16px 128px;
 }
 
 .singlePageViewport {
@@ -1051,23 +1109,22 @@
 
 .singlePage {
   transform-origin: center center calc(var(--book-depth) / -2);
-  transform: rotateX(
-      calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) * (1 - var(--book-openness)))
-    )
+  transform: rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) * (1 - var(--book-openness))))
     rotateY(
       calc(
-        var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))) * (1 - var(--book-openness)) *
+        var(--book-preview-yaw, calc(-1 * var(--book-rotation))) * (1 - var(--book-openness)) *
           (1 - 2 * var(--book-side))
       )
     );
 
   &:not(.open, [data-cover-turning], [data-book-animating]):hover,
   &:not(.open, [data-cover-turning], [data-book-animating]):focus-within {
-    transform: translateY(-4px) rotateX(calc(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))) / 2))
-      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+    transform: translateY(-4px) rotateX(calc(var(--book-preview-pitch, var(--book-tilt)) / 2))
+      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
   }
 
-  .spreadBoards > div:first-child {
+  .spreadBoards > div:first-child,
+  .readingPageLayers > div:first-child {
     display: none;
   }
 
@@ -1077,14 +1134,18 @@
     border-radius: 3px;
 
     &::before {
-      inset: -2px;
-      border-radius: 5px;
+      inset: -4px calc(-4px - var(--book-right-stack)) -4px -4px;
+      border-radius: 3px;
     }
 
     &::after {
-      inset: 3px;
-      border-radius: 1px;
+      inset: -2px calc(-2px - var(--book-right-stack)) -2px -2px;
+      border-radius: 2px;
     }
+  }
+
+  .readingPageLayers > div:last-child {
+    width: 100%;
   }
 
   .closedVolume {
@@ -1094,14 +1155,13 @@
 
 @media (hover: none) {
   .bookWrapper:not(.open, [data-cover-turning], [data-book-animating]) {
-    transform: translateX(calc(var(--page-width) / -2))
-      rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
-      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+    transform: translateX(calc(var(--page-width) / -2)) rotateX(var(--book-preview-pitch, var(--book-tilt)))
+      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
   }
 
   .singlePage:not(.open, [data-cover-turning], [data-book-animating]) {
-    transform: rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
-      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+    transform: rotateX(var(--book-preview-pitch, var(--book-tilt)))
+      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
   }
 }
 
@@ -1114,20 +1174,19 @@
   }
 
   .bookWrapper:not(.open) {
-    transform: translateX(calc(var(--page-width) / -2))
-      rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
-      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+    transform: translateX(calc(var(--page-width) / -2)) rotateX(var(--book-preview-pitch, var(--book-tilt)))
+      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
   }
 
   .singlePage:not(.open) {
-    transform: rotateX(var(--home-book-pitch, var(--book-preview-pitch, var(--book-tilt))))
-      rotateY(var(--home-book-yaw, var(--book-preview-yaw, calc(-1 * var(--book-rotation)))));
+    transform: rotateX(var(--book-preview-pitch, var(--book-tilt)))
+      rotateY(var(--book-preview-yaw, calc(-1 * var(--book-rotation))));
   }
 }
 
 @media (width <= 768px) {
   .container {
-    padding: 16px 8px max(84px, env(safe-area-inset-bottom, 84px));
+    padding: 16px 8px max(128px, env(safe-area-inset-bottom, 128px));
   }
 
   .navigation {
@@ -1175,7 +1234,6 @@
   }
 
   .angleControls {
-    margin-top: 12px;
     gap: 3px;
   }
 

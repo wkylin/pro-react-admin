@@ -1,0 +1,270 @@
+.matter {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: var(--reading-ink);
+  font-size: 13px;
+  line-height: 1.8;
+
+  [data-book-flow] {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  p {
+    margin: 0 0 1.2em;
+  }
+}
+
+.eyebrow {
+  flex-shrink: 0;
+  color: var(--reading-muted);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.endpaper {
+  position: relative;
+  flex: 1;
+  background-color: color-mix(in srgb, var(--book-color) 5%, var(--reading-paper));
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 15px,
+    color-mix(in srgb, var(--book-color) 6%, transparent) 15px 16px,
+    transparent 16px 32px
+  );
+}
+
+.bookmark {
+  position: absolute;
+  width: 18px;
+  height: 48px;
+  top: 0;
+  right: 22%;
+  background: color-mix(in srgb, var(--book-color) 15%, var(--reading-paper));
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
+}
+
+.quietTitle {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  h2 {
+    margin: auto 0;
+    padding-block: 28px;
+    font-family: var(--book-matter-title-font);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+  }
+}
+
+.titleBlock {
+  flex: 1;
+  padding-top: 10%;
+  text-align: center;
+}
+
+.bookTitle {
+  margin: 26px 0 18px;
+  font-family: var(--book-matter-title-font);
+  font-size: clamp(24px, calc(var(--page-width) * 0.085), 40px);
+  font-weight: 600;
+  line-height: 1.5;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.subtitle {
+  color: var(--reading-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.ornament {
+  display: block;
+  width: 28px;
+  height: 1px;
+  margin: 30px auto 22px;
+  background: var(--reading-rule);
+}
+
+.author,
+.publisher {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.publisher {
+  flex-shrink: 0;
+  padding-top: 24px;
+  color: var(--reading-muted);
+}
+
+.frontispiece {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  img {
+    width: 62%;
+    max-height: 65%;
+    object-fit: cover;
+  }
+
+  figcaption {
+    color: var(--reading-muted);
+    font-size: 10px;
+    text-align: center;
+  }
+}
+
+.publicationBody {
+  flex: 1;
+}
+
+.details {
+  margin: 20px 0;
+  font-size: 11px;
+  line-height: 1.9;
+
+  > div {
+    display: grid;
+    grid-template-columns: 5em minmax(0, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  dt {
+    grid-column: 1;
+    color: var(--reading-muted);
+  }
+
+  dd {
+    grid-column: 2;
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.copyright {
+  padding-top: 18px;
+  border-top: 1px solid var(--reading-rule);
+  color: var(--reading-muted);
+  font-size: 10px;
+}
+
+.prose,
+.dedication {
+  flex: 1;
+  padding-top: 12px;
+  font-size: 14px;
+  line-height: 2;
+  overflow-wrap: anywhere;
+}
+
+.dedication {
+  padding-top: 12%;
+  font-family: var(--book-matter-title-font);
+  text-align: center;
+}
+
+.sectionTitle {
+  margin: 16px 0 20px;
+  font-family: var(--book-matter-title-font);
+  font-size: clamp(18px, calc(var(--page-width) * 0.065), 25px);
+  line-height: 1.5;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.readingSummary {
+  color: var(--reading-muted);
+  font-size: 10px;
+}
+
+.acknowledgments {
+  margin-top: 26px;
+
+  h3 {
+    font-size: 13px;
+    font-weight: 500;
+  }
+}
+
+.footer,
+.closing {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  color: var(--reading-muted);
+  font-size: 10px;
+}
+
+.footer > span {
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.footer > .folio {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.closing {
+  flex-direction: column;
+  border-top: 1px solid var(--reading-rule);
+}
+
+.completion {
+  letter-spacing: 0.2em;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--reading-ink);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+  }
+
+  &:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+}

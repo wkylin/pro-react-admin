@@ -1,10 +1,9 @@
-import type { BookPage } from '@/pages/mediaAdapters/InteractiveBook'
+import type { BookPage, InteractiveBookProps } from '@/pages/mediaAdapters/InteractiveBook'
 import journeyCover from '@assets/reading/journey.png'
 import kingdomsCover from '@assets/reading/three-kingdoms.png'
 import liaozhaiCover from '@assets/reading/liaozhai.png'
 import warCover from '@assets/reading/art-of-war.png'
 import styles from './index.module.less'
-import { paginateChapter, type ReadingPageSize } from './pagination'
 
 export interface ReadingText {
   title: string
@@ -87,18 +86,37 @@ export const readingBooks: ReadingBook[] = [
   },
 ]
 
-export function createReadingPages(book: ReadingText, size: ReadingPageSize): BookPage[] {
-  const pages: BookPage[] = []
-  for (const chapter of book.chapters) {
-    const chunks = paginateChapter(chapter.text, size)
-    for (let index = 0; index < chunks.length; index += 2) {
-      pages.push({
-        pageNumber: pages.length * 2 + 1,
-        title: index === 0 ? chapter.title : undefined,
-        content: <div className={styles.prose}>{chunks[index]}</div>,
-        backContent: chunks[index + 1] ? <div className={styles.prose}>{chunks[index + 1]}</div> : null,
-      })
+/** Keep chapter boundaries and the original text; InteractiveBook owns physical pagination. */
+export function createReadingPages(book: ReadingText): BookPage[] {
+  return book.chapters.map((chapter, index) => {
+    // Two source faces per chapter, split at a paragraph; physical page sizes remain the component's concern.
+    const middle = Math.floor(chapter.text.length / 2)
+    const paragraph = chapter.text.indexOf('\n', middle)
+    const split = paragraph > 0 && paragraph < chapter.text.length - 1 ? paragraph + 1 : middle
+    return {
+      pageNumber: index + 1,
+      title: chapter.title,
+      content: <div className={styles.prose}>{chapter.text.slice(0, split)}</div>,
+      backContent: <div className={styles.prose}>{chapter.text.slice(split)}</div>,
     }
-  }
-  return pages
+  })
+}
+
+/** Shared by the shelf preview and reader so artwork and binding always agree. */
+export function getReadingBookAppearance(book: ReadingBook) {
+  return {
+    coverImage: book.cover,
+    coverColor: book.coverColor,
+    coverTitleColor: book.titleColor,
+    coverTextColor: book.titleColor,
+    spineColor: book.coverColor,
+    spineTextColor: book.titleColor,
+    spineAuthor: book.author,
+    coverStyle: 'illustrated',
+    bookTitle: book.title,
+    bookAuthor: book.author,
+    backCoverContent: <p>{book.description}</p>,
+    thickness: book.sectionCount > 20 ? 32 : 18,
+    textured: true,
+  } satisfies Partial<InteractiveBookProps>
 }

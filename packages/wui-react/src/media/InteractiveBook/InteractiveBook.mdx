@@ -42,7 +42,7 @@ import * as Stories from './InteractiveBook.stories'
 
 ### 打开一本书
 
-点击封面进入阅读，使用页角、导航按钮或拖动翻页。
+点击封面先翻开环衬与前扉页，再依次进入扉页、出版信息、目录和正文。可点“进入目录”连续翻过开卷页，使用页角、导航按钮或拖动翻页。
 
 <Canvas of={Stories.Default} />
 
@@ -150,7 +150,7 @@ import * as Stories from './InteractiveBook.stories'
 <Canvas of={Stories.BackCover} />
 
 <div className="wui-doc-callout">
-  <strong>组件范围：</strong>InteractiveBook 目前是应用内部组件，不属于 <code>@w.ui/wui-react</code> 发布包。PDF
+  <strong>运行依赖：</strong>合起的书使用 Three.js 与 React Three Fiber 渲染；无法使用 WebGL 时回退到原有封面视图。PDF
   示例依赖 Worker、跨域与内容安全策略配置，部署时需要单独验证。
 </div>
 
@@ -161,21 +161,35 @@ import * as Stories from './InteractiveBook.stories'
 
 #### 组件概览
 
-应用内部翻页书组件。必需 coverImage 与 pages，可选 bookTitle/bookAuthor、pdfUrl 和 pageImages。显示优先级为 PDF > 图片 > pages JSX，每两面组成一个书页。目录从 pages 的 title 自动生成；contentsPerPage 控制每张目录页的章节数上限（默认 6，页面较矮时会自动减少），目录超出后会分页，点击目录条目可直接跳转到对应正文页。
+应用内部翻页书组件。必需 coverImage 与 pages，可选 bookTitle/bookAuthor、pdfUrl 和 pageImages。显示优先级为 PDF > 图片 > pages JSX，每两面组成一个书页。目录从 pages 的 title 自动生成；contentsPerPage 控制每张目录页的章节数上限（默认 6，页面较矮时会自动减少），目录超出后会分页，点击目录条目会逐页翻至对应正文页。
 
-mode 支持 single/double/auto；auto 在窄屏或容器放不下完整双页时使用单页，并按可用宽度等比缩放。defaultOpen 设置初始开合，open/onClose 为受控交互；onPageChange 接收页索引。可关闭导航、悬停卷角预览和音效。
+frontMatter 默认启用六类前置页，可传 `{ dedication, preface }` 设置献词或卷首语；有献词时优先展示献词，卷首语未设置时沿用封底简介。书名、作者、副标题和出版者沿用封面配置。publication 可设置 `publisher`、`date`、`edition`、`isbn`、`copyright` 及 `details: [{ label, value }]`，只显示实际传入的信息，不生成 ISBN 或版权声明。
 
-封面、封底、书脊和纸张侧面使用 CSS 3D 构成立体书本。合起时可水平或垂直拖动封面或封底查看角度，也可用视角快捷按钮切换正面、3/4、书脊、封底和俯视；enable3DViewControls 默认 true，可关闭该交互。tilt 和 rotation 配置初始俯仰与侧转角，默认分别为 4° 和 24°。coverStyle 支持插画、黑金精装、酒红皮革、金色插画书衣和橙白编辑风五种装帧；coverLayout 支持标准、居中和出版物排版。coverImagePosition 可调整封面图片裁切位置；coverLabel、coverTitle、coverSubtitle、coverContent、coverAuthor 和 coverPublisher 可分别设置封面标签、标题、副标题、简介、作者与出版信息。coverFontFamily、coverTitleSize、coverTitleColor、coverTextColor、coverAccentColor、coverTextAlign 和 coverTitleStyle 可继续微调字体、颜色、对齐方式与标题位置。spineTitle 默认使用 bookTitle，可单独设置 spineSubtitle、spineAuthor、spineColor、spineTextColor 和 spineAccentColor；spineStyle 可选 auto、smooth、ribbed、banded、ornate 或 minimal，设置书脊的光滑、压纹、横带、古典装饰或极简效果。textured 可启用封面纸纹（默认 false），复用本地噪点资源。
+backMatter 默认在正文后增加“后记／版本记录”跨页，可传 `{ title, content, acknowledgments }` 配置后记标题、正文与致谢；版本记录显示书籍信息、正文页数及“从头阅读”“返回目录”。Home 与“从头阅读”返回环衬，End 打开最后一页。“进入目录”、章节跳转、“返回目录”和“从头阅读”均连续翻过中间页到达目标；远距离翻页会适当加快，最后一页放缓落定，系统减少动态效果时直接切换。目录仍按正文页码定位。已有完整前置页的 PDF 可设置 `frontMatter={false}`；`backMatter={false}` 可恢复简略结束页。版权信息、卷首语、正文、后记与版本记录按实际页面尺寸和字体自动续页，保留文字、格式与链接，不显示页内滚动条。分页优先在段落、词语或标点处分开；图片、SVG 和自定义组件保持完整，超出一页时等比缩放。窗口尺寸或字体加载变化时重新分页，并尽量保留当前阅读位置。
 
-内页使用项目内的翻页引擎：封面与封底按硬板翻动，内页按软纸折叠，书角跟随鼠标或手指移动，折线与投影实时变化，未越过书槽的拖拽会回弹。开合时装帧底板与居中位置跟随引擎的封面翻转进度，拖拽回弹时同步复位；展开后左右纸层与底边保持平齐。thickness 设置纸张厚度（默认 28px，范围 6–64px），coverColor 设置封面、书脊和封底的基础装帧颜色（未设置时随 coverStyle 变化）。pagePadding 接受数字 px 值或 CSS padding 简写，可一次设置完整边距；未设置时，上边距约为书页宽度的 4%、外侧边距约 6.5%、装订侧约 9%、下边距约 3%，并分别限制在 14–22px、22–36px、30–46px、10–18px 范围内。pageSidePadding 可分别设置水平外侧与书脊侧边距，例如 `{ outer: 28, gutter: 40 }`；数字按 px 处理，也可传入 CSS 长度。显式设置 pagePadding 时优先使用 pagePadding。fontFamily 设置内页字体；paperColor、textColor、mutedColor 和 ruleColor 分别设置纸张、正文、辅助文字和分隔线颜色。正文使用独立字号，避免嵌套样式连续缩小。触屏与减少动态效果模式使用静态透视，系统启用减少动态效果时关闭旋转过渡、卷角预览与翻页动画。
+<Canvas of={Stories.BookMatterDesign} />
 
-展开后以平展双页呈现，书槽渐变、页底纸叠和细纸纹表现装订层次。装帧外缘保留 2px 深色包边，目录与末尾内封的包边随页面翻动，悬停、拖动及回弹时保持相同尺寸。左侧内封展示书名、作者和章节目录；图片书展示插图扉页。目录与扉页在相邻软页之间翻动时，左侧页角悬停会向右卷起；卷角从边缘渐入并随指针移动，阴影沿实际折线收束。移开鼠标后页角回弹，回弹途中再次悬停会从当前姿态继续。目录朝硬封面及末尾“读完了”内封朝硬封底的页角不显示预卷，仍可点击、拖动或用导航合上硬质封面。单页模式合上封面时目录留在原位，硬封面从左侧盖住目录。悬停预览仅在展开的内页启用。触屏从书角纵向滚动不会翻页，从页中部横划达到 35px 后才开始翻页。末尾内封沿用正文纸面、书槽渐变和纸纹，保持左右装订边衔接。内页统一页眉、正文和外侧页码，较长的正文可独立滚动。滚动区域溢出时保留原生触摸滚动，可通过页角和导航按钮翻页。导航显示实际页面范围和阅读进度。
+长标题的主标题与副标题共用流式排版，换行后保持间距。可通过 coverTitle 设置短主标题、coverSubtitle 设置说明性副标题，bookTitle 保留完整书名。未指定副标题时，带冒号的长书名会自动拆分主副标题；显式副标题优先。页眉、页脚使用简短书名，完整书名保留在出版信息中。
 
-末页继续翻动会合到封底并停留，不触发 onClose。backCoverImage 设置满幅封底图片，backCoverImagePosition 可调整裁切；backCoverLabel、backCoverTitle、backCoverSubtitle、backCoverContent、backCoverAuthor 和 backCoverPublisher 分别设置封底标签、标题、副标题、简介、作者和出版信息。backCoverStyle 与 backCoverLayout 可独立选择封底装帧和排版，backCoverColor、backCoverFontFamily、backCoverTitleColor、backCoverTextColor、backCoverAccentColor、backCoverTextAlign 和 backCoverTitleStyle 可进一步调整外观；未设置的封底标题和作者沿用书名与作者，装帧和布局沿用封面。backCoverTextured 可单独控制封底纸纹。封底可拖动旋转、使用视角快捷按钮，点击封底可返回末页；点击“翻到封面”则将整本书从当前角度旋转到封面正面并停留，随后可重新打开阅读；隐藏导航时也保留此按钮。整书翻转不会触发 onClose，显式关闭仍触发该回调。系统启用减少动态效果时直接切换到封面。
+<Canvas of={Stories.LongBookMatter} />
 
-翻页交互与几何实现参考 [StPageFlip](https://github.com/Nodlik/StPageFlip) 的公开源码。透视与纸张侧面参考 [3D Book Image CSS Generator](https://scastiel.dev/3dbook/)，悬停动效和装帧参考 [Spell UI Perspective Book](https://spell.sh/docs/perspective-book)。
+mode 支持 single/double/auto；auto 在窄屏或容器放不下完整双页时使用单页，并按可用宽度等比缩放。defaultOpen 设置初始开合，open/onClose 为受控交互；onPageChange 接收原始 pages 的条目索引；自动续页不会改变该回调的索引含义。可关闭导航、悬停卷角预览和音效。
 
-PDF 先读取文档信息，再按需渲染当前可见页，并预加载后续两页；相邻页面保留在有限缓存中，降低翻页等待和内存占用。PDF.js API 与 Worker 使用同一版本。Worker 由 Webpack 资源 URL 加载，异常时回退 CDN；部署时需验证 Worker/CORS。当前不属于 @w.ui/wui-react 发布组件。
+书架预览可设置 `open={false}` 并传入 `onOpenRequest`：点击封面时交给调用方打开独立阅读层，预览保持合起；拖动旋转仍由组件处理。`showViewControls={false}` 只隐藏视角快捷按钮，保留拖动交互；`tilt` 和 `rotation` 设置预览的初始角度。阅读层不设置该回调即可使用默认的开书行为。
+
+合起的书使用 Three.js 的连续书壳几何体，封面、封底、书脊均比内页突出；厚书的书脊逐渐外凸，薄书保持方脊；上下端缘由同一书壳的倒角形成。封面内容生成纹理贴在书壳表面，封面和封底靠书脊的一侧另有沿圆脊与上下倒角弯折的渐变包边贴片，使图案平滑过渡到书脊，书壳端面颜色也随之渐变；纸芯装订端随书壳内侧的弧线内收，上下端形成连续的 U 形包边，纸边由书脊同色的窄带收边。书脊内壁随外弧向外移动，中央壁厚保持约 3px，避免厚书端缘堆积成实心厚块；封板厚度为 2px。3D 场景不绘制投地阴影。极薄书脊不绘制难以辨认的书脊文字。无法使用 WebGL 时保留原有封面视图。合起时可水平或垂直拖动封面或封底查看角度，也可用视角快捷按钮切换正面、3/4、书脊、封底和俯视；enable3DViewControls 默认 true，可关闭该交互。tilt 和 rotation 配置初始俯仰与侧转角，默认分别为 4° 和 24°。coverStyle 支持插画、黑金精装、酒红皮革、金色插画书衣和橙白编辑风五种装帧；coverLayout 支持标准、居中和出版物排版。coverImagePosition 可调整封面图片裁切位置；coverLabel、coverTitle、coverSubtitle、coverContent、coverAuthor 和 coverPublisher 可分别设置封面标签、标题、副标题、简介、作者与出版信息。coverFontFamily、coverTitleSize、coverTitleColor、coverTextColor、coverAccentColor、coverTextAlign 和 coverTitleStyle 可继续微调字体、颜色、对齐方式与标题位置。spineTitle 默认使用 bookTitle，可单独设置 spineSubtitle、spineAuthor、spineColor、spineTextColor 和 spineAccentColor；spineStyle 可选 auto、smooth、ribbed、banded、ornate 或 minimal，设置书脊的光滑、压纹、横带、古典装饰或极简效果。textured 可启用封面纸纹（默认 false），复用本地噪点资源。
+
+内页使用项目内的翻页引擎：封面与封底按硬板翻动，内页按软纸折叠，书角跟随鼠标或手指移动，折线与投影实时变化，未越过书槽的拖拽会回弹。开合时装帧底板与居中位置跟随引擎的封面翻转进度，拖拽回弹时同步复位；展开后左右纸层与底边保持平齐。thickness 设置纸张厚度（默认 28px，范围 6–64px），书脊曲率与默认订口留白会随厚度增加；coverColor 设置封面、书脊和封底的基础装帧颜色（未设置时随 coverStyle 变化）。pagePadding 接受数字 px 值或 CSS padding 简写，可一次设置完整边距；未设置时，上下边距均约为书页宽度的 5.5%、外侧边距约 8%、装订侧约 10%，上下边距统一限制在 20–30px、外侧边距为 28–42px，订口在普通厚度为 34–50px、厚书至多 60px。pageSidePadding 可分别设置水平外侧与书脊侧边距，例如 `{ outer: 28, gutter: 40 }`；数字按 px 处理，也可传入 CSS 长度。显式设置 pagePadding 时优先使用 pagePadding。fontFamily 设置内页字体；paperColor、textColor、mutedColor 和 ruleColor 分别设置纸张、正文、辅助文字和分隔线颜色。正文使用独立字号，避免嵌套样式连续缩小。触屏与减少动态效果模式使用静态透视，系统启用减少动态效果时关闭旋转过渡、卷角预览与翻页动画。
+
+展开后参考[云展网示例](https://book.yunzhan365.com/cjrcv/rvbr/mobile/index.html)保持平展双页，中缝渐变、外侧纸叠和细纸纹表现装订层次。纸叠由固定在中缝的完整纸层向外侧逐渐展开厚度，中缝上下端点保持对齐，细边线随纸色混合；厚度随书本厚度缩放，并随翻页进度在左右连续转移，不绘制书本投地阴影。纸层仅向左右外侧展开，所有纸页与左右封板共用上下基准，在纸叠之外保留连续的 2px 深色包边与上下各 2px 的衬纸余量；内封与正文使用一致的纸边尺寸，中缝渐变延续到衬纸，避免端点出现缺口或台阶。合书时阅读外框随进度淡出，避免从封面上下露出多余边线；自适应布局为纸叠预留空间，正文默认增加天头、地脚和外侧留白，自定义边距仍优先。默认开卷依次显示环衬／前扉页、插画衬页／正式扉页、版权信息／献词或卷首语，再展示目录。目录不足完整跨页时自动补一面正文引导页；图片与 PDF 的原始页码保持不变。目录与扉页在相邻软页之间翻动时，左侧页角悬停会向右卷起；悬停卷角限制为页边内的小幅提示；拖动时才展开完整折页，阴影随实际折线长短变化，两端柔和渐隐。移开鼠标后页角回弹，回弹途中再次悬停会从当前姿态继续。目录朝硬封面及末尾“读完了”内封朝硬封底的页角不显示预卷，仍可点击、拖动或用导航合上硬质封面。单页模式合上封面时目录留在原位，硬封面从左侧盖住目录。悬停预览仅在展开的内页启用。左右外侧各约三分之一页宽的整高区域支持点击或轻点翻页，页角仍可抓取拖动。触屏从正文也能左右横滑，达到 36–64px（随页宽变化）即可翻页，快速轻扫的阈值为 35px；纵向手势不触发翻页。末尾内封沿用正文纸面、书槽渐变和纸纹，保持左右装订边衔接。内页统一页眉、正文和外侧页码，长正文通过连续翻页阅读，正文页码和目录目的页随分页结果更新；按钮、链接和鼠标文字选择不会触发翻页。导航在开卷、目录、正文、卷末显示对应阶段；正文页码与 onPageChange 不包含新增前置和收尾页。
+
+点击关闭会取消当前翻页，从当前阅读位置直接合上封面，不逐页倒翻。合书前准备正面姿态的 3D 书壳，将同一画面用于翻动中的封面，对齐投影尺寸与明暗；合书完成后停留在正面，不自动旋转到 3/4 视角；视角控制区保留固定空间，避免工具栏切换推动书本。首次加载仍直接显示默认视角。末页继续翻动会合到封底并停留，不触发 onClose；进入末页时提前准备封底的 3D 书壳，并将其平视画面用于翻动中的封底；书脊侧渐变、明暗和文字沿用同一画面，避免合上瞬间更换阴影。画面完成解码后才启用封底操作，重新打开时继续沿用；无法使用 WebGL 时保留原有封底视图。合上后以正面姿态接续翻页画面，点击封底返回阅读时立即交还画面给翻页引擎。backCoverImage 设置满幅封底图片，backCoverImagePosition 可调整裁切；backCoverLabel、backCoverTitle、backCoverSubtitle、backCoverContent、backCoverAuthor 和 backCoverPublisher 分别设置封底标签、标题、副标题、简介、作者和出版信息。backCoverStyle 与 backCoverLayout 可独立选择封底装帧和排版，backCoverColor、backCoverFontFamily、backCoverTitleColor、backCoverTextColor、backCoverAccentColor、backCoverTextAlign 和 backCoverTitleStyle 可进一步调整外观；未设置的封底标题和作者沿用书名与作者，装帧和布局沿用封面。backCoverTextured 可单独控制封底纸纹。封底可拖动旋转、使用视角快捷按钮，点击封底可返回末页；点击“翻到封面”则将整本书从当前角度旋转到封面正面并停留，随后可重新打开阅读；隐藏导航时也保留此按钮。整书翻转不会触发 onClose，显式关闭仍触发该回调。系统启用减少动态效果时直接切换到封面。
+
+单次翻页可以通过 pageTurnSound 或 soundSrc 使用自定义音效；多页跳转使用连续纸张摩擦声，随每次实际翻页起伏，结束或取消时短暂淡出。关闭使用较低沉的纸板合拢声；enableSound=false 会停止当前声音并关闭后续音效。
+
+翻页交互与几何实现参考 [StPageFlip](https://github.com/Nodlik/StPageFlip) 的公开源码。悬停动效和装帧参考 [Spell UI Perspective Book](https://spell.sh/docs/perspective-book)。
+
+PDF 先读取文档信息，再按需渲染当前可见页，并预加载后续两页；相邻页面保留在有限缓存中，降低翻页等待和内存占用。组件在加载 PDF.js API 后自行配置本地 Worker，无需在实例页面额外初始化。默认 Worker 随构建输出，使用项目中匹配版本的 pdfjs-dist；宿主显式设置的 workerSrc、workerPort 或传入的 pdfWorker 会保留，组件不会销毁外部传入的 Worker。跨域 PDF 地址仍需文件服务器允许访问。
 
 </details>
 
