@@ -125,6 +125,17 @@
     10px 12px 20px rgb(14 23 43 / 12%);
 }
 
+.closedBook[data-has-back-cover='true'] {
+  .backBoard {
+    transform: translateZ(-1.5px) rotateY(180deg);
+    backface-visibility: hidden;
+  }
+
+  .frontBoard {
+    backface-visibility: hidden;
+  }
+}
+
 .frontBoard {
   overflow: hidden;
   transform: translateZ(calc(var(--book-depth) + 3px));

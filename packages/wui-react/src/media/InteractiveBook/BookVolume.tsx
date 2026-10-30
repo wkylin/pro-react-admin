@@ -332,6 +332,8 @@ interface BookCover3DProps {
   spineTextColor?: string
   spineAccentColor?: string
   spineStyle?: BookSpineStyle
+  backCoverImage?: string
+  backCoverContent?: ReactNode
 }
 
 export function BookCover3D({
@@ -364,6 +366,8 @@ export function BookCover3D({
   spineTextColor,
   spineAccentColor,
   spineStyle = 'auto',
+  backCoverImage,
+  backCoverContent,
 }: BookCover3DProps) {
   const resolvedCoverAuthor = coverAuthor === undefined ? author : coverAuthor
   const resolvedCoverColor =
@@ -378,9 +382,11 @@ export function BookCover3D({
             ? '#efeee8'
             : '#17213a')
   return (
-    <div className={styles.coverScene} aria-hidden="true">
+    <div className={styles.coverScene} data-book-cover-scene aria-hidden="true">
       <div
         className={styles.closedBook}
+        data-book-cover-body
+        data-has-back-cover={backCoverImage || backCoverContent ? 'true' : undefined}
         data-cover-style={coverStyle}
         style={
           {
@@ -392,7 +398,21 @@ export function BookCover3D({
           } as CSSProperties
         }
       >
-        <div className={styles.backBoard} />
+        <div className={styles.backBoard}>
+          {(backCoverImage || backCoverContent) && (
+            <BookBackCoverArtwork
+              image={backCoverImage}
+              title={title}
+              author={author}
+              content={backCoverContent}
+              coverStyle={coverStyle}
+              color={resolvedCoverColor}
+              textColor={coverTextColor}
+              titleColor={coverTitleColor}
+              textured={textured}
+            />
+          )}
+        </div>
         <div className={styles.bindingSpine} data-cover-style={coverStyle} data-spine-style={spineStyle}>
           <BookSpineCopy
             title={spineTitle ?? title}

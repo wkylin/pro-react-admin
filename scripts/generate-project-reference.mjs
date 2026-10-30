@@ -57,7 +57,7 @@ ${rows(libraryComponents.map((component) => [component.name, `${library.name}/${
 
 ## 组件库分组
 
-133 个迁移实现分布在以下七组；根入口不加载这些组。各组的可选 peer 安装及惰性加载说明见 [npm 使用说明](../../NPM_README.md)。
+当前组件库实现分布在以下七组；根入口不加载这些组。各组的可选 peer 安装及惰性加载说明见 [npm 使用说明](../../NPM_README.md)。
 
 | 安装后的子路径 | 命名导出 |
 | --- | --- |

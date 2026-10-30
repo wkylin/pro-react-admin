@@ -40,7 +40,14 @@ const PieNestChart = ({
   const option = useMemo(() => {
     const defaultOption: EChartsOption = {
       tooltip: {
-        show: false,
+        show: true,
+        trigger: 'item',
+        renderMode: 'richText',
+        confine: true,
+        backgroundColor: '#fff',
+        borderColor: '#d9e5f2',
+        textStyle: { color: '#203a56', fontSize: 12 },
+        padding: [8, 10],
       },
       legend: {
         show: false,
@@ -79,10 +86,10 @@ const PieNestChart = ({
               ...item,
               data: colorizeData(item.data, innerColors),
               tooltip: {
-                show: false,
+                show: true,
                 trigger: 'item',
                 formatter: (params: DefaultLabelFormatterCallbackParams) =>
-                  `${params.name}: ${params.value}(${params.percent}%)`,
+                  `${params.name}\n${params.value} · ${params.percent}%`,
                 ...item?.tooltip,
               },
             }
@@ -91,24 +98,6 @@ const PieNestChart = ({
               name: 'outer',
               type: 'pie',
               radius: ['24%', '40%'],
-              labelLine: {
-                length: 30,
-                length2: 60,
-              },
-              label: {
-                show: false,
-                formatter: '{b|{b}}\n{c}}\n{d}%',
-                rich: {
-                  a: { color: '#fff', fontSize: 12, lineHeight: 22 },
-                  b: {
-                    color: '#fff',
-                    fontSize: 14,
-                    fontWeight: 'bold',
-                    lineHeight: 33,
-                  },
-                },
-                ...item?.label,
-              },
               labelLayout: () => ({
                 hideOverlap: true,
               }),
@@ -123,12 +112,33 @@ const PieNestChart = ({
                 borderWidth: 2,
               },
               ...item,
+              labelLine: {
+                length: 18,
+                length2: 26,
+                ...item.labelLine,
+              },
+              label: {
+                show: false,
+                position: 'outside',
+                formatter: '{name|{b}}\n{detail|{c} · {d}%}',
+                backgroundColor: '#fff',
+                borderColor: '#d9e5f2',
+                borderWidth: 1,
+                borderRadius: 6,
+                padding: [5, 8],
+                ...item.label,
+                rich: {
+                  name: { color: '#203a56', fontSize: 12, fontWeight: 'bold', lineHeight: 18 },
+                  detail: { color: '#52677e', fontSize: 11, lineHeight: 16 },
+                  ...item.label?.rich,
+                },
+              },
               data: colorizeData(item.data, outerColors),
               tooltip: {
                 show: false,
                 trigger: 'item',
                 formatter: (params: DefaultLabelFormatterCallbackParams) =>
-                  `${params.name}: ${params.value}(${params.percent}%)`,
+                  `${params.name}\n${params.value} · ${params.percent}%`,
                 ...item?.tooltip,
               },
             }

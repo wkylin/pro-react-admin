@@ -1,7 +1,17 @@
 // .storybook/preview.tsx
-import { Suspense } from 'react'
+import { Suspense, useContext } from 'react'
 import type { Preview } from '@storybook/react'
-import { Controls, Description, Primary, Stories, Subtitle, Title, useOf } from '@storybook/addon-docs/blocks'
+import {
+  Controls,
+  Description,
+  DocsContext,
+  Primary,
+  Source,
+  Stories,
+  Subtitle,
+  Title,
+  useOf,
+} from '@storybook/addon-docs/blocks'
 import { MemoryRouter } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
 import { App, ConfigProvider } from 'antd'
@@ -15,12 +25,14 @@ import { AppStoreProvider } from '../src/app/model'
 import componentDocs from './component-docs.json'
 import componentCautions from './component-cautions.json'
 import { PropReference } from './PropReference'
+import { sourceSnippet } from './sourceSnippet.mjs'
 
 const AutoDocsPage = () => {
   const { csfFile, preparedMeta } = useOf<'meta'>('meta', ['meta'])
   const name = preparedMeta.title.split('/').at(-1) as keyof typeof componentDocs
   const guide = componentDocs[name]
   const hasMoreStories = Object.keys(csfFile.stories).length > 1
+  const primaryStory = useContext(DocsContext).componentStories()[0]
 
   return (
     <div className="wui-doc-auto">
@@ -55,6 +67,12 @@ const AutoDocsPage = () => {
           </div>
         </div>
         <Primary />
+        {primaryStory && (
+          <details className="wui-doc-source-details">
+            <summary>查看当前示例源码</summary>
+            <Source of={primaryStory.moduleExport} />
+          </details>
+        )}
       </section>
 
       <section aria-label="Props 说明">
@@ -127,6 +145,9 @@ const preview: Preview = {
       page: AutoDocsPage,
       canvas: {
         sourceState: 'shown', // 默认显示代码
+      },
+      source: {
+        transform: sourceSnippet,
       },
     },
   },

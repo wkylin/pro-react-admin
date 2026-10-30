@@ -4687,76 +4687,6 @@
       "description": "页面控件显示的文案。"
     }
   ],
-  "FixMusicPlayer": [
-    {
-      "name": "closeLabel",
-      "type": "string",
-      "required": false,
-      "description": "关闭控件显示的文案。",
-      "defaultValue": "'Close player'"
-    },
-    {
-      "name": "onClose",
-      "type": "() => void",
-      "required": false,
-      "description": "关闭组件时调用的回调。"
-    },
-    {
-      "name": "tracks",
-      "type": "readonly MusicTrack[]",
-      "required": true,
-      "description": "播放器可选择的音轨列表。"
-    },
-    {
-      "name": "initialTrack",
-      "type": "number",
-      "required": false,
-      "description": "初次选中的音轨索引。"
-    },
-    {
-      "name": "playOnNavigate",
-      "type": "boolean",
-      "required": false,
-      "sourceDescription": "Start playback when navigating even if currently paused.",
-      "description": "切换音轨或页面时是否继续播放。"
-    },
-    {
-      "name": "labels",
-      "type": "Partial<MusicPlayerLabels>",
-      "required": false,
-      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
-    },
-    {
-      "name": "active",
-      "type": "boolean",
-      "required": false,
-      "description": "组件当前是否处于激活状态。"
-    },
-    {
-      "name": "theme",
-      "type": "'light' | 'dark'",
-      "required": false,
-      "description": "组件使用的颜色主题；可选值见类型列。"
-    },
-    {
-      "name": "onTrackChange",
-      "type": "(track: MusicTrack, index: number) => void",
-      "required": false,
-      "description": "当前音轨变化时调用的回调。"
-    },
-    {
-      "name": "onPlaybackChange",
-      "type": "(playing: boolean) => void",
-      "required": false,
-      "description": "播放状态变化时调用的回调。"
-    },
-    {
-      "name": "onError",
-      "type": "(error: unknown) => void",
-      "required": false,
-      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
-    }
-  ],
   "InteractiveBook": [
     {
       "name": "pdfWorker",
@@ -5378,13 +5308,13 @@
       "name": "tracks",
       "type": "readonly MusicTrack[]",
       "required": true,
-      "description": "播放器可选择的音轨列表。"
+      "description": "可播放曲目数组；每项必须有唯一 id、title 和可播放的 src，可选 artist 与 cover。"
     },
     {
       "name": "initialTrack",
       "type": "number",
       "required": false,
-      "description": "初次选中的音轨索引。",
+      "description": "初次选中的曲目索引，从 0 开始；越界时会取最近的有效项。",
       "defaultValue": "0"
     },
     {
@@ -5392,46 +5322,82 @@
       "type": "boolean",
       "required": false,
       "sourceDescription": "Start playback when navigating even if currently paused.",
-      "description": "切换音轨或页面时是否继续播放。",
+      "description": "暂停状态下按上一首或下一首时，是否立即播放新曲目。",
       "defaultValue": "false"
     },
     {
       "name": "labels",
       "type": "Partial<MusicPlayerLabels>",
       "required": false,
-      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+      "description": "覆盖播放、暂停、切歌、进度、音量、队列等控制按钮的界面文案。"
     },
     {
       "name": "active",
       "type": "boolean",
       "required": false,
-      "description": "组件当前是否处于激活状态。",
+      "description": "设为 false 时暂停音频，适合保活页面暂时隐藏时使用。",
       "defaultValue": "true"
     },
     {
       "name": "theme",
       "type": "'light' | 'dark'",
       "required": false,
-      "description": "组件使用的颜色主题；可选值见类型列。",
+      "description": "editorial 和 minimal 使用 light 或 dark 配色；console 始终采用深色视觉。",
       "defaultValue": "'light'"
+    },
+    {
+      "name": "appearance",
+      "type": "'editorial' | 'console' | 'minimal'",
+      "required": false,
+      "sourceDescription": "Visual direction. Console is intentionally dark; the other styles follow theme.",
+      "description": "视觉外观：editorial 为音乐站风格，console 为深色唱片控制台，minimal 为冷蓝极简风格。",
+      "defaultValue": "'editorial'"
+    },
+    {
+      "name": "variant",
+      "type": "'studio' | 'compact'",
+      "required": false,
+      "sourceDescription": "Full player and playlist, or a condensed player with a collapsed playlist.",
+      "description": "studio 将播放区与队列并列或上下展示；compact 压缩为横向控制条，队列默认收起。",
+      "defaultValue": "'studio'"
+    },
+    {
+      "name": "dismissible",
+      "type": "boolean",
+      "required": false,
+      "description": "是否显示播放器右上角的关闭按钮。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "closeLabel",
+      "type": "string",
+      "required": false,
+      "description": "关闭按钮的无障碍名称和悬停提示。",
+      "defaultValue": "'Close player'"
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "description": "点击关闭按钮后调用；播放器会先停止并释放当前音频。"
     },
     {
       "name": "onTrackChange",
       "type": "(track: MusicTrack, index: number) => void",
       "required": false,
-      "description": "当前音轨变化时调用的回调。"
+      "description": "曲目改变时调用，依次收到新曲目和索引。"
     },
     {
       "name": "onPlaybackChange",
       "type": "(playing: boolean) => void",
       "required": false,
-      "description": "播放状态变化时调用的回调。"
+      "description": "音频实际进入播放或暂停状态时调用，收到布尔值。"
     },
     {
       "name": "onError",
       "type": "(error: unknown) => void",
       "required": false,
-      "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
+      "description": "音频加载或播放失败时调用，接收浏览器提供的错误。"
     }
   ],
   "SmartVideoPlayer": [

@@ -20,7 +20,9 @@ export function renderAudit(roster) {
       .filter(([, values]) => values.length)
       .map(([kind, values]) => `${kind}: ${list(values)}`).join('; ') || '无外部 import'
     return `| ${[
-      `[${entry.name}](../../${entry.source}) (${entry.kind})`,
+      entry.name === 'FixMusicPlayer'
+        ? `\`${entry.name}\` (${entry.kind}，已合并至 MusicPlayer)`
+        : `[${entry.name}](../../${entry.source}) (${entry.kind})`,
       dependencies,
       entry.classification,
       entry.requiredAdaptation.join(' '),

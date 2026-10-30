@@ -11,7 +11,7 @@ jest.mock('./InteractiveBook/pdfEngine', () => ({ loadPdfEngine: async () => req
 jest.mock('react-pdf', () => ({ pdfjs: { getDocument: jest.fn() } }))
 const AutoSlider = require('./AutoSlider').default
 const InteractiveBook = require('./InteractiveBook').default
-const FixMusicPlayer = require('./FixMusicPlayer').default
+const MusicPlayer = require('./MusicPlayer').default
 const getDocument = require('react-pdf').pdfjs.getDocument as jest.Mock
 const tracks = [{ id: 'a', title: 'Track A', src: '/a.mp3' }]
 beforeEach(() => {
@@ -54,7 +54,7 @@ test('book sound survives StrictMode replay and source replacement', () => {
   expect(audio).not.toHaveAttribute('src')
 })
 test('keep-alive reactivation resumes interrupted playback but respects user pause', async () => {
-  const view = render(<FixMusicPlayer tracks={tracks} active />)
+  const view = render(<MusicPlayer tracks={tracks} active />)
   const audio = view.container.querySelector('audio')!
   let paused = true
   Object.defineProperty(audio, 'paused', { configurable: true, get: () => paused })
@@ -70,11 +70,11 @@ test('keep-alive reactivation resumes interrupted playback but respects user pau
     fireEvent.click(screen.getByRole('button', { name: 'Play' }))
   })
   await act(async () => {
-    view.rerender(<FixMusicPlayer tracks={tracks} active={false} />)
+    view.rerender(<MusicPlayer tracks={tracks} active={false} />)
   })
   expect(paused).toBe(true)
   await act(async () => {
-    view.rerender(<FixMusicPlayer tracks={tracks} active />)
+    view.rerender(<MusicPlayer tracks={tracks} active />)
   })
   expect(paused).toBe(false)
   expect(audio.play).toHaveBeenCalledTimes(2)
@@ -82,10 +82,10 @@ test('keep-alive reactivation resumes interrupted playback but respects user pau
     fireEvent.click(screen.getByRole('button', { name: 'Pause' }))
   })
   await act(async () => {
-    view.rerender(<FixMusicPlayer tracks={tracks} active={false} />)
+    view.rerender(<MusicPlayer tracks={tracks} active={false} />)
   })
   await act(async () => {
-    view.rerender(<FixMusicPlayer tracks={tracks} active />)
+    view.rerender(<MusicPlayer tracks={tracks} active />)
   })
   expect(paused).toBe(true)
   expect(audio.play).toHaveBeenCalledTimes(2)

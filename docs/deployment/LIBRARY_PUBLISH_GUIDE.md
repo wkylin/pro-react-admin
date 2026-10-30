@@ -261,7 +261,7 @@ git push origin wui-react-v6.0.0
 
 ## 6.1.0 迁移核对与固定产物
 
-143 个目录的冻结审核保留在 `config/wui-migration-roster.json`；133 个迁移实现进入七个分组，10 个保留在应用。`node scripts/check-wui-migration-implementation.mjs` 核对目标源码、分组契约与已构建的 ESM/CJS 导出。各组可选 peers 的精确安装范围见 [NPM_README](../../NPM_README.md)，根入口无需安装重依赖组。先在独立干净 checkout 执行 `pnpm install --frozen-lockfile`，避免共享 node_modules 掩盖 lockfile 漂移。
+143 个目录的冻结审核保留在 `config/wui-migration-roster.json`；合并播放器后，当前有 132 个独立迁移实现进入七个分组，10 个保留在应用。`node scripts/check-wui-migration-implementation.mjs` 核对目标源码、分组契约与已构建的 ESM/CJS 导出。各组可选 peers 的精确安装范围见 [NPM_README](../../NPM_README.md)，根入口无需安装重依赖组。先在独立干净 checkout 执行 `pnpm install --frozen-lockfile`，避免共享 node_modules 掩盖 lockfile 漂移。
 
 Webpack 与 Vite 验证后固定最终构建器的产物，再执行：
 

@@ -15,6 +15,7 @@ import paths from './paths.js'
 import { createPathAliases } from '../aliases.js'
 import { generateRemotesConfig } from './mfe.config.js'
 import RemoteManifestPlugin from './remote-manifest-plugin.js'
+import BootSplashHtmlPlugin from './boot-splash-plugin.js'
 import { bundleBudget } from './bundle-budget.js'
 import { clientEnvKeys } from '../client-env.js'
 import { applyWorkspaceEnv } from '../load-env.js'
@@ -228,6 +229,7 @@ const config = {
             useShortDoctype: true,
           },
     }),
+    new BootSplashHtmlPlugin(paths.projectName),
     new AntdDayjsWebpackPlugin(),
     new CaseSensitivePathsPlugin(),
     // new CircularDependencyPlugin({

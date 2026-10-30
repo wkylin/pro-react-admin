@@ -22,6 +22,18 @@ export const uiRoutes = [
     element: <lazyComponents.ReactMusic />,
   },
   {
+    path: 'reading',
+    name: 'Reading Room',
+    i18nKey: 'menu.reading',
+    element: <lazyComponents.ReadingRoom />,
+  },
+  {
+    path: 'movies',
+    name: 'Cinema',
+    i18nKey: 'menu.movies',
+    element: <lazyComponents.Cinema />,
+  },
+  {
     path: 'video',
     name: 'React Video',
     element: <lazyComponents.MyVideo />,

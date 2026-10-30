@@ -1,0 +1,395 @@
+<style id="wui-boot-splash-style">
+  :root {
+    --wui-boot-bg: #f4f7fc;
+    --wui-boot-surface: #ffffff;
+    --wui-boot-ink: #172740;
+    --wui-boot-muted: #60738e;
+    --wui-boot-line: #dce6f2;
+    --wui-boot-accent: #1677ff;
+  }
+
+  html[data-theme='dark'] {
+    --wui-boot-bg: #0e1726;
+    --wui-boot-surface: #17263b;
+    --wui-boot-ink: #edf4ff;
+    --wui-boot-muted: #a1b5cf;
+    --wui-boot-line: #344762;
+  }
+
+  html {
+    background: var(--wui-boot-bg);
+  }
+
+  .wui-boot-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+    overflow: hidden;
+    box-sizing: border-box;
+    background: var(--wui-boot-bg);
+    color: var(--wui-boot-ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 260ms ease,
+      visibility 260ms ease;
+  }
+
+  .wui-boot-splash.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .wui-boot-splash.is-exiting {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .wui-boot-splash::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--wui-boot-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--wui-boot-line) 1px, transparent 1px);
+    background-size: 36px 36px;
+    opacity: 0.24;
+    mask-image: radial-gradient(circle at center, #000 4%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .wui-boot-splash__content {
+    position: relative;
+    display: flex;
+    width: min(100%, 340px);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .wui-boot-splash__mark {
+    position: relative;
+    display: grid;
+    width: 88px;
+    height: 88px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 10px 25px 10px;
+    gap: 7px;
+    box-sizing: border-box;
+    padding: 15px;
+    border: 1px solid var(--wui-boot-line);
+    border-radius: 23px;
+    background: var(--wui-boot-surface);
+    box-shadow:
+      0 16px 40px rgba(22, 55, 101, 0.12),
+      0 0 0 7px rgba(22, 119, 255, 0.035);
+  }
+
+  .wui-boot-splash__tile {
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--wui-boot-accent) 20%, var(--wui-boot-surface));
+  }
+
+  .wui-boot-splash__tile:first-child {
+    grid-column: 1 / -1;
+    background: var(--wui-boot-accent);
+  }
+
+  .wui-boot-splash__tile:nth-child(2) {
+    background: color-mix(in srgb, var(--wui-boot-accent) 55%, var(--wui-boot-surface));
+    animation: wui-boot-tile 1.8s ease-in-out infinite alternate;
+  }
+
+  .wui-boot-splash__tile:last-child {
+    grid-column: 1 / -1;
+    width: 62%;
+  }
+
+  .wui-boot-splash__eyebrow {
+    margin: 28px 0 6px;
+    color: var(--wui-boot-accent);
+    font:
+      700 11px/1.4 ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Consolas,
+      monospace;
+    letter-spacing: 0.28em;
+  }
+
+  .wui-boot-splash__title {
+    margin: 0;
+    font-size: clamp(23px, 5vw, 29px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
+
+  .wui-boot-splash__status {
+    min-height: 20px;
+    margin: 13px 0 0;
+    color: var(--wui-boot-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .wui-boot-splash__track {
+    width: min(100%, 230px);
+    height: 3px;
+    margin-top: 22px;
+    overflow: hidden;
+    border-radius: 99px;
+    background: var(--wui-boot-line);
+  }
+
+  .wui-boot-splash__track::after {
+    content: '';
+    display: block;
+    width: 42%;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--wui-boot-accent);
+    animation: wui-boot-track 1.5s ease-in-out infinite;
+  }
+
+  .wui-boot-splash__error {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .wui-boot-splash__error-message {
+    margin: 0;
+    color: var(--wui-boot-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .wui-boot-splash__retry {
+    min-height: 42px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--wui-boot-accent);
+    color: #ffffff;
+    cursor: pointer;
+    font:
+      600 13px/1 -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      Roboto,
+      Arial,
+      sans-serif;
+  }
+
+  .wui-boot-splash__retry:focus-visible {
+    outline: 3px solid var(--wui-boot-ink);
+    outline-offset: 3px;
+  }
+
+  .wui-boot-splash.is-error .wui-boot-splash__status,
+  .wui-boot-splash.is-error .wui-boot-splash__track {
+    display: none;
+  }
+
+  .wui-boot-splash.is-error .wui-boot-splash__error {
+    display: flex;
+  }
+
+  @keyframes wui-boot-tile {
+    to {
+      background: var(--wui-boot-accent);
+    }
+  }
+
+  @keyframes wui-boot-track {
+    from {
+      transform: translateX(-110%);
+    }
+    to {
+      transform: translateX(250%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wui-boot-splash,
+    .wui-boot-splash__tile,
+    .wui-boot-splash__track::after {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>
+<script>
+  ;(function () {
+    var root = document.documentElement
+    var settings = null
+    try {
+      settings = JSON.parse(localStorage.getItem('pro-react-admin:__WUI_PROJECT_ID__:theme') || 'null')
+    } catch (_) {
+      /* Browser storage may be unavailable. */
+    }
+    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    var mode = settings && settings.themeMode
+    var dark = mode === 'dark' || (mode === 'system' && prefersDark)
+    root.dataset.theme = dark ? 'dark' : 'light'
+    if (settings && typeof settings.colorPrimary === 'string' && /^#[0-9a-f]{6}$/i.test(settings.colorPrimary)) {
+      root.style.setProperty('--wui-boot-accent', settings.colorPrimary)
+    }
+    var themeMeta = document.querySelector('meta[name="theme-color"]')
+    if (themeMeta) themeMeta.setAttribute('content', dark ? '#0e1726' : '#f4f7fc')
+  })()
+</script>
+<div id="global-loader" class="wui-boot-splash" role="status" aria-hidden="true">
+  <div class="wui-boot-splash__content">
+    <div class="wui-boot-splash__mark" aria-hidden="true">
+      <span class="wui-boot-splash__tile"></span>
+      <span class="wui-boot-splash__tile"></span>
+      <span class="wui-boot-splash__tile"></span>
+      <span class="wui-boot-splash__tile"></span>
+    </div>
+    <p class="wui-boot-splash__eyebrow">WUI / WORKSPACE</p>
+    <h1 class="wui-boot-splash__title">Pro React Admin</h1>
+    <p class="wui-boot-splash__status" aria-live="polite">正在准备工作台…</p>
+    <div class="wui-boot-splash__track" aria-hidden="true"></div>
+    <div class="wui-boot-splash__error" role="alert">
+      <p class="wui-boot-splash__error-message"></p>
+      <button class="wui-boot-splash__retry" type="button">重新加载</button>
+    </div>
+  </div>
+</div>
+<script>
+  ;(function () {
+    var el = document.getElementById('global-loader')
+    if (!el) return
+    var status = el.querySelector('.wui-boot-splash__status')
+    var errorMessage = el.querySelector('.wui-boot-splash__error-message')
+    var retry = el.querySelector('.wui-boot-splash__retry')
+    var appRoot = null
+    var locale = ''
+    try {
+      locale = localStorage.getItem('i18nextLng') || ''
+    } catch (_) {
+      /* Use browser language when storage is unavailable. */
+    }
+    var chinese = /^(zh|zh-)/i.test(locale || navigator.language || 'zh')
+    var copy = chinese
+      ? {
+          loading: '正在准备工作台…',
+          slow: '网络较慢，仍在加载页面…',
+          offline: '网络已断开，请检查连接后重试。',
+          resource: '页面资源加载失败，请重新加载。',
+          timeout: '页面加载时间过长，请重新加载。',
+          retry: '重新加载',
+        }
+      : {
+          loading: 'Preparing your workspace…',
+          slow: 'Connection is slow. Still loading…',
+          offline: "You're offline. Check your connection and reload.",
+          resource: 'A page resource failed to load. Reload to retry.',
+          timeout: 'The page is taking too long. Reload to retry.',
+          retry: 'Reload',
+        }
+    status.textContent = copy.loading
+    retry.textContent = copy.retry
+
+    var finished = false
+    var shown = false
+    var failed = false
+    var showTimer = window.setTimeout(show, 300)
+    var slowTimer = window.setTimeout(function () {
+      if (!finished && !failed) status.textContent = copy.slow
+    }, 8000)
+    var timeoutTimer = window.setTimeout(function () {
+      fail('timeout')
+    }, 25000)
+
+    function protectRoot() {
+      if (finished) return
+      appRoot = document.getElementById('root')
+      if (appRoot) appRoot.inert = true
+    }
+
+    function show() {
+      if (finished || shown) return
+      shown = true
+      el.classList.add('is-visible')
+      el.setAttribute('aria-hidden', 'false')
+      protectRoot()
+      if (!appRoot) document.addEventListener('DOMContentLoaded', protectRoot, { once: true })
+    }
+
+    function fail(reason) {
+      if (finished || failed) return
+      failed = true
+      show()
+      el.classList.add('is-error')
+      errorMessage.textContent = copy[reason] || copy.timeout
+      retry.focus()
+    }
+
+    function onResourceError(event) {
+      var target = event && event.target
+      if (target && (target.tagName === 'SCRIPT' || (target.tagName === 'LINK' && target.rel === 'stylesheet'))) {
+        fail('resource')
+      }
+    }
+
+    function onRejection(event) {
+      var message = String((event && event.reason && event.reason.message) || '')
+      if (/dynamically imported module|importing a module script failed|chunkloaderror|loading chunk/i.test(message)) {
+        fail('resource')
+      }
+    }
+
+    function onOffline() {
+      fail('offline')
+    }
+
+    function onPreloadError() {
+      fail('resource')
+    }
+
+    function done() {
+      if (finished) return
+      finished = true
+      window.clearTimeout(showTimer)
+      window.clearTimeout(slowTimer)
+      window.clearTimeout(timeoutTimer)
+      window.removeEventListener('offline', onOffline)
+      window.removeEventListener('error', onResourceError, true)
+      window.removeEventListener('unhandledrejection', onRejection)
+      window.removeEventListener('vite:preloadError', onPreloadError)
+      document.removeEventListener('DOMContentLoaded', protectRoot)
+      if (appRoot) appRoot.inert = false
+      if (!shown) {
+        el.remove()
+        return
+      }
+      el.classList.add('is-exiting')
+      el.setAttribute('aria-hidden', 'true')
+      window.setTimeout(function () {
+        el.remove()
+      }, 280)
+    }
+
+    retry.addEventListener('click', function () {
+      window.location.reload()
+    })
+    window.addEventListener('offline', onOffline)
+    window.addEventListener('error', onResourceError, true)
+    window.addEventListener('unhandledrejection', onRejection)
+    window.addEventListener('vite:preloadError', onPreloadError)
+    if (navigator.onLine === false) fail('offline')
+    window.__wuiBootSplash = { done: done, fail: fail }
+  })()
+</script>

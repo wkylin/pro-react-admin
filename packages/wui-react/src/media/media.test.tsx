@@ -127,11 +127,10 @@ test('playlist selection starts playback and ended advances playback', () => {
   expect(play).toHaveBeenCalledTimes(2)
 })
 
-test('fixed player starts paused navigation, shuffles away from current track and closes', () => {
-  const FixMusicPlayer = require('./FixMusicPlayer').default
+test('music player starts paused navigation, shuffles away from current track and closes', () => {
   const onClose = jest.fn()
   jest.spyOn(Math, 'random').mockReturnValue(0)
-  const view = render(<FixMusicPlayer tracks={tracks} onClose={onClose} />)
+  const view = render(<MusicPlayer tracks={tracks} playOnNavigate dismissible onClose={onClose} />)
   fireEvent.click(screen.getByRole('button', { name: 'Shuffle' }))
   fireEvent.click(screen.getByRole('button', { name: 'Previous track' }))
   expect(view.container.querySelector('audio')).toHaveAttribute('src', '/two.mp3')
@@ -139,4 +138,42 @@ test('fixed player starts paused navigation, shuffles away from current track an
   fireEvent.click(screen.getByRole('button', { name: 'Close player' }))
   expect(view.container.querySelector('audio')).toBeNull()
   expect(onClose).toHaveBeenCalledTimes(1)
+})
+
+test('unified player offers compact presentation, time labels and optional dismissal', () => {
+  const onClose = jest.fn()
+  const view = render(<MusicPlayer tracks={tracks} variant="compact" dismissible onClose={onClose} />)
+  const audio = view.container.querySelector('audio')!
+  Object.defineProperty(audio, 'duration', { configurable: true, value: 125 })
+  Object.defineProperty(audio, 'currentTime', { configurable: true, value: 42, writable: true })
+  fireEvent.loadedMetadata(audio)
+  fireEvent.timeUpdate(audio)
+  expect(screen.getByText('0:42')).toBeInTheDocument()
+  expect(screen.getByText('2:05')).toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Close player' }))
+  expect(view.container.querySelector('audio')).toBeNull()
+  expect(onClose).toHaveBeenCalledTimes(1)
+})
+
+test('music player separates its playback surface from the playlist across appearances', () => {
+  const view = render(<MusicPlayer tracks={tracks} appearance="console" />)
+  const player = screen.getByRole('region', { name: 'Now playing' })
+  const playlist = screen.getByRole('region', { name: 'Playlist' })
+  expect(player).toHaveAttribute('data-appearance', 'console')
+  expect(player.firstElementChild?.nextElementSibling).toBe(playlist)
+  expect(screen.getByRole('button', { name: 'Second track' })).toBeInTheDocument()
+
+  view.rerender(<MusicPlayer tracks={tracks} appearance="minimal" variant="compact" />)
+  expect(player).toHaveAttribute('data-appearance', 'minimal')
+  expect(screen.queryByRole('button', { name: 'Second track' })).not.toBeInTheDocument()
+  fireEvent.click(screen.getByRole('button', { name: 'Show playlist' }))
+  expect(screen.getByRole('button', { name: 'Second track' })).toBeInTheDocument()
+})
+
+test('empty music player keeps separate regions without an unusable queue toggle', () => {
+  render(<MusicPlayer tracks={[]} />)
+  expect(screen.getByRole('region', { name: 'Now playing' })).toBeInTheDocument()
+  expect(screen.getByRole('region', { name: 'Playlist' })).toBeInTheDocument()
+  expect(screen.getByText('No tracks')).toBeInTheDocument()
+  expect(screen.queryByRole('button', { name: 'Hide playlist' })).not.toBeInTheDocument()
 })

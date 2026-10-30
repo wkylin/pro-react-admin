@@ -65,9 +65,13 @@ for (const directory of directories) {
   if (storyTitles.has(title)) throw new Error(`Duplicate Storybook title: ${title}`)
   storyTitles.add(title)
   const name = title.split('/').at(-1)
-  if (!Array.isArray(componentProps[name]) || componentProps[name].some((prop) =>
-    !prop.name || !prop.type || !prop.description || typeof prop.required !== 'boolean'
-  )) throw new Error(`Missing source-derived Props explanation: ${title}`)
+  if (
+    !Array.isArray(componentProps[name]) ||
+    componentProps[name].some(
+      (prop) => !prop.name || !prop.type || !prop.description || typeof prop.required !== 'boolean'
+    )
+  )
+    throw new Error(`Missing source-derived Props explanation: ${title}`)
   if (/\btags:\s*\[[^\]]*['"]autodocs['"]/.test(source)) {
     if (autodocs.has(name)) throw new Error(`Duplicate Autodocs component name: ${name}`)
     autodocs.add(name)
@@ -103,7 +107,9 @@ const orphanDocs = Object.keys(componentDocs).filter((name) => !autodocs.has(nam
 if (orphanDocs.length) throw new Error(`Autodocs guides without a component story: ${orphanDocs.join(', ')}`)
 const orphanCautions = Object.keys(componentCautions).filter((name) => !autodocs.has(name))
 if (orphanCautions.length) throw new Error(`Autodocs cautions without a component story: ${orphanCautions.join(', ')}`)
-const undocumentedProps = Object.keys(componentProps).filter((name) => ![...storyTitles].some((title) => title.endsWith(`/${name}`)))
+const undocumentedProps = Object.keys(componentProps).filter(
+  (name) => ![...storyTitles].some((title) => title.endsWith(`/${name}`))
+)
 if (undocumentedProps.length) throw new Error(`Props without a component story: ${undocumentedProps.join(', ')}`)
 const builtOption = process.argv.find((arg) => arg === '--built' || arg.startsWith('--built='))
 if (builtOption) {

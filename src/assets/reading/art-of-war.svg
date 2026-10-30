@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#ede8dc"/><stop offset="1" stop-color="#cfc7b2"/></linearGradient>
+    <pattern id="fiber" width="17" height="17" patternUnits="userSpaceOnUse"><path d="M2 5h4M11 12h3" stroke="#877d6e" stroke-width=".7" opacity=".22"/></pattern>
+  </defs>
+  <path fill="url(#paper)" d="M0 0h600v800H0z"/>
+  <path d="M0 0h600v800H0z" fill="url(#fiber)"/>
+  <circle cx="384" cy="398" r="151" fill="#b94e3f"/>
+  <circle cx="384" cy="398" r="180" fill="none" stroke="#9b4239" stroke-width="1" opacity=".5"/>
+  <path d="M63 756q123-89 227-230 74-90 151-109M266 601q-17-98-60-145m98 84q86-128 177-158" fill="none" stroke="#272d2b" stroke-width="20" stroke-linecap="round" opacity=".9"/>
+  <path d="m49 691 133 22m77-91 63 105m-5-198 127 53" fill="none" stroke="#272d2b" stroke-width="6" stroke-linecap="round" opacity=".75"/>
+  <path d="M0 730h600" stroke="#947d6b" stroke-width="1" opacity=".48"/>
+</svg>

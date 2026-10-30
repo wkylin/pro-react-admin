@@ -1,6 +1,6 @@
 /* Storybook 专用样式覆盖 */
 
-/* 修复滚动问题 - 允许页面滚动 */
+/* Storybook Docs scrolls within its preview iframe. Individual demos own nested scrolling. */
 html,
 body {
   overflow: auto !important;
@@ -36,6 +36,7 @@ body {
   --wui-doc-line: #d9e5f2;
   --wui-doc-accent: #1677ff;
   color: var(--wui-doc-ink);
+  min-width: 0;
 }
 
 #storybook-docs .wui-doc-auto-hero,
@@ -139,17 +140,19 @@ body {
 
 #storybook-docs .wui-doc-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   margin: 20px 0 28px;
 }
 
 #storybook-docs .wui-doc-card {
+  min-width: 0;
   padding: 18px 20px;
   border: 1px solid var(--wui-doc-line);
   border-radius: 14px;
   background: #fff;
   box-shadow: 0 5px 20px rgba(18, 53, 92, 0.035);
+  overflow-wrap: anywhere;
 }
 
 #storybook-docs .wui-doc-card strong {
@@ -167,8 +170,28 @@ body {
 }
 
 #storybook-docs .wui-doc-card-caution {
+  grid-column: 1 / -1;
   border-color: #f3dfbb;
   background: #fffaf0;
+}
+
+#storybook-docs .wui-doc-source-details {
+  margin: 14px 0 28px;
+  border: 1px solid var(--wui-doc-line);
+  border-radius: 12px;
+  background: #f8fbff;
+}
+
+#storybook-docs .wui-doc-source-details summary {
+  padding: 12px 16px;
+  color: #145cb6;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#storybook-docs .wui-doc-source-details > div {
+  margin: 0 12px 12px;
 }
 
 #storybook-docs .wui-doc-card-caution strong {
@@ -272,6 +295,10 @@ body {
 }
 
 @media (max-width: 600px) {
+  #storybook-docs .wui-doc-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   #storybook-docs .wui-doc-auto-hero,
   #storybook-docs .wui-doc-hero {
     padding: 22px;

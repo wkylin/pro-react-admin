@@ -8,6 +8,7 @@
     transform 0.3s;
   text-align: left;
 }
+
 .open {
   border-color: var(--wui-border, #e5e7eb);
   background: var(--wui-surface, #fff);
@@ -16,12 +17,14 @@
   transform: scale(1);
   box-shadow: 0 1px 3px #0001;
 }
+
 .heading {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding: 1rem;
 }
+
 .number {
   display: flex;
   align-items: center;
@@ -33,21 +36,31 @@
   background: var(--wui-number-bg, #171717);
   color: var(--wui-number-text, #fff);
 }
+
 .content {
   padding: 0 1rem 1rem;
 }
+
 .content p {
   margin: 0 0 1rem;
 }
+
 .progress {
   height: 4px;
   overflow: hidden;
   border-radius: 999px;
   background: #e5e7eb;
 }
+
 .progress span {
   display: block;
   height: 100%;
-  background: currentColor;
-  transition: width 0.3s;
+  background: #1677ff;
+  transition: width 60ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress span {
+    transition: none;
+  }
 }

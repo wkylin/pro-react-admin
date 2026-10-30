@@ -62,6 +62,8 @@ export const lazyComponents = {
   Motion: lazyLoad(() => import('@pages/motion')),
   ReactTilt: lazyLoad(() => import('@pages/tilt')),
   ReactMusic: lazyLoad(() => import('@pages/music')),
+  ReadingRoom: lazyLoad(() => import('@pages/reading')),
+  Cinema: lazyLoad(() => import('@pages/movies')),
   MyVideo: lazyLoad(() => import('@pages/video')),
   MyCrypto: lazyLoad(() => import('@pages/crypto')),
 

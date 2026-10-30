@@ -67,6 +67,7 @@ export type SmartVideoPlayerProps = {
   externalUrl?: string
   sourceUrl?: string
   title?: string
+  poster?: string
   trackSrc?: string
   trackLang?: string
   config?: PlayerConfig
@@ -236,6 +237,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
       externalUrl,
       sourceUrl,
       title,
+      poster,
       trackSrc,
       trackLang = 'en',
       config: controlledConfig,
@@ -1902,6 +1904,7 @@ const SmartVideoPlayerInner = React.forwardRef<SmartVideoPlayerRef, SmartVideoPl
               <video
                 ref={useVideoRef}
                 className={styles.video}
+                poster={poster}
                 muted={config.autoMute}
                 controls={false}
                 preload="metadata"

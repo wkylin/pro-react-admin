@@ -39,6 +39,7 @@ import {
   SafetyCertificateOutlined,
   NodeIndexOutlined,
   PlayCircleOutlined,
+  BookOutlined,
   RadarChartOutlined,
 } from '@ant-design/icons'
 
@@ -79,6 +80,7 @@ const icons = {
   SafetyCertificateOutlined,
   NodeIndexOutlined,
   PlayCircleOutlined,
+  BookOutlined,
   RadarChartOutlined,
 }
 

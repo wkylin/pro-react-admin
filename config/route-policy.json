@@ -21,7 +21,7 @@
     "title": "AI Workbench",
     "i18nKey": "menu.aiWorkbench",
     "menu": {
-      "order": 19,
+      "order": 22,
       "icon": "RobotOutlined"
     }
   },
@@ -43,7 +43,7 @@
     "title": "Big Screen",
     "i18nKey": "menu.bigScreen",
     "menu": {
-      "order": 23,
+      "order": 25,
       "icon": "FundProjectionScreenOutlined"
     }
   },
@@ -72,7 +72,7 @@
     "title": "Business",
     "i18nKey": "menu.business",
     "menu": {
-      "order": 26,
+      "order": 28,
       "icon": "BankOutlined"
     }
   },
@@ -81,7 +81,7 @@
     "title": "ChatGPT",
     "i18nKey": "menu.chatgpt",
     "menu": {
-      "order": 18,
+      "order": 21,
       "icon": "RobotOutlined"
     }
   },
@@ -94,7 +94,7 @@
     "title": "Contact",
     "i18nKey": "menu.contact",
     "menu": {
-      "order": 32,
+      "order": 34,
       "icon": "ContactsOutlined"
     }
   },
@@ -151,7 +151,7 @@
     "title": "Echarts",
     "i18nKey": "menu.echarts",
     "menu": {
-      "order": 24,
+      "order": 26,
       "icon": "PieChartOutlined"
     }
   },
@@ -169,7 +169,7 @@
     "title": "Geo Chart",
     "i18nKey": "menu.geoChart",
     "menu": {
-      "order": 29,
+      "order": 31,
       "icon": "EnvironmentOutlined"
     }
   },
@@ -178,7 +178,7 @@
     "i18nKey": "menu.mermaid",
     "permission": "mermaid:read",
     "menu": {
-      "order": 14,
+      "order": 17,
       "icon": "ProjectOutlined"
     }
   },
@@ -187,7 +187,7 @@
     "title": "Motion",
     "i18nKey": "menu.motion",
     "menu": {
-      "order": 13,
+      "order": 16,
       "icon": "PlayCircleOutlined"
     }
   },
@@ -196,8 +196,17 @@
     "title": "Music",
     "i18nKey": "menu.music",
     "menu": {
-      "order": 21,
+      "order": 15,
       "icon": "SoundOutlined"
+    }
+  },
+  "/movies": {
+    "permission": "home:read",
+    "title": "Cinema",
+    "i18nKey": "menu.movies",
+    "menu": {
+      "order": 13,
+      "icon": "VideoCameraOutlined"
     }
   },
   "/my-iframe": {
@@ -217,7 +226,7 @@
     "title": "权限示例",
     "i18nKey": "menu.permissionExample",
     "menu": {
-      "order": 16,
+      "order": 19,
       "icon": "LockOutlined"
     }
   },
@@ -226,7 +235,7 @@
     "title": "PH Bar",
     "i18nKey": "menu.phBar",
     "menu": {
-      "order": 17,
+      "order": 20,
       "icon": "BarChartOutlined"
     }
   },
@@ -238,7 +247,7 @@
     "title": "Post Message",
     "i18nKey": "menu.postMessage",
     "menu": {
-      "order": 28,
+      "order": 30,
       "icon": "SendOutlined"
     }
   },
@@ -247,7 +256,7 @@
     "title": "Print",
     "i18nKey": "menu.print",
     "menu": {
-      "order": 30,
+      "order": 32,
       "icon": "PrinterOutlined"
     }
   },
@@ -256,7 +265,7 @@
     "title": "Prism Render",
     "i18nKey": "menu.prismRender",
     "menu": {
-      "order": 27,
+      "order": 29,
       "icon": "HighlightOutlined"
     }
   },
@@ -269,7 +278,7 @@
     "title": "Profile",
     "i18nKey": "menu.profile",
     "menu": {
-      "order": 31,
+      "order": 33,
       "icon": "UserOutlined"
     }
   },
@@ -279,7 +288,7 @@
     "availability": "enterprise",
     "access": "authenticated",
     "menu": {
-      "order": 37,
+      "order": 39,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -288,8 +297,17 @@
     "title": "Qr Generate",
     "i18nKey": "menu.qrGenerate",
     "menu": {
-      "order": 25,
+      "order": 27,
       "icon": "QrcodeOutlined"
+    }
+  },
+  "/reading": {
+    "permission": "home:read",
+    "title": "Reading",
+    "i18nKey": "menu.reading",
+    "menu": {
+      "order": 14,
+      "icon": "BookOutlined"
     }
   },
   "/signin": {
@@ -306,7 +324,7 @@
     "i18nKey": "menu.error",
     "menuGroup": true,
     "menu": {
-      "order": 36,
+      "order": 38,
       "icon": "QuestionCircleOutlined"
     }
   },
@@ -325,7 +343,7 @@
     "i18nKey": "menu.backendTechStack",
     "menuGroup": true,
     "menu": {
-      "order": 34,
+      "order": 36,
       "icon": "CloudServerOutlined"
     }
   },
@@ -365,7 +383,7 @@
     "i18nKey": "menu.frontendTechStack",
     "menuGroup": true,
     "menu": {
-      "order": 33,
+      "order": 35,
       "icon": "NodeIndexOutlined"
     }
   },
@@ -459,7 +477,7 @@
     "title": "React Tilt",
     "i18nKey": "menu.reactTilt",
     "menu": {
-      "order": 20,
+      "order": 23,
       "icon": "ExperimentOutlined"
     }
   },
@@ -468,7 +486,7 @@
     "title": "Topology",
     "i18nKey": "menu.topology",
     "menu": {
-      "order": 15,
+      "order": 18,
       "icon": "DeploymentUnitOutlined"
     }
   },
@@ -477,7 +495,7 @@
     "title": "埋点数据看板",
     "i18nKey": "menu.tracking",
     "menu": {
-      "order": 35,
+      "order": 37,
       "icon": "RadarChartOutlined"
     }
   },
@@ -486,7 +504,7 @@
     "title": "Video",
     "i18nKey": "menu.video",
     "menu": {
-      "order": 22,
+      "order": 24,
       "icon": "VideoCameraOutlined"
     }
   },

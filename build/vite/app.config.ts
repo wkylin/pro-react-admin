@@ -18,6 +18,7 @@ import { readWorkspaceEnv } from '../load-env.js'
 import { createFederationPlugins } from '../module-federation.ts'
 import { createDevProxy } from '../dev-proxy.ts'
 import { buildStats } from '../stats.ts'
+import { injectBootSplashHtml } from '../boot-splash.mjs'
 
 const configDir = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(configDir, '../..')
@@ -85,7 +86,7 @@ export default defineConfig(({ mode, command }) => {
     transformIndexHtml: {
       order: 'pre',
       handler(html) {
-        return html.replace('../../src/index.tsx', entryUrl)
+        return injectBootSplashHtml(html.replace('../../src/index.tsx', entryUrl), project)
       },
     },
   }

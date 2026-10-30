@@ -156,7 +156,7 @@ ${formatNames(wuiComponentNames)}
 
 ## WUI 分组导出
 
-七个分组提供 133 个审核通过的迁移实现；原有 12 个根组件及子路径保持兼容。分组不从根入口再导出，安装可选 peers 见 [npm 使用说明](../../NPM_README.md)。
+七个分组提供下列当前组件库实现；根组件及子路径由组件库契约维护。分组不从根入口再导出，安装可选 peers 见 [npm 使用说明](../../NPM_README.md)。
 
 ${libraryGroups
   .map(

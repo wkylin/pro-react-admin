@@ -455,10 +455,6 @@
     "purpose": "把一组内容按页分组展示，适合有限空间的多项列表。",
     "preview": "点击上一页、下一页和页码，观察 itemsPerPage 对每页数量的影响。"
   },
-  "FixMusicPlayer": {
-    "purpose": "提供带播放列表的音乐播放器界面。",
-    "preview": "切换 tracks 并尝试播放、暂停，观察当前曲目信息。"
-  },
   "LazyLoadImage": {
     "purpose": "图片进入可见区域后再加载，减少首屏资源消耗。",
     "preview": "滚动到图片位置，观察加载时机；用 loadInitially 比较立即加载。"
@@ -468,8 +464,8 @@
     "preview": "观察 companies 的循环排列，调整 radius 查看轨道形状。"
   },
   "MusicPlayer": {
-    "purpose": "提供曲目列表与播放控制，适合页面内音频展示。",
-    "preview": "切换 tracks，尝试播放与暂停，观察进度和当前曲目。"
+    "purpose": "在一个播放器中分开展示播放舞台与曲目列表，适合音乐页、内容详情和紧凑音频入口。",
+    "preview": "播放本地音频、从独立队列切歌，再比较 Default（Editorial）、Console、Minimal 与 Compact 的布局和视觉层次。"
   },
   "SoundBar": {
     "purpose": "以简洁控制条播放音频资源。",
@@ -509,7 +505,7 @@
   },
   "PieNestCharts": {
     "purpose": "用嵌套饼图表达多层组成关系。",
-    "preview": "查看内外圈与图例的对应；调整 eOptions 比较数据变化。"
+    "preview": "悬停扇区查看名称、数值和占比；调整 eOptions 比较内外圈数据变化。"
   },
   "markmap": {
     "purpose": "把 Markdown 标题和列表转换为可探索的思维导图。",

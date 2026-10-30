@@ -252,7 +252,6 @@ try {
       createElement(media.AutoSlider, {slides:[{id:'a',name:'Caller slide',image:'/slide.png'}]}),
       createElement(media.CompareAll, {firstImage:'/first.png',secondImage:'/second.png',label:'Consumer comparison'}),
       createElement(media.FixCarouse, {items:['Caller item'],renderItem:item=>item}),
-      createElement(media.FixMusicPlayer, {tracks:[]}),
       createElement(media.InteractiveBook, {coverImage:'/cover.png',pages:[],bookTitle:'Consumer book'}),
       createElement(media.LazyLoadImage, {src:'/photo.png',alt:'Consumer photograph',caption:'Caller caption'}),
       createElement(media.LogoSlider, {companies:[]}),

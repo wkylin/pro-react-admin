@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="night" x2="0" y2="1"><stop stop-color="#142331"/><stop offset="1" stop-color="#273447"/></linearGradient>
+    <linearGradient id="window" x2="0" y2="1"><stop stop-color="#f5dca5"/><stop offset="1" stop-color="#ac6b42"/></linearGradient>
+  </defs>
+  <path fill="url(#night)" d="M0 0h600v800H0z"/>
+  <path d="M70 429h460v300H70z" fill="#1c2431" stroke="#6a5f56" stroke-width="9"/>
+  <path d="M109 472h382v192H109z" fill="url(#window)"/>
+  <path d="M109 540h382M235 472v192M371 472v192" stroke="#2b3238" stroke-width="12"/>
+  <path d="M80 424h440l-17 45H97z" fill="#5b463f"/>
+  <path d="M151 498h43v39h-43zM277 495h56v43h-56zM403 494h53v44h-53z" fill="#7a4c3e" opacity=".7"/>
+  <path d="M90 723h420v17H90zM0 758h600v42H0z" fill="#647180" opacity=".32"/>
+  <g stroke="#b7cee0" stroke-opacity=".4" stroke-width="2"><path d="m65 73-23 86m144-126-24 103m202-91-18 88m145 10-22 83m78 95-24 97M99 278l-29 103m228-168-28 111m103 1-32 110"/></g>
+  <path d="M0 750q152-18 304 8t296-4" fill="none" stroke="#b77a5c" stroke-opacity=".42" stroke-width="4"/>
+</svg>

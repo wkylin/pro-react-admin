@@ -6,13 +6,13 @@
 
 | 指标                          | 数量 | 统计口径                                                            |
 | ----------------------------- | ---: | ------------------------------------------------------------------- |
-| `src/` 文件                   |  708 | 包含源码、样式、资源与配置文件                                      |
-| TS/JS 源文件                  |  604 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
-| `packages/wui-react/src` 文件 |  471 | 组件库源码、stories 与组件文档                                      |
-| 组件库 TS/JS 源文件           |  362 | 组件库自身源码，不含 MDX                                            |
+| `src/` 文件                   |  706 | 包含源码、样式、资源与配置文件                                      |
+| TS/JS 源文件                  |  602 | `.ts/.tsx/.js/.jsx` 等源码扩展名                                    |
+| `packages/wui-react/src` 文件 |  469 | 组件库源码、stories 与组件文档                                      |
+| 组件库 TS/JS 源文件           |  360 | 组件库自身源码，不含 MDX                                            |
 | 样式文件                      |   40 | Less、CSS、SCSS                                                     |
 | CSS Modules                   |   36 | 文件名含 `.module.`                                                 |
-| Storybook stories             |  157 | `*.stories.*`                                                       |
+| Storybook stories             |  156 | `*.stories.*`                                                       |
 | TS/JS 测试文件                |   69 | 应用源码与组件库 package 下的 `*.test.*`/`*.spec.*`；不含仓库级 E2E |
 | 根 package scripts            |  173 | `package.json#scripts` 命令数                                       |
 | pnpm workspace 项目           |    5 | `pnpm-workspace.yaml` 中的工作区条目                                |
@@ -21,7 +21,7 @@
 
 | 当前目录                                | 数量 | 说明                                                                           |
 | --------------------------------------- | ---: | ------------------------------------------------------------------------------ |
-| `src/components/stateless`              |  150 | 含 `index.*` 的模块目录（直接子目录 139，嵌套入口 11）；目录名不保证组件无状态 |
+| `src/components/stateless`              |  149 | 含 `index.*` 的模块目录（直接子目录 138，嵌套入口 11）；目录名不保证组件无状态 |
 | `src/components/stateful`               |    4 | 含 `index.*` 的直接子目录                                                      |
 | `src/components` 独立目录               |    1 | 未归入现有分类目录的直接子目录                                                 |
 | `src/platform/auth/components` TSX 文件 |    7 | 认证、鉴权和权限守卫相关模块                                                   |
@@ -52,31 +52,31 @@
 | `DeploymentFlow/shared/CardContainer` | `DeploymentFlow/shared/KnowledgeSummary` | `DeploymentFlow/shared/SectionBadge`     | `DeploymentFlow/shared/TimelineDot`  |
 | `DescBox`                             | `DonutCharts`                            | `DottedStepper`                          | `DynamicBackground`                  |
 | `EChart`                              | `EChartsCommon`                          | `EChartsCommon/BaseChart`                | `Exception`                          |
-| `FeatureAny`                          | `FixCarouse`                             | `FixMusicPlayer`                         | `FixTabs`                            |
-| `FlipLink`                            | `FlipWords`                              | `FloatAny`                               | `FloatingIcon`                       |
-| `Footer`                              | `GradientAnimation`                      | `GradientStats`                          | `GradientTracking`                   |
-| `GradualSpacing`                      | `HorizontalScroll`                       | `IconCloud`                              | `InteractiveBook`                    |
-| `InteractiveGrid`                     | `IntervalInput`                          | `IsometricCard`                          | `LandingPage`                        |
-| `LanguageSwitcher`                    | `LazyLoadImage`                          | `LineBordered`                           | `LinearWrap`                         |
-| `Loading`                             | `LogoSlider`                             | `MagicTrail`                             | `MarketingHero`                      |
-| `MdxEditor`                           | `MemoizedStars`                          | `MeshGradientBackground`                 | `Meteors`                            |
-| `MouseTrail`                          | `MultiColorBorder`                       | `MultiDirectionSlide`                    | `MusicPlayer`                        |
-| `NoMatch`                             | `NumberFlowFix`                          | `NumberViewCard`                         | `OrbitingCircles`                    |
-| `OrgChart`                            | `OrgChart/org-chart`                     | `PDFExport`                              | `PHBarChart`                         |
-| `PageContainer`                       | `PieNestCharts`                          | `PointerMove`                            | `PromptOptimizer`                    |
-| `RadioInput`                          | `ReMarkdown`                             | `ReactSignature`                         | `SafeLink`                           |
-| `SandpackBasic`                       | `ScratchToReveal`                        | `ScriptView`                             | `ScrollAnimation`                    |
-| `ScrollToTop`                         | `ScrollVelocity`                         | `SectionNotFound`                        | `SettingDrawer`                      |
-| `ShiCode`                             | `ShiftingCard`                           | `ShinyText`                              | `ShootingStars`                      |
-| `SkeletonFix`                         | `SlideButton`                            | `SlideLinear`                            | `SlideText`                          |
-| `SmartChat`                           | `SmartVideoPlayer`                       | `SoundBar`                               | `Sparkles`                           |
-| `SparklesText`                        | `Spotlight`                              | `SquaresGrid`                            | `StarBackground`                     |
-| `StarRating`                          | `StaticStepper`                          | `StatisticCard`                          | `StickyCard`                         |
-| `StickyFooter`                        | `SvgPreview`                             | `TagCard`                                | `TagCloud`                           |
-| `TestimonialCarousel`                 | `TextClip`                               | `TextComponent`                          | `TextLoader`                         |
-| `TextReveal`                          | `ThreeDCard`                             | `TransferHistory`                        | `TrapezoidTabs`                      |
-| `TypeWriter`                          | `TypedText`                              | `UserIP`                                 | `Video`                              |
-| `Watermark`                           | `WordRotate`                             |                                          |                                      |
+| `FeatureAny`                          | `FixCarouse`                             | `FixTabs`                                | `FlipLink`                           |
+| `FlipWords`                           | `FloatAny`                               | `FloatingIcon`                           | `Footer`                             |
+| `GradientAnimation`                   | `GradientStats`                          | `GradientTracking`                       | `GradualSpacing`                     |
+| `HorizontalScroll`                    | `IconCloud`                              | `InteractiveBook`                        | `InteractiveGrid`                    |
+| `IntervalInput`                       | `IsometricCard`                          | `LandingPage`                            | `LanguageSwitcher`                   |
+| `LazyLoadImage`                       | `LineBordered`                           | `LinearWrap`                             | `Loading`                            |
+| `LogoSlider`                          | `MagicTrail`                             | `MarketingHero`                          | `MdxEditor`                          |
+| `MemoizedStars`                       | `MeshGradientBackground`                 | `Meteors`                                | `MouseTrail`                         |
+| `MultiColorBorder`                    | `MultiDirectionSlide`                    | `MusicPlayer`                            | `NoMatch`                            |
+| `NumberFlowFix`                       | `NumberViewCard`                         | `OrbitingCircles`                        | `OrgChart`                           |
+| `OrgChart/org-chart`                  | `PDFExport`                              | `PHBarChart`                             | `PageContainer`                      |
+| `PieNestCharts`                       | `PointerMove`                            | `PromptOptimizer`                        | `RadioInput`                         |
+| `ReMarkdown`                          | `ReactSignature`                         | `SafeLink`                               | `SandpackBasic`                      |
+| `ScratchToReveal`                     | `ScriptView`                             | `ScrollAnimation`                        | `ScrollToTop`                        |
+| `ScrollVelocity`                      | `SectionNotFound`                        | `SettingDrawer`                          | `ShiCode`                            |
+| `ShiftingCard`                        | `ShinyText`                              | `ShootingStars`                          | `SkeletonFix`                        |
+| `SlideButton`                         | `SlideLinear`                            | `SlideText`                              | `SmartChat`                          |
+| `SmartVideoPlayer`                    | `SoundBar`                               | `Sparkles`                               | `SparklesText`                       |
+| `Spotlight`                           | `SquaresGrid`                            | `StarBackground`                         | `StarRating`                         |
+| `StaticStepper`                       | `StatisticCard`                          | `StickyCard`                             | `StickyFooter`                       |
+| `SvgPreview`                          | `TagCard`                                | `TagCloud`                               | `TestimonialCarousel`                |
+| `TextClip`                            | `TextComponent`                          | `TextLoader`                             | `TextReveal`                         |
+| `ThreeDCard`                          | `TransferHistory`                        | `TrapezoidTabs`                          | `TypeWriter`                         |
+| `TypedText`                           | `UserIP`                                 | `Video`                                  | `Watermark`                          |
+| `WordRotate`                          |                                          |                                          |                                      |
 
 ## Stateful 目录入口
 
@@ -119,7 +119,7 @@
 
 ## WUI 分组导出
 
-七个分组提供 133 个审核通过的迁移实现；原有 12 个根组件及子路径保持兼容。分组不从根入口再导出，安装可选 peers 见 [npm 使用说明](../../NPM_README.md)。
+七个分组提供下列当前组件库实现；根组件及子路径由组件库契约维护。分组不从根入口再导出，安装可选 peers 见 [npm 使用说明](../../NPM_README.md)。
 
 ### layout
 
@@ -184,11 +184,11 @@
 
 入口：`@w.ui/wui-react/media`
 
-| 模块               | 模块              | 模块                  | 模块             |
-| ------------------ | ----------------- | --------------------- | ---------------- |
-| `SmartVideoPlayer` | `LazyLoadImage`   | `Video`               | `AutoSlider`     |
-| `LogoSlider`       | `FixCarouse`      | `TestimonialCarousel` | `FixMusicPlayer` |
-| `MusicPlayer`      | `InteractiveBook` | `SoundBar`            | `CompareAll`     |
+| 模块               | 模块            | 模块                  | 模块          |
+| ------------------ | --------------- | --------------------- | ------------- |
+| `SmartVideoPlayer` | `LazyLoadImage` | `Video`               | `AutoSlider`  |
+| `LogoSlider`       | `FixCarouse`    | `TestimonialCarousel` | `MusicPlayer` |
+| `InteractiveBook`  | `SoundBar`      | `CompareAll`          |               |
 
 ### visualization
 

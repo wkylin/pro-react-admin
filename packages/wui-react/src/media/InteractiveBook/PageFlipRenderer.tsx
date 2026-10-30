@@ -1,5 +1,6 @@
 import { useImperativeHandle, useLayoutEffect, useRef, useState, type ReactNode, type Ref } from 'react'
 import { createPortal } from 'react-dom'
+import { flushSync } from 'react-dom'
 import { BookFlipEngine, type TurnFrame } from './BookFlipEngine'
 import styles from './index.module.less'
 
@@ -50,6 +51,7 @@ export default function PageFlipRenderer({
   const eventsRef = useRef({ onFlip, onTurning })
   const startPageRef = useRef(startPage)
   const interactionRef = useRef({ interactive, showCorners })
+  const [activePage, setActivePage] = useState(startPage)
   startPageRef.current = startPage
   interactionRef.current = { interactive, showCorners }
   const [pageElements] = useState(() =>
@@ -74,7 +76,11 @@ export default function PageFlipRenderer({
     () => ({
       next: () => engineRef.current?.next(),
       previous: () => engineRef.current?.previous(),
-      goTo: (page, animate = true) => engineRef.current?.goTo(page, animate),
+      goTo: (page, animate = true) => {
+        // A distant chapter jump must mount the destination before the engine paints it.
+        if (Math.abs(page - (engineRef.current?.getPage() ?? 0)) > 8) flushSync(() => setActivePage(page))
+        engineRef.current?.goTo(page, animate)
+      },
       getPage: () => engineRef.current?.getPage() ?? 0,
     }),
     []
@@ -125,7 +131,7 @@ export default function PageFlipRenderer({
       interactive: interactionRef.current.interactive,
       showCorners: interactionRef.current.showCorners && !reducedMotion,
       reducedMotion,
-      onPage: (page) => eventsRef.current.onFlip(page),
+      onPage: (page) => { setActivePage(page); eventsRef.current.onFlip(page) },
       onTurning: (turning) => eventsRef.current.onTurning(turning),
       onFrame: syncFrame,
     })
@@ -143,7 +149,11 @@ export default function PageFlipRenderer({
   return (
     <>
       <div ref={hostRef} className={styles.flipHost} />
-      {pages.map((page, index) => createPortal(page.content, pageElements[index].firstElementChild!, page.key))}
+      {pages.map((page, index) =>
+        (index < 2 || index >= pages.length - 2 || Math.abs(index - activePage) <= 8)
+          ? createPortal(page.content, pageElements[index].firstElementChild!, page.key)
+          : null
+      )}
     </>
   )
 }

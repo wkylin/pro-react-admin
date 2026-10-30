@@ -156,6 +156,29 @@ test('nested pie uses caller numeric data and reacts to data replacement', () =>
     5,
   ])
 })
+test('nested pie hover label shows name, value and percent without stray braces', () => {
+  render(
+    <PieNestCharts
+      eOptions={{
+        options: {
+          series: [
+            { type: 'pie', data: [{ name: 'Category', value: 20 }] },
+            { type: 'pie', data: [{ name: 'Detail', value: 20 }] },
+          ],
+        },
+      }}
+    />
+  )
+  const host = screen.getByRole('img')
+  Object.defineProperties(host, { clientWidth: { value: 300 }, clientHeight: { value: 200 } })
+  act(() => callbacks.forEach((cb) => cb([], {} as ResizeObserver)))
+  const outer = chart.setOption.mock.calls.at(-1)?.[0].series[1]
+  expect(outer.label.formatter).toBe('{name|{b}}\n{detail|{c} · {d}%}')
+  expect(outer.label.rich.name.color).toBe('#203a56')
+  expect(outer.emphasis.label.show).toBe(true)
+  expect(outer.tooltip.show).toBe(false)
+  expect(outer.tooltip.formatter({ name: 'Detail', value: 20, percent: 20 })).toBe('Detail\n20 · 20%')
+})
 test('BaseChart preserves caller events and gives onClick precedence over onEvents.click', () => {
   const BaseChart = require('./EChartsCommon/BaseChart').default
   const mouseover = jest.fn(),

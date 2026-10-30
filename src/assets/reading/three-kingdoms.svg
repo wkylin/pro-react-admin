@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800" viewBox="0 0 600 800">
+  <defs>
+    <linearGradient id="red" x2="1" y2="1"><stop stop-color="#4e141a"/><stop offset=".54" stop-color="#a34331"/><stop offset="1" stop-color="#602025"/></linearGradient>
+    <linearGradient id="blade" x2="1" y2="0"><stop stop-color="#e4ba83"/><stop offset=".5" stop-color="#f4e1b7"/><stop offset="1" stop-color="#b7855b"/></linearGradient>
+  </defs>
+  <path fill="url(#red)" d="M0 0h600v800H0z"/>
+  <path d="M-90 415Q139 350 289 493q155-101 406-39v380H-90Z" fill="#351620" opacity=".75"/>
+  <circle cx="429" cy="391" r="135" fill="#e9b885" opacity=".93"/>
+  <path d="M183 699 488 257l22 17L218 722Z" fill="url(#blade)"/>
+  <path d="m479 265 57-87-21 98-28 16Z" fill="#f4d29c"/>
+  <path d="m288 543-53-51 4-11 65 47Z" fill="#dfae79"/>
+  <path d="M-15 702q108-100 205-70 113-115 256-73 83-41 174-7v248H-15Z" fill="#491922"/>
+  <path d="M-15 753q84-24 173-7 134-49 211-30 104-39 251-24v108H-15Z" fill="#2b121b"/>
+  <path d="M46 538q75 19 102-23m-57 65q62-7 99-38m188 146q68-59 129-45" stroke="#d8a16d" stroke-width="3" fill="none" opacity=".45"/>
+</svg>

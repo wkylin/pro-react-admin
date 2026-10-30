@@ -1,5 +1,5 @@
-import React, { useRef } from 'react'
-import { motion, useTransform, useScroll } from 'motion/react'
+import React, { useEffect, useRef } from 'react'
+import { motion, useMotionValue, useTransform } from 'motion/react'
 import clsx from 'clsx'
 
 /**
@@ -17,13 +17,38 @@ export interface ContactSectionProps {
   className?: string
 }
 const ContactSection = ({ scrollContainerRef, className = '', text = '' }: ContactSectionProps) => {
-  const wordTargetRef = useRef(null)
+  const wordTargetRef = useRef<HTMLDivElement>(null)
+  const wordScrYPro = useMotionValue(0)
 
   const words = text.split('')
-  const { scrollYProgress: wordScrYPro } = useScroll({
-    target: wordTargetRef,
-    container: scrollContainerRef,
-  })
+
+  useEffect(() => {
+    const target = wordTargetRef.current
+    const container = scrollContainerRef?.current
+    if (!target) return
+
+    const update = () => {
+      const targetRect = target.getBoundingClientRect()
+      const containerRect = container?.getBoundingClientRect()
+      const viewportHeight = container?.clientHeight ?? window.innerHeight
+      const scrollTop = container?.scrollTop ?? window.scrollY
+      const targetTop = targetRect.top - (containerRect?.top ?? 0) + scrollTop
+      const start = Math.max(0, targetTop - viewportHeight / 2)
+      const end = Math.max(start + 1, targetTop + targetRect.height - viewportHeight)
+      const progress = (scrollTop - start) / (end - start)
+      wordScrYPro.set(Math.min(1, Math.max(0, progress)))
+    }
+
+    const scrollSource = container ?? window
+    scrollSource.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    update()
+
+    return () => {
+      scrollSource.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [scrollContainerRef, wordScrYPro])
 
   return (
     <div ref={wordTargetRef} className={clsx(className)} style={{ position: 'relative', zIndex: 0, height: '150vh' }}>
