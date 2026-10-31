@@ -7,6 +7,7 @@
   --accent: #dc4867;
   --accent-soft: #f9e9ed;
   --range-track: #d8d6dc;
+  --range-thumb-bg: var(--queue-bg);
   --play-ink: #fff;
   --art-shadow: 0 22px 45px rgb(43 26 38 / 17%);
 
@@ -396,7 +397,7 @@
     appearance: none;
     border: 3px solid var(--accent);
     border-radius: 50%;
-    background: var(--queue-bg);
+    background: var(--range-thumb-bg);
     box-shadow: 0 1px 6px rgb(0 0 0 / 16%);
   }
 
@@ -405,7 +406,7 @@
     height: 8px;
     border: 3px solid var(--accent);
     border-radius: 50%;
-    background: var(--queue-bg);
+    background: var(--range-thumb-bg);
     box-shadow: 0 1px 6px rgb(0 0 0 / 16%);
   }
 }
@@ -988,12 +989,14 @@
   --accent: #c94e69;
   --accent-soft: #f8e9ed;
   --range-track: #d9dce1;
+  --range-thumb-bg: var(--stage-bg);
   --play-ink: #fff;
   width: 100%;
   min-height: 0;
   display: flex;
   flex-direction: column-reverse;
   background: transparent;
+  container: music-player / inline-size;
 }
 .player[data-appearance='playlist'][data-theme='dark'] {
   --stage-bg: #27272d;
@@ -1056,7 +1059,8 @@
 }
 .player[data-appearance='playlist'] .transport {
   grid-area: transport;
-  width: 234px;
+  width: min(234px, 100%);
+  min-width: 0;
   margin: 0;
 }
 .player[data-appearance='playlist'] .iconButton {
@@ -1076,6 +1080,11 @@
   grid-area: volume;
   max-width: 160px;
 }
+
+.player[data-appearance='playlist'] .volumeRow .range {
+  min-width: 0;
+}
+
 .player[data-appearance='playlist'] .seek {
   grid-area: seek;
   margin-top: 9px;
@@ -1137,68 +1146,115 @@
   font-size: 11px;
 }
 
-@media (width <= 800px) {
+@container music-player (width <= 980px) {
   .player[data-appearance='playlist'] .main {
-    grid-template-columns: minmax(90px, 1fr) auto;
-    grid-template-areas: 'metadata transport' 'seek seek';
+    grid-template-columns: minmax(0, 1fr) minmax(0, 160px);
+    grid-template-areas: 'metadata metadata' 'transport volume' 'seek seek';
+    gap: 10px clamp(12px, 3cqi, 24px);
   }
+
   .player[data-appearance='playlist'] .volumeRow {
-    display: none;
+    width: 100%;
+    justify-self: end;
+    margin: 0;
+  }
+
+  .player[data-appearance='playlist'] .seek {
+    margin-top: 0;
   }
 }
-@media (width <= 620px) {
+
+@container music-player (width <= 620px) {
   .player[data-appearance='playlist'] .stage {
     padding: 12px;
     border-radius: 10px;
   }
+
   .player[data-appearance='playlist'] .hero {
     grid-template-columns: 45px minmax(0, 1fr);
     gap: 10px;
   }
+
   .player[data-appearance='playlist'] .artwork {
     width: 45px;
     height: 45px;
   }
+
   .player[data-appearance='playlist'] .main {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: 'metadata transport' 'seek seek';
+    grid-template-columns: minmax(95px, 1fr) minmax(0, 160px);
   }
+
   .player[data-appearance='playlist'] .metadata {
     text-align: left;
   }
+
   .player[data-appearance='playlist'] .metadata h3 {
     font-size: 13px;
   }
+
   .player[data-appearance='playlist'] .metadata p {
     font-size: 10px;
   }
+
   .player[data-appearance='playlist'] .transport {
     width: auto;
+    justify-content: flex-start;
     gap: 4px;
     margin: 0;
   }
+
   .player[data-appearance='playlist'] .transport .iconButton:first-child,
   .player[data-appearance='playlist'] .transport .iconButton:last-child {
     display: none;
   }
+
   .player[data-appearance='playlist'] .iconButton {
     width: 27px;
     height: 27px;
   }
+
   .player[data-appearance='playlist'] .playButton {
     width: 33px;
     height: 33px;
   }
+
+  .player[data-appearance='playlist'] .volumeRow {
+    gap: 8px;
+  }
+
   .player[data-appearance='playlist'] .queuePanel {
     padding: 0 0 16px;
   }
+
   .player[data-appearance='playlist'] .trackButton {
     grid-template-columns: 21px 43px minmax(0, 1fr) 18px;
     min-height: 63px;
     gap: 8px;
   }
+
   .player[data-appearance='playlist'] .trackArt {
     width: 43px;
     height: 43px;
+  }
+}
+
+@container music-player (width <= 420px) {
+  .player[data-appearance='playlist'] .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .player[data-appearance='playlist'] .artwork {
+    display: none;
+  }
+
+  .player[data-appearance='playlist'] .trackButton {
+    grid-template-columns: 19px 38px minmax(0, 1fr) 16px;
+    gap: 7px;
+    padding-inline: 4px;
+  }
+
+  .player[data-appearance='playlist'] .trackArt {
+    width: 38px;
+    height: 38px;
   }
 }

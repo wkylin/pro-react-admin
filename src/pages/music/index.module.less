@@ -37,6 +37,7 @@
   width: min(100%, 1280px);
   margin: 0 auto;
   padding: 0 clamp(20px, 5vw, 72px);
+  container: music-page / inline-size;
 }
 
 .masthead {
@@ -260,7 +261,7 @@
   outline-offset: 4px;
 }
 
-@media (width <= 760px) {
+@container music-page (width <= 760px) {
   .playlistHero {
     grid-template-columns: 220px minmax(0, 1fr);
     gap: 30px;
@@ -275,7 +276,7 @@
   }
 }
 
-@media (width <= 620px) {
+@container music-page (width <= 620px) {
   .shell {
     padding: 0 17px;
   }
