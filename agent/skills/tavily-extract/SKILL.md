@@ -1,6 +1,7 @@
 ---
 description: "Extract clean markdown or text content from specific URLs via the Tavily CLI. Use this skill when the user has one or more URLs and wants their content, says \"extract\", \"grab the content from\", \"pull the text from\", \"get the page at\", \"read this webpage\", or needs clean text from web pages. Handles JavaScript-rendered pages, returns LLM-optimized markdown, and supports query-focused chunking for targeted extraction. Can process up to 20 URLs in a single call.\n"
 ---
+
 # tavily extract
 
 Extract clean markdown or text content from one or more URLs.
@@ -44,22 +45,22 @@ tvly extract "https://example.com/article" -o article.md
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--query` | Rerank chunks by relevance to this query |
-| `--chunks-per-source` | Chunks per URL (1-5, requires `--query`) |
-| `--extract-depth` | `basic` (default) or `advanced` (for JS pages) |
-| `--format` | `markdown` (default) or `text` |
-| `--include-images` | Include image URLs |
-| `--timeout` | Max wait time (1-60 seconds) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option                | Description                                    |
+| --------------------- | ---------------------------------------------- |
+| `--query`             | Rerank chunks by relevance to this query       |
+| `--chunks-per-source` | Chunks per URL (1-5, requires `--query`)       |
+| `--extract-depth`     | `basic` (default) or `advanced` (for JS pages) |
+| `--format`            | `markdown` (default) or `text`                 |
+| `--include-images`    | Include image URLs                             |
+| `--timeout`           | Max wait time (1-60 seconds)                   |
+| `-o, --output`        | Save output to file                            |
+| `--json`              | Structured JSON output                         |
 
 ## Extract depth
 
-| Depth | When to use |
-|-------|-------------|
-| `basic` | Simple pages, fast — try this first |
+| Depth      | When to use                               |
+| ---------- | ----------------------------------------- |
+| `basic`    | Simple pages, fast — try this first       |
 | `advanced` | JS-rendered SPAs, dynamic content, tables |
 
 ## Tips

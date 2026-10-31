@@ -14,10 +14,7 @@ const MAX_CONNECTIONS = 200
 
 export type AuditNotice = { tenantId: string; seq: string; resource: string; action: string }
 type Listener = { close(): Promise<void> }
-export type ListenerFactory = (
-  notify: (notice: AuditNotice) => void,
-  failed: () => void
-) => Promise<Listener>
+export type ListenerFactory = (notify: (notice: AuditNotice) => void, failed: () => void) => Promise<Listener>
 type ClientState = {
   address: string
   sessionHash?: string
@@ -43,16 +40,25 @@ export function postgresAuditListener(connectionString: string): ListenerFactory
         const value: unknown = JSON.parse(message.payload)
         if (!value || typeof value !== 'object') return
         const record = value as Record<string, unknown>
-        if (typeof record.tenantId !== 'string' || typeof record.seq !== 'string' ||
-            !/^\d+$/.test(record.seq) || typeof record.resource !== 'string' ||
-            typeof record.action !== 'string') return
+        if (
+          typeof record.tenantId !== 'string' ||
+          typeof record.seq !== 'string' ||
+          !/^\d+$/.test(record.seq) ||
+          typeof record.resource !== 'string' ||
+          typeof record.action !== 'string'
+        )
+          return
         notify(record as AuditNotice)
       } catch {
         // The database trigger owns this private channel; ignore malformed payloads.
       }
     })
-    client.on('error', () => { if (!closing) failed() })
-    client.on('end', () => { if (!closing) failed() })
+    client.on('error', () => {
+      if (!closing) failed()
+    })
+    client.on('end', () => {
+      if (!closing) failed()
+    })
     try {
       await client.connect()
       await client.query(`LISTEN ${CHANNEL}`)
@@ -79,8 +85,12 @@ export function createPostgresEnterpriseEventsServer(
     response.writeHead(426, { 'Cache-Control': 'no-store', 'Content-Type': 'application/json' })
     response.end(JSON.stringify({ error: 'websocket_upgrade_required' }))
   })
-  const wss = new WebSocketServer({ noServer: true, maxPayload: 4_096, perMessageDeflate: false,
-    handleProtocols: (protocols) => protocols.has(PROTOCOL) ? PROTOCOL : false })
+  const wss = new WebSocketServer({
+    noServer: true,
+    maxPayload: 4_096,
+    perMessageDeflate: false,
+    handleProtocols: (protocols) => (protocols.has(PROTOCOL) ? PROTOCOL : false),
+  })
   const clients = new Map<WebSocket, ClientState>()
   let listener: Listener | undefined
   let connecting: Promise<void> | undefined
@@ -103,8 +113,8 @@ export function createPostgresEnterpriseEventsServer(
     const previous = listener
     listener = undefined
     void previous?.close()
-    for (const socket of clients.keys()) if (socket.readyState === WebSocket.OPEN)
-      socket.close(1013, 'event_source_unavailable')
+    for (const socket of clients.keys())
+      if (socket.readyState === WebSocket.OPEN) socket.close(1013, 'event_source_unavailable')
   }
   const maybeCloseListener = () => {
     if (clients.size || idleTimer) return
@@ -122,38 +132,58 @@ export function createPostgresEnterpriseEventsServer(
     idleTimer = undefined
     if (listener) return
     connecting ??= listen(onNotice, listenerFailed)
-      .then((connected) => { listener = connected; maybeCloseListener() })
-      .finally(() => { connecting = undefined })
+      .then((connected) => {
+        listener = connected
+        maybeCloseListener()
+      })
+      .finally(() => {
+        connecting = undefined
+      })
     await connecting
   }
   const onNotice = (notice: AuditNotice) => {
     for (const [socket, state] of clients) {
       if (!state.sessionHash || state.tenantId !== notice.tenantId) continue
-      state.queue = state.queue.then(async () => {
-        if (socket.readyState !== WebSocket.OPEN || !state.sessionHash || !state.tenantId || !state.principalId) return
-        if (state.cursor && BigInt(notice.seq) <= BigInt(state.cursor)) return
-        const principal = await service.authenticateSession(state.sessionHash, state.tenantId, state.principalId)
-        const resources = new Set<'users' | 'roles' | 'audit' | 'access_requests'>(['audit'])
-        if (notice.resource === 'users' || notice.resource === 'roles' || notice.resource === 'access_requests')
-          resources.add(notice.resource)
-        if (notice.resource === 'access_requests' && notice.action === 'access_approved') {
-          resources.add('users')
-          resources.add('roles')
-        }
-        for (const resource of resources) if (service.canReadEvent(principal, resource))
-          send(socket, { type: 'resource.invalidate', id: notice.seq, scope: 'tenant', resource,
-            occurredAt: new Date().toISOString() })
-        state.cursor = notice.seq
-      }).catch((error: unknown) => closeForError(socket, error))
+      state.queue = state.queue
+        .then(async () => {
+          if (socket.readyState !== WebSocket.OPEN || !state.sessionHash || !state.tenantId || !state.principalId)
+            return
+          if (state.cursor && BigInt(notice.seq) <= BigInt(state.cursor)) return
+          const principal = await service.authenticateSession(state.sessionHash, state.tenantId, state.principalId)
+          const resources = new Set<'users' | 'roles' | 'audit' | 'access_requests'>(['audit'])
+          if (notice.resource === 'users' || notice.resource === 'roles' || notice.resource === 'access_requests')
+            resources.add(notice.resource)
+          if (notice.resource === 'access_requests' && notice.action === 'access_approved') {
+            resources.add('users')
+            resources.add('roles')
+          }
+          for (const resource of resources)
+            if (service.canReadEvent(principal, resource))
+              send(socket, {
+                type: 'resource.invalidate',
+                id: notice.seq,
+                scope: 'tenant',
+                resource,
+                occurredAt: new Date().toISOString(),
+              })
+          state.cursor = notice.seq
+        })
+        .catch((error: unknown) => closeForError(socket, error))
     }
   }
 
   server.on('upgrade', (request: IncomingMessage, socket: Duplex, head: Buffer) => {
     const origin = request.headers.origin
-    const protocols = String(request.headers['sec-websocket-protocol'] ?? '').split(',').map((value) => value.trim())
+    const protocols = String(request.headers['sec-websocket-protocol'] ?? '')
+      .split(',')
+      .map((value) => value.trim())
     const pathname = new URL(request.url ?? '/', 'http://internal').pathname
-    if (request.method !== 'GET' || pathname !== '/api/resource-stream' ||
-        (origin && !origins.has(origin)) || !protocols.includes(PROTOCOL)) {
+    if (
+      request.method !== 'GET' ||
+      pathname !== '/api/resource-stream' ||
+      (origin && !origins.has(origin)) ||
+      !protocols.includes(PROTOCOL)
+    ) {
       socket.write('HTTP/1.1 403 Forbidden\r\nConnection: close\r\nCache-Control: no-store\r\n\r\n')
       socket.destroy()
       return
@@ -163,8 +193,10 @@ export function createPostgresEnterpriseEventsServer(
 
   wss.on('connection', (socket: WebSocket, request: IncomingMessage) => {
     const address = request.socket.remoteAddress || 'unknown'
-    if (clients.size >= MAX_CONNECTIONS ||
-        [...clients.values()].filter((client) => !client.sessionHash && client.address === address).length >= 5) {
+    if (
+      clients.size >= MAX_CONNECTIONS ||
+      [...clients.values()].filter((client) => !client.sessionHash && client.address === address).length >= 5
+    ) {
       socket.close(4429, 'connection_limit')
       return
     }
@@ -175,7 +207,11 @@ export function createPostgresEnterpriseEventsServer(
     socket.once('message', async (payload: RawData, binary: boolean) => {
       if (binary || Buffer.byteLength(payload.toString()) > 2_048) return socket.close(4400, 'invalid_auth_message')
       let message: unknown
-      try { message = JSON.parse(payload.toString()) } catch { return socket.close(4400, 'invalid_auth_message') }
+      try {
+        message = JSON.parse(payload.toString())
+      } catch {
+        return socket.close(4400, 'invalid_auth_message')
+      }
       if (!message || typeof message !== 'object' || (message as Record<string, unknown>).type !== 'authenticate')
         return socket.close(4400, 'invalid_auth_message')
       try {
@@ -185,14 +221,22 @@ export function createPostgresEnterpriseEventsServer(
         state.sessionHash = principal.sessionHash
         state.tenantId = principal.tenantId
         state.principalId = principal.principalId
-        state.queue = ensureListener().then(async () => {
-          const current = await service.authenticateSession(principal.sessionHash, principal.tenantId, principal.principalId)
-          const result = await service.pollEvents(current, undefined)
-          state.cursor = result.cursor
-          send(socket, { type: 'reset', reason: 'initial_sync', latestEventId: result.cursor })
-          send(socket, { type: 'ready', latestEventId: result.cursor })
-        }).catch((error: unknown) => closeForError(socket, error))
-        socket.on('pong', () => { state.alive = true })
+        state.queue = ensureListener()
+          .then(async () => {
+            const current = await service.authenticateSession(
+              principal.sessionHash,
+              principal.tenantId,
+              principal.principalId
+            )
+            const result = await service.pollEvents(current, undefined)
+            state.cursor = result.cursor
+            send(socket, { type: 'reset', reason: 'initial_sync', latestEventId: result.cursor })
+            send(socket, { type: 'ready', latestEventId: result.cursor })
+          })
+          .catch((error: unknown) => closeForError(socket, error))
+        socket.on('pong', () => {
+          state.alive = true
+        })
         socket.on('message', (data: RawData, isBinary: boolean) => {
           if (isBinary || Buffer.byteLength(data.toString()) > 128) return socket.close(4400, 'invalid_message')
           try {
@@ -200,23 +244,40 @@ export function createPostgresEnterpriseEventsServer(
             if (!input || typeof input !== 'object' || (input as Record<string, unknown>).type !== 'ping')
               return socket.close(4400, 'unsupported_message')
             send(socket, { type: 'pong', at: Date.now() })
-          } catch { socket.close(4400, 'invalid_message') }
+          } catch {
+            socket.close(4400, 'invalid_message')
+          }
         })
-      } catch (error) { closeForError(socket, error) }
+      } catch (error) {
+        closeForError(socket, error)
+      }
     })
-    socket.once('close', () => { clearTimeout(authTimer); clients.delete(socket); maybeCloseListener() })
-    socket.once('error', () => { clearTimeout(authTimer); clients.delete(socket); maybeCloseListener() })
+    socket.once('close', () => {
+      clearTimeout(authTimer)
+      clients.delete(socket)
+      maybeCloseListener()
+    })
+    socket.once('error', () => {
+      clearTimeout(authTimer)
+      clients.delete(socket)
+      maybeCloseListener()
+    })
   })
 
   const heartbeat = setInterval(() => {
     for (const [socket, state] of clients) {
       if (!state.sessionHash || !state.tenantId || !state.principalId || socket.readyState !== WebSocket.OPEN) continue
-      if (!state.alive) { socket.terminate(); continue }
+      if (!state.alive) {
+        socket.terminate()
+        continue
+      }
       state.alive = false
       socket.ping()
-      state.queue = state.queue.then(async () => {
-        await service.authenticateSession(state.sessionHash!, state.tenantId!, state.principalId!)
-      }).catch((error: unknown) => closeForError(socket, error))
+      state.queue = state.queue
+        .then(async () => {
+          await service.authenticateSession(state.sessionHash!, state.tenantId!, state.principalId!)
+        })
+        .catch((error: unknown) => closeForError(socket, error))
     }
   }, SESSION_RECHECK_MS)
   heartbeat.unref?.()

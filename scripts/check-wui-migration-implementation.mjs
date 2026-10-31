@@ -23,7 +23,9 @@ for (const group of libraryGroups) {
     assert.ok(esm[name], `${entry.name}: missing ESM export`)
     assert.ok(cjs[name], `${entry.name}: missing CJS export`)
   }
-  for (const entry of accepted.filter((entry) => retiredNames.has(entry.name) && entry.destination.group === group.subpath)) {
+  for (const entry of accepted.filter(
+    (entry) => retiredNames.has(entry.name) && entry.destination.group === group.subpath
+  )) {
     assert.ok(!group.runtimeExports.includes(entry.name), `${entry.name}: retired export remains in group contract`)
     assert.ok(!esm[entry.name], `${entry.name}: retired ESM export remains`)
     assert.ok(!cjs[entry.name], `${entry.name}: retired CJS export remains`)

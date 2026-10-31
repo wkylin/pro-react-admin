@@ -10,7 +10,5 @@
       "maxDuration": 300
     }
   },
-  "rewrites": [
-    { "source": "/api/:first/:rest*", "destination": "/api/:first" }
-  ]
+  "rewrites": [{ "source": "/api/:first/:rest*", "destination": "/api/:first" }]
 }

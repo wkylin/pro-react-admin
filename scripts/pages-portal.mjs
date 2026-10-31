@@ -62,7 +62,8 @@ function renderEntryCard([label, href]) {
 }
 
 export function renderPortalHtml(version, links, repository = 'wkylin/pro-react-admin') {
-  const featuredEntry = links.find(([label]) => label === '默认应用') || links.find(([label]) => label === '微前端') || links[0]
+  const featuredEntry =
+    links.find(([label]) => label === '默认应用') || links.find(([label]) => label === '微前端') || links[0]
   const [featuredLabel, featuredHref] = featuredEntry || ['Storybook', './storybook/']
   const [owner, repo] = repository.split('/')
   const repositoryUrl = `https://github.com/${encodeURIComponent(owner || 'wkylin')}/${encodeURIComponent(repo || 'pro-react-admin')}`

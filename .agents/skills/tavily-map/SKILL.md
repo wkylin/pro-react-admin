@@ -45,20 +45,20 @@ tvly map "https://example.com" --max-depth 3 --limit 200 --json
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--max-depth` | Levels deep (1-5, default: 1) |
-| `--max-breadth` | Links per page (default: 20) |
-| `--limit` | Max URLs to discover (default: 50) |
-| `--instructions` | Natural language guidance for URL filtering |
-| `--select-paths` | Comma-separated regex patterns to include |
-| `--exclude-paths` | Comma-separated regex patterns to exclude |
-| `--select-domains` | Comma-separated regex for domains to include |
-| `--exclude-domains` | Comma-separated regex for domains to exclude |
-| `--allow-external / --no-external` | Include external links |
-| `--timeout` | Max wait (10-150 seconds) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option                             | Description                                  |
+| ---------------------------------- | -------------------------------------------- |
+| `--max-depth`                      | Levels deep (1-5, default: 1)                |
+| `--max-breadth`                    | Links per page (default: 20)                 |
+| `--limit`                          | Max URLs to discover (default: 50)           |
+| `--instructions`                   | Natural language guidance for URL filtering  |
+| `--select-paths`                   | Comma-separated regex patterns to include    |
+| `--exclude-paths`                  | Comma-separated regex patterns to exclude    |
+| `--select-domains`                 | Comma-separated regex for domains to include |
+| `--exclude-domains`                | Comma-separated regex for domains to exclude |
+| `--allow-external / --no-external` | Include external links                       |
+| `--timeout`                        | Max wait (10-150 seconds)                    |
+| `-o, --output`                     | Save output to file                          |
+| `--json`                           | Structured JSON output                       |
 
 ## Map + Extract pattern
 

@@ -43,7 +43,7 @@ Axios 与 Fetch 适配器对相对 `/api/*` 请求自动生成 `X-Request-ID`，
 | 恢复能力   | 最近可验证备份年龄、异地副本状态、真实事故路径恢复耗时           | [恢复 runbook](../runbooks/ENTERPRISE_RECOVERY.md) 的 owner 和演练记录 |
 
 Vercel + Neon 环境使用独立的[恢复演练手册](../runbooks/VERCEL_NEON_RECOVERY.md)和[本次验收记录](./VERCEL_NEON_ACCEPTANCE_2026-10-28.md)。
-| 页面体验   | 真实设备 LCP/INP/CLS p75，按页面与发布版本分组并注明样本数       | Tracking stats 与部署版本                                              |
+| 页面体验 | 真实设备 LCP/INP/CLS p75，按页面与发布版本分组并注明样本数 | Tracking stats 与部署版本 |
 
 SLO 数值、采样比例、告警阈值和负责人必须由实际部署流量及业务容忍度确定。发布前至少把上述口径写入监控看板和响应手册，并记录一次真实部署环境的告警到处置演练；本地构建、fixture 或单卷 `drill` 不构成这项验收。
 

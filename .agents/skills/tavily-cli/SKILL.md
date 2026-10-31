@@ -48,13 +48,13 @@ Follow this escalation pattern — start simple, escalate when needed:
 4. **Crawl** — Need bulk content from an entire site section.
 5. **Research** — Need comprehensive, multi-source analysis with citations.
 
-| Need | Command | When |
-|------|---------|------|
-| Find pages on a topic | `tvly search` | No specific URL yet |
-| Get a page's content | `tvly extract` | Have a URL |
-| Find URLs within a site | `tvly map` | Need to locate a specific subpage |
-| Bulk extract a site section | `tvly crawl` | Need many pages (e.g., all /docs/) |
-| Deep research with citations | `tvly research` | Need multi-source synthesis |
+| Need                         | Command         | When                               |
+| ---------------------------- | --------------- | ---------------------------------- |
+| Find pages on a topic        | `tvly search`   | No specific URL yet                |
+| Get a page's content         | `tvly extract`  | Have a URL                         |
+| Find URLs within a site      | `tvly map`      | Need to locate a specific subpage  |
+| Bulk extract a site section  | `tvly crawl`    | Need many pages (e.g., all /docs/) |
+| Deep research with citations | `tvly research` | Need multi-source synthesis        |
 
 For detailed command reference, use the individual skill for each command (e.g., `tavily-search`, `tavily-crawl`) or run `tvly <command> --help`.
 

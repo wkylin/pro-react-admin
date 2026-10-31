@@ -213,11 +213,21 @@ body {
   table-layout: fixed;
 }
 
-#storybook-docs .wui-doc-props-table th:nth-child(1) { width: 16%; }
-#storybook-docs .wui-doc-props-table th:nth-child(2) { width: 38%; }
-#storybook-docs .wui-doc-props-table th:nth-child(3) { width: 27%; }
-#storybook-docs .wui-doc-props-table th:nth-child(4) { width: 7%; }
-#storybook-docs .wui-doc-props-table th:nth-child(5) { width: 12%; }
+#storybook-docs .wui-doc-props-table th:nth-child(1) {
+  width: 16%;
+}
+#storybook-docs .wui-doc-props-table th:nth-child(2) {
+  width: 38%;
+}
+#storybook-docs .wui-doc-props-table th:nth-child(3) {
+  width: 27%;
+}
+#storybook-docs .wui-doc-props-table th:nth-child(4) {
+  width: 7%;
+}
+#storybook-docs .wui-doc-props-table th:nth-child(5) {
+  width: 12%;
+}
 
 #storybook-docs .wui-doc-props-table tbody th {
   color: var(--wui-doc-ink);

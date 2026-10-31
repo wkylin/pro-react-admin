@@ -8,17 +8,17 @@
 
 本次连接使用的字段如下；密码从上述受保护的配置中取得：
 
-| DBeaver 字段 | 值 |
-| --- | --- |
-| 驱动 | PostgreSQL |
-| 连接方式 | 主机（Host），不是 URL |
-| 主机 | `ep-steep-cloud-b3s1059z-pooler.c-4.ap-southeast-1.aws.neon.tech` |
-| 端口 | `5432` |
-| 数据库 | `neondb` |
-| 身份验证 | Username/password |
-| 用户名 | `neondb_owner` |
-| 密码 | `DATABASE_URL` 中该用户名后的密码；不要使用 Enterprise 管理员登录密码 |
-| SSL mode | `require` |
+| DBeaver 字段 | 值                                                                    |
+| ------------ | --------------------------------------------------------------------- |
+| 驱动         | PostgreSQL                                                            |
+| 连接方式     | 主机（Host），不是 URL                                                |
+| 主机         | `ep-steep-cloud-b3s1059z-pooler.c-4.ap-southeast-1.aws.neon.tech`     |
+| 端口         | `5432`                                                                |
+| 数据库       | `neondb`                                                              |
+| 身份验证     | Username/password                                                     |
+| 用户名       | `neondb_owner`                                                        |
+| 密码         | `DATABASE_URL` 中该用户名后的密码；不要使用 Enterprise 管理员登录密码 |
+| SSL mode     | `require`                                                             |
 
 主机名中的 `-pooler` 表示这是 Neon 的池化连接，与 API 的 `DATABASE_URL` 一致。如果需要直连，请从 API 项目的 `DATABASE_URL_UNPOOLED` 或 Neon 控制台复制直连主机名，不要凭猜测修改端点。
 
@@ -39,12 +39,12 @@ SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;
 
 ## 常见问题
 
-| 现象 | 检查 |
-| --- | --- |
-| 自动生成的 JDBC URL 出现 `:5432:5432` | 主机栏包含了端口；删除主机栏末尾的 `:5432`，端口栏保留 `5432` |
-| `Hostname is not specified` | SSH 标签已启用但没有 SSH 主机；移除 SSH 配置 |
-| SSL 连接错误 | 在 SSL 标签确认已启用 SSL，`SSL mode` 为 `require` |
-| 用户名或密码验证失败 | 检查当前 `DATABASE_URL` 的账号和密码是否已轮换；Enterprise 管理员账号不能用于数据库认证 |
-| 主机无法解析或连接超时 | 核对当前 Neon 端点和本机网络 / DNS；历史配置中的主机名可能已失效 |
+| 现象                                  | 检查                                                                                    |
+| ------------------------------------- | --------------------------------------------------------------------------------------- |
+| 自动生成的 JDBC URL 出现 `:5432:5432` | 主机栏包含了端口；删除主机栏末尾的 `:5432`，端口栏保留 `5432`                           |
+| `Hostname is not specified`           | SSH 标签已启用但没有 SSH 主机；移除 SSH 配置                                            |
+| SSL 连接错误                          | 在 SSL 标签确认已启用 SSL，`SSL mode` 为 `require`                                      |
+| 用户名或密码验证失败                  | 检查当前 `DATABASE_URL` 的账号和密码是否已轮换；Enterprise 管理员账号不能用于数据库认证 |
+| 主机无法解析或连接超时                | 核对当前 Neon 端点和本机网络 / DNS；历史配置中的主机名可能已失效                        |
 
 此连接可能指向 Enterprise API 的真实业务数据。数据库创建、迁移和 API 部署步骤见 [Vercel + Neon 部署指南](./VERCEL_NEON_ENTERPRISE.md)。

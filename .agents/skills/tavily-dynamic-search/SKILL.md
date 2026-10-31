@@ -436,15 +436,15 @@ except Exception:
 
 All standard `tvly search` options work:
 
-| Option | Description |
-|--------|-------------|
-| `--max-results` | Number of results (default: 5, max: 20) |
-| `--depth` | `ultra-fast`, `fast`, `basic` (default), `advanced` |
-| `--time-range` | `day`, `week`, `month`, `year` |
-| `--include-domains` | Comma-separated whitelist |
-| `--exclude-domains` | Comma-separated blacklist |
-| `--include-raw-content` | Full page content (`markdown` or `text`) |
-| `--country` | Boost results from country |
+| Option                  | Description                                         |
+| ----------------------- | --------------------------------------------------- |
+| `--max-results`         | Number of results (default: 5, max: 20)             |
+| `--depth`               | `ultra-fast`, `fast`, `basic` (default), `advanced` |
+| `--time-range`          | `day`, `week`, `month`, `year`                      |
+| `--include-domains`     | Comma-separated whitelist                           |
+| `--exclude-domains`     | Comma-separated blacklist                           |
+| `--include-raw-content` | Full page content (`markdown` or `text`)            |
+| `--country`             | Boost results from country                          |
 
 ## Fallback: jq
 

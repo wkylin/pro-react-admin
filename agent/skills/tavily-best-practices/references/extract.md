@@ -27,6 +27,7 @@ response = client.search(
 ```
 
 **When to use:**
+
 - Quick prototyping
 - Simple queries where search results are likely relevant
 - Single API call convenience
@@ -61,6 +62,7 @@ for item in extracted["results"]:
 ```
 
 **When to use:**
+
 - You want control over which URLs to extract
 - You need to filter/curate URLs before extraction
 - You want targeted extraction with query and chunks_per_source
@@ -69,17 +71,17 @@ for item in extracted["results"]:
 
 ## Key Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `urls` | string/array | Required | Single URL or list (max 20) |
-| `extract_depth` | enum | `"basic"` | `"basic"` or `"advanced"` (for complex/JS pages) |
-| `query` | string | null | Reranks chunks by relevance to this query |
-| `chunks_per_source` | integer | 3 | Chunks per source (1-5, max 500 chars each). Only with `query` |
-| `format` | enum | `"markdown"` | Output: `"markdown"` or `"text"` |
-| `include_images` | boolean | false | Include image URLs |
-| `include_favicon` | boolean | false | Include favicon URL |
-| `include_usage` | boolean | false | Include credit consumption data in response |
-| `timeout` | float | varies | Max wait time (1.0-60.0 seconds) |
+| Parameter           | Type         | Default      | Description                                                    |
+| ------------------- | ------------ | ------------ | -------------------------------------------------------------- |
+| `urls`              | string/array | Required     | Single URL or list (max 20)                                    |
+| `extract_depth`     | enum         | `"basic"`    | `"basic"` or `"advanced"` (for complex/JS pages)               |
+| `query`             | string       | null         | Reranks chunks by relevance to this query                      |
+| `chunks_per_source` | integer      | 3            | Chunks per source (1-5, max 500 chars each). Only with `query` |
+| `format`            | enum         | `"markdown"` | Output: `"markdown"` or `"text"`                               |
+| `include_images`    | boolean      | false        | Include image URLs                                             |
+| `include_favicon`   | boolean      | false        | Include favicon URL                                            |
+| `include_usage`     | boolean      | false        | Include credit consumption data in response                    |
+| `timeout`           | float        | varies       | Max wait time (1.0-60.0 seconds)                               |
 
 ---
 
@@ -100,11 +102,13 @@ extracted = client.extract(
 ```
 
 **When to use query:**
+
 - To extract only relevant portions of long documents
 - When you need focused content instead of full page extraction
 - For targeted information retrieval from specific URLs
 
 **Key benefits of chunks_per_source:**
+
 - Returns only relevant snippets (max 500 chars each) instead of full page
 - Chunks appear in `raw_content` as: `<chunk 1> [...] <chunk 2> [...] <chunk 3>`
 - Prevents context window from exploding in agentic use cases
@@ -115,10 +119,10 @@ extracted = client.extract(
 
 ## Extract Depth
 
-| Depth | When to use |
-|-------|-------------|
-| `basic` (default) | Simple text extraction, faster |
-| `advanced` | Dynamic/JS-rendered pages, tables, structured data, embedded media |
+| Depth             | When to use                                                        |
+| ----------------- | ------------------------------------------------------------------ |
+| `basic` (default) | Simple text extraction, faster                                     |
+| `advanced`        | Dynamic/JS-rendered pages, tables, structured data, embedded media |
 
 ```python
 # For complex pages
@@ -144,13 +148,13 @@ if url in [f["url"] for f in result.get("failed_results", [])]:
 
 Beyond query-based filtering, consider these approaches before extraction:
 
-| Strategy | When to use |
-|----------|-------------|
-| Score-based | Filter search results by relevance score |
-| Domain-based | Filter by trusted domains |
-| Re-ranking | Use dedicated re-ranking models for precision |
-| LLM-based | Let an LLM assess relevance before extraction |
-| Clustering | Group similar documents, extract from clusters |
+| Strategy     | When to use                                    |
+| ------------ | ---------------------------------------------- |
+| Score-based  | Filter search results by relevance score       |
+| Domain-based | Filter by trusted domains                      |
+| Re-ranking   | Use dedicated re-ranking models for precision  |
+| LLM-based    | Let an LLM assess relevance before extraction  |
+| Clustering   | Group similar documents, extract from clusters |
 
 ### Optimal Workflow
 
@@ -210,29 +214,29 @@ asyncio.run(content_pipeline("machine learning in healthcare"))
 
 **Top-level response:**
 
-| Field | Description |
-|-------|-------------|
-| `results` | Array of successfully extracted content |
-| `failed_results` | Array of URLs that failed extraction |
-| `response_time` | Time in seconds |
-| `request_id` | Unique identifier for support reference |
-| `usage` | Credit usage info (if `include_usage=True`) |
+| Field            | Description                                 |
+| ---------------- | ------------------------------------------- |
+| `results`        | Array of successfully extracted content     |
+| `failed_results` | Array of URLs that failed extraction        |
+| `response_time`  | Time in seconds                             |
+| `request_id`     | Unique identifier for support reference     |
+| `usage`          | Credit usage info (if `include_usage=True`) |
 
 **Each result object:**
 
-| Field | Description |
-|-------|-------------|
-| `url` | The URL extracted from |
+| Field         | Description                                                                |
+| ------------- | -------------------------------------------------------------------------- |
+| `url`         | The URL extracted from                                                     |
 | `raw_content` | Full content, or top-ranked chunks joined by `[...]` when `query` provided |
-| `images` | Array of image URLs (if `include_images=true`) |
-| `favicon` | Favicon URL (if `include_favicon=true`) |
+| `images`      | Array of image URLs (if `include_images=true`)                             |
+| `favicon`     | Favicon URL (if `include_favicon=true`)                                    |
 
 **Each failed_results object:**
 
-| Field | Description |
-|-------|-------------|
-| `url` | The URL that failed |
-| `error` | Error message |
+| Field   | Description         |
+| ------- | ------------------- |
+| `url`   | The URL that failed |
+| `error` | Error message       |
 
 ---
 

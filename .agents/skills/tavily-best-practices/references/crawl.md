@@ -17,19 +17,21 @@
 
 ## Crawl vs Map
 
-| Feature | Crawl | Map |
-|---------|-------|-----|
-| **Returns** | Full content | URLs only |
-| **Speed** | Slower | Faster |
+| Feature      | Crawl                             | Map                                      |
+| ------------ | --------------------------------- | ---------------------------------------- |
+| **Returns**  | Full content                      | URLs only                                |
+| **Speed**    | Slower                            | Faster                                   |
 | **Best for** | RAG, deep analysis, documentation | Site structure discovery, URL collection |
 
 **Use Crawl when:**
+
 - Full content extraction needed
 - Building RAG systems
 - Processing paginated/nested content
 - Integration with knowledge bases
 
 **Use Map when:**
+
 - Quick site structure discovery
 - URL collection without content
 - Planning before crawling
@@ -39,25 +41,25 @@
 
 ## Key Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `url` | string | Required | Root URL to begin |
-| `max_depth` | integer | 1 | Levels deep to crawl (1-5). **Start with 1-2** |
-| `max_breadth` | integer | 20 | Links per page. 50-100 for focused crawls |
-| `limit` | integer | 50 | Total pages cap |
-| `instructions` | string | null | Natural language guidance (2 credits/10 pages) |
-| `chunks_per_source` | integer | 3 | Chunks per page (1-5). Only with `instructions` |
-| `extract_depth` | enum | `"basic"` | `"basic"` (1 credit/5 URLs) or `"advanced"` (2 credits/5 URLs) |
-| `format` | enum | `"markdown"` | `"markdown"` or `"text"` |
-| `select_paths` | array | null | Regex patterns to include |
-| `exclude_paths` | array | null | Regex patterns to exclude |
-| `select_domains` | array | null | Regex for domains to include |
-| `exclude_domains` | array | null | Regex for domains to exclude |
-| `allow_external` | boolean | true (crawl) / false (map) | Include external domain links |
-| `include_images` | boolean | false | Include images (crawl only) |
-| `include_favicon` | boolean | false | Include favicon URL (crawl only) |
-| `include_usage` | boolean | false | Include credit usage info |
-| `timeout` | float | 150 | Max wait (10-150 seconds) |
+| Parameter           | Type    | Default                    | Description                                                    |
+| ------------------- | ------- | -------------------------- | -------------------------------------------------------------- |
+| `url`               | string  | Required                   | Root URL to begin                                              |
+| `max_depth`         | integer | 1                          | Levels deep to crawl (1-5). **Start with 1-2**                 |
+| `max_breadth`       | integer | 20                         | Links per page. 50-100 for focused crawls                      |
+| `limit`             | integer | 50                         | Total pages cap                                                |
+| `instructions`      | string  | null                       | Natural language guidance (2 credits/10 pages)                 |
+| `chunks_per_source` | integer | 3                          | Chunks per page (1-5). Only with `instructions`                |
+| `extract_depth`     | enum    | `"basic"`                  | `"basic"` (1 credit/5 URLs) or `"advanced"` (2 credits/5 URLs) |
+| `format`            | enum    | `"markdown"`               | `"markdown"` or `"text"`                                       |
+| `select_paths`      | array   | null                       | Regex patterns to include                                      |
+| `exclude_paths`     | array   | null                       | Regex patterns to exclude                                      |
+| `select_domains`    | array   | null                       | Regex for domains to include                                   |
+| `exclude_domains`   | array   | null                       | Regex for domains to exclude                                   |
+| `allow_external`    | boolean | true (crawl) / false (map) | Include external domain links                                  |
+| `include_images`    | boolean | false                      | Include images (crawl only)                                    |
+| `include_favicon`   | boolean | false                      | Include favicon URL (crawl only)                               |
+| `include_usage`     | boolean | false                      | Include credit usage info                                      |
+| `timeout`           | float   | 150                        | Max wait (10-150 seconds)                                      |
 
 ---
 
@@ -75,6 +77,7 @@ response = client.crawl(
 ```
 
 **Key benefits:**
+
 - `instructions` guides crawler semantically, focusing on relevant content
 - `chunks_per_source` returns only relevant snippets (max 500 chars each)
 - Prevents context window explosion in agentic use cases
@@ -127,6 +130,7 @@ response = client.crawl(
 ## Use Cases
 
 ### 1. Deep/Unlinked Content
+
 Deeply nested pages, paginated archives, internal search-only content.
 
 ```python
@@ -141,6 +145,7 @@ response = client.crawl(
 ```
 
 ### 2. Documentation/Structured Content
+
 Documentation, changelogs, FAQs with nonstandard markup.
 
 ```python
@@ -153,6 +158,7 @@ response = client.crawl(
 ```
 
 ### 3. Multi-modal/Cross-referencing
+
 Combining information from multiple sections.
 
 ```python
@@ -165,6 +171,7 @@ response = client.crawl(
 ```
 
 ### 4. Rapidly Changing Content
+
 API docs, product announcements, news sections.
 
 ```python
@@ -188,6 +195,7 @@ response = client.crawl(
 ```
 
 ### 6. Compliance/Auditing
+
 Comprehensive content analysis for legal checks.
 
 ```python
@@ -202,6 +210,7 @@ response = client.crawl(
 ```
 
 ### 7. Known URL Patterns
+
 Sitemap-based crawling, section-specific extraction.
 
 ```python
@@ -248,6 +257,7 @@ response = client.extract(
 ```
 
 **Benefits:**
+
 - Discover site structure before committing to full crawl
 - Identify relevant path patterns
 - Avoid unnecessary extraction
@@ -261,13 +271,14 @@ response = client.extract(
 
 Each depth level increases crawl time exponentially:
 
-| Depth | Typical Pages | Time |
-|-------|---------------|------|
-| 1 | 10-50 | Seconds |
-| 2 | 50-500 | Minutes |
-| 3 | 500-5000 | Many minutes |
+| Depth | Typical Pages | Time         |
+| ----- | ------------- | ------------ |
+| 1     | 10-50         | Seconds      |
+| 2     | 50-500        | Minutes      |
+| 3     | 500-5000      | Many minutes |
 
 **Best practices:**
+
 - Start with `max_depth=1` and increase only if needed
 - Use `max_breadth` to control horizontal expansion
 - Set appropriate `limit` to prevent excessive crawling
@@ -304,13 +315,13 @@ response = client.crawl(
 
 ## Common Pitfalls
 
-| Problem | Impact | Solution |
-|---------|--------|----------|
-| Excessive depth (`max_depth=4+`) | Exponential time, unnecessary pages | Start with 1-2, increase if needed |
-| Unfocused crawling | Wasted resources, irrelevant content, context explosion | Use `instructions` to focus semantically |
-| Missing limits | Runaway crawls, unexpected costs | Always set reasonable `limit` value |
-| Ignoring `failed_results` | Incomplete data, missed content | Monitor and adjust parameters |
-| Full content without chunks | Context window explosion | Use `instructions` + `chunks_per_source` |
+| Problem                          | Impact                                                  | Solution                                 |
+| -------------------------------- | ------------------------------------------------------- | ---------------------------------------- |
+| Excessive depth (`max_depth=4+`) | Exponential time, unnecessary pages                     | Start with 1-2, increase if needed       |
+| Unfocused crawling               | Wasted resources, irrelevant content, context explosion | Use `instructions` to focus semantically |
+| Missing limits                   | Runaway crawls, unexpected costs                        | Always set reasonable `limit` value      |
+| Ignoring `failed_results`        | Incomplete data, missed content                         | Monitor and adjust parameters            |
+| Full content without chunks      | Context window explosion                                | Use `instructions` + `chunks_per_source` |
 
 ---
 
@@ -318,25 +329,25 @@ response = client.crawl(
 
 ### Crawl Response
 
-| Field | Description |
-|-------|-------------|
-| `base_url` | The URL you started the crawl from |
-| `results` | List of crawled pages |
-| `results[].url` | Page URL |
+| Field                   | Description                                            |
+| ----------------------- | ------------------------------------------------------ |
+| `base_url`              | The URL you started the crawl from                     |
+| `results`               | List of crawled pages                                  |
+| `results[].url`         | Page URL                                               |
 | `results[].raw_content` | Extracted content (or chunks if instructions provided) |
-| `results[].images` | Image URLs extracted from the page |
-| `results[].favicon` | Favicon URL (if `include_favicon=True`) |
-| `response_time` | Time in seconds |
-| `request_id` | Unique identifier for support reference |
+| `results[].images`      | Image URLs extracted from the page                     |
+| `results[].favicon`     | Favicon URL (if `include_favicon=True`)                |
+| `response_time`         | Time in seconds                                        |
+| `request_id`            | Unique identifier for support reference                |
 
 ### Map Response
 
-| Field | Description |
-|-------|-------------|
-| `base_url` | The URL you started the mapping from |
-| `results` | List of discovered URLs |
-| `response_time` | Time in seconds |
-| `request_id` | Unique identifier for support reference |
+| Field           | Description                             |
+| --------------- | --------------------------------------- |
+| `base_url`      | The URL you started the mapping from    |
+| `results`       | List of discovered URLs                 |
+| `response_time` | Time in seconds                         |
+| `request_id`    | Unique identifier for support reference |
 
 ---
 

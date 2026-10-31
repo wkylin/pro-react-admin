@@ -18,6 +18,7 @@
 **Keep queries under 400 characters.** Think search query, not long-form prompt.
 
 **Break complex queries into sub-queries:**
+
 ```python
 # Instead of one massive query, break it down:
 queries = [
@@ -32,52 +33,53 @@ responses = await asyncio.gather(*(client.search(q) for q in queries))
 
 Controls the latency vs. relevance tradeoff:
 
-| Depth | Latency | Relevance | Content Type |
-|-------|---------|-----------|--------------|
-| `ultra-fast` | Lowest | Lower | Content (NLP summary) |
-| `fast` | Low | Good | Chunks |
-| `basic` | Medium | High | Content (NLP summary) |
-| `advanced` | Higher | Highest | Chunks |
+| Depth        | Latency | Relevance | Content Type          |
+| ------------ | ------- | --------- | --------------------- |
+| `ultra-fast` | Lowest  | Lower     | Content (NLP summary) |
+| `fast`       | Low     | Good      | Chunks                |
+| `basic`      | Medium  | High      | Content (NLP summary) |
+| `advanced`   | Higher  | Highest   | Chunks                |
 
 **Content types:**
+
 - **Content**: NLP-based summary of the page, providing general context
 - **Chunks**: Short snippets (max 500 chars) reranked by relevance to your query
 
-**When to use each:** 
+**When to use each:**
+
 - `ultra-fast`: Latency-critical (real-time chat, autocomplete)
 - `fast`: Need chunks but latency matters
 - `basic`: General-purpose, balanced relevance and latency
-- `advanced`: Specific information queries, precision matters - default (Still fast and suitable for almost all use cases) 
+- `advanced`: Specific information queries, precision matters - default (Still fast and suitable for almost all use cases)
 
 ## Key Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `query` | string | Required | Search query (keep under 400 chars) |
-| `search_depth` | enum | `"basic"` | `"ultra-fast"`, `"fast"`, `"basic"`, `"advanced"` |
-| `topic` | enum | `"general"` | `"general"`, `"news"`, `"finance"` |
-| `chunks_per_source` | integer | 3 | Chunks per source (advanced/fast depth only) |
-| `max_results` | integer | 5 | Maximum results (0-20) |
-| `time_range` | enum | null | `"day"`, `"week"`, `"month"`, `"year"` |
-| `start_date` | string | null | Results after date (YYYY-MM-DD) |
-| `end_date` | string | null | Results before date (YYYY-MM-DD) |
-| `include_domains` | array | [] | Domains to include (max 300, supports wildcards like `*.com`) |
-| `exclude_domains` | array | [] | Domains to exclude (max 150) |
-| `country` | enum | null | Boost results from country |
-| `include_answer` | bool/enum | false | `true`/`"basic"` or `"advanced"` for LLM answer |
-| `include_raw_content` | bool/enum | false | `true`/`"markdown"` or `"text"` for full page |
-| `include_images` | boolean | false | Include image results |
-| `include_image_descriptions` | boolean | false | AI descriptions for images |
-| `include_favicon` | boolean | false | Favicon URL per result |
-| `auto_parameters` | boolean | false | Auto-configure based on query intent |
-| `include_usage` | boolean | false | Include credit usage info |
+| Parameter                    | Type      | Default     | Description                                                   |
+| ---------------------------- | --------- | ----------- | ------------------------------------------------------------- |
+| `query`                      | string    | Required    | Search query (keep under 400 chars)                           |
+| `search_depth`               | enum      | `"basic"`   | `"ultra-fast"`, `"fast"`, `"basic"`, `"advanced"`             |
+| `topic`                      | enum      | `"general"` | `"general"`, `"news"`, `"finance"`                            |
+| `chunks_per_source`          | integer   | 3           | Chunks per source (advanced/fast depth only)                  |
+| `max_results`                | integer   | 5           | Maximum results (0-20)                                        |
+| `time_range`                 | enum      | null        | `"day"`, `"week"`, `"month"`, `"year"`                        |
+| `start_date`                 | string    | null        | Results after date (YYYY-MM-DD)                               |
+| `end_date`                   | string    | null        | Results before date (YYYY-MM-DD)                              |
+| `include_domains`            | array     | []          | Domains to include (max 300, supports wildcards like `*.com`) |
+| `exclude_domains`            | array     | []          | Domains to exclude (max 150)                                  |
+| `country`                    | enum      | null        | Boost results from country                                    |
+| `include_answer`             | bool/enum | false       | `true`/`"basic"` or `"advanced"` for LLM answer               |
+| `include_raw_content`        | bool/enum | false       | `true`/`"markdown"` or `"text"` for full page                 |
+| `include_images`             | boolean   | false       | Include image results                                         |
+| `include_image_descriptions` | boolean   | false       | AI descriptions for images                                    |
+| `include_favicon`            | boolean   | false       | Favicon URL per result                                        |
+| `auto_parameters`            | boolean   | false       | Auto-configure based on query intent                          |
+| `include_usage`              | boolean   | false       | Include credit usage info                                     |
 
 **Notes:**
 
 - **`include_answer`**: Only use if you don't want to bring your own LLM. Most users bring their own model.
 
 - **`auto_parameters`**: May set `search_depth="advanced"` (2 credits). Set `search_depth` manually to control cost.
-
 
 ## Basic Usage
 
@@ -97,7 +99,6 @@ for result in response["results"]:
     print(f"{result['title']}: {result['url']}")
     print(f"Score: {result['score']}")
 ```
-
 
 ## Filtering Results
 
@@ -176,41 +177,40 @@ async def fetch_and_gather():
 asyncio.run(fetch_and_gather())
 ```
 
-
 ## Response Fields
 
 **Top-level response:**
 
-| Field | Description |
-|-------|-------------|
-| `query` | The original search query |
-| `answer` | AI-generated answer (if `include_answer` enabled) |
-| `results` | Array of search result objects |
-| `images` | Array of image results (if `include_images=True`) |
+| Field     | Description                                       |
+| --------- | ------------------------------------------------- |
+| `query`   | The original search query                         |
+| `answer`  | AI-generated answer (if `include_answer` enabled) |
+| `results` | Array of search result objects                    |
+| `images`  | Array of image results (if `include_images=True`) |
 
 **Each result object:**
 
-| Field | Description |
-|-------|-------------|
-| `title` | Page title |
-| `url` | Source URL |
-| `content` | Extracted text snippet(s) |
-| `score` | Semantic relevance score (0-1) |
+| Field         | Description                                          |
+| ------------- | ---------------------------------------------------- |
+| `title`       | Page title                                           |
+| `url`         | Source URL                                           |
+| `content`     | Extracted text snippet(s)                            |
+| `score`       | Semantic relevance score (0-1)                       |
 | `raw_content` | Full page content (if `include_raw_content` enabled) |
-| `favicon` | Favicon URL (if `include_favicon=True`) |
+| `favicon`     | Favicon URL (if `include_favicon=True`)              |
 
 **Top-level response also includes:**
 
-| Field | Description |
-|-------|-------------|
-| `request_id` | Unique identifier for support reference |
-| `response_time` | Response time in seconds |
+| Field           | Description                             |
+| --------------- | --------------------------------------- |
+| `request_id`    | Unique identifier for support reference |
+| `response_time` | Response time in seconds                |
 
 **Each image object (if `include_images=True`):**
 
-| Field | Description |
-|-------|-------------|
-| `url` | Image URL |
+| Field         | Description                                                     |
+| ------------- | --------------------------------------------------------------- |
+| `url`         | Image URL                                                       |
 | `description` | AI-generated description (if `include_image_descriptions=True`) |
 
 ---
@@ -247,6 +247,7 @@ top_relevant = sorted(
 ### Regex Filtering
 
 Fast, deterministic filtering using pattern matching. Use for:
+
 - URL pattern validation
 - Required keywords/phrases
 - Structural requirements
@@ -329,6 +330,7 @@ criteria = {
 ### LLM Verification
 
 Semantic validation using an LLM. Use for:
+
 - Synonym/abbreviation matching ("FDE" = "Forward Deployed Engineer")
 - Context-aware validation
 - Confidence scoring with reasoning

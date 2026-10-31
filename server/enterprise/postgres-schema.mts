@@ -213,13 +213,20 @@ export async function migratePostgresEnterpriseDatabase(store: PostgresEnterpris
     }
     for (let index = existing.length; index < migrations.length; index += 1) {
       for (const statement of migrations[index]) await store.query(statement)
-      await store.run('INSERT INTO enterprise_schema_migrations (version, checksum) VALUES (?, ?)', index + 1, checksums[index])
+      await store.run(
+        'INSERT INTO enterprise_schema_migrations (version, checksum) VALUES (?, ?)',
+        index + 1,
+        checksums[index]
+      )
     }
     return { version: POSTGRES_SCHEMA_VERSION, applied: existing.length < migrations.length }
   })
 }
 
-export async function verifyPostgresEnterpriseDatabase(store: PostgresEnterpriseStore, { allowVersionOne = false } = {}) {
+export async function verifyPostgresEnterpriseDatabase(
+  store: PostgresEnterpriseStore,
+  { allowVersionOne = false } = {}
+) {
   let row
   try {
     row = await store.one<{ version: number; checksum: string }>(
@@ -230,8 +237,11 @@ export async function verifyPostgresEnterpriseDatabase(store: PostgresEnterprise
       throw new Error('Enterprise PostgreSQL schema needs migration; run api:pg migrate')
     throw error
   }
-  if (!row || row.checksum !== checksums[row.version - 1] ||
-      (row.version !== POSTGRES_SCHEMA_VERSION && !(allowVersionOne && row.version === 1)))
+  if (
+    !row ||
+    row.checksum !== checksums[row.version - 1] ||
+    (row.version !== POSTGRES_SCHEMA_VERSION && !(allowVersionOne && row.version === 1))
+  )
     throw new Error('Enterprise PostgreSQL schema needs migration; run api:pg migrate')
   return { version: row.version }
 }

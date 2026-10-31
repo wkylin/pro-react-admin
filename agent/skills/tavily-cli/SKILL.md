@@ -1,6 +1,7 @@
 ---
 description: "Web search, content extraction, crawling, and deep research via the Tavily CLI. Use this skill whenever the user wants to search the web, find articles, research a topic, look something up online, extract content from a URL, grab text from a webpage, crawl documentation, download a site's pages, discover URLs on a domain, or conduct in-depth research with citations. Also use when they say \"fetch this page\", \"pull the content from\", \"get the page at https://\", \"find me articles about\", or reference extracting data from external websites. This provides LLM-optimized web search, content extraction, site crawling, URL discovery, and AI-powered deep research — capabilities beyond what agents can do natively. Do NOT trigger for local file operations, git commands, deployments, or code editing tasks.\n"
 ---
+
 # Tavily CLI
 
 Web search, content extraction, site crawling, URL discovery, and deep research. Returns JSON optimized for LLM consumption.
@@ -43,13 +44,13 @@ Follow this escalation pattern — start simple, escalate when needed:
 4. **Crawl** — Need bulk content from an entire site section.
 5. **Research** — Need comprehensive, multi-source analysis with citations.
 
-| Need | Command | When |
-|------|---------|------|
-| Find pages on a topic | `tvly search` | No specific URL yet |
-| Get a page's content | `tvly extract` | Have a URL |
-| Find URLs within a site | `tvly map` | Need to locate a specific subpage |
-| Bulk extract a site section | `tvly crawl` | Need many pages (e.g., all /docs/) |
-| Deep research with citations | `tvly research` | Need multi-source synthesis |
+| Need                         | Command         | When                               |
+| ---------------------------- | --------------- | ---------------------------------- |
+| Find pages on a topic        | `tvly search`   | No specific URL yet                |
+| Get a page's content         | `tvly extract`  | Have a URL                         |
+| Find URLs within a site      | `tvly map`      | Need to locate a specific subpage  |
+| Bulk extract a site section  | `tvly crawl`    | Need many pages (e.g., all /docs/) |
+| Deep research with citations | `tvly research` | Need multi-source synthesis        |
 
 For detailed command reference, use the individual skill for each command (e.g., `tavily-search`, `tavily-crawl`) or run `tvly <command> --help`.
 

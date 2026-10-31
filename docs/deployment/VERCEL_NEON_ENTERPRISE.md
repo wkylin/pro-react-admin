@@ -4,14 +4,14 @@
 
 ## 已实现的范围
 
-| 部分 | 文件 | 作用 |
-| --- | --- | --- |
-| 数据库连接、事务 | `server/enterprise/postgres-store.mts` | 参数绑定、同连接事务、序列化冲突重试 |
-| 版本化建表 | `server/enterprise/postgres-schema.mts` | 17 张表（含迁移表）、外键、唯一约束、审计只追加、事件通知触发器 |
-| 业务接口 | `server/enterprise/postgres-service.mts` | 账号、会话、租户、角色、用户、权限、审批、TOTP、审计 |
-| Vercel Function | `apps/enterprise-api/api/[...path].ts` | `/api/*` 路由、健康检查、CORS、数据库登录限速 |
-| 跨实例更新 | `/api/resource-stream` + `/api/events/poll` | WebSocket 实时推送，连接故障时按审计游标轮询 |
-| 运维入口 | `pnpm run api:pg` | 显式迁移、状态、首个租户、平台管理员授权 |
+| 部分             | 文件                                        | 作用                                                            |
+| ---------------- | ------------------------------------------- | --------------------------------------------------------------- |
+| 数据库连接、事务 | `server/enterprise/postgres-store.mts`      | 参数绑定、同连接事务、序列化冲突重试                            |
+| 版本化建表       | `server/enterprise/postgres-schema.mts`     | 17 张表（含迁移表）、外键、唯一约束、审计只追加、事件通知触发器 |
+| 业务接口         | `server/enterprise/postgres-service.mts`    | 账号、会话、租户、角色、用户、权限、审批、TOTP、审计            |
+| Vercel Function  | `apps/enterprise-api/api/[...path].ts`      | `/api/*` 路由、健康检查、CORS、数据库登录限速                   |
+| 跨实例更新       | `/api/resource-stream` + `/api/events/poll` | WebSocket 实时推送，连接故障时按审计游标轮询                    |
+| 运维入口         | `pnpm run api:pg`                           | 显式迁移、状态、首个租户、平台管理员授权                        |
 
 API 启动只校验数据库版本，不在流量请求中建表或创建默认账号。旧的 SQLite API 与本地演示仍可独立使用。PostgreSQL 的事件票据和审计游标保存在数据库，跨 Function 实例的通知来自 PostgreSQL `LISTEN/NOTIFY`；本地 SQLite API 仍提供原有 WebSocket。Neon 的连接 URL、TOTP 密钥和初始化密码只放服务端或受保护的本地运维环境，不写入前端构建变量。
 
@@ -35,13 +35,13 @@ API 项目的 `vercel-build` 会先检查类型，再把共享的 TypeScript 模
 
 在 API 项目的 Environment Variables 中核对：
 
-| 变量 | 配置 |
-| --- | --- |
-| `DATABASE_URL` | Neon 的 PostgreSQL **pooled** 连接 URL，带 TLS 配置；仅 API 项目和运维终端可见 |
-| `DATABASE_URL_UNPOOLED` | Neon 的 **direct** 连接 URL；仅 WebSocket Function 订阅数据库通知使用 |
-| `CORS_ORIGINS` | 前端精确 origin，例如 `https://your-enterprise-frontend.vercel.app`；多个用逗号分隔 |
-| `ENTERPRISE_TOTP_KEY` | 可选，`openssl rand -hex 32` 生成的 64 位十六进制密钥；启用验证器后必须保留原值 |
-| `ENTERPRISE_SESSION_TTL_MS` | 可选，默认 `28800000`（8 小时） |
+| 变量                        | 配置                                                                                |
+| --------------------------- | ----------------------------------------------------------------------------------- |
+| `DATABASE_URL`              | Neon 的 PostgreSQL **pooled** 连接 URL，带 TLS 配置；仅 API 项目和运维终端可见      |
+| `DATABASE_URL_UNPOOLED`     | Neon 的 **direct** 连接 URL；仅 WebSocket Function 订阅数据库通知使用               |
+| `CORS_ORIGINS`              | 前端精确 origin，例如 `https://your-enterprise-frontend.vercel.app`；多个用逗号分隔 |
+| `ENTERPRISE_TOTP_KEY`       | 可选，`openssl rand -hex 32` 生成的 64 位十六进制密钥；启用验证器后必须保留原值     |
+| `ENTERPRISE_SESSION_TTL_MS` | 可选，默认 `28800000`（8 小时）                                                     |
 
 如集成生成的连接变量名称不同，将**池化连接 URL**复制到 API 项目的 `DATABASE_URL`，直连 URL 复制到 `DATABASE_URL_UNPOOLED`。Neon 的事务池不支持 `LISTEN/NOTIFY`，事件订阅必须使用直连；Function 实例没有活跃 WebSocket 连接时会关闭此直连。[Neon 连接池限制](https://neon.com/docs/connect/connection-pooling) 预览环境若也要连接真实数据，应使用独立 Neon 分支或数据库，并显式设置对应环境变量；不要让预览写入生产租户。数据库 URL 不放进前端 Vercel 项目。Vercel 的环境变量更新后需重新部署对应版本。
 
@@ -104,13 +104,13 @@ node --test server/enterprise/postgres.test.mjs
 
 集成测试使用内存 PostgreSQL 兼容引擎，覆盖建表、登录、租户、RBAC、独立审批、TOTP 恢复码、审计约束、限速、一次性票据、WebSocket 事件和轮询；上线前还须在目标 Neon 数据库运行 `status` 并用真实前端完成一次登录与管理页验收。对 Neon 数据库启用项目所需的备份 / 恢复策略，并在独立分支或副本验证恢复。数据库迁移是显式操作，按本节顺序升级旧库。
 
-| 症状 | 检查 |
-| --- | --- |
-| `/api/health` 返回 503 | API 项目是否有 `DATABASE_URL`、是否已迁移、TOTP 密钥是否匹配已存验证器 |
-| 浏览器 CORS 错误 | `CORS_ORIGINS` 是否包含当前前端 origin（无路径和末尾 `/`） |
-| 前端 404 或 HTML | `APP_BASE_URL` 是否为独立 API origin，构建后是否重新发布前端 |
-| 登录 429 | 数据库中的同一客户端 10 分钟窗口登录请求超过配置上限 |
-| WebSocket 无法连接 | 核对 `DATABASE_URL_UNPOOLED`、v2 迁移、`CORS_ORIGINS`、Function 的 Fluid Compute 和 `/api/resource-stream` 路由；浏览器会自动切回轮询 |
-| 管理页更新延迟 | WebSocket 正常时由数据库提交触发推送；轮询兜底每 10 秒读取审计游标 |
+| 症状                   | 检查                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/health` 返回 503 | API 项目是否有 `DATABASE_URL`、是否已迁移、TOTP 密钥是否匹配已存验证器                                                                |
+| 浏览器 CORS 错误       | `CORS_ORIGINS` 是否包含当前前端 origin（无路径和末尾 `/`）                                                                            |
+| 前端 404 或 HTML       | `APP_BASE_URL` 是否为独立 API origin，构建后是否重新发布前端                                                                          |
+| 登录 429               | 数据库中的同一客户端 10 分钟窗口登录请求超过配置上限                                                                                  |
+| WebSocket 无法连接     | 核对 `DATABASE_URL_UNPOOLED`、v2 迁移、`CORS_ORIGINS`、Function 的 Fluid Compute 和 `/api/resource-stream` 路由；浏览器会自动切回轮询 |
+| 管理页更新延迟         | WebSocket 正常时由数据库提交触发推送；轮询兜底每 10 秒读取审计游标                                                                    |
 
 当前 PostgreSQL 路径用于**新库初始化**。现有 SQLite 生产数据没有自动导入步骤；如需切换旧库，先设计并验证保留账号、密码哈希、principal、角色、审批、审计和 TOTP 密钥的离线迁移，再切换前端 API 地址。

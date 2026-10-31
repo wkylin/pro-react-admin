@@ -8,13 +8,13 @@ Storybook 的静态目录用于预览，不是可安装的 npm 包。要构建�
 
 在仓库根目录使用 Node.js >=24.15.0 且 <25、pnpm 11.5.2，先运行 `pnpm install --frozen-lockfile`。选择一套 builder；它们展示相同的 stories，只影响本地编译速度和构建实现。
 
-| 任务                   | Webpack（默认）                             | Vite                                                              |
-| ---------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
-| 开发并自动刷新         | `pnpm run storybook:webpack`，端口 6006     | `pnpm run storybook:vite`，端口 6008                              |
-| 构建静态站             | `pnpm run build-storybook:webpack`          | `pnpm run build-storybook:vite`                                   |
-| 构建输出               | `storybook-static/`                         | `storybook-static-vite/`                                          |
-| 本地预览已构建的文件   | `pnpm run serve:storybook`，端口 6007       | `python3 -m http.server -p HTTP/1.1 6009 -d storybook-static-vite`                   |
-| 检查实际构建的组件索引 | `node scripts/validate-stories.mjs --built` | `node scripts/validate-stories.mjs --built=storybook-static-vite` |
+| 任务                   | Webpack（默认）                             | Vite                                                               |
+| ---------------------- | ------------------------------------------- | ------------------------------------------------------------------ |
+| 开发并自动刷新         | `pnpm run storybook:webpack`，端口 6006     | `pnpm run storybook:vite`，端口 6008                               |
+| 构建静态站             | `pnpm run build-storybook:webpack`          | `pnpm run build-storybook:vite`                                    |
+| 构建输出               | `storybook-static/`                         | `storybook-static-vite/`                                           |
+| 本地预览已构建的文件   | `pnpm run serve:storybook`，端口 6007       | `python3 -m http.server -p HTTP/1.1 6009 -d storybook-static-vite` |
+| 检查实际构建的组件索引 | `node scripts/validate-stories.mjs --built` | `node scripts/validate-stories.mjs --built=storybook-static-vite`  |
 
 首次使用建议先启动开发服务，在浏览器打开终端输出的地址，从左侧导航进入 `WUI / Components`、`Shared`、`Components / Stateless` 或 `Components / Stateful`。修改同目录的 `*.stories.tsx` 或组件源码后，开发服务自动更新；构建出的静态目录不会自动更新，需重新执行对应构建命令。两个静态输出目录独立，切换 builder 无需清理另一套产物。
 

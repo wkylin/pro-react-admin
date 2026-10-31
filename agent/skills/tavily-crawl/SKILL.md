@@ -1,6 +1,7 @@
 ---
 description: "Crawl websites and extract content from multiple pages via the Tavily CLI. Use this skill when the user wants to crawl a site, download documentation, extract an entire docs section, bulk-extract pages, save a site as local markdown files, or says \"crawl\", \"get all the pages\", \"download the docs\", \"extract everything under /docs\", \"bulk extract\", or needs content from many pages on the same domain. Supports depth/breadth control, path filtering, semantic instructions, and saving each page as a local markdown file.\n"
 ---
+
 # tavily crawl
 
 Crawl a website and extract content from multiple pages. Supports saving each page as a local markdown file.
@@ -44,25 +45,25 @@ tvly crawl "https://docs.example.com" --instructions "Find authentication docs" 
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--max-depth` | Levels deep (1-5, default: 1) |
-| `--max-breadth` | Links per page (default: 20) |
-| `--limit` | Total pages cap (default: 50) |
-| `--instructions` | Natural language guidance for semantic focus |
-| `--chunks-per-source` | Chunks per page (1-5, requires `--instructions`) |
-| `--extract-depth` | `basic` (default) or `advanced` |
-| `--format` | `markdown` (default) or `text` |
-| `--select-paths` | Comma-separated regex patterns to include |
-| `--exclude-paths` | Comma-separated regex patterns to exclude |
-| `--select-domains` | Comma-separated regex for domains to include |
-| `--exclude-domains` | Comma-separated regex for domains to exclude |
-| `--allow-external / --no-external` | Include external links (default: allow) |
-| `--include-images` | Include images |
-| `--timeout` | Max wait (10-150 seconds) |
-| `-o, --output` | Save JSON output to file |
-| `--output-dir` | Save each page as a .md file in directory |
-| `--json` | Structured JSON output |
+| Option                             | Description                                      |
+| ---------------------------------- | ------------------------------------------------ |
+| `--max-depth`                      | Levels deep (1-5, default: 1)                    |
+| `--max-breadth`                    | Links per page (default: 20)                     |
+| `--limit`                          | Total pages cap (default: 50)                    |
+| `--instructions`                   | Natural language guidance for semantic focus     |
+| `--chunks-per-source`              | Chunks per page (1-5, requires `--instructions`) |
+| `--extract-depth`                  | `basic` (default) or `advanced`                  |
+| `--format`                         | `markdown` (default) or `text`                   |
+| `--select-paths`                   | Comma-separated regex patterns to include        |
+| `--exclude-paths`                  | Comma-separated regex patterns to exclude        |
+| `--select-domains`                 | Comma-separated regex for domains to include     |
+| `--exclude-domains`                | Comma-separated regex for domains to exclude     |
+| `--allow-external / --no-external` | Include external links (default: allow)          |
+| `--include-images`                 | Include images                                   |
+| `--timeout`                        | Max wait (10-150 seconds)                        |
+| `-o, --output`                     | Save JSON output to file                         |
+| `--output-dir`                     | Save each page as a .md file in directory        |
+| `--json`                           | Structured JSON output                           |
 
 ## Crawl for context vs. data collection
 

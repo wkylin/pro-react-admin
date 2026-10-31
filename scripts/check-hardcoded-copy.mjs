@@ -71,7 +71,12 @@ function collect(sourceFile) {
       localized += 1
       return
     }
-    if (ts.isParenthesizedExpression(node) || ts.isAsExpression(node) || ts.isTypeAssertionExpression(node) || ts.isNonNullExpression(node)) {
+    if (
+      ts.isParenthesizedExpression(node) ||
+      ts.isAsExpression(node) ||
+      ts.isTypeAssertionExpression(node) ||
+      ts.isNonNullExpression(node)
+    ) {
       visitExpression(node.expression)
       return
     }
@@ -93,7 +98,11 @@ function collect(sourceFile) {
       visitExpression(node.whenFalse)
       return
     }
-    if (ts.isBinaryExpression(node) && (node.operatorToken.kind === ts.SyntaxKind.BarBarToken || node.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken)) {
+    if (
+      ts.isBinaryExpression(node) &&
+      (node.operatorToken.kind === ts.SyntaxKind.BarBarToken ||
+        node.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken)
+    ) {
       visitExpression(node.left)
       visitExpression(node.right)
       return
@@ -215,7 +224,8 @@ function main() {
     return
   }
 
-  if (!existsSync(baselineFile)) throw new Error('Missing hardcoded-copy baseline; review and run with --write-baseline')
+  if (!existsSync(baselineFile))
+    throw new Error('Missing hardcoded-copy baseline; review and run with --write-baseline')
   const baseline = JSON.parse(readFileSync(baselineFile, 'utf8'))
   if (baseline.version !== 2 || !baseline.hardcodedByFile || typeof baseline.hardcodedByFile !== 'object') {
     throw new Error('Unsupported hardcoded-copy baseline format')

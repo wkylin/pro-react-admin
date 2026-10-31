@@ -48,25 +48,25 @@ tvly crawl "https://docs.example.com" --instructions "Find authentication docs" 
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--max-depth` | Levels deep (1-5, default: 1) |
-| `--max-breadth` | Links per page (default: 20) |
-| `--limit` | Total pages cap (default: 50) |
-| `--instructions` | Natural language guidance for semantic focus |
-| `--chunks-per-source` | Chunks per page (1-5, requires `--instructions`) |
-| `--extract-depth` | `basic` (default) or `advanced` |
-| `--format` | `markdown` (default) or `text` |
-| `--select-paths` | Comma-separated regex patterns to include |
-| `--exclude-paths` | Comma-separated regex patterns to exclude |
-| `--select-domains` | Comma-separated regex for domains to include |
-| `--exclude-domains` | Comma-separated regex for domains to exclude |
-| `--allow-external / --no-external` | Include external links (default: allow) |
-| `--include-images` | Include images |
-| `--timeout` | Max wait (10-150 seconds) |
-| `-o, --output` | Save JSON output to file |
-| `--output-dir` | Save each page as a .md file in directory |
-| `--json` | Structured JSON output |
+| Option                             | Description                                      |
+| ---------------------------------- | ------------------------------------------------ |
+| `--max-depth`                      | Levels deep (1-5, default: 1)                    |
+| `--max-breadth`                    | Links per page (default: 20)                     |
+| `--limit`                          | Total pages cap (default: 50)                    |
+| `--instructions`                   | Natural language guidance for semantic focus     |
+| `--chunks-per-source`              | Chunks per page (1-5, requires `--instructions`) |
+| `--extract-depth`                  | `basic` (default) or `advanced`                  |
+| `--format`                         | `markdown` (default) or `text`                   |
+| `--select-paths`                   | Comma-separated regex patterns to include        |
+| `--exclude-paths`                  | Comma-separated regex patterns to exclude        |
+| `--select-domains`                 | Comma-separated regex for domains to include     |
+| `--exclude-domains`                | Comma-separated regex for domains to exclude     |
+| `--allow-external / --no-external` | Include external links (default: allow)          |
+| `--include-images`                 | Include images                                   |
+| `--timeout`                        | Max wait (10-150 seconds)                        |
+| `-o, --output`                     | Save JSON output to file                         |
+| `--output-dir`                     | Save each page as a .md file in directory        |
+| `--json`                           | Structured JSON output                           |
 
 ## Crawl for context vs. data collection
 

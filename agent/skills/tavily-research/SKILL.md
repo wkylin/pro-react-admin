@@ -1,6 +1,7 @@
 ---
 description: "Conduct comprehensive AI-powered research with citations via the Tavily CLI. Use this skill when the user wants deep research, a detailed report, a comparison, market analysis, literature review, or says \"research\", \"investigate\", \"analyze in depth\", \"compare X vs Y\", \"what does the market look like for\", or needs multi-source synthesis with explicit citations. Returns a structured report grounded in web sources. Takes 30-120 seconds. For quick fact-finding, use tavily-search instead.\n"
 ---
+
 # tavily research
 
 AI-powered deep research that gathers sources, analyzes them, and produces a cited report. Takes 30-120 seconds.
@@ -45,25 +46,25 @@ tvly research "quantum computing breakthroughs" --json
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--model` | `mini`, `pro`, or `auto` (default) |
-| `--stream` | Stream results in real-time |
-| `--no-wait` | Return request_id immediately (async) |
-| `--output-schema` | Path to JSON schema for structured output |
-| `--citation-format` | `numbered`, `mla`, `apa`, `chicago` |
-| `--poll-interval` | Seconds between checks (default: 10) |
-| `--timeout` | Max wait seconds (default: 600) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option              | Description                               |
+| ------------------- | ----------------------------------------- |
+| `--model`           | `mini`, `pro`, or `auto` (default)        |
+| `--stream`          | Stream results in real-time               |
+| `--no-wait`         | Return request_id immediately (async)     |
+| `--output-schema`   | Path to JSON schema for structured output |
+| `--citation-format` | `numbered`, `mla`, `apa`, `chicago`       |
+| `--poll-interval`   | Seconds between checks (default: 10)      |
+| `--timeout`         | Max wait seconds (default: 600)           |
+| `-o, --output`      | Save output to file                       |
+| `--json`            | Structured JSON output                    |
 
 ## Model selection
 
-| Model | Use for | Speed |
-|-------|---------|-------|
-| `mini` | Single-topic, targeted research | ~30s |
-| `pro` | Comprehensive multi-angle analysis | ~60-120s |
-| `auto` | API chooses based on complexity | Varies |
+| Model  | Use for                            | Speed    |
+| ------ | ---------------------------------- | -------- |
+| `mini` | Single-topic, targeted research    | ~30s     |
+| `pro`  | Comprehensive multi-angle analysis | ~60-120s |
+| `auto` | API chooses based on complexity    | Varies   |
 
 **Rule of thumb:** "What does X do?" → mini. "X vs Y vs Z" or "best way to..." → pro.
 

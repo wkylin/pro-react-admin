@@ -17,14 +17,17 @@ export function PropReference({ name }: { name: string }) {
   if (!props.length)
     return (
       <div className="wui-doc-callout" role="note">
-        <strong>没有公开 Props：</strong>当前组件不接收自定义属性。上方预览展示固定内容；Storybook 的示例设置不代表组件 API。
+        <strong>没有公开 Props：</strong>当前组件不接收自定义属性。上方预览展示固定内容；Storybook 的示例设置不代表组件
+        API。
       </div>
     )
 
   return (
     <div className="wui-doc-props-wrap">
       <p className="wui-doc-props-intro">
-        以下 {props.length} 个组件专属或常用继承属性来自 TypeScript 声明；标准 DOM 与第三方库的其余属性遵循原类型。默认值只列出源码参数中可直接确认的表达式；「示例参数」只展示当前 Story 开放了交互控制的部分。
+        以下 {props.length} 个组件专属或常用继承属性来自 TypeScript 声明；标准 DOM
+        与第三方库的其余属性遵循原类型。默认值只列出源码参数中可直接确认的表达式；「示例参数」只展示当前 Story
+        开放了交互控制的部分。
       </p>
       <table className="wui-doc-table wui-doc-props-table">
         <thead>
@@ -39,9 +42,13 @@ export function PropReference({ name }: { name: string }) {
         <tbody>
           {props.map((prop) => (
             <tr key={prop.name}>
-              <th scope="row"><code>{prop.name}</code></th>
+              <th scope="row">
+                <code>{prop.name}</code>
+              </th>
               <td>{prop.description}</td>
-              <td><code>{prop.type}</code></td>
+              <td>
+                <code>{prop.type}</code>
+              </td>
               <td>{prop.required ? '是' : '否'}</td>
               <td>{prop.defaultValue ? <code>{prop.defaultValue}</code> : '—'}</td>
             </tr>

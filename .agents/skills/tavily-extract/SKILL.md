@@ -48,22 +48,22 @@ tvly extract "https://example.com/article" -o article.md
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--query` | Rerank chunks by relevance to this query |
-| `--chunks-per-source` | Chunks per URL (1-5, requires `--query`) |
-| `--extract-depth` | `basic` (default) or `advanced` (for JS pages) |
-| `--format` | `markdown` (default) or `text` |
-| `--include-images` | Include image URLs |
-| `--timeout` | Max wait time (1-60 seconds) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option                | Description                                    |
+| --------------------- | ---------------------------------------------- |
+| `--query`             | Rerank chunks by relevance to this query       |
+| `--chunks-per-source` | Chunks per URL (1-5, requires `--query`)       |
+| `--extract-depth`     | `basic` (default) or `advanced` (for JS pages) |
+| `--format`            | `markdown` (default) or `text`                 |
+| `--include-images`    | Include image URLs                             |
+| `--timeout`           | Max wait time (1-60 seconds)                   |
+| `-o, --output`        | Save output to file                            |
+| `--json`              | Structured JSON output                         |
 
 ## Extract depth
 
-| Depth | When to use |
-|-------|-------------|
-| `basic` | Simple pages, fast — try this first |
+| Depth      | When to use                               |
+| ---------- | ----------------------------------------- |
+| `basic`    | Simple pages, fast — try this first       |
 | `advanced` | JS-rendered SPAs, dynamic content, tables |
 
 ## Tips

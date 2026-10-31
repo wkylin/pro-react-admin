@@ -46,9 +46,10 @@ try {
     const service = new PostgresEnterpriseService(store)
     const tenant = option('--tenant')
     const email = option('--email')
-    const principalId = command === 'grant-platform-admin'
-      ? await service.grantPlatformAdmin(tenant, email)
-      : await service.revokePlatformAdmin(tenant, email)
+    const principalId =
+      command === 'grant-platform-admin'
+        ? await service.grantPlatformAdmin(tenant, email)
+        : await service.revokePlatformAdmin(tenant, email)
     result = { principalId, action: command }
   } else throw new Error(usage)
   process.stdout.write(`${JSON.stringify(result, null, 2)}\n`)

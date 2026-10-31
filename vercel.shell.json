@@ -2,9 +2,7 @@
   "version": 2,
   "buildCommand": "pnpm run build:mf:shell",
   "outputDirectory": "dist-shell",
-  "rewrites": [
-    { "source": "/((?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }
-  ],
+  "rewrites": [{ "source": "/((?!.*\\.[a-z0-9]+$).*)", "destination": "/index.html" }],
   "headers": [
     {
       "source": "/remoteEntry.js",

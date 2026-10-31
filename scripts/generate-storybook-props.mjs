@@ -73,7 +73,10 @@ function declaredProps(name, directory) {
     const file = program.getSourceFile(path.resolve(directory, entry))
     if (!file) continue
     for (const statement of file.statements) {
-      if ((ts.isInterfaceDeclaration(statement) || ts.isTypeAliasDeclaration(statement)) && statement.name.text === typeName) {
+      if (
+        (ts.isInterfaceDeclaration(statement) || ts.isTypeAliasDeclaration(statement)) &&
+        statement.name.text === typeName
+      ) {
         const symbol = checker.getSymbolAtLocation(statement.name)
         if (symbol) return catalogProps(checker.getDeclaredTypeOfSymbol(symbol), statement)
       }
@@ -85,12 +88,14 @@ function declaredProps(name, directory) {
 function parameterDefaults(signature) {
   const name = signature?.getDeclaration()?.parameters?.[0]?.name
   if (!name || !ts.isObjectBindingPattern(name)) return new Map()
-  return new Map(name.elements.flatMap((element) => {
-    if (!ts.isIdentifier(element.name) || !element.initializer) return []
-    const expression = element.initializer.getText()
-    // Keep this column strictly source-backed. Complex expressions belong in examples.
-    return expression.length <= 50 && !/[\n=>]/.test(expression) ? [[element.name.text, expression]] : []
-  }))
+  return new Map(
+    name.elements.flatMap((element) => {
+      if (!ts.isIdentifier(element.name) || !element.initializer) return []
+      const expression = element.initializer.getText()
+      // Keep this column strictly source-backed. Complex expressions belong in examples.
+      return expression.length <= 50 && !/[\n=>]/.test(expression) ? [[element.name.text, expression]] : []
+    })
+  )
 }
 
 const catalog = {}
@@ -100,7 +105,8 @@ for (const storyFile of stories) {
   if (!file) throw new Error(`Cannot resolve Storybook source: ${storyFile}`)
   let component
   function visit(node) {
-    if (!component && ts.isPropertyAssignment(node) && node.name.getText(file) === 'component') component = node.initializer
+    if (!component && ts.isPropertyAssignment(node) && node.name.getText(file) === 'component')
+      component = node.initializer
     ts.forEachChild(node, visit)
   }
   visit(file)

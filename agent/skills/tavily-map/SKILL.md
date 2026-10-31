@@ -1,6 +1,7 @@
 ---
 description: "Discover and list all URLs on a website without extracting content, via the Tavily CLI. Use this skill when the user wants to find a specific page on a large site, list all URLs, see the site structure, find where something is on a domain, or says \"map the site\", \"find the URL for\", \"what pages are on\", \"list all pages\", or \"site structure\". Faster than crawling — returns URLs only. Essential when you know the site but not the exact page. Combine with extract for targeted content retrieval.\n"
 ---
+
 # tavily map
 
 Discover URLs on a website without extracting content. Faster than crawling.
@@ -41,20 +42,20 @@ tvly map "https://example.com" --max-depth 3 --limit 200 --json
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--max-depth` | Levels deep (1-5, default: 1) |
-| `--max-breadth` | Links per page (default: 20) |
-| `--limit` | Max URLs to discover (default: 50) |
-| `--instructions` | Natural language guidance for URL filtering |
-| `--select-paths` | Comma-separated regex patterns to include |
-| `--exclude-paths` | Comma-separated regex patterns to exclude |
-| `--select-domains` | Comma-separated regex for domains to include |
-| `--exclude-domains` | Comma-separated regex for domains to exclude |
-| `--allow-external / --no-external` | Include external links |
-| `--timeout` | Max wait (10-150 seconds) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option                             | Description                                  |
+| ---------------------------------- | -------------------------------------------- |
+| `--max-depth`                      | Levels deep (1-5, default: 1)                |
+| `--max-breadth`                    | Links per page (default: 20)                 |
+| `--limit`                          | Max URLs to discover (default: 50)           |
+| `--instructions`                   | Natural language guidance for URL filtering  |
+| `--select-paths`                   | Comma-separated regex patterns to include    |
+| `--exclude-paths`                  | Comma-separated regex patterns to exclude    |
+| `--select-domains`                 | Comma-separated regex for domains to include |
+| `--exclude-domains`                | Comma-separated regex for domains to exclude |
+| `--allow-external / --no-external` | Include external links                       |
+| `--timeout`                        | Max wait (10-150 seconds)                    |
+| `-o, --output`                     | Save output to file                          |
+| `--json`                           | Structured JSON output                       |
 
 ## Map + Extract pattern
 

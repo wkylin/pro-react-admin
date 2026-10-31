@@ -25,6 +25,7 @@ The Research API conducts comprehensive research on any topic with automatic sou
 Define a **clear goal** with all **details** and **direction**.
 
 **Guidelines:**
+
 - **Be specific when you can.** Include known details: target market, competitors, geography, constraints
 - **Stay open-ended only for discovery.** Make it explicit: "tell me about the most impactful AI innovations in healthcare in 2025"
 - **Avoid contradictions.** Don't include conflicting constraints or goals
@@ -34,18 +35,21 @@ Define a **clear goal** with all **details** and **direction**.
 ### Example Queries
 
 **Company research:**
+
 ```
 Research the company ____ and its 2026 outlook. Provide a brief overview
 of the company, its products, services, and market position.
 ```
 
 **Competitive analysis:**
+
 ```
 Conduct a competitive analysis of ____ in 2026. Identify their main
 competitors, compare market positioning, and analyze key differentiators.
 ```
 
 **With prior context:**
+
 ```
 We're evaluating Notion as a potential partner. We already know they
 primarily serve SMB and mid-market teams, expanded their AI features
@@ -58,11 +62,11 @@ and where a partnership could be most valuable. Include citations.
 
 ## Model Selection
 
-| Model | Best For |
-|-------|----------|
-| `pro` | Comprehensive, multi-agent research for complex, multi-domain topics |
-| `mini` | Targeted, efficient research for narrow or well-scoped questions |
-| `auto` | When unsure how complex research will be (default) |
+| Model  | Best For                                                             |
+| ------ | -------------------------------------------------------------------- |
+| `pro`  | Comprehensive, multi-agent research for complex, multi-domain topics |
+| `mini` | Targeted, efficient research for narrow or well-scoped questions     |
+| `auto` | When unsure how complex research will be (default)                   |
 
 ### Pro Model
 
@@ -95,18 +99,18 @@ result = client.research(
 
 ### research()
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `input` | string | Required | The research topic or question |
-| `model` | enum | `"auto"` | `"mini"`, `"pro"`, or `"auto"` |
-| `stream` | boolean | false | Enable streaming responses |
-| `output_schema` | object | null | JSON Schema for structured output |
-| `citation_format` | enum | `"numbered"` | `"numbered"`, `"mla"`, `"apa"`, `"chicago"` |
+| Parameter         | Type    | Default      | Description                                 |
+| ----------------- | ------- | ------------ | ------------------------------------------- |
+| `input`           | string  | Required     | The research topic or question              |
+| `model`           | enum    | `"auto"`     | `"mini"`, `"pro"`, or `"auto"`              |
+| `stream`          | boolean | false        | Enable streaming responses                  |
+| `output_schema`   | object  | null         | JSON Schema for structured output           |
+| `citation_format` | enum    | `"numbered"` | `"numbered"`, `"mla"`, `"apa"`, `"chicago"` |
 
 ### get_research()
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter    | Type   | Description                        |
+| ------------ | ------ | ---------------------------------- |
 | `request_id` | string | Task ID from `research()` response |
 
 ---
@@ -167,22 +171,22 @@ for chunk in stream:
 
 ### Event Types
 
-| Event Type | Description |
-|------------|-------------|
-| **Tool Call** | Agent initiates action (Planning, WebSearch, etc.) |
-| **Tool Response** | Results after tool execution with sources |
-| **Content** | Research report streamed as markdown (or JSON with `output_schema`) |
-| **Sources** | Complete list of sources, emitted after content |
-| **Done** | Signals completion |
+| Event Type        | Description                                                         |
+| ----------------- | ------------------------------------------------------------------- |
+| **Tool Call**     | Agent initiates action (Planning, WebSearch, etc.)                  |
+| **Tool Response** | Results after tool execution with sources                           |
+| **Content**       | Research report streamed as markdown (or JSON with `output_schema`) |
+| **Sources**       | Complete list of sources, emitted after content                     |
+| **Done**          | Signals completion                                                  |
 
 ### Tool Types
 
-| Tool | Description | Models |
-|------|-------------|--------|
-| `Planning` | Initializes research strategy | mini, pro |
-| `WebSearch` | Executes web searches | mini, pro |
-| `Generating` | Creates final report | mini, pro |
-| `ResearchSubtopic` | Deep research on subtopics | pro only |
+| Tool               | Description                   | Models    |
+| ------------------ | ----------------------------- | --------- |
+| `Planning`         | Initializes research strategy | mini, pro |
+| `WebSearch`        | Executes web searches         | mini, pro |
+| `Generating`       | Creates final report          | mini, pro |
+| `ResearchSubtopic` | Deep research on subtopics    | pro only  |
 
 ### Typical Flow
 
@@ -200,10 +204,10 @@ See [streaming cookbook](https://github.com/tavily-ai/tavily-cookbook/blob/main/
 
 ## Structured Output vs. Report
 
-| Format | Best For |
-|--------|----------|
-| **Report** (default) | Reading, sharing, or displaying verbatim (chat interfaces, briefs, newsletters) |
-| **Structured Output** | Data enrichment, pipelines, or powering UIs with specific fields |
+| Format                | Best For                                                                        |
+| --------------------- | ------------------------------------------------------------------------------- |
+| **Report** (default)  | Reading, sharing, or displaying verbatim (chat interfaces, briefs, newsletters) |
+| **Structured Output** | Data enrichment, pipelines, or powering UIs with specific fields                |
 
 ## Structured Output
 
@@ -276,29 +280,29 @@ for chunk in stream:
 
 ### research() Response
 
-| Field | Description |
-|-------|-------------|
-| `request_id` | Unique identifier for tracking |
+| Field        | Description                     |
+| ------------ | ------------------------------- |
+| `request_id` | Unique identifier for tracking  |
 | `created_at` | Timestamp when task was created |
-| `status` | Initial status |
-| `input` | The research topic submitted |
-| `model` | Model used by research agent |
+| `status`     | Initial status                  |
+| `input`      | The research topic submitted    |
+| `model`      | Model used by research agent    |
 
 ### get_research() Response
 
-| Field | Description |
-|-------|-------------|
-| `status` | `"pending"`, `"processing"`, `"completed"`, `"failed"` |
-| `content` | Generated research report (when completed) |
-| `sources` | Array of source citations |
-| `response_time` | Time in seconds |
+| Field           | Description                                            |
+| --------------- | ------------------------------------------------------ |
+| `status`        | `"pending"`, `"processing"`, `"completed"`, `"failed"` |
+| `content`       | Generated research report (when completed)             |
+| `sources`       | Array of source citations                              |
+| `response_time` | Time in seconds                                        |
 
 ### Source Object
 
-| Field | Description |
-|-------|-------------|
-| `url` | Source URL |
-| `title` | Source title |
+| Field      | Description               |
+| ---------- | ------------------------- |
+| `url`      | Source URL                |
+| `title`    | Source title              |
 | `citation` | Formatted citation string |
 
 ---

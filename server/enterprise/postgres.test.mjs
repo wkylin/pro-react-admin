@@ -58,16 +58,28 @@ async function request(path, { method = 'GET', token, tenant = 'acme', body, hea
 
 test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and audit data', async () => {
   assert.deepEqual(await migratePostgresEnterpriseDatabase(store), { version: 2, applied: false })
-  await service.bootstrap({ tenantId: 'acme', tenantName: 'Acme', name: 'Admin', email: 'admin@acme.test', password: 'StrongPassword123!' })
+  await service.bootstrap({
+    tenantId: 'acme',
+    tenantName: 'Acme',
+    name: 'Admin',
+    email: 'admin@acme.test',
+    password: 'StrongPassword123!',
+  })
   await service.grantPlatformAdmin('acme', 'admin@acme.test')
-  const login = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!' } })
+  const login = await request('/auth/login', {
+    method: 'POST',
+    body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!' },
+  })
   assert.equal(login.status, 200)
   assert.ok(login.body.token)
   const token = login.body.token
   const oldClientTicket = await request('/events/ticket', { method: 'POST', token })
   assert.equal(oldClientTicket.status, 503)
-  const firstTicket = await request('/events/ticket', { method: 'POST', token,
-    headers: { 'x-event-transport': 'resource-stream-v1' } })
+  const firstTicket = await request('/events/ticket', {
+    method: 'POST',
+    token,
+    headers: { 'x-event-transport': 'resource-stream-v1' },
+  })
   assert.equal(firstTicket.status, 201)
   assert.equal(firstTicket.body.path, '/api/resource-stream')
   assert.ok(firstTicket.body.expiresAt > Date.now())
@@ -83,17 +95,24 @@ test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and
     },
   })
   await new Promise((resolve) => stream.listen(0, resolve))
-  const streamTicket = await request('/events/ticket', { method: 'POST', token,
-    headers: { 'x-event-transport': 'resource-stream-v1' } })
-  const socket = new WebSocket(`ws://127.0.0.1:${stream.address().port}/api/resource-stream`,
-    'pro-admin-events-v1', { origin: 'http://localhost' })
+  const streamTicket = await request('/events/ticket', {
+    method: 'POST',
+    token,
+    headers: { 'x-event-transport': 'resource-stream-v1' },
+  })
+  const socket = new WebSocket(`ws://127.0.0.1:${stream.address().port}/api/resource-stream`, 'pro-admin-events-v1', {
+    origin: 'http://localhost',
+  })
   const messages = []
   const ready = new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error('WebSocket did not become ready')), 5_000)
     socket.on('message', (payload) => {
       const message = JSON.parse(payload.toString())
       messages.push(message)
-      if (message.type === 'ready') { clearTimeout(timeout); resolve() }
+      if (message.type === 'ready') {
+        clearTimeout(timeout)
+        resolve()
+      }
     })
   })
   socket.on('open', () => socket.send(JSON.stringify({ type: 'authenticate', ticket: streamTicket.body.ticket })))
@@ -119,7 +138,17 @@ test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and
   const current = await request('/permissions/current', { token })
   assert.equal(current.status, 200)
   assert.ok(current.body.permissions.includes('tenant:*'))
-  const created = await request('/admin/tenants', { method: 'POST', token, body: { tenantId: 'other', name: 'Other', adminName: 'Other Admin', adminEmail: 'admin@other.test', adminPassword: 'OtherPassword123!' } })
+  const created = await request('/admin/tenants', {
+    method: 'POST',
+    token,
+    body: {
+      tenantId: 'other',
+      name: 'Other',
+      adminName: 'Other Admin',
+      adminEmail: 'admin@other.test',
+      adminPassword: 'OtherPassword123!',
+    },
+  })
   assert.equal(created.status, 201)
   assert.equal(created.body.id, 'other')
   const tenants = await request('/admin/tenants', { token })
@@ -127,27 +156,73 @@ test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and
   assert.equal(tenants.body.total, 2)
   const spoofedTenant = await request('/admin/users', { token, tenant: 'other' })
   assert.equal(spoofedTenant.status, 403)
-  const role = await request('/admin/roles', { method: 'POST', token, body: { name: 'Reader', code: 'reader', permissions: ['user:read'] } })
+  const role = await request('/admin/roles', {
+    method: 'POST',
+    token,
+    body: { name: 'Reader', code: 'reader', permissions: ['user:read'] },
+  })
   assert.equal(role.status, 201)
-  const user = await request('/admin/users', { method: 'POST', token, body: { name: 'Alice', email: 'alice@acme.test', role: 'reader', status: 'active', password: 'AlicePassword123!' } })
+  const user = await request('/admin/users', {
+    method: 'POST',
+    token,
+    body: { name: 'Alice', email: 'alice@acme.test', role: 'reader', status: 'active', password: 'AlicePassword123!' },
+  })
   assert.equal(user.status, 201)
-  const userLogin = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'alice@acme.test', password: 'AlicePassword123!' } })
+  const userLogin = await request('/auth/login', {
+    method: 'POST',
+    body: { tenantId: 'acme', email: 'alice@acme.test', password: 'AlicePassword123!' },
+  })
   assert.equal(userLogin.status, 200)
   const forbidden = await request('/admin/roles', { token: userLogin.body.token })
   assert.equal(forbidden.status, 403)
-  const reviewer = await request('/admin/users', { method: 'POST', token, body: { name: 'Reviewer', email: 'reviewer@acme.test', role: 'tenant-admin', status: 'active', password: 'ReviewerPassword123!' } })
+  const reviewer = await request('/admin/users', {
+    method: 'POST',
+    token,
+    body: {
+      name: 'Reviewer',
+      email: 'reviewer@acme.test',
+      role: 'tenant-admin',
+      status: 'active',
+      password: 'ReviewerPassword123!',
+    },
+  })
   assert.equal(reviewer.status, 201)
-  const reviewerLogin = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'reviewer@acme.test', password: 'ReviewerPassword123!' } })
+  const reviewerLogin = await request('/auth/login', {
+    method: 'POST',
+    body: { tenantId: 'acme', email: 'reviewer@acme.test', password: 'ReviewerPassword123!' },
+  })
   assert.equal(reviewerLogin.status, 200)
   const beforeEvents = await request('/events/poll', { token })
   assert.equal(beforeEvents.status, 200)
-  const preview = await request('/admin/access-requests/preview', { method: 'POST', token, body: { kind: 'role', targetId: role.body.id, change: { permissions: ['user:read', 'role:read'] } } })
+  const preview = await request('/admin/access-requests/preview', {
+    method: 'POST',
+    token,
+    body: { kind: 'role', targetId: role.body.id, change: { permissions: ['user:read', 'role:read'] } },
+  })
   assert.equal(preview.status, 200)
-  const proposal = await request('/admin/access-requests', { method: 'POST', token, body: { kind: 'role', targetId: role.body.id, change: { permissions: ['user:read', 'role:read'] }, reason: 'Reader needs role visibility', fingerprint: preview.body.fingerprint } })
+  const proposal = await request('/admin/access-requests', {
+    method: 'POST',
+    token,
+    body: {
+      kind: 'role',
+      targetId: role.body.id,
+      change: { permissions: ['user:read', 'role:read'] },
+      reason: 'Reader needs role visibility',
+      fingerprint: preview.body.fingerprint,
+    },
+  })
   assert.equal(proposal.status, 201)
-  const selfReview = await request(`/admin/access-requests/${proposal.body.id}/decision`, { method: 'POST', token, body: { decision: 'approve', reason: 'self review' } })
+  const selfReview = await request(`/admin/access-requests/${proposal.body.id}/decision`, {
+    method: 'POST',
+    token,
+    body: { decision: 'approve', reason: 'self review' },
+  })
   assert.equal(selfReview.status, 403)
-  const approved = await request(`/admin/access-requests/${proposal.body.id}/decision`, { method: 'POST', token: reviewerLogin.body.token, body: { decision: 'approve', reason: 'approved' } })
+  const approved = await request(`/admin/access-requests/${proposal.body.id}/decision`, {
+    method: 'POST',
+    token: reviewerLogin.body.token,
+    body: { decision: 'approve', reason: 'approved' },
+  })
   assert.equal(approved.status, 200)
   assert.equal(approved.body.status, 'approved')
   const events = await request(`/events/poll?cursor=${beforeEvents.body.cursor}`, { token })
@@ -161,7 +236,8 @@ test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and
   const setup = await request('/auth/totp/setup', { method: 'POST', token, body: { password: 'StrongPassword123!' } })
   assert.equal(setup.status, 200)
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
-  let bits = 0, value = 0
+  let bits = 0,
+    value = 0
   const bytes = []
   for (const letter of setup.body.secret) {
     value = (value << 5) | alphabet.indexOf(letter)
@@ -174,12 +250,31 @@ test('migration is idempotent and Enterprise API persists auth, RBAC, tenant and
   const confirmed = await request('/auth/totp/confirm', { method: 'POST', token, body: { code } })
   assert.equal(confirmed.status, 200)
   assert.equal(confirmed.body.recoveryCodes.length, 10)
-  const needsTotp = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!' } })
+  const needsTotp = await request('/auth/login', {
+    method: 'POST',
+    body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!' },
+  })
   assert.equal(needsTotp.body.totpRequired, true)
-  const recovered = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!', recoveryCode: confirmed.body.recoveryCodes[0] } })
+  const recovered = await request('/auth/login', {
+    method: 'POST',
+    body: {
+      tenantId: 'acme',
+      email: 'admin@acme.test',
+      password: 'StrongPassword123!',
+      recoveryCode: confirmed.body.recoveryCodes[0],
+    },
+  })
   assert.equal(recovered.status, 200)
   assert.ok(recovered.body.token)
-  const reused = await request('/auth/login', { method: 'POST', body: { tenantId: 'acme', email: 'admin@acme.test', password: 'StrongPassword123!', recoveryCode: confirmed.body.recoveryCodes[0] } })
+  const reused = await request('/auth/login', {
+    method: 'POST',
+    body: {
+      tenantId: 'acme',
+      email: 'admin@acme.test',
+      password: 'StrongPassword123!',
+      recoveryCode: confirmed.body.recoveryCodes[0],
+    },
+  })
   assert.equal(reused.status, 401)
   const status = await request('/auth/totp', { token: recovered.body.token })
   assert.equal(status.body.recoveryCodesRemaining, 9)

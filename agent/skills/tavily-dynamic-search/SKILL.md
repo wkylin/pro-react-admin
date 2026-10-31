@@ -1,6 +1,7 @@
 ---
 description: "Programmatic web search with context isolation. Use this skill for any research task where you need to search the web, filter results, and extract specific information — without polluting your context window with raw HTML and boilerplate. This is the default skill for web research. Triggered by \"search for\", \"look up\", \"find\", \"research\", \"what's the latest on\", or any query that requires current web information. Also use when asked to \"search and filter\", \"find the important parts\", or \"extract the key details\" — any case where the user wants curated, noise-free content.\n"
 ---
+
 # Tavily Dynamic Search
 
 Search the web, filter results, and extract content so that **raw search data never enters your context window**. Only your curated `print()` output comes back.
@@ -432,15 +433,15 @@ except Exception:
 
 All standard `tvly search` options work:
 
-| Option | Description |
-|--------|-------------|
-| `--max-results` | Number of results (default: 5, max: 20) |
-| `--depth` | `ultra-fast`, `fast`, `basic` (default), `advanced` |
-| `--time-range` | `day`, `week`, `month`, `year` |
-| `--include-domains` | Comma-separated whitelist |
-| `--exclude-domains` | Comma-separated blacklist |
-| `--include-raw-content` | Full page content (`markdown` or `text`) |
-| `--country` | Boost results from country |
+| Option                  | Description                                         |
+| ----------------------- | --------------------------------------------------- |
+| `--max-results`         | Number of results (default: 5, max: 20)             |
+| `--depth`               | `ultra-fast`, `fast`, `basic` (default), `advanced` |
+| `--time-range`          | `day`, `week`, `month`, `year`                      |
+| `--include-domains`     | Comma-separated whitelist                           |
+| `--exclude-domains`     | Comma-separated blacklist                           |
+| `--include-raw-content` | Full page content (`markdown` or `text`)            |
+| `--country`             | Boost results from country                          |
 
 ## Fallback: jq
 

@@ -40,6 +40,7 @@ if not os.environ.get("TAVILY_API_KEY"):
 ### Tavily Search
 
 **Available parameters**
+
 - `max_results` (default: `5`)
 - `topic` (`"general"`, `"news"`, `"finance"`)
 - `include_answer`
@@ -66,6 +67,7 @@ tavily_search = TavilySearch(
 ```
 
 **Invoke directly with args**
+
 - Required: `query`
 - Can also be overridden at invocation: `include_images`, `search_depth`, `time_range`, `include_domains`, `exclude_domains`, `start_date`, `end_date`
 - `include_answer` and `include_raw_content` should be set at instantiation time for predictable response sizes
@@ -98,6 +100,7 @@ Tip: include today's date in the system prompt for time-aware queries.
 ### Tavily Extract
 
 **Available parameters**
+
 - `extract_depth` (`"basic"` or `"advanced"`)
 - `include_images`
 
@@ -143,6 +146,7 @@ result = tavily_crawl.invoke({
 ### Tavily Research
 
 **Available parameters**
+
 - `input` (required)
 - `model` (`"mini"`, `"pro"`, `"auto"`)
 - `output_schema`
@@ -623,33 +627,33 @@ npm install ai @ai-sdk/openai @tavily/ai-sdk
 ### Usage
 
 ```typescript
-import { tavilySearch, tavilyCrawl } from "@tavily/ai-sdk";
-import { generateText } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { tavilySearch, tavilyCrawl } from '@tavily/ai-sdk'
+import { generateText } from 'ai'
+import { openai } from '@ai-sdk/openai'
 
 // Search
 const result = await generateText({
-  model: openai("gpt-4"),
-  prompt: "What are the latest AI developments?",
+  model: openai('gpt-4'),
+  prompt: 'What are the latest AI developments?',
   tools: {
     tavilySearch: tavilySearch({
       maxResults: 5,
-      searchDepth: "advanced",
+      searchDepth: 'advanced',
     }),
   },
-});
+})
 
 // Crawl
 const crawlResult = await generateText({
-  model: openai("gpt-4"),
-  prompt: "Crawl tavily.com and summarize their features",
+  model: openai('gpt-4'),
+  prompt: 'Crawl tavily.com and summarize their features',
   tools: {
     tavilyCrawl: tavilyCrawl({
       maxDepth: 2,
       limit: 50,
     }),
   },
-});
+})
 ```
 
 **Available tools:** `tavilySearch`, `tavilyExtract`, `tavilyCrawl`, `tavilyMap`
@@ -702,16 +706,17 @@ result = crew.kickoff()
 
 Tavily integrates with popular no-code automation platforms:
 
-| Platform | Features | Best For |
-|----------|----------|----------|
-| **Zapier** | Search, Extract | CRM enrichment, automated research |
-| **Make** | Search, Extract | Complex workflows, multi-step automations |
-| **n8n** | Search, Extract, AI Agent tool | Self-hosted, AI agent workflows |
-| **Dify** | Search, Extract | No-code AI apps, chatflows |
-| **FlowiseAI** | Search | Visual LLM builders, RAG systems |
-| **Langflow** | Search, Extract | Visual agent building |
+| Platform      | Features                       | Best For                                  |
+| ------------- | ------------------------------ | ----------------------------------------- |
+| **Zapier**    | Search, Extract                | CRM enrichment, automated research        |
+| **Make**      | Search, Extract                | Complex workflows, multi-step automations |
+| **n8n**       | Search, Extract, AI Agent tool | Self-hosted, AI agent workflows           |
+| **Dify**      | Search, Extract                | No-code AI apps, chatflows                |
+| **FlowiseAI** | Search                         | Visual LLM builders, RAG systems          |
+| **Langflow**  | Search, Extract                | Visual agent building                     |
 
 ---
 
 ## Additional Integrations
+
 See the [full integrations documentation](https://docs.tavily.com/documentation/integrations) for complete guides.

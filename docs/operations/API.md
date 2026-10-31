@@ -31,24 +31,24 @@ CORS 只允许配置的可信 origin（开发额外允许 loopback），允许 c
 
 ## 服务端变量
 
-| 变量                                    | 行为                                                    |
-| --------------------------------------- | ------------------------------------------------------- |
-| TRACKING_STORE                          | memory 或 mongodb；开发默认 memory，生产默认 mongodb    |
-| MONGODB_URI                             | mongodb 模式必需；连接失败时该模式启动失败              |
-| TRACKING_ADMIN_TOKEN                    | 埋点管理与 /apis 所需凭据                               |
-| CORS_ORIGINS                            | 逗号分隔可信 origin；生产至少一个，开发允许 loopback    |
-| TRACKING_RATE_WINDOW_MS                 | 限速窗口，默认 60000                                    |
-| TRACKING_RATE_LIMIT                     | 每 IP 窗口内请求数，默认 60                             |
-| TRACKING_API_PORT / PORT                | 监听端口                                                |
-| GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET | GitHub OAuth App 凭据，仅 API 服务端读取                |
-| GITHUB_DEMO_CALLBACK_URL                | GitHub OAuth App 中注册的精确回调 URL                   |
-| GITHUB_DEMO_APP_URL                     | 同源演示前端根 URL，可包含部署子路径                    |
-| GITHUB_SESSION_SECRET                   | 至少 32 字节的随机签名密钥，仅服务端使用                |
+| 变量                                    | 行为                                                                                         |
+| --------------------------------------- | -------------------------------------------------------------------------------------------- |
+| TRACKING_STORE                          | memory 或 mongodb；开发默认 memory，生产默认 mongodb                                         |
+| MONGODB_URI                             | mongodb 模式必需；连接失败时该模式启动失败                                                   |
+| TRACKING_ADMIN_TOKEN                    | 埋点管理与 /apis 所需凭据                                                                    |
+| CORS_ORIGINS                            | 逗号分隔可信 origin；生产至少一个，开发允许 loopback                                         |
+| TRACKING_RATE_WINDOW_MS                 | 限速窗口，默认 60000                                                                         |
+| TRACKING_RATE_LIMIT                     | 每 IP 窗口内请求数，默认 60                                                                  |
+| TRACKING_API_PORT / PORT                | 监听端口                                                                                     |
+| GITHUB_CLIENT_ID / GITHUB_CLIENT_SECRET | GitHub OAuth App 凭据，仅 API 服务端读取                                                     |
+| GITHUB_DEMO_CALLBACK_URL                | GitHub OAuth App 中注册的精确回调 URL                                                        |
+| GITHUB_DEMO_APP_URL                     | 同源演示前端根 URL，可包含部署子路径                                                         |
+| GITHUB_SESSION_SECRET                   | 至少 32 字节的随机签名密钥，仅服务端使用                                                     |
 | ENTERPRISE_ENABLED                      | true 才启用真实业务 API；通用 API 默认关闭，两个 Enterprise 开发启动命令自动启用本地真实模式 |
-| ENTERPRISE_DB_PATH                      | 开发默认 api/data/enterprise.sqlite；生产必填持久卷路径 |
-| ENTERPRISE_SESSION_TTL_MS               | 默认 28800000；范围 300000..604800000                   |
-| ENTERPRISE_TOTP_KEY                     | 32 字节随机密钥的 64 位十六进制，仅服务端保存           |
-| ENTERPRISE_API_TARGET                   | Webpack 开发企业 API 代理目标，默认本地 API 端口        |
+| ENTERPRISE_DB_PATH                      | 开发默认 api/data/enterprise.sqlite；生产必填持久卷路径                                      |
+| ENTERPRISE_SESSION_TTL_MS               | 默认 28800000；范围 300000..604800000                                                        |
+| ENTERPRISE_TOTP_KEY                     | 32 字节随机密钥的 64 位十六进制，仅服务端保存                                                |
+| ENTERPRISE_API_TARGET                   | Webpack 开发企业 API 代理目标，默认本地 API 端口                                             |
 
 内存存储重启丢失；埋点与登录 IP 限速在进程内，TOTP 账号限次在 SQLite 中持久保存。MongoDB tracking_events 有查询索引与 90 天 _receivedAt TTL。反向代理须正确处理身份、来源与 API 路径；不要将 TRACKING_ADMIN_TOKEN、client secret 注入浏览器包。
 

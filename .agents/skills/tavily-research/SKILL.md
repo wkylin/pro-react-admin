@@ -49,25 +49,25 @@ tvly research "quantum computing breakthroughs" --json
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--model` | `mini`, `pro`, or `auto` (default) |
-| `--stream` | Stream results in real-time |
-| `--no-wait` | Return request_id immediately (async) |
-| `--output-schema` | Path to JSON schema for structured output |
-| `--citation-format` | `numbered`, `mla`, `apa`, `chicago` |
-| `--poll-interval` | Seconds between checks (default: 10) |
-| `--timeout` | Max wait seconds (default: 600) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option              | Description                               |
+| ------------------- | ----------------------------------------- |
+| `--model`           | `mini`, `pro`, or `auto` (default)        |
+| `--stream`          | Stream results in real-time               |
+| `--no-wait`         | Return request_id immediately (async)     |
+| `--output-schema`   | Path to JSON schema for structured output |
+| `--citation-format` | `numbered`, `mla`, `apa`, `chicago`       |
+| `--poll-interval`   | Seconds between checks (default: 10)      |
+| `--timeout`         | Max wait seconds (default: 600)           |
+| `-o, --output`      | Save output to file                       |
+| `--json`            | Structured JSON output                    |
 
 ## Model selection
 
-| Model | Use for | Speed |
-|-------|---------|-------|
-| `mini` | Single-topic, targeted research | ~30s |
-| `pro` | Comprehensive multi-angle analysis | ~60-120s |
-| `auto` | API chooses based on complexity | Varies |
+| Model  | Use for                            | Speed    |
+| ------ | ---------------------------------- | -------- |
+| `mini` | Single-topic, targeted research    | ~30s     |
+| `pro`  | Comprehensive multi-angle analysis | ~60-120s |
+| `auto` | API chooses based on complexity    | Varies   |
 
 **Rule of thumb:** "What does X do?" → mini. "X vs Y vs Z" or "best way to..." → pro.
 

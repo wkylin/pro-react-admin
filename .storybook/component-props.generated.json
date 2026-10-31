@@ -1377,16 +1377,16 @@
       "description": "没有可见文字时供辅助技术识别的名称。"
     },
     {
-      "name": "href",
-      "type": "string",
-      "required": false,
-      "description": "链接点击后前往的 URL 地址。"
-    },
-    {
       "name": "target",
       "type": "HTMLAttributeAnchorTarget",
       "required": false,
       "description": "链接打开的位置，例如新窗口。"
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "链接点击后前往的 URL 地址。"
     }
   ],
   "FlipWords": [
@@ -4692,7 +4692,7 @@
       "name": "pdfWorker",
       "type": "InstanceType<typeof pdfjs.PDFWorker>",
       "required": false,
-      "sourceDescription": "Caller-owned PDF worker; or configure PDF.js globally before mounting.",
+      "sourceDescription": "可选的调用方 Worker；默认自动加载与 PDF.js 同版本的 Worker。",
       "description": "PDF.js 使用的 worker 实例。"
     },
     {
@@ -4989,7 +4989,7 @@
       "type": "BookPage[]",
       "required": true,
       "description": "传入自定义页内容；也可从 pageImages 或 pdfUrl 构建页面。",
-      "defaultValue": "[]"
+      "defaultValue": "EMPTY_PAGES"
     },
     {
       "name": "pageImages",
@@ -5065,6 +5065,14 @@
       "defaultValue": "true"
     },
     {
+      "name": "showViewControls",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "是否显示合起时的视角快捷按钮；隐藏后仍可拖动旋转，默认 true",
+      "description": "是否显示viewcontrols。",
+      "defaultValue": "true"
+    },
+    {
       "name": "pagePadding",
       "type": "string | number",
       "required": false,
@@ -5120,6 +5128,27 @@
       "sourceDescription": "每张目录页显示的章节数上限，默认 6；页面较矮时会自动减少",
       "description": "目录页中每页显示的目录项数。",
       "defaultValue": "6"
+    },
+    {
+      "name": "publication",
+      "type": "BookPublicationInfo",
+      "required": false,
+      "sourceDescription": "出版信息；缺失字段不显示，出版者默认沿用 coverPublisher。",
+      "description": "设置publication；可用类型见右侧。"
+    },
+    {
+      "name": "frontMatter",
+      "type": "false | BookFrontMatterOptions",
+      "required": false,
+      "sourceDescription": "默认生成环衬、前扉页、扉页、版权与卷首页；false 关闭。",
+      "description": "设置frontmatter；可用类型见右侧。"
+    },
+    {
+      "name": "backMatter",
+      "type": "false | BookBackMatterOptions",
+      "required": false,
+      "sourceDescription": "默认生成后记与版本记录；false 使用简略的阅读结束页。",
+      "description": "设置backmatter；可用类型见右侧。"
     },
     {
       "name": "textured",
@@ -5197,6 +5226,13 @@
       "description": "受控模式下书籍是否打开。"
     },
     {
+      "name": "onOpenRequest",
+      "type": "() => void",
+      "required": false,
+      "sourceDescription": "可选：接管封面点击以在独立阅读层中打开；设置后预览保持合起。",
+      "description": "open请求时调用的回调；参数见类型列。"
+    },
+    {
       "name": "onClose",
       "type": "() => void",
       "required": false,
@@ -5244,16 +5280,16 @@
       "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
     },
     {
-      "name": "height",
-      "type": "number | string | undefined",
-      "required": false,
-      "description": "组件或绘制区域的高度。"
-    },
-    {
       "name": "width",
       "type": "number | string | undefined",
       "required": false,
       "description": "组件或绘制区域的宽度。"
+    },
+    {
+      "name": "height",
+      "type": "number | string | undefined",
+      "required": false,
+      "description": "组件或绘制区域的高度。"
     },
     {
       "name": "alt",
@@ -5347,11 +5383,19 @@
     },
     {
       "name": "appearance",
-      "type": "'editorial' | 'console' | 'minimal'",
+      "type": "'editorial' | 'console' | 'minimal' | 'playlist'",
       "required": false,
       "sourceDescription": "Visual direction. Console is intentionally dark; the other styles follow theme.",
       "description": "视觉外观：editorial 为音乐站风格，console 为深色唱片控制台，minimal 为冷蓝极简风格。",
       "defaultValue": "'editorial'"
+    },
+    {
+      "name": "playRequest",
+      "type": "number",
+      "required": false,
+      "sourceDescription": "Increment to request playback from a playlist header outside the player.",
+      "description": "设置播放请求数值。",
+      "defaultValue": "0"
     },
     {
       "name": "variant",
@@ -5460,6 +5504,12 @@
       "type": "string",
       "required": false,
       "description": "组件显示的标题。"
+    },
+    {
+      "name": "poster",
+      "type": "string",
+      "required": false,
+      "description": "设置poster文字或取值。"
     },
     {
       "name": "trackSrc",
@@ -5953,6 +6003,13 @@
       "description": "操作失败时调用的回调，可用于展示错误或记录日志。"
     },
     {
+      "name": "ariaLabel",
+      "type": "string",
+      "required": false,
+      "description": "无可见文字时供辅助技术识别的名称。",
+      "defaultValue": "title ?? 'pH chart'"
+    },
+    {
       "name": "theme",
       "type": "Parameters<typeof echarts.init>[1]",
       "required": false,
@@ -5963,13 +6020,6 @@
       "type": "boolean | Parameters<EChartsType['showLoading']>[1]",
       "required": false,
       "description": "是否显示加载状态，或传入加载效果配置。"
-    },
-    {
-      "name": "ariaLabel",
-      "type": "string",
-      "required": false,
-      "description": "无可见文字时供辅助技术识别的名称。",
-      "defaultValue": "title ?? 'pH chart'"
     },
     {
       "name": "renderer",
@@ -6316,11 +6366,11 @@
       "description": "主要显示颜色。"
     },
     {
-      "name": "show",
-      "type": "boolean",
+      "name": "position",
+      "type": "'fixed' | 'relative' | 'absolute' | 'sticky'",
       "required": false,
-      "sourceDescription": "是否显示进度条，默认 true。",
-      "description": "是否显示滚动进度条。"
+      "sourceDescription": "定位方式；独立使用默认 fixed，ScrollArea 默认 sticky。",
+      "description": "进度条相对于容器的定位方式。"
     },
     {
       "name": "height",
@@ -6330,11 +6380,11 @@
       "description": "进度条的厚度。"
     },
     {
-      "name": "position",
-      "type": "'fixed' | 'relative' | 'absolute' | 'sticky'",
+      "name": "show",
+      "type": "boolean",
       "required": false,
-      "sourceDescription": "定位方式；独立使用默认 fixed，ScrollArea 默认 sticky。",
-      "description": "进度条相对于容器的定位方式。"
+      "sourceDescription": "是否显示进度条，默认 true。",
+      "description": "是否显示滚动进度条。"
     },
     {
       "name": "springConfig",

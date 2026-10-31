@@ -10,11 +10,13 @@ const config = ts.parseJsonConfigFileContent(configFile.config, ts.sys, resolve(
 const program = ts.createProgram(config.fileNames, { ...config.options, noEmit: true })
 const diagnostics = [...config.errors, ...ts.getPreEmitDiagnostics(program)]
 if (diagnostics.length) {
-  process.stderr.write(ts.formatDiagnosticsWithColorAndContext(diagnostics, {
-    getCanonicalFileName: (file) => file,
-    getCurrentDirectory: () => root,
-    getNewLine: () => '\n',
-  }))
+  process.stderr.write(
+    ts.formatDiagnosticsWithColorAndContext(diagnostics, {
+      getCanonicalFileName: (file) => file,
+      getCurrentDirectory: () => root,
+      getNewLine: () => '\n',
+    })
+  )
   process.exit(1)
 }
 const sources = [

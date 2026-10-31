@@ -144,7 +144,6 @@ export class PostgresEnterpriseService {
     this.now = now
     if (totpKey && totpKey.length !== 32) throw new Error('TOTP encryption key must be 32 bytes')
     this.totpKey = totpKey
-
   }
   async ensureReady() {
     const stored = await this.store.one<TotpRow>('SELECT * FROM totp_credentials LIMIT 1')
@@ -239,7 +238,14 @@ export class PostgresEnterpriseService {
     return await this.store.transaction(async () => {
       if (await this.store.one('SELECT id FROM tenants WHERE id=?', id)) fail(409, 'tenant_exists')
       await this.store.run('INSERT INTO tenants VALUES (?,?,?)', id, tenantName, 'active')
-      await this.store.run('INSERT INTO roles VALUES (?,?,?,?,?)', randomUUID(), id, '租户管理员', reservedRole, '["*:*"]')
+      await this.store.run(
+        'INSERT INTO roles VALUES (?,?,?,?,?)',
+        randomUUID(),
+        id,
+        '租户管理员',
+        reservedRole,
+        '["*:*"]'
+      )
       const user: User = { id: randomUUID(), name, email: address, role: reservedRole, status: 'active' }
       const principalId = randomUUID()
       await this.store.run(
@@ -280,7 +286,12 @@ export class PostgresEnterpriseService {
         new Date(this.now()).toISOString()
       )
       if (changed.changes)
-        await this.audit({ tenantId: id, user: publicUser(row) }, 'platform_admin_grant', 'principals', row.principal_id)
+        await this.audit(
+          { tenantId: id, user: publicUser(row) },
+          'platform_admin_grant',
+          'principals',
+          row.principal_id
+        )
       return row.principal_id
     })
   }
@@ -294,7 +305,10 @@ export class PostgresEnterpriseService {
         account,
         reservedRole
       )
-      if (!row || !await this.store.one('SELECT principal_id FROM platform_admins WHERE principal_id=?', row.principal_id))
+      if (
+        !row ||
+        !(await this.store.one('SELECT principal_id FROM platform_admins WHERE principal_id=?', row.principal_id))
+      )
         return fail(404, 'platform_admin_not_found')
       const remaining = await this.store.one<{ principal_id: string }>(
         `SELECT p.principal_id FROM platform_admins p
@@ -351,7 +365,8 @@ export class PostgresEnterpriseService {
       let usedRecovery = false
       if (authenticator?.enabled) {
         if (input.totpCode === undefined && input.recoveryCode === undefined) return { totpRequired: true as const }
-        usedRecovery = await this.consumeSecondFactor(authenticator, input.totpCode, input.recoveryCode) === 'recovery'
+        usedRecovery =
+          (await this.consumeSecondFactor(authenticator, input.totpCode, input.recoveryCode)) === 'recovery'
         await this.clearSecondFactorLimit(user.principal_id)
       } else if (input.totpCode !== undefined || input.recoveryCode !== undefined) {
         return fail(400, 'totp_not_enabled')
@@ -367,7 +382,8 @@ export class PostgresEnterpriseService {
       )
       await this.store.run('INSERT INTO sessions VALUES (?,?,?,?)', tokenHash(token), id, user.id, expiresAt)
       await this.audit({ tenantId: id, user }, 'login', 'sessions', user.id)
-      if (usedRecovery) await this.audit({ tenantId: id, user }, 'totp_recovery_login', 'authenticators', user.principal_id)
+      if (usedRecovery)
+        await this.audit({ tenantId: id, user }, 'totp_recovery_login', 'authenticators', user.principal_id)
       return { token, tenantId: id, expiresAt, user: publicUser(user) }
     })
   }
@@ -383,7 +399,11 @@ export class PostgresEnterpriseService {
          window_started_at=CASE WHEN ?-login_rate_limits.window_started_at>=600000 THEN ?
            ELSE login_rate_limits.window_started_at END
        RETURNING attempts,window_started_at`,
-      key, now, now, now, now
+      key,
+      now,
+      now,
+      now,
+      now
     )
     if (row && row.attempts > limit) return fail(429, 'login_rate_limited')
   }
@@ -414,7 +434,11 @@ export class PostgresEnterpriseService {
   private requireTotpKey(): Buffer {
     return this.totpKey ?? fail(503, 'totp_unavailable')
   }
-  private async consumeSecondFactor(row: TotpRow, totpCode: unknown, recoveryCode: unknown): Promise<'totp' | 'recovery'> {
+  private async consumeSecondFactor(
+    row: TotpRow,
+    totpCode: unknown,
+    recoveryCode: unknown
+  ): Promise<'totp' | 'recovery'> {
     if (totpCode !== undefined && recoveryCode !== undefined) return fail(400, 'multiple_second_factors')
     if (totpCode !== undefined) {
       const secret = decryptTotpSecret(row.secret_ciphertext, this.requireTotpKey(), row.principal_id)
@@ -446,7 +470,11 @@ export class PostgresEnterpriseService {
   }
   private async reauthenticate(principal: Principal, expectedHash: string): Promise<Principal> {
     const actor = await this.authenticateHash(principal.sessionHash)
-    const row = await this.store.one<UserRow>('SELECT * FROM users WHERE tenant_id=? AND id=?', actor.tenantId, actor.user.id)
+    const row = await this.store.one<UserRow>(
+      'SELECT * FROM users WHERE tenant_id=? AND id=?',
+      actor.tenantId,
+      actor.user.id
+    )
     if (
       actor.principalId !== principal.principalId ||
       actor.user.id !== principal.user.id ||
@@ -481,10 +509,12 @@ export class PostgresEnterpriseService {
     const actor = await this.authenticateHash(principal.sessionHash)
     const row = await this.store.one<TotpRow>('SELECT * FROM totp_credentials WHERE principal_id=?', actor.principalId)
     const remaining = row?.enabled
-      ? ((await this.store.one<{ count: number }>(
-          'SELECT COUNT(*) AS count FROM totp_recovery_codes WHERE principal_id=?',
-          actor.principalId
-        ))?.count ?? 0)
+      ? ((
+          await this.store.one<{ count: number }>(
+            'SELECT COUNT(*) AS count FROM totp_recovery_codes WHERE principal_id=?',
+            actor.principalId
+          )
+        )?.count ?? 0)
       : 0
     return { enabled: Boolean(row?.enabled), available: Boolean(this.totpKey), recoveryCodesRemaining: remaining }
   }
@@ -495,7 +525,10 @@ export class PostgresEnterpriseService {
     const expectedHash = await this.checkCurrentPassword(principal, input.password)
     return await this.store.transaction(async () => {
       const actor = await this.reauthenticate(principal, expectedHash)
-      const previous = await this.store.one<TotpRow>('SELECT * FROM totp_credentials WHERE principal_id=?', actor.principalId)
+      const previous = await this.store.one<TotpRow>(
+        'SELECT * FROM totp_credentials WHERE principal_id=?',
+        actor.principalId
+      )
       if (previous?.enabled) return fail(409, 'totp_already_enabled')
       const secret = createTotpSecret()
       const cipher = encryptTotpSecret(secret, key, actor.principalId)
@@ -523,7 +556,10 @@ export class PostgresEnterpriseService {
     await this.chargeSecondFactor(principal.principalId)
     return await this.store.transaction(async () => {
       const actor = await this.authenticateHash(principal.sessionHash)
-      const row = await this.store.one<TotpRow>('SELECT * FROM totp_credentials WHERE principal_id=?', actor.principalId)
+      const row = await this.store.one<TotpRow>(
+        'SELECT * FROM totp_credentials WHERE principal_id=?',
+        actor.principalId
+      )
       if (!row || row.enabled) return fail(409, 'totp_setup_required')
       if (row.pending_expires_at === null || row.pending_expires_at <= this.now())
         return fail(409, 'totp_setup_expired')
@@ -551,7 +587,10 @@ export class PostgresEnterpriseService {
     await this.chargeSecondFactor(principal.principalId)
     return await this.store.transaction(async () => {
       const actor = await this.reauthenticate(principal, expectedHash)
-      const row = await this.store.one<TotpRow>('SELECT * FROM totp_credentials WHERE principal_id=?', actor.principalId)
+      const row = await this.store.one<TotpRow>(
+        'SELECT * FROM totp_credentials WHERE principal_id=?',
+        actor.principalId
+      )
       if (!row?.enabled) return fail(409, 'totp_not_enabled')
       await this.consumeSecondFactor(row, input.totpCode, input.recoveryCode)
       await this.store.run('DELETE FROM totp_recovery_codes WHERE principal_id=?', actor.principalId)
@@ -569,7 +608,10 @@ export class PostgresEnterpriseService {
     await this.chargeSecondFactor(principal.principalId)
     return await this.store.transaction(async () => {
       const actor = await this.reauthenticate(principal, expectedHash)
-      const row = await this.store.one<TotpRow>('SELECT * FROM totp_credentials WHERE principal_id=?', actor.principalId)
+      const row = await this.store.one<TotpRow>(
+        'SELECT * FROM totp_credentials WHERE principal_id=?',
+        actor.principalId
+      )
       if (!row?.enabled) return fail(409, 'totp_not_enabled')
       await this.consumeSecondFactor(row, input.totpCode, input.recoveryCode)
       const recoveryCodes = await this.saveRecoveryCodes(actor.principalId)
@@ -609,7 +651,11 @@ export class PostgresEnterpriseService {
     return principal
   }
   /** Revalidate long-lived transports against the live session and the tenant captured at upgrade time. */
-  async authenticateSession(sessionHash: string, expectedTenantId: string, expectedPrincipalId: string): Promise<Principal> {
+  async authenticateSession(
+    sessionHash: string,
+    expectedTenantId: string,
+    expectedPrincipalId: string
+  ): Promise<Principal> {
     const principal = await this.authenticateHash(sessionHash)
     if (principal.tenantId !== expectedTenantId || principal.principalId !== expectedPrincipalId)
       return fail(401, 'session_identity_changed')
@@ -625,11 +671,14 @@ export class PostgresEnterpriseService {
       )
       if (!available?.name) return fail(503, 'events_not_configured')
       const session = await this.store.one<{ hash: string }>(
-        'SELECT hash FROM sessions WHERE hash=? AND expires_at>? FOR UPDATE', principal.sessionHash, now
+        'SELECT hash FROM sessions WHERE hash=? AND expires_at>? FOR UPDATE',
+        principal.sessionHash,
+        now
       )
       if (!session) return fail(401, 'session_expired')
       const limit = await this.store.one<{ window_started_at: number; attempts: number }>(
-        'SELECT window_started_at,attempts FROM event_ticket_limits WHERE session_hash=?', principal.sessionHash
+        'SELECT window_started_at,attempts FROM event_ticket_limits WHERE session_hash=?',
+        principal.sessionHash
       )
       if (limit && now - limit.window_started_at < 60_000 && limit.attempts >= 30)
         return fail(429, 'event_ticket_rate_limited')
@@ -637,16 +686,23 @@ export class PostgresEnterpriseService {
         await this.store.run(
           `INSERT INTO event_ticket_limits (session_hash,window_started_at,attempts) VALUES (?,?,1)
            ON CONFLICT(session_hash) DO UPDATE SET window_started_at=excluded.window_started_at,attempts=1`,
-          principal.sessionHash, now
+          principal.sessionHash,
+          now
         )
       } else {
-        await this.store.run('UPDATE event_ticket_limits SET attempts=attempts+1 WHERE session_hash=?', principal.sessionHash)
+        await this.store.run(
+          'UPDATE event_ticket_limits SET attempts=attempts+1 WHERE session_hash=?',
+          principal.sessionHash
+        )
       }
       await this.store.run('DELETE FROM event_tickets WHERE expires_at<=?', now)
       await this.store.run(
         'INSERT INTO event_tickets (hash,session_hash,tenant_id,principal_id,expires_at) VALUES (?,?,?,?,?)',
-        createHash('sha256').update(ticket).digest('hex'), principal.sessionHash, principal.tenantId,
-        principal.principalId, expiresAt
+        createHash('sha256').update(ticket).digest('hex'),
+        principal.sessionHash,
+        principal.tenantId,
+        principal.principalId,
+        expiresAt
       )
       return { ticket, expiresAt, path: '/api/resource-stream' }
     })
@@ -655,7 +711,8 @@ export class PostgresEnterpriseService {
     if (typeof ticket !== 'string' || !/^[A-Za-z0-9_-]{43}$/.test(ticket)) return null
     const row = await this.store.one<{ session_hash: string; tenant_id: string; principal_id: string }>(
       `DELETE FROM event_tickets WHERE hash=? AND expires_at>? RETURNING session_hash,tenant_id,principal_id`,
-      createHash('sha256').update(ticket).digest('hex'), this.now()
+      createHash('sha256').update(ticket).digest('hex'),
+      this.now()
     )
     if (!row) return null
     const principal = await this.authenticateSession(row.session_hash, row.tenant_id, row.principal_id)
@@ -678,7 +735,7 @@ export class PostgresEnterpriseService {
   }
   private async requirePlatformAdmin(principal: Principal): Promise<Principal> {
     const actor = await this.authenticateHash(principal.sessionHash)
-    if (actor.principalId !== principal.principalId || !await this.isPlatformAdmin(actor))
+    if (actor.principalId !== principal.principalId || !(await this.isPlatformAdmin(actor)))
       return fail(403, 'platform_admin_required')
     return actor
   }
@@ -725,7 +782,8 @@ export class PostgresEnterpriseService {
     const where = term ? "WHERE t.id ILIKE ? ESCAPE '\\' OR t.name ILIKE ? ESCAPE '\\'" : ''
     const bindings = term ? [pattern, pattern] : []
     const total =
-      (await this.store.one<{ total: number }>(`SELECT COUNT(*) AS total FROM tenants t ${where}`, ...bindings))?.total ?? 0
+      (await this.store.one<{ total: number }>(`SELECT COUNT(*) AS total FROM tenants t ${where}`, ...bindings))
+        ?.total ?? 0
     const rows = await this.store.all<{ id: string }>(
       `SELECT t.id FROM tenants t ${where} ORDER BY t.${sort} ${order},t.id ASC LIMIT ? OFFSET ?`,
       ...bindings,
@@ -751,7 +809,14 @@ export class PostgresEnterpriseService {
       const actor = await this.requirePlatformAdmin(principal)
       if (await this.store.one('SELECT id FROM tenants WHERE id=?', id)) return fail(409, 'tenant_exists')
       await this.store.run('INSERT INTO tenants VALUES (?,?,?)', id, name, 'active')
-      await this.store.run('INSERT INTO roles VALUES (?,?,?,?,?)', randomUUID(), id, '租户管理员', reservedRole, '["*:*"]')
+      await this.store.run(
+        'INSERT INTO roles VALUES (?,?,?,?,?)',
+        randomUUID(),
+        id,
+        '租户管理员',
+        reservedRole,
+        '["*:*"]'
+      )
       const principalId = randomUUID()
       await this.store.run(
         'INSERT INTO principals (id,created_at) VALUES (?,?)',
@@ -876,24 +941,30 @@ export class PostgresEnterpriseService {
     if (raw !== undefined && !/^(0|[1-9]\d{0,15})$/.test(raw)) return fail(400, 'invalid_event_cursor')
     if (raw === undefined) {
       const latest = await this.store.one<{ seq: string }>(
-        'SELECT COALESCE(MAX(seq),0) AS seq FROM audit WHERE tenant_id=?', principal.tenantId
+        'SELECT COALESCE(MAX(seq),0) AS seq FROM audit WHERE tenant_id=?',
+        principal.tenantId
       )
       return { cursor: String(latest?.seq ?? 0), resources: [], reset: false }
     }
     const rows = await this.store.all<{ seq: string; resource: string; action: string; record_id: string }>(
       'SELECT seq,resource,action,"recordId" AS record_id FROM audit WHERE tenant_id=? AND seq>? ORDER BY seq ASC LIMIT 101',
-      principal.tenantId, Number(raw)
+      principal.tenantId,
+      Number(raw)
     )
     const window = rows.slice(0, 100)
     const resources = new Set<'users' | 'roles' | 'audit' | 'access_requests'>()
     for (const row of window) {
       if (this.canReadEvent(principal, 'audit')) resources.add('audit')
-      const resource = row.resource === 'users' || row.resource === 'roles' || row.resource === 'access_requests'
-        ? row.resource : undefined
+      const resource =
+        row.resource === 'users' || row.resource === 'roles' || row.resource === 'access_requests'
+          ? row.resource
+          : undefined
       if (resource && this.canReadEvent(principal, resource)) resources.add(resource)
       if (row.resource === 'access_requests' && row.action === 'access_approved') {
         const changed = await this.store.one<{ kind: 'role' | 'user' }>(
-          'SELECT kind FROM access_requests WHERE tenant_id=? AND id=?', principal.tenantId, row.record_id
+          'SELECT kind FROM access_requests WHERE tenant_id=? AND id=?',
+          principal.tenantId,
+          row.record_id
         )
         const changedResource = changed?.kind === 'role' ? 'roles' : changed?.kind === 'user' ? 'users' : undefined
         if (changedResource && this.canReadEvent(principal, changedResource)) resources.add(changedResource)
@@ -906,7 +977,7 @@ export class PostgresEnterpriseService {
     }
   }
   async permissions(principal: Principal) {
-    const platformRole: Role | undefined = await this.isPlatformAdmin(principal)
+    const platformRole: Role | undefined = (await this.isPlatformAdmin(principal))
       ? { id: 'platform-admin', name: '平台管理员', code: 'platform-admin', permissions: ['tenant:*'] }
       : undefined
     const roles = platformRole ? [principal.role, platformRole] : [principal.role]
@@ -1007,8 +1078,12 @@ export class PostgresEnterpriseService {
     )
     const approved: User[] = []
     for (const user of users) {
-      if (user.id !== exceptUserId && user.role !== exceptRole &&
-        permits((await this.role(tenant, user.role)).permissions, 'access:approve')) approved.push(user)
+      if (
+        user.id !== exceptUserId &&
+        user.role !== exceptRole &&
+        permits((await this.role(tenant, user.role)).permissions, 'access:approve')
+      )
+        approved.push(user)
     }
     return approved
   }
@@ -1022,7 +1097,12 @@ export class PostgresEnterpriseService {
     const reviewers = await this.approvers(principal.tenantId, principal.user.id)
     return { requiresApproval: reviewers.length > 0, independentReviewers: reviewers.length }
   }
-  private async affectedUsers(tenant: string, kind: AccessKind, targetId: string, roleCode?: string): Promise<AffectedUsers> {
+  private async affectedUsers(
+    tenant: string,
+    kind: AccessKind,
+    targetId: string,
+    roleCode?: string
+  ): Promise<AffectedUsers> {
     const users =
       kind === 'role'
         ? await this.store.all<Pick<User, 'id' | 'name' | 'email'>>(
@@ -1134,8 +1214,12 @@ export class PostgresEnterpriseService {
     const where = `tenant_id=?${status ? ' AND status=?' : ''}`
     const bindings = status ? [principal.tenantId, String(status)] : [principal.tenantId]
     const total =
-      (await this.store.one<{ total: number }>(`SELECT COUNT(*) AS total FROM access_requests WHERE ${where}`, ...bindings))
-        ?.total ?? 0
+      (
+        await this.store.one<{ total: number }>(
+          `SELECT COUNT(*) AS total FROM access_requests WHERE ${where}`,
+          ...bindings
+        )
+      )?.total ?? 0
     const rows = await this.store.all<AccessRequestRow>(
       `SELECT * FROM access_requests WHERE ${where} ORDER BY created_at DESC,id DESC LIMIT ? OFFSET ?`,
       ...bindings,
@@ -1151,7 +1235,11 @@ export class PostgresEnterpriseService {
     const expected = text(input.fingerprint, 'fingerprint', 64)
     return await this.store.transaction(async () => {
       const actor = await this.authenticateHash(principal.sessionHash)
-      const preview = await this.previewAccess(actor, { kind: input.kind, targetId: input.targetId, change: input.change })
+      const preview = await this.previewAccess(actor, {
+        kind: input.kind,
+        targetId: input.targetId,
+        change: input.change,
+      })
       if (preview.fingerprint !== expected) return fail(409, 'stale_access_preview')
       const excludedRole = preview.kind === 'role' ? (preview.before as Role).code : undefined
       const reviewers = (await this.approvers(actor.tenantId, actor.user.id, excludedRole)).filter(
@@ -1178,7 +1266,9 @@ export class PostgresEnterpriseService {
         new Date(this.now()).toISOString()
       )
       await this.audit(actor, 'access_propose', 'access_requests', id)
-      return this.publicAccessRequest((await this.store.one<AccessRequestRow>('SELECT * FROM access_requests WHERE id=?', id))!)
+      return this.publicAccessRequest(
+        (await this.store.one<AccessRequestRow>('SELECT * FROM access_requests WHERE id=?', id))!
+      )
     })
   }
   async decideAccess(principal: Principal, id: string, value: unknown) {
@@ -1303,12 +1393,14 @@ export class PostgresEnterpriseService {
     )
       return
     const count =
-      (await this.store.one<{ total: number }>(
-        'SELECT COUNT(*) AS total FROM users WHERE tenant_id=? AND role=? AND status=?',
-        principal.tenantId,
-        reservedRole,
-        'active'
-      ))?.total ?? 0
+      (
+        await this.store.one<{ total: number }>(
+          'SELECT COUNT(*) AS total FROM users WHERE tenant_id=? AND role=? AND status=?',
+          principal.tenantId,
+          reservedRole,
+          'active'
+        )
+      )?.total ?? 0
     if (count <= 1) fail(409, 'last_tenant_admin')
   }
   private async protectReviewer(tenant: string, old: User, next?: Pick<User, 'role' | 'status'>) {
@@ -1382,7 +1474,11 @@ export class PostgresEnterpriseService {
             if (
               previous &&
               previous.code !== next.code &&
-              await this.store.one('SELECT id FROM users WHERE tenant_id=? AND role=? LIMIT 1', actor.tenantId, previous.code)
+              (await this.store.one(
+                'SELECT id FROM users WHERE tenant_id=? AND role=? LIMIT 1',
+                actor.tenantId,
+                previous.code
+              ))
             )
               fail(409, 'role_in_use')
             if (action === 'create')
@@ -1487,8 +1583,7 @@ export class PostgresEnterpriseService {
       })
     } catch (error) {
       if (error instanceof BusinessError) throw error
-      if (error && typeof error === 'object' && 'code' in error && error.code === '23505')
-        fail(409, 'duplicate_record')
+      if (error && typeof error === 'object' && 'code' in error && error.code === '23505') fail(409, 'duplicate_record')
       throw error
     }
   }

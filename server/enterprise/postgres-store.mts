@@ -44,7 +44,8 @@ export class PostgresEnterpriseStore {
   private readonly currentClient = new AsyncLocalStorage<QueryClient>()
 
   constructor(connectionString: string, pool?: QueryPool) {
-    if (!pool && !/^postgres(?:ql)?:\/\//.test(connectionString)) throw new Error('DATABASE_URL must be a PostgreSQL URL')
+    if (!pool && !/^postgres(?:ql)?:\/\//.test(connectionString))
+      throw new Error('DATABASE_URL must be a PostgreSQL URL')
     const securedUrl = pool ? connectionString : new URL(connectionString)
     if (securedUrl instanceof URL) securedUrl.searchParams.set('sslmode', 'verify-full')
     this.pool =
@@ -57,7 +58,10 @@ export class PostgresEnterpriseStore {
       }) as unknown as QueryPool)
   }
 
-  async query<T = Record<string, unknown>>(sql: string, ...values: SqlValue[]): Promise<{ rows: T[]; rowCount: number }> {
+  async query<T = Record<string, unknown>>(
+    sql: string,
+    ...values: SqlValue[]
+  ): Promise<{ rows: T[]; rowCount: number }> {
     const client = this.currentClient.getStore() ?? this.pool
     const result = await client.query(postgresSql(sql), values)
     return { rows: normalizeRows<T>(result.rows), rowCount: result.rowCount ?? 0 }

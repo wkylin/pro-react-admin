@@ -23,10 +23,7 @@
         "Export item/group/event/handle types; honor checkedKeys changes as controlled state and verify keyboard selection."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "react"
-        ],
+        "packages": ["antd", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -87,11 +84,7 @@
         "Resolve current extra dependencies (markmap-lib, markmap-view): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "markmap-lib",
-          "markmap-view",
-          "react"
-        ],
+        "packages": ["markmap-lib", "markmap-view", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -154,10 +147,7 @@
         "Resolve current extra dependencies (mermaid): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "mermaid",
-          "react"
-        ],
+        "packages": ["mermaid", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -202,14 +192,9 @@
         "Replace legacy imports (@stateless/Loading) with package-local group imports; no old-directory runtime paths may remain."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "react"
-        ],
+        "packages": ["antd", "react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/Loading"
-        ],
+        "legacyComponents": ["@stateless/Loading"],
         "existingLibrary": []
       },
       "destination": {
@@ -297,14 +282,9 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/HorizontalScroll"
-        ],
+        "legacyComponents": ["@stateless/HorizontalScroll"],
         "existingLibrary": []
       },
       "destination": {
@@ -353,15 +333,9 @@
         "Replace legacy imports (@stateless/CodeHighlighter, @stateless/CopyToClipboard) with package-local group imports; no old-directory runtime paths may remain."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/CodeHighlighter",
-          "@stateless/CopyToClipboard"
-        ],
+        "legacyComponents": ["@stateless/CodeHighlighter", "@stateless/CopyToClipboard"],
         "existingLibrary": []
       },
       "destination": {
@@ -411,13 +385,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Children-based centering layout with local styles.",
-      "requiredAdaptation": [
-        "Export typed children and container attributes; carry its Less module into package CSS."
-      ],
+      "requiredAdaptation": ["Export typed children and container attributes; carry its Less module into package CSS."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -465,9 +435,7 @@
         "Type alternateText; replace the Text goes here fallback with an optional placeholder; expose interval and handle an empty array."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -515,11 +483,7 @@
         "Export list props; package the utility classes and declare its existing framer-motion peer."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "framer-motion",
-          "react"
-        ],
+        "packages": ["clsx", "framer-motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -569,9 +533,7 @@
         "Export animation option types and provide an IntersectionObserver-unavailable fallback while retaining observer cleanup."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -609,9 +571,7 @@
         "Export button props; track and clear ripple timeouts on repeated clicks/unmount; preserve caller class names."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -659,9 +619,7 @@
         "Replace React/framework names and headings with typed text/words/children props; move both example sections into stories."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -710,11 +668,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -765,11 +719,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -820,11 +770,7 @@
         "Resolve current extra dependencies (motion, prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["motion", "prop-types", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -881,11 +827,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -935,13 +877,9 @@
         "Keep this composition in application/Storybook; replace its AnimInView import after migration."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/AnimInView"
-        ],
+        "legacyComponents": ["@stateless/AnimInView"],
         "existingLibrary": []
       },
       "destination": {
@@ -979,13 +917,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Per-letter CSS animation for supplied text.",
-      "requiredAdaptation": [
-        "Type animText and CSS custom properties; cancel the three-second timeout on unmount."
-      ],
+      "requiredAdaptation": ["Type animText and CSS custom properties; cancel the three-second timeout on unmount."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1064,9 +998,7 @@
         "No behavioral adaptation; relocate its source and Less module and expose the group export."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1110,13 +1042,9 @@
       "classification": "generic",
       "decision": "migrate",
       "reason": "Typed messages/renderItem scroll container with inline styles and effect-only DOM access.",
-      "requiredAdaptation": [
-        "No behavioral adaptation; relocate source and expose the group export."
-      ],
+      "requiredAdaptation": ["No behavioral adaptation; relocate source and expose the group export."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1161,10 +1089,7 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["lucide-react", "react"],
         "application": [
           "@assets/images/he.png",
           "@assets/images/song.png",
@@ -1172,9 +1097,7 @@
           "@assets/images/xue.png"
         ],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "media",
@@ -1255,9 +1178,7 @@
         "Type avatar, text and image alternative text; expose container attributes and retain CSS variable fallbacks."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1306,11 +1227,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1361,11 +1278,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1416,10 +1329,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1464,10 +1374,7 @@
         "Resolve current extra dependencies (@react-spring/web): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@react-spring/web",
-          "react"
-        ],
+        "packages": ["@react-spring/web", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1522,11 +1429,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1576,9 +1479,7 @@
         "Accept typed text/secondaryText or children; move fixed words to stories and retain effect styles."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1626,9 +1527,7 @@
         "Expose clock format/locale or formatTime and typed wrapper props; correct 12-hour midnight/noon formatting and package styles."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1667,11 +1566,7 @@
         "Resolve current extra dependencies (shiki): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react",
-          "shiki"
-        ],
+        "packages": ["clsx", "react", "shiki"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1722,10 +1617,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1771,17 +1663,10 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "lucide-react",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "lucide-react", "motion", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "media",
@@ -1841,11 +1726,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1896,11 +1777,7 @@
         "Resolve current extra dependencies (motion, popmotion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "popmotion",
-          "react"
-        ],
+        "packages": ["motion", "popmotion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -1960,10 +1837,7 @@
         "Export clipboard options; provide accessible button labels and failure callback; clear copied-state timeout and guard clipboard availability."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["lucide-react", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -2017,10 +1891,7 @@
         "Export item/props types; remove Face Front/Top/Bottom sample defaults and accept explicit face content."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -2074,10 +1945,7 @@
         "Keep the application route fallback policy here; no independent rendering behavior beyond React Router Routes."
       ],
       "dependencies": {
-        "packages": [
-          "react",
-          "react-router-dom"
-        ],
+        "packages": ["react", "react-router-dom"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -2121,13 +1989,9 @@
         "Keep the deployment curriculum and its nested phase content in app; migrate shared AnimInView imports only, without inventing a new timeline product."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/AnimInView"
-        ],
+        "legacyComponents": ["@stateless/AnimInView"],
         "existingLibrary": []
       },
       "destination": {
@@ -2371,13 +2235,9 @@
         "Keep this business example in app; migrate RadioInput import only. It has no data, selection or schema API and adds no generic form behavior."
       ],
       "dependencies": {
-        "packages": [
-          "antd"
-        ],
+        "packages": ["antd"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/RadioInput"
-        ],
+        "legacyComponents": ["@stateless/RadioInput"],
         "existingLibrary": []
       },
       "destination": {
@@ -2431,17 +2291,9 @@
         "Resolve current extra dependencies (echarts, prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "echarts",
-          "prop-types",
-          "react"
-        ],
-        "application": [
-          "@/components/hooks/useBigScreenChartsReinit"
-        ],
-        "legacyComponents": [
-          "@stateless/EChart"
-        ],
+        "packages": ["echarts", "prop-types", "react"],
+        "application": ["@/components/hooks/useBigScreenChartsReinit"],
+        "legacyComponents": ["@stateless/EChart"],
         "existingLibrary": []
       },
       "destination": {
@@ -2515,22 +2367,10 @@
         "Resolve current extra dependencies (motion, prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "clsx",
-          "lucide-react",
-          "motion",
-          "prop-types",
-          "react"
-        ],
-        "application": [
-          "@/theme/hooks",
-          "@app/model"
-        ],
+        "packages": ["antd", "clsx", "lucide-react", "motion", "prop-types", "react"],
+        "application": ["@/theme/hooks", "@app/model"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "forms",
@@ -2614,10 +2454,7 @@
         "Resolve current extra dependencies (use-debounce): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "react",
-          "use-debounce"
-        ],
+        "packages": ["react", "use-debounce"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -2762,14 +2599,8 @@
         "Resolve current extra dependencies (echarts, lodash): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "echarts",
-          "lodash",
-          "react"
-        ],
-        "application": [
-          "@/theme/hooks"
-        ],
+        "packages": ["echarts", "lodash", "react"],
+        "application": ["@/theme/hooks"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -2832,19 +2663,9 @@
         "Resolve current extra dependencies (echarts, prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "echarts",
-          "prop-types",
-          "react"
-        ],
-        "application": [
-          "@/components/hooks/useBigScreenChartsReinit",
-          "@assets/map/china.json"
-        ],
-        "legacyComponents": [
-          "../EChart",
-          "@stateless/EChart"
-        ],
+        "packages": ["echarts", "prop-types", "react"],
+        "application": ["@/components/hooks/useBigScreenChartsReinit", "@assets/map/china.json"],
+        "legacyComponents": ["../EChart", "@stateless/EChart"],
         "existingLibrary": []
       },
       "destination": {
@@ -2978,14 +2799,8 @@
         "Expose typed status/title/subtitle/action props and variant wrappers; replace exception403 safeNavigate/FixTabPanel with caller action/children slots."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "react"
-        ],
-        "application": [
-          "@platform/navigation/useSafeNavigate",
-          "@shared/ui/FixTabPanel"
-        ],
+        "packages": ["antd", "react"],
+        "application": ["@platform/navigation/useSafeNavigate", "@shared/ui/FixTabPanel"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -3117,19 +2932,14 @@
         "Replace legacy imports (@stateless/TextComponent) with package-local group imports; no old-directory runtime paths may remain."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [
           "@assets/images/he.png",
           "@assets/images/song.png",
           "@assets/images/spring.png",
           "@assets/images/xue.png"
         ],
-        "legacyComponents": [
-          "@stateless/TextComponent"
-        ],
+        "legacyComponents": ["@stateless/TextComponent"],
         "existingLibrary": []
       },
       "destination": {
@@ -3202,16 +3012,10 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["antd", "lucide-react", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "media",
@@ -3265,10 +3069,7 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["lucide-react", "react"],
         "application": [
           "@/theme/hooks",
           "@assets/audio/hearty.mp3",
@@ -3281,9 +3082,7 @@
           "@platform/keep-alive"
         ],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "media",
@@ -3564,12 +3363,8 @@
         "Replace theme hook with explicit theme/tokens; export tab types; implement selected tab roles, keyboard navigation and controlled activeId."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
-        "application": [
-          "@src/theme/hooks"
-        ],
+        "packages": ["react"],
+        "application": ["@src/theme/hooks"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -3623,10 +3418,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -3671,11 +3463,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -3726,11 +3514,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -3782,16 +3566,10 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "framer-motion",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["framer-motion", "prop-types", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "animation",
@@ -3846,18 +3624,10 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "motion",
-          "react"
-        ],
-        "application": [
-          "@assets/images/song.png"
-        ],
+        "packages": ["lucide-react", "motion", "react"],
+        "application": ["@assets/images/song.png"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "layout",
@@ -3916,12 +3686,8 @@
         "Move the reusable palette constants into a package-local module or accept explicit palettes; remove @theme/contrast and export text props."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
-        "application": [
-          "@theme/contrast"
-        ],
+        "packages": ["react"],
+        "application": ["@theme/contrast"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -3970,13 +3736,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Caller-provided statistics list with gradient styling.",
-      "requiredAdaptation": [
-        "Export typed label/value/item props and package utility styling; add stable item keys."
-      ],
+      "requiredAdaptation": ["Export typed label/value/item props and package utility styling; add stable item keys."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4014,9 +3776,7 @@
         "Accept children and typed button attributes instead of Hover me; use typed currentTarget coordinates and a null-safe ref."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4065,11 +3825,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4120,9 +3876,7 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "prop-types"
-        ],
+        "packages": ["prop-types"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4160,10 +3914,7 @@
         "Export IconCloudProps, guard browser-only image/canvas initialization, clean animation frames and expose text alternatives."
       ],
       "dependencies": {
-        "packages": [
-          "react",
-          "react-dom"
-        ],
+        "packages": ["react", "react-dom"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4208,17 +3959,8 @@
         "Resolve current extra dependencies (react-pdf): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "framer-motion",
-          "lucide-react",
-          "react",
-          "react-dom",
-          "react-pdf"
-        ],
-        "application": [
-          "@/assets/audio/page-turn.mp3"
-        ],
+        "packages": ["clsx", "framer-motion", "lucide-react", "react", "react-dom", "react-pdf"],
+        "application": ["@/assets/audio/page-turn.mp3"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -4381,10 +4123,7 @@
         "Type grid dimensions and cell/wrapper attributes; package utility grid styling and decorative semantics."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4428,10 +4167,7 @@
         "Honor supplied value, use null-safe comparisons, expose bounds and accessible min/max labels; remove forced 0-100 limits from the generic API."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "react"
-        ],
+        "packages": ["antd", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4471,13 +4207,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Text-driven isometric card effect with local CSS.",
-      "requiredAdaptation": [
-        "Export typed text/children/container props and package scoped styles."
-      ],
+      "requiredAdaptation": ["Export typed text/children/container props and package scoped styles."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4525,19 +4257,10 @@
         "Keep this route-specific trailer screen in app; a generic video-background interface would be newly invented rather than extracted behavior."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react"
-        ],
-        "application": [
-          "@assets/video/trailer.mp4",
-          "@platform/navigation/useSafeNavigate"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react"],
+        "application": ["@assets/video/trailer.mp4", "@platform/navigation/useSafeNavigate"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "app",
@@ -4614,17 +4337,10 @@
         "Resolve current extra dependencies (react-i18next): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react",
-          "react-i18next"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react", "react-i18next"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "forms",
@@ -4683,9 +4399,7 @@
         "Replace runtime Lorem Ipsum caption with optional caption ReactNode; export image props and guard missing IntersectionObserver fallback."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4733,9 +4447,7 @@
         "Export typed children and container attributes; preserve scoped styles and CSS variable defaults."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4779,13 +4491,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Text-driven border animation in local Less.",
-      "requiredAdaptation": [
-        "Type text/children/container attributes and ship all border keyframes in package CSS."
-      ],
+      "requiredAdaptation": ["Type text/children/container attributes and ship all border keyframes in package CSS."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4834,16 +4542,10 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -4896,10 +4598,7 @@
         "Export company/props types; require accessible logo text, package styling and retain interval cleanup."
       ],
       "dependencies": {
-        "packages": [
-          "framer-motion",
-          "react"
-        ],
+        "packages": ["framer-motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4943,10 +4642,7 @@
         "Export props and package positioning styles; retain canvas/DPR, listener and RAF cleanup and decorative semantics."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -4991,14 +4687,9 @@
         "Replace legacy imports (@stateless/FloatingIcon) with package-local group imports; no old-directory runtime paths may remain."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["lucide-react", "react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/FloatingIcon"
-        ],
+        "legacyComponents": ["@stateless/FloatingIcon"],
         "existingLibrary": []
       },
       "destination": {
@@ -5067,9 +4758,7 @@
           "react",
           "turndown"
         ],
-        "application": [
-          "@/theme/hooks"
-        ],
+        "application": ["@/theme/hooks"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -5425,10 +5114,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5472,9 +5158,7 @@
         "Accept children/gradient options and remove Mesh Gradient Background heading from runtime defaults; export props and package styles."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5523,10 +5207,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5574,10 +5255,7 @@
         "Export props, provide image alt policy and maintain listener/ref cleanup; package image positioning styles."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5621,9 +5299,7 @@
         "Type content/container style and CSS custom properties; retain locally scoped animation CSS."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5672,11 +5348,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5727,15 +5399,10 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["lucide-react", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "media",
@@ -5782,19 +5449,10 @@
         "Keep this application navigation/error route composition; migrate AnimatedIcon import only."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react",
-          "react-router-dom"
-        ],
-        "application": [
-          "@platform/navigation/useSafeNavigate"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react", "react-router-dom"],
+        "application": ["@platform/navigation/useSafeNavigate"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "app",
@@ -5859,14 +5517,8 @@
         "Keep the demonstration in app/Storybook; no additional reusable number-rendering implementation exists beyond @number-flow/react."
       ],
       "dependencies": {
-        "packages": [
-          "@number-flow/react",
-          "react"
-        ],
-        "application": [
-          "@hooks/useCycle",
-          "@hooks/useRootClick"
-        ],
+        "packages": ["@number-flow/react", "react"],
+        "application": ["@hooks/useCycle", "@hooks/useRootClick"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -5921,9 +5573,7 @@
         "Expose typed value, label and optional formatting; move sample metric into stories and package animate-move-dot keyframes."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -5961,11 +5611,7 @@
         "Export item/props types, package orbit keyframes and preserve caller-supplied content and accessible text."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "clsx",
-          "react"
-        ],
+        "packages": ["antd", "clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -6016,11 +5662,7 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["antd", "prop-types", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -6104,15 +5746,9 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["antd", "prop-types", "react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/Footer"
-        ],
+        "legacyComponents": ["@stateless/Footer"],
         "existingLibrary": []
       },
       "destination": {
@@ -6169,21 +5805,10 @@
         "Resolve current extra dependencies (echarts, html2canvas, jspdf): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "echarts",
-          "html2canvas",
-          "jspdf",
-          "react"
-        ],
+        "packages": ["@ant-design/icons", "antd", "echarts", "html2canvas", "jspdf", "react"],
         "application": [],
-        "legacyComponents": [
-          "@stateless/EChart"
-        ],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "legacyComponents": ["@stateless/EChart"],
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -6262,17 +5887,9 @@
         "Resolve current extra dependencies (echarts): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "echarts",
-          "react"
-        ],
-        "application": [
-          "@/theme/hooks"
-        ],
-        "legacyComponents": [
-          "@stateless/EChart"
-        ],
+        "packages": ["antd", "echarts", "react"],
+        "application": ["@/theme/hooks"],
+        "legacyComponents": ["@stateless/EChart"],
         "existingLibrary": []
       },
       "destination": {
@@ -6334,17 +5951,9 @@
         "Resolve current extra dependencies (echarts, prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "echarts",
-          "prop-types",
-          "react"
-        ],
-        "application": [
-          "@/components/hooks/useBigScreenChartsReinit"
-        ],
-        "legacyComponents": [
-          "@stateless/EChart"
-        ],
+        "packages": ["echarts", "prop-types", "react"],
+        "application": ["@/components/hooks/useBigScreenChartsReinit"],
+        "legacyComponents": ["@stateless/EChart"],
         "existingLibrary": []
       },
       "destination": {
@@ -6417,10 +6026,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -6475,13 +6081,7 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "clsx",
-          "lucide-react",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["antd", "clsx", "lucide-react", "prop-types", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -6553,11 +6153,7 @@
         "Export props and document read-only display semantics; add role/aria-checked and configurable text rather than claiming interactive input behavior."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "clsx",
-          "react"
-        ],
+        "packages": ["antd", "clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -6619,19 +6215,10 @@
         "Resolve current extra dependencies (@uiw/react-signature): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@uiw/react-signature",
-          "clsx",
-          "lucide-react",
-          "react"
-        ],
-        "application": [
-          "@hooks/useCopyToClipboard"
-        ],
+        "packages": ["@uiw/react-signature", "clsx", "lucide-react", "react"],
+        "application": ["@hooks/useCopyToClipboard"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "forms",
@@ -6710,10 +6297,7 @@
           "remark-math",
           "use-debounce"
         ],
-        "application": [
-          "@assets/svg/three-dots.svg",
-          "@platform/feedback/message"
-        ],
+        "application": ["@assets/svg/three-dots.svg", "@platform/feedback/message"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -6838,10 +6422,7 @@
         "Keep authorization and hash-navigation policy in app; passing through an opaque callback would erase the implementation being audited."
       ],
       "dependencies": {
-        "packages": [
-          "react",
-          "react-router-dom"
-        ],
+        "packages": ["react", "react-router-dom"],
         "application": [
           "@platform/auth/services/permissionService",
           "@platform/feedback/message",
@@ -6908,10 +6489,7 @@
         "Resolve current extra dependencies (@codesandbox/sandpack-react): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@codesandbox/sandpack-react",
-          "react"
-        ],
+        "packages": ["@codesandbox/sandpack-react", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -6956,11 +6534,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7012,18 +6586,10 @@
         "Resolve current extra dependencies (prism-react-renderer): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "prism-react-renderer",
-          "react"
-        ],
-        "application": [
-          "@src/theme/hooks"
-        ],
+        "packages": ["lucide-react", "prism-react-renderer", "react"],
+        "application": ["@src/theme/hooks"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "editor",
@@ -7093,10 +6659,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7141,10 +6704,7 @@
         "Resolve current extra dependencies (react-router-dom): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "react",
-          "react-router-dom"
-        ],
+        "packages": ["react", "react-router-dom"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7189,11 +6749,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7243,20 +6799,10 @@
         "Keep application module routing and safeNavigate integration; migrate AnimatedIcon import only."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react",
-          "react-router-dom"
-        ],
-        "application": [
-          "@platform/navigation/useSafeNavigate",
-          "@shared/ui/FixTabPanel"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react", "react-router-dom"],
+        "application": ["@platform/navigation/useSafeNavigate", "@shared/ui/FixTabPanel"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "app",
@@ -7327,19 +6873,10 @@
         "Keep theme-store mutation and the product-specific configuration UI in app; reusable Ant Design Drawer already supplies the generic container."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react",
-          "react-i18next"
-        ],
-        "application": [
-          "@/theme/hooks"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react", "react-i18next"],
+        "application": ["@/theme/hooks"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "app",
@@ -7406,18 +6943,10 @@
         "Resolve current extra dependencies (prism-react-renderer): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "prism-react-renderer",
-          "react"
-        ],
-        "application": [
-          "@hooks/useCopyToClipboard"
-        ],
+        "packages": ["@ant-design/icons", "prism-react-renderer", "react"],
+        "application": ["@hooks/useCopyToClipboard"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "editor",
@@ -7486,9 +7015,7 @@
         "Accept typed children/container props and remove Shifting Card heading; retain null-safe geometry/listener cleanup."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7532,13 +7059,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Text-driven CSS shine effect with speed/disabled options.",
-      "requiredAdaptation": [
-        "Export explicit props and validate speed while retaining scoped keyframes."
-      ],
+      "requiredAdaptation": ["Export explicit props and validate speed while retaining scoped keyframes."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7586,10 +7109,7 @@
         "Export props and package wrapper styles; preserve timeout/RAF cleanup and mark decorative content appropriately."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7633,9 +7153,7 @@
         "Expose typed shape/count/container options and accessible loading status; keep animations scoped."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7683,10 +7201,7 @@
         "Use semantic button props or explicitly provide role/tabIndex/keyboard activation, expose accessible name and package effect styles."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7726,13 +7241,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Children-based CSS sliding gradient effect.",
-      "requiredAdaptation": [
-        "Type children/container attributes and retain local animation styles."
-      ],
+      "requiredAdaptation": ["Type children/container attributes and retain local animation styles."],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7781,10 +7292,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -7944,15 +7452,7 @@
         "Resolve current extra dependencies (hls.js, i18next, prop-types, react-i18next): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "hls.js",
-          "i18next",
-          "lucide-react",
-          "prop-types",
-          "react",
-          "react-dom",
-          "react-i18next"
-        ],
+        "packages": ["hls.js", "i18next", "lucide-react", "prop-types", "react", "react-dom", "react-i18next"],
         "application": [
           "@/i18n/i18n",
           "@/i18n/locales/en/translation.js",
@@ -7960,9 +7460,7 @@
           "@hooks/useVideo"
         ],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "media",
@@ -8095,13 +7593,8 @@
         "Require typed src and playback labels/callbacks; move audio asset to stories and clean audio resources when source changes/unmounts."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "react"
-        ],
-        "application": [
-          "@assets/audio/heart-of-the-sea.mp3"
-        ],
+        "packages": ["antd", "react"],
+        "application": ["@assets/audio/heart-of-the-sea.mp3"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -8244,11 +7737,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8298,9 +7787,7 @@
         "Type children/style/custom properties and pointer handlers; retain scoped effect CSS and cleanup."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8348,9 +7835,7 @@
         "Export props, preserve RAF/resize teardown and package canvas dimensions without global CSS dependencies."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8398,9 +7883,7 @@
         "Expose typed color/count/container options and retain scoped keyframes; keep decoration hidden from assistive technology."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8448,9 +7931,7 @@
         "Export typed value/max/onChange/readOnly props; implement keyboard selection and accessible names while preserving controlled value behavior."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8500,17 +7981,10 @@
         "Resolve current extra dependencies (copy-to-clipboard): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "copy-to-clipboard",
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["clsx", "copy-to-clipboard", "lucide-react", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -8570,16 +8044,10 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["antd", "lucide-react", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -8659,11 +8127,7 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["clsx", "prop-types", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8713,10 +8177,7 @@
         "Export props and replace utility positioning classes with package CSS; expose bottom offset instead of fixed bottom-[100px]."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -8761,18 +8222,10 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react"
-        ],
-        "application": [
-          "@platform/feedback/message"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react"],
+        "application": ["@platform/feedback/message"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -8833,19 +8286,10 @@
         "Resolve current extra dependencies (prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "prop-types",
-          "react"
-        ],
-        "application": [
-          "@/theme/hooks"
-        ],
+        "packages": ["@ant-design/icons", "antd", "prop-types", "react"],
+        "application": ["@/theme/hooks"],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -8980,9 +8424,7 @@
         "Accept typed tag items/children and accessibility labels; move feature strings to stories and preserve cloud animation styles."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9031,10 +8473,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9078,9 +8517,7 @@
         "Accept typed items/children; move fixed labels to stories and package clip/hover styles with keyboard parity where interactive."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9118,10 +8555,7 @@
         "Export typed props and progress semantics; package utility classes and remove implicit any."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9166,10 +8600,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "motion",
-          "react"
-        ],
+        "packages": ["motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9214,11 +8645,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9264,14 +8691,9 @@
       "classification": "generic",
       "decision": "adapt then migrate",
       "reason": "Typed pointer-tilt card around supplied children.",
-      "requiredAdaptation": [
-        "Export props, package required perspective/utility styles and retain event/RAF cleanup."
-      ],
+      "requiredAdaptation": ["Export props, package required perspective/utility styles and retain event/RAF cleanup."],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "react"
-        ],
+        "packages": ["clsx", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9315,14 +8737,8 @@
         "Expose typed groups/records, theme and renderLabel/ratio/title slots; move company/date/percentage fixtures into stories, remove app theme hook and preserve measured-connector cleanup/tests."
       ],
       "dependencies": {
-        "packages": [
-          "@ant-design/icons",
-          "antd",
-          "react"
-        ],
-        "application": [
-          "@src/theme/hooks"
-        ],
+        "packages": ["@ant-design/icons", "antd", "react"],
+        "application": ["@src/theme/hooks"],
         "legacyComponents": [],
         "existingLibrary": []
       },
@@ -9399,10 +8815,7 @@
         "Export typed tab/props types, use empty tabs default, add tab roles/keyboard behavior and controlled activeTab support."
       ],
       "dependencies": {
-        "packages": [
-          "antd",
-          "react"
-        ],
+        "packages": ["antd", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9456,9 +8869,7 @@
         "Type supported children/text and delay; clean pending timeouts and define behavior when input changes."
       ],
       "dependencies": {
-        "packages": [
-          "react"
-        ],
+        "packages": ["react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9507,12 +8918,7 @@
         "Resolve current extra dependencies (motion, prop-types): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "prop-types",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "prop-types", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9569,15 +8975,10 @@
         "Resolve @wui/AnimatedIcon internally while retaining their existing public subpaths."
       ],
       "dependencies": {
-        "packages": [
-          "lucide-react",
-          "react"
-        ],
+        "packages": ["lucide-react", "react"],
         "application": [],
         "legacyComponents": [],
-        "existingLibrary": [
-          "@wui/AnimatedIcon"
-        ]
+        "existingLibrary": ["@wui/AnimatedIcon"]
       },
       "destination": {
         "group": "data-display",
@@ -9625,11 +9026,7 @@
         "Resolve current extra dependencies (prop-types, video.js): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "prop-types",
-          "react",
-          "video.js"
-        ],
+        "packages": ["prop-types", "react", "video.js"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []
@@ -9721,11 +9118,7 @@
         "Resolve current extra dependencies (motion): replace those explicitly removed above; declare all remaining packages in contract/manifest/docs, using optional peers for heavy group-only imports."
       ],
       "dependencies": {
-        "packages": [
-          "clsx",
-          "motion",
-          "react"
-        ],
+        "packages": ["clsx", "motion", "react"],
         "application": [],
         "legacyComponents": [],
         "existingLibrary": []

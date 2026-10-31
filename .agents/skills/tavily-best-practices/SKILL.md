@@ -1,6 +1,6 @@
 ---
 name: tavily-best-practices
-description: "Build production-ready Tavily integrations with best practices baked in. Reference documentation for developers using coding assistants (Claude Code, Cursor, etc.) to implement web search, content extraction, crawling, and research in agentic workflows, RAG systems, or autonomous agents."
+description: 'Build production-ready Tavily integrations with best practices baked in. Reference documentation for developers using coding assistants (Claude Code, Cursor, etc.) to implement web search, content extraction, crawling, and research in agentic workflows, RAG systems, or autonomous agents.'
 ---
 
 # Tavily
@@ -10,11 +10,13 @@ Tavily is a search API designed for LLMs, enabling AI applications to access rea
 ## Installation
 
 **Python:**
+
 ```bash
 pip install tavily-python
 ```
 
 **JavaScript:**
+
 ```bash
 npm install @tavily/core
 ```
@@ -41,17 +43,17 @@ async_client = AsyncTavilyClient()
 
 **For custom agents/workflows:**
 
-| Need | Method |
-|------|--------|
-| Web search results | `search()` |
+| Need                       | Method      |
+| -------------------------- | ----------- |
+| Web search results         | `search()`  |
 | Content from specific URLs | `extract()` |
-| Content from entire site | `crawl()` |
-| URL discovery from site | `map()` |
+| Content from entire site   | `crawl()`   |
+| URL discovery from site    | `map()`     |
 
 **For out-of-the-box research:**
 
-| Need | Method |
-|------|--------|
+| Need                                  | Method       |
+| ------------------------------------- | ------------ |
 | End-to-end research with AI synthesis | `research()` |
 
 ## Quick Reference
@@ -66,6 +68,7 @@ response = client.search(
 )
 print(response)
 ```
+
 Key parameters: `query`, `max_results`, `search_depth` (ultra-fast/fast/basic/advanced), `include_domains`, `exclude_domains`, `time_range`
 
 See **[references/search.md](references/search.md)** for complete search reference.
@@ -80,6 +83,7 @@ response = client.extract(
 )
 print(response)
 ```
+
 Key parameters: `urls` (max 20), `extract_depth`, `query`, `chunks_per_source` (1-5)
 
 See **[references/extract.md](references/extract.md)** for complete extract reference.
@@ -94,6 +98,7 @@ response = client.crawl(
 )
 print(response)
 ```
+
 Key parameters: `url`, `max_depth`, `max_breadth`, `limit`, `instructions`, `chunks_per_source`, `select_paths`, `exclude_paths`
 
 See **[references/crawl.md](references/crawl.md)** for complete crawl reference.

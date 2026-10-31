@@ -1,6 +1,9 @@
 import { spawnSync } from 'node:child_process'
 
-const isCI = ['true', '1'].includes(process.env.CI) || ['true', '1'].includes(process.env.GITHUB_ACTIONS) || process.env.VERCEL === '1'
+const isCI =
+  ['true', '1'].includes(process.env.CI) ||
+  ['true', '1'].includes(process.env.GITHUB_ACTIONS) ||
+  process.env.VERCEL === '1'
 const force = ['1', 'true'].includes(process.env.OPTIMIZE_MEDIA)
 
 if (isCI && !force) {

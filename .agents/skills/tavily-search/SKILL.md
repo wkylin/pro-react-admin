@@ -48,33 +48,33 @@ tvly search "react hooks tutorial" --include-raw-content --max-results 3 --json
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--depth` | `ultra-fast`, `fast`, `basic` (default), `advanced` |
-| `--max-results` | Max results, 0-20 (default: 5) |
-| `--topic` | `general` (default), `news`, `finance` |
-| `--time-range` | `day`, `week`, `month`, `year` |
-| `--start-date` | Results after date (YYYY-MM-DD) |
-| `--end-date` | Results before date (YYYY-MM-DD) |
-| `--include-domains` | Comma-separated domains to include |
-| `--exclude-domains` | Comma-separated domains to exclude |
-| `--country` | Boost results from country |
-| `--include-answer` | Include AI answer (`basic` or `advanced`) |
-| `--include-raw-content` | Include full page content (`markdown` or `text`) |
-| `--include-images` | Include image results |
-| `--include-image-descriptions` | Include AI image descriptions |
-| `--chunks-per-source` | Chunks per source (advanced/fast depth only) |
-| `-o, --output` | Save output to file |
-| `--json` | Structured JSON output |
+| Option                         | Description                                         |
+| ------------------------------ | --------------------------------------------------- |
+| `--depth`                      | `ultra-fast`, `fast`, `basic` (default), `advanced` |
+| `--max-results`                | Max results, 0-20 (default: 5)                      |
+| `--topic`                      | `general` (default), `news`, `finance`              |
+| `--time-range`                 | `day`, `week`, `month`, `year`                      |
+| `--start-date`                 | Results after date (YYYY-MM-DD)                     |
+| `--end-date`                   | Results before date (YYYY-MM-DD)                    |
+| `--include-domains`            | Comma-separated domains to include                  |
+| `--exclude-domains`            | Comma-separated domains to exclude                  |
+| `--country`                    | Boost results from country                          |
+| `--include-answer`             | Include AI answer (`basic` or `advanced`)           |
+| `--include-raw-content`        | Include full page content (`markdown` or `text`)    |
+| `--include-images`             | Include image results                               |
+| `--include-image-descriptions` | Include AI image descriptions                       |
+| `--chunks-per-source`          | Chunks per source (advanced/fast depth only)        |
+| `-o, --output`                 | Save output to file                                 |
+| `--json`                       | Structured JSON output                              |
 
 ## Search depth
 
-| Depth | Speed | Relevance | Best for |
-|-------|-------|-----------|----------|
-| `ultra-fast` | Fastest | Lower | Real-time chat, autocomplete |
-| `fast` | Fast | Good | Need chunks, latency matters |
-| `basic` | Medium | High | General-purpose (default) |
-| `advanced` | Slower | Highest | Precision, specific facts |
+| Depth        | Speed   | Relevance | Best for                     |
+| ------------ | ------- | --------- | ---------------------------- |
+| `ultra-fast` | Fastest | Lower     | Real-time chat, autocomplete |
+| `fast`       | Fast    | Good      | Need chunks, latency matters |
+| `basic`      | Medium  | High      | General-purpose (default)    |
+| `advanced`   | Slower  | Highest   | Precision, specific facts    |
 
 ## Tips
 

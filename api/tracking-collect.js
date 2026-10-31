@@ -20,8 +20,20 @@ function normalizePage(value, fallback, max = Number.MAX_SAFE_INTEGER) {
 
 function createFilter(query) {
   const filter = {}
-  if (query.eventType) filter.eventType = { $in: String(query.eventType).split(',').map((value) => value.trim()).filter(Boolean) }
-  if (query.eventName) filter.eventName = { $in: String(query.eventName).split(',').map((value) => value.trim()).filter(Boolean) }
+  if (query.eventType)
+    filter.eventType = {
+      $in: String(query.eventType)
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean),
+    }
+  if (query.eventName)
+    filter.eventName = {
+      $in: String(query.eventName)
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean),
+    }
 
   const startTime = Number(query.startTime)
   const endTime = Number(query.endTime)
@@ -54,7 +66,12 @@ function isEvent(value) {
 async function trackingCollect(req, res) {
   try {
     const { appId, appVersion, sdkVersion, events, sentAt } = req.body || {}
-    if (!Array.isArray(events) || events.length === 0 || events.length > MAX_EVENTS_PER_BATCH || !events.every(isEvent)) {
+    if (
+      !Array.isArray(events) ||
+      events.length === 0 ||
+      events.length > MAX_EVENTS_PER_BATCH ||
+      !events.every(isEvent)
+    ) {
       return res.status(400).json({ code: 400, message: 'Invalid events', maxEvents: MAX_EVENTS_PER_BATCH })
     }
 
@@ -98,24 +115,39 @@ async function getEvents(req, res) {
     const direction = req.query.order === 'asc' ? 1 : -1
 
     if (TrackingEventModel) {
-      if (!isPersistentStoreReady()) return res.status(503).json({ code: 503, message: 'Tracking storage is unavailable' })
+      if (!isPersistentStoreReady())
+        return res.status(503).json({ code: 503, message: 'Tracking storage is unavailable' })
       const [items, total] = await Promise.all([
-        TrackingEventModel.find(filter).sort({ [sortKey]: direction }).skip((page - 1) * pageSize).limit(pageSize).lean(),
+        TrackingEventModel.find(filter)
+          .sort({ [sortKey]: direction })
+          .skip((page - 1) * pageSize)
+          .limit(pageSize)
+          .lean(),
         TrackingEventModel.countDocuments(filter),
       ])
       return res.json({ code: 0, data: { items, total, page, pageSize, totalPages: Math.ceil(total / pageSize) } })
     }
 
     let filtered = [...eventStore].reverse()
-    const types = req.query.eventType && String(req.query.eventType).split(',').map((value) => value.trim())
-    const names = req.query.eventName && String(req.query.eventName).split(',').map((value) => value.trim())
+    const types =
+      req.query.eventType &&
+      String(req.query.eventType)
+        .split(',')
+        .map((value) => value.trim())
+    const names =
+      req.query.eventName &&
+      String(req.query.eventName)
+        .split(',')
+        .map((value) => value.trim())
     if (types) filtered = filtered.filter((event) => types.includes(event.eventType))
     if (names) filtered = filtered.filter((event) => names.includes(event.eventName))
-    if (filter.timestamp?.$gte !== undefined) filtered = filtered.filter((event) => event.timestamp >= filter.timestamp.$gte)
-    if (filter.timestamp?.$lte !== undefined) filtered = filtered.filter((event) => event.timestamp <= filter.timestamp.$lte)
+    if (filter.timestamp?.$gte !== undefined)
+      filtered = filtered.filter((event) => event.timestamp >= filter.timestamp.$gte)
+    if (filter.timestamp?.$lte !== undefined)
+      filtered = filtered.filter((event) => event.timestamp <= filter.timestamp.$lte)
     filtered.sort((a, b) => {
-      const left = a[sortKey] instanceof Date ? a[sortKey].getTime() : a[sortKey] ?? 0
-      const right = b[sortKey] instanceof Date ? b[sortKey].getTime() : b[sortKey] ?? 0
+      const left = a[sortKey] instanceof Date ? a[sortKey].getTime() : (a[sortKey] ?? 0)
+      const right = b[sortKey] instanceof Date ? b[sortKey].getTime() : (b[sortKey] ?? 0)
       return direction * (left > right ? 1 : left < right ? -1 : 0)
     })
     const total = filtered.length
@@ -184,8 +216,13 @@ function getMemoryStats() {
     uniqueSessions24h: new Set(recent.map((event) => event.sessionId).filter(Boolean)).size,
     errorRate: recent.length ? Math.round((errorCount / recent.length) * 10_000) / 100 : 0,
     byType,
-    topEvents: Object.entries(byName).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([name, count]) => ({ name, count })),
-    trend: Object.entries(hourly).sort(([a], [b]) => a.localeCompare(b)).map(([hour, count]) => ({ hour, count })),
+    topEvents: Object.entries(byName)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([name, count]) => ({ name, count })),
+    trend: Object.entries(hourly)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([hour, count]) => ({ hour, count })),
     perfStats,
   }
 }
@@ -254,13 +291,34 @@ async function getMongoStats() {
     TrackingEventModel.countDocuments(recentFilter),
     TrackingEventModel.countDocuments(since7d),
     TrackingEventModel.countDocuments({ ...recentFilter, eventType: 'error' }),
-    count(TrackingEventModel.aggregate([{ $match: { ...recentFilter, anonymousId: { $exists: true, $ne: null } } }, { $group: { _id: '$anonymousId' } }, { $count: 'count' }])),
-    count(TrackingEventModel.aggregate([{ $match: { ...recentFilter, sessionId: { $exists: true, $ne: null } } }, { $group: { _id: '$sessionId' } }, { $count: 'count' }])),
+    count(
+      TrackingEventModel.aggregate([
+        { $match: { ...recentFilter, anonymousId: { $exists: true, $ne: null } } },
+        { $group: { _id: '$anonymousId' } },
+        { $count: 'count' },
+      ])
+    ),
+    count(
+      TrackingEventModel.aggregate([
+        { $match: { ...recentFilter, sessionId: { $exists: true, $ne: null } } },
+        { $group: { _id: '$sessionId' } },
+        { $count: 'count' },
+      ])
+    ),
     TrackingEventModel.aggregate([{ $group: { _id: '$eventType', count: { $sum: 1 } } }]),
-    TrackingEventModel.aggregate([{ $group: { _id: '$eventName', count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $limit: 10 }]),
+    TrackingEventModel.aggregate([
+      { $group: { _id: '$eventName', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 10 },
+    ]),
     TrackingEventModel.aggregate([
       { $match: recentFilter },
-      { $group: { _id: { $dateToString: { format: '%Y-%m-%dT%H:00', date: { $toDate: '$timestamp' }, timezone: 'UTC' } }, count: { $sum: 1 } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: '%Y-%m-%dT%H:00', date: { $toDate: '$timestamp' }, timezone: 'UTC' } },
+          count: { $sum: 1 },
+        },
+      },
       { $sort: { _id: 1 } },
     ]),
     readPerformance(),
@@ -310,7 +368,8 @@ async function clearEvents(req, res) {
   try {
     let cleared
     if (TrackingEventModel) {
-      if (!isPersistentStoreReady()) return res.status(503).json({ code: 503, message: 'Tracking storage is unavailable' })
+      if (!isPersistentStoreReady())
+        return res.status(503).json({ code: 503, message: 'Tracking storage is unavailable' })
       const result = await TrackingEventModel.deleteMany({})
       cleared = result.deletedCount || 0
     } else {

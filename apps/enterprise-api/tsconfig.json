@@ -12,5 +12,10 @@
     "rewriteRelativeImportExtensions": true,
     "types": ["node"]
   },
-  "include": ["api/**/*.ts", "../../server/enterprise/**/*.mts", "../../server/enterprise/router.cjs", "../../src/platform/auth/model/accessDecision.ts"]
+  "include": [
+    "api/**/*.ts",
+    "../../server/enterprise/**/*.mts",
+    "../../server/enterprise/router.cjs",
+    "../../src/platform/auth/model/accessDecision.ts"
+  ]
 }
