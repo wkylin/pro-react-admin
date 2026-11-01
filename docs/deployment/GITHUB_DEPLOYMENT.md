@@ -71,7 +71,7 @@ gh run watch --exit-status
 
 ## 本地构建同一部署产物
 
-要求 Node 24 和 pnpm 11.5.2，在仓库根执行：
+要求 Node 24 和 pnpm 12.16.1，在仓库根执行：
 
 ```bash
 pnpm install --frozen-lockfile

@@ -19,11 +19,11 @@ GitHub Pages 是静态托管，不能运行本项目的企业 API 或持久化 S
 
 ## 准备源码与工具
 
-仓库的 `package.json` 要求 Node.js `>=24.15.0 <25`，并固定 `pnpm@11.5.2`。先安装 Git、符合要求的 Node.js 和 pnpm，再检查版本：
+仓库的 `package.json` 要求 Node.js `>=24.15.0 <25`，并固定 `pnpm@12.16.1`。先安装 Git、符合要求的 Node.js 和 pnpm，再检查版本：
 
 ```bash
 node --version
-npm install --global pnpm@11.5.2
+npm install --global pnpm@12.16.1
 pnpm --version
 git --version
 ```
@@ -48,7 +48,7 @@ pnpm install --frozen-lockfile
 2. 进入 **Actions**，确认 `Deploy to GitHub Pages` 工作流已启用。
 3. 若仓库设置了 `github-pages` environment 的部署限制，允许 `main` 分支，并按仓库规则批准部署。
 
-现有工作流已经声明 `contents: read`、`pages: write` 和 `id-token: write`，并负责安装 Node 24、pnpm 11.5.2、依赖和部署所需的 Actions。普通 Fork 不需要另存一个 Pages token。
+现有工作流已经声明 `contents: read`、`pages: write` 和 `id-token: write`，并负责安装 Node 24、pnpm 12.16.1、依赖和部署所需的 Actions。普通 Fork 不需要另存一个 Pages token。
 
 ### 2. 先看构建计划，再按需本地验证
 

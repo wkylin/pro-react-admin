@@ -4,10 +4,10 @@
 
 ## 准备环境
 
-要求 Node.js **>=24.15.0 且 <25**、pnpm **11.5.2**。先安装满足要求的 Node；如果尚未安装 pnpm，执行：
+要求 Node.js **>=24.15.0 且 <25**、pnpm **12.16.1**。先安装满足要求的 Node；如果尚未安装 pnpm，执行：
 
 ```bash
-npm install --global pnpm@11.5.2
+npm install --global pnpm@12.16.1
 node --version
 pnpm --version
 ```

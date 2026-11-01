@@ -31,13 +31,13 @@ Pages 当前的 `all` 部署包含以下路径，均相对于 `https://wkylin.gi
 
 ## 2. 环境与代码准备
 
-要求 Node.js `>=24.15.0 <25`、pnpm `11.5.2`、Git，以及目标平台的部署权限。
+要求 Node.js `>=24.15.0 <25`、pnpm `12.16.1`、Git，以及目标平台的部署权限。
 
 ```bash
 # 已安装 nvm 时选择项目所需 Node；也可通过其它方式安装符合要求的 Node 24
 nvm install 24
 nvm use 24
-npm install --global pnpm@11.5.2
+npm install --global pnpm@12.16.1
 node --version
 pnpm --version
 
@@ -490,7 +490,7 @@ gh run watch RUN_ID --exit-status
 | 线上仍是旧界面                      | 比较 buildTime 和本次工作流提交，检查浏览器/PWA 缓存后重开页面                                   |
 | `check:docs` 提示参考过期           | `pnpm run generate:docs` 后审阅并提交；不要手工维护生成表格                                      |
 | Release 报 tag/version 不匹配       | 新标签必须与根版本一致；已发布标签保持原指向，修复后按新的版本发布                               |
-| pnpm 启动器卡住                     | 确认 Node 24、pnpm 11.5.2 和 registry 连通；已安装依赖可按 Storybook/组件库指南使用等价 Node CLI |
+| pnpm 启动器卡住                     | 确认 Node 24、pnpm 12.16.1 和 registry 连通；已安装依赖可按 Storybook/组件库指南使用等价 Node CLI |
 | 真实登录返回 HTML、404 或 CORS 错误 | 检查公网 API、编译时 APP_BASE_URL、服务端 CORS 与 HTTPS；见真实 API 指南                         |
 
 继续阅读：[GitHub Pages 原理与配置](./GITHUB_DEPLOYMENT.md)、[Storybook 开发与资源规则](../development/STORYBOOK.md)、[微前端协议](./MFE_DEPLOYMENT.md)、[Vercel 与持久 API](./VERCEL_SQLITE.md)、[组件库与 npm 发布](./LIBRARY_PUBLISH_GUIDE.md)。

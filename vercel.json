@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "installCommand": "corepack enable && corepack pnpm@11.5.2 install --frozen-lockfile",
+  "installCommand": "corepack enable && corepack pnpm@12.16.1 install --frozen-lockfile",
   "rewrites": [
     {
       "source": "/api/demo/github/config",

@@ -5,7 +5,7 @@
 ## 1. GitHub Pages 当前如何发布
 
 1. 推送 `main` 会触发 `Deploy to GitHub Pages`；也可在 Actions 中手动触发，选择 `all`、`default`、`enterprise`、`mfe`、`multi` 或 `storybook`。推送时默认 `all`。
-2. Actions 在 Ubuntu 上安装 Node 24、pnpm 11.5.2 和锁文件依赖。`actions/configure-pages@v5` 读取当前仓库 Pages 的 HTTPS origin 和 base path，分别传给 `PAGES_SITE_URL`、`PAGES_BASE_PATH`。
+2. Actions 在 Ubuntu 上安装 Node 24、pnpm 12.16.1 和锁文件依赖。`actions/configure-pages@v5` 读取当前仓库 Pages 的 HTTPS origin 和 base path，分别传给 `PAGES_SITE_URL`、`PAGES_BASE_PATH`。
 3. 先检查 Story 覆盖与 Storybook 类型，再执行 `pnpm run build:pages`。脚本按构建计划逐个编译应用和 Storybook，并立即复制到 `dist-combined`。
 4. 构建结束后检查 Storybook 索引，`pnpm run check:pages` 再检查 HTML 资源、Storybook base、Remote manifest/容器以及 Host 中的 Remote URL。
 5. `actions/upload-pages-artifact@v3` 上传整个 `dist-combined`；`actions/deploy-pages@v4` 将该 artifact 发布到 GitHub Pages。仓库不通过 Nginx、SSH、`gh-pages` 分支或 Vercel 执行这条 Actions 发布链。
@@ -38,7 +38,7 @@
 
 ## 3. 为自己的域名重新构建
 
-要求 Node.js `>=24.15.0 <25`、pnpm `11.5.2`。以下命令在仓库根目录运行，示例域名须替换为自己的 HTTPS 域名。`PAGES_SITE_URL` 只写 origin，不带末尾目录；`PAGES_BASE_PATH` 写浏览器中的挂载路径。构建脚本校验 origin 必须是无凭据的 HTTPS 地址。
+要求 Node.js `>=24.15.0 <25`、pnpm `12.16.1`。以下命令在仓库根目录运行，示例域名须替换为自己的 HTTPS 域名。`PAGES_SITE_URL` 只写 origin，不带末尾目录；`PAGES_BASE_PATH` 写浏览器中的挂载路径。构建脚本校验 origin 必须是无凭据的 HTTPS 地址。
 
 ```bash
 pnpm install --frozen-lockfile

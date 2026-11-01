@@ -23,7 +23,7 @@
 
 ## 在本地走通一次
 
-要求 Node.js >=24.15.0 且 <25、pnpm 11.5.2。已安装依赖后，选择 Vite 体验完整开发与验证链路：
+要求 Node.js >=24.15.0 且 <25、pnpm 12.16.1。已安装依赖后，选择 Vite 体验完整开发与验证链路：
 
 ```bash
 pnpm run project:doctor

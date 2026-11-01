@@ -31,7 +31,7 @@ GitHub Actions 中 `v*` 标签创建应用 GitHub Release 并附带已验证的 
 
 ## 环境与包边界
 
-仓库构建要求 Node.js **>=24.15.0 且 <25**、pnpm **11.5.2**：
+仓库构建要求 Node.js **>=24.15.0 且 <25**、pnpm **12.16.1**：
 
 ```bash
 node --version

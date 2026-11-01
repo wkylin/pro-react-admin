@@ -5,7 +5,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY api/package.json ./api/package.json
 COPY server/package.json ./server/package.json
 COPY packages/wui-react/package.json ./packages/wui-react/package.json
-RUN corepack enable && corepack pnpm@11.5.2 install --filter api --prod --frozen-lockfile --ignore-scripts
+RUN corepack enable && corepack pnpm@12.16.1 install --filter api --prod --frozen-lockfile --ignore-scripts
 
 COPY api ./api
 COPY server ./server

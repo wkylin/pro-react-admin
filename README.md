@@ -16,10 +16,10 @@ Pages 的新增示例和全部应用入口以本次 Actions 部署成功为准�
 
 ## 快速上手
 
-要求 Node.js >=24.15.0 且 <25、pnpm 11.5.2。
+要求 Node.js >=24.15.0 且 <25、pnpm 12.16.1。
 
 ```bash
-# 尚未安装 pnpm 时：npm install --global pnpm@11.5.2
+# 尚未安装 pnpm 时：npm install --global pnpm@12.16.1
 git clone https://github.com/wkylin/pro-react-admin.git
 cd pro-react-admin
 pnpm install --frozen-lockfile
