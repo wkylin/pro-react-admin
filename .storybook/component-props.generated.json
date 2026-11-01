@@ -1016,7 +1016,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     },
@@ -1503,7 +1503,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     },
@@ -1963,7 +1963,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     }
@@ -2104,7 +2104,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     }
@@ -2373,7 +2373,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "卡片主体内容。"
     },
@@ -4132,7 +4132,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     }
@@ -4360,7 +4360,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     }
@@ -6267,7 +6267,7 @@
     },
     {
       "name": "children",
-      "type": "ReactI18NextChildren | Iterable<ReactI18NextChildren>",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
       "required": false,
       "description": "组件内部要呈现的 React 内容。"
     },
