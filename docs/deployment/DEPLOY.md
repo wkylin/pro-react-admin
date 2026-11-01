@@ -8,6 +8,8 @@
 
 `deploy/Dockerfile` 用于静态站点；`deploy/enterprise/Dockerfile` 和 `compose.enterprise.yaml` 提供业务 API、SQLite 持久卷及 Caddy HTTPS 网关。逐条部署命令、生产配置、演示/真实登录与 Vercel 静态产物上传见[Vercel 与 SQLite 部署指南](./VERCEL_SQLITE.md)。容器恢复和真实部署旧库升级仍需在目标主机副本演练。
 
+Docker 镜像、构建上下文、Compose、持久卷和进阶排错的分阶段练习见 [Docker 入门到进阶](./DOCKER_GUIDE.md)。
+
 ## 构建、验证、复用
 
 按项目构建一次，在同一产物上运行测试，再上传/组合/打包；不要在发布阶段用不同参数重新生成一个未验证目录。

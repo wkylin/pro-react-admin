@@ -4,6 +4,16 @@
 !pnpm-workspace.yaml
 !api/
 !api/**
+!server/
+!server/package.json
+!server/github-oauth.cjs
+!server/enterprise/
+!server/enterprise/**
+!src/
+!src/platform/
+!src/platform/auth/
+!src/platform/auth/model/
+!src/platform/auth/model/accessDecision.ts
 !config/
 !config/route-policy.json
 !packages/

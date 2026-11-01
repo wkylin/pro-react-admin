@@ -8,16 +8,16 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 
 | 技术             | 声明版本                           |
 | ---------------- | ---------------------------------- |
-| react            | ^19.3.0                            |
-| react-router-dom | ^7.18.4                            |
-| antd             | ^6.6.5                             |
-| zustand          | ^5.0.15                            |
+| react            | ^19.3.1                            |
+| react-router-dom | ^7.18.5                            |
+| antd             | ^6.6.8                             |
+| zustand          | ^5.0.16                            |
 | typescript       | npm:@typescript/typescript6@^6.0.2 |
-| webpack          | ^5.111.1                           |
-| vite             | ^8.3.2                             |
-| @babel/core      | ^8.0.7                             |
-| storybook        | 10.6.1                             |
-| @playwright/test | ^1.64.0                            |
+| webpack          | ^5.112.2                           |
+| vite             | ^8.3.5                             |
+| @babel/core      | ^8.0.10                            |
+| storybook        | 10.6.5                             |
+| @playwright/test | ^1.64.1                            |
 | jest             | ^30.5.2                            |
 
 ## 项目与构建入口

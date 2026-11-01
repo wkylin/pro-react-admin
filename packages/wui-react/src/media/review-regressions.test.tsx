@@ -4,7 +4,22 @@ jest.mock('./AutoSlider/index.module.less', () => ({
   __esModule: true,
   default: { activeSlide: 'activeSlide', lastSlide: 'lastSlide', nextSlide: 'nextSlide' },
 }))
-jest.mock('./InteractiveBook/PageFlipRenderer', () => ({ __esModule: true, default: () => null }))
+jest.mock('./InteractiveBook/PageFlipRenderer', () => ({
+  __esModule: true,
+  default: ({
+    onTurnStart,
+  }: {
+    onTurnStart?: (event: { kind: 'page' | 'cover'; sequence: boolean; duration: number }) => void
+  }) =>
+    require('react').createElement(
+      'button',
+      {
+        type: 'button',
+        onClick: () => onTurnStart?.({ kind: 'page', sequence: false, duration: 200 }),
+      },
+      'Trigger page turn'
+    ),
+}))
 jest.mock('./InteractiveBook/pdfEngine', () => ({ loadPdfEngine: async () => require('react-pdf').pdfjs }), {
   virtual: true,
 })
@@ -37,21 +52,48 @@ test('single slide stays active after initial render and collection shrink', () 
   expect(view.container.querySelector('article')).toHaveClass('activeSlide')
 })
 test('book sound survives StrictMode replay and source replacement', () => {
-  const view = render(
-    <StrictMode>
-      <InteractiveBook coverImage="/cover.png" pages={[]} pageTurnSound="/first.mp3" />
-    </StrictMode>
-  )
-  expect(view.container.querySelector('audio')).toHaveAttribute('src', '/first.mp3')
-  view.rerender(
-    <StrictMode>
-      <InteractiveBook coverImage="/cover.png" pages={[]} pageTurnSound="/second.mp3" />
-    </StrictMode>
-  )
-  const audio = view.container.querySelector('audio')!
-  expect(audio).toHaveAttribute('src', '/second.mp3')
-  view.unmount()
-  expect(audio).not.toHaveAttribute('src')
+  const audioInstances: HTMLAudioElement[] = []
+  const originalAudio = window.Audio
+  window.Audio = jest.fn((source?: string) => {
+    const audio = document.createElement('audio')
+    if (source) audio.setAttribute('src', source)
+    audioInstances.push(audio)
+    return audio
+  }) as unknown as typeof Audio
+
+  try {
+    const view = render(
+      <StrictMode>
+        <InteractiveBook
+          coverImage="/cover.png"
+          pages={[{ content: 'Test page', pageNumber: 1 }]}
+          pageTurnSound="/first.mp3"
+          defaultOpen
+        />
+      </StrictMode>
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger page turn' }))
+    expect(audioInstances[0]?.getAttribute('src')).toBe('/first.mp3')
+
+    view.rerender(
+      <StrictMode>
+        <InteractiveBook
+          coverImage="/cover.png"
+          pages={[{ content: 'Test page', pageNumber: 1 }]}
+          pageTurnSound="/second.mp3"
+          defaultOpen
+        />
+      </StrictMode>
+    )
+    expect(audioInstances[0]?.hasAttribute('src')).toBe(false)
+    fireEvent.click(screen.getByRole('button', { name: 'Trigger page turn' }))
+    expect(audioInstances[1]?.getAttribute('src')).toBe('/second.mp3')
+
+    view.unmount()
+    expect(audioInstances[1]?.hasAttribute('src')).toBe(false)
+  } finally {
+    window.Audio = originalAudio
+  }
 })
 test('keep-alive reactivation resumes interrupted playback but respects user pause', async () => {
   const view = render(<MusicPlayer tracks={tracks} active />)

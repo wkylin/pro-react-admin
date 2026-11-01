@@ -13,7 +13,7 @@
     "@pro-react-admin/server": "workspace:*",
     "api": "workspace:*",
     "cors": "^2.8.6",
-    "express": "^5.2.1",
+    "express": "^5.3.0",
     "helmet": "^8.3.0",
     "pg": "^8.23.1",
     "ws": "8.22.0"
