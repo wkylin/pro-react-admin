@@ -74,6 +74,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 | ScrollLayout       | @w.ui/wui-react/scroll-layout       | packages/wui-react/src/ScrollLayout/index.tsx       |
 | ScrollableSections | @w.ui/wui-react/scrollable-sections | packages/wui-react/src/ScrollableSections/index.tsx |
 | SliderCaptcha      | @w.ui/wui-react/slider-captcha      | packages/wui-react/src/SliderCaptcha/index.tsx      |
+| VirtualKeyboard    | @w.ui/wui-react/virtual-keyboard    | packages/wui-react/src/VirtualKeyboard/index.ts     |
 | WatermarkProvider  | @w.ui/wui-react/watermark-provider  | packages/wui-react/src/WatermarkProvider/index.ts   |
 
 ## 组件库分组
