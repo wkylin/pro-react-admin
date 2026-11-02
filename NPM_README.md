@@ -1,6 +1,6 @@
 # @w.ui/wui-react
 
-面向 React 19 的 UI 组件库：12 个可直接使用的基础组件，以及布局、表单、数据展示等 7 个按场景导入的组件组。提供 TypeScript 类型、ESM / CommonJS 入口和统一样式。
+面向 React 19 的 UI 组件库：13 个可直接使用的基础组件，以及布局、表单、数据展示等 7 个按场景导入的组件组。提供 TypeScript 类型、ESM / CommonJS 入口和统一样式。
 
 [在线预览与组件说明](https://wkylin.github.io/pro-react-admin/storybook/) · [完整组件目录](https://github.com/wkylin/pro-react-admin/blob/main/docs/components/COMPONENT_CATALOG.md) · [源码](https://github.com/wkylin/pro-react-admin) · [反馈问题](https://github.com/wkylin/pro-react-admin/issues)
 
@@ -46,22 +46,27 @@ export function CodeInput() {
 
 扩展组件组不从包根路径导出，也没有默认导出。组件 Props 类型从对应入口导入；`ResponsiveTable` 的 `useTable` 同时从包根路径和 `responsive-table` 子路径导出。
 
-### 12 个基础组件
+### 13 个基础组件
 
-| 组件                 | 适合做什么                         | 单组件子路径          |
-| -------------------- | ---------------------------------- | --------------------- |
-| `AnimatedIcon`       | 给现有图标添加轻量动效             | `animated-icon`       |
-| `IconFrame`          | 统一图标与文字并排时的对齐         | `icon-frame`          |
-| `MoveChecker`        | 拖动滑块完成可见的确认步骤         | `move-checker`        |
-| `OneTimePasscode`    | 输入一次性验证码或 PIN             | `one-time-passcode`   |
-| `OverflowText`       | 截断溢出文字并按需显示完整内容     | `overflow-text`       |
-| `PortalTooltip`      | 在可能裁剪内容的容器上显示提示层   | `portal-tooltip`      |
-| `ResponsiveTable`    | 展示本地或远程数据，支持分页与选择 | `responsive-table`    |
-| `SafeHtml`           | 清理 HTML 字符串后显示内容         | `safe-html`           |
-| `ScrollLayout`       | 组合固定头部、滚动内容与底部       | `scroll-layout`       |
-| `ScrollableSections` | 让区块导航与滚动位置同步           | `scrollable-sections` |
-| `SliderCaptcha`      | 提供拼图滑块的前端验证交互         | `slider-captcha`      |
-| `WatermarkProvider`  | 为指定容器的内容添加文字水印       | `watermark-provider`  |
+| 组件                 | 适合做什么                           | 单组件子路径          |
+| -------------------- | ------------------------------------ | --------------------- |
+| `AnimatedIcon`       | 给现有图标添加轻量动效               | `animated-icon`       |
+| `IconFrame`          | 统一图标与文字并排时的对齐           | `icon-frame`          |
+| `MoveChecker`        | 拖动滑块完成可见的确认步骤           | `move-checker`        |
+| `OneTimePasscode`    | 输入一次性验证码或 PIN               | `one-time-passcode`   |
+| `OverflowText`       | 截断溢出文字并按需显示完整内容       | `overflow-text`       |
+| `PortalTooltip`      | 在可能裁剪内容的容器上显示提示层     | `portal-tooltip`      |
+| `ResponsiveTable`    | 展示本地或远程数据，支持分页与选择   | `responsive-table`    |
+| `SafeHtml`           | 清理 HTML 字符串后显示内容           | `safe-html`           |
+| `ScrollLayout`       | 组合固定头部、滚动内容与底部         | `scroll-layout`       |
+| `ScrollableSections` | 让区块导航与滚动位置同步             | `scrollable-sections` |
+| `SliderCaptcha`      | 提供拼图滑块的前端验证交互           | `slider-captcha`      |
+| `VirtualKeyboard`    | 提供可选的屏幕数字键盘与 QWERTY 键盘 | `virtual-keyboard`    |
+| `WatermarkProvider`  | 为指定容器的内容添加文字水印         | `watermark-provider`  |
+
+### VirtualKeyboard 接入约定
+
+VirtualKeyboard 只发出 input、paste、backspace、next 和 close 动作，不会直接修改 DOM 输入框。接入页面负责当前焦点、受控值、光标选区和校验；将 input/paste 文本插入当前选区并处理退格。只在该键盘显示时，把已接入的目标输入框设为 inputMode="none"。密码遮挡仍由输入框的 type="password" 控制。
 
 组件的可交互示例、Props 含义和使用注意见 [Storybook](https://wkylin.github.io/pro-react-admin/storybook/)。
 

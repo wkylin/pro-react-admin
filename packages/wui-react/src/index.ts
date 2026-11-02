@@ -31,3 +31,10 @@ export { default as ScrollableSections } from './ScrollableSections'
 export type { ScrollableSection, ScrollableSectionsProps } from './ScrollableSections'
 export { default as SliderCaptcha } from './SliderCaptcha'
 export type { SliderCaptchaDifficulty, SliderCaptchaProps } from './SliderCaptcha'
+export { default as VirtualKeyboard } from './VirtualKeyboard'
+export type {
+  VirtualKeyboardAction,
+  VirtualKeyboardLabels,
+  VirtualKeyboardLayout,
+  VirtualKeyboardProps,
+} from './VirtualKeyboard'

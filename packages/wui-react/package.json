@@ -85,6 +85,12 @@
       "require": "./dist/cjs/slider-captcha.cjs",
       "default": "./dist/esm/slider-captcha.js"
     },
+    "./virtual-keyboard": {
+      "types": "./dist/types/VirtualKeyboard/index.d.ts",
+      "import": "./dist/esm/virtual-keyboard.js",
+      "require": "./dist/cjs/virtual-keyboard.cjs",
+      "default": "./dist/esm/virtual-keyboard.js"
+    },
     "./watermark-provider": {
       "types": "./dist/types/WatermarkProvider/index.d.ts",
       "import": "./dist/esm/watermark-provider.js",

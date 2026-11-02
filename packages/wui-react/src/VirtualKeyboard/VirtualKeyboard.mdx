@@ -1,0 +1,119 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs/blocks'
+import { PropReference } from '../../../../.storybook/PropReference'
+import * as Stories from './VirtualKeyboard.stories'
+
+<Meta of={Stories} />
+
+<div className="wui-doc-page">
+
+<header className="wui-doc-hero">
+  <span className="wui-doc-eyebrow">WUI / DATA ENTRY</span>
+  <h1>VirtualKeyboard</h1>
+  <p>可选接入的屏幕键盘，提供电话/数字键盘和 QWERTY 字母、数字及符号页。键盘只发出按键动作，由表单管理实际输入值。</p>
+  <div className="wui-doc-badges">
+    <span>受控输入事件</span>
+    <span>电话 / 数字 / 字母 / 密码</span>
+    <span>无需新增依赖</span>
+  </div>
+</header>
+
+<div className="wui-doc-grid" aria-label="组件使用指南">
+  <div className="wui-doc-card">
+    <strong>适用场景</strong>
+    <p>手机号码、数字码或密码输入需要统一键盘外观时，由页面显式显示并连接到当前字段。</p>
+  </div>
+  <div className="wui-doc-card">
+    <strong>交互预览</strong>
+    <p>切换四种布局，尝试输入、退格、粘贴、Shift、数字/符号页、Next 与收起。</p>
+  </div>
+  <div className="wui-doc-card wui-doc-card-caution">
+    <strong>使用边界</strong>
+    <p>
+      组件不寻找或修改输入框。页面负责焦点、光标位置、校验和输入值；仅对选择使用该键盘的输入框设置 inputMode="none"。
+    </p>
+  </div>
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">01</span>
+  <div>
+    <h2>交互预览</h2>
+    <p>先体验键盘，再查看布局、事件和接入说明。</p>
+  </div>
+</div>
+
+### 电话号码键盘
+
+数字键盘提供 0–9、加号、退格、粘贴、Next 和收起操作。
+
+<Canvas of={Stories.Phone} />
+
+### 数字键盘
+
+数字键盘提供小数点，适用于数值字段。
+
+<Canvas of={Stories.Numeric} />
+
+### 字母与密码键盘
+
+两种布局都使用 QWERTY、Shift、数字/符号页和空格。密码字段的遮挡由表单输入框的 type="password" 决定。
+
+<Canvas of={Stories.Text} />
+
+<Canvas of={Stories.Password} />
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">02</span>
+  <div>
+    <h2>事件与接入</h2>
+    <p>从 @w.ui/wui-react 导入 VirtualKeyboard，并在拥有目标输入框的组件中处理 onAction。</p>
+  </div>
+</div>
+
+<p>
+  <code>onAction</code> 收到的动作类型包括 <code>input</code>、<code>paste</code>、<code>backspace</code>、
+  <code>next</code> 与 <code>close</code>。输入和粘贴动作带有 <code>text</code>
+  。常见做法是把字符插入当前选区；示例为了简洁追加到受控值末尾。
+</p>
+
+<pre>
+  <code>{`import { VirtualKeyboard, type VirtualKeyboardAction } from '@w.ui/wui-react'
+
+const handleAction = (action: VirtualKeyboardAction) => {
+  if (action.type === 'input' || action.type === 'paste') {
+    setValue((current) => current + action.text)
+  } else if (action.type === 'backspace') {
+    setValue((current) => Array.from(current).slice(0, -1).join(''))
+  } else if (action.type === 'next') {
+    nextFieldRef.current?.focus()
+  } else {
+    setKeyboardVisible(false)
+  }
+}
+
+<VirtualKeyboard
+  layout="phone"
+  visible={keyboardVisible}
+  onAction={handleAction}
+  onPasteError={() => setMessage('无法读取剪贴板')}
+/>`}</code>
+</pre>
+
+<div className="wui-doc-callout">
+  <strong>光标与键盘显示：</strong>
+  将自定义键盘连接到输入框时，调用方应依据输入框的选区更新受控值。组件不捕获全局焦点事件；请只在已接入并显示该键盘时，将目标字段设为{' '}
+  <code>inputMode="none"</code>。
+</div>
+
+<div className="wui-doc-section-heading">
+  <span className="wui-doc-section-index">03</span>
+  <div>
+    <h2>参数</h2>
+    <p>查看公开属性的类型与说明。</p>
+  </div>
+</div>
+
+<ArgTypes of={Stories.Phone} />
+<PropReference name="VirtualKeyboard" />
+
+</div>

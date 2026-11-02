@@ -755,6 +755,44 @@
       "defaultValue": "'medium'"
     }
   ],
+  "VirtualKeyboard": [
+    {
+      "name": "layout",
+      "type": "VirtualKeyboardLayout",
+      "required": true,
+      "description": "设置排版；可用类型见右侧。"
+    },
+    {
+      "name": "visible",
+      "type": "boolean",
+      "required": true,
+      "description": "弹层是否显示；传入时由父组件控制。"
+    },
+    {
+      "name": "onAction",
+      "type": "(action: VirtualKeyboardAction) => void",
+      "required": true,
+      "description": "action时调用的回调；参数见类型列。"
+    },
+    {
+      "name": "onPasteError",
+      "type": "(error: unknown) => void",
+      "required": false,
+      "description": "paste错误时调用的回调；参数见类型列。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
+    },
+    {
+      "name": "labels",
+      "type": "Partial<VirtualKeyboardLabels>",
+      "required": false,
+      "description": "界面文案集合，可按类型列中的字段覆盖默认文案。"
+    }
+  ],
   "WatermarkProvider": [
     {
       "name": "content",

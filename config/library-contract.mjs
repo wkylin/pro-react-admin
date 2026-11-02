@@ -93,6 +93,13 @@ export const libraryComponents = Object.freeze([
     typeExports: ['SliderCaptchaDifficulty', 'SliderCaptchaProps'],
   },
   {
+    name: 'VirtualKeyboard',
+    subpath: 'virtual-keyboard',
+    source: 'VirtualKeyboard/index.ts',
+    types: 'VirtualKeyboard/index.d.ts',
+    typeExports: ['VirtualKeyboardAction', 'VirtualKeyboardLabels', 'VirtualKeyboardLayout', 'VirtualKeyboardProps'],
+  },
+  {
     name: 'WatermarkProvider',
     subpath: 'watermark-provider',
     source: 'WatermarkProvider/index.ts',
