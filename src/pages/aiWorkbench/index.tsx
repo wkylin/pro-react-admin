@@ -22,6 +22,7 @@ import { Activity, Bot, BrainCircuit, DatabaseZap, Gauge, Layers3, Rocket, WandS
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import PromptOptimizer from '@wui/forms/PromptOptimizer'
 import SmartChat from '@wui/forms/SmartChat'
+import { createTavilySearchFetcher } from './tavilySearch'
 
 import styles from './index.module.less'
 
@@ -62,6 +63,49 @@ type StreamEvent = {
   message?: string
   done?: boolean
   raw?: unknown
+}
+
+const STREAM_EVENT_TYPES = new Set<StreamEvent['type']>(['start', 'chunk', 'done', 'error', 'abort'])
+
+function sanitizeStreamEvent(value: unknown): StreamEvent | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+  const event = value as Record<string, unknown>
+  if (
+    typeof event.type !== 'string' ||
+    !STREAM_EVENT_TYPES.has(event.type as StreamEvent['type']) ||
+    typeof event.timestamp !== 'string'
+  )
+    return null
+
+  // Keep metrics only; input, error text and raw chunks may contain user content.
+  return {
+    type: event.type as StreamEvent['type'],
+    timestamp: event.timestamp.slice(0, 80),
+    ...(typeof event.requestId === 'string' ? { requestId: event.requestId.slice(0, 160) } : {}),
+    ...(typeof event.assistantMessageId === 'string'
+      ? { assistantMessageId: event.assistantMessageId.slice(0, 160) }
+      : {}),
+    ...(typeof event.contentSize === 'number' && Number.isFinite(event.contentSize)
+      ? { contentSize: event.contentSize }
+      : {}),
+    ...(typeof event.reasoningSize === 'number' && Number.isFinite(event.reasoningSize)
+      ? { reasoningSize: event.reasoningSize }
+      : {}),
+    ...(typeof event.durationMs === 'number' && Number.isFinite(event.durationMs)
+      ? { durationMs: event.durationMs }
+      : {}),
+    ...(typeof event.done === 'boolean' ? { done: event.done } : {}),
+  }
+}
+
+function sanitizeStreamEvents(value: unknown): StreamEvent[] {
+  if (!Array.isArray(value)) return []
+  return value
+    .flatMap((item) => {
+      const event = sanitizeStreamEvent(item)
+      return event ? [event] : []
+    })
+    .slice(0, 30)
 }
 
 type SessionStats = {
@@ -212,7 +256,24 @@ const ARCHITECTURE_HIGHLIGHTS = [
 function safeReadWorkspace(): Partial<WorkspaceState> | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? (JSON.parse(raw) as Partial<WorkspaceState>) : null
+    if (!raw) return null
+    const value: unknown = JSON.parse(raw)
+    if (!value || typeof value !== 'object' || Array.isArray(value)) return null
+
+    const workspace = value as Partial<WorkspaceState>
+    const streamEvents = sanitizeStreamEvents(workspace.streamEvents)
+    if (JSON.stringify(streamEvents) !== JSON.stringify(workspace.streamEvents)) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...workspace, streamEvents }))
+      } catch {
+        try {
+          localStorage.removeItem(STORAGE_KEY)
+        } catch {
+          // Keep the sanitized in-memory state when storage is unavailable.
+        }
+      }
+    }
+    return { ...workspace, streamEvents }
   } catch {
     return null
   }
@@ -394,6 +455,7 @@ const AiWorkbench = () => {
       persistWorkspace: true,
     }
   )
+  const [webSearchEnabled, setWebSearchEnabled] = useState(false)
   const [streamEvents, setStreamEvents] = useState<StreamEvent[]>(persisted?.streamEvents || [])
   const [sessionStats, setSessionStats] = useState<SessionStats>(
     persisted?.sessionStats || {
@@ -488,7 +550,8 @@ const AiWorkbench = () => {
   )
 
   const handleStreamEvent = (event: StreamEvent) => {
-    setStreamEvents((prev) => [event, ...prev].slice(0, 30))
+    const safeEvent = sanitizeStreamEvent(event)
+    if (safeEvent) setStreamEvents((prev) => [safeEvent, ...prev].slice(0, 30))
 
     setSessionStats((prev) => {
       if (event.type === 'start') {
@@ -600,7 +663,11 @@ const AiWorkbench = () => {
           type="info"
           showIcon
           title={<Text strong>当前环境</Text>}
-          description={<Text>当前页面使用本地模拟流式响应，便于联调模板、对话、配置和事件记录等功能。</Text>}
+          description={
+            <Text>
+              聊天默认使用本地模拟流式响应；打开联网搜索后，当前问题会通过 Enterprise API 查询 Tavily 并附带来源。
+            </Text>
+          }
         />
 
         <Row gutter={[20, 20]} className={styles.layout}>
@@ -749,9 +816,15 @@ const AiWorkbench = () => {
                       {deferredPromptText ? '已同步' : '待生成'}
                     </Text>
                   </div>
-                  <Button onClick={() => setPromptText('')} disabled={!promptText}>
-                    清空预设 Prompt
-                  </Button>
+                  <Space>
+                    <Space size={8}>
+                      <Text>联网搜索</Text>
+                      <Switch aria-label="联网搜索" checked={webSearchEnabled} onChange={setWebSearchEnabled} />
+                    </Space>
+                    <Button onClick={() => setPromptText('')} disabled={!promptText}>
+                      清空预设 Prompt
+                    </Button>
+                  </Space>
                 </div>
                 <Divider className={styles.divider} />
                 <TypedSmartChat
@@ -766,15 +839,17 @@ const AiWorkbench = () => {
                     preset: activePreset.name,
                   })}
                   fetcher={(_url, requestInit, body) =>
-                    createMockSseResponse({
-                      promptText:
-                        body?.promptText ||
-                        body?.input ||
-                        (typeof requestInit?.body === 'string' ? requestInit.body : ''),
-                      signal: requestInit?.signal,
-                      runtimeConfig,
-                      presetName: activePreset.name,
-                    })
+                    webSearchEnabled
+                      ? createTavilySearchFetcher(_url, requestInit, body)
+                      : createMockSseResponse({
+                          promptText:
+                            body?.promptText ||
+                            body?.input ||
+                            (typeof requestInit?.body === 'string' ? requestInit.body : ''),
+                          signal: requestInit?.signal,
+                          runtimeConfig,
+                          presetName: activePreset.name,
+                        })
                   }
                   onStreamEvent={handleStreamEvent}
                   welcomeTitle="智能会话"

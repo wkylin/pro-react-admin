@@ -1,19 +1,56 @@
 const express = require('express')
 const { randomUUID } = require('node:crypto')
+const { searchTavily, TavilySearchError } = require('./tavily-search.cjs')
 
 /**
  * HTTP owns transport/rate limits. Domain code owns authorization and transactions.
  * @param {any} service
- * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError, requestLogger?: { info: (entry: string) => void, error: (entry: string) => void } }} [options]
+ * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, searchLimit?: number, searchLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError, requestLogger?: { info: (entry: string) => void, error: (entry: string) => void } }} [options]
  */
 function createEnterpriseRouter(
   service,
-  { loginLimit = 20, loginLimiter, events, businessErrorClass, requestLogger = globalThis.console } = {}
+  {
+    loginLimit = 20,
+    loginLimiter,
+    searchLimit = 20,
+    searchLimiter,
+    events,
+    businessErrorClass,
+    requestLogger = globalThis.console,
+  } = {}
 ) {
   const BusinessError = businessErrorClass ?? require('./domain.mts').BusinessError
-  if (!Number.isInteger(loginLimit) || loginLimit < 1) throw new Error('Invalid login limit')
+  if (!Number.isInteger(loginLimit) || loginLimit < 1 || !Number.isInteger(searchLimit) || searchLimit < 1)
+    throw new Error('Invalid request limit')
   const router = express.Router()
   const buckets = new Map()
+  const searchBuckets = new Map()
+  const chargeSearchLimit = async (principal) => {
+    const clientKey = `tavily:${principal.tenantId}:${principal.principalId}`
+    if (searchLimiter) {
+      try {
+        await searchLimiter(clientKey, searchLimit)
+        return 0
+      } catch (error) {
+        if (error?.code === 'login_rate_limited') return 600
+        throw error
+      }
+    }
+
+    const now = Date.now()
+    for (const [key, bucket] of searchBuckets) if (bucket.until <= now) searchBuckets.delete(key)
+    let bucket = searchBuckets.get(clientKey)
+    if (!bucket && searchBuckets.size >= 10_000) {
+      const oldestKey = searchBuckets.keys().next().value
+      if (oldestKey !== undefined) searchBuckets.delete(oldestKey)
+    }
+    if (!bucket || bucket.until <= now) {
+      bucket = { until: now + 600_000, count: 0 }
+      searchBuckets.set(clientKey, bucket)
+    }
+    bucket.count += 1
+    return bucket.count > searchLimit ? Math.max(1, Math.ceil((bucket.until - now) / 1000)) : 0
+  }
   router.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store')
     const suppliedId = req.headers['x-request-id']
@@ -59,7 +96,7 @@ function createEnterpriseRouter(
     res.json(await service.login(req.body))
   })
   router.use(
-    ['/auth/session', '/auth/totp', '/permissions/current', '/roles', '/admin', '/events/ticket', '/events/poll'],
+    ['/auth/session', '/auth/totp', '/permissions/current', '/roles', '/admin', '/events/ticket', '/events/poll', '/ai'],
     async (req, _res, next) => {
       const authorization = req.headers.authorization || ''
       req.principal = await service.authenticate(
@@ -84,6 +121,67 @@ function createEnterpriseRouter(
     res.json(await service.rotateTotpRecoveryCodes(req.principal, req.body))
   )
   router.get('/permissions/current', async (req, res) => res.json(await service.permissions(req.principal)))
+  router.post('/ai/tavily-search', async (req, res) => {
+    const body = req.body
+    if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).some((key) => key !== 'query'))
+      return res.status(400).json({ error: 'invalid_query' })
+    const query = typeof body.query === 'string' ? body.query.trim() : ''
+    if (!query || Array.from(query).length > 400) return res.status(400).json({ error: 'invalid_query' })
+
+    const permissionState = await service.permissions(req.principal)
+    const permissions = Array.isArray(permissionState?.permissions) ? permissionState.permissions : []
+    if (!permissions.some((permission) => ['ai-workbench:read', 'ai-workbench:*', '*:*'].includes(permission)))
+      return res.status(403).json({ error: 'forbidden' })
+    const apiKey = process.env.TAVILY_API_KEY
+    if (!apiKey?.trim()) return res.status(503).json({ error: 'tavily_not_configured' })
+
+    let retryAfter
+    try {
+      retryAfter = await chargeSearchLimit(req.principal)
+    } catch (error) {
+      if (error?.code !== 'login_rate_limited') throw error
+      retryAfter = 600
+    }
+    if (retryAfter) {
+      res.setHeader('Retry-After', retryAfter)
+      return res.status(429).json({ error: 'search_rate_limited' })
+    }
+
+    const upstreamController = new AbortController()
+    const abortUpstream = () => {
+      if (!res.writableEnded) upstreamController.abort()
+    }
+    req.once('aborted', abortUpstream)
+    res.once('close', abortUpstream)
+    try {
+      const result = await searchTavily({ query, apiKey, signal: upstreamController.signal })
+      const answer = result.answer || result.results.find((item) => item.content)?.content || '没有找到相关网页。'
+      const escapeLabel = (value) =>
+        String(value).replace(/[\r\n]+/g, ' ').replace(/[\\[\]]/g, (character) => `\\${character}`)
+      const sources = result.results
+        .map(
+          (item, index) =>
+            `${index + 1}. [${escapeLabel(item.title)}](<${item.url}>)${item.publishedDate ? ` · ${item.publishedDate}` : ''}`
+        )
+        .join('\n')
+      const content = sources
+        ? `${answer}\n\n来源\n${sources}`
+        : `${answer}\n\n没有找到可引用的相关网页。`
+
+      res.status(200)
+      res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
+      res.setHeader('Cache-Control', 'no-store')
+      res.end(`data: ${JSON.stringify({ content, done: true })}\n\n`)
+    } catch (error) {
+      if (req.aborted || res.destroyed || error?.code === 'search_cancelled') return
+      if (error instanceof TavilySearchError)
+        return res.status(error.status).json({ error: error.code })
+      throw error
+    } finally {
+      req.off('aborted', abortUpstream)
+      res.off('close', abortUpstream)
+    }
+  })
   router.get('/roles', async (req, res) =>
     res.json((await service.list(req.principal, 'roles', { page: 1, pageSize: 200 })).items)
   )

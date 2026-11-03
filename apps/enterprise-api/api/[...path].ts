@@ -41,6 +41,7 @@ function createApp(
     createEnterpriseRouter(service, {
       businessErrorClass: BusinessError,
       loginLimiter: (clientKey: string, limit: number) => service.chargeLoginLimit(clientKey, limit),
+      searchLimiter: (clientKey: string, limit: number) => service.chargeLoginLimit(clientKey, limit),
     })
   )
   return app

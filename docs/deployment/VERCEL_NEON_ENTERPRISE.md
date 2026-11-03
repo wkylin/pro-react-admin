@@ -42,8 +42,9 @@ API 项目的 `vercel-build` 会先检查类型，再把共享的 TypeScript 模
 | `CORS_ORIGINS`              | 前端精确 origin，例如 `https://your-enterprise-frontend.vercel.app`；多个用逗号分隔 |
 | `ENTERPRISE_TOTP_KEY`       | 可选，`openssl rand -hex 32` 生成的 64 位十六进制密钥；启用验证器后必须保留原值     |
 | `ENTERPRISE_SESSION_TTL_MS` | 可选，默认 `28800000`（8 小时）                                                     |
+| `TAVILY_API_KEY`            | 可选，Tavily API Key；仅 Enterprise API 使用，不放进前端 Vercel 项目或 `REACT_APP_*` |
 
-如集成生成的连接变量名称不同，将**池化连接 URL**复制到 API 项目的 `DATABASE_URL`，直连 URL 复制到 `DATABASE_URL_UNPOOLED`。Neon 的事务池不支持 `LISTEN/NOTIFY`，事件订阅必须使用直连；Function 实例没有活跃 WebSocket 连接时会关闭此直连。[Neon 连接池限制](https://neon.com/docs/connect/connection-pooling) 预览环境若也要连接真实数据，应使用独立 Neon 分支或数据库，并显式设置对应环境变量；不要让预览写入生产租户。数据库 URL 不放进前端 Vercel 项目。Vercel 的环境变量更新后需重新部署对应版本。
+如集成生成的连接变量名称不同，将**池化连接 URL**复制到 API 项目的 `DATABASE_URL`，直连 URL 复制到 `DATABASE_URL_UNPOOLED`。Neon 的事务池不支持 `LISTEN/NOTIFY`，事件订阅必须使用直连；Function 实例没有活跃 WebSocket 连接时会关闭此直连。[Neon 连接池限制](https://neon.com/docs/connect/connection-pooling) 预览环境若也要连接真实数据，应使用独立 Neon 分支或数据库，并显式设置对应环境变量；不要让预览写入生产租户。数据库 URL 和 Tavily key 都只配置在 API 项目。未设置 `TAVILY_API_KEY` 时，AI 工作台仍可使用模拟会话，联网搜索接口返回未配置状态。Vercel 的环境变量更新后需重新部署对应版本。
 
 需要在桌面客户端查看数据库时，按 [DBeaver 连接 Neon 指南](./DBEAVER_NEON_CONNECTION.md)配置 PostgreSQL 主机、端口、账号和 SSL。
 
