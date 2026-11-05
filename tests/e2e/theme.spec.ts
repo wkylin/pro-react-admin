@@ -17,13 +17,26 @@ async function switchTheme(page: Page, mode: 'light' | 'dark') {
 async function readableColors(locator: Locator) {
   await expect(locator).toBeVisible()
   const colors = await locator.evaluate((element) => {
+    const layers: number[][] = []
     let surface: Element | null = element
-    while (surface && ['transparent', 'rgba(0, 0, 0, 0)'].includes(getComputedStyle(surface).backgroundColor)) {
+    while (surface) {
+      const color = getComputedStyle(surface)
+        .backgroundColor.match(/[\d.]+/g)
+        ?.map(Number)
+      if (color) {
+        const alpha = color[3] ?? 1
+        layers.push([...color.slice(0, 3), alpha])
+        if (alpha === 1) break
+      }
       surface = surface.parentElement
+    }
+    let background = [255, 255, 255]
+    for (const layer of layers.reverse()) {
+      background = background.map((channel, index) => Math.round(layer[index] * layer[3] + channel * (1 - layer[3])))
     }
     return {
       foreground: getComputedStyle(element).color,
-      background: surface ? getComputedStyle(surface).backgroundColor : '',
+      background: `rgb(${background.join(', ')})`,
     }
   })
   expect(getContrastRatio(colors.foreground, colors.background), JSON.stringify(colors)).toBeGreaterThanOrEqual(4.5)
@@ -77,16 +90,21 @@ for (const mode of ['dark', 'light'] as const) {
     const heading = guide.getByRole('heading', { name: 'Deploy to GitHub Pages and Vercel' })
     await expect(heading).toHaveCSS('font-size', '24px')
     await readableColors(heading)
+    const homeLink = page.locator('.layout-header').getByRole('button', { name: 'Home', exact: true })
+    const normalLinkColor = await homeLink.evaluate((e) => getComputedStyle(e).color)
+    await homeLink.hover()
+    await expect.poll(() => homeLink.evaluate((e) => getComputedStyle(e).color)).not.toBe(normalLinkColor)
+    await readableColors(homeLink)
     await readableColors(guide.locator('code').first())
     await readableColors(guide.getByRole('link', { name: 'View Markdown source' }))
-    await page.screenshot({ path: info.outputPath('guide.png') })
+    await page.screenshot({ animations: 'disabled', path: info.outputPath('guide.png') })
 
     await page.evaluate(() => {
       window.location.hash = '/administration/users'
     })
     await expect(page.getByRole('heading', { name: 'Users', exact: true })).toBeVisible()
-    await expect(page.locator('.wui-ant-spin-blur:visible')).toHaveCount(0)
-    await page.screenshot({ path: info.outputPath('users.png') })
+    await expect(page.getByRole('row').filter({ hasText: 'admin@example.com' })).toBeVisible()
+    await page.screenshot({ animations: 'disabled', path: info.outputPath('users.png') })
     await page.getByRole('button', { name: 'Add user', exact: true }).click()
     const modal = page.getByRole('dialog', { name: 'Add user', exact: true })
     const modalColors = await readableColors(modal.getByText('Add user', { exact: true }))
@@ -94,7 +112,7 @@ for (const mode of ['dark', 'light'] as const) {
     await modal.getByRole('combobox', { name: /Role/ }).click()
     const option = page.locator('.wui-ant-select-dropdown:visible .wui-ant-select-item-option-content').first()
     await readableColors(option)
-    await page.screenshot({ path: info.outputPath('modal-dropdown.png') })
+    await page.screenshot({ animations: 'disabled', path: info.outputPath('modal-dropdown.png') })
     await page.keyboard.press('Escape')
     await modal.getByRole('button', { name: 'Cancel', exact: true }).click()
     await expect(modal).toBeHidden()
@@ -109,6 +127,20 @@ for (const mode of ['dark', 'light'] as const) {
     await readableColors(page.getByText('发现新版本', { exact: true }))
     await page.getByRole('button', { name: /^稍\s*后$/ }).click()
     await expect(page.getByText('发现新版本', { exact: true })).toBeHidden()
+    await page.getByRole('button', { name: 'Preferences', exact: true }).click()
+    const preferences = page.getByRole('dialog')
+    await preferences.getByRole('button', { name: 'Top menu layout', exact: true }).click()
+    const widthSwitch = preferences.getByRole('switch', { name: 'Content width', exact: true })
+    await expect(widthSwitch).toBeEnabled()
+    await readableColors(preferences.getByText('Fluid', { exact: true }))
+    await widthSwitch.check()
+    await readableColors(preferences.getByText('Fixed', { exact: true }))
+    const [thumb, track] = await widthSwitch.evaluate((e) => [
+      getComputedStyle(e.querySelector('.wui-ant-switch-handle')!, '::before').backgroundColor,
+      getComputedStyle(e).backgroundColor,
+    ])
+    expect(getContrastRatio(thumb, track)).toBeGreaterThanOrEqual(3)
+    await preferences.getByRole('button', { name: 'Close', exact: true }).click()
   })
 }
 
@@ -166,7 +198,7 @@ for (const width of [390, 440]) {
       await header.getByRole('button', { name: 'Open navigation menu', exact: true }).click()
       await expect(page.getByRole('dialog')).toBeInViewport({ ratio: 1 })
       await expect(page.getByRole('menuitem', { name: 'Deployment Guide', exact: true })).toBeVisible()
-      await page.screenshot({ path: info.outputPath('mobile-navigation.png') })
+      await page.screenshot({ animations: 'disabled', path: info.outputPath('mobile-navigation.png') })
       await page.getByRole('dialog').getByRole('menuitem', { name: 'Home', exact: true }).click()
       await expect(page.getByRole('dialog')).toBeHidden()
       await expect(page).toHaveURL(/#\/$/)
@@ -180,7 +212,7 @@ for (const width of [390, 440]) {
       await expect(preferences.getByRole('switch', { name: 'Compact mode', exact: true })).toBeVisible()
       await preferences.getByRole('button', { name: 'Close', exact: true }).click()
       await expect(preferences).toBeHidden()
-      await page.screenshot({ path: info.outputPath('mobile-guide.png') })
+      await page.screenshot({ animations: 'disabled', path: info.outputPath('mobile-guide.png') })
     })
   }
 }

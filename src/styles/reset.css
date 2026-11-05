@@ -669,8 +669,3 @@ Layout / component styles
   background: #e1e1e1 border-box;
   width: fit-content;
 }
-
-/* Keep Ant Design link buttons readable after the active theme derives tokens. */
-html .wui-ant-btn-link:not(.wui-ant-btn-dangerous, :disabled, .wui-ant-btn-disabled) {
-  color: var(--pro-accessible-primary-color) !important;
-}

@@ -10,6 +10,9 @@ export const createAdminTheme = (
   const palette = getThemePalette(mode)
   const dark = getThemePalette('dark')
   const accents = getThemeAccents(mode, settings.colorPrimary)
+  const dangerAccents = getThemeAccents(mode, palette.danger)
+  const switchAccents = getThemeAccents('light', settings.colorPrimary)
+  const switchForeground = getContrastingTextColor(switchAccents.primary)
   const colorPrimary = accents.primary
   const selectedBg = mixThemeColors(palette.surface, colorPrimary, mode === 'dark' ? 0.12 : 0.06)
   const primaryTokens = {
@@ -37,7 +40,11 @@ export const createAdminTheme = (
     colorWarningBg: palette.warningBg,
     colorWarningBorder: mixThemeColors(palette.warningBg, palette.warning, 0.2),
     colorError: palette.danger,
+    colorErrorHover: dangerAccents.hover,
+    colorErrorActive: dangerAccents.active,
     colorErrorText: palette.danger,
+    colorErrorTextHover: dangerAccents.hover,
+    colorErrorTextActive: dangerAccents.active,
     colorErrorBg: palette.dangerBg,
     colorErrorBorder: mixThemeColors(palette.dangerBg, palette.danger, 0.2),
   }
@@ -149,6 +156,16 @@ export const createAdminTheme = (
         defaultActiveBg: palette.hover,
         defaultActiveColor: palette.text,
         defaultActiveBorderColor: palette.text,
+      },
+      Switch: {
+        // One label/thumb color serves both states in AntD; give each track enough contrast.
+        colorTextLightSolid: switchForeground,
+        handleBg: switchForeground,
+        colorTextQuaternary: dark.borderStrong,
+        colorTextTertiary: mixThemeColors(dark.borderStrong, '#ffffff', 0.12),
+        colorPrimary: switchAccents.primary,
+        colorPrimaryHover: switchAccents.hover,
+        colorPrimaryActive: switchAccents.active,
       },
       Input: {
         activeBg: palette.surface,

@@ -1,7 +1,7 @@
 import { theme } from 'antd'
 import { createAdminTheme } from './createTheme'
 import { getThemePalette, getThemeVariables } from './palette'
-import { getContrastRatio } from './contrast'
+import { getContrastRatio, mixThemeColors } from './contrast'
 
 describe.each(['light', 'dark'] as const)('%s admin theme', (mode) => {
   it('shares palette roles with CSS variables and AntD surfaces', () => {
@@ -55,6 +55,44 @@ describe.each(['light', 'dark'] as const)('%s admin theme', (mode) => {
     const tokens = theme.getDesignToken(createAdminTheme({ colorPrimary: primary, compactAlgorithm: false }, mode))
     for (const background of [tokens.colorPrimary, tokens.colorPrimaryHover, tokens.colorPrimaryActive]) {
       expect(getContrastRatio(tokens.colorTextLightSolid, background)).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+
+  it.each(['#1677ff', '#16a34a', '#ffffff', '#000000'])(
+    'keeps both switch labels and thumbs readable for %s',
+    (primary) => {
+      const config = createAdminTheme({ colorPrimary: primary, compactAlgorithm: false }, mode)
+      const tokens = theme.getDesignToken(config)
+      const control = config.components?.Switch
+      const foreground = String(control?.colorTextLightSolid ?? tokens.colorTextLightSolid)
+      const thumb = String(control?.handleBg ?? tokens.colorWhite)
+      const unchecked = String(control?.colorTextQuaternary ?? tokens.colorTextQuaternary)
+      const rgba = unchecked.startsWith('rgba') ? unchecked.match(/[\d.]+/g)?.map(Number) : null
+      const offBackground = rgba
+        ? mixThemeColors(getThemePalette(mode).elevated, `rgb(${rgba.slice(0, 3).join(', ')})`, rgba[3])
+        : unchecked
+      for (const background of [
+        offBackground,
+        String(control?.colorPrimary ?? tokens.colorPrimary),
+        String(control?.colorPrimaryHover ?? tokens.colorPrimaryHover),
+      ]) {
+        expect(getContrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5)
+        expect(getContrastRatio(thumb, background)).toBeGreaterThanOrEqual(3)
+      }
+    }
+  )
+
+  it('keeps destructive action text and filled states readable', () => {
+    const config = createAdminTheme({ colorPrimary: '#1677ff', compactAlgorithm: false }, mode)
+    const tokens = theme.getDesignToken(config)
+    const palette = getThemePalette(mode)
+    for (const foreground of [tokens.colorErrorText, tokens.colorErrorTextHover, tokens.colorErrorTextActive]) {
+      for (const background of [palette.canvas, palette.surface, palette.elevated, palette.hover]) {
+        expect(getContrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5)
+      }
+    }
+    for (const background of [tokens.colorError, tokens.colorErrorHover, tokens.colorErrorActive]) {
+      expect(getContrastRatio(String(config.components?.Button?.dangerColor), background)).toBeGreaterThanOrEqual(4.5)
     }
   })
 
