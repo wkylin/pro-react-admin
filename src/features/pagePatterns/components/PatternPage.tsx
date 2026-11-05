@@ -22,7 +22,7 @@ export default function PatternPage({
       <section className={styles.page} aria-labelledby={titleId}>
         <header className={styles.header}>
           <div className={styles.heading}>
-            <Tag color="blue">{t('patterns.eyebrow')}</Tag>
+            <Tag>{t('patterns.eyebrow')}</Tag>
             <Typography.Title id={titleId} level={1}>
               {title}
             </Typography.Title>

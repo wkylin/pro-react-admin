@@ -62,6 +62,7 @@ export const createAdminTheme = (
       colorBgSpotlight: dark.elevated,
       colorBgMask: mode === 'dark' ? 'rgb(0 0 0 / 60%)' : 'rgb(24 24 24 / 36%)',
       colorText: palette.text,
+      colorTextLightSolid: getContrastingTextColor(colorPrimary),
       colorTextSecondary: palette.secondary,
       colorTextTertiary: palette.muted,
       colorTextDescription: palette.muted,

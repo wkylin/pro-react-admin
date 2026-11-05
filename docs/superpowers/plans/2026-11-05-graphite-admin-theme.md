@@ -71,13 +71,13 @@
 
 **Interfaces:** Existing CSS `--wui-*` roles from Task 1. FixTabPanel continues accepting explicit `scrollProgressProps` overrides.
 
-- [ ] Replace deployment-guide fixed foregrounds / light fallbacks with shared semantic roles, including code blocks, tables and platform cards.
-- [ ] Apply the approved title / body hierarchy and balanced spacing to shared management and pattern shells. Preserve field labels, values, notices, actions and responsive table behavior.
-- [ ] Keep FixTabPanel inner padding 0; default its progress line to the accessible primary CSS variable while allowing explicit caller colors.
-- [ ] Validate dark/light users table and modal, basic and step forms, guide cards / code / tables, Select and DatePicker popups; include 390px and 440px widths.
-- [ ] Verify compact density and long menu labels after the font has loaded, including fallback text and Chinese names.
-- [ ] Run relevant lint, type checks and progress-bar / existing palette tests; regenerate the component catalog if shared UI metadata changes.
-- [ ] Record the deliverable checkpoint.
+- [x] Replace deployment-guide fixed foregrounds / light fallbacks with shared semantic roles, including code blocks, tables and platform cards.
+- [x] Apply the approved title / body hierarchy and balanced spacing to shared management and pattern shells. Preserve field labels, values, notices, actions and responsive table behavior.
+- [x] Keep FixTabPanel inner padding 0; default its progress line to the accessible primary CSS variable while allowing explicit caller colors.
+- [x] Validate dark/light users table and modal, basic and step forms, guide cards / code / tables, Select and DatePicker popups; include 390px and 440px widths.
+- [x] Verify compact density and long menu labels after the font has loaded, including fallback text and Chinese names.
+- [x] Run relevant lint, type checks and progress-bar / existing palette tests; regenerate the component catalog if shared UI metadata changes.
+- [x] Record the deliverable checkpoint.
 
 ### Task 4: Regression and visual evidence
 

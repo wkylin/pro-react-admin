@@ -41,13 +41,20 @@ describe.each(['light', 'dark'] as const)('%s admin theme', (mode) => {
     }
   )
 
-  it('distinguishes hover and active states', () => {
-    const config = createAdminTheme({ colorPrimary: '#1677ff', compactAlgorithm: false }, mode)
+  it.each(['#1677ff', '#16a34a', '#ffffff', '#000000'])('distinguishes hover and active states for %s', (primary) => {
+    const config = createAdminTheme({ colorPrimary: primary, compactAlgorithm: false }, mode)
     const tokens = theme.getDesignToken(config)
     expect(new Set([tokens.colorLink, tokens.colorLinkHover, tokens.colorLinkActive]).size).toBe(3)
     const foreground = String(config.components?.Button?.primaryColor)
     for (const background of [tokens.colorPrimary, tokens.colorPrimaryHover, tokens.colorPrimaryActive]) {
       expect(getContrastRatio(foreground, background)).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+
+  it.each(['#1677ff', '#16a34a', '#ffffff', '#000000'])('keeps solid selection labels readable for %s', (primary) => {
+    const tokens = theme.getDesignToken(createAdminTheme({ colorPrimary: primary, compactAlgorithm: false }, mode))
+    for (const background of [tokens.colorPrimary, tokens.colorPrimaryHover, tokens.colorPrimaryActive]) {
+      expect(getContrastRatio(tokens.colorTextLightSolid, background)).toBeGreaterThanOrEqual(4.5)
     }
   })
 

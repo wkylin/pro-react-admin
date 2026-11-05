@@ -1,13 +1,13 @@
 .page {
   min-height: 100%;
-  background: var(--wui-bg-base, #f6f8fb);
-  color: var(--wui-text-primary, #172436);
+  background: var(--wui-bg-page);
+  color: var(--wui-text-primary);
 }
 
 .inner {
   width: min(100%, 1260px);
   margin: 0 auto;
-  padding: 32px 36px 80px;
+  padding: 24px 32px 64px;
 }
 
 .header {
@@ -15,8 +15,8 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
-  padding: 0 0 28px;
-  border-bottom: 1px solid var(--wui-border, #dfe5ec);
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--wui-border);
 }
 
 .headerCopy {
@@ -26,46 +26,51 @@
 .eyebrow,
 .contentsLabel,
 .pathNumber {
-  color: var(--wui-text-secondary, #536276);
+  color: var(--wui-text-muted);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 500;
+  line-height: 16px;
   letter-spacing: 0.04em;
 }
 
 .header h1 {
-  margin: 10px 0 8px;
-  color: var(--wui-text-primary, #172436);
-  font-size: clamp(27px, 3vw, 38px);
-  font-weight: 750;
-  line-height: 1.2;
+  margin: 8px 0;
+  color: var(--wui-text-primary);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
 }
 
 .header p {
   margin: 0;
-  color: var(--wui-text-secondary, #536276);
-  font-size: 15px;
-  line-height: 1.75;
+  color: var(--wui-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .sourceLink {
+  display: inline-flex;
   flex: 0 0 auto;
-  padding: 9px 12px;
-  border: 1px solid var(--wui-border, #dfe5ec);
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--wui-border-strong);
   border-radius: 8px;
-  color: var(--wui-text-primary, #172436);
-  font-size: 13px;
-  font-weight: 600;
+  color: var(--wui-text-primary);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .sourceLink:hover {
-  border-color: #2162b2;
-  color: #2162b2;
+  border-color: var(--wui-color-primary);
+  background: var(--wui-bg-surface);
+  color: var(--wui-color-primary-hover);
 }
 
 .pathCards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 16px;
   margin: 24px 0 32px;
 }
 
@@ -74,49 +79,43 @@
   flex-direction: column;
   align-items: flex-start;
   min-width: 0;
-  padding: 20px 22px;
-  border: 1px solid var(--wui-border, #dfe5ec);
-  border-left: 4px solid #2162b2;
-  border-radius: 10px;
-  background: var(--wui-bg-surface, #fff);
-  color: var(--wui-text-primary, #172436);
+  padding: 24px;
+  border: 1px solid var(--wui-border);
+  border-radius: 12px;
+  background: var(--wui-bg-surface);
+  color: var(--wui-text-primary);
   cursor: pointer;
   text-align: left;
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease;
-}
-
-.pathCard:nth-child(2) {
-  border-left-color: #315f88;
 }
 
 .pathCard:hover {
-  border-color: #2162b2;
-  box-shadow: 0 6px 22px rgb(24 50 83 / 9%);
+  border-color: var(--wui-border-strong);
+  background: var(--wui-bg-elevated);
 }
 
 .pathCard strong {
-  margin: 10px 0 4px;
+  margin: 8px 0 4px;
   font-size: 18px;
-  line-height: 1.4;
+  font-weight: 600;
+  line-height: 28px;
 }
 
 .pathCard > span:not(.pathNumber) {
-  color: var(--wui-text-secondary, #536276);
-  font-size: 13px;
-  line-height: 1.6;
+  color: var(--wui-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .pathCard code {
   max-width: 100%;
-  margin-top: 14px;
-  padding: 5px 8px;
+  margin-top: 16px;
+  padding: 4px 8px;
   overflow-x: auto;
-  border-radius: 5px;
-  background: var(--wui-bg-base, #f6f8fb);
-  color: #225a91;
+  border-radius: 4px;
+  background: var(--wui-bg-page);
+  color: var(--wui-color-primary);
   font-size: 12px;
+  line-height: 16px;
 }
 
 .readingLayout {
@@ -131,54 +130,56 @@
   top: 24px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 10px 0;
+  gap: 4px;
+  padding: 8px 0;
 }
 
 .contentsLabel {
-  margin: 0 0 8px 10px;
+  margin: 0 0 8px 12px;
 }
 
 .contents button {
-  padding: 9px 10px;
+  padding: 8px 12px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 8px;
   background: transparent;
-  color: var(--wui-text-secondary, #536276);
+  color: var(--wui-text-secondary);
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 20px;
   text-align: left;
 }
 
 .contents button:hover {
-  background: var(--wui-bg-surface, #fff);
-  color: #2162b2;
+  background: var(--wui-bg-surface);
+  color: var(--wui-color-primary-hover);
 }
 
 .document {
   min-width: 0;
-  padding: 24px 30px 38px;
-  border: 1px solid var(--wui-border, #dfe5ec);
-  border-radius: 10px;
-  background: var(--wui-bg-surface, #fff);
+  padding: 24px;
+  border: 1px solid var(--wui-border);
+  border-radius: 12px;
+  background: var(--wui-bg-surface);
   font-size: 14px;
-  line-height: 1.8;
+  line-height: 20px;
   overflow-wrap: anywhere;
 }
 
 .document h2,
 .document h3 {
-  color: var(--wui-text-primary, #172436);
-  line-height: 1.4;
+  color: var(--wui-text-primary);
+  font-weight: 600;
+  line-height: 28px;
   scroll-margin-top: 24px;
 }
 
 .document h2 {
-  margin: 42px 0 16px;
-  padding-bottom: 11px;
-  border-bottom: 1px solid var(--wui-border, #dfe5ec);
-  font-size: 23px;
+  margin: 32px 0 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--wui-border);
+  font-size: 20px;
 }
 
 .document h2:first-child {
@@ -186,8 +187,8 @@
 }
 
 .document h3 {
-  margin: 27px 0 12px;
-  font-size: 17px;
+  margin: 24px 0 12px;
+  font-size: 18px;
 }
 
 .document p,
@@ -198,41 +199,42 @@
 
 .document ul,
 .document ol {
-  padding-left: 23px;
+  padding-left: 24px;
 }
 
 .document li + li {
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
 .document a {
-  color: #2162b2;
+  color: var(--wui-color-primary);
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: 2px;
 }
 
 .document a:hover {
-  color: #174a89;
+  color: var(--wui-color-primary-hover);
 }
 
 .document :not(pre) > code {
-  padding: 2px 5px;
+  padding: 2px 4px;
   border-radius: 4px;
-  background: var(--wui-bg-base, #f0f3f7);
-  color: #205a91;
-  font-size: 0.92em;
+  background: var(--wui-bg-page);
+  color: var(--wui-color-primary);
+  font-size: 12px;
 }
 
 .document pre {
   max-width: 100%;
-  margin: 0 0 20px;
-  padding: 16px 18px;
+  margin: 0 0 24px;
+  padding: 16px;
   overflow-x: auto;
+  border: 1px solid var(--wui-border);
   border-radius: 8px;
-  background: #192638;
-  color: #e9f0f7;
-  font-size: 13px;
-  line-height: 1.6;
+  background: var(--wui-bg-elevated);
+  color: var(--wui-text-primary);
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .document pre code {
@@ -241,23 +243,23 @@
 
 .tableScroll {
   max-width: 100%;
-  margin: 0 0 20px;
+  margin: 0 0 24px;
   overflow-x: auto;
-  border: 1px solid var(--wui-border, #dfe5ec);
-  border-radius: 7px;
+  border: 1px solid var(--wui-border);
+  border-radius: 8px;
 }
 
 .tableScroll table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .tableScroll th,
 .tableScroll td {
-  min-width: 115px;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--wui-border, #dfe5ec);
+  min-width: 128px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--wui-border);
   text-align: left;
   vertical-align: top;
 }
@@ -267,8 +269,9 @@
 }
 
 .tableScroll th {
-  background: var(--wui-bg-base, #f6f8fb);
-  font-weight: 700;
+  background: var(--wui-bg-elevated);
+  color: var(--wui-text-secondary);
+  font-weight: 500;
 }
 
 .tableScroll code {
@@ -276,8 +279,8 @@
 }
 
 .page :is(button, a):focus-visible {
-  outline: 2px solid #2162b2;
-  outline-offset: 3px;
+  outline: 2px solid var(--wui-color-primary);
+  outline-offset: 2px;
 }
 
 @media (width <= 900px) {
@@ -293,13 +296,13 @@
 
   .contentsLabel {
     width: 100%;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 }
 
 @media (width <= 640px) {
   .inner {
-    padding: 22px 16px 52px;
+    padding: 24px 16px 48px;
   }
 
   .header {
@@ -312,12 +315,6 @@
   }
 
   .document {
-    padding: 20px 17px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pathCard {
-    transition: none;
+    padding: 16px;
   }
 }

@@ -41,7 +41,13 @@ const FixTabPanel = React.forwardRef<HTMLDivElement, FixTabPanelProps>(
         }}
       >
         {showScrollProgress && containerNode && (
-          <ScrollProgressBar container={containerNode} position="sticky" {...scrollProgressProps} />
+          <ScrollProgressBar
+            container={containerNode}
+            position="sticky"
+            height={2}
+            color="var(--wui-color-primary, #1677ff)"
+            {...scrollProgressProps}
+          />
         )}
         <div
           style={{
@@ -51,7 +57,7 @@ const FixTabPanel = React.forwardRef<HTMLDivElement, FixTabPanelProps>(
             maxWidth: '100%',
             minWidth: 0,
             height: fill ? '100%' : 'auto',
-            padding: '5px',
+            padding: 0,
             boxSizing: 'border-box',
           }}
         >

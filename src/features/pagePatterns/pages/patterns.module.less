@@ -1,7 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
   width: min(100%, 1240px);
   min-width: 0;
   margin: 0 auto;
@@ -12,7 +12,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
 }
 
 .heading {
@@ -20,8 +20,8 @@
 
   :global(h1.wui-ant-typography) {
     margin: 12px 0 4px;
-    font-size: clamp(27px, 4vw, 34px);
-    line-height: 1.2;
+    font-size: 24px;
+    line-height: 32px;
   }
 
   :global(p.wui-ant-typography) {
@@ -54,7 +54,7 @@
 .formGrid {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(250px, 0.7fr);
-  gap: 18px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -65,13 +65,13 @@
 .formActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 22px;
+  gap: 8px;
+  margin-top: 24px;
 }
 
 .helpList {
   margin: 0;
-  padding-left: 18px;
+  padding-left: 24px;
 
   li + li {
     margin-top: 10px;
@@ -79,7 +79,7 @@
 }
 
 .steps {
-  margin-bottom: 30px;
+  margin-bottom: 24px;
 }
 
 .detailCard {
@@ -87,7 +87,7 @@
 }
 
 .result {
-  padding: 18px 0;
+  padding: 16px 0;
 }
 
 @media (width < 860px) {

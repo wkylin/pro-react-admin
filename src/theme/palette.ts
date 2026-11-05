@@ -1,4 +1,4 @@
-import { getAccessiblePrimaryColor, mixThemeColors } from './contrast'
+import { getAccessiblePrimaryColor, getContrastRatio, mixThemeColors } from './contrast'
 
 export type ThemeAppearance = 'light' | 'dark'
 
@@ -79,7 +79,10 @@ export const getThemePalette = (mode: ThemeAppearance): ThemePalette => palettes
 
 export const getThemeAccents = (mode: ThemeAppearance, source: string) => {
   const primary = getAccessiblePrimaryColor(source, mode)
-  const target = mode === 'dark' ? '#ffffff' : '#000000'
+  const preferredTarget = mode === 'dark' ? '#ffffff' : '#000000'
+  // Near black or white, move the other way so interactive states remain visible.
+  const target =
+    getContrastRatio(primary, preferredTarget) < 1.5 ? (mode === 'dark' ? '#000000' : '#ffffff') : preferredTarget
   return {
     primary,
     hover: mixThemeColors(primary, target, 0.12),
