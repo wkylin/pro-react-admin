@@ -1,10 +1,10 @@
 .topMenu {
   border-bottom: 0;
-  line-height: 64px;
+  line-height: 56px;
   background: transparent;
   flex: 1;
   min-width: 0;
-  height: 64px;
+  height: 56px;
 }
 
 .menu {
@@ -13,34 +13,12 @@
   overflow: hidden auto;
 }
 
-/* 减少侧边栏多层嵌套的缩进，确保最深层的标签可见 */
-.menu :global(.ant-menu-inline .ant-menu-submenu-title),
-.menu :global(.ant-menu-inline .ant-menu-item) {
-  padding-left: 12px !important;
-}
-
-/* 逐层微调：每层增加 8px（而不是 Ant 默认的更大值） */
-.menu :global(.ant-menu-inline .ant-menu-submenu .ant-menu-submenu-title) {
-  padding-left: 20px !important;
-}
-
-.menu :global(.ant-menu-inline .ant-menu-submenu .ant-menu-submenu .ant-menu-submenu-title) {
-  padding-left: 28px !important;
-}
-
-.menu :global(.ant-menu-inline .ant-menu-submenu .ant-menu-submenu .ant-menu-submenu .ant-menu-submenu-title) {
-  padding-left: 36px !important;
-}
-
-.menu
-  :global(
-    .ant-menu-inline .ant-menu-submenu .ant-menu-submenu .ant-menu-submenu .ant-menu-submenu .ant-menu-submenu-title
-  ) {
-  padding-left: 44px !important;
+.menu:global(.wui-ant-menu-inline.wui-ant-menu-root) :global(.wui-ant-menu-submenu-title) {
+  padding-inline-end: 32px;
 }
 
 /* 顶部菜单模式下减少间距，以便容纳更多菜单项 */
-.topMenu :global(.ant-menu-item),
-.topMenu :global(.ant-menu-submenu-title) {
+.topMenu :global(.wui-ant-menu-item),
+.topMenu :global(.wui-ant-menu-submenu-title) {
   padding-inline: 12px !important;
 }

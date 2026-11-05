@@ -11,8 +11,6 @@ import rootRouter from '@routers'
 import { flattenRouteNodes } from '@platform/navigation/routes'
 import { createMenuIcon } from '@layouts/navigation/menu.config'
 import { useNavigation } from '@layouts/navigation/useNavigation'
-import { useProThemeContext } from '@src/theme/hooks'
-import { getAccessiblePrimaryColor } from '@src/theme/contrast'
 import styles from './index.module.less'
 
 interface ProSecNavProps {
@@ -27,7 +25,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }: ProSecNavP
   const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
   const navigation = useNavigation()
-  const { themeSettings } = useProThemeContext()
   const [expanded, setExpanded] = useState<{ pathname: string; keys: string[] } | null>(null)
   const routeComponents = useMemo(
     () =>
@@ -41,11 +38,6 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }: ProSecNavP
   )
   const chain = findNavigationChain(navigation, pathname)
   const selectedKeys = chain.length ? [chain.at(-1)!.key] : []
-  const isDarkTheme = theme === 'dark'
-  const darkSelectedBackground = getAccessiblePrimaryColor(
-    getAccessiblePrimaryColor(themeSettings.colorPrimary, 'dark'),
-    'light'
-  )
   const openKeys = expanded?.pathname === pathname ? expanded.keys : chain.slice(0, -1).map((item) => item.key)
   const preload = (path: string) => {
     void (async () => routeComponents.get(path)?.preload?.())().catch(() => {
@@ -54,19 +46,18 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }: ProSecNavP
   }
   const toItems = (nodes: NavigationItem[]): MenuProps['items'] =>
     nodes.map((item) => {
-      const selected = selectedKeys.includes(item.key)
+      const label = item.i18nKey ? t(item.i18nKey, { defaultValue: item.label }) : item.label
 
       return {
         key: item.key,
         icon: createMenuIcon(item.iconName),
-        style: selected && isDarkTheme ? { backgroundColor: darkSelectedBackground } : undefined,
         label: (
-          <span
-            onMouseEnter={() => preload(item.path)}
-            style={selected ? { color: isDarkTheme ? '#fff' : '#1f1f1f' } : undefined}
-          >
-            {item.i18nKey ? t(item.i18nKey, { defaultValue: item.label }) : item.label}
-          </span>
+          // A bare span bypasses Menu's ellipsis and collapsed-title wrapper.
+          <>
+            <span title={label} onMouseEnter={() => preload(item.path)}>
+              {label}
+            </span>
+          </>
         ),
         ...(item.children?.length ? { children: toItems(item.children) } : {}),
       }
@@ -83,6 +74,7 @@ const ProSecNav = ({ mode = 'inline', theme = 'light', onMenuClick }: ProSecNavP
     <Menu
       className={mode === 'horizontal' ? styles.topMenu : styles.menu}
       mode={mode}
+      inlineIndent={8}
       forceSubMenuRender
       theme={theme}
       items={toItems(navigation)}

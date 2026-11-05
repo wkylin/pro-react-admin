@@ -8,6 +8,7 @@ import { canAccessPath } from '@platform/auth/model/policy'
 import { useTranslation } from 'react-i18next'
 import rootRouter from '@routers'
 import { matchRoutes, type RouteObject } from 'react-router-dom'
+import styles from './index.module.less'
 
 interface PrimaryNavItem {
   key: string
@@ -91,8 +92,23 @@ const PrimaryNav = ({ layout = '' }: PrimaryNavProps) => {
   return (
     <Space style={{ marginRight: 16 }}>
       {filterItems.map((item) => (
-        <Button key={item.key} type="link" icon={item.icon} onClick={item.onClick}>
-          {item.i18nKey ? t(item.i18nKey) : item.label}
+        <Button
+          key={item.key}
+          type="text"
+          className={styles.navButton}
+          aria-label={item.i18nKey ? t(item.i18nKey) : item.label}
+          title={item.i18nKey ? t(item.i18nKey) : item.label}
+          style={{
+            color: 'inherit',
+            background: 'var(--header-action-bg, transparent)',
+            width: 'var(--primary-nav-width)',
+            minWidth: 'var(--primary-nav-width)',
+            paddingInline: 'var(--primary-nav-padding)',
+          }}
+          icon={item.icon}
+          onClick={item.onClick}
+        >
+          <span className={styles.label}>{item.i18nKey ? t(item.i18nKey) : item.label}</span>
         </Button>
       ))}
     </Space>

@@ -1,24 +1,41 @@
+.routeTabs {
+  min-width: 0;
+}
+
 .tabBarRow {
   position: relative;
+  isolation: isolate;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
+  height: 44px;
   overflow: hidden;
+  box-shadow: inset 0 -1px 0 var(--pro-tabs-border-color);
 }
 
 .tabLabel {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  min-height: 28px;
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+  gap: 8px;
   white-space: nowrap;
 }
 
+.tabTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Reserve the controls on every tab so selection never changes its width.
 .tabActionSlot {
   display: inline-block;
   flex: 0 0 48px;
   width: 48px;
   height: 24px;
-  margin-inline-start: 2px;
 }
 
 .tabActionSlotSingle {
@@ -31,8 +48,8 @@
   z-index: 20;
   display: flex;
   align-items: center;
-  gap: 0;
   height: 24px;
+  color: var(--pro-tabs-action-color);
 }
 
 .tabActionButton {
@@ -44,22 +61,23 @@
   height: 24px;
   padding: 0;
   border: 0;
-  border-radius: 4px;
+  border-radius: 50%;
   background: transparent;
   color: inherit;
   cursor: pointer;
-  font-size: 9px;
-  opacity: 0.7;
+  font-size: 11px;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
 
   &:hover {
-    background: rgb(127 127 127 / 10%);
-    opacity: 1;
+    background: var(--pro-tabs-hover-bg);
+    color: var(--pro-tabs-active-text);
   }
 
   &:focus-visible {
-    outline: 2px solid currentcolor;
+    outline: 2px solid var(--pro-tabs-focus-color);
     outline-offset: 1px;
-    opacity: 1;
   }
 }
 
@@ -73,77 +91,203 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .tabRefreshIcon {
-    animation: none;
-  }
-}
-
 .tabBarDecoration {
-  display: flex;
-  flex: 0 0 auto;
-  align-self: stretch;
-  align-items: center;
-  padding: 0 10px;
   position: relative;
+  display: flex;
+  flex: 0 0 36px;
+  align-items: center;
+  justify-content: center;
+  padding-block-start: 4px;
 }
 
-.tabList {
+.routeTabs:global(.wui-ant-tabs.wui-ant-tabs-card) .tabList:global(.wui-ant-tabs-nav) {
   display: flex;
   flex: 1 1 auto;
-  align-items: center;
+  align-items: stretch;
   min-width: 0;
+  height: 44px;
   overflow: hidden;
+
+  &::before {
+    display: none;
+  }
 
   :global(.wui-ant-tabs-nav-wrap) {
     position: relative;
     display: flex;
     flex: 1 1 auto;
+    align-items: stretch;
     min-width: 0;
     overflow: hidden;
+    padding-inline: 8px;
   }
 
   :global(.wui-ant-tabs-nav-list) {
     position: relative;
     display: flex;
     flex: 0 0 auto;
-    align-items: center;
+    align-items: flex-end;
+    box-sizing: border-box;
+    height: 44px;
+    padding-block-start: 8px;
     white-space: nowrap;
   }
 
-  :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab.wui-ant-tabs-tab-active) {
-    padding-inline-end: 8px;
+  :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab) {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    box-sizing: border-box;
+    min-width: 100px;
+    max-width: 224px;
+    height: 36px;
+    margin: 0;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 10px 10px 0 0;
+    background: transparent;
+    color: var(--pro-tabs-text);
+    font-size: 13px;
+    line-height: 20px;
+    transition:
+      background-color 120ms ease,
+      color 120ms ease;
+  }
+
+  :global(.wui-ant-tabs-tab-btn) {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: inherit;
+    font-weight: 400;
+    text-shadow: none;
+
+    &::after {
+      position: absolute;
+      top: 10px;
+      inset-inline-end: 0;
+      width: 1px;
+      height: 16px;
+      border-radius: 1px;
+      background: var(--pro-tabs-separator-color);
+      content: '';
+      pointer-events: none;
+      transition: opacity 120ms ease;
+    }
+
+    &:focus-visible {
+      border-radius: 4px;
+      outline: 2px solid var(--pro-tabs-focus-color);
+      outline-offset: 3px;
+    }
+  }
+
+  :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab:has(> .wui-ant-tabs-tab-btn:focus-visible)) {
+    outline: 2px solid var(--pro-tabs-focus-color);
+    outline-offset: -4px;
+  }
+
+  :global(.wui-ant-tabs-tab:not(.wui-ant-tabs-tab-active):hover),
+  :global(.wui-ant-tabs-tab:not(.wui-ant-tabs-tab-active):focus-within) {
+    border-radius: 10px;
+    background: var(--pro-tabs-hover-bg);
+    color: var(--pro-tabs-active-text);
+  }
+
+  :global(.wui-ant-tabs-tab:hover .wui-ant-tabs-tab-btn::after),
+  :global(.wui-ant-tabs-tab:not(:has(~ .wui-ant-tabs-tab)) .wui-ant-tabs-tab-btn::after),
+  :global(.wui-ant-tabs-tab:has(+ .wui-ant-tabs-tab-active) .wui-ant-tabs-tab-btn::after),
+  :global(.wui-ant-tabs-tab:has(+ .wui-ant-tabs-tab:hover) .wui-ant-tabs-tab-btn::after) {
+    opacity: 0;
+  }
+
+  :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab-active) {
+    z-index: 3;
+    background: var(--pro-tabs-surface);
+    color: var(--pro-tabs-active-text);
+
+    // Outward bottom curves join the selected tab to the content surface.
+    &::before,
+    &::after {
+      position: absolute;
+      bottom: 0;
+      width: 8px;
+      height: 8px;
+      background: transparent;
+      content: '';
+      pointer-events: none;
+    }
+
+    &::before {
+      inset-inline-start: -8px;
+      border-end-end-radius: 8px;
+      box-shadow: 4px 4px 0 4px var(--pro-tabs-surface);
+    }
+
+    &::after {
+      inset-inline-end: -8px;
+      border-end-start-radius: 8px;
+      box-shadow: -4px 4px 0 4px var(--pro-tabs-surface);
+    }
+
+    :global(.wui-ant-tabs-tab-btn) {
+      color: inherit;
+
+      &::after {
+        opacity: 0;
+      }
+    }
+  }
+
+  :global(.wui-ant-tabs-ink-bar) {
+    display: none;
   }
 
   :global(.wui-ant-tabs-nav-operations) {
-    flex: 0 0 auto;
+    flex: 0 0 36px;
+    align-self: stretch;
+    box-sizing: border-box;
+    min-width: 36px;
+    padding-inline: 2px;
+  }
+
+  :global(.wui-ant-tabs-nav-more) {
+    min-width: 32px;
+    border: 0;
+    color: var(--pro-tabs-text);
   }
 
   :global(.wui-ant-tabs-nav-operations-hidden) {
     display: none;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab),
+    :global(.wui-ant-tabs-tab-btn::after) {
+      transition: none;
+    }
+  }
 }
 
 .tabBarActions {
+  position: relative;
   display: flex;
   flex: 0 0 auto;
-  align-self: stretch;
   align-items: center;
   gap: 4px;
-  padding: 0 8px;
-  position: relative;
+  padding: 4px 8px 0;
+  color: var(--pro-tabs-action-color);
 }
 
-.tabBarDecoration::after,
-.tabBarActions::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  background-color: var(--pro-tabs-border-color, #f0f0f0);
-  content: '';
-  pointer-events: none;
+@media (prefers-reduced-motion: reduce) {
+  .tabRefreshIcon {
+    animation: none;
+  }
+
+  .tabActionButton {
+    transition: none;
+  }
 }
 
 @media (width <= 576px) {
@@ -153,6 +297,13 @@
 
   .tabBarActions {
     gap: 0;
-    padding: 0 4px;
+    padding-inline: 4px;
+  }
+
+  .routeTabs:global(.wui-ant-tabs.wui-ant-tabs-card)
+    .tabList:global(.wui-ant-tabs-nav)
+    :global(.wui-ant-tabs-nav-list > .wui-ant-tabs-tab) {
+    min-width: 88px;
+    max-width: 190px;
   }
 }

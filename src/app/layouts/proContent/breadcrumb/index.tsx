@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom'
 import { Breadcrumb, Button } from 'antd'
+import { ChevronRight } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import rootRouter from '@routers'
@@ -13,7 +14,9 @@ const ProBreadcrumb = () => {
   const chain = findRouteChain(rootRouter, pathname)
   return (
     <Breadcrumb
-      separator=">"
+      classNames={{ separator: styles.separator }}
+      styles={{ separator: { marginInline: 4 } }}
+      separator={<ChevronRight size={14} strokeWidth={1.5} aria-hidden="true" />}
       items={chain.map((item, index) => ({
         key: item.key,
         title: (

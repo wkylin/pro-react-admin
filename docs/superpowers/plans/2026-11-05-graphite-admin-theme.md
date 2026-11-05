@@ -56,14 +56,14 @@
 
 **Interfaces:** Consumes Task 1 exports. `ThemeFeedback(): React.ReactNode` binds the existing message adapter to an AntD App inside the configured theme.
 
-- [ ] Replace ad hoc configuration in `ThemeIndex` with `createAdminTheme`; retain language, prefixes, compact setting, and stable router creation.
-- [ ] Place a themed App / feedback bridge beneath ConfigProvider. Preserve renderApp's outer provider for consumers outside ThemeIndex; size the inner app root correctly.
-- [ ] Apply 56px main Header and matching horizontal-menu dimensions, quieter toolbar borders and theme-aware hover / focus.
-- [ ] Remove inline selected colors in ProSecNav so component tokens control foreground / background. Retain translated labels, preloading, access checks, tooltip labels, open keys and 8px indentation.
-- [ ] Replace navy-specific header / sider fallbacks with semantic navigation values. Keep the independently dark navigation option readable on a light page.
-- [ ] Make rail / selected tab / content surfaces coherent without changing tab action placement, event handlers or caching.
-- [ ] Verify in the browser: expanded and collapsed menus; four nested levels; top navigation; light page + dark nav; refresh / close / overflow tab actions; message and confirmation theme context.
-- [ ] Run typecheck and changed-file lint. Record the deliverable checkpoint.
+- [x] Replace ad hoc configuration in `ThemeIndex` with `createAdminTheme`; retain language, prefixes, compact setting, and stable router creation.
+- [x] Place a themed App / feedback bridge beneath ConfigProvider. Preserve renderApp's outer provider for consumers outside ThemeIndex; size the inner app root correctly.
+- [x] Apply 56px main Header and matching horizontal-menu dimensions, quieter toolbar borders and theme-aware hover / focus.
+- [x] Remove inline selected colors in ProSecNav so component tokens control foreground / background. Retain translated labels, preloading, access checks, tooltip labels, open keys and 8px indentation.
+- [x] Replace navy-specific header / sider fallbacks with semantic navigation values. Keep the independently dark navigation option readable on a light page.
+- [x] Make rail / selected tab / content surfaces coherent without changing tab action placement, event handlers or caching.
+- [x] Verify in the browser: expanded and collapsed menus; four nested levels; top navigation; light page + dark nav; refresh / close / overflow tab actions; message and confirmation theme context.
+- [x] Run typecheck and changed-file lint. Record the deliverable checkpoint.
 
 ### Task 3: Page surfaces and component consistency
 

@@ -1,4 +1,7 @@
 .header {
+  --header-action-size: 32px;
+
+  height: 56px;
   padding: 0;
   display: flex;
   align-items: center;
@@ -81,4 +84,38 @@
   width: auto;
   padding: 0 24px;
   margin-right: 0;
+}
+
+.headerActions :global(button:hover),
+.headerMenu :global(button:hover) {
+  --header-action-bg: var(--header-action-hover-bg);
+}
+
+.header:global(.wui-ant-layout-header) {
+  .headerActions :global(button:focus-visible),
+  .headerMenu :global(button:focus-visible),
+  .mobileMenuTrigger:focus-visible {
+    outline: 2px solid var(--header-focus-color);
+    outline-offset: 2px;
+  }
+}
+
+.mobileMenuTrigger {
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  color: inherit;
+  font-size: 18px;
+}
+
+@media (width <= 768px) {
+  .header {
+    --header-action-size: 44px;
+  }
+}
+
+@media (width >= 769px) and (width <= 1200px) {
+  .header {
+    --header-action-size: 28px;
+  }
 }

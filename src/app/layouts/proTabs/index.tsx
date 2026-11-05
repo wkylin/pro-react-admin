@@ -65,7 +65,17 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   const activePane = visiblePanes.find((pane) => pane.key === visibleActiveKey)
 
   const {
-    token: { colorBgContainer, colorBorderSecondary },
+    token: {
+      colorBgContainer,
+      colorBgLayout,
+      colorBorder,
+      colorBorderSecondary,
+      colorFillTertiary,
+      colorPrimary,
+      colorText,
+      colorTextSecondary,
+      colorTextTertiary,
+    },
   } = theme.useToken()
 
   useLayoutEffect(() => {
@@ -130,21 +140,28 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       style={
         {
           zIndex: 10,
-          backgroundColor: colorBgContainer,
+          backgroundColor: colorBgLayout,
+          '--pro-tabs-surface': colorBgContainer,
           '--pro-tabs-border-color': colorBorderSecondary,
+          '--pro-tabs-separator-color': colorBorder,
+          '--pro-tabs-hover-bg': colorFillTertiary,
+          '--pro-tabs-text': colorTextSecondary,
+          '--pro-tabs-active-text': colorText,
+          '--pro-tabs-action-color': colorTextTertiary,
+          '--pro-tabs-focus-color': colorPrimary,
         } as CSSProperties
       }
     >
       <span className={styles.tabBarDecoration} aria-hidden="true">
         <AnimatedIcon variant="spin" mode="hover">
-          <FireOutlined style={{ color: '#eb2f96', fontSize: 16 }} aria-hidden="true" />
+          <FireOutlined style={{ color: colorTextTertiary, fontSize: 16 }} aria-hidden="true" />
         </AnimatedIcon>
       </span>
       <DefaultTabBar
         {...tabBarProps}
         extra={undefined}
         className={`pro-tabs ${styles.tabList}`}
-        style={{ ...tabBarProps.style, backgroundColor: colorBgContainer, flex: '1 1 auto', minWidth: 0 }}
+        style={{ ...tabBarProps.style, backgroundColor: 'transparent', flex: '1 1 auto', minWidth: 0 }}
       />
       {activePane && actionPosition?.key === visibleActiveKey ? (
         <div className={styles.activeTabActions} style={{ left: actionPosition.left, top: actionPosition.top }}>
@@ -304,7 +321,7 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       onTabClick={onTabClick}
       onTabScroll={onTabScroll}
       renderTabBar={renderTabBar}
-      className="layout-container"
+      className={`layout-container ${styles.routeTabs}`}
       id="container"
       tabBarStyle={{
         zIndex: 2,
@@ -315,14 +332,17 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
       items={visiblePanes.map((pane) => ({
         label: (
           <span className={styles.tabLabel}>
-            <span>{pane.i18nKey ? t(pane.i18nKey) : pane.title}</span>
-            {pane.key === visibleActiveKey ? (
-              <span
-                className={`${styles.tabActionSlot} ${pane.closable ? '' : styles.tabActionSlotSingle}`}
-                data-tab-action-slot=""
-                aria-hidden="true"
-              />
-            ) : null}
+            <span
+              className={styles.tabTitle}
+              title={pane.i18nKey ? t(pane.i18nKey) : typeof pane.title === 'string' ? pane.title : undefined}
+            >
+              {pane.i18nKey ? t(pane.i18nKey) : pane.title}
+            </span>
+            <span
+              className={`${styles.tabActionSlot} ${pane.closable ? '' : styles.tabActionSlotSingle}`}
+              data-tab-action-slot={pane.key === visibleActiveKey ? '' : undefined}
+              aria-hidden="true"
+            />
           </span>
         ),
         key: pane.key,
