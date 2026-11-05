@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import type { LayoutMode } from '@layouts/types'
 import { useApplicationScope } from '@app/model'
-import { getAccessiblePrimaryColor } from './contrast'
+import { getThemeVariables } from './palette'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
@@ -88,7 +88,11 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
 
   const resolvedTheme: 'light' | 'dark' =
     themeSettings.themeMode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : themeSettings.themeMode
-  const accessiblePrimaryColor = getAccessiblePrimaryColor(themeSettings.colorPrimary, resolvedTheme)
+  const themeVariables = useMemo(
+    () => getThemeVariables(resolvedTheme, themeSettings.colorPrimary),
+    [resolvedTheme, themeSettings.colorPrimary]
+  )
+  const accessiblePrimaryColor = themeVariables['--wui-color-primary']
 
   useLayoutEffect(() => {
     try {
@@ -99,8 +103,13 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
 
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
+    const appearanceChanged = html.dataset.theme !== resolvedTheme
+    let firstFrame: number | undefined
+    let secondFrame: number | undefined
+    if (appearanceChanged) html.setAttribute('data-theme-switching', '')
 
     // Publish contrast-safe CSS values before exposing the next theme to global styles.
+    for (const [name, value] of Object.entries(themeVariables)) html.style.setProperty(name, value)
     html.style.setProperty('--pro-accessible-primary-color', accessiblePrimaryColor)
     html.dataset.theme = resolvedTheme
 
@@ -111,7 +120,20 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
     } else {
       html.style.filter = ''
     }
-  }, [themeSettings, resolvedTheme, storageKey, accessiblePrimaryColor])
+
+    if (appearanceChanged) {
+      // Commit the new colors before restoring normal hover / interaction transitions.
+      html.getBoundingClientRect()
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => html.removeAttribute('data-theme-switching'))
+      })
+    }
+    return () => {
+      if (firstFrame !== undefined) cancelAnimationFrame(firstFrame)
+      if (secondFrame !== undefined) cancelAnimationFrame(secondFrame)
+      if (appearanceChanged) html.removeAttribute('data-theme-switching')
+    }
+  }, [themeSettings, resolvedTheme, storageKey, accessiblePrimaryColor, themeVariables])
 
   // Keep Ant Design, CSS variables and Tailwind dark: utilities in sync with OS changes.
   useEffect(() => {

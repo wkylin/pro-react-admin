@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import AnimatedIcon from '@wui/AnimatedIcon'
 import MoveChecker from '@wui/MoveChecker'
 import {
@@ -413,146 +414,154 @@ const Home = () => {
 
   return (
     <FixTabPanel ref={setScrollRef}>
-      <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
-        <ColorfulText text={`React version: ${version}`} />
-      </section>
-      <section style={{ width: '320px', margin: '30px 0' }}>
-        <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
-        <Flex align="center">
-          <Input.TextArea
-            ref={textareaRef}
-            defaultValue={chatText}
-            placeholder="来，说点什么呗...Meta + Enter发送"
-            onChange={changeChatText}
-            onKeyDown={onInputKeyDown}
-            autoSize
-            style={{ height: 30, caretColor: '#ff0000' }}
-          />
-        </Flex>
-        <Button
-          style={{ margin: '10px' }}
-          icon={
-            <AnimatedIcon variant="spin" mode="hover">
-              <SendOutlined rotate={-60} />
-            </AnimatedIcon>
-          }
-          type="primary"
-          disabled={isStream}
-          onClick={onSubmit}
-        >
-          发送
-        </Button>
-        <Button
-          style={{ margin: '10px' }}
-          icon={
-            <AnimatedIcon variant="spin" mode="hover">
-              <SendOutlined rotate={-60} />
-            </AnimatedIcon>
-          }
-          type="primary"
-          disabled={isStream}
-          onClick={onSubmitImage}
-        >
-          生成图片
-        </Button>
-        <Button
-          icon={
-            <AnimatedIcon variant="spin" mode="hover">
-              <SendOutlined rotate={-60} />
-            </AnimatedIcon>
-          }
-          type="primary"
-          disabled={!isStream}
-          onClick={onStop}
-        >
-          停止
-        </Button>
-      </section>
-      <section className="mb-10">
-        {isStream && <div>正在输入...</div>}
-        <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
-        <ReMarkdown markdownText={aiText} isLoading={isStream} />
-        <section className="aiImage">
-          {aiImageList.length > 0 && (
-            <>
-              {aiImageList.map((item, index) => (
-                <div key={index}>
-                  <div>{item.imagePrompt}</div>
-                  <img src={item.imageUrl} width="100%" alt={item.url} />
-                </div>
-              ))}
-            </>
-          )}
+      <div className={pageStyles.content}>
+        <section className={styles.avatar} style={{ margin: '10px 0', fontSize: 24 }}>
+          <ColorfulText text={`React version: ${version}`} />
         </section>
-      </section>
-      <section style={{ margin: '10px 0', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-        <MoveChecker
-          ref={setMoveCheckerRef}
-          onResult={(r) => console.log('result', r)}
-          initialText="请按住滑块，拖动到最后"
-          successText="验证通过"
-          bgColor="linear-gradient(to right,#68cd0f,#35cca1)"
-          bgColorS="linear-gradient(to right,#68cd0f,#66e92d)"
-        />
-        <Button type="primary" style={{ margin: '10px' }} onClick={() => mcRef.current && mcRef.current.reset()}>
-          重置验证
-        </Button>
-      </section>
-      <HomeBookStage />
-      {/* ─── 书籍列表 ─── */}
-      <BookLibrary />
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        I love <span className={styles.circledHighlight}>coding</span> in{' '}
-        <AlternatingTextWithStrings alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']} />.
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        X岁的你，正处在一个特殊的位置：
-        <TypeWriter
-          text={['年轻到足以创新, 成熟到懂得坚持', '你既有冒险的勇气, 又有控制风险的智慧', '人生不设限，梦想不过期! ']}
-          speed={70}
-          className="text-gray-500"
-          waitTime={1500}
-          deleteSpeed={40}
-          cursorChar={'_'}
-        />
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 20 }}>
-        <MultiDirectionSlide textLeft="逐光前行，奔赴新程；" textRight="千山过尽，万里星辰！" />
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 20 }}>
-        <AnimText animText="逐光前行，奔赴新程；千山过尽，万里星辰！" />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20, overflow: 'hidden' }}>
-        This is something
-        <SlideTextWithStrings text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <SparklesText className="" text="千山过尽，万里星辰!" sparklesCount={5} />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
-      </section>
-      <section style={{ marginBottom: 15, fontSize: 20 }}>
-        <ShinyText text="Just some shiny text!" disabled={false} speed={3} />
-      </section>
-      {/* <section style={{ marginBottom: 15, fontSize: 20 }}>
+        <section style={{ width: '320px', margin: '30px 0' }}>
+          <Input defaultValue={apiKey} placeholder="api key" onChange={changeApiKey} style={{ marginBottom: 20 }} />
+          <Flex align="center">
+            <Input.TextArea
+              ref={textareaRef}
+              defaultValue={chatText}
+              placeholder="来，说点什么呗...Meta + Enter发送"
+              onChange={changeChatText}
+              onKeyDown={onInputKeyDown}
+              autoSize
+              style={{ height: 30, caretColor: '#ff0000' }}
+            />
+          </Flex>
+          <Button
+            style={{ margin: '10px' }}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <SendOutlined rotate={-60} />
+              </AnimatedIcon>
+            }
+            type="primary"
+            disabled={isStream}
+            onClick={onSubmit}
+          >
+            发送
+          </Button>
+          <Button
+            style={{ margin: '10px' }}
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <SendOutlined rotate={-60} />
+              </AnimatedIcon>
+            }
+            type="primary"
+            disabled={isStream}
+            onClick={onSubmitImage}
+          >
+            生成图片
+          </Button>
+          <Button
+            icon={
+              <AnimatedIcon variant="spin" mode="hover">
+                <SendOutlined rotate={-60} />
+              </AnimatedIcon>
+            }
+            type="primary"
+            disabled={!isStream}
+            onClick={onStop}
+          >
+            停止
+          </Button>
+        </section>
+        <section className="mb-10">
+          {isStream && <div>正在输入...</div>}
+          <section style={{ textAlign: 'right', color: '#666' }}>{dateTime}</section>
+          <ReMarkdown markdownText={aiText} isLoading={isStream} />
+          <section className="aiImage">
+            {aiImageList.length > 0 && (
+              <>
+                {aiImageList.map((item, index) => (
+                  <div key={index}>
+                    <div>{item.imagePrompt}</div>
+                    <img src={item.imageUrl} width="100%" alt={item.url} />
+                  </div>
+                ))}
+              </>
+            )}
+          </section>
+        </section>
+        <section style={{ margin: '10px 0', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <MoveChecker
+            ref={setMoveCheckerRef}
+            onResult={(r) => console.log('result', r)}
+            initialText="请按住滑块，拖动到最后"
+            successText="验证通过"
+            bgColor="linear-gradient(to right,#68cd0f,#35cca1)"
+            bgColorS="linear-gradient(to right,#68cd0f,#66e92d)"
+          />
+          <Button type="primary" style={{ margin: '10px' }} onClick={() => mcRef.current && mcRef.current.reset()}>
+            重置验证
+          </Button>
+        </section>
+        <HomeBookStage />
+        {/* ─── 书籍列表 ─── */}
+        <BookLibrary />
+        <section style={{ marginBottom: 15, fontSize: 20 }}>
+          I love <span className={styles.circledHighlight}>coding</span> in{' '}
+          <AlternatingTextWithStrings
+            alternateText={['JavaScript', 'TypeScript', 'React', 'Vue', 'Remix', 'Node.js']}
+          />
+          .
+        </section>
+        <section style={{ marginBottom: 15, fontSize: 20 }}>
+          X岁的你，正处在一个特殊的位置：
+          <TypeWriter
+            text={[
+              '年轻到足以创新, 成熟到懂得坚持',
+              '你既有冒险的勇气, 又有控制风险的智慧',
+              '人生不设限，梦想不过期! ',
+            ]}
+            speed={70}
+            className="text-gray-500"
+            waitTime={1500}
+            deleteSpeed={40}
+            cursorChar={'_'}
+          />
+        </section>
+        <section style={{ margin: '20px 0', fontSize: 20 }}>
+          <MultiDirectionSlide textLeft="逐光前行，奔赴新程；" textRight="千山过尽，万里星辰！" />
+        </section>
+        <section style={{ margin: '20px 0', fontSize: 20 }}>
+          <AnimText animText="逐光前行，奔赴新程；千山过尽，万里星辰！" />
+        </section>
+        <section style={{ marginBottom: 15, fontSize: 20, overflow: 'hidden' }}>
+          This is something
+          <SlideTextWithStrings text={['amazing', 'new', 'wonderful', 'beautiful', 'smart']} />
+        </section>
+        <section style={{ marginBottom: 15, fontSize: 20 }}>
+          <SparklesText className="" text="千山过尽，万里星辰!" sparklesCount={5} />
+        </section>
+        <section style={{ marginBottom: 15, fontSize: 20 }}>
+          <AutoLink text="foo bar baz http://example.org bar https://github.com/wkylin/pro-react-admin" />
+        </section>
+        <section style={{ marginBottom: 15, fontSize: 20 }}>
+          <ShinyText text="Just some shiny text!" disabled={false} speed={3} />
+        </section>
+        {/* <section style={{ marginBottom: 15, fontSize: 20 }}>
         <BlurText text="Isn't this so cool?!" delay={50} />
       </section> */}
-      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
-        <TextLoader
-          messages={[
-            'Preparing your experience',
-            'Loading awesome content',
-            'Almost there',
-            'Just a moment',
-            'Getting things ready',
-          ]}
-        />
-      </section>
-      <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
-        <TestimonialCarousel />
-      </section>
-      {/* <section style={{
+        <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
+          <TextLoader
+            messages={[
+              'Preparing your experience',
+              'Loading awesome content',
+              'Almost there',
+              'Just a moment',
+              'Getting things ready',
+            ]}
+          />
+        </section>
+        <section style={{ marginBottom: 15, width: 360, fontSize: 20 }}>
+          <TestimonialCarousel />
+        </section>
+        {/* <section style={{
         marginBottom: 15,
         width: 360,
         height: 200,
@@ -570,211 +579,211 @@ const Home = () => {
       }}>
         <InteractiveGrid width={12} height={12} squares={[50, 50]} />
       </section> */}
-      <section
-        style={{
-          marginBottom: 15,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <IconCloud icons={undefined} images={images} />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <NumberViewCard value="750k" label="浏览量" />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          background: '#111827',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-      >
-        <Meteors starCount={30} primaryColor="#6366f1" className="opacity-30" />
-        <Meteors starCount={25} primaryColor="#818cf8" className="opacity-50" />
-        <Meteors starCount={20} primaryColor="#ffffff" className="opacity-70" />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          background: '#111827',
-        }}
-      >
-        <SparklesCore
-          background="transparent"
-          minSize={0.4}
-          maxSize={1}
-          particleDensity={1200}
-          className="h-full w-full"
-          particleColor="#FFFFFF"
-        />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-        className="bg-slate-900"
-      >
-        <BackgroundBoxes className="" />
-      </section>
-      <section
-        style={{
-          marginBottom: 15,
-          fontSize: 20,
-          height: 200,
-          width: 360,
-          overflow: 'hidden',
-          position: 'relative',
-        }}
-        className="bg-slate-900"
-      >
-        <MemoizedStars />
-      </section>
-      <button
-        type="button"
-        onMouseEnter={handleMouseEnter}
-        onTouchStart={(e) => handleMouseEnter(e)}
-        onFocus={() => {
-          // provide some visible/default state when focused
-          setEnterDirection((prev) => prev || 'left')
-        }}
-        ref={mouseEnterRef}
-        style={{
-          marginBottom: 15,
-          height: 200,
-          width: 360,
-          background: '#111827',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#fff',
-          border: 'none',
-          padding: 0,
-        }}
-      >
-        Direction: {enterDirection}
-      </button>
-      <section style={{ margin: '20px 0' }}>
-        <CompareAll
-          firstImage={firstImage}
-          secondImage={secondImage}
-          firstImageClassName="object-cover object-left-top"
-          secondImageClassname="object-cover object-left-top"
-          className="h-50"
-          slideMode="drag"
-        />
-      </section>
-      <section
-        style={{
-          margin: '20px 0',
-          width: 360,
-          height: 200,
-          background: '#999',
-        }}
-      >
-        <SquaresGrid
-          speed={0.5}
-          squareSize={20}
-          direction="diagonal" // up, down, left, right, diagonal
-          borderColor="#222"
-          hoverFillColor="#222"
-        />
-      </section>
-      <section
-        style={{
-          margin: '20px 0',
-          width: 360,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-          <Input value={svgFileName} onChange={(e) => setSvgFileName(e.target.value)} style={{ width: 180 }} />
-          <Button type="primary" onClick={saveSvgAsFile}>
-            保存 SVG
-          </Button>
-        </div>
-        <section className="relative p-4">
-          <div className={styles.itemCircle} />
-          <svg ref={svgRef} style={{ height: '10px', width: '100%' }}>
-            <path d="M 0 0 L 5000 0" fill="none" stroke="#595959">
-              <animate
-                attributeName="stroke-dashoffset"
-                values="100;0"
-                dur="3s"
-                calcMode="linear"
-                repeatCount="indefinite"
-              ></animate>
-            </path>
-          </svg>
-          <div className={styles.itemCircleTail} />
+        <section
+          style={{
+            marginBottom: 15,
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <IconCloud icons={undefined} images={images} />
         </section>
-      </section>
-      <section className={styles.line} />
-      <section className={styles.linear} />
-      {/* <section>
+        <section
+          style={{
+            marginBottom: 15,
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <NumberViewCard value="750k" label="浏览量" />
+        </section>
+        <section
+          style={{
+            marginBottom: 15,
+            fontSize: 20,
+            height: 200,
+            width: 360,
+            background: '#111827',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          <Meteors starCount={30} primaryColor="#6366f1" className="opacity-30" />
+          <Meteors starCount={25} primaryColor="#818cf8" className="opacity-50" />
+          <Meteors starCount={20} primaryColor="#ffffff" className="opacity-70" />
+        </section>
+        <section
+          style={{
+            marginBottom: 15,
+            fontSize: 20,
+            height: 200,
+            width: 360,
+            background: '#111827',
+          }}
+        >
+          <SparklesCore
+            background="transparent"
+            minSize={0.4}
+            maxSize={1}
+            particleDensity={1200}
+            className="h-full w-full"
+            particleColor="#FFFFFF"
+          />
+        </section>
+        <section
+          style={{
+            marginBottom: 15,
+            fontSize: 20,
+            height: 200,
+            width: 360,
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+          className="bg-slate-900"
+        >
+          <BackgroundBoxes className="" />
+        </section>
+        <section
+          style={{
+            marginBottom: 15,
+            fontSize: 20,
+            height: 200,
+            width: 360,
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+          className="bg-slate-900"
+        >
+          <MemoizedStars />
+        </section>
+        <button
+          type="button"
+          onMouseEnter={handleMouseEnter}
+          onTouchStart={(e) => handleMouseEnter(e)}
+          onFocus={() => {
+            // provide some visible/default state when focused
+            setEnterDirection((prev) => prev || 'left')
+          }}
+          ref={mouseEnterRef}
+          style={{
+            marginBottom: 15,
+            height: 200,
+            width: 360,
+            background: '#111827',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#fff',
+            border: 'none',
+            padding: 0,
+          }}
+        >
+          Direction: {enterDirection}
+        </button>
+        <section style={{ margin: '20px 0' }}>
+          <CompareAll
+            firstImage={firstImage}
+            secondImage={secondImage}
+            firstImageClassName="object-cover object-left-top"
+            secondImageClassname="object-cover object-left-top"
+            className="h-50"
+            slideMode="drag"
+          />
+        </section>
+        <section
+          style={{
+            margin: '20px 0',
+            width: 360,
+            height: 200,
+            background: '#999',
+          }}
+        >
+          <SquaresGrid
+            speed={0.5}
+            squareSize={20}
+            direction="diagonal" // up, down, left, right, diagonal
+            borderColor="#222"
+            hoverFillColor="#222"
+          />
+        </section>
+        <section
+          style={{
+            margin: '20px 0',
+            width: 360,
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <Input value={svgFileName} onChange={(e) => setSvgFileName(e.target.value)} style={{ width: 180 }} />
+            <Button type="primary" onClick={saveSvgAsFile}>
+              保存 SVG
+            </Button>
+          </div>
+          <section className="relative p-4">
+            <div className={styles.itemCircle} />
+            <svg ref={svgRef} style={{ height: '10px', width: '100%' }}>
+              <path d="M 0 0 L 5000 0" fill="none" stroke="#595959">
+                <animate
+                  attributeName="stroke-dashoffset"
+                  values="100;0"
+                  dur="3s"
+                  calcMode="linear"
+                  repeatCount="indefinite"
+                ></animate>
+              </path>
+            </svg>
+            <div className={styles.itemCircleTail} />
+          </section>
+        </section>
+        <section className={styles.line} />
+        <section className={styles.linear} />
+        {/* <section>
         <AvatarCard avatar="https://picsum.photos/seed/picsum/300/160" text="Hi, I'm a developer." />
       </section> */}
-      <section>
-        <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
-      </section>
-      <LineBordered text="A line bordered text." />
-      <section
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginTop: 10,
-          marginBottom: 40,
-        }}
-      >
-        <AnimatedIcon variant="spin" mode="hover">
-          <Atom />
-        </AnimatedIcon>{' '}
-        <AnimatedIcon variant="spin" mode="hover">
-          <Merge />
-        </AnimatedIcon>{' '}
-        <AnimatedIcon variant="spin" mode="hover">
-          <GitMerge />
-        </AnimatedIcon>{' '}
-        <AnimatedIcon variant="spin" mode="hover">
-          <GitPullRequestArrow />
-        </AnimatedIcon>
-      </section>
-      <section style={{ marginBottom: 40, fontSize: 16 }}>
-        <h2>Scroll direction: {`${scrollDir}`}</h2>
-        <p>
-          Scroll position - Top: {scrollPosition.top}, Bottom: {scrollPosition.bottom}
-        </p>
-      </section>
-      <section style={{ marginBottom: 40, fontSize: 16 }}>
-        <h3>React Animate On Scroll.</h3>
-        <h3>
-          <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
-        </h3>
-        <h3 style={{ marginBottom: 40 }}>
-          <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
-        </h3>
-        <ScrollAnimation>
-          {/* <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" /> */}
-          <LazyLoadImage className="" src={secondImage} alt="Strawberries" />
-        </ScrollAnimation>
-      </section>
-      {/* <section style={{ marginBottom: 40, fontSize: 36 }}>
+        <section>
+          <IsometricCard text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti repellat, consequuntur doloribus voluptate esse iure?" />
+        </section>
+        <LineBordered text="A line bordered text." />
+        <section
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginTop: 10,
+            marginBottom: 40,
+          }}
+        >
+          <AnimatedIcon variant="spin" mode="hover">
+            <Atom />
+          </AnimatedIcon>{' '}
+          <AnimatedIcon variant="spin" mode="hover">
+            <Merge />
+          </AnimatedIcon>{' '}
+          <AnimatedIcon variant="spin" mode="hover">
+            <GitMerge />
+          </AnimatedIcon>{' '}
+          <AnimatedIcon variant="spin" mode="hover">
+            <GitPullRequestArrow />
+          </AnimatedIcon>
+        </section>
+        <section style={{ marginBottom: 40, fontSize: 16 }}>
+          <h2>Scroll direction: {`${scrollDir}`}</h2>
+          <p>
+            Scroll position - Top: {scrollPosition.top}, Bottom: {scrollPosition.bottom}
+          </p>
+        </section>
+        <section style={{ marginBottom: 40, fontSize: 16 }}>
+          <h3>React Animate On Scroll.</h3>
+          <h3>
+            <AutoLink text="https://motion.dev/ https://gsap.com/ https://www.react-spring.dev/ https://use-gesture.netlify.app/" />
+          </h3>
+          <h3 style={{ marginBottom: 40 }}>
+            <AutoLink text="https://www.npmjs.com/package/react-animate-on-scroll https://www.npmjs.com/package/react-scroll https://github.com/wellyshen/react-cool-inview" />
+          </h3>
+          <ScrollAnimation>
+            {/* <LazyLoadImage src="https://picsum.photos/seed/picsum/300/160" alt="Strawberries" /> */}
+            <LazyLoadImage className="" src={secondImage} alt="Strawberries" />
+          </ScrollAnimation>
+        </section>
+        {/* <section style={{ marginBottom: 40, fontSize: 36 }}>
         <Typewriter
           options={{
             strings: ['Software Developer.', 'Full Stack Developer.', 'Open Source Contributor.'],
@@ -784,437 +793,438 @@ const Home = () => {
           }}
         />
       </section> */}
-      <section>
-        <GradientTracking>Hover me</GradientTracking>
-      </section>
-      <section style={{ margin: 40 }}>
-        <BreatheText text="Breathe" />
-      </section>
-      <section style={{ margin: '60px 0 40px 40px' }}>
-        <div className={styles['video-box']}>
-          <div className={styles['video-btn']}>b</div>
-        </div>
-      </section>
-      {/* <section style={{ marginBottom: 40 }}>
+        <section>
+          <GradientTracking>Hover me</GradientTracking>
+        </section>
+        <section style={{ margin: 40 }}>
+          <BreatheText text="Breathe" />
+        </section>
+        <section style={{ margin: '60px 0 40px 40px' }}>
+          <div className={styles['video-box']}>
+            <div className={styles['video-btn']}>b</div>
+          </div>
+        </section>
+        {/* <section style={{ marginBottom: 40 }}>
         <ShiftingCard style={{ backgroundImage: 'url(https://picsum.photos/id/1018/480/720)' }} />
       </section> */}
-      {/* <section style={{ marginBottom: 40 }}>
+        {/* <section style={{ marginBottom: 40 }}>
         <PinInput onChange={(value, index, values) => setPinValues(values)} values={pinValues} />
       </section> */}
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.FadeIn>
-          <AvatarCard avatar={XuePng} text="Hi, I'm a developer." />
-        </AnimateOnScreen.FadeIn>
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.FadeUp>
-          <img
-            src={SongPng}
-            alt=""
-            style={{
-              maskImage: 'linear-gradient(to top, transparent, black 20%, black 80%, transparent)',
-            }}
-          />
-        </AnimateOnScreen.FadeUp>
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.ScaleIn triggerOnce={false}>
-          <>
-            <img src={SpringPng} alt="" />
-            <section className={styles['blend-me']}>Mix Blend Mode</section>
-          </>
-        </AnimateOnScreen.ScaleIn>
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          width: 360,
-          height: 200,
-          overflow: 'hidden',
-        }}
-      >
-        <AnimateOnScreen.DiyAnimation
-          from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
-          to={{ opacity: 1, transform: 'translate(0, 0)' }}
-          triggerOnce={true}
+        <section
+          style={{
+            marginBottom: 40,
+            width: 360,
+            height: 200,
+            overflow: 'hidden',
+          }}
         >
-          <Zoom>
-            <img src={HePng} alt="" />
-          </Zoom>
-        </AnimateOnScreen.DiyAnimation>
-      </section>
-      <section style={{ marginBottom: 40, display: 'flex' }}>
-        <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
-          <section />
-        </SpotlightCard>
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 24 }}>
-        <BlurFade className="" variant={undefined} delay={0.25} inView>
-          这一年，以笔为剑，以梦为马，在生活的画布上，绘就属于自己的壮丽史诗。
-        </BlurFade>
-      </section>
-      <section style={{ margin: '20px 0', fontSize: 24 }}>
-        <GradualSpacing text={hopefulText} />
-      </section>
-      <section style={{ margin: '20px 0' }}>
-        <ContentPlaceholder />
-      </section>
-      <section
-        // className={styles.box}
-        style={{
-          marginBottom: 10,
-          width: 360,
-          height: 200,
-          position: 'relative',
-          backgroundColor: 'rgba(0, 0,0, 0.8)',
-          borderRadius: 8,
-        }}
-      >
-        <section className={styles.dotMask} ref={barRef}>
-          dot mask
+          <AnimateOnScreen.FadeIn>
+            <AvatarCard avatar={XuePng} text="Hi, I'm a developer." />
+          </AnimateOnScreen.FadeIn>
         </section>
-        <BorderBeam className="" size={100} transition={{}} style={{}} />
-      </section>
-      <section style={{ marginBottom: 40, fontSize: 18 }}>
-        <section>RectResult.</section>
-        width: {Number.parseInt(String(barRect?.width))} height: {Number.parseInt(String(barRect?.height))} top:{' '}
-        {Number.parseInt(String(barRect?.top))} bottom: {Number.parseInt(String(barRect?.bottom))} right:{' '}
-        {Number.parseInt(String(barRect?.right))} left: {Number.parseInt(String(barRect?.left))}
-      </section>
-      <section
-        style={{
-          marginBottom: 40,
-          height: 200,
-          width: 360,
-          overflow: 'hidden',
-        }}
-      >
-        <MeshGradientBackground>Mesh Gradient Background</MeshGradientBackground>
-      </section>
-      <section
-        style={{
-          marginBottom: 20,
-        }}
-      >
-        <ScratchToReveal
-          width={360}
-          height={200}
-          minScratchPercentage={70}
-          onComplete={() => undefined}
-          className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-(--wui-border-strong) bg-(--wui-bg-subtle)"
+        <section
+          style={{
+            marginBottom: 40,
+            width: 360,
+            height: 200,
+            overflow: 'hidden',
+          }}
         >
-          <p className="text-9xl">✨</p>
-        </ScratchToReveal>
-      </section>
-      <section style={{ margin: 20 }}>
-        <AnimateRipple onClick={() => undefined}>Click Me</AnimateRipple>
-      </section>
-      <section style={{ margin: 20 }}>
-        <section className={styles.effect}> Hello CSS</section>
-      </section>
-      <section style={{ margin: 20 }} className={styles.maskBox}>
-        <section className={styles.watermark}>water mark</section>
-        mask
-      </section>
-      <section style={{ margin: 20 }}>
-        <button className={styles.button} onClick={fireConfetti}>
-          <span className={styles['button-label']}>Click Me</span>
-        </button>
-      </section>
-      {/* <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
+          <AnimateOnScreen.FadeUp>
+            <img
+              src={SongPng}
+              alt=""
+              style={{
+                maskImage: 'linear-gradient(to top, transparent, black 20%, black 80%, transparent)',
+              }}
+            />
+          </AnimateOnScreen.FadeUp>
+        </section>
+        <section
+          style={{
+            marginBottom: 40,
+            width: 360,
+            height: 200,
+            overflow: 'hidden',
+          }}
+        >
+          <AnimateOnScreen.ScaleIn triggerOnce={false}>
+            <>
+              <img src={SpringPng} alt="" />
+              <section className={styles['blend-me']}>Mix Blend Mode</section>
+            </>
+          </AnimateOnScreen.ScaleIn>
+        </section>
+        <section
+          style={{
+            marginBottom: 40,
+            width: 360,
+            height: 200,
+            overflow: 'hidden',
+          }}
+        >
+          <AnimateOnScreen.DiyAnimation
+            from={{ opacity: 0, transform: 'translate(-100%, 0)' }}
+            to={{ opacity: 1, transform: 'translate(0, 0)' }}
+            triggerOnce={true}
+          >
+            <Zoom>
+              <img src={HePng} alt="" />
+            </Zoom>
+          </AnimateOnScreen.DiyAnimation>
+        </section>
+        <section style={{ marginBottom: 40, display: 'flex' }}>
+          <SpotlightCard className="my-spot" style={{ width: 360, height: 200, color: '#fff' }}>
+            <section />
+          </SpotlightCard>
+        </section>
+        <section style={{ margin: '20px 0', fontSize: 24 }}>
+          <BlurFade className="" variant={undefined} delay={0.25} inView>
+            这一年，以笔为剑，以梦为马，在生活的画布上，绘就属于自己的壮丽史诗。
+          </BlurFade>
+        </section>
+        <section style={{ margin: '20px 0', fontSize: 24 }}>
+          <GradualSpacing text={hopefulText} />
+        </section>
+        <section style={{ margin: '20px 0' }}>
+          <ContentPlaceholder />
+        </section>
+        <section
+          // className={styles.box}
+          style={{
+            marginBottom: 10,
+            width: 360,
+            height: 200,
+            position: 'relative',
+            backgroundColor: 'rgba(0, 0,0, 0.8)',
+            borderRadius: 8,
+          }}
+        >
+          <section className={styles.dotMask} ref={barRef}>
+            dot mask
+          </section>
+          <BorderBeam className="" size={100} transition={{}} style={{}} />
+        </section>
+        <section style={{ marginBottom: 40, fontSize: 18 }}>
+          <section>RectResult.</section>
+          width: {Number.parseInt(String(barRect?.width))} height: {Number.parseInt(String(barRect?.height))} top:{' '}
+          {Number.parseInt(String(barRect?.top))} bottom: {Number.parseInt(String(barRect?.bottom))} right:{' '}
+          {Number.parseInt(String(barRect?.right))} left: {Number.parseInt(String(barRect?.left))}
+        </section>
+        <section
+          style={{
+            marginBottom: 40,
+            height: 200,
+            width: 360,
+            overflow: 'hidden',
+          }}
+        >
+          <MeshGradientBackground>Mesh Gradient Background</MeshGradientBackground>
+        </section>
+        <section
+          style={{
+            marginBottom: 20,
+          }}
+        >
+          <ScratchToReveal
+            width={360}
+            height={200}
+            minScratchPercentage={70}
+            onComplete={() => undefined}
+            className="flex items-center justify-center overflow-hidden rounded-2xl border-2 border-(--wui-border-strong) bg-(--wui-bg-subtle)"
+          >
+            <p className="text-9xl">✨</p>
+          </ScratchToReveal>
+        </section>
+        <section style={{ margin: 20 }}>
+          <AnimateRipple onClick={() => undefined}>Click Me</AnimateRipple>
+        </section>
+        <section style={{ margin: 20 }}>
+          <section className={styles.effect}> Hello CSS</section>
+        </section>
+        <section style={{ margin: 20 }} className={styles.maskBox}>
+          <section className={styles.watermark}>water mark</section>
+          mask
+        </section>
+        <section style={{ margin: 20 }}>
+          <button className={styles.button} onClick={fireConfetti}>
+            <span className={styles['button-label']}>Click Me</span>
+          </button>
+        </section>
+        {/* <section style={{ position: 'relative', margin: '80px 0 160px 100px' }}>
         <div className={styles['circle-1']}></div>
         <div className={styles['circle-2']}></div>
         <div className={styles['circle-3']}></div>
         <div className={styles['circle-4']}></div>
       </section> */}
-      <section style={{ margin: 20 }} className={styles.eHElAY}>
-        Hi, React!
-      </section>
-      <section style={{ margin: 20 }} className="z-30 flex w-full items-center justify-start gap-8">
-        <SlideButton
-          backgroundColor="#0c002b"
-          textColor="#1670f0"
-          borderStartColor="rgba(22, 112, 240, 0.1)"
-          borderEndColor="rgba(22, 112, 240, 0.7)"
-          className=""
-          style={{}}
-        >
-          Button
-        </SlideButton>
-        <SlideButton
-          backgroundColor="#1a0b2e"
-          textColor="#ff00ff"
-          borderStartColor="rgba(255, 0, 255, 0.1)"
-          borderEndColor="rgba(0, 255, 255, 0.7)"
-          className=""
-          style={{}}
-        >
-          Button
-        </SlideButton>
-      </section>
-      <section>
-        <CubeSpinner items={['Face Front', 'Face Top', 'Face Bottom']} />
-      </section>
-      {/* <section style={{ margin: '20px 0', fontSize: 40 }}>
+        <section style={{ margin: 20 }} className={styles.eHElAY}>
+          Hi, React!
+        </section>
+        <section style={{ margin: 20 }} className="z-30 flex w-full items-center justify-start gap-8">
+          <SlideButton
+            backgroundColor="#0c002b"
+            textColor="#1670f0"
+            borderStartColor="rgba(22, 112, 240, 0.1)"
+            borderEndColor="rgba(22, 112, 240, 0.7)"
+            className=""
+            style={{}}
+          >
+            Button
+          </SlideButton>
+          <SlideButton
+            backgroundColor="#1a0b2e"
+            textColor="#ff00ff"
+            borderStartColor="rgba(255, 0, 255, 0.1)"
+            borderEndColor="rgba(0, 255, 255, 0.7)"
+            className=""
+            style={{}}
+          >
+            Button
+          </SlideButton>
+        </section>
+        <section>
+          <CubeSpinner items={['Face Front', 'Face Top', 'Face Bottom']} />
+        </section>
+        {/* <section style={{ margin: '20px 0', fontSize: 40 }}>
         <CountUp start={20} end={10000} duration={10} enableScrollSpy />
       </section> */}
-      <section style={{ margin: '20px 0', fontSize: 40 }}>
-        <NumberFlowFix />
-      </section>
-      <section style={{ position: 'relative', fontSize: 36 }}>
-        I build
-        <FlipWords
-          className="mx-1 px-4 py-2"
-          words={['creative', 'interactive', 'beautiful', 'modern']}
-          wordClassName="text-blue-500 font-bold"
-        />
-        <span className="block sm:inline">websites and apps.</span>
-      </section>
-      <section style={{ margin: 20 }}>
-        <ReactSignature />
-      </section>
-      <section style={{ margin: 20 }}>
-        {dataSteps.map((step, index) => (
-          <StaticStepper.StaticStep
-            key={step.title}
-            step={index + 1}
-            title={step.title}
-            stepClassName="bg-blue-100 text-blue-600 border-blue-200"
-            titleClassName="text-blue-500 font-bold"
+        <section style={{ margin: '20px 0', fontSize: 40 }}>
+          <NumberFlowFix />
+        </section>
+        <section style={{ position: 'relative', fontSize: 36 }}>
+          I build
+          <FlipWords
+            className="mx-1 px-4 py-2"
+            words={['creative', 'interactive', 'beautiful', 'modern']}
+            wordClassName="text-blue-500 font-bold"
+          />
+          <span className="block sm:inline">websites and apps.</span>
+        </section>
+        <section style={{ margin: 20 }}>
+          <ReactSignature />
+        </section>
+        <section style={{ margin: 20 }}>
+          {dataSteps.map((step, index) => (
+            <StaticStepper.StaticStep
+              key={step.title}
+              step={index + 1}
+              title={step.title}
+              stepClassName="bg-blue-100 text-blue-600 border-blue-200"
+              titleClassName="text-blue-500 font-bold"
+            >
+              <StaticStepper.CodeContainer>{step.code}</StaticStepper.CodeContainer>
+            </StaticStepper.StaticStep>
+          ))}
+        </section>
+        <section style={{ margin: 20 }}>
+          <FeatureAny data={featureDemoData} />
+        </section>
+        <section style={{ margin: 20 }}>
+          <SkeletonFix />
+        </section>
+        <section style={{ margin: 20 }}>
+          <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
+            <Masonry gutter="10px">
+              <section
+                key="masonry-1"
+                style={{
+                  height: 100,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-2"
+                style={{
+                  height: 200,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-3"
+                style={{
+                  height: 150,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-4"
+                style={{
+                  height: 150,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-5"
+                style={{
+                  height: 200,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-6"
+                style={{
+                  height: 100,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-7"
+                style={{
+                  height: 200,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-8"
+                style={{
+                  height: 150,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-9"
+                style={{
+                  height: 100,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-10"
+                style={{
+                  height: 150,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-11"
+                style={{
+                  height: 100,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-12"
+                style={{
+                  height: 200,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-13"
+                style={{
+                  height: 150,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+              <section
+                key="masonry-14"
+                style={{
+                  height: 150,
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  background: '#aaa',
+                }}
+              />
+            </Masonry>
+          </ResponsiveMasonry>
+        </section>
+        <section style={{ margin: 20 }}>
+          <InViewBasicMultiple />
+        </section>
+        <section style={{ margin: 20 }}>
+          <TagCloud items={['use server', 'React Server Components', 'Suspense', 'React Compiler']} />
+        </section>
+        <section style={{ margin: 20 }}>
+          <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+            <div
+              style={{
+                width: 200,
+                height: 100,
+                lineHeight: '100px',
+                textAlign: 'center',
+                background: '#aaa',
+                margin: '0 10px',
+                borderRadius: 8,
+                // transform: 'rotateX(60deg) rotateY(0deg) rotateZ(45deg)'
+              }}
+            >
+              React
+            </div>
+          </Marquee>
+        </section>
+        <section style={{ margin: 20 }}>
+          <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
+            <div
+              style={{
+                width: 200,
+                height: 100,
+                lineHeight: '100px',
+                textAlign: 'center',
+                background: '#aaa',
+                margin: '0 10px',
+                borderRadius: 8,
+              }}
+            >
+              Vue
+            </div>
+          </Marquee>
+        </section>
+        <section style={{ margin: 0 }}>
+          <DottedStepper className="" activeColor={undefined} inactiveBgColor={undefined} />
+        </section>
+        <section style={{ margin: 20 }}>
+          <ShiCode preCode={preCode} />
+        </section>
+        <section style={{ margin: 20 }}>
+          <DynamicBackground
+            items={[
+              { icon: '⚛', size: 'lg' },
+              { icon: 'JS', size: 'sm' },
+              { icon: 'TS', size: 'md' },
+            ]}
           >
-            <StaticStepper.CodeContainer>{step.code}</StaticStepper.CodeContainer>
-          </StaticStepper.StaticStep>
-        ))}
-      </section>
-      <section style={{ margin: 20 }}>
-        <FeatureAny data={featureDemoData} />
-      </section>
-      <section style={{ margin: 20 }}>
-        <SkeletonFix />
-      </section>
-      <section style={{ margin: 20 }}>
-        <ResponsiveMasonry columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 6 }}>
-          <Masonry gutter="10px">
-            <section
-              key="masonry-1"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-2"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-3"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-4"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-5"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-6"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-7"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-8"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-9"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-10"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-11"
-              style={{
-                height: 100,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-12"
-              style={{
-                height: 200,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-13"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-            <section
-              key="masonry-14"
-              style={{
-                height: 150,
-                width: '100%',
-                border: '1px solid #ccc',
-                background: '#aaa',
-              }}
-            />
-          </Masonry>
-        </ResponsiveMasonry>
-      </section>
-      <section style={{ margin: 20 }}>
-        <InViewBasicMultiple />
-      </section>
-      <section style={{ margin: 20 }}>
-        <TagCloud items={['use server', 'React Server Components', 'Suspense', 'React Compiler']} />
-      </section>
-      <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="left" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div
-            style={{
-              width: 200,
-              height: 100,
-              lineHeight: '100px',
-              textAlign: 'center',
-              background: '#aaa',
-              margin: '0 10px',
-              borderRadius: 8,
-              // transform: 'rotateX(60deg) rotateY(0deg) rotateZ(45deg)'
-            }}
-          >
-            React
-          </div>
-        </Marquee>
-      </section>
-      <section style={{ margin: 20 }}>
-        <Marquee autoFill direction="right" gradient gradientColor="rgba(255, 255, 255, 0.8)">
-          <div
-            style={{
-              width: 200,
-              height: 100,
-              lineHeight: '100px',
-              textAlign: 'center',
-              background: '#aaa',
-              margin: '0 10px',
-              borderRadius: 8,
-            }}
-          >
-            Vue
-          </div>
-        </Marquee>
-      </section>
-      <section style={{ margin: 0 }}>
-        <DottedStepper className="" activeColor={undefined} inactiveBgColor={undefined} />
-      </section>
-      <section style={{ margin: 20 }}>
-        <ShiCode preCode={preCode} />
-      </section>
-      <section style={{ margin: 20 }}>
-        <DynamicBackground
-          items={[
-            { icon: '⚛', size: 'lg' },
-            { icon: 'JS', size: 'sm' },
-            { icon: 'TS', size: 'md' },
-          ]}
-        >
-          <h1>
-            Grow your <br />
-            <span>Frontend Skills</span>
-          </h1>
-          <h3>with React, Angular, Vue, TypeScript and JavaScript</h3>
-        </DynamicBackground>
-      </section>
-      <section style={{ margin: 20 }}>
-        <UserIP
-          data={{ ip: '192.0.2.1', country_name: 'Example country', city: 'Example city', org: 'Example network' }}
-        />
-      </section>
-      <section style={{ margin: 20 }}>
-        <AutoSlider />
-      </section>
+            <h1>
+              Grow your <br />
+              <span>Frontend Skills</span>
+            </h1>
+            <h3>with React, Angular, Vue, TypeScript and JavaScript</h3>
+          </DynamicBackground>
+        </section>
+        <section style={{ margin: 20 }}>
+          <UserIP
+            data={{ ip: '192.0.2.1', country_name: 'Example country', city: 'Example city', org: 'Example network' }}
+          />
+        </section>
+        <section style={{ margin: 20 }}>
+          <AutoSlider />
+        </section>
+      </div>
     </FixTabPanel>
   )
 }

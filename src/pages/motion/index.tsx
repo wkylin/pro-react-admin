@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React, { useRef } from 'react'
 import { motion, useAnimationControls } from 'motion/react'
 import ScrollableSections from '@wui/ScrollableSections'
@@ -129,16 +130,18 @@ const ParallaxVert = () => {
       }}
       style={{ height: '100%' }}
     >
-      <h2>Hi, Motion</h2>
-      <ScrollableSections
-        sections={sections}
-        scrollContainerRef={scrollContainerRef}
-        navUlClassName="custom-nav-ul"
-        navLiClassName="custom-nav-li"
-        titleClassName="custom-title"
-        contentClassName="custom-content"
-        componentClassName="custom-component"
-      />
+      <div className={pageStyles.content}>
+        <h2>Hi, Motion</h2>
+        <ScrollableSections
+          sections={sections}
+          scrollContainerRef={scrollContainerRef}
+          navUlClassName="custom-nav-ul"
+          navLiClassName="custom-nav-li"
+          titleClassName="custom-title"
+          contentClassName="custom-content"
+          componentClassName="custom-component"
+        />
+      </div>
     </FixTabPanel>
   )
 }

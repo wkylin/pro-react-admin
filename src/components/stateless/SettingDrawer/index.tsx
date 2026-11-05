@@ -208,6 +208,7 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
         <div className="flex justify-between">
           <span>{t('settingDrawer.contentWidth')}</span>
           <Switch
+            aria-label={t('settingDrawer.contentWidth')}
             checkedChildren={t('settingDrawer.contentWidthFixed')}
             unCheckedChildren={t('settingDrawer.contentWidthFluid')}
             checked={themeSettings.contentWidth === 'Fixed'}
@@ -224,26 +225,43 @@ const SettingDrawer: React.FC<SettingDrawerProps> = ({ open, onClose }) => {
 
         <div className="mb-3 flex justify-between">
           <span>{t('settingDrawer.other.colorWeak')}</span>
-          <Switch checked={themeSettings.colorWeak} onChange={(checked) => changeSetting('colorWeak', checked)} />
+          <Switch
+            aria-label={t('settingDrawer.other.colorWeak')}
+            checked={themeSettings.colorWeak}
+            onChange={(checked) => changeSetting('colorWeak', checked)}
+          />
         </div>
         <div className="mb-3 flex justify-between">
           <span>{t('settingDrawer.other.grayMode')}</span>
-          <Switch checked={themeSettings.grayMode} onChange={(checked) => changeSetting('grayMode', checked)} />
+          <Switch
+            aria-label={t('settingDrawer.other.grayMode')}
+            checked={themeSettings.grayMode}
+            onChange={(checked) => changeSetting('grayMode', checked)}
+          />
         </div>
         <div className="mb-3 flex justify-between">
           <span>{t('settingDrawer.other.compactMode')}</span>
           <Switch
+            aria-label={t('settingDrawer.other.compactMode')}
             checked={themeSettings.compactAlgorithm}
             onChange={(checked) => changeSetting('compactAlgorithm', checked)}
           />
         </div>
         <div className="mb-3 flex justify-between">
           <span>{t('settingDrawer.other.fixedHeader')}</span>
-          <Switch checked={themeSettings.fixedHeader} onChange={(checked) => changeSetting('fixedHeader', checked)} />
+          <Switch
+            aria-label={t('settingDrawer.other.fixedHeader')}
+            checked={themeSettings.fixedHeader}
+            onChange={(checked) => changeSetting('fixedHeader', checked)}
+          />
         </div>
         <div className="mb-3 flex justify-between">
           <span>{t('settingDrawer.other.fixedSider')}</span>
-          <Switch checked={themeSettings.fixSiderbar} onChange={(checked) => changeSetting('fixSiderbar', checked)} />
+          <Switch
+            aria-label={t('settingDrawer.other.fixedSider')}
+            checked={themeSettings.fixSiderbar}
+            onChange={(checked) => changeSetting('fixSiderbar', checked)}
+          />
         </div>
       </div>
 

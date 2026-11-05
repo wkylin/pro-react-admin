@@ -41,11 +41,14 @@ const ProContent = ({ showTabs = true, slots }: ProContentProps) => {
     [fullPath, outlet, routeHandle?.i18nKey, routeHandle?.title, routeMatch?.id, tabKey]
   )
   const {
-    token: { colorBgContainer, colorBgLayout },
+    token: { colorBgContainer, colorBorderSecondary },
   } = theme.useToken()
   return (
     <Layout className={styles.layout} id="fullScreen">
-      <div className="layout-header" style={{ backgroundColor: colorBgLayout }}>
+      <div
+        className={`layout-header ${styles.header}`}
+        style={{ backgroundColor: colorBgContainer, borderBottom: `1px solid ${colorBorderSecondary}` }}
+      >
         <section className="flex items-center justify-between">
           <ProBreadcrumb />
           {/* <ClockFace /> */}

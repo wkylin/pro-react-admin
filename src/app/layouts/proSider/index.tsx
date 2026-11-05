@@ -40,15 +40,16 @@ const ProSider: FC<ProSiderProps> = ({ children, theme = 'light', slots }) => {
           type="button"
           className={styles.proLink}
           aria-label={t(isSidebarOpen ? 'header.collapseSidebar' : 'header.expandSidebar')}
+          aria-expanded={isSidebarOpen}
           onClick={() => toggleSidebar()}
         >
           {isSidebarOpen ? (
             <AnimatedIcon variant="spin" mode="hover">
-              <MenuFoldOutlined style={{ fontSize: '18px', color: '#08c', cursor: 'pointer' }} />
+              <MenuFoldOutlined aria-hidden />
             </AnimatedIcon>
           ) : (
             <AnimatedIcon variant="spin" mode="hover">
-              <MenuUnfoldOutlined style={{ fontSize: '16px', color: '#08c', cursor: 'pointer' }} />
+              <MenuUnfoldOutlined aria-hidden />
             </AnimatedIcon>
           )}
         </button>

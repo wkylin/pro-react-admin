@@ -40,6 +40,7 @@ import { permissionService } from '@platform/auth/services/permissionService'
 import { getEnv } from '@platform/config/env'
 import { HashRouterUtils } from '@platform/navigation/hashRouter'
 import PrimaryNav, { usePrimaryNavItems } from '../primaryNav'
+import { getThemeAccents, getThemePalette } from '@theme/palette'
 import styles from './index.module.less'
 import Fullscreen from '../fullscreen'
 import { selectIsMobile, useAppStore, useApplicationScope } from '@app/model'
@@ -91,12 +92,16 @@ const HEADER_ACTION_BUTTON_STYLE: CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
-  flex: '0 0 24px',
-  width: 24,
-  height: 24,
-  minWidth: 24,
-  minHeight: 24,
+  flex: '0 0 var(--header-action-size, 32px)',
+  width: 'var(--header-action-size, 32px)',
+  height: 'var(--header-action-size, 32px)',
+  minWidth: 'var(--header-action-size, 32px)',
+  minHeight: 'var(--header-action-size, 32px)',
   padding: 0,
+  borderColor: 'transparent',
+  boxShadow: 'none',
+  background: 'var(--header-action-bg, transparent)',
+  color: 'var(--header-action-color)',
   fontSize: 16,
 }
 
@@ -322,10 +327,11 @@ const renderMobileMenuTrigger = (
   return (
     <button
       type="button"
+      className={styles.mobileMenuTrigger}
       aria-label={label}
       onClick={onMobileMenuClick}
       style={{
-        margin: '0 16px',
+        margin: '0 8px',
         cursor: 'pointer',
         display: 'flex',
         alignItems: 'center',
@@ -689,15 +695,19 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
   )
 
   const {
-    token: { colorBgContainer, colorBorder },
+    token: { colorBgContainer, colorBorderSecondary, colorTextSecondary, colorBgTextHover, colorPrimary },
   } = theme.useToken()
   const { themeSettings, resolvedTheme, updateSettings } = useProThemeContext()
   const isDark = resolvedTheme === 'dark'
   const effectiveNavTheme = isDark ? 'dark' : themeSettings.navTheme
 
   const isTopDarkHeader = layout === 'top' && effectiveNavTheme === 'dark'
-  const headerBackground = isTopDarkHeader ? '#001529' : colorBgContainer
-  const headerBorder = isTopDarkHeader ? '1px solid rgba(255, 255, 255, 0.12)' : `1px solid ${colorBorder}`
+  const darkNavigation = getThemePalette('dark')
+  const headerBackground = isTopDarkHeader ? darkNavigation.canvas : colorBgContainer
+  const headerBorder = `1px solid ${isTopDarkHeader ? darkNavigation.border : colorBorderSecondary}`
+  const headerActionColor = isTopDarkHeader ? darkNavigation.secondary : colorTextSecondary
+  const headerHoverBg = isTopDarkHeader ? darkNavigation.hover : colorBgTextHover
+  const headerFocusColor = isTopDarkHeader ? getThemeAccents('dark', themeSettings.colorPrimary).primary : colorPrimary
 
   const handleThemeToggle = () => {
     updateSettings({ themeMode: isDark ? 'light' : 'dark' })
@@ -724,11 +734,17 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
   return (
     <Layout.Header
       className={styles.header}
-      style={{
-        backgroundColor: headerBackground,
-        borderBottom: headerBorder,
-        padding: isMobile ? '0 16px' : 0,
-      }}
+      style={
+        {
+          backgroundColor: headerBackground,
+          borderBottom: headerBorder,
+          color: headerActionColor,
+          padding: isMobile ? '0 16px' : 0,
+          '--header-action-color': headerActionColor,
+          '--header-action-hover-bg': headerHoverBg,
+          '--header-focus-color': headerFocusColor,
+        } as CSSProperties
+      }
     >
       {renderMobileMenuTrigger(isMobile, onMobileMenuClick, t('header.openMenu'))}
       <button

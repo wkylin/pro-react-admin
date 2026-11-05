@@ -88,7 +88,7 @@ const ChinaMap = () => {
     ],
   })
 
-  return <EChartsCommon option={mapOptions(mapData)} />
+  return <EChartsCommon option={mapOptions(mapData)} style={{ height: '100%', minHeight: 0 }} />
 }
 
 export default ChinaMap

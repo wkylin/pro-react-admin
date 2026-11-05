@@ -1,11 +1,12 @@
 .mdxToolbar {
   background: var(--mdx-bg-toolbar);
   border-bottom: 1px solid var(--mdx-border);
-  padding: 8px 10px;
+  padding: 12px 16px;
+  flex-wrap: wrap;
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: 10px;
+  gap: 8px;
 }
 
 .mdxToolbarLeft {
@@ -13,7 +14,7 @@
   gap: 6px;
   flex-wrap: wrap;
   align-items: center;
-  flex: 1 1 auto;
+  flex: 1 1 480px;
   min-width: 0;
 }
 
@@ -36,16 +37,16 @@
   appearance: none;
   border: none;
   background: transparent;
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: 6px;
   font-size: 12px;
   cursor: pointer;
   color: var(--mdx-text-muted);
   user-select: none;
-  line-height: 1;
+  line-height: 16px;
 
   &:hover {
-    background: rgb(0 0 0 / 5%);
+    background: var(--mdx-active-bg);
   }
 
   &.active {
@@ -76,7 +77,10 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  transition: all 0.15s ease;
+  transition:
+    color 0.2s,
+    background 0.2s,
+    border-color 0.2s;
   position: relative;
 
   &:hover {
@@ -214,7 +218,7 @@
   border: none;
   border-radius: 6px;
   background: var(--mdx-primary);
-  color: white;
+  color: var(--mdx-primary-foreground);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -222,5 +226,26 @@
 
   &:hover {
     background: var(--mdx-primary-hover);
+  }
+}
+
+.mdxToolbar button:focus-visible {
+  outline: 2px solid var(--mdx-primary);
+  outline-offset: 2px;
+}
+
+.mdxToolBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (width <= 767px) {
+  .mdxToolbar {
+    padding: 8px;
+  }
+
+  .mdxToolBtn {
+    min-width: 36px;
+    height: 36px;
   }
 }

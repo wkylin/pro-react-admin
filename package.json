@@ -365,6 +365,7 @@
     "@babel/runtime": "^8.0.10",
     "@codesandbox/sandpack-react": "^2.20.0",
     "@emotion/is-prop-valid": "^1.4.0",
+    "@fontsource-variable/geist": "5.3.0",
     "@loadable/component": "^5.16.7",
     "@mermaid-js/parser": "2.0.1",
     "@number-flow/react": "^0.6.2",

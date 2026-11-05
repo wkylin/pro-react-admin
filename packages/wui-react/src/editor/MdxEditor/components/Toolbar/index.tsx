@@ -268,10 +268,11 @@ function Toolbar({
       </div>
 
       <div className={styles.mdxToolbarRight}>
-        <div className={styles.mdxViewToggle} role="tablist" aria-label="View mode">
+        <div className={styles.mdxViewToggle} role="group" aria-label="View mode">
           <button
             type="button"
             className={`${styles.mdxViewOpt} ${viewMode === 'normal' ? styles.active : ''}`}
+            aria-pressed={viewMode === 'normal'}
             onClick={() => onChangeViewMode?.('normal')}
           >
             编辑
@@ -279,6 +280,7 @@ function Toolbar({
           <button
             type="button"
             className={`${styles.mdxViewOpt} ${viewMode === 'split' ? styles.active : ''}`}
+            aria-pressed={viewMode === 'split'}
             onClick={() => onChangeViewMode?.('split')}
           >
             分屏
@@ -286,6 +288,7 @@ function Toolbar({
           <button
             type="button"
             className={`${styles.mdxViewOpt} ${viewMode === 'code' ? styles.active : ''}`}
+            aria-pressed={viewMode === 'code'}
             onClick={() => onChangeViewMode?.('code')}
           >
             源码
@@ -296,7 +299,13 @@ function Toolbar({
       {/* 链接输入弹窗 */}
       {showLinkModal && !readOnly && (
         <div className={styles.linkModalOverlay} onClick={handleLinkCancel}>
-          <div className={styles.linkModal} onClick={(e) => e.stopPropagation()}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="插入链接"
+            className={styles.linkModal}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className={styles.linkModalHeader}>
               <span>插入链接</span>
               <button

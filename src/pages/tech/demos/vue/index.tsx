@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React from 'react'
 import useSafeNavigate from '@platform/navigation/useSafeNavigate'
 import { Alert, Button } from 'antd'
@@ -13,16 +14,18 @@ const VueDemo = () => {
     })
   }
   return (
-    <FixTabPanel>
-      <Button type="link" onClick={closeActiveOpenAngular}>
-        关闭当前标签 并打开 Angular标签
-      </Button>
-      <Alert
-        title="Success Tips"
-        description="Detailed description and advice about successful copywriting."
-        type="success"
-        showIcon
-      />
+    <FixTabPanel fill={false}>
+      <div className={pageStyles.content}>
+        <Button type="link" onClick={closeActiveOpenAngular}>
+          关闭当前标签 并打开 Angular标签
+        </Button>
+        <Alert
+          title="Success Tips"
+          description="Detailed description and advice about successful copywriting."
+          type="success"
+          showIcon
+        />
+      </div>
     </FixTabPanel>
   )
 }

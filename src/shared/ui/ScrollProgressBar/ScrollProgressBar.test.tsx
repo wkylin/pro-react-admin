@@ -70,7 +70,8 @@ describe('ScrollProgressBar', () => {
     )
     const bar = container.querySelector<HTMLElement>('.scroll-progress-bar')!
     expect(bar.parentElement).toBe(ref.current)
-    expect(bar).toHaveStyle({ position: 'sticky', top: '0px', marginBottom: '-3px' })
+    expect(bar.style.backgroundColor).toBe('var(--wui-color-primary, #1677ff)')
+    expect(bar).toHaveStyle({ position: 'sticky', top: '0px', marginBottom: '-2px' })
     ref.current!.scrollTop = 500
     fireEvent.scroll(ref.current!)
     expect(onScroll).toHaveBeenCalledTimes(1)

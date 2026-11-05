@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React, { useState } from 'react'
 import { Button } from 'antd'
 import FixTabPanel from '@shared/ui/FixTabPanel'
@@ -30,11 +31,13 @@ const MyPrint = () => {
     onPrintError: handlePrintError,
   })
   return (
-    <FixTabPanel>
-      <ComponentToPrint ref={componentRef} />
-      <Button type="primary" onClick={printFn} loading={loading}>
-        Print
-      </Button>
+    <FixTabPanel fill={false}>
+      <div className={`${pageStyles.content} ${pageStyles.horizontal}`}>
+        <ComponentToPrint ref={componentRef} />
+        <Button type="primary" onClick={printFn} loading={loading}>
+          Print
+        </Button>
+      </div>
     </FixTabPanel>
   )
 }

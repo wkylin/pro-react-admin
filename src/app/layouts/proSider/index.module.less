@@ -1,15 +1,51 @@
 .sider {
+  box-sizing: border-box;
   height: 100%;
+  border-inline-end: 1px solid var(--wui-border-navigation, #c9cdd4);
+}
+
+.sider:global(.wui-ant-layout-sider-dark) {
+  border-inline-end-color: var(--wui-border-navigation-dark, #525252);
 }
 
 .proLink {
-  height: 40px;
-  line-height: 40px;
-  padding: 0 15px;
-  margin-bottom: 5px;
-  cursor: pointer;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
   width: 100%;
-  background: transparent;
+  height: 40px;
+  padding: 0 16px;
+  margin: 0;
   border: 0;
+  border-block-start: 1px solid var(--wui-border, #e5e7eb);
+  background: var(--wui-ant-layout-light-trigger-bg, var(--wui-bg-surface, #fff));
+  color: var(--wui-ant-layout-light-trigger-color, var(--wui-text-primary, #171717));
+  font-size: 18px;
+  line-height: 1;
   text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--wui-bg-navigation-hover, #e5e7eb);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wui-ant-color-primary, #1677ff);
+    outline-offset: -2px;
+  }
+}
+
+.sider:global(.wui-ant-layout-sider-dark) .proLink {
+  border-block-start-color: rgb(255 255 255 / 12%);
+  background: var(--wui-ant-layout-trigger-bg, #1f1f1f);
+  color: var(--wui-ant-layout-trigger-color, #fff);
+
+  &:hover {
+    background: rgb(255 255 255 / 12%);
+  }
+}
+
+.sider:global(.wui-ant-layout-sider-collapsed) .proLink {
+  justify-content: center;
+  padding-inline: 0;
 }

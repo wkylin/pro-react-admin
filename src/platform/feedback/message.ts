@@ -18,6 +18,9 @@ let messageInstance: AppMessageInstance | null = null
 // 设置消息实例的函数
 export const setMessageInstance = (instance: AppMessageInstance) => {
   messageInstance = instance
+  return () => {
+    if (messageInstance === instance) messageInstance = null
+  }
 }
 
 const noopMessage = (() => undefined) as unknown as ReturnType<MessageInstance['success']>
