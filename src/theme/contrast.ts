@@ -4,7 +4,8 @@ type RGB = readonly [number, number, number]
 // Use an extra margin because primary text also appears on tinted surfaces.
 const MINIMUM_CONTRAST = 6
 const LIGHT_SURFACE: RGB = [255, 255, 255]
-const DARK_SURFACE: RGB = [20, 20, 20]
+// Accent text also appears on hovered rows and elevated controls.
+const DARK_SURFACE: RGB = [49, 49, 49]
 const BLACK: RGB = [0, 0, 0]
 const WHITE: RGB = [255, 255, 255]
 
@@ -47,6 +48,13 @@ const luminance = ([red, green, blue]: RGB): number =>
 const contrastRatioForRGB = (first: RGB, second: RGB): number => {
   const [lighter, darker] = [luminance(first), luminance(second)].sort((left, right) => right - left)
   return (lighter + 0.05) / (darker + 0.05)
+}
+
+export const mixThemeColors = (from: string, to: string, amount: number): string => {
+  const first = parseHexColor(from)
+  const second = parseHexColor(to)
+  if (!first || !second) return from
+  return toHexColor(mix(first, second, Math.max(0, Math.min(1, amount))))
 }
 
 export const getContrastRatio = (foreground: string, background: string): number => {
