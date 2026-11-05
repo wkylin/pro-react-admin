@@ -85,11 +85,11 @@
 
 **Interfaces:** Existing demo login fixture (`admin@test.com` / `super_admin` local test storage), theme controls, actual roles / labels and computed-style assertions.
 
-- [ ] Add a browser test that switches theme with a filled form / cached tab and confirms the draft and route are preserved.
-- [ ] Add a browser test that checks the guide's actual background / text contrast and an open dropdown / modal after switching themes; do not rely on class-name snapshots.
-- [ ] Cover independently dark nav, custom primary and compact setting through the existing Preferences UI. Include 390px / 440px checks for horizontal overflow and reachable controls.
-- [ ] Run `pnpm run typecheck`, targeted Jest, changed-file lint, `pnpm run test:e2e:typecheck`, and `SENTRY_SOURCE_MAP=no pnpm run build:vite`.
-- [ ] Run `pnpm run test:e2e:vite theme.spec.ts route-tabs.spec.ts page-patterns.spec.ts authorized-access.spec.ts --workers=2` against the final build.
-- [ ] Inspect actual screenshots for users, an overlay, the basic form, the guide and mobile navigation in both themes. Attribute failures accurately and fix regressions before delivery.
+- [x] Add a browser test that switches theme with a filled form / cached tab and confirms the draft and route are preserved.
+- [x] Add a browser test that checks the guide's actual background / text contrast and an open dropdown / modal after switching themes; do not rely on class-name snapshots.
+- [x] Cover independently dark nav, custom primary and compact setting through the existing Preferences UI. Include 390px / 440px checks for horizontal overflow and reachable controls.
+- [x] Run `pnpm run typecheck`, targeted Jest, changed-file lint, `pnpm run test:e2e:typecheck`, and `SENTRY_SOURCE_MAP=no pnpm run build:vite`.
+- [x] Run `pnpm run test:e2e:vite theme.spec.ts route-tabs.spec.ts page-patterns.spec.ts authorized-access.spec.ts --workers=2` against the final build.
+- [x] Inspect actual screenshots for users, an overlay, the basic form, the guide and mobile navigation in both themes. Attribute failures accurately and fix regressions before delivery.
 - [ ] Run `git diff --check`, review final changes against the approved spec, and obtain one fresh whole-change review as required by Native execution.
 - [ ] Report changed behavior, actual checks and local preview URL. Keep remote publication outside this task.
