@@ -1,10 +1,14 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import QRCode from 'qrcode'
 import React, { useState } from 'react'
-import { Button, Input, Space } from 'antd'
+import { useTranslation } from 'react-i18next'
+import { Button, Input } from 'antd'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import PDFExport from '@wui/data-display/PDFExport'
+import styles from './index.module.less'
 
 const QrCode = () => {
+  const { t } = useTranslation()
   const [url, setUrl] = useState('')
   const [qr, setQr] = useState('')
   const GenerateQRCode = () => {
@@ -25,30 +29,32 @@ const QrCode = () => {
     )
   }
   return (
-    <FixTabPanel>
-      <h1>QR Generator</h1>
-      <Space>
-        <Input
-          style={{ width: 400 }}
-          placeholder="e.g. https://google.com"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-        />
-        <Button type="primary" onClick={GenerateQRCode}>
-          Generate
-        </Button>
-      </Space>
-      <section style={{ margin: 20 }}>
-        {qr && (
-          <Space>
-            <img src={qr} width="300" alt="QRcode" />
-            <Button type="link" href={qr} download="qrcode.png">
-              Download
-            </Button>
-          </Space>
-        )}
-      </section>
-      <PDFExport fileName="qrcode.pdf">{qr && <img src={qr} width="300" alt="QR code" />}</PDFExport>
+    <FixTabPanel fill={false}>
+      <div className={pageStyles.content}>
+        <h1 className={styles.title}>QR Generator</h1>
+        <div className={styles.form}>
+          <Input
+            aria-label={t('qrCode.urlLabel')}
+            placeholder="e.g. https://google.com"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          <Button type="primary" onClick={GenerateQRCode}>
+            Generate
+          </Button>
+        </div>
+        <section className={styles.preview}>
+          {qr && (
+            <div className={styles.result}>
+              <img src={qr} width="300" alt="QRcode" />
+              <Button type="link" href={qr} download="qrcode.png">
+                Download
+              </Button>
+            </div>
+          )}
+        </section>
+        <PDFExport fileName="qrcode.pdf">{qr && <img src={qr} width="300" alt="QR code" />}</PDFExport>
+      </div>
     </FixTabPanel>
   )
 }

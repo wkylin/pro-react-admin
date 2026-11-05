@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React from 'react'
 import type { EChartsOption } from 'echarts'
 import FixTabPanel from '@shared/ui/FixTabPanel'
@@ -121,9 +122,11 @@ const Echarts = () => {
     ],
   }
   return (
-    <FixTabPanel>
-      <h3>Welcome to echarts!</h3>
-      <EChartsCommon option={option} style={{ height: 680 }} />
+    <FixTabPanel fill={false}>
+      <div className={pageStyles.content}>
+        <h3>Welcome to echarts!</h3>
+        <EChartsCommon option={option} style={{ height: 680 }} />
+      </div>
     </FixTabPanel>
   )
 }

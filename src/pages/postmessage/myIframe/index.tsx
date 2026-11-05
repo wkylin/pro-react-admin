@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React, { useState, useEffect } from 'react'
 import { getEnv } from '@platform/config/env'
 
@@ -26,10 +27,18 @@ const MyIFrame = () => {
   })
 
   if (!message) {
-    return <p>no message has been received</p>
+    return (
+      <div className={pageStyles.content}>
+        <p>no message has been received</p>
+      </div>
+    )
   }
 
-  return <p>message received: {message}</p>
+  return (
+    <div className={pageStyles.content}>
+      <p>message received: {message}</p>
+    </div>
+  )
 }
 
 export default MyIFrame

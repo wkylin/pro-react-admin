@@ -1,6 +1,8 @@
 .mdxSourceCol {
   flex: 1;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   display: none;
   background: var(--mdx-code-bg);
   border-left: 1px solid var(--mdx-border);
@@ -18,4 +20,19 @@
   outline: none;
   font-size: 14px;
   line-height: 1.6;
+}
+
+.mdxSourceTextarea::placeholder {
+  color: var(--mdx-text-muted);
+}
+
+.mdxSourceTextarea:focus-visible {
+  outline: 2px solid var(--mdx-primary);
+  outline-offset: -2px;
+}
+
+@media (width <= 767px) {
+  .mdxSourceTextarea {
+    padding: 16px;
+  }
 }

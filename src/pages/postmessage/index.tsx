@@ -1,3 +1,5 @@
+import FixTabPanel from '@shared/ui/FixTabPanel'
+import pageStyles from '@shared/styles/pageContent.module.less'
 import { useRef, useEffect } from 'react'
 import { getEnv } from '@platform/config/env'
 
@@ -31,27 +33,28 @@ const PostMessage = () => {
   })
 
   return (
-    <>
-      <button onClick={sendMessage}>send a message</button>
+    <FixTabPanel fill={false}>
+      <div className={pageStyles.content}>
+        <button onClick={sendMessage}>send a message</button>
 
-      <iframe
-        style={{
-          display: 'block',
-          border: 'none',
-          width: '100%',
-        }}
-        src={childOrigin}
-        ref={ref}
-        width="800px"
-        height="600px"
-        title="my-iframe"
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-        referrerPolicy="no-referrer-when-downgrade"
-        sandbox="allow-scripts allow-same-origin"
-      />
+        <iframe
+          style={{
+            display: 'block',
+            border: 'none',
+            width: '100%',
+          }}
+          src={childOrigin}
+          ref={ref}
+          width="800px"
+          height="600px"
+          title="my-iframe"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+          referrerPolicy="no-referrer-when-downgrade"
+          sandbox="allow-scripts allow-same-origin"
+        />
 
-      {/* <iframe
+        {/* <iframe
         id="result"
         name="CodePen"
         title="CodePen Preview"
@@ -63,7 +66,8 @@ const PostMessage = () => {
         class="result-iframe"
         loading="lazy"
       /> */}
-    </>
+      </div>
+    </FixTabPanel>
   )
 }
 

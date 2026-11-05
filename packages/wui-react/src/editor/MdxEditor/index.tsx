@@ -101,6 +101,9 @@ export default function ProMdxEditor({
     extensions,
     content: markdownToHtml(markdown),
     editable: !readOnly,
+    editorProps: {
+      attributes: { role: 'textbox', 'aria-multiline': 'true', 'aria-label': title ?? 'Rich text editor' },
+    },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       const md = htmlToMarkdown(html)

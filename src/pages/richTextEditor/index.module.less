@@ -1,0 +1,22 @@
+.page {
+  box-sizing: border-box;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 24px;
+  background: var(--wui-bg-page);
+
+  > :global(.wui-mdx-editor) {
+    --mdx-primary: var(--wui-color-primary);
+    --mdx-primary-hover: var(--wui-color-primary-hover);
+
+    height: 100%;
+    min-height: 0;
+    border: 1px solid var(--wui-border);
+    border-radius: 12px;
+  }
+
+  @media (width <= 767px) {
+    padding: 16px;
+  }
+}

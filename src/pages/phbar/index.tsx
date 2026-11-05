@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import PHBarChart from '@wui/visualization/PHBarChart'
 import { useOptionalProThemeContext } from '@/theme/hooks'
@@ -13,13 +14,15 @@ const markers = [
 export default function PHBar() {
   const theme = useOptionalProThemeContext()
   return (
-    <FixTabPanel>
-      <PHBarChart
-        ranges={ranges}
-        markers={markers}
-        title="pH值堆叠柱状图（0-14）"
-        theme={theme?.resolvedTheme === 'dark' ? 'dark' : null}
-      />
+    <FixTabPanel fill={false}>
+      <div className={pageStyles.content}>
+        <PHBarChart
+          ranges={ranges}
+          markers={markers}
+          title="pH值堆叠柱状图（0-14）"
+          theme={theme?.resolvedTheme === 'dark' ? 'dark' : null}
+        />
+      </div>
     </FixTabPanel>
   )
 }

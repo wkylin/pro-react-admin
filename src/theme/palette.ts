@@ -7,6 +7,8 @@ export interface ThemePalette {
   surface: string
   elevated: string
   hover: string
+  navigation: string
+  navigationHover: string
   border: string
   borderStrong: string
   text: string
@@ -34,6 +36,8 @@ const palettes: Record<ThemeAppearance, ThemePalette> = {
     surface: '#ffffff',
     elevated: '#ffffff',
     hover: '#f0f1f3',
+    navigation: '#f0f1f3',
+    navigationHover: '#e5e7eb',
     border: '#e5e7eb',
     borderStrong: '#c9cdd4',
     text: '#171717',
@@ -56,6 +60,8 @@ const palettes: Record<ThemeAppearance, ThemePalette> = {
     surface: '#1f1f1f',
     elevated: '#272727',
     hover: '#313131',
+    navigation: '#181818',
+    navigationHover: '#313131',
     border: '#313131',
     borderStrong: '#525252',
     text: '#f5f5f5',
@@ -100,6 +106,10 @@ export const getThemeVariables = (mode: ThemeAppearance, primary: string): Recor
     '--wui-bg-surface': palette.surface,
     '--wui-bg-elevated': palette.elevated,
     '--wui-bg-subtle': palette.hover,
+    '--wui-bg-navigation': palette.navigation,
+    '--wui-bg-navigation-hover': palette.navigationHover,
+    '--wui-border-navigation': palette.borderStrong,
+    '--wui-border-navigation-dark': palettes.dark.borderStrong,
     '--wui-text-primary': palette.text,
     '--wui-text-secondary': palette.secondary,
     '--wui-text-muted': palette.muted,

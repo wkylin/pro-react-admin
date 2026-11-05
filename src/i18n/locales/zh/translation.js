@@ -1,4 +1,5 @@
 const zh = {
+  qrCode: { urlLabel: '二维码网址' },
   identity: {
     brand: 'PRO REACT ADMIN',
     enterpriseBrand: 'PRO REACT ADMIN / ENTERPRISE',

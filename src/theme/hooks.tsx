@@ -103,6 +103,10 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
 
     // Apply global styles for gray mode and color weak mode
     const html = document.documentElement
+    const appearanceChanged = html.dataset.theme !== resolvedTheme
+    let firstFrame: number | undefined
+    let secondFrame: number | undefined
+    if (appearanceChanged) html.setAttribute('data-theme-switching', '')
 
     // Publish contrast-safe CSS values before exposing the next theme to global styles.
     for (const [name, value] of Object.entries(themeVariables)) html.style.setProperty(name, value)
@@ -115,6 +119,19 @@ const ProThemeProvider: React.FC<ProThemeProviderProps> = ({ children, defaultSe
       html.style.filter = 'invert(80%)'
     } else {
       html.style.filter = ''
+    }
+
+    if (appearanceChanged) {
+      // Commit the new colors before restoring normal hover / interaction transitions.
+      html.getBoundingClientRect()
+      firstFrame = requestAnimationFrame(() => {
+        secondFrame = requestAnimationFrame(() => html.removeAttribute('data-theme-switching'))
+      })
+    }
+    return () => {
+      if (firstFrame !== undefined) cancelAnimationFrame(firstFrame)
+      if (secondFrame !== undefined) cancelAnimationFrame(secondFrame)
+      if (appearanceChanged) html.removeAttribute('data-theme-switching')
     }
   }, [themeSettings, resolvedTheme, storageKey, accessiblePrimaryColor, themeVariables])
 

@@ -103,3 +103,12 @@
 - Light helper text uses `#626d7e` to preserve contrast on hover rows; it is slightly darker than the design sample. Existing Users loading dimming is retained, so slow reads can still look temporarily dim.
 - Component catalog and targeted Markdown checks passed. `check:docs` retains two baseline missing design-document links in `docs/README.md` and `docs/components/WUI_MIGRATION_AUDIT.md`; neither was introduced here.
 - Local preview: `http://localhost:8080/`. Changes are committed locally on `style/chrome-route-tabs-20261105`.
+
+## Follow-up layout fixes (2026-11-06)
+
+- Added page-owned spacing to unpadded tools and demos while preserving the global zero-padding content contract. Clarified sidebar surfaces and its divider, and aligned the editor's light/dark surfaces with the global theme.
+- Suppressed CSS transitions only during the theme update so cached tabs and the editor change appearance in the same frame. Normal hover transitions resume afterwards.
+- Made the big-screen map fill its available panel height and verified resizing, sidebar collapse and cached-tab activation.
+- Full Jest: **433/433 passed** across 76 suites; tooling: **41/41 passed**. Type checks, lint, source/deployment/route contracts, Markdown checks, and Vite app/library builds passed.
+- Layout/theme browser regression: **24/24 passed**. After localizing the new QR input label, rebuilt the app and reran its desktop/mobile browser cases: **2/2 passed**; English and Chinese translation keys remain aligned.
+- Existing gate failures remain outside these changes: two missing design-document links in `check:docs`, and AI Workbench's 46 hardcoded strings against its budget of 44 in `check:i18n`. Its source and the budget file are byte-identical to the `e0933024` main baseline. No new per-file hardcoded-copy budget is exceeded by these changes.

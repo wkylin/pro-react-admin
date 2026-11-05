@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React from 'react'
 
 import { Highlight, themes } from 'prism-react-renderer'
@@ -19,22 +20,24 @@ const GroceryItem: React.FC<GroceryItemProps> = ({ item }) => {
 `.trim()
 
 const PrismRender = () => (
-  <FixTabPanel>
-    <h3>Welcome to prism-react-renderer!</h3>
-    <Highlight theme={themes.dracula} code={exampleCode} language="jsx">
-      {({ style, tokens, getLineProps, getTokenProps }) => (
-        <pre className={styles.pre} style={style}>
-          {tokens.map((line, i) => (
-            <div className={styles.line} key={i} {...getLineProps({ line })}>
-              <span className={styles['line-no']}>{i + 1}</span>
-              {line.map((token, key) => (
-                <span key={key} {...getTokenProps({ token })} />
-              ))}
-            </div>
-          ))}
-        </pre>
-      )}
-    </Highlight>
+  <FixTabPanel fill={false}>
+    <div className={pageStyles.content}>
+      <h3>Welcome to prism-react-renderer!</h3>
+      <Highlight theme={themes.dracula} code={exampleCode} language="jsx">
+        {({ style, tokens, getLineProps, getTokenProps }) => (
+          <pre className={styles.pre} style={style}>
+            {tokens.map((line, i) => (
+              <div className={styles.line} key={i} {...getLineProps({ line })}>
+                <span className={styles['line-no']}>{i + 1}</span>
+                {line.map((token, key) => (
+                  <span key={key} {...getTokenProps({ token })} />
+                ))}
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
+    </div>
   </FixTabPanel>
 )
 

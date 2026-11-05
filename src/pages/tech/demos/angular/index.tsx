@@ -1,3 +1,4 @@
+import pageStyles from '@shared/styles/pageContent.module.less'
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Alert } from 'antd'
@@ -7,14 +8,16 @@ const AngularDemo = () => {
   const [searchParams] = useSearchParams()
   const term = searchParams.get('id')
   return (
-    <FixTabPanel>
-      <Alert
-        title="Angular Demo"
-        description="This is a demo page for Angular technology stack."
-        type="success"
-        showIcon
-      />
-      <span>Search Id: {term}</span>
+    <FixTabPanel fill={false}>
+      <div className={pageStyles.content}>
+        <Alert
+          title="Angular Demo"
+          description="This is a demo page for Angular technology stack."
+          type="success"
+          showIcon
+        />
+        <span>Search Id: {term}</span>
+      </div>
     </FixTabPanel>
   )
 }

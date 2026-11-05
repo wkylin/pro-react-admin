@@ -209,6 +209,14 @@ CSS variables + theme overrides
 -------------------------------------------------------------------------------
 */
 
+/* Theme colors switch as one frame; normal interaction transitions resume immediately afterwards. */
+html[data-theme-switching],
+html[data-theme-switching] *,
+html[data-theme-switching] *::before,
+html[data-theme-switching] *::after {
+  transition: none !important;
+}
+
 :root {
   color-scheme: light;
 

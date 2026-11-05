@@ -1,15 +1,42 @@
 .wui-mdx-editor {
-  /* Minimal code highlight styles for MdxEditor */
   .mdx-code-block {
-    padding: 0.5rem;
-    border-radius: 6px;
-    background: #0b1220;
-    color: #e6eef8;
+    padding: 16px;
+    border-radius: 8px;
+    background: var(--mdx-code-bg);
+    color: var(--mdx-code-text);
   }
 
-  /* allow highlight.js / lowlight tokens to show */
   pre code .hljs {
     background: transparent;
     color: inherit;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: var(--mdx-code-comment);
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-literal {
+    color: var(--mdx-code-keyword);
+  }
+
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-attr {
+    color: var(--mdx-code-string);
+  }
+
+  .hljs-number,
+  .hljs-symbol,
+  .hljs-bullet {
+    color: var(--mdx-code-number);
+  }
+
+  .hljs-title,
+  .hljs-built_in,
+  .hljs-type {
+    color: var(--mdx-code-function);
   }
 }

@@ -1,5 +1,11 @@
 .sider {
+  box-sizing: border-box;
   height: 100%;
+  border-inline-end: 1px solid var(--wui-border-navigation, #c9cdd4);
+}
+
+.sider:global(.wui-ant-layout-sider-dark) {
+  border-inline-end-color: var(--wui-border-navigation-dark, #525252);
 }
 
 .proLink {
@@ -20,7 +26,7 @@
   cursor: pointer;
 
   &:hover {
-    background: var(--wui-ant-color-fill-tertiary, rgb(0 0 0 / 4%));
+    background: var(--wui-bg-navigation-hover, #e5e7eb);
   }
 
   &:focus-visible {

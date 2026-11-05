@@ -1,4 +1,5 @@
 const en = {
+  qrCode: { urlLabel: 'QR code URL' },
   identity: {
     brand: 'PRO REACT ADMIN',
     enterpriseBrand: 'PRO REACT ADMIN / ENTERPRISE',
