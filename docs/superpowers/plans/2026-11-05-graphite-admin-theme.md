@@ -91,5 +91,15 @@
 - [x] Run `pnpm run typecheck`, targeted Jest, changed-file lint, `pnpm run test:e2e:typecheck`, and `SENTRY_SOURCE_MAP=no pnpm run build:vite`.
 - [x] Run `pnpm run test:e2e:vite theme.spec.ts route-tabs.spec.ts page-patterns.spec.ts authorized-access.spec.ts --workers=2` against the final build.
 - [x] Inspect actual screenshots for users, an overlay, the basic form, the guide and mobile navigation in both themes. Attribute failures accurately and fix regressions before delivery.
-- [ ] Run `git diff --check`, review final changes against the approved spec, and obtain one fresh whole-change review as required by Native execution.
-- [ ] Report changed behavior, actual checks and local preview URL. Keep remote publication outside this task.
+- [x] Run `git diff --check`, review final changes against the approved spec, and obtain one fresh whole-change review as required by Native execution.
+- [x] Report changed behavior, actual checks and local preview URL. Keep remote publication outside this task.
+
+## Delivery verification
+
+- Shared theme, contrast, feedback and scroll-progress Jest suites: **60/60 passed**.
+- Final Vite production build, project/E2E type checks and changed-file lint/format checks passed.
+- Production-build browser regression: **18/18 passed**, including appearance/system changes, cached forms, scoped overlays, custom accents, compact controls and 390px/440px layouts.
+- One fresh whole-change review completed; Switch labels/thumbs, danger action states and the old link-color override were reproduced and fixed in one pass.
+- Light helper text uses `#626d7e` to preserve contrast on hover rows; it is slightly darker than the design sample. Existing Users loading dimming is retained, so slow reads can still look temporarily dim.
+- Component catalog and targeted Markdown checks passed. `check:docs` retains two baseline missing design-document links in `docs/README.md` and `docs/components/WUI_MIGRATION_AUDIT.md`; neither was introduced here.
+- Local preview: `http://localhost:8080/`. Changes are committed locally on `style/chrome-route-tabs-20261105`.
