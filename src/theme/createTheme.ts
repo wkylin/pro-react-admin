@@ -1,7 +1,14 @@
 import { theme, type ThemeConfig } from 'antd'
 import type { ThemeSettings } from './hooks'
 import { getContrastingTextColor, mixThemeColors } from './contrast'
-import { ADMIN_FONT_FAMILY, getThemeAccents, getThemePalette, type ThemeAppearance } from './palette'
+import {
+  ADMIN_FONT_FAMILY,
+  getThemeAccents,
+  getThemePalette,
+  getThemeSelectionBackground,
+  getThemeStatusColors,
+  type ThemeAppearance,
+} from './palette'
 
 export const createAdminTheme = (
   settings: Pick<ThemeSettings, 'colorPrimary' | 'compactAlgorithm'>,
@@ -10,11 +17,12 @@ export const createAdminTheme = (
   const palette = getThemePalette(mode)
   const dark = getThemePalette('dark')
   const accents = getThemeAccents(mode, settings.colorPrimary)
+  const statusColors = getThemeStatusColors(mode)
   const dangerAccents = getThemeAccents(mode, palette.danger)
   const switchAccents = getThemeAccents('light', settings.colorPrimary)
   const switchForeground = getContrastingTextColor(switchAccents.primary)
   const colorPrimary = accents.primary
-  const selectedBg = mixThemeColors(palette.surface, colorPrimary, mode === 'dark' ? 0.12 : 0.06)
+  const selectedBg = getThemeSelectionBackground(mode, settings.colorPrimary)
   const primaryTokens = {
     colorPrimary,
     colorPrimaryHover: accents.hover,
@@ -27,26 +35,26 @@ export const createAdminTheme = (
     colorLinkActive: accents.active,
   }
   const statusTokens = {
-    colorInfo: palette.info,
-    colorInfoText: palette.info,
-    colorInfoBg: palette.infoBg,
-    colorInfoBorder: mixThemeColors(palette.infoBg, palette.info, 0.2),
-    colorSuccess: palette.success,
-    colorSuccessText: palette.success,
-    colorSuccessBg: palette.successBg,
-    colorSuccessBorder: mixThemeColors(palette.successBg, palette.success, 0.2),
-    colorWarning: palette.warning,
-    colorWarningText: palette.warning,
-    colorWarningBg: palette.warningBg,
-    colorWarningBorder: mixThemeColors(palette.warningBg, palette.warning, 0.2),
-    colorError: palette.danger,
+    colorInfo: statusColors.info.color,
+    colorInfoText: statusColors.info.color,
+    colorInfoBg: statusColors.info.background,
+    colorInfoBorder: statusColors.info.border,
+    colorSuccess: statusColors.success.color,
+    colorSuccessText: statusColors.success.color,
+    colorSuccessBg: statusColors.success.background,
+    colorSuccessBorder: statusColors.success.border,
+    colorWarning: statusColors.warning.color,
+    colorWarningText: statusColors.warning.color,
+    colorWarningBg: statusColors.warning.background,
+    colorWarningBorder: statusColors.warning.border,
+    colorError: statusColors.danger.color,
     colorErrorHover: dangerAccents.hover,
     colorErrorActive: dangerAccents.active,
-    colorErrorText: palette.danger,
+    colorErrorText: statusColors.danger.color,
     colorErrorTextHover: dangerAccents.hover,
     colorErrorTextActive: dangerAccents.active,
-    colorErrorBg: palette.dangerBg,
-    colorErrorBorder: mixThemeColors(palette.dangerBg, palette.danger, 0.2),
+    colorErrorBg: statusColors.danger.background,
+    colorErrorBorder: statusColors.danger.border,
   }
   const baseAlgorithm = mode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm
   // Seed colors are derived again by AntD; pin the accessible roles in the map too.
@@ -89,11 +97,15 @@ export const createAdminTheme = (
       fontSize: 14,
       lineHeight: 20 / 14,
       fontSizeHeading1: 24,
-      fontSizeHeading2: 20,
-      fontSizeHeading3: 18,
+      fontSizeHeading2: 18,
+      fontSizeHeading3: 16,
+      fontSizeHeading4: 14,
+      fontSizeHeading5: 14,
       lineHeightHeading1: 32 / 24,
-      lineHeightHeading2: 28 / 20,
-      lineHeightHeading3: 28 / 18,
+      lineHeightHeading2: 26 / 18,
+      lineHeightHeading3: 24 / 16,
+      lineHeightHeading4: 20 / 14,
+      lineHeightHeading5: 20 / 14,
       fontWeightStrong: 600,
       borderRadius: 8,
       borderRadiusLG: 12,

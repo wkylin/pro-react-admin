@@ -1,0 +1,35 @@
+.paginationFooter {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 4px 8px;
+}
+
+.paginationContent {
+  display: flex;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.pagination {
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  row-gap: 6px;
+  margin-block: 0;
+}
+
+@media (width <= 640px) {
+  .paginationFooter {
+    justify-content: center;
+    padding-inline: 4px;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+}

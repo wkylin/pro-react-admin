@@ -18,6 +18,7 @@ import styles from './guide.module.less'
 
 const repository = 'https://github.com/wkylin/pro-react-admin'
 const pages = 'https://wkylin.github.io/pro-react-admin'
+const accessPreviewRoute = '/preview/access'
 const referenceRoute = '/administration/users'
 const referenceSignInRoute = `/signin?next=${encodeURIComponent(referenceRoute)}`
 const libraryPack = 'npm pack ./packages/wui-react --dry-run --ignore-scripts'
@@ -128,7 +129,11 @@ export default function Home() {
             <a href={`${repository}/tree/main/docs`} target="_blank" rel="noopener noreferrer">
               {t('projectGuide.nav.docs')} <ArrowUpRight size={15} aria-hidden="true" />
             </a>
-            <Link className={styles.navPrimary} to={isSignedIn ? referenceRoute : referenceSignInRoute}>
+            <Link to={accessPreviewRoute}>{t('projectGuide.nav.preview')}</Link>
+            <Link
+              className={`${styles.navPrimary} wui-action-link wui-action-link--brand`}
+              to={isSignedIn ? referenceRoute : referenceSignInRoute}
+            >
               {isSignedIn ? t('projectGuide.nav.openDemo') : t('projectGuide.nav.signIn')}{' '}
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
@@ -144,12 +149,21 @@ export default function Home() {
             <p className={styles.lead}>{t('projectGuide.intro.lead')}</p>
             <p className={styles.introCopy}>{t('projectGuide.intro.description')}</p>
             <div className={styles.introActions}>
-              <Link className={styles.primaryAction} to={isSignedIn ? referenceRoute : referenceSignInRoute}>
-                {isSignedIn ? t('projectGuide.intro.viewScenarios') : t('projectGuide.intro.tryDemo')}{' '}
+              <Link
+                className={`${styles.primaryAction} wui-action-link wui-action-link--brand`}
+                to={isSignedIn ? referenceRoute : accessPreviewRoute}
+              >
+                {isSignedIn ? t('projectGuide.intro.viewScenarios') : t('projectGuide.intro.preview')}{' '}
                 <ArrowRight size={17} aria-hidden="true" />
               </Link>
+              <Link
+                className={`${styles.secondaryAction} wui-action-link wui-action-link--secondary`}
+                to={isSignedIn ? accessPreviewRoute : referenceSignInRoute}
+              >
+                {isSignedIn ? t('projectGuide.intro.preview') : t('projectGuide.intro.tryDemo')}
+              </Link>
               <a
-                className={styles.secondaryAction}
+                className={`${styles.secondaryAction} wui-action-link wui-action-link--secondary`}
                 href={`${repository}/blob/main/docs/README.md`}
                 target="_blank"
                 rel="noopener noreferrer"

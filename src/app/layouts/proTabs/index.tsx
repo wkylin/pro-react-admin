@@ -41,7 +41,7 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
   const { activeKey, setActiveKey, panes, setPanes, removeTab } = useProTabContext() as ProTabContextValue
   const [, startTransition] = useTransition()
   const tabBarRef = useRef<HTMLDivElement>(null)
-  const [actionPosition, setActionPosition] = useState<{ key: string; left: number; top: number } | null>(null)
+  const [actionPositions, setActionPositions] = useState<Array<{ key: string; left: number; top: number }>>([])
   const { redirectTo } = useSafeNavigate()
   const { t } = useTranslation()
   const { pathname } = useLocation()
@@ -84,21 +84,32 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
 
     let frame = 0
     const updatePosition = () => {
-      const slot = tabBar.querySelector<HTMLElement>('[data-tab-action-slot]')
-      if (!slot) {
-        setActionPosition(null)
-        return
-      }
-
-      const slotRect = slot.getBoundingClientRect()
       const barRect = tabBar.getBoundingClientRect()
-      const next = {
-        key: visibleActiveKey,
-        left: Math.round(slotRect.left - barRect.left),
-        top: Math.round(slotRect.top - barRect.top),
-      }
-      setActionPosition((current) =>
-        current?.key === next.key && current.left === next.left && current.top === next.top ? current : next
+      const tabList = tabBar.querySelector<HTMLElement>('[role="tablist"]')
+      const tabViewport = tabList?.querySelector<HTMLElement>('.wui-ant-tabs-nav-wrap') ?? tabList
+      const viewportRect = tabViewport?.getBoundingClientRect()
+      const next = Array.from(tabBar.querySelectorAll<HTMLElement>('[data-tab-action-slot]')).flatMap((slot) => {
+        const key = slot.dataset.tabActionSlot
+        if (!key || !viewportRect) return []
+        const slotRect = slot.getBoundingClientRect()
+        const fullyVisible =
+          slotRect.left >= viewportRect.left &&
+          slotRect.right <= viewportRect.right &&
+          slotRect.top >= viewportRect.top &&
+          slotRect.bottom <= viewportRect.bottom
+        if (!fullyVisible) return []
+        return [{ key, left: Math.round(slotRect.left - barRect.left), top: Math.round(slotRect.top - barRect.top) }]
+      })
+      setActionPositions((current) =>
+        current.length === next.length &&
+        current.every(
+          (position, index) =>
+            position.key === next[index]?.key &&
+            position.left === next[index]?.left &&
+            position.top === next[index]?.top
+        )
+          ? current
+          : next
       )
     }
     const schedulePosition = () => {
@@ -115,7 +126,7 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
     if (tabList) {
       mutationObserver.observe(tabList, {
         attributes: true,
-        attributeFilter: ['class', 'style'],
+        attributeFilter: ['class', 'style', 'data-tab-action-slot'],
         childList: true,
         characterData: true,
         subtree: true,
@@ -163,34 +174,48 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
         className={`pro-tabs ${styles.tabList}`}
         style={{ ...tabBarProps.style, backgroundColor: 'transparent', flex: '1 1 auto', minWidth: 0 }}
       />
-      {activePane && actionPosition?.key === visibleActiveKey ? (
-        <div className={styles.activeTabActions} style={{ left: actionPosition.left, top: actionPosition.top }}>
-          <button
-            type="button"
-            className={styles.tabActionButton}
-            aria-label={t('admin.refresh')}
-            title={t('admin.refresh')}
-            onClick={refreshTab}
+      {actionPositions.map((position) => {
+        const pane = visiblePanes.find((item) => item.key === position.key)
+        if (!pane) return null
+        const isActive = pane.key === visibleActiveKey
+        const paneLabel = pane.i18nKey ? t(pane.i18nKey) : typeof pane.title === 'string' ? pane.title : pane.key
+        const closeLabel = `${t('admin.closeTab')}: ${paneLabel}`
+
+        return (
+          <div
+            key={position.key}
+            className={`${styles.tabActions} ${isActive ? styles.tabActionsActive : styles.tabActionsInactive}`}
+            style={{ left: position.left, top: position.top }}
           >
-            <SyncOutlined
-              key={activePane.generation ?? 0}
-              className={activePane.generation ? styles.tabRefreshIcon : undefined}
-              aria-hidden
-            />
-          </button>
-          {activePane.closable ? (
-            <button
-              type="button"
-              className={styles.tabActionButton}
-              aria-label={t('admin.closeCurrentTab')}
-              title={t('admin.closeCurrentTab')}
-              onClick={() => removeTab(visibleActiveKey)}
-            >
-              <CloseOutlined aria-hidden />
-            </button>
-          ) : null}
-        </div>
-      ) : null}
+            {isActive ? (
+              <button
+                type="button"
+                className={styles.tabActionButton}
+                aria-label={t('admin.refresh')}
+                title={t('admin.refresh')}
+                onClick={refreshTab}
+              >
+                <SyncOutlined
+                  key={pane.generation ?? 0}
+                  className={pane.generation ? styles.tabRefreshIcon : undefined}
+                  aria-hidden
+                />
+              </button>
+            ) : null}
+            {pane.closable ? (
+              <button
+                type="button"
+                className={styles.tabActionButton}
+                aria-label={closeLabel}
+                title={closeLabel}
+                onClick={() => removeTab(pane.key)}
+              >
+                <CloseOutlined aria-hidden />
+              </button>
+            ) : null}
+          </div>
+        )
+      })}
       <div className={styles.tabBarActions} ref={tabBarRef} role="group" aria-label={t('admin.pageActions')}>
         <Fullscreen ele="#fullScreenContent" placement="left" tips={t('admin.contentFullscreen')} />
         {visiblePanes.length > 2 ? (
@@ -338,15 +363,11 @@ const ProTabs = ({ panesItem, tabActiveKey }: ProTabsProps) => {
             >
               {pane.i18nKey ? t(pane.i18nKey) : pane.title}
             </span>
-            <span
-              className={`${styles.tabActionSlot} ${pane.closable ? '' : styles.tabActionSlotSingle}`}
-              data-tab-action-slot={pane.key === visibleActiveKey ? '' : undefined}
-              aria-hidden="true"
-            />
+            <span className={styles.tabActionSlot} data-tab-action-slot={pane.key} aria-hidden="true" />
           </span>
         ),
         key: pane.key,
-        // Action buttons are positioned over the active tab but stay outside the tablist.
+        // Keep refresh/close controls outside the tab label so every close button is independently focusable.
         closable: false,
         forceRender: true,
         children: (

@@ -10,6 +10,7 @@ import React, {
 import type { LayoutMode } from '@layouts/types'
 import { useApplicationScope } from '@app/model'
 import { getThemeVariables } from './palette'
+import tokens from './tokens.json'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type NavTheme = 'light' | 'dark'
@@ -34,7 +35,7 @@ export interface ThemeSettings {
 export const defaultSettings: ThemeSettings = {
   themeMode: 'light',
   navTheme: 'light',
-  colorPrimary: '#1677ff',
+  colorPrimary: tokens.defaultPrimary,
   layout: 'side',
   contentWidth: 'Fluid',
   fixedHeader: false,

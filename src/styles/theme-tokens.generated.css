@@ -1,0 +1,127 @@
+/* Generated from src/theme/tokens.json by scripts/generate-theme-token-css.mjs. Do not edit. */
+
+/* stylelint-disable custom-property-empty-line-before */
+
+:root {
+  color-scheme: light;
+  --wui-bg-page: #f5f6f8;
+  --wui-bg-base: #f5f6f8;
+  --wui-bg-surface: #fff;
+  --wui-bg-elevated: #fff;
+  --wui-bg-subtle: #f0f1f3;
+  --wui-bg-navigation: #f0f1f3;
+  --wui-bg-navigation-hover: #e5e7eb;
+  --wui-border-navigation: #c9cdd4;
+  --wui-border-navigation-dark: #525252;
+  --wui-text-primary: #171717;
+  --wui-text-secondary: #525f70;
+  --wui-text-muted: #626d7e;
+  --wui-border: #e5e7eb;
+  --wui-border-strong: #c9cdd4;
+  --wui-shadow: 0 8px 32px rgb(24 24 24 / 8%);
+  --wui-bg-info-subtle: #eaf2ff;
+  --wui-bg-success-subtle: #edf7f0;
+  --wui-bg-warning-subtle: #fff6e6;
+  --wui-bg-danger-subtle: #fff0f1;
+  --wui-bg-purple-subtle: #f3efff;
+  --wui-text-info: #175cb7;
+  --wui-text-success: #216e43;
+  --wui-text-warning: #8e5d13;
+  --wui-text-danger: #b33948;
+  --wui-text-purple: #6941b0;
+  --wui-indicator-active: #525f70;
+  --wui-indicator-inactive: #c9cdd4;
+  --wui-flow-mask: rgb(245 246 248 / 70%);
+  --background: #f5f6f8;
+  --foreground: #171717;
+  --color-gray-200: #e5e7eb;
+  --color-red-pers: #4b5563;
+  --color-yellow-saff: #9ca3af;
+  --wui-scrollbar-size: 6px;
+  --wui-scrollbar-radius: 999px;
+  --wui-scrollbar-track: transparent;
+  --wui-scrollbar-thumb-start: rgb(75 85 99 / 6%);
+  --wui-scrollbar-thumb-end: rgb(156 163 175 / 6%);
+  --wui-scrollbar-thumb-hover-start: rgb(75 85 99 / 18%);
+  --wui-scrollbar-thumb-hover-end: rgb(156 163 175 / 18%);
+  --wui-scrollbar-thumb-active-start: rgb(75 85 99 / 28%);
+  --wui-scrollbar-thumb-active-end: rgb(156 163 175 / 28%);
+  --wui-scrollbar-thumb-solid: rgb(203 213 225);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --wui-bg-page: #181818;
+  --wui-bg-base: #181818;
+  --wui-bg-surface: #1f1f1f;
+  --wui-bg-elevated: #272727;
+  --wui-bg-subtle: #313131;
+  --wui-bg-navigation: #181818;
+  --wui-bg-navigation-hover: #313131;
+  --wui-border-navigation: #525252;
+  --wui-border-navigation-dark: #525252;
+  --wui-text-primary: #f5f5f5;
+  --wui-text-secondary: #c2c2c2;
+  --wui-text-muted: #a3a3a3;
+  --wui-border: #313131;
+  --wui-border-strong: #525252;
+  --wui-shadow: 0 12px 40px rgb(0 0 0 / 28%);
+  --wui-bg-info-subtle: #202b3a;
+  --wui-bg-success-subtle: #1c3026;
+  --wui-bg-warning-subtle: #352b1b;
+  --wui-bg-danger-subtle: #3a2224;
+  --wui-bg-purple-subtle: #30283d;
+  --wui-text-info: #9cc7ff;
+  --wui-text-success: #8bd5ad;
+  --wui-text-warning: #f3cb7b;
+  --wui-text-danger: #f5a6ad;
+  --wui-text-purple: #c7aff2;
+  --wui-indicator-active: #c2c2c2;
+  --wui-indicator-inactive: #525252;
+  --wui-flow-mask: rgb(24 24 24 / 20%);
+  --background: #181818;
+  --foreground: #f5f5f5;
+  --color-gray-200: #313131;
+  --color-red-pers: #e5e7eb;
+  --color-yellow-saff: #9ca3af;
+  --wui-scrollbar-size: 6px;
+  --wui-scrollbar-radius: 999px;
+  --wui-scrollbar-track: transparent;
+  --wui-scrollbar-thumb-start: rgb(229 231 235 / 4%);
+  --wui-scrollbar-thumb-end: rgb(156 163 175 / 4%);
+  --wui-scrollbar-thumb-hover-start: rgb(229 231 235 / 12%);
+  --wui-scrollbar-thumb-hover-end: rgb(156 163 175 / 12%);
+  --wui-scrollbar-thumb-active-start: rgb(229 231 235 / 20%);
+  --wui-scrollbar-thumb-active-end: rgb(156 163 175 / 20%);
+  --wui-scrollbar-thumb-solid: rgb(55 65 81);
+}
+
+/* Legacy fallback for engines without space-separated rgb() with alpha. */
+
+/* stylelint-disable color-function-notation, color-function-alias-notation, alpha-value-notation */
+
+@supports not (color: rgb(0 0 0)) {
+  :root {
+    --wui-scrollbar-thumb-start: rgba(75, 85, 99, 0.06);
+    --wui-scrollbar-thumb-end: rgba(156, 163, 175, 0.06);
+    --wui-scrollbar-thumb-hover-start: rgba(75, 85, 99, 0.18);
+    --wui-scrollbar-thumb-hover-end: rgba(156, 163, 175, 0.18);
+    --wui-scrollbar-thumb-active-start: rgba(75, 85, 99, 0.28);
+    --wui-scrollbar-thumb-active-end: rgba(156, 163, 175, 0.28);
+    --wui-scrollbar-thumb-solid: rgb(203, 213, 225);
+  }
+
+  :root[data-theme='dark'] {
+    --wui-scrollbar-thumb-start: rgba(229, 231, 235, 0.04);
+    --wui-scrollbar-thumb-end: rgba(156, 163, 175, 0.04);
+    --wui-scrollbar-thumb-hover-start: rgba(229, 231, 235, 0.12);
+    --wui-scrollbar-thumb-hover-end: rgba(156, 163, 175, 0.12);
+    --wui-scrollbar-thumb-active-start: rgba(229, 231, 235, 0.2);
+    --wui-scrollbar-thumb-active-end: rgba(156, 163, 175, 0.2);
+    --wui-scrollbar-thumb-solid: rgb(55, 65, 81);
+  }
+}
+
+/* stylelint-enable color-function-notation, color-function-alias-notation, alpha-value-notation */
+
+/* stylelint-enable custom-property-empty-line-before */

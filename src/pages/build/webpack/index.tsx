@@ -145,7 +145,7 @@ const WebpackPage = () => {
 
   return (
     <FixTabPanel fill={false}>
-      <article className={styles.page} style={colors} aria-labelledby="build-title">
+      <article className={styles.page} style={colors} aria-labelledby="build-title" data-content-typography-exempt>
         <div className={styles.inner}>
           <header className={styles.header}>
             <p className={styles.eyebrow}>构建体系 / WEBPACK 5 + VITE 8</p>

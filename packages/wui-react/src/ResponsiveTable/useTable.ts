@@ -190,6 +190,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
   useEffect(() => {
     const node = containerRef.current as HTMLDivElement | null
     if (!node) return
+    const paginationFooter = node.querySelector<HTMLElement>('[data-responsive-table-pagination]')
 
     const calc = () => {
       const rect = node.getBoundingClientRect()
@@ -213,7 +214,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
       const toolbarEl = node.querySelector<HTMLElement>('.responsive-table-toolbar')
       const toolbarH = toolbarEl ? toolbarEl.offsetHeight : 0
 
-      const footerH = 64 // pagination area
+      const footerH = paginationFooter?.offsetHeight || 48
       const padding = 16
 
       // available space for table body inside container
@@ -237,6 +238,7 @@ export default function useTable<T = any>(opts: UseTableOptions<T> = {}): UseTab
     if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(calc)
       ro.observe(node)
+      if (paginationFooter) ro.observe(paginationFooter)
       return () => ro.disconnect()
     }
 

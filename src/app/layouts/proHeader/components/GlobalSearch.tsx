@@ -13,9 +13,9 @@ import {
   ArrowUpOutlined,
   ArrowDownOutlined,
 } from '@ant-design/icons'
-import { useProThemeContext } from '@src/theme/hooks'
 import { useTranslation } from 'react-i18next'
 import { getEnv } from '@platform/config/env'
+import { selectIsMobile, useAppStore } from '@app/model'
 
 interface GlobalSearchProps {
   open: boolean
@@ -80,14 +80,16 @@ const buildRecentEntries = (recentStored: StoredRecent[], allItems: MenuSearchRe
   })
 }
 
-const renderEntryContent = (entry: MenuSearchResult, isDark: boolean) => {
+type SearchThemeToken = ReturnType<typeof theme.useToken>['token']
+
+const renderEntryContent = (entry: MenuSearchResult, token: SearchThemeToken) => {
   const item = entry.item
   const matches = entry.matches ?? []
   const labelMatch = matches.find((m) => m.key === 'label')
   const i18nMatch = matches.find((m) => m.key === 'i18nKey' || m.key === 'i18n')
   const pinyinMatch = matches.find((m) => m.key === 'pinyin')
 
-  const labelEl = labelMatch ? highlightWithIndices(item.label, labelMatch.indices, isDark) : <>{item.label}</>
+  const labelEl = labelMatch ? highlightWithIndices(item.label, labelMatch.indices, token) : <>{item.label}</>
 
   let subEl: React.ReactNode = null
   if (!labelMatch) {
@@ -95,38 +97,38 @@ const renderEntryContent = (entry: MenuSearchResult, isDark: boolean) => {
       subEl = (
         <div
           style={{
-            color: isDark ? '#888' : '#999',
+            color: token.colorTextTertiary,
             fontSize: 12,
             marginTop: 4,
           }}
         >
-          {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, isDark)}
+          {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, token)}
         </div>
       )
     } else if (pinyinMatch) {
       subEl = (
         <div
           style={{
-            color: isDark ? '#888' : '#999',
+            color: token.colorTextTertiary,
             fontSize: 12,
             marginTop: 4,
           }}
         >
-          {highlightWithIndices(pinyinMatch.value || item.pinyin || '', pinyinMatch.indices, isDark)}
+          {highlightWithIndices(pinyinMatch.value || item.pinyin || '', pinyinMatch.indices, token)}
         </div>
       )
     }
   } else if (i18nMatch) {
     subEl = (
-      <div style={{ color: isDark ? '#888' : '#999', fontSize: 12, marginTop: 4 }}>
-        {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, isDark)}
+      <div style={{ color: token.colorTextTertiary, fontSize: 12, marginTop: 4 }}>
+        {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, token)}
       </div>
     )
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ color: isDark ? '#eee' : '#333', fontWeight: 500 }}>{labelEl}</div>
+      <div style={{ color: token.colorText, fontWeight: 500 }}>{labelEl}</div>
       {subEl}
     </div>
   )
@@ -135,6 +137,7 @@ const renderEntryContent = (entry: MenuSearchResult, isDark: boolean) => {
 type DraggableModalRenderProps = {
   modal: React.ReactNode
   isFullscreen: boolean
+  isMobile: boolean
   bounds: { left: number; top: number; right: number; bottom: number }
   dragRef: React.RefObject<HTMLDivElement | null>
   onStart: (event: DraggableEvent, data: DraggableData) => void
@@ -143,11 +146,19 @@ type DraggableModalRenderProps = {
 const DraggableModalRender: React.FC<DraggableModalRenderProps> = ({
   modal,
   isFullscreen,
+  isMobile,
   bounds,
   dragRef,
   onStart,
 }) => (
-  <Draggable disabled={isFullscreen} bounds={bounds} handle=".draggable-handle" nodeRef={dragRef} onStart={onStart}>
+  <Draggable
+    disabled={isFullscreen || isMobile}
+    bounds={bounds}
+    handle=".draggable-handle"
+    cancel=".global-search-modal-control"
+    nodeRef={dragRef}
+    onStart={onStart}
+  >
     <div ref={dragRef} style={{ pointerEvents: 'auto' }}>
       <style>
         {`
@@ -191,23 +202,21 @@ type SearchRowProps = {
   entry: MenuSearchResult
   idx: number
   isActive: boolean
-  isDark: boolean
-  token: ReturnType<typeof theme.useToken>['token']
+  token: SearchThemeToken
   setActiveIndex: (idx: number) => void
   onSelect: (entry: MenuSearchResult) => void
 }
 
-const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, isDark, token, setActiveIndex, onSelect }) => {
+const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, token, setActiveIndex, onSelect }) => {
   const item = entry.item
 
-  const activeBg = isDark ? '#111b26' : '#e6f7ff'
-  const rowBackground = isActive ? activeBg : 'transparent'
+  const rowBackground = isActive ? token.controlItemBgActive : 'transparent'
 
-  let avatarBg = isDark ? '#333' : '#f0f0f0'
+  let avatarBg = token.colorFillTertiary
   if (isActive) avatarBg = token.colorPrimary
 
-  let avatarColor = isDark ? '#aaa' : '#666'
-  if (isActive) avatarColor = '#fff'
+  let avatarColor = token.colorTextSecondary
+  if (isActive) avatarColor = token.colorTextLightSolid
 
   return (
     <button
@@ -243,10 +252,10 @@ const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, isDark, tok
           }}
         />
       )}
-      <div style={{ flex: 1 }}>{renderEntryContent(entry, isDark)}</div>
+      <div style={{ flex: 1 }}>{renderEntryContent(entry, token)}</div>
       <span
         style={{
-          color: isDark ? '#555' : '#ccc',
+          color: token.colorTextTertiary,
           marginLeft: 12,
           fontSize: 12,
         }}
@@ -255,7 +264,7 @@ const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, isDark, tok
       </span>
       {isActive && (
         <AnimatedIcon variant="spin" mode="hover">
-          <EnterOutlined style={{ color: isDark ? '#666' : '#999', marginLeft: 12 }} />
+          <EnterOutlined style={{ color: token.colorTextTertiary, marginLeft: 12 }} />
         </AnimatedIcon>
       )}
     </button>
@@ -413,7 +422,6 @@ type SearchPalette = {
   inputBorder: string
   inputText: string | undefined
   listEmptyText: string
-  keyText: string
   enterIcon: string
   footerBg: string
   footerText: string
@@ -422,23 +430,22 @@ type SearchPalette = {
   maskBg: string
 }
 
-const getSearchPalette = (isDark: boolean): SearchPalette => ({
-  modalBg: isDark ? '#1f1f1f' : '#fff',
-  headerBorder: isDark ? '#303030' : '#f0f0f0',
-  titleColor: isDark ? '#eee' : '#333',
-  iconBtnColor: isDark ? '#aaa' : '#666',
-  inputPrefixColor: isDark ? '#666' : '#bbb',
-  inputBg: isDark ? '#141414' : '#fff',
-  inputBorder: isDark ? '#424242' : '#d9d9d9',
-  inputText: isDark ? '#eee' : undefined,
-  listEmptyText: isDark ? '#666' : '#999',
-  keyText: isDark ? '#555' : '#ccc',
-  enterIcon: isDark ? '#666' : '#999',
-  footerBg: isDark ? '#1f1f1f' : '#fafafa',
-  footerText: isDark ? '#666' : '#999',
-  footerBorder: isDark ? '#303030' : '#f0f0f0',
-  escBorder: isDark ? '#444' : '#ddd',
-  maskBg: 'rgba(0,0,0,0.45)',
+const getSearchPalette = (token: SearchThemeToken): SearchPalette => ({
+  modalBg: token.colorBgElevated,
+  headerBorder: token.colorBorderSecondary,
+  titleColor: token.colorText,
+  iconBtnColor: token.colorTextSecondary,
+  inputPrefixColor: token.colorTextTertiary,
+  inputBg: token.colorBgContainer,
+  inputBorder: token.colorBorder,
+  inputText: token.colorText,
+  listEmptyText: token.colorTextTertiary,
+  enterIcon: token.colorTextTertiary,
+  footerBg: token.colorBgLayout,
+  footerText: token.colorTextTertiary,
+  footerBorder: token.colorBorderSecondary,
+  escBorder: token.colorBorder,
+  maskBg: token.colorBgMask,
 })
 
 type GlobalSearchViewProps = {
@@ -455,10 +462,10 @@ type GlobalSearchViewProps = {
   onSelectEntry: (entry: MenuSearchResult) => void
   isFullscreen: boolean
   toggleFullscreen: () => void
-  isDark: boolean
   palette: SearchPalette
-  token: ReturnType<typeof theme.useToken>['token']
+  token: SearchThemeToken
   modalRender: (node: React.ReactNode) => React.ReactNode
+  isMobile: boolean
 }
 
 const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
@@ -475,16 +482,16 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
   onSelectEntry,
   isFullscreen,
   toggleFullscreen,
-  isDark,
   palette,
   token,
   modalRender,
+  isMobile,
 }) => {
   const { t } = useTranslation()
-  const modalWidth = isFullscreen ? '100%' : 600
+  const modalWidth = isFullscreen ? '100%' : isMobile ? 'calc(100vw - 24px)' : 600
   const modalStyle = isFullscreen
-    ? { top: 0, margin: 0, maxWidth: '100vw', padding: 0, height: '100vh' }
-    : { top: 80, paddingBottom: 0 }
+    ? { top: 0, margin: 0, maxWidth: '100vw', padding: 0, height: '100dvh' }
+    : { top: isMobile ? 12 : 80, paddingBottom: 0, maxWidth: 'calc(100vw - 24px)' }
 
   return (
     <Modal
@@ -500,7 +507,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
       styles={{
         body: {
           padding: 0,
-          height: isFullscreen ? '100vh' : 'auto',
+          height: isFullscreen ? '100dvh' : 'auto',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
@@ -516,18 +523,24 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '16px 24px',
+          padding: isMobile ? '14px 16px' : '16px 24px',
           borderBottom: `1px solid ${palette.headerBorder}`,
           flexShrink: 0,
-          cursor: isFullscreen ? 'default' : 'move',
+          cursor: isFullscreen || isMobile ? 'default' : 'move',
         }}
       >
         <div style={{ fontSize: 16, fontWeight: 600, color: palette.titleColor }}>{t('header.search')}</div>
-        <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: isMobile ? 12 : 16, alignItems: 'center' }}>
           <button
             type="button"
+            className="global-search-modal-control"
             onClick={toggleFullscreen}
+            aria-label={isFullscreen ? t('header.exitFullscreen') : t('header.fullscreen')}
             style={{
+              display: 'grid',
+              width: isMobile ? 40 : 32,
+              height: isMobile ? 40 : 32,
+              placeItems: 'center',
               cursor: 'pointer',
               color: palette.iconBtnColor,
               fontSize: 16,
@@ -550,8 +563,14 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           </button>
           <button
             type="button"
+            className="global-search-modal-control"
             onClick={onClose}
+            aria-label={t('header.close')}
             style={{
+              display: 'grid',
+              width: isMobile ? 40 : 32,
+              height: isMobile ? 40 : 32,
+              placeItems: 'center',
               cursor: 'pointer',
               color: palette.iconBtnColor,
               fontSize: 16,
@@ -568,7 +587,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
           </button>
         </div>
       </div>
-      <div style={{ padding: '16px 24px', flexShrink: 0 }}>
+      <div style={{ padding: isMobile ? '12px 16px' : '16px 24px', flexShrink: 0 }}>
         <Input
           ref={inputRef}
           prefix={
@@ -622,7 +641,6 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
               entry={entry}
               idx={idx}
               isActive={idx === activeIndex}
-              isDark={isDark}
               token={token}
               setActiveIndex={setActiveIndex}
               onSelect={onSelectEntry}
@@ -678,7 +696,7 @@ const GlobalSearchView: React.FC<GlobalSearchViewProps> = ({
   )
 }
 
-function highlightWithIndices(text: string, indices?: Array<[number, number]>, isDark: boolean = false) {
+function highlightWithIndices(text: string, indices: Array<[number, number]> | undefined, token: SearchThemeToken) {
   if (!indices || indices.length === 0) return <>{text}</>
   const parts: React.ReactNode[] = []
   let last = 0
@@ -688,8 +706,8 @@ function highlightWithIndices(text: string, indices?: Array<[number, number]>, i
       <span
         key={`h-${i}-${s}`}
         style={{
-          background: isDark ? 'rgba(250, 230, 140, 0.4)' : 'rgba(250, 230, 140, 0.9)',
-          color: isDark ? '#fff' : '#000',
+          background: token.colorPrimaryBg,
+          color: token.colorPrimaryText,
           padding: '0 2px',
           borderRadius: 2,
           fontWeight: 500,
@@ -711,9 +729,8 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
   const inputRef = useRef<InputRef>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const { redirectTo } = useSafeNavigate()
-  const { resolvedTheme } = useProThemeContext()
-  const isDark = resolvedTheme === 'dark'
   const { token } = theme.useToken()
+  const isMobile = useAppStore(selectIsMobile)
 
   const keyword = useDebouncedTrimmedValue(inputValue, 150)
 
@@ -724,7 +741,7 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
 
   const { bounds, dragRef, onStart } = useDraggableBounds()
 
-  const palette = React.useMemo(() => getSearchPalette(isDark), [isDark])
+  const palette = React.useMemo(() => getSearchPalette(token), [token])
 
   useResetOnOpen(open, setInputValue, setActiveIndex, inputRef)
   useClampActiveIndex(keyword, results.length, recentEntries.length, setActiveIndex)
@@ -762,12 +779,13 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
       <DraggableModalRender
         modal={modal}
         isFullscreen={isFullscreen}
+        isMobile={isMobile}
         bounds={bounds}
         dragRef={dragRef}
         onStart={onStart}
       />
     ),
-    [isFullscreen, bounds, onStart, dragRef]
+    [isFullscreen, isMobile, bounds, onStart, dragRef]
   )
 
   return (
@@ -785,10 +803,10 @@ const GlobalSearchNew: React.FC<GlobalSearchProps> = ({ open, onClose, onNavigat
       onSelectEntry={handleSelectEntry}
       isFullscreen={isFullscreen}
       toggleFullscreen={() => setIsFullscreen((v) => !v)}
-      isDark={isDark}
       palette={palette}
       token={token}
       modalRender={modalRender}
+      isMobile={isMobile}
     />
   )
 }

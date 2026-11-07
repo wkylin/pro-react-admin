@@ -154,7 +154,7 @@ export default function ReadingRoom() {
 
   return (
     <FixTabPanel className={styles.scroll} fill={false} showScrollProgress={false}>
-      <main className={styles.page} data-theme={resolvedTheme} inert={!!selectedBook}>
+      <main className={styles.page} data-theme={resolvedTheme} data-content-typography-exempt inert={!!selectedBook}>
         <div className={styles.shell}>
           <header className={styles.masthead}>
             <span className={styles.brand}>

@@ -1,0 +1,88 @@
+.wui-action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    border-color 140ms ease,
+    outline-color 140ms ease;
+}
+
+.wui-action-link:hover {
+  text-decoration: none;
+}
+
+a.wui-action-link.wui-action-link--primary {
+  border-color: var(--wui-color-primary);
+  color: var(--wui-color-primary-contrast);
+  background-color: var(--wui-color-primary);
+}
+
+a.wui-action-link.wui-action-link--primary:hover {
+  border-color: var(--wui-color-primary-hover);
+  color: var(--wui-color-primary-hover-contrast);
+  background-color: var(--wui-color-primary-hover);
+}
+
+a.wui-action-link.wui-action-link--primary:active {
+  border-color: var(--wui-color-primary-active);
+  color: var(--wui-color-primary-active-contrast);
+  background-color: var(--wui-color-primary-active);
+}
+
+a.wui-action-link.wui-action-link--brand {
+  border-color: var(--wui-color-brand-action);
+  color: var(--wui-color-brand-action-contrast);
+  background-color: var(--wui-color-brand-action);
+}
+
+a.wui-action-link.wui-action-link--brand:hover {
+  border-color: var(--wui-color-brand-action-hover);
+  color: var(--wui-color-brand-action-hover-contrast);
+  background-color: var(--wui-color-brand-action-hover);
+}
+
+a.wui-action-link.wui-action-link--brand:active {
+  border-color: var(--wui-color-brand-action-active);
+  color: var(--wui-color-brand-action-active-contrast);
+  background-color: var(--wui-color-brand-action-active);
+}
+
+a.wui-action-link.wui-action-link--secondary {
+  border-color: var(--wui-border-strong);
+  color: var(--wui-text-primary);
+  background-color: var(--wui-bg-surface);
+}
+
+a.wui-action-link.wui-action-link--secondary:hover {
+  border-color: var(--wui-text-secondary);
+  color: var(--wui-text-primary);
+  background-color: var(--wui-bg-subtle);
+}
+
+a.wui-action-link.wui-action-link--secondary:active {
+  border-color: var(--wui-border-strong);
+  color: var(--wui-text-primary);
+  background-color: var(--wui-bg-subtle);
+}
+
+a.wui-action-link.wui-action-link--primary:focus-visible,
+a.wui-action-link.wui-action-link--secondary:focus-visible {
+  outline: 2px solid var(--wui-color-primary);
+  outline-offset: 3px;
+}
+
+a.wui-action-link.wui-action-link--brand:focus-visible {
+  outline: 2px solid var(--wui-color-brand-action-focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wui-action-link {
+    transition: none;
+  }
+}

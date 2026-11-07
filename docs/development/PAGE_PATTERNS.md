@@ -4,6 +4,8 @@
 
 ## 运行与体验
 
+只想查看成员、访问审批和审计界面的呈现方式，可先打开[公开只读预览](https://pro-react-admin.vercel.app/#/preview/access)，无需启动本地环境。预览数据均为虚构内容，不能执行写操作；下方步骤会登录本地应用并体验完整流程。
+
 ```bash
 pnpm start
 # 或使用真实租户登录的 Enterprise 本地入口

@@ -4,7 +4,7 @@ Pro React Admin 是一个 React 管理应用工作区：同一份业务源码可
 
 ## 1. 选型：确认能力与边界
 
-[工程导览](architecture/ENGINEERING_OVERVIEW.md)把项目、模块、构建、测试和部署连成一条链，并标出各项能力的源码与验证入口。[技术架构](architecture/ARCHITECTURE.md#当前能力与边界)列出已实现行为和仍需建设的部分；[Ant Design Pro 对标设计](superpowers/specs/2026-10-28-ant-design-pro-benchmark-upgrade-design.md)记录 GitHub 项目比较、第一批取舍和后续路线。默认应用适合体验完整界面；Enterprise 入口提供真实租户管理与同一组业务页面模板。企业 API 可用单实例 SQLite 持久卷自托管，或用[独立 Vercel API + Neon PostgreSQL](deployment/VERCEL_NEON_ENTERPRISE.md)部署；本地默认 SQLite 演示库与这两种生产路径的验收边界不同。[企业资源与数据接入](operations/ENTERPRISE.md)说明演示数据和持久化业务数据的区别。
+[工程导览](architecture/ENGINEERING_OVERVIEW.md)把项目、模块、构建、测试和部署连成一条链，并标出各项能力的源码与验证入口。[技术架构](architecture/ARCHITECTURE.md#当前能力与边界)列出已实现行为和仍需建设的部分。默认应用适合体验完整界面；Enterprise 入口提供真实租户管理与同一组业务页面模板。企业 API 可用单实例 SQLite 持久卷自托管，或用[独立 Vercel API + Neon PostgreSQL](deployment/VERCEL_NEON_ENTERPRISE.md)部署；本地默认 SQLite 演示库与这两种生产路径的验收边界不同。[企业资源与数据接入](operations/ENTERPRISE.md)说明演示数据和持久化业务数据的区别。
 
 ## 2. 上手：先运行一个应用
 

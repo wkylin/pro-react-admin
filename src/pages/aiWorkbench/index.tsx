@@ -19,6 +19,7 @@ import {
   Typography,
 } from 'antd'
 import { Activity, Bot, BrainCircuit, DatabaseZap, Gauge, Layers3, Rocket, WandSparkles, Workflow } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import FixTabPanel from '@shared/ui/FixTabPanel'
 import PromptOptimizer from '@wui/forms/PromptOptimizer'
 import SmartChat from '@wui/forms/SmartChat'
@@ -442,6 +443,7 @@ function createMockSseResponse({
 }
 
 const AiWorkbench = () => {
+  const { t } = useTranslation()
   const persisted = useMemo(() => safeReadWorkspace(), [])
   const [promptText, setPromptText] = useState<string>(persisted?.promptText || '')
   const [optimizerValue, setOptimizerValue] = useState<PromptValue>(persisted?.optimizerValue || PROMPT_TEMPLATE)
@@ -818,8 +820,12 @@ const AiWorkbench = () => {
                   </div>
                   <Space>
                     <Space size={8}>
-                      <Text>联网搜索</Text>
-                      <Switch aria-label="联网搜索" checked={webSearchEnabled} onChange={setWebSearchEnabled} />
+                      <Text>{t('aiWorkbench.webSearch')}</Text>
+                      <Switch
+                        aria-label={t('aiWorkbench.webSearch')}
+                        checked={webSearchEnabled}
+                        onChange={setWebSearchEnabled}
+                      />
                     </Space>
                     <Button onClick={() => setPromptText('')} disabled={!promptText}>
                       清空预设 Prompt

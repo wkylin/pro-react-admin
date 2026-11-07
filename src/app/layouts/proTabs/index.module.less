@@ -33,32 +33,36 @@
 /* Reserve the controls on every tab so selection never changes its width. */
 .tabActionSlot {
   display: inline-block;
-  flex: 0 0 48px;
-  width: 48px;
+  flex: 0 0 56px;
+  width: 56px;
   height: 24px;
 }
 
-.tabActionSlotSingle {
-  flex-basis: 24px;
-  width: 24px;
-}
-
-.activeTabActions {
+.tabActions {
   position: absolute;
   z-index: 20;
   display: flex;
   align-items: center;
-  height: 24px;
+  width: 56px;
+  height: 28px;
   color: var(--pro-tabs-action-color);
+}
+
+.tabActionsActive {
+  justify-content: flex-start;
+}
+
+.tabActionsInactive {
+  justify-content: center;
 }
 
 .tabActionButton {
   display: inline-flex;
-  flex: 0 0 24px;
+  flex: 0 0 28px;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   padding: 0;
   border: 0;
   border-radius: 50%;

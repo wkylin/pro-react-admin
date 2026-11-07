@@ -1,5 +1,4 @@
 import React from 'react'
-import Layout from '@layouts'
 import { ApplicationModules } from '@platform/modules'
 import { defaultModules } from '@app/modules/default'
 import { ProtectedRoute } from '@platform/auth/components/ProtectedRoute'
@@ -39,7 +38,7 @@ export const mainLayoutRoute: RouteNode = {
   element: (
     <ApplicationModules registry={defaultModules}>
       <ProtectedRoute>
-        <Layout />
+        <lazyComponents.Layout />
       </ProtectedRoute>
     </ApplicationModules>
   ),

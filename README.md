@@ -9,6 +9,7 @@
 ## 线上预览
 
 - [默认后台展示应用](https://pro-react-admin.vercel.app)。
+- [公开的成员访问管理预览](https://pro-react-admin.vercel.app/#/preview/access)：可浏览虚构的成员、审批和审计数据，不需要登录，也不会写入数据。
 - [Storybook 组件预览](https://wkylin.github.io/pro-react-admin/storybook/)。
 - [GitHub Pages 各应用导航](https://wkylin.github.io/pro-react-admin/portal.html)。
 

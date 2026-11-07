@@ -46,6 +46,7 @@ const columns: ColumnsType<Dependency> = [
 const Dependencies: React.FC = () => {
   const [searchText, setSearchText] = useState('')
   const [activeTab, setActiveTab] = useState('1')
+  const [pageSizes, setPageSizes] = useState({ runtime: 10, development: 10 })
 
   const filteredRuntimeDeps = useMemo(() => {
     return runtimeDependencies.filter(
@@ -97,11 +98,13 @@ const Dependencies: React.FC = () => {
                 dataSource={filteredRuntimeDeps}
                 rowKey="name"
                 pagination={{
-                  pageSize: 10,
+                  size: 'small',
+                  pageSize: pageSizes.runtime,
                   showSizeChanger: true,
-                  showQuickJumper: true,
+                  showQuickJumper: Math.ceil(filteredRuntimeDeps.length / pageSizes.runtime) > 5,
                   showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
                   pageSizeOptions: ['10', '20', '50', '100'],
+                  onShowSizeChange: (_page, pageSize) => setPageSizes((current) => ({ ...current, runtime: pageSize })),
                 }}
               />
             ),
@@ -115,11 +118,14 @@ const Dependencies: React.FC = () => {
                 dataSource={filteredDevDeps}
                 rowKey="name"
                 pagination={{
-                  pageSize: 10,
+                  size: 'small',
+                  pageSize: pageSizes.development,
                   showSizeChanger: true,
-                  showQuickJumper: true,
+                  showQuickJumper: Math.ceil(filteredDevDeps.length / pageSizes.development) > 5,
                   showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
                   pageSizeOptions: ['10', '20', '50', '100'],
+                  onShowSizeChange: (_page, pageSize) =>
+                    setPageSizes((current) => ({ ...current, development: pageSize })),
                 }}
               />
             ),

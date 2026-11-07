@@ -336,8 +336,9 @@ const TrackingDashboard = () => {
                 scroll={{ x: 900 }}
                 pagination={{
                   ...pagination,
+                  size: 'small',
                   showSizeChanger: true,
-                  showQuickJumper: true,
+                  showQuickJumper: Math.ceil(pagination.total / pagination.pageSize) > 5,
                   showTotal: (total) => `共 ${total} 条`,
                   onChange: (page, pageSize) => fetchEvents(page, pageSize),
                 }}

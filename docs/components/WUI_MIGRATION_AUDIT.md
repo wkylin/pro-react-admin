@@ -1,6 +1,6 @@
 # WUI React 6.1.0 组件迁移审核
 
-本清单冻结于 2026-10-28，源码基线为 `5307852d77fa3002fd1c5b8fbb962af76429b57f`。依据[批准的迁移设计](../superpowers/specs/2026-10-28-wui-react-component-migration-design.md)，审核全部 **143** 个直接目录：139 个 stateless、4 个 stateful。
+本清单冻结于 2026-10-28，源码基线为 `5307852d77fa3002fd1c5b8fbb962af76429b57f`。基于该源码基线审核全部 **143** 个直接目录：139 个 stateless、4 个 stateful。
 
 结论：**2 migrate**、**131 adapt then migrate**、**10 keep in app**。前两类合计 **133** 个目录均属于同一次 6.1.0 发布范围；“改造后迁入”不是延期或已通过发布质量检查的声明。
 

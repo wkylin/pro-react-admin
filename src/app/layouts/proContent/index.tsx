@@ -1,7 +1,10 @@
 import React, { useMemo, type ComponentProps } from 'react'
-import { Layout, theme, Space } from 'antd'
+import { Button, Layout, theme, Space } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { useLocation, useMatches, useOutlet } from 'react-router-dom'
 import type { RouteHandle } from '@app/routing/utils'
+import { selectIsMobile, useAppStore } from '@app/model'
+import { useTranslation } from 'react-i18next'
 import ProBreadcrumb from './breadcrumb'
 import ProTabs from '../proTabs'
 import styles from './index.module.less'
@@ -17,6 +20,10 @@ interface ProContentProps {
 }
 
 const ProContent = ({ showTabs = true, slots }: ProContentProps) => {
+  const isSidebarOpen = useAppStore((state) => state.isSidebarOpen)
+  const toggleSidebar = useAppStore((state) => state.toggleSidebar)
+  const isMobile = useAppStore(selectIsMobile)
+  const { t } = useTranslation()
   const { pathname, search } = useLocation()
   const matches = useMatches()
   const outlet = useOutlet()
@@ -50,12 +57,26 @@ const ProContent = ({ showTabs = true, slots }: ProContentProps) => {
         style={{ backgroundColor: colorBgContainer, borderBottom: `1px solid ${colorBorderSecondary}` }}
       >
         <section className="flex items-center justify-between">
-          <ProBreadcrumb />
+          <div className={styles.breadcrumbControls}>
+            {!isMobile && (
+              <Button
+                type="text"
+                size="small"
+                className={styles.sidebarToggle}
+                aria-label={t(isSidebarOpen ? 'header.collapseSidebar' : 'header.expandSidebar')}
+                aria-expanded={isSidebarOpen}
+                title={t(isSidebarOpen ? 'header.collapseSidebar' : 'header.expandSidebar')}
+                icon={isSidebarOpen ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />}
+                onClick={toggleSidebar}
+              />
+            )}
+            <ProBreadcrumb />
+          </div>
           {/* <ClockFace /> */}
         </section>
       </div>
       <Content
-        className="layout-content"
+        className="layout-content content-typography"
         id="fullScreenContent"
         tabIndex={-1}
         style={{ backgroundColor: colorBgContainer }}

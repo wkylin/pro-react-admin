@@ -51,7 +51,7 @@ export default function Cinema() {
 
   return (
     <FixTabPanel className={styles.scroll} fill={false} showScrollProgress={false}>
-      <main className={styles.page} data-theme={resolvedTheme}>
+      <main className={styles.page} data-theme={resolvedTheme} data-content-typography-exempt>
         <div className={styles.shell}>
           <header className={styles.masthead}>
             <div className={styles.brand}>

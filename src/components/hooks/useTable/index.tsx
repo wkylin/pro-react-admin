@@ -33,7 +33,7 @@ export type UseTableProps<
 
 type TablePaginationConfig = {
   total: number
-  size: 'default'
+  size: 'small'
   current: number
   pageSize: number
   onChange: (page: number, pageSize: number) => void
@@ -176,12 +176,12 @@ function useTable<
       pagination: isPagination
         ? {
             total,
-            size: 'default',
+            size: 'small',
             current: page,
             pageSize,
             onChange,
             onShowSizeChange: onChange,
-            showQuickJumper: true,
+            showQuickJumper: Math.ceil(total / pageSize) > 5,
             showSizeChanger: true,
             hideOnSinglePage: false,
             showTotal: (total: number) => (

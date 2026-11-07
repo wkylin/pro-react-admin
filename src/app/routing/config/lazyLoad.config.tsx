@@ -5,8 +5,6 @@ import loadable, {
 } from '@loadable/component'
 import Loading from '@wui/data-display/Loading'
 
-import Layout from '@layouts'
-
 /**
  * 统一懒加载处理函数
  */
@@ -34,8 +32,7 @@ const lazyLoad = <Props,>(
  */
 export const lazyComponents = {
   // 布局组件
-  // Layout: lazyLoad(() => import('@layouts')),
-  Layout, // 布局改为同步加载，避免白屏
+  Layout: lazyLoad(() => import('@layouts')),
   Dashboard: lazyLoad(() => import('@pages/dashboard')),
   MyPortfilo: lazyLoad(() => import('@pages/portfilo')),
 

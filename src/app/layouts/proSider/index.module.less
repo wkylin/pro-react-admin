@@ -1,51 +1,139 @@
 .sider {
   box-sizing: border-box;
   height: 100%;
-  border-inline-end: 1px solid var(--wui-border-navigation, #c9cdd4);
+  border-inline-end: 1px solid var(--wui-border-navigation);
+
+  > :global(.wui-ant-layout-sider-children) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
 }
 
 .sider:global(.wui-ant-layout-sider-dark) {
-  border-inline-end-color: var(--wui-border-navigation-dark, #525252);
+  border-inline-end-color: var(--wui-border-navigation-dark);
 }
 
-.proLink {
-  box-sizing: border-box;
+.accountDock {
+  flex: none;
+  padding: 1px 8px;
+  border-block-start: 1px solid var(--wui-border-navigation);
+  background: var(--wui-bg-navigation);
+}
+
+.accountTrigger {
+  position: relative;
   display: flex;
   align-items: center;
   width: 100%;
-  height: 40px;
-  padding: 0 16px;
-  margin: 0;
+  min-width: 0;
+  gap: 8px;
+  padding: 2px 6px;
   border: 0;
-  border-block-start: 1px solid var(--wui-border, #e5e7eb);
-  background: var(--wui-ant-layout-light-trigger-bg, var(--wui-bg-surface, #fff));
-  color: var(--wui-ant-layout-light-trigger-color, var(--wui-text-primary, #171717));
-  font-size: 18px;
-  line-height: 1;
-  text-align: left;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--wui-text-primary);
+  text-align: start;
   cursor: pointer;
+  transition: color 120ms ease;
 
   &:hover {
-    background: var(--wui-bg-navigation-hover, #e5e7eb);
+    color: var(--wui-text-primary);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--wui-ant-color-primary, #1677ff);
-    outline-offset: -2px;
+    outline: 2px solid var(--wui-color-primary);
+    outline-offset: 2px;
   }
 }
 
-.sider:global(.wui-ant-layout-sider-dark) .proLink {
-  border-block-start-color: rgb(255 255 255 / 12%);
-  background: var(--wui-ant-layout-trigger-bg, #1f1f1f);
-  color: var(--wui-ant-layout-trigger-color, #fff);
-
-  &:hover {
-    background: rgb(255 255 255 / 12%);
-  }
+.accountAvatar:global(.wui-ant-avatar) {
+  flex: none;
+  border: 1px solid var(--wui-border);
+  background: transparent;
+  color: var(--wui-text-secondary);
 }
 
-.sider:global(.wui-ant-layout-sider-collapsed) .proLink {
-  justify-content: center;
-  padding-inline: 0;
+.accountCopy {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0;
+}
+
+.accountName,
+.accountEmail {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accountName {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.accountEmail {
+  color: var(--wui-text-secondary);
+  font-size: 10px;
+  line-height: 14px;
+}
+
+.accountMore {
+  display: grid;
+  flex: none;
+  width: 18px;
+  height: 24px;
+  place-items: center;
+  color: var(--wui-text-secondary);
+  font-size: 16px;
+}
+
+.accountDropdown {
+  width: 280px;
+  overflow: hidden;
+  border: 1px solid var(--wui-border-strong);
+  border-radius: 12px;
+  background: var(--wui-bg-elevated);
+  box-shadow: var(--wui-shadow);
+}
+
+.accountDropdownHeader {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 12px;
+  padding: 12px 14px;
+  border-block-end: 1px solid var(--wui-border);
+}
+
+.accountDropdown :global(.wui-ant-dropdown-menu) {
+  padding: 4px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.sider:global(.wui-ant-layout-sider-collapsed) {
+  .accountDock {
+    padding-inline: 6px;
+  }
+
+  .accountTrigger {
+    justify-content: space-between;
+    gap: 4px;
+    padding: 2px;
+  }
+
+  .accountCopy {
+    display: none;
+  }
+
+  .accountMore {
+    display: grid;
+    width: 18px;
+    height: 28px;
+    font-size: 15px;
+  }
 }

@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Alert, Button, Space, Table, Tag, Typography, type TableProps } from 'antd'
+import { Alert, Button, Grid, Space, Table, Tag, Typography, type TableProps } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { getEnv } from '@platform/config/env'
@@ -8,7 +8,7 @@ import { useCheckPermission } from '@platform/auth/hooks/usePermission'
 import { permits } from '@platform/auth/model/accessDecision'
 import { useResourceList } from '../model/useResourceList'
 import type { ManagedRole } from '../model/resources'
-import { permissionMatrixGroupsForProject } from '../model/permissionCatalog'
+import { groupPermissionCodes, permissionMatrixGroupsForProject } from '../model/permissionCatalog'
 import ResourceWorkspace from './ResourceWorkspace'
 import styles from './workspace.module.less'
 
@@ -18,8 +18,54 @@ export default function PermissionsPage() {
   const projectId = getEnv('PROJECT')
   const { routes } = useApplicationModules()
   const permissionGroups = useMemo(() => permissionMatrixGroupsForProject(projectId, routes), [projectId, routes])
+  const screens = Grid.useBreakpoint()
   const list = useResourceList('roles')
   const canEdit = useCheckPermission('role:update').hasPermission
+  const renderMobileSummary = (role: ManagedRole) => {
+    const grantedGroups = groupPermissionCodes(role.permissions)
+    const nonDefaultScopes = (['user', 'role'] as const).flatMap((resource) => {
+      const mode = role.scopes?.[resource]?.mode
+      return mode && mode !== 'global' ? [{ resource, mode }] : []
+    })
+
+    return (
+      <div className={`${styles.mobileMeta} ${styles.mobilePermissionSummary}`}>
+        {grantedGroups.length ? (
+          grantedGroups.map(({ resource, permissions }) => (
+            <div className={styles.mobilePermissionGroup} key={resource}>
+              <Typography.Text type="secondary">
+                {t(`admin.permissionResource.${resource}`, { defaultValue: resource })}
+              </Typography.Text>
+              <Space wrap size={[0, 4]}>
+                {permissions.map((permission) => {
+                  const action = permission.split(':')[1]
+                  return (
+                    <Tag key={permission} color="success" title={permission}>
+                      {t(`admin.permissionAction.${action}`, { defaultValue: action })}
+                    </Tag>
+                  )
+                })}
+              </Space>
+            </div>
+          ))
+        ) : (
+          <Typography.Text type="secondary">{t('admin.permissionNone')}</Typography.Text>
+        )}
+        {nonDefaultScopes.length > 0 && (
+          <div className={styles.mobilePermissionGroup}>
+            <Typography.Text type="secondary">{t('admin.resourceScope')}</Typography.Text>
+            <Space wrap size={[0, 4]}>
+              {nonDefaultScopes.map(({ resource, mode }) => (
+                <Tag key={resource}>
+                  {t(`admin.scopeResource.${resource}`)}: {t(`admin.scopeMode.${mode}`)}
+                </Tag>
+              ))}
+            </Space>
+          </div>
+        )}
+      </div>
+    )
+  }
   const columns: TableProps<ManagedRole>['columns'] = [
     {
       title: t('admin.role'),
@@ -32,12 +78,14 @@ export default function PermissionsPage() {
           <Typography.Text className={styles.code} type="secondary">
             {role.code}
           </Typography.Text>
+          {renderMobileSummary(role)}
         </div>
       ),
     },
     ...permissionGroups.map(({ key, permissions }) => ({
       title: t(`admin.permissionResource.${key}`, { defaultValue: key }),
       key,
+      responsive: ['md' as const],
       width: key === 'user' || key === 'role' || key === 'tenant' ? 180 : 140,
       render: (_: unknown, role: ManagedRole) => {
         const granted = permissions.filter((permission) => permits(role.permissions, permission))
@@ -59,6 +107,7 @@ export default function PermissionsPage() {
     {
       title: t('admin.resourceScope'),
       key: 'scopes',
+      responsive: ['md' as const],
       width: 190,
       render: (_, role) => (
         <Space orientation="vertical" size={0}>
@@ -92,12 +141,14 @@ export default function PermissionsPage() {
         columns={columns}
         dataSource={list.data.items}
         loading={list.loading}
-        scroll={{ x: 1150 }}
+        size={screens.md ? 'large' : 'small'}
+        scroll={screens.md ? { x: 1150 } : undefined}
         locale={{ emptyText: t('admin.noRoles') }}
         pagination={{
           current: list.query.page,
           pageSize: list.query.pageSize,
           total: list.data.total,
+          size: screens.md ? 'medium' : 'small',
           showSizeChanger: true,
           onChange: (page, pageSize) => list.setQuery((current) => ({ ...current, page, pageSize })),
         }}

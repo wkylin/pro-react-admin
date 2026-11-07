@@ -8,6 +8,7 @@
  */
 export const publicRoutes: string[] = [
   '/overview',
+  '/preview/access',
   '/signin',
   '/signup',
   '/auth/callback',

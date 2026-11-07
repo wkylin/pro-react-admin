@@ -73,8 +73,12 @@
   min-height: 36px;
   padding: 0 13px;
   border-radius: 5px;
-  color: #fff;
-  background: #17654e;
+}
+
+.navActions a:focus-visible,
+.introActions a:focus-visible {
+  outline: 2px solid var(--wui-color-primary);
+  outline-offset: 3px;
 }
 
 .content {
@@ -134,18 +138,10 @@
   justify-content: center;
   min-height: 42px;
   padding: 0 15px;
-  border: 1px solid var(--wui-border-strong);
   border-radius: 5px;
-  color: var(--wui-text-primary);
   font-size: 13px;
   font-weight: 680;
   text-decoration: none;
-}
-
-.introActions .primaryAction {
-  border-color: #17654e;
-  color: #fff;
-  background: #17654e;
 }
 
 .deliveryMap {

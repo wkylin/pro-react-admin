@@ -71,6 +71,7 @@ interface HeaderActionsProps {
   iconButtonStyle: CSSProperties
   isEnterpriseProject: boolean
   isTopDarkHeader: boolean
+  darkHeaderText: string
   isDark: boolean
   handleThemeToggle: () => void
   onSettingClick?: () => void
@@ -192,7 +193,6 @@ const buildUserMenuItems = ({
       ? [
           { key: '1', label: t('header.userCenter'), icon: <UserOutlined /> },
           { key: '2', label: t('header.userSettings'), icon: <SmileOutlined /> },
-          { key: '3', label: t('header.contactMe'), icon: <SmileOutlined /> },
         ]
       : []),
     { key: '4', label: t('header.logout'), icon: <LogoutOutlined />, disabled: switchingTenant },
@@ -218,10 +218,13 @@ const buildMobileMoreItems = ({
   redirectWiki: () => void
   redirectWrapped: () => void
 }): HeaderMenuItems => [
-  ...(Array.isArray(primaryNavItems) ? primaryNavItems : []).map((it) => ({
-    ...it,
-    label: it?.i18nKey ? t(it.i18nKey) : it?.label,
-  })),
+  ...(Array.isArray(primaryNavItems) ? primaryNavItems : []).map((item) => {
+    const { i18nKey, ...menuItem } = item
+    return {
+      ...menuItem,
+      label: i18nKey ? t(i18nKey) : menuItem.label,
+    }
+  }),
   { type: 'divider' },
   ...moduleActions.map((definition) => ({
     key: `module:${definition.id}`,
@@ -476,6 +479,7 @@ const renderMobileActions = ({
   t,
   iconButtonStyle,
   isTopDarkHeader,
+  darkHeaderText,
   isDark,
   handleThemeToggle,
   mobileMoreItems,
@@ -487,7 +491,7 @@ const renderMobileActions = ({
         aria-label={t('header.searchTooltip')}
         icon={
           <AnimatedIcon variant="spin" mode="hover">
-            <SearchOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />
+            <SearchOutlined style={{ color: isTopDarkHeader ? darkHeaderText : undefined }} />
           </AnimatedIcon>
         }
         size="small"
@@ -503,7 +507,7 @@ const renderMobileActions = ({
         style={iconButtonStyle}
         icon={
           <AnimatedIcon variant="spin" mode="hover">
-            <MoreOutlined style={{ color: isTopDarkHeader ? '#fff' : undefined }} />
+            <MoreOutlined style={{ color: isTopDarkHeader ? darkHeaderText : undefined }} />
           </AnimatedIcon>
         }
       />
@@ -676,10 +680,6 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
         redirectTo('/setting')
         return
       }
-      if (key === '3') {
-        redirectTo('/contact')
-        return
-      }
       if (key === '4') {
         if (isAuthenticated && user) {
           authService.logout()
@@ -768,6 +768,7 @@ const ProHeader = ({ layout, slots, onSettingClick, children, onMobileMenuClick 
             t,
             isEnterpriseProject,
             isTopDarkHeader,
+            darkHeaderText: darkNavigation.text,
             isDark,
             handleThemeToggle,
             onSettingClick,

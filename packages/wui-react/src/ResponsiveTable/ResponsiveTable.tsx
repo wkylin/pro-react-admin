@@ -25,6 +25,7 @@ import {
 } from 'antd'
 import { SettingOutlined } from '@ant-design/icons'
 import useTable, { type RequestClient, type TablePagination } from './useTable'
+import styles from './ResponsiveTable.module.less'
 
 const ScrollbarHeaderCell = (cellProps: any) => {
   const className = cellProps?.className ?? ''
@@ -574,6 +575,8 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
     if (typeof onChange === 'function') onChange(pg, filters, sorter, extra)
   }
 
+  const paginationTotal = typeof total === 'number' && total > 0 ? total : dataSource.length
+
   return (
     <div
       ref={containerRef as any}
@@ -908,7 +911,15 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
         </div>
       )}
 
-      <div style={{ flex: '1 1 auto', overflowX: 'auto', overflowY: 'hidden' }}>
+      <div
+        style={{
+          flex: '0 1 auto',
+          minHeight: 0,
+          maxHeight: '100%',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+        }}
+      >
         {(() => {
           const computed = { x: tableScroll.x, y: tableScroll.y }
           const tablePropsAny = tableProps as any
@@ -960,47 +971,43 @@ const ResponsiveTable = <T,>(props: ResponsiveTableProps<T> & TableProps<T>) => 
           )
         })()}
       </div>
-      <div
-        style={{
-          flex: '0 0 auto',
-          padding: 8,
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-        }}
-      >
-        <Pagination
-          current={pagination.current}
-          pageSize={pagination.pageSize}
-          total={typeof total === 'number' && total > 0 ? total : dataSource.length}
-          showSizeChanger
-          showQuickJumper
-          showTotal={(totalVal) => uiLabels.total?.(totalVal) ?? `共 ${totalVal} 条`}
-          onChange={async (current, pageSize) => {
-            setPagination({ current, pageSize })
-            if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
-              try {
-                const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch?.())
-                const extra = includeSearch ? parseLocationSearch() : undefined
-                await fetchPage(current, pageSize, sortState, extra)
-              } catch (err) {
-                console.warn('pagination fetchPage error', err)
+      <div className={styles.paginationFooter}>
+        <div className={styles.paginationContent} data-responsive-table-pagination>
+          <Pagination
+            className={styles.pagination}
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={paginationTotal}
+            size="small"
+            showSizeChanger
+            showQuickJumper={Math.ceil(paginationTotal / pagination.pageSize) > 5}
+            showTotal={(totalVal) => uiLabels.total?.(totalVal) ?? `共 ${totalVal} 条`}
+            onChange={async (current, pageSize) => {
+              setPagination({ current, pageSize })
+              if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
+                try {
+                  const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch?.())
+                  const extra = includeSearch ? parseLocationSearch() : undefined
+                  await fetchPage(current, pageSize, sortState, extra)
+                } catch (err) {
+                  console.warn('pagination fetchPage error', err)
+                }
               }
-            }
-          }}
-          onShowSizeChange={async (current, size) => {
-            setPagination({ current, pageSize: size })
-            if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
-              try {
-                const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch?.())
-                const extra = includeSearch ? parseLocationSearch() : undefined
-                await fetchPage(current, size, sortState, extra)
-              } catch (err) {
-                console.warn('pagination fetchPage error', err)
+            }}
+            onShowSizeChange={async (current, size) => {
+              setPagination({ current, pageSize: size })
+              if (typeof fetchData === 'function' || typeof reloadPage === 'function') {
+                try {
+                  const includeSearch = mergeSearchToFetch && (!mergeSearchToFetchOnce || !hasMergedInitialSearch?.())
+                  const extra = includeSearch ? parseLocationSearch() : undefined
+                  await fetchPage(current, size, sortState, extra)
+                } catch (err) {
+                  console.warn('pagination fetchPage error', err)
+                }
               }
-            }
-          }}
-        />
+            }}
+          />
+        </div>
       </div>
     </div>
   )

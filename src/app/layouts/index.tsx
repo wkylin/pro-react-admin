@@ -79,7 +79,7 @@ const ProLayout = ({ registry = defaultLayoutRegistry }: ProLayoutProps) => {
               styles={{ body: { padding: 0 } }}
               closable={false}
             >
-              <ProSider theme={effectiveNavTheme} slots={preset.slots}>
+              <ProSider theme={effectiveNavTheme} slots={preset.slots} onMenuClick={() => setMobileOpen(false)}>
                 <ProSecNav mode="inline" theme={effectiveNavTheme} onMenuClick={() => setMobileOpen(false)} />
               </ProSider>
             </Drawer>

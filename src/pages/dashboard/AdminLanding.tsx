@@ -57,7 +57,7 @@ const AdminLanding = () => {
               <Col key={feature.title} xs={24} sm={12}>
                 <Card>
                   <Space align="start" size="middle">
-                    <span style={{ color: '#1677ff', fontSize: 20 }}>{feature.icon}</span>
+                    <span style={{ color: 'var(--wui-color-primary)', fontSize: 20 }}>{feature.icon}</span>
                     <div>
                       <Title level={4} style={{ marginTop: 0 }}>
                         {feature.title}
