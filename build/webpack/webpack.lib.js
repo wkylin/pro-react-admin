@@ -155,6 +155,7 @@ const createConfig = ({ format, entries, includeStyleEntry = false, analyze = fa
     plugins: [
       new MiniCssExtractPlugin({
         filename: ({ chunk }) => (chunk?.name === 'style' ? 'style.css' : `${format}-styles/[name].css`),
+        chunkFilename: `${format}-styles/[id].css`,
       }),
       ...(analyze && useAnalyze
         ? [
