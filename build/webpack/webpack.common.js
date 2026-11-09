@@ -327,7 +327,7 @@ const config = {
                 namedExport: false,
                 exportLocalsConvention: 'camelCase',
               },
-              importLoaders: 2,
+              importLoaders: 3,
             },
           },
           {
@@ -351,6 +351,15 @@ const config = {
                 ],
               },
               sourceMap: true,
+            },
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              sourceMap: true,
+              lessOptions: {
+                javascriptEnabled: true,
+              },
             },
           },
         ],

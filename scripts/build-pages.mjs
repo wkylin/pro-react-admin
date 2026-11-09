@@ -32,7 +32,7 @@ if (process.argv.includes('--dry-run')) {
   for (const task of plan.tasks) {
     const env = createPagesTaskEnv(task, process.env)
     if (task.kind === 'app') {
-      run(['scripts/project-command.mjs', task.action, task.name, '--stats'], env)
+      run(['scripts/project-command.mjs', task.action, task.name], env)
     } else {
       run(
         [
