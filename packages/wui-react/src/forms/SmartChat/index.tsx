@@ -311,6 +311,7 @@ export default function SmartChat({
   useEffect(() => {
     cancel()
     setStreaming(false)
+    setError('')
     setMessages(initialMessages.map(createMessage))
   }, [initialMessages])
   useEffect(() => {

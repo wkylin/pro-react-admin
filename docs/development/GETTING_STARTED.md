@@ -39,14 +39,15 @@ node --input-type=module -e "import fs from 'node:fs'; if (!fs.existsSync('.env.
 
 用编辑器打开 `.env.development.local`。共享 `.env` 默认开启浏览器演示登录，本地模板只补 API 配置。Enterprise 两个启动命令默认同时启动前端和 Node API；没有自定义后端配置时，它们会创建隔离的本地 SQLite 演示租户。浏览器 Mock 演示需显式设置 `REACT_APP_USE_MOCK=true`，自建租户按[真实用户登录](#真实用户登录)配置。
 
-| 配置                     | 默认值与作用                                                       |
-| ------------------------ | ------------------------------------------------------------------ |
-| `REACT_APP_USE_MOCK`     | `true`：演示账号；`false`：真实租户登录和 REST 数据                |
-| `APP_BASE_URL`           | 空：前端请求走同源开发代理；外部 API 可填完整地址                  |
-| `ENTERPRISE_ENABLED`     | 通用 API 默认 `false`；Enterprise 启动命令在本地真实模式会自动启用 |
-| `TRACKING_STORE`         | `memory`：埋点使用内存，与企业 SQLite 持久化独立                   |
-| `TRACKING_API_PORT`      | `5200`：全栈启动时本地 API 的起始端口，占用时递增                  |
-| `ENTERPRISE_BOOTSTRAP_*` | 默认注释；仅首次创建真实租户时填写，完成后删除                     |
+| 配置                     | 默认值与作用                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------ |
+| `REACT_APP_USE_MOCK`     | `true`：演示账号；`false`：真实租户登录和 REST 数据                                  |
+| `APP_BASE_URL`           | 空：前端请求走同源开发代理；外部 API 可填完整地址                                    |
+| `ENTERPRISE_ENABLED`     | 通用 API 默认 `false`；Enterprise 启动命令在本地真实模式会自动启用                   |
+| `ENTERPRISE_LOCAL_DEMO`  | 默认关闭；设为 `true` 后，默认应用全栈启动时启用隔离的企业演示 API，保留前端演示登录 |
+| `TRACKING_STORE`         | `memory`：埋点使用内存，与企业 SQLite 持久化独立                                     |
+| `TRACKING_API_PORT`      | `5200`：全栈启动时本地 API 的起始端口，占用时递增                                    |
+| `ENTERPRISE_BOOTSTRAP_*` | 默认注释；仅首次创建真实租户时填写，完成后删除                                       |
 
 `.env.development.local` 已被 Git 忽略，模板可以提交，实际凭据只保留在本机。不要直接覆盖已有配置。Webpack 开发入口和全栈启动读取此文件；`api:bootstrap` 与 `pnpm --filter api dev` 也会读取它。外部命令环境变量优先于文件；配置修改后重启服务。
 
@@ -97,6 +98,17 @@ pnpm start
 ```
 
 访问 http://localhost:8080/#/signin，登录后进入完整后台。`pnpm start`和`pnpm run dev:webpack` 同时启动 Webpack 前端与本地 Express API；`pnpm run dev:vite`启动 Vite 前端与同一 API。API 从`127.0.0.1:5200`起寻找空闲端口，所选前端的企业、埋点和 GitHub 演示登录代理跟随实际端口，终端会显示选用端口。默认埋点存储为内存，不需要 MongoDB；使用 Ctrl+C 同时停止前端和 API。GitHub 演示登录需在`.env.development.local` 配置 OAuth App 凭据和精确回调 URL，参见 [API 文档](../operations/API.md)。
+
+默认应用需要使用真实 Tavily 搜索时，在本机 `.env.development.local` 显式增加以下配置，再重启 `pnpm start` 或 `pnpm run dev:vite`：
+
+```dotenv
+ENTERPRISE_LOCAL_DEMO=true
+TAVILY_API_KEY=your-server-key
+```
+
+启动器会准备隔离的本地演示库，成功后才启用企业 API；前端仍使用原演示账号登录。进入 `/#/ai-workbench` 输入问题并运行搜索，程序会自动使用 `demo` / `admin@demo.local` / `DemoAdmin123!` 连接后查询，不再要求手填账号。前端和登录、搜索接口使用同一开发地址，API 代理跟随实际分配的端口，不需要另开临时预览。
+
+该开关只用于默认应用的本地开发。生产、Vercel、外部 API、自定义数据库、bootstrap 配置或已有 `api/data/enterprise.sqlite` 会拒绝自动初始化；自建企业环境仍按[真实用户登录](#真实用户登录)配置。Tavily Key 只留在 API 进程，不进入浏览器环境。单独预览前端不会启动此 API。
 
 只预览前端页面：
 

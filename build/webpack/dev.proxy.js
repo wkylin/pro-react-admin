@@ -2,7 +2,7 @@ const localApiTarget = `http://127.0.0.1:${process.env.TRACKING_API_PORT || 5200
 
 export default [
   {
-    context: ['/api/auth', '/api/admin', '/api/permissions', '/api/roles', '/api/events'],
+    context: ['/api/auth', '/api/admin', '/api/permissions', '/api/roles', '/api/events', '/api/ai'],
     target: process.env.ENTERPRISE_API_TARGET || localApiTarget,
     changeOrigin: true,
     ws: true,

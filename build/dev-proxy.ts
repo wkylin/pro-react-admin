@@ -22,7 +22,10 @@ export function createDevProxy(env: Record<string, string | undefined>): Record<
   }
   return {
     ...Object.fromEntries(
-      ['/api/auth', '/api/admin', '/api/permissions', '/api/roles', '/api/events'].map((route) => [route, api])
+      ['/api/auth', '/api/admin', '/api/permissions', '/api/roles', '/api/events', '/api/ai'].map((route) => [
+        route,
+        api,
+      ])
     ),
     '/api/tracking': {
       target: env.TRACKING_API_TARGET || localApi,

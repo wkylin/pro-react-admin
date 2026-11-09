@@ -113,6 +113,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 | /big-screen                     | Big Screen       | bigscreen:read          | src/app/routing/modules/chart.routes.tsx    |
 | /build/webpack                  | Webpack / Vite   | build:read              | src/app/routing/modules/tech.routes.tsx     |
 | /business                       | Business         | business:read           | src/app/routing/modules/business.routes.tsx |
+| /chat                           | 聊天室           | crypto:read             | src/app/routing/modules/ui.routes.tsx       |
 | /chatgpt                        | ChatGPT          | chatgpt:read            | src/app/routing/modules/ui.routes.tsx       |
 | /component-playground           | 组件实验场       | demo:read               | src/app/routing/modules/business.routes.tsx |
 | /contact                        | Contact          | contact:read            | src/app/routing/modules/ui.routes.tsx       |

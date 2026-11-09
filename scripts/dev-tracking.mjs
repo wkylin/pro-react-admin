@@ -1,10 +1,16 @@
 import crypto from 'node:crypto'
+import console from 'node:console'
 import path from 'node:path'
+import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import concurrently from 'concurrently'
 import portfinder from 'portfinder'
 import { applyWorkspaceEnv } from '../build/load-env.js'
-import { prepareLocalEnterpriseDemo } from './enterprise-demo.mjs'
+import {
+  getDevelopmentEnvSkipKeys,
+  prepareLocalEnterpriseDemo,
+  validateLocalEnterpriseDemoMode,
+} from './enterprise-demo.mjs'
 import { resolveProject } from '../config/project-registry.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
@@ -12,8 +18,9 @@ const projectName = process.env.PROJECT || 'default'
 const enterpriseProject = resolveProject(projectName).project.authentication === 'enterprise'
 
 // Enterprise uses the tenant-backed login by default; browser-only mock remains opt-in.
-applyWorkspaceEnv('development', root, process.env, enterpriseProject ? new Set(['REACT_APP_USE_MOCK']) : new Set())
+applyWorkspaceEnv('development', root, process.env, getDevelopmentEnvSkipKeys(projectName, enterpriseProject))
 
+const explicitLocalDemo = validateLocalEnterpriseDemoMode(projectName, process.env)
 process.env.NODE_ENV = 'development'
 process.env.TRACKING_STORE ||= 'memory'
 if (enterpriseProject) {
@@ -31,8 +38,18 @@ process.env.TRACKING_API_PORT = String(apiPort)
 process.env.TRACKING_API_TARGET ||= `http://127.0.0.1:${process.env.TRACKING_API_PORT}`
 process.env.TRACKING_ADMIN_TOKEN ||= crypto.randomBytes(32).toString('hex')
 if (apiPort !== requestedApiPort) console.log(`API port ${requestedApiPort} is in use; using ${apiPort} instead.`)
-if (enterpriseProject && process.env.ENTERPRISE_ENABLED === 'true') {
-  const demo = await prepareLocalEnterpriseDemo(root, process.env)
+if (explicitLocalDemo || (enterpriseProject && process.env.ENTERPRISE_ENABLED === 'true')) {
+  // Default mock login stays intact; only the separate, isolated local API is enabled after successful setup.
+  let demo
+  try {
+    demo = await prepareLocalEnterpriseDemo(root, process.env)
+  } catch (error) {
+    if (explicitLocalDemo)
+      throw new Error('Local Enterprise demo initialization failed. No development services were started.', {
+        cause: error,
+      })
+    throw error
+  }
   if (demo)
     console.log(
       `Local Enterprise demo: tenant=${demo.account.tenantId}, email=${demo.account.email}, password=${demo.account.password}; SQLite=${demo.databasePath}`

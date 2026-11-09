@@ -59,6 +59,7 @@ const userRoutes = [
   '/dashboard',
   '/motion',
   '/crypto',
+  '/chat',
   '/profile',
   '/svg-viewer',
 ]

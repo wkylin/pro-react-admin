@@ -4,6 +4,7 @@ import { routePolicies } from '@platform/auth/model/policy'
 import { createNavigationTree } from '@platform/navigation/menu'
 import {
   HomeOutlined,
+  MessageOutlined,
   DeploymentUnitOutlined,
   HeatMapOutlined,
   ApartmentOutlined,
@@ -45,6 +46,7 @@ import {
 
 const icons = {
   HomeOutlined,
+  MessageOutlined,
   DeploymentUnitOutlined,
   HeatMapOutlined,
   ApartmentOutlined,

@@ -63,6 +63,7 @@ export const lazyComponents = {
   Cinema: lazyLoad(() => import('@pages/movies')),
   MyVideo: lazyLoad(() => import('@pages/video')),
   MyCrypto: lazyLoad(() => import('@pages/crypto')),
+  ChatRoom: lazyLoad(() => import('@pages/chat')),
 
   // 图表相关
   Echarts: lazyLoad(() => import('@pages/echarts')),

@@ -13,16 +13,40 @@ const bootstrapKeys = [
   'ENTERPRISE_BOOTSTRAP_PASSWORD',
 ]
 
+export function getDevelopmentEnvSkipKeys(projectName, enterpriseProject) {
+  const keys = new Set(enterpriseProject ? ['REACT_APP_USE_MOCK'] : [])
+  // A default app's local setting must not opt another project into its demo backend.
+  if (projectName !== 'default') keys.add('ENTERPRISE_LOCAL_DEMO')
+  return keys
+}
+
+/** Validate before the development launcher normalizes NODE_ENV. This flag never changes browser authentication. */
+export function validateLocalEnterpriseDemoMode(projectName, env) {
+  if (env.ENTERPRISE_LOCAL_DEMO !== 'true') return false
+  if (projectName !== 'default') throw new Error('ENTERPRISE_LOCAL_DEMO is supported only for the default project')
+  if (env.NODE_ENV === 'production' || env.VERCEL)
+    throw new Error('ENTERPRISE_LOCAL_DEMO requires local development and is unavailable in production or Vercel')
+  return true
+}
+
 export function shouldUseLocalEnterpriseDemo(root, env) {
-  if (env.NODE_ENV === 'production' || env.VERCEL || env.REACT_APP_USE_MOCK === 'true') return false
+  if (env.NODE_ENV === 'production' || env.VERCEL) return false
+  // The default app keeps mock login; its independent search API must be explicitly opted into.
+  if (env.REACT_APP_USE_MOCK === 'true' && env.ENTERPRISE_LOCAL_DEMO !== 'true') return false
   if (env.ENTERPRISE_DB_PATH || env.ENTERPRISE_API_TARGET || env.APP_BASE_URL) return false
   if (bootstrapKeys.some((key) => env[key])) return false
   return !existsSync(path.join(root, 'api/data/enterprise.sqlite'))
 }
 
-/** Only the local enterprise starter may provision this isolated, gitignored demo database. */
+/** Local starters may provision this isolated, gitignored database; default mock mode requires explicit opt-in. */
 export async function prepareLocalEnterpriseDemo(root, env) {
-  if (!shouldUseLocalEnterpriseDemo(root, env)) return null
+  if (!shouldUseLocalEnterpriseDemo(root, env)) {
+    if (env.ENTERPRISE_LOCAL_DEMO === 'true')
+      throw new Error(
+        'ENTERPRISE_LOCAL_DEMO requires local development without custom Enterprise databases, external API targets, bootstrap settings or an existing enterprise.sqlite'
+      )
+    return null
+  }
 
   const directory = path.join(root, 'api/data')
   const keyPath = path.join(directory, 'enterprise-demo-totp.key')
@@ -62,6 +86,8 @@ export async function prepareLocalEnterpriseDemo(root, env) {
         service.store.close()
       }
 
+      // Enable the API only after migration and seeding succeed; never fall back to a business database.
+      env.ENTERPRISE_ENABLED = 'true'
       return { account: demoAccount, databasePath, seeded }
     } catch (error) {
       if (error instanceof Error && /^Enterprise database is already in use by process \d+$/.test(error.message)) {

@@ -81,6 +81,15 @@
       "parent": "/examples/components"
     }
   },
+  "/chat": {
+    "permission": "crypto:read",
+    "title": "聊天室",
+    "i18nKey": "chatRoom.title",
+    "menu": {
+      "order": 4,
+      "icon": "MessageOutlined"
+    }
+  },
   "/chatgpt": {
     "permission": "chatgpt:read",
     "title": "ChatGPT",
@@ -247,7 +256,7 @@
     "permission": "notification:read",
     "i18nKey": "notificationCenter.title",
     "menu": {
-      "order": 4,
+      "order": 5,
       "icon": "FileTextOutlined"
     }
   },
@@ -313,7 +322,7 @@
     "title": "Profile",
     "i18nKey": "menu.profile",
     "menu": {
-      "order": 5,
+      "order": 6,
       "icon": "UserOutlined"
     }
   },
@@ -323,7 +332,7 @@
     "availability": "enterprise",
     "access": "authenticated",
     "menu": {
-      "order": 11,
+      "order": 12,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -707,7 +716,7 @@
     "i18nKey": "menu.componentExamples",
     "menuGroup": true,
     "menu": {
-      "order": 6,
+      "order": 7,
       "icon": "AppstoreOutlined"
     }
   },
@@ -716,7 +725,7 @@
     "i18nKey": "menu.visualizationExamples",
     "menuGroup": true,
     "menu": {
-      "order": 7,
+      "order": 8,
       "icon": "PieChartOutlined"
     }
   },
@@ -725,7 +734,7 @@
     "i18nKey": "menu.aiTools",
     "menuGroup": true,
     "menu": {
-      "order": 8,
+      "order": 9,
       "icon": "RobotOutlined"
     }
   },
@@ -734,7 +743,7 @@
     "i18nKey": "menu.contentExamples",
     "menuGroup": true,
     "menu": {
-      "order": 9,
+      "order": 10,
       "icon": "BookOutlined"
     }
   },
@@ -743,7 +752,7 @@
     "i18nKey": "menu.engineeringExamples",
     "menuGroup": true,
     "menu": {
-      "order": 10,
+      "order": 11,
       "icon": "ToolOutlined"
     }
   }

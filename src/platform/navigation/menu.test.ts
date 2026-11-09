@@ -56,6 +56,7 @@ test('keeps daily work first and limits the sidebar to three levels', () => {
     '/dashboard',
     '/patterns',
     '/administration',
+    '/chat',
     '/notifications',
     '/profile',
     '/examples/components',
@@ -130,6 +131,7 @@ test('retains existing navigation destinations after grouping and exposes notifi
   const leaves = navigationLeaves(createNavigationTree(canonical)).map((item) => item.path)
   expect(leaves).toEqual(expect.arrayContaining(previousDestinations))
   expect(leaves).toContain('/notifications')
+  expect(leaves).toContain('/chat')
   expect(new Set(leaves).size).toBe(leaves.length)
   expect(
     findNavigationChain(createNavigationTree(canonical), '/tech/frontend/plugins/perf').map((item) => item.path)

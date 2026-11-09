@@ -3,6 +3,8 @@ declare module '@xmpp/client' {
     attrs: Record<string, string | undefined>
     is(name: string, namespace?: string): boolean
     getChildText(name: string, namespace?: string): string | undefined
+    getChild(name: string, namespace?: string): XmppElement | undefined
+    getChildren(name: string, namespace?: string): XmppElement[]
   }
 
   export interface XmppClient {
@@ -11,6 +13,7 @@ declare module '@xmpp/client' {
     on(event: 'online', listener: (address: { toString(): string }) => void): XmppClient
     on(event: 'stanza', listener: (stanza: XmppElement) => void): XmppClient
     on(event: 'offline', listener: () => void): XmppClient
+    on(event: 'disconnect', listener: () => void): XmppClient
     on(event: 'error', listener: (cause: unknown) => void): XmppClient
     start(): Promise<void>
     stop(): Promise<unknown>

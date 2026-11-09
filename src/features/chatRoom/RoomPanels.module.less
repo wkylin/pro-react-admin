@@ -1,0 +1,162 @@
+.roomRow {
+  position: relative;
+  margin-bottom: 4px;
+}
+
+.roomRow .roomButton {
+  margin-bottom: 0;
+  padding-inline-end: 44px;
+}
+
+.roomRow .roomMore {
+  position: absolute;
+  inset-block-start: 12px;
+  inset-inline-end: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0;
+  color: var(--wui-text-secondary);
+}
+
+.unreadToggle {
+  align-self: flex-start;
+}
+
+.pinnedMark {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  color: var(--wui-color-primary);
+}
+
+.roomName {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.detailsTabs {
+  margin-top: 16px;
+
+  :global(.wui-ant-tabs-tab) {
+    font-size: 12px;
+    line-height: 20px;
+  }
+}
+
+.loadedHint {
+  margin-bottom: 16px !important;
+  color: var(--wui-text-secondary);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.sharedLinks,
+.activityList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sharedLink {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-block: 12px;
+
+  & + & {
+    border-top: 1px solid var(--wui-border);
+  }
+
+  > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  > svg {
+    flex: none;
+    margin-top: 4px;
+    color: var(--wui-text-muted);
+  }
+
+  small {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--wui-text-secondary);
+    font-size: 12px;
+    line-height: 16px;
+    overflow-wrap: anywhere;
+  }
+
+  a {
+    color: var(--wui-color-primary);
+    font-size: 12px;
+    line-height: 20px;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    overflow-wrap: anywhere;
+  }
+}
+
+.activityItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-block: 12px;
+
+  & + & {
+    border-top: 1px solid var(--wui-border);
+  }
+
+  > div {
+    flex: 1;
+    min-width: 0;
+  }
+
+  p {
+    margin-top: 8px !important;
+    color: var(--wui-text-secondary);
+    font-size: 12px;
+    line-height: 20px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+}
+
+.activityDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--wui-border);
+}
+
+.activityMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 8px;
+
+  strong {
+    color: var(--wui-text-primary);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    overflow-wrap: anywhere;
+  }
+
+  time {
+    color: var(--wui-text-muted);
+    font-size: 12px;
+    line-height: 20px;
+    font-variant-numeric: tabular-nums;
+  }
+}

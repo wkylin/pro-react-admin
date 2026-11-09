@@ -44,6 +44,12 @@ export const uiRoutes = [
     element: <lazyComponents.MyCrypto />,
   },
   {
+    path: 'chat',
+    name: 'Chat',
+    i18nKey: 'chatRoom.title',
+    element: <lazyComponents.ChatRoom />,
+  },
+  {
     path: 'chatgpt',
     name: 'ChatGPT Markmap',
     element: <lazyComponents.ChatGpt />,

@@ -4,7 +4,7 @@
 
 `sport-demo/apps/web` 使用 Web Crypto / `jose` JWE 加密 HTTP 与 WebSocket 传输，实时数据可走原生 WebSocket 或 STOMP，聊天使用 `@xmpp/client` 的 XMPP over WebSocket、SASL 和 XML stanza。那些协议与密钥服务由它自己的服务端配合完成。
 
-本项目在现有 `/crypto` 页面增加“安全通信”页签，使用这些技术实现通用消息实验工具。没有引入体育数据、聊天房间或其他业务对象，也没有复用 `sport-demo` 的私有 JWE wire format。项目原有 `Request.js` AES/RSA/HYBRID 协议和企业资源失效事件 WebSocket 保持原样；它们不能直接解密这里的消息封包。
+本项目在 `/crypto` 页面的“安全通信”页签使用这些技术实现通用消息实验工具，不复用 `sport-demo` 的体育数据或私有 JWE wire format。项目原有 `Request.js` AES/RSA/HYBRID 协议和企业资源失效事件 WebSocket 保持原样；它们不能直接解密这里的消息封包。需要普通群聊工作区时可使用独立的 [聊天室](../development/CHAT_ROOM.md)，它复用相同 Chat Platform 后端的普通文本协议，本页的加密实验行为不变。
 
 ## 本页的消息协议
 

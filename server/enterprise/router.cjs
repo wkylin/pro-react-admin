@@ -1,11 +1,13 @@
 const express = require('express')
 const { randomUUID } = require('node:crypto')
-const { searchTavily, TavilySearchError } = require('./tavily-search.cjs')
+const process = require('node:process')
+const { AbortController } = globalThis
+const { normalizeSearchOptions, searchTavily, TavilySearchError } = require('./tavily-search.cjs')
 
 /**
  * HTTP owns transport/rate limits. Domain code owns authorization and transactions.
  * @param {any} service
- * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, searchLimit?: number, searchLimiter?: (clientKey: string, limit: number) => Promise<void>, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError, requestLogger?: { info: (entry: string) => void, error: (entry: string) => void } }} [options]
+ * @param {{ loginLimit?: number, loginLimiter?: (clientKey: string, limit: number) => Promise<void>, searchLimit?: number, searchLimiter?: (clientKey: string, limit: number) => Promise<void>, tavilyFetch?: typeof globalThis.fetch, events?: any, businessErrorClass?: typeof import('./domain.mts').BusinessError, requestLogger?: { info: (entry: string) => void, error: (entry: string) => void } }} [options]
  */
 function createEnterpriseRouter(
   service,
@@ -14,6 +16,7 @@ function createEnterpriseRouter(
     loginLimiter,
     searchLimit = 20,
     searchLimiter,
+    tavilyFetch = globalThis.fetch,
     events,
     businessErrorClass,
     requestLogger = globalThis.console,
@@ -96,7 +99,16 @@ function createEnterpriseRouter(
     res.json(await service.login(req.body))
   })
   router.use(
-    ['/auth/session', '/auth/totp', '/permissions/current', '/roles', '/admin', '/events/ticket', '/events/poll', '/ai'],
+    [
+      '/auth/session',
+      '/auth/totp',
+      '/permissions/current',
+      '/roles',
+      '/admin',
+      '/events/ticket',
+      '/events/poll',
+      '/ai',
+    ],
     async (req, _res, next) => {
       const authorization = req.headers.authorization || ''
       req.principal = await service.authenticate(
@@ -122,11 +134,13 @@ function createEnterpriseRouter(
   )
   router.get('/permissions/current', async (req, res) => res.json(await service.permissions(req.principal)))
   router.post('/ai/tavily-search', async (req, res) => {
-    const body = req.body
-    if (!body || typeof body !== 'object' || Array.isArray(body) || Object.keys(body).some((key) => key !== 'query'))
-      return res.status(400).json({ error: 'invalid_query' })
-    const query = typeof body.query === 'string' ? body.query.trim() : ''
-    if (!query || Array.from(query).length > 400) return res.status(400).json({ error: 'invalid_query' })
+    let options
+    try {
+      options = normalizeSearchOptions(req.body)
+    } catch (error) {
+      if (error instanceof TavilySearchError) return res.status(error.status).json({ error: error.code })
+      throw error
+    }
 
     const permissionState = await service.permissions(req.principal)
     const permissions = Array.isArray(permissionState?.permissions) ? permissionState.permissions : []
@@ -154,19 +168,26 @@ function createEnterpriseRouter(
     req.once('aborted', abortUpstream)
     res.once('close', abortUpstream)
     try {
-      const result = await searchTavily({ query, apiKey, signal: upstreamController.signal })
+      const result = await searchTavily({
+        ...options,
+        apiKey,
+        signal: upstreamController.signal,
+        fetchImpl: tavilyFetch,
+      })
+      res.vary('Accept')
+      if (req.accepts(['text/event-stream', 'application/json']) === 'application/json') return res.json(result)
       const answer = result.answer || result.results.find((item) => item.content)?.content || '没有找到相关网页。'
       const escapeLabel = (value) =>
-        String(value).replace(/[\r\n]+/g, ' ').replace(/[\\[\]]/g, (character) => `\\${character}`)
+        String(value)
+          .replace(/[\r\n]+/g, ' ')
+          .replace(/[\\[\]]/g, (character) => `\\${character}`)
       const sources = result.results
         .map(
           (item, index) =>
             `${index + 1}. [${escapeLabel(item.title)}](<${item.url}>)${item.publishedDate ? ` · ${item.publishedDate}` : ''}`
         )
         .join('\n')
-      const content = sources
-        ? `${answer}\n\n来源\n${sources}`
-        : `${answer}\n\n没有找到可引用的相关网页。`
+      const content = sources ? `${answer}\n\n来源\n${sources}` : `${answer}\n\n没有找到可引用的相关网页。`
 
       res.status(200)
       res.setHeader('Content-Type', 'text/event-stream; charset=utf-8')
@@ -174,8 +195,7 @@ function createEnterpriseRouter(
       res.end(`data: ${JSON.stringify({ content, done: true })}\n\n`)
     } catch (error) {
       if (req.aborted || res.destroyed || error?.code === 'search_cancelled') return
-      if (error instanceof TavilySearchError)
-        return res.status(error.status).json({ error: error.code })
+      if (error instanceof TavilySearchError) return res.status(error.status).json({ error: error.code })
       throw error
     } finally {
       req.off('aborted', abortUpstream)

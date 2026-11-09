@@ -26,6 +26,12 @@ pnpm run dev:webpack
 
 [联系与反馈页](development/CONTACT.md)整理项目邮箱、GitHub Issues 与项目指南，保留 Web3Forms 留言发送，并说明公开表单配置、草稿、发送结果和无真实留言的验证方式。
 
+[Tavily Playground](development/TAVILY_PLAYGROUND.md)支持搜索调参、带来源的联网回答、响应检查与请求代码，说明真实企业会话和原聊天/提示词工具的使用边界。
+
+[对话与提示词](development/AI_TOOLS.md)说明日常对话、模板编辑、提示词应用、调试抽屉和按账号保存的使用流程。
+
+[聊天室](development/CHAT_ROOM.md)使用已集成的 Chat Platform 房间与实时消息能力，提供独立对话工作区，并说明历史、草稿、连接生命周期及与加密实验室的区别。
+
 ## 4. 测试：验证功能和工程契约
 
 [质量门禁](development/QUALITY.md)解释单元测试、API 测试、Playwright 场景、类型与依赖边界检查，以及 CI 对应的报告。常用入口：
