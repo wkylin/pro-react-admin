@@ -514,11 +514,11 @@ test('a newer connection attempt wins even while an earlier transport is still s
 test('a hanging lazy import shares the connection deadline and ignores a late module', async () => {
   jest.useFakeTimers()
   const harness = createHarness()
-  let finish!: (library: unknown) => void
+  let finish!: (library: typeof harness.library) => void
   const loader = (() =>
-    new Promise((resolve) => {
+    new Promise<typeof harness.library>((resolve) => {
       finish = resolve
-    })) as typeof loadXmppClient
+    })) as unknown as typeof loadXmppClient
   const { result } = renderHook(() => useChatRoomChannel({ onMessage: jest.fn() }, loader))
   let connecting!: Promise<unknown>
   await act(async () => {

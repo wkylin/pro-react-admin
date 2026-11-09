@@ -6356,6 +6356,70 @@
       "description": "关闭组件时调用的回调。"
     }
   ],
+  "BusinessPage": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "组件显示的标题。"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "标题下方的说明内容。"
+    },
+    {
+      "name": "eyebrow",
+      "type": "ReactNode",
+      "required": false,
+      "description": "显示为eyebrow的 React 内容。"
+    },
+    {
+      "name": "actions",
+      "type": "ReactNode",
+      "required": false,
+      "description": "行操作配置，如查看、编辑和删除。"
+    },
+    {
+      "name": "notice",
+      "type": "ReactNode",
+      "required": false,
+      "description": "显示为notice的 React 内容。"
+    },
+    {
+      "name": "toolbar",
+      "type": "ReactNode",
+      "required": false,
+      "description": "表格工具栏配置。"
+    },
+    {
+      "name": "children",
+      "type": "ReactNode",
+      "required": true,
+      "description": "组件内部要呈现的 React 内容。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。",
+      "defaultValue": "''"
+    },
+    {
+      "name": "headingId",
+      "type": "string",
+      "required": false,
+      "description": "设置标题id文字或取值。"
+    },
+    {
+      "name": "fill",
+      "type": "boolean",
+      "required": false,
+      "description": "是否让内容填满可用区域。",
+      "defaultValue": "false"
+    }
+  ],
   "FixTabPanel": [
     {
       "name": "showScrollProgress",

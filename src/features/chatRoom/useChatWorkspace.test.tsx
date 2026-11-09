@@ -41,7 +41,7 @@ const message = (id: string, roomId = roomA.id, userId = 'other'): ChatMessage =
   createdAt,
 })
 
-function deferred<T>() {
+function deferred<T = undefined>() {
   let resolve!: (value: T) => void
   let reject!: (error: unknown) => void
   const promise = new Promise<T>((done, fail) => {
@@ -222,7 +222,7 @@ test('the mobile room list does not mark its hidden conversation as read', async
 
 test('a room is not ready for composing until its own join acknowledgement finishes', async () => {
   const { result } = await connectedWorkspace()
-  const acknowledgement = deferred<void>()
+  const acknowledgement = deferred()
   channel.joinRoom.mockReturnValueOnce(acknowledgement.promise)
   let selecting!: Promise<void>
   act(() => {
@@ -252,7 +252,7 @@ test('a disconnected room becomes ready only after its reconnect join is acknowl
   await waitFor(() => expect(result.current.historyError).toBe('joinTimeout'))
   expect(result.current.roomReady).toBe(false)
 
-  const acknowledgement = deferred<void>()
+  const acknowledgement = deferred()
   channel.joinRoom.mockReturnValueOnce(acknowledgement.promise)
   act(() => callbacks.onReconnect?.())
   await waitFor(() => expect(channel.joinRoom).toHaveBeenCalledTimes(3))
@@ -266,7 +266,7 @@ test('a disconnected room becomes ready only after its reconnect join is acknowl
 
 test('sending never clears a newer draft or invents a successful message before server echo', async () => {
   const { result } = await connectedWorkspace()
-  const delivery = deferred<void>()
+  const delivery = deferred()
   channel.sendRoom.mockReturnValueOnce(delivery.promise)
   act(() => result.current.setDraft('First draft'))
   let sending!: Promise<boolean>
@@ -299,7 +299,7 @@ test('a failed send keeps the original room draft and exposes a fixed error code
 
 test('a late send failure stays with its room and survives editing a different room draft', async () => {
   const { result } = await connectedWorkspace()
-  const delivery = deferred<void>()
+  const delivery = deferred()
   channel.sendRoom.mockReturnValueOnce(delivery.promise)
   act(() => result.current.setDraft('General draft to retry'))
   let sending!: Promise<boolean>
@@ -329,7 +329,7 @@ test('a late send failure stays with its room and survives editing a different r
 
 test('room drafts survive switching while a sent snapshot clears only its original room', async () => {
   const { result } = await connectedWorkspace()
-  const delivery = deferred<void>()
+  const delivery = deferred()
   channel.sendRoom.mockReturnValueOnce(delivery.promise)
   act(() => result.current.setDraft('General draft'))
   let sending!: Promise<boolean>
@@ -354,7 +354,7 @@ test('room drafts survive switching while a sent snapshot clears only its origin
 test('disconnect clears account data and ignores outstanding history and send completions', async () => {
   const { result } = await connectedWorkspace()
   const history = deferred<ChatMessage[]>()
-  const delivery = deferred<void>()
+  const delivery = deferred()
   listMessages.mockReturnValueOnce(history.promise)
   channel.sendRoom.mockReturnValueOnce(delivery.promise)
   act(() => {
@@ -424,7 +424,7 @@ test('cancelling a pending login revokes a late-created session without connecti
 })
 
 test('cancelling during the initial disconnect prevents the queued login from starting', async () => {
-  const stopped = deferred<void>()
+  const stopped = deferred()
   channel.disconnect.mockReturnValueOnce(stopped.promise)
   const { result } = renderHook(() => useChatWorkspace())
   let connecting!: Promise<boolean>
@@ -444,7 +444,7 @@ test('cancelling during the initial disconnect prevents the queued login from st
 })
 
 test('two connect clicks share one in-progress attempt even before the prior socket stops', async () => {
-  const stopped = deferred<void>()
+  const stopped = deferred()
   channel.disconnect.mockReturnValueOnce(stopped.promise)
   const { result } = renderHook(() => useChatWorkspace())
   let first!: Promise<boolean>
@@ -507,7 +507,7 @@ function communicationCalls() {
 
 test('a quoted wire override clears only its submitted room raw draft and preserves private drafts', async () => {
   const { result } = await connectedWorkspace()
-  const delivery = deferred<void>()
+  const delivery = deferred()
   channel.sendRoom.mockReturnValueOnce(delivery.promise)
   act(() => {
     result.current.setDraft('  Original reply  ')
@@ -542,7 +542,7 @@ test('a quoted wire override clears only its submitted room raw draft and preser
 
 test('a quoted send never clears a replacement raw draft entered while delivery is pending', async () => {
   const { result } = await connectedWorkspace()
-  const delivery = deferred<void>()
+  const delivery = deferred()
   channel.sendRoom.mockReturnValueOnce(delivery.promise)
   act(() => result.current.setDraft('First reply'))
   let sending!: Promise<boolean>
@@ -571,8 +571,8 @@ test('a failed quoted send returns false and keeps the editable raw reply', asyn
 
 test('an old account send cannot clear a new account draft or settle its pending send', async () => {
   const { result } = await connectedWorkspace()
-  const previous = deferred<void>()
-  const current = deferred<void>()
+  const previous = deferred()
+  const current = deferred()
   channel.sendRoom.mockReturnValueOnce(previous.promise).mockReturnValueOnce(current.promise)
   act(() => result.current.setDraft('Old account reply'))
   let oldSend!: Promise<boolean>

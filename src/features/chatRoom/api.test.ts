@@ -334,7 +334,7 @@ describe('request errors and cancellation', () => {
     await rejected
     pending.resolve(response({ rooms: [room] }))
     await Promise.resolve()
-    expect(fetcher.mock.calls[0][1].signal.aborted).toBe(true)
+    expect(fetcher.mock.calls[0]?.[1]?.signal?.aborted).toBe(true)
   })
 
   it('enforces timeout through JSON reading and clears its timer after settlement', async () => {

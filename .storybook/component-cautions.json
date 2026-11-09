@@ -138,5 +138,6 @@
   "SectionNotFound": "返回模块首页会从当前路径去掉最后一段；应在 Router 内使用，并核对这个规则符合路由结构。",
   "SettingDrawer": "open 由父组件控制；关闭动作需要在 onClose 中更新外部状态。",
   "FixTabPanel": "scrollProgressProps 决定进度条配置；嵌套滚动时检查进度对应的实际容器。",
-  "ScrollProgressBar": "没有明确滚动容器时会跟踪页面；target 指向局部滚动区时检查其高度和定位。"
+  "ScrollProgressBar": "没有明确滚动容器时会跟踪页面；target 指向局部滚动区时检查其高度和定位。",
+  "BusinessPage": "title 和 description 是必填或推荐字段；toolbar 与 notice 应与主内容区保持间距，fill 会让 FixTabPanel 占满高度。"
 }
