@@ -21,8 +21,9 @@
     "title": "AI Workbench",
     "i18nKey": "menu.aiWorkbench",
     "menu": {
-      "order": 22,
-      "icon": "RobotOutlined"
+      "order": 0,
+      "icon": "RobotOutlined",
+      "parent": "/examples/ai"
     }
   },
   "/auth/callback": {
@@ -34,8 +35,9 @@
     "title": "自动部署",
     "i18nKey": "menu.autoDeploy",
     "menu": {
-      "order": 8,
-      "icon": "CloudUploadOutlined"
+      "order": 5,
+      "icon": "CloudUploadOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/big-screen": {
@@ -43,8 +45,9 @@
     "title": "Big Screen",
     "i18nKey": "menu.bigScreen",
     "menu": {
-      "order": 25,
-      "icon": "FundProjectionScreenOutlined"
+      "order": 1,
+      "icon": "FundProjectionScreenOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/build": {
@@ -53,8 +56,9 @@
     "i18nKey": "menu.buildTools",
     "menuGroup": true,
     "menu": {
-      "order": 5,
-      "icon": "ApartmentOutlined"
+      "order": 0,
+      "icon": "ApartmentOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/build/webpack": {
@@ -72,8 +76,9 @@
     "title": "Business",
     "i18nKey": "menu.business",
     "menu": {
-      "order": 28,
-      "icon": "BankOutlined"
+      "order": 1,
+      "icon": "BankOutlined",
+      "parent": "/examples/components"
     }
   },
   "/chatgpt": {
@@ -81,8 +86,9 @@
     "title": "ChatGPT",
     "i18nKey": "menu.chatgpt",
     "menu": {
-      "order": 21,
-      "icon": "RobotOutlined"
+      "order": 1,
+      "icon": "RobotOutlined",
+      "parent": "/examples/ai"
     }
   },
   "/component-playground": {
@@ -94,8 +100,9 @@
     "title": "Contact",
     "i18nKey": "menu.contact",
     "menu": {
-      "order": 34,
-      "icon": "ContactsOutlined"
+      "order": 4,
+      "icon": "ContactsOutlined",
+      "parent": "/examples/content"
     }
   },
   "/crypto": {
@@ -103,20 +110,28 @@
     "title": "Crypto",
     "i18nKey": "menu.crypto",
     "menu": {
-      "order": 6,
-      "icon": "SafetyCertificateOutlined"
+      "order": 9,
+      "icon": "SafetyCertificateOutlined",
+      "parent": "/examples/components"
     }
   },
   "/dashboard": {
-    "permission": "dashboard:read"
+    "permission": "dashboard:read",
+    "title": "业务概览",
+    "i18nKey": "dashboard.title",
+    "menu": {
+      "order": 1,
+      "icon": "BarChartOutlined"
+    }
   },
   "/demo": {
     "permission": "demo:read",
     "title": "demo",
     "i18nKey": "demo",
     "menu": {
-      "order": 1,
-      "icon": "GlobalOutlined"
+      "order": 0,
+      "icon": "GlobalOutlined",
+      "parent": "/examples/components"
     }
   },
   "/dependencies": {
@@ -124,8 +139,9 @@
     "title": "项目依赖分析",
     "i18nKey": "menu.dependencies",
     "menu": {
-      "order": 9,
-      "icon": "CloudUploadOutlined"
+      "order": 7,
+      "icon": "CloudUploadOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/deploy-flow": {
@@ -133,8 +149,9 @@
     "title": "Deploy Flow",
     "i18nKey": "menu.deployFlow",
     "menu": {
-      "order": 12,
-      "icon": "RocketOutlined"
+      "order": 6,
+      "icon": "RocketOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/deployment-guide": {
@@ -142,8 +159,9 @@
     "title": "部署指南",
     "i18nKey": "menu.deploymentGuide",
     "menu": {
-      "order": 7,
-      "icon": "FileTextOutlined"
+      "order": 4,
+      "icon": "FileTextOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/echarts": {
@@ -151,8 +169,9 @@
     "title": "Echarts",
     "i18nKey": "menu.echarts",
     "menu": {
-      "order": 26,
-      "icon": "PieChartOutlined"
+      "order": 0,
+      "icon": "PieChartOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/error": {
@@ -169,8 +188,9 @@
     "title": "Geo Chart",
     "i18nKey": "menu.geoChart",
     "menu": {
-      "order": 31,
-      "icon": "EnvironmentOutlined"
+      "order": 2,
+      "icon": "EnvironmentOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/mermaid": {
@@ -178,8 +198,9 @@
     "i18nKey": "menu.mermaid",
     "permission": "mermaid:read",
     "menu": {
-      "order": 17,
-      "icon": "ProjectOutlined"
+      "order": 3,
+      "icon": "ProjectOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/motion": {
@@ -187,8 +208,9 @@
     "title": "Motion",
     "i18nKey": "menu.motion",
     "menu": {
-      "order": 16,
-      "icon": "PlayCircleOutlined"
+      "order": 3,
+      "icon": "PlayCircleOutlined",
+      "parent": "/examples/components"
     }
   },
   "/music": {
@@ -196,8 +218,9 @@
     "title": "Music",
     "i18nKey": "menu.music",
     "menu": {
-      "order": 15,
-      "icon": "SoundOutlined"
+      "order": 2,
+      "icon": "SoundOutlined",
+      "parent": "/examples/content"
     }
   },
   "/movies": {
@@ -205,8 +228,9 @@
     "title": "Cinema",
     "i18nKey": "menu.movies",
     "menu": {
-      "order": 13,
-      "icon": "VideoCameraOutlined"
+      "order": 0,
+      "icon": "VideoCameraOutlined",
+      "parent": "/examples/content"
     }
   },
   "/my-iframe": {
@@ -215,19 +239,26 @@
   },
   "/notification/:id": {
     "title": "通知详情",
+    "i18nKey": "notificationCenter.detailTitle",
     "permission": "notification:read"
   },
   "/notifications": {
     "title": "通知中心",
-    "permission": "notification:read"
+    "permission": "notification:read",
+    "i18nKey": "notificationCenter.title",
+    "menu": {
+      "order": 4,
+      "icon": "FileTextOutlined"
+    }
   },
   "/permission": {
     "permission": "permission:read",
     "title": "权限示例",
     "i18nKey": "menu.permissionExample",
     "menu": {
-      "order": 19,
-      "icon": "LockOutlined"
+      "order": 9,
+      "icon": "LockOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/ph-bar": {
@@ -235,8 +266,9 @@
     "title": "PH Bar",
     "i18nKey": "menu.phBar",
     "menu": {
-      "order": 20,
-      "icon": "BarChartOutlined"
+      "order": 2,
+      "icon": "BarChartOutlined",
+      "parent": "/examples/components"
     }
   },
   "/portfilo": {
@@ -247,8 +279,9 @@
     "title": "Post Message",
     "i18nKey": "menu.postMessage",
     "menu": {
-      "order": 30,
-      "icon": "SendOutlined"
+      "order": 10,
+      "icon": "SendOutlined",
+      "parent": "/examples/components"
     }
   },
   "/print": {
@@ -256,8 +289,9 @@
     "title": "Print",
     "i18nKey": "menu.print",
     "menu": {
-      "order": 32,
-      "icon": "PrinterOutlined"
+      "order": 7,
+      "icon": "PrinterOutlined",
+      "parent": "/examples/components"
     }
   },
   "/prism": {
@@ -265,8 +299,9 @@
     "title": "Prism Render",
     "i18nKey": "menu.prismRender",
     "menu": {
-      "order": 29,
-      "icon": "HighlightOutlined"
+      "order": 8,
+      "icon": "HighlightOutlined",
+      "parent": "/examples/components"
     }
   },
   "/privacy": {
@@ -278,7 +313,7 @@
     "title": "Profile",
     "i18nKey": "menu.profile",
     "menu": {
-      "order": 33,
+      "order": 5,
       "icon": "UserOutlined"
     }
   },
@@ -288,7 +323,7 @@
     "availability": "enterprise",
     "access": "authenticated",
     "menu": {
-      "order": 39,
+      "order": 11,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -297,8 +332,9 @@
     "title": "Qr Generate",
     "i18nKey": "menu.qrGenerate",
     "menu": {
-      "order": 27,
-      "icon": "QrcodeOutlined"
+      "order": 6,
+      "icon": "QrcodeOutlined",
+      "parent": "/examples/components"
     }
   },
   "/reading": {
@@ -306,8 +342,9 @@
     "title": "Reading",
     "i18nKey": "menu.reading",
     "menu": {
-      "order": 14,
-      "icon": "BookOutlined"
+      "order": 1,
+      "icon": "BookOutlined",
+      "parent": "/examples/content"
     }
   },
   "/signin": {
@@ -324,8 +361,9 @@
     "i18nKey": "menu.error",
     "menuGroup": true,
     "menu": {
-      "order": 38,
-      "icon": "QuestionCircleOutlined"
+      "order": 11,
+      "icon": "QuestionCircleOutlined",
+      "parent": "/examples/components"
     }
   },
   "/svg-viewer": {
@@ -333,8 +371,9 @@
     "title": "SVG Viewer",
     "i18nKey": "menu.svgViewer",
     "menu": {
-      "order": 3,
-      "icon": "HeatMapOutlined"
+      "order": 6,
+      "icon": "HeatMapOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/tech/backend": {
@@ -343,8 +382,9 @@
     "i18nKey": "menu.backendTechStack",
     "menuGroup": true,
     "menu": {
-      "order": 36,
-      "icon": "CloudServerOutlined"
+      "order": 2,
+      "icon": "CloudServerOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/tech/backend/go": {
@@ -383,8 +423,9 @@
     "i18nKey": "menu.frontendTechStack",
     "menuGroup": true,
     "menu": {
-      "order": 35,
-      "icon": "NodeIndexOutlined"
+      "order": 1,
+      "icon": "NodeIndexOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/tech/frontend/angular": {
@@ -413,8 +454,8 @@
     "i18nKey": "menu.vuePlugins",
     "menuGroup": true,
     "menu": {
-      "parent": "/tech/frontend/vue",
-      "order": 0,
+      "parent": "/examples/engineering",
+      "order": 3,
       "icon": "AppstoreOutlined"
     }
   },
@@ -452,7 +493,6 @@
     "permission": "tech:read",
     "title": "Vue",
     "i18nKey": "menu.vue",
-    "menuGroup": true,
     "menu": {
       "parent": "/tech/frontend",
       "order": 1,
@@ -468,8 +508,9 @@
     "title": "Text Editor",
     "i18nKey": "menu.textEditor",
     "menu": {
-      "order": 10,
-      "icon": "FileTextOutlined"
+      "order": 5,
+      "icon": "FileTextOutlined",
+      "parent": "/examples/components"
     }
   },
   "/tilt": {
@@ -477,8 +518,9 @@
     "title": "React Tilt",
     "i18nKey": "menu.reactTilt",
     "menu": {
-      "order": 23,
-      "icon": "ExperimentOutlined"
+      "order": 4,
+      "icon": "ExperimentOutlined",
+      "parent": "/examples/components"
     }
   },
   "/topology": {
@@ -486,8 +528,9 @@
     "title": "Topology",
     "i18nKey": "menu.topology",
     "menu": {
-      "order": 18,
-      "icon": "DeploymentUnitOutlined"
+      "order": 4,
+      "icon": "DeploymentUnitOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/tracking": {
@@ -495,8 +538,9 @@
     "title": "埋点数据看板",
     "i18nKey": "menu.tracking",
     "menu": {
-      "order": 37,
-      "icon": "RadarChartOutlined"
+      "order": 5,
+      "icon": "RadarChartOutlined",
+      "parent": "/examples/visualization"
     }
   },
   "/video": {
@@ -504,8 +548,9 @@
     "title": "Video",
     "i18nKey": "menu.video",
     "menu": {
-      "order": 24,
-      "icon": "VideoCameraOutlined"
+      "order": 3,
+      "icon": "VideoCameraOutlined",
+      "parent": "/examples/content"
     }
   },
   "/zustand": {
@@ -513,8 +558,9 @@
     "title": "Zustand演示",
     "i18nKey": "menu.zustand",
     "menu": {
-      "order": 11,
-      "icon": "DatabaseOutlined"
+      "order": 8,
+      "icon": "DatabaseOutlined",
+      "parent": "/examples/engineering"
     }
   },
   "/administration": {
@@ -522,7 +568,7 @@
     "i18nKey": "admin.administration",
     "menuGroup": true,
     "menu": {
-      "order": 4,
+      "order": 3,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -635,5 +681,70 @@
     "permission": "home:read",
     "title": "提交结果",
     "i18nKey": "patterns.resultTitle"
+  },
+  "/patterns/crm": {
+    "permission": "home:read",
+    "title": "CRM 演示",
+    "i18nKey": "crm.menu",
+    "menu": {
+      "parent": "/patterns",
+      "order": 3,
+      "icon": "ContactsOutlined"
+    }
+  },
+  "/patterns/crm/customers/:id": {
+    "permission": "home:read",
+    "title": "客户详情",
+    "i18nKey": "crm.customerDetailTitle"
+  },
+  "/patterns/crm/opportunities": {
+    "permission": "home:read",
+    "title": "商机工作区",
+    "i18nKey": "crm.opportunitiesTitle"
+  },
+  "/examples/components": {
+    "title": "组件与交互",
+    "i18nKey": "menu.componentExamples",
+    "menuGroup": true,
+    "menu": {
+      "order": 6,
+      "icon": "AppstoreOutlined"
+    }
+  },
+  "/examples/visualization": {
+    "title": "图表与可视化",
+    "i18nKey": "menu.visualizationExamples",
+    "menuGroup": true,
+    "menu": {
+      "order": 7,
+      "icon": "PieChartOutlined"
+    }
+  },
+  "/examples/ai": {
+    "title": "AI 工具",
+    "i18nKey": "menu.aiTools",
+    "menuGroup": true,
+    "menu": {
+      "order": 8,
+      "icon": "RobotOutlined"
+    }
+  },
+  "/examples/content": {
+    "title": "内容与媒体",
+    "i18nKey": "menu.contentExamples",
+    "menuGroup": true,
+    "menu": {
+      "order": 9,
+      "icon": "BookOutlined"
+    }
+  },
+  "/examples/engineering": {
+    "title": "工程与技术",
+    "i18nKey": "menu.engineeringExamples",
+    "menuGroup": true,
+    "menu": {
+      "order": 10,
+      "icon": "ToolOutlined"
+    }
   }
 }

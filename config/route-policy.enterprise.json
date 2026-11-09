@@ -26,7 +26,7 @@
     "availability": "enterprise",
     "access": "authenticated",
     "menu": {
-      "order": 39,
+      "order": 11,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -43,7 +43,7 @@
     "i18nKey": "admin.administration",
     "menuGroup": true,
     "menu": {
-      "order": 4,
+      "order": 3,
       "icon": "SafetyCertificateOutlined"
     }
   },
@@ -156,5 +156,25 @@
     "permission": "home:read",
     "title": "提交结果",
     "i18nKey": "patterns.resultTitle"
+  },
+  "/patterns/crm": {
+    "permission": "home:read",
+    "title": "CRM 演示",
+    "i18nKey": "crm.menu",
+    "menu": {
+      "parent": "/patterns",
+      "order": 3,
+      "icon": "ContactsOutlined"
+    }
+  },
+  "/patterns/crm/customers/:id": {
+    "permission": "home:read",
+    "title": "客户详情",
+    "i18nKey": "crm.customerDetailTitle"
+  },
+  "/patterns/crm/opportunities": {
+    "permission": "home:read",
+    "title": "商机工作区",
+    "i18nKey": "crm.opportunitiesTitle"
   }
 }

@@ -48,6 +48,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 - `IFRAME_ORIGIN`
 - `REACT_APP_USE_MOCK`
 - `REACT_APP_ENTERPRISE_LOCAL_DEMO`
+- `REACT_APP_WEB3FORMS_ACCESS_KEY`
 - `REACT_APP_ENCRYPTION_MODE`
 - `REACT_APP_RSA_PUBLIC_KEY`
 - `PROJECTB_STANDALONE_BASE_URL`
@@ -116,7 +117,7 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 | /component-playground           | 组件实验场       | demo:read               | src/app/routing/modules/business.routes.tsx |
 | /contact                        | Contact          | contact:read            | src/app/routing/modules/ui.routes.tsx       |
 | /crypto                         | Crypto           | crypto:read             | src/app/routing/modules/ui.routes.tsx       |
-| /dashboard/*                    | Dashboard        | 继承策略或公共/回退路由 | src/app/routing/modules/layout.routes.tsx   |
+| /dashboard                      | 业务概览         | dashboard:read          | src/app/routing/modules/layout.routes.tsx   |
 | /demo                           | demo             | demo:read               | src/app/routing/modules/business.routes.tsx |
 | /dependencies                   | 项目依赖分析     | dependencies:read       | src/app/routing/modules/ui.routes.tsx       |
 | /deploy-flow                    | Deploy Flow      | deploy-flow:read        | src/app/routing/modules/ui.routes.tsx       |
@@ -133,6 +134,9 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 | /notifications                  | 通知中心         | notification:read       | src/features/notifications/routes.tsx       |
 | /overview                       | 项目概览         | 继承策略或公共/回退路由 | src/app/routing/modules/auth.routes.tsx     |
 | /patterns/basic-form            | 基础表单         | home:read               | src/features/pagePatterns/routes.tsx        |
+| /patterns/crm                   | CRM 演示         | home:read               | src/features/crm/routes.tsx                 |
+| /patterns/crm/customers/:id     | 客户详情         | home:read               | src/features/crm/routes.tsx                 |
+| /patterns/crm/opportunities     | 商机工作区       | home:read               | src/features/crm/routes.tsx                 |
 | /patterns/requests              | 查询表格         | home:read               | src/features/pagePatterns/routes.tsx        |
 | /patterns/requests/:id          | 申请详情         | home:read               | src/features/pagePatterns/routes.tsx        |
 | /patterns/result/:id            | 提交结果         | home:read               | src/features/pagePatterns/routes.tsx        |

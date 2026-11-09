@@ -20,7 +20,11 @@ pnpm run dev:webpack
 
 ## 3. 开发：找到业务扩展点
 
-先用[业务页面模板](development/PAGE_PATTERNS.md)走通查询表格、表单、详情和结果，再按[源码职责与扩展入口](development/SRC_DIRECTORY_GUIDE.md)定位 `app`、`features`、`platform`、`projects` 和 `api`。新增业务看[业务模块](architecture/MODULES.md)与[路由、菜单和授权](architecture/USER_ROLE_PERMISSION.md)；跨项目复用或新建独立项目看[多项目与脚手架](development/MULTI_PROJECT.md)。组件开发看[Storybook](development/STORYBOOK.md)和[组件目录](components/COMPONENT_CATALOG.md)。项目、环境变量、路由和命令的当前清单见[生成参考](reference/PROJECT_REFERENCE.md)。
+先用[业务页面模板](development/PAGE_PATTERNS.md)走通查询表格、表单、详情和结果；需要一组有关联的业务记录时，用 [CRM 演示](development/CRM_DEMO.md)完成客户、跟进与商机赢单流程。再按[源码职责与扩展入口](development/SRC_DIRECTORY_GUIDE.md)定位 `app`、`features`、`platform`、`projects` 和 `api`。新增业务看[业务模块](architecture/MODULES.md)与[路由、菜单和授权](architecture/USER_ROLE_PERMISSION.md)；跨项目复用或新建独立项目看[多项目与脚手架](development/MULTI_PROJECT.md)。组件开发看[Storybook](development/STORYBOOK.md)和[组件目录](components/COMPONENT_CATALOG.md)。项目、环境变量、路由和命令的当前清单见[生成参考](reference/PROJECT_REFERENCE.md)。
+
+[个人资料页](development/PROFILE.md)展示当前账号，支持保存在当前浏览器的展示资料和实际生效的主题、语言与密度设置；文档说明它们与登录身份、服务端资料的边界。
+
+[联系与反馈页](development/CONTACT.md)整理项目邮箱、GitHub Issues 与项目指南，保留 Web3Forms 留言发送，并说明公开表单配置、草稿、发送结果和无真实留言的验证方式。
 
 ## 4. 测试：验证功能和工程契约
 

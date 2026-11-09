@@ -1,234 +1,99 @@
-import AnimatedIcon from '@wui/AnimatedIcon'
-import { useState, type ChangeEvent, type FormEvent } from 'react'
-import { theme } from 'antd'
-import FixTabPanel from '@shared/ui/FixTabPanel'
-import { Send } from 'lucide-react'
+import { App, Button, Collapse } from 'antd'
+import { Mail, BookOpen, Copy } from 'lucide-react'
+import { GithubOutlined } from '@ant-design/icons'
+import { useTranslation } from 'react-i18next'
+import BusinessPage from '@shared/ui/BusinessPage'
+import { useAuth } from '@platform/auth/hooks/useAuth'
+import { readEnterpriseSession } from '@platform/auth/model/session'
+import { contactChannels } from './channels'
+import ContactForm from './ContactForm'
+import styles from './index.module.less'
 
-type ContactFormData = {
-  name: string
-  email: string
-  subject: string
-  message: string
-}
-
-type ContactFormErrors = Partial<Record<keyof ContactFormData, string>>
-
-const Contact = () => {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  })
-
-  const [errors, setErrors] = useState<ContactFormErrors>({})
-  const [status, setStatus] = useState<string | null>(null)
-  const validateForm = () => {
-    const tempErrors: ContactFormErrors = {}
-    let isValid = true
-
-    if (!formData.name.trim()) {
-      tempErrors.name = 'Name is required'
-      isValid = false
-    }
-
-    if (!formData.email.trim()) {
-      tempErrors.email = 'Email is required'
-      isValid = false
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      tempErrors.email = 'Email is invalid'
-      isValid = false
-    }
-
-    if (!formData.subject.trim()) {
-      tempErrors.subject = 'Subject is required'
-      isValid = false
-    }
-
-    if (!formData.message.trim()) {
-      tempErrors.message = 'Message is required'
-      isValid = false
-    }
-
-    setErrors(tempErrors)
-    return isValid
-  }
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-
-    if (!validateForm()) {
-      setStatus('Please fill in all required fields correctly.')
-      return
-    }
-
-    // Create a new FormData object to send to Web3Forms API
-    const form = new FormData()
-    form.append('access_key', '44b28ec2-e0a1-459a-8e3b-06869186889b')
-    form.append('name', formData.name)
-    form.append('email', formData.email)
-    form.append('subject', formData.subject || 'New Contact Form Submission')
-    form.append('message', formData.message)
-
+export default function Contact() {
+  const { t } = useTranslation()
+  const { message } = App.useApp()
+  const { user } = useAuth()
+  const enterprise = readEnterpriseSession()
+  const mayPrefill = Boolean(enterprise) || Boolean(user && user.id > 0)
+  const scope = JSON.stringify([enterprise?.tenantId ?? null, user?.id ?? null, user?.login ?? null])
+  const copyEmail = async () => {
     try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: form,
-      })
-
-      const result: unknown = await response.json()
-
-      if (response.ok) {
-        setStatus('Message sent successfully!')
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-        })
-        setErrors({})
-      } else {
-        const message =
-          typeof result === 'object' && result !== null && 'message' in result && typeof result.message === 'string'
-            ? result.message
-            : undefined
-        setStatus(message || 'There was an error sending your message.')
-      }
-    } catch (error) {
-      setStatus('An error occurred. Please try again.')
-      console.error('Error:', error)
+      await navigator.clipboard.writeText(contactChannels.email)
+      void message.success(t('contactPage.copied'))
+    } catch {
+      void message.info(t('contactPage.copyFallback'))
     }
   }
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-  const {
-    token: { colorBgContainer, colorBorder, colorText },
-  } = theme.useToken()
-
   return (
-    <FixTabPanel>
-      <div
-        className="code-window relative flex h-full items-center justify-center"
-        style={{
-          padding: '24px 8px',
-          backgroundColor: colorBgContainer,
-        }}
-      >
-        <div
-          className="w-full"
-          style={{
-            maxWidth: 420,
-            width: '100%',
-            backgroundColor: colorBgContainer,
-            border: `1px solid ${colorBorder}`,
-            borderRadius: 16,
-            boxShadow: '0 2px 16px 0 rgba(0,0,0,0.04)',
-            padding: '32px 20px',
-            margin: '0 auto',
-            backdropFilter: 'blur(4px)',
-            color: colorText,
-          }}
-        >
-          <h2 className="mb-4 bg-linear-to-r from-blue-400 to-purple-600 bg-clip-text text-center text-3xl font-bold text-transparent md:text-5xl">
-            Get in Touch
-          </h2>
-          <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
-            <div className="grid grid-cols-1 gap-6">
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Your Name"
-                  className={`w-full rounded-xl border px-4 py-3 ${
-                    errors.name
-                      ? 'border-red-500 dark:border-red-500'
-                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
-                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
-                  value={formData.name}
-                  onChange={handleInputChange}
-                />
-                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+    <BusinessPage title={t('menu.contact')} description={t('contactPage.description')}>
+      <div className={styles.grid}>
+        <aside className={styles.aside} aria-label={t('contactPage.channels')}>
+          <section className={styles.panel}>
+            <h2 className={styles.sectionTitle}>{t('contactPage.channels')}</h2>
+            <p className={styles.description}>{t('contactPage.channelsDescription')}</p>
+            <div className={styles.channels}>
+              <div className={styles.channel}>
+                <Mail size={20} aria-hidden="true" />
+                <div>
+                  <h3>{t('contactPage.emailChannel')}</h3>
+                  <a className={styles.email} href={'mailto:' + contactChannels.email}>
+                    {contactChannels.email}
+                  </a>
+                  <Button size="small" icon={<Copy size={14} aria-hidden="true" />} onClick={() => void copyEmail()}>
+                    {t('contactPage.copyEmail')}
+                  </Button>
+                  <p>{t('contactPage.emailHelp')}</p>
+                </div>
               </div>
-
-              <div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Your Email"
-                  className={`w-full rounded-xl border px-4 py-3 ${
-                    errors.email
-                      ? 'border-red-500 dark:border-red-500'
-                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
-                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
-                  value={formData.email}
-                  onChange={handleInputChange}
-                />
-                {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+              <div className={styles.channel}>
+                <GithubOutlined className={styles.channelIcon} aria-hidden="true" />
+                <div>
+                  <h3>{t('contactPage.issuesChannel')}</h3>
+                  <a href={contactChannels.issues} target="_blank" rel="noopener noreferrer">
+                    {t('contactPage.openIssues')}
+                  </a>
+                  <p>{t('contactPage.issuesHelp')}</p>
+                </div>
               </div>
-
-              <div>
-                <input
-                  type="text"
-                  name="subject"
-                  placeholder="Subject"
-                  className={`w-full rounded-xl border px-4 py-3 ${
-                    errors.subject
-                      ? 'border-red-500 dark:border-red-500'
-                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
-                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                />
-                {errors.subject && <p className="mt-1 text-sm text-red-500">{errors.subject}</p>}
-              </div>
-
-              <div>
-                <textarea
-                  name="message"
-                  placeholder="Your Message"
-                  rows={4}
-                  className={`w-full resize-none rounded-xl border px-4 py-3 ${
-                    errors.message
-                      ? 'border-red-500 dark:border-red-500'
-                      : 'border-gray-300/50 bg-white/30 dark:border-gray-700 dark:bg-gray-900/40'
-                  } text-gray-800 transition-colors focus:border-blue-500 focus:outline-none dark:text-gray-100 dark:placeholder:text-gray-400`}
-                  value={formData.message}
-                  onChange={handleInputChange}
-                ></textarea>
-                {errors.message && <p className="mt-1 text-sm text-red-500">{errors.message}</p>}
+              <div className={styles.channel}>
+                <BookOpen size={20} aria-hidden="true" />
+                <div>
+                  <h3>{t('contactPage.guideChannel')}</h3>
+                  <a href={contactChannels.guide} target="_blank" rel="noopener noreferrer">
+                    {t('contactPage.openGuide')}
+                  </a>
+                  <p>{t('contactPage.guideHelp')}</p>
+                </div>
               </div>
             </div>
-
-            <button
-              type="submit"
-              className="flex w-full items-center justify-center space-x-2 rounded-xl bg-linear-to-r from-blue-500 to-purple-600 px-6 py-3 font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:from-blue-600 hover:to-purple-700 hover:shadow-lg"
-            >
-              <span>Send Message</span>
-              <AnimatedIcon variant="spin" mode="hover">
-                <Send className="h-4 w-4" />
-              </AnimatedIcon>
-            </button>
-          </form>
-          {status && (
-            <div
-              className={`mt-4 rounded-lg p-3 backdrop-blur-sm ${
-                status.includes('success')
-                  ? 'border border-green-500/20 bg-green-500/10 text-green-400'
-                  : 'border border-red-500/20 bg-red-500/10 text-red-400'
-              }`}
-            >
-              <p className="text-center">{status}</p>
-            </div>
-          )}
-        </div>
+          </section>
+          <section className={styles.panel} aria-label={t('contactPage.helpTitle')}>
+            <h2 className={styles.sectionTitle}>{t('contactPage.helpTitle')}</h2>
+            <ul className={styles.helpList}>
+              <li>{t('contactPage.help.page')}</li>
+              <li>{t('contactPage.help.steps')}</li>
+              <li>{t('contactPage.help.environment')}</li>
+            </ul>
+          </section>
+        </aside>
+        <ContactForm
+          key={scope}
+          initialName={mayPrefill ? (user?.name || '').trim().slice(0, 80) : ''}
+          initialEmail={mayPrefill ? user?.email || '' : ''}
+        />
       </div>
-    </FixTabPanel>
+      <section className={styles.panel} aria-label={t('contactPage.faqTitle')}>
+        <h2 className={styles.sectionTitle}>{t('contactPage.faqTitle')}</h2>
+        <Collapse
+          className={styles.faq}
+          ghost
+          items={['channel', 'draft', 'delivery'].map((key) => ({
+            key,
+            label: t('contactPage.faq.' + key + 'Title'),
+            children: <p className={styles.description}>{t('contactPage.faq.' + key + 'Description')}</p>,
+          }))}
+        />
+      </section>
+    </BusinessPage>
   )
 }
-
-export default Contact

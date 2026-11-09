@@ -1,6 +1,6 @@
 # 参与开发
 
-使用 Node.js >=24.15.0 且 <25 和 pnpm 11.5.2，执行 `pnpm install --frozen-lockfile`。从最新目标分支创建任务分支；不要混用包管理器改 lockfile。
+使用 Node.js >=24.15.0 且 <25 和 pnpm 12.16.1，执行 `pnpm install --frozen-lockfile`。从最新目标分支创建任务分支；不要混用包管理器改 lockfile。
 
 新增业务遵循[目录职责](./docs/development/SRC_DIRECTORY_GUIDE.md)，按 feature 组织，响应经 unknown parser 验证，平台不反向依赖应用。新增页面更新路由和 route-policy；新项目优先使用 `pnpm run project:create`。生成内容通过命令同步，避免手工维护多套定义。
 

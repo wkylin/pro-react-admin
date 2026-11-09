@@ -86,50 +86,17 @@ const renderEntryContent = (entry: MenuSearchResult, token: SearchThemeToken) =>
   const item = entry.item
   const matches = entry.matches ?? []
   const labelMatch = matches.find((m) => m.key === 'label')
-  const i18nMatch = matches.find((m) => m.key === 'i18nKey' || m.key === 'i18n')
-  const pinyinMatch = matches.find((m) => m.key === 'pinyin')
 
   const labelEl = labelMatch ? highlightWithIndices(item.label, labelMatch.indices, token) : <>{item.label}</>
-
-  let subEl: React.ReactNode = null
-  if (!labelMatch) {
-    if (i18nMatch) {
-      subEl = (
-        <div
-          style={{
-            color: token.colorTextTertiary,
-            fontSize: 12,
-            marginTop: 4,
-          }}
-        >
-          {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, token)}
-        </div>
-      )
-    } else if (pinyinMatch) {
-      subEl = (
-        <div
-          style={{
-            color: token.colorTextTertiary,
-            fontSize: 12,
-            marginTop: 4,
-          }}
-        >
-          {highlightWithIndices(pinyinMatch.value || item.pinyin || '', pinyinMatch.indices, token)}
-        </div>
-      )
-    }
-  } else if (i18nMatch) {
-    subEl = (
-      <div style={{ color: token.colorTextTertiary, fontSize: 12, marginTop: 4 }}>
-        {highlightWithIndices(i18nMatch.value || String(item.i18nKey || ''), i18nMatch.indices, token)}
-      </div>
-    )
-  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={{ color: token.colorText, fontWeight: 500 }}>{labelEl}</div>
-      {subEl}
+      {item.parentLabels?.length ? (
+        <div style={{ color: token.colorTextTertiary, fontSize: 12, marginTop: 4 }}>
+          {item.parentLabels.join(' / ')}
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -237,7 +204,6 @@ const SearchRow: React.FC<SearchRowProps> = ({ entry, idx, isActive, token, setA
         cursor: 'pointer',
         transition: 'background 0.2s',
         border: 'none',
-        outline: 'none',
       }}
     >
       {item.icon && (

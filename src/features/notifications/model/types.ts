@@ -6,6 +6,8 @@ export interface Notification {
   time: string
 }
 
+export type NotificationDraft = Pick<Notification, 'title' | 'description' | 'read'>
+
 export interface NotificationSearchValues {
   title?: string
   read?: boolean | ''

@@ -50,14 +50,14 @@ export const usePrimaryNavItems = (): PrimaryNavItem[] => {
     },
     {
       key: 'dashboard',
-      label: '多路由设置',
+      label: '业务概览',
       i18nKey: 'nav.dashboard',
       icon: (
         <AnimatedIcon variant="spin" mode="hover">
           <DashboardOutlined style={{ fontSize: 16 }} />
         </AnimatedIcon>
       ),
-      onClick: () => redirectTo('dashboard'),
+      onClick: () => redirectTo('/dashboard'),
       show: hasAccess('/dashboard'),
     },
     {

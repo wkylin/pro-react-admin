@@ -1,0 +1,119 @@
+.page {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 1600px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 24px;
+  color: var(--wui-text-primary);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  text-wrap: balance;
+}
+
+.description {
+  max-width: 800px;
+  margin: 4px 0 0;
+  color: var(--wui-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+  text-wrap: pretty;
+}
+
+.eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: var(--wui-text-muted);
+  font-size: 12px;
+  line-height: 16px;
+
+  :global(.wui-ant-tag) {
+    margin-inline-end: 0;
+  }
+}
+
+.actions,
+.toolbarActions {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  flex: 1 1 320px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+
+  > :global(.wui-ant-input-search) {
+    flex: 1 1 240px;
+    max-width: 420px;
+  }
+}
+
+// Table clones interactive headers into an aria-hidden row to measure widths.
+// Hide the cloned inputs while leaving the measurement geometry intact.
+.page :global(.wui-ant-table-measure-row input) {
+  visibility: hidden;
+}
+
+@media (width <= 600px) {
+  .page {
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions,
+  .toolbarActions {
+    justify-content: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .controls {
+    flex-basis: 100%;
+  }
+}

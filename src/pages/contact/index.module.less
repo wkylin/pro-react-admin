@@ -1,3 +1,150 @@
-.profile {
+.grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.aside {
   display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 24px;
+}
+
+.panel {
+  min-width: 0;
+  padding: 24px;
+  background: var(--wui-bg-surface);
+  border: 1px solid var(--wui-border);
+  border-radius: 12px;
+}
+
+.sectionTitle {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+}
+
+.description {
+  margin: 0 0 24px;
+  color: var(--wui-text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+  text-wrap: pretty;
+}
+
+.channels {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.channel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+
+  > svg {
+    flex: none;
+    margin-top: 4px;
+    color: var(--wui-text-secondary);
+  }
+
+  > div {
+    min-width: 0;
+  }
+
+  h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  p {
+    margin: 8px 0 0;
+    color: var(--wui-text-secondary);
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  a {
+    overflow-wrap: anywhere;
+  }
+}
+
+.email {
+  display: block;
+  margin: 4px 0 8px;
+  overflow-wrap: anywhere;
+}
+
+.channelIcon {
+  flex: none;
+  margin-top: 4px;
+  color: var(--wui-text-secondary);
+  font-size: 20px;
+}
+
+.helpList {
+  margin: 16px 0 0;
+  padding-left: 24px;
+  color: var(--wui-text-secondary);
+  font-size: 14px;
+  line-height: 24px;
+
+  li + li {
+    margin-top: 8px;
+  }
+}
+
+.form {
+  margin-top: 24px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.deliveryNote {
+  margin: 24px 0 16px;
+  color: var(--wui-text-secondary);
+  font-size: 12px;
+  line-height: 20px;
+  text-wrap: pretty;
+}
+
+.cancelSend {
+  margin-top: 12px;
+}
+
+.faq {
+  min-width: 0;
+}
+
+@media (width <= 900px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (width <= 600px) {
+  .grid,
+  .aside {
+    gap: 16px;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .formRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
 }

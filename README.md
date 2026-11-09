@@ -1,10 +1,20 @@
 # Pro React Admin
 
-供团队复用的 React 管理后台脚手架。安全项目预设提供受保护路由、租户身份、服务端授权、持久化资源与审计；展示应用、双构建器、微前端示例和独立 UI 包可按需选用。基于 React 19、Ant Design 6、React Router 7、Zustand 5 和 TypeScript 6。
+[简体中文](./README.md) · [English](./README.en.md)
 
-第一次使用建议从下方的安全项目预设开始。[线上项目概览](https://pro-react-admin.vercel.app/#/overview)和[工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md)展示源码、验证命令与交付边界；公开站点使用浏览器演示数据。
+面向 React 团队的管理后台脚手架，提供租户权限、审计与可复用的业务页面模板。
 
-要直接体验类似 Ant Design Pro 的常见管理页，登录后打开“业务页面模板”：查询表格、基础表单、分步表单、详情和提交结果在默认应用与 Enterprise 入口均可运行。按[业务页面模板指南](./docs/development/PAGE_PATTERNS.md)可从页面走到源码、数据 Provider、权限策略和验证命令。模板记录只属于当前工作区会话。
+**[立即体验：免登录只读预览 →](https://pro-react-admin.vercel.app/#/preview/access)**
+
+- **租户与权限有可运行的起点**：Enterprise 预设包含租户登录、服务端授权、持久化用户/角色和事务审计。
+- **常见业务页面可直接参考**：查询表格、基础表单、分步表单、详情和提交结果，配有源码、数据 Provider 与权限说明。
+- **按团队需要选择工程能力**：同一份源码支持 Webpack / Vite，可选多项目、微前端示例与独立 UI 组件包。
+
+[GitHub 源码](https://github.com/wkylin/pro-react-admin) · [工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md) · [完整演示](https://pro-react-admin.vercel.app) · [Storybook](https://wkylin.github.io/pro-react-admin/storybook/)
+
+![桌面工作台：业务概览、导航与常用操作](./docs/media/workspace-overview.png)
+
+截图和 [45 秒演示视频](./docs/media/demo-walkthrough.webm)（[MP4](./docs/media/demo-walkthrough.mp4)）来自本地演示，公开预览使用虚构数据。需要创建自己的项目，可从下方的[安全项目预设](#快速上手)开始。
 
 ## 线上预览
 
@@ -12,6 +22,21 @@
 - [公开的成员访问管理预览](https://pro-react-admin.vercel.app/#/preview/access)：可浏览虚构的成员、审批和审计数据，不需要登录，也不会写入数据。
 - [Storybook 组件预览](https://wkylin.github.io/pro-react-admin/storybook/)。
 - [GitHub Pages 各应用导航](https://wkylin.github.io/pro-react-admin/portal.html)。
+
+<details>
+<summary>查看访问管理与移动端通知截图</summary>
+
+| 免登录访问管理预览                                             | 移动端通知                                                                           |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| ![虚构的成员、审批与审计数据](./docs/media/access-preview.png) | <img src="./docs/media/mobile-notifications.png" alt="移动端通知列表" width="260" /> |
+
+</details>
+
+基于 React 19、Ant Design 6、React Router 7、Zustand 5 和 TypeScript 6。[线上项目概览](https://pro-react-admin.vercel.app/#/overview)和[工程导览](./docs/architecture/ENGINEERING_OVERVIEW.md)展示源码、验证命令与交付边界。
+
+要体验常见管理页，登录后打开“业务页面模板”：查询表格、基础表单、分步表单、详情和提交结果在默认应用与 Enterprise 入口均可运行。按[业务页面模板指南](./docs/development/PAGE_PATTERNS.md)可从页面走到源码、数据 Provider、权限策略和验证命令。模板记录只属于当前工作区会话。
+
+同一菜单下的 [CRM 演示](./docs/development/CRM_DEMO.md)串起客户、跟进与商机：新建客户、记录沟通、创建商机、推进阶段，赢单后自动更新客户状态。数据仅在演示会话内保留，刷新后重置。
 
 Pages 的新增示例和全部应用入口以本次 Actions 部署成功为准。第一次发布可按[GitHub Pages 与 Vercel 部署实操](./docs/deployment/PAGES_VERCEL_GUIDE.md)完成构建与验收；手动触发、本地上传、Release 和回退见[手动部署指南](./docs/deployment/MANUAL_DEPLOYMENT.md)。Pages 配置见[GitHub 部署指南](./docs/deployment/GITHUB_DEPLOYMENT.md)，组件预览见[Storybook 指南](./docs/development/STORYBOOK.md)。
 

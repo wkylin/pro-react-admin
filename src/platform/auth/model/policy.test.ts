@@ -13,6 +13,42 @@ test('inherits the most specific route policy for parameterized and nested route
   expect(getRoutePolicy('/missing')).toBeUndefined()
 })
 
+test('checks the pathname of dashboard query and fragment destinations for ordinary accounts', () => {
+  const current: UserPermission = {
+    userId: 'reader',
+    username: 'reader',
+    roles: [],
+    permissions: ['home:read', 'dashboard:read'],
+    routes: ['/', '/dashboard'],
+  }
+
+  expect(getRoutePolicy('/dashboard?range=7')?.permission).toBe('dashboard:read')
+  expect(canAccessPath(current, '/dashboard?range=7')).toBe(true)
+  expect(canAccessPath(current, '/dashboard?page=2')).toBe(true)
+  expect(canAccessPath(current, '/dashboard#customers')).toBe(true)
+  expect(canAccessPath(current, '/dashboard?page=2#customers')).toBe(true)
+  expect(canAccessPath(current, '/administration/users?next=/dashboard')).toBe(false)
+  expect(canAccessPath(current, '/dashboard-other?next=/dashboard')).toBe(false)
+  expect(canAccessPath(current, '/dashboard%3Fpage=2')).toBe(false)
+  expect(canAccessPath(current, '?next=/dashboard')).toBe(false)
+  expect(canAccessPath(current, '#/dashboard')).toBe(false)
+})
+
+test('uses the same pathname for explicit whitelist fallback without granting other routes', () => {
+  const current: UserPermission = {
+    userId: 'reader',
+    username: 'reader',
+    roles: [],
+    permissions: [],
+    routes: ['/custom-report'],
+  }
+
+  expect(canAccessPath(current, '/custom-report?page=2#totals')).toBe(true)
+  expect(canAccessPath(current, '/custom-report-other?page=2')).toBe(false)
+  expect(canAccessPath(current, '/administration/users?next=/custom-report')).toBe(false)
+  expect(canAccessPath(current, '/custom-report%3Fpage=2')).toBe(false)
+})
+
 test('matches exact and resource wildcard grants without broadening unrelated permissions', () => {
   expect(matchesPermission('user:read', ['user:*'])).toBe(true)
   expect(matchesPermission('user:delete', ['user:read'])).toBe(false)

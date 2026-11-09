@@ -1,10 +1,9 @@
-import { useId, type ReactNode } from 'react'
-import { Alert, Button, Input, Space, Typography } from 'antd'
+import type { ReactNode } from 'react'
+import { Alert, Button, Input } from 'antd'
 import { ReloadOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
-import FixTabPanel from '@shared/ui/FixTabPanel'
+import BusinessPage, { BusinessToolbar } from '@shared/ui/BusinessPage'
 import { useAdministration } from '../model/AdministrationProvider'
-import styles from './workspace.module.less'
 
 export default function ResourceWorkspace({
   title,
@@ -29,21 +28,21 @@ export default function ResourceWorkspace({
 }) {
   const { demo } = useAdministration()
   const { t } = useTranslation()
-  const titleId = useId()
   return (
-    <FixTabPanel fill={false}>
-      <section className={styles.workspace} aria-labelledby={titleId}>
-        <header className={styles.header}>
-          <div>
-            <Typography.Title id={titleId} level={1}>
-              {title}
-            </Typography.Title>
-            <Typography.Paragraph type="secondary">{description}</Typography.Paragraph>
-          </div>
-          <Space wrap>{actions}</Space>
-        </header>
-        {demo && <Alert type="info" showIcon title={t('admin.demo')} description={t('admin.demoDescription')} />}
-        <div className={styles.toolbar}>
+    <BusinessPage
+      title={title}
+      description={description}
+      actions={actions}
+      notice={demo && <Alert type="info" showIcon title={t('admin.demo')} description={t('admin.demoDescription')} />}
+      toolbar={
+        <BusinessToolbar
+          label={onSearch ? t('admin.search') : undefined}
+          actions={
+            <Button icon={<ReloadOutlined aria-hidden />} onClick={onReload}>
+              {t('admin.refresh')}
+            </Button>
+          }
+        >
           {onSearch && (
             <Input.Search
               key={searchValue ?? ''}
@@ -54,15 +53,13 @@ export default function ResourceWorkspace({
               onSearch={onSearch}
             />
           )}
-          <Button icon={<ReloadOutlined aria-hidden />} onClick={onReload}>
-            {t('admin.refresh')}
-          </Button>
-        </div>
-        {error && (
-          <Alert type="error" showIcon title={error} action={<Button onClick={onReload}>{t('admin.retry')}</Button>} />
-        )}
-        {children}
-      </section>
-    </FixTabPanel>
+        </BusinessToolbar>
+      }
+    >
+      {error && (
+        <Alert type="error" showIcon title={error} action={<Button onClick={onReload}>{t('admin.retry')}</Button>} />
+      )}
+      {children}
+    </BusinessPage>
   )
 }

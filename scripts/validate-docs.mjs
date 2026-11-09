@@ -18,6 +18,7 @@ const files = [
   ...collect(path.join(root, 'packages/wui-react/src')),
   ...[
     'README.md',
+    'README.en.md',
     'NPM_README.md',
     'CONTRIBUTING.md',
     'SECURITY.md',

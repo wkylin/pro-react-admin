@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 
 test('a deep link can open the project overview tab and restore a contact draft', async ({ page }) => {
   await page.goto('/#/contact')
-  const name = page.getByPlaceholder('Your Name')
+  const name = page.getByRole('textbox', { name: 'Name', exact: true })
   await expect(name).toBeVisible()
   await name.fill('Preserved contact draft')
 

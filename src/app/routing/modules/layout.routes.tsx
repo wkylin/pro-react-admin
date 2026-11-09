@@ -10,13 +10,6 @@ import { lazyComponents } from '../config/lazyLoad.config'
  * 具有独立布局的模块（不包含在主 Layout 中）
  */
 export const layoutRoutes: RouteNode[] = [
-  // Dashboard模块（独立布局）
-  {
-    path: 'dashboard/*',
-    name: 'Dashboard',
-    auth: true,
-    element: <lazyComponents.Dashboard />,
-  },
   // Portfilo模块（独立布局）
   {
     path: 'portfilo/*',
@@ -43,6 +36,12 @@ export const mainLayoutRoute: RouteNode = {
     </ApplicationModules>
   ),
   children: [
+    {
+      path: 'dashboard',
+      name: '业务概览',
+      i18nKey: 'dashboard.title',
+      element: <lazyComponents.Dashboard />,
+    },
     // 首页默认路由
     {
       index: true,

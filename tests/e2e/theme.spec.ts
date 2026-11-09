@@ -72,7 +72,7 @@ test('theme and system appearance changes preserve the route, cached form and ta
   ).toBe(true)
 
   const activeTab = await page.getByRole('tab', { name: 'Basic form', exact: true }).boundingBox()
-  const close = await page.getByRole('button', { name: 'Close current tab', exact: true }).boundingBox()
+  const close = await page.getByRole('button', { name: 'Close tab: Basic form', exact: true }).boundingBox()
   expect(activeTab).not.toBeNull()
   expect(close).not.toBeNull()
   expect(close!.x).toBeGreaterThan(activeTab!.x)

@@ -5,12 +5,70 @@ import { useNavigate } from 'react-router-dom'
 import { hasEffectivePermission } from '@platform/auth/model/policy'
 import type { PermissionCode } from '@platform/auth/model/permission'
 import { usePermission } from '@platform/auth/hooks/usePermission'
-import FixTabPanel from '@shared/ui/FixTabPanel'
+import BusinessPage from '@shared/ui/BusinessPage'
 import { useAdministration } from '../model/AdministrationProvider'
 import type { AuditEntry } from '../model/resources'
 import styles from './workspace.module.less'
 
 type Feed<T> = { loading: boolean; data: T; error?: string }
+
+function ResourceTotalCard({ resource, revision }: { resource: 'users' | 'roles'; revision: number }) {
+  const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
+  const { provider } = useAdministration()
+  const [attempt, setAttempt] = useState(0)
+  const [total, setTotal] = useState<Feed<number>>({ loading: true, data: 0 })
+  useEffect(() => provider.subscribe?.(resource, () => setAttempt((value) => value + 1)), [provider, resource])
+  useEffect(() => {
+    const controller = new AbortController()
+    setTotal((previous) => ({ ...previous, loading: true, error: undefined }))
+    void provider.list(resource, { page: 1, pageSize: 1 }, { signal: controller.signal, showError: false }).then(
+      (result) => {
+        if (!controller.signal.aborted) setTotal({ loading: false, data: result.total })
+      },
+      (reason) => {
+        if (!controller.signal.aborted)
+          setTotal((previous) => ({
+            ...previous,
+            loading: false,
+            error: reason instanceof Error ? reason.message : t('admin.loadFailed'),
+          }))
+      }
+    )
+    return () => controller.abort()
+  }, [provider, resource, revision, attempt, t])
+  const title = t(`adminOverview.${resource}`)
+  return (
+    <Card
+      className={styles.summaryCard}
+      role="region"
+      aria-label={title}
+      aria-busy={total.loading}
+      title={<h2 className={styles.summaryHeading}>{title}</h2>}
+    >
+      {total.loading ? (
+        <Skeleton active title={false} paragraph={{ rows: 2 }} />
+      ) : total.error ? (
+        <Alert
+          type="error"
+          showIcon
+          title={total.error}
+          action={<Button onClick={() => setAttempt((value) => value + 1)}>{t('admin.retry')}</Button>}
+        />
+      ) : (
+        <>
+          <div className={styles.summaryValue} aria-live="polite">
+            {new Intl.NumberFormat(i18n.resolvedLanguage).format(total.data)}
+          </div>
+          <Typography.Paragraph type="secondary">{t('adminOverview.scopeDescription')}</Typography.Paragraph>
+          <Button type="link" onClick={() => navigate(`/administration/${resource}`)}>
+            {t(resource === 'users' ? 'adminOverview.openUsers' : 'adminOverview.openRoles')}
+          </Button>
+        </>
+      )}
+    </Card>
+  )
+}
 
 export default function AdministrationHome() {
   const { t, i18n } = useTranslation()
@@ -83,112 +141,111 @@ export default function AdministrationHome() {
   ].filter((step) => step.allowed)
 
   return (
-    <FixTabPanel fill={false}>
-      <section className={styles.workspace} aria-labelledby="administration-home-title">
-        <header className={styles.header}>
-          <div>
-            <Typography.Title id="administration-home-title" level={1}>
-              {t('admin.workspace')}
-            </Typography.Title>
-            <Typography.Paragraph type="secondary">{t('admin.workspaceDescription')}</Typography.Paragraph>
-          </div>
-          {(canReadAccess || canReadAudit) && (
-            <Button onClick={() => setRevision((value) => value + 1)}>{t('admin.refresh')}</Button>
-          )}
-        </header>
-        {demo && <Alert type="info" showIcon title={t('admin.demo')} description={t('admin.demoDescription')} />}
-
-        <div className={styles.overviewGrid}>
-          {canReadAccess && (
-            <Card className={styles.overviewCard} title={t('admin.pendingWork')}>
-              {pending.loading ? (
-                <Skeleton active title={false} paragraph={{ rows: 2 }} />
-              ) : pending.error ? (
-                <Alert
-                  type="error"
-                  showIcon
-                  title={pending.error}
-                  action={<Button onClick={() => setRevision((value) => value + 1)}>{t('admin.retry')}</Button>}
-                />
-              ) : (
-                <>
-                  <Typography.Title level={2} className={styles.overviewCount}>
-                    {pending.data}
-                  </Typography.Title>
-                  <Typography.Paragraph type="secondary">
-                    {pending.data ? t('admin.pendingDescription') : t('admin.pendingEmpty')}
-                  </Typography.Paragraph>
-                  <Button type="primary" onClick={() => navigate('/administration/access-requests')}>
-                    {t(canApprove ? 'admin.reviewPending' : 'admin.viewRequests')}
-                  </Button>
-                </>
-              )}
-            </Card>
-          )}
-          {canReadAudit && (
-            <Card
-              className={styles.overviewCard}
-              title={t('admin.recentChanges')}
-              extra={
-                <Button type="link" onClick={() => navigate('/administration/audit')}>
-                  {t('admin.viewAll')}
-                </Button>
-              }
-            >
-              {recent.loading ? (
-                <Skeleton active title={false} paragraph={{ rows: 3 }} />
-              ) : recent.error ? (
-                <Alert
-                  type="error"
-                  showIcon
-                  title={recent.error}
-                  action={<Button onClick={() => setRevision((value) => value + 1)}>{t('admin.retry')}</Button>}
-                />
-              ) : recent.data.length ? (
-                <ul className={styles.recentList}>
-                  {recent.data.map((entry) => (
-                    <li key={entry.id}>
-                      <span>
-                        <Typography.Text strong>{entry.actor}</Typography.Text>{' '}
-                        {t(`admin.${entry.action}`, { defaultValue: entry.action })}{' '}
-                        <Typography.Text type="secondary">{entry.resource}</Typography.Text>
-                      </span>
-                      <time dateTime={entry.at}>{new Date(entry.at).toLocaleString(i18n.resolvedLanguage)}</time>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <Typography.Text type="secondary">{t('admin.recentEmpty')}</Typography.Text>
-              )}
-            </Card>
-          )}
+    <BusinessPage
+      title={t('admin.workspace')}
+      description={t('admin.workspaceDescription')}
+      headingId="administration-home-title"
+      actions={
+        (canReadUsers || canReadRoles || canReadAccess || canReadAudit) && (
+          <Button onClick={() => setRevision((value) => value + 1)}>{t('admin.refresh')}</Button>
+        )
+      }
+      notice={demo && <Alert type="info" showIcon title={t('admin.demo')} description={t('admin.demoDescription')} />}
+    >
+      {(canReadUsers || canReadRoles) && (
+        <div className={styles.summaryGrid}>
+          {canReadUsers && <ResourceTotalCard resource="users" revision={revision} />}
+          {canReadRoles && <ResourceTotalCard resource="roles" revision={revision} />}
         </div>
+      )}
+      <div className={styles.overviewGrid}>
+        {canReadAccess && (
+          <Card className={styles.overviewCard} title={t('admin.pendingWork')}>
+            {pending.loading ? (
+              <Skeleton active title={false} paragraph={{ rows: 2 }} />
+            ) : pending.error ? (
+              <Alert
+                type="error"
+                showIcon
+                title={pending.error}
+                action={<Button onClick={() => setRevision((value) => value + 1)}>{t('admin.retry')}</Button>}
+              />
+            ) : (
+              <>
+                <Typography.Title level={2} className={styles.overviewCount}>
+                  {pending.data}
+                </Typography.Title>
+                <Typography.Paragraph type="secondary">
+                  {pending.data ? t('admin.pendingDescription') : t('admin.pendingEmpty')}
+                </Typography.Paragraph>
+                <Button type="primary" onClick={() => navigate('/administration/access-requests')}>
+                  {t(canApprove ? 'admin.reviewPending' : 'admin.viewRequests')}
+                </Button>
+              </>
+            )}
+          </Card>
+        )}
+        {canReadAudit && (
+          <Card
+            className={styles.overviewCard}
+            title={t('admin.recentChanges')}
+            extra={
+              <Button type="link" onClick={() => navigate('/administration/audit')}>
+                {t('admin.viewAll')}
+              </Button>
+            }
+          >
+            {recent.loading ? (
+              <Skeleton active title={false} paragraph={{ rows: 3 }} />
+            ) : recent.error ? (
+              <Alert
+                type="error"
+                showIcon
+                title={recent.error}
+                action={<Button onClick={() => setRevision((value) => value + 1)}>{t('admin.retry')}</Button>}
+              />
+            ) : recent.data.length ? (
+              <ul className={styles.recentList}>
+                {recent.data.map((entry) => (
+                  <li key={entry.id}>
+                    <span>
+                      <Typography.Text strong>{entry.actor}</Typography.Text>{' '}
+                      {t(`admin.${entry.action}`, { defaultValue: entry.action })}{' '}
+                      <Typography.Text type="secondary">{entry.resource}</Typography.Text>
+                    </span>
+                    <time dateTime={entry.at}>{new Date(entry.at).toLocaleString(i18n.resolvedLanguage)}</time>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <Typography.Text type="secondary">{t('admin.recentEmpty')}</Typography.Text>
+            )}
+          </Card>
+        )}
+      </div>
 
-        <section aria-labelledby="administration-flow-title" className={styles.flowSection}>
-          <Typography.Title id="administration-flow-title" level={2}>
-            {t('admin.referenceFlow')}
-          </Typography.Title>
-          <Typography.Paragraph type="secondary">{t('admin.referenceFlowDescription')}</Typography.Paragraph>
-          {steps.length ? (
-            <div className={styles.flowGrid}>
-              {steps.map((step, index) => (
-                <Card key={step.key} className={styles.flowCard}>
-                  <span className={styles.flowNumber}>{String(index + 1).padStart(2, '0')}</span>
-                  <Typography.Title level={3}>{t(`admin.flow.${step.key}.title`)}</Typography.Title>
-                  <Typography.Paragraph type="secondary">
-                    {t(`admin.flow.${step.key}.description`)}
-                  </Typography.Paragraph>
-                  <Button type="link" onClick={() => navigate(step.path)}>
-                    {t('admin.openStep')}
-                  </Button>
-                </Card>
-              ))}
-            </div>
-          ) : (
-            <Alert type="info" showIcon title={t('admin.noWorkspaceActions')} />
-          )}
-        </section>
+      <section aria-labelledby="administration-flow-title" className={styles.flowSection}>
+        <Typography.Title id="administration-flow-title" level={2}>
+          {t('admin.referenceFlow')}
+        </Typography.Title>
+        <Typography.Paragraph type="secondary">{t('admin.referenceFlowDescription')}</Typography.Paragraph>
+        {steps.length ? (
+          <div className={styles.flowGrid}>
+            {steps.map((step, index) => (
+              <Card key={step.key} className={styles.flowCard}>
+                <span className={styles.flowNumber}>{String(index + 1).padStart(2, '0')}</span>
+                <Typography.Title level={3}>{t(`admin.flow.${step.key}.title`)}</Typography.Title>
+                <Typography.Paragraph type="secondary">{t(`admin.flow.${step.key}.description`)}</Typography.Paragraph>
+                <Button type="link" onClick={() => navigate(step.path)}>
+                  {t('admin.openStep')}
+                </Button>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <Alert type="info" showIcon title={t('admin.noWorkspaceActions')} />
+        )}
       </section>
-    </FixTabPanel>
+    </BusinessPage>
   )
 }

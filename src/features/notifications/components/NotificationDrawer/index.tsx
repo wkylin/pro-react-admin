@@ -1,9 +1,14 @@
 import AnimatedIcon from '@wui/AnimatedIcon'
 import { useState, type CSSProperties } from 'react'
-import { Badge, Button, Space, Typography, theme, Drawer, Grid } from 'antd'
+import { App, Badge, Button, Space, Typography, theme, Drawer, Grid } from 'antd'
 import { BellOutlined, CheckCircleOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { usePermission } from '@platform/auth/hooks/usePermission'
+import { hasEffectivePermission } from '@platform/auth/model/policy'
+import { permissionService } from '@platform/auth/services/permissionService'
 import { useNotificationsStore } from '../../model/notificationsStore'
+import { formatNotificationTime } from '../../model/notificationList'
 
 interface NotificationDrawerProps {
   iconColor?: string
@@ -28,11 +33,15 @@ const NotificationDropdown = ({
   buttonStyle,
   ghost = false,
 }: NotificationDrawerProps) => {
+  const { t, i18n } = useTranslation()
+  const { modal } = App.useApp()
+  const { current } = usePermission()
   const notifications = useNotificationsStore((state) => state.notifications)
   const markRead = useNotificationsStore((state) => state.markRead)
   const markAllRead = useNotificationsStore((state) => state.markAllRead)
   const clearAll = useNotificationsStore((state) => state.clear)
   const unreadCount = notifications.filter((n) => !n.read).length
+  const canDelete = Boolean(current && hasEffectivePermission(current, 'notification:delete'))
   const navigate = useNavigate()
   const MAX_ITEMS = 50
   const isMobile = !Grid.useBreakpoint().md
@@ -73,7 +82,7 @@ const NotificationDropdown = ({
               padding: '32px 0',
             }}
           >
-            暂无通知
+            {t('notificationCenter.none')}
           </div>
         ) : (
           notifications.slice(0, MAX_ITEMS).map((item) => (
@@ -103,9 +112,9 @@ const NotificationDropdown = ({
               </div>
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: colorTextSecondary,
-                  marginTop: 6,
+                  marginTop: 4,
                 }}
               >
                 {item.description}
@@ -118,7 +127,7 @@ const NotificationDropdown = ({
                   textAlign: 'right',
                 }}
               >
-                {item.time}
+                {formatNotificationTime(item.time, i18n.resolvedLanguage === 'zh' ? 'zh-CN' : 'en-US')}
               </div>
             </button>
           ))
@@ -136,6 +145,7 @@ const NotificationDropdown = ({
         <Space>
           <Button
             size="small"
+            disabled={unreadCount === 0}
             onClick={markAllRead}
             icon={
               <AnimatedIcon variant="spin" mode="hover">
@@ -143,22 +153,36 @@ const NotificationDropdown = ({
               </AnimatedIcon>
             }
           >
-            全部已读
+            {t('notificationCenter.markAllRead')}
           </Button>
-          <Button
-            size="small"
-            onClick={clearAll}
-            icon={
-              <AnimatedIcon variant="spin" mode="hover">
-                <DeleteOutlined />
-              </AnimatedIcon>
-            }
-            danger
-          >
-            清空
-          </Button>
+          {canDelete && (
+            <Button
+              size="small"
+              disabled={notifications.length === 0}
+              onClick={() =>
+                modal.confirm({
+                  title: t('notificationCenter.clearConfirm'),
+                  okText: t('notificationCenter.clearAll'),
+                  cancelText: t('notificationCenter.cancel'),
+                  okButtonProps: { danger: true },
+                  onOk: () => {
+                    const latest = permissionService.peekPermissions()
+                    if (latest && hasEffectivePermission(latest, 'notification:delete')) clearAll()
+                  },
+                })
+              }
+              icon={
+                <AnimatedIcon variant="spin" mode="hover">
+                  <DeleteOutlined />
+                </AnimatedIcon>
+              }
+              danger
+            >
+              {t('notificationCenter.clearAll')}
+            </Button>
+          )}
           <Button size="small" type="link" onClick={() => safeNavigate('/notifications')}>
-            查看全部
+            {t('notificationCenter.viewAll')}
           </Button>
         </Space>
       </div>
@@ -189,7 +213,7 @@ const NotificationDropdown = ({
         ghost={ghost}
         icon={iconNode}
         onClick={openDrawer}
-        aria-label="通知"
+        aria-label={t('notificationCenter.notifications')}
         aria-haspopup="dialog"
         aria-expanded={popVisible}
         style={{
@@ -198,13 +222,13 @@ const NotificationDropdown = ({
           ...(iconColor ? { color: iconColor } : {}),
         }}
       >
-        {isMobile ? '通知' : null}
+        {isMobile ? t('notificationCenter.notifications') : null}
       </Button>
     ) : (
       <button
         type="button"
         onClick={openDrawer}
-        aria-label="通知"
+        aria-label={t('notificationCenter.notifications')}
         aria-haspopup="dialog"
         aria-expanded={popVisible}
         style={{
@@ -218,7 +242,7 @@ const NotificationDropdown = ({
         }}
       >
         {iconNode}
-        {isMobile && <span style={{ marginLeft: 4 }}>通知</span>}
+        {isMobile && <span style={{ marginLeft: 4 }}>{t('notificationCenter.notifications')}</span>}
       </button>
     )
 
@@ -226,7 +250,7 @@ const NotificationDropdown = ({
     <>
       {triggerNode}
       <Drawer
-        title="通知"
+        title={t('notificationCenter.notifications')}
         placement="right"
         onClose={() => setPopVisible(false)}
         open={popVisible}

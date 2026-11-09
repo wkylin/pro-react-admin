@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Pro React Admin social preview source</title>
+    <style>
+      @font-face {
+        font-family: Geist;
+        src: url('../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2') format('woff2');
+        font-weight: 100 900;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        width: 1280px;
+        height: 640px;
+        margin: 0;
+        overflow: hidden;
+        font-family: Geist, sans-serif;
+        color: #171717;
+        background: #f5f6f8;
+      }
+      main {
+        position: relative;
+        display: grid;
+        grid-template-columns: 480px 1fr;
+        gap: 40px;
+        width: 100%;
+        height: 100%;
+        padding: 48px;
+      }
+      .copy {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 24px;
+        line-height: 32px;
+        font-weight: 600;
+      }
+      .brand img {
+        width: 32px;
+        height: 26px;
+        object-fit: contain;
+      }
+      h1 {
+        margin: 48px 0 16px;
+        font-size: 48px;
+        line-height: 48px;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+      }
+      p {
+        margin: 0;
+        max-width: 440px;
+        font-size: 18px;
+        line-height: 28px;
+        color: #525f70;
+      }
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+      }
+      .features span {
+        padding: 8px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #fff;
+        color: #17654e;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 500;
+      }
+      footer {
+        margin-top: auto;
+        color: #525f70;
+        font-size: 14px;
+        line-height: 20px;
+      }
+      .preview {
+        align-self: center;
+        overflow: hidden;
+        height: 448px;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        background: #fff;
+      }
+      .preview img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: left top;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="copy">
+        <div class="brand"><img src="../../src/assets/images/pro-logo.png" alt="" />Pro React Admin</div>
+        <h1>A React starter<br />for admin teams.</h1>
+        <p>Build from reusable business pages, tenant access, approvals, and audit examples.</p>
+        <div class="features"><span>Tenant access</span><span>Business pages</span><span>Public preview</span></div>
+        <footer>github.com/wkylin/pro-react-admin</footer>
+      </div>
+      <div class="preview">
+        <img
+          src="../media/access-preview.png"
+          alt="Public access management preview with fictional members and approval records"
+        />
+      </div>
+    </main>
+  </body>
+</html>

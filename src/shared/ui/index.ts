@@ -1,4 +1,6 @@
 export { default as FixTabPanel } from './FixTabPanel'
+export { default as BusinessPage, BusinessToolbar } from './BusinessPage'
+export type { BusinessPageProps } from './BusinessPage'
 export type { FixTabPanelProps } from './FixTabPanel/types'
 export { default as ScrollProgressBar, ScrollArea } from './ScrollProgressBar'
 export type { ScrollAreaProps, ScrollProgressBarProps } from './ScrollProgressBar/types'

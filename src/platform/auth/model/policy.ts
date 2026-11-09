@@ -21,8 +21,16 @@ export const routePermissionMap: Readonly<Record<string, PermissionCode>> = Obje
   Object.entries(routePolicies).flatMap(([path, policy]) => (policy.permission ? [[path, policy.permission]] : []))
 )
 
+/** Ignore destination state without decoding or resolving the route being authorized. */
+function routePathname(path: string): string {
+  const suffix = path.search(/[?#]/)
+  return suffix === -1 ? path : path.slice(0, suffix)
+}
+
 export function getRoutePolicy(path: string): RoutePolicy | undefined {
-  const normalized = path.replace(/\/\*$/, '') || '/'
+  const pathname = routePathname(path)
+  if (!pathname) return undefined
+  const normalized = pathname.replace(/\/\*$/, '') || '/'
   if (routePolicies[normalized]) return routePolicies[normalized]
   const dynamic = Object.keys(routePolicies)
     .filter((key) => key.includes(':') && matchPath({ path: key, end: true }, normalized))
@@ -80,11 +88,13 @@ export function evaluateAccessRequirements(current: UserPermission, required: Ac
 
 /** Route policies override broad route grants; unmapped pages need an explicit whitelist. */
 export function canAccessPath(current: UserPermission, pathname: string): boolean {
-  const policy = getRoutePolicy(pathname)
+  const path = routePathname(pathname)
+  if (!path) return false
+  const policy = getRoutePolicy(path)
   if (policy?.availability === 'enterprise' && getEnvBool('REACT_APP_USE_MOCK', false)) return false
   if (policy?.permission) return hasEffectivePermission(current, policy.permission)
   return (
     current.permissions.includes('*:*') ||
-    current.routes.some((path) => path === '*' || Boolean(matchPath({ path, end: true }, pathname)))
+    current.routes.some((route) => route === '*' || Boolean(matchPath({ path: route, end: true }, path)))
   )
 }

@@ -40,6 +40,7 @@ export default function RequestsPage() {
   const provider = useExampleRequests()
   const filtersRef = useRef<RequestFilters>({})
   const controllerRef = useRef<AbortController | null>(null)
+  const mountedRef = useRef(false)
   const tableApiRef = useRef<TableApi | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
@@ -62,12 +63,13 @@ export default function RequestsPage() {
           },
           { signal: controller.signal }
         )
-        return controller.signal.aborted ? null : result
+        return !mountedRef.current || controller.signal.aborted ? null : result
       } catch (reason) {
-        if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : t('patterns.loadFailed'))
+        if (mountedRef.current && !controller.signal.aborted)
+          setError(reason instanceof Error ? reason.message : t('patterns.loadFailed'))
         return null
       } finally {
-        if (controllerRef.current === controller) {
+        if (mountedRef.current && controllerRef.current === controller) {
           controllerRef.current = null
           setLoading(false)
         }
@@ -76,13 +78,19 @@ export default function RequestsPage() {
     [provider, t]
   )
 
-  useEffect(
-    () => () => {
-      controllerRef.current?.abort()
-      controllerRef.current = null
-    },
-    []
-  )
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      // StrictMode immediately replays this effect. Preserve the table's one-time
+      // initial load during that replay, but abort after a genuine unmount.
+      queueMicrotask(() => {
+        if (mountedRef.current) return
+        controllerRef.current?.abort()
+        controllerRef.current = null
+      })
+    }
+  }, [])
   useEffect(
     () =>
       provider.subscribe?.('requests', () => {

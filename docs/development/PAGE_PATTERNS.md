@@ -2,6 +2,8 @@
 
 这组页面展示管理后台常见的查询表格、基础表单、分步表单、详情与提交结果。它使用同一组“申请”记录，因此提交后能回到列表找到记录、打开详情并推进状态。模板在默认展示应用和 Enterprise 入口均默认显示，菜单名为“业务页面模板”。
 
+同一菜单下还有独立的 [CRM 演示](./CRM_DEMO.md)，把客户、跟进和商机连接成完整业务场景。CRM 与申请模板分别持有自己的内存演示数据，均不接入真实业务 API。
+
 ## 运行与体验
 
 只想查看成员、访问审批和审计界面的呈现方式，可先打开[公开只读预览](https://pro-react-admin.vercel.app/#/preview/access)，无需启动本地环境。预览数据均为虚构内容，不能执行写操作；下方步骤会登录本地应用并体验完整流程。
@@ -23,6 +25,7 @@ pnpm run start:enterprise
 | **分步表单**：输入分阶段完成，提交前需要总览确认     | `/#/patterns/step-form`    | [StepFormPage](../../src/features/pagePatterns/pages/StepFormPage.tsx)           |
 | **详情**：查看一条记录并推进简单状态流程             | `/#/patterns/requests/:id` | [RequestDetailPage](../../src/features/pagePatterns/pages/RequestDetailPage.tsx) |
 | **结果**：提交后确认结果并提供下一步入口             | `/#/patterns/result/:id`   | [RequestResultPage](../../src/features/pagePatterns/pages/RequestResultPage.tsx) |
+| **CRM 演示**：客户列表、详情跟进与关联商机           | `/#/patterns/crm`          | [CustomersPage](../../src/features/crm/pages/CustomersPage.tsx)                  |
 
 ## 找到一条完整的数据链
 

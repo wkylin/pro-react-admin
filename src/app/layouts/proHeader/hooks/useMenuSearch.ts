@@ -13,6 +13,7 @@ export interface MenuItem {
   i18nKey?: string
   path?: string
   parentKeys?: string[]
+  parentLabels?: string[]
   pinyin?: string
   children?: MenuItem[]
 }
@@ -20,11 +21,13 @@ export interface MenuItem {
 function flattenMenu(
   menu: NavigationItem[],
   translate: (key: string, fallback: string) => string,
-  parentKeys: string[] = []
+  parentKeys: string[] = [],
+  parentLabels: string[] = []
 ): MenuItem[] {
   return menu.flatMap((item) => {
     const label = item.i18nKey ? translate(item.i18nKey, item.label) : item.label
-    if (item.children?.length) return flattenMenu(item.children, translate, [...parentKeys, item.key])
+    if (item.children?.length)
+      return flattenMenu(item.children, translate, [...parentKeys, item.key], [...parentLabels, label])
     return [
       {
         ...item,
@@ -32,6 +35,7 @@ function flattenMenu(
         icon: createMenuIcon(item.iconName),
         children: undefined,
         parentKeys,
+        parentLabels,
         pinyin: pinyin(label, { toneType: 'none', type: 'array' }).join(' ').toLowerCase(),
       },
     ]
