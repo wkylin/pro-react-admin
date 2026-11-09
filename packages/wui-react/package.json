@@ -176,16 +176,16 @@
   "dependencies": {
     "@ant-design/icons": "^6.3.4",
     "clsx": "^2.1.1",
-    "dompurify": "^3.4.17",
+    "dompurify": "^3.4.16",
     "html-to-image": "^1.11.13",
-    "isomorphic-dompurify": "^4.6.0",
-    "lucide-react": "^1.65.0"
+    "isomorphic-dompurify": "^4.5.0",
+    "lucide-react": "^1.54.0"
   },
   "peerDependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
     "@react-spring/web": ">=10.0.0 <11.0.0",
     "@react-three/fiber": ">=9.0.0 <10.0.0",
-    "@tiptap/core": "3.32.2",
+    "@tiptap/core": "3.31.4",
     "@tiptap/extension-code-block-lowlight": "^3.31.4",
     "@tiptap/extension-image": "^3.31.4",
     "@tiptap/extension-link": "^3.31.4",
