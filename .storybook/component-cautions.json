@@ -139,5 +139,7 @@
   "SettingDrawer": "open 由父组件控制；关闭动作需要在 onClose 中更新外部状态。",
   "FixTabPanel": "scrollProgressProps 决定进度条配置；嵌套滚动时检查进度对应的实际容器。",
   "ScrollProgressBar": "没有明确滚动容器时会跟踪页面；target 指向局部滚动区时检查其高度和定位。",
+  "HandlePanel": "onMinimize 只通知调用方，需在回调中控制显隐。外层应留出顶部提手空间；面板使用渐变背景时，须用 --minimize-tab-base 指定连接处的实色。减少动态效果开启时不显示红色光效。",
+  "MinimizeHandle": "label 应说明按钮动作。父面板须 position: relative 且不裁切溢出；无边框、仅有 1px 内描边时设置 --minimize-tab-offset-y: 1px。渐变变量接受颜色值；需由父面板同步 flashing 红色外环。",
   "BusinessPage": "title 和 description 是必填或推荐字段；toolbar 与 notice 应与主内容区保持间距，fill 会让 FixTabPanel 占满高度。"
 }

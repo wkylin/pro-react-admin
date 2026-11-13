@@ -12,8 +12,8 @@ const require = createRequire(import.meta.url)
 const ts = require('typescript')
 
 test('legacy subpaths and named-only groups have separate runtime contracts', () => {
-  assert.equal(libraryComponents.length, 13)
-  assert.equal(libraryEntries.length, 20)
+  assert.equal(libraryComponents.length, 15)
+  assert.equal(libraryEntries.length, 22)
   assert.deepEqual(
     libraryGroups.map(({ subpath }) => subpath),
     ['layout', 'animation', 'data-display', 'forms', 'media', 'visualization', 'editor']

@@ -24,6 +24,8 @@ const program = ts.createProgram(stories, parsed.options)
 const checker = program.getTypeChecker()
 const optionTypes = { Watermark: 'WatermarkOptions' }
 const inheritedProps = {
+  HandlePanel: ['children', 'className', 'hidden'],
+  MinimizeHandle: ['onClick', 'disabled', 'className', 'aria-label'],
   AnimateRipple: ['children', 'onClick', 'disabled', 'className'],
   GradientTracking: ['children', 'onClick', 'disabled', 'className'],
   ShiftingCard: ['children', 'className', 'style'],

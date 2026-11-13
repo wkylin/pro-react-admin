@@ -65,7 +65,9 @@ Node.js：`>=24.15.0 <25`；包管理器：`pnpm@12.16.1`；应用：`6.1.1`；�
 | 组件               | 安装后的子路径                      | 源码                                                |
 | ------------------ | ----------------------------------- | --------------------------------------------------- |
 | AnimatedIcon       | @w.ui/wui-react/animated-icon       | packages/wui-react/src/AnimatedIcon/index.ts        |
+| HandlePanel        | @w.ui/wui-react/handle-panel        | packages/wui-react/src/HandlePanel/index.tsx        |
 | IconFrame          | @w.ui/wui-react/icon-frame          | packages/wui-react/src/IconFrame/index.tsx          |
+| MinimizeHandle     | @w.ui/wui-react/minimize-handle     | packages/wui-react/src/MinimizeHandle/index.tsx     |
 | MoveChecker        | @w.ui/wui-react/move-checker        | packages/wui-react/src/MoveChecker/index.tsx        |
 | OneTimePasscode    | @w.ui/wui-react/one-time-passcode   | packages/wui-react/src/OneTimePasscode/index.ts     |
 | OverflowText       | @w.ui/wui-react/overflow-text       | packages/wui-react/src/OverflowText/index.tsx       |

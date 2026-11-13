@@ -13,11 +13,25 @@ export const libraryComponents = Object.freeze([
     typeExports: ['AnimatedIconProps', 'AnimatedIconVariant', 'AnimatedIconMode'],
   },
   {
+    name: 'HandlePanel',
+    subpath: 'handle-panel',
+    source: 'HandlePanel/index.tsx',
+    types: 'HandlePanel/index.d.ts',
+    typeExports: ['HandlePanelProps', 'HandlePanelStyle'],
+  },
+  {
     name: 'IconFrame',
     subpath: 'icon-frame',
     source: 'IconFrame/index.tsx',
     types: 'IconFrame/index.d.ts',
     typeExports: ['IconFrameProps'],
+  },
+  {
+    name: 'MinimizeHandle',
+    subpath: 'minimize-handle',
+    source: 'MinimizeHandle/index.tsx',
+    types: 'MinimizeHandle/index.d.ts',
+    typeExports: ['MinimizeHandleProps', 'MinimizeHandleStyle'],
   },
   {
     name: 'MoveChecker',

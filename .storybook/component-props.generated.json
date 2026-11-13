@@ -25,12 +25,119 @@
       "description": "图标的视觉样式。"
     }
   ],
+  "HandlePanel": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": false,
+      "sourceDescription": "Accessible name and tooltip of the minimize handle.",
+      "description": "收起提手的无障碍名称和悬停提示，默认“收起面板”。",
+      "defaultValue": "'收起面板'"
+    },
+    {
+      "name": "flashing",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "Synchronize the panel and handle red outlines, respecting reduced motion.",
+      "description": "是否同时显示面板红色外环和提手红色轮廓；系统开启减少动态效果时不显示光效。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "variant",
+      "type": "'border' | 'inset'",
+      "required": false,
+      "sourceDescription": "Standard outer border or the Virtuals inset border and alignment.",
+      "description": "border 使用 1px 外边框和 22px 圆角；inset 使用 1px 内描边和 16px 圆角，并补偿提手垂直位置。",
+      "defaultValue": "'border'"
+    },
+    {
+      "name": "onMinimize",
+      "type": "MouseEventHandler<HTMLButtonElement>",
+      "required": false,
+      "sourceDescription": "Notify the caller; visibility is controlled by the caller.",
+      "description": "点击或通过键盘激活提手时调用，接收按钮点击事件；由调用方更新面板显隐。"
+    },
+    {
+      "name": "style",
+      "type": "HandlePanelStyle",
+      "required": false,
+      "sourceDescription": "Native styles and the original --panel-* / --minimize-tab-* variables.",
+      "description": "面板根元素的行内样式；支持 --panel-* 和 --minimize-tab-* CSS 变量以调整面板与提手外观。"
+    },
+    {
+      "name": "children",
+      "type": "TypeOptions['allowObjectInHTMLChildren'] extends true\n      ? ReactI18NextChildren | Iterable<ReactI18NextChildren>\n      : DOMAttributes<T>['children']",
+      "required": false,
+      "description": "面板内部的内容。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到面板根元素的 CSS 类名。"
+    },
+    {
+      "name": "hidden",
+      "type": "boolean | undefined",
+      "required": false,
+      "description": "隐藏面板及提手，同时保留已挂载的子组件状态；恢复时设为 false。"
+    }
+  ],
   "IconFrame": [
     {
       "name": "children",
       "type": "ReactNode",
       "required": true,
       "description": "组件内部要呈现的 React 内容。"
+    }
+  ],
+  "MinimizeHandle": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "sourceDescription": "Accessible name and default tooltip for the handle.",
+      "description": "提手按钮的无障碍名称和默认悬停提示，应描述点击后执行的动作。"
+    },
+    {
+      "name": "flashing",
+      "type": "boolean",
+      "required": false,
+      "sourceDescription": "Show the red outline when the user has not requested reduced motion.",
+      "description": "是否显示提手红色轮廓；系统开启减少动态效果时不显示光效，父面板的红色外环需由调用方同步。",
+      "defaultValue": "false"
+    },
+    {
+      "name": "style",
+      "type": "MinimizeHandleStyle",
+      "required": false,
+      "sourceDescription": "Native styles and the original --panel-* / --minimize-tab-* variables.",
+      "description": "提手按钮的行内样式；支持 --panel-* 和 --minimize-tab-* CSS 变量以调整颜色、右侧距离和垂直对齐。"
+    },
+    {
+      "name": "onClick",
+      "type": "MouseEventHandler<T> | undefined",
+      "required": false,
+      "description": "点击或通过键盘激活提手时调用，接收原生按钮的 React 点击事件。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到提手按钮的 CSS 类名。"
+    },
+    {
+      "name": "aria-label",
+      "type": "string | undefined",
+      "required": false,
+      "sourceDescription": "Defines a string value that labels the current element.",
+      "description": "单独覆盖提手按钮的无障碍名称；未传入时使用 label。"
+    },
+    {
+      "name": "disabled",
+      "type": "boolean | undefined",
+      "required": false,
+      "description": "禁用提手按钮的点击、键盘激活和聚焦。"
     }
   ],
   "MoveChecker": [
@@ -1384,10 +1491,10 @@
       "description": "链接可见文字；翻转动画会逐字符拆分该字符串。"
     },
     {
-      "name": "className",
-      "type": "string",
+      "name": "onClick",
+      "type": "MouseEventHandler<HTMLAnchorElement>",
       "required": false,
-      "description": "追加到组件根元素的 CSS 类名。"
+      "description": "点击时调用的回调。"
     },
     {
       "name": "style",
@@ -1397,10 +1504,10 @@
       "description": "组件根元素的行内样式。"
     },
     {
-      "name": "onClick",
-      "type": "MouseEventHandler<HTMLAnchorElement>",
+      "name": "className",
+      "type": "string",
       "required": false,
-      "description": "点击时调用的回调。"
+      "description": "追加到组件根元素的 CSS 类名。"
     },
     {
       "name": "rel",
@@ -2416,12 +2523,6 @@
       "description": "卡片主体内容。"
     },
     {
-      "name": "className",
-      "type": "string | undefined",
-      "required": false,
-      "description": "追加到组件根元素的 CSS 类名。"
-    },
-    {
       "name": "style",
       "type": "CSSProperties | undefined",
       "required": false,
@@ -2432,6 +2533,12 @@
       "type": "string | undefined",
       "required": false,
       "description": "立体卡片显示的标题。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
     },
     {
       "name": "onMouseEnter",
@@ -6023,16 +6130,16 @@
   ],
   "PHBarChart": [
     {
-      "name": "className",
-      "type": "string",
-      "required": false,
-      "description": "追加到组件根元素的 CSS 类名。"
-    },
-    {
       "name": "style",
       "type": "CSSProperties",
       "required": false,
       "description": "组件根元素的行内样式。"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
     },
     {
       "name": "onError",
@@ -6310,16 +6417,16 @@
       "description": "组件内部要呈现的 React 内容。"
     },
     {
-      "name": "className",
-      "type": "string | undefined",
-      "required": false,
-      "description": "追加到组件根元素的 CSS 类名。"
-    },
-    {
       "name": "onClick",
       "type": "MouseEventHandler<T> | undefined",
       "required": false,
       "description": "导航点击回调；权限和外链处理仍由 SafeLink 执行。"
+    },
+    {
+      "name": "className",
+      "type": "string | undefined",
+      "required": false,
+      "description": "追加到组件根元素的 CSS 类名。"
     },
     {
       "name": "rel",

@@ -424,6 +424,25 @@ Object.assign(exact, {
 })
 
 const componentExact = {
+  HandlePanel: {
+    label: '收起提手的无障碍名称和悬停提示，默认“收起面板”。',
+    flashing: '是否同时显示面板红色外环和提手红色轮廓；系统开启减少动态效果时不显示光效。',
+    variant: 'border 使用 1px 外边框和 22px 圆角；inset 使用 1px 内描边和 16px 圆角，并补偿提手垂直位置。',
+    onMinimize: '点击或通过键盘激活提手时调用，接收按钮点击事件；由调用方更新面板显隐。',
+    style: '面板根元素的行内样式；支持 --panel-* 和 --minimize-tab-* CSS 变量以调整面板与提手外观。',
+    children: '面板内部的内容。',
+    className: '追加到面板根元素的 CSS 类名。',
+    hidden: '隐藏面板及提手，同时保留已挂载的子组件状态；恢复时设为 false。',
+  },
+  MinimizeHandle: {
+    label: '提手按钮的无障碍名称和默认悬停提示，应描述点击后执行的动作。',
+    flashing: '是否显示提手红色轮廓；系统开启减少动态效果时不显示光效，父面板的红色外环需由调用方同步。',
+    style: '提手按钮的行内样式；支持 --panel-* 和 --minimize-tab-* CSS 变量以调整颜色、右侧距离和垂直对齐。',
+    onClick: '点击或通过键盘激活提手时调用，接收原生按钮的 React 点击事件。',
+    className: '追加到提手按钮的 CSS 类名。',
+    'aria-label': '单独覆盖提手按钮的无障碍名称；未传入时使用 label。',
+    disabled: '禁用提手按钮的点击、键盘激活和聚焦。',
+  },
   SlideText: { text: '依次上下滑动轮换的短句数组。' },
   FlipLink: { children: '链接可见文字；翻转动画会逐字符拆分该字符串。' },
   ThreeDCard: { title: '立体卡片显示的标题。', children: '卡片主体内容。' },

@@ -559,6 +559,14 @@
     "purpose": "将滚动位置映射为容器顶部的进度条。",
     "preview": "滚动 Default、Gradient，比较 Empty 无可滚内容时的进度。"
   },
+  "HandlePanel": {
+    "purpose": "为任意内容提供带收起提手的面板外壳，支持标准边框和内描边两种外观。",
+    "preview": "切换 variant 和 flashing 查看连接边线与红色提示，点击提手验证 onMinimize；显隐由调用方控制。"
+  },
+  "MinimizeHandle": {
+    "purpose": "在现有面板顶边添加可通过鼠标、触摸和键盘操作的收起提手。",
+    "preview": "点击或聚焦提手，检查 label、焦点描边和 onClick；切换 flashing 查看红色轮廓。"
+  },
   "BusinessPage": {
     "purpose": "为工作区内的业务页面提供统一的标题、描述、操作区和工具栏布局。",
     "preview": "比较 Default、With Actions、With Toolbar 和 Complete 的页头层次与内容区域排布。"

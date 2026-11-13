@@ -1,6 +1,6 @@
 # @w.ui/wui-react
 
-面向 React 19 的 UI 组件库：13 个可直接使用的基础组件，以及布局、表单、数据展示等 7 个按场景导入的组件组。提供 TypeScript 类型、ESM / CommonJS 入口和统一样式。
+面向 React 19 的 UI 组件库：15 个可直接使用的基础组件，以及布局、表单、数据展示等 7 个按场景导入的组件组。提供 TypeScript 类型、ESM / CommonJS 入口和统一样式。
 
 [在线预览与组件说明](https://wkylin.github.io/pro-react-admin/storybook/) · [完整组件目录](https://github.com/wkylin/pro-react-admin/blob/main/docs/components/COMPONENT_CATALOG.md) · [源码](https://github.com/wkylin/pro-react-admin) · [反馈问题](https://github.com/wkylin/pro-react-admin/issues)
 
@@ -46,12 +46,14 @@ export function CodeInput() {
 
 扩展组件组不从包根路径导出，也没有默认导出。组件 Props 类型从对应入口导入；`ResponsiveTable` 的 `useTable` 同时从包根路径和 `responsive-table` 子路径导出。
 
-### 13 个基础组件
+### 15 个基础组件
 
 | 组件                 | 适合做什么                           | 单组件子路径          |
 | -------------------- | ------------------------------------ | --------------------- |
 | `AnimatedIcon`       | 给现有图标添加轻量动效               | `animated-icon`       |
+| `HandlePanel`        | 为内容添加带收起提手的面板外壳       | `handle-panel`        |
 | `IconFrame`          | 统一图标与文字并排时的对齐           | `icon-frame`          |
+| `MinimizeHandle`     | 在现有面板顶边添加独立收起提手       | `minimize-handle`     |
 | `MoveChecker`        | 拖动滑块完成可见的确认步骤           | `move-checker`        |
 | `OneTimePasscode`    | 输入一次性验证码或 PIN               | `one-time-passcode`   |
 | `OverflowText`       | 截断溢出文字并按需显示完整内容       | `overflow-text`       |

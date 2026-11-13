@@ -1,0 +1,74 @@
+.handle {
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(-37px + var(--minimize-tab-offset-y, 0px));
+  right: var(--minimize-tab-right, 21px);
+  z-index: 2;
+  display: grid;
+  place-items: end center;
+  width: 72px;
+  height: 44px;
+  margin: 0;
+  padding: 0 0 10px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--minimize-tab-ink, #b5a7c1);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.handle[hidden] {
+  display: none;
+}
+
+.cap {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 72px;
+  height: 26px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.tint {
+  stop-color: var(--minimize-tab-tint, #33263f);
+}
+
+.base {
+  stop-color: var(--minimize-tab-base, var(--panel-background, #2a2038));
+}
+
+.rim {
+  stop-color: var(--minimize-tab-border, var(--panel-border, rgb(255 255 255 / 10%)));
+}
+
+.alert {
+  opacity: 0;
+  stroke: #f43f5e;
+  filter: drop-shadow(0 0 13px rgb(244 63 94 / 45%));
+}
+
+.icon {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.handle:active .icon {
+  transform: translateY(1px);
+}
+
+.handle:focus-visible {
+  outline: 2px solid var(--panel-focus, #d24ac4);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .handle.flashing .alert {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+  }
+}

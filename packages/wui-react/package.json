@@ -25,11 +25,23 @@
       "require": "./dist/cjs/animated-icon.cjs",
       "default": "./dist/esm/animated-icon.js"
     },
+    "./handle-panel": {
+      "types": "./dist/types/HandlePanel/index.d.ts",
+      "import": "./dist/esm/handle-panel.js",
+      "require": "./dist/cjs/handle-panel.cjs",
+      "default": "./dist/esm/handle-panel.js"
+    },
     "./icon-frame": {
       "types": "./dist/types/IconFrame/index.d.ts",
       "import": "./dist/esm/icon-frame.js",
       "require": "./dist/cjs/icon-frame.cjs",
       "default": "./dist/esm/icon-frame.js"
+    },
+    "./minimize-handle": {
+      "types": "./dist/types/MinimizeHandle/index.d.ts",
+      "import": "./dist/esm/minimize-handle.js",
+      "require": "./dist/cjs/minimize-handle.cjs",
+      "default": "./dist/esm/minimize-handle.js"
     },
     "./move-checker": {
       "types": "./dist/types/MoveChecker/index.d.ts",
